@@ -1,6 +1,5 @@
 # admin-web
-
-admin 的纯前端工程
+vue+typeScript+iview
 
 ## 工程初始化
 ```
