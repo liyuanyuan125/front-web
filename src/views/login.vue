@@ -76,6 +76,8 @@ export default class Main extends View {
   }
   tabs(val: number) {
     val === 2 ? this.activeTab = false : this.activeTab = true
+
+    // https://router.vuejs.org/zh/api/#router-link
   }
   async submit() {
     const valid = await (this.$refs.form as any).validate()
