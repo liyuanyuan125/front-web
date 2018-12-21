@@ -12,7 +12,7 @@
     <div class='firstNext'>
       <Row type='flex' justify='space-between'>
         <Col :span='11'>
-        <p><img src='../assets/img1.png' width='275px'></p>
+        <p><img src='../assets/img1.png' width='275px' class=''></p>
         </Col>
         <Col :span='11'>
         <p><img src='../assets/img-hover.png' width='275px'></p>
@@ -22,11 +22,12 @@
         <FormItem label='登录邮箱' prop='email'>
           <Input v-model='form.email' placeholder='请输入登录邮箱'></Input>
         </FormItem>
-        <FormItem label='邮箱验证码' prop='emailCode'>
+        <FormItem label='邮箱验证码' prop='emailCode' class='getEmailCode'>
           <Input v-model='form.emailCode' :maxlength='6' placeholder='请输入邮箱验证码'></Input>
+          <span @click='getCode' ref='getcode'>获取邮箱验证码</span>
         </FormItem>
         <FormItem label='密码' prop='password'>
-          <Input v-model='form.password' @keyup='handlekeyup' :maxlength='16' placeholder='请输入密码'></Input>
+          <Input v-model='form.password' @keyup='handlekeyup' :maxlength='16' placeholder='请设置包含大小写的英文字母与数字的组合'></Input>
         </FormItem>
         <FormItem label='重复密码' prop='confirm'>
           <Input v-model='form.confirm' @keyup='handlekeyup' :maxlength='16' placeholder='请再次输入密码'></Input>
@@ -38,9 +39,9 @@
             </Checkbox>
           </p>
         </FormItem>
-        <Button type='warning' long class="submit">下一步</Button>
+        <Button type='warning' long class='submit'>下一步</Button>
       </Form>
-     
+
     </div>
     <footer-com></footer-com>
   </div>
@@ -60,31 +61,16 @@ import footerCom from '../components/header/footer.vue'
 export default class Main extends View {
   current = 0
   single = true
+
+  second = 10 // 倒计时时间
+  isRun = false // 是否启动按钮
+  clearTime = 0 // 组件销毁清除定时器
+
   form = {
     email: '',
     emailCode: '',
     password: '',
     confirm: ''
-  }
-  validatePass = (rule: any, value: any, callback: any) => {
-    if (value === '') {
-      callback(new Error('请输入你的密码'))
-    } else {
-      if (this.form.password !== '') {
-        // 对第二个密码框单独验证
-        (this.$refs.form as any).validateField('confirm')
-      }
-      callback()
-    }
-  }
-  validatePassCheck = (rule: any, value: any, callback: any) => {
-    if (value === '') {
-      callback(new Error('请输入你的确定密码'))
-    } else if (value !== this.form.password) {
-      callback(new Error('两次密码输入不同'))
-    } else {
-      callback()
-    }
   }
   rulesfrom = {
     email: [
@@ -94,10 +80,53 @@ export default class Main extends View {
     emailCode: [
       { required: true, message: '请输入邮箱验证码', trigger: 'blur' }
     ],
-    password: [{required: true, validator: this.validatePass, trigger: 'blur' }],
-    confirm: [{required: true, validator: this.validatePassCheck, trigger: 'blur' }]
+    password: [{ required: true, message: '请输入你的密码', trigger: 'blur' }],
+    confirm: [{ required: true, message: '请再次输入密码', trigger: 'blur' }]
+  }
+  // 定时器
+  downTime() {
+    this.isRun = true
+    const innter = this.$refs.getcode as any
+    if (this.second == 0) {
+      innter.innerText = '重新获取验证码'
+      this.second = 10
+      this.isRun = false
+    } else {
+      
+      this.second = this.second - 1
+      innter.innerText = this.second + 's'
+
+      this.clearTime = setTimeout(() => {
+        this.downTime()
+      }, 1000)
+    }
+  }
+  // 获取验证码
+  getCode() {
+    const reg = new RegExp(
+      '^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$'
+    )
+    if (this.form.email) {
+      // 邮箱格式匹配
+      if (!reg.test(this.form.email)) {
+        //  --------------要去掉！
+        if (!this.isRun) {
+          // 判断重复验证
+          // 发动请求响应成功 -> 启动定时器
+          this.downTime()
+        }
+      } else {
+        // this.showWaring('用户邮箱格式有误')
+      }
+    } else {
+      this.showWaring('用户登录邮箱不能为空')
+    }
   }
   handlekeyup() {}
+  destroyed() {
+    // 组件销毁清除定时器
+    clearTimeout(this.clearTime)
+  }
 }
 </script>
 <style lang='less' scoped>
@@ -135,21 +164,43 @@ export default class Main extends View {
 .firstNext {
   width: 600px;
   margin: 80px auto 40px;
-  &>form{
-    margin-top:40px;
+  & > form {
+    margin-top: 40px;
   }
-  .ivu-form-item{
-    /deep/ label{
-      .form-label
+  .getEmailCode {
+    .ivu-input-wrapper {
+      width: auto;
     }
-  }
-  .ivu-input-wrapper{
     /deep/ input {
-     .form-input
+      width: 260px;
+    }
+    /deep/ span {
+      width: 200px;
+      display: block;
+      .form-input;
+      cursor: pointer;
+      line-height: 50px;
+      border: solid 1px #dcdee2;
+      text-align: center;
+      background: #ffffff;
+      position: absolute;
+      right: 0;
+      top: 0;
+      color: @theme-color;
     }
   }
-  .submit{
-    .form-btn
+  .ivu-form-item {
+    /deep/ label {
+      .form-label;
+    }
+  }
+  .ivu-input-wrapper {
+    /deep/ input {
+      .form-input;
+    }
+  }
+  .submit {
+    .form-btn;
   }
 }
 </style>
