@@ -11,7 +11,11 @@
     </div>
     <div class="regStep">
       <component :is="currentView"></component>
-      <Button type='warning' long class='submit'>下一步</Button>
+      <Button v-if="!current==2" type='warning' long class='submit'>下一步</Button>
+      <div class="regSubmit" v-else> 
+        <Button type='warning' >稍后补充</Button>
+        <Button type='warning' >注册完成</Button>
+      </div>
     </div>
     <footer-com></footer-com>
   </div>
@@ -24,17 +28,19 @@ import headerCom from '../components/header/head.vue'
 import footerCom from '../components/header/footer.vue'
 import firstStep from '../components/register/firstStep.vue'
 import secondStep from '../components/register/secondStep.vue'
+import thressStep from '../components/register/threeStep.vue'
 @Component({
   components: {
     headerCom,
     footerCom,
     firstStep,
-    secondStep
+    secondStep,
+    thressStep
   }
 })
 export default class Main extends View {
-  currentView = 'secondStep'
-  current = 1
+  currentView = 'thressStep'
+  current = 2
 }
 </script>
 <style lang='less' scoped>
@@ -53,6 +59,7 @@ export default class Main extends View {
   /deep/ .ivu-steps {
     width: 500px;
     margin: 0 auto;
+    margin-left: 345px;
   }
   /deep/ .ivu-steps .ivu-steps-title {
     font-weight: none;
@@ -81,6 +88,24 @@ export default class Main extends View {
 .regStep{
    height: 68%;
   margin-bottom: 80px;
+  .regSubmit{
+   width: 600px;
+    margin: 0 auto;
+    position: relative;
+    button{
+      width: 280px;
+     .form-btn;
+     background: #ffffff;
+     color: rgba(254,129,53,1);
+     &:last-child{
+       background: rgba(254,129,53,1);
+       position: absolute;
+       right: 0;
+       top:0;
+       color: #ffffff;
+     }
+    }
+  }
     /deep/ .submit {
     width: 600px;
     display: block;

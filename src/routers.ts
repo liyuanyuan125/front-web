@@ -13,7 +13,12 @@ const router = new Router({
       path: '/register',
       name: 'register',
       component: () => import('./views/register.vue')
-    }
+    },
+    {
+      path: '/regsucess',
+      name: 'regsucess',
+      component: () => import('./components/register/regsucess.vue')
+    },
   ]
 })
 
