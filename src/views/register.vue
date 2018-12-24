@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="maxHeight">
     <header-com></header-com>
     <div class='steps'>
       <Steps :current='current'>
@@ -9,128 +9,39 @@
         <Step title='补充资质' style='width:33.3%'></Step>
       </Steps>
     </div>
-    <div class='firstNext'>
-      <Row type='flex' justify='space-between'>
-        <Col :span='11'>
-        <p><img src='../assets/img1.png' width='275px' class=''></p>
-        </Col>
-        <Col :span='11'>
-        <p><img src='../assets/img-hover.png' width='275px'></p>
-        </Col>
-      </Row>
-      <Form ref='form' :model='form' :rules='rulesfrom' label-position='left' :label-width='120'>
-        <FormItem label='登录邮箱' prop='email'>
-          <Input v-model='form.email' placeholder='请输入登录邮箱'></Input>
-        </FormItem>
-        <FormItem label='邮箱验证码' prop='emailCode' class='getEmailCode'>
-          <Input v-model='form.emailCode' :maxlength='6' placeholder='请输入邮箱验证码'></Input>
-          <span @click='getCode' ref='getcode'>获取邮箱验证码</span>
-        </FormItem>
-        <FormItem label='密码' prop='password'>
-          <Input v-model='form.password' @keyup='handlekeyup' :maxlength='16' placeholder='请设置包含大小写的英文字母与数字的组合'></Input>
-        </FormItem>
-        <FormItem label='重复密码' prop='confirm'>
-          <Input v-model='form.confirm' @keyup='handlekeyup' :maxlength='16' placeholder='请再次输入密码'></Input>
-        </FormItem>
-        <FormItem>
-          <p>
-            <Checkbox v-model='single'>我同意并遵守
-              <router-link to=''>《平台运营条款》</router-link>
-            </Checkbox>
-          </p>
-        </FormItem>
-        <Button type='warning' long class='submit'>下一步</Button>
-      </Form>
-
+    <div class="regStep">
+      <component :is="currentView"></component>
+      <Button type='warning' long class='submit'>下一步</Button>
     </div>
     <footer-com></footer-com>
   </div>
 </template>
 
 <script lang='ts'>
-import { Component } from 'vue-property-decorator'
+import { Component, Watch} from 'vue-property-decorator'
 import View from '@/util/View'
 import headerCom from '../components/header/head.vue'
 import footerCom from '../components/header/footer.vue'
+import firstStep from '../components/register/firstStep.vue'
+import secondStep from '../components/register/secondStep.vue'
 @Component({
   components: {
     headerCom,
-    footerCom
+    footerCom,
+    firstStep,
+    secondStep
   }
 })
 export default class Main extends View {
-  current = 0
-  single = true
-
-  second = 10 // 倒计时时间
-  isRun = false // 是否启动按钮
-  clearTime = 0 // 组件销毁清除定时器
-
-  form = {
-    email: '',
-    emailCode: '',
-    password: '',
-    confirm: ''
-  }
-  rulesfrom = {
-    email: [
-      { required: true, message: '请输入登录邮箱', trigger: 'blur' },
-      { type: 'email', message: '邮箱格式有误', trigger: 'blur' }
-    ],
-    emailCode: [
-      { required: true, message: '请输入邮箱验证码', trigger: 'blur' }
-    ],
-    password: [{ required: true, message: '请输入你的密码', trigger: 'blur' }],
-    confirm: [{ required: true, message: '请再次输入密码', trigger: 'blur' }]
-  }
-  // 定时器
-  downTime() {
-    this.isRun = true
-    const innter = this.$refs.getcode as any
-    if (this.second == 0) {
-      innter.innerText = '重新获取验证码'
-      this.second = 10
-      this.isRun = false
-    } else {
-      
-      this.second = this.second - 1
-      innter.innerText = this.second + 's'
-
-      this.clearTime = setTimeout(() => {
-        this.downTime()
-      }, 1000)
-    }
-  }
-  // 获取验证码
-  getCode() {
-    const reg = new RegExp(
-      '^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$'
-    )
-    if (this.form.email) {
-      // 邮箱格式匹配
-      if (!reg.test(this.form.email)) {
-        //  --------------要去掉！
-        if (!this.isRun) {
-          // 判断重复验证
-          // 发动请求响应成功 -> 启动定时器
-          this.downTime()
-        }
-      } else {
-        // this.showWaring('用户邮箱格式有误')
-      }
-    } else {
-      this.showWaring('用户登录邮箱不能为空')
-    }
-  }
-  handlekeyup() {}
-  destroyed() {
-    // 组件销毁清除定时器
-    clearTimeout(this.clearTime)
-  }
+  currentView = 'secondStep'
+  current = 1
 }
 </script>
 <style lang='less' scoped>
 @import '../site/login.less';
+.maxHeight{
+  height: 100%;
+}
 .steps {
   border-bottom: solid 1px #efefef;
   padding-bottom: 20px;
@@ -160,47 +71,21 @@ export default class Main extends View {
   /deep/ .ivu-steps-item.ivu-steps-status-process .ivu-steps-title {
     color: @text-color;
   }
+  /deep/ .ivu-steps .ivu-steps-head-inner>.ivu-steps-icon.ivu-icon{
+    position: relative;
+    font-size: 22px;
+    top:-4px;
+    left: -4px;
+  }
 }
-.firstNext {
-  width: 600px;
-  margin: 80px auto 40px;
-  & > form {
-    margin-top: 40px;
-  }
-  .getEmailCode {
-    .ivu-input-wrapper {
-      width: auto;
-    }
-    /deep/ input {
-      width: 260px;
-    }
-    /deep/ span {
-      width: 200px;
-      display: block;
-      .form-input;
-      cursor: pointer;
-      line-height: 50px;
-      border: solid 1px #dcdee2;
-      text-align: center;
-      background: #ffffff;
-      position: absolute;
-      right: 0;
-      top: 0;
-      color: @theme-color;
-    }
-  }
-  .ivu-form-item {
-    /deep/ label {
-      .form-label;
-    }
-  }
-  .ivu-input-wrapper {
-    /deep/ input {
-      .form-input;
-    }
-  }
-  .submit {
+.regStep{
+   height: 68%;
+  margin-bottom: 80px;
+    /deep/ .submit {
+    width: 600px;
+    display: block;
+    margin: 0 auto;
     .form-btn;
+    }
   }
-}
 </style>
