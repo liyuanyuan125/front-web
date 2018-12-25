@@ -35,6 +35,8 @@
 <script lang="ts">
 import { Component, Watch} from 'vue-property-decorator'
 import View from '@/util/View'
+import { countDown } from '@/fn/timer'
+
 @Component
 export default class Main extends View {
   single = true
@@ -48,6 +50,7 @@ export default class Main extends View {
     password: '',
     confirm: ''
   }
+
   rulesfrom = {
     email: [
       { required: true, message: '请输入登录邮箱', trigger: 'blur' },
@@ -59,21 +62,33 @@ export default class Main extends View {
     password: [{ required: true, message: '请输入你的密码', trigger: 'blur' }],
     confirm: [{ required: true, message: '请再次输入密码', trigger: 'blur' }]
   }
-  downTime() {
+
+  async downTime() {
     this.isRun = true
     const innter = this.$refs.getcode as any
-    if (this.second == 0) {
-      innter.innerText = '重新获取验证码'
-      this.second = 10
-      this.isRun = false
-    } else {
-      this.second = this.second - 1
-      innter.innerText = this.second + 's'
 
-      this.clearTime = setTimeout(() => {
-        this.downTime()
-      }, 1000)
-    }
+    await countDown(10, sec => {
+      this.second = sec
+      innter.innerText = this.second + 's'
+    })
+
+    innter.innerText = '重新获取验证码'
+    this.isRun = false
+
+    // this.isRun = true
+    // const innter = this.$refs.getcode as any
+    // if (this.second == 0) {
+    //   innter.innerText = '重新获取验证码'
+    //   this.second = 10
+    //   this.isRun = false
+    // } else {
+    //   this.second = this.second - 1
+    //   innter.innerText = this.second + 's'
+
+    //   this.clearTime = setTimeout(() => {
+    //     this.downTime()
+    //   }, 1000)
+    // }
   }
   getCode() {
     const reg = new RegExp(
@@ -175,6 +190,6 @@ export default class Main extends View {
       .form-input;
     }
   }
-  
+
 }
 </style>

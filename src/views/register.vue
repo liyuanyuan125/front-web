@@ -12,7 +12,7 @@
     <div class="regStep">
       <component :is="currentView"></component>
       <Button v-if="!current==2" type='warning' long class='submit'>下一步</Button>
-      <div class="regSubmit" v-else> 
+      <div class="regSubmit" v-else>
         <Button type='warning' >稍后补充</Button>
         <Button type='warning' >注册完成</Button>
       </div>
@@ -29,6 +29,7 @@ import footerCom from '../components/header/footer.vue'
 import firstStep from '../components/register/firstStep.vue'
 import secondStep from '../components/register/secondStep.vue'
 import thressStep from '../components/register/threeStep.vue'
+
 @Component({
   components: {
     headerCom,
@@ -39,8 +40,8 @@ import thressStep from '../components/register/threeStep.vue'
   }
 })
 export default class Main extends View {
-  currentView = 'thressStep'
-  current = 2
+  currentView = 'firstStep'
+  current = 0
 }
 </script>
 <style lang='less' scoped>
