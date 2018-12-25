@@ -25,13 +25,13 @@
             <div :class='{active:!activeTab}' @click='tabs(2)'>我是资源方</div>
           </div>
          <Form :model='form' :rules='rules' ref='form' class='form'>
-           <FormItem prop='email'>
+           <FormItem prop='email' :error="emailError">
             <Input type='email' v-model='form.email'  prefix='md-person' placeholder='请输入邮箱'/>
            </FormItem>
            <FormItem prop='password'>
             <Input type='password' v-model='form.password'  prefix='ios-unlock-outline' placeholder='请输入密码' />
            </FormItem>
-           <FormItem prop='code'>
+           <FormItem prop='code' :error="codeError">
             <Input class='code' type='text' v-model='form.code' prefix=''  placeholder='请输入右图验证码' />
            </FormItem>
             <Button type='warning' long @click="submit('form')" class="submit">登录</Button>
@@ -49,6 +49,8 @@
 <script lang='ts'>
 import { Component } from 'vue-property-decorator'
 import View from '@/util/View'
+import { login } from '@/api/auth'
+import { setUser } from '@/store'
 
 @Component
 export default class Main extends View {
@@ -57,6 +59,10 @@ export default class Main extends View {
     password: '',
     code: ''
   }
+
+  emailError = ''
+  codeError = ''
+
   activeTab = true
   rules = {
     email: [
@@ -74,16 +80,37 @@ export default class Main extends View {
     ],
     code: [{ required: true, message: '请输入你的验证码', trigger: 'blur' }]
   }
+
   tabs(val: number) {
     val === 2 ? this.activeTab = false : this.activeTab = true
 
     // https://router.vuejs.org/zh/api/#router-link
   }
+
   async submit() {
     const valid = await (this.$refs.form as any).validate()
     if (valid) {
-      this.$router.push({name: 'register'})
+      try {
+        const { data: { user } } = await login({
+          username: this.form.email,
+          password: this.form.password,
+          imageCode: this.form.code
+        })
+        setUser(user)
+        debugger
+        this.$router.push({ name: 'register' })
+      } catch (ex) {
+        (this as any)[`onAjax${ex.code}`].call(this, ex)
+      }
     }
+  }
+
+  onAjax600600() {
+    this.emailError = '邮箱不存在'
+  }
+
+  onAjax600608() {
+    this.codeError = '验证码不正确'
   }
 }
 </script>
@@ -193,6 +220,6 @@ export default class Main extends View {
       left:0;
     }
   }
- 
+
 }
 </style>
