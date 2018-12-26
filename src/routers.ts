@@ -17,8 +17,13 @@ const router = new Router({
     {
       path: '/regsucess',
       name: 'regsucess',
-      component: () => import('./components/register/regsucess.vue')
+      component: () => import('./views/register/regsucess.vue')
     },
+    {
+      path: '/forgetpass',
+      name: 'forgetpass',
+      component: () => import('./views/forgetPassword.vue')
+    }
   ]
 })
 

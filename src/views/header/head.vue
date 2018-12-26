@@ -12,6 +12,7 @@
   .wid-auto;
   .toLogin{
     text-align:right;
+    font-size:15px;
   }
 }
 </style>
