@@ -1,29 +1,25 @@
 <template>
-  <div  class="firstNext">
+  <div>
     <com-header></com-header>
-    <Form
-     
-      ref="form"
-      :model="form"
-      :rules="rulesfrom"
-      label-position="left"
-      :label-width="120"
-    >
-      <FormItem label="登录邮箱" prop="email">
-        <Input v-model="form.email" placeholder="请输入登录邮箱"></Input>
-      </FormItem>
-      <FormItem label="邮箱验证码" prop="emailCode" class="getEmailCode">
-        <Input v-model="form.emailCode" :maxlength="6" placeholder="请输入邮箱验证码"></Input>
-        <span @click="getCode">{{codeMess}}</span>
-      </FormItem>
-      <FormItem label="密码" prop="password">
-        <Input v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合"></Input>
-      </FormItem>
-      <FormItem label="重复密码" prop="confirm">
-        <Input v-model="form.confirm" :maxlength="16" placeholder="请再次输入密码"></Input>
-      </FormItem>
-    </Form>
-    <Button type="warning" @click="next" long class="submit">下一步</Button>
+    <div class="forgetpass">找回密码</div>
+    <div class="firstNext">
+      <Form ref="form" :model="form" :rules="rulesfrom" label-position="left" :label-width="120">
+        <FormItem label="登录邮箱" prop="email">
+          <Input v-model="form.email" placeholder="请输入登录邮箱"/>
+        </FormItem>
+        <FormItem label="邮箱验证码" prop="emailCode" class="getEmailCode">
+          <Input v-model="form.emailCode" :maxlength="6" placeholder="请输入邮箱验证码"/>
+          <span @click="getCode">{{codeMess}}</span>
+        </FormItem>
+        <FormItem label="密码" prop="password">
+          <Input v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合"></Input>
+        </FormItem>
+        <FormItem label="重复密码" prop="confirm">
+          <Input v-model="form.confirm" :maxlength="16" placeholder="请再次输入密码"></Input>
+        </FormItem>
+      </Form>
+      <Button type="warning" @click="next" long class="submit">下一步</Button>
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -87,15 +83,23 @@ export default class Main extends View {
 </script>
 <style lang="less" scoped>
 @import '../site/login.less';
+.forgetpass{
+  .wid-auto;
+  text-align: center;
+  font-size:15px;
+  color: @theme-color;
+  border-bottom: solid 1px #EFEFEF;
+  padding: 50px 0 20px;
+}
 .firstNext {
   width: 600px;
   margin: 80px auto 40px;
-  .submit{
-      .form-btn
+  .submit {
+    .form-btn;
+    margin-top:30px;
   }
   & > form {
     margin-top: 40px;
-    border-bottom: 1px solid rgba(239, 239, 239, 1);
   }
   /deep/ .ivu-select-selection {
     height: 50px;
@@ -146,9 +150,9 @@ export default class Main extends View {
     /deep/ input {
       .form-input;
     }
-   /deep/ button{
-        height: 50px;
-        line-height: 50px;
+    /deep/ button {
+      height: 50px;
+      line-height: 50px;
     }
   }
 }

@@ -47,7 +47,7 @@ export default class Main extends View {
 }
 .steps {
   border-bottom: solid 1px #efefef;
-  padding-bottom: 20px;
+  padding: 50px 0 20px;
   .wid-auto;
   /deep/ .ivu-steps .ivu-steps-tail > i {
     position: relative;
