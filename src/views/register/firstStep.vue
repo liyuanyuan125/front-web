@@ -17,7 +17,7 @@
         <span @click="getCode">{{codeMess}}</span>
       </FormItem>
       <FormItem label="密码" prop="password">
-        <Input v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合"></Input>
+        <Input v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"></Input>
       </FormItem>
       <FormItem label="重复密码" prop="confirm">
         <Input v-model="form.confirm" :maxlength="16" placeholder="请再次输入密码"></Input>
@@ -55,6 +55,7 @@ import { Component, Watch } from 'vue-property-decorator'
 import View from '@/util/View'
 import { countDown } from '@/fn/timer'
 import { email } from '@/util/common.ts'
+import { validatePassword } from '@/util/validateRules'
 
 @Component
 export default class Main extends View {
@@ -99,7 +100,20 @@ export default class Main extends View {
     emailCode: [
       { required: true, message: '请输入邮箱验证码', trigger: 'blur' }
     ],
-    password: [{ required: true, message: '请输入你的密码', trigger: 'blur' }],
+    password: [
+      {
+        required: true,
+        message: '请输入你的密码',
+        trigger: 'blur'
+      },
+      {
+        trigger: 'blur',
+        validator(rule: any, value: string, callback: any) {
+          const msg = validatePassword(value)
+          msg ? callback(new Error(msg)) : callback()
+        }
+      },
+    ],
     confirm: [{ required: true, message: '请再次输入密码', trigger: 'blur' }],
     companyName: [
       { required: true, message: '请输入您的公司名称', trigger: 'blur' }
