@@ -5,27 +5,24 @@ stages:
   - deploy
 
 variables:
-  SERVICE_NAME: aiads-iadp-admin-web
-
-before_script:
-  - export COMMIT_SHA=${CI_COMMIT_SHA:0:8}
+  SERVICE_NAME: iadp-front-web
 
 lint:
-  image: $REGISTRY_ADDRESS/ai/devops/nodejs/build
+  image: $REGISTRY_ADDRESS/devops/nodejs/build
   stage: lint
-  only:
-    - testing
-    - release
   script:
     - yarn && yarn lint
+  only:
+    - develop
+    - release
   tags:
     - nodejs
 
 build:
-  image: $REGISTRY_ADDRESS/ai/devops/nodejs/build
+  image: $REGISTRY_ADDRESS/devops/nodejs/build
   stage: build
   only:
-    - testing
+    - develop
     - release
   script:
     - yarn && yarn build
@@ -38,12 +35,12 @@ build:
     - nodejs
 
 package:
-  image: $REGISTRY_ADDRESS/ai/devops/docker/package:1.0
+  image: $REGISTRY_ADDRESS/devops/docker/package:1.0
   stage: package
   variables:
     GIT_STRATEGY: none
   only:
-    - testing
+    - develop
     - release
   script:
     - package
@@ -51,16 +48,16 @@ package:
     - docker
 
 deploy:
-  image: $REGISTRY_ADDRESS/ai/devops/docker/deploy
+  image: $REGISTRY_ADDRESS/devops/docker/deploy
   stage: deploy
   variables:
     GIT_STRATEGY: none
   dependencies: []
   only:
-    - testing
+    - develop
     - release
   script:
-    - deploy -service $SERVICE_NAME -image $REGISTRY_ADDRESS/ai/$CI_PROJECT_PATH:$COMMIT_SHA
+    - deploy -service $SERVICE_NAME
   environment: aiads-dev
   tags:
     - docker
