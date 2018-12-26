@@ -61,7 +61,7 @@ export default class Main extends View {
   }
   downTime() {
     this.isRun = true
-    const innter = this.$refs.getcode as any
+    const innter  = this.$refs.getcode as any
     if (this.second == 0) {
       innter.innerText = '重新获取验证码'
       this.second = 10
