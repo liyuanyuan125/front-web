@@ -13,17 +13,17 @@
         <Input v-model="form.email" placeholder="请输入登录邮箱"/>
       </FormItem>
       <FormItem label="邮箱验证码" prop="emailCode" class="getEmailCode">
-        <Input v-model="form.emailCode" :maxlength="6" placeholder="请输入邮箱验证码"></Input>
+        <Input v-model="form.emailCode" :maxlength="6" placeholder="请输入邮箱验证码"/>
         <span @click="getCode">{{codeMess}}</span>
       </FormItem>
       <FormItem label="密码" prop="password">
-        <Input v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"></Input>
+        <Input v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位" />
       </FormItem>
       <FormItem label="重复密码" prop="confirm">
-        <Input v-model="form.confirm" :maxlength="16" placeholder="请再次输入密码"></Input>
+        <Input v-model="form.confirm" :maxlength="16" placeholder="请再次输入密码">
       </FormItem>
       <FormItem label="公司名称" prop="companyName">
-        <Input v-model="form.companyName" placeholder="请输入公司名称，并与营业执照保持一致"></Input>
+        <Input v-model="form.companyName" placeholder="请输入公司名称，并与营业执照保持一致"/>
       </FormItem>
       <FormItem label="公司所在地" prop="city">
         <Select v-model="form.city">
@@ -31,13 +31,13 @@
         </Select>
       </FormItem>
       <FormItem label="联系人姓名" prop="personName">
-        <Input v-model="form.personName" placeholder="请输入您的姓名"></Input>
+        <Input v-model="form.personName" placeholder="请输入您的姓名" />
       </FormItem>
       <FormItem label="手机号码" prop="mobile">
-        <Input v-model="form.mobile" placeholder="请输入您的手机号码"></Input>
+        <Input v-model="form.mobile" placeholder="请输入您的手机号码" />
       </FormItem>
       <FormItem label="个人邮箱" prop="personEmail">
-        <Input v-model="form.personEmail" placeholder="请输入您的个人邮箱"></Input>
+        <Input v-model="form.personEmail" placeholder="请输入您的个人邮箱" />
       </FormItem>
       <FormItem>
         <p>
@@ -163,7 +163,7 @@ export default class Main extends ViewBase {
   display: inline-block;
   width: 275px;
   height: 120px;
-  border: solid 1px #ffffff;
+  border: solid 1px #fff;
   background-size: contain;
 }
 .imghover {
@@ -231,6 +231,7 @@ export default class Main extends ViewBase {
   }
   .adver {
     .imgstyle;
+
     background: url('../../assets/advertising.png') no-repeat;
     &:hover {
       .imghover;
@@ -238,6 +239,7 @@ export default class Main extends ViewBase {
   }
   .resource {
     .imgstyle;
+
     background: url('../../assets/resource.png') no-repeat;
     &:hover {
       .imghover;
@@ -251,14 +253,14 @@ export default class Main extends ViewBase {
       width: 260px;
     }
     /deep/ span {
+      .form-input;
       width: 200px;
       display: block;
-      .form-input;
       cursor: pointer;
       line-height: 50px;
       border: solid 1px #dcdee2;
       text-align: center;
-      background: #ffffff;
+      background: #fff;
       position: absolute;
       right: 0;
       top: 0;
@@ -273,8 +275,6 @@ export default class Main extends ViewBase {
   }
   .ivu-checkbox-wrapper {
     font-size: 14px;
-  }
-  .ivu-input-wrapper {
     /deep/ input {
       .form-input;
     }

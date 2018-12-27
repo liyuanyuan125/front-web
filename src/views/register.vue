@@ -2,10 +2,10 @@
 <template>
   <div class="maxHeight">
     <header-com></header-com>
-    <div class='steps'>
-      <Steps :current='current'>
-        <Step title='创建帐号' style='width:48%'></Step>
-        <Step title='补充资质' style='width:48%'></Step>
+    <div class="steps">
+      <Steps :current="current">
+        <Step title="创建帐号" style="width:48%"></Step>
+        <Step title="补充资质" style="width:48%"></Step>
       </Steps>
     </div>
     <div class="regStep">
@@ -42,7 +42,7 @@ export default class Main extends ViewBase {
 </script>
 <style lang='less' scoped>
 @import '../site/login.less';
-.maxHeight{
+.maxHeight {
   height: 100%;
 }
 .steps {
@@ -75,21 +75,21 @@ export default class Main extends ViewBase {
   /deep/ .ivu-steps-item.ivu-steps-status-process .ivu-steps-title {
     color: @text-color;
   }
-  /deep/ .ivu-steps .ivu-steps-head-inner>.ivu-steps-icon.ivu-icon{
+  /deep/ .ivu-steps .ivu-steps-head-inner > .ivu-steps-icon.ivu-icon {
     position: relative;
     font-size: 22px;
-    top:-4px;
+    top: -4px;
     left: -4px;
   }
 }
-.regStep{
+.regStep {
   margin-bottom: 80px;
 
-    /deep/ .submit {
+  /deep/ .submit {
     width: 600px;
     display: block;
     margin: 0 auto;
     .form-btn;
-    }
   }
+}
 </style>

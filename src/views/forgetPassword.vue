@@ -12,10 +12,10 @@
           <span @click="getCode">{{codeMess}}</span>
         </FormItem>
         <FormItem label="密码" prop="password">
-          <Input v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合"></Input>
+          <Input v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合"/>
         </FormItem>
         <FormItem label="重复密码" prop="confirm">
-          <Input v-model="form.confirm" :maxlength="16" placeholder="请再次输入密码"></Input>
+          <Input v-model="form.confirm" :maxlength="16" placeholder="请再次输入密码"/>
         </FormItem>
       </Form>
       <Button type="warning" @click="next" long class="submit">下一步</Button>
@@ -83,12 +83,14 @@ export default class Main extends ViewBase {
 </script>
 <style lang="less" scoped>
 @import '../site/login.less';
-.forgetpass{
+
+.forgetpass {
   .wid-auto;
+
   text-align: center;
-  font-size:15px;
+  font-size: 15px;
   color: @theme-color;
-  border-bottom: solid 1px #EFEFEF;
+  border-bottom: solid 1px #efefef;
   padding: 50px 0 20px;
 }
 .firstNext {
@@ -96,7 +98,8 @@ export default class Main extends ViewBase {
   margin: 80px auto 40px;
   .submit {
     .form-btn;
-    margin-top:30px;
+
+    margin-top: 30px;
   }
   & > form {
     margin-top: 40px;
@@ -118,41 +121,37 @@ export default class Main extends ViewBase {
   .getEmailCode {
     .ivu-input-wrapper {
       width: auto;
-    }
-    /deep/ input {
-      width: 260px;
-    }
-    /deep/ span {
-      width: 200px;
-      display: block;
-      .form-input;
-      cursor: pointer;
-      line-height: 50px;
-      border: solid 1px #dcdee2;
-      text-align: center;
-      background: #ffffff;
-      position: absolute;
-      right: 0;
-      top: 0;
-      color: @theme-color;
+      font-size: 14px;
+      /deep/ input {
+        .form-input;
+
+        width: 260px;
+      }
+      /deep/ button {
+        height: 50px;
+        line-height: 50px;
+      }
+      /deep/ span {
+        width: 200px;
+        display: block;
+        .form-input;
+
+        cursor: pointer;
+        line-height: 50px;
+        border: solid 1px #dcdee2;
+        text-align: center;
+        background: #fff;
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: @theme-color;
+      }
     }
   }
   .ivu-form-item {
     margin-bottom: 40px;
     /deep/ .ivu-form-item-label {
       .form-label;
-    }
-  }
-  .ivu-checkbox-wrapper {
-    font-size: 14px;
-  }
-  .ivu-input-wrapper {
-    /deep/ input {
-      .form-input;
-    }
-    /deep/ button {
-      height: 50px;
-      line-height: 50px;
     }
   }
 }

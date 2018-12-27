@@ -37,7 +37,7 @@ export default class Main extends ViewBase {
 </script>
 <style lang="less" scoped>
 .flex {
-  color: #222222;
+  color: #222;
   font-size: 24px;
   text-align: center;
   width: 100%;
