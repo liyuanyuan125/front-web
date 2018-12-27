@@ -275,42 +275,5 @@ export default class Main extends ViewBase {
       .imghover;
     }
   }
-<<<<<<< HEAD
-=======
-  .getEmailCode {
-    .ivu-input-wrapper {
-      width: auto;
-    }
-    /deep/ input {
-      width: 260px;
-    }
-    /deep/ span {
-      .form-input;
-      width: 200px;
-      display: block;
-      cursor: pointer;
-      line-height: 50px;
-      border: solid 1px #dcdee2;
-      text-align: center;
-      background: #fff;
-      position: absolute;
-      right: 0;
-      top: 0;
-      color: @theme-color;
-    }
-  }
-  .ivu-form-item {
-    margin-bottom: 40px;
-    /deep/ .ivu-form-item-label {
-      .form-label;
-    }
-  }
-  .ivu-checkbox-wrapper {
-    font-size: 14px;
-    /deep/ input {
-      .form-input;
-    }
-  }
->>>>>>> 2678fb68667e9fab28a4c1f43ebba8b1ec01fda2
 }
 </style>
