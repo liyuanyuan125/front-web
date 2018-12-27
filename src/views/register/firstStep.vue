@@ -275,8 +275,6 @@ export default class Main extends ViewBase {
       .imghover;
     }
   }
-<<<<<<< HEAD
-=======
   .getEmailCode {
     .ivu-input-wrapper {
       width: auto;
@@ -311,6 +309,5 @@ export default class Main extends ViewBase {
       .form-input;
     }
   }
->>>>>>> 2678fb68667e9fab28a4c1f43ebba8b1ec01fda2
 }
 </style>
