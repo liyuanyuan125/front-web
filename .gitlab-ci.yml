@@ -35,7 +35,7 @@ build:
     - nodejs
 
 package:
-  image: $REGISTRY_ADDRESS/devops/docker/package:1.0
+  image: $REGISTRY_ADDRESS/devops/docker/package
   stage: package
   variables:
     GIT_STRATEGY: none
