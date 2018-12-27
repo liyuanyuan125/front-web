@@ -7,9 +7,14 @@
         <FormItem label="登录邮箱" prop="email">
           <Input v-model="form.email" placeholder="请输入登录邮箱"/>
         </FormItem>
-        <FormItem label="邮箱验证码" prop="emailCode" class="getEmailCode">
-          <Input v-model="form.emailCode" :maxlength="6" placeholder="请输入邮箱验证码"/>
-          <span @click="getCode">{{codeMess}}</span>
+        <FormItem label="邮箱验证码" prop="emailCode">
+          <Input
+            v-model="form.emailCode"
+            :maxlength="6"
+            style="width:260px;"
+            placeholder="请输入邮箱验证码"
+          />
+          <span @click="getCode" class="codemess">{{codeMess}}</span>
         </FormItem>
         <FormItem label="密码" prop="password">
           <Input v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合"/>
@@ -25,9 +30,9 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import View from '@/util/View'
-import comHeader from '../views/header/head.vue'
 import { countDown } from '@/fn/timer'
 import { email } from '@/util/common.ts'
+import comHeader from '@/views/header/head.vue'
 
 @Component({
   components: {
@@ -103,55 +108,31 @@ export default class Main extends View {
   }
   & > form {
     margin-top: 40px;
-  }
-  /deep/ .ivu-select-selection {
-    height: 50px;
-  }
-  /deep/ .ivu-select-selected-value {
-    height: 50px;
-    line-height: 50px;
-    font-size: 15px;
-  }
-  /deep/ .ivu-select-placeholder {
-    height: 50px;
-    line-height: 50px;
-    font-size: 15px;
-  }
-
-  .getEmailCode {
-    .ivu-input-wrapper {
-      width: auto;
-      font-size: 14px;
-      /deep/ input {
-        .form-input;
-
-        width: 260px;
+    .ivu-form-item {
+      margin-bottom: 40px;
+      /deep/.ivu-form-item-label {
+        .form-label;
       }
-      /deep/ button {
-        height: 50px;
-        line-height: 50px;
-      }
-      /deep/ span {
-        width: 200px;
-        display: block;
-        .form-input;
+      /deep/ .ivu-form-item-content {
+        input {
+          .form-input;
+        }
+        span.codemess {
+          width: 200px;
+          display: block;
+          .form-input;
 
-        cursor: pointer;
-        line-height: 50px;
-        border: solid 1px #dcdee2;
-        text-align: center;
-        background: #fff;
-        position: absolute;
-        right: 0;
-        top: 0;
-        color: @theme-color;
+          cursor: pointer;
+          line-height: 50px;
+          border: solid 1px #dcdee2;
+          text-align: center;
+          background: #fff;
+          position: absolute;
+          right: 0;
+          top: 0;
+          color: @theme-color;
+        }
       }
-    }
-  }
-  .ivu-form-item {
-    margin-bottom: 40px;
-    /deep/ .ivu-form-item-label {
-      .form-label;
     }
   }
 }

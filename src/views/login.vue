@@ -3,7 +3,7 @@
     <header>
       <div class="nav">
         <div class="logo">
-          <img src="../assets/logo.png" height="44px">
+          <img src="~@/assets/login/logo.png" alt="alias" height="44px">
         </div>
         <div class="navTitle">
           <router-link tag="span" to>概览</router-link>
@@ -16,10 +16,10 @@
     <content class="content">
       <div class="mainAuto">
         <div>
-          <img src="../assets/bannerlogo.png" height="115px">
+          <img src="~@/assets/login/bannerlogo.png" alt="alias" height="115px">
           <br>
           <router-link to="/register">
-            <img src="../assets/bannerbtn.png" height="50px">
+            <img src="~@/assets/login/bannerbtn.png" alt="alias" height="50px">
           </router-link>
         </div>
         <div>
@@ -130,7 +130,7 @@ export default class Main extends View {
 </script>
 
 <style lang='less' scoped>
-@import '../site/login.less';
+@import '~@/site/login.less';
 
 .loginHome {
   height: 100%;
@@ -183,7 +183,7 @@ export default class Main extends View {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: url('../assets/loginBg.png') no-repeat center;
+    background: url('~@/assets/login/loginBg.png') no-repeat center;
     background-size: cover;
     .mainAuto {
       .wid-auto;

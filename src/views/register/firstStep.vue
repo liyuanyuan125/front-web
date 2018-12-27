@@ -12,15 +12,15 @@
       <FormItem label="登录邮箱" prop="email">
         <Input v-model="form.email" placeholder="请输入登录邮箱"/>
       </FormItem>
-      <FormItem label="邮箱验证码" prop="emailCode" class="getEmailCode">
-        <Input v-model="form.emailCode" :maxlength="6" placeholder="请输入邮箱验证码"/>
-        <span @click="getCode">{{codeMess}}</span>
+      <FormItem label="邮箱验证码" prop="emailCode">
+        <Input v-model="form.emailCode" :maxlength="6" style="width:260px;" placeholder="请输入邮箱验证码"/>
+        <span @click="getCode" class="codemess">{{codeMess}}</span>
       </FormItem>
       <FormItem label="密码" prop="password">
-        <Input v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位" />
+        <Input v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"/>
       </FormItem>
       <FormItem label="重复密码" prop="confirm">
-        <Input v-model="form.confirm" :maxlength="16" placeholder="请再次输入密码">
+        <Input v-model="form.confirm" :maxlength="16" placeholder="请再次输入密码"/>
       </FormItem>
       <FormItem label="公司名称" prop="companyName">
         <Input v-model="form.companyName" placeholder="请输入公司名称，并与营业执照保持一致"/>
@@ -31,13 +31,13 @@
         </Select>
       </FormItem>
       <FormItem label="联系人姓名" prop="personName">
-        <Input v-model="form.personName" placeholder="请输入您的姓名" />
+        <Input v-model="form.personName" placeholder="请输入您的姓名"/>
       </FormItem>
       <FormItem label="手机号码" prop="mobile">
-        <Input v-model="form.mobile" placeholder="请输入您的手机号码" />
+        <Input v-model="form.mobile" placeholder="请输入您的手机号码"/>
       </FormItem>
       <FormItem label="个人邮箱" prop="personEmail">
-        <Input v-model="form.personEmail" placeholder="请输入您的个人邮箱" />
+        <Input v-model="form.personEmail" placeholder="请输入您的个人邮箱"/>
       </FormItem>
       <FormItem>
         <p>
@@ -112,9 +112,17 @@ export default class Main extends View {
           const msg = validatePassword(value)
           msg ? callback(new Error(msg)) : callback()
         }
-      },
+      }
     ],
-    confirm: [{ required: true, message: '请再次输入密码', trigger: 'blur' }],
+    confirm: [
+      { required: true, message: '请再次输入密码', trigger: 'blur' },
+      {
+        trigger: 'blur',
+        validator(rule: any, value: string, callback: any, source: any) {
+          const msg = (this as any).form.password
+        }
+      }
+    ],
     companyName: [
       { required: true, message: '请输入您的公司名称', trigger: 'blur' }
     ],
@@ -207,19 +215,41 @@ export default class Main extends View {
   & > form {
     margin-top: 40px;
     border-bottom: 1px solid rgba(239, 239, 239, 1);
-  }
-  /deep/ .ivu-select-selection {
-    height: 50px;
-  }
-  /deep/ .ivu-select-selected-value {
-    height: 50px;
-    line-height: 50px;
-    font-size: 15px;
-  }
-  /deep/ .ivu-select-placeholder {
-    height: 50px;
-    line-height: 50px;
-    font-size: 15px;
+    .ivu-form-item {
+      margin-bottom: 40px;
+      /deep/ .ivu-form-item-label {
+        .form-label;
+      }
+      /deep/ .ivu-form-item-content {
+        /deep/ .ivu-select-selection {
+          height: 50px;
+          line-height: 50px;
+          .ivu-select-placeholder {
+            height: 50px;
+            line-height: 50px;
+            font-size: 15px;
+          }
+        }
+        input {
+          .form-input;
+        }
+        span.codemess {
+          width: 200px;
+          display: block;
+          .form-input;
+
+          cursor: pointer;
+          line-height: 50px;
+          border: solid 1px #dcdee2;
+          text-align: center;
+          background: #fff;
+          position: absolute;
+          right: 0;
+          top: 0;
+          color: @theme-color;
+        }
+      }
+    }
   }
   .row {
     label.active {
@@ -232,7 +262,7 @@ export default class Main extends View {
   .adver {
     .imgstyle;
 
-    background: url('../../assets/advertising.png') no-repeat;
+    background: url('../../assets/login/advertising.png') no-repeat;
     &:hover {
       .imghover;
     }
@@ -240,44 +270,9 @@ export default class Main extends View {
   .resource {
     .imgstyle;
 
-    background: url('../../assets/resource.png') no-repeat;
+    background: url('../../assets/login/resource.png') no-repeat;
     &:hover {
       .imghover;
-    }
-  }
-  .getEmailCode {
-    .ivu-input-wrapper {
-      width: auto;
-    }
-    /deep/ input {
-      width: 260px;
-    }
-    /deep/ span {
-      width: 200px;
-      display: block;
-      .form-input;
-      
-      cursor: pointer;
-      line-height: 50px;
-      border: solid 1px #dcdee2;
-      text-align: center;
-      background: #fff;
-      position: absolute;
-      right: 0;
-      top: 0;
-      color: @theme-color;
-    }
-  }
-  .ivu-form-item {
-    margin-bottom: 40px;
-    /deep/ .ivu-form-item-label {
-      .form-label;
-    }
-  }
-  .ivu-checkbox-wrapper {
-    font-size: 14px;
-    /deep/ input {
-      .form-input;
     }
   }
 }
