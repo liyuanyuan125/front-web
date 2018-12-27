@@ -21,7 +21,7 @@ export default class App extends View {
 <style lang="less" scoped>
 .app {
   position: relative;
-  width:100%;
+  width: 100%;
   height: 100%;
 }
 </style>

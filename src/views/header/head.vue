@@ -17,9 +17,9 @@
 </template>
 <style lang="less" scoped>
 @import '../../site/login.less';
-.bgHei{
+.bgHei {
   height: 20px;
-  background: #F6F7FD;
+  background: #f6f7fd;
 }
 .header {
   .wid-auto;
