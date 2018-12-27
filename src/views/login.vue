@@ -60,12 +60,12 @@
 
 <script lang='ts'>
 import { Component } from 'vue-property-decorator'
-import View from '@/util/View'
+import ViewBase from '@/util/ViewBase'
 import { login } from '@/api/auth'
 import { setUser } from '@/store'
 
 @Component
-export default class Main extends View {
+export default class Main extends ViewBase {
   form = {
     email: '',
     password: '',

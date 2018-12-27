@@ -1,4 +1,4 @@
-import { Vue } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { alert } from '@/ui/modal'
 
 const ignoreCodes = { 401: 1, 403: 1 }
@@ -6,7 +6,8 @@ const ignoreCodes = { 401: 1, 403: 1 }
 /**
  * 本系统所有页面、组件的基类
  */
-export default class View extends Vue {
+@Component
+export default class ViewBase extends Vue {
   /**
    * 显示错误信息
    * @param msg 错误信息
@@ -15,11 +16,13 @@ export default class View extends Vue {
     alert(msg, { title: '出错了' })
   }
 
-  // 警告提示用户信息
+  /**
+   * 显示警告信息
+   * @param msg 警告信息
+   */
   showWaring(msg: string) {
-    alert(msg, {type: 'warning', title: '提示'})
+    alert(msg, { type: 'warning', title: '提示' })
   }
-
   /**
    * 将错误格式化成字符串
    * @param ex 错误对象

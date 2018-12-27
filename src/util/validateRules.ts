@@ -39,3 +39,5 @@ export function validatePassword(value: string): string | undefined {
     return '密码不合法，合法的密码：8-16 位大小写字母、数字组合'
   }
 }
+
+// 重复密码的判断

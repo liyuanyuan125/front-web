@@ -4,13 +4,13 @@
 
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
-import View from '@/util/View'
+import ViewBase from '@/util/ViewBase'
 import event from '@/fn/event'
 
 import { get, post } from '@/fn/ajax'
 
 @Component
-export default class Main extends View {
+export default class Main extends ViewBase {
   async mounted() {
     // const { data } = await get('/mock/29230/demo/user_list', {
     //   page: 8,

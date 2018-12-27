@@ -16,8 +16,8 @@
 </template>
 
 <script lang='ts'>
-import { Component, Watch } from 'vue-property-decorator'
-import View from '@/util/View'
+import { Component, Watch} from 'vue-property-decorator'
+import ViewBase from '@/util/ViewBase'
 import footerCom from '../views/header/footer.vue'
 import headerCom from '../views/header/head.vue'
 import firstStep from '../views/register/firstStep.vue'
@@ -31,7 +31,7 @@ import thressStep from '../views/register/threeStep.vue'
     thressStep
   }
 })
-export default class Main extends View {
+export default class Main extends ViewBase {
   currentView = 'firstStep'
   current = 0
   iscurrent(val: any) {
