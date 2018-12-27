@@ -24,7 +24,7 @@
 </template>
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
-import View from '@/util/View'
+import ViewBase from '@/util/ViewBase'
 import comHeader from '../views/header/head.vue'
 import { countDown } from '@/fn/timer'
 import { email } from '@/util/common.ts'
@@ -34,7 +34,7 @@ import { email } from '@/util/common.ts'
     comHeader
   }
 })
-export default class Main extends View {
+export default class Main extends ViewBase {
   codeMess = '获取邮箱验证码'
   isRun = false
 

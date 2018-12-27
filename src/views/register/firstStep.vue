@@ -10,7 +10,7 @@
     </Row>
     <Form ref="form" :model="form" :rules="rulesfrom" label-position="left" :label-width="120">
       <FormItem label="登录邮箱" prop="email">
-        <Input v-model="form.email" placeholder="请输入登录邮箱"></Input>
+        <Input v-model="form.email" placeholder="请输入登录邮箱"/>
       </FormItem>
       <FormItem label="邮箱验证码" prop="emailCode" class="getEmailCode">
         <Input v-model="form.emailCode" :maxlength="6" placeholder="请输入邮箱验证码"></Input>
@@ -52,13 +52,13 @@
 </template>
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
-import View from '@/util/View'
+import ViewBase from '@/util/ViewBase'
 import { countDown } from '@/fn/timer'
 import { email } from '@/util/common.ts'
 import { validatePassword } from '@/util/validateRules'
 
 @Component
-export default class Main extends View {
+export default class Main extends ViewBase {
   single = true
   isRun = false
   codeMess = '获取邮箱验证码'

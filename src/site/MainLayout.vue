@@ -48,11 +48,11 @@
 
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
-import View from '@/util/View'
+import ViewBase from '@/util/ViewBase'
 import { logout } from '@/store'
 
 @Component
-export default class App extends View {
+export default class App extends ViewBase {
   isOff = false
 
   siderMenuList = [
@@ -225,40 +225,5 @@ export default class App extends View {
       }
     }
   }
-  // a {
-  //   position: absolute;
-  //   top: 0;
-  //   left: 0;
-  //   width: 100%;
-  //   height: 100%;
-  // }
-  // span {
-  //   display: inline-block;
-  //   width: 69px;
-  //   overflow: hidden;
-  //   text-overflow: ellipsis;
-  //   white-space: nowrap;
-  //   vertical-align: bottom;
-  //   transition: width .2s ease .2s;
-  // }
-  // i {
-  //   transform: translateX(0);
-  //   transition: font-size .2s ease, transform .2s ease;
-  //   vertical-align: middle;
-  //   font-size: 16px;
-  // }
 }
-
-// .sider-menu-off {
-//   span {
-//     width: 0;
-//     transition: width .2s ease;
-//   }
-//   i {
-//     transform: translateX(5px);
-//     transition: font-size .2s ease .2s, transform .2s ease .2s;
-//     vertical-align: middle;
-//     font-size: 22px;
-//   }
-// }
 </style>
