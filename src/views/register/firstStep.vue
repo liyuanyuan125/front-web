@@ -34,7 +34,7 @@
         <Input v-model="form.personName" placeholder="请输入您的姓名"/>
       </FormItem>
       <FormItem label="手机号码" prop="mobile">
-        <Input v-model="form.mobile" placeholder="请输入您的手机号码"/>
+        <Input v-model="form.mobile" :maxlength="11" placeholder="请输入您的手机号码"/>
       </FormItem>
       <FormItem label="个人邮箱" prop="personEmail">
         <Input v-model="form.personEmail" placeholder="请输入您的个人邮箱"/>
@@ -55,7 +55,7 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { countDown } from '@/fn/timer'
 import { email } from '@/util/common.ts'
-import { validatePassword } from '@/util/validateRules'
+import { validatePassword, validataTel } from '@/util/validateRules'
 
 @Component
 export default class Main extends ViewBase {
@@ -118,8 +118,9 @@ export default class Main extends ViewBase {
       { required: true, message: '请再次输入密码', trigger: 'blur' },
       {
         trigger: 'blur',
-        validator(rule: any, value: string, callback: any, source: any) {
-          const msg = (this as any).form.password
+        validator: (rule: any, value: string, callback: any) => {
+          const msg = '两次密码不一致,请重新输入'
+          value != this.form.password ? callback(new Error(msg)) : callback()
         }
       }
     ],
@@ -130,7 +131,16 @@ export default class Main extends ViewBase {
     personName: [
       { required: true, message: '请输入您的姓名', trigger: 'blur' }
     ],
-    mobile: [{ required: true, message: '请输入您的手机号', trigger: 'blur' }],
+    mobile: [
+      { required: true, message: '请输入您的手机号', trigger: 'blur' },
+      {
+        trigger: 'blur',
+        validator(rule: any, value: string, callback: any) {
+          const msg = validataTel(value)
+          msg ? callback(new Error(msg)) : callback()
+        }
+      }
+      ],
     personEmail: [
       { required: true, message: '请输入个人邮箱', trigger: 'blur' },
       { type: 'email', message: '邮箱格式有误', trigger: 'blur' }

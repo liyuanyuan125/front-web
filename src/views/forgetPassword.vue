@@ -1,6 +1,5 @@
 <template>
   <div>
-    <com-header></com-header>
     <div class="forgetpass">找回密码</div>
     <div class="firstNext">
       <Form ref="form" :model="form" :rules="rulesfrom" label-position="left" :label-width="120">
@@ -32,13 +31,9 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { countDown } from '@/fn/timer'
 import { email } from '@/util/common.ts'
-import comHeader from '@/views/header/head.vue'
+import { validatePassword } from '@/util/validateRules'
 
-@Component({
-  components: {
-    comHeader
-  }
-})
+@Component
 export default class Main extends ViewBase {
   codeMess = '获取邮箱验证码'
   isRun = false
@@ -57,8 +52,26 @@ export default class Main extends ViewBase {
     emailCode: [
       { required: true, message: '请输入邮箱验证码', trigger: 'blur' }
     ],
-    password: [{ required: true, message: '请输入你的密码', trigger: 'blur' }],
-    confirm: [{ required: true, message: '请再次输入密码', trigger: 'blur' }]
+    password: [
+      { required: true, message: '请输入你的密码', trigger: 'blur' },
+      {
+        trigger: 'blur',
+        validate(rule: any, value: string, callback: any) {
+          const msg = validatePassword(value)
+          msg ? callback(new Error(msg)) : callback()
+        }
+      }
+    ],
+    confirm: [
+      { required: true, message: '请再次输入密码', trigger: 'blur' },
+      {
+        trigger: 'blur',
+        validate: (rule: any, value: string, callback: any) => {
+          const msg = '两次密码不一致,请重新输入'
+          value != this.form.password ? callback(new Error(msg)) : callback()
+        }
+      }
+    ]
   }
   async downTime() {
     this.isRun = true

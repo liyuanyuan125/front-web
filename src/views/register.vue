@@ -1,7 +1,6 @@
 
 <template>
   <div class="maxHeight">
-    <header-com></header-com>
     <div class="steps">
       <Steps :current="current">
         <Step title="创建帐号" style="width:48%"></Step>
@@ -11,22 +10,17 @@
     <div class="regStep">
       <component :is="currentView" @iscurrent="iscurrent"></component>
     </div>
-    <footer-com></footer-com>
   </div>
 </template>
 
 <script lang='ts'>
 import { Component, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import footerCom from '../views/header/footer.vue'
-import headerCom from '../views/header/head.vue'
 import firstStep from '../views/register/firstStep.vue'
 import thressStep from '../views/register/threeStep.vue'
 
 @Component({
   components: {
-    headerCom,
-    footerCom,
     firstStep,
     thressStep
   }

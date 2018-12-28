@@ -40,4 +40,12 @@ export function validatePassword(value: string): string | undefined {
   }
 }
 
-// 重复密码的判断
+// 判断手机号格式
+export function validataTel(value: string): string | undefined {
+  const reg = /^[1][3,4,5,7,8][0-9]{9}$/
+  if (!reg.test(value)) {
+    return '输入手机号格式有误'
+  }
+}
+
+

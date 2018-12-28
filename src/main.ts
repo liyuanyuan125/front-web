@@ -7,7 +7,7 @@ import app from './app.vue'
 import Router from 'vue-router'
 import home from './views/home.vue'
 import login from './views/login.vue'
-import register from './views/register.vue'
+import Create from './views/create.vue'
 import MainLayout from './site/MainLayout.vue'
 import locale from 'iview/dist/locale/zh-CN'
 import event from './fn/event'
@@ -32,14 +32,14 @@ const router = new Router({
   // 非 MainLayout 页面放在这里，MainLayout 页面放在 routes 里
   routes: [
     {
-      path: '/login',
+      path: '/',
       name: 'login',
       component: login,
     },
     {
-      path: '/register',
-      name: 'register',
-      component: register,
+      path: '/login',
+      name: 'login',
+      component: login,
     },
     {
       path: '/regsucess',
@@ -47,12 +47,24 @@ const router = new Router({
       component: () => import('./views/register/regsucess.vue'),
     },
     {
-      path: '/forgetpass',
-      name: 'forgetpass',
-      component: () => import('./views/forgetPassword.vue')
+      path: '/',
+      name: 'create',
+      component: Create,
+      children: [
+        {
+          path: 'register',
+          name: 'register',
+          component: () => import('./views/register.vue')
+        },
+        {
+          path: 'forgetpass',
+          name: 'forgetpass',
+          component: () => import('./views/forgetPassword.vue')
+        }
+      ]
     },
     {
-      path: '/',
+      path: '/layout',
       name: 'main-layout',
       component: MainLayout,
       children: [{
