@@ -13,37 +13,40 @@
 
 /**
  * 验证密码
- * @param value 密码值
+ * @param password 密码值
  */
-export function validatePassword(value: string): string | undefined {
-  if (value === '') {
+export function validatePassword(password: string): string | undefined {
+  if (password === '') {
     return '密码不能为空'
   }
 
-  if (/\s/.test(value)) {
+  if (/\s/.test(password)) {
     return '密码不能含有空格'
   }
 
-  if (!/[a-z]/.test(value) ||
-    !/[A-Z]/.test(value) ||
-    !/\d/.test(value)) {
+  if (!/[a-z]/.test(password) ||
+    !/[A-Z]/.test(password) ||
+    !/\d/.test(password)) {
     return '密码必须大小写字母、数字组合，缺一不可'
   }
 
   // 一般直接在 input 上设置 maxlength 为 16，此处就不验证过长了，最后一条规则兜底
-  if (value.length < 8) {
+  if (password.length < 8) {
     return '密码过短，不能少于 8 位'
   }
 
-  if (!/^[a-zA-Z\d]{8,16}$/.test(value)) {
+  if (!/^[a-zA-Z\d]{8,16}$/.test(password)) {
     return '密码不合法，合法的密码：8-16 位大小写字母、数字组合'
   }
 }
 
-// 判断手机号格式
-export function validataTel(value: string): string | undefined {
-  const reg = /^[1][3,4,5,7,8][0-9]{9}$/
-  if (!reg.test(value)) {
+/**
+ * 验证中国手机号
+ * @param mobile 手机号
+ */
+export function validataTel(mobile: string): string | undefined {
+  const reg = /^[1][0-9]{10}$/
+  if (!reg.test(mobile)) {
     return '输入手机号格式有误'
   }
 }
