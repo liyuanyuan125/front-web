@@ -42,11 +42,11 @@ export function validatePassword(password: string): string | undefined {
 
 /**
  * 验证中国手机号
- * @param mobile 手机号
+ * @param tel 手机号
  */
-export function validataTel(mobile: string): string | undefined {
+export function validataTel(tel: string): string | undefined {
   const reg = /^[1][0-9]{10}$/
-  if (!reg.test(mobile)) {
+  if (!reg.test(tel)) {
     return '输入手机号格式有误'
   }
 }
