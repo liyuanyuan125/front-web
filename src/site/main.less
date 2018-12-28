@@ -1,13 +1,9 @@
-// 全局样式
-@import 'lib.less';
+/**
+ * 全局文件入口文件
+ * @author zhangpeng
+ */
 
-html, body {
-  height: 100%;
-}
-// input-select 
-.ivu-select-selection, .ivu-input{
-  border-radius: 0;
-}
-.FF1000{
-  color: #FF1000;
-}
+@import 'lib.less';
+@import 'reset.less';
+@import 'util.less';
+@import 'override.less';
