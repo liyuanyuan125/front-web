@@ -208,18 +208,14 @@ export default class App extends ViewBase {
 }
 
 .site-center {
+  position: relative;
   background-color: transparent;
-  width: 100%;
-  position: absolute;
-  left: 0;
-  top: 60px;
-  right: 0;
-  bottom: 0;
 }
 .site-sider {
   position: relative;
   background-color: @c-sider-bg;
   border-right: 1px solid #eee;
+  min-height: calc(100vh - 60px);
 }
 .site-content {
   position: relative;
