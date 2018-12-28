@@ -164,9 +164,6 @@ export default class App extends ViewBase {
 @c-menu-open: #002d5b;
 @c-sider-text: #91a5bc;
 
-.site-layout {
-  position: relative;
-}
 .site-header {
   position: relative;
   height: 60px;
@@ -211,8 +208,13 @@ export default class App extends ViewBase {
 }
 
 .site-center {
-  position: relative;
   background-color: transparent;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 60px;
+  right: 0;
+  bottom: 0;
 }
 .site-sider {
   position: relative;
