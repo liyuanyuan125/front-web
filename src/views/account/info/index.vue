@@ -1,6 +1,6 @@
 <template>
   <div class="page bgHei">
-     <com-statu :statuCode="statuCode"></com-statu>
+    <com-statu :statuCode="statuCode"></com-statu>
     <div class="content">
       <h3>登录信息</h3>
       <ul>
@@ -30,28 +30,94 @@
         </li>
       </ul>
     </div>
+    <div class="accountList">
+      <h3>账号变更记录</h3>
+      <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
+    </div>
     <div class="btnCenter">
       <button class="submitBtn">
-        <router-link tag="span" :to="{ name: 'account-info-edit' }">编辑账号信息</router-link>
+        <router-link tag="span" :to="{ name: 'account-info-edit' }">修改信息</router-link>
       </button>
     </div>
+
+    <dlgChange v-model="model" v-if="model.visibleMess"></dlgChange>
   </div>
 </template>
 
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import UrlManager from '@/util/UrlManager'
 import { infoIndex } from '@/api/info'
 import comStatu from './status.vue'
+import dlgChange from './dlgChange.vue'
 
 @Component({
   components: {
-    comStatu
+    comStatu,
+    dlgChange
   }
 })
-export default class Main extends UrlManager {
+export default class Main extends ViewBase {
   statuCode = 0
+  model = {
+    visibleMess: false
+  }
+  column = [
+    { title: '变更编号', key: 'id' },
+    { title: '账号变更提交时间', key: 'times' },
+    {
+      title: '变更前信息',
+      key: 'front',
+      render: (h: any, params: any) => {
+        return h('div', [
+          h(
+            'a',
+            {
+              style: {
+                color: '#2481D7'
+              },
+              on: {
+                click: () => {
+                  this.model.visibleMess = true
+                }
+              }
+            },
+            params.row.front
+          )
+        ])
+      }
+    },
+    { title: '变更后信息', key: 'after' },
+    { title: '审核状态', key: 'status' },
+    { title: '备注', key: 'remarks' }
+  ]
+  dataList = [
+    {
+      id: 'John Brown1',
+      times: '2016-10-03 9:00:00',
+      front: '点击查看',
+      after: '点击查看',
+      status: '1',
+      remarks: '/'
+    },
+    {
+      id: 'John Brown2',
+      times: '2016-10-03 9:00:00',
+      front: '点击查看',
+      after: '点击查看',
+      status: '1',
+      remarks: '/'
+    },
+    {
+      id: 'John Brown3',
+      times: '2016-10-03 9:00:00',
+      front: '点击查看',
+      after: '点击查看',
+      status: '1',
+      remarks: '/'
+    }
+  ]
+
   loginMes = [
     { label: '账号类型', name: '公司信息/资源方' },
     { label: '账号ID', name: '22' },
@@ -82,11 +148,11 @@ export default class Main extends UrlManager {
   }
 
   async mounted() {
-    try {
-      const {
-        data: { user }
-      } = await infoIndex()
-    } catch (ex) {}
+    // try {
+    //   const {
+    //     data: { user }
+    //   } = await infoIndex()
+    // } catch (ex) {}
   }
 }
 </script>
@@ -143,6 +209,19 @@ export default class Main extends UrlManager {
         color: @c-text;
       }
     }
+  }
+}
+
+.accountList {
+  h3 {
+    font-size: 14px;
+    height: 50px;
+    line-height: 50px;
+    padding-left: 30px;
+    background: @c-head-bg;
+  }
+  .ivu-table-wrapper {
+    margin: 30px 20px 20px;
   }
 }
 </style>
