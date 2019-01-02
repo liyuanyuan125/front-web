@@ -20,6 +20,24 @@ export default [
     name: 'account-user',
     component: () => import('./views/account/user/index.vue'),
   },
+  // 账户管理 - 用户管理 - 添加子用户
+  {
+    path: '/account/user/add',
+    name: 'account-user-add',
+    component: () => import('./views/account/user/addUser.vue')
+  },
+  // 账户管理 - 用户管理 - 编辑
+  {
+    path: '/account/user/edit',
+    name: 'account-user-edit',
+    component: () => import('./views/account/user/editUser.vue')
+  },
+  // 账户管理 - 用户管理 - 查看
+  {
+    path: '/account/user/detail',
+    name: 'account-user-detail',
+    component: () => import('./views/account/user/detailUser.vue')
+  },
 
   // 账户管理 - 权限管理
   {

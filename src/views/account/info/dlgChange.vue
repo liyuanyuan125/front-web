@@ -23,7 +23,6 @@
       </p>
       <div slot="footer" class="dialog-footer btnCenter">
         <Button type="primary" @click="closeDlg">关闭</Button>
-        <!-- <Button type="primary">确定</Button> -->
       </div>
     </Modal>
   </div>
