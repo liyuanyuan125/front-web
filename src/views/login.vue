@@ -102,20 +102,21 @@ export default class Main extends ViewBase {
   async submit() {
     const valid = await (this.$refs.form as any).validate()
     if (valid) {
-      try {
-        const {
-          data: { user }
-        } = await login({
-          username: this.form.email,
-          password: this.form.password,
-          imageCode: this.form.code
-        })
-        setUser(user)
+      this.$router.push({name: 'home'})
+      // try {
+      //   const {
+      //     data: { user }
+      //   } = await login({
+      //     username: this.form.email,
+      //     password: this.form.password,
+      //     imageCode: this.form.code
+      //   })
+      //   setUser(user)
         // debugger
         // this.$router.push({ name: 'register' })
-      } catch (ex) {
-        (this as any)[`onAjax${ex.code}`].call(this, ex)
-      }
+      // } catch (ex) {
+      //   (this as any)[`onAjax${ex.code}`].call(this, ex)
+      // }
     }
   }
 

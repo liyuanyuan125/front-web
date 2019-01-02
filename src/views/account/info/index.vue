@@ -33,14 +33,21 @@
     <div class="accountList">
       <h3>账号变更记录</h3>
       <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
+      <div class="tableSubmit">
+        <button class="submitBtn">
+          <router-link tag="span" :to="{ name: 'account-info-edit' }">修改信息</router-link>
+        </button>
+        <button class="submitBtn" @click="handleInforma">变更账号</button>
+      </div>
     </div>
-    <div class="btnCenter">
+    <div class="btnCenter" v-if="false">
       <button class="submitBtn">
         <router-link tag="span" :to="{ name: 'account-info-edit' }">修改信息</router-link>
       </button>
     </div>
 
     <dlgChange v-model="model" v-if="model.visibleMess"></dlgChange>
+    <dlgInforma v-model="informa" v-if="informa.visibleInforma"></dlgInforma>
   </div>
 </template>
 
@@ -50,17 +57,26 @@ import ViewBase from '@/util/ViewBase'
 import { infoIndex } from '@/api/info'
 import comStatu from './status.vue'
 import dlgChange from './dlgChange.vue'
+import dlgInforma from './dlgInformation.vue'
 
 @Component({
   components: {
     comStatu,
-    dlgChange
+    dlgChange,
+    dlgInforma
   }
 })
 export default class Main extends ViewBase {
   statuCode = 0
   model = {
-    visibleMess: false
+    visibleMess: false,
+    changelist: {
+      name: '北京智能',
+      type: '公司账号',
+      type2: 'xxxxx',
+      code: '88888888888888888',
+      img: []
+    }
   }
   column = [
     { title: '变更编号', key: 'id' },
@@ -87,7 +103,28 @@ export default class Main extends ViewBase {
         ])
       }
     },
-    { title: '变更后信息', key: 'after' },
+    {
+      title: '变更后信息',
+      key: 'after',
+      render: (h: any, params: any) => {
+        return h('div', [
+          h(
+            'a',
+            {
+              style: {
+                color: '#2481D7'
+              },
+              on: {
+                click: () => {
+                  this.model.visibleMess = true
+                }
+              }
+            },
+            params.row.front
+          )
+        ])
+      }
+    },
     { title: '审核状态', key: 'status' },
     { title: '备注', key: 'remarks' }
   ]
@@ -147,12 +184,20 @@ export default class Main extends ViewBase {
     }
   }
 
+  informa = {
+    visibleInforma: false
+  }
+
   async mounted() {
     // try {
     //   const {
     //     data: { user }
     //   } = await infoIndex()
     // } catch (ex) {}
+  }
+
+  handleInforma() {
+    this.informa.visibleInforma = true
   }
 }
 </script>
@@ -170,6 +215,12 @@ export default class Main extends ViewBase {
   color: @c-sub-text;
 }
 
+.tableSubmit {
+  text-align: center;
+  & > button:last-child {
+    margin-left: 20px;
+  }
+}
 .content {
   background: @c-bg;
   h3 {
