@@ -1,5 +1,5 @@
 <template>
-  <div class="site-layout">
+  <div class="site-layout layoutBg">
     <header class="site-header flex-box">
       <h1 class="logo">
         <router-link to="/" class="logo-link">
