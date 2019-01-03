@@ -19,12 +19,12 @@
           <Col :span="12">
             <p>覆盖区域 0 个</p>
             <p>覆盖省份 0 个</p>
-            <p class="btn">查看已关联影院列表</p>
+            <p class="btn" @click="queryList">查看已关联影院列表</p>
           </Col>
           <Col :span="12">
             <p>覆盖区域 0 个</p>
             <p>覆盖省份 0 个</p>
-            <p class="btn">编辑关联影院</p>
+            <p class="btn" @click="handleEdit">编辑关联影院</p>
           </Col>
         </Row>
       </div>
@@ -41,19 +41,37 @@
     <div class="tableSubmit btnCenter">
       <button class="submitBtn" @click="handleInforma">确定增加</button>
     </div>
+    <detailDlg v-model="detailVisible" v-if="detailVisible.visible"></detailDlg>
+    <editDig v-model="editVisible" v-if="editVisible.editVis"></editDig>
   </div>
 </template>
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import detailDlg from '@/views/account/user/detailDlg.vue'
+import editDig from '@/views/account/user/editDlg.vue'
 
+@Component({
+  components: {
+    detailDlg,
+    editDig
+  }
+})
 export default class Main extends ViewBase {
+  detailVisible = {
+    visible: false
+  }
+  editVisible = {
+    editVis: false
+  }
+
   form = {
     type: '',
     name: '',
     mobile: '',
     role: ''
   }
+
   rolelist = [{ key: 0, value: '销售人员' }, { key: 1, value: '财务人员' }]
   data2 = [
     {
@@ -73,6 +91,12 @@ export default class Main extends ViewBase {
   ]
 
   handleInforma() {}
+  queryList() {
+    this.detailVisible.visible = true
+  }
+  handleEdit() {
+    this.editVisible.editVis = true
+  }
 }
 </script>
 

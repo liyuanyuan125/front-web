@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Modal v-model="value.visibleMess" title="变更前信息" width="360">
+    <Modal v-model="value.visibleMess" title="变更前信息" width="460">
       <p>
         <label>公司信息</label>
         {{list.name}}

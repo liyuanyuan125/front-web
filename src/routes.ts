@@ -45,12 +45,37 @@ export default [
     name: 'account-auth',
     component: () => import('./views/account/auth/index.vue'),
   },
+  // 账户管理 - 权限管理 - 添加子用户
+  {
+    path: '/account/auth/add',
+    name: 'account-auth-add',
+    component: () => import('./views/account/auth/addUser.vue')
+  },
+  // 账户管理 - 权限管理 - 编辑
+  {
+    path: '/account/auth/edit',
+    name: 'account-auth-edit',
+    component: () => import('./views/account/auth/editUser.vue')
+  },
+  // 账户管理 - 权限管理 - 查看
+  {
+    path: '/account/auth/detail',
+    name: 'account-auth-detail',
+    component: () => import('./views/account/auth/detailUser.vue')
+  },
+
 
   // 账户管理 - 影院管理
   {
     path: '/account/cinema',
     name: 'account-cinema',
     component: () => import('./views/account/cinema/index.vue'),
+  },
+   // 账户管理 - 影院管理 - 查看
+   {
+    path: '/account/cinema/detail',
+    name: 'account-cinema-detail',
+    component: () => import('./views/account/cinema/detailCinema.vue')
   },
 
   // 账户管理 - 修改密码

@@ -2,9 +2,8 @@
   <div class="page">
     <h3 class="userTitle">
       <span>用户管理</span>
-      <router-link class="addUser" tag="span" to>
-        <Icon type="ios-add" size="27"/>
-        <router-link to="/account/user/add">新增子用户</router-link>
+      <router-link class="addUser" tag="span" to="/account/user/add">
+        <Icon type="ios-add" size="27"/>新增子用户
       </router-link>
     </h3>
     <Form :model="form">
@@ -59,22 +58,26 @@ import ViewBase from '@/util/ViewBase'
 @Component
 export default class Main extends ViewBase {
   checkboxAll = false
+
   form = {
     role: '',
     status: ''
   }
+
   rolelist = [
     { key: '1', value: '所有角色' },
     { key: '2', value: '广告运营' },
     { key: '3', value: '所有角色' },
     { key: '4', value: '所有角色' }
   ]
+
   statusList = [
     { key: '1', value: '所有状态' },
     { key: '2', value: '待激活' },
     { key: '3', value: '已启用' },
     { key: '4', value: '已禁用' }
   ]
+
   columns4 = [
     {
       type: 'selection',
@@ -141,7 +144,11 @@ export default class Main extends ViewBase {
                 cursor: 'pointer',
                 margin: '0 15px'
               },
-              on: { click: () => {} }
+              on: {
+                click: () => {
+                  this.toEdit()
+                }
+              }
             },
             '编辑'
           )
@@ -250,6 +257,9 @@ export default class Main extends ViewBase {
   toDetail() {
     this.$router.push({ name: 'account-user-detail' })
   }
+  toEdit() {
+    this.$router.push({ name: 'account-user-edit' })
+  }
   selectAll(select: any) {}
   handleSelectAll() {
     const selection = this.$refs.selection as any
@@ -269,6 +279,7 @@ export default class Main extends ViewBase {
   padding: 0 30px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
   background: @c-head-bg;
 }
