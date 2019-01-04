@@ -12,10 +12,10 @@
         </CheckboxGroup>
       </FormItem>
 
-      <FormItem label="登录邮箱" prop="email" error="emailError">
+      <FormItem label="登录邮箱" prop="email" :error="emailError">
         <Input v-model="form.email" placeholder="请输入邮箱"/>
       </FormItem>
-      <FormItem label="邮箱验证码" prop="captcha">
+      <FormItem label="邮箱验证码" prop="captcha" :error="captchaError">
         <Input v-model="form.captcha" :maxlength="6" style="width:260px" placeholder="请输入邮箱验证码"/>
         <Button class="btn-code" :disabled="codeDisabled || emailIsValid" @click="getCode">{{codeMsg}}</Button>
       </FormItem>
@@ -80,6 +80,7 @@ export default class Main extends ViewBase {
   codeMsg = '获取邮箱验证码'
 
   emailError = ''
+  captchaError = ''
 
   agreement = true
 
@@ -210,11 +211,16 @@ export default class Main extends ViewBase {
     }
   }
 
+  scrollToError() {
+    const form = this.$refs.form as any
+    this.$nextTick(() => scrollToError(form))
+  }
+
   async submit() {
     const form = this.$refs.form as any
     const valid = await form.validate()
     if (!valid) {
-      return this.$nextTick(() => scrollToError(form))
+      return this.scrollToError()
     }
 
     if (!this.agreement) {
@@ -232,10 +238,15 @@ export default class Main extends ViewBase {
       })
       this.$router.push({ name: 'registerComplete' })
     } catch (ex) {
-      this.handleError(ex)
+      ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
     } finally {
       this.submitDisabled = false
     }
+  }
+
+  onSubmit8007303() {
+    this.captchaError = '验证码错误'
+    this.scrollToError()
   }
 
   @Watch('form.area', { deep: true })
