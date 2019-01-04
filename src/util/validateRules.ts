@@ -51,4 +51,13 @@ export function validataTel(mobile: string): string | undefined {
   }
 }
 
-
+/**
+ * 验证邮箱地址
+ * @param email 邮箱
+ */
+export function validateEmail(email: string): string | undefined {
+  const reg = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/
+  if (!reg.test(email)) {
+    return '邮箱格式错误'
+  }
+}

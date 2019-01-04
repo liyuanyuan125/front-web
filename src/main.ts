@@ -6,8 +6,12 @@ import 'iview/dist/styles/iview.css'
 import app from './app.vue'
 import Router from 'vue-router'
 import home from './views/home.vue'
-import login from './views/login.vue'
-import Create from './views/create.vue'
+// 将登陆注册等模块「静态」到主文件中，以便用户更流畅
+import login from './views/portal/login.vue'
+import PortalLayout from './views/portal/layout.vue'
+import RegisterLayout from './views/portal/registerLayout.vue'
+import register from './views/portal/register.vue'
+import registerComplete from './views/portal/registerComplete.vue'
 import MainLayout from './site/MainLayout.vue'
 import locale from 'iview/dist/locale/zh-CN'
 import event from './fn/event'
@@ -31,47 +35,56 @@ const router = new Router({
   mode: 'history',
   // 非 MainLayout 页面放在这里，MainLayout 页面放在 routes 里
   routes: [
-    {
-      path: '/',
-      name: 'login',
-      component: login,
-    },
+    // {
+    //   path: '/',
+    //   name: 'login',
+    //   component: login,
+    // },
     {
       path: '/login',
       name: 'login',
       component: login,
     },
     {
-      path: '/regsucess',
-      name: 'regsucess',
-      component: () => import('./views/register/regsucess.vue'),
-    },
-    {
-      path: '/',
-      name: 'create',
-      component: Create,
+      path: '/portal-layout',
+      name: 'portal-layout',
+      component: PortalLayout,
       children: [
         {
-          path: 'register',
+          path: '/register-layout',
           name: 'register',
-          component: () => import('./views/register.vue')
+          component: RegisterLayout,
+          children: [
+            {
+              path: '/register',
+              name: 'register',
+              component: register
+            },
+            {
+              path: '/register/complete',
+              name: 'registerComplete',
+              component: registerComplete
+            },
+          ]
         },
         {
-          path: 'forgetpass',
-          name: 'forgetpass',
-          component: () => import('./views/forgetPassword.vue')
+          path: '/resetpwd',
+          name: 'resetpwd',
+          component: () => import('./views/portal/resetpwd.vue')
         }
       ]
     },
     {
-      path: '/layout',
+      path: '/main-layout',
       name: 'main-layout',
       component: MainLayout,
-      children: [{
-        path: '/',
-        name: 'home',
-        component: home,
-      }].concat(routes),
+      children: [
+        {
+          path: '/',
+          name: 'home',
+          component: home,
+        }
+      ].concat(routes),
     }
   ]
 })
@@ -101,7 +114,7 @@ router.afterEach((to, from) => {
 event.on({
   ajax401(ev: any) {
     ev.handled = true
-    router.push({ name: 'login' })
+    // router.push({ name: 'login' })
   },
 
   ajax403(ev: any) {

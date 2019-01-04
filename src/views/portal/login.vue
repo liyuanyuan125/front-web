@@ -45,10 +45,10 @@
             <Button type="warning" long @click="submit('form')" class="submit">登录</Button>
             <Row class="toRegister">
               <Col span="4">
-                <router-link tag="span" to="/register">注册</router-link>
+                <router-link tag="span" :to="{ name: 'register' }">注册</router-link>
               </Col>
               <Col align="right" span="6" offset="14">
-                <router-link tag="span" to="/forgetpass">忘记密码</router-link>
+                <router-link tag="span" :to="{ name: 'resetpwd' }">忘记密码</router-link>
               </Col>
             </Row>
           </Form>

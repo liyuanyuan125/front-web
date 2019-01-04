@@ -61,7 +61,3 @@ export function logout() {
   theUser = null
   postLogout()
 }
-
-export function setCookie(token: string) {
-  cookie.set(KEY_TOKEN, token, COOKIE_OPTIONS)
-}
