@@ -13,6 +13,12 @@ export default [
     name: 'account-info-edit',
     component: () => import('./views/account/info/edit.vue'),
   },
+  // 账户管理 - 账号信息-账户编辑
+  {
+    path: '/account/info/accedit',
+    name: 'account-info-accedit',
+    component: () => import('./views/account/info/accEdit.vue'),
+  },
 
   // 账户管理 - 用户管理
   {

@@ -1,53 +1,88 @@
 <template>
-  <div class="page bgHei">
+  <div class="page home-bg">
     <com-statu :statuCode="statuCode"></com-statu>
     <div class="content">
-      <h3>登录信息</h3>
+      <h3 class="layout-title">登录信息</h3>
       <ul>
-        <li class="flex-box" v-for="item in loginMes">
+        <li
+          class="flex-box"
+          v-for="item in loginMes"
+        >
           <div>{{item.label}}</div>
           <p>{{item.name}}</p>
         </li>
       </ul>
-      <h3>公司信息</h3>
+      <h3 class="layout-title">公司信息</h3>
       <dl>
         <dd v-for="item in company">
           <div>{{item.label}}</div>
           <p>{{item.name}}</p>
         </dd>
       </dl>
-      <h3>开户信息</h3>
+      <h3 class="layout-title">开户信息</h3>
       <ul>
-        <li class="flex-box" v-for="item in opens.list">
+        <li
+          class="flex-box"
+          v-for="item in opens.list"
+        >
           <div>{{item.label}}</div>
           <p>{{item.name}}</p>
         </li>
         <li class="flex-box">
           <div>{{opens.imgs.label}}</div>
           <p>
-            <img class="imgs" v-for="item in opens.imgs.list" :src="item" alt="alias" width="150px">
+            <img
+              class="imgs"
+              v-for="item in opens.imgs.list"
+              :src="item"
+              alt="alias"
+              width="150px"
+            >
           </p>
         </li>
       </ul>
     </div>
     <div class="accountList">
-      <h3>账号变更记录</h3>
-      <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
+      <h3 class="layout-title">账号变更记录</h3>
+      <Table
+        :columns="column"
+        :data="dataList"
+        stripe
+        disabled-hover
+      ></Table>
+
       <div class="tableSubmit">
         <button class="submitBtn">
-          <router-link tag="span" :to="{ name: 'account-info-edit' }">修改信息</router-link>
+          <router-link
+            tag="span"
+            :to="{ name: 'account-info-accedit' }"
+          >修改信息</router-link>
         </button>
-        <button class="submitBtn" @click="handleInforma">变更账号</button>
+        <button
+          class="submitBtn"
+          @click="handleInforma"
+        >变更账号</button>
       </div>
     </div>
-    <div class="btnCenter" v-if="false">
+
+    <div
+      class="btnCenter"
+      v-if="false"
+    >
       <button class="submitBtn">
-        <router-link tag="span" :to="{ name: 'account-info-edit' }">修改信息</router-link>
+        <router-link
+          tag="span"
+          :to="{ name: 'account-info-edit' }"
+        >修改信息</router-link>
       </button>
     </div>
 
-    <dlgChange v-model="model" v-if="model.visibleMess"></dlgChange>
+    <dlgChange
+      v-model="model"
+      v-if="model.visibleMess"
+    ></dlgChange>
     <dlgInforma v-model="informa" v-if="informa.visibleInforma"></dlgInforma>
+
   </div>
 </template>
 
@@ -68,6 +103,7 @@ import dlgInforma from './dlgInformation.vue'
 })
 export default class Main extends ViewBase {
   statuCode = 0
+
   model = {
     visibleMess: false,
     changelist: {
@@ -189,11 +225,6 @@ export default class Main extends ViewBase {
   }
 
   async mounted() {
-    // try {
-    //   const {
-    //     data: { user }
-    //   } = await infoIndex()
-    // } catch (ex) {}
   }
 
   handleInforma() {
@@ -223,13 +254,6 @@ export default class Main extends ViewBase {
 }
 .content {
   background: @c-bg;
-  h3 {
-    font-size: 14px;
-    height: 50px;
-    line-height: 50px;
-    padding-left: 30px;
-    background: @c-head-bg;
-  }
   ul {
     .compad;
     li {
