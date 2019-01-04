@@ -257,13 +257,13 @@ export default class Main extends ViewBase {
 .form {
   margin-top: 40px;
   border-bottom: 1px solid rgba(239, 239, 239, 1);
-  .ivu-form-item {
+  /deep/ .ivu-form-item {
     margin-bottom: 40px;
-    /deep/ .ivu-form-item-label {
+    .ivu-form-item-label {
       .form-label;
     }
-    /deep/ .ivu-form-item-content {
-      /deep/ .ivu-select-selection {
+    .ivu-form-item-content {
+      .ivu-select-selection {
         height: 50px;
         line-height: 50px;
         .ivu-select-placeholder {
