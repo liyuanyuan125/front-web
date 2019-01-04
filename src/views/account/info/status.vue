@@ -1,11 +1,11 @@
 <template>
   <div class="stateContent flex-box">
     <div>
-      <img :src="status[statuCode].img" width="64px" alt="alias">
+      <img :src="statusList[statuCode].img" width="64px" alt="alias">
     </div>
     <div class="textMes">
-      <h6>{{status[statuCode].title}}</h6>
-      <p>{{status[statuCode].message}}</p>
+      <h6>{{statusList[statuCode].title}}</h6>
+      <p>{{statusList[statuCode].message}}</p>
     </div>
   </div>
 </template>
@@ -16,8 +16,7 @@ import ViewBase from '@/util/ViewBase'
 @Component
 export default class InfoStatus extends ViewBase {
   @Prop({ type: Number }) statuCode: any
-
-  status = [
+  statusList = [
     {
       img: require('../../../assets/icon/waiting.png'),
       title: '未上传资质',
@@ -29,14 +28,14 @@ export default class InfoStatus extends ViewBase {
       message: '您的账号正在审核中，审核通过后即可开始上传资源位。'
     },
     {
-      img: require('../../../assets/icon/waiting.png'),
+      img: require('../../../assets/icon/error.png'),
       title: '审核失败',
       message: '您的账号审核未通过，请修改注册信息。 '
     },
     {
-      img: require('../../../assets/icon/waiting.png'),
+      img: require('../../../assets/icon/success.png'),
       title: '正常使用',
-      message: '您的账号正常，可进行广告投放！如需变更公司账号请联系我司。！'
+      message: '您的账号正常，可进行广告投放！如需变更公司账号请联系我司！'
     }
   ]
 }

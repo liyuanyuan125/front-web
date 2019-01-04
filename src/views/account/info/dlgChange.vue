@@ -50,12 +50,6 @@ export default class Change extends ViewBase {
   padding: 10px 13px;
   background: #f9f9f9;
   font-weight: none;
-  .ivu-modal-header-inner {
-    font-weight: none;
-  }
-}
-.ivu-modal-footer {
-  border-top: 0;
 }
 </style>
 
