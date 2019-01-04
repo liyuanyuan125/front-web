@@ -26,6 +26,7 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -99,8 +100,9 @@ export default class Main extends ViewBase {
   }
 }
 </script>
+
 <style lang="less" scoped>
-@import '../site/login.less';
+@import '~@/site/login.less';
 
 .forgetpass {
   .wid-auto;

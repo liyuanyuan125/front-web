@@ -1,6 +1,5 @@
 <template>
   <div>
-    <header-com></header-com>
     <div class="flex">
       <p>
         <Icon type="ios-checkmark-circle-outline" size="48"/>&nbsp;注册完成
@@ -11,17 +10,13 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import headerCom from '../header/head.vue'
 import { countDown } from '@/fn/timer'
 
-@Component({
-  components: {
-    headerCom
-  }
-})
+@Component
 export default class Main extends ViewBase {
   time = 3
   mounted() {
@@ -35,6 +30,7 @@ export default class Main extends ViewBase {
   }
 }
 </script>
+
 <style lang="less" scoped>
 .flex {
   color: #222;

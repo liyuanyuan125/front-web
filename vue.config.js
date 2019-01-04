@@ -10,7 +10,7 @@ module.exports = {
     },
     proxy: {
       '/': {
-        target: 'http://mapi.dev.aiads.com',
+        target: 'http://fapi.dev.aiads.com',
         changeOrigin: true,
         ws: false,
         bypass(req) {
@@ -37,22 +37,22 @@ module.exports = {
       {
         env: 'dev',
         baseUrl: isDev ? '/' : '//admin.dev.aiads.com',
-        ajaxBaseUrl: isDev ? '/' : '//mapi.dev.aiads.com',
+        ajaxBaseUrl: isDev ? '/' : '//fapi.dev.aiads.com',
       },
       {
         env: 'qas',
         baseUrl: '//admin.qas.aiads.com',
-        ajaxBaseUrl: '//mapi.qas.aiads.com',
+        ajaxBaseUrl: '//fapi.qas.aiads.com',
       },
       {
         env: 'stg',
         baseUrl: '//admin.stg.aiads.com',
-        ajaxBaseUrl: '//mapi.stg.aiads.com',
+        ajaxBaseUrl: '//fapi.stg.aiads.com',
       },
       {
         env: 'prd',
         baseUrl: '//admin.aiads.com',
-        ajaxBaseUrl: '//mapi.aiads.com',
+        ajaxBaseUrl: '//fapi.aiads.com',
       },
     ].forEach(it => {
       const { env } = it

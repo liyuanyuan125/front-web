@@ -1,14 +1,14 @@
 
 <template>
-  <div class="maxHeight">
+  <div class="page-wrap">
     <div class="steps">
       <Steps :current="current">
         <Step title="创建帐号" style="width:48%"></Step>
         <Step title="补充资质" style="width:48%"></Step>
       </Steps>
     </div>
-    <div class="regStep">
-      <component :is="currentView" @iscurrent="iscurrent"></component>
+    <div class="reg-body">
+      <router-view/>
     </div>
   </div>
 </template>
@@ -16,27 +16,25 @@
 <script lang='ts'>
 import { Component, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import firstStep from '../views/register/firstStep.vue'
-import thressStep from '../views/register/threeStep.vue'
 
-@Component({
-  components: {
-    firstStep,
-    thressStep
-  }
-})
+const stepMap: any = {
+  register: 0,
+  registerComplete: 1,
+}
+
+@Component
 export default class Main extends ViewBase {
-  currentView = 'firstStep'
-  current = 0
-  iscurrent(val: any) {
-    this.current = val
-    this.currentView = 'thressStep'
+  get current() {
+    const name = this.$route.name
+    return stepMap[name!] || 0
   }
 }
 </script>
+
 <style lang='less' scoped>
-@import '../site/login.less';
-.maxHeight {
+@import '~@/site/login.less';
+
+.page-wrap {
   height: 100%;
 }
 .steps {
@@ -76,14 +74,15 @@ export default class Main extends ViewBase {
     left: -4px;
   }
 }
-.regStep {
+
+.reg-body {
   margin-bottom: 80px;
 
-  /deep/ .submit {
-    width: 600px;
-    display: block;
-    margin: 0 auto;
-    .form-btn;
-  }
+  // /deep/ .submit {
+  //   width: 600px;
+  //   display: block;
+  //   margin: 0 auto;
+  //   .form-btn;
+  // }
 }
 </style>

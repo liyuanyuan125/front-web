@@ -7,3 +7,67 @@
 .ivu-select-selection, .ivu-input {
   border-radius: 0;
 }
+
+.ivu-btn,
+.ivu-input {
+  border-radius: 2px;
+}
+
+.ivu-btn {
+  font-size: 16px;
+  height: 50px;
+}
+
+.ivu-btn-default {
+  color: @c-button;
+  border: 1px solid @c-button;
+  &:hover,
+  &:active,
+  &:focus {
+    color: @c-button;
+    border-color: @c-button;
+  }
+  &:active,
+  &:focus {
+    background-color: @c-button-weak;
+  }
+  &:focus {
+    box-shadow: none;
+    // box-shadow: 0 0 0 2px fade(@c-button, 20%);
+  }
+}
+
+.ivu-btn-primary {
+  color: #fff;
+  border: 1px solid @c-button;
+  background-color: @c-button;
+  &:hover,
+  &:active,
+  &:focus {
+    color: #fff;
+    border-color: darken(@c-button, 8%);
+    background-color: darken(@c-button, 8%);
+  }
+  &:active {
+    border-color: darken(@c-button, 16%);
+    background-color: darken(@c-button, 16%);
+  }
+  &:focus {
+    box-shadow: none;
+    // box-shadow: 0 0 0 2px fade(@c-button, 20%);
+  }
+}
+
+.ivu-input {
+  &:hover {
+    border-color: @c-border;
+  }
+  &:focus {
+    border-color: @c-border;
+    box-shadow: none;
+  }
+}
+
+.ivu-form-item-error .ivu-input:focus {
+  box-shadow: none;
+}
