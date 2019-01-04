@@ -3,86 +3,83 @@
     <com-statu :statuCode="statuCode"></com-statu>
     <div class="content">
       <h3 class="layout-title">登录信息</h3>
-      <ul>
-        <li
-          class="flex-box"
-          v-for="item in loginMes"
-        >
-          <div>{{item.label}}</div>
-          <p>{{item.name}}</p>
-        </li>
-      </ul>
-      <h3 class="layout-title">公司信息</h3>
-      <dl>
-        <dd v-for="item in company">
-          <div>{{item.label}}</div>
-          <p>{{item.name}}</p>
-        </dd>
-      </dl>
-      <h3 class="layout-title">开户信息</h3>
-      <ul>
-        <li
-          class="flex-box"
-          v-for="item in opens.list"
-        >
-          <div>{{item.label}}</div>
-          <p>{{item.name}}</p>
-        </li>
-        <li class="flex-box">
-          <div>{{opens.imgs.label}}</div>
+      <Row class="text-rows">
+        <Col :span="12">
           <p>
-            <img
-              class="imgs"
-              v-for="item in opens.imgs.list"
-              :src="item"
-              alt="alias"
-              width="150px"
-            >
+            <label>账号类型</label>广告放/资源方
           </p>
-        </li>
-      </ul>
+          <p>
+            <label>账号ID</label>xxxxxxxxx
+          </p>
+          <p>
+            <label>登录账号</label>xxxxxxxxx
+          </p>
+        </Col>
+      </Row>
+
+      <h3 class="layout-title">公司信息</h3>
+      <Row class="text-rows">
+        <Col :span="12">
+          <p>
+            <label>公司名称</label>广告放/资源方
+          </p>
+          <p>
+            <label>公司所在地</label>xxxxxxxxx
+          </p>
+        </Col>
+        <Col :span="12">
+          <p>
+            <label>联系人</label>广告放/资源方
+          </p>
+          <p>
+            <label>手机号码</label>xxxxxxxxx
+          </p>
+          <p>
+            <label>邮箱</label>xxxxxxxxx
+          </p>
+        </Col>
+      </Row>
+
+      <h3 class="layout-title">开户信息</h3>
+      <Row class="text-rows">
+        <Col :span="24">
+          <p>
+            <label>资质类型</label>广告放/资源方
+          </p>
+          <p>
+            <label>资质编号</label>xxxxxxxxx
+          </p>
+          <p class="flex-box">
+            <label>资质图片</label>
+            <em>
+              <img :src="item" v-for="item in opens.list" width="150px">
+            </em>
+          </p>
+        </Col>
+      </Row>
     </div>
+
     <div class="accountList">
       <h3 class="layout-title">账号变更记录</h3>
-      <Table
-        :columns="column"
-        :data="dataList"
-        stripe
-        disabled-hover
-      ></Table>
-
-      <div class="tableSubmit">
-        <button class="submitBtn">
-          <router-link
-            tag="span"
-            :to="{ name: 'account-info-accedit' }"
-          >修改信息</router-link>
-        </button>
-        <button
-          class="submitBtn"
-          @click="handleInforma"
-        >变更账号</button>
-      </div>
+      <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
     </div>
 
-    <div
-      class="btnCenter"
-      v-if="false"
-    >
-      <button class="submitBtn">
-        <router-link
-          tag="span"
-          :to="{ name: 'account-info-edit' }"
-        >修改信息</router-link>
+    <!-- 审核以通过 -->
+    <div class="btnCenter sumbit-button">
+      <button class="button-ok button-offset">
+        <router-link tag="span" :to="{ name: 'account-info-accedit' }">修改信息</router-link>
+      </button>
+      <button class="button-ok" @click="handleInforma">变更账号</button>
+    </div>
+
+    <div class="btnCenter sumbit-button" v-if="false">
+      <button class="button-ok">
+        <router-link tag="span" :to="{ name: 'account-info-edit' }">修改信息</router-link>
       </button>
     </div>
 
-    <dlgChange
-      v-model="model"
-      v-if="model.visibleMess"
-    ></dlgChange>
+    <dlgChange v-model="queryDetail" v-if="queryDetail.visibleMess"></dlgChange>
     <dlgInforma v-model="informa" v-if="informa.visibleInforma"></dlgInforma>
-
   </div>
 </template>
 
@@ -104,16 +101,21 @@ import dlgInforma from './dlgInformation.vue'
 export default class Main extends ViewBase {
   statuCode = 0
 
-  model = {
+  queryDetail: any = {
     visibleMess: false,
     changelist: {
       name: '北京智能',
       type: '公司账号',
       type2: 'xxxxx',
       code: '88888888888888888',
-      img: []
+      img: [
+        'https://file.iviewui.com/iview-admin/login_bg.jpg',
+        'https://file.iviewui.com/iview-admin/login_bg.jpg',
+        'https://file.iviewui.com/iview-admin/login_bg.jpg'
+      ]
     }
   }
+
   column = [
     { title: '变更编号', key: 'id' },
     { title: '账号变更提交时间', key: 'times' },
@@ -130,7 +132,8 @@ export default class Main extends ViewBase {
               },
               on: {
                 click: () => {
-                  this.model.visibleMess = true
+                  this.queryDetail.title = '账号变更前信息'
+                  this.queryDetail.visibleMess = true
                 }
               }
             },
@@ -152,7 +155,8 @@ export default class Main extends ViewBase {
               },
               on: {
                 click: () => {
-                  this.model.visibleMess = true
+                  this.queryDetail.title = '账号变更后信息'
+                  this.queryDetail.visibleMess = true
                 }
               }
             },
@@ -162,8 +166,31 @@ export default class Main extends ViewBase {
       }
     },
     { title: '审核状态', key: 'status' },
-    { title: '备注', key: 'remarks' }
+    {
+      title: '备注',
+      key: 'remarks',
+      render: (h: any, params: any) => {
+        const { row } = params
+        if (row.remarks.length > 10) {
+          const splitText = row.remarks.substr(0, 10) + '.......'
+          return h(
+            'Tooltip',
+            {
+              props: {
+                placement: 'top',
+                content: row.remarks,
+                maxWidth: '200px'
+              }
+            },
+            splitText
+          )
+        } else {
+          return h('span', {}, row.remarks)
+        }
+      }
+    }
   ]
+
   dataList = [
     {
       id: 'John Brown1',
@@ -171,7 +198,8 @@ export default class Main extends ViewBase {
       front: '点击查看',
       after: '点击查看',
       status: '1',
-      remarks: '/'
+      remarks:
+        '北京智能广宣科技有限公司北京智能广宣科技有限公司北京智能广宣科技有限公司'
     },
     {
       id: 'John Brown2',
@@ -179,7 +207,7 @@ export default class Main extends ViewBase {
       front: '点击查看',
       after: '点击查看',
       status: '1',
-      remarks: '/'
+      remarks: '北京智能广宣科技有限公司'
     },
     {
       id: 'John Brown3',
@@ -191,41 +219,19 @@ export default class Main extends ViewBase {
     }
   ]
 
-  loginMes = [
-    { label: '账号类型', name: '公司信息/资源方' },
-    { label: '账号ID', name: '22' },
-    { label: '登录账号', name: 'xxxx.$com' }
-  ]
-
-  company = [
-    { label: '公司名称', name: '公司信息/资源方' },
-    { label: '账号ID', name: '22' },
-    { label: '登录账号', name: 'xxxx.$com' },
-    { label: '账号ID', name: '22' },
-    { label: '登录账号', name: 'xxxx.$com' }
-  ]
-
-  opens = {
-    list: [
-      { label: '资质类型', name: '公司信息/资源方' },
-      { label: '账号ID', name: '22' }
-    ],
-    imgs: {
-      label: '资源图片',
-      list: [
-        'https://file.iviewui.com/iview-admin/login_bg.jpg',
-        'https://file.iviewui.com/iview-admin/login_bg.jpg',
-        'https://file.iviewui.com/iview-admin/login_bg.jpg'
-      ]
-    }
-  }
-
   informa = {
     visibleInforma: false
   }
 
-  async mounted() {
+  opens = {
+    list: [
+      'https://file.iviewui.com/iview-admin/login_bg.jpg',
+      'https://file.iviewui.com/iview-admin/login_bg.jpg',
+      'https://file.iviewui.com/iview-admin/login_bg.jpg'
+    ]
   }
+
+  async mounted() {}
 
   handleInforma() {
     this.informa.visibleInforma = true
@@ -236,67 +242,7 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 
-@c-bg: #fff;
-.compad {
-  padding: 20px 0 20px 30px;
-}
-.comli {
-  padding-bottom: 20px;
-  font-size: 14px;
-  color: @c-sub-text;
-}
-
-.tableSubmit {
-  text-align: center;
-  & > button:last-child {
-    margin-left: 20px;
-  }
-}
-.content {
-  background: @c-bg;
-  ul {
-    .compad;
-    li {
-      .comli;
-      div {
-        width: 80px;
-      }
-      p {
-        color: @c-text;
-        .imgs {
-          margin-right: 20px;
-        }
-      }
-    }
-  }
-  dl {
-    .compad;
-    height: 152px;
-    dd {
-      width: 50%;
-      float: left;
-      .comli;
-      div {
-        width: 80px;
-        float: left;
-      }
-      p {
-        color: @c-text;
-      }
-    }
-  }
-}
-
-.accountList {
-  h3 {
-    font-size: 14px;
-    height: 50px;
-    line-height: 50px;
-    padding-left: 30px;
-    background: @c-head-bg;
-  }
-  .ivu-table-wrapper {
-    margin: 30px 20px 20px;
-  }
+.sumbit-button {
+  padding: 30px 0 50px;
 }
 </style>

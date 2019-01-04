@@ -18,57 +18,107 @@
   flex: 3;
 }
 
-// 按钮but样式
-.home-bg{
-	height: 100%;
-	background: #fff;
+.home-bg {
+  height: 100%;
+  background: #fff;
 }
+.btnCenter {
+  text-align: center;
+}
+
+// layout 模块 标题
 .layout-title {
-	font-size: 14px;
-	height: 50px;
-	line-height: 50px;
-	padding-left: 30px;
-	background: @c-head-bg;
+  font-size: 14px;
+  height: 50px;
+  line-height: 50px;
+  padding-left: 30px;
+  background: @c-head-bg;
 }
-.btnCenter{
-	text-align: center;
-}
-.submitBtn {
-	padding: 15px 32px;
-	font-size: 16px;
-	background: #fe8135;
-	color: #fff;
-	border: none;
-	border-radius: 2px;
-	border: 0;
-	margin: 100px 0 40px;
-	cursor: pointer;
-}
+
+// MainLayout 背景样式
 .layoutBg {
-	background:#f2f2f2
+  background: #f2f2f2;
 }
-.button-cancel{
-	display: inline-block;
-	height: 50px;
-	width: 160px;
-	background:rgba(255,248,242,1);
-	border-radius:2px;
-	border:1px solid rgba(254,129,53,1);
-	color: #FE8135;
-	font-size: 16px;
-	margin-right: 20px;
+
+// button 按钮样式
+.button-cancel {
+  display: inline-block;
+  height: 50px;
+  width: 160px;
+  background: rgba(255, 248, 242, 1);
+  border-radius: 2px;
+  border: 1px solid rgba(254, 129, 53, 1);
+  color: #fe8135;
+  font-size: 16px;
+  margin-right: 20px;
+  cursor: pointer;
 }
-.button-ok{
-	display: inline-block;
-	height: 50px;
-	width: 160px;
-	background:#FE8135;
-	border-radius:2px;
-	border:1px solid #FE8135;
-	color: #fff;
-	font-size: 16px;
+.button-ok {
+  display: inline-block;
+  height: 50px;
+  width: 160px;
+  background: #fe8135;
+  border-radius: 2px;
+  border: 1px solid #fe8135;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
 }
-.input-four{
-	height: 40px;
-	font-size: 14px;
+.button-offset {
+  margin-right: 20px;
+}
+
+// 文字排版
+.text-rows {
+  padding: 20px 0 30px 30px;
+  font-size: 14px;
+  color: #444;
+  p {
+    margin-bottom: 20px;
+    img {
+      margin-right: 20px;
+    }
+    label {
+      display: inline-block;
+      width: 90px;
+      color: #888;
+    }
+  }
+}
+
+// iview Modal 弹框居中
+.vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .ivu-modal {
+    top: 0;
+    .ivu-modal-header-inner {
+      color: #272727;
+      font-weight: 300;
+    }
+  }
+}
+
+// from input 编辑
+.edit-input {
+  .ivu-form-item-label {
+    font-size: 14px;
+    padding: 14px 12px 14px 0;
+    text-align: left;
+  }
+  .ivu-form-item-content {
+    .ivu-input-wrapper {
+      width: 400px;
+      input {
+        height: 40px;
+        line-height: 40px;
+      }
+    }
+  }
+}
+
+.input-four {
+  height: 40px;
+  font-size: 14px;
 }
