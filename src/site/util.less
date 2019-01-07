@@ -40,6 +40,14 @@
   padding-left: 30px;
   background: @c-head-bg;
 }
+// layout 标题栏
+.layout-nav-title {
+  height: 50px;
+  padding: 14px 30px 33px;
+  font-size: 14px;
+  border-bottom: solid 10px #f2f2f2;
+  color: @c-link;
+}
 
 // MainLayout 背景样式
 .layoutBg {
@@ -114,6 +122,20 @@
     text-align: left;
   }
   .ivu-form-item-content {
+    .ivu-select-selection {
+      width: 400px;
+      height: 40px;
+      .ivu-select-selected-value {
+        height: 40px;
+        line-height: 40px;
+        font-size: 14px;
+      }
+      .ivu-select-placeholder {
+        height: 40px;
+        line-height: 40px;
+        font-size: 14px;
+      }
+    }
     .ivu-input-wrapper {
       width: 400px;
       input {
@@ -124,7 +146,14 @@
   }
 }
 
-.input-four {
-  height: 40px;
-  font-size: 14px;
+.item-top {
+  padding-top:20px;
+}
+.nav-top-title {
+  color: @c-link;
+}
+// 关联影院
+.query-cinema {
+  color: @c-button;
+  cursor: pointer;
 }

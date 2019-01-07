@@ -6,13 +6,16 @@
       <Row class="text-rows">
         <Col :span="12">
           <p>
-            <label>账号类型</label>广告放/资源方
+            <label>账号类型</label>
+            {{company.type}}
           </p>
           <p>
-            <label>账号ID</label>xxxxxxxxx
+            <label>账号ID</label>
+            {{account.id}}
           </p>
           <p>
-            <label>登录账号</label>xxxxxxxxx
+            <label>登录邮箱</label>
+            {{account.email}}
           </p>
         </Col>
       </Row>
@@ -21,21 +24,26 @@
       <Row class="text-rows">
         <Col :span="12">
           <p>
-            <label>公司名称</label>广告放/资源方
+            <label>公司名称</label>
+            {{company.name}}
           </p>
           <p>
-            <label>公司所在地</label>xxxxxxxxx
+            <label>公司所在地</label>
+            {{company.provinceName}}{{account.cityName}}
           </p>
         </Col>
         <Col :span="12">
           <p>
-            <label>联系人</label>广告放/资源方
+            <label>联系人</label>
+            {{account.name}}
           </p>
           <p>
-            <label>手机号码</label>xxxxxxxxx
+            <label>手机号码</label>
+            {{account.mobile}}
           </p>
           <p>
-            <label>邮箱</label>xxxxxxxxx
+            <label>邮箱</label>
+            {{account.email}}
           </p>
         </Col>
       </Row>
@@ -44,35 +52,36 @@
       <Row class="text-rows">
         <Col :span="24">
           <p>
-            <label>资质类型</label>广告放/资源方
+            <label>资质类型</label>
+            {{company.qualificationType}}
           </p>
           <p>
-            <label>资质编号</label>xxxxxxxxx
+            <label>资质编号</label>
+            {{company.qualificationCode}}
           </p>
           <p class="flex-box">
             <label>资质图片</label>
             <em>
-              <img :src="item" v-for="item in opens.list" width="150px">
+              <img :src="item" v-for="item in company.images" width="150px">
             </em>
           </p>
         </Col>
       </Row>
     </div>
 
-    <div class="accountList">
+    <!-- 审核以通过 -->
+    <div class="accountList" v-if="false">
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
+      <div class="btnCenter sumbit-button" >
+        <button class="button-ok button-offset">
+          <router-link tag="span" :to="{ name: 'account-info-accedit' }">修改信息</router-link>
+        </button>
+        <button class="button-ok" @click="handleInforma">变更账号</button>
+      </div>
     </div>
 
-    <!-- 审核以通过 -->
     <div class="btnCenter sumbit-button">
-      <button class="button-ok button-offset">
-        <router-link tag="span" :to="{ name: 'account-info-accedit' }">修改信息</router-link>
-      </button>
-      <button class="button-ok" @click="handleInforma">变更账号</button>
-    </div>
-
-    <div class="btnCenter sumbit-button" v-if="false">
       <button class="button-ok">
         <router-link tag="span" :to="{ name: 'account-info-edit' }">修改信息</router-link>
       </button>
@@ -86,7 +95,7 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { infoIndex } from '@/api/info'
+import { accountDetail } from '@/api/account'
 import comStatu from './status.vue'
 import dlgChange from './dlgChange.vue'
 import dlgInforma from './dlgInformation.vue'
@@ -100,6 +109,9 @@ import dlgInforma from './dlgInformation.vue'
 })
 export default class Main extends ViewBase {
   statuCode = 0
+  account = {}
+  company = {}
+  systemList = {}
 
   queryDetail: any = {
     visibleMess: false,
@@ -222,7 +234,6 @@ export default class Main extends ViewBase {
   informa = {
     visibleInforma: false
   }
-
   opens = {
     list: [
       'https://file.iviewui.com/iview-admin/login_bg.jpg',
@@ -231,7 +242,17 @@ export default class Main extends ViewBase {
     ]
   }
 
-  async mounted() {}
+  async mounted() {
+    try {
+      const option = { id: 1272 }
+      const { data } = await accountDetail(option)
+      this.account = data.account
+      this.company = data.company
+      this.systemList = data.systemList
+    } catch (ex) {
+      ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
+    }
+  }
 
   handleInforma() {
     this.informa.visibleInforma = true

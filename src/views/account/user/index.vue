@@ -1,12 +1,13 @@
 <template>
-  <div class="page">
+  <div class="page home-bg">
     <h3 class="userTitle">
-      <span>用户管理</span>
+      <span class="nav-top-title">用户管理</span>
       <router-link class="addUser" tag="span" to="/account/user/add">
         <Icon type="ios-add" size="27"/>新增子用户
       </router-link>
     </h3>
-    <Form :model="form">
+
+    <Form :model="form" class="form">
       <Row type="flex" justify="space-between">
         <Col :span="6">
           <FormItem label="权限角色" :label-width="100">
@@ -24,40 +25,49 @@
         </Col>
         <Col :span="10">
           <FormItem>
-            <Input search enter-button placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
+            <div class="flex-box">
+              <Input placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
+              <span>
+                <Icon type="ios-search" size="22"/>
+              </span>
+            </div>
           </FormItem>
         </Col>
       </Row>
     </Form>
+
     <div class="tableTotal">
       <span>当前共有用户 xxx 人</span>
       <span>当前结果共xxxx项</span>
     </div>
-    <Table
-      ref="selection"
-      stripe
-      class="tables"
-      :columns="columns4"
-      :data="data1"
-      @on-select-all="selectAll"
-    ></Table>
+    <Table ref="selection" stripe :columns="columns4" :data="data1" @on-select-all="selectAll"></Table>
     <h4 class="checkAll">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
       </span>
       <span @click="deleteList">批量删除</span>
     </h4>
-    <Page :total="100" class="btnCenter" show-total show-elevator/>
+    <Pagination v-model="pageObject"></Pagination>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import Pagination from '@/components/page.vue'
 
-@Component
+@Component({
+  components: {
+    Pagination
+  }
+})
 export default class Main extends ViewBase {
   checkboxAll = false
+  pageObject = {
+    total: 10,
+    current: 1,
+    pageSize: 4
+  }
 
   form = {
     role: '',
@@ -260,6 +270,7 @@ export default class Main extends ViewBase {
   toEdit() {
     this.$router.push({ name: 'account-user-edit' })
   }
+
   selectAll(select: any) {}
   handleSelectAll() {
     const selection = this.$refs.selection as any
@@ -284,8 +295,6 @@ export default class Main extends ViewBase {
   background: @c-head-bg;
 }
 .page {
-  background: #fff;
-  height: 100%;
   font-size: 14px;
   .checkAll {
     cursor: pointer;
@@ -308,46 +317,51 @@ export default class Main extends ViewBase {
       background: @c-button;
     }
   }
-  .ivu-form-item {
-    /deep/ .ivu-form-item-label {
-      padding: 14px 12px 14px 0;
-      font-size: 14px;
-    }
-    /deep/ .ivu-form-item-content {
-      /deep/ .ivu-select-selection {
-        height: 40px;
-        .ivu-select-selected-value {
-          height: 40px;
-          line-height: 40px;
-          font-size: 14px;
-        }
-        .ivu-select-placeholder {
-          height: 40px;
-          line-height: 40px;
-          font-size: 14px;
-        }
-      }
-      /deep/ .ivu-input {
-        height: 40px;
-        font-size: 14px;
-      }
-    }
-  }
   .tableTotal {
-    padding: 0 30px 20px;
+    padding: 0 30px 0;
     display: flex;
     justify-content: space-between;
     color: #989898;
   }
-  .tables {
-    margin: 0 20px;
-    border: none;
-    /deep/.ivu-table {
-      &::before {
-        height: 0;
+  .flex-box {
+    span {
+      display: block;
+      height: 40px;
+      width: 80px;
+      color: #fff;
+      text-align: center;
+      padding-top: 4px;
+      background: @c-button;
+    }
+  }
+  .form {
+    padding-left: 30px;
+    .ivu-form-item {
+      /deep/ .ivu-form-item-label {
+        font-size: 14px;
+        padding: 14px 12px 14px 0;
+        text-align: left;
       }
-      td {
-        border-bottom: none;
+      /deep/ .ivu-form-item-content {
+        .ivu-select-selection {
+          height: 40px;
+          .ivu-select-selected-value {
+            height: 40px;
+            line-height: 40px;
+            font-size: 14px;
+          }
+          .ivu-select-placeholder {
+            height: 40px;
+            line-height: 40px;
+            font-size: 14px;
+          }
+        }
+        .ivu-input-wrapper {
+          input {
+            height: 40px;
+            line-height: 40px;
+          }
+        }
       }
     }
   }

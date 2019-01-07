@@ -1,7 +1,7 @@
 <template>
-  <div class="page">
+  <div class="page home-bg">
     <h3 class="userTitle">
-      <span>影院管理</span>
+      <span class="nav-top-title">影院管理</span>
     </h3>
     <div class="flex-box">
       <Input placeholder="请输入影院专资编码／影院名称进行搜索"/>
@@ -134,15 +134,6 @@ export default class Main extends ViewBase {
   }
   .tables {
     margin: 0 20px 40px;
-    border: none;
-    /deep/.ivu-table {
-      &::before {
-        height: 0;
-      }
-      td {
-        border-bottom: none;
-      }
-    }
   }
 }
 </style>

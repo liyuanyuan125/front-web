@@ -1,8 +1,8 @@
 <template>
-  <div class="page">
-    <h2 class="title">权限管理 >新建权限角色</h2>
-    <Form :model="form" label-position="left" :label-width="100">
-      <FormItem label="角色名称" class="padItem">
+  <div class="page home-bg">
+    <h2 class="layout-nav-title">权限管理 >新建权限角色</h2>
+    <Form :model="form" label-position="left" :label-width="100" class="edit-input">
+      <FormItem label="角色名称" class="item-top">
         <Input v-model="form.type" placeholder="请输入权限角色名称"></Input>
       </FormItem>
       <FormItem label="相关权限">
@@ -10,7 +10,7 @@
       </FormItem>
     </Form>
     <div class="tableSubmit btnCenter">
-      <button class="submitBtn" @click="handleInforma">确定增加</button>
+      <button class="submitBtn button-ok" @click="handleInforma">确定增加</button>
     </div>
     <detailDlg v-model="detailVisible" v-if="detailVisible.visible"></detailDlg>
     <editDig v-model="editVisible" v-if="editVisible.editVis"></editDig>
@@ -73,62 +73,10 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-@import '~@/site/common.less';
 .page {
-  height: 100%;
-  background: #fff;
-  .title {
-    height: 50px;
-    padding: 14px 30px 33px;
-    font-size: 14px;
-    border-bottom: solid 10px #f2f2f2;
-    color: @c-link;
-  }
   .ivu-form-item {
     padding-left: 30px;
     color: @c-text;
-    /deep/ .ivu-form-item-label {
-      font-size: 14px;
-      padding: 14px 12px 14px 0;
-    }
-    /deep/ .ivu-form-item-content {
-      .ivu-input-wrapper {
-        width: 400px;
-        /deep/ .ivu-input {
-          height: 40px;
-          line-height: 40px;
-        }
-      }
-      .ivu-select {
-        width: 400px;
-        .ivu-select-selection {
-          height: 40px;
-          .ivu-select-selected-value {
-            height: 40px;
-            line-height: 40px;
-          }
-          .ivu-select-placeholder {
-            height: 40px;
-            line-height: 40px;
-          }
-        }
-      }
-    }
-  }
-  h3 {
-    .h3Bg;
-  }
-  .rows {
-    padding: 20px 30px 35px;
-    font-size: 14px;
-    p {
-      padding-bottom: 15px;
-      &.btn {
-        color: @c-button;
-        padding-top: 10px;
-        cursor: pointer;
-      }
-    }
   }
 }
 </style>
