@@ -35,11 +35,6 @@ const router = new Router({
   mode: 'history',
   // 非 MainLayout 页面放在这里，MainLayout 页面放在 routes 里
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'login',
-    //   component: login,
-    // },
     {
       path: '/login',
       name: 'login',
@@ -75,7 +70,7 @@ const router = new Router({
       ]
     },
     {
-      path: '/main-layout',
+      path: '/',
       name: 'main-layout',
       component: MainLayout,
       children: [
