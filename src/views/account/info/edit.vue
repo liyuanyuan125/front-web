@@ -5,8 +5,16 @@
       <FormItem label="账号类型" class="item-top">
         <Input v-model="form.type"></Input>
       </FormItem>
-      <FormItem label="登录账号">
-        <Input v-model="form.account"></Input>
+      <FormItem label="登录邮箱">
+        <Input v-model="form.loginEmail"></Input>
+      </FormItem>
+      <FormItem label="邮箱验证码">
+        <Input v-model="form.emailCode" :maxlength="6" class="email-code" placeholder="请输入邮箱验证码"></Input>
+        <Button
+          class="btn-code"
+          :disabled="displayCode || emailIsValid"
+          @click="getEmailCode"
+        >{{emailMes}}</Button>
       </FormItem>
       <h3 class="layout-title">公司信息</h3>
       <FormItem label="公司名称" class="item-top">
@@ -43,6 +51,7 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
+import { validateEmail } from '@/util/validateRules'
 import ViewBase from '@/util/ViewBase'
 import AreaSelect from '@/components/AreaSelect.vue'
 
@@ -52,13 +61,29 @@ import AreaSelect from '@/components/AreaSelect.vue'
   }
 })
 export default class Main extends ViewBase {
+  emailMes = '获取邮箱验证码'
+  displayCode = false
+
   form = {
     type: '11111111',
+    loginEmail: '810805409@qq.com',
     account: 'xxxx@.com',
     message: 'xxxx',
-    area: []
+    area: [],
+    emailCode: ''
   }
   async mounted() {}
+  get emailIsValid() {
+    const failMsg = validateEmail(this.form.loginEmail)
+    return !!failMsg
+  }
+  getEmailCode() {
+    this.displayCode = true
+    try {
+    } catch (ex) {
+    } finally {
+    }
+  }
 }
 </script>
 
@@ -76,6 +101,14 @@ export default class Main extends ViewBase {
   }
   /deep/ .ivu-cascader-rel {
     width: auto;
+  }
+  .email-code {
+    width: 200px;
+  }
+  .btn-code {
+    width: 180px;
+    height: 40px;
+    margin-left: 20px;
   }
 }
 </style>
