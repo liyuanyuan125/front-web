@@ -3,8 +3,8 @@
   <div class="page-wrap">
     <div class="steps">
       <Steps :current="current">
-        <Step title="创建帐号" style="width:48%"></Step>
-        <Step title="补充资质" style="width:48%"></Step>
+        <Step title="创建帐号" style="width:135px"></Step>
+        <Step title="补充资质" style="width:135px"></Step>
       </Steps>
     </div>
     <div class="reg-body">
@@ -32,57 +32,66 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang='less' scoped>
-@import '~@/site/login.less';
+@import '~@/site/lib.less';
 
 .page-wrap {
   height: 100%;
 }
 .steps {
   border-bottom: solid 1px #efefef;
-  padding: 50px 0 20px;
-  .wid-auto;
-  /deep/ .ivu-steps .ivu-steps-tail > i {
-    position: relative;
-    top: -2px;
-  }
+  padding: 50px 0 20px 48px;
+  max-width: 1100px;
+  margin: 0 auto;
   /deep/ .ivu-steps {
-    width: 500px;
+    width: 270px;
     margin: 0 auto;
-    margin-left: 345px;
-  }
-  /deep/ .ivu-steps .ivu-steps-title {
-    font-weight: none;
-  }
-  /deep/ .ivu-steps .ivu-steps-head-inner {
-    width: 16px;
-    height: 16px;
-    line-height: 14px;
-    font-size: 12px;
-    margin: 2px 5px 0 0;
-  }
-  /deep/ .ivu-steps-item.ivu-steps-status-process .ivu-steps-head-inner {
-    border-color: @theme-color;
-    background-color: @theme-color;
-  }
-  /deep/ .ivu-steps-item.ivu-steps-status-process .ivu-steps-title {
-    color: @text-color;
-  }
-  /deep/ .ivu-steps .ivu-steps-head-inner > .ivu-steps-icon.ivu-icon {
-    position: relative;
-    font-size: 22px;
-    top: -4px;
-    left: -4px;
+    user-select: none;
+    .ivu-steps-title {
+      color: @c-text;
+      font-size: 16px;
+      font-weight: normal;
+      vertical-align: top;
+    }
+    .ivu-steps-head-inner {
+      position: relative;
+      top: 5px;
+      width: 16px;
+      height: 16px;
+      font-size: 12px;
+      border: 0;
+      margin-right: 2px;
+      span {
+        position: relative;
+        top: -3px;
+        color: @c-text;
+        font-size: 18px;
+      }
+    }
+    // 正在进行中的 step
+    .ivu-steps-status-process,
+    .ivu-steps-status-finish {
+      .ivu-steps-head-inner {
+        border-color: @c-button;
+        background-color: @c-button;
+        margin-right: 5px;
+        span {
+          color: #fff;
+          top: -4px;
+        }
+      }
+      .ivu-steps-title {
+        color: @c-button;
+      }
+    }
+    .ivu-steps-status-finish {
+      .ivu-steps-tail > i::after {
+        background: @c-button;
+      }
+    }
   }
 }
 
 .reg-body {
   margin-bottom: 80px;
-
-  // /deep/ .submit {
-  //   width: 600px;
-  //   display: block;
-  //   margin: 0 auto;
-  //   .form-btn;
-  // }
 }
 </style>

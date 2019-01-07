@@ -3,6 +3,7 @@
     <Form :model="form" :rules="rules" label-position="left" :label-width="120"
       class="form" @submit.native.prevent="submit" ref="form">
       <DisableAutoFill/>
+
       <FormItem prop="systems" :label-width="0">
         <CheckboxGroup v-model="form.systems" class="check-group">
           <Checkbox label="ad" class="check-type advert"
@@ -258,36 +259,12 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-@import '~@/site/login.less';
+@import '~@/site/lib.less';
+@import './common.less';
 
 .page-wrap {
   width: 600px;
   margin: 80px auto 40px;
-}
-
-.form {
-  margin-top: 40px;
-  border-bottom: 1px solid rgba(239, 239, 239, 1);
-  /deep/ .ivu-form-item {
-    margin-bottom: 40px;
-    .ivu-form-item-label {
-      .form-label;
-    }
-    .ivu-form-item-content {
-      .ivu-select-selection {
-        height: 50px;
-        line-height: 50px;
-        .ivu-select-placeholder {
-          height: 50px;
-          line-height: 50px;
-          font-size: 15px;
-        }
-      }
-      input {
-        .form-input;
-      }
-    }
-  }
 }
 
 .check-group {

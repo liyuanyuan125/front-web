@@ -9,21 +9,24 @@
 }
 
 // Table默认边框去除border
-.ivu-table-wrapper{
+.ivu-table-wrapper {
   margin: 30px 20px 20px;
   border: none;
 }
-.ivu-table th, .ivu-table td,{ border-bottom: none;}
+.ivu-table th, .ivu-table td {
+  border-bottom: none;
+}
 .ivu-table:before, .ivu-table:after{
   height: 0;
 }
 
-// iview model 
+// iview model
 .ivu-modal-footer{
   border-top: 0;
-.ivu-btn,
-.ivu-input {
-  border-radius: 2px;}
+  .ivu-btn,
+  .ivu-input {
+    border-radius: 2px;
+  }
 }
 
 .ivu-btn {
@@ -72,6 +75,8 @@
 }
 
 .ivu-input {
+  border-radius: 2px;
+  border-color: @c-border;
   &:hover {
     border-color: @c-border;
   }

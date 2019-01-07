@@ -1,10 +1,11 @@
 import { get, post } from '@/fn/ajax'
-import { mockGet, mockPost } from './mock'
 
 interface LoginData {
-  username: string
+  systemCode: string
+  email: string
   password: string
-  imageCode: string
+  captchaId: string
+  captchaCode: string
 }
 
 /**
@@ -12,12 +13,7 @@ interface LoginData {
  * @param data 提交数据
  */
 export async function login(data: LoginData) {
-  const res = await mockPost(data, {
-    user: {
-      id: 888,
-      name: data.username,
-    }
-  })
+  const res = await post('/auth/login', data)
   return res
 }
 
