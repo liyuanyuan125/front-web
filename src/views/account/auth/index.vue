@@ -1,7 +1,7 @@
 <template>
-  <div class="page">
+  <div class="page home-bg">
     <h3 class="userTitle">
-      <span>权限管理</span>
+      <span class="nav-top-title">权限管理</span>
       <router-link class="addUser" tag="span" :to="{name:'account-auth-add'}">
         <Icon type="ios-add" size="27"/>新建权限角色
       </router-link>
@@ -16,7 +16,7 @@
       <span>当前共有用户 xxx 人</span>
       <span>当前结果共xxxx项</span>
     </div>
-    <Table ref="selection" stripe class="tables" :columns="columns4" :data="data1"></Table>
+    <Table ref="selection" stripe  :columns="columns4" :data="data1"></Table>
     <Page :total="100" class="btnCenter" show-total show-elevator/>
   </div>
 </template>
@@ -125,8 +125,6 @@ export default class Main extends ViewBase {
   background: @c-head-bg;
 }
 .page {
-  background: #fff;
-  height: 100%;
   font-size: 14px;
   .ivu-input-wrapper {
     width: auto;
@@ -162,22 +160,10 @@ export default class Main extends ViewBase {
     }
   }
   .tableTotal {
-    padding: 0 30px 20px;
+    padding: 0 30px 0;
     display: flex;
     justify-content: space-between;
     color: #989898;
-  }
-  .tables {
-    margin: 0 20px 40px;
-    border: none;
-    /deep/.ivu-table {
-      &::before {
-        height: 0;
-      }
-      td {
-        border-bottom: none;
-      }
-    }
   }
 }
 </style>

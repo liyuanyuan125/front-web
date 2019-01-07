@@ -69,20 +69,19 @@
       </Row>
     </div>
 
-    <div class="accountList">
+    <!-- 审核以通过 -->
+    <div class="accountList" v-if="false">
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
+      <div class="btnCenter sumbit-button" >
+        <button class="button-ok button-offset">
+          <router-link tag="span" :to="{ name: 'account-info-accedit' }">修改信息</router-link>
+        </button>
+        <button class="button-ok" @click="handleInforma">变更账号</button>
+      </div>
     </div>
 
-    <!-- 审核以通过 -->
     <div class="btnCenter sumbit-button">
-      <button class="button-ok button-offset">
-        <router-link tag="span" :to="{ name: 'account-info-accedit' }">修改信息</router-link>
-      </button>
-      <button class="button-ok" @click="handleInforma">变更账号</button>
-    </div>
-
-    <div class="btnCenter sumbit-button" v-if="false">
       <button class="button-ok">
         <router-link tag="span" :to="{ name: 'account-info-edit' }">修改信息</router-link>
       </button>

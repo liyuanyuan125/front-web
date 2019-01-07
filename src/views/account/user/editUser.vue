@@ -1,34 +1,34 @@
 <template>
-  <div class="page">
-    <h2 class="title">用户管理 > 编辑子用户</h2>
-    <Form :model="form" label-position="left" :label-width="100">
-      <h3>设置登录账号</h3>
+  <div class="page home-bg">
+    <h2 class="layout-nav-title">用户管理 > 编辑子用户</h2>
+    <Form :model="form" label-position="left" :label-width="100" class="edit-input">
+      <h3 class="layout-title">设置登录账号</h3>
       <FormItem label="邮箱类型" class="padItem">
         <Input v-model="form.type" placeholder="请输入正确的邮箱地址"></Input>
       </FormItem>
-      <h3>设置联系人（选项）</h3>
+      <h3 class="layout-title">设置联系人（选项）</h3>
       <FormItem label="联系人名称" class="padTop">
         <Input v-model="form.name" placeholder="请输入联系人名称"></Input>
       </FormItem>
       <FormItem label="手机号码" class="padbottom">
         <Input v-model="form.mobile" placeholder="请输入手机号码"></Input>
       </FormItem>
-      <h3>关联影院（选项）</h3>
-      <div class="rows">
+      <h3 class="layout-title">关联影院（选项）</h3>
+      <div class="text-rows">
         <Row>
           <Col :span="12">
             <p>覆盖区域 0 个</p>
             <p>覆盖省份 0 个</p>
-            <p class="btn" @click="queryList">查看已关联影院列表</p>
+            <p class="query-cinema" @click="queryList">查看已关联影院列表</p>
           </Col>
           <Col :span="12">
             <p>覆盖区域 0 个</p>
             <p>覆盖省份 0 个</p>
-            <p class="btn" @click="handleEdit">编辑关联影院</p>
+            <p class="query-cinema" @click="handleEdit">编辑关联影院</p>
           </Col>
         </Row>
       </div>
-      <h3>设置账号权限</h3>
+      <h3 class="layout-title">设置账号权限</h3>
       <FormItem label="权限角色" class="padTop">
         <Select v-model="form.role">
           <Option :value="item.key" v-for="item in rolelist">{{item.value}}</Option>
@@ -38,8 +38,8 @@
         <Tree :data="data2" show-checkbox></Tree>
       </FormItem>
     </Form>
-    <div class="tableSubmit btnCenter">
-      <button class="submitBtn" @click="handleInforma">确定修改</button>
+    <div class="btnCenter">
+      <button class="button-ok editSumbit" @click="handleInforma">确定修改</button>
     </div>
     <detailDlg v-model="detailVisible" v-if="detailVisible.visible"></detailDlg>
     <editDig v-model="editVisible" v-if="editVisible.editVis"></editDig>
@@ -102,63 +102,12 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-@import '~@/site/common.less';
-.page {
-  height: 100%;
-  background: #fff;
-  .title {
-    height: 50px;
-    padding: 14px 30px 33px;
-    font-size: 14px;
-    border-bottom: solid 10px #f2f2f2;
-    color: @c-link;
-  }
-  .ivu-form-item {
-    padding-left: 30px;
-    color: @c-text;
-    /deep/ .ivu-form-item-label {
-      font-size: 14px;
-      padding: 14px 12px 14px 0;
-    }
-    /deep/ .ivu-form-item-content {
-      .ivu-input-wrapper {
-        width: 400px;
-        /deep/ .ivu-input {
-          height: 40px;
-          line-height: 40px;
-        }
-      }
-      .ivu-select {
-        width: 400px;
-        .ivu-select-selection {
-          height: 40px;
-          .ivu-select-selected-value {
-            height: 40px;
-            line-height: 40px;
-          }
-          .ivu-select-placeholder {
-            height: 40px;
-            line-height: 40px;
-          }
-        }
-      }
-    }
-  }
-  h3 {
-    .h3Bg;
-  }
-  .rows {
-    padding: 20px 30px 35px;
-    font-size: 14px;
-    p {
-      padding-bottom: 15px;
-      &.btn {
-        color: @c-button;
-        padding-top: 10px;
-        cursor: pointer;
-      }
-    }
-  }
+.ivu-form-item {
+  padding-left: 30px;
+  color: @c-text;
+}
+.editSumbit {
+  margin-bottom: 30px;
 }
 </style>
 

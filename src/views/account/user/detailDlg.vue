@@ -17,14 +17,6 @@
         :columns="columns"
         :data="data1"
       ></Table>
-      <Page
-        :total="100"
-        class="btnCenter"
-        show-total
-        show-elevator
-      />
-      <!-- <div slot="footer" class="dialog-footer btnCenter">
-      </div>-->
     </Modal>
   </div>
 </template>
@@ -65,27 +57,6 @@ export default class Change extends ViewBase {
     display: flex;
     justify-content: space-between;
     color: #989898;
-  }
-  .tables {
-    margin: 0 20px 40px;
-    border: none;
-    /deep/.ivu-table {
-      &::before {
-        height: 0;
-      }
-      td {
-        border-bottom: none;
-      }
-    }
-  }
-}
-/deep/ .vertical-center-modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .ivu-modal {
-    top: 0;
   }
 }
 /deep/ .ivu-modal-footer {

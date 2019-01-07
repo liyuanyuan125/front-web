@@ -1,19 +1,16 @@
 <template>
-  <div class="page">
-    <Form :model="form" label-position="left" :label-width="120">
-      <h3>登录信息</h3>
-      <FormItem label="账号类型">
+  <div class="page home-bg">
+    <Form :model="form" label-position="left" :label-width="100">
+      <h3 class="layout-title">登录信息</h3>
+      <FormItem label="账号类型" class="item-top">
         <Input v-model="form.type"></Input>
       </FormItem>
       <FormItem label="登录账号">
         <Input v-model="form.account"></Input>
       </FormItem>
-      <h3>公司信息</h3>
-      <!-- <FormItem label="公司名称">
-        <Input v-model="form.type"></Input>
-      </FormItem> -->
-      <FormItem label="公司所在地">
-        <Input v-model="form.account"></Input>
+      <h3 class="layout-title">公司信息</h3>
+      <FormItem label="公司所在地" class="item-top">
+        <AreaSelect v-model="form.area" :max-level="2" no-self/>
       </FormItem>
       <FormItem label="联系人">
         <Input v-model="form.type"></Input>
@@ -24,19 +21,9 @@
       <FormItem label="邮箱">
         <Input v-model="form.account"></Input>
       </FormItem>
-      <!-- <h3>开户资质</h3>
-      <FormItem label="资质类型">
-        <Input v-model="form.account"></Input>
-      </FormItem>
-      <FormItem label="资质编号">
-        <Input v-model="form.account"></Input>
-      </FormItem>
-      <FormItem label="资质图片">
-        <Input v-model="form.account"></Input>
-      </FormItem> -->
     </Form>
     <div class="btnCenter">
-      <button class="submitBtn">提交申请</button>
+      <button class="button-ok edit-submit">提交申请</button>
     </div>
   </div>
 </template>
@@ -44,13 +31,19 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import AreaSelect from '@/components/AreaSelect.vue'
 
-@Component
+@Component({
+  components: {
+    AreaSelect
+  }
+})
 export default class Main extends ViewBase {
   form = {
     type: '11111111',
     account: 'xxxx@.com',
-    message: 'xxxx'
+    message: 'xxxx',
+    area: []
   }
   async mounted() {}
 }
@@ -61,31 +54,18 @@ export default class Main extends ViewBase {
 
 @c-bg: #fff;
 .page {
-  background: @c-bg;
-  height: 100%;
-  h3 {
-    font-size: 14px;
-    height: 50px;
-    line-height: 50px;
-    padding-left: 30px;
-    background: @c-head-bg;
-  }
   .ivu-form-item {
     padding-left: 30px;
     color: @c-text;
-    /deep/ .ivu-form-item-label {
-      font-size: 14px;
-      padding: 14px 12px 14px 0;
-    }
-    /deep/ .ivu-form-item-content {
-      .ivu-input-wrapper {
-        width: 400px;
-        /deep/ .ivu-input {
-          height: 40px;
-          line-height: 40px;
-        }
-      }
-    }
+  }
+  .item-top {
+    padding-top: 20px;
+  }
+  .edit-submit {
+    margin: 50px 0 40px;
+  }
+  /deep/ .ivu-cascader-rel {
+    width: auto;
   }
 }
 </style>
