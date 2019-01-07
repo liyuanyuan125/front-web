@@ -1,5 +1,5 @@
 <template>
-  <div class="loginHome">
+  <div class="login-home">
     <header>
       <div class="nav">
         <div class="logo">
@@ -24,31 +24,35 @@
         </div>
         <div>
           <div class="tablist">
-            <div :class="{active:activeTab}" @click="tabs(1)">我是广告主</div>
-            <div :class="{active:!activeTab}" @click="tabs(2)">我是资源方</div>
+            <div :class="{active: form.systemCode == 'ad'}"
+              @click="form.systemCode = 'ad'">我是广告主</div>
+            <div :class="{active: form.systemCode == 'resource'}"
+              @click="form.systemCode = 'resource'">我是资源方</div>
           </div>
-          <Form :model="form" :rules="rules" ref="form" class="form">
+          <Form :model="form" :rules="rules" ref="form" class="form"
+            @submit.native.prevent="submit" novalidate>
             <FormItem prop="email" :error="emailError">
               <Input type="email" v-model="form.email" prefix="md-person" placeholder="请输入邮箱"/>
             </FormItem>
-            <FormItem prop="password">
-              <Input
-                type="password"
-                v-model="form.password"
-                prefix="ios-unlock-outline"
-                placeholder="请输入密码"
-              />
+            <FormItem prop="password" :error="passwordError">
+              <Input type="password" v-model="form.password" prefix="ios-unlock-outline"
+                placeholder="请输入密码" :maxlength="16"/>
             </FormItem>
-            <FormItem prop="code" :error="codeError">
-              <Input class="code" type="text" v-model="form.code" prefix placeholder="请输入右图验证码"/>
+            <FormItem prop="captchaCode" :error="captchaCodeError">
+              <div class="captcha-wrap">
+                <Input class="captcha" type="text" v-model="form.captchaCode"
+                  placeholder="请输入右图验证码"/>
+                <img :src="captchaImg" v-if="captchaImg" class="captcha-img"
+                  title="点击更换" @click="changeCaptcha">
+              </div>
             </FormItem>
-            <Button type="warning" long @click="submit('form')" class="submit">登录</Button>
-            <Row class="toRegister">
+            <Button type="primary" html-type="submit" long :disabled="submitDisabled">登录</Button>
+            <Row class="login-etc">
               <Col span="4">
-                <router-link tag="span" :to="{ name: 'register' }">注册</router-link>
+                <router-link tag="span" :to="{name: 'register'}">注册</router-link>
               </Col>
               <Col align="right" span="6" offset="14">
-                <router-link tag="span" :to="{ name: 'resetpwd' }">忘记密码</router-link>
+                <router-link tag="span" :to="{name: 'resetpwd'}">忘记密码</router-link>
               </Col>
             </Row>
           </Form>
@@ -63,19 +67,26 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { login } from '@/api/auth'
 import { setUser } from '@/store'
+import { getCaptchaImage } from '@/api/captcha'
 
 @Component
 export default class Main extends ViewBase {
   form = {
+    systemCode: 'ad',
     email: '',
     password: '',
-    code: ''
+    captchaId: '',
+    captchaCode: ''
   }
 
   emailError = ''
-  codeError = ''
+  passwordError = ''
 
-  activeTab = true
+  captchaImg = ''
+  captchaCodeError = ''
+
+  submitDisabled = false
+
   rules = {
     email: [
       { required: true, message: '请输入你的邮箱', trigger: 'blur' },
@@ -90,50 +101,71 @@ export default class Main extends ViewBase {
         trigger: 'blur'
       }
     ],
-    code: [{ required: true, message: '请输入你的验证码', trigger: 'blur' }]
+    captchaCode: [{ required: true, message: '请输入图片验证码', trigger: 'blur' }]
   }
 
-  tabs(val: number) {
-    val === 2 ? (this.activeTab = false) : (this.activeTab = true)
+  async changeCaptcha() {
+    const { id, img } = await getCaptchaImage()
+    this.form.captchaId = id
+    this.captchaImg = img
+  }
 
-    // https://router.vuejs.org/zh/api/#router-link
+  created() {
+    this.changeCaptcha()
   }
 
   async submit() {
     const valid = await (this.$refs.form as any).validate()
-    if (valid) {
-      this.$router.push({name: 'home'})
-      // try {
-      //   const {
-      //     data: { user }
-      //   } = await login({
-      //     username: this.form.email,
-      //     password: this.form.password,
-      //     imageCode: this.form.code
-      //   })
-      //   setUser(user)
-        // debugger
-        // this.$router.push({ name: 'register' })
-      // } catch (ex) {
-      //   (this as any)[`onAjax${ex.code}`].call(this, ex)
-      // }
+    if (!valid) {
+      return
+    }
+
+    this.emailError = ''
+    this.passwordError = ''
+    this.captchaCodeError = ''
+
+    this.submitDisabled = true
+
+    try {
+      const postData = { ...this.form }
+      const { data } = await login(postData)
+      const user = {
+        id: data.userId,
+        name: data.email,
+        ...data,
+      }
+      setUser(user)
+      this.$router.push({ name: 'home' })
+    } catch (ex) {
+      ((this as any)[`onLogin${ex.code}`] || this.handleError).call(this, ex)
+    } finally {
+      this.submitDisabled = false
     }
   }
 
-  onAjax600600() {
+  onLogin10002() {
     this.emailError = '邮箱不存在'
+    this.form.captchaCode = ''
+    this.changeCaptcha()
   }
 
-  onAjax600608() {
-    this.codeError = '验证码不正确'
+  onLogin10010() {
+    this.passwordError = '密码不正确'
+    this.form.captchaCode = ''
+    this.changeCaptcha()
+  }
+
+  onLogin600608() {
+    this.captchaCodeError = '验证码不正确'
   }
 }
 </script>
 
 <style lang='less' scoped>
+@import '~@/site/lib.less';
 @import '~@/site/login.less';
 
-.loginHome {
+.login-home {
   height: 100%;
   width: 100%;
   /deep/ input {
@@ -144,16 +176,10 @@ export default class Main extends ViewBase {
       padding-left: 16px;
     }
   }
-  /deep/ .ivu-btn {
-    padding: 0;
-    background: #fe8135;
-    font-size: 16px;
-    height: 50px;
-  }
   /deep/ .ivu-input-prefix i {
     line-height: 50px;
   }
-  .toRegister {
+  .login-etc {
     margin-top: 20px;
     color: #272727;
     font-size: 14px;
@@ -238,5 +264,18 @@ export default class Main extends ViewBase {
       }
     }
   }
+}
+
+.captcha-wrap {
+  position: relative;
+  width: 100%;
+}
+.captcha-img {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 131px;
+  height: 48px;
+  border-left: 1px solid @c-border;
 }
 </style>
