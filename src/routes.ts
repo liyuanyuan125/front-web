@@ -79,7 +79,7 @@ export default [
   },
    // 账户管理 - 影院管理 - 查看
    {
-    path: '/account/cinema/detail',
+    path: '/account/cinema/detail/:id',
     name: 'account-cinema-detail',
     component: () => import('./views/account/cinema/detailCinema.vue')
   },
