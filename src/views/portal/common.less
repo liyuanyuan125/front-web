@@ -4,16 +4,31 @@
 
 .form {
   margin-top: 40px;
+
+  // Input 组件以及含有 Input 的组件
   /deep/ .ivu-input {
     height: 50px;
     padding: 15px;
     font-size: 16px;
   }
+
+  // FormItem 组件
   /deep/ .ivu-form-item {
     margin-bottom: 40px;
   }
   /deep/ .ivu-form-item-label {
     padding: 17px 12px 17px 0;
     font-size: 16px;
+  }
+
+  // Select 组件
+  /deep/ .ivu-select-selection {
+    height: 50px;
+  }
+  /deep/ .ivu-select-selected-value {
+    height: 50px;
+    line-height: 48px;
+    font-size: 16px;
+    padding-left: 15px;
   }
 }

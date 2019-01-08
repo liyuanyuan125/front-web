@@ -97,6 +97,7 @@ export default class Main extends ViewBase {
 
 <style lang='less' scoped>
 @import '~@/site/login.less';
+@import './common.less';
 
 .page-wrap {
   width: 600px;
