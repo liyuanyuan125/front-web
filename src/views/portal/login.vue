@@ -72,7 +72,7 @@ import { getCaptchaImage } from '@/api/captcha'
 @Component
 export default class Main extends ViewBase {
   form = {
-    systemCode: 'ad',
+    systemCode: 'ads',
     email: '',
     password: '',
     captchaId: '',

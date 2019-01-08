@@ -1,18 +1,21 @@
 <template>
   <div class="page home-bg">
     <Form :model="from" class="edit-input from" :label-width="100">
-      <FormItem label="账号类型">
-        <Input v-model="from.input"></Input>
+      <FormItem label="登录邮箱">
+        <span>xxxxxxxxx.com</span>
       </FormItem>
-      <FormItem label="公司名称">
-        <Input v-model="from.input"></Input>
+      <FormItem label="输入旧密码">
+        <Input v-model="from.input" placeholder="请输入旧密码" :maxlength="16"></Input>
       </FormItem>
-      <FormItem label="资质图片">
-        <Input v-model="from.input"></Input>
+      <FormItem label="设置新密码">
+        <Input v-model="from.input" placeholder="请输入新密码" :maxlength="16"></Input>
+      </FormItem>
+      <FormItem label="确定密码">
+        <Input v-model="from.input" placeholder="请确定密码" :maxlength="16"></Input>
       </FormItem>
     </Form>
     <div class="btnCenter sumbit-button">
-      <button class="button-ok">修改</button>
+      <button class="button-ok">确定修改</button>
     </div>
   </div>
 </template>
