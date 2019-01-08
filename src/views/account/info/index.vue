@@ -1,13 +1,13 @@
 <template>
   <div class="page home-bg">
-    <com-statu :statuCode="statuCode"></com-statu>
+    <com-statu :statuCode="displayStatus"></com-statu>
     <div class="content">
       <h3 class="layout-title">登录信息</h3>
       <Row class="text-rows">
         <Col :span="12">
           <p>
             <label>账号类型</label>
-            {{company.type}}
+            {{company.typeList}}
           </p>
           <p>
             <label>账号ID</label>
@@ -73,7 +73,7 @@
     <div class="accountList" v-if="false">
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
-      <div class="btnCenter sumbit-button" >
+      <div class="btnCenter sumbit-button">
         <button class="button-ok button-offset">
           <router-link tag="span" :to="{ name: 'account-info-accedit' }">修改信息</router-link>
         </button>
@@ -108,7 +108,7 @@ import dlgInforma from './dlgInformation.vue'
   }
 })
 export default class Main extends ViewBase {
-  statuCode = 0
+  displayStatus = 0
   account = {}
   company = {}
   systemList = {}
@@ -244,11 +244,11 @@ export default class Main extends ViewBase {
 
   async mounted() {
     try {
-      const option = { id: 1272 }
-      const { data } = await accountDetail(option)
+      const { data } = await accountDetail()
       this.account = data.account
       this.company = data.company
       this.systemList = data.systemList
+      this.displayStatus = data.company.displayStatus
     } catch (ex) {
       ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
     }

@@ -6,8 +6,8 @@
 
       <FormItem prop="systems" :label-width="0">
         <CheckboxGroup v-model="form.systems" class="check-group">
-          <Checkbox label="ad" class="check-type advert"
-            :class="{checked: form.systems.includes('ad')}"/>
+          <Checkbox label="ads" class="check-type advert"
+            :class="{checked: form.systems.includes('ads')}"/>
           <Checkbox label="resource" class="check-type resource"
             :class="{checked: form.systems.includes('resource')}"/>
         </CheckboxGroup>
@@ -243,6 +243,11 @@ export default class Main extends ViewBase {
     } finally {
       this.submitDisabled = false
     }
+  }
+
+  onSubmit8007203() {
+    this.emailError = '邮箱已存在'
+    this.scrollToError()
   }
 
   onSubmit8007303() {

@@ -16,12 +16,12 @@
 .ivu-table th, .ivu-table td {
   border-bottom: none;
 }
-.ivu-table:before, .ivu-table:after{
+.ivu-table:before, .ivu-table:after {
   height: 0;
 }
 
 // iview model
-.ivu-modal-footer{
+.ivu-modal-footer {
   border-top: 0;
   .ivu-btn,
   .ivu-input {
@@ -43,6 +43,7 @@
     color: @c-button;
     border-color: @c-button;
   }
+  &:hover,
   &:active,
   &:focus {
     background-color: @c-button-weak;
@@ -87,5 +88,13 @@
 }
 
 .ivu-form-item-error .ivu-input:focus {
+  box-shadow: none;
+}
+
+.ivu-select-selection,
+.ivu-select-selection-focused,
+.ivu-select-selection:hover,
+.ivu-select-visible .ivu-select-selection {
+  border-color: @c-border;
   box-shadow: none;
 }
