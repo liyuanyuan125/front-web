@@ -24,8 +24,8 @@
         </div>
         <div>
           <div class="tablist">
-            <div :class="{active: form.systemCode == 'ad'}"
-              @click="form.systemCode = 'ad'">我是广告主</div>
+            <div :class="{active: form.systemCode == 'ads'}"
+              @click="form.systemCode = 'ads'">我是广告主</div>
             <div :class="{active: form.systemCode == 'resource'}"
               @click="form.systemCode = 'resource'">我是资源方</div>
           </div>
@@ -110,6 +110,11 @@ export default class Main extends ViewBase {
     this.captchaImg = img
   }
 
+  async resetCaptcha() {
+    this.form.captchaCode = ''
+    this.changeCaptcha()
+  }
+
   created() {
     this.changeCaptcha()
   }
@@ -132,31 +137,29 @@ export default class Main extends ViewBase {
       const user = {
         id: data.userId,
         name: data.email,
+        systemCode: postData.systemCode,
         ...data,
       }
       setUser(user)
       this.$router.push({ name: 'home' })
     } catch (ex) {
       ((this as any)[`onLogin${ex.code}`] || this.handleError).call(this, ex)
+      this.resetCaptcha()
     } finally {
       this.submitDisabled = false
     }
   }
 
+  onLogin9006201() {
+    this.emailError = '账号不存在'
+  }
+
   onLogin10002() {
-    this.emailError = '邮箱不存在'
-    this.form.captchaCode = ''
-    this.changeCaptcha()
+    this.passwordError = '密码错误'
   }
 
-  onLogin10010() {
-    this.passwordError = '密码不正确'
-    this.form.captchaCode = ''
-    this.changeCaptcha()
-  }
-
-  onLogin600608() {
-    this.captchaCodeError = '验证码不正确'
+  onLogin10006() {
+    this.captchaCodeError = '验证码错误'
   }
 }
 </script>

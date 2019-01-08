@@ -9,6 +9,7 @@ import { logout as postLogout } from '@/api/auth'
 interface User {
   id: string
   name: string
+  systemCode: string
 }
 
 const KEY_TOKEN = 'X-API-TOKEN'
