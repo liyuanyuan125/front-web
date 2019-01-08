@@ -4,73 +4,167 @@
       <span class="nav-top-title">影院管理</span>
     </h3>
     <div class="flex-box">
-      <Input placeholder="请输入影院专资编码／影院名称进行搜索"/>
-      <span>
+      <Select
+        v-model="dataForm.query"
+        filterable
+        remote
+        clearable
+        placeholder="请输入转资编码或影院名称"
+        :remote-method="queryCode"
+        :loading="loading">
+        <Option v-for="(option, index) in options" :value="option.value" :key="index">{{option.label}}</Option>
+      </Select>
+      <span @click="seach">
         <Icon type="ios-search" size="22"/>
       </span>
     </div>
-    <div class="tableTotal">
-      <span>当前共有用户 xxx 人</span>
-      <span>当前结果共xxxx项</span>
-    </div>
-    <Table ref="selection" stripe class="tables" :columns="columns4" :data="data1"></Table>
-    <Page :total="100" class="btnCenter" show-total show-elevator/>
+    <Table ref="selection" stripe class="tables" :loading="tableLoading" :columns="columns4" :data="cinemaData"></Table>
+    <Page :total="total" v-if="total>0" class="btnCenter"
+      :current="dataForm.pageIndex"
+      :page-size="dataForm.pageSize"
+      :page-size-opts="[10, 20, 50, 100]"
+      show-total
+      show-sizer
+      show-elevator
+      @on-change="sizeChangeHandle"
+      @on-page-size-change="currentChangeHandle"/>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="tsx">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { cinmeaList } from '@/api/cinema'
+import { clean } from '@/fn/object'
+import jsxReactToVue from '@/util/jsxReactToVue'
 
 @Component
 export default class Main extends ViewBase {
+  dataForm = {
+    query: '',
+    pageIndex: 1,
+    pageSize: 10,
+  }
+  total = 0
+  cinemaData: any = []
+  loading = false
+  tableLoading = false
+  options: any = []
   columns4 = [
-    { title: 'ID', key: 'person' },
+    { title: '省份', key: 'provinceName', align: 'center' },
     {
-      title: '权限角色名称',
-      key: 'loginEmail'
+      title: '城市',
+      key: 'countyName',
+      align: 'center'
     },
     {
-      title: '上次编辑时间',
-      key: 'mobile'
+      title: '专资编码',
+      key: 'code',
+      align: 'center'
+    },
+    {
+      title: '影院名称',
+      key: 'shortName',
+      align: 'center'
+    },
+    {
+      title: '影厅数',
+      key: 'hallCount',
+      align: 'center'
+    },
+    {
+      title: '总座位数',
+      key: 'seatCount',
+      align: 'center'
     },
     {
       title: '操作',
-      render: (h: any, params: any) => {
-        return h('div', [
-          h(
-            'span',
-            {
-              style: { color: '#2481D7', cursor: 'pointer' },
-              on: {
-                click: () => {
-                  this.toDetail()
-                }
-              }
-            },
-            '查看'
-          )
-        ])
+      align: 'center',
+      render: (hh: any, { row: { id } }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        return <a on-click={this.toDetail.bind(this, id)} class="operation" >详情</a>
+        /* tslint:enable */
       }
     }
   ]
-  data1 = [
-    {
-      person: 'John Brown',
-      loginEmail: 'xxxxxxx',
-      mobile: 'xxxxxx'
-    },
-    {
-      person: 'John Brown',
-      loginEmail: 'xxxxxxx',
-      mobile: 'xxxxxx'
+
+  created() {
+    this.seach()
+  }
+
+  // 每页数
+  sizeChangeHandle(val: any) {
+    this.dataForm.pageIndex = val
+    this.seach()
+  }
+
+  // 当前页
+  currentChangeHandle(val: any) {
+    this.dataForm.pageSize = val
+    this.seach()
+  }
+
+  async queryCode(query: any) {
+    if (query !== '') {
+      this.loading = true
+      try {
+        const {
+          data: {
+            items
+          }
+        } = await cinmeaList({
+          query
+        })
+        const code: any = []
+        const shortName: any = []
+        items.forEach((it: any) => {
+          if ( it.code.includes(query) ) {
+            code.push({
+              value: it.code,
+              label: it.code
+            })
+          }
+        })
+        items.forEach((it: any) => {
+          if ( it.shortName.includes(query) ) {
+            shortName.push({
+              value: it.shortName,
+              label: it.shortName
+            })
+          }
+        })
+        this.options = [...code, ...shortName]
+        this.loading = false
+      } catch (ex) {
+        this.options = []
+      }
+    } else {
+      this.options = []
     }
-  ]
+  }
 
-  async mounted() {}
+  async seach() {
+    this.tableLoading = true
+    try {
+      const query = { ...this.dataForm }
+      const {
+        data: {
+          items,
+          totalCount
+        }
+      } = await cinmeaList(clean({...query}))
+      this.cinemaData = items
+      this.total = totalCount
+    } catch (ex) {
+      this.handleError(ex)
+    } finally {
+      this.tableLoading = false
+    }
+  }
 
-  toDetail() {
-    this.$router.push({ name: 'account-cinema-detail' })
+  toDetail(id: any) {
+    this.$router.push({ name: 'account-cinema-detail', params: {id} })
   }
 }
 </script>
@@ -93,13 +187,26 @@ export default class Main extends ViewBase {
   background: #fff;
   height: 100%;
   font-size: 14px;
-  .ivu-input-wrapper {
+  .ivu-select {
     width: auto;
-    /deep/ .ivu-input {
+    margin-left: 25px;
+    /deep/ .ivu-select-selection {
       height: 40px;
-      width: 400px;
-      margin-bottom: 30px;
-      margin-left: 25px;
+      /deep/ .ivu-select-input {
+        height: 40px;
+        width: 400px;
+        margin-bottom: 30px;
+      }
+    }
+    /deep/ .ivu-select-dropdown {
+      /deep/ li, /deep/ .ivu-select-loading {
+        line-height: 35px;
+        height: 35px;
+      }
+      /deep/ .ivu-select-item {
+        line-height: 25px;
+        height: 35px;
+      }
     }
   }
   .flex-box {
@@ -133,7 +240,7 @@ export default class Main extends ViewBase {
     color: #989898;
   }
   .tables {
-    margin: 0 20px 40px;
+    margin: 20px;
   }
 }
 </style>
