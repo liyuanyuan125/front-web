@@ -91,14 +91,13 @@ iView.LoadingBar.config({
 
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start()
-  next()
-  // if (!hasLogin() && to.name !== 'login') {
-  //   next({ name: 'login' })
-  // // } else if (!store.getters.canSee(to.name)) {
-  // //   next({ name: '403' })
-  // } else {
-  //   next()
-  // }
+  if (!hasLogin() && to.name !== 'login') {
+    next({ name: 'login' })
+  // } else if (!store.getters.canSee(to.name)) {
+  //   next({ name: '403' })
+  } else {
+    next()
+  }
 })
 
 router.afterEach((to, from) => {

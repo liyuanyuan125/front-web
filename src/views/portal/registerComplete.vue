@@ -11,7 +11,9 @@
       <FormItem label="资质编号" prop="qualificationCode">
         <Input v-model="form.qualificationCode" placeholder="请输入资质编号"/>
       </FormItem>
-      <FormItem label="资质图片" prop="images"></FormItem>
+      <FormItem label="资质图片" prop="images">
+        <Upload v-model="imageList" :max-count="3" multiple accept="images/*"/>
+      </FormItem>
     </Form>
 
     <div class="submit-ln">
@@ -29,14 +31,21 @@ import { scrollToError } from '@/util/form'
 import { getQualificationTypeList } from '@/api/company'
 import { KeyTextControlStatus } from '@/util/types'
 import { filterByControlStatus } from '@/util/dealData'
+import Upload from '@/components/Upload.vue'
 
-@Component
+@Component({
+  components: {
+    Upload
+  }
+})
 export default class Main extends ViewBase {
   form = {
     qualificationType: '',
     qualificationCode: '',
     images: [],
   }
+
+  imageList = []
 
   rules = {
     qualificationType: [
