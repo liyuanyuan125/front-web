@@ -245,6 +245,11 @@ export default class Main extends ViewBase {
     }
   }
 
+  onSubmit8007203() {
+    this.emailError = '邮箱已存在'
+    this.scrollToError()
+  }
+
   onSubmit8007303() {
     this.captchaError = '验证码错误'
     this.scrollToError()
