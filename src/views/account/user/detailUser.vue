@@ -6,47 +6,38 @@
       <Row>
         <Col :span="12">
           <p>
-            <label>账号管理</label>33333
+            <label>账户状态</label>
+            {{data.status}}
           </p>
           <p>
-            <label>账号ID</label> xxxxxx
+            <label>账号ID</label>
+            {{data.id}}
           </p>
         </Col>
         <Col :span="12">
           <p>
-            <label>邮箱账号</label> 33333
+            <label>登录账号</label>
+            {{data.email}}
           </p>
           <p>
-            <label>登录密码</label> xxxxxx
+            <label>联系人</label>
+            {{data.name}}
           </p>
           <p>
-            <label>联系人</label>33333
-          </p>
-          <p>
-            <label>手机号码</label> xxxxxx
+            <label>手机号码</label>
+            {{data.mobile}}
           </p>
         </Col>
       </Row>
     </div>
-    <h3 class="layout-title">关联影院</h3>
+    <h3 class="layout-title">关联客户</h3>
     <div class="text-rows">
       <Row>
         <Col :span="12">
           <p>
-            <label>覆盖区域</label>33333个
+            <label>客户</label> xxxxxx
           </p>
-          <p>
-            <label>覆盖省份</label> xxxxxx
-          </p>
-          <p class="query-cinema">查看已关联影院列表</p>
-        </Col>
-        <Col :span="12">
-          <p>
-            <label>覆盖</label> 33333 个
-          </p>
-          <p>
-            <label>关联影院</label> xxx个
-          </p>
+          <p class="query-cinema">查看关联客户</p>
         </Col>
       </Row>
     </div>
@@ -88,8 +79,11 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { userDetail } from '@/api/user'
 
+@Component
 export default class Main extends ViewBase {
+  data: any = []
   data1 = [
     {
       title: '首页',
@@ -122,6 +116,11 @@ export default class Main extends ViewBase {
       ]
     }
   ]
+  async mounted() {
+    const id = this.$route.params.useid
+    const { data } = await userDetail({ id })
+    this.data = data
+  }
 }
 </script>
 

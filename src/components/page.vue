@@ -1,7 +1,7 @@
 <template>
   <div>
     <Page
-      :total="value.total"
+      :total="total"
       :current="value.current"
       :page-size="value.pageSize"
       class="btnCenter"
@@ -19,6 +19,8 @@ import ViewBase from '@/util/ViewBase'
 @Component
 export default class Main extends ViewBase {
   @Prop({ type: Object }) value: any
+  @Prop({type: Number}) total: any
+
   mounted() {
   }
   // 点击页码

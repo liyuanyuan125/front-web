@@ -51,6 +51,7 @@ import ViewBase from '@/util/ViewBase'
 import detailDlg from '@/views/account/user/detailDlg.vue'
 import editDig from '@/views/account/user/editDlg.vue'
 
+
 @Component({
   components: {
     detailDlg,

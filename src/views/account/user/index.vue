@@ -11,23 +11,23 @@
       <Row type="flex" justify="space-between">
         <Col :span="6">
           <FormItem label="权限角色" :label-width="100">
-            <Select v-model="form.role">
-              <Option :value="item.key" v-for="item in rolelist">{{item.value}}</Option>
+            <Select v-model="form.roleId">
+              <Option :value="item.id" :key="item.id" v-for="item in rolelist">{{item.name}}</Option>
             </Select>
           </FormItem>
         </Col>
         <Col :span="5">
           <FormItem label="账号状态" :label-width="100">
             <Select v-model="form.status">
-              <Option :value="item.key" v-for="item in statusList">{{item.value}}</Option>
+              <Option :value="item.key" :key="item.id" v-for="item in statusList">{{item.text}}</Option>
             </Select>
           </FormItem>
         </Col>
         <Col :span="10">
           <FormItem>
             <div class="flex-box">
-              <Input placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
-              <span>
+              <Input v-model="form.searchKey" placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
+              <span @click="userList">
                 <Icon type="ios-search" size="22"/>
               </span>
             </div>
@@ -36,18 +36,18 @@
       </Row>
     </Form>
 
-    <div class="tableTotal">
+    <!-- <div class="tableTotal">
       <span>当前共有用户 xxx 人</span>
       <span>当前结果共xxxx项</span>
-    </div>
-    <Table ref="selection" stripe :columns="columns4" :data="data1" @on-select-all="selectAll"></Table>
+    </div>-->
+    <Table ref="selection" stripe :columns="columns" :data="data" @on-select-all="selectAll"></Table>
     <h4 class="checkAll">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
       </span>
       <span @click="deleteList">批量删除</span>
     </h4>
-    <Pagination v-model="pageObject"></Pagination>
+    <Pagination :total="total" v-model="pageObject"></Pagination>
   </div>
 </template>
 
@@ -65,41 +65,33 @@ import { getUser } from '@/store'
 })
 export default class Main extends ViewBase {
   checkboxAll = false
+  total = 0
   pageObject = {
-    total: 10,
-    current: 1,
-    pageSize: 4
+    pageIndex: 1,
+    pageSize: 1
   }
 
   form = {
-    role: '',
-    status: ''
+    systemCode: null,
+    roleId: null,
+    status: null,
+    searchKey: null
   }
 
-  rolelist = [
-    { key: '1', value: '所有角色' },
-    { key: '2', value: '广告运营' },
-    { key: '3', value: '所有角色' },
-    { key: '4', value: '所有角色' }
-  ]
+  rolelist = []
+  statusList = []
+  data = []
 
-  statusList = [
-    { key: '1', value: '所有状态' },
-    { key: '2', value: '待激活' },
-    { key: '3', value: '已启用' },
-    { key: '4', value: '已禁用' }
-  ]
-
-  columns4 = [
+  columns = [
     {
       type: 'selection',
       width: 60,
       align: 'center'
     },
-    { title: '联系人', key: 'person' },
+    { title: '联系人', key: 'name' },
     {
       title: '登录邮箱',
-      key: 'loginEmail'
+      key: 'email'
     },
     {
       title: '手机号码',
@@ -107,17 +99,17 @@ export default class Main extends ViewBase {
     },
     {
       title: '权限角色',
-      key: 'power'
+      key: 'roleName'
     },
     {
       title: '状态',
       key: 'status',
       render: (h: any, params: any) => {
         const status = params.row.status
-        if (status === 0) {
+        if (status === 1) {
           return h('span', { style: { color: '#444' } }, '已启用')
         }
-        if (status === 1) {
+        if (status === 3) {
           return h('span', { style: { color: '#05B824' } }, '待激活')
         }
         if (status === 2) {
@@ -127,7 +119,7 @@ export default class Main extends ViewBase {
     },
     {
       title: '上次登录时间',
-      key: 'lastTime'
+      key: 'lastLoginTime'
     },
     {
       title: '操作',
@@ -142,7 +134,7 @@ export default class Main extends ViewBase {
               style: { color: '#2481D7', cursor: 'pointer' },
               on: {
                 click: () => {
-                  this.toDetail()
+                  this.toDetail(params.row.id)
                 }
               }
             },
@@ -166,7 +158,7 @@ export default class Main extends ViewBase {
           )
         ]
 
-        if (status === 0) {
+        if (status === 1) {
           return h(
             'div',
             cocat.concat([
@@ -190,7 +182,7 @@ export default class Main extends ViewBase {
               )
             ])
           )
-        } else if (status === 1) {
+        } else if (status === 3) {
           return h(
             'div',
             cocat.concat([
@@ -237,58 +229,43 @@ export default class Main extends ViewBase {
       }
     }
   ]
-  data1 = [
-    {
-      person: 'John Brown',
-      loginEmail: 'xxxxxxx',
-      mobile: 'xxxxxx',
-      power: 'xxxxxx',
-      status: 0,
-      lastTime: 'xxxx',
-      _disabled: false
-    },
-    {
-      person: 'John Brown',
-      loginEmail: 'xxxxxxx',
-      mobile: 'xxxxxx',
-      power: 'xxxxxx',
-      status: 1,
-      lastTime: 'xxxx'
-    },
-    {
-      person: 'John Brown',
-      loginEmail: 'xxxxxxx',
-      mobile: 'xxxxxx',
-      power: 'xxxxxx',
-      status: 2,
-      lastTime: 'xxxx'
-    }
-  ]
 
   async mounted() {
     const user: any = getUser()!
-    const obj = {
-      pageIndex: 1,
-      systemCode: 'ads',
-      pageSize: 10,
-      status: null,
-      roleId: null
-    }
-    const { data } = await subAccount(obj)
+    this.form.systemCode = user.systemCode
+    this.userList()
   }
-  toDetail() {
-    this.$router.push({ name: 'account-user-detail' })
-  }
-  toEdit() {
-    this.$router.push({ name: 'account-user-edit' })
-  }
+  async userList() {
+    const { data } = await subAccount({ ...this.form, ...this.pageObject })
 
+    data.list.map((item: any) => {
+      data.roleList.map((role: any) => {
+        if (role.id == item.roleId) {
+          item.roleName = role.name
+        } else {
+          item.roleName = ''
+        }
+      })
+    })
+
+    this.rolelist = data.roleList
+    this.statusList = data.statusList
+    this.data = data.list
+    this.total = data.totalCount
+  }
   selectAll(select: any) {}
   handleSelectAll() {
     const selection = this.$refs.selection as any
     selection.selectAll(!this.checkboxAll)
   }
+
   deleteList() {}
+  toDetail(id: any) {
+    this.$router.push({ name: 'account-user-detail', params: { useid: id } })
+  }
+  toEdit() {
+    this.$router.push({ name: 'account-user-edit' })
+  }
 }
 </script>
 
@@ -343,6 +320,9 @@ export default class Main extends ViewBase {
       color: #fff;
       text-align: center;
       padding-top: 4px;
+      cursor: pointer;
+      position: relative;
+      left: -1px;
       background: @c-button;
     }
   }

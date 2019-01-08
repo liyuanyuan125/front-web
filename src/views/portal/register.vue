@@ -233,10 +233,11 @@ export default class Main extends ViewBase {
     try {
       const postData = except(this.form, 'passwordAgain,area')
       const { data } = await register(postData)
-      setUser({
+      const usr: any = {
         id: data.id,
         name: data.email,
-      })
+      }
+      setUser(usr)
       this.$router.push({ name: 'registerComplete' })
     } catch (ex) {
       ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
