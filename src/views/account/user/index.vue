@@ -55,6 +55,8 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Pagination from '@/components/page.vue'
+import { rolesList, subAccount } from '@/api/user'
+import { getUser } from '@/store'
 
 @Component({
   components: {
@@ -263,7 +265,17 @@ export default class Main extends ViewBase {
     }
   ]
 
-  async mounted() {}
+  async mounted() {
+    const user: any = getUser()!
+    const obj = {
+      pageIndex: 1,
+      systemCode: 'ads',
+      pageSize: 10,
+      status: null,
+      roleId: null
+    }
+    const { data } = await subAccount(obj)
+  }
   toDetail() {
     this.$router.push({ name: 'account-user-detail' })
   }
@@ -335,7 +347,7 @@ export default class Main extends ViewBase {
     }
   }
   .form {
-    padding-left: 30px;
+    padding: 0 30px;
     .ivu-form-item {
       /deep/ .ivu-form-item-label {
         font-size: 14px;
