@@ -59,7 +59,7 @@ export default class Main extends ViewBase {
       margin-right: 2px;
       span {
         position: relative;
-        top: -3px;
+        top: -4px;
         color: @c-text;
         font-size: 18px;
       }
@@ -73,7 +73,6 @@ export default class Main extends ViewBase {
         margin-right: 5px;
         span {
           color: #fff;
-          // top: -4px;
         }
       }
       .ivu-steps-title {

@@ -318,15 +318,15 @@ export default class Main extends ViewBase {
   }
 }
 .advert {
-  background-image: url(~@/assets/portal/ggzhu.png);
+  background-image: url(./assets/ggzhu.png);
   &.checked {
-    background-image: url(~@/assets/portal/ggzhu-checked.png);
+    background-image: url(./assets/ggzhuChecked.png);
   }
 }
 .resource {
-  background-image: url(~@/assets/portal/resource.png);
+  background-image: url(./assets/resource.png);
   &.checked {
-    background-image: url(~@/assets/portal/resource-checked.png);
+    background-image: url(./assets/resourceChecked.png);
   }
 }
 
