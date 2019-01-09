@@ -1,44 +1,34 @@
 <template>
   <div>
     <Modal
-      v-model="value.visible"
-      title="查看已关联影院列表"
-      width="800px"
+      v-model="value.visibleDetail"
       class-name="vertical-center-modal"
+      title="查看关联客户"
+      width="800"
     >
-      <div class="tableTotal">
-        <span>当前共有用户 xxx 人</span>
-        <span>当前结果共xxxx项</span>
-      </div>
-      <Table
-        ref="selection"
-        stripe
-        class="tables"
-        :columns="columns"
-        :data="data1"
-      ></Table>
+      <div v-if="visible">当前没有关联的客户</div>
+      <Table v-else :columns="columns" :data="data"></Table>
     </Modal>
   </div>
 </template>
 <script lang="ts">
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { mount } from '@vue/test-utils'
 
 @Component
 export default class Change extends ViewBase {
   @Prop({ type: Object }) value!: any
-  columns = [{ title: 'id', key: 'code' }, { title: '客户名称', key: 'name' }]
-  data1 = [
-    { code: '33333333333', name: 'xxxxxxxxxxxxxxxxx' },
-    { code: '33333333333', name: 'xxxxxxxxxxxxxxxxx' },
-    { code: '33333333333', name: 'xxxxxxxxxxxxxxxxx' },
-    { code: '33333333333', name: 'xxxxxxxxxxxxxxxxx' }
-  ]
+  visible = true
+  data = []
+  columns = [{ title: 'id', key: 'id' }, { title: '客户名称', key: 'name' }]
   mounted() {
-    // this.list = Object.assign(this.value.changelist)
-  }
-  closeDlg() {
-    this.value.visible = false
+    if (this.value.customer == null) {
+      this.visible = true
+    } else {
+      this.visible = false
+      this.data = this.value.customer
+    }
   }
 }
 </script>
@@ -47,21 +37,7 @@ export default class Change extends ViewBase {
   border-bottom: 0;
   padding: 10px 13px;
   background: #f9f9f9;
-  /deep/ .ivu-modal-header-inner {
-    font-weight: 0;
-  }
-}
-.ivu-modal-body {
-  .tableTotal {
-    padding: 0 30px 20px;
-    display: flex;
-    justify-content: space-between;
-    color: #989898;
-  }
-}
-/deep/ .ivu-modal-footer {
-  border-top: 0;
-  display: none;
+  font-weight: none;
 }
 </style>
 

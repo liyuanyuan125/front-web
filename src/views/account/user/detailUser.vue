@@ -35,9 +35,9 @@
       <Row>
         <Col :span="12">
           <p>
-            <label>客户</label> xxxxxx
+            <label>客户</label>{{customer}} 个
           </p>
-          <p class="query-cinema">查看关联客户</p>
+          <p class="query-cinema" @click="queryCustomer">查看关联客户</p>
         </Col>
       </Row>
     </div>
@@ -72,18 +72,30 @@
       </Row>
     </div>
     <div class="btnCenter">
-      <button class="button-ok submitBtn">编辑</button>
+      <button class="button-ok submitBtn" @click="goBack">返回</button>
     </div>
+    <detailDlg v-model="objDlg" v-if="objDlg.visibleDetail"></detailDlg>
   </div>
 </template>
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { userDetail } from '@/api/user'
+import detailDlg from './detailDlg.vue'
 
-@Component
+@Component({
+  components: {
+    detailDlg
+  }
+})
 export default class Main extends ViewBase {
   data: any = []
+  customer: any = ''
+  objDlg = {
+    visibleDetail: false,
+    customer: ''
+  }
+
   data1 = [
     {
       title: '首页',
@@ -120,6 +132,15 @@ export default class Main extends ViewBase {
     const id = this.$route.params.useid
     const { data } = await userDetail({ id })
     this.data = data
+    this.customer = this.data.partners == null ? 0 : this.data.partners.length
+  }
+
+  queryCustomer() {
+    this.objDlg.visibleDetail = true
+    this.objDlg.customer = this.data.partners
+  }
+  goBack() {
+    this.$router.push({name: 'account-user'})
   }
 }
 </script>
