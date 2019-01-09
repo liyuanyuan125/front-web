@@ -28,7 +28,8 @@
           placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"/>
       </FormItem>
       <FormItem label="重复密码" prop="passwordAgain">
-        <Input type="password" v-model="form.passwordAgain" :maxlength="16" placeholder="请再次输入密码"/>
+        <Input type="password" v-model="form.passwordAgain" :maxlength="16"
+          placeholder="请再次输入密码"/>
       </FormItem>
 
       <FormItem label="公司名称" prop="company">
@@ -55,8 +56,8 @@
       </FormItem>
 
       <div class="submit-ln">
-        <Button type="primary" html-type="submit" long class="submit"
-          :disabled="submitDisabled">下一步</Button>
+        <Button type="primary" html-type="submit" long
+          class="submit" :disabled="submitDisabled">下一步</Button>
       </div>
     </Form>
   </div>
@@ -107,7 +108,7 @@ export default class Main extends ViewBase {
 
     name: '',
     mobile: '',
-    contactEmail: '',
+    contactEmail: ''
   }
 
   get rules() {
@@ -125,7 +126,7 @@ export default class Main extends ViewBase {
 
       email: [
         { required: true, message: '请输入邮箱', trigger: 'blur' },
-        { type: 'email', message: '邮箱格式有误', trigger: 'blur' },
+        { type: 'email', message: '邮箱格式有误', trigger: 'blur' }
       ],
       captcha: [
         { required: true, message: '请输入邮箱验证码', trigger: 'blur' }
@@ -168,14 +169,14 @@ export default class Main extends ViewBase {
           type: 'array',
           validator(rule: any, value: number[], callback: any) {
             const strVal = (value || []).join('')
-            ; /^0*$/.test(strVal) ? callback(new Error(rule.message)) : callback()
+            ; /^0*$/.test(strVal)
+              ? callback(new Error(rule.message))
+              : callback()
           }
         }
       ],
 
-      name: [
-        { required: true, message: '请输入您的姓名', trigger: 'blur' }
-      ],
+      name: [{ required: true, message: '请输入您的姓名', trigger: 'blur' }],
       mobile: [
         { required: true, message: '请输入您的手机号', trigger: 'blur' },
         {
@@ -237,11 +238,12 @@ export default class Main extends ViewBase {
     try {
       const postData: any = except(this.form, 'passwordAgain,area')
       const { data } = await register(postData)
-      setUser({
+      const usr: any = {
         id: data.id,
         name: data.email,
-        systemCode: postData.systemCode,
-      })
+        systemCode: postData.systemCode
+      }
+      setUser(usr)
       this.$router.push({ name: 'registerComplete' })
     } catch (ex) {
       ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
@@ -295,15 +297,15 @@ export default class Main extends ViewBase {
   }
 }
 .advert {
-  background-image: url(~@/assets/portal/ggzhu.png);
+  background-image: url(./assets/ggzhu.png);
   &.checked {
-    background-image: url(~@/assets/portal/ggzhu-checked.png);
+    background-image: url(./assets/ggzhuChecked.png);
   }
 }
 .resource {
-  background-image: url(~@/assets/portal/resource.png);
+  background-image: url(./assets/resource.png);
   &.checked {
-    background-image: url(~@/assets/portal/resource-checked.png);
+    background-image: url(./assets/resourceChecked.png);
   }
 }
 

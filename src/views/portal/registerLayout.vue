@@ -13,13 +13,13 @@
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { Component, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 
 const stepMap: any = {
   register: 0,
-  registerComplete: 1,
+  'register-complete': 1,
 }
 
 @Component
@@ -59,7 +59,7 @@ export default class Main extends ViewBase {
       margin-right: 2px;
       span {
         position: relative;
-        top: -3px;
+        top: -4px;
         color: @c-text;
         font-size: 18px;
       }
@@ -73,7 +73,6 @@ export default class Main extends ViewBase {
         margin-right: 5px;
         span {
           color: #fff;
-          // top: -4px;
         }
       }
       .ivu-steps-title {

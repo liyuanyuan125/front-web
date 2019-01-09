@@ -40,7 +40,7 @@ export default [
   },
   // 账户管理 - 用户管理 - 查看
   {
-    path: '/account/user/detail',
+    path: '/account/user/detail/:useid',
     name: 'account-user-detail',
     component: () => import('./views/account/user/detailUser.vue')
   },

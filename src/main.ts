@@ -12,6 +12,7 @@ import PortalLayout from './views/portal/layout.vue'
 import RegisterLayout from './views/portal/registerLayout.vue'
 import register from './views/portal/register.vue'
 import registerComplete from './views/portal/registerComplete.vue'
+import registerSuccess from './views/portal/registerSuccess.vue'
 import MainLayout from './site/MainLayout.vue'
 import locale from 'iview/dist/locale/zh-CN'
 import event from './fn/event'
@@ -57,10 +58,15 @@ const router = new Router({
             },
             {
               path: '/register/complete',
-              name: 'registerComplete',
+              name: 'register-complete',
               component: registerComplete
             },
           ]
+        },
+        {
+          path: '/register/success',
+          name: 'register-success',
+          component: registerSuccess
         },
         {
           path: '/resetpwd',

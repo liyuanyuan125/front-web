@@ -11,23 +11,23 @@
       <Row type="flex" justify="space-between">
         <Col :span="6">
           <FormItem label="权限角色" :label-width="100">
-            <Select v-model="form.role">
-              <Option :value="item.key" v-for="item in rolelist">{{item.value}}</Option>
+            <Select v-model="form.roleId">
+              <Option :value="item.id" :key="item.id" v-for="item in rolelist">{{item.name}}</Option>
             </Select>
           </FormItem>
         </Col>
         <Col :span="5">
           <FormItem label="账号状态" :label-width="100">
             <Select v-model="form.status">
-              <Option :value="item.key" v-for="item in statusList">{{item.value}}</Option>
+              <Option :value="item.key" :key="item.id" v-for="item in statusList">{{item.text}}</Option>
             </Select>
           </FormItem>
         </Col>
         <Col :span="10">
           <FormItem>
             <div class="flex-box">
-              <Input placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
-              <span>
+              <Input v-model="form.searchKey" placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
+              <span @click="userList">
                 <Icon type="ios-search" size="22"/>
               </span>
             </div>
@@ -36,68 +36,77 @@
       </Row>
     </Form>
 
-    <div class="tableTotal">
+    <!-- <div class="tableTotal">
       <span>当前共有用户 xxx 人</span>
       <span>当前结果共xxxx项</span>
-    </div>
-    <Table ref="selection" stripe :columns="columns4" :data="data1" @on-select-all="selectAll"></Table>
+    </div>-->
+    <Table
+      ref="selection"
+      stripe
+      :columns="columns"
+      :data="data"
+      @on-select="singleSelect"
+      @on-select-all="selectAll"
+    ></Table>
     <h4 class="checkAll">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
       </span>
       <span @click="deleteList">批量删除</span>
     </h4>
-    <Pagination v-model="pageObject"></Pagination>
+    <Page
+      :total="total"
+      v-if="total>0"
+      class="btnCenter"
+      :current="pageObject.pageIndex"
+      :page-size="pageObject.pageSize"
+      show-total
+      show-elevator
+      @on-change="handlepageChange"
+      @on-page-size-change="handlePageSize"
+    />
   </div>
 </template>
 
-<script lang="ts">
+<script lang="tsx">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import Pagination from '@/components/page.vue'
+import jsxReactToVue from '@/util/jsxReactToVue'
+import { rolesList, subAccount, delectSub, accountStatu } from '@/api/user'
+import { getUser } from '@/store'
+import { confirm } from '@/ui/modal'
 
-@Component({
-  components: {
-    Pagination
-  }
-})
+@Component({})
 export default class Main extends ViewBase {
   checkboxAll = false
+  total = 0
   pageObject = {
-    total: 10,
-    current: 1,
-    pageSize: 4
+    pageIndex: 1,
+    pageSize: 2
   }
 
   form = {
-    role: '',
-    status: ''
+    systemCode: null,
+    roleId: null,
+    status: null,
+    searchKey: null
   }
 
-  rolelist = [
-    { key: '1', value: '所有角色' },
-    { key: '2', value: '广告运营' },
-    { key: '3', value: '所有角色' },
-    { key: '4', value: '所有角色' }
-  ]
+  rolelist = []
+  statusList = []
+  data = []
+  selectIds = []
 
-  statusList = [
-    { key: '1', value: '所有状态' },
-    { key: '2', value: '待激活' },
-    { key: '3', value: '已启用' },
-    { key: '4', value: '已禁用' }
-  ]
-
-  columns4 = [
+  columns = [
     {
       type: 'selection',
       width: 60,
       align: 'center'
     },
-    { title: '联系人', key: 'person' },
+    { title: '联系人', key: 'name' },
     {
       title: '登录邮箱',
-      key: 'loginEmail'
+      key: 'email'
     },
     {
       title: '手机号码',
@@ -105,17 +114,17 @@ export default class Main extends ViewBase {
     },
     {
       title: '权限角色',
-      key: 'power'
+      key: 'roleName'
     },
     {
       title: '状态',
       key: 'status',
       render: (h: any, params: any) => {
         const status = params.row.status
-        if (status === 0) {
+        if (status === 1) {
           return h('span', { style: { color: '#444' } }, '已启用')
         }
-        if (status === 1) {
+        if (status === 3) {
           return h('span', { style: { color: '#05B824' } }, '待激活')
         }
         if (status === 2) {
@@ -125,158 +134,117 @@ export default class Main extends ViewBase {
     },
     {
       title: '上次登录时间',
-      key: 'lastTime'
+      key: 'lastLoginTime'
     },
     {
       title: '操作',
       key: '',
-      render: (h: any, params: any) => {
-        const status = params.row.status
-        const that = this
-        const cocat = [
-          h(
-            'span',
-            {
-              style: { color: '#2481D7', cursor: 'pointer' },
-              on: {
-                click: () => {
-                  this.toDetail()
-                }
-              }
-            },
-            '查看'
-          ),
-          h(
-            'span',
-            {
-              style: {
-                color: '#2481D7',
-                cursor: 'pointer',
-                margin: '0 15px'
-              },
-              on: {
-                click: () => {
-                  this.toEdit()
-                }
-              }
-            },
-            '编辑'
+      render: (hh: any, { row }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        if (row.status == 2) {
+          return (
+            <div class="">
+              <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
+              &nbsp;&nbsp;&nbsp;
+              <a on-click={this.toEdit}>编辑</a>&nbsp;&nbsp;&nbsp;
+              <a on-click={this.handleEnable.bind(this, row.id, 1)}>启用</a>
+            </div>
           )
-        ]
-
-        if (status === 0) {
-          return h(
-            'div',
-            cocat.concat([
-              h(
-                'span',
-                {
-                  style: { color: '#2481D7', cursor: 'pointer' },
-                  on: {
-                    click: () => {
-                      this.$Modal.warning({
-                        title: '提示',
-                        content:
-                          '您确认要禁用该广告用户吗？广告用户禁用后，将不能登录广告平台',
-                        onOk: () => {},
-                        onCancel: () => {}
-                      })
-                    }
-                  }
-                },
-                '禁用'
-              )
-            ])
+        } else if (row.status == 1) {
+          return (
+            <div class="">
+              <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
+              &nbsp;&nbsp;&nbsp;
+              <a on-click={this.toEdit}>编辑</a>&nbsp;&nbsp;&nbsp;
+              <a on-click={this.handleEnable.bind(this, row.id, 2)}>禁用</a>
+            </div>
           )
-        } else if (status === 1) {
-          return h(
-            'div',
-            cocat.concat([
-              h(
-                'span',
-                {
-                  style: { color: '#2481D7', cursor: 'pointer' },
-                  on: {
-                    click: () => {
-                      this.$Message.success(
-                        '重新激活”按钮，提示文案“激活链接已重新发送，请提醒子用户查收激活邮件'
-                      )
-                    }
-                  }
-                },
-                '重新激活'
-              )
-            ])
-          )
-        } else if (status === 2) {
-          return h(
-            'div',
-            cocat.concat([
-              h(
-                'span',
-                {
-                  style: { color: '#2481D7', cursor: 'pointer' },
-                  on: {
-                    click: () => {
-                      this.$Modal.success({
-                        title: '提示',
-                        content: '您确认要启用该广告吗',
-                        onOk: () => {},
-                        onCancel: () => {}
-                      })
-                    }
-                  }
-                },
-                '启用'
-              )
-            ])
+        } else if (row.status == 3) {
+          return (
+            <div class="">
+              <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
+              &nbsp;&nbsp;&nbsp;
+              <a on-click={this.toEdit}>编辑</a>&nbsp;&nbsp;&nbsp;
+              <a v-else-if="row.status == 3">重新激活</a>
+            </div>
           )
         }
+        /* tslint:enable */
       }
     }
   ]
-  data1 = [
-    {
-      person: 'John Brown',
-      loginEmail: 'xxxxxxx',
-      mobile: 'xxxxxx',
-      power: 'xxxxxx',
-      status: 0,
-      lastTime: 'xxxx',
-      _disabled: false
-    },
-    {
-      person: 'John Brown',
-      loginEmail: 'xxxxxxx',
-      mobile: 'xxxxxx',
-      power: 'xxxxxx',
-      status: 1,
-      lastTime: 'xxxx'
-    },
-    {
-      person: 'John Brown',
-      loginEmail: 'xxxxxxx',
-      mobile: 'xxxxxx',
-      power: 'xxxxxx',
-      status: 2,
-      lastTime: 'xxxx'
-    }
-  ]
 
-  async mounted() {}
-  toDetail() {
-    this.$router.push({ name: 'account-user-detail' })
+  async mounted() {
+    const user: any = getUser()!
+    this.form.systemCode = user.systemCode
+    this.userList()
   }
-  toEdit() {
-    this.$router.push({ name: 'account-user-edit' })
+  async userList() {
+    const { data } = await subAccount({ ...this.form, ...this.pageObject })
+
+    data.list.map((item: any) => {
+      data.roleList.map((role: any) => {
+        if (role.id == item.roleId) {
+          item.roleName = role.name
+        } else {
+          item.roleName = ''
+        }
+      })
+    })
+
+    this.rolelist = data.roleList
+    this.statusList = data.statusList
+    this.data = data.list
+    this.total = data.totalCount
   }
 
-  selectAll(select: any) {}
+  singleSelect(select: any) {
+    this.selectIds = select
+  }
+  // 全选
+  selectAll(select: any) {
+    this.selectIds = select
+  }
   handleSelectAll() {
     const selection = this.$refs.selection as any
     selection.selectAll(!this.checkboxAll)
   }
-  deleteList() {}
+
+  async deleteList() {
+    if (this.selectIds.length) {
+      const ids = this.selectIds.map((item: any) => item.id)
+      await delectSub({ ids })
+      this.userList()
+    } else {
+      this.showWaring('请选择你要删除的元素')
+    }
+  }
+  async handleEnable(id: any, type: any) {
+    if (type == 1) {
+      await confirm('您确定启用当前信息吗？')
+      await accountStatu({ status: 1 }, id)
+      this.userList()
+    } else {
+      await confirm('您确定禁用当前信息吗？')
+      await accountStatu({ status: 2 }, id)
+      this.userList()
+    }
+  }
+  toDetail(id: any) {
+    this.$router.push({ name: 'account-user-detail', params: { useid: id } })
+  }
+  toEdit() {
+    this.$router.push({ name: 'account-user-edit' })
+  }
+  handlepageChange(size: any) {
+    this.pageObject.pageIndex = size
+    this.userList()
+  }
+  handlePageSize(size: any) {
+    this.pageObject.pageIndex = size
+    this.userList()
+  }
 }
 </script>
 
@@ -331,11 +299,14 @@ export default class Main extends ViewBase {
       color: #fff;
       text-align: center;
       padding-top: 4px;
+      cursor: pointer;
+      position: relative;
+      left: -1px;
       background: @c-button;
     }
   }
   .form {
-    padding-left: 30px;
+    padding: 0 30px;
     .ivu-form-item {
       /deep/ .ivu-form-item-label {
         font-size: 14px;
