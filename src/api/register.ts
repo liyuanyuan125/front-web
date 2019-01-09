@@ -32,3 +32,12 @@ export async function register(data: any) {
   const res = post('/customer/accounts/signup', data)
   return res
 }
+
+/**
+ * 充值密码
+ * @param data 接口数据
+ */
+export async function resetPassword(data: any) {
+  const res = put('/customer/accounts/pwd-reset', data)
+  return res
+}

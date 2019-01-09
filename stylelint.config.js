@@ -10,5 +10,6 @@ module.exports = {
     'selector-list-comma-newline-after': null,
     'no-descending-specificity': null,
     'declaration-empty-line-before': null,
+    'declaration-block-semicolon-newline-after': null,
   }
 }

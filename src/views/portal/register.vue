@@ -17,8 +17,10 @@
         <Input v-model="form.email" placeholder="请输入邮箱"/>
       </FormItem>
       <FormItem label="邮箱验证码" prop="captcha" :error="captchaError">
-        <Input v-model="form.captcha" :maxlength="6" style="width:260px" placeholder="请输入邮箱验证码"/>
-        <Button class="btn-code" :disabled="codeDisabled || emailIsValid" @click="getCode">{{codeMsg}}</Button>
+        <Input v-model="form.captcha" :maxlength="6" class="input-captcha"
+          placeholder="请输入邮箱验证码"/>
+        <Button class="btn-code" :disabled="codeDisabled || emailIsValid"
+          @click="getCode">{{codeMsg}}</Button>
       </FormItem>
 
       <FormItem label="密码" prop="password">
@@ -46,14 +48,16 @@
         <Input v-model="form.contactEmail" placeholder="请输入您的邮箱"/>
       </FormItem>
 
-      <FormItem>
+      <FormItem class="agreement-ln">
         <Checkbox v-model="agreement">我同意并遵守
           <router-link to>《平台运营条款》</router-link>
         </Checkbox>
       </FormItem>
 
-      <Button type="primary" html-type="submit" long class="submit"
-        :disabled="submitDisabled">下一步</Button>
+      <div class="submit-ln">
+        <Button type="primary" html-type="submit" long class="submit"
+          :disabled="submitDisabled">下一步</Button>
+      </div>
     </Form>
   </div>
 </template>
@@ -147,7 +151,7 @@ export default class Main extends ViewBase {
           trigger: 'blur',
           validator: (rule: any, value: string, callback: any) => {
             value != this.form.password
-              ? callback(new Error('两次密码不一致,请重新输入'))
+              ? callback(new Error('两次密码不一致，请重新输入'))
               : callback()
           }
         }
@@ -231,11 +235,12 @@ export default class Main extends ViewBase {
     this.submitDisabled = true
 
     try {
-      const postData = except(this.form, 'passwordAgain,area')
+      const postData: any = except(this.form, 'passwordAgain,area')
       const { data } = await register(postData)
       setUser({
         id: data.id,
         name: data.email,
+        systemCode: postData.systemCode,
       })
       this.$router.push({ name: 'registerComplete' })
     } catch (ex) {
@@ -269,7 +274,7 @@ export default class Main extends ViewBase {
 
 .page-wrap {
   width: 600px;
-  margin: 80px auto 40px;
+  margin: 80px auto 0;
 }
 
 .check-group {
@@ -302,8 +307,21 @@ export default class Main extends ViewBase {
   }
 }
 
+.input-captcha {
+  width: 260px;
+}
 .btn-code {
   margin-left: 20px;
   width: 200px;
+}
+
+.agreement-ln {
+  margin-top: -10px;
+}
+
+.submit-ln {
+  margin-top: -10px;
+  padding-top: 40px;
+  border-top: 1px solid @c-divider;
 }
 </style>
