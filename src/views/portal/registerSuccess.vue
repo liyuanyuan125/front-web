@@ -16,7 +16,7 @@ export default class Main extends ViewBase {
 
   async mounted() {
     await countDown(3, sec => this.second = sec)
-    // this.$router.push({ name: 'home' })
+    this.$router.push({ name: 'home' })
   }
 }
 </script>
