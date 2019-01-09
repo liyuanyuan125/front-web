@@ -34,9 +34,6 @@ export default class Main extends ViewBase {
 <style lang='less' scoped>
 @import '~@/site/lib.less';
 
-.page-wrap {
-  height: 100%;
-}
 .steps {
   border-bottom: solid 1px #efefef;
   padding: 50px 0 20px 48px;
@@ -76,7 +73,7 @@ export default class Main extends ViewBase {
         margin-right: 5px;
         span {
           color: #fff;
-          top: -4px;
+          // top: -4px;
         }
       }
       .ivu-steps-title {
@@ -89,9 +86,5 @@ export default class Main extends ViewBase {
       }
     }
   }
-}
-
-.reg-body {
-  margin-bottom: 80px;
 }
 </style>

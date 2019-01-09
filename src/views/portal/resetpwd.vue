@@ -1,28 +1,35 @@
 <template>
   <div>
     <div class="forgetpass">找回密码</div>
-    <div class="firstNext">
-      <Form ref="form" :model="form" :rules="rulesfrom" label-position="left" :label-width="120">
-        <FormItem label="登录邮箱" prop="email">
-          <Input v-model="form.email" placeholder="请输入登录邮箱"/>
+    <div class="reset-pwd">
+      <Form :model="form" :rules="rules" class="form" label-position="left"
+        :label-width="120" @submit.native.prevent="submit" ref="form">
+        <DisableAutoFill/>
+
+        <FormItem label="登录邮箱" prop="email" :error="emailError">
+          <Input v-model="form.email" placeholder="请输入注册时的邮箱地址"/>
         </FormItem>
-        <FormItem label="邮箱验证码" prop="emailCode">
-          <Input
-            v-model="form.emailCode"
-            :maxlength="6"
-            style="width:260px;"
-            placeholder="请输入邮箱验证码"
-          />
-          <span @click="getCode" class="codemess">{{codeMess}}</span>
+        <FormItem label="邮箱验证码" prop="captcha" :error="captchaError">
+          <Input v-model="form.captcha" :maxlength="6" class="input-captcha"
+            placeholder="请输入邮箱验证码"/>
+          <Button class="btn-code" :disabled="codeDisabled || emailIsValid"
+            @click="getCode">{{codeMsg}}</Button>
         </FormItem>
+
         <FormItem label="密码" prop="password">
-          <Input v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合"/>
+          <Input type="password" v-model="form.password" :maxlength="16"
+            placeholder="请设置包含大小写的英文字母与数字的组合，8－16位的新密码"/>
         </FormItem>
-        <FormItem label="重复密码" prop="confirm">
-          <Input v-model="form.confirm" :maxlength="16" placeholder="请再次输入密码"/>
+        <FormItem label="重复密码" prop="passwordAgain">
+          <Input type="password" v-model="form.passwordAgain" :maxlength="16"
+            placeholder="请再次输入密码"/>
         </FormItem>
+
+        <div class="submit-ln">
+          <Button type="primary" html-type="submit" long class="submit"
+            :disabled="submitDisabled">提交</Button>
+        </div>
       </Form>
-      <Button type="warning" @click="next" long class="submit">下一步</Button>
     </div>
   </div>
 </template>
@@ -31,125 +38,161 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { countDown } from '@/fn/timer'
-import { email } from '@/util/common.ts'
-import { validatePassword } from '@/util/validateRules'
+import { validateEmail, validatePassword } from '@/util/validateRules'
+import { except } from '@/fn/object'
+import { scrollToError } from '@/util/form'
+import DisableAutoFill from '@/components/DisableAutoFill.vue'
+import { sendResetpwdEmail, resetPassword } from '@/api/register'
+import { success } from '@/ui/modal'
 
-@Component
+@Component({
+  components: {
+    DisableAutoFill
+  }
+})
 export default class Main extends ViewBase {
-  codeMess = '获取邮箱验证码'
-  isRun = false
+  codeDisabled = false
+  codeMsg = '获取邮箱验证码'
+
+  emailError = ''
+  captchaError = ''
+
+  submitDisabled = false
 
   form = {
     email: '',
-    emailCode: '',
+    captcha: '',
     password: '',
-    confirm: ''
+    passwordAgain: '',
   }
-  rulesfrom = {
+
+  rules = {
     email: [
-      { required: true, message: '请输入登录邮箱', trigger: 'blur' },
-      { type: 'email', message: '邮箱格式有误', trigger: 'blur' }
+      { required: true, message: '请输入邮箱', trigger: 'blur' },
+      { type: 'email', message: '邮箱格式有误', trigger: 'blur' },
     ],
-    emailCode: [
+    captcha: [
       { required: true, message: '请输入邮箱验证码', trigger: 'blur' }
     ],
+
     password: [
-      { required: true, message: '请输入你的密码', trigger: 'blur' },
+      {
+        required: true,
+        message: '请输入你的密码',
+        trigger: 'blur'
+      },
       {
         trigger: 'blur',
-        validate(rule: any, value: string, callback: any) {
+        validator(rule: any, value: string, callback: any) {
           const msg = validatePassword(value)
           msg ? callback(new Error(msg)) : callback()
         }
       }
     ],
-    confirm: [
+    passwordAgain: [
       { required: true, message: '请再次输入密码', trigger: 'blur' },
       {
         trigger: 'blur',
-        validate: (rule: any, value: string, callback: any) => {
-          const msg = '两次密码不一致,请重新输入'
-          value != this.form.password ? callback(new Error(msg)) : callback()
+        validator: (rule: any, value: string, callback: any) => {
+          value != this.form.password
+            ? callback(new Error('两次密码不一致，请重新输入'))
+            : callback()
         }
       }
-    ]
+    ],
   }
-  async downTime() {
-    this.isRun = true
-    await countDown(10, sec => {
-      this.codeMess = sec + 's'
-    })
 
-    this.codeMess = '重新获取验证码'
-    this.isRun = false
+  get emailIsValid() {
+    const failMsg = validateEmail(this.form.email)
+    return !!failMsg
   }
-  getCode() {
-    if (email(this.form.email)) {
-      if (!this.isRun) {
-        this.downTime()
-      }
-    } else {
-      this.showWaring('用户邮箱格式有误')
+
+  async getCode() {
+    this.codeDisabled = true
+
+    try {
+      await sendResetpwdEmail(this.form.email)
+
+      await countDown(10, sec => {
+        this.codeMsg = sec + 's'
+      })
+
+      this.codeMsg = '重新获取验证码'
+    } catch (ex) {
+      this.handleError(ex)
+    } finally {
+      this.codeDisabled = false
     }
   }
-  async next() {
-    const valid = await (this.$refs.form as any).validate()
-    if (valid) {
-      this.$emit('iscurrent', 1)
+
+  scrollToError() {
+    const form = this.$refs.form as any
+    this.$nextTick(() => scrollToError(form))
+  }
+
+  async submit() {
+    const form = this.$refs.form as any
+    const valid = await form.validate()
+    if (!valid) {
+      return this.scrollToError()
     }
+
+    this.submitDisabled = true
+
+    try {
+      const postData = except(this.form, 'passwordAgain,area')
+      const { data } = await resetPassword(postData)
+      await success('重置密码成功')
+      this.$router.push({ name: 'login' })
+    } catch (ex) {
+      ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
+    } finally {
+      this.submitDisabled = false
+    }
+  }
+
+  onSubmit8007203() {
+    this.emailError = '邮箱已存在'
+    this.scrollToError()
+  }
+
+  onSubmit8007303() {
+    this.captchaError = '验证码错误'
+    this.scrollToError()
   }
 }
 </script>
 
 <style lang="less" scoped>
-@import '~@/site/login.less';
+@import '~@/site/lib.less';
+@import './common.less';
 
 .forgetpass {
-  .wid-auto;
-
+  max-width: 1100px;
+  margin: 0 auto;
   text-align: center;
   font-size: 15px;
-  color: @theme-color;
-  border-bottom: solid 1px #efefef;
+  color: @c-button;
+  border-bottom: solid 1px @c-divider;
   padding: 50px 0 20px;
 }
-.firstNext {
+
+.reset-pwd {
   width: 600px;
-  margin: 80px auto 40px;
-  .submit {
-    .form-btn;
+  margin: auto;
+  padding: 80px auto 40px;
+}
 
-    margin-top: 30px;
-  }
-  & > form {
-    margin-top: 40px;
-    .ivu-form-item {
-      margin-bottom: 40px;
-      /deep/.ivu-form-item-label {
-        .form-label;
-      }
-      /deep/ .ivu-form-item-content {
-        input {
-          .form-input;
-        }
-        span.codemess {
-          width: 200px;
-          display: block;
-          .form-input;
+.input-captcha {
+  width: 260px;
+}
+.btn-code {
+  margin-left: 20px;
+  width: 200px;
+}
 
-          cursor: pointer;
-          line-height: 50px;
-          border: solid 1px #dcdee2;
-          text-align: center;
-          background: #fff;
-          position: absolute;
-          right: 0;
-          top: 0;
-          color: @theme-color;
-        }
-      }
-    }
-  }
+.submit-ln {
+  margin-top: 100px;
 }
 </style>
 

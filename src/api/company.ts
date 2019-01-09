@@ -8,3 +8,11 @@ export async function getQualificationTypeList() {
   const { data } = await get('/customer/companies/qualification/view')
   return (data.qualificationTypeList || []) as KeyTextControlStatus[]
 }
+
+/**
+ * 提交补充资料
+ */
+export async function putAdditional(data: any) {
+  const res = await put('/customer/companies/qualification/additional', data)
+  return res
+}

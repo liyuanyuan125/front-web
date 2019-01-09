@@ -1,13 +1,19 @@
 <template>
-  <div :class="['upload-box', readonly ? 'upload-box-readonly' : '']">
-    <ul class="upload-list">
+  <div :class="['upload-box',
+    readonly ? 'upload-box-readonly' : '',
+    canAdd ? '' : 'upload-box-cannot-add']">
+    <form class="upload-add" ref="form" v-if="!readonly">
+      <label class="upload-add-in">
+        <span>添加</span>
+        <input type="file" :accept="accept" :multiple="multiple"
+          @change="onChange" v-if="canAdd"/>
+      </label>
+    </form>
+    <transition-group name="list" tag="ul" class="upload-list">
       <li v-for="(it, i) in inValue" :key="it.uqid" class="upload-item">
         <img :src="it.url" v-if="it.url">
         <div class="action-cover" v-if="it.status == 'done'">
-          <Icon type="ios-eye-outline" @click.native="onView(it.url)"
-            class="action-view"/>
-          <Icon type="ios-trash-outline" @click.native="onDel(i)"
-            class="action-del" v-if="!readonly"/>
+          <a @click="onDel(i)" class="action-del"></a>
         </div>
         <div class="loading-cover" v-else-if="it.status == 'loading'">
           <TinyLoading/>
@@ -16,14 +22,7 @@
           <Progress :percent="it.percent" status="success" hide-info/>
         </div>
       </li>
-      <li class="upload-item upload-add" v-if="!readonly && canAdd">
-        <label class="upload-add-in">
-          <Icon type="ios-camera" size="20"/>
-          <span>上传</span>
-          <input type="file" :accept="accept" :multiple="multiple" @change="onChange"/>
-        </label>
-      </li>
-    </ul>
+    </transition-group>
     <Modal v-model="viewerShow" title="查看图片" width="888">
       <img :src="viewerImage" class="viewer-image">
     </Modal>
@@ -36,31 +35,16 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import Uploader from '@/util/Uploader'
-import { alert } from '@/ui/modal'
+import { alert, confirm } from '@/ui/modal'
 import { random } from '@/fn/string'
 import { slice } from '@/fn/object'
 import { isEqual } from 'lodash'
+import { FileItem } from './types'
 
 const genUqid = () => random('upload')
 
 // 状态，loading 表示正在生成预览（针对图片），uploading 正在上传，done 完成
-type Status = '' | 'loading' | 'uploading' | 'done'
-
-/** 文件项 */
-export interface FileItem {
-  /** 唯一 ID，内部添加，会传播到外部 */
-  uqid?: string
-  /** 文件（图片）地址 */
-  url: string
-  /** 文件ID */
-  fileId: string
-  /** 可选，客户端文件名，内部添加，会传播到外部 */
-  clientName?: string
-  /** 可选，客户端文件大小，内部添加，会传播到外部 */
-  clientSize?: number
-  /** 可选，客户端文件类型，内部添加，会传播到外部 */
-  clientType?: string
-}
+type Status = '' | 'loading' | 'uploading' | 'done' | 'fail'
 
 /** 上传项 */
 interface UploadItem extends FileItem {
@@ -108,12 +92,12 @@ export default class Upload extends ViewBase {
   @Prop({ type: Array, default: () => [] }) value!: FileItem[]
 
   /**
-   * 是否支持多选文件
+   * 是否支持多选文件，默认为 false
    */
   @Prop({ type: Boolean, default: false }) multiple!: boolean
 
   /**
-   * 接受的文件类型
+   * 接受的文件类型，默认为 *
    */
   @Prop({ type: String, default: '*' }) accept!: string
 
@@ -123,9 +107,19 @@ export default class Upload extends ViewBase {
   @Prop({ type: Number, default: 1 }) maxCount!: number
 
   /**
-   * 是否为只读
+   * 是否为只读，默认为 false
    */
   @Prop({ type: Boolean, default: false }) readonly!: boolean
+
+  /**
+   * 是否在删除前进行 confirm 提示，默认为 false
+   */
+  @Prop({ type: Boolean, default: false }) confirmOnDel!: boolean
+
+  /**
+   * 删除提示消息
+   */
+  @Prop({ type: String, default: '确定删除这张图片？' }) delConfirmMsg!: string
 
   inValue: UploadItem[] = []
 
@@ -134,6 +128,10 @@ export default class Upload extends ViewBase {
 
   get canAdd() {
     return this.inValue.length < this.maxCount
+  }
+
+  get isUploading() {
+    return !this.inValue.every(it => it.status == 'done' || it.status == 'fail')
   }
 
   @Watch('value', { deep: true, immediate: true })
@@ -160,10 +158,12 @@ export default class Upload extends ViewBase {
     if (files == null || files.length === 0) {
       return
     }
+
     const remain = this.maxCount - this.inValue.length
     if (files.length > remain) {
       return alert(`最多添加 ${this.maxCount} 个，还剩 ${remain} 个`)
     }
+
     [].slice.call(files).forEach((file: File) => {
       const uqid = genUqid()
       // 快速响应原则：只要选择，直接添加
@@ -214,17 +214,25 @@ export default class Upload extends ViewBase {
     const item = this.inValue.find(it => it.uqid === uqid)!
     item.url = url
     item.fileId = fileId
+    item.status = 'done'
   }
 
   onUploadFail(uqid: string, ex: any) {
     const error = this.formatError(ex)
     const item = this.inValue.find(it => it.uqid === uqid)!
     item.error = error
+    item.status = 'fail'
   }
 
   onUploadEnd(uqid: string) {
-    const item = this.inValue.find(it => it.uqid === uqid)!
-    item.status = 'done'
+    this.checkComplete()
+  }
+
+  checkComplete() {
+    if (!this.isUploading) {
+      // reset 表单，以便添加同一个文件时，仍然触发 onChange
+      (this.$refs.form as HTMLFormElement).reset()
+    }
   }
 
   onView(url: string) {
@@ -232,33 +240,44 @@ export default class Upload extends ViewBase {
     this.viewerShow = true
   }
 
-  onDel(i: number) {
+  async onDel(i: number) {
+    this.confirmOnDel && await confirm(this.delConfirmMsg)
+    this.inValue.splice(i, 1)
+  }
+
+  doDel(i: number) {
     this.inValue.splice(i, 1)
   }
 }
 </script>
 
 <style lang="less" scoped>
+@import '~@/site/lib.less';
+
 .upload-box {
-  background-color: #ecf0f4;
+  position: relative;
 }
 .upload-list {
-  display: flex;
-  padding: 0 8px;
   list-style: inside none;
+}
+.upload-list:not(:empty) {
+  margin-top: 20px;
 }
 .upload-item {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
-  border: 1px solid transparent;
-  border-radius: 4px;
+  width: 150px;
+  height: 150px;
+  border: 1px solid @c-border;
   background-color: #fff;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-  margin: 8px 8px 8px 0;
+  margin-left: 15px;
+  vertical-align: top;
+  &:first-child {
+    margin-left: 0;
+  }
   img {
     max-width: 100%;
     max-height: 100%;
@@ -282,35 +301,60 @@ export default class Upload extends ViewBase {
 }
 .action-cover {
   display: none;
-  background-color: rgba(0, 0, 0, 0.6);
-  /deep/ .ivu-icon {
-    color: #fff;
-    font-size: 20px;
-    cursor: pointer;
-    margin: 0 2px;
-  }
 }
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s;
+}
+.list-enter,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.action-del {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 100%;
+  background: url(~./assets/del.png) no-repeat;
+  background-size: contain;
+}
+
 .upload-add {
-  box-shadow: none;
-  border: 1px dashed #dcdee2;
-  &:hover {
-    color: #2d8ce8;
-    border-color: #2d8ce8;
-  }
+  position: relative;
+  user-select: none;
 }
 .upload-add-in {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  font-size: 14px;
+  color: @c-button;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  // 扩大选取范围
+  display: inline-block;
+  padding-right: 8px;
+
+  &::before {
+    content: '';
+    position: relative;
+    display: inline-block;
+    top: 2px;
+    width: 13px;
+    height: 13px;
+    background: url(./assets/add.png) no-repeat left center;
+    margin-right: 10px;
+  }
   input[type=file] {
     display: none;
+  }
+}
+.upload-box-cannot-add {
+  .upload-add-in {
+    color: @c-sub-text;
+    filter: grayscale(100%);
+    cursor: not-allowed;
   }
 }
 .viewer-image {
