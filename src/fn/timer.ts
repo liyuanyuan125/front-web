@@ -24,7 +24,7 @@ export function delay(ms: number) {
  * @return {Promise} 倒计时结束 resolve，从不 reject
  */
 export async function countDown(seconds: number, tick: CountDownCallback, { span = 1, to = 0 } = {}) {
-  for (; seconds > to; seconds -= span) {
+  for (; seconds >= to; seconds -= span) {
     tick(seconds)
     await delay(span * 1000)
   }

@@ -14,7 +14,7 @@
       </div>
     </header>
     <content class="content">
-      <div class="mainAuto">
+      <div class="main-wrap">
         <div>
           <img src="~@/assets/login/bannerlogo.png" alt="alias" height="115px">
           <br>
@@ -193,7 +193,7 @@ export default class Main extends ViewBase {
       .flex;
       .wid-auto;
 
-      height: 124px;
+      height: 110px;
       font-size: 14px;
       color: @text-color;
       cursor: pointer;
@@ -213,9 +213,10 @@ export default class Main extends ViewBase {
     position: absolute;
     width: 100%;
     height: 100%;
+    min-height: 600px;
     background: url('~@/assets/login/loginBg.png') no-repeat center;
     background-size: cover;
-    .mainAuto {
+    .main-wrap {
       .wid-auto;
 
       cursor: pointer;
