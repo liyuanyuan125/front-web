@@ -59,13 +59,13 @@ export default [
   },
   // 账户管理 - 权限管理 - 编辑
   {
-    path: '/account/auth/edit',
+    path: '/account/auth/edit/:id',
     name: 'account-auth-edit',
     component: () => import('./views/account/auth/editUser.vue')
   },
   // 账户管理 - 权限管理 - 查看
   {
-    path: '/account/auth/detail',
+    path: '/account/auth/detail/:id',
     name: 'account-auth-detail',
     component: () => import('./views/account/auth/detailUser.vue')
   },

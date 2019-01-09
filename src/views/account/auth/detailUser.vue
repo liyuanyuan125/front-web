@@ -5,7 +5,7 @@
       <Row>
         <Col :span="12">
           <p>
-            <label>权限角色</label>33333
+            <label>权限角色</label>{{role.name}}
           </p>
         </Col>
       </Row>
@@ -15,7 +15,7 @@
         <Col :span="12">
           <p class="flex-box">
             <label>相关权限</label>
-            <Tree :data="data1"></Tree>
+            <Tree :data="list"></Tree>
           </p>
         </Col>
       </Row>
@@ -28,40 +28,39 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { customerRole } from '@/api/authUser'
 
+@Component
 export default class Main extends ViewBase {
-  data1 = [
-    {
-      title: '首页',
-      expand: true,
-      children: [
-        {
-          title: '推广管理1',
-          expand: true,
-          children: [
-            {
-              title: '推广管理1-1'
-            },
-            {
-              title: '推广管理1-2'
-            }
-          ]
-        },
-        {
-          title: '推广管理2',
-          expand: true,
-          children: [
-            {
-              title: '推广管理2-1'
-            },
-            {
-              title: '推广管理2-2'
-            }
-          ]
+  list: any = []
+  role: any = []
+
+  created() {
+    this.seach()
+  }
+
+  recursion(arr: any, brr: any) {
+  }
+
+  async seach() {
+    const id = this.$route.params.id || 0
+    try {
+      const {
+        data: {
+          menu,
+          role
         }
-      ]
+      } = await customerRole(id)
+      const meanList: any = []
+      const brr: any = []
+      meanList.push(menu)
+      this.recursion(meanList, brr)
+      this.role = role
+    } catch (ex) {
+      this.handleError(ex)
+    } finally {
     }
-  ]
+  }
 }
 </script>
 
@@ -72,5 +71,3 @@ export default class Main extends ViewBase {
   padding-bottom: 0;
 }
 </style>
-
-
