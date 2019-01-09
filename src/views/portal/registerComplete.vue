@@ -182,5 +182,16 @@ export default class Main extends ViewBase {
   color: @c-text;
   font-size: 24px;
   font-weight: normal;
+  line-height: 48px;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    margin-right: 20px;
+    background: url(./assets/okFlag.png) no-repeat;
+    background-size: contain;
+  }
 }
 </style>

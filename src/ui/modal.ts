@@ -11,7 +11,7 @@ import { Modal, Message } from 'iview'
 /**
  * Modal 类型
  */
-export type ModalType = 'error' | 'info' | 'success' | 'warning'
+export type ModalType = 'error' | 'info' | 'success' | 'warning' | 'confirm'
 
 /**
  * iView Modal 配置对象，并从原配置对象中去掉 onOk，多加了一个 type 对象
