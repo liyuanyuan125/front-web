@@ -2,7 +2,7 @@
   <div class="page home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">用户管理</span>
-      <router-link class="addUser" tag="span" to="/account/user/add">
+      <router-link class="addUser" tag="span" :to="{name: 'account-user-add'}">
         <Icon type="ios-add" size="27"/>新增子用户
       </router-link>
     </h3>
@@ -72,7 +72,7 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import jsxReactToVue from '@/util/jsxReactToVue'
-import { rolesList, subAccount, delectSub, accountStatu } from '@/api/user'
+import { rolesList, subAccount, delectSub, accountStatu, activeEmail } from '@/api/user'
 import { getUser } from '@/store'
 import { confirm } from '@/ui/modal'
 
@@ -147,7 +147,7 @@ export default class Main extends ViewBase {
             <div class="">
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
-              <a on-click={this.toEdit}>编辑</a>&nbsp;&nbsp;&nbsp;
+              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
               <a on-click={this.handleEnable.bind(this, row.id, 1)}>启用</a>
             </div>
           )
@@ -156,7 +156,7 @@ export default class Main extends ViewBase {
             <div class="">
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
-              <a on-click={this.toEdit}>编辑</a>&nbsp;&nbsp;&nbsp;
+              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
               <a on-click={this.handleEnable.bind(this, row.id, 2)}>禁用</a>
             </div>
           )
@@ -165,8 +165,8 @@ export default class Main extends ViewBase {
             <div class="">
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
-              <a on-click={this.toEdit}>编辑</a>&nbsp;&nbsp;&nbsp;
-              <a v-else-if="row.status == 3">重新激活</a>
+              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
+              <a on-click={this.activeEmail.bind(this,row.id)}>重新激活</a>
             </div>
           )
         }
@@ -231,12 +231,17 @@ export default class Main extends ViewBase {
       this.userList()
     }
   }
+
   toDetail(id: any) {
     this.$router.push({ name: 'account-user-detail', params: { useid: id } })
   }
-  toEdit() {
-    this.$router.push({ name: 'account-user-edit' })
+  toEdit(id: any) {
+    this.$router.push({ name: 'account-user-edit', params: {useid: id} })
   }
+  async activeEmail(id: any) {
+    await activeEmail({id})
+  }
+
   handlepageChange(size: any) {
     this.pageObject.pageIndex = size
     this.userList()

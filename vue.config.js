@@ -13,6 +13,7 @@ module.exports = {
         target: 'https://fapi.dev.aiads.com',
         changeOrigin: true,
         ws: false,
+        secure: false,
         bypass(req) {
           if (req.headers.accept.indexOf('html') !== -1) {
             return '/index.html'

@@ -1,14 +1,18 @@
-import { get } from '@/fn/ajax'
+import { post } from '@/fn/ajax'
 
 /**
  * 获取验证码图片信息
  */
 export async function getCaptchaImage() {
-  const { data } = await get('/customer/captchas/image')
+  const { data: { imageCaptcha } } = await post('/captcha/images')
 
+  // TODO: 应该去掉
   if (VAR.env == 'dev') {
-    data.img = data.img.replace(/^(http:)?\/\//, 'https://')
+    imageCaptcha.url = imageCaptcha.url.replace(/^(http:)?\/\//, 'https://')
   }
 
-  return data as { id: string, img: string }
+  return {
+    id: imageCaptcha.ticket,
+    img: imageCaptcha.url,
+  }
 }

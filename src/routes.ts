@@ -34,7 +34,7 @@ export default [
   },
   // 账户管理 - 用户管理 - 编辑
   {
-    path: '/account/user/edit',
+    path: '/account/user/edit/:useid',
     name: 'account-user-edit',
     component: () => import('./views/account/user/editUser.vue')
   },
@@ -83,6 +83,13 @@ export default [
     path: '/account/password',
     name: 'account-password',
     component: () => import('./views/account/password/index.vue'),
+  },
+
+  // 财务信息 - 财务信息  - 查看
+  {
+    path: '/finance/info',
+    name: 'finance-info',
+    component: () => import('./views/finance/info/index.vue'),
   },
 
   // 示例，没有实际用处
