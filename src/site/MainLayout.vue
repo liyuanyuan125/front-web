@@ -95,6 +95,20 @@ export default class App extends ViewBase {
         },
       ]
     },
+    {
+      name: 'finance',
+      label: '财务管理',
+      subList: [
+        {
+          name: 'finance-info',
+          label: '财务信息',
+        },
+        {
+          name: 'finance-bill',
+          label: '资金账单',
+        }
+      ]
+    },
   ]
 
   get siderOpenNames() {
