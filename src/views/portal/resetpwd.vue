@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <PortalLayout>
     <div class="forgetpass">找回密码</div>
     <div class="reset-pwd">
       <Form :model="form" :rules="rules" class="form" label-position="left"
@@ -31,12 +31,13 @@
         </div>
       </Form>
     </div>
-  </div>
+  </PortalLayout>
 </template>
 
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import PortalLayout from './portalLayout.vue'
 import { countDown } from '@/fn/timer'
 import { validateEmail, validatePassword } from '@/util/validateRules'
 import { except } from '@/fn/object'
@@ -47,6 +48,7 @@ import { success } from '@/ui/modal'
 
 @Component({
   components: {
+    PortalLayout,
     DisableAutoFill
   }
 })
@@ -195,5 +197,3 @@ export default class Main extends ViewBase {
   margin-top: 100px;
 }
 </style>
-
-

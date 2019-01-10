@@ -1,29 +1,37 @@
 
 <template>
-  <div class="page-wrap">
-    <div class="steps">
-      <Steps :current="current">
-        <Step title="创建帐号" style="width:135px"></Step>
-        <Step title="补充资质" style="width:135px"></Step>
-      </Steps>
-    </div>
+  <PortalLayout>
+    <slot name="steps">
+      <div class="steps">
+        <Steps :current="current">
+          <Step title="创建帐号" style="width:135px"></Step>
+          <Step title="补充资质" style="width:135px"></Step>
+        </Steps>
+      </div>
+    </slot>
+
     <div class="reg-body">
-      <router-view/>
+      <slot></slot>
     </div>
-  </div>
+  </PortalLayout>
 </template>
 
 <script lang="ts">
 import { Component, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import PortalLayout from './portalLayout.vue'
 
 const stepMap: any = {
   register: 0,
   'register-complete': 1,
 }
 
-@Component
-export default class Main extends ViewBase {
+@Component({
+  components: {
+    PortalLayout
+  }
+})
+export default class RegisterLayout extends ViewBase {
   get current() {
     const name = this.$route.name
     return stepMap[name!] || 0

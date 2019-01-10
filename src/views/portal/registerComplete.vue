@@ -1,38 +1,41 @@
 <template>
-  <div class="page-wrap">
-    <Form :model="form" :rules="rules" label-position="left" :label-width="120"
-      class="form" @submit.native.prevent="submit" ref="form">
-      <FormItem label="资质类型" prop="qualificationType">
-        <Select v-model="form.qualificationType" placeholder="请选择资质类型">
-          <Option v-for="it in qualificationTypeList" :key="it.key"
-            :value="it.key">{{it.text}}</Option>
-        </Select>
-      </FormItem>
+  <RegisterLayout>
+    <div class="page-wrap">
+      <Form :model="form" :rules="rules" label-position="left" :label-width="120"
+        class="form" @submit.native.prevent="submit" ref="form">
+        <FormItem label="资质类型" prop="qualificationType">
+          <Select v-model="form.qualificationType" placeholder="请选择资质类型">
+            <Option v-for="it in qualificationTypeList" :key="it.key"
+              :value="it.key">{{it.text}}</Option>
+          </Select>
+        </FormItem>
 
-      <FormItem label="资质编号" prop="qualificationCode">
-        <Input v-model="form.qualificationCode" placeholder="请输入资质编号"/>
-      </FormItem>
+        <FormItem label="资质编号" prop="qualificationCode">
+          <Input v-model="form.qualificationCode" placeholder="请输入资质编号"/>
+        </FormItem>
 
-      <FormItem label="资质图片" prop="images">
-        <div class="upload-wrap">
-          <Upload v-model="imageList" :max-count="3" multiple accept="images/*"
-            confirm-on-del/>
-          <div class="upload-tip">支持1或3张，格式为jpg/jpeg/png，大小不超过5M的图片</div>
+        <FormItem label="资质图片" prop="images">
+          <div class="upload-wrap">
+            <Upload v-model="imageList" :max-count="3" multiple accept="images/*"
+              confirm-on-del/>
+            <div class="upload-tip">支持1或3张，格式为jpg/jpeg/png，大小不超过5M的图片</div>
+          </div>
+        </FormItem>
+
+        <div class="submit-ln">
+          <Button @click="toHome" class="btn-pass">稍后补充</Button>
+          <Button type="primary" html-type="submit" class="btn-submit"
+            :disabled="submitDisabled">注册完成</Button>
         </div>
-      </FormItem>
-
-      <div class="submit-ln">
-        <Button @click="toHome" class="btn-pass">稍后补充</Button>
-        <Button type="primary" html-type="submit" class="btn-submit"
-          :disabled="submitDisabled">注册完成</Button>
-      </div>
-    </Form>
-  </div>
+      </Form>
+    </div>
+  </RegisterLayout>
 </template>
 
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import RegisterLayout from './registerLayout.vue'
 import { scrollToError } from '@/util/form'
 import { getQualificationTypeList, putAdditional } from '@/api/company'
 import { KeyTextControlStatus } from '@/util/types'
@@ -41,6 +44,7 @@ import Upload, { FileItem } from '@/components/upload'
 
 @Component({
   components: {
+    RegisterLayout,
     Upload
   }
 })

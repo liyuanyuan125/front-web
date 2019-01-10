@@ -1,5 +1,5 @@
 <template>
-  <div class="scene-wrap">
+  <div class="portal-layout">
     <header class="header">
       <div class="header-in flex-box">
         <div class="logo-wrap flex-mid">
@@ -15,7 +15,7 @@
     </header>
 
     <main class="main">
-      <router-view/>
+      <slot></slot>
     </main>
 
     <footer class="footer">
@@ -38,7 +38,7 @@
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 
-.scene-wrap {
+.portal-layout {
   background-color: #f6f7fd;
 }
 
