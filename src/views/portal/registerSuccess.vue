@@ -1,16 +1,24 @@
 <template>
-  <div class="page-wrap">
-    <h3 class="done-title">注册完成</h3>
-    <p class="done-tip"><em>{{second}}秒</em>后将自动返回首页</p>
-  </div>
+  <RegisterLayout>
+    <div slot="steps"></div>
+    <div class="page-wrap">
+      <h3 class="done-title">注册完成</h3>
+      <p class="done-tip"><em>{{second}}秒</em>后将自动返回首页</p>
+    </div>
+  </RegisterLayout>
 </template>
 
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import RegisterLayout from './registerLayout.vue'
 import { countDown } from '@/fn/timer'
 
-@Component
+@Component({
+  components: {
+    RegisterLayout
+  }
+})
 export default class Main extends ViewBase {
   second = 0
 
