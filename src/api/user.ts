@@ -2,6 +2,8 @@ import {get, post, put, del} from '@/fn/ajax'
 import { getUser } from '@/store'
 const user: any = getUser()!
 const systemCode = user.systemCode
+
+// liyuanyuan
 /**
  * 获取角色列表
  * @param data
@@ -64,12 +66,22 @@ export async function activeEmail(data: any) {
     return res
 }
 
+
 /**
- *  添加待激活子账户
+ * 用户管理- 激活邮箱提交
  * @param status
  */
-export async function addUser() {
-    const res = post(`/customer/sub-accounts/${systemCode}`)
+export async function activeEmailSumbit(data: any) {
+    const res = get('customer/sub-accounts/active', data)
+    return res
+}
+
+/**
+ *  添加待激活子账户(增加子账户)
+ * @param status
+ */
+export async function addUser(data: any) {
+    const res = post(`/customer/sub-accounts/${systemCode}`, data)
     return res
 }
 
