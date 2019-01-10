@@ -62,14 +62,7 @@
     </div>
     <h3 class="layout-title">操作日志</h3>
     <div class="text-rows">
-      <Row>
-        <Col :span="12">
-          <p>20111-22-22 提交账户充值，充值ID：10000，金额（元）：100000；33333</p>
-        </Col>
-        <Col :span="12">
-          <p>20111-22-22 登录广告平台</p>
-        </Col>
-      </Row>
+      9999
     </div>
     <div class="btnCenter">
       <button class="button-ok submitBtn" @click="goBack">返回</button>
@@ -80,7 +73,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { userDetail } from '@/api/user'
+import { userDetail, operationLog } from '@/api/user'
 import detailDlg from './detailDlg.vue'
 
 @Component({
@@ -133,6 +126,9 @@ export default class Main extends ViewBase {
     const { data } = await userDetail({ id })
     this.data = data
     this.customer = this.data.partners == null ? 0 : this.data.partners.length
+
+    const obj = {pageIndex: 1, pageSize: 10}
+    const datalog = operationLog(obj, id)
   }
 
   queryCustomer() {
