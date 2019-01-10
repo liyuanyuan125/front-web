@@ -1,4 +1,4 @@
-import { get, post, put } from '@/fn/ajax'
+import { get, post, put, del } from '@/fn/ajax'
 
 /**
  * 权限列表
@@ -40,7 +40,16 @@ export async function customerAdd(query: any) {
  * 删除角色
  * @param data 接口数据
  */
-export async function customerDel(query: any) {
-    const res = get('/customer/roles/', query)
+export async function customerDel(id: any) {
+    const res = del(`/customer/roles/${id}`)
+    return res
+}
+
+/**
+ * 获取角色列表
+ * @param data 接口数据
+ */
+export async function meanList(systemCode: string, query: any) {
+    const res = get(`/customer/menus/${systemCode}`, query)
     return res
 }

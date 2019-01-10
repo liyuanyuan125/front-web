@@ -46,7 +46,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import editDig from '@/views/account/user/editDlg.vue'
 import TreeList from '@/components/tree.vue'
-import { roleList, roleIdDetail, addUser } from '@/api/user'
+import { rolesList, roleIdDetail, addUser } from '@/api/user'
 import { getUser } from '@/store'
 
 @Component({
@@ -93,7 +93,7 @@ export default class Main extends ViewBase {
     const user: any = getUser()!
     const systemCode = user.systemCode
     const role = { pageIndex: 1, pageSize: 100, systemCode }
-    const { data } = await roleList(role)
+    const { data } = await rolesList(role)
     this.roleList = data.items
   }
   save(val: any) {

@@ -147,7 +147,7 @@ export default class Main extends ViewBase {
             <div class="">
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
-              <a on-click={this.toEdit}>编辑</a>&nbsp;&nbsp;&nbsp;
+              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
               <a on-click={this.handleEnable.bind(this, row.id, 1)}>启用</a>
             </div>
           )
@@ -156,7 +156,7 @@ export default class Main extends ViewBase {
             <div class="">
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
-              <a on-click={this.toEdit}>编辑</a>&nbsp;&nbsp;&nbsp;
+              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
               <a on-click={this.handleEnable.bind(this, row.id, 2)}>禁用</a>
             </div>
           )
@@ -165,7 +165,7 @@ export default class Main extends ViewBase {
             <div class="">
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
-              <a on-click={this.toEdit}>编辑</a>&nbsp;&nbsp;&nbsp;
+              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
               <a on-click={this.activeEmail.bind(this,row.id)}>重新激活</a>
             </div>
           )
@@ -235,8 +235,8 @@ export default class Main extends ViewBase {
   toDetail(id: any) {
     this.$router.push({ name: 'account-user-detail', params: { useid: id } })
   }
-  toEdit() {
-    this.$router.push({ name: 'account-user-edit' })
+  toEdit(id: any) {
+    this.$router.push({ name: 'account-user-edit', params: {useid: id} })
   }
   async activeEmail(id: any) {
     await activeEmail({id})
