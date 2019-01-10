@@ -11,6 +11,7 @@
         v-model="dataForm.searchKey"
         filterable
         remote
+        @on-query-change = "querySet"
         clearable
         placeholder="请输入权限角色ID或名称"
         :remote-method="authIdList"
@@ -21,7 +22,7 @@
         <Icon type="ios-search" size="22"/>
       </span>
     </div>
-    <Table ref="selection" stripe  :columns="columns4" :data="authDate"></Table>
+    <Table ref="selection" stripe :loading="tableLoading"  :columns="columns4" :data="authDate"></Table>
     <Page :total="total" v-if="total>0" class="btnCenter"
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
@@ -38,10 +39,11 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store.ts'
-import { authUserList } from '@/api/authUser'
+import { authUserList, customerDel } from '@/api/authUser'
 import { clean } from '@/fn/object'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import moment from 'moment'
+import { confirm, toast } from '@/ui/modal'
 
 const timeFormatDate = 'YYYY-MM-DD HH:mm:ss'
 
@@ -53,12 +55,13 @@ export default class Main extends ViewBase {
     pageIndex: 1,
     pageSize: 10,
   }
-
+  query = ''
   loading = false
   tableLoading = false
   options: any = []
   list: any = []
   total = 0
+
   get systemCode() {
     return getUser()!.systemCode
   }
@@ -91,7 +94,7 @@ export default class Main extends ViewBase {
         return <div>
           <a on-click={this.toDetail.bind(this, id)} class="operation" >查看</a>
           <a on-click={this.toEdit.bind(this, id)} class="operation" >编辑</a>
-          <a on-click={this.toDetail.bind(this, id)} class="operation" >删除</a>
+          <a on-click={this.toDel.bind(this, id)} class="operation" >删除</a>
         </div>
         /* tslint:enable */
       }
@@ -126,43 +129,43 @@ export default class Main extends ViewBase {
   async seach() {
     this.tableLoading = true
     try {
-      const query = { ...this.dataForm }
+      const query = { ...this.dataForm, searchKey: this.query }
       const {
-        data
+        data: {
+          items,
+          totalCount
+        }
       } = await authUserList(clean({...query, systemCode: this.systemCode}))
-      this.list = data
-      // this.total = totalCount
+      this.list = items
+      this.total = totalCount
     } catch (ex) {
       this.handleError(ex)
     } finally {
       this.tableLoading = false
     }
   }
+
   async authIdList(query: any) {
+    this.query = query
     if (query !== '') {
       this.loading = true
       try {
         const {
-          data
+          data: {
+            items
+          }
         } = await authUserList({
           searchKey: query,
           systemCode: this.systemCode
         })
         const ids: any = []
-        const datas = data
+        const datas = items
         const name: any = []
         datas.forEach((it: any) => {
           if (it.name.includes(query)) {
             name.push({
               value: it.name,
               label: it.name
-            })
-          }
-          const id = it.id + ''
-          if (id.includes(query)) {
-            ids.push({
-              value: it.id,
-              label: it.id
             })
           }
         })
@@ -182,7 +185,22 @@ export default class Main extends ViewBase {
   }
 
   toEdit(id: any) {
-    this.$router.push({ name: 'account-auth-edit', params: {id} })
+    this.$router.push({name: 'account-auth-add', params: {id}})
+  }
+
+  async toDel(id: any) {
+    await confirm('确定删除该权限角色')
+    try {
+      await customerDel(id)
+      toast('删除成功')
+      this.seach()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  querySet() {
+    this.query = ''
   }
 }
 </script>

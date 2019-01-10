@@ -4,12 +4,14 @@
       <span class="nav-top-title">影院管理</span>
     </h3>
     <div class="flex-box">
+      {{query}}
       <Select
         v-model="dataForm.query"
         filterable
         remote
         clearable
         placeholder="请输入转资编码或影院名称"
+        @on-query-change = "querySet"
         :remote-method="queryCode"
         :loading="loading">
         <Option v-for="(option, index) in options" :value="option.value" :key="index">{{option.label}}</Option>
@@ -45,6 +47,7 @@ export default class Main extends ViewBase {
     pageIndex: 1,
     pageSize: 10,
   }
+  query = ''
   total = 0
   cinemaData: any = []
   loading = false
@@ -106,6 +109,7 @@ export default class Main extends ViewBase {
   }
 
   async queryCode(query: any) {
+    this.query = query
     if (query !== '') {
       this.loading = true
       try {
@@ -147,7 +151,7 @@ export default class Main extends ViewBase {
   async seach() {
     this.tableLoading = true
     try {
-      const query = { ...this.dataForm }
+      const query = { ...this.dataForm, query: this.query }
       const {
         data: {
           items,
@@ -165,6 +169,10 @@ export default class Main extends ViewBase {
 
   toDetail(id: any) {
     this.$router.push({ name: 'account-cinema-detail', params: {id} })
+  }
+
+  querySet(query: any) {
+    this.query = ''
   }
 }
 </script>
