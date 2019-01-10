@@ -34,7 +34,7 @@ export default [
   },
   // 账户管理 - 用户管理 - 编辑
   {
-    path: '/account/user/edit',
+    path: '/account/user/edit/:useid',
     name: 'account-user-edit',
     component: () => import('./views/account/user/editUser.vue')
   },
@@ -53,15 +53,9 @@ export default [
   },
   // 账户管理 - 权限管理 - 添加子用户
   {
-    path: '/account/auth/add',
+    path: '/account/auth/add/:id',
     name: 'account-auth-add',
     component: () => import('./views/account/auth/addUser.vue')
-  },
-  // 账户管理 - 权限管理 - 编辑
-  {
-    path: '/account/auth/edit/:id',
-    name: 'account-auth-edit',
-    component: () => import('./views/account/auth/editUser.vue')
   },
   // 账户管理 - 权限管理 - 查看
   {
@@ -89,6 +83,19 @@ export default [
     path: '/account/password',
     name: 'account-password',
     component: () => import('./views/account/password/index.vue'),
+  },
+
+  // 财务信息 - 财务信息  - 查看
+  {
+    path: '/finance/info',
+    name: 'finance-info',
+    component: () => import('./views/finance/info/index.vue'),
+  },
+  // 财务信息 - 财务信息  - 更多数据
+  {
+    path: '/finance/info/more',
+    name: 'finance-info-more',
+    component: () => import('./views/finance/info/moreList.vue'),
   },
 
   // 示例，没有实际用处

@@ -53,11 +53,6 @@
             <Tree :data="data1"></Tree>
           </p>
         </Col>
-        <Col :span="12">
-          <p>
-            <label>授权影院</label> 33333
-          </p>
-        </Col>
       </Row>
     </div>
     <h3 class="layout-title">操作日志</h3>
@@ -129,6 +124,9 @@ export default class Main extends ViewBase {
 
     const obj = {pageIndex: 1, pageSize: 10}
     const datalog = operationLog(obj, id)
+
+
+
   }
 
   queryCustomer() {

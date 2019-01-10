@@ -49,7 +49,7 @@ export default class Change extends ViewBase {
   pageSize = 10
   search = null
 
-  data = []
+  data: any = []
   selectList = []
   columns = [
     { type: 'selection', width: 60, align: 'center' },
@@ -59,6 +59,16 @@ export default class Change extends ViewBase {
 
   async mounted() {
     this.getList()
+    if (this.value.check) {
+      this.data.map((item: any) => {
+        // 全部list
+        this.value.check.map((check: any) => {
+          if (item.id == check.id) {
+            item._checked = true
+          }
+        })
+      })
+    }
   }
   async getList() {
     const obj = {
@@ -125,6 +135,11 @@ export default class Change extends ViewBase {
     left: -1px;
     background: @c-button;
   }
+}
+/deep/ .ivu-table {
+  height: 550px;
+  max-height: 550px;
+  overflow: auto;
 }
 .footer-bottom {
   margin: 10px 0 30px;

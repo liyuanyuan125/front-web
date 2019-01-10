@@ -1,6 +1,6 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title">权限管理 > 查看权限管理</h2>
+    <h2 class="layout-nav-title"><span @click="toAuth">权限管理</span> > 查看权限管理</h2>
     <div class="text-rows auth-col">
       <Row>
         <Col :span="12">
@@ -29,6 +29,7 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { customerRole } from '@/api/authUser'
+import { isArray } from '@/fn/type.ts'
 
 @Component
 export default class Main extends ViewBase {
@@ -39,7 +40,38 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
-  recursion(arr: any, brr: any) {
+  recursion(arr: any, brr: any = {}, root: boolean = false) {
+    for (const i in arr) {
+      if ( arr.hasOwnProperty(i)) {
+        if ( typeof arr[i] == 'object') {
+          if ( isArray(arr[i]) ) {
+            brr.children = []
+            if (i == 'subPages' && arr[i].length < 0) {
+              this.recursion(arr[i], brr.children, false)
+            } else {
+              const b = arr[i].concat(arr.actions.filter((it: any) => {
+                return it.check
+              }))
+              this.recursion(b, brr.children, true)
+            }
+          } else {
+            brr[i] = {}
+            this.recursion(arr[i], brr[i], root)
+          }
+        } else {
+          if (arr.code) {
+            brr.title = arr.name
+            brr.code = arr.code
+            brr.expand = true
+          } else {
+            brr.title = arr.name
+            brr.key = arr.key
+            brr.expand = true
+          }
+        }
+      }
+    }
+    return brr
   }
 
   async seach() {
@@ -52,14 +84,18 @@ export default class Main extends ViewBase {
         }
       } = await customerRole(id)
       const meanList: any = []
-      const brr: any = []
-      meanList.push(menu)
-      this.recursion(meanList, brr)
+      const tree = this.recursion(menu)
+      meanList.push(tree)
+      this.list = meanList
       this.role = role
     } catch (ex) {
       this.handleError(ex)
     } finally {
     }
+  }
+
+  toAuth() {
+    this.$router.push({name: 'account-auth'})
   }
 }
 </script>
