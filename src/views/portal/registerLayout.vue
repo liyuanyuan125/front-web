@@ -13,13 +13,13 @@
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { Component, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 
 const stepMap: any = {
   register: 0,
-  registerComplete: 1,
+  'register-complete': 1,
 }
 
 @Component

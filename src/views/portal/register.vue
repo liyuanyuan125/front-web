@@ -1,28 +1,15 @@
 <template>
   <div class="page-wrap">
-    <Form
-      :model="form"
-      :rules="rules"
-      label-position="left"
-      :label-width="120"
-      class="form"
-      @submit.native.prevent="submit"
-      ref="form"
-    >
+    <Form :model="form" :rules="rules" label-position="left" :label-width="120"
+      class="form" @submit.native.prevent="submit" ref="form">
       <DisableAutoFill/>
 
       <FormItem prop="systems" :label-width="0">
         <CheckboxGroup v-model="form.systems" class="check-group">
-          <Checkbox
-            label="ads"
-            class="check-type advert"
-            :class="{checked: form.systems.includes('ads')}"
-          />
-          <Checkbox
-            label="resource"
-            class="check-type resource"
-            :class="{checked: form.systems.includes('resource')}"
-          />
+          <Checkbox label="ads" class="check-type advert"
+            :class="{checked: form.systems.includes('ads')}"/>
+          <Checkbox label="resource" class="check-type resource"
+            :class="{checked: form.systems.includes('resource')}"/>
         </CheckboxGroup>
       </FormItem>
 
@@ -30,24 +17,19 @@
         <Input v-model="form.email" placeholder="请输入邮箱"/>
       </FormItem>
       <FormItem label="邮箱验证码" prop="captcha" :error="captchaError">
-        <Input v-model="form.captcha" :maxlength="6" class="input-captcha" placeholder="请输入邮箱验证码"/>
-        <Button
-          class="btn-code"
-          :disabled="codeDisabled || emailIsValid"
-          @click="getCode"
-        >{{codeMsg}}</Button>
+        <Input v-model="form.captcha" :maxlength="6" class="input-captcha"
+          placeholder="请输入邮箱验证码"/>
+        <Button class="btn-code" :disabled="codeDisabled || emailIsValid"
+          @click="getCode">{{codeMsg}}</Button>
       </FormItem>
 
       <FormItem label="密码" prop="password">
-        <Input
-          type="password"
-          v-model="form.password"
-          :maxlength="16"
-          placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"
-        />
+        <Input type="password" v-model="form.password" :maxlength="16"
+          placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"/>
       </FormItem>
       <FormItem label="重复密码" prop="passwordAgain">
-        <Input type="password" v-model="form.passwordAgain" :maxlength="16" placeholder="请再次输入密码"/>
+        <Input type="password" v-model="form.passwordAgain" :maxlength="16"
+          placeholder="请再次输入密码"/>
       </FormItem>
 
       <FormItem label="公司名称" prop="company">
@@ -74,7 +56,8 @@
       </FormItem>
 
       <div class="submit-ln">
-        <Button type="primary" html-type="submit" long class="submit" :disabled="submitDisabled">下一步</Button>
+        <Button type="primary" html-type="submit" long
+          class="submit" :disabled="submitDisabled">下一步</Button>
       </div>
     </Form>
   </div>
@@ -84,11 +67,7 @@
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { countDown } from '@/fn/timer'
-import {
-  validateEmail,
-  validatePassword,
-  validataTel
-} from '@/util/validateRules'
+import { validateEmail, validatePassword, validataTel } from '@/util/validateRules'
 import { sendRegisterEmail, register } from '@/api/register'
 import DisableAutoFill from '@/components/DisableAutoFill.vue'
 import AreaSelect from '@/components/AreaSelect.vue'

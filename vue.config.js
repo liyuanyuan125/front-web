@@ -5,12 +5,13 @@ const resolve = dir => path.join(__dirname, 'src', dir)
 
 module.exports = {
   devServer: {
+    https: true,
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
     proxy: {
       '/': {
-        target: 'http://fapi.dev.aiads.com',
+        target: 'https://fapi.dev.aiads.com',
         changeOrigin: true,
         ws: false,
         bypass(req) {
@@ -36,23 +37,23 @@ module.exports = {
     ; [
       {
         env: 'dev',
-        baseUrl: isDev ? '/' : '//admin.dev.aiads.com',
-        ajaxBaseUrl: isDev ? '/' : '//fapi.dev.aiads.com',
+        baseUrl: isDev ? '/' : 'https://dev.aiads.com',
+        ajaxBaseUrl: isDev ? '/' : 'https://fapi.dev.aiads.com',
       },
       {
         env: 'qas',
-        baseUrl: '//admin.qas.aiads.com',
-        ajaxBaseUrl: '//fapi.qas.aiads.com',
+        baseUrl: 'https://qas.aiads.com',
+        ajaxBaseUrl: 'https://fapi.qas.aiads.com',
       },
       {
         env: 'stg',
-        baseUrl: '//admin.stg.aiads.com',
-        ajaxBaseUrl: '//fapi.stg.aiads.com',
+        baseUrl: 'https://stg.aiads.com',
+        ajaxBaseUrl: 'https://fapi.stg.aiads.com',
       },
       {
         env: 'prd',
-        baseUrl: '//admin.aiads.com',
-        ajaxBaseUrl: '//fapi.aiads.com',
+        baseUrl: 'https://aiads.com',
+        ajaxBaseUrl: 'https://fapi.aiads.com',
       },
     ].forEach(it => {
       const { env } = it

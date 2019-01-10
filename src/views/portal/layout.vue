@@ -49,7 +49,7 @@
 }
 
 .header {
-  height: 144px;
+  height: 110px;
 }
 .header-in {
   max-width: 1100px;

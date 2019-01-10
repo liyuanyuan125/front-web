@@ -1,16 +1,18 @@
 <template>
   <div class="page-wrap">
-    <Form v-model="form" :rules="rules" label-position="left" :label-width="120"
-      class="form" @submit.native.prevent="submit" ref="form" v-if="!allDone">
+    <Form :model="form" :rules="rules" label-position="left" :label-width="120"
+      class="form" @submit.native.prevent="submit" ref="form">
       <FormItem label="资质类型" prop="qualificationType">
         <Select v-model="form.qualificationType" placeholder="请选择资质类型">
           <Option v-for="it in qualificationTypeList" :key="it.key"
             :value="it.key">{{it.text}}</Option>
         </Select>
       </FormItem>
+
       <FormItem label="资质编号" prop="qualificationCode">
         <Input v-model="form.qualificationCode" placeholder="请输入资质编号"/>
       </FormItem>
+
       <FormItem label="资质图片" prop="images">
         <div class="upload-wrap">
           <Upload v-model="imageList" :max-count="3" multiple accept="images/*"
@@ -25,14 +27,10 @@
           :disabled="submitDisabled">注册完成</Button>
       </div>
     </Form>
-    <div class="all-done" v-else>
-      <h3 class="all-done-title">注册完成</h3>
-      <p class="all-done-tip"><em>{{allDoneSecond}}秒</em>后将自动返回首页</p>
-    </div>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { scrollToError } from '@/util/form'
@@ -40,7 +38,6 @@ import { getQualificationTypeList, putAdditional } from '@/api/company'
 import { KeyTextControlStatus } from '@/util/types'
 import { filterByControlStatus } from '@/util/dealData'
 import Upload, { FileItem } from '@/components/upload'
-import { countDown } from '@/fn/timer'
 
 @Component({
   components: {
@@ -58,10 +55,10 @@ export default class Main extends ViewBase {
 
   rules = {
     qualificationType: [
-      { required: true, message: '请选择资质类型', trigger: 'blur' }
+      { required: true, message: '请选择资质类型', trigger: 'change' }
     ],
     qualificationCode: [
-      { required: true, message: '请输入资质编号', trigger: 'blur' }
+      { required: true, message: '请输入资质编号', trigger: 'blur' },
     ],
     images: [
       {
@@ -78,9 +75,6 @@ export default class Main extends ViewBase {
   }
 
   submitDisabled = false
-
-  allDone = true
-  allDoneSecond = 0
 
   qualificationTypeList: KeyTextControlStatus[] = []
 
@@ -107,11 +101,6 @@ export default class Main extends ViewBase {
     this.$nextTick(() => scrollToError(form))
   }
 
-  async delayToHome() {
-    await countDown(3, sec => this.allDoneSecond = sec)
-    this.toHome()
-  }
-
   async submit() {
     const form = this.$refs.form as any
     const valid = await form.validate()
@@ -124,8 +113,7 @@ export default class Main extends ViewBase {
     try {
       const formData = { ...this.form }
       await putAdditional(formData)
-      this.allDone = true
-      this.delayToHome()
+      this.$router.push({ name: 'register-success' })
     } catch (ex) {
       ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
     } finally {
@@ -141,9 +129,8 @@ export default class Main extends ViewBase {
 }
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 @import '~@/site/lib.less';
-@import '~@/site/login.less';
 @import './common.less';
 
 .page-wrap {
@@ -172,26 +159,5 @@ export default class Main extends ViewBase {
 .btn-pass,
 .btn-submit {
   width: 280px;
-}
-
-.all-done {
-  margin-top: 156px;
-  text-align: center;
-}
-.all-done-title {
-  color: @c-text;
-  font-size: 24px;
-  font-weight: normal;
-  line-height: 48px;
-
-  &::before {
-    content: '';
-    display: inline-block;
-    width: 48px;
-    height: 48px;
-    margin-right: 20px;
-    background: url(./assets/okFlag.png) no-repeat;
-    background-size: contain;
-  }
 }
 </style>
