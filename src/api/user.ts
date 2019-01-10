@@ -1,7 +1,13 @@
 import {get, post, put, del} from '@/fn/ajax'
 import { getUser } from '@/store'
 const user: any = getUser()!
-const systemCode = user.systemCode
+let systemCode: any = ''
+if (user == null) {
+    systemCode = ''
+} else {
+    systemCode = user.systemCode
+}
+
 
 // liyuanyuan
 /**
