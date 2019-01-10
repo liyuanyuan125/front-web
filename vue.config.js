@@ -5,6 +5,7 @@ const resolve = dir => path.join(__dirname, 'src', dir)
 
 module.exports = {
   devServer: {
+    https: true,
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
@@ -12,7 +13,7 @@ module.exports = {
       '/': {
         target: 'https://fapi.dev.aiads.com',
         changeOrigin: true,
-        ws: true,
+        ws: false,
         bypass(req) {
           if (req.headers.accept.indexOf('html') !== -1) {
             return '/index.html'
