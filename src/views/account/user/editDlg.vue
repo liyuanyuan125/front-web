@@ -59,16 +59,6 @@ export default class Change extends ViewBase {
 
   async mounted() {
     this.getList()
-    if (this.value.check) {
-      this.data.map((item: any) => {
-        // 全部list
-        this.value.check.map((check: any) => {
-          if (item.id == check.id) {
-            item._checked = true
-          }
-        })
-      })
-    }
   }
   async getList() {
     const obj = {
@@ -77,6 +67,17 @@ export default class Change extends ViewBase {
       searchKey: this.search
     }
     const { data } = await addEditCustomer(obj)
+    // 在渲染之前添加选中的key
+    if (this.value.check) {
+      data.items.map((item: any) => {
+        this.value.check.map((check: any) => {
+          if (item.id == check.id) {
+            item._checked = true
+          }
+        })
+      })
+    }
+
     this.data = data.items
     this.value.totalCount = data.totalCount
   }

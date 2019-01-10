@@ -28,12 +28,12 @@
       </div>
       <h3 class="layout-title">设置账号权限</h3>
       <FormItem label="权限角色" class="item-top">
-        <Select v-model="form.roleVal" style="width:400px">
+        <Select v-model="form.roleVal" style="width:400px" @on-change="handleSelect">
           <Option :value="item.id" :key="item.id" v-for="item in rolelist">{{item.name}}</Option>
         </Select>
       </FormItem>
       <FormItem label="相关权限">
-        <Tree :data="data2" show-checkbox></Tree>
+        <Tree :data="data2"></Tree>
       </FormItem>
     </Form>
     <div class="btnCenter">
@@ -48,7 +48,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import detailDlg from '@/views/account/user/detailDlg.vue'
 import editDig from '@/views/account/user/editDlg.vue'
-import { userDetail, rolesList } from '@/api/user'
+import { userDetail, rolesList, roleIdDetail } from '@/api/user'
 import { getUser } from '@/store'
 
 @Component({
@@ -131,7 +131,9 @@ export default class Main extends ViewBase {
     //   this.form.partnerIds = val.map((item: any) => item.id)
     // }
   }
-
+  async handleSelect(val: any) {
+    const { data } = await roleIdDetail({ id: val })
+  }
   handleInforma() {}
 }
 </script>

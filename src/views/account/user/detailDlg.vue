@@ -42,6 +42,11 @@ export default class Change extends ViewBase {
   background: #f9f9f9;
   font-weight: none;
 }
+/deep/ .ivu-table {
+  height: 550px;
+  max-height: 550px;
+  overflow: auto;
+}
 .footer-bottom {
   margin: 10px 0 30px;
 }

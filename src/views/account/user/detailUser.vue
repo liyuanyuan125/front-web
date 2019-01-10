@@ -46,7 +46,7 @@
       <Row>
         <Col :span="12">
           <p>
-            <label>权限角色</label>33333
+            <label>权限角色</label>{{roleName}}
           </p>
           <p class="flex-box">
             <label>相关权限</label>
@@ -79,6 +79,7 @@ import detailDlg from './detailDlg.vue'
 export default class Main extends ViewBase {
   data: any = []
   customer: any = ''
+  roleName = ''
   objDlg = {
     visibleDetail: false,
     customer: ''
@@ -120,6 +121,7 @@ export default class Main extends ViewBase {
     const id = this.$route.params.useid
     const { data } = await userDetail({ id })
     this.data = data
+    this.roleName = data.role.name
     this.customer = this.data.partners == null ? 0 : this.data.partners.length
 
     const obj = {pageIndex: 1, pageSize: 10}
