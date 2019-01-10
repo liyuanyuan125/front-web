@@ -36,48 +36,55 @@ Vue.config.productionTip = false
 const router = new Router({
   mode: 'history',
   // 非 MainLayout 页面放在这里，MainLayout 页面放在 routes 里
+  // 使用 meta unauth 标识不需要登录的页面
   routes: [
     {
       path: '/login',
       name: 'login',
       component: login,
+      meta: {
+        unauth: true
+      }
     },
     {
       path: '/active-email',
       name: 'active-email',
       component: activeEmail,
+      meta: {
+        unauth: true
+      }
     },
     {
-      path: '/portal-layout',
-      component: PortalLayout,
-      children: [
-        {
-          path: '/register-layout',
-          component: RegisterLayout,
-          children: [
-            {
-              path: '/register',
-              name: 'register',
-              component: register
-            },
-            {
-              path: '/register/complete',
-              name: 'register-complete',
-              component: registerComplete
-            },
-          ]
-        },
-        {
-          path: '/register/success',
-          name: 'register-success',
-          component: registerSuccess
-        },
-        {
-          path: '/resetpwd',
-          name: 'resetpwd',
-          component: () => import('./views/portal/resetpwd.vue')
-        }
-      ]
+      path: '/register',
+      name: 'register',
+      component: register,
+      meta: {
+        unauth: true
+      }
+    },
+    {
+      path: '/register/complete',
+      name: 'register-complete',
+      component: registerComplete,
+      meta: {
+        unauth: true
+      }
+    },
+    {
+      path: '/register/success',
+      name: 'register-success',
+      component: registerSuccess,
+      meta: {
+        unauth: true
+      }
+    },
+    {
+      path: '/resetpwd',
+      name: 'resetpwd',
+      component: () => import('./views/portal/resetpwd.vue'),
+      meta: {
+        unauth: true
+      }
     },
     {
       path: '/',
@@ -100,7 +107,7 @@ iView.LoadingBar.config({
 
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start()
-  if (!hasLogin() && to.name !== 'login') {
+  if (!to.meta.unauth && !hasLogin()) {
     next({ name: 'login' })
   // } else if (!store.getters.canSee(to.name)) {
   //   next({ name: '403' })
