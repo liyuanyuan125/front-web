@@ -1,31 +1,30 @@
 <template>
-  <div class="site-layout layoutBg">
+  <div class="site-layout">
     <header class="site-header flex-box">
       <h1 class="logo">
         <router-link to="/" class="logo-link">
-          <img src="~@/assets/site/logo.png" alt="Aiads投放管理平台">
+          <img src="./assets/logo.png" alt="Aiads投放管理平台">
         </router-link>
       </h1>
-      <div class="flex-1 flex-box">
-        <a class="sider-toggle" @click="toggleSider" style="display:none">
-          <Icon type="md-menu" size="24" class="menu-icon"
-            :class="isOff && 'rotate-icon'"></Icon>
-        </a>
 
-        <div class="flex-1"></div>
+      <Dropdown class="switcher">
+        <a class="switcher-node"></a>
+        <DropdownMenu slot="list">
+          <div class="switcher-arrow"></div>
+          <DropdownItem v-for="it in systemList" :key="it.code"
+            :selected="user.systemCode == it.code">{{it.name}}投放管理平台</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
 
-        <Menu mode="horizontal" class="user-menu flex-box"
-          @on-select='onMenuSelect'>
-          <Submenu name="user">
-            <template slot="title">
-              <Icon type="md-person"></Icon>用户
-            </template>
-            <MenuItem name="settings">账户信息</MenuItem>
-            <MenuItem name="logout">退出登录</MenuItem>
-          </Submenu>
-        </Menu>
+      <div class="flex-1"></div>
+
+      <div class="flex-box">
+        <span class="corp-name">{{systemName}}：{{user.companyName}}</span>
+        <span class="user-name">用户：{{user.name}}</span>
+        <a class="logout" title="退出" @click="logout">退出</a>
       </div>
     </header>
+
     <Layout class="site-center">
       <Sider collapsible hide-trigger v-model="isOff" class="site-sider"
         :width="180" ref="sider">
@@ -58,10 +57,33 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { logout } from '@/store'
+import { getUser, logout, User } from '@/store'
+import { systemList as allSystemList } from '@/util/types'
 
 @Component
 export default class App extends ViewBase {
+  user = getUser()
+
+  allSystemList = allSystemList
+
+  get systemList() {
+    if (this.user != null) {
+      const list = this.user.systems
+        .map(code => allSystemList.find(it => it.code == code))
+        .filter(it => it != null)
+      return list
+    }
+    return []
+  }
+
+  get systemName() {
+    if (this.user != null) {
+      const item = allSystemList.find(it => it.code == this.user!.systemCode)
+      return item != null ? item.name : ''
+    }
+    return ''
+  }
+
   isOff = false
 
   siderMenuList = [
@@ -140,19 +162,9 @@ export default class App extends ViewBase {
     return this.siderActiveMap[name]
   }
 
-  toggleSider() {
-    (this.$refs.sider as any).toggleCollapse()
-  }
-
-  onMenuSelect(name: string) {
-    if (name == 'settings') {
-      alert('暂未实现')
-      // this.$router.push({ name })
-    } else if (name == 'logout') {
-      // TODO: do logout
-      logout()
-      this.$router.push({ name: 'login' })
-    }
+  logout() {
+    logout()
+    this.$router.push({ name: 'login' })
   }
 }
 </script>
@@ -169,7 +181,9 @@ export default class App extends ViewBase {
   height: 60px;
   line-height: 60px;
   background-color: #fff;
+  z-index: 8880;
 }
+
 .logo {
   width: 200px;
   font-weight: 400;
@@ -184,26 +198,97 @@ export default class App extends ViewBase {
   color: #fff;
 }
 
-// TODO: 右侧菜单收缩功能稍微开发完成
-.menu-icon {
-  transition: all .3s;
+.switcher {
+  position: relative;
+  left: -17px;
+  /deep/ .ivu-select-dropdown {
+    margin-top: 10px;
+    margin-left: -50px;
+    padding: 22px 0;
+  }
+  /deep/ .ivu-dropdown-menu {
+    position: relative;
+  }
+  /deep/ .ivu-dropdown-item {
+    position: relative;
+    padding: 6px 32px;
+    font-size: 14px !important;
+    text-indent: 10px;
+
+    &:hover {
+      background-color: fade(@c-button, 10%);
+    }
+  }
+  /deep/ .ivu-dropdown-item-selected {
+    color: @c-button;
+    background-color: transparent;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      width: 14px;
+      height: 14px;
+      margin-top: -7px;
+      border: 2px solid @c-button;
+      border-radius: 100%;
+      background-color: transparent;
+    }
+  }
 }
-.rotate-icon {
-  transform: rotate(-90deg);
+.switcher-node {
+  display: block;
+  width: 80px;
+  height: 60px;
+  background: url(./assets/downTriangle.png) no-repeat 15% 65%;
 }
 
-.user-menu {
-  height: 50px;
-  line-height: 50px;
-  background-color: transparent;
-  &::after {
-    display: none;
-  }
-  /deep/ .ivu-menu-submenu {
-    border-bottom: 0 !important;
-  }
-  /deep/ .ivu-menu-submenu-title {
-    color: #fff;
+.switcher-arrow,
+.switcher-arrow::after {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: solid transparent;
+}
+.switcher-arrow {
+  top: -33px;
+  left: 50%;
+  margin-left: -10px;
+  border-width: 0 10px 10px;
+  border-bottom-color: rgba(217, 217, 217, 0.5);
+}
+.switcher-arrow::after {
+  content: " ";
+  top: 1px;
+  margin-left: -10px;
+  border-width: 0 10px 10px 10px;
+  border-bottom-color: #fff;
+}
+
+.corp-name {
+  color: @c-sub-text;
+  padding-left: 34px;
+  background: url(./assets/person.png) no-repeat left center;
+}
+.user-name {
+  color: @c-primary;
+  margin-left: 30px;
+}
+.logout {
+  position: relative;
+  margin-left: 31px;
+  padding: 0 30px;
+  color: transparent;
+  background: url(./assets/exit.png) no-repeat center;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 15px;
+    width: 1px;
+    height: 30px;
+    background-color: @c-border;
   }
 }
 
@@ -272,16 +357,16 @@ export default class App extends ViewBase {
         width: 8px;
         height: 8px;
         margin-top: -4px;
-        background: url(~@/assets/main-layout/selected.png) no-repeat;
+        background: url(./assets/selected.png) no-repeat;
       }
     }
   }
   .menu-node-home a {
-    background-image: url(~@/assets/main-layout/home.png);
+    background-image: url(./assets/home.png);
   }
   .menu-node-account {
     /deep/ .ivu-menu-submenu-title {
-      background-image: url(~@/assets/main-layout/account.png);
+      background-image: url(./assets/account.png);
     }
   }
 }

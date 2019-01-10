@@ -29,6 +29,7 @@
             <div :class="{active: form.systemCode == 'resource'}"
               @click="form.systemCode = 'resource'">我是资源方</div>
           </div>
+
           <Form :model="form" :rules="rules" ref="form" class="form"
             @submit.native.prevent="submit" novalidate>
             <FormItem prop="email" :error="emailError">
@@ -46,7 +47,9 @@
                   title="点击更换" @click="changeCaptcha">
               </div>
             </FormItem>
+
             <Button type="primary" html-type="submit" long :disabled="submitDisabled">登录</Button>
+
             <Row class="login-etc">
               <Col span="4">
                 <router-link tag="span" :to="{name: 'register'}">注册</router-link>
@@ -66,8 +69,9 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { login } from '@/api/auth'
-import { setUser } from '@/store'
+import { setUser, User } from '@/store'
 import { getCaptchaImage } from '@/api/captcha'
+import { SystemCode } from '@/util/types'
 
 @Component
 export default class Main extends ViewBase {
@@ -134,13 +138,24 @@ export default class Main extends ViewBase {
     try {
       const postData = { ...this.form }
       const { data } = await login(postData)
-      const user = {
-        id: data.userId,
-        name: data.email,
-        systemCode: postData.systemCode,
-        ...data,
+
+      // 设置用户
+      const user: User = {
+        id: data.userId as number,
+        name: data.email as string,
+        email: data.email as string,
+        isAdmin: data.admin as boolean,
+
+        systemCode: postData.systemCode as SystemCode,
+        systems: data.systems as SystemCode[],
+
+        companyId: data.companyId as number,
+        companyName: data.companyName || '<我的公司>',
+
+        perms: data.perms || [],
       }
       setUser(user)
+
       this.$router.push({ name: 'home' })
     } catch (ex) {
       ((this as any)[`onLogin${ex.code}`] || this.handleError).call(this, ex)
