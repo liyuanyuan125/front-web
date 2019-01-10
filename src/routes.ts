@@ -34,7 +34,7 @@ export default [
   },
   // 账户管理 - 用户管理 - 编辑
   {
-    path: '/account/user/edit',
+    path: '/account/user/edit/:useid',
     name: 'account-user-edit',
     component: () => import('./views/account/user/editUser.vue')
   },

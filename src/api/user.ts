@@ -95,10 +95,10 @@ export async function addUser(data: any) {
  * 新增子用户 -> 账号权限角色
  * @param data
  */
-export async function roleList(data: any) {
-    const res = get(`/customer/roles/`, data)
-    return res
-}
+// export async function roleList(data: any) {
+//     const res = get(`/customer/roles/`, data)
+//     return res
+// }
 
 /**
  * 新增子用户 -> 根据角色id获取角色详情
