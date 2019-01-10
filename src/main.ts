@@ -43,12 +43,10 @@ const router = new Router({
     },
     {
       path: '/portal-layout',
-      name: 'portal-layout',
       component: PortalLayout,
       children: [
         {
           path: '/register-layout',
-          name: 'register',
           component: RegisterLayout,
           children: [
             {
@@ -77,7 +75,6 @@ const router = new Router({
     },
     {
       path: '/',
-      name: 'main-layout',
       component: MainLayout,
       children: [
         {
