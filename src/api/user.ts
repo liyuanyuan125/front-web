@@ -30,6 +30,15 @@ export async function userDetail(data: any) {
 }
 
 /**
+ * 查看详情 - 操作日志
+ * @param data
+ */
+export async function operationLog(data: any, id: any) {
+    const res = get(`/customer/sub-accounts/${id}/log`, data)
+    return res
+}
+
+/**
  * 批量删除子用户
  * @param data
  */
@@ -45,6 +54,53 @@ export async function accountStatu(data: any, id: any) {
     const res = put(`/customer/sub-accounts/${id}/status`, data)
     return res
 }
+
+/**
+ * 重发激活邮件
+ * @param status
+ */
+export async function activeEmail(data: any) {
+    const res = get(`/customer/sub-accounts/send-email/${data.id}`)
+    return res
+}
+
+/**
+ *  添加待激活子账户
+ * @param status
+ */
+export async function addUser() {
+    const res = post(`/customer/sub-accounts/${systemCode}`)
+    return res
+}
+
+/**
+ * 新增子用户 -> 账号权限角色
+ * @param data
+ */
+export async function roleList(data: any) {
+    const res = get(`/customer/roles/`, data)
+    return res
+}
+
+/**
+ * 新增子用户 -> 根据角色id获取角色详情
+ * @param data
+ */
+export async function roleIdDetail(data: any) {
+    const res = get(`customer/roles/${data.id}`)
+    return res
+}
+/**
+ * 新增子用户 -编辑关联客户
+ * @param data
+ */
+export async function addEditCustomer(data: any) {
+    const res = get('/customer/partners', data)
+    return res
+}
+
+
+
 
 
 
