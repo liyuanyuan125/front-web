@@ -180,6 +180,7 @@ export default class Main extends ViewBase {
     this.form.systemCode = user.systemCode
     this.userList()
   }
+
   async userList() {
     const { data } = await subAccount({ ...this.form, ...this.pageObject })
 
@@ -206,6 +207,7 @@ export default class Main extends ViewBase {
   selectAll(select: any) {
     this.selectIds = select
   }
+
   handleSelectAll() {
     const selection = this.$refs.selection as any
     selection.selectAll(!this.checkboxAll)
