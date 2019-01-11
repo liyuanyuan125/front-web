@@ -1,7 +1,13 @@
 <template>
   <div class="perm-tree">
-    <Tree :data="treeData" multiple show-checkbox ref="tree"
-      @on-select-change="onSelChange" @on-check-change="onSelChange"/>
+    <Tree
+      :data="treeData"
+      multiple
+      show-checkbox
+      ref="tree"
+      @on-select-change="onSelChange"
+      @on-check-change="onSelChange"
+    />
   </div>
 </template>
 
@@ -41,14 +47,14 @@ const toTreeData = (nodes: Page[], perms: string[]) => {
         extraData: {
           node,
           level,
-          perms,
+          perms
         },
         render: (hh: any, { data }: any) => {
           /* tslint:disable */
-          const h = jsxReactToVue(hh)
-          return <PermTreeItem value={data}/>
+          // const h = jsxReactToVue(hh)
+          // return <PermTreeItem value={data} />
           /* tslint:enable */
-        },
+        }
       }
 
       return page
@@ -66,13 +72,16 @@ const toTreeData = (nodes: Page[], perms: string[]) => {
   })
 }
 
-const isSameList = (list1: string[] | number[] | null, list2: string[] | number[] | null) => {
+const isSameList = (
+  list1: string[] | number[] | null,
+  list2: string[] | number[] | null
+) => {
   if (list1 == null || list2 == null) {
     return list1 == list2
   }
 
-  const sorted1 = [ ...list1 ].sort()
-  const sorted2 = [ ...list2 ].sort()
+  const sorted1 = [...list1].sort()
+  const sorted2 = [...list2].sort()
   return isEqual(sorted1, sorted2)
 }
 
@@ -83,14 +92,16 @@ const isSameValue = (val1: PermTreeModal, val2: PermTreeModal) => {
 
 // 标准化树，将 children key 更改为 children
 const normalizeTree = (nodes: Page[]): Page[] => {
-  const list = nodes.filter(it => it != null).map(it => {
-    const children = normalizeTree(it.subPages)
-    const item = {
-      ...it,
-      children
-    }
-    return item
-  })
+  const list = nodes
+    .filter(it => it != null)
+    .map(it => {
+      const children = normalizeTree(it.subPages)
+      const item = {
+        ...it,
+        children
+      }
+      return item
+    })
   return list
 }
 
@@ -99,23 +110,24 @@ export default class PermTree extends ViewBase {
   /**
    * 值本身，可以使用 v-model 进行双向绑定
    */
-  @Prop({ type: Object, default: () => {}, required: true }) value!: PermTreeModal
+  @Prop({ type: Object, default: () => {}, required: true })
+  value!: PermTreeModal
 
   inValue = {} as PermTreeModal
 
   get treeData() {
     const menu = this.inValue.menu
     const perms = this.inValue.perms
-    const tree = toTreeData(menu ? [ menu ] : [], perms)
+    const tree = toTreeData(menu ? [menu] : [], perms)
     return tree
   }
 
   @Watch('value', { deep: true, immediate: true })
   watchValue(value: PermTreeModal) {
-    const [ menu ] = normalizeTree([ value.menu ])
+    const [menu] = normalizeTree([value.menu])
     this.inValue = {
       menu,
-      perms: [ ...(value.perms || []) ],
+      perms: [...(value.perms || [])]
     }
     // this.inValue = {
     //   // 有的情况下，pages 是 string[]，这里进行转换，使组件更健壮一些
@@ -143,7 +155,6 @@ export default class PermTree extends ViewBase {
     //   pages: [],
     //   perms: [],
     // })
-
     // // 虑重
     // const uniqValue = {
     //   pages: uniq(pages) as number[],
