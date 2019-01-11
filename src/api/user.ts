@@ -38,6 +38,15 @@ export async function userDetail(data: any) {
 }
 
 /**
+ * 账户管理 -> 子账户编辑
+ * @param data
+ */
+export async function userEditSub(data: any, id: any) {
+    const res = put(`/customer/sub-accounts/${systemCode}/${id}`, data)
+    return res
+}
+
+/**
  * 查看详情 - 操作日志
  * @param data
  */
@@ -45,6 +54,8 @@ export async function operationLog(data: any, id: any) {
     const res = get(`/customer/sub-accounts/${id}/log`, data)
     return res
 }
+
+
 
 /**
  * 批量删除子用户

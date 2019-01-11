@@ -7,7 +7,7 @@
         <Col :span="12">
           <p>
             <label>账号类型</label>
-            {{company.typeList}}
+            {{accountType.toString()}}
           </p>
           <p>
             <label>账号ID</label>
@@ -29,7 +29,7 @@
           </p>
           <p>
             <label>公司所在地</label>
-            {{company.provinceName}}{{account.cityName}}
+            {{company.provinceName}} / {{company.cityName}}
           </p>
         </Col>
         <Col :span="12">
@@ -70,7 +70,7 @@
     </div>
 
     <!-- 审核以通过 -->
-    <div class="accountList" v-if="false">
+    <div class="accountList" v-if="displayStatus == 4">
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
       <div class="btnCenter sumbit-button">
@@ -81,7 +81,7 @@
       </div>
     </div>
 
-    <div class="btnCenter sumbit-button">
+    <div class="btnCenter sumbit-button" v-else>
       <button class="button-ok">
         <router-link tag="span" :to="{ name: 'account-info-edit' }">修改信息</router-link>
       </button>
@@ -109,10 +109,10 @@ import dlgInforma from './dlgInformation.vue'
 })
 export default class Main extends ViewBase {
   displayStatus = 0
-  account = {}
-  company = {}
-  systemList = {}
-
+  account: any = {}
+  company: any = {}
+  systemList: any = []
+  accountType = ''
   queryDetail: any = {
     visibleMess: false,
     changelist: {
@@ -234,23 +234,22 @@ export default class Main extends ViewBase {
   informa = {
     visibleInforma: false
   }
-  opens = {
-    list: [
-      'https://file.iviewui.com/iview-admin/login_bg.jpg',
-      'https://file.iviewui.com/iview-admin/login_bg.jpg',
-      'https://file.iviewui.com/iview-admin/login_bg.jpg'
-    ]
-  }
 
   async mounted() {
     try {
       const { data } = await accountDetail()
       this.account = data.account
       this.company = data.company
+      this.displayStatus = data.company.displayStatus - 1
       this.systemList = data.systemList
-      this.displayStatus = data.company.displayStatus
+
+      this.accountType = this.account.systems.map((item: any, index: any) => {
+        if (this.systemList[index].code == item) {
+          return this.systemList[index].desc
+        }
+      })
     } catch (ex) {
-      ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
+      this.handleError(ex)
     }
   }
 

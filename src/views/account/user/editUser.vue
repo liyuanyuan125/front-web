@@ -8,7 +8,7 @@
       </FormItem>
       <h3 class="layout-title">设置联系人（选项）</h3>
       <FormItem label="联系人名称" class="item-top">
-        <Input v-model="form.name" placeholder="请输入联系人名称"></Input>
+        <Input v-model="form.contactName" placeholder="请输入联系人名称"></Input>
       </FormItem>
       <FormItem label="手机号码">
         <Input v-model="form.mobile" :maxlength="11" placeholder="请输入手机号码"></Input>
@@ -28,7 +28,7 @@
       </div>
       <h3 class="layout-title">设置账号权限</h3>
       <FormItem label="权限角色" class="item-top">
-        <Select v-model="form.roleVal" style="width:400px" @on-change="handleSelect">
+        <Select v-model="form.role" style="width:400px" @on-change="handleSelect">
           <Option :value="item.id" :key="item.id" v-for="item in rolelist">{{item.name}}</Option>
         </Select>
       </FormItem>
@@ -48,7 +48,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import detailDlg from '@/views/account/user/detailDlg.vue'
 import editDig from '@/views/account/user/editDlg.vue'
-import { userDetail, rolesList, roleIdDetail } from '@/api/user'
+import { userDetail, rolesList, roleIdDetail, userEditSub } from '@/api/user'
 import { getUser } from '@/store'
 
 @Component({
@@ -70,9 +70,10 @@ export default class Main extends ViewBase {
 
   form: any = {
     email: '',
-    name: '',
+    contactName: '',
     mobile: '',
-    roleVal: []
+    role: '',
+    partnerIds: []
   }
 
   data: any = []
@@ -101,8 +102,9 @@ export default class Main extends ViewBase {
       const { data } = await userDetail({ id })
       this.form = {
         email: data.email,
-        name: data.name,
-        mobile: data.mobile
+        contactName: data.name,
+        mobile: data.mobile,
+        role: data.role.id
       }
       this.data = data
       this.customer = data.partners == null ? 0 : data.partners.length
@@ -127,14 +129,22 @@ export default class Main extends ViewBase {
     this.editVisible.check = this.data.partners
   }
   save(val: any) {
-    // if (val.length > 0) {
-    //   this.form.partnerIds = val.map((item: any) => item.id)
-    // }
+    if (val.length > 0) {
+      this.form.partnerIds = val.map((item: any) => item.id)
+    }
   }
   async handleSelect(val: any) {
     const { data } = await roleIdDetail({ id: val })
   }
-  handleInforma() {}
+  async handleInforma() {
+    try {
+      const id = this.$route.params.useid
+      const { data } = await userEditSub(this.form, id)
+      this.$router.push({name: 'account-user'})
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
 }
 </script>
 

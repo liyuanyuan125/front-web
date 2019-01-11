@@ -9,7 +9,7 @@ const getUseId = { id: 1272 }
  * @param data 接口数据
  */
 export async function accountDetail() {
-  const res = get(`/customer/accounts/${getUseId.id}`)
+  const res = get('/customer/accounts/detail')
   return res
 }
 /**

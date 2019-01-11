@@ -9,9 +9,9 @@
       </FormItem>
       <FormItem label="登录邮箱">
         <Input v-model="form.email" placeholder="请输入登录邮箱"></Input>
-        <!-- <span class="modifyCode" @click="">修改邮箱</span> -->
+        <span class="modifyCode" @click="isEmailCode = !isEmailCode">修改邮箱</span>
       </FormItem>
-      <FormItem label="邮箱验证码">
+      <FormItem label="邮箱验证码" v-if="isEmailCode">
         <Input v-model="form.emailCaptcha" :maxlength="6" class="email-code" placeholder="请输入邮箱验证码"></Input>
         <Button class="btn-code" :disabled="displayCode" @click="getEmailCode">{{emailMes}}</Button>
       </FormItem>
@@ -33,10 +33,10 @@
       </FormItem>
       <h3 class="layout-title">开户资质</h3>
       <FormItem label="资质类型" class="item-top">
-        <Select v-model="form.qualificationType" style="width:200px">
+        <Select v-model="form.qualificationType" style="width:400px">
           <Option
             v-for="item in queryDate.qualificationTypeList"
-            :value="item.desc"
+            :value="item.code"
             :key="item.code"
           >{{ item.desc }}</Option>
         </Select>
@@ -44,9 +44,9 @@
       <FormItem label="资质编号">
         <Input v-model="form.qualificationCode" placeholder="请输入资质编号"></Input>
       </FormItem>
-      <FormItem label="资质图片">
-        <img :src="item" v-for="item in queryDate.company.images">
-      </FormItem>
+      <!-- <FormItem label="资质图片">
+        <img :src="item" v-for="item in queryDate.company.images" alt="">
+      </FormItem> -->
     </Form>
     <div class="btnCenter">
       <button class="button-ok edit-submit" @click="updateAccount">更新账号</button>
@@ -71,6 +71,7 @@ export default class Main extends ViewBase {
   emailMes = '获取邮箱验证码'
   displayCode = false
   queryDate: any = ''
+  isEmailCode = false
 
   form: any = {
     accountType: [],
@@ -78,7 +79,6 @@ export default class Main extends ViewBase {
     emailCaptcha: '',
     companyName: '',
     area: [],
-    provinceId: '',
     cityId: '',
 
     contact: '',
@@ -96,11 +96,13 @@ export default class Main extends ViewBase {
       const arryList: [number, string] = data.systemList.map((item: any) => {
         return item.code
       })
+
       this.form = {
         accountType: arryList,
         email: data.account.email,
         companyName: data.company.name,
-        area: [19, 253],
+
+        area: [data.company.provinceId, data.company.cityId],
         contact: data.account.name,
         contactTel: data.account.mobile,
         companyEmail: data.account.email,
@@ -112,11 +114,6 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     }
   }
-  // get emailIsValid() {
-  //   const failMsg = validateEmail(this.form.loginEmail)
-  //   return failMsg
-  // }
-
   async getEmailCode() {
     try {
       const msg = await getLoginEmail(this.form.loginEmail)
@@ -133,16 +130,25 @@ export default class Main extends ViewBase {
   }
 
   async updateAccount() {
-    if (this.form.emailCaptcha == '') {
-      this.form.email = ''
+    // 如果验证码为空，不必传邮箱
+    const cloneForm = Object.assign(this.form)
+    if (!cloneForm.emailCaptcha) {
+      cloneForm.email = null
+      cloneForm.emailCaptcha = null
     }
     try {
       await pendingAudit({
-        ...this.form
+        ...cloneForm,
+        provinceId: this.form.area[0],
+        cityId: this.form.area[1],
       })
+      this.$router.push({name: 'account-info'})
     } catch (ex) {
-      this.handleError(ex)
+      ((this as any)[`onSumbit${ex.code}`] || this.handleError).call(this, ex)
     }
+  }
+  onSumbit9006305(msg: any) {
+    this.handleError(msg)
   }
 }
 </script>
