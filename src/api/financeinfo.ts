@@ -18,27 +18,16 @@ export async function defaultList(query: any) {
   return res
 }
 
-// 新建档期
+// 新建财务信息
 export async function add(query: any) {
-  const res = await post('/basis/calendars', query)
+  const res = await post('/finance/recharges', query)
   return res
 }
 
 export async function dataFrom(query: any) {
-  const res = await get('/basis/calendars', query)
+  const res = await get('/finance/recharges', query)
   return res
 }
 
-// 更新档期
-export async function set(query: any) {
-  const res = await put(`/basis/calendars/${query.id}`, query)
-  return res
-}
-
-// 删除档期
-export async function dels(query: any) {
-  const res = await del(`/basis/calendars/${query.id}`, query)
-  return res
-}
 
 

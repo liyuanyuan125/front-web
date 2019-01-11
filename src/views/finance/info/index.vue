@@ -10,15 +10,18 @@
       <!-- {{datamoney}} -->
       <div class='fince-list'>
           <div class='fince-list-big'>
-            <div class='fince-list-acc'>{{datamoney.balance}}</div>
+            <!-- <div class='fince-list-acc'>{{datamoney.balance}}</div> -->
+            <div class='fince-list-acc'>53200.00</div>
             <p class='fince-list-sm'>账户余额/元</p>
           </div>
           <div class='fince-list-big'>
-            <div class='fince-list-acc'>{{datamoney.availableAmount}}</div>
+            <!-- <div class='fince-list-acc'>{{datamoney.availableAmount}}</div> -->
+            <div class='fince-list-acc'>53200.00</div>
             <p class='fince-list-sm'>可用金额/元</p>
           </div>
           <div class='fince-list-big'>
-            <div class='fince-list-accd'>{{datamoney.freezeAmount}}</div>
+            <!-- <div class='fince-list-accd'>{{datamoney.freezeAmount}}</div> -->
+            <div class='fince-list-accd'>53200.00</div>
             <p class='fince-list-sm'>冻结金额/元</p>
           </div>
       </div>
@@ -49,78 +52,84 @@
                 <FormItem label="汇款信息">
                   <div class='hui-div'>
                     <div>
-                        <p class='sma1'>招商银行股份有限公司北京朝阳支行</p>
+                        <p class='sma1'>{{defaultdata.accountBank}}</p>
                         <p class='sma2'>开户银行</p>
                     </div>
                     <div>
                         <p class='sma3'>开户账号</p>
-                        <div class='sma4'>6226622662266226622</div>
+                        <div class='sma4'>{{defaultdata.accountNumber.slice(0, 4)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(4, 8)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(8, 12)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(12, 16)}}</div>
                     </div>
                     <div>
                         <p class='sma5'>开户名称</p>
-                        <p class='sma6'>北京智能广宣科技有限公司</p>
+                        <p class='sma6'>{{defaultdata.accountName}}</p>
                     </div>
                   </div>
                 </FormItem>
               </Col>
               <Col span='12'>
-                <FormItem label="汇款底单">
-                  <Input class='inp-style' placeholder="请输入充值金额"/>
+                <FormItem label="汇款底单" prop='receipts'>
+                <Upload v-model="dataForm.receipts" multiple :maxCount="1" accept="image/*"/>
+                  <!-- <Input class='inp-style' placeholder="请输入充值金额"/> -->
                 </FormItem>
               </Col>
             </Row>
             <Row class='add-row'>
               <Col span="12">
-                <FormItem label="银行账号">
-                  <Input class='inp-style' placeholder="请输入汇款银行账号"/>
+                <FormItem label="银行账号" prop='accountNumber'>
+                  <Input v-model="dataForm.accountNumber" class='inp-style' placeholder="请输入汇款银行账号"/>
                 </FormItem>
               </Col>
               <Col span='12'>
-                <FormItem label="充值金额">
-                  <Input class='inp-style' placeholder="请输入充值金额"/>
+                <FormItem label="充值金额" prop='amount'>
+                  <Input v-model="dataForm.amount" class='inp-style' placeholder="请输入充值金额"/>
                 </FormItem>
               </Col>
             </Row>
             <Row class='add-row'>
               <Col span="8">
-                <FormItem label="汇款人姓名">
-                  <Input class='inp-style-center' placeholder="请输入汇款人姓名"/>
+                <FormItem label="汇款人姓名" prop='accountName'>
+                  <Input v-model="dataForm.accountName" class='inp-style-center' placeholder="请输入汇款人姓名"/>
                 </FormItem>
               </Col>
               <Col span='8'>
                 <FormItem label="汇款时间">
-                  <Input class='inp-style-center' placeholder=""/>
+                  <Date-picker type="date" prop='remittanceDate' v-model="dataForm.remittanceDate"
+          on-change="selectTime" placeholder="选择日期" class='inp-style-center'></Date-picker>
+                  <!-- <Input v-model="dataForm.remittanceDate" class='inp-style-center' placeholder=""/> -->
                 </FormItem>
               </Col>
               <Col span='8'>
-                <FormItem label="联系电话">
-                  <Input class='inp-style-center' placeholder="请输入联系人电话号码"/>
+                <FormItem label="联系电话" prop='contactPhone'>
+                  <Input v-model="dataForm.contactPhone" class='inp-style-center' placeholder="请输入联系人电话号码"/>
                 </FormItem>
               </Col>
             </Row>
             <Row class='add-row'>
               <Col span="24">
-                <FormItem label="备注">
-                  <Input class='inp-style-tex' type='textarea' placeholder="限50字"/>
+                <FormItem label="备注" prop='remark'>
+                  <Input v-model="dataForm.remark" class='inp-style-tex' type='textarea' placeholder="限50字"/>
                 </FormItem>
               </Col>
             </Row>
         </Form>
+        <div style="text-align: center">
+          <Button type="primary" @click="dataFormSubmit('dataForm')">提交充值申请</Button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="tsx">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins , Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
-import { queryList , moneyList , defaultList } from '@/api/financeinfo'
+import { queryList , moneyList , dataFrom , defaultList , add } from '@/api/financeinfo'
 // import { queryList } from '@/api/asd'
-// import { clean } from '@/fn/object'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { toMap } from '@/fn/array'
 import moment from 'moment'
+import Upload from '@/components/upload/Upload.vue'
 import { slice, clean } from '@/fn/object'
 
 // 获取当前登录用户信息
@@ -129,15 +138,45 @@ const user: any = getUser()!
 const makeMap = (list: any[]) => toMap(list, 'id', 'name')
 const timeFormat = 'YYYY-MM-DD HH:mm'
 
-@Component
+const dataForm = {
+  accountNumber: '',
+  accountName: '',
+  amount: null,
+  remittanceDate: null,
+  contactPhone: '',
+  remark: '',
+  receipts : [],
+  receipt: '',
+  companyId: user.companyId,
+  companyName: user.companyName
+}
+
+@Component({
+  components: {
+    Upload
+  }
+})
 export default class Main extends ViewBase {
 //   user : any = getUser()
-  dataForm = {
+  dataFormget = {
     companyId: user.companyId,
     pageIndex: 1,
     pageSize: 10,
   }
+  // dataForm = {
+  //   accountNumber: '',
+  //   accountName: '',
+  //   amount: null,
+  //   remittanceDate: null,
+  //   contactPhone: '',
+  //   remark: '',
+  //   receipts : [],
+  //   receipt: '',
+  //   companyId: user.companyId,
+  //   companyName: user.companyName
+  // }
   total = 0
+  id = 0
   items: any = []
   loading = false
   tableLoading = false
@@ -149,6 +188,18 @@ export default class Main extends ViewBase {
   datamoney: any = {}
   // 默认银行卡信息
   defaultdata: any = {}
+  // 银行账号
+  accountNumbers: any = ''
+
+  rules = {
+    accountName: [
+
+    ]
+  }
+
+  dataForm: any = { ...dataForm }
+
+
   columns4 = [
     { title: '充值ID', key: 'id', align: 'center' },
     {
@@ -231,22 +282,23 @@ export default class Main extends ViewBase {
     },
   ]
 
+
   created() {
     // this.getUser()
-    // console.log(user.companyId)
+    // console.log(user)
     this.userList = user
     this.seach()
   }
 
   // 每页数
   sizeChangeHandle(val: any) {
-    this.dataForm.pageIndex = val
+    this.dataFormget.pageIndex = val
     this.seach()
   }
 
   // 当前页
   currentChangeHandle(val: any) {
-    this.dataForm.pageSize = val
+    this.dataFormget.pageSize = val
     this.seach()
   }
 
@@ -271,7 +323,7 @@ export default class Main extends ViewBase {
   async seach() {
     this.tableLoading = true
     try {
-      const query = { ...this.dataForm }
+      const query = { ...this.dataFormget }
       const {
         data: {
           items,
@@ -294,6 +346,7 @@ export default class Main extends ViewBase {
     //   this.datamoney = data
     // 银行卡信息
     const { data } = await defaultList(clean({...query}))
+    this.defaultdata = data
     // console.log(data)
     } catch (ex) {
       this.handleError(ex)
@@ -302,8 +355,54 @@ export default class Main extends ViewBase {
     }
   }
 
+
+
+    // 表单提交
+  async dataFormSubmit(dataForms: any) {
+    // for ( const i in this.companys) {
+    //   if (this.dataForm.companyId == this.companys[i].id) {
+    //     this.dataForm.companyName = this.companys[i].name
+    //   }
+    // }
+  this.dataForm.remittanceDate = new Date(this.dataForm.remittanceDate).getTime()
+  this.dataForm.receipt = this.dataForm.receipts.length > 0 ? this.dataForm.receipts[0].fileId : []
+   const myThis: any = this
+   myThis.$refs[dataForms].validate( async ( valid: any ) => {
+  // debugger
+      if (valid) {
+        const query = !this.id ? this.dataForm : {
+          id: this.id,
+          ...this.dataForm
+        }
+        const title = '添加'
+        try {
+           const res =  await add (query)
+          //  this.$router.push({ name : 'Finance-examine' })
+        } catch (ex) {
+           this.handleError(ex)
+        }
+      }
+    })
+  // const valid = await (this.$refs[dataForms] as any).validate()
+  //   if (!valid) {
+  //     return
+  //   }
+  //   try {
+  //     // const {oldPassword, newPassword} = this.dataForm
+  //     const data = this.dataForm
+  //     await add(data)
+  //     // toast('密码修改成功')
+  //   } catch (ex) {
+  //     this.handleError(ex)
+  //   }
+  }
+
   toDetail(id: any) {
     this.$router.push({ name: 'account-cinema-detail', params: {id} })
+  }
+  @Watch('dataForms', { deep: true })
+    watchdataForms(val: any[]) {
+    this.dataForm.receipts = val.map(it => it.fileId)
   }
 }
 </script>
@@ -429,7 +528,7 @@ export default class Main extends ViewBase {
         width: 100%;
         font-size: 36px;
         font-weight: 400;
-        color: rgba(254, 129, 53, 1);
+        color: #222;
         line-height: 36px;
         text-align: center;
         margin-top: 50px;
@@ -452,23 +551,24 @@ export default class Main extends ViewBase {
   }
   .inp-style {
     width: 97%;
-    border: 1px solid rgba(210, 210, 210, 1);
-    border-radius: 2px;
+    border: 0.5px solid rgba(210, 210, 210, 1);
+    border-radius: 5px;
   }
   .inp-style-center {
     width: 95%;
-    border: 1px solid rgba(210, 210, 210, 1);
-    border-radius: 2px;
+    border: 0.5px solid rgba(210, 210, 210, 1);
+    border-radius: 5px;
   }
   .inp-style-tex {
     width: 98.5%;
-    border: 1px solid rgba(210, 210, 210, 1);
-    border-radius: 2px;
+    border: 0.5px solid rgba(210, 210, 210, 1);
+    border-radius: 5px;
   }
   .hui-div {
     width: 400px;
     height: 225px;
-    background: linear-gradient(131deg, rgba(254, 89, 64, 1) 0%, rgba(253, 150, 68, 1) 100%);
+    // background: linear-gradient(131deg, rgba(254, 89, 64, 1) 0%, rgba(253, 150, 68, 1) 100%);
+    background: url('./../images/银行卡.png');
     border-radius: 6px;
     padding: 12px 30px;
     .hui-big {
