@@ -43,12 +43,12 @@ const toTreeData = (nodes: Page[], perms: string[]) => {
           level,
           perms,
         },
-        render: (hh: any, { data }: any) => {
-          /* tslint:disable */
-          const h = jsxReactToVue(hh)
-          return <PermTreeItem value={data}/>
-          /* tslint:enable */
-        },
+        // render: (hh: any, { data }: any) => {
+        //   /* tslint:disable */
+        //   const h = jsxReactToVue(hh)
+        //   return <PermTreeItem value={data}/>
+        //   /* tslint:enable */
+        // },
       }
 
       return page

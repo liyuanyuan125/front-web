@@ -92,6 +92,30 @@ export default class App extends ViewBase {
       label: '首页',
     },
     {
+      name: 'pop',
+      label: '推广管理',
+      subList: [
+        {
+          name: 'pop-plan',
+          label: '广告计划',
+        },
+        {
+          name: '',
+          label: '广告片',
+        },
+      ]
+    },
+    {
+      name: 'report',
+      label: '数据报表',
+      subList: [
+        {
+          name: 'report-plan',
+          label: '投放成效报告',
+        },
+      ]
+    },
+    {
       name: 'account',
       label: '账户管理',
       subList: [
@@ -134,7 +158,12 @@ export default class App extends ViewBase {
   ]
 
   get siderOpenNames() {
-    return this.siderMenuList.map(it => it.name)
+    const activeName = this.siderActiveName
+    const item = this.siderMenuList.find(it => {
+      const exists = (it.subList! || [{ name: it.name }]).some(t => t.name === activeName)
+      return exists
+    })
+    return item != null ? [ item.name ] : []
   }
 
   // 获取导航中全部可点击的页面 name

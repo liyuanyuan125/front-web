@@ -98,6 +98,26 @@ export default [
     component: () => import('./views/finance/info/moreList.vue'),
   },
 
+  // 推广管理 - 广告计划 - 创建广告计划
+  {
+    path: '/pop/plan',
+    name: 'pop-plan',
+    component: () => import('./views/pop/plan/index.vue'),
+  },
+  // 推广管理 - 广告计划 - 生成广告方案
+  {
+    path: '/pop/plan/scheme',
+    name: 'pop-plan-scheme',
+    component: () => import('./views/pop/plan/scheme.vue'),
+  },
+
+  // 数据报表 - 投放成效报告
+  {
+    path: '/report/plan',
+    name: 'report-plan',
+    component: () => import('./views/report/plan/index.vue'),
+  },
+
   // 示例，没有实际用处
   {
     path: '/about',
