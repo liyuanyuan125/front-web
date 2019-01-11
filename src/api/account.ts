@@ -1,9 +1,7 @@
 import { get, post, put } from '@/fn/ajax'
 import { getUser } from '@/store'
-// const getUseId: any = getUser()
+const getUseId: any = getUser()
 
-// 主账户id
-const getUseId = { id: 1272 }
 /**
  * 主账号详情接口
  * @param data 接口数据
@@ -25,5 +23,5 @@ export async function getLoginEmail(email: string) {
  * @param data
  */
 export async function pendingAudit(data: any) {
-  const res = put(`/customer/accounts/${getUseId.id}/company`, data)
+  // const res = put(`/customer/accounts/${getUseId.id}/company`, data)
 }
