@@ -3,33 +3,13 @@
     <h3 class="userTitle">
       <span class="nav-top-title">财务信息</span>
     </h3>
-    <div class='fince'>
-      <h3 class="userTitle">
-        <span style='color:#222222;' class="nav-top-title">账户总览</span>
-      </h3>
-      <!-- {{datamoney}} -->
-      <div class='fince-list'>
-          <div class='fince-list-big'>
-            <div class='fince-list-acc'>{{datamoney.balance}}</div>
-            <p class='fince-list-sm'>账户余额/元</p>
-          </div>
-          <div class='fince-list-big'>
-            <div class='fince-list-acc'>{{datamoney.availableAmount}}</div>
-            <p class='fince-list-sm'>可用金额/元</p>
-          </div>
-          <div class='fince-list-big'>
-            <div class='fince-list-accd'>{{datamoney.freezeAmount}}</div>
-            <p class='fince-list-sm'>冻结金额/元</p>
-          </div>
-      </div>
-    </div>
     <div class="table-box">
       <div class="table-left-title">最近充值记录</div>
       <router-link :to="{path:'/finance/info/more' , params: {companyId: userList.companyId,}}" tag="div" class="table-right-title">查看更多</router-link>
       <!-- <div class="table-right-title">查看更多</div> -->
     </div>
     <Table ref="selection" stripe class="tables" :loading="tableLoading" :columns="columns4" :data="tableData"></Table>
-    <!-- <Page :total="total" v-if="total>0" class="btnCenter"
+    <Page :total="total" v-if="total>0" class="btnCenter"
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
       :page-size-opts="[10, 20, 50, 100]"
@@ -37,77 +17,7 @@
       show-sizer
       show-elevator
       @on-change="sizeChangeHandle"
-      @on-page-size-change="currentChangeHandle"/> -->
-    <div class='finceadd'>
-      <h3 class="userTitle">
-        <span style='color:#222222;' class="nav-top-title">账户充值</span>
-      </h3>
-      <div class='fince-list'>
-        <Form  :model='dataForm' :label-width='88' :rules='rules' label-position="left" class='form page' ref='dataForm'>
-            <Row class='add-row'>
-              <Col span="12">
-                <FormItem label="汇款信息">
-                  <div class='hui-div'>
-                    <div>
-                        <p class='sma1'>招商银行股份有限公司北京朝阳支行</p>
-                        <p class='sma2'>开户银行</p>
-                    </div>
-                    <div>
-                        <p class='sma3'>开户账号</p>
-                        <div class='sma4'>6226622662266226622</div>
-                    </div>
-                    <div>
-                        <p class='sma5'>开户名称</p>
-                        <p class='sma6'>北京智能广宣科技有限公司</p>
-                    </div>
-                  </div>
-                </FormItem>
-              </Col>
-              <Col span='12'>
-                <FormItem label="汇款底单">
-                  <Input class='inp-style' placeholder="请输入充值金额"/>
-                </FormItem>
-              </Col>
-            </Row>
-            <Row class='add-row'>
-              <Col span="12">
-                <FormItem label="银行账号">
-                  <Input class='inp-style' placeholder="请输入汇款银行账号"/>
-                </FormItem>
-              </Col>
-              <Col span='12'>
-                <FormItem label="充值金额">
-                  <Input class='inp-style' placeholder="请输入充值金额"/>
-                </FormItem>
-              </Col>
-            </Row>
-            <Row class='add-row'>
-              <Col span="8">
-                <FormItem label="汇款人姓名">
-                  <Input class='inp-style-center' placeholder="请输入汇款人姓名"/>
-                </FormItem>
-              </Col>
-              <Col span='8'>
-                <FormItem label="汇款时间">
-                  <Input class='inp-style-center' placeholder=""/>
-                </FormItem>
-              </Col>
-              <Col span='8'>
-                <FormItem label="联系电话">
-                  <Input class='inp-style-center' placeholder="请输入联系人电话号码"/>
-                </FormItem>
-              </Col>
-            </Row>
-            <Row class='add-row'>
-              <Col span="24">
-                <FormItem label="备注">
-                  <Input class='inp-style-tex' type='textarea' placeholder="限50字"/>
-                </FormItem>
-              </Col>
-            </Row>
-        </Form>
-      </div>
-    </div>
+      @on-page-size-change="currentChangeHandle"/>
   </div>
 </template>
 
@@ -115,7 +25,7 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
-import { queryList , moneyList , defaultList } from '@/api/financeinfo'
+import { queryList } from '@/api/financeinfo'
 // import { queryList } from '@/api/asd'
 // import { clean } from '@/fn/object'
 import jsxReactToVue from '@/util/jsxReactToVue'
@@ -145,10 +55,6 @@ export default class Main extends ViewBase {
   userList: any = {}
   // 状态列表
   approvalStatusList: any = []
-  // 财产
-  datamoney: any = {}
-  // 默认银行卡信息
-  defaultdata: any = {}
   columns4 = [
     { title: '充值ID', key: 'id', align: 'center' },
     {
@@ -287,14 +193,6 @@ export default class Main extends ViewBase {
       }
       this.total = totalCount
       this.approvalStatusList = approvalStatusList
-      // 财产信息
-    //   const {
-    //     data
-    //   } = await moneyList(user.companyId)
-    //   this.datamoney = data
-    // 银行卡信息
-    const { data } = await defaultList(clean({...query}))
-    // console.log(data)
     } catch (ex) {
       this.handleError(ex)
     } finally {
@@ -464,72 +362,6 @@ export default class Main extends ViewBase {
     width: 98.5%;
     border: 1px solid rgba(210, 210, 210, 1);
     border-radius: 2px;
-  }
-  .hui-div {
-    width: 400px;
-    height: 225px;
-    background: linear-gradient(131deg, rgba(254, 89, 64, 1) 0%, rgba(253, 150, 68, 1) 100%);
-    border-radius: 6px;
-    padding: 12px 30px;
-    .hui-big {
-      width: 100%;
-    }
-    .sma1 {
-      display: block;
-      text-align: right;
-      height: 12px;
-      font-size: 12px;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 1);
-      line-height: 12px;
-      margin-top: 12px;
-    }
-    .sma2 {
-      width: 100%;
-      text-align: right;
-      height: 12px;
-      font-size: 12px;
-      font-weight: 400;
-      color: #222;
-      line-height: 12px;
-      margin-top: 10px;
-    }
-    .sma3 {
-      width: 100%;
-      height: 12px;
-      font-size: 12px;
-      font-weight: 400;
-      color: rgba(34, 34, 34, 1);
-      line-height: 12px;
-      margin-top: 24px;
-    }
-    .sma4 {
-      width: 100%;
-      height: 24px;
-      font-size: 24px;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 1);
-      line-height: 24px;
-      margin-top: 12px;
-    }
-    .sma5 {
-      width: 100%;
-      height: 12px;
-      font-size: 12px;
-      font-weight: 400;
-      color: rgba(34, 34, 34, 1);
-      line-height: 12px;
-      margin-top: 47px;
-    }
-    .sma6 {
-      display: block;
-      height: 12px;
-      font-size: 12px;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 1);
-      line-height: 12px;
-      margin-top: 12px;
-    }
   }
 }
 </style>

@@ -5,11 +5,31 @@
 import tryParseJson from '@/util/tryParseJson'
 import cookie from 'js-cookie'
 import { logout as postLogout } from '@/api/auth'
+import { SystemCode } from '@/util/types'
 
-interface User {
-  id: string
+/** 用户类型 */
+export interface User {
+  /** 用户 ID */
+  id: number
+  /** 用户显示名，若今后有昵称，则显示昵称，目前为 email */
   name: string
-  systemCode: string
+  /** 用户邮箱，也是账号 */
+  email: string
+  /** 是否为主账号 */
+  isAdmin: boolean
+
+  /** 当前系统 */
+  systemCode: SystemCode
+  /** 所拥有的系统列表 */
+  systems: SystemCode[]
+
+  /** 所属公司 ID */
+  companyId: number
+  /** 所属公司名 */
+  companyName: string
+
+  /** 权限列表 */
+  perms: string[]
 }
 
 const KEY_TOKEN = 'X-API-TOKEN'

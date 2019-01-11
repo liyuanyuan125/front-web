@@ -5,22 +5,21 @@ import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 import app from './app.vue'
 import Router from 'vue-router'
-import home from './views/home.vue'
-// 将登陆注册等模块「静态」到主文件中，以便用户更流畅
-import login from './views/portal/login.vue'
-import PortalLayout from './views/portal/layout.vue'
-import RegisterLayout from './views/portal/registerLayout.vue'
-import register from './views/portal/register.vue'
-import registerComplete from './views/portal/registerComplete.vue'
-import activeEmail from './views/portal/activeEmail.vue'
-import registerSuccess from './views/portal/registerSuccess.vue'
-import MainLayout from './site/MainLayout.vue'
 import locale from 'iview/dist/locale/zh-CN'
 import event from './fn/event'
 import { alert } from './ui/modal'
 import LazyInput from '@/components/LazyInput'
 import { hasLogin } from './store'
 import routes from './routes'
+
+// 将登陆注册等模块「静态」到主文件中，以便用户更流畅
+import home from './views/home.vue'
+import login from './views/portal/login.vue'
+import register from './views/portal/register.vue'
+import registerComplete from './views/portal/registerComplete.vue'
+import activeEmail from './views/portal/activeEmail.vue'
+import registerSuccess from './views/portal/registerSuccess.vue'
+import MainLayout from './views/layout/MainLayout.vue'
 
 Vue.use(Router)
 

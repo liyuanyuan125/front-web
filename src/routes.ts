@@ -91,6 +91,12 @@ export default [
     name: 'finance-info',
     component: () => import('./views/finance/info/index.vue'),
   },
+  // 财务信息 - 财务信息  - 更多数据
+  {
+    path: '/finance/info/more',
+    name: 'finance-info-more',
+    component: () => import('./views/finance/info/moreList.vue'),
+  },
 
   // 示例，没有实际用处
   {
