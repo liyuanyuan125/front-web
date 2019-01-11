@@ -51,16 +51,12 @@
         </div>
       </FormItem>
       <h3 class="layout-title">投放定向</h3>
-      <FormItem label="广告版位">
+      <FormItem label="广告版位" class="item-top">
         <div class="flex-box">
           <div class="adv-position">
-            <span
-              v-for="item in advList"
-              :key="item.key"
-              @click="handleTabs.bind(this,item.key)"
-            >{{item.name}}</span>
+            <span v-for="item in advList" :key="item.key" @click="handleTabs(item.id)">{{item.name}}</span>
           </div>
-          <div></div>
+          <div class="select-tabs" :class="selectTab"></div>
         </div>
       </FormItem>
       <h3 class="layout-title">预算与计费</h3>
@@ -88,6 +84,7 @@ import ViewBase from '@/util/ViewBase'
 @Component
 export default class Main extends ViewBase {
   tabs = 1
+  selectTab = 'tabs1'
   form = {
     putType: 'refBefore',
     advMes: '',
@@ -104,13 +101,13 @@ export default class Main extends ViewBase {
   ]
   amountList = [
     { key: 1, label: '50万以下' },
-    { key: 1, label: '50~100万以下' },
-    { key: 1, label: '50~100万以下' },
-    { key: 1, label: '100~300万以下' },
-    { key: 1, label: '300~500万以下' },
-    { key: 1, label: '500~800万以下' },
-    { key: 1, label: '800~1000万以下' },
-    { key: 1, label: '指定金额' }
+    { key: 2, label: '50~100万以下' },
+    { key: 3, label: '50~100万以下' },
+    { key: 4, label: '100~300万以下' },
+    { key: 5, label: '300~500万以下' },
+    { key: 6, label: '500~800万以下' },
+    { key: 7, label: '800~1000万以下' },
+    { key: 8, label: '指定金额' }
   ]
   advList = [
     { id: 1, name: '海报灯箱' },
@@ -122,12 +119,48 @@ export default class Main extends ViewBase {
     { id: 7, name: '门贴' }
   ]
   handleSelect() {}
-  handleTabs() {}
+  handleTabs(val: any) {
+    this.selectTab = `tabs${val}`
+  }
 }
 </script>
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.select-tabs {
+  margin: 30px 0 0 50px;
+  width: 536px;
+  height: 260px;
+}
+.tabs1 {
+  background: url('./assets/tabs1.png') no-repeat;
+  background-size: cover;
+}
+.tabs2 {
+  background: url('./assets/tabs2.png') no-repeat;
+  background-size: cover;
+}
+.tabs3 {
+  background: url('./assets/tabs3.png') no-repeat;
+  background-size: cover;
+}
+.tabs4 {
+  background: url('./assets/tabs4.png') no-repeat;
+  background-size: cover;
+}
+.tabs5 {
+  background: url('./assets/tabs5.png') no-repeat;
+  background-size: cover;
+}
+.tabs6 {
+  background: url('./assets/tabs6.png') no-repeat;
+  background-size: cover;
+}
+.tabs7 {
+  background: url('./assets/tabs7.png') no-repeat;
+  background-size: cover;
+}
+
 .btnCenter {
   margin: 40px 0 30px;
 }
