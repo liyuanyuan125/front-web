@@ -70,6 +70,7 @@ export default class Main extends ViewBase {
       const data = { oldPassword, newPassword }
       await setPassword(data)
       toast('密码修改成功')
+      ; (this.$refs.form as any).resetFields()
     } catch (ex) {
       this.handleError(ex)
     }

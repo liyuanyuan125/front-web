@@ -2,7 +2,7 @@
   <div class="page home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">权限管理</span>
-      <router-link class="addUser" tag="span" :to="{name:'account-auth-add'}">
+      <router-link class="addUser" tag="span" :to="{name:'account-auth-add', params: {id: 0}}">
         <Icon type="ios-add" size="27"/>新建权限角色
       </router-link>
     </h3>
@@ -156,7 +156,9 @@ export default class Main extends ViewBase {
           }
         } = await authUserList({
           searchKey: query,
-          systemCode: this.systemCode
+          systemCode: this.systemCode,
+          pageIndex: 1,
+          pageSize: 20
         })
         const ids: any = []
         const datas = items
