@@ -1,12 +1,15 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title"><span @click="toAuth">权限管理</span> > 
+    <h2 class="layout-nav-title"><span @click="toAuth">权限管理</span> >
       <span v-if="!$route.params.id">新建权限角色</span>
-      <span v-else>编辑权限角色</span> 
+      <span v-else>编辑权限角色</span>
     </h2>
     <Form ref="form" :model="form" label-position="left" :rules="rules" :label-width="100" class="edit-input">
       <FormItem label="角色名称" class="item-top" prop='name'>
         <Input v-model="form.name" placeholder="请输入权限角色名称"></Input>
+      </FormItem>
+      <FormItem label="相关权限">
+        <PermTree v-model="permTreeModal"/>
       </FormItem>
       <FormItem label="相关权限">
         <Tree ref="tree" :data="list" @on-check-change="checkShow" show-checkbox></Tree>
@@ -26,16 +29,25 @@ import { getUser } from '@/store.ts'
 import { isArray, isString } from '@/fn/type.ts'
 import { uniq } from 'lodash'
 import { toast } from '@/ui/modal'
+import PermTree, { PermTreeModal } from '@/components/permTree'
 
 @Component({
+  components: {
+    PermTree
+  }
 })
 export default class Main extends ViewBase {
   role = []
   list: any = []
+
   form = {
     name: ''
   }
+
   perms: any = []
+
+  permTreeModal = {} as PermTreeModal
+
   rules = {
     name: [
        { required: true, message: '请输入角色名称', trigger: 'change' }
@@ -122,9 +134,13 @@ export default class Main extends ViewBase {
     const id = this.$route.params.id || 0
     try {
       if (!id) {
-        const {
-          data
-        } = await meanList(this.systemCode, {type: 2})
+        const { data } = await meanList(this.systemCode, { type: 2 })
+
+        this.permTreeModal = {
+          menu: data.menu,
+          perms: id > 0 ? data.role.perms : []
+        }
+
         const meanLists: any = []
         const tree = this.recursion(data)
         meanLists.push(tree)
@@ -136,6 +152,12 @@ export default class Main extends ViewBase {
             role
           }
         } = await customerRole(id)
+
+        this.permTreeModal = {
+          menu,
+          perms: role.perms || []
+        }
+
         const meanLists: any = []
         const tree = this.recursion(menu)
         meanLists.push(tree)

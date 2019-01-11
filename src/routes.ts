@@ -55,13 +55,13 @@ export default [
   {
     path: '/account/auth/add/:id',
     name: 'account-auth-add',
-    component: () => import('./views/account/auth/addUser.vue')
+    component: () => import('./views/account/auth/addRole.vue')
   },
   // 账户管理 - 权限管理 - 查看
   {
     path: '/account/auth/detail/:id',
     name: 'account-auth-detail',
-    component: () => import('./views/account/auth/detailUser.vue')
+    component: () => import('./views/account/auth/detailRole.vue')
   },
 
 
