@@ -17,23 +17,23 @@
         <div class='tops-byte'>
           <row class='code-list'>
             <Col span='3' style='color:#888'>投放类型</Col>
-            <Col span='11'>映前广告（标准投放）</Col>
+            <Col span='12'>映前广告（标准投放）</Col>
           </row>
           <row class='code-list'>
             <Col span='3' style='color:#888'>广告计划</Col>
-            <Col span='11'>2019款全新奔驰G级影院广告&nbsp;&nbsp;—&nbsp;&nbsp;春节档</Col>
+            <Col span='12'>2019款全新奔驰G级影院广告&nbsp;&nbsp;—&nbsp;&nbsp;春节档</Col>
             <Col span='4' style='color:#888'>客户</Col>
             <Col span='2'>奔驰</Col>
           </row>
           <row class='code-list'>
             <Col span='3' style='color:#888'>广告片</Col>
-            <Col span='11'>奔驰G级2019款最新广告片：与时间争锋</Col>
+            <Col span='12'>奔驰G级2019款最新广告片：与时间争锋</Col>
             <Col span='4' style='color:#888'>广告规格时长</Col>
             <Col span='2' style='color: #ff8237;'>30s</Col>
           </row>
           <row class='code-list' style='border: 0px;'>
             <Col span='3' style='color:#888'>投放排期</Col>
-            <Col span='11'>2019/02/02&nbsp;&nbsp;—&nbsp;&nbsp;2019/02/10</Col>
+            <Col span='12'>2019/02/02&nbsp;&nbsp;—&nbsp;&nbsp;2019/02/10</Col>
             <Col span='4' style='color:#888'>投放周期</Col>
             <Col span='2' style='color: #ff8237;'>7天</Col>
           </row>
@@ -160,7 +160,7 @@ export default class Main extends ViewBase {
     }
     .btn-dao {
       margin-top: 5px;
-      width: 7%;
+      width: 10%;
       height: 40px;
       float: right;
       color: #fff;
