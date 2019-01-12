@@ -6,7 +6,7 @@
     <div class='top-btn'>
       <div class='tops-btn'>
         <div class='code'>投放成效报告</div>
-        <i-button class='btn-dao' type="warning">报表导出</i-button>
+        <Button class='btn-dao' type="warning">报表导出</Button>
       </div>
     </div>
     <div class='top'>
@@ -17,23 +17,23 @@
         <div class='tops-byte'>
           <row class='code-list'>
             <Col span='3' style='color:#888'>投放类型</Col>
-            <Col span='10'>映前广告（标准投放）</Col>
+            <Col span='11'>映前广告（标准投放）</Col>
           </row>
           <row class='code-list'>
             <Col span='3' style='color:#888'>广告计划</Col>
-            <Col span='10'>2019款全新奔驰G级影院广告&nbsp;&nbsp;—&nbsp;&nbsp;春节档</Col>
+            <Col span='11'>2019款全新奔驰G级影院广告&nbsp;&nbsp;—&nbsp;&nbsp;春节档</Col>
             <Col span='4' style='color:#888'>客户</Col>
             <Col span='2'>奔驰</Col>
           </row>
           <row class='code-list'>
             <Col span='3' style='color:#888'>广告片</Col>
-            <Col span='10'>奔驰G级2019款最新广告片：与时间争锋</Col>
+            <Col span='11'>奔驰G级2019款最新广告片：与时间争锋</Col>
             <Col span='4' style='color:#888'>广告规格时长</Col>
             <Col span='2' style='color: #ff8237;'>30s</Col>
           </row>
           <row class='code-list' style='border: 0px;'>
             <Col span='3' style='color:#888'>投放排期</Col>
-            <Col span='10'>2019/02/02&nbsp;&nbsp;—&nbsp;&nbsp;2019/02/10</Col>
+            <Col span='11'>2019/02/02&nbsp;&nbsp;—&nbsp;&nbsp;2019/02/10</Col>
             <Col span='4' style='color:#888'>投放周期</Col>
             <Col span='2' style='color: #ff8237;'>7天</Col>
           </row>
@@ -138,7 +138,7 @@ export default class Main extends ViewBase {
   // height: 100px;
   margin-top: 10px;
   img {
-    width: 85%;
+    width: 100%;
     height: 100%;
   }
 }
