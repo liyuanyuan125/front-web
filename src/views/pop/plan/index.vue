@@ -17,7 +17,6 @@
           class="select-adv-list"
           style="width:200px"
           placeholder="请选择类型"
-          @on-change="handleSelect"
         >
           <Option :value="item.id" :key="item.id" v-for="item in advTypeList">{{item.name}}</Option>
         </Select>
@@ -52,7 +51,46 @@
         </div>
       </FormItem>
       <h3 class="layout-title">投放定向</h3>
-      <FormItem label="广告版位" class="item-top">
+      <FormItem label="场馆类型" class="item-top">
+        <span
+          class="float check-type all-type"
+          @click="handleAllType"
+          :class="{checked: allType}"
+        >不限</span>
+        <CheckboxGroup v-model="form.venueType" @on-change="handleVenue" class="float">
+          <Checkbox
+            label="剧院"
+            class="check-type"
+            :class="{checked: form.venueType.includes('剧院') }"
+          />
+          <Checkbox
+            label="剧场"
+            class="check-type"
+            :class="{checked: form.venueType.includes('剧场') }"
+          />
+          <Checkbox
+            label="文化馆"
+            class="check-type"
+            :class="{checked: form.venueType.includes('文化馆') }"
+          />
+          <Checkbox
+            label="体育馆"
+            class="check-type"
+            :class="{checked: form.venueType.includes('体育馆') }"
+          />
+          <Checkbox
+            label="商场"
+            class="check-type"
+            :class="{checked: form.venueType.includes('商场') }"
+          />
+          <Checkbox
+            label="写字楼"
+            class="check-type"
+            :class="{checked: form.venueType.includes('写字楼') }"
+          />
+        </CheckboxGroup>
+      </FormItem>
+      <FormItem label="广告形式">
         <div class="flex-box">
           <div class="adv-position">
             <span
@@ -69,6 +107,12 @@
       <FormItem label="总预算/￥" class="item-top">
         <RadioGroup v-model="form.totalMonery">
           <Radio :label="item.label" :key="item.key" v-for="item in amountList"></Radio>
+          <Radio label="指定金额">
+            指定金额
+            <em v-if="form.totalMonery == '指定金额'" class="custom-monery">
+              <Input v-model="form.custom" placeholder="请输入自定义金额"/>万
+            </em>
+          </Radio>
         </RadioGroup>
       </FormItem>
       <FormItem label="计算方式">
@@ -78,7 +122,7 @@
       </FormItem>
     </Form>
     <div class="btnCenter">
-      <button class="button-ok">生成投放方案</button>
+      <button class="button-ok" @click="handleScheme">生成投放方案</button>
     </div>
   </div>
 </template>
@@ -92,6 +136,8 @@ export default class Main extends ViewBase {
   tabs = 1
   ding = 0
   selectTab = 'tabs1'
+  allType = true
+
   form = {
     putType: 'refBefore',
     advMes: '',
@@ -99,12 +145,14 @@ export default class Main extends ViewBase {
     date: '',
     vacation: '春节档',
     totalMonery: '50万以下',
-    bill: '按人次计费'
+    bill: '按人次计费',
+    custom: '',
+    venueType: []
   }
   advTypeList = [
     { id: 1, name: '奔驰' },
     { id: 2, name: '西贝餐饮' },
-    { id: 3, name: '阿玛尼' }
+    { id: 3, name: '迪奥' }
   ]
   amountList = [
     { key: 1, label: '50万以下' },
@@ -113,7 +161,7 @@ export default class Main extends ViewBase {
     { key: 5, label: '300~500万以下' },
     { key: 6, label: '500~800万以下' },
     { key: 7, label: '800~1000万以下' },
-    { key: 8, label: '指定金额' }
+    { key: 8, label: '1000万以上' }
   ]
   advList = [
     { id: 1, name: '海报灯箱' },
@@ -124,22 +172,66 @@ export default class Main extends ViewBase {
     { id: 6, name: '卖品柜台屏幕' },
     { id: 7, name: '门贴' }
   ]
-  handleSelect() {}
+  handleVenue() {
+    if (this.allType && this.form.venueType.length >= 1) {
+      this.allType = false
+    }
+  }
+  handleAllType() {
+    if (!this.allType && this.form.venueType.length >= 1) {
+      this.form.venueType = []
+      this.allType = true
+    }
+  }
   handleTabs(val: any) {
     this.ding = val - 1
     this.selectTab = `tabs${val}`
+  }
+  handleScheme() {
+    this.$router.push({ name: 'pop-plan-scheme' })
   }
 }
 </script>
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+.float {
+  float: left;
+}
 .btnCenter {
   margin: 40px 0 30px;
 }
 .forms {
   font-size: 14px;
+  .all-type {
+    line-height: 22px;
+    margin-right: 6px;
+    cursor: pointer;
+    &.checked {
+      color: #fff;
+      background-color: @c-button;
+    }
+  }
+  .check-type {
+    margin: 10px 15px 0 0;
+    width: 60px;
+    height: 26px;
+    font-size: 14px;
+    text-align: center;
+    border-radius: 2px;
+    border: 1px solid rgba(210, 210, 210, 1);
+    &.checked {
+      color: #fff;
+      background-color: @c-button;
+    }
+    /deep/ .ivu-checkbox {
+      display: none;
+      & + span {
+        position: relative;
+        top: -4px;
+      }
+    }
+  }
   .select-adv-type {
     span {
       display: inline-block;
@@ -166,7 +258,7 @@ export default class Main extends ViewBase {
     }
   }
   /deep/ .ivu-form-item {
-    margin-left: 100px;
+    margin-left: 70px;
     font-size: 14px;
   }
   /deep/ .ivu-select-selection {
@@ -230,9 +322,13 @@ export default class Main extends ViewBase {
       display: block;
       cursor: pointer;
       margin-bottom: 10px;
+      padding-left: 35px;
+      width: 200px;
       &.adv-active {
-        color: @c-button;
         font-size: 17px;
+        background: url('./assets/arrow.png') no-repeat left center;
+        background-size: 20px;
+        color: @c-button;
       }
     }
   }
@@ -247,6 +343,16 @@ export default class Main extends ViewBase {
     background-color: @c-button;
   }
 }
+/deep/ .custom-monery {
+  .ivu-input-wrapper {
+    width: 150px;
+    input {
+      height: 30px;
+      line-height: 30px;
+    }
+  }
+}
+
 .select-tabs {
   margin: 30px 0 0 50px;
   width: 536px;
