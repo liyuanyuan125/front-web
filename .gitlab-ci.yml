@@ -5,7 +5,7 @@ stages:
   - deploy
 
 variables:
-  SERVICE_NAME: iadp-front-web
+  SERVICE_NAME: iadp-front-web-demo
 
 lint:
   image: $REGISTRY_ADDRESS/devops/nodejs/build
@@ -13,8 +13,7 @@ lint:
   script:
     - yarn && yarn lint
   only:
-    - develop
-    - release
+    - demo
   tags:
     - nodejs
 
@@ -22,8 +21,7 @@ build:
   image: $REGISTRY_ADDRESS/devops/nodejs/build
   stage: build
   only:
-    - develop
-    - release
+    - demo
   script:
     - yarn && yarn build
   artifacts:
@@ -40,8 +38,7 @@ package:
   variables:
     GIT_STRATEGY: none
   only:
-    - develop
-    - release
+    - demo
   script:
     - package
   tags:
@@ -54,8 +51,7 @@ deploy:
     GIT_STRATEGY: none
   dependencies: []
   only:
-    - develop
-    - release
+    - demo
   script:
     - deploy -service $SERVICE_NAME
   environment: aiads-dev
