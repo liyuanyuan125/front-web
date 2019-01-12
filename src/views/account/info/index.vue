@@ -62,7 +62,8 @@
           <p class="flex-box">
             <label>资质图片</label>
             <em>
-              <img :src="item" v-for="item in company.images" width="150px">
+              <!-- <img :src="item" v-for="item in company.images"  width="150px"
+              @error="setErrorImg">-->
             </em>
           </p>
         </Col>
@@ -255,6 +256,9 @@ export default class Main extends ViewBase {
 
   handleInforma() {
     this.informa.visibleInforma = true
+  }
+  setErrorImg(e: any) {
+    e.target.src = 'https://file.iviewui.com/iview-admin/login_bg.jpg'
   }
 }
 </script>

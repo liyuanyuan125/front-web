@@ -23,5 +23,5 @@ export async function getLoginEmail(email: string) {
  * @param data
  */
 export async function pendingAudit(data: any) {
-  // const res = put(`/customer/accounts/${getUseId.id}/company`, data)
+  const res = put(`/customer/accounts/${getUseId.id}/company`, data)
 }
