@@ -334,7 +334,7 @@ export default class Main extends ViewBase {
       }
     }
   }
-  .ivu-input-icon {
+  /deep/ .ivu-input-icon {
     height: 40px;
     line-height: 40px;
   }
