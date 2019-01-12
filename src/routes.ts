@@ -108,7 +108,7 @@ export default [
   {
     path: '/pop/plan/scheme',
     name: 'pop-plan-scheme',
-    component: () => import('./views/pop/plan/scheme.vue'),
+    component: () => import('./views/pop/pages/index.vue'),
   },
 
   // 数据报表 - 投放成效报告
