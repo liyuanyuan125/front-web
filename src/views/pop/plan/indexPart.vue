@@ -2,9 +2,7 @@
   <div class="page">
     <div class="form-line">
       <label class="form-label">定向类型</label>
-      <RadioGroup v-model="type" type="button">
-        <Radio v-for="it in typeList" :key="it.key" :label="it.key">{{it.text}}</Radio>
-      </RadioGroup>
+
     </div>
 
     <div class="form-line">
@@ -23,8 +21,8 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cityList, City, sexList, ageStageList, filmHobbyList } from './types'
 import CitySelect from './citySelect.vue'
+import { cityList, City, sexList, ageStageList, filmHobbyList, areaTypeList } from './types'
 
 @Component({
   components: {
@@ -32,12 +30,7 @@ import CitySelect from './citySelect.vue'
   }
 })
 export default class Main extends ViewBase {
-  type = 1
 
-  typeList = [
-    { key: 1, text: '标准定向' },
-    { key: 2, text: '按单部影片' },
-  ]
 
   // 标准定向
   area = 3
@@ -62,9 +55,7 @@ export default class Main extends ViewBase {
 
   cityName = ''
 
-  sex = 0
 
-  sexList = sexList
 
   age = 0
 

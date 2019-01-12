@@ -5,19 +5,19 @@
       <ul class="selected-list">
         <li v-for="(it, i) in selectedList" :key="it.id" class="selected-item">
           <label>{{it.name}}</label>
-          <Icon type="md-close" @click="onDel(i)"/>
+          <Icon type="md-close" @click="onDel(i)" class="act-del"/>
         </li>
       </ul>
     </div>
 
-    <div class="main-pane flex-box">
-      <div class="filter-box">
-        <Select v-model="level" class="level">
+    <div class="main-pane flex-1">
+      <div class="filter-box flex-box">
+        <Select v-model="level" class="select-level">
           <Option v-for="it in levelList" :key="it.key"
             :value="it.key">{{it.text}}</Option>
         </Select>
         <Select v-model="searchCityId" placeholder="输入城市名称" filterable
-          on-change="onSelect" ref="search">
+          on-change="onSelect" ref="search" class="select-city">
           <Option v-for="it in remainList" :key="it.id"
             :value="it.id">{{it.name}}</Option>
         </Select>
@@ -86,17 +86,76 @@ export default class CitySelect extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import '~@/site/lib.less';
+
 .side-pane {
   width: 180px;
+  min-width: 180px;
+  background-color: #f9f9f9;
 }
 .side-title {
   height: 50px;
   line-height: 50px;
+  text-indent: 15px;
   font-size: 14px;
+  font-weight: normal;
+  background-color: lighten(@c-button, 30%);
   em {
+    margin: 0 4px;
     font-size: 18px;
-    margin: 0 5px;
+    font-weight: 600;
   }
+}
+
+.selected-list {
+  margin-top: 7px;
+}
+.selected-item {
+  padding: 7px 0 7px 15px;
+}
+.act-del {
+  position: relative;
+  margin-left: 8px;
+  cursor: pointer;
+  padding: 3px;
+  top: -1px;
+  &:hover {
+    color: @c-button;
+  }
+}
+
+.main-pane {
+  margin-left: 20px;
+}
+
+.select-level,
+.select-city {
+  /deep/ .ivu-select-selected-value {
+    height: 40px;
+    line-height: 40px;
+  }
+  // TODO: 主页面影响此处的样式？
+  /deep/ .ivu-select-selection {
+    width: 172px !important;
+    margin-left: 0 !important;
+    height: 40px;
+    line-height: 40px;
+  }
+}
+
+.select-level {
+  width: 172px;
+}
+
+.select-city {
+  width: 100%;
+  margin-left: 20px;
+  /deep/ .ivu-select-selection {
+    width: 100% !important;
+  }
+}
+.map-box {
+  margin-top: 35px;
 }
 
 .the-map {

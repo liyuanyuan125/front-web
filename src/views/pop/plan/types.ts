@@ -26,11 +26,13 @@ export const sexList: KeyText[] = [
 ]
 
 export const ageStageList: KeyText[] = [
-  { key: 1, text: '10岁以下' },
-  { key: 2, text: '10-16岁' },
-  { key: 3, text: '18-30岁' },
-  { key: 4, text: '30-45岁' },
-  { key: 5, text: '45岁以上' },
+  { key: 0, text: '不限' },
+  { key: 1, text: '20岁以下' },
+  { key: 2, text: '20-24岁' },
+  { key: 3, text: '25-29岁' },
+  { key: 4, text: '30-34岁' },
+  { key: 5, text: '35-39岁' },
+  { key: 6, text: '40岁以上' },
 ]
 
 export const filmHobbyList: KeyText[] = [
@@ -41,14 +43,22 @@ export const filmHobbyList: KeyText[] = [
   { key: 4, text: '喜剧' },
   { key: 5, text: '爱情' },
   { key: 6, text: '科幻' },
-  { key: 7, text: '爱情' },
-  { key: 8, text: '记录' },
-  { key: 9, text: '动画' },
-  { key: 10, text: '警匪' },
-  { key: 11, text: '武侠' },
-  { key: 12, text: '网剧' },
-  { key: 13, text: '古装' },
-  { key: 14, text: '战争' },
-  { key: 15, text: '历史' },
-  { key: 16, text: '悲剧' },
+  // { key: 7, text: '爱情' },
+  // { key: 8, text: '记录' },
+  // { key: 9, text: '动画' },
+  // { key: 10, text: '警匪' },
+  // { key: 11, text: '武侠' },
+  // { key: 12, text: '网剧' },
+  // { key: 13, text: '古装' },
+  // { key: 14, text: '战争' },
+  // { key: 15, text: '历史' },
+  // { key: 16, text: '悲剧' },
+]
+
+export const areaTypeList: KeyText[] = [
+  { key: 0, text: '不限' },
+  { key: 1, text: '按区域' },
+  { key: 2, text: '按省份' },
+  { key: 3, text: '按城市' },
+  { key: 4, text: '安影院' },
 ]
