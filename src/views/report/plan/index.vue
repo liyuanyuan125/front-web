@@ -27,7 +27,7 @@
           </row>
           <row class='code-list'>
             <Col span='3' style='color:#888'>广告片</Col>
-            <Col span='12'>奔驰G级2019款最新广告片：与时间争锋</Col>
+            <Col span='12'>{{forMat.detail}}</Col>
             <Col span='4' style='color:#888'>广告规格时长</Col>
             <Col span='2' style='color: #ff8237;'>30s</Col>
           </row>
@@ -126,6 +126,7 @@ const mockMap = [
     id: '映前广告－标准定向',
     name: '2019款全新奔驰G级影院广告－春节档',
     client: '奔驰',
+    detail: '',
     time: '2019-2-4 ～2019-2-10',
     longTime : '7',
     data: '春节档',
@@ -136,6 +137,7 @@ const mockMap = [
   {
     id: '映前广告－按单部影片',
     name: '“我爱筱面”美食节6月推广',
+    detail: '专注营养,致力健康',
     client: '西贝餐饮',
     time: '2019-6-1 ～2019-6-10',
     longTime : '10',
@@ -148,6 +150,7 @@ const mockMap = [
     id: '线下场馆',
     name: 'GIORGIO ARMANI新品红管唇釉',
     client: '阿玛尼',
+    detail: '欧洲时尚生活的缔造者',
     time: '2019-2-4 ～2019-2-10',
     longTime : '7',
     data: '春节档',
