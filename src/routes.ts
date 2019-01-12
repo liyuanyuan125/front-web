@@ -113,7 +113,7 @@ export default [
 
   // 数据报表 - 投放成效报告
   {
-    path: '/report/plan',
+    path: '/report/plan/:id',
     name: 'report-plan',
     component: () => import('./views/report/plan/index.vue'),
   },
