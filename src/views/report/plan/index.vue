@@ -17,25 +17,25 @@
         <div class='tops-byte'>
           <row class='code-list'>
             <Col span='3' style='color:#888'>投放类型</Col>
-            <Col span='12'>映前广告（标准投放）</Col>
+            <Col span='12'>{{forMat.id}}</Col>
           </row>
           <row class='code-list'>
             <Col span='3' style='color:#888'>广告计划</Col>
-            <Col span='12'>2019款全新奔驰G级影院广告&nbsp;&nbsp;—&nbsp;&nbsp;春节档</Col>
+            <Col span='12'>{{forMat.name}}</Col>
             <Col span='4' style='color:#888'>客户</Col>
-            <Col span='2'>奔驰</Col>
+            <Col span='3'>{{forMat.client}}</Col>
           </row>
           <row class='code-list'>
             <Col span='3' style='color:#888'>广告片</Col>
-            <Col span='12'>奔驰G级2019款最新广告片：与时间争锋</Col>
+            <Col span='12'>{{forMat.detail}}</Col>
             <Col span='4' style='color:#888'>广告规格时长</Col>
             <Col span='2' style='color: #ff8237;'>30s</Col>
           </row>
           <row class='code-list' style='border: 0px;'>
             <Col span='3' style='color:#888'>投放排期</Col>
-            <Col span='12'>2019/02/02&nbsp;&nbsp;—&nbsp;&nbsp;2019/02/10</Col>
+            <Col span='12'>{{forMat.time}}</Col>
             <Col span='4' style='color:#888'>投放周期</Col>
-            <Col span='2' style='color: #ff8237;'>7天</Col>
+            <Col span='2' style='color: #ff8237;'>{{forMat.longTime}}天</Col>
           </row>
         </div>
       </div>
@@ -120,10 +120,55 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 
+
+const mockMap = [
+  {
+    id: '映前广告－标准定向',
+    name: '2019款全新奔驰G级影院广告－春节档',
+    client: '奔驰',
+    detail: '奔驰G级影院广告语：与时间争锋',
+    time: '2019-2-4 ～2019-2-10',
+    longTime : '7',
+    data: '春节档',
+    man : '400,000',
+    ceil: '4000,000.00',
+    sex: '男'
+  },
+  {
+    id: '映前广告－标准定向',
+    name: '2019款全新奔驰G级影院广告－春节档',
+    client: '奔驰',
+    detail: '奔驰G级影院广告语：与时间争锋',
+    time: '2019-2-4 ～2019-2-10',
+    longTime : '7',
+    data: '春节档',
+    man : '400,000',
+    ceil: '4000,000.00',
+    sex: '男'
+  },
+  {
+    id: '映前广告－标准定向',
+    name: '2019款全新奔驰G级影院广告－春节档',
+    client: '奔驰',
+    detail: '奔驰G级影院广告语：与时间争锋',
+    time: '2019-2-4 ～2019-2-10',
+    longTime : '7',
+    data: '春节档',
+    man : '400,000',
+    ceil: '4000,000.00',
+    sex: '男'
+  },
+]
+
 @Component
 export default class Main extends ViewBase {
 
   tabObj: any = ['汇总', '按人群' , '按影院' , '按影片' , '按地区']
+
+  get forMat() {
+    const id: any = (this.$route.params as any).id - 1 || 0
+    return mockMap[id]
+  }
 
 }
 </script>
