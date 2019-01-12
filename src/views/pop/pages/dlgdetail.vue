@@ -65,7 +65,10 @@ export default class Main extends ViewBase {
   }
 
   open() {
-
+    this.$router.push({
+      name: 'report-plan',
+      params: {id: this.$route.params.id}
+    })
   }
 }
 </script>
