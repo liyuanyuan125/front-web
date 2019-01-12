@@ -43,16 +43,7 @@ export const filmHobbyList: KeyText[] = [
   { key: 4, text: '喜剧' },
   { key: 5, text: '爱情' },
   { key: 6, text: '科幻' },
-  // { key: 7, text: '爱情' },
-  // { key: 8, text: '记录' },
-  // { key: 9, text: '动画' },
-  // { key: 10, text: '警匪' },
-  // { key: 11, text: '武侠' },
-  // { key: 12, text: '网剧' },
-  // { key: 13, text: '古装' },
-  // { key: 14, text: '战争' },
-  // { key: 15, text: '历史' },
-  // { key: 16, text: '悲剧' },
+  { key: 7, text: '奇幻' },
 ]
 
 export const areaTypeList: KeyText[] = [
@@ -61,4 +52,64 @@ export const areaTypeList: KeyText[] = [
   { key: 2, text: '按省份' },
   { key: 3, text: '按城市' },
   { key: 4, text: '安影院' },
+]
+
+export interface Film {
+  name: string
+  date: string
+  cover: string
+  typeList: number[]
+  checked: boolean
+  tags: string
+}
+
+export const filmList: Film[] = [
+  {
+    name: '《疯狂的外星人》',
+    date: '2019年02月05日',
+    cover: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgstr5a893rg008001n0.jpg',
+    typeList: [4, 1, 6],
+    checked: false,
+    tags: '喜剧/剧情/科幻',
+  },
+  {
+    name: '《新喜剧之王》',
+    date: '2019年02月05日',
+    cover: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgstrq2893rg008001ng.jpg',
+    typeList: [4],
+    checked: false,
+    tags: '喜剧',
+  },
+  {
+    name: '《情圣2》',
+    date: '2019年02月05日',
+    cover: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgsts7i893rg008001o0.jpg',
+    typeList: [4, 5],
+    checked: false,
+    tags: '喜剧/爱情',
+  },
+  {
+    name: '《飞驰人生》',
+    date: '2019年02月05日',
+    cover: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgstsci893rg008001og.jpg',
+    typeList: [4],
+    checked: false,
+    tags: '喜剧',
+  },
+  {
+    name: '《日不落酒店》',
+    date: '2019年02月05日',
+    cover: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgstslq893rg008001p0.jpg',
+    typeList: [4],
+    checked: false,
+    tags: '喜剧',
+  },
+  {
+    name: '《神探蒲松龄》',
+    date: '2019年02月05日',
+    cover: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgstsna893rg008001pg.jpg',
+    typeList: [3, 7, 4],
+    checked: false,
+    tags: '动作/奇幻/喜剧',
+  },
 ]

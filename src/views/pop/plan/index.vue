@@ -1,8 +1,10 @@
 <template>
   <div class="page home-bg">
     <h2 class="layout-nav-title">创建广告计划</h2>
+
     <Form :model="form" label-position="left" :label-width="100" class="edit-input forms">
       <h3 class="layout-title">基本信息</h3>
+
       <FormItem label="投放类型" class="item-top select-adv-type">
         <span
           :class="{active: form.putType == 'refBefore'}"
@@ -10,6 +12,7 @@
         >映前广告</span>
         <span :class="{active: form.putType == 'refafter'}" @click="form.putType = 'refafter'">线下场馆</span>
       </FormItem>
+
       <FormItem label="广告计划">
         <Input v-model="form.advMes" placeholder="如：2019款全新奔驰G级影院广告"></Input>
         <Select
@@ -21,6 +24,7 @@
           <Option :value="item.id" :key="item.id" v-for="item in advTypeList">{{item.name}}</Option>
         </Select>
       </FormItem>
+
       <FormItem label="投放排期">
         <div class="flex-box">
           <div class="put-tab">
@@ -116,6 +120,32 @@
               :label="it.key" class="check-item">{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
+
+        <FormItem label="选择影片" class="form-item-film-name">
+          <Input v-model="form.filmName" class="input-film-name"
+            placeholder="输入影片名字" search enter-button/>
+        </FormItem>
+
+        <FormItem label="影片类型" class="form-item-film-type">
+          <CheckboxGroup v-model="form.filmType" class="float">
+            <Checkbox v-for="it in filmHobbyList" :key="it.key"
+              :label="it.key" class="check-item">{{it.text}}</Checkbox>
+          </CheckboxGroup>
+        </FormItem>
+
+        <p class="single-result"
+          v-if="foundFilmList.length > 0">已为您匹配以下{{foundFilmList.length}}部影片：</p>
+
+        <ul class="single-film-list" v-if="foundFilmList.length > 0">
+          <li v-for="(it, i) in foundFilmList" :key="i" class="single-film-item">
+            <div class="film-cover-box">
+              <img :src="it.cover" class="film-cover">
+              <div class="film-date">上映时间：{{it.date}}</div>
+            </div>
+            <h4 class="film-name">{{it.name}}</h4>
+            <div class="film-tags">{{it.tags}}</div>
+          </li>
+        </ul>
       </div>
 
       <FormItem label="场馆类型" class="item-top" v-if="!isSingle">
@@ -171,7 +201,9 @@
           <div class="select-tabs" :class="selectTab"></div>
         </div>
       </FormItem>
+
       <h3 class="layout-title">预算与计费</h3>
+
       <FormItem label="总预算/￥" class="item-top">
         <RadioGroup v-model="form.totalMonery">
           <Radio :label="item.label" v-for="item in amountList" :key="item.key"
@@ -184,12 +216,14 @@
           </Radio>
         </RadioGroup>
       </FormItem>
+
       <FormItem label="计算方式">
         <RadioGroup v-model="form.bill">
           <Radio label="按人次计费"></Radio>
         </RadioGroup>
       </FormItem>
     </Form>
+
     <div class="btn-center">
       <button class="button-ok" @click="handleScheme">生成投放方案</button>
     </div>
@@ -199,8 +233,19 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cityList, City, sexList, ageStageList, filmHobbyList, areaTypeList } from './types'
+import { cityList, City, sexList, ageStageList, filmHobbyList,
+  areaTypeList, filmList as allFilmList } from './types'
 import CitySelect from './citySelect.vue'
+
+// 保持互斥
+const keepExclusion = <T>(value: T[], oldValue: T[], aloneValue: T, setter: (newValue: T[]) => any) => {
+  if (value.length > 1) {
+    const newHas = value.includes(aloneValue)
+    const oldHas = oldValue.includes(aloneValue)
+    newHas && setter([aloneValue])
+    newHas && oldHas && setter(value.filter(it => it != aloneValue))
+  }
+}
 
 @Component({
   components: {
@@ -224,12 +269,17 @@ export default class Main extends ViewBase {
     bill: '按人次计费',
     custom: '',
     venueType: [],
+
     // 定向类型
     type: 1,
     areaType: 3,
     sex: 0,
     age: 0,
     filmHobby: [0],
+
+    // 单个影片
+    filmName: '',
+    filmType: [0]
   }
 
   // 是否为映前广告
@@ -254,6 +304,12 @@ export default class Main extends ViewBase {
   ageStageList = ageStageList
 
   filmHobbyList = filmHobbyList
+
+  allFilmList = allFilmList
+
+  get foundFilmList() {
+    return this.allFilmList
+  }
 
   advTypeList = [
     { id: 1, name: '奔驰' },
@@ -305,12 +361,16 @@ export default class Main extends ViewBase {
   @Watch('form.filmHobby', { deep: true })
   watchFilmHobby(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
-    if (value.length > 1) {
-      const newHas = value.includes(0)
-      const oldHas = oldValue.includes(0)
-      newHas && (this.form.filmHobby = [0])
-      oldHas && newHas && (this.form.filmHobby = value.filter(it => it != 0))
-    }
+    keepExclusion(value, oldValue, 0, newValue => {
+      this.form.filmHobby = newValue
+    })
+  }
+
+  @Watch('form.filmType', { deep: true })
+  watchfilmType(value: number[], oldValue: number[]) {
+    keepExclusion(value, oldValue, 0, newValue => {
+      this.form.filmType = newValue
+    })
   }
 }
 </script>
@@ -322,6 +382,7 @@ export default class Main extends ViewBase {
 }
 .btn-center {
   margin: 40px 0 30px;
+  text-align: center;
 }
 .radio-item {
   font-size: 14px;
@@ -547,6 +608,71 @@ export default class Main extends ViewBase {
     color: #fff;
     border-color: @c-button;
     background-color: @c-button;
+  }
+}
+
+.single-result,
+.single-film-list {
+  margin-left: 169px;
+}
+.single-result {
+  color: @c-sub-text;
+}
+
+.single-film-list {
+  display: flex;
+  flex-wrap: wrap;
+  column-count: 3;
+  margin-top: -15px;
+  margin-bottom: 40px;
+}
+.single-film-item {
+  width: 270px;
+  margin: 25px 10px 0 0;
+}
+.film-cover-box {
+  position: relative;
+  width: 270px;
+  height: 405px;
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+.film-date {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  font-size: 14px;
+  text-align: center;
+  color: #fff;
+  background-color: rgba(0, 0, 0, .8);
+}
+.film-name,
+.film-tags {
+  line-height: 22px;
+  text-align: center;
+  font-weight: normal;
+}
+.film-name {
+  margin-top: 10px;
+}
+
+.form-item-film-name {
+  /deep/ .ivu-input {
+    border-color: @c-button;
+  }
+  /deep/ .ivu-input-search {
+    border-color: @c-button !important;
+    background-color: @c-button !important;
+    &:hover,
+    &:active {
+      border-color: darken(@c-button, 10%) !important;
+      background-color: darken(@c-button, 10%) !important;
+    }
   }
 }
 </style>
