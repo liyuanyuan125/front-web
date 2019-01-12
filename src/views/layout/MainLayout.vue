@@ -116,6 +116,24 @@ export default class App extends ViewBase {
       ]
     },
     {
+      name: 'customer',
+      label: '客户管理',
+    },
+    {
+      name: 'finance',
+      label: '财务管理',
+      subList: [
+        {
+          name: 'finance-info',
+          label: '财务信息',
+        },
+        {
+          name: 'finance-bill',
+          label: '资金账单',
+        }
+      ]
+    },
+    {
       name: 'account',
       label: '账户管理',
       subList: [
@@ -139,20 +157,6 @@ export default class App extends ViewBase {
           name: 'account-password',
           label: '修改密码',
         },
-      ]
-    },
-    {
-      name: 'finance',
-      label: '财务管理',
-      subList: [
-        {
-          name: 'finance-info',
-          label: '财务信息',
-        },
-        {
-          name: 'finance-bill',
-          label: '资金账单',
-        }
       ]
     },
   ]
