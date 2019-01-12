@@ -14,23 +14,23 @@
           <div class="report-title-left">
             <dl>
               <dd>广告计划</dd>
-              <dt>2019款全新奔驰G级影院广告－春节档</dt>
+              <dt>{{forMat.name}}</dt>
             </dl>
             <dl>
               <dd>客户名称</dd>
-              <dt>奔驰</dt>
+              <dt>{{forMat.client}}</dt>
             </dl>
             <dl>
               <dd>投放排期</dd>
-              <dt>2019-2-4 ～2019-2-10</dt>
+              <dt>{{forMat.time}}</dt>
             </dl>
             <dl>
               <dd>投放周期</dd>
-              <dt>7天</dt>
+              <dt>{{forMat.longTime}}天</dt>
             </dl>
             <dl>
               <dd>档期</dd>
-              <dt>春节档</dt>
+              <dt>{{forMat.data}}</dt>
             </dl>
           </div>
         </Col>
@@ -41,14 +41,14 @@
               <div class="people">
                 <img style="width: 80%" src="./assets/money.png" alt="">
               </div>
-              <p class="report-title-p2">400,000</p>
+              <p class="report-title-p2">{{forMat.man}}</p>
             </Col>
             <Col :span="12">
               <p class="report-title-p1">预估投放花费</p>
               <div class="people">
                 <img style="width: 80%" src="./assets/people.png" alt="">
               </div>
-              <p class="report-title-p2">¥400,000.00</p>
+              <p class="report-title-p2">¥{{forMat.ceil}}</p>
             </Col>
           </Row>
         </Col>
@@ -253,13 +253,13 @@
         <Col :span="23" class="mt30" offset="1">
           <div class="flex">
             <span>预期投放花费=</span>
-            <h4 class="ceil">¥400,000.00</h4>
+            <h4 class="ceil">¥{{forMat.ceil}}</h4>
           </div>
         </Col>
         <Col :span="23" class="mt30" offset="1">
           <div class="flex">
             <span>预估冻结金额 = 预估投放发费 = </span>
-            <h4 class="ceil">¥400,000.00</h4>
+            <h4 class="ceil">¥{{forMat.ceil}}</h4>
           </div>
         </Col>
       </Row>
@@ -276,6 +276,40 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DlgDetail from './dlgdetail.vue'
+
+const mockMap = [
+  {
+    name: '2019款全新奔驰G级影院广告－春节档',
+    client: '奔驰',
+    time: '2019-2-4 ～2019-2-10',
+    longTime : '7',
+    data: '春节档',
+    man : '400,000',
+    ceil: '4000,000.00',
+    sex: '男'
+  },
+  {
+    name: '“我爱筱面”美食节6月推广',
+    client: '西贝餐饮',
+    time: '2019-6-1 ～2019-6-10',
+    longTime : '10',
+    data: '无',
+    man : '400,000',
+    ceil: '400,000.00',
+    sex: '女'
+  },
+  {
+    name: 'GIORGIO ARMANI新品红管唇釉',
+    client: '阿玛尼',
+    time: '2019-2-4 ～2019-2-10',
+    longTime : '7',
+    data: '春节档',
+    man : '400,000',
+    ceil: '4000,000.00',
+    sex: '男'
+  }
+]
+
 @Component ({
   components: {
     DlgDetail
@@ -296,10 +330,16 @@ export default class Main extends ViewBase {
     { title: '影院名称', key: 'name', align: 'center'},
     { title: '总座位数', key: 'seat', align: 'center'}
   ]
+
+  get forMat() {
+    const id: any = (this.$route.params as any).id - 1
+    return mockMap[id]
+  }
+
   edit() {
     this.addOrUpdateVisible = true
     this.$nextTick(() => {
-      (this.$refs.addOrUpdate as any).init()
+      (this.$refs.addOrUpdate as any).init(this.forMat)
     })
   }
 }

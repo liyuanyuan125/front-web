@@ -6,7 +6,7 @@
   @on-cancel="cancel()">
     <div style="padding: 0 80px; text-align: center">
       <div class="mb50">
-        <span class="header-title">GIORGIO ARMANI新品红管唇釉推广</span>
+        <span class="header-title">{{forMat.name}}</span>
       </div>
       <Row class="mb20">
         <Col :span="4">投放类型</Col>
@@ -18,27 +18,27 @@
       </Row>
       <Row class="mb20">
         <Col :span="4">广告计划</Col>
-        <Col :span="11"><span>2019款全新奔驰G级影院广告</span></Col>
+        <Col :span="11"><span>{{forMat.name}}</span></Col>
         <Col :span="4" style="text-indent: 2em">客户</Col>
-        <Col :span="4"><span>奔驰</span></Col>
+        <Col :span="4"><span>{{forMat.client}}</span></Col>
       </Row>
       <Row class="mb20">
         <Col :span="4">投放排期</Col>
-        <Col :span="11"><span>2019-2-4 ～2019-2-10</span></Col>
+        <Col :span="11"><span>{{forMat.time}}</span></Col>
         <Col :span="4">投放周期</Col>
-        <Col :span="3"><span>7天</span></Col>
+        <Col :span="3"><span>{{forMat.longTime}}天</span></Col>
       </Row>
       <Row class="mb50">
         <Col :span="4">投放影院</Col>
         <Col :span="11"><span>500家影院</span></Col>
         <Col :span="4">人群画像</Col>
-        <Col :span="4"><span>男性／30-34岁</span></Col>
+        <Col :span="4"><span>{{forMat.sex}}性／30-34岁</span></Col>
       </Row>
       <Row class="mb20 pd5">
         <Col :span="5" class="pd5">冻结金额（元）</Col>
-        <Col :span="9"><span class="money">¥ 400,000.00</span></Col>
+        <Col :span="9"><span class="money">¥ {{forMat.ceil}}</span></Col>
         <Col :span="4" class="pd5">预估覆盖人次</Col>
-        <Col :span="3" offset="1"><span class="money">400,000</span></Col>
+        <Col :span="3" offset="1"><span class="money">{{forMat.man}}</span></Col>
       </Row>
     </div>
     <div slot="footer" class="foot">
@@ -54,9 +54,10 @@ import ViewBase from '@/util/ViewBase'
 @Component
 export default class Main extends ViewBase {
   showDlg = false
-
-  init() {
+  forMat: any = {}
+  init(forMat: any) {
     this.showDlg = true
+    this.forMat = forMat
   }
 
   cancel() {
