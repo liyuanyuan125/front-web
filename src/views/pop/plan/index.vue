@@ -16,6 +16,7 @@
           v-model="form.advType"
           class="select-adv-list"
           style="width:200px"
+          placeholder="请选择类型"
           @on-change="handleSelect"
         >
           <Option :value="item.id" :key="item.id" v-for="item in advTypeList">{{item.name}}</Option>
@@ -26,7 +27,7 @@
           <div class="put-tab">
             <p :class="{active: tabs == 1}" @click="tabs = 1">自定义时间段</p>
             <span></span>
-            <p :class="{active: tabs == 2}" @click="tabs = 2">热门档期</p>
+            <p :class="{active: tabs == 2}" @click="tabs = 2">按热门档期</p>
             <span></span>
           </div>
           <div class="tabs-active">
@@ -36,7 +37,7 @@
                 format="yyyy/MM/dd"
                 type="daterange"
                 placement="bottom-end"
-                placeholder="请输入开始日期和结束日期"
+                placeholder="请输入投放开始日期和结束日期"
               ></DatePicker>
             </div>
             <div v-else>
@@ -54,7 +55,12 @@
       <FormItem label="广告版位" class="item-top">
         <div class="flex-box">
           <div class="adv-position">
-            <span v-for="item in advList" :key="item.key" @click="handleTabs(item.id)">{{item.name}}</span>
+            <span
+              v-for="(item, index) in advList"
+              :key="item.key"
+              :class="{'adv-active': index == ding}"
+              @click="handleTabs(item.id)"
+            >{{item.name}}</span>
           </div>
           <div class="select-tabs" :class="selectTab"></div>
         </div>
@@ -84,6 +90,7 @@ import ViewBase from '@/util/ViewBase'
 @Component
 export default class Main extends ViewBase {
   tabs = 1
+  ding = 0
   selectTab = 'tabs1'
   form = {
     putType: 'refBefore',
@@ -102,7 +109,6 @@ export default class Main extends ViewBase {
   amountList = [
     { key: 1, label: '50万以下' },
     { key: 2, label: '50~100万以下' },
-    { key: 3, label: '50~100万以下' },
     { key: 4, label: '100~300万以下' },
     { key: 5, label: '300~500万以下' },
     { key: 6, label: '500~800万以下' },
@@ -120,6 +126,7 @@ export default class Main extends ViewBase {
   ]
   handleSelect() {}
   handleTabs(val: any) {
+    this.ding = val - 1
     this.selectTab = `tabs${val}`
   }
 }
@@ -127,6 +134,119 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+
+.btnCenter {
+  margin: 40px 0 30px;
+}
+.forms {
+  font-size: 14px;
+  .select-adv-type {
+    span {
+      display: inline-block;
+      width: 160px;
+      height: 50px;
+      line-height: 47px;
+      text-align: center;
+      color: #444;
+      margin-right: 20px;
+      font-size: 14px;
+      border: solid 1px #fff;
+      cursor: pointer;
+      background: #f7f7f7;
+      &.active {
+        background: url('./assets/bg-type.png') no-repeat;
+        background-size: contain;
+      }
+    }
+  }
+  /deep/ .ivu-input {
+    font-size: 14px;
+    &::placeholder {
+      font-size: 14px;
+    }
+  }
+  /deep/ .ivu-form-item {
+    margin-left: 100px;
+    font-size: 14px;
+  }
+  /deep/ .ivu-select-selection {
+    margin-left: 35px;
+    width: 200px;
+  }
+  .put-tab {
+    font-size: 14px;
+    position: relative;
+    span {
+      position: absolute;
+      top: 11px;
+      right: -12px;
+      display: inline-block;
+      width: 2px;
+      height: 22px;
+      background: #ededed;
+      &:nth-child(2) {
+        right: -12px;
+        top: 51px;
+      }
+    }
+
+    p {
+      width: 120px;
+      padding: 4px 10px 4px 18px;
+      border-bottom: solid 1px #ededed;
+      cursor: pointer;
+      position: relative;
+      &.active {
+        color: @c-button;
+        background: url('./assets/active.png') no-repeat 1px center;
+        background-size: 11px;
+      }
+      &.active::before {
+        display: block;
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 5px;
+        width: 10px;
+        font-size: 14px;
+        color: @c-button;
+      }
+    }
+  }
+  .tabs-active {
+    margin-left: 30px;
+    padding-top: 5px;
+  }
+  /deep/ .ivu-radio-wrapper {
+    font-size: 14px;
+    margin-right: 40px;
+  }
+  .adv-position {
+    font-size: 14px;
+    color: #444;
+    width: 120px;
+    margin-top: 30px;
+    span {
+      display: block;
+      cursor: pointer;
+      margin-bottom: 10px;
+      &.adv-active {
+        color: @c-button;
+        font-size: 17px;
+      }
+    }
+  }
+  .ivu-input-icon {
+    height: 40px;
+    line-height: 40px;
+  }
+}
+/deep/ .ivu-radio-checked .ivu-radio-inner {
+  border-color: @c-button;
+  &::after {
+    background-color: @c-button;
+  }
+}
 .select-tabs {
   margin: 30px 0 0 50px;
   width: 536px;
@@ -159,100 +279,5 @@ export default class Main extends ViewBase {
 .tabs7 {
   background: url('./assets/tabs7.png') no-repeat;
   background-size: cover;
-}
-
-.btnCenter {
-  margin: 40px 0 30px;
-}
-.forms {
-  font-size: 14px;
-  .select-adv-type {
-    span {
-      display: inline-block;
-      width: 120px;
-      height: 40px;
-      line-height: 40px;
-      text-align: center;
-      color: #444;
-      margin-right: 20px;
-      font-size: 14px;
-      border: solid 1px #fff;
-      cursor: pointer;
-      background: fade(@c-sub-text, 10%);
-      &.active {
-        border: solid 1px @c-button;
-      }
-    }
-  }
-  /deep/ .ivu-form-item {
-    margin-left: 100px;
-    font-size: 14px;
-  }
-  /deep/ .ivu-select-selection {
-    margin-left: 50px;
-    width: 200px;
-  }
-  .put-tab {
-    font-size: 14px;
-    position: relative;
-    span {
-      position: absolute;
-      top: 5px;
-      right: -6px;
-      display: inline-block;
-      width: 2px;
-      height: 30px;
-      background: #ededed;
-      &:nth-child(2) {
-        right: -6px;
-        top: 45px;
-      }
-    }
-
-    p {
-      width: 120px;
-      padding: 4px 15px;
-      border-bottom: solid 1px #ededed;
-      cursor: pointer;
-      &.active {
-        color: @c-button;
-      }
-      &.active::before {
-        display: block;
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 5px;
-        width: 10px;
-        font-size: 14px;
-        color: @c-button;
-      }
-    }
-  }
-  .tabs-active {
-    margin-left: 30px;
-    padding-top: 5px;
-  }
-  /deep/ .ivu-radio-wrapper {
-    font-size: 14px;
-    margin-right: 25px;
-  }
-  .adv-position {
-    font-size: 14px;
-    color: #444;
-    width: 120px;
-    margin-top: 30px;
-    span {
-      display: block;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-  }
-  /deep/ .ivu-radio-inner {
-    // background-color: @c-button;
-    // &::after {
-    //   background-color: @c-button;
-    // }
-  }
 }
 </style>
