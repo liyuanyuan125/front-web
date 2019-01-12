@@ -1,6 +1,6 @@
 <template>
   <div class="city-select flex-box">
-    <div class="side-pane">
+    <div class="side-pane" v-if="!readonly">
       <h3 class="side-title">已选<em>{{selectedList.length}}</em>个城市</h3>
       <ul class="selected-list">
         <li v-for="(it, i) in selectedList" :key="it.id" class="selected-item">
@@ -11,7 +11,7 @@
     </div>
 
     <div class="main-pane flex-1">
-      <div class="filter-box flex-box">
+      <div class="filter-box flex-box" v-if="!readonly">
         <Select v-model="level" class="select-level">
           <Option v-for="it in levelList" :key="it.key"
             :value="it.key">{{it.text}}</Option>
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { cityList as allList, City } from './types'
 import { toast } from '@/ui/modal'
@@ -45,6 +45,10 @@ import Dot from '@/components/Dot.vue'
   }
 })
 export default class CitySelect extends ViewBase {
+  @Prop({ type: Array, default: () => [] }) value!: number[]
+
+  @Prop({ type: Boolean, default: false }) readonly!: boolean
+
   allList = allList
 
   selectedList = [] as City[]
@@ -64,6 +68,11 @@ export default class CitySelect extends ViewBase {
   searchCityId = 0
 
   filterList = [] as City[]
+
+  created() {
+    const map = toMap(this.value)
+    this.selectedList = this.allList.filter(it => it.id in map)
+  }
 
   onDel(i: number) {
     this.selectedList.splice(i, 1)

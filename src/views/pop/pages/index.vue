@@ -79,9 +79,7 @@
           </ul>
         </Col>
         <Col class="mt70" :span="12">
-          <div>
-            111111111
-          </div>
+          <CitySelect :value="[1,2,3,4,5,6,7]" readonly class="city-map"/>
         </Col>
         <Col class="mt70" :span="12">
           <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
@@ -175,7 +173,7 @@
               </dl>
             </Col>
           </Row>
-          
+
         </Col>
       </Row>
 
@@ -276,6 +274,7 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DlgDetail from './dlgdetail.vue'
+import CitySelect from '../plan/citySelect.vue'
 
 const mockMap = [
   {
@@ -312,7 +311,8 @@ const mockMap = [
 
 @Component ({
   components: {
-    DlgDetail
+    DlgDetail,
+    CitySelect
   }
 })
 export default class Main extends ViewBase {
@@ -552,6 +552,13 @@ export default class Main extends ViewBase {
       margin-right: 20px;
       text-align: center;
     }
+  }
+}
+
+.city-map {
+  /deep/ .map-box {
+    margin-top: 0;
+    zoom: 0.62;
   }
 }
 </style>

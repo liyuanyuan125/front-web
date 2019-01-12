@@ -118,6 +118,12 @@ export default class App extends ViewBase {
     {
       name: 'customer',
       label: '客户管理',
+      subList: [
+        {
+          name: 'report-plan',
+          label: '客户列表',
+        },
+      ]
     },
     {
       name: 'finance',
@@ -410,6 +416,26 @@ export default class App extends ViewBase {
   }
   .menu-node-home a {
     background-image: url(./assets/home.png);
+  }
+  .menu-node-pop {
+    /deep/ .ivu-menu-submenu-title {
+      background-image: url(./assets/pop.png);
+    }
+  }
+  .menu-node-report {
+    /deep/ .ivu-menu-submenu-title {
+      background-image: url(./assets/report.png);
+    }
+  }
+  .menu-node-customer {
+    /deep/ .ivu-menu-submenu-title {
+      background-image: url(./assets/customer.png);
+    }
+  }
+  .menu-node-finance {
+    /deep/ .ivu-menu-submenu-title {
+      background-image: url(./assets/finance.png);
+    }
   }
   .menu-node-account {
     /deep/ .ivu-menu-submenu-title {
