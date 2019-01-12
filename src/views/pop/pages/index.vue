@@ -1,7 +1,9 @@
 <template>
   <div class="page home-bg">
     <h3 class="reportTitle">
-      投放类型
+      投放类型: <span v-if="$route.params.id == 1">映前广告－标准定向</span>
+      <span v-if="$route.params.id == 2">映前广告－按单部影片</span>
+      <span v-if="$route.params.id == 3">线下场馆</span>
     </h3>
     <Row class="body">
       <Row>
@@ -37,16 +39,16 @@
             <Col :span="12">
               <p class="report-title-p1">预计覆盖人次</p>
               <div class="people">
-                <img style="height: 120px" src="./assets/money.png" alt="">
+                <img style="width: 80%" src="./assets/money.png" alt="">
               </div>
-              <p class="report-title-p2">35,000</p>
+              <p class="report-title-p2">400,000</p>
             </Col>
             <Col :span="12">
-              <p class="report-title-p1">预计覆盖人次</p>
+              <p class="report-title-p1">预估投放花费</p>
               <div class="people">
-                <img style="height: 120px" src="./assets/money.png" alt="">
+                <img style="width: 80%" src="./assets/people.png" alt="">
               </div>
-              <p class="report-title-p2">35,000</p>
+              <p class="report-title-p2">¥400,000.00</p>
             </Col>
           </Row>
         </Col>
@@ -86,7 +88,7 @@
         </Col>
       </Row>
 
-      <Row class="pt40">
+      <Row class="pt40" v-if="$route.params.id == 1">
         <Col :span="24">
           <h3 class="square">投放影片</h3>
         </Col>
@@ -121,23 +123,23 @@
              </Col>
              <Col :span="5">
               <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
+                <dd><img src="./assets/two.png" alt=""></dd>
+                <dt>《新喜剧之王》</dt>
+                <dt> 喜剧 </dt>
               </dl>
              </Col>
              <Col :span="5">
               <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
+                <dd><img src="./assets/three.png" alt=""></dd>
+                <dt>《情圣2》</dt>
+                <dt> 喜剧／爱情</dt>
               </dl>
              </Col>
              <Col :span="5">
               <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
+                <dd><img src="./assets/cinem5.png" alt=""></dd>
+                <dt>《飞驰人生》</dt>
+                <dt> 喜剧 </dt>
               </dl>
              </Col>
            </Row>
@@ -146,30 +148,30 @@
           <Row :gutter="30">
             <Col :span="5" offset="4">
               <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
+                <dd><img src="./assets/cinem6.png" alt=""></dd>
+                <dt>《日不落酒店》</dt>
+                <dt> 喜剧 </dt>
               </dl>
             </Col>
             <Col :span="5">
               <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
+                <dd><img src="./assets/cinem8.png" alt=""></dd>
+                <dt>《神探蒲松龄》</dt>
+                <dt> 动作／奇幻／喜剧 </dt>
               </dl>
             </Col>
             <Col :span="5">
               <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
+                <dd><img src="./assets/cinem4.png" alt=""></dd>
+                <dt>《江湖喜事》</dt>
+                <dt> 喜剧 </dt>
               </dl>
             </Col>
             <Col :span="5">
               <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
+                <dd><img src="./assets/cinem7.png" alt=""></dd>
+                <dt>《廉政风云》</dt>
+                <dt> 剧情／悬疑／犯罪</dt>
               </dl>
             </Col>
           </Row>
@@ -177,7 +179,7 @@
         </Col>
       </Row>
 
-      <Row class="pt40">
+      <Row class="pt40" v-if="$route.params.id == 2">
         <Col :span="24">
           <h3 class="square">投放影片</h3>
         </Col>
@@ -186,7 +188,7 @@
           <Col :span="20">
            <ul class="tag" style="left:2px">
               <li class="tag-ltme">
-                <img style="vertical-align: middle;" src="./assets/man.png" alt="">
+                <img style="vertical-align: middle;" src="./assets/woman.png" alt="">
               </li>
               <li class="tag-ltme">
                 <span>30-40岁</span>
@@ -202,71 +204,48 @@
         </Col>
         <Col class="mt30" :span="24">
            <Row :gutter="30">
-             <Col :span="4" style="text-indent: 1em">投放期间上映的电影</Col>
-             <Col :span="5">
-              <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
-              </dl>
+             <Col :span="4" style="text-indent: 2em">已选定投放的影片</Col>
+             <Col :span="7" style="height: 430px">
+              <img src="./assets/poster.png" alt="">
              </Col>
-             <Col :span="5">
-              <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
-              </dl>
-             </Col>
-             <Col :span="5">
-              <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
-              </dl>
-             </Col>
-             <Col :span="5">
-              <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
-              </dl>
+             <Col class="poster-title" :span="13" style="height: 430px">
+              <h3 class="pt40">《飞驰人生》</h3>
+              <p class="pt40">导演: <span>韩寒</span> </p>
+              <p class="mt6">编剧: <span>韩寒</span></p>
+              <p class="mt6">主演: <span>沈腾 / 黄景瑜 / 尹正 / 尹昉 / 田雨 / 腾格尔 / 赵文瑄 / 张本</span></p>
+              <p class="mt6">类型：<span>喜剧</span></p>
+              <p class="mt6">制片国家/地区：<span>中国大陆</span></p>
+              <p class="mt6">语言：<span>汉语普通话</span></p>
+              <p class="mt6">上映时间：<span>2019-02-05(中国大陆)</span></p>
+              <p class="mt6">片长：<span>125分钟</span></p>
+              <p class="mt6">又名：<span>Pegasus</span></p>
+              <p class="pt40"><span style="margin-left: 0px">预告片(1)</span><span>新闻(10)</span></p>
              </Col>
            </Row>
         </Col>
+      </Row>
+
+      <Row class="pt40" v-if="$route.params.id == 3">
+        <Col :span="24">
+          <h3 class="square">广告版位－海报灯箱</h3>
+        </Col>
         <Col class="mt30" :span="24">
-          <Row :gutter="30">
-            <Col :span="5" offset="4">
-              <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
-              </dl>
-            </Col>
-            <Col :span="5">
-              <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
-              </dl>
-            </Col>
-            <Col :span="5">
-              <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
-              </dl>
-            </Col>
-            <Col :span="5">
-              <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
-              </dl>
-            </Col>
-          </Row>
-          
+           <Row :gutter="30">
+             <Col :span="8">
+              <ul class="version">
+                <li><img src="./assets/check.png" alt="">img 位置</li>
+                <li><img src="./assets/check.png" alt="">位置图片</li>
+                <li><img src="./assets/check.png" alt="">尺寸</li>
+                <li><img src="./assets/check.png" alt="">素材要求</li>
+              </ul>
+             </Col>
+             <Col :span="16">
+              <div class="tabs1"></div>
+             </Col>
+           </Row>
         </Col>
       </Row>
+
       <Row class="pt40">
         <Col :span="24">
           <h3 class="square">预算和计费</h3>
@@ -274,13 +253,13 @@
         <Col :span="23" class="mt30" offset="1">
           <div class="flex">
             <span>预期投放花费=</span>
-            <h4 class="o">¥400,000.00</h4>
+            <h4 class="ceil">¥400,000.00</h4>
           </div>
         </Col>
         <Col :span="23" class="mt30" offset="1">
           <div class="flex">
             <span>预估冻结金额 = 预估投放发费 = </span>
-            <h4>¥400,000.00</h4>
+            <h4 class="ceil">¥400,000.00</h4>
           </div>
         </Col>
       </Row>
@@ -330,13 +309,11 @@ export default class Main extends ViewBase {
 @import '~@/site/lib.less';
 .colBg {
   font-size: 18px;
-  font-weight: normal;
+  font-weight: 400;
+  color: #444;
   height: 50px;
   line-height: 50px;
-  padding: 0 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding: 0 40px;
   margin-bottom: 20px;
   background: @c-head-bg;
 }
@@ -383,6 +360,9 @@ export default class Main extends ViewBase {
       cursor: pointer;
       background: @c-button;
     }
+    span {
+      margin-left: 8px;
+    }
   }
   .money, .people {
     margin-top: 10px;
@@ -421,6 +401,7 @@ export default class Main extends ViewBase {
         }
         dt {
           flex: 1;
+          color: #444;
         }
       }
     }
@@ -438,6 +419,7 @@ export default class Main extends ViewBase {
         margin-right: 20px;
         span {
           margin-right: 10px;
+          color: #222;
         }
         .orgrn {
           color: #fe8135;
@@ -451,6 +433,41 @@ export default class Main extends ViewBase {
         width: 100%;
       }
     }
+    .poster-title {
+      background: #f9f9f9;
+      p {
+        padding-left: 8px;
+        color: #444;
+        span {
+          margin-left: 5px;
+          margin-right: 40px;
+        }
+      }
+    }
+    .version {
+      margin-left: 20px;
+      li {
+        margin-bottom: 20px;
+        color: #444;
+        img {
+          vertical-align: middle;
+          margin-right: 10px;
+        }
+      }
+    }
+    .tabs1 {
+      height: 260px;
+      background: url('../plan/assets/tabs1.png') no-repeat;
+      background-size: cover;
+    }
+    .ceil {
+      font-size: 20px;
+      font-weight: 500;
+      color: rgba(254, 129, 53, 1);
+      line-height: 20px;
+      letter-spacing: 2px;
+      margin-left: 8px;
+    }
     .flex {
       display: flex;
     }
@@ -459,6 +476,9 @@ export default class Main extends ViewBase {
     }
     .pt20 {
       padding-top: 20px;
+    }
+    .mt6 {
+      margin-top: 6px;
     }
     .mt20 {
       margin-top: 20px;
@@ -484,7 +504,8 @@ export default class Main extends ViewBase {
     }
   }
   .report-button {
-    padding-bottom: 20px;
+    padding-top: 40px;
+    padding-bottom: 40px;
     text-align: center;
     /deep/ button {
       height: 46px;

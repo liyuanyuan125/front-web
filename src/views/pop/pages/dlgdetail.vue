@@ -10,31 +10,35 @@
       </div>
       <Row class="mb20">
         <Col :span="4">投放类型</Col>
-        <Col :span="18"><span>nihao </span></Col>
+        <Col :span="18">
+        <span v-if="$route.params.id == 1">映前广告&nbsp;&nbsp;(标准定向)</span>
+        <span v-if="$route.params.id == 2">映前广告&nbsp;&nbsp; (按单部影片)</span>
+        <span v-if="$route.params.id == 3">线下场馆</span>
+      </Col>
       </Row>
       <Row class="mb20">
         <Col :span="4">广告计划</Col>
-        <Col :span="11"><span>1111</span></Col>
+        <Col :span="11"><span>2019款全新奔驰G级影院广告</span></Col>
         <Col :span="4" style="text-indent: 2em">客户</Col>
-        <Col :span="4"><span>2222</span></Col>
+        <Col :span="4"><span>奔驰</span></Col>
       </Row>
       <Row class="mb20">
         <Col :span="4">投放排期</Col>
-        <Col :span="11"><span>1111</span></Col>
+        <Col :span="11"><span>2019-2-4 ～2019-2-10</span></Col>
         <Col :span="4">投放周期</Col>
-        <Col :span="3"><span>222</span></Col>
+        <Col :span="3"><span>7天</span></Col>
       </Row>
       <Row class="mb50">
         <Col :span="4">投放影院</Col>
-        <Col :span="11"><span>111</span></Col>
-        <Col :span="3">投放影片</Col>
-        <Col :span="3"><span>2222</span></Col>
+        <Col :span="11"><span>500家影院</span></Col>
+        <Col :span="4">人群画像</Col>
+        <Col :span="4"><span>男性／30-34岁</span></Col>
       </Row>
       <Row class="mb20 pd5">
         <Col :span="5" class="pd5">冻结金额（元）</Col>
-        <Col :span="5"><span class="money">1111</span></Col>
-        <Col :span="5" class="pd5" offset="2">预估覆盖人次</Col>
-        <Col :span="5"><span class="money">2222</span></Col>
+        <Col :span="9"><span class="money">¥ 400,000.00</span></Col>
+        <Col :span="4" class="pd5">预估覆盖人次</Col>
+        <Col :span="3" offset="1"><span class="money">400,000</span></Col>
       </Row>
     </div>
     <div slot="footer" class="foot">
