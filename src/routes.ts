@@ -106,7 +106,7 @@ export default [
   },
   // 推广管理 - 广告计划 - 生成广告方案
   {
-    path: '/pop/plan/scheme',
+    path: '/pop/plan/scheme/:id',
     name: 'pop-plan-scheme',
     component: () => import('./views/pop/pages/index.vue'),
   },
