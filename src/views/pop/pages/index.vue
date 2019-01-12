@@ -332,7 +332,7 @@ export default class Main extends ViewBase {
   ]
 
   get forMat() {
-    const id: any = (this.$route.params as any).id - 1
+    const id: any = ((this.$route.params as any).id - 1) || 0
     return mockMap[id]
   }
 

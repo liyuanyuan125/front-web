@@ -23,7 +23,7 @@
             <Col span='3' style='color:#888'>广告计划</Col>
             <Col span='12'>{{forMat.name}}</Col>
             <Col span='4' style='color:#888'>客户</Col>
-            <Col span='2'>{{forMat.client}}</Col>
+            <Col span='3'>{{forMat.client}}</Col>
           </row>
           <row class='code-list'>
             <Col span='3' style='color:#888'>广告片</Col>
