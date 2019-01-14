@@ -23,7 +23,10 @@
         </Select>
       </div>
       <div class="map-box">
-        <div class="the-map">
+        <div v-if="type=='beijing'" class="the-beijing">
+          <Dot v-for="it in value" :key="it" :class="'dot dot-' + it"/>
+        </div>
+        <div v-else class="the-map">
           <Dot v-for="it in selectedList" :key="it.id" :class="'dot dot-' + it.pinyin"/>
         </div>
       </div>
@@ -48,6 +51,8 @@ export default class CitySelect extends ViewBase {
   @Prop({ type: Array, default: () => [] }) value!: number[]
 
   @Prop({ type: Boolean, default: false }) readonly!: boolean
+
+  @Prop({ type: String, default: 'china' }) type: any
 
   allList = allList
 
@@ -173,6 +178,13 @@ export default class CitySelect extends ViewBase {
   height: 537px;
   background: #fff url(./assets/map.png) no-repeat;
 }
+.the-beijing {
+  position: relative;
+  width: 650px;
+  height: 537px;
+  background: #fff url(./assets/beijing.png) no-repeat;
+  background-size: 100% 100%;
+}
 .dot {
   position: absolute;
 }
@@ -203,5 +215,29 @@ export default class CitySelect extends ViewBase {
 .dot-hangzhou {
   top: 319px;
   left: 517px;
+}
+.dot-1 {
+  top: 357px;
+  left: 375px;
+}
+.dot-2 {
+  top: 307px;
+  left: 325px;
+}
+.dot-3 {
+  top: 407px;
+  left: 255px;
+}
+.dot-4 {
+  top: 227px;
+  left: 305px;
+}
+.dot-5 {
+  top: 217px;
+  left: 345px;
+}
+.dot-6 {
+  top: 416px;
+  left: 215px;
 }
 </style>

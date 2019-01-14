@@ -121,7 +121,7 @@ const mockMap = [
   {
     id: '映前广告－标准定向',
     name: '我爱莜面美食街六月推广',
-    client: '西北餐饮',
+    client: '西贝餐饮',
     detail: '我爱莜面美食节广告片',
     time: '2019-06-04 ～2019-06-10',
     longTime : '1',
@@ -133,7 +133,7 @@ const mockMap = [
   {
     id: '映前广告－标准定向',
     name: '我爱莜面美食街六月推广',
-    client: '西北餐饮',
+    client: '西贝餐饮',
     detail: '我爱莜面美食节广告片',
     time: '2019-06-04 ～2019-06-10',
     longTime : '1',
@@ -145,7 +145,7 @@ const mockMap = [
   {
     id: '映前广告－标准定向',
     name: '我爱莜面美食街六月推广',
-    client: '西北餐饮',
+    client: '西贝餐饮',
     detail: '我爱莜面美食节广告片',
     time: '2019-06-04 ～2019-06-10',
     longTime : '1',

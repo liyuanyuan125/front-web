@@ -72,21 +72,23 @@
               <span>城市</span>
               <span>8个</span>
             </li>
-            <li class="tag-ltme">
+            <li class="tag-ltme" v-if="$route.params.corp != 2">
               <span>影院</span>
               <span>500个</span>
             </li>
           </ul>
         </Col>
         <Col class="mt70" :span="12">
-          <CitySelect :value="[1,2,3,4,5,6,7]" readonly class="city-map"/>
+          <CitySelect v-if="$route.params.corp != 2" :value="[1,2,3,4,5,6,7]" readonly class="city-map"/>
+          <CitySelect v-else :value="[1,2,3,4,5,6]" type="beijing" readonly class="city-map"/>
         </Col>
         <Col class="mt70" :span="12">
           <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
+          <Button v-if="$route.params.corp == 2" type="primary" class="mt30" @click="edit" style="float: right; height: 40px">查看全部</Button>
         </Col>
       </Row>
 
-      <Row class="pt40" v-if="$route.params.id == 1">
+      <Row class="pt40" v-if="$route.params.corp == 1">
         <Col :span="24">
           <h3 class="square">投放影片</h3>
         </Col>
@@ -177,7 +179,7 @@
         </Col>
       </Row>
 
-      <Row class="pt40" v-if="$route.params.id == 2">
+      <Row class="pt40" v-if="$route.params.corp == 3">
         <Col :span="24">
           <h3 class="square">投放影片</h3>
         </Col>
@@ -223,7 +225,7 @@
         </Col>
       </Row>
 
-      <Row class="pt40" v-if="$route.params.id == 3">
+      <Row class="pt40" v-if="$route.params.corp == 2">
         <Col :span="24">
           <h3 class="square">广告版位－海报灯箱</h3>
         </Col>
@@ -270,11 +272,12 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="tsx">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DlgDetail from './dlgdetail.vue'
 import CitySelect from '../plan/citySelect.vue'
+import jsxReactToVue from '@/util/jsxReactToVue'
 
 const mockMap = [
   {
@@ -300,11 +303,11 @@ const mockMap = [
     id: '2'
   },
   {
-    name: 'GIORGIO ARMANI新品红管唇釉',
+    name: 'DIOR 新品红管唇釉推广',
     client: '迪奥',
     time: '2019-2-4 ～2019-2-10',
     longTime : '7',
-    data: '春节档',
+    data: '无',
     man : '400,000',
     ceil: '4,000,000.00',
     sex: '男',
@@ -320,19 +323,52 @@ const mockMap = [
 })
 export default class Main extends ViewBase {
   addOrUpdateVisible = false
-  tableData = [
-    { name : '北京横店影视电影城', code: '23375741', seat: '10,000'},
-    { name : '深圳万众国际影城', code: '70023342', seat: '10,000'},
-    { name : '上海中影国际影城', code: '98574212', seat: '10,000'},
-    { name : '北京万达影城', code: '12668473', seat: '10,000'},
-    { name : '浙江新远国际影城', code: '12358553', seat: '10,000'},
-    { name : '杭州百老汇影城', code: '66273647', seat: '10,000'}
-  ]
-  columns = [
-    { title: '转资编码', key: 'code', align: 'center'},
-    { title: '影院名称', key: 'name', align: 'center'},
-    { title: '总座位数', key: 'seat', align: 'center'}
-  ]
+
+  get tableData() {
+    if (this.$route.params.corp != '2') {
+      return [
+        { name : '北京横店影视电影城', code: '23375741', seat: '10,000'},
+        { name : '深圳万众国际影城', code: '70023342', seat: '10,000'},
+        { name : '上海中影国际影城', code: '98574212', seat: '10,000'},
+        { name : '北京万达影城', code: '12668473', seat: '10,000'},
+        { name : '浙江新远国际影城', code: '12358553', seat: '10,000'},
+        { name : '杭州百老汇影城', code: '66273647', seat: '10,000'}
+      ]
+    } else {
+      return [
+        { names : '金源购物中心', codes: '商场', seats: '西贝筱面村(王府井店)', juli: '0.78km'},
+        { names : '伊斯特大厦', codes: '商场', seats: '西贝筱面村(王府井店)', juli: '0.90km'},
+        { names : '万达广场', codes: '商场', seats: '西贝筱面村(通州万达店)', juli: '0.10km'},
+        { names : '爱沐咖啡私人影院', codes: '商场', seats: '西贝筱面村(通州万达店)', juli: '1.21km'},
+        { names : '奥体中心', codes: '体育馆', seats: '西贝筱面村(小关店)', juli: '0.28km'},
+        { names : '中国木偶剧院', codes: '商场', seats: '西贝筱面村(小关店)', juli: '1.78km'}
+      ]
+    }
+  }
+
+  get columns() {
+    if (this.$route.params.corp != '2') {
+      return [
+        { title: '专资编码', key: 'code', align: 'center'},
+        { title: '影院名称', key: 'name', align: 'center'},
+        { title: '总座位数', key: 'seat', align: 'center'}
+      ]
+    } else {
+      return [
+        { title: '场馆名称', width: 150, key: 'names', align: 'center'},
+        { title: '场馆类型', key: 'codes', align: 'center'},
+        { title: '最近门店', width: 170, key: 'seats', align: 'center'},
+        { title: '距离', key: 'juli', align: 'center',
+          render: (hh: any, { row: { juli } }: any) => {
+            /* tslint:disable */
+            const h = jsxReactToVue(hh)
+            return <span class="orange">{juli}</span>
+            /* tslint:enable */
+          }
+        }
+      ]
+    }
+  }
 
   get forMat() {
     const corp: any = ((this.$route.params as any).corp) || 0
@@ -380,6 +416,9 @@ export default class Main extends ViewBase {
     text-align: center;
     line-height: 50px;
     font-size: 14px;
+  }
+  /deep/ .orange {
+    color: #fe8135;
   }
   .table-left-title {
     float: left;
