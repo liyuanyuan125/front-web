@@ -188,7 +188,7 @@
         </ul>
       </div>
 
-      <FormItem label="场馆类型" class="item-top" v-if="!isSingle">
+      <FormItem label="场馆类型" class="item-top" v-if="!isRefBefore">
         <span
           class="float check-type all-type"
           @click="handleAllType"
@@ -228,7 +228,7 @@
         </CheckboxGroup>
       </FormItem>
 
-      <FormItem label="广告形式" v-if="!isSingle">
+      <FormItem label="广告形式" v-if="!isRefBefore">
         <div class="flex-box">
           <div class="adv-position">
             <span
@@ -402,9 +402,14 @@ export default class Main extends ViewBase {
 
   handleScheme() {
     // id 为 1 映前广告－标准定向2 映前广告－按单部影片3 线下场馆
-    const id =
-      this.form.putType == 'refBefore' ? (this.form.type == 1 ? 1 : 2) : 3
-    this.$router.push({ name: 'pop-plan-scheme', params: { id: String(id) } })
+    const id = this.form.putType == 'refBefore'
+      ? (this.form.type == 1 ? 1 : 2)
+      : 3
+    const corp = this.form.advType || 1
+    this.$router.push({ name: 'pop-plan-scheme', params: {
+      id: String(id),
+      corp: String(corp),
+    }})
   }
 
   @Watch('form.filmHobby', { deep: true })
@@ -638,7 +643,7 @@ export default class Main extends ViewBase {
 }
 
 .people-wrap {
-  margin: 36px 0 0 70px;
+  margin: 36px 0 23px 70px;
   .ivu-form-item {
     margin: 0 0 8px 52px;
   }

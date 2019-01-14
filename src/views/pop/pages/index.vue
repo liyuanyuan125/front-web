@@ -285,7 +285,8 @@ const mockMap = [
     data: '春节档',
     man : '400,000',
     ceil: '4000,000.00',
-    sex: '男'
+    sex: '男',
+    id: '1'
   },
   {
     name: '“我爱筱面”美食节6月推广',
@@ -295,17 +296,19 @@ const mockMap = [
     data: '无',
     man : '400,000',
     ceil: '400,000.00',
-    sex: '女'
+    sex: '女',
+    id: '2'
   },
   {
     name: 'GIORGIO ARMANI新品红管唇釉',
-    client: '阿玛尼',
+    client: '迪奥',
     time: '2019-2-4 ～2019-2-10',
     longTime : '7',
     data: '春节档',
     man : '400,000',
     ceil: '4000,000.00',
-    sex: '男'
+    sex: '男',
+    id: '3'
   }
 ]
 
@@ -332,8 +335,10 @@ export default class Main extends ViewBase {
   ]
 
   get forMat() {
-    const id: any = ((this.$route.params as any).id - 1) || 0
-    return mockMap[id]
+    const corp: any = ((this.$route.params as any).corp) || 0
+    return mockMap.filter((it: any) => {
+      return it.id == corp
+    })[0]
   }
 
   edit() {

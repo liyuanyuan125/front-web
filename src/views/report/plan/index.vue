@@ -52,15 +52,19 @@
             <img src="./assets/1-2.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>投放人群</div>
             <img src="./assets/1-3.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>投放影院</div>
             <img src="./assets/1-4.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>投放影片</div>
             <img src="./assets/1-5.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>投放地区</div>
             <img src="./assets/1-6.png" alt="">
           </div>
         </Tab-pane>
@@ -69,9 +73,11 @@
             <img src="./assets/2-1.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>地域分布</div>
             <img src="./assets/2-2.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>人群画像</div>
             <img src="./assets/2-3.png" alt="">
           </div>
         </Tab-pane>
@@ -80,9 +86,11 @@
             <img src="./assets/3-1.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>成效概览</div>
             <img src="./assets/3-2.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>单个影院成效</div>
             <img src="./assets/3-3.png" alt="">
           </div>
         </Tab-pane>
@@ -91,9 +99,11 @@
             <img src="./assets/4-1.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>成效概览</div>
             <img src="./assets/4-2.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>单个影院成效</div>
             <img src="./assets/4-3.png" alt="">
           </div>
         </Tab-pane>
@@ -102,12 +112,15 @@
             <img src="./assets/5-1.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>投放地区</div>
             <img src="./assets/5-2.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>成效概览</div>
             <img src="./assets/5-3.png" alt="">
           </div>
           <div class='imgs'>
+            <div class='ze'>单个城市成效</div>
             <img src="./assets/5-4.png" alt="">
           </div>
         </Tab-pane>
@@ -182,9 +195,22 @@ export default class Main extends ViewBase {
   width: 100%;
   // height: 100px;
   margin-top: 10px;
+  position: relative;
   img {
-    width: 100%;
+    display: block;
+    width: 1009px;
     height: 100%;
+    margin: 0 auto;
+  }
+  .ze {
+    width: 100%;
+    height: 50px;
+    background: #f9f9f9;
+    top: 0;
+    left: 0;
+    line-height: 50px;
+    font-size: 14px;
+    padding-left: 27px;
   }
 }
 .top-btn {
