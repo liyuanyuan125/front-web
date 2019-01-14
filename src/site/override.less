@@ -126,7 +126,10 @@
   .ivu-radio-wrapper-checked:first-child {
     color: @c-button;
     border-color: @c-button;
-    box-shadow: none;
+    box-shadow: -1px 0 0 0 @c-button !important;
+  }
+  .ivu-radio-wrapper-checked:first-child {
+    box-shadow: none !important;
   }
   .ivu-radio-wrapper-checked:hover,
   .ivu-radio-wrapper-checked:active {

@@ -87,34 +87,22 @@
 
         <FormItem label="观影人群性别" class="form-item-sex">
           <RadioGroup v-model="form.sex" class="item-radio-top">
-            <Radio
-              v-for="it in sexList"
-              :key="it.key"
-              :label="it.key"
-              class="radio-item"
-            >{{it.text}}</Radio>
+            <Radio v-for="it in sexList" :key="it.key" :label="it.key"
+              class="radio-item">{{it.text}}</Radio>
           </RadioGroup>
         </FormItem>
 
         <FormItem label="观影人群年龄" class="form-item-age">
-          <RadioGroup v-model="form.age" class="item-radio-top">
-            <Radio
-              v-for="it in ageStageList"
-              :key="it.key"
-              :label="it.key"
-              class="radio-item"
-            >{{it.text}}</Radio>
-          </RadioGroup>
+          <CheckboxGroup v-model="form.age" class="item-radio-top">
+            <Checkbox v-for="it in ageStageList" :key="it.key" :label="it.key"
+              class="check-item">{{it.text}}</Checkbox>
+          </CheckboxGroup>
         </FormItem>
 
         <FormItem label="观影人群偏好" class="form-item-hobby">
           <CheckboxGroup v-model="form.filmHobby" class="float item-radio-top">
-            <Checkbox
-              v-for="it in filmHobbyList"
-              :key="it.key"
-              :label="it.key"
-              class="check-item"
-            >{{it.text}}</Checkbox>
+            <Checkbox v-for="it in filmHobbyList" :key="it.key"
+              :label="it.key" class="check-item">{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
       </div>
@@ -132,14 +120,10 @@
         </FormItem>
 
         <FormItem label="观影人群年龄" class="form-item-age">
-          <RadioGroup v-model="form.age">
-            <Radio
-              v-for="it in ageStageList"
-              :key="it.key"
-              :label="it.key"
-              class="radio-item"
-            >{{it.text}}</Radio>
-          </RadioGroup>
+          <CheckboxGroup v-model="form.age" class="item-radio-top">
+            <Checkbox v-for="it in ageStageList" :key="it.key" :label="it.key"
+              class="check-item">{{it.text}}</Checkbox>
+          </CheckboxGroup>
         </FormItem>
 
         <FormItem label="观影人群偏好" class="form-item-hobby">
@@ -266,7 +250,7 @@
     </Form>
 
     <div class="btn-center">
-      <button class="button-ok" @click="handleScheme">生成投放方案</button>
+      <Button type="primary" class="button-ok" @click="handleScheme">生成投放方案</Button>
     </div>
   </div>
 </template>
@@ -319,7 +303,7 @@ export default class Main extends ViewBase {
     type: 1,
     areaType: 3,
     sex: 0,
-    age: 0,
+    age: [0],
     filmHobby: [0],
 
     // 单个影片
@@ -414,6 +398,14 @@ export default class Main extends ViewBase {
     this.form.filmIdSelected = film.id
   }
 
+  @Watch('form.age', { deep: true })
+  watchAge(value: number[], oldValue: number[]) {
+    // 不限与其他项互斥
+    keepExclusion(value, oldValue, 0, newValue => {
+      this.form.age = newValue
+    })
+  }
+
   @Watch('form.filmHobby', { deep: true })
   watchFilmHobby(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
@@ -443,6 +435,7 @@ export default class Main extends ViewBase {
 .radio-item {
   font-size: 14px;
   margin-right: 40px;
+  user-select: none;
 }
 .form-item-type {
   margin-top: 35px;
@@ -659,13 +652,14 @@ export default class Main extends ViewBase {
 .check-item {
   position: relative;
   top: 3px;
-  min-width: 60px;
+  min-width: 80px;
   height: 26px;
   line-height: 26px;
   text-align: center;
   border: 1px solid #d2d2d2;
   margin-right: 15px;
   font-size: 14px;
+  user-select: none;
   /deep/ .ivu-checkbox {
     display: none;
   }
