@@ -113,7 +113,7 @@ export default class Main extends ViewBase {
         companyEmail: data.account.email,
         qualificationType: data.company.qualificationType,
         qualificationCode: data.company.qualificationCode,
-        imageList: []
+        // imageList: data.company.images
       }
     } catch (ex) {
       this.handleError(ex)

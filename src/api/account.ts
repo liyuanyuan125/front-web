@@ -24,7 +24,7 @@ export async function getLoginEmail(email: string) {
  * @param data
  */
 export async function pendingAudit(data: any) {
-  const res = put(`/customer/accounts/${getUseId.id}/company`, data)
+  const res = put(`/customer/accounts/company`, data)
   return res
 }
 
@@ -33,7 +33,7 @@ export async function pendingAudit(data: any) {
  * @param data
  */
 export async function auditingAccount(data: any) {
-  const res = put(`customer/accounts/${getUseId.id}`, data)
+  const res = put(`customer/accounts`, data)
   return res
 }
 
@@ -50,6 +50,6 @@ export async function accountChangeList() {
  * @param data
  */
 export async function changeCompanyList(data: any) {
-  const res = put(`customer/companies/${getUseId.id}`)
+  const res = put(`customer/companies/detail`)
   return res
 }

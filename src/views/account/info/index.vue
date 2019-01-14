@@ -62,8 +62,8 @@
           <p class="flex-box">
             <label>资质图片</label>
             <em>
-              <!-- <img :src="item" v-for="item in company.images"  width="150px"
-              @error="setErrorImg">-->
+              <img :src="item" v-for="item in company.images"  width="150px"
+              @error="setErrorImg">
             </em>
           </p>
         </Col>
