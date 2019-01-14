@@ -301,7 +301,7 @@ const mockMap = [
   },
   {
     name: 'GIORGIO ARMANI新品红管唇釉',
-    client: '阿玛尼',
+    client: '迪奥',
     time: '2019-2-4 ～2019-2-10',
     longTime : '7',
     data: '春节档',
