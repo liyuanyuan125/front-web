@@ -584,12 +584,7 @@ export default class Main extends ViewBase {
     line-height: 40px;
   }
 }
-/deep/ .ivu-radio-checked .ivu-radio-inner {
-  border-color: @c-button;
-  &::after {
-    background-color: @c-button;
-  }
-}
+
 /deep/ .custom-monery {
   .ivu-input-wrapper {
     width: 150px;
