@@ -25,3 +25,11 @@ export async function getLoginEmail(email: string) {
 export async function pendingAudit(data: any) {
   const res = put(`/customer/accounts/${getUseId.id}/company`, data)
 }
+
+/**
+ * 审核后修改账号信息
+ * @param data
+ */
+export async function auditingAccount(data: any) {
+  const res = put(`customer/accounts/${getUseId.id}`, data)
+}

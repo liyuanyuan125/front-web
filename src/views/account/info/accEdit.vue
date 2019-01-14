@@ -18,14 +18,14 @@
         <Input v-model="form.contact" placeholder="请输入联系人姓名"></Input>
       </FormItem>
       <FormItem label="手机号">
-        <Input v-model="form.contactTel" placeholder="请输入手机号"></Input>
+        <Input v-model="form.contactTel" :maxlength="11" placeholder="请输入手机号"></Input>
       </FormItem>
       <FormItem label="个人邮箱">
         <Input v-model="form.companyEmail" placeholder="请输入个人邮箱"></Input>
       </FormItem>
     </Form>
     <div class="btnCenter">
-      <button class="button-ok edit-submit">提交申请</button>
+      <button class="button-ok edit-submit" @click="editAccount">提交申请</button>
     </div>
   </div>
 </template>
@@ -35,7 +35,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { countDown } from '@/fn/timer'
 import AreaSelect from '@/components/AreaSelect.vue'
-import { accountDetail, getLoginEmail } from '@/api/account'
+import { accountDetail, getLoginEmail, auditingAccount } from '@/api/account'
 
 @Component({
   components: {
@@ -78,6 +78,24 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     } finally {
       // this.displayCode = false
+    }
+  }
+
+  async editAccount() {
+    const cloneForm = Object.assign(this.form)
+    if (!this.form.emailCaptcha) {
+      cloneForm.emailCaptcha = null
+      cloneForm.email = null
+    }
+    try {
+      await auditingAccount({
+        ...cloneForm,
+        provinceId: this.form.area[0],
+        cityId: this.form.area[1]
+      })
+      this.$router.push({name: 'account-info'})
+    } catch (ex) {
+      this.handleError(ex)
     }
   }
 }
