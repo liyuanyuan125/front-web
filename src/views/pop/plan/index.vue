@@ -357,7 +357,7 @@ export default class Main extends ViewBase {
     const id = this.form.putType == 'refBefore'
       ? (this.form.type == 1 ? 1 : 2)
       : 3
-    const corp = this.form.advType
+    const corp = this.form.advType || 1
     this.$router.push({ name: 'pop-plan-scheme', params: {
       id: String(id),
       corp: String(corp),
