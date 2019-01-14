@@ -197,9 +197,10 @@ export default class Main extends ViewBase {
   margin-top: 10px;
   position: relative;
   img {
+    display: block;
     width: 1009px;
     height: 100%;
-    margin-left: 10%;
+    margin: 0 auto;
   }
   .ze {
     width: 100%;
