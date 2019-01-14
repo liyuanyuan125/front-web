@@ -65,9 +65,15 @@ export default class Main extends ViewBase {
   }
 
   open() {
+    let id: any = ''
+    if (this.$route.params.corp == '1') {
+      id = 1
+    } else {
+      id = 2
+    }
     this.$router.push({
       name: 'report-plan',
-      params: {id: this.$route.params.id}
+      params: {id}
     })
   }
 }
