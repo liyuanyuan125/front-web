@@ -4,7 +4,7 @@
       <h3 class="layout-title">登录信息</h3>
       <FormItem label="账号类型" class="item-top">
         <CheckboxGroup v-model="form.accountType">
-          <Checkbox :label="item.code" v-for="item in queryDate.systemList">{{item.desc}}</Checkbox>
+          <Checkbox :label="item.code" v-for="item in queryDate.systemList" :key="item.code">{{item.desc}}</Checkbox>
         </CheckboxGroup>
       </FormItem>
       <FormItem label="登录邮箱">
@@ -44,9 +44,13 @@
       <FormItem label="资质编号">
         <Input v-model="form.qualificationCode" placeholder="请输入资质编号"></Input>
       </FormItem>
-      <!-- <FormItem label="资质图片">
-        <img :src="item" v-for="item in queryDate.company.images" alt="">
-      </FormItem> -->
+      <FormItem label="资质图片">
+        <div class="upload-wrap">
+          <Upload v-model="form.imageList" :max-count="3" multiple accept="images/*" confirm-on-del/>
+          <div class="upload-tip">支持1或3张，格式为jpg/jpeg/png，大小不超过5M的图片</div>
+        </div>
+        <!-- <img :src="item" v-for="item in queryDate.company.images" alt=""> -->
+      </FormItem>
     </Form>
     <div class="btnCenter">
       <button class="button-ok edit-submit" @click="updateAccount">更新账号</button>
@@ -61,10 +65,12 @@ import { countDown } from '@/fn/timer'
 import ViewBase from '@/util/ViewBase'
 import AreaSelect from '@/components/AreaSelect.vue'
 import { accountDetail, getLoginEmail, pendingAudit } from '@/api/account'
+import Upload, { FileItem } from '@/components/upload'
 
 @Component({
   components: {
-    AreaSelect
+    AreaSelect,
+    Upload
   }
 })
 export default class Main extends ViewBase {
@@ -108,7 +114,7 @@ export default class Main extends ViewBase {
         companyEmail: data.account.email,
         qualificationType: data.company.qualificationType,
         qualificationCode: data.company.qualificationCode,
-        imageList: data.company.images
+        // imageList: data.company.images
       }
     } catch (ex) {
       this.handleError(ex)
@@ -116,7 +122,7 @@ export default class Main extends ViewBase {
   }
   async getEmailCode() {
     try {
-      const msg = await getLoginEmail(this.form.loginEmail)
+      const msg = await getLoginEmail(this.form.email)
       await countDown(10, sec => {
         this.emailMes = sec + 's'
       })
@@ -140,9 +146,9 @@ export default class Main extends ViewBase {
       await pendingAudit({
         ...cloneForm,
         provinceId: this.form.area[0],
-        cityId: this.form.area[1],
+        cityId: this.form.area[1]
       })
-      this.$router.push({name: 'account-info'})
+      this.$router.push({ name: 'account-info' })
     } catch (ex) {
       ((this as any)[`onSumbit${ex.code}`] || this.handleError).call(this, ex)
     }
@@ -158,6 +164,10 @@ export default class Main extends ViewBase {
 
 @c-bg: #fff;
 .page {
+  .upload-wrap {
+    position: relative;
+    margin-top: 10px;
+  }
   .ivu-form-item {
     padding-left: 30px;
     color: @c-text;

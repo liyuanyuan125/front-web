@@ -12,13 +12,13 @@
       </div>
       <Form :model="from" :label-width="90" class="edit-input">
         <FormItem label="账号类型">
-          <CheckboxGroup v-model="fruit">
-            <Checkbox size="large" label="广告方" ></Checkbox>
-            <Checkbox size="large"  label="资源方"></Checkbox>
+          <CheckboxGroup v-model="from.accountType">
+            <Checkbox size="large" label="广告方"></Checkbox>
+            <Checkbox size="large" label="资源方"></Checkbox>
           </CheckboxGroup>
         </FormItem>
         <FormItem label="公司名称">
-          <Input v-model="from.input"></Input>
+          <Input v-model="from.companyName"></Input>
         </FormItem>
         <FormItem label="资质类型">
           <Input v-model="from.input"></Input>
@@ -27,12 +27,21 @@
           <Input v-model="from.input"></Input>
         </FormItem>
         <FormItem label="资质图片">
-          <Input v-model="from.input"></Input>
+          <div class="upload-wrap">
+            <Upload
+              v-model="from.imageList"
+              :max-count="3"
+              multiple
+              accept="images/*"
+              confirm-on-del
+            />
+            <div class="upload-tip">支持1或3张，格式为jpg/jpeg/png，大小不超过5M的图片</div>
+          </div>
         </FormItem>
       </Form>
       <div slot="footer" class="btnCenter">
-        <button  class="button-cancel">取消</button >
-        <button  class="button-ok">变更数据</button>
+        <button class="button-cancel" @click="value.visibleInforma = false">取消</button>
+        <button class="button-ok" @click="changeData">变更数据</button>
       </div>
     </Modal>
   </div>
@@ -40,19 +49,32 @@
 <script lang="ts">
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import Upload, { FileItem } from '@/components/upload'
 
-@Component
+@Component({
+  components: {
+    Upload
+  }
+})
 export default class Change extends ViewBase {
   @Prop({ type: Object }) value!: any
-  from = {
-    input: 'xxxxxxx'
+  from: any = {
+    accountType: [],
+    companyName: '',
+    imageList: [],
+    qualificationType: '',
+    qualificationCode: ''
   }
   fruit = []
+  changeData() {}
 }
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+.upload-wrap {
+  position: relative;
+  margin-top: 10px;
+}
 /deep/ .ivu-modal-header {
   border-bottom: 0;
   padding: 10px 13px;

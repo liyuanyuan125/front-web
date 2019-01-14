@@ -69,9 +69,8 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { login } from '@/api/auth'
-import { setUser, User } from '@/store'
+import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
-import { SystemCode } from '@/util/types'
 
 @Component
 export default class Main extends ViewBase {
@@ -139,22 +138,10 @@ export default class Main extends ViewBase {
       const postData = { ...this.form }
       const { data } = await login(postData)
 
-      // 设置用户
-      const user: User = {
-        id: data.userId as number,
-        name: data.email as string,
-        email: data.email as string,
-        isAdmin: data.admin as boolean,
-
-        systemCode: postData.systemCode as SystemCode,
-        systems: data.systems as SystemCode[],
-
-        companyId: data.companyId as number,
-        companyName: data.companyName || '<我的公司>',
-
-        perms: data.perms || [],
-      }
-      setUser(user)
+      setUserByData({
+        ...data,
+        systemCode: postData.systemCode
+      })
 
       this.$router.push({ name: 'home' })
     } catch (ex) {

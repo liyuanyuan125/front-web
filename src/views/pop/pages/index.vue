@@ -284,7 +284,7 @@ const mockMap = [
     longTime : '7',
     data: '春节档',
     man : '400,000',
-    ceil: '4000,000.00',
+    ceil: '4,000,000.00',
     sex: '男',
     id: '1'
   },
@@ -295,7 +295,7 @@ const mockMap = [
     longTime : '10',
     data: '无',
     man : '400,000',
-    ceil: '400,000.00',
+    ceil: '4,000,000.00',
     sex: '女',
     id: '2'
   },
@@ -306,7 +306,7 @@ const mockMap = [
     longTime : '7',
     data: '春节档',
     man : '400,000',
-    ceil: '4000,000.00',
+    ceil: '4,000,000.00',
     sex: '男',
     id: '3'
   }

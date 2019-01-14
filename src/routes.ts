@@ -117,6 +117,11 @@ export default [
     name: 'report-plan',
     component: () => import('./views/report/plan/index.vue'),
   },
+  {
+    path: '/report/plan/xibei/:id?',
+    name: 'report-plan-xibei',
+    component: () => import('./views/report/plan/xibei.vue'),
+  },
 
   // 示例，没有实际用处
   {
