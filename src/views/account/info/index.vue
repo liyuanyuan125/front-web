@@ -7,7 +7,7 @@
         <Col :span="12">
           <p>
             <label>账号类型</label>
-            {{accountType.toString()}}
+            {{accountType}}
           </p>
           <p>
             <label>账号ID</label>
@@ -71,7 +71,7 @@
     </div>
 
     <!-- 审核以通过  displayStatus == 4 -->
-    <div class="accountList" v-if="true">
+    <div class="accountList" v-if="false">
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
       <div class="btnCenter sumbit-button">
@@ -93,10 +93,11 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="tsx">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { accountDetail } from '@/api/account'
+import { accountDetail, accountChangeList } from '@/api/account'
+import jsxReactToVue from '@/util/jsxReactToVue'
 import comStatu from './status.vue'
 import dlgChange from './dlgChange.vue'
 import dlgInforma from './dlgInformation.vue'
@@ -114,74 +115,56 @@ export default class Main extends ViewBase {
   company: any = {}
   systemList: any = []
   accountType = ''
+
+  // 公司信息变更记录
   queryDetail: any = {
     visibleMess: false,
-    changelist: {
-      name: '北京智能',
-      type: '公司账号',
-      type2: 'xxxxx',
-      code: '88888888888888888',
-      img: [
-        'https://file.iviewui.com/iview-admin/login_bg.jpg',
-        'https://file.iviewui.com/iview-admin/login_bg.jpg',
-        'https://file.iviewui.com/iview-admin/login_bg.jpg'
-      ]
-    }
+    changelist: {}
+  }
+  // 审核后修改公司信息
+  informa = {
+    visibleInforma: false
   }
 
   column = [
     { title: '变更编号', key: 'id' },
-    { title: '账号变更提交时间', key: 'times' },
+    { title: '账号变更提交时间', key: 'submitTime' },
     {
       title: '变更前信息',
-      key: 'front',
-      render: (h: any, params: any) => {
-        return h('div', [
-          h(
-            'a',
-            {
-              style: {
-                color: '#2481D7'
-              },
-              on: {
-                click: () => {
-                  this.queryDetail.title = '账号变更前信息'
-                  this.queryDetail.visibleMess = true
-                }
-              }
-            },
-            params.row.front
-          )
-        ])
+      key: 'changeBefore',
+      render: (hh: any, { row }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        return (
+          <a
+            on-click={this.beforeChange.bind(this, row.changeBefore)}
+            class="detail-list">
+            点击查看
+          </a>
+        )
+        /* tslint:disable */
       }
     },
     {
       title: '变更后信息',
-      key: 'after',
-      render: (h: any, params: any) => {
-        return h('div', [
-          h(
-            'a',
-            {
-              style: {
-                color: '#2481D7'
-              },
-              on: {
-                click: () => {
-                  this.queryDetail.title = '账号变更后信息'
-                  this.queryDetail.visibleMess = true
-                }
-              }
-            },
-            params.row.front
-          )
-        ])
+      key: 'changeEnd',
+      render: (hh: any, { row }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        return (
+          <a
+            on-click={this.afterChange.bind(this, row.changeEnd)}
+            class="detail-list">
+            点击查看
+          </a>
+        )
+        /* tslint:disable */
       }
     },
     { title: '审核状态', key: 'status' },
     {
       title: '备注',
-      key: 'remarks',
+      key: 'remark',
       render: (h: any, params: any) => {
         const { row } = params
         if (row.remarks.length > 10) {
@@ -203,38 +186,7 @@ export default class Main extends ViewBase {
       }
     }
   ]
-
-  dataList = [
-    {
-      id: 'John Brown1',
-      times: '2016-10-03 9:00:00',
-      front: '点击查看',
-      after: '点击查看',
-      status: '1',
-      remarks:
-        '北京智能广宣科技有限公司北京智能广宣科技有限公司北京智能广宣科技有限公司'
-    },
-    {
-      id: 'John Brown2',
-      times: '2016-10-03 9:00:00',
-      front: '点击查看',
-      after: '点击查看',
-      status: '1',
-      remarks: '北京智能广宣科技有限公司'
-    },
-    {
-      id: 'John Brown3',
-      times: '2016-10-03 9:00:00',
-      front: '点击查看',
-      after: '点击查看',
-      status: '1',
-      remarks: '/'
-    }
-  ]
-
-  informa = {
-    visibleInforma: false
-  }
+  dataList = []
 
   async mounted() {
     try {
@@ -244,16 +196,37 @@ export default class Main extends ViewBase {
       this.displayStatus = data.company.displayStatus - 1
       this.systemList = data.systemList
 
-      this.accountType = this.account.systems.map((item: any, index: any) => {
+      const accountType = this.account.systems.map((item: any, index: any) => {
         if (this.systemList[index].code == item) {
           return this.systemList[index].desc
         }
       })
+      this.accountType =
+        accountType.length > 1
+          ? `${accountType[0]} / ${accountType[1]}`
+          : accountType.toString()
     } catch (ex) {
       this.handleError(ex)
     }
+    this.accountChangeList()
   }
-
+  async accountChangeList() {
+    const { data } = await accountChangeList()
+  }
+  beforeChange(list: any) {
+    this.queryDetail = {
+      title: '账号变更前信息',
+      changelist: list,
+      visibleMess: true
+    }
+  }
+  afterChange(list: any) {
+    this.queryDetail = {
+      title: '账号变更后信息',
+      changelist: list,
+      visibleMess: true
+    }
+  }
   handleInforma() {
     this.informa.visibleInforma = true
   }
@@ -265,7 +238,9 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+.detail-list {
+  color: #2481d7;
+}
 .sumbit-button {
   padding: 30px 0 50px;
 }

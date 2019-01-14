@@ -9,22 +9,32 @@
       <Row class="text-rows">
         <Col :span="24">
           <p>
-            <label>公司信息</label>广告放/资源方
+            <label>公司名称</label>
+            {{list.companyName}}
           </p>
           <p>
-            <label>账号类型</label>xxxxxxxxx
+            <label>账号类型</label>
+            {{list.companyTypeList}}
           </p>
           <p>
-            <label>资质类型</label>xxxxxxxxx
+            <label>资质类型</label>
+            {{list.qualificationType}}
+          </p>
+          <p>
+            <label>资质编号</label>
+            {{list.qualificationCode}}
           </p>
           <p class="flex-box">
             <label>资质图片</label>
             <em>
-              <img :src="item" v-for=" item in list.img" width="150">
+              <img :src="item" v-for=" item in list.qualificationImageList" width="150">
             </em>
           </p>
         </Col>
       </Row>
+      <div class="footer btnCenter">
+        <button class="button-ok" @click="value.visibleMess = false">关闭</button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -50,6 +60,9 @@ export default class Change extends ViewBase {
   padding: 10px 13px;
   background: #f9f9f9;
   font-weight: none;
+}
+/deep/ .ivu-modal-footer {
+  display: none;
 }
 </style>
 

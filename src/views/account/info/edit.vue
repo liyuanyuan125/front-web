@@ -49,7 +49,6 @@
           <Upload v-model="form.imageList" :max-count="3" multiple accept="images/*" confirm-on-del/>
           <div class="upload-tip">支持1或3张，格式为jpg/jpeg/png，大小不超过5M的图片</div>
         </div>
-        <!-- <img :src="item" v-for="item in queryDate.company.images" alt=""> -->
       </FormItem>
     </Form>
     <div class="btnCenter">
@@ -114,7 +113,7 @@ export default class Main extends ViewBase {
         companyEmail: data.account.email,
         qualificationType: data.company.qualificationType,
         qualificationCode: data.company.qualificationCode,
-        // imageList: data.company.images
+        imageList: []
       }
     } catch (ex) {
       this.handleError(ex)
@@ -142,6 +141,7 @@ export default class Main extends ViewBase {
       cloneForm.email = null
       cloneForm.emailCaptcha = null
     }
+    cloneForm.imageList = cloneForm.imageList.map( (item: any) => item.fileId)
     try {
       await pendingAudit({
         ...cloneForm,

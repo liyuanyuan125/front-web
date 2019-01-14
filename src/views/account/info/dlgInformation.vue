@@ -10,26 +10,26 @@
         说明：如有需要可对以下账号信息进行变更，账号变更申请提交后将由平台进行审核，
         账号变更期间不会影响账号的正常使用。
       </div>
-      <Form :model="from" :label-width="90" class="edit-input">
+      <Form :model="form" :label-width="90" class="edit-input">
         <FormItem label="账号类型">
-          <CheckboxGroup v-model="from.accountType">
+          <CheckboxGroup v-model="form.accountType" class="item-type">
             <Checkbox size="large" label="广告方"></Checkbox>
             <Checkbox size="large" label="资源方"></Checkbox>
           </CheckboxGroup>
         </FormItem>
         <FormItem label="公司名称">
-          <Input v-model="from.companyName"></Input>
+          <Input v-model="form.companyName" placeholder="请输入公司名称"></Input>
         </FormItem>
         <FormItem label="资质类型">
-          <Input v-model="from.input"></Input>
+          <Input v-model="form.qualificationType" placeholder="请输入资质类型"></Input>
         </FormItem>
         <FormItem label="资质编号">
-          <Input v-model="from.input"></Input>
+          <Input v-model="form.qualificationCode" placeholder="请输入资质编号"></Input>
         </FormItem>
         <FormItem label="资质图片">
           <div class="upload-wrap">
             <Upload
-              v-model="from.imageList"
+              v-model="form.imageList"
               :max-count="3"
               multiple
               accept="images/*"
@@ -50,6 +50,7 @@
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Upload, { FileItem } from '@/components/upload'
+import { changeCompanyList } from '@/api/account'
 
 @Component({
   components: {
@@ -58,15 +59,22 @@ import Upload, { FileItem } from '@/components/upload'
 })
 export default class Change extends ViewBase {
   @Prop({ type: Object }) value!: any
-  from: any = {
+  form: any = {
     accountType: [],
     companyName: '',
     imageList: [],
     qualificationType: '',
     qualificationCode: ''
   }
-  fruit = []
-  changeData() {}
+  async changeData() {
+    const cloneForm = Object.assign(this.form)
+    cloneForm.imageList = cloneForm.imageList.map((item: any) => item.fileId)
+    try {
+      await changeCompanyList(cloneForm)
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
 }
 </script>
 <style lang="less" scoped>
@@ -96,8 +104,14 @@ export default class Change extends ViewBase {
     margin-left: 113px;
   }
 }
+.item-type {
+  margin-top: 3px;
+}
 /deep/ .ivu-modal-footer {
   padding-bottom: 30px;
+}
+/deep/ .ivu-checkbox + span {
+  margin-left: 3px;
 }
 </style>
 

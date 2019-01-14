@@ -97,7 +97,12 @@ export default [
     name: 'finance-info-more',
     component: () => import('./views/finance/info/moreList.vue'),
   },
-
+  // 财务管理 - 资金账单
+  {
+    path: '/finance/bill',
+    name: 'finance-bill',
+    component: () => import('./views/finance/bill/index.vue')
+  },
   // 示例，没有实际用处
   {
     path: '/about',
