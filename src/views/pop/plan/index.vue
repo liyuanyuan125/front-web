@@ -257,7 +257,6 @@ export default class Main extends ViewBase {
   ding = 0
   selectTab = 'tabs1'
   allType = true
-  schemeId: any = 1 // id 为 1 映前广告－标准定向2 映前广告－按单部影片3 线下场馆
 
   form = {
     putType: 'refBefore',
@@ -355,7 +354,10 @@ export default class Main extends ViewBase {
 
   handleScheme() {
     // id 为 1 映前广告－标准定向2 映前广告－按单部影片3 线下场馆
-    this.$router.push({ name: 'pop-plan-scheme', params: {id: this.schemeId} })
+    const id = this.form.putType == 'refBefore'
+      ? (this.form.type == 1 ? 1 : 2)
+      : 3
+    this.$router.push({ name: 'pop-plan-scheme', params: { id: String(id) } })
   }
 
   @Watch('form.filmHobby', { deep: true })
