@@ -247,7 +247,7 @@
       <h3 class="layout-title">预算与计费</h3>
 
       <FormItem label="总预算/￥" class="item-top">
-        <RadioGroup v-model="form.totalMonery">
+        <RadioGroup v-model="form.totalMonery" class="item-radio-top">
           <Radio :label="item.label" v-for="item in amountList" :key="item.key" class="radio-item"></Radio>
           <Radio label="指定金额" class="radio-item">
             指定金额
@@ -259,7 +259,7 @@
       </FormItem>
 
       <FormItem label="计算方式">
-        <RadioGroup v-model="form.bill">
+        <RadioGroup v-model="form.bill" class="item-radio-top">
           <Radio label="按人次计费"></Radio>
         </RadioGroup>
       </FormItem>
