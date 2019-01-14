@@ -57,16 +57,24 @@
       <h3 class="layout-title">投放定向</h3>
 
       <FormItem label="定向类型" class="form-item-type" v-if="isRefBefore">
-        <RadioGroup v-model="form.type" type="button">
-          <Radio v-for="it in typeList" :key="it.key" :label="it.key"
-            class="target-type">{{it.text}}</Radio>
+        <RadioGroup v-model="form.type" type="button" class="orient-tabs">
+          <Radio
+            v-for="it in typeList"
+            :key="it.key"
+            :label="it.key"
+            class="target-type"
+          >{{it.text}}</Radio>
         </RadioGroup>
       </FormItem>
 
       <FormItem label="投放地区" class="form-item-type" v-if="!isSingle">
-        <RadioGroup v-model="form.areaType">
-          <Radio v-for="it in areaTypeList" :key="it.key" :label="it.key"
-            class="radio-item">{{it.text}}</Radio>
+        <RadioGroup v-model="form.areaType" class="item-radio-top">
+          <Radio
+            v-for="it in areaTypeList"
+            :key="it.key"
+            :label="it.key"
+            class="radio-item"
+          >{{it.text}}</Radio>
         </RadioGroup>
       </FormItem>
 
@@ -78,23 +86,35 @@
         <h3 class="group-title">观影人群</h3>
 
         <FormItem label="观影人群性别" class="form-item-sex">
-          <RadioGroup v-model="form.sex">
-            <Radio v-for="it in sexList" :key="it.key" :label="it.key"
-              class="radio-item">{{it.text}}</Radio>
+          <RadioGroup v-model="form.sex" class="item-radio-top">
+            <Radio
+              v-for="it in sexList"
+              :key="it.key"
+              :label="it.key"
+              class="radio-item"
+            >{{it.text}}</Radio>
           </RadioGroup>
         </FormItem>
 
         <FormItem label="观影人群年龄" class="form-item-age">
-          <RadioGroup v-model="form.age">
-            <Radio v-for="it in ageStageList" :key="it.key" :label="it.key"
-              class="radio-item">{{it.text}}</Radio>
+          <RadioGroup v-model="form.age" class="item-radio-top">
+            <Radio
+              v-for="it in ageStageList"
+              :key="it.key"
+              :label="it.key"
+              class="radio-item"
+            >{{it.text}}</Radio>
           </RadioGroup>
         </FormItem>
 
         <FormItem label="观影人群偏好" class="form-item-hobby">
-          <CheckboxGroup v-model="form.filmHobby" class="float">
-            <Checkbox v-for="it in filmHobbyList" :key="it.key"
-              :label="it.key" class="check-item">{{it.text}}</Checkbox>
+          <CheckboxGroup v-model="form.filmHobby" class="float item-radio-top">
+            <Checkbox
+              v-for="it in filmHobbyList"
+              :key="it.key"
+              :label="it.key"
+              class="check-item"
+            >{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
       </div>
@@ -102,39 +122,59 @@
       <div class="single-wrap" v-if="isSingle">
         <FormItem label="观影人群性别" class="form-item-sex">
           <RadioGroup v-model="form.sex">
-            <Radio v-for="it in sexList" :key="it.key" :label="it.key"
-              class="radio-item">{{it.text}}</Radio>
+            <Radio
+              v-for="it in sexList"
+              :key="it.key"
+              :label="it.key"
+              class="radio-item"
+            >{{it.text}}</Radio>
           </RadioGroup>
         </FormItem>
 
         <FormItem label="观影人群年龄" class="form-item-age">
           <RadioGroup v-model="form.age">
-            <Radio v-for="it in ageStageList" :key="it.key" :label="it.key"
-              class="radio-item">{{it.text}}</Radio>
+            <Radio
+              v-for="it in ageStageList"
+              :key="it.key"
+              :label="it.key"
+              class="radio-item"
+            >{{it.text}}</Radio>
           </RadioGroup>
         </FormItem>
 
         <FormItem label="观影人群偏好" class="form-item-hobby">
           <CheckboxGroup v-model="form.filmHobby" class="float">
-            <Checkbox v-for="it in filmHobbyList" :key="it.key"
-              :label="it.key" class="check-item">{{it.text}}</Checkbox>
+            <Checkbox
+              v-for="it in filmHobbyList"
+              :key="it.key"
+              :label="it.key"
+              class="check-item"
+            >{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
 
         <FormItem label="选择影片" class="form-item-film-name">
-          <Input v-model="form.filmName" class="input-film-name"
-            placeholder="输入影片名字" search enter-button/>
+          <Input
+            v-model="form.filmName"
+            class="input-film-name"
+            placeholder="输入影片名字"
+            search
+            enter-button
+          />
         </FormItem>
 
         <FormItem label="影片类型" class="form-item-film-type">
           <CheckboxGroup v-model="form.filmType" class="float">
-            <Checkbox v-for="it in filmHobbyList" :key="it.key"
-              :label="it.key" class="check-item">{{it.text}}</Checkbox>
+            <Checkbox
+              v-for="it in filmHobbyList"
+              :key="it.key"
+              :label="it.key"
+              class="check-item"
+            >{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
 
-        <p class="single-result"
-          v-if="foundFilmList.length > 0">已为您匹配以下{{foundFilmList.length}}部影片：</p>
+        <p class="single-result" v-if="foundFilmList.length > 0">已为您匹配以下{{foundFilmList.length}}部影片：</p>
 
         <ul class="single-film-list" v-if="foundFilmList.length > 0">
           <li v-for="(it, i) in foundFilmList" :key="i" class="single-film-item">
@@ -206,8 +246,7 @@
 
       <FormItem label="总预算/￥" class="item-top">
         <RadioGroup v-model="form.totalMonery">
-          <Radio :label="item.label" v-for="item in amountList" :key="item.key"
-            class="radio-item"></Radio>
+          <Radio :label="item.label" v-for="item in amountList" :key="item.key" class="radio-item"></Radio>
           <Radio label="指定金额" class="radio-item">
             指定金额
             <em v-if="form.totalMonery == '指定金额'" class="custom-monery">
@@ -233,12 +272,24 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cityList, City, sexList, ageStageList, filmHobbyList,
-  areaTypeList, filmList as allFilmList } from './types'
+import {
+  cityList,
+  City,
+  sexList,
+  ageStageList,
+  filmHobbyList,
+  areaTypeList,
+  filmList as allFilmList
+} from './types'
 import CitySelect from './citySelect.vue'
 
 // 保持互斥
-const keepExclusion = <T>(value: T[], oldValue: T[], aloneValue: T, setter: (newValue: T[]) => any) => {
+const keepExclusion = <T>(
+  value: T[],
+  oldValue: T[],
+  aloneValue: T,
+  setter: (newValue: T[]) => any
+) => {
   if (value.length > 1) {
     const newHas = value.includes(aloneValue)
     const oldHas = oldValue.includes(aloneValue)
@@ -291,10 +342,7 @@ export default class Main extends ViewBase {
     return this.isRefBefore && this.form.type == 2
   }
 
-  typeList = [
-    { key: 1, text: '标准定向' },
-    { key: 2, text: '按单部影片' },
-  ]
+  typeList = [{ key: 1, text: '标准定向' }, { key: 2, text: '按单部影片' }]
 
   areaTypeList = areaTypeList
 
@@ -354,9 +402,8 @@ export default class Main extends ViewBase {
 
   handleScheme() {
     // id 为 1 映前广告－标准定向2 映前广告－按单部影片3 线下场馆
-    const id = this.form.putType == 'refBefore'
-      ? (this.form.type == 1 ? 1 : 2)
-      : 3
+    const id =
+      this.form.putType == 'refBefore' ? (this.form.type == 1 ? 1 : 2) : 3
     this.$router.push({ name: 'pop-plan-scheme', params: { id: String(id) } })
   }
 
@@ -393,12 +440,16 @@ export default class Main extends ViewBase {
 .form-item-type {
   margin-top: 35px;
 }
-
+.orient-tabs {
+  margin-top: 4px;
+}
 .city-wrap {
   width: 790px;
   margin-left: 70px;
 }
-
+.item-radio-top {
+  margin-top: 3px;
+}
 .forms {
   font-size: 14px;
   .all-type {
@@ -411,7 +462,7 @@ export default class Main extends ViewBase {
     }
   }
   .check-type {
-    margin: 10px 15px 0 0;
+    margin: 8px 15px 0 0;
     width: 60px;
     height: 26px;
     font-size: 14px;
@@ -427,6 +478,7 @@ export default class Main extends ViewBase {
       & + span {
         position: relative;
         top: -4px;
+        margin-right: 0;
       }
     }
   }
@@ -439,6 +491,7 @@ export default class Main extends ViewBase {
       text-align: center;
       color: #444;
       margin-right: 20px;
+      margin-top: -3px;
       font-size: 14px;
       border: solid 1px #fff;
       cursor: pointer;
@@ -547,6 +600,9 @@ export default class Main extends ViewBase {
   }
 }
 
+/deep/ .ivu-radio-wrapper {
+  font-size: 14px;
+}
 .select-tabs {
   margin: 30px 0 0 50px;
   width: 536px;
@@ -651,7 +707,7 @@ export default class Main extends ViewBase {
   font-size: 14px;
   text-align: center;
   color: #fff;
-  background-color: rgba(0, 0, 0, .8);
+  background-color: rgba(0, 0, 0, 0.8);
 }
 .film-name,
 .film-tags {
