@@ -1,9 +1,7 @@
 import { get, post, put } from '@/fn/ajax'
 import { getUser } from '@/store'
-// const getUseId: any = getUser()
+const getUseId: any = getUser()
 
-// 主账户id
-const getUseId = { id: 1272 }
 /**
  * 主账号详情接口
  * @param data 接口数据

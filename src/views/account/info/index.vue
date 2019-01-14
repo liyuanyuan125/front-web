@@ -62,15 +62,16 @@
           <p class="flex-box">
             <label>资质图片</label>
             <em>
-              <img :src="item" v-for="item in company.images" width="150px">
+              <!-- <img :src="item" v-for="item in company.images"  width="150px"
+              @error="setErrorImg">-->
             </em>
           </p>
         </Col>
       </Row>
     </div>
 
-    <!-- 审核以通过 -->
-    <div class="accountList" v-if="displayStatus == 4">
+    <!-- 审核以通过  displayStatus == 4 -->
+    <div class="accountList" v-if="true">
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
       <div class="btnCenter sumbit-button">
@@ -255,6 +256,9 @@ export default class Main extends ViewBase {
 
   handleInforma() {
     this.informa.visibleInforma = true
+  }
+  setErrorImg(e: any) {
+    e.target.src = 'https://file.iviewui.com/iview-admin/login_bg.jpg'
   }
 }
 </script>
