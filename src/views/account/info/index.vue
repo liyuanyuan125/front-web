@@ -62,8 +62,8 @@
           <p class="flex-box">
             <label>资质图片</label>
             <em>
-              <ImagePreviewer v-for="item in company.images" :url="item.url"
-                class="qualification-image"/>
+              <ImagePreviewer v-for="(item, i) in company.images" :key="i"
+                :url="item.url" class="qualification-image"/>
             </em>
           </p>
         </Col>
