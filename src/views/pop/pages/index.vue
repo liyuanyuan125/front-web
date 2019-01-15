@@ -115,10 +115,13 @@
                 <span>30-40岁</span>
               </li>
               <li class="tag-ltme">
-                <span>剧情</span>
+                <span>科幻</span>
               </li>
               <li class="tag-ltme">
                 <span>冒险</span>
+              </li>
+              <li class="tag-ltme">
+                <span>动作</span>
               </li>
             </ul>
           </Col>
@@ -129,65 +132,36 @@
              <Col :span="5">
               <dl class="cinema-img">
                 <dd><img src="./assets/first.png" alt=""></dd>
-                <dt>《疯狂的外星人》</dt>
-                <dt> 喜剧／剧情／科幻</dt>
+                <dt class="mt10">《阿丽塔：战斗天使》</dt>
+                <dt> 动作／科幻／冒险</dt>
+                <dt class="orange"> 25298人想看</dt>
               </dl>
              </Col>
              <Col :span="5">
               <dl class="cinema-img">
                 <dd><img src="./assets/two.png" alt=""></dd>
-                <dt>《新喜剧之王》</dt>
+                <dt class="mt10">《掠夺城市》</dt>
                 <dt> 喜剧 </dt>
+                <dt class="orange"> 15258人想看</dt>
               </dl>
              </Col>
              <Col :span="5">
               <dl class="cinema-img">
                 <dd><img src="./assets/three.png" alt=""></dd>
-                <dt>《情圣2》</dt>
-                <dt> 喜剧／爱情</dt>
+                <dt class="mt10">《死侍2：我爱我家》</dt>
+                <dt> 动作／科幻／喜剧</dt>
+                <dt class="orange"> 55945人想看</dt>
               </dl>
              </Col>
              <Col :span="5">
               <dl class="cinema-img">
                 <dd><img src="./assets/cinem5.png" alt=""></dd>
-                <dt>《飞驰人生》</dt>
-                <dt> 喜剧 </dt>
+                <dt class="mt10">《汝海风云》</dt>
+                <dt> 动作／犯罪</dt>
+                <dt class="orange"> 20981人想看</dt>
               </dl>
              </Col>
            </Row>
-        </Col>
-        <Col class="mt30" :span="24">
-          <Row :gutter="30">
-            <Col :span="5" offset="4">
-              <dl class="cinema-img">
-                <dd><img src="./assets/cinem6.png" alt=""></dd>
-                <dt>《日不落酒店》</dt>
-                <dt> 喜剧 </dt>
-              </dl>
-            </Col>
-            <Col :span="5">
-              <dl class="cinema-img">
-                <dd><img src="./assets/cinem8.png" alt=""></dd>
-                <dt>《神探蒲松龄》</dt>
-                <dt> 动作／奇幻／喜剧 </dt>
-              </dl>
-            </Col>
-            <Col :span="5">
-              <dl class="cinema-img">
-                <dd><img src="./assets/cinem4.png" alt=""></dd>
-                <dt>《江湖喜事》</dt>
-                <dt> 喜剧 </dt>
-              </dl>
-            </Col>
-            <Col :span="5">
-              <dl class="cinema-img">
-                <dd><img src="./assets/cinem7.png" alt=""></dd>
-                <dt>《廉政风云》</dt>
-                <dt> 剧情／悬疑／犯罪</dt>
-              </dl>
-            </Col>
-          </Row>
-
         </Col>
       </Row>
 
@@ -525,8 +499,12 @@ export default class Main extends ViewBase {
     }
     .cinema-img {
       text-align: center;
-      img {
-        width: 100%;
+      dt:first-child {
+        margin-top: 10px;
+      }
+      .orange {
+        color: #fe8135;
+        margin-top: 12px;
       }
     }
     .poster-title {
@@ -575,6 +553,9 @@ export default class Main extends ViewBase {
     }
     .mt6 {
       margin-top: 6px;
+    }
+    .mt10 {
+      margin-top: 10px;
     }
     .mt20 {
       margin-top: 20px;
