@@ -25,7 +25,7 @@
       </FormItem>
     </Form>
     <div class="btnCenter">
-      <button class="button-ok edit-submit" @click="editAccount">提交申请</button>
+      <Button type="primary" class="button-ok edit-submit" @click="editAccount">提交申请</Button>
     </div>
   </div>
 </template>

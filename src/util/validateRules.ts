@@ -65,7 +65,7 @@ export function validateEmail(email: string): string | undefined {
 }
 
 /**
- * 时间戳格式转换
+ * 时间戳格式转换年月日
  */
 export function formatTimes(timestamp: any) {
   const date = new Date(timestamp * 1000)
@@ -79,4 +79,11 @@ export function formatTimes(timestamp: any) {
   const m = date.getMinutes() + ':'
   const s = date.getSeconds()
   return Y + M + D + h + m + s
+}
+
+/**
+ * 年月日转换时间戳格式
+ */
+export function formatTimestamp(val: any) {
+  return new Date(val).getTime() / 1000
 }

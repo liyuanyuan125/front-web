@@ -30,8 +30,8 @@
         @on-page-size-change="handlePageSize"
       />
       <div slot="footer" class="btnCenter footer-bottom">
-        <button class="button-cancel" @click="handleCancel">取消</button>
-        <button class="button-ok" @click="handleOk">保存</button>
+        <Button class="button-cancel" @click="handleCancel">取消</Button>
+        <Button type="primary" class="button-ok" @click="handleOk">保存</Button>
       </div>
     </Modal>
   </div>

@@ -33,7 +33,7 @@
         </Col>
       </Row>
       <div class="footer btnCenter">
-        <button class="button-ok" @click="value.visibleMess = false">关闭</button>
+        <Button type="primary" class="button-ok" @click="value.visibleMess = false">关闭</Button>
       </div>
     </Modal>
   </div>
