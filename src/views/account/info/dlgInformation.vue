@@ -46,8 +46,8 @@
         </FormItem>
       </Form>
       <div slot="footer" class="btnCenter">
-        <button class="button-cancel" @click="value.visibleInforma = false">取消</button>
-        <button class="button-ok" @click="changeData">变更数据</button>
+        <Button  class="button-cancel" @click="value.visibleInforma = false">取消</Button>
+        <Button type="primary" class="button-ok" @click="changeData">变更数据</Button>
       </div>
     </Modal>
   </div>

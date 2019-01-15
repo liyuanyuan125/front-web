@@ -11,14 +11,14 @@
       <Row type="flex" justify="space-between">
         <Col :span="6">
           <FormItem label="权限角色" :label-width="100">
-            <Select v-model="form.roleId">
+            <Select v-model="form.roleId" clearable>
               <Option :value="item.id" :key="item.id" v-for="item in rolelist">{{item.name}}</Option>
             </Select>
           </FormItem>
         </Col>
         <Col :span="5">
           <FormItem label="账号状态" :label-width="100">
-            <Select v-model="form.status">
+            <Select v-model="form.status" clearable>
               <Option :value="item.key" :key="item.id" v-for="item in statusList">{{item.text}}</Option>
             </Select>
           </FormItem>
