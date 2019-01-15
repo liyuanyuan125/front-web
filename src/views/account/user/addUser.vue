@@ -27,12 +27,12 @@
       </div>
       <h3 class="layout-title">设置账号权限</h3>
       <FormItem label="权限角色" class="item-top">
-        <Select v-model="form.role" style="width:400px">
+        <Select v-model="form.role" style="width:400px" @on-change="handleChange">
           <Option :value="item.id" :key="item.id" v-for="item in roleList">{{item.name}}</Option>
         </Select>
       </FormItem>
       <FormItem label="相关权限">
-        <Tree :data="treeObject.list" show-checkbox></Tree>
+         <PermTree v-model="permTreeModal" readonly v-if="permTreeModal"/>
       </FormItem>
     </Form>
     <div class="btnCenter">
@@ -45,14 +45,14 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import editDig from '@/views/account/user/editDlg.vue'
-import TreeList from '@/components/tree.vue'
 import { rolesList, roleIdDetail, addUser } from '@/api/user'
 import { getUser } from '@/store'
+import PermTree, { PermTreeModal } from '@/components/permTree'
 
 @Component({
   components: {
     editDig,
-    TreeList
+    PermTree
   }
 })
 export default class Main extends ViewBase {
@@ -60,34 +60,16 @@ export default class Main extends ViewBase {
     editVis: false,
     totalCount: null
   }
+  permTreeModal: PermTreeModal | null = null
 
   form = {
     email: '',
     contactName: '',
     mobile: '',
-    role: '',
+    role: 1,
     partnerIds: []
   }
   roleList = []
-
-  treeObject = {
-    list: [
-      {
-        title: '首页',
-        expand: true,
-        children: [{ title: '查看' }]
-      },
-      {
-        title: '推广管理',
-        expand: true,
-        children: [
-          {
-            title: '广告计划'
-          }
-        ]
-      }
-    ]
-  }
 
   async mounted() {
     const user: any = getUser()!
@@ -95,6 +77,8 @@ export default class Main extends ViewBase {
     const role = { pageIndex: 1, pageSize: 100, systemCode }
     const { data } = await rolesList(role)
     this.roleList = data.items
+
+    this.handleChange()
   }
   save(val: any) {
     if (val.length > 0) {
@@ -109,6 +93,14 @@ export default class Main extends ViewBase {
     } catch (ex) {
       this.handleError.call(this, ex)
     }
+  }
+  async handleChange() {
+    const id = this.form.role
+    const { data: { menu, role}} = await roleIdDetail({id})
+     this.permTreeModal = {
+          menu,
+          perms: (role && role.perms) || []
+     }
   }
   handleEdit() {
     this.editVisible.editVis = true

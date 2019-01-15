@@ -33,7 +33,7 @@
         </Select>
       </FormItem>
       <FormItem label="相关权限">
-        <Tree :data="data2"></Tree>
+         <PermTree v-model="permTreeModal" readonly v-if="permTreeModal"/>
       </FormItem>
     </Form>
     <div class="btnCenter">
@@ -50,11 +50,13 @@ import detailDlg from '@/views/account/user/detailDlg.vue'
 import editDig from '@/views/account/user/editDlg.vue'
 import { userDetail, rolesList, roleIdDetail, userEditSub } from '@/api/user'
 import { getUser } from '@/store'
+import PermTree, { PermTreeModal } from '@/components/permTree'
 
 @Component({
   components: {
     detailDlg,
-    editDig
+    editDig,
+    PermTree
   }
 })
 export default class Main extends ViewBase {
@@ -78,22 +80,8 @@ export default class Main extends ViewBase {
 
   data: any = []
   rolelist = []
-  data2 = [
-    {
-      title: '首页',
-      expand: true,
-      children: [{ title: '查看' }]
-    },
-    {
-      title: '推广管理',
-      expand: true,
-      children: [
-        {
-          title: '广告计划'
-        }
-      ]
-    }
-  ]
+
+  permTreeModal: PermTreeModal | null = null
 
   async mounted() {
     this.getRoleList()
@@ -108,6 +96,9 @@ export default class Main extends ViewBase {
       }
       this.data = data
       this.customer = data.partners == null ? 0 : data.partners.length
+
+      // tree
+      this.handleSelect(data.role.id)
     } catch (ex) {
       this.handleError(ex)
     }
@@ -133,8 +124,14 @@ export default class Main extends ViewBase {
       this.form.partnerIds = val.map((item: any) => item.id)
     }
   }
-  async handleSelect(val: any) {
-    const { data } = await roleIdDetail({ id: val })
+  async handleSelect(id: any) {
+     const {
+      data: { menu, role }
+    } = await roleIdDetail({ id})
+    this.permTreeModal = {
+      menu,
+      perms: (role && role.perms) || []
+    }
   }
   async handleInforma() {
     try {

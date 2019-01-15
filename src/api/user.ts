@@ -112,7 +112,7 @@ export async function addUser(data: any) {
 // }
 
 /**
- * 新增子用户 -> 根据角色id获取角色详情
+ *  根据角色id 获取权限列表
  * @param data
  */
 export async function roleIdDetail(data: any) {

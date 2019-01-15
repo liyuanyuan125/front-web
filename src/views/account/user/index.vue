@@ -82,7 +82,7 @@ export default class Main extends ViewBase {
   total = 0
   pageObject = {
     pageIndex: 1,
-    pageSize: 2
+    pageSize: 10
   }
 
   form = {
@@ -144,7 +144,7 @@ export default class Main extends ViewBase {
         const h = jsxReactToVue(hh)
         if (row.status == 2) {
           return (
-            <div class="">
+            <div>
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
               <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
@@ -153,7 +153,7 @@ export default class Main extends ViewBase {
           )
         } else if (row.status == 1) {
           return (
-            <div class="">
+            <div>
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
               <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
@@ -162,7 +162,7 @@ export default class Main extends ViewBase {
           )
         } else if (row.status == 3) {
           return (
-            <div class="">
+            <div>
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
               <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
@@ -184,6 +184,7 @@ export default class Main extends ViewBase {
   async userList() {
     const { data } = await subAccount({ ...this.form, ...this.pageObject })
 
+    // 处理 roleList 新增 releName
     data.list.map((item: any) => {
       data.roleList.map((role: any) => {
         if (role.id == item.roleId) {
@@ -196,6 +197,7 @@ export default class Main extends ViewBase {
 
     this.rolelist = data.roleList
     this.statusList = data.statusList
+    // console.log(data)
     this.data = data.list
     this.total = data.totalCount
   }
