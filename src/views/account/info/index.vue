@@ -53,7 +53,7 @@
         <Col :span="24">
           <p>
             <label>资质类型</label>
-            {{company.qualificationType}}
+            {{queryTypeList(company.qualificationType)}}
           </p>
           <p>
             <label>资质编号</label>
@@ -70,22 +70,22 @@
       </Row>
     </div>
 
-    <!-- 审核以通过  displayStatus == 4 -->
-    <div class="accountList" v-if="displayStatus == 4">
+    <!-- 审核以通过 displayStatus == 3  -->
+    <div class="accountList" v-if="displayStatus == 3">
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
       <div class="btnCenter sumbit-button">
-        <button class="button-ok button-offset">
+        <Button class="button-ok button-offset" type="primary">
           <router-link tag="span" :to="{ name: 'account-info-accedit' }">修改信息</router-link>
-        </button>
-        <button class="button-ok" @click="handleInforma">变更账号</button>
+        </Button>
+        <Button type="primary" class="button-ok" @click="informa.visibleInforma = true">变更账号</Button>
       </div>
     </div>
 
     <div class="btnCenter sumbit-button" v-else>
-      <button class="button-ok">
+      <Button class="button-ok" type="primary">
         <router-link tag="span" :to="{ name: 'account-info-edit' }">修改信息</router-link>
-      </button>
+      </Button>
     </div>
 
     <dlgChange v-model="queryDetail" v-if="queryDetail.visibleMess"></dlgChange>
@@ -98,6 +98,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { accountDetail, accountChangeList } from '@/api/account'
 import jsxReactToVue from '@/util/jsxReactToVue'
+import { formatTimes } from '@/util/validateRules'
 import comStatu from './status.vue'
 import dlgChange from './dlgChange.vue'
 import dlgInforma from './dlgInformation.vue'
@@ -123,12 +124,13 @@ export default class Main extends ViewBase {
   }
   // 审核后修改公司信息
   informa = {
-    visibleInforma: false
+    visibleInforma: false,
+    qualificationTypeList: []
   }
 
   column = [
     { title: '变更编号', key: 'id' },
-    { title: '账号变更提交时间', key: 'submitTime' },
+    { title: '账号变更提交时间', key: 'timeName' },
     {
       title: '变更前信息',
       key: 'changeBefore',
@@ -167,7 +169,7 @@ export default class Main extends ViewBase {
       key: 'remark',
       render: (h: any, params: any) => {
         const { row } = params
-        if (row.remarks.length > 10) {
+        if (row.remarks && row.remarks.length > 10) {
           const splitText = row.remarks.substr(0, 10) + '.......'
           return h(
             'Tooltip',
@@ -195,7 +197,9 @@ export default class Main extends ViewBase {
       this.company = data.company
       this.displayStatus = data.company.displayStatus - 1
       this.systemList = data.systemList
+      this.informa.qualificationTypeList = data.qualificationTypeList
 
+      // 账号类型转换
       const accountType = this.account.systems.map((item: any, index: any) => {
         if (this.systemList[index].code == item) {
           return this.systemList[index].desc
@@ -208,11 +212,28 @@ export default class Main extends ViewBase {
     } catch (ex) {
       this.handleError(ex)
     }
+    // 审核后 账号变更记录
     this.accountChangeList()
   }
+
+  queryTypeList(val: any) {
+    // 查询资质类型
+    let list: any = this.informa.qualificationTypeList
+    for ( let i =0; i<list.length; i++) {
+      if (list[i].code == val) {
+        return list[i].desc
+      }
+    }
+  }
+
   async accountChangeList() {
     const { data } = await accountChangeList()
+    data.map( (item: any) => {
+      item.timeName = formatTimes(item.submitTime)
+    })
+    this.dataList = data
   }
+
   beforeChange(list: any) {
     this.queryDetail = {
       title: '账号变更前信息',
@@ -226,9 +247,6 @@ export default class Main extends ViewBase {
       changelist: list,
       visibleMess: true
     }
-  }
-  handleInforma() {
-    this.informa.visibleInforma = true
   }
   setErrorImg(e: any) {
     e.target.src = 'https://file.iviewui.com/iview-admin/login_bg.jpg'

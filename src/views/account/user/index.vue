@@ -102,6 +102,7 @@ export default class Main extends ViewBase {
     { title: '联系人', key: 'name' },
     {
       title: '登录邮箱',
+      width: 160,
       key: 'email'
     },
     {
@@ -135,6 +136,7 @@ export default class Main extends ViewBase {
     {
       title: '操作',
       key: '',
+      width: 160,
       render: (hh: any, { row }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)

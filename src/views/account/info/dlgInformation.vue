@@ -13,15 +13,21 @@
       <Form :model="form" :label-width="90" class="edit-input">
         <FormItem label="账号类型">
           <CheckboxGroup v-model="form.accountType" class="item-type">
-            <Checkbox size="large" label="广告方"></Checkbox>
-            <Checkbox size="large" label="资源方"></Checkbox>
+            <Checkbox size="large" label="ads">广告方</Checkbox>
+            <Checkbox size="large" label="resource">资源方</Checkbox>
           </CheckboxGroup>
         </FormItem>
         <FormItem label="公司名称">
           <Input v-model="form.companyName" placeholder="请输入公司名称"></Input>
         </FormItem>
         <FormItem label="资质类型">
-          <Input v-model="form.qualificationType" placeholder="请输入资质类型"></Input>
+           <Select v-model="form.qualificationType" style="width:400px">
+          <Option
+            v-for="item in value.qualificationTypeList"
+            :value="item.code"
+            :key="item.code"
+          >{{ item.desc }}</Option>
+          </Select>
         </FormItem>
         <FormItem label="资质编号">
           <Input v-model="form.qualificationCode" placeholder="请输入资质编号"></Input>
@@ -71,6 +77,7 @@ export default class Change extends ViewBase {
     cloneForm.imageList = cloneForm.imageList.map((item: any) => item.fileId)
     try {
       await changeCompanyList(cloneForm)
+      this.value.visibleInforma = false
     } catch (ex) {
       this.handleError(ex)
     }
