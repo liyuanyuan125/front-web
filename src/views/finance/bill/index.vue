@@ -1,9 +1,101 @@
 <template>
-  <div class="home-bg">
+  <div class="page home-bg">
     <h3 class="layout-title nav-top-title">资金账单</h3>
     <Form :model="form" label-position="left" class="edit-input" :label-width="100">
-      <FormItem label="账号类型" class="item-top"></FormItem>
-      <FormItem label="账单日期" ></FormItem>
+      <FormItem label="账单类型" class="item-top">
+        <RadioGroup v-model="form.billType" class="radio-item-type">
+            <Radio label="-1">全部</Radio>
+            <Radio :label="item.key" :key="item.key" v-for="item in billTypeList">{{item.text}}</Radio>
+        </RadioGroup>
+      </FormItem>
+      <FormItem label="账单日期">
+        <DatePicker type="daterange" v-model="beginDate" @on-change="handleChange" 
+        placement="bottom-end" placeholder="请选择开始日期和结束日期" ></DatePicker>
+        <Button class="search" @click="tableList">查询</Button>
+      </FormItem>
     </Form>
+    <Table stripe :columns="columns" :data="dataList"></Table>
+    <Page  :total="total"  class="btnCenter page-list" :current="pageIndex" 
+      :page-size="pageSize" show-total show-elevator/>
   </div>
 </template>
+<script lang="ts">
+ import { Component } from 'vue-property-decorator'
+ import ViewBase from '@/util/ViewBase'
+ import { bill } from '@/api/bill'
+
+ @Component
+ export default class Index extends ViewBase {
+   pageIndex = 1
+   pageSize = 10
+   total = 0
+
+   beginDate = []
+   form = {
+     beginDate: '',
+     endDate: '',
+     billType: '-1'
+   }
+   billTypeList = []
+
+   dataList = []
+   columns = [
+     { title: '账单ID', key: 'id'},
+     { title: '交易时间', key: 'createTime'},
+     { title: '费用/元', key: 'transactionAmount'},
+     { title: '类型', key: 'transactionType'},
+     { title: '交易说明', key: 'remark'},
+   ]
+
+   async mounted() {
+     this.tableList()
+   }
+   async tableList() {
+     const { data }  = await bill({
+       pageIndex: this.pageIndex,
+       pageSize: this.pageSize,
+       ...this.form,
+     })
+     this.dataList = data.item
+     this.billTypeList = data.transactionTypeList
+     this.total = data.totalCount
+   }
+
+   handleChange(data: any) {
+     this.beginDate = data
+   }
+ }
+
+</script>
+<style lang="less" scoped>
+@import '~@/site/lib.less';
+.page-list {
+  margin-top: 30px;
+}
+.ivu-form-item {
+  padding-left: 30px;
+  color: @c-text;
+}
+/deep/ .ivu-input-icon {
+  line-height: 40px;
+  height: 40px;
+}
+.search {
+  width: 140px;
+  height: 40px;
+  border-radius: 2px;
+  color: #fff;
+  margin-left: 30px;
+  background: @c-button;
+}
+.radio-item-type {
+  font-size: 14px;
+  margin-top: 4px;
+  .ivu-radio-wrapper {
+    font-size: 14px;
+    margin-right: 35px;
+  }
+}
+</style>
+
+
