@@ -62,7 +62,7 @@
           <p class="flex-box">
             <label>资质图片</label>
             <em>
-              <img :src="item" v-for="item in company.images"  width="150px"
+              <img :src="item.url" v-for="item in company.images"  width="150px"
               @error="setErrorImg">
             </em>
           </p>
@@ -71,7 +71,7 @@
     </div>
 
     <!-- 审核以通过  displayStatus == 4 -->
-    <div class="accountList" v-if="false">
+    <div class="accountList" v-if="displayStatus == 4">
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
       <div class="btnCenter sumbit-button">

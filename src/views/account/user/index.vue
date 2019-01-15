@@ -36,10 +36,6 @@
       </Row>
     </Form>
 
-    <!-- <div class="tableTotal">
-      <span>当前共有用户 xxx 人</span>
-      <span>当前结果共xxxx项</span>
-    </div>-->
     <Table
       ref="selection"
       stripe
@@ -189,15 +185,12 @@ export default class Main extends ViewBase {
       data.roleList.map((role: any) => {
         if (role.id == item.roleId) {
           item.roleName = role.name
-        } else {
-          item.roleName = ''
         }
       })
     })
 
     this.rolelist = data.roleList
     this.statusList = data.statusList
-    // console.log(data)
     this.data = data.list
     this.total = data.totalCount
   }

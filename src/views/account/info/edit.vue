@@ -52,7 +52,7 @@
       </FormItem>
     </Form>
     <div class="btnCenter">
-      <button class="button-ok edit-submit" @click="updateAccount">更新账号</button>
+      <Button type="primary" class="button-ok edit-submit" @click="updateAccount">更新账号</Button>
     </div>
   </div>
 </template>
