@@ -10,7 +10,7 @@ module.exports = {
     },
     proxy: {
       '/': {
-        target: 'https://fapi.dev.aiads.com',
+        target: 'https://fapi.aiads-dev.com',
         changeOrigin: true,
         ws: false,
         secure: false,
@@ -37,8 +37,8 @@ module.exports = {
     ; [
       {
         env: 'dev',
-        baseUrl: isDev ? '/' : 'https://dev.aiads.com',
-        ajaxBaseUrl: isDev ? '/' : 'https://fapi.dev.aiads.com',
+        baseUrl: isDev ? '/' : 'https://aiads-dev.com',
+        ajaxBaseUrl: isDev ? '/' : 'https://fapi.aiads-dev.com',
       },
       {
         env: 'qas',
