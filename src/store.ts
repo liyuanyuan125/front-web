@@ -6,6 +6,9 @@ import tryParseJson from '@/util/tryParseJson'
 import cookie from 'js-cookie'
 import { logout as postLogout } from '@/api/auth'
 import { SystemCode } from '@/util/types'
+import innerAccess, { AccessToken } from '@/fn/innerAccess'
+
+const accessToken: AccessToken = { can: false }
 
 /** 用户类型 */
 export interface User {
@@ -41,6 +44,8 @@ const COOKIE_OPTIONS = {
 
 let theUser: User | null = null
 
+const saveUser = () => sessionStorage.user = JSON.stringify(theUser)
+
 const restoreUser = (): User | null => {
   const token = cookie.get(KEY_TOKEN)
   const user = tryParseJson(sessionStorage.user)
@@ -54,6 +59,11 @@ export function getUser() {
   if (theUser == null) {
     theUser = restoreUser()
   }
+
+  if (theUser != null && VAR.env == 'dev') {
+    theUser = innerAccess(theUser, accessToken)
+  }
+
   return theUser
 }
 
@@ -63,7 +73,16 @@ export function getUser() {
  */
 export function setUser(user: User) {
   theUser = user
-  sessionStorage.user = JSON.stringify(user)
+  saveUser()
+}
+
+export function switchToSystem(systemCode: SystemCode) {
+  if (theUser != null) {
+    accessToken.can = true
+    theUser.systemCode = systemCode
+    accessToken.can = false
+    saveUser()
+  }
 }
 
 /**
