@@ -12,18 +12,18 @@ import ViewBase from '@/util/ViewBase'
 import { listToTree } from '@/fn/tree'
 import { walkTree } from '@/fn/tree'
 import jsxReactToVue from '@/util/jsxReactToVue'
-import { isEqual, Dictionary, uniq } from 'lodash'
+import { isEqual, Dictionary, uniq, intersection } from 'lodash'
 import { toMap } from '@/fn/array'
-import { Action, Page, PermTreeModal } from './types'
+import { Action, Page, PermTreeModal, TreeItem } from './types'
 import PermTreeItem from './PermTreeItem.vue'
 
 const toTreeData = (
   nodes: Page[],
-  perms: string[],
+  allPerms: string[],
   handler: (perms: string[]) => any,
   readonly: boolean
 ) => {
-  const permMap = toMap(perms)
+  const allPermMap = toMap(allPerms)
   return walkTree(nodes, {
     onEachBefore(node, parentNodes) {
       const level = parentNodes.length
@@ -33,10 +33,15 @@ const toTreeData = (
 
       let checked = false
       let indeterminate = false
+      let actionList = [] as Action[]
 
       if (isLeaf && actions.length > 0) {
-        const hasPerm = actions.some(it => `${node.key}:${it.code}` in permMap)
-        const allPerm = actions.every(it => `${node.key}:${it.code}` in permMap)
+        actionList = actions.map(it => ({
+          ...it,
+          code: `${node.key}:${it.code}`,
+        }))
+        const hasPerm = actionList.some(it => it.code in allPermMap)
+        const allPerm = actionList.every(it => it.code in allPermMap)
         checked = allPerm
         indeterminate = !allPerm && hasPerm
       }
@@ -47,16 +52,18 @@ const toTreeData = (
         checked,
         indeterminate,
         extraData: {
-          node,
+          name: node.name,
+          key: node.key,
+          actions: actionList,
+          isLeaf,
           level,
-          perms,
-          isLeaf
+          allPerms,
         },
         render: (hh: any, { data }: any) => {
           /* tslint:disable */
           const h = jsxReactToVue(hh)
-          return <PermTreeItem v-model={data} on-change={handler}
-            v-readonly={readonly}/>
+          return <PermTreeItem v-model={data.extraData}
+            on-change={handler} v-readonly={readonly}/>
           /* tslint:enable */
         }
       }
@@ -107,6 +114,15 @@ const normalizeTree = (nodes: Page[]): Page[] => {
   return list
 }
 
+const permListFromItems = (items: TreeItem[]) => {
+  const result = items.reduce((list: string[], it) => {
+    const { actions } = it.extraData
+    const subList = (actions || []).map(act => act.code)
+    return list.concat(subList)
+  }, [])
+  return result
+}
+
 @Component
 export default class PermTree extends ViewBase {
   /**
@@ -119,67 +135,58 @@ export default class PermTree extends ViewBase {
    */
   @Prop({ type: Boolean, default: false }) readonly!: boolean
 
-  inValue = {} as PermTreeModal
+  inner = {} as PermTreeModal
 
   oldNodes: any[] | null = null
 
   get treeData() {
-    const menu = this.inValue.menu
-    const perms = this.inValue.perms
-    const tree = toTreeData(menu ? [menu] : [], perms, this.onPermsChange.bind(this), this.readonly)
+    const menu = this.inner.menu
+    const perms = this.inner.perms
+    const tree = toTreeData(menu ? [menu] : [], perms,
+      this.onPermsChange.bind(this), this.readonly)
     return tree
   }
 
   onPermsChange(perms: string[]) {
-    this.inValue.perms = perms
+    this.inner.perms = perms
   }
 
   @Watch('value', { deep: true, immediate: true })
   watchValue(value: PermTreeModal) {
     const [ menu ] = normalizeTree([value.menu])
-    this.inValue = {
+    this.inner = {
       menu,
       perms: [...(value.perms || [])]
     }
   }
 
-  @Watch('inValue', { deep: true })
-  watchInValue(value: PermTreeModal) {
+  @Watch('inner', { deep: true })
+  watchInner(value: PermTreeModal) {
     if (!isSameValue(value, this.value)) {
       this.$emit('input', value)
     }
   }
 
-  // @Watch('inValue.perms', { deep: true, immediate: true })
-  // watchPerms(value: string[]) {
-  //   this.$nextTick(() => {
-  //     const tree = this.$refs.tree as any
-  //     this.oldNodes = tree.getCheckedNodes() as any[]
-  //     // console.log(this.oldNodes)
-  //   })
-  // }
-
   onSelChange() {
     const tree = this.$refs.tree as any
-    const nodes = tree.getCheckedNodes() as any[]
-    // debugger
-    // console.log(nodes)
-    // const nodes = tree.getCheckedAndIndeterminateNodes() as any[]
-    // const { pages, perms } = nodes.reduce((result, { extraData: data } = {}) => {
-    //   data.type == 'page'
-    //     ? result.pages.push(parseInt(data.key, 10))
-    //     : result.perms.push(String(data.key))
-    //   return result
-    // }, {
-    //   pages: [],
-    //   perms: [],
-    // })
-    // // 虑重
-    // const uniqValue = {
-    //   pages: uniq(pages) as number[],
-    //   perms: uniq(perms) as string[],
-    // }
-    // this.inValue = uniqValue
+
+    // 获取全部选择或半选择的节点
+    const items = tree.getCheckedAndIndeterminateNodes() as TreeItem[]
+    // 过滤掉非叶子节点
+    const pageItems = items.filter(it => it.extraData.isLeaf)
+
+    // 全选节点 -> 全选 perms，半选节点 -> 半选 perms
+    const checkedItems = pageItems.filter(it => it.checked)
+    const halfItems = pageItems.filter(it => !it.checked)
+    const checkedPerms = permListFromItems(checkedItems)
+    const halfPerms = permListFromItems(halfItems)
+
+    // 取当前 perms 与半选 perms 的交集
+    const keepPerms = intersection(halfPerms, this.inner.perms)
+
+    // 将全选 perms 与上一步产生的交集合同，去重，就是最终的 perms
+    const perms = uniq(checkedPerms.concat(keepPerms))
+    this.inner.perms = perms
   }
 }
 </script>

@@ -1,8 +1,8 @@
 <template>
-  <span :class="['perm-tree-item', 'perm-tree-item-level-' + level]">
-    <label class="title">{{inValue.title}}</label>
-    <CheckboxGroup v-model="perms" class="perm-list" v-if="isLeaf">
-      <Checkbox v-for="it in permList" :key="it.code" :disabled="readonly"
+  <span :class="['perm-tree-item', 'perm-tree-item-level-' + inner.level]">
+    <label class="title">{{inner.name}}</label>
+    <CheckboxGroup v-model="perms" class="perm-list" v-if="inner.isLeaf">
+      <Checkbox v-for="it in inner.actions" :key="it.code" :disabled="readonly"
         :label="it.code" class="perm-item">{{it.name}}</Checkbox>
     </CheckboxGroup>
   </span>
@@ -12,36 +12,18 @@
 // doc: https://github.com/kaorun343/vue-property-decorator
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { Action, Page, TreeItem } from './types'
+import { Action, Page, ExtraData } from './types'
 import { uniq, isEqual } from 'lodash'
 
 @Component
 export default class PermTreeItem extends ViewBase {
-  @Prop({ type: Object, default: () => {}, required: true }) value!: TreeItem
+  @Prop({ type: Object, default: () => {}, required: true }) value!: ExtraData
 
   @Prop({ type: Boolean, default: false }) readonly!: boolean
 
-  inValue = {} as TreeItem
+  inner = {} as ExtraData
 
   perms: string[] = []
-
-  get node() {
-    return this.inValue.extraData.node
-  }
-
-  get permList() {
-    const key = this.node.key
-    const list = this.node.actions.map(it => ({ ...it, code: `${key}:${it.code}` }))
-    return list
-  }
-
-  get level() {
-    return this.inValue.extraData.level
-  }
-
-  get isLeaf() {
-    return this.inValue.extraData.isLeaf
-  }
 
   get selfPerms() {
     return this.filterPerms(true)
@@ -52,9 +34,9 @@ export default class PermTreeItem extends ViewBase {
   }
 
   filterPerms(isEq: boolean) {
-    const key = this.node.key
-    const perms = this.inValue.extraData.perms
-    const list = perms.filter(perm => {
+    const key = this.inner.key
+    const allPerms = this.inner.allPerms
+    const list = allPerms.filter(perm => {
       const eq = perm.split(':')[0] == key
       return isEq ? eq : !eq
     })
@@ -62,14 +44,14 @@ export default class PermTreeItem extends ViewBase {
   }
 
   @Watch('value', { deep: true, immediate: true })
-  watchValue(value: TreeItem) {
-    this.inValue = { ...value }
+  watchValue(value: ExtraData) {
+    this.inner = { ...value }
     this.perms = this.selfPerms
   }
 
   @Watch('perms')
   watchPerms(value: string[]) {
-    const oldPerms = this.inValue.extraData.perms
+    const oldPerms = this.inner.allPerms
     const perms = uniq(this.extraPerms.concat(value)).sort()
     if (!isEqual(perms, oldPerms)) {
       this.$emit('change', perms)
