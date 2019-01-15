@@ -60,21 +60,33 @@
         </Col>
         <Col class="mt20" :span="24">
           <ul class="tag" style="left: 0px">
-            <li class="tag-ltme">
+            <li class="tag-ltme" v-if="$route.params.corp != 2">
               <span>区域</span>
               <span>4个</span>
             </li>
-            <li class="tag-ltme">
+            <li class="tag-ltme" v-if="$route.params.corp != 2">
               <span>省份</span>
               <span>6个</span>
             </li>
-            <li class="tag-ltme">
+            <li class="tag-ltme" v-if="$route.params.corp != 2">
               <span>城市</span>
               <span>8个</span>
             </li>
             <li class="tag-ltme" v-if="$route.params.corp != 2">
               <span>影院</span>
               <span>500个</span>
+            </li>
+             <li class="tag-ltme" v-if="$route.params.corp == 2">
+              <span>城市</span>
+              <span>1个</span>
+            </li>
+            <li class="tag-ltme" v-if="$route.params.corp == 2">
+              <span>门店</span>
+              <span>67</span>
+            </li>
+            <li class="tag-ltme" v-if="$route.params.corp == 2">
+              <span>场馆</span>
+              <span>237个</span>
             </li>
           </ul>
         </Col>
