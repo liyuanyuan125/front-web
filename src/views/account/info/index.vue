@@ -62,8 +62,8 @@
           <p class="flex-box">
             <label>资质图片</label>
             <em>
-              <img :src="item.url" v-for="item in company.images"  width="150px"
-              @error="setErrorImg">
+              <ImagePreviewer v-for="item in company.images" :url="item.url"
+                class="qualification-image"/>
             </em>
           </p>
         </Col>
@@ -102,12 +102,14 @@ import { formatTimes } from '@/util/validateRules'
 import comStatu from './status.vue'
 import dlgChange from './dlgChange.vue'
 import dlgInforma from './dlgInformation.vue'
+import ImagePreviewer from '@/components/imagePreviewer'
 
 @Component({
   components: {
     comStatu,
     dlgChange,
-    dlgInforma
+    dlgInforma,
+    ImagePreviewer
   }
 })
 export default class Main extends ViewBase {
@@ -188,6 +190,7 @@ export default class Main extends ViewBase {
       }
     }
   ]
+
   dataList = []
 
   async mounted() {
@@ -241,6 +244,7 @@ export default class Main extends ViewBase {
       visibleMess: true
     }
   }
+
   afterChange(list: any) {
     this.queryDetail = {
       title: '账号变更后信息',
@@ -248,6 +252,7 @@ export default class Main extends ViewBase {
       visibleMess: true
     }
   }
+
   setErrorImg(e: any) {
     e.target.src = 'https://file.iviewui.com/iview-admin/login_bg.jpg'
   }
@@ -261,5 +266,9 @@ export default class Main extends ViewBase {
 }
 .sumbit-button {
   padding: 30px 0 50px;
+}
+
+.qualification-image {
+  width: 150px;
 }
 </style>
