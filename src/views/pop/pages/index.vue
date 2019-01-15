@@ -499,6 +499,9 @@ export default class Main extends ViewBase {
     }
     .cinema-img {
       text-align: center;
+      img {
+        width: 95%;
+      }
       dt:first-child {
         margin-top: 10px;
       }
