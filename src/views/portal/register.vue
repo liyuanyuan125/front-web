@@ -7,7 +7,7 @@
 
         <FormItem prop="systems" :label-width="0">
           <CheckboxGroup v-model="form.systems" class="check-group">
-            <Checkbox label="ads" class="check-type advert"
+            <Checkbox label="ads" class="check-type xadvert"
               :class="{checked: form.systems.includes('ads')}"/>
             <Checkbox label="resource" class="check-type resource"
               :class="{checked: form.systems.includes('resource')}"/>
@@ -76,7 +76,7 @@ import DisableAutoFill from '@/components/DisableAutoFill.vue'
 import AreaSelect from '@/components/AreaSelect.vue'
 import { except } from '@/fn/object'
 import { scrollToError } from '@/util/form'
-import { setUser } from '@/store'
+import setUserByData from '@/util/setUserByData'
 
 @Component({
   components: {
@@ -246,13 +246,13 @@ export default class Main extends ViewBase {
     try {
       const postData: any = except(this.form, 'passwordAgain,area')
       const { data } = await register(postData)
-      const usr: any = {
-        id: data.id,
-        name: data.email,
-        systemCode: postData.systemCode
-      }
-      setUser(usr)
-      this.$router.push({ name: 'registerComplete' })
+
+      setUserByData({
+        ...data,
+        systemCode: postData.systems[0],
+      })
+
+      this.$router.push({ name: 'register-complete' })
     } catch (ex) {
       ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
     } finally {
@@ -304,7 +304,7 @@ export default class Main extends ViewBase {
     display: none;
   }
 }
-.advert {
+.xadvert {
   background-image: url(./assets/ggzhu.png);
   &.checked {
     background-image: url(./assets/ggzhuChecked.png);

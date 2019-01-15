@@ -4,7 +4,7 @@
       <h3 class="layout-title">登录信息</h3>
       <FormItem label="账号类型" class="item-top">
         <CheckboxGroup v-model="form.accountType">
-          <Checkbox :label="item.code" v-for="item in queryDate.systemList">{{item.desc}}</Checkbox>
+          <Checkbox :label="item.code" v-for="item in queryDate.systemList" :key="item.code">{{item.desc}}</Checkbox>
         </CheckboxGroup>
       </FormItem>
       <FormItem label="登录邮箱">

@@ -25,5 +25,6 @@ export interface TreeItem {
     node: Page
     level: number
     perms: string[]
+    isLeaf: boolean
   }
 }
