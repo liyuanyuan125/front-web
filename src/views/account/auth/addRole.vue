@@ -11,9 +11,6 @@
       <FormItem label="相关权限">
         <PermTree v-model="permTreeModal" v-if="permTreeModal"/>
       </FormItem>
-      <!-- <FormItem label="相关权限">
-        <Tree ref="tree" :data="list" @on-check-change="checkShow" show-checkbox></Tree>
-      </FormItem> -->
     </Form>
     <div class="tableSubmit btnCenter">
       <button class="submitBtn button-ok" v-if="!$route.params.id" @click="handleInforma('form')">确定增加</button>
@@ -62,89 +59,15 @@ export default class Main extends ViewBase {
     return getUser()!.systemCode
   }
 
-  recursion(arr: any, brr: any = {}, parentKey = '') {
-    for (const i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        const item = arr[i] as any
-        if (typeof item == 'object') {
-          if (isArray(item)) {
-            brr.children = []
-            if (i == 'subPages' && item.length < 0) {
-              this.recursion(item, brr.children)
-            } else {
-              const b = item.concat(arr.actions)
-              this.recursion(b, brr.children, arr.key)
-            }
-          } else {
-            brr[i] = {}
-            this.recursion(item, brr[i], parentKey)
-          }
-        } else {
-          if (arr.code) {
-            brr.title = arr.name
-            brr.code = arr.code
-            brr.expand = true
-            if (this.$route.params.id) {
-              brr.checked = arr.check
-            }
-            brr.parentKey = parentKey
-          } else {
-            brr.title = arr.name
-            brr.key = arr.key
-            brr.expand = true
-            brr.parentKey = ''
-          }
-        }
-      }
-    }
-    return brr
-  }
-
-  checkShow(row: any) {
-    const tree = this.$refs.tree as any
-    const nodes = tree.getCheckedAndIndeterminateNodes() as any[]
-    // 取出含有parentKey的对象
-    const selseKey = nodes.filter((it: any) => {
-      return it.parentKey
-    })
-    // 去重
-    const parentsArray = uniq(selseKey.map((it: any) => {
-      return it.parentKey
-    }))
-    // 定义perms对象
-    const perms: any = {}
-    // perms对象的属性为parentKey
-    parentsArray.forEach((it: any) => {
-      perms[it] = []
-    })
-    const codeArray: any = []
-    // perms对象的属性为parentKey的值追加状态
-    selseKey.forEach((it: any) => {
-      if (parentsArray.includes(it.parentKey)) {
-         perms[it.parentKey].push(it.code)
-      }
-    })
-    // 格式化perms  parentsArray:code:code
-    this.perms = Object.entries(perms).map((item, index) => {
-      return `${item[0]}:${(item[1] as any).join(';')}`
-    })
-  }
-
   async seach() {
     const id = this.$route.params.id || 0
     try {
-      if (!id) {
+      if (id == 0) {
         const { data } = await meanList(this.systemCode, { type: 2 })
-
         this.permTreeModal = {
-          menu: data.menu,
+          menu: data,
           perms: id > 0 ? data.role.perms : []
         }
-
-        const meanLists: any = []
-        const tree = this.recursion(data)
-        meanLists.push(tree)
-        this.list = meanLists
       } else {
         const {
           data: {
@@ -158,10 +81,6 @@ export default class Main extends ViewBase {
           perms: (role && role.perms) || []
         }
 
-        const meanLists: any = []
-        const tree = this.recursion(menu)
-        meanLists.push(tree)
-        this.list = meanLists
         this.form.name = (role && role.name) || ''
       }
     } catch (ex) {
@@ -180,13 +99,13 @@ export default class Main extends ViewBase {
       !id ? await customerAdd({
         name: this.form.name,
         systemCode: this.systemCode,
-        perms: this.perms
+        perms: this.permTreeModal ? this.permTreeModal.perms : []
       }) : await customerSet(
         id,
         {
         name: this.form.name,
         systemCode: this.systemCode,
-        perms: this.perms
+        perms: this.permTreeModal ? this.permTreeModal.perms : []
       })
       toast(!id ? '添加成功' : '修改成功')
       this.toAuth()
