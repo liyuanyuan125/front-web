@@ -170,6 +170,13 @@ export default class Main extends ViewBase {
               label: it.name
             })
           }
+          const id = it.id + ''
+          if (id.includes(query)) {
+            ids.push({
+              value: it.id,
+              label: it.id
+            })
+          }
         })
         this.options = [...ids, ...name]
         this.loading = false

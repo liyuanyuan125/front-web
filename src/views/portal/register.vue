@@ -7,7 +7,7 @@
 
         <FormItem prop="systems" :label-width="0">
           <CheckboxGroup v-model="form.systems" class="check-group">
-            <Checkbox label="ads" class="check-type advert"
+            <Checkbox label="ads" class="check-type xadvert"
               :class="{checked: form.systems.includes('ads')}"/>
             <Checkbox label="resource" class="check-type resource"
               :class="{checked: form.systems.includes('resource')}"/>
@@ -304,7 +304,7 @@ export default class Main extends ViewBase {
     display: none;
   }
 }
-.advert {
+.xadvert {
   background-image: url(./assets/ggzhu.png);
   &.checked {
     background-image: url(./assets/ggzhuChecked.png);

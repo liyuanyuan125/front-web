@@ -1,7 +1,6 @@
 export interface Action {
   name: string
   code: string
-  check: boolean
 }
 
 export interface Page {
@@ -19,11 +18,19 @@ export interface PermTreeModal {
   perms: string[]
 }
 
+export interface ExtraData {
+  name: string
+  key: string
+  actions: Action[]
+  isLeaf: boolean
+  level: number
+  allPerms: string[]
+}
+
 export interface TreeItem {
   title: string
-  extraData: {
-    node: Page
-    level: number
-    perms: string[]
-  }
+  expand: boolean
+  checked: boolean
+  indeterminate: boolean
+  extraData: ExtraData
 }
