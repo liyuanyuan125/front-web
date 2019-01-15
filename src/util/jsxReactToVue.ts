@@ -16,7 +16,8 @@ const isNestable: any = {
   on: true,
   nativeOn: true,
   domProps: true,
-  hook: true
+  hook: true,
+  v: true,
 }
 
 const transformData = (data: any) => {
@@ -40,7 +41,9 @@ const transformData = (data: any) => {
       isNestable[nestKey = key.slice(0, hyphenIndex)]
     ) {
       const subKey = key.slice(hyphenIndex + 1)
-      ; (res[nestKey] || (res[nestKey] = {}))[subKey] = data[key]
+      // 将 v 映射为 props，v 更短更容易记忆
+      const pkey = nestKey == 'v' ? 'props' : nestKey
+      ; (res[pkey] || (res[pkey] = {}))[subKey] = data[key]
     } else {
       (res.attrs || (res.attrs = {}))[key] = data[key]
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="perm-tree">
-    <Tree :data="treeData" multiple show-checkbox ref="tree"
+    <Tree :data="treeData" multiple :show-checkbox="!readonly" ref="tree"
       @on-select-change="onSelChange" @on-check-change="onSelChange"/>
   </div>
 </template>
@@ -17,7 +17,12 @@ import { toMap } from '@/fn/array'
 import { Action, Page, PermTreeModal } from './types'
 import PermTreeItem from './PermTreeItem.vue'
 
-const toTreeData = (nodes: Page[], perms: string[], handler: (perms: string[]) => any) => {
+const toTreeData = (
+  nodes: Page[],
+  perms: string[],
+  handler: (perms: string[]) => any,
+  readonly: boolean
+) => {
   const permMap = toMap(perms)
   return walkTree(nodes, {
     onEachBefore(node, parentNodes) {
@@ -50,7 +55,8 @@ const toTreeData = (nodes: Page[], perms: string[], handler: (perms: string[]) =
         render: (hh: any, { data }: any) => {
           /* tslint:disable */
           const h = jsxReactToVue(hh)
-          return <PermTreeItem v-model={data} on-change={handler}/>
+          return <PermTreeItem v-model={data} on-change={handler}
+            v-readonly={readonly}/>
           /* tslint:enable */
         }
       }
@@ -108,6 +114,11 @@ export default class PermTree extends ViewBase {
    */
   @Prop({ type: Object, default: () => {}, required: true }) value!: PermTreeModal
 
+  /**
+   * 只读模式
+   */
+  @Prop({ type: Boolean, default: false }) readonly!: boolean
+
   inValue = {} as PermTreeModal
 
   oldNodes: any[] | null = null
@@ -115,7 +126,7 @@ export default class PermTree extends ViewBase {
   get treeData() {
     const menu = this.inValue.menu
     const perms = this.inValue.perms
-    const tree = toTreeData(menu ? [menu] : [], perms, this.onPermsChange.bind(this))
+    const tree = toTreeData(menu ? [menu] : [], perms, this.onPermsChange.bind(this), this.readonly)
     return tree
   }
 
@@ -139,18 +150,19 @@ export default class PermTree extends ViewBase {
     }
   }
 
-  @Watch('inValue.perms', { deep: true, immediate: true })
-  watchPerms(value: string[]) {
-    this.$nextTick(() => {
-      const tree = this.$refs.tree as any
-      this.oldNodes = tree.getCheckedNodes() as any[]
-      // console.log(this.oldNodes)
-    })
-  }
+  // @Watch('inValue.perms', { deep: true, immediate: true })
+  // watchPerms(value: string[]) {
+  //   this.$nextTick(() => {
+  //     const tree = this.$refs.tree as any
+  //     this.oldNodes = tree.getCheckedNodes() as any[]
+  //     // console.log(this.oldNodes)
+  //   })
+  // }
 
   onSelChange() {
     const tree = this.$refs.tree as any
     const nodes = tree.getCheckedNodes() as any[]
+    // debugger
     // console.log(nodes)
     // const nodes = tree.getCheckedAndIndeterminateNodes() as any[]
     // const { pages, perms } = nodes.reduce((result, { extraData: data } = {}) => {

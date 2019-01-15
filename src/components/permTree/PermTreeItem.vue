@@ -2,7 +2,7 @@
   <span :class="['perm-tree-item', 'perm-tree-item-level-' + level]">
     <label class="title">{{inValue.title}}</label>
     <CheckboxGroup v-model="perms" class="perm-list" v-if="isLeaf">
-      <Checkbox v-for="it in permList" :key="it.code"
+      <Checkbox v-for="it in permList" :key="it.code" :disabled="readonly"
         :label="it.code" class="perm-item">{{it.name}}</Checkbox>
     </CheckboxGroup>
   </span>
@@ -18,6 +18,8 @@ import { uniq, isEqual } from 'lodash'
 @Component
 export default class PermTreeItem extends ViewBase {
   @Prop({ type: Object, default: () => {}, required: true }) value!: TreeItem
+
+  @Prop({ type: Boolean, default: false }) readonly!: boolean
 
   inValue = {} as TreeItem
 
@@ -38,7 +40,7 @@ export default class PermTreeItem extends ViewBase {
   }
 
   get isLeaf() {
-    return (this.node.children || []).length == 0
+    return this.inValue.extraData.isLeaf
   }
 
   get selfPerms() {
