@@ -12,16 +12,16 @@
     </div>
     <div class="text-rows">
       <Row>
-        <Col :span="12">
-          <p class="flex-box">
+        <Col :span="18">
+          <p style="float:left">
             <label>相关权限</label>
-            <Tree :data="list"></Tree>
           </p>
+          <PermTree class="tree" v-model="permTreeModal" readonly v-if="permTreeModal"/>
         </Col>
       </Row>
     </div>
     <div class="btnCenter">
-      <button class="button-ok">编辑</button>
+      <button class="button-ok" @click="toAuth">编辑</button>
     </div>
   </div>
 </template>
@@ -30,11 +30,17 @@ import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { customerRole } from '@/api/authUser'
 import { isArray } from '@/fn/type.ts'
+import PermTree, { PermTreeModal } from '@/components/permTree'
 
-@Component
+@Component({
+  components: {
+    PermTree
+  }
+})
 export default class Main extends ViewBase {
   list: any = []
   role: any = []
+  permTreeModal: PermTreeModal | null = null
 
   created() {
     this.seach()
@@ -83,10 +89,10 @@ export default class Main extends ViewBase {
           role
         }
       } = await customerRole(id)
-      const meanList: any = []
-      const tree = this.recursion(menu)
-      meanList.push(tree)
-      this.list = meanList
+      this.permTreeModal = {
+        menu,
+        perms: (role && role.perms) || []
+      }
       this.role = role
     } catch (ex) {
       this.handleError(ex)
@@ -95,7 +101,7 @@ export default class Main extends ViewBase {
   }
 
   toAuth() {
-    this.$router.push({name: 'account-auth'})
+    this.$router.push({name: 'account-auth-add', params: {id: this.$route.params.id}})
   }
 }
 </script>
@@ -105,5 +111,9 @@ export default class Main extends ViewBase {
 
 .auth-col {
   padding-bottom: 0;
+}
+.tree {
+  float: left;
+  margin-top: -6px;
 }
 </style>

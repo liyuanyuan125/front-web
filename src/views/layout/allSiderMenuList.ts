@@ -61,18 +61,6 @@ const allSiderMenuList: SiderMenuItem[] = [
   },
 
   {
-    name: 'customer',
-    label: '客户管理',
-    systems: ['ads'],
-    subList: [
-      {
-        name: 'report-plan',
-        label: '客户列表',
-      },
-    ]
-  },
-
-  {
     name: 'order',
     label: '广告单管理',
     systems: ['resource'],

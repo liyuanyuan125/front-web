@@ -29,10 +29,16 @@
         <Col :span="3"><span>{{forMat.longTime}}天</span></Col>
       </Row>
       <Row class="mb50">
-        <Col :span="4">投放影院</Col>
-        <Col :span="11"><span>500家影院</span></Col>
-        <Col :span="4">人群画像</Col>
-        <Col :span="4"><span>{{forMat.sex}}性／30-34岁</span></Col>
+        <Col :span="4" v-if="$route.params.corp != 2">投放影院</Col>
+        <Col :span="11" v-if="$route.params.corp != 2"><span>500家影院</span></Col>
+        <Col :span="4" v-if="$route.params.corp == 2">投放地区</Col>
+        <Col :span="11" v-if="$route.params.corp == 2"><span>7个城市</span></Col>
+        <Col :span="4" v-if="$route.params.corp == 1">人群画像</Col>
+        <Col :span="4" v-if="$route.params.corp == 1"><span>{{forMat.sex}}性／30-34岁</span></Col>
+        <Col :span="4" v-if="$route.params.corp == 2">广告版位</Col>
+        <Col :span="4" v-if="$route.params.corp == 2"><span>海报灯箱</span></Col>
+        <Col :span="4" v-if="$route.params.corp == 3">投放影片</Col>
+        <Col :span="5" v-if="$route.params.corp == 3"><span>《新喜剧之王》</span></Col>
       </Row>
       <Row class="mb20 pd5">
         <Col :span="5" class="pd5">冻结金额（元）</Col>
@@ -66,14 +72,14 @@ export default class Main extends ViewBase {
 
   open() {
     const id: any = this.$route.params.id || 1
-    if (this.$route.params.corp == '1') {
+    if (this.$route.params.corp == '2') {
        this.$router.push({
-        name: 'report-plan',
+        name: 'report-plan-xibei',
         params: {id}
       })
     } else {
       this.$router.push({
-        name: 'report-plan-xibei',
+        name: 'report-plan',
         params: {id}
       })
     }

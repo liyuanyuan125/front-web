@@ -87,34 +87,22 @@
 
         <FormItem label="观影人群性别" class="form-item-sex">
           <RadioGroup v-model="form.sex" class="item-radio-top">
-            <Radio
-              v-for="it in sexList"
-              :key="it.key"
-              :label="it.key"
-              class="radio-item"
-            >{{it.text}}</Radio>
+            <Radio v-for="it in sexList" :key="it.key" :label="it.key"
+              class="radio-item">{{it.text}}</Radio>
           </RadioGroup>
         </FormItem>
 
         <FormItem label="观影人群年龄" class="form-item-age">
-          <RadioGroup v-model="form.age" class="item-radio-top">
-            <Radio
-              v-for="it in ageStageList"
-              :key="it.key"
-              :label="it.key"
-              class="radio-item"
-            >{{it.text}}</Radio>
-          </RadioGroup>
+          <CheckboxGroup v-model="form.age" class="item-radio-top">
+            <Checkbox v-for="it in ageStageList" :key="it.key" :label="it.key"
+              class="check-item">{{it.text}}</Checkbox>
+          </CheckboxGroup>
         </FormItem>
 
         <FormItem label="观影人群偏好" class="form-item-hobby">
           <CheckboxGroup v-model="form.filmHobby" class="float item-radio-top">
-            <Checkbox
-              v-for="it in filmHobbyList"
-              :key="it.key"
-              :label="it.key"
-              class="check-item"
-            >{{it.text}}</Checkbox>
+            <Checkbox v-for="it in filmHobbyList" :key="it.key"
+              :label="it.key" class="check-item">{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
       </div>
@@ -132,14 +120,10 @@
         </FormItem>
 
         <FormItem label="观影人群年龄" class="form-item-age">
-          <RadioGroup v-model="form.age">
-            <Radio
-              v-for="it in ageStageList"
-              :key="it.key"
-              :label="it.key"
-              class="radio-item"
-            >{{it.text}}</Radio>
-          </RadioGroup>
+          <CheckboxGroup v-model="form.age" class="item-radio-top">
+            <Checkbox v-for="it in ageStageList" :key="it.key" :label="it.key"
+              class="check-item">{{it.text}}</Checkbox>
+          </CheckboxGroup>
         </FormItem>
 
         <FormItem label="观影人群偏好" class="form-item-hobby">
@@ -177,7 +161,9 @@
         <p class="single-result" v-if="foundFilmList.length > 0">已为您匹配以下{{foundFilmList.length}}部影片：</p>
 
         <ul class="single-film-list" v-if="foundFilmList.length > 0">
-          <li v-for="(it, i) in foundFilmList" :key="i" class="single-film-item">
+          <li v-for="it in foundFilmList" :key="it.id" @click="selectFilm(it)"
+            :class="['single-film-item',
+            form.filmIdSelected == it.id ? 'single-film-item-on' : '']">
             <div class="film-cover-box">
               <img :src="it.cover" class="film-cover">
               <div class="film-date">上映时间：{{it.date}}</div>
@@ -264,7 +250,7 @@
     </Form>
 
     <div class="btn-center">
-      <button class="button-ok" @click="handleScheme">生成投放方案</button>
+      <Button type="primary" class="button-ok" @click="handleScheme">生成投放方案</Button>
     </div>
   </div>
 </template>
@@ -272,15 +258,8 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import {
-  cityList,
-  City,
-  sexList,
-  ageStageList,
-  filmHobbyList,
-  areaTypeList,
-  filmList as allFilmList
-} from './types'
+import { cityList, City, sexList, ageStageList, filmHobbyList,
+  areaTypeList, filmList as allFilmList, Film } from './types'
 import CitySelect from './citySelect.vue'
 
 // 保持互斥
@@ -324,12 +303,13 @@ export default class Main extends ViewBase {
     type: 1,
     areaType: 3,
     sex: 0,
-    age: 0,
+    age: [0],
     filmHobby: [0],
 
     // 单个影片
     filmName: '',
-    filmType: [0]
+    filmType: [0],
+    filmIdSelected: 0,
   }
 
   // 是否为映前广告
@@ -363,6 +343,7 @@ export default class Main extends ViewBase {
     { id: 2, name: '西贝餐饮' },
     { id: 3, name: '迪奥' }
   ]
+
   amountList = [
     { key: 1, label: '50万以下' },
     { key: 2, label: '50~100万以下' },
@@ -372,6 +353,7 @@ export default class Main extends ViewBase {
     { key: 7, label: '800~1000万以下' },
     { key: 8, label: '1000万以上' }
   ]
+
   advList = [
     { id: 1, name: '海报灯箱' },
     { id: 2, name: '墙体灯箱' },
@@ -412,6 +394,18 @@ export default class Main extends ViewBase {
     }})
   }
 
+  selectFilm(film: Film) {
+    this.form.filmIdSelected = film.id
+  }
+
+  @Watch('form.age', { deep: true })
+  watchAge(value: number[], oldValue: number[]) {
+    // 不限与其他项互斥
+    keepExclusion(value, oldValue, 0, newValue => {
+      this.form.age = newValue
+    })
+  }
+
   @Watch('form.filmHobby', { deep: true })
   watchFilmHobby(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
@@ -441,6 +435,7 @@ export default class Main extends ViewBase {
 .radio-item {
   font-size: 14px;
   margin-right: 40px;
+  user-select: none;
 }
 .form-item-type {
   margin-top: 35px;
@@ -589,12 +584,7 @@ export default class Main extends ViewBase {
     line-height: 40px;
   }
 }
-/deep/ .ivu-radio-checked .ivu-radio-inner {
-  border-color: @c-button;
-  &::after {
-    background-color: @c-button;
-  }
-}
+
 /deep/ .custom-monery {
   .ivu-input-wrapper {
     width: 150px;
@@ -657,13 +647,14 @@ export default class Main extends ViewBase {
 .check-item {
   position: relative;
   top: 3px;
-  min-width: 60px;
+  min-width: 80px;
   height: 26px;
   line-height: 26px;
   text-align: center;
   border: 1px solid #d2d2d2;
   margin-right: 15px;
   font-size: 14px;
+  user-select: none;
   /deep/ .ivu-checkbox {
     display: none;
   }
@@ -690,9 +681,35 @@ export default class Main extends ViewBase {
   margin-bottom: 40px;
 }
 .single-film-item {
+  position: relative;
   width: 270px;
   margin: 25px 10px 0 0;
+
+  &::before {
+    content: '选择影片';
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 60px;
+    height: 60px;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    background-color: fade(@c-button, 90%);
+    border-radius: 100%;
+    z-index: 1;
+    text-align: center;
+    line-height: 1.2;
+  }
 }
+.single-film-item-on {
+  &::before {
+    content: '已选影片';
+    background-color: fade(#059bfb, 90%);
+  }
+}
+
 .film-cover-box {
   position: relative;
   width: 270px;
