@@ -9,11 +9,11 @@
         <Input v-model="form.name" placeholder="请输入权限角色名称"></Input>
       </FormItem>
       <FormItem label="相关权限">
-        <PermTree v-model="permTreeModal"/>
+        <PermTree v-model="permTreeModal" v-if="permTreeModal"/>
       </FormItem>
-      <FormItem label="相关权限">
+      <!-- <FormItem label="相关权限">
         <Tree ref="tree" :data="list" @on-check-change="checkShow" show-checkbox></Tree>
-      </FormItem>
+      </FormItem> -->
     </Form>
     <div class="tableSubmit btnCenter">
       <button class="submitBtn button-ok" v-if="!$route.params.id" @click="handleInforma('form')">确定增加</button>
@@ -46,7 +46,7 @@ export default class Main extends ViewBase {
 
   perms: any = []
 
-  permTreeModal = {} as PermTreeModal
+  permTreeModal: PermTreeModal | null = null
 
   rules = {
     name: [
@@ -155,14 +155,14 @@ export default class Main extends ViewBase {
 
         this.permTreeModal = {
           menu,
-          perms: role.perms || []
+          perms: (role && role.perms) || []
         }
 
         const meanLists: any = []
         const tree = this.recursion(menu)
         meanLists.push(tree)
         this.list = meanLists
-        this.form.name = role.name
+        this.form.name = (role && role.name) || ''
       }
     } catch (ex) {
       this.handleError(ex)
