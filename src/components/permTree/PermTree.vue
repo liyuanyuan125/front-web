@@ -71,13 +71,12 @@ const toTreeData = (
       return page
     },
 
-    onEachAfter(page) {
-      const isLeaf = page.children.length == 0
-      const childrenChecked = page.children.some((t: any) => t.checked)
-
-      // page.checked = isLeaf ? pageOn : false
-      // page.expand = childrenChecked
-      page.expand = true
+    onEachAfter(page, parentNodes) {
+      const hasChecked = page.checked || page.indeterminate
+      hasChecked && parentNodes.forEach(parent => {
+        parent.indeterminate = true
+        parent.expand = true
+      })
     }
   })
 }
@@ -99,10 +98,14 @@ const isSameValue = (val1: PermTreeModal, val2: PermTreeModal) => {
   return isSameList(val1.perms, val2.perms)
 }
 
+const listNotEmpty = (list: any[] | null) => (list || []).length > 0
+
 // 标准化树，将 children key 更改为 children
 const normalizeTree = (nodes: Page[]): Page[] => {
   const list = nodes
     .filter(it => it != null)
+    // 过滤掉 subPages 与 actions 都为空的节点，这些节点不需要编辑
+    .filter(it => listNotEmpty(it.subPages) || listNotEmpty(it.actions))
     .map(it => {
       const children = normalizeTree(it.subPages)
       const item = {

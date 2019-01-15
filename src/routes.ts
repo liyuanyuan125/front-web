@@ -97,12 +97,41 @@ export default [
     name: 'finance-info-more',
     component: () => import('./views/finance/info/moreList.vue'),
   },
+<<<<<<< HEAD
   // 财务管理 - 资金账单
   {
     path: '/finance/bill',
     name: 'finance-bill',
     component: () => import('./views/finance/bill/index.vue')
   },
+=======
+
+  // 推广管理 - 广告计划 - 创建广告计划
+  {
+    path: '/pop/plan',
+    name: 'pop-plan',
+    component: () => import('./views/pop/plan/index.vue'),
+  },
+  // 推广管理 - 广告计划 - 生成广告方案
+  {
+    path: '/pop/plan/scheme/:id/:corp',
+    name: 'pop-plan-scheme',
+    component: () => import('./views/pop/pages/index.vue'),
+  },
+
+  // 数据报表 - 投放成效报告
+  {
+    path: '/report/plan/:id?',
+    name: 'report-plan',
+    component: () => import('./views/report/plan/index.vue'),
+  },
+  {
+    path: '/report/plan/xibei/:id?',
+    name: 'report-plan-xibei',
+    component: () => import('./views/report/plan/xibei.vue'),
+  },
+
+>>>>>>> 065b72d47ffe28c153debed8811dbf9286608a46
   // 示例，没有实际用处
   {
     path: '/about',

@@ -58,7 +58,12 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser, logout, User } from '@/store'
-import { systemList as allSystemList } from '@/util/types'
+import { systemList as allSystemList, SystemCode } from '@/util/types'
+import allSiderMenuList, { SiderMenuItem } from './allSiderMenuList'
+import { cloneDeep } from 'lodash'
+
+const isSystemCode = (code: SystemCode) =>
+  (it: SiderMenuItem) => it.systems == null || it.systems.includes(code)
 
 @Component
 export default class App extends ViewBase {
@@ -86,55 +91,27 @@ export default class App extends ViewBase {
 
   isOff = false
 
-  siderMenuList = [
-    {
-      name: 'home',
-      label: '首页',
-    },
-    {
-      name: 'account',
-      label: '账户管理',
-      subList: [
-        {
-          name: 'account-info',
-          label: '账号信息',
-        },
-        {
-          name: 'account-user',
-          label: '用户管理',
-        },
-        {
-          name: 'account-auth',
-          label: '权限管理',
-        },
-        {
-          name: 'account-cinema',
-          label: '影院管理',
-        },
-        {
-          name: 'account-password',
-          label: '修改密码',
-        },
-      ]
-    },
-    {
-      name: 'finance',
-      label: '财务管理',
-      subList: [
-        {
-          name: 'finance-info',
-          label: '财务信息',
-        },
-        {
-          name: 'finance-bill',
-          label: '资金账单',
-        }
-      ]
-    },
-  ]
+  get siderMenuList() {
+    const user = this.user
+    if (user == null) {
+      return []
+    }
+    const systemCode = user.systemCode
+    const isSystem = isSystemCode(systemCode)
+    const list = cloneDeep(allSiderMenuList).filter(it => {
+      it.subList = it.subList && it.subList.filter(isSystem)
+      return isSystem(it)
+    })
+    return list
+  }
 
   get siderOpenNames() {
-    return this.siderMenuList.map(it => it.name)
+    const activeName = this.siderActiveName
+    const item = this.siderMenuList.find(it => {
+      const exists = (it.subList! || [{ name: it.name }]).some(t => t.name === activeName)
+      return exists
+    })
+    return item != null ? [ item.name ] : []
   }
 
   // 获取导航中全部可点击的页面 name
@@ -377,6 +354,43 @@ export default class App extends ViewBase {
   }
   .menu-node-home a {
     background-image: url(./assets/home.png);
+  }
+  .menu-node-pop {
+    /deep/ .ivu-menu-submenu-title {
+      background-image: url(./assets/pop.png);
+    }
+  }
+  .menu-node-report {
+    /deep/ .ivu-menu-submenu-title {
+      background-image: url(./assets/report.png);
+    }
+  }
+  .menu-node-customer {
+    /deep/ .ivu-menu-submenu-title {
+      background-image: url(./assets/customer.png);
+    }
+  }
+
+  .menu-node-order {
+    /deep/ .ivu-menu-submenu-title {
+      background-image: url(./assets/order.png);
+    }
+  }
+  .menu-node-play {
+    /deep/ .ivu-menu-submenu-title {
+      background-image: url(./assets/play.png);
+    }
+  }
+  .menu-node-space {
+    /deep/ .ivu-menu-submenu-title {
+      background-image: url(./assets/space.png);
+    }
+  }
+
+  .menu-node-finance {
+    /deep/ .ivu-menu-submenu-title {
+      background-image: url(./assets/finance.png);
+    }
   }
   .menu-node-account {
     /deep/ .ivu-menu-submenu-title {
