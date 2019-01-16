@@ -1,7 +1,7 @@
 <template>
   <div class="page home-bg">
     <Form ref="form" :model="from" class="edit-input from" :rules="dataRule" :label-width="100">
-      <FormItem label="邮箱邮箱">
+      <FormItem label="邮箱账号" class="item-account-email">
         <em class="login-email">{{loginEmail}}</em>
       </FormItem>
       <FormItem label="输入旧密码" prop="oldPassword">
@@ -89,6 +89,11 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+.item-account-email {
+  /deep/ .ivu-form-item-label {
+    padding-left: 10px;
+  }
+}
 .login-email {
   font-size: 14px;
   position: relative;

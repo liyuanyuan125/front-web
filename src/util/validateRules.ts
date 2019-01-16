@@ -67,18 +67,20 @@ export function validateEmail(email: string): string | undefined {
 /**
  * 时间戳格式转换年月日
  */
-export function formatTimes(timestamp: any) {
-  const date = new Date(timestamp * 1000)
-  const Y = date.getFullYear() + '-'
-  const M =
-    (date.getMonth() + 1 < 10
-      ? '0' + (date.getMonth() + 1)
-      : date.getMonth() + 1) + '-'
-  const D = date.getDate() + ' '
-  const h = date.getHours() + ':'
-  const m = date.getMinutes() + ':'
-  const s = date.getSeconds()
-  return Y + M + D + h + m + s
+export function formatTimes(value: any) {
+  const date: any = new Date(value)
+  const y = date.getFullYear()
+  let MM = date.getMonth() + 1
+  MM = MM < 10 ? '0' + MM : MM
+  let d = date.getDate()
+  d = d < 10 ? '0' + d : d
+  let h = date.getHours()
+  h = h < 10 ? '0' + h : h
+  let m = date.getMinutes()
+  m = m < 10 ? '0' + m : m
+  let s = date.getSeconds()
+  s = s < 10 ? '0' + s : s
+  return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
 }
 
 /**

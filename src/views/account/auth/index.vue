@@ -6,8 +6,8 @@
         <Icon type="ios-add" size="27"/>新建权限角色
       </router-link>
     </h3>
-    <div class="flex-box">
-      <Select
+    <div class="flex-box search-input">
+      <!-- <Select
         v-model="dataForm.searchKey"
         filterable
         remote
@@ -17,8 +17,9 @@
         :remote-method="authIdList"
         :loading="loading">
         <Option v-for="(option, index) in options" :value="option.value" :key="index">{{option.label}}</Option>
-      </Select>
-      <span @click="seach">
+      </Select> -->
+      <Input  v-model="dataForm.searchKey" placeholder="请输入权限角色ID或名称"  />
+      <span @click="seach" class="bth-search">
         <Icon type="ios-search" size="22"/>
       </span>
     </div>
@@ -110,32 +111,19 @@ export default class Main extends ViewBase {
     return list
   }
 
-  created() {
-    this.seach()
-  }
-
-  // 每页数
-  sizeChangeHandle(val: any) {
-    this.dataForm.pageIndex = val
-    this.seach()
-  }
-
-  // 当前页
-  currentChangeHandle(val: any) {
-    this.dataForm.pageSize = val
-    this.seach()
+  mounted() {
+     this.seach()
   }
 
   async seach() {
     this.tableLoading = true
     try {
-      const query = { ...this.dataForm, searchKey: this.query }
       const {
         data: {
           items,
           totalCount
         }
-      } = await authUserList(clean({...query, systemCode: this.systemCode}))
+      } = await authUserList({...this.dataForm, systemCode: this.systemCode})
       this.list = items
       this.total = totalCount
     } catch (ex) {
@@ -145,49 +133,48 @@ export default class Main extends ViewBase {
     }
   }
 
-  async authIdList(query: any) {
-    this.query = query
-    if (query !== '') {
-      this.loading = true
-      try {
-        const {
-          data: {
-            items
-          }
-        } = await authUserList({
-          searchKey: query,
-          systemCode: this.systemCode,
-          pageIndex: 1,
-          pageSize: 20
-        })
-        const ids: any = []
-        const datas = items
-        const name: any = []
-        datas.forEach((it: any) => {
-          if (it.name.includes(query)) {
-            name.push({
-              value: it.name,
-              label: it.name
-            })
-          }
-          const id = it.id + ''
-          if (id.includes(query)) {
-            ids.push({
-              value: it.id,
-              label: it.id
-            })
-          }
-        })
-        this.options = [...ids, ...name]
-        this.loading = false
-      } catch (ex) {
-        this.options = []
-      }
-    } else {
-      this.options = []
-    }
-  }
-  async mounted() {}
+  // async authIdList(query: any) {
+  //   this.query = query
+  //   if (query !== '') {
+  //     this.loading = true
+  //     try {
+  //       const {
+  //         data: {
+  //           items
+  //         }
+  //       } = await authUserList({
+  //         searchKey: query,
+  //         systemCode: this.systemCode,
+  //         pageIndex: 1,
+  //         pageSize: 20
+  //       })
+  //       const ids: any = []
+  //       const datas = items
+  //       const name: any = []
+  //       datas.forEach((it: any) => {
+  //         if (it.name.includes(query)) {
+  //           name.push({
+  //             value: it.name,
+  //             label: it.name
+  //           })
+  //         }
+  //         const id = it.id + ''
+  //         if (id.includes(query)) {
+  //           ids.push({
+  //             value: it.id,
+  //             label: it.id
+  //           })
+  //         }
+  //       })
+  //       this.options = [...ids, ...name]
+  //       this.loading = false
+  //     } catch (ex) {
+  //       this.options = []
+  //     }
+  //   } else {
+  //     this.options = []
+  //   }
+  // }
 
   toDetail(id: any) {
     this.$router.push({ name: 'account-auth-detail', params: {id} })
@@ -195,6 +182,18 @@ export default class Main extends ViewBase {
 
   toEdit(id: any) {
     this.$router.push({name: 'account-auth-add', params: {id}})
+  }
+
+   // 每页数
+  sizeChangeHandle(val: any) {
+    this.dataForm.pageIndex = val
+    this.seach()
+  }
+
+  // 当前页
+  currentChangeHandle(val: any) {
+    this.dataForm.pageSize = val
+    this.seach()
   }
 
   async toDel(id: any) {
@@ -216,7 +215,12 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+.bth-search {
+  cursor: pointer;
+}
+.search-input {
+  margin-left: 30px;
+}
 .colBg {
   font-size: 14px;
   height: 50px;
@@ -284,6 +288,14 @@ export default class Main extends ViewBase {
   }
   /deep/ .operation {
     margin-right: 6px;
+  }
+}
+/deep/ .ivu-input-wrapper {
+  width: 400px;
+  .ivu-input {
+    width: 400px;
+    line-height: 40px;
+    height: 40px;
   }
 }
 </style>

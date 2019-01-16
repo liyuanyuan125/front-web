@@ -66,7 +66,7 @@ export default class Main extends ViewBase {
     email: '',
     contactName: '',
     mobile: '',
-    role: 1,
+    role: '',
     partnerIds: []
   }
   roleList = []
@@ -76,7 +76,7 @@ export default class Main extends ViewBase {
     const systemCode = user.systemCode
     const role = { pageIndex: 1, pageSize: 100, systemCode }
     const { data } = await rolesList(role)
-    this.roleList = data.items
+    this.roleList = data.items || []
 
     this.handleChange()
   }

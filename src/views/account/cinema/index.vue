@@ -3,9 +3,9 @@
     <h3 class="userTitle">
       <span class="nav-top-title">影院管理</span>
     </h3>
-    <div class="flex-box">
-      {{query}}
-      <Select
+    <div class="flex-box  search-input">
+      <!-- {{query}} -->
+      <!-- <Select
         v-model="dataForm.query"
         filterable
         remote
@@ -15,7 +15,8 @@
         :remote-method="queryCode"
         :loading="loading">
         <Option v-for="(option, index) in options" :value="option.value" :key="index">{{option.label}}</Option>
-      </Select>
+      </Select> -->
+      <Input v-model="dataForm.query"  placeholder="请输入转资编码或影院名称" />
       <span @click="seach">
         <Icon type="ios-search" size="22"/>
       </span>
@@ -92,72 +93,59 @@ export default class Main extends ViewBase {
     }
   ]
 
-  created() {
+  mounted() {
     this.seach()
   }
 
-  // 每页数
-  sizeChangeHandle(val: any) {
-    this.dataForm.pageIndex = val
-    this.seach()
-  }
-
-  // 当前页
-  currentChangeHandle(val: any) {
-    this.dataForm.pageSize = val
-    this.seach()
-  }
-
-  async queryCode(query: any) {
-    this.query = query
-    if (query !== '') {
-      this.loading = true
-      try {
-        const {
-          data: {
-            items
-          }
-        } = await cinmeaList({
-          query
-        })
-        const code: any = []
-        const shortName: any = []
-        items.forEach((it: any) => {
-          if ( it.code.includes(query) ) {
-            code.push({
-              value: it.code,
-              label: it.code
-            })
-          }
-        })
-        items.forEach((it: any) => {
-          if ( it.shortName.includes(query) ) {
-            shortName.push({
-              value: it.shortName,
-              label: it.shortName
-            })
-          }
-        })
-        this.options = [...code, ...shortName]
-        this.loading = false
-      } catch (ex) {
-        this.options = []
-      }
-    } else {
-      this.options = []
-    }
-  }
+  // async queryCode(query: any) {
+  //   this.query = query
+  //   if (query !== '') {
+  //     this.loading = true
+  //     try {
+  //       const {
+  //         data: {
+  //           items
+  //         }
+  //       } = await cinmeaList({
+  //         query
+  //       })
+  //       const code: any = []
+  //       const shortName: any = []
+  //       items.forEach((it: any) => {
+  //         if ( it.code.includes(query) ) {
+  //           code.push({
+  //             value: it.code,
+  //             label: it.code
+  //           })
+  //         }
+  //       })
+  //       items.forEach((it: any) => {
+  //         if ( it.shortName.includes(query) ) {
+  //           shortName.push({
+  //             value: it.shortName,
+  //             label: it.shortName
+  //           })
+  //         }
+  //       })
+  //       this.options = [...code, ...shortName]
+  //       this.loading = false
+  //     } catch (ex) {
+  //       this.options = []
+  //     }
+  //   } else {
+  //     this.options = []
+  //   }
+  // }
 
   async seach() {
     this.tableLoading = true
     try {
-      const query = { ...this.dataForm, query: this.query }
       const {
         data: {
           items,
           totalCount
         }
-      } = await cinmeaList(clean({...query}))
+      } = await cinmeaList({...this.dataForm})
       this.cinemaData = items
       this.total = totalCount
     } catch (ex) {
@@ -170,16 +158,29 @@ export default class Main extends ViewBase {
   toDetail(id: any) {
     this.$router.push({ name: 'account-cinema-detail', params: {id} })
   }
-
-  querySet(query: any) {
-    this.query = ''
+   // 每页数
+  sizeChangeHandle(val: any) {
+    this.dataForm.pageIndex = val
+    this.seach()
   }
+
+  // 当前页
+  currentChangeHandle(val: any) {
+    this.dataForm.pageSize = val
+    this.seach()
+  }
+
+  // querySet(query: any) {
+  //   this.query = ''
+  // }
 }
 </script>
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+.search-input {
+  margin-left: 30px;
+}
 .colBg {
   font-size: 14px;
   height: 50px;
@@ -249,6 +250,14 @@ export default class Main extends ViewBase {
   }
   .tables {
     margin: 20px;
+  }
+}
+/deep/ .ivu-input-wrapper {
+  width: 400px;
+  .ivu-input {
+    width: 400px;
+    line-height: 40px;
+    height: 40px;
   }
 }
 </style>

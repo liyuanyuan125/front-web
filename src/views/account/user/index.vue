@@ -2,9 +2,9 @@
   <div class="page home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">用户管理</span>
-      <router-link class="addUser" tag="span" :to="{name: 'account-user-add'}">
+      <em class="addUser" @click="addUser">
         <Icon type="ios-add" size="27"/>新增子用户
-      </router-link>
+      </em>
     </h3>
 
     <Form :model="form" class="form">
@@ -207,7 +207,13 @@ export default class Main extends ViewBase {
     this.statusList = data.statusList
     this.total = data.totalCount
   }
-
+  addUser() {
+    if (this.rolelist.length) {
+      this.$router.push({ name: 'account-user-add'})
+    } else {
+      this.showWaring('当前您没有角色列表, 请到权限管理添加角色')
+    }
+  }
   singleSelect(select: any) {
     this.selectIds = select
   }

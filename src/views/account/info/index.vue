@@ -1,6 +1,6 @@
 <template>
   <div class="page home-bg">
-    <com-statu :statuCode="displayStatus"></com-statu>
+    <com-statu :statuCode="displayStatus" v-if="displayStatus != 5"></com-statu>
     <div class="content">
       <h3 class="layout-title">登录信息</h3>
       <Row class="text-rows">
@@ -113,7 +113,7 @@ import ImagePreviewer from '@/components/imagePreviewer'
   }
 })
 export default class Main extends ViewBase {
-  displayStatus = 0
+  displayStatus: any = 5
   account: any = {}
   company: any = {}
   systemList: any = []
@@ -171,21 +171,21 @@ export default class Main extends ViewBase {
       key: 'remark',
       render: (h: any, params: any) => {
         const { row } = params
-        if (row.remarks && row.remarks.length > 10) {
-          const splitText = row.remarks.substr(0, 10) + '.......'
+        if (row.remark && row.remark.length > 10) {
+          const splitText = row.remark.substr(0, 10) + '.......'
           return h(
             'Tooltip',
             {
               props: {
                 placement: 'top',
-                content: row.remarks,
+                content: row.remark,
                 maxWidth: '200px'
               }
             },
             splitText
           )
         } else {
-          return h('span', {}, row.remarks)
+          return h('span', {}, row.remark)
         }
       }
     }
@@ -196,9 +196,9 @@ export default class Main extends ViewBase {
   async mounted() {
     try {
       const { data } = await accountDetail()
+      this.displayStatus = data.company.displayStatus - 1
       this.account = data.account
       this.company = data.company
-      this.displayStatus = data.company.displayStatus - 1
       this.systemList = data.systemList
       this.informa.qualificationTypeList = data.qualificationTypeList
 
