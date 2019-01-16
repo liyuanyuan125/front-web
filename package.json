@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint --no-fix && yarn lint:css",
-    "lint:css": "stylelint \"**/*.vue\" --syntax less"
+    "dev": "npx vue-cli-service serve",
+    "build": "npx vue-cli-service build",
+    "lint": "npx vue-cli-service lint --no-fix && yarn lint:css",
+    "lint:css": "npx stylelint \"**/*.vue\" --syntax less"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -52,11 +52,11 @@
   },
   "lint-staged": {
     "*.ts": [
-      "vue-cli-service lint",
+      "npx vue-cli-service lint",
       "git add"
     ],
     "*.vue": [
-      "vue-cli-service lint",
+      "npx vue-cli-service lint",
       "yarn lint:css",
       "git add"
     ]
