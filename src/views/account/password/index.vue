@@ -1,14 +1,17 @@
 <template>
   <div class="page home-bg">
     <Form ref="form" :model="from" class="edit-input from" :rules="dataRule" :label-width="100">
+      <FormItem label="邮箱邮箱">
+        <span>{{loginEmail}}</span>
+      </FormItem>
       <FormItem label="输入旧密码" prop="oldPassword">
-        <Input type="password" v-model="from.oldPassword"></Input>
+        <Input type="password" v-model="from.oldPassword" :maxlength="16" placeholder="请输入含大小写的英文字母与数字的组合，8－16位"></Input>
       </FormItem>
       <FormItem label="输入新密码" prop="newPassword">
-        <Input type="password" v-model="from.newPassword"></Input>
+        <Input type="password" v-model="from.newPassword" :maxlength="16" placeholder="请输入含大小写的英文字母与数字的组合，8－16位"></Input>
       </FormItem>
       <FormItem label="确认密码" prop="newPasswords">
-        <Input type="password" v-model="from.newPasswords"></Input>
+        <Input type="password" v-model="from.newPasswords" :maxlength="16" placeholder="请输入含大小写的英文字母与数字的组合，8－16位"></Input>
       </FormItem>
     </Form>
     <div class="btnCenter sumbit-button">
@@ -23,14 +26,20 @@ import { toast } from '@/ui/modal'
 import { slice } from '@/fn/object'
 import ViewBase from '@/util/ViewBase'
 import { setPassword } from '@/api/password'
+import { getUser } from '@/store'
+
+
 @Component
 export default class Main extends ViewBase {
+  loginEmail = ''
   from = {
     oldPassword: '',
     newPassword: '',
     newPasswords: ''
   }
-
+  async mounted() {
+    const use = getUser()
+  }
   get dataRule() {
       const password = (rule: any, value: any, callback: any) => {
         if (value === '') {
