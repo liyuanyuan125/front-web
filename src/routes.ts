@@ -116,6 +116,12 @@ export default [
     name: 'pop-plan-scheme',
     component: () => import('./views/pop/pages/index.vue'),
   },
+  // 推广管理 - 广告计划 - 生成广告方案2
+  {
+    path: '/pop/plan/scheme/two',
+    name: 'pop-plan-scheme-two',
+    component: () => import('./views/two/index.vue'),
+  },
 
   // 数据报表 - 投放成效报告
   {
