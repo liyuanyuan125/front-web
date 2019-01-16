@@ -128,37 +128,19 @@
         </Col>
         <Col class="mt30" :span="24">
            <Row :gutter="30">
-             <Col :span="4" style="text-indent: 1em">投放期间上映的电影</Col>
-             <Col :span="5">
+             <Col :span="8">
               <dl class="cinema-img">
-                <dd><img src="./assets/first.png" alt=""></dd>
-                <dt class="mt10">《阿丽塔：战斗天使》</dt>
-                <dt> 动作／科幻／冒险</dt>
-                <dt class="orange"> 25298人想看</dt>
+                <dd><img src="./assets/Group 5.png" alt=""></dd>
               </dl>
              </Col>
-             <Col :span="5">
+             <Col :span="8">
               <dl class="cinema-img">
-                <dd><img src="./assets/two.png" alt=""></dd>
-                <dt class="mt10">《掠夺城市》</dt>
-                <dt> 喜剧 </dt>
-                <dt class="orange"> 15258人想看</dt>
+                <dd><img src="./assets/Group 6.png" alt=""></dd>
               </dl>
              </Col>
-             <Col :span="5">
+             <Col :span="8">
               <dl class="cinema-img">
-                <dd><img src="./assets/three.png" alt=""></dd>
-                <dt class="mt10">《死侍2：我爱我家》</dt>
-                <dt> 动作／科幻／喜剧</dt>
-                <dt class="orange"> 55945人想看</dt>
-              </dl>
-             </Col>
-             <Col :span="5">
-              <dl class="cinema-img">
-                <dd><img src="./assets/cinem5.png" alt=""></dd>
-                <dt class="mt10">《汝海风云》</dt>
-                <dt> 动作／犯罪</dt>
-                <dt class="orange"> 20981人想看</dt>
+                <dd><img src="./assets/Group 8.png" alt=""></dd>
               </dl>
              </Col>
            </Row>
@@ -498,16 +480,8 @@ export default class Main extends ViewBase {
       }
     }
     .cinema-img {
-      text-align: center;
       img {
-        width: 95.5%;
-      }
-      dt:first-child {
-        margin-top: 10px;
-      }
-      .orange {
-        color: #fe8135;
-        margin-top: 12px;
+        width: 95%;
       }
     }
     .poster-title {
