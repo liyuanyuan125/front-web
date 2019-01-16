@@ -68,6 +68,7 @@ export default class Upload extends ViewBase {
 .viewer {
   /deep/ .ivu-modal {
     top: 38px;
+    margin-bottom: 38px;
   }
   /deep/ .ivu-modal-content {
     background-color: transparent;
