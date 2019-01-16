@@ -3,7 +3,7 @@
     <header>
       <div class="nav">
         <div class="logo">
-          <img src="~@/assets/site/logo.png" alt="alias" height="44px">
+          <img src="~@/assets/site/logo.png" alt="alias" height="50">
         </div>
         <div class="navTitle">
           <router-link tag="span" to>概览</router-link>

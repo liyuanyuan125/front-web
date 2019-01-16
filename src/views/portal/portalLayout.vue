@@ -58,7 +58,7 @@
 }
 
 .logo {
-  height: 44px;
+  height: 50px;
 }
 .link-login {
   font-size: 16px;
