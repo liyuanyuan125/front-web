@@ -8,7 +8,7 @@ export async function queryList(query: any) {
 
 // 财产信息
 export async function moneyList(companyId: any) {
-  const res = await get(`/finance/advertiser/accounts/${companyId}`)
+  const res = await get(`/finance/xadvertiser/accounts/${companyId}`)
   return res
 }
 

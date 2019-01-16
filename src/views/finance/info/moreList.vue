@@ -18,6 +18,9 @@
       show-elevator
       @on-change="sizeChangeHandle"
       @on-page-size-change="currentChangeHandle"/>
+      <Modal v-model="viewerShow" title="查看图片" width="500" height='500'>
+        <img style='width: 100%;' :src=viewerImage alt="" sizes="" srcset="">
+    </Modal>
   </div>
 </template>
 
@@ -55,6 +58,11 @@ export default class Main extends ViewBase {
   userList: any = {}
   // 状态列表
   approvalStatusList: any = []
+
+  // 查看图片
+  viewerShow = false
+  viewerImage = ''
+
   columns4 = [
     { title: '充值ID', key: 'id', align: 'center' },
     {
@@ -104,15 +112,30 @@ export default class Main extends ViewBase {
     {
       title: '备注',
       key: 'freceipt',
-      align: 'center'
+      align: 'center',
+      render: (hh: any, { row: { freceipt } }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        const html1 = String(freceipt).slice(0,10) + '...'
+        if (String(freceipt).length >= 10) {
+          return <div>
+            <span class='datetime' v-html={html1}></span>
+          </div>
+        } else {
+          return <div>
+            <span class='datetime' v-html={freceipt}></span>
+          </div>
+        }
+        /* tslint:enable */
+      }
     },
     {
       title: '汇款凭证',
       align: 'center',
-      render: (hh: any, { row: { id } }: any) => {
+      render: (hh: any, { row: { mageList } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        return <a on-click={this.toDetail.bind(this, id)} class="operation" >查看</a>
+        return <a href='javascript:;' on-click={this.onView.bind( mageList.url )} class="operation" >查看汇款凭证</a>
         /* tslint:enable */
       }
     },
@@ -121,7 +144,7 @@ export default class Main extends ViewBase {
       key: 'statusText',
       width: 100,
       align: 'center',
-      render: (hh: any, { row: { approvalStatus, statusText } }: any) => {
+      render: (hh: any, { row: { rejectReason , approvalStatus, statusText } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         if (approvalStatus == 1) {
@@ -129,12 +152,13 @@ export default class Main extends ViewBase {
         } else if (approvalStatus == 2) {
           return <span class={`status-${2}`}>充值通过</span>
         } else if (approvalStatus == 3) {
-          return <span class={`status-${3}`}>充值拒绝</span>
+          return <tooltip content={rejectReason} placement="top">
+              <span class={`status-${3}`}>充值拒绝</span>
+            </tooltip>
         }
-        
         /* tslint:enable */
       }
-    },
+    }
   ]
 
   created() {
@@ -171,6 +195,13 @@ export default class Main extends ViewBase {
       }
     })
     return list
+  }
+
+    // 查看图片
+  onView(url: string) {
+    // console.log(url)
+    this.viewerImage = url
+    this.viewerShow = true
   }
 
 
