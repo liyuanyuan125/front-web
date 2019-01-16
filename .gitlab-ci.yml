@@ -6,13 +6,12 @@ stages:
 
 variables:
   SERVICE_NAME: iadp-front-web-demo
-  YARN_REGISTRY: https://registry.npm.taobao.org
 
 lint:
   image: $REGISTRY_ADDRESS/devops/nodejs/build
   stage: lint
   script:
-    - yarn config set registry $YARN_REGISTRY && yarn && yarn lint
+    - yarn && yarn lint
   only:
     - develop
   tags:
@@ -24,7 +23,7 @@ build:
   only:
     - demo
   script:
-    - yarn config set registry $YARN_REGISTRY && yarn && yarn build
+    - yarn && yarn build
   artifacts:
     paths:
       - dist
