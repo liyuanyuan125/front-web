@@ -309,7 +309,7 @@ export default class Main extends ViewBase {
       ? (this.form.type == 1 ? 1 : 2)
       : 3
     const corp = this.form.advType || 1
-    this.$router.push({ name: 'pop-plan-scheme', params: {
+    this.$router.push({ name: 'pop-plan-scheme-two', params: {
       id: String(id),
       corp: String(corp),
     }})
