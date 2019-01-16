@@ -3,17 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "yarn fixiview && vue-cli-service serve",
-    "build": "yarn fixiview && vue-cli-service build",
+    "dev": "vue-cli-service serve",
+    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --no-fix && yarn lint:css",
-    "lint:css": "stylelint \"**/*.vue\" --syntax less",
-    "fixiview": "node --experimental-modules --no-warnings tools/fixiview.mjs"
+    "lint:css": "stylelint \"**/*.vue\" --syntax less"
   },
   "dependencies": {
     "axios": "^0.18.0",
     "deep-extend": "^0.6.0",
     "exif-js": "^2.3.0",
-    "iview": "^3.1.5",
+    "iview": "^3.2.2",
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.11",
     "mockjs": "^1.0.1-beta3",
