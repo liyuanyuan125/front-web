@@ -31,7 +31,8 @@ export default function setUserByData(data: UserData) {
     isAdmin: data.admin as boolean,
 
     systemCode: data.systemCode as SystemCode,
-    systems: data.systems as SystemCode[],
+    // TODO: 片商只是展示用，后面要去掉
+    systems: (data.systems || []).concat('ps') as SystemCode[],
 
     companyId: data.companyId as number,
     companyName: data.companyName || '<我的公司>',

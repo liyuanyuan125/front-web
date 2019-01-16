@@ -12,7 +12,7 @@
         <DropdownMenu slot="list">
           <div class="switcher-arrow"></div>
           <DropdownItem v-for="it in systemList" :key="it.code" :name="it.code"
-            :selected="user.systemCode == it.code">{{it.name}}投放管理平台</DropdownItem>
+            :selected="user.systemCode == it.code">{{it.name}}系统</DropdownItem>
         </DropdownMenu>
       </Dropdown>
 
