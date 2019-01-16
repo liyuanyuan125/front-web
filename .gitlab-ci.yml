@@ -5,15 +5,17 @@ stages:
   - deploy
 
 variables:
-  SERVICE_NAME: iadp-front-web-demo
+  SERVICE_NAME: iadp-front-web
+  YARN_REGISTRY: https://registry.npm.taobao.org
 
 lint:
   image: $REGISTRY_ADDRESS/devops/nodejs/build
   stage: lint
   script:
-    - yarn && yarn lint
+    - yarn config set registry $YARN_REGISTRY && yarn && yarn lint
   only:
-    - demo
+    - develop
+    - release
   tags:
     - nodejs
 
@@ -21,9 +23,10 @@ build:
   image: $REGISTRY_ADDRESS/devops/nodejs/build
   stage: build
   only:
-    - demo
+    - develop
+    - release
   script:
-    - yarn && yarn build
+    - yarn config set registry $YARN_REGISTRY && yarn && yarn build
   artifacts:
     paths:
       - dist
@@ -38,7 +41,8 @@ package:
   variables:
     GIT_STRATEGY: none
   only:
-    - demo
+    - develop
+    - release
   script:
     - package
   tags:
@@ -51,7 +55,8 @@ deploy:
     GIT_STRATEGY: none
   dependencies: []
   only:
-    - demo
+    - develop
+    - release
   script:
     - deploy -service $SERVICE_NAME
   environment: aiads-dev
