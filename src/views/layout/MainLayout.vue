@@ -3,15 +3,15 @@
     <header class="site-header flex-box">
       <h1 class="logo">
         <router-link to="/" class="logo-link">
-          <img src="./assets/logo.png" alt="Aiads投放管理平台">
+          <img src="~@/assets/site/logo.png" alt="Aiads投放管理平台" class="logo-img">
         </router-link>
       </h1>
 
-      <Dropdown class="switcher">
+      <Dropdown class="switcher" @on-click="onSwitcherClick">
         <a class="switcher-node"></a>
         <DropdownMenu slot="list">
           <div class="switcher-arrow"></div>
-          <DropdownItem v-for="it in systemList" :key="it.code"
+          <DropdownItem v-for="it in systemList" :key="it.code" :name="it.code"
             :selected="user.systemCode == it.code">{{it.name}}投放管理平台</DropdownItem>
         </DropdownMenu>
       </Dropdown>
@@ -57,7 +57,7 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getUser, logout, User } from '@/store'
+import { getUser, logout, User, switchToSystem } from '@/store'
 import { systemList as allSystemList, SystemCode } from '@/util/types'
 import allSiderMenuList, { SiderMenuItem } from './allSiderMenuList'
 import { cloneDeep } from 'lodash'
@@ -153,6 +153,11 @@ export default class App extends ViewBase {
     return this.siderActiveMap[name]
   }
 
+  onSwitcherClick(name: SystemCode) {
+    switchToSystem(name)
+    this.$router.push({ name: 'home' })
+  }
+
   logout() {
     logout()
     this.$router.push({ name: 'login' })
@@ -176,7 +181,7 @@ export default class App extends ViewBase {
 }
 
 .logo {
-  width: 200px;
+  width: 155px;
   font-weight: 400;
   font-size: 18px;
 }
@@ -187,6 +192,9 @@ export default class App extends ViewBase {
   justify-content: center;
   align-items: center;
   color: #fff;
+}
+.logo-img {
+  height: 50px;
 }
 
 .switcher {

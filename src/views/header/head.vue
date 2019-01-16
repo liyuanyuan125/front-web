@@ -4,7 +4,7 @@
       <Row type="flex" justify="center" class="headLogo" align="middle" style="height:144px;">
         <Col span="5">
           <router-link to="/login">
-            <img src="../../assets/login/logo.png" height="44px">
+            <img src="~@/assets/site/logo.png" height="44px">
           </router-link>
         </Col>
         <Col span="2" :offset="17" class="toLogin">

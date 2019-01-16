@@ -30,8 +30,8 @@
         @on-page-size-change="handlePageSize"
       />
       <div slot="footer" class="btnCenter footer-bottom">
-        <button class="button-cancel" @click="handleCancel">取消</button>
-        <button class="button-ok" @click="handleOk">保存</button>
+        <Button class="button-cancel" @click="handleCancel">取消</Button>
+        <Button type="primary" class="button-ok" @click="handleOk">保存</Button>
       </div>
     </Modal>
   </div>
@@ -138,12 +138,12 @@ export default class Change extends ViewBase {
   }
 }
 /deep/ .ivu-table {
-  height: 550px;
-  max-height: 550px;
+  height: 250px;
+  max-height: 250px;
   overflow: auto;
 }
 .footer-bottom {
-  margin: 10px 0 30px;
+  margin: 0 0 10px;
 }
 /deep/ .ivu-page {
   margin-top: 25px;

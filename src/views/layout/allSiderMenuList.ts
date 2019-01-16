@@ -54,7 +54,7 @@ const allSiderMenuList: SiderMenuItem[] = [
     systems: ['ads'],
     subList: [
       {
-        name: 'report-plan',
+        name: '',
         label: '客户列表',
       },
     ]
@@ -66,7 +66,7 @@ const allSiderMenuList: SiderMenuItem[] = [
     systems: ['resource'],
     subList: [
       {
-        name: 'report-plan',
+        name: '',
         label: '广告单列表',
       },
     ]
@@ -78,7 +78,7 @@ const allSiderMenuList: SiderMenuItem[] = [
     systems: ['resource'],
     subList: [
       {
-        name: 'report-plan',
+        name: '',
         label: '排播列表',
       },
     ]
@@ -90,7 +90,7 @@ const allSiderMenuList: SiderMenuItem[] = [
     systems: ['resource'],
     subList: [
       {
-        name: 'report-plan',
+        name: '',
         label: '资源位列表',
       },
     ]
@@ -106,7 +106,7 @@ const allSiderMenuList: SiderMenuItem[] = [
         label: '财务信息',
       },
       {
-        name: 'finance-bill',
+        name: '',
         label: '资金账单',
       }
     ]

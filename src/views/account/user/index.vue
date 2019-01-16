@@ -11,14 +11,14 @@
       <Row type="flex" justify="space-between">
         <Col :span="6">
           <FormItem label="权限角色" :label-width="100">
-            <Select v-model="form.roleId">
+            <Select v-model="form.roleId" clearable>
               <Option :value="item.id" :key="item.id" v-for="item in rolelist">{{item.name}}</Option>
             </Select>
           </FormItem>
         </Col>
         <Col :span="5">
           <FormItem label="账号状态" :label-width="100">
-            <Select v-model="form.status">
+            <Select v-model="form.status" clearable>
               <Option :value="item.key" :key="item.id" v-for="item in statusList">{{item.text}}</Option>
             </Select>
           </FormItem>
@@ -36,10 +36,6 @@
       </Row>
     </Form>
 
-    <!-- <div class="tableTotal">
-      <span>当前共有用户 xxx 人</span>
-      <span>当前结果共xxxx项</span>
-    </div>-->
     <Table
       ref="selection"
       stripe
@@ -82,7 +78,7 @@ export default class Main extends ViewBase {
   total = 0
   pageObject = {
     pageIndex: 1,
-    pageSize: 2
+    pageSize: 10
   }
 
   form = {
@@ -106,6 +102,7 @@ export default class Main extends ViewBase {
     { title: '联系人', key: 'name' },
     {
       title: '登录邮箱',
+      width: 160,
       key: 'email'
     },
     {
@@ -139,12 +136,13 @@ export default class Main extends ViewBase {
     {
       title: '操作',
       key: '',
+      width: 160,
       render: (hh: any, { row }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         if (row.status == 2) {
           return (
-            <div class="">
+            <div>
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
               <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
@@ -153,7 +151,7 @@ export default class Main extends ViewBase {
           )
         } else if (row.status == 1) {
           return (
-            <div class="">
+            <div>
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
               <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
@@ -162,7 +160,7 @@ export default class Main extends ViewBase {
           )
         } else if (row.status == 3) {
           return (
-            <div class="">
+            <div>
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
               <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
@@ -184,12 +182,11 @@ export default class Main extends ViewBase {
   async userList() {
     const { data } = await subAccount({ ...this.form, ...this.pageObject })
 
+    // 处理 roleList 新增 releName
     data.list.map((item: any) => {
       data.roleList.map((role: any) => {
         if (role.id == item.roleId) {
           item.roleName = role.name
-        } else {
-          item.roleName = ''
         }
       })
     })

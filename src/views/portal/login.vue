@@ -3,7 +3,7 @@
     <header>
       <div class="nav">
         <div class="logo">
-          <img src="~@/assets/login/logo.png" alt="alias" height="44px">
+          <img src="~@/assets/site/logo.png" alt="alias" height="50">
         </div>
         <div class="navTitle">
           <router-link tag="span" to>概览</router-link>
@@ -216,7 +216,7 @@ export default class Main extends ViewBase {
     width: 100%;
     height: 100%;
     min-height: 600px;
-    background: url('~@/assets/login/loginBg.png') no-repeat center;
+    background: url('~@/assets/login/loginBg.jpg') no-repeat center;
     background-size: cover;
     .main-wrap {
       .wid-auto;

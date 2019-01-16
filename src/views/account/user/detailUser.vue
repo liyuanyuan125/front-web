@@ -35,7 +35,8 @@
       <Row>
         <Col :span="12">
           <p>
-            <label>客户</label>{{customer}} 个
+            <label>客户</label>
+            {{customer}} 个
           </p>
           <p class="query-cinema" @click="queryCustomer">查看关联客户</p>
         </Col>
@@ -44,23 +45,22 @@
     <h3 class="layout-title">账号权限</h3>
     <div class="text-rows">
       <Row>
-        <Col :span="12">
+        <Col :span="24">
           <p>
-            <label>权限角色</label>{{roleName}}
+            <label>权限角色</label>
+            {{roleName}}
           </p>
           <p class="flex-box">
             <label>相关权限</label>
-            <Tree :data="data1"></Tree>
+            <PermTree v-model="permTreeModal" readonly v-if="permTreeModal"/>
           </p>
         </Col>
       </Row>
     </div>
     <h3 class="layout-title">操作日志</h3>
-    <div class="text-rows">
-      9999
-    </div>
+    <div class="text-rows"></div>
     <div class="btnCenter">
-      <button class="button-ok submitBtn" @click="goBack">返回</button>
+      <Button type="primary" class="button-ok submitBtn" @click="goBack">返回</Button>
     </div>
     <detailDlg v-model="objDlg" v-if="objDlg.visibleDetail"></detailDlg>
   </div>
@@ -68,12 +68,14 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { userDetail, operationLog } from '@/api/user'
+import { userDetail, operationLog, roleIdDetail } from '@/api/user'
 import detailDlg from './detailDlg.vue'
+import PermTree, { PermTreeModal } from '@/components/permTree'
 
 @Component({
   components: {
-    detailDlg
+    detailDlg,
+    PermTree
   }
 })
 export default class Main extends ViewBase {
@@ -85,38 +87,8 @@ export default class Main extends ViewBase {
     customer: ''
   }
 
-  data1 = [
-    {
-      title: '首页',
-      expand: true,
-      children: [
-        {
-          title: '推广管理1',
-          expand: true,
-          children: [
-            {
-              title: '推广管理1-1'
-            },
-            {
-              title: '推广管理1-2'
-            }
-          ]
-        },
-        {
-          title: '推广管理2',
-          expand: true,
-          children: [
-            {
-              title: '推广管理2-1'
-            },
-            {
-              title: '推广管理2-2'
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  permTreeModal: PermTreeModal | null = null
+
   async mounted() {
     const id = this.$route.params.useid
     const { data } = await userDetail({ id })
@@ -124,11 +96,18 @@ export default class Main extends ViewBase {
     this.roleName = data.role.name
     this.customer = this.data.partners == null ? 0 : this.data.partners.length
 
-    const obj = {pageIndex: 1, pageSize: 10}
+    // 操作日志
+    const obj = { pageIndex: 1, pageSize: 10 }
     const datalog = operationLog(obj, id)
 
-
-
+    // tree
+    const {
+      data: { menu, role }
+    } = await roleIdDetail({ id: data.role.id })
+    this.permTreeModal = {
+      menu,
+      perms: (role && role.perms) || []
+    }
   }
 
   queryCustomer() {
@@ -136,7 +115,7 @@ export default class Main extends ViewBase {
     this.objDlg.customer = this.data.partners
   }
   goBack() {
-    this.$router.push({name: 'account-user'})
+    this.$router.push({ name: 'account-user' })
   }
 }
 </script>
