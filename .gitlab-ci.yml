@@ -23,7 +23,7 @@ build:
   only:
     - demo
   script:
-    - yarn && yarn build
+    - rm -rf node_modules && yarn && yarn build
   artifacts:
     paths:
       - dist
