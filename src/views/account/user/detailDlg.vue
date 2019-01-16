@@ -2,7 +2,6 @@
   <div>
     <Modal
       v-model="value.visibleDetail"
-      class-name="vertical-center-modal"
       title="查看关联客户"
       width="800"
     >
@@ -44,11 +43,10 @@ export default class Change extends ViewBase {
 }
 /deep/ .ivu-table {
   height: 550px;
-  max-height: 550px;
-  overflow: auto;
+  overflow-y: auto;
 }
 .footer-bottom {
-  margin: 10px 0 30px;
+  margin: 10px 0 10px;
 }
 </style>
 

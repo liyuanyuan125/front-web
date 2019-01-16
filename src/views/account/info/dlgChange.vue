@@ -2,7 +2,6 @@
   <div>
     <Modal
       v-model="value.visibleMess"
-      class-name="vertical-center-modal"
       :title="value.title"
       width="800"
     >
