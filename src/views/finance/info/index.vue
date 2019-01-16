@@ -11,7 +11,7 @@
       <div class='fince-list'>
           <div class='fince-list-big'>
             <!-- <div class='fince-list-acc'>{{datamoney.balance}}</div> -->
-            <div class='fince-list-acc'>53200.00</div>
+            <div class='fince-list-acc count-to-count-text count-style'>53200.00</div>
             <p class='fince-list-sm'>账户余额/元</p>
           </div>
           <div class='fince-list-big'>
@@ -660,6 +660,10 @@ export default class Main extends ViewBase {
       line-height: 12px;
       margin-top: 12px;
     }
+  }
+  /deep/ .ivu-input {
+    height: 40px;
+    border-radius: 5px;
   }
 }
 </style>

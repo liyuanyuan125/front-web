@@ -2,14 +2,13 @@
   <div>
     <Modal
       v-model="value.visibleDetail"
-      class-name="vertical-center-modal"
       title="查看关联客户"
       width="800"
     >
       <div v-if="visible">当前没有关联的客户</div>
       <Table v-else stripe :columns="columns" :data="data"></Table>
       <div slot="footer" class="btnCenter footer-bottom">
-        <button class="button-cancel" @click="value.visibleDetail = false">关闭</button>
+        <Button type="primary" class="button-cancel" @click="value.visibleDetail = false">关闭</Button>
       </div>
     </Modal>
   </div>
@@ -17,7 +16,6 @@
 <script lang="ts">
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { mount } from '@vue/test-utils'
 
 @Component
 export default class Change extends ViewBase {
@@ -44,11 +42,10 @@ export default class Change extends ViewBase {
 }
 /deep/ .ivu-table {
   height: 550px;
-  max-height: 550px;
-  overflow: auto;
+  overflow-y: auto;
 }
 .footer-bottom {
-  margin: 10px 0 30px;
+  margin: 10px 0 10px;
 }
 </style>
 

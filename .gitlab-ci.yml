@@ -6,12 +6,13 @@ stages:
 
 variables:
   SERVICE_NAME: iadp-front-web
+  YARN_REGISTRY: https://registry.yarnpkg.com
 
 lint:
   image: $REGISTRY_ADDRESS/devops/nodejs/build
   stage: lint
   script:
-    - yarn && yarn lint
+    - yarn config set registry $YARN_REGISTRY && yarn && yarn lint
   only:
     - develop
     - release
@@ -25,7 +26,7 @@ build:
     - develop
     - release
   script:
-    - yarn && yarn build
+    - yarn config set registry $YARN_REGISTRY && yarn && yarn build
   artifacts:
     paths:
       - dist

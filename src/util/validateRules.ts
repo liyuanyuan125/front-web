@@ -24,9 +24,11 @@ export function validatePassword(password: string): string | undefined {
     return '密码不能含有空格'
   }
 
-  if (!/[a-z]/.test(password) ||
+  if (
+    !/[a-z]/.test(password) ||
     !/[A-Z]/.test(password) ||
-    !/\d/.test(password)) {
+    !/\d/.test(password)
+  ) {
     return '密码必须大小写字母、数字组合，缺一不可'
   }
 
@@ -40,10 +42,10 @@ export function validatePassword(password: string): string | undefined {
   }
 }
 
- /**
-  * 验证中国手机号
-  * @param mobile 手机号
-  */
+/**
+ * 验证中国手机号
+ * @param mobile 手机号
+ */
 export function validataTel(mobile: string): string | undefined {
   const reg = /^[1][0-9]{10}$/
   if (!reg.test(mobile)) {
@@ -60,4 +62,28 @@ export function validateEmail(email: string): string | undefined {
   if (!reg.test(email)) {
     return '邮箱格式错误'
   }
+}
+
+/**
+ * 时间戳格式转换年月日
+ */
+export function formatTimes(timestamp: any) {
+  const date = new Date(timestamp * 1000)
+  const Y = date.getFullYear() + '-'
+  const M =
+    (date.getMonth() + 1 < 10
+      ? '0' + (date.getMonth() + 1)
+      : date.getMonth() + 1) + '-'
+  const D = date.getDate() + ' '
+  const h = date.getHours() + ':'
+  const m = date.getMinutes() + ':'
+  const s = date.getSeconds()
+  return Y + M + D + h + m + s
+}
+
+/**
+ * 年月日转换时间戳格式
+ */
+export function formatTimestamp(val: any) {
+  return new Date(val).getTime() / 1000
 }

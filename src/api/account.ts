@@ -16,6 +16,7 @@ export async function accountDetail() {
  */
 export async function getLoginEmail(email: string) {
   const res = get(`/customer/captchas/email/reset-email-captcha`, { email })
+  return res
 }
 
 /**
@@ -23,5 +24,32 @@ export async function getLoginEmail(email: string) {
  * @param data
  */
 export async function pendingAudit(data: any) {
-  const res = put(`/customer/accounts/${getUseId.id}/company`, data)
+  const res = put(`/customer/accounts/company`, data)
+  return res
+}
+
+/**
+ * 审核后修改账号信息
+ * @param data
+ */
+export async function auditingAccount(data: any) {
+  const res = put(`customer/accounts`, data)
+  return res
+}
+
+/**]
+ * 获取公司信息变更记录
+ */
+export async function accountChangeList() {
+  const res = get('customer/companies/change-list')
+  return res
+}
+
+/**
+ * 审核成功后修改公司信息
+ * @param data
+ */
+export async function changeCompanyList(data: any) {
+  const res = put(`customer/companies/detail`, data)
+  return res
 }

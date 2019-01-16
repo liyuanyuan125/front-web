@@ -12,7 +12,7 @@
       </FormItem>
     </Form>
     <div class="btnCenter sumbit-button">
-      <button class="button-ok" @click="passwordkSet('form')">修改</button>
+      <Button type="primary" class="button-ok" @click="passwordkSet('form')">修改</Button>
     </div>
   </div>
 </template>

@@ -1,16 +1,12 @@
 <template>
   <div>
-    <Modal v-model="value.editVis" class-name="vertical-center-modal" title="查看关联客户" width="800">
+    <Modal v-model="value.editVis"  title="查看关联客户" width="800">
       <div class="flex-box">
         <Input v-model="search" @click="getList" placeholder="请输入客户ID或名称"/>
         <span @click="getList">
           <Icon type="ios-search" size="22"/>
         </span>
       </div>
-      <!-- <div class="tableTotal">
-        <span>当前共有用户 xxx 人</span>
-        <span>当前结果共xxxx项</span>
-      </div>-->
       <Table
         stripe
         :columns="columns"
@@ -30,8 +26,8 @@
         @on-page-size-change="handlePageSize"
       />
       <div slot="footer" class="btnCenter footer-bottom">
-        <button class="button-cancel" @click="handleCancel">取消</button>
-        <button class="button-ok" @click="handleOk">保存</button>
+        <Button class="button-cancel" @click="handleCancel">取消</Button>
+        <Button type="primary" class="button-ok" @click="handleOk">保存</Button>
       </div>
     </Modal>
   </div>
@@ -138,12 +134,11 @@ export default class Change extends ViewBase {
   }
 }
 /deep/ .ivu-table {
-  height: 550px;
-  max-height: 550px;
-  overflow: auto;
+  height: 500px;
+  overflow-y: auto;
 }
 .footer-bottom {
-  margin: 10px 0 30px;
+  margin: 0 0 10px;
 }
 /deep/ .ivu-page {
   margin-top: 25px;
