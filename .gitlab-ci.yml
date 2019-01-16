@@ -6,7 +6,7 @@ stages:
 
 variables:
   SERVICE_NAME: iadp-front-web
-  YARN_REGISTRY: https://registry.npm.taobao.org
+  YARN_REGISTRY: https://registry.yarnpkg.com
 
 lint:
   image: $REGISTRY_ADDRESS/devops/nodejs/build
