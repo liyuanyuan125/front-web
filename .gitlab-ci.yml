@@ -14,7 +14,7 @@ lint:
   script:
     - yarn config set registry $YARN_REGISTRY && yarn && yarn lint
   only:
-    - develop
+    - demo
   tags:
     - nodejs
 
