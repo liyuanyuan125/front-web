@@ -2,7 +2,6 @@
   <div>
     <Modal
       v-model="value.visibleInforma"
-      class-name="vertical-center-modal"
       title="变更账号信息"
       width="800"
     >

@@ -1,16 +1,12 @@
 <template>
   <div>
-    <Modal v-model="value.editVis" class-name="vertical-center-modal" title="查看关联客户" width="800">
+    <Modal v-model="value.editVis"  title="查看关联客户" width="800">
       <div class="flex-box">
         <Input v-model="search" @click="getList" placeholder="请输入客户ID或名称"/>
         <span @click="getList">
           <Icon type="ios-search" size="22"/>
         </span>
       </div>
-      <!-- <div class="tableTotal">
-        <span>当前共有用户 xxx 人</span>
-        <span>当前结果共xxxx项</span>
-      </div>-->
       <Table
         stripe
         :columns="columns"
@@ -138,9 +134,8 @@ export default class Change extends ViewBase {
   }
 }
 /deep/ .ivu-table {
-  height: 250px;
-  max-height: 250px;
-  overflow: auto;
+  height: 500px;
+  overflow-y: auto;
 }
 .footer-bottom {
   margin: 0 0 10px;
