@@ -2,7 +2,7 @@
   <div class="activeEmail">
     <Form :model="form" label-position="left" class="edit-input" :label-width="100">
       <h3 class="logo">
-        <img src="../../assets/login/logo.png">
+        <img src="~@/assets/site/logo.png">
       </h3>
       <FormItem label="登录邮箱" class="item-top">
         <Input v-model="form.firstPass" placeholder="请输入正确的邮箱地址"></Input>

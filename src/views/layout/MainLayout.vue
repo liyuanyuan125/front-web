@@ -3,7 +3,7 @@
     <header class="site-header flex-box">
       <h1 class="logo">
         <router-link to="/" class="logo-link">
-          <img src="./assets/logo.png" alt="Aiads投放管理平台">
+          <img src="~@/assets/site/logo.png" alt="Aiads投放管理平台" class="logo-img">
         </router-link>
       </h1>
 
@@ -181,7 +181,7 @@ export default class App extends ViewBase {
 }
 
 .logo {
-  width: 200px;
+  width: 155px;
   font-weight: 400;
   font-size: 18px;
 }
@@ -192,6 +192,9 @@ export default class App extends ViewBase {
   justify-content: center;
   align-items: center;
   color: #fff;
+}
+.logo-img {
+  height: 50px;
 }
 
 .switcher {

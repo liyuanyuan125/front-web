@@ -4,7 +4,7 @@
       <div class="header-in flex-box">
         <div class="logo-wrap flex-mid">
           <router-link :to="{ name: 'home' }">
-            <img src="~@/assets/login/logo.png" class="logo">
+            <img src="~@/assets/site/logo.png" class="logo">
           </router-link>
         </div>
         <div class="flex-1"></div>
