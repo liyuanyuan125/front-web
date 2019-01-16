@@ -130,17 +130,17 @@
            <Row :gutter="30">
              <Col :span="8">
               <dl class="cinema-img">
-                <dd><img src="./assets/Group 5.png" alt=""></dd>
+                <dd><img src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgv9f4i893rg0080030g.png" alt=""></dd>
               </dl>
              </Col>
              <Col :span="8">
               <dl class="cinema-img">
-                <dd><img src="./assets/Group 6.png" alt=""></dd>
+                <dd><img src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgv9feq893rg00800310.png" alt=""></dd>
               </dl>
              </Col>
              <Col :span="8">
               <dl class="cinema-img">
-                <dd><img src="./assets/Group 8.png" alt=""></dd>
+                <dd><img src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgv9fj2893rg0080031g.png" alt=""></dd>
               </dl>
              </Col>
            </Row>

@@ -11,6 +11,9 @@
           @click="form.putType = 'refBefore'"
         >映前广告</span>
         <span :class="{active: form.putType == 'refafter'}" @click="form.putType = 'refafter'">线下场馆</span>
+        <span>视频贴片</span>
+        <span>电视广告</span>
+        <span>名人</span>
       </FormItem>
 
       <FormItem label="广告计划">
@@ -485,12 +488,12 @@ export default class Main extends ViewBase {
   .select-adv-type {
     span {
       display: inline-block;
-      width: 160px;
+      width: 155px;
       height: 50px;
       line-height: 47px;
       text-align: center;
       color: #444;
-      margin-right: 20px;
+      margin-right: 10px;
       margin-top: -3px;
       font-size: 14px;
       border: solid 1px #fff;
