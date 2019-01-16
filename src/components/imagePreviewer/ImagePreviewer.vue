@@ -86,6 +86,7 @@ export default class Upload extends ViewBase {
 .viewer-tip {
   text-align: center;
   color: #ddd;
+  cursor: pointer;
   margin-bottom: 10px;
 }
 

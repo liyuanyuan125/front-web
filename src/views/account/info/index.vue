@@ -253,9 +253,9 @@ export default class Main extends ViewBase {
     }
   }
 
-  setErrorImg(e: any) {
-    e.target.src = 'https://file.iviewui.com/iview-admin/login_bg.jpg'
-  }
+  // setErrorImg(e: any) {
+  //   e.target.src = 'https://file.iviewui.com/iview-admin/login_bg.jpg'
+  // }
 }
 </script>
 
