@@ -16,7 +16,6 @@
 <script lang="ts">
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { mount } from '@vue/test-utils'
 
 @Component
 export default class Change extends ViewBase {
