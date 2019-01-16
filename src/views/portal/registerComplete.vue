@@ -97,7 +97,7 @@ export default class Main extends ViewBase {
   }
 
   toHome() {
-    this.$router.push({ name: 'home' })
+    this.$router.push({ name: 'login' })
   }
 
   scrollToError() {

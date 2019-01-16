@@ -61,7 +61,7 @@
           </p>
           <p class="flex-box">
             <label>资质图片</label>
-            <em>
+            <em class="flex-box">
               <ImagePreviewer v-for="(item, i) in company.images" :key="i"
                 :url="item.url" class="qualification-image"/>
             </em>
@@ -202,23 +202,26 @@ export default class Main extends ViewBase {
       this.systemList = data.systemList
       this.informa.qualificationTypeList = data.qualificationTypeList
 
-      // 账号类型转换
-      const accountType = this.account.systems.map((item: any, index: any) => {
-        if (this.systemList[index].code == item) {
-          return this.systemList[index].desc
-        }
-      })
-      this.accountType =
-        accountType.length > 1
-          ? `${accountType[0]} / ${accountType[1]}`
-          : accountType.toString()
+      this.queryAccuontList()
     } catch (ex) {
       this.handleError(ex)
     }
     // 审核后 账号变更记录
     this.accountChangeList()
   }
-
+  queryAccuontList() {
+    // 账号类型转换
+    let array:any[] = []
+    this.account.systems.map( (item: any) => {
+     const a = this.systemList.filter( (sys: any) => {
+       if (sys.code == item) {
+        array.push(sys.desc)
+         return sys.desc
+       }
+     })
+    })
+    this.accountType = array.length > 1 ? `${array[0]} / ${array[1]}` : array.toString()
+  }
   queryTypeList(val: any) {
     // 查询资质类型
     let list: any = this.informa.qualificationTypeList
@@ -270,5 +273,6 @@ export default class Main extends ViewBase {
 
 .qualification-image {
   width: 150px;
+  margin-right: 25px;
 }
 </style>

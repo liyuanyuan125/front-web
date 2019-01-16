@@ -111,9 +111,9 @@ export default class Main extends ViewBase {
         contact: data.account.name,
         contactTel: data.account.mobile,
         companyEmail: data.account.email,
-        qualificationType: data.company.qualificationType,
+        qualificationType: data.company.qualificationType || '',
         qualificationCode: data.company.qualificationCode,
-        imageList: data.company.images
+        imageList: data.company.images || []
       }
     } catch (ex) {
       this.handleError(ex)
@@ -136,18 +136,24 @@ export default class Main extends ViewBase {
 
   async updateAccount() {
     // 如果验证码为空，不必传邮箱
-    const cloneForm = Object.assign(this.form)
-    if (!cloneForm.emailCaptcha) {
-      cloneForm.email = null
-      cloneForm.emailCaptcha = null
-    }
+    const cloneForm = this.form
     cloneForm.imageList = cloneForm.imageList.map( (item: any) => item.fileId)
     try {
-      await pendingAudit({
-        ...cloneForm,
-        provinceId: this.form.area[0],
-        cityId: this.form.area[1]
-      })
+      if (!cloneForm.emailCaptcha) {
+         await pendingAudit({
+            ...cloneForm,
+            email: null,
+            emailCaptcha: null,
+            provinceId: this.form.area[0],
+            cityId: this.form.area[1]
+         })
+      } else {
+         await pendingAudit({
+            ...cloneForm,
+            provinceId: this.form.area[0],
+            cityId: this.form.area[1]
+         })
+      }
       this.$router.push({ name: 'account-info' })
     } catch (ex) {
       ((this as any)[`onSumbit${ex.code}`] || this.handleError).call(this, ex)

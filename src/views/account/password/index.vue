@@ -2,7 +2,7 @@
   <div class="page home-bg">
     <Form ref="form" :model="from" class="edit-input from" :rules="dataRule" :label-width="100">
       <FormItem label="邮箱邮箱">
-        <span>{{loginEmail}}</span>
+        <em class="login-email">{{loginEmail}}</em>
       </FormItem>
       <FormItem label="输入旧密码" prop="oldPassword">
         <Input type="password" v-model="from.oldPassword" :maxlength="16" placeholder="请输入含大小写的英文字母与数字的组合，8－16位"></Input>
@@ -37,8 +37,9 @@ export default class Main extends ViewBase {
     newPassword: '',
     newPasswords: ''
   }
-  async mounted() {
-    const use = getUser()
+  mounted() {
+    const use: any = getUser()
+    this.loginEmail = JSON.parse(JSON.stringify(use)).email
   }
   get dataRule() {
       const password = (rule: any, value: any, callback: any) => {
@@ -88,6 +89,11 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+.login-email {
+  font-size: 14px;
+  position: relative;
+  top: 3px;
+}
 .from {
   padding: 30px 0 0 30px;
 }

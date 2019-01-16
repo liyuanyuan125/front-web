@@ -68,7 +68,13 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import jsxReactToVue from '@/util/jsxReactToVue'
-import { rolesList, subAccount, delectSub, accountStatu, activeEmail } from '@/api/user'
+import {
+  rolesList,
+  subAccount,
+  delectSub,
+  accountStatu,
+  activeEmail
+} from '@/api/user'
 import { getUser } from '@/store'
 import { confirm } from '@/ui/modal'
 
@@ -145,7 +151,8 @@ export default class Main extends ViewBase {
             <div>
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
-              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
+              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>
+              &nbsp;&nbsp;&nbsp;
               <a on-click={this.handleEnable.bind(this, row.id, 1)}>启用</a>
             </div>
           )
@@ -154,7 +161,8 @@ export default class Main extends ViewBase {
             <div>
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
-              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
+              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>
+              &nbsp;&nbsp;&nbsp;
               <a on-click={this.handleEnable.bind(this, row.id, 2)}>禁用</a>
             </div>
           )
@@ -163,8 +171,9 @@ export default class Main extends ViewBase {
             <div>
               <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
               &nbsp;&nbsp;&nbsp;
-              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>&nbsp;&nbsp;&nbsp;
-              <a on-click={this.activeEmail.bind(this,row.id)}>重新激活</a>
+              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>
+              &nbsp;&nbsp;&nbsp;
+              <a on-click={this.activeEmail.bind(this, row.id)}>重新激活</a>
             </div>
           )
         }
@@ -183,17 +192,19 @@ export default class Main extends ViewBase {
     const { data } = await subAccount({ ...this.form, ...this.pageObject })
 
     // 处理 roleList 新增 releName
-    data.list.map((item: any) => {
-      data.roleList.map((role: any) => {
-        if (role.id == item.roleId) {
-          item.roleName = role.name
-        }
+    if (data.list) {
+      data.list.map((item: any) => {
+        data.roleList.map((role: any) => {
+          if (role.id == item.roleId) {
+            item.roleName = role.name
+          }
+        })
       })
-    })
+      this.data = data.list
+    }
 
     this.rolelist = data.roleList
     this.statusList = data.statusList
-    this.data = data.list
     this.total = data.totalCount
   }
 
@@ -235,10 +246,10 @@ export default class Main extends ViewBase {
     this.$router.push({ name: 'account-user-detail', params: { useid: id } })
   }
   toEdit(id: any) {
-    this.$router.push({ name: 'account-user-edit', params: {useid: id} })
+    this.$router.push({ name: 'account-user-edit', params: { useid: id } })
   }
   async activeEmail(id: any) {
-    await activeEmail({id})
+    await activeEmail({ id })
   }
 
   handlepageChange(size: any) {
