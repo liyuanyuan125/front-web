@@ -9,7 +9,7 @@
       <div v-if="visible">当前没有关联的客户</div>
       <Table v-else stripe :columns="columns" :data="data"></Table>
       <div slot="footer" class="btnCenter footer-bottom">
-        <button class="button-cancel" @click="value.visibleDetail = false">关闭</button>
+        <Button type="primary" class="button-cancel" @click="value.visibleDetail = false">关闭</Button>
       </div>
     </Modal>
   </div>

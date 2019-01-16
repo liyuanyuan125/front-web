@@ -50,6 +50,6 @@ export async function accountChangeList() {
  * @param data
  */
 export async function changeCompanyList(data: any) {
-  const res = put(`customer/companies/detail`)
+  const res = put(`customer/companies/detail`, data)
   return res
 }

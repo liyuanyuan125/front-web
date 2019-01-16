@@ -14,7 +14,7 @@
           </p>
           <p>
             <label>账号类型</label>
-            {{list.companyTypeList}}
+            {{accountType}}
           </p>
           <p>
             <label>资质类型</label>
@@ -33,7 +33,7 @@
         </Col>
       </Row>
       <div class="footer btnCenter">
-        <button class="button-ok" @click="value.visibleMess = false">关闭</button>
+        <Button type="primary" class="button-ok" @click="value.visibleMess = false">关闭</Button>
       </div>
     </Modal>
   </div>
@@ -45,9 +45,12 @@ import ViewBase from '@/util/ViewBase'
 @Component
 export default class Change extends ViewBase {
   @Prop({ type: Object }) value!: any
-  list = {}
+  list: any = {}
+  accountType = ''
   mounted() {
     this.list = Object.assign(this.value.changelist)
+    const account: any = this.list.companyTypeList
+    this.accountType = account.length > 1 ? `${account[0]} / ${account[1]}` : account.toString()
   }
   closeDlg() {
     this.value.visibleMess = false

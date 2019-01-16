@@ -37,7 +37,7 @@
       </FormItem>
     </Form>
     <div class="btnCenter">
-      <button class="button-ok editSumbit" @click="handleInforma">确定修改</button>
+      <Button type="primary" class="button-ok editSumbit" @click="handleInforma">确定修改</Button>
     </div>
     <detailDlg v-model="detailVisible" v-if="detailVisible.visibleDetail"></detailDlg>
     <editDig v-model="editVisible" @save="save" v-if="editVisible.editVis"></editDig>

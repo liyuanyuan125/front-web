@@ -60,7 +60,7 @@
     <h3 class="layout-title">操作日志</h3>
     <div class="text-rows"></div>
     <div class="btnCenter">
-      <button class="button-ok submitBtn" @click="goBack">返回</button>
+      <Button type="primary" class="button-ok submitBtn" @click="goBack">返回</Button>
     </div>
     <detailDlg v-model="objDlg" v-if="objDlg.visibleDetail"></detailDlg>
   </div>
