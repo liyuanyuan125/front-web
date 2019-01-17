@@ -481,7 +481,7 @@ export default class Main extends ViewBase {
     }
     .cinema-img {
       img {
-        width: 95%;
+        width: 100%;
       }
     }
     .poster-title {
