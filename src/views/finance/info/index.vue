@@ -7,25 +7,17 @@
       <h3 class="userTitle">
         <span style="color:#222222;" class="nav-top-title">账户总览</span>
       </h3>
-      <!-- {{datamoney}} -->
       <div class="fince-list">
         <div class="fince-list-big">
-          <!-- <div class='fince-list-acc'>{{datamoney.balance}}</div> -->
           <div class="fince-list-acc count-to-count-text count-style">{{balance}}</div>
-          <!-- <Row type="flex" justify="center" align="middle" class="countto-page-row">
-              <div class="count-to-con">
-                <count-to :end="2534"/>
-              </div>
-          </Row>-->
+
           <p class="fince-list-sm">账户余额/元</p>
         </div>
         <div class="fince-list-big">
-          <!-- <div class='fince-list-acc'>{{datamoney.availableAmount}}</div> -->
           <div class="fince-list-acc">{{availableAmount}}</div>
           <p class="fince-list-sm">可用金额/元</p>
         </div>
         <div class="fince-list-big">
-          <!-- <div class='fince-list-accd'>{{datamoney.freezeAmount}}</div> -->
           <div class="fince-list-accd">{{freezeAmount}}</div>
           <p class="fince-list-sm">冻结金额/元</p>
         </div>
@@ -38,7 +30,6 @@
         tag="div"
         class="table-right-title"
       >查看更多</router-link>
-      <!-- <div class="table-right-title">查看更多</div> -->
     </div>
     <Table
       ref="selection"
@@ -48,15 +39,7 @@
       :columns="columns4"
       :data="tableData"
     ></Table>
-    <!-- <Page :total="total" v-if="total>0" class="btnCenter"
-      :current="dataForm.pageIndex"
-      :page-size="dataForm.pageSize"
-      :page-size-opts="[10, 20, 50, 100]"
-      show-total
-      show-sizer
-      show-elevator
-      @on-change="sizeChangeHandle"
-    @on-page-size-change="currentChangeHandle"/>-->
+
     <div class="finceadd">
       <h3 class="userTitle">
         <span style="color:#222222;" class="nav-top-title">账户充值</span>
@@ -93,7 +76,6 @@
             <Col span="12">
               <FormItem label="汇款底单" prop="receipts">
                 <Upload v-model="dataForm.receipts" multiple :maxCount="1" accept="image/*"/>
-                <!-- <Input class='inp-style' placeholder="请输入充值金额"/> -->
               </FormItem>
             </Col>
           </Row>
@@ -129,7 +111,6 @@
                   placeholder="选择日期"
                   class="inp-style-center"
                 ></Date-picker>
-                <!-- <Input v-model="dataForm.remittanceDate" class='inp-style-center' placeholder=""/> -->
               </FormItem>
             </Col>
             <Col span="8">
@@ -155,7 +136,7 @@
             </Col>
           </Row>
         </Form>
-        <div style="text-align: center">
+        <div class='btnq' style="text-align: center">
           <Button type="primary" @click="dataFormSubmit('dataForm')">提交充值申请</Button>
         </div>
       </div>
@@ -177,13 +158,11 @@ import {
   defaultList,
   add
 } from '@/api/financeinfo'
-// import { queryList } from '@/api/asd'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { toMap } from '@/fn/array'
 import moment from 'moment'
 import Upload from '@/components/upload/Upload.vue'
 import { slice, clean } from '@/fn/object'
-// import countTo from './count-to/count-to.vue'
 
 // 获取当前登录用户信息
 const user: any = getUser()!
@@ -217,18 +196,7 @@ export default class Main extends ViewBase {
     pageIndex: 1,
     pageSize: 10
   }
-  // dataForm = {
-  //   accountNumber: '',
-  //   accountName: '',
-  //   amount: null,
-  //   remittanceDate: null,
-  //   contactPhone: '',
-  //   remark: '',
-  //   receipts : [],
-  //   receipt: '',
-  //   companyId: user.companyId,
-  //   companyName: user.companyName
-  // }
+
 
   accountSplice = ''
 
@@ -418,7 +386,6 @@ export default class Main extends ViewBase {
         this.newend + (number + '00').substr((number + '00').indexOf('.'), 3)
       return number
     }
-    // number = ''
   }
   addset(str: any, str1: any) {
     setInterval(() => {
@@ -433,7 +400,6 @@ export default class Main extends ViewBase {
 
   created() {
     // this.getUser()
-    // console.log(user)
     this.userList = user
     this.seach()
     this.init()
@@ -538,15 +504,12 @@ export default class Main extends ViewBase {
         this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
       }, 5000)
 
-      // this.availableAmount = this.addNumber(String(this.datamoney.availableAmount))
-      // this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
       // 银行卡信息
       const { data } = await defaultList(user.companyId)
       this.defaultdata = data // accountSplice
       this.accountSplice = data.accountNumber
         ? data.accountNumber.replace(/(\d{4})(?=\d)/g, '$1 ')
         : ''
-      // console.log(data)
     } catch (ex) {
       this.handleError(ex)
     } finally {
@@ -563,7 +526,6 @@ export default class Main extends ViewBase {
       this.dataForm.receipts.length > 0 ? this.dataForm.receipts[0].fileId : []
     const myThis: any = this
     myThis.$refs[dataForms].validate(async (valid: any) => {
-      // debugger
       if (valid) {
         const query = !this.id
           ? this.dataForm
@@ -574,7 +536,6 @@ export default class Main extends ViewBase {
         const title = '添加'
         try {
           const res = await add(query)
-          //  this.$router.push({ name : 'Finance-examine' })
         } catch (ex) {
           this.handleError(ex)
         }
@@ -589,9 +550,6 @@ export default class Main extends ViewBase {
     this.viewerShow = true
   }
 
-  toDetail(id: any) {
-    this.$router.push({ name: 'account-cinema-detail', params: { id } })
-  }
   @Watch('dataForms', { deep: true })
   watchdataForms(val: any[]) {
     this.dataForm.receipts = val.map(it => it.fileId)
@@ -829,6 +787,9 @@ export default class Main extends ViewBase {
   }
   /deep/ .inp-style-tex .ivu-input {
     height: 100px;
+  }
+  .btnq {
+    margin-top: 100px;
   }
 }
 </style>
