@@ -3,46 +3,40 @@
     <h3 class="userTitle">
       <span class="nav-top-title">财务信息</span>
     </h3>
-    <div class="fince">
+    <div class='fince'>
       <h3 class="userTitle">
-        <span style="color:#222222;" class="nav-top-title">账户总览</span>
+        <span style='color:#222222;' class="nav-top-title">账户总览</span>
       </h3>
       <!-- {{datamoney}} -->
-      <div class="fince-list">
-        <div class="fince-list-big">
-          <!-- <div class='fince-list-acc'>{{datamoney.balance}}</div> -->
-          <div class="fince-list-acc count-to-count-text count-style">53200.00</div>
-          <p class="fince-list-sm">账户余额/元</p>
-        </div>
-        <div class="fince-list-big">
-          <!-- <div class='fince-list-acc'>{{datamoney.availableAmount}}</div> -->
-          <div class="fince-list-acc">53200.00</div>
-          <p class="fince-list-sm">可用金额/元</p>
-        </div>
-        <div class="fince-list-big">
-          <!-- <div class='fince-list-accd'>{{datamoney.freezeAmount}}</div> -->
-          <div class="fince-list-accd">53200.00</div>
-          <p class="fince-list-sm">冻结金额/元</p>
-        </div>
+      <div class='fince-list'>
+          <div class='fince-list-big'>
+            <!-- <div class='fince-list-acc'>{{datamoney.balance}}</div> -->
+            <div class='fince-list-acc count-to-count-text count-style'>{{balance}}</div>
+            <!-- <Row type="flex" justify="center" align="middle" class="countto-page-row">
+              <div class="count-to-con">
+                <count-to :end="2534"/>
+              </div>
+            </Row> -->
+            <p class='fince-list-sm'>账户余额/元</p>
+          </div>
+          <div class='fince-list-big'>
+            <!-- <div class='fince-list-acc'>{{datamoney.availableAmount}}</div> -->
+            <div class='fince-list-acc'>{{availableAmount}}</div>
+            <p class='fince-list-sm'>可用金额/元</p>
+          </div>
+          <div class='fince-list-big'>
+            <!-- <div class='fince-list-accd'>{{datamoney.freezeAmount}}</div> -->
+            <div class='fince-list-accd'>{{freezeAmount}}</div>
+            <p class='fince-list-sm'>冻结金额/元</p>
+          </div>
       </div>
     </div>
     <div class="table-box">
       <div class="table-left-title">最近充值记录</div>
-      <router-link
-        :to="{path:'/finance/info/more' , params: {companyId: userList.companyId,}}"
-        tag="div"
-        class="table-right-title"
-      >查看更多</router-link>
+      <router-link :to="{path:'/finance/info/more' , params: {companyId: userList.companyId,}}" tag="div" class="table-right-title">查看更多</router-link>
       <!-- <div class="table-right-title">查看更多</div> -->
     </div>
-    <Table
-      ref="selection"
-      stripe
-      class="tables"
-      :loading="tableLoading"
-      :columns="columns4"
-      :data="tableData"
-    ></Table>
+    <Table ref="selection" stripe class="tables" :loading="tableLoading" :columns="columns4" :data="tableData"></Table>
     <!-- <Page :total="total" v-if="total>0" class="btnCenter"
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
@@ -51,133 +45,101 @@
       show-sizer
       show-elevator
       @on-change="sizeChangeHandle"
-    @on-page-size-change="currentChangeHandle"/>-->
-    <div class="finceadd">
+      @on-page-size-change="currentChangeHandle"/> -->
+    <div class='finceadd'>
       <h3 class="userTitle">
-        <span style="color:#222222;" class="nav-top-title">账户充值</span>
+        <span style='color:#222222;' class="nav-top-title">账户充值</span>
       </h3>
-      <div class="fince-list">
-        <Form
-          :model="dataForm"
-          :label-width="88"
-          :rules="rules"
-          label-position="left"
-          class="form page"
-          ref="dataForm"
-        >
-          <Row class="add-row">
-            <Col span="12">
-              <FormItem label="汇款信息">
-                <div class="hui-div">
-                  <div>
-                    <p class="sma1">{{defaultdata.accountBank}}</p>
-                    <p class="sma2">开户银行</p>
+      <div class='fince-list'>
+        <Form  :model='dataForm' :label-width='88' :rules='rules' label-position="left" class='form page' ref='dataForm'>
+            <Row class='add-row'>
+              <Col span="12">
+                <FormItem label="汇款信息">
+                  <div class='hui-div'>
+                    <div>
+                        <p class='sma1'>{{defaultdata.accountBank}}</p>
+                        <p class='sma2'>开户银行</p>
+                    </div>
+                    <div>
+                        <p class='sma3'>开户账号</p>
+                        <div class='sma4'>{{defaultdata.accountNumber.slice(0, 4)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(4, 8)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(8, 12)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(12, 16)}}</div>
+                    </div>
+                    <div>
+                        <p class='sma5'>开户名称</p>
+                        <p class='sma6'>{{defaultdata.accountName}}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p class="sma3">开户账号</p>
-                    <div class="sma4">{{accounNumId}}</div>
-                    <!-- <div class='sma4'>{{defaultdata.accountNumber.slice(0, 4)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(4, 8)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(8, 12)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(12, 16)}}</div> -->
-                  </div>
-                  <div>
-                    <p class="sma5">开户名称</p>
-                    <p class="sma6">{{defaultdata.accountName}}</p>
-                  </div>
-                </div>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="汇款底单" prop="receipts">
+                </FormItem>
+              </Col>
+              <Col span='12'>
+                <FormItem label="汇款底单" prop='receipts'>
                 <Upload v-model="dataForm.receipts" multiple :maxCount="1" accept="image/*"/>
-                <!-- <Input class='inp-style' placeholder="请输入充值金额"/> -->
-              </FormItem>
-            </Col>
-          </Row>
-          <Row class="add-row">
-            <Col span="12">
-              <FormItem label="银行账号" prop="accountNumber">
-                <Input v-model="dataForm.accountNumber" class="inp-style" placeholder="请输入汇款银行账号"/>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="充值金额" prop="amount">
-                <Input v-model="dataForm.amount" class="inp-style" placeholder="请输入充值金额"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row class="add-row">
-            <Col span="8">
-              <FormItem label="汇款人姓名" prop="accountName">
-                <Input
-                  v-model="dataForm.accountName"
-                  class="inp-style-center"
-                  placeholder="请输入汇款人姓名"
-                />
-              </FormItem>
-            </Col>
-            <Col span="8">
-              <FormItem label="汇款时间">
-                <Date-picker
-                  type="date"
-                  prop="remittanceDate"
-                  v-model="dataForm.remittanceDate"
-                  on-change="selectTime"
-                  placeholder="选择日期"
-                  class="inp-style-center"
-                ></Date-picker>
-                <!-- <Input v-model="dataForm.remittanceDate" class='inp-style-center' placeholder=""/> -->
-              </FormItem>
-            </Col>
-            <Col span="8">
-              <FormItem label="联系电话" prop="contactPhone">
-                <Input
-                  v-model="dataForm.contactPhone"
-                  class="inp-style-center"
-                  placeholder="请输入联系人电话号码"
-                />
-              </FormItem>
-            </Col>
-          </Row>
-          <Row class="add-row">
-            <Col span="24">
-              <FormItem label="备注" prop="remark">
-                <Input
-                  v-model="dataForm.remark"
-                  class="inp-style-tex"
-                  type="textarea"
-                  placeholder="限50字"
-                />
-              </FormItem>
-            </Col>
-          </Row>
+                  <!-- <Input class='inp-style' placeholder="请输入充值金额"/> -->
+                </FormItem>
+              </Col>
+            </Row>
+            <Row class='add-row'>
+              <Col span="12">
+                <FormItem label="银行账号" prop='accountNumber'>
+                  <Input v-model="dataForm.accountNumber" class='inp-style' placeholder="请输入汇款银行账号"/>
+                </FormItem>
+              </Col>
+              <Col span='12'>
+                <FormItem label="充值金额" prop='amount'>
+                  <Input v-model="dataForm.amount" class='inp-style' placeholder="请输入充值金额"/>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row class='add-row'>
+              <Col span="8">
+                <FormItem label="汇款人姓名" prop='accountName'>
+                  <Input v-model="dataForm.accountName" class='inp-style-center' placeholder="请输入汇款人姓名"/>
+                </FormItem>
+              </Col>
+              <Col span='8'>
+                <FormItem label="汇款时间">
+                  <Date-picker type="date" prop='remittanceDate' v-model="dataForm.remittanceDate"
+          on-change="selectTime" placeholder="选择日期" class='inp-style-center'></Date-picker>
+                  <!-- <Input v-model="dataForm.remittanceDate" class='inp-style-center' placeholder=""/> -->
+                </FormItem>
+              </Col>
+              <Col span='8'>
+                <FormItem label="联系电话" prop='contactPhone'>
+                  <Input v-model="dataForm.contactPhone" class='inp-style-center' placeholder="请输入联系人电话号码"/>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row class='add-row'>
+              <Col span="24">
+                <FormItem label="备注" prop='remark'>
+                  <Input v-model="dataForm.remark" class='inp-style-tex' type='textarea' placeholder="限50字"/>
+                </FormItem>
+              </Col>
+            </Row>
         </Form>
         <div style="text-align: center">
           <Button type="primary" @click="dataFormSubmit('dataForm')">提交充值申请</Button>
         </div>
       </div>
     </div>
-    <Modal v-model="viewerShow" title="查看图片" width="500" height="500">
-      <img style="width: 100%;" :src="viewerImage" alt sizes srcset>
+    <Modal v-model="viewerShow" title="查看图片" width="500" height='500'>
+      <img style='width: 100%;' :src=viewerImage alt="" sizes="" srcset="">
     </Modal>
   </div>
 </template>
 
 <script lang="tsx">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, Mixins , Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
-import {
-  queryList,
-  moneyList,
-  dataFrom,
-  defaultList,
-  add
-} from '@/api/financeinfo'
+import { queryList , moneyList , dataFrom , defaultList , add } from '@/api/financeinfo'
 // import { queryList } from '@/api/asd'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { toMap } from '@/fn/array'
 import moment from 'moment'
 import Upload from '@/components/upload/Upload.vue'
 import { slice, clean } from '@/fn/object'
+// import countTo from './count-to/count-to.vue'
 
 // 获取当前登录用户信息
 const user: any = getUser()!
@@ -192,7 +154,7 @@ const dataForm = {
   remittanceDate: null,
   contactPhone: '',
   remark: '',
-  receipts: [],
+  receipts : [],
   receipt: '',
   companyId: user.companyId,
   companyName: user.companyName
@@ -200,18 +162,17 @@ const dataForm = {
 
 @Component({
   components: {
-    Upload
+    Upload,
+    // countTo
   }
 })
 export default class Main extends ViewBase {
-  //   user : any = getUser()
+//   user : any = getUser()
   dataFormget = {
     companyId: user.companyId,
     pageIndex: 1,
-    pageSize: 10
+    pageSize: 10,
   }
-  accounNumId = ''
-
   // dataForm = {
   //   accountNumber: '',
   //   accountName: '',
@@ -241,14 +202,27 @@ export default class Main extends ViewBase {
   accountNumbers: any = ''
 
   rules = {
-    accountName: []
+    accountName: [
+
+    ]
   }
+  count = 0
+  end: any = 0
+  end2: any = 0
+  end3: any = 0
+
+  balance: any = ''
+  availableAmount: any = ''
+  freezeAmount: any = ''
+  newend: any = ''
+
 
   // 查看图片
   viewerShow = false
   viewerImage = ''
 
   dataForm: any = { ...dataForm }
+
 
   columns4 = [
     { title: '充值ID', key: 'id', align: 'center' },
@@ -260,11 +234,7 @@ export default class Main extends ViewBase {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         const html = moment(applyTime).format(timeFormat)
-        return applyTime == null ? (
-          <span class="datetime" v-html="-" />
-        ) : (
-          <span class="datetime" v-html={html} />
-        )
+        return applyTime == null ? <span class='datetime' v-html='-'></span> : <span class='datetime' v-html={html}></span>
         /* tslint:enable */
       }
     },
@@ -286,11 +256,7 @@ export default class Main extends ViewBase {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         const html = moment(remittanceDate).format(timeFormat)
-        return remittanceDate == null ? (
-          <span class="datetime" v-html="-" />
-        ) : (
-          <span class="datetime" v-html={html} />
-        )
+        return remittanceDate == null ? <span class='datetime' v-html='-'></span> : <span class='datetime' v-html={html}></span>
         /* tslint:enable */
       }
     },
@@ -311,19 +277,15 @@ export default class Main extends ViewBase {
       render: (hh: any, { row: { freceipt } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        const html1 = String(freceipt).slice(0, 10) + '...'
+        const html1 = String(freceipt).slice(0,10) + '...'
         if (String(freceipt).length >= 10) {
-          return (
-            <div>
-              <span class="datetime" v-html={html1} />
-            </div>
-          )
+          return <div>
+            <span class='datetime' v-html={html1}></span>
+          </div>
         } else {
-          return (
-            <div>
-              <span class="datetime" v-html={freceipt} />
-            </div>
-          )
+          return <div>
+            <span class='datetime' v-html={freceipt}></span>
+          </div>
         }
         /* tslint:enable */
       }
@@ -334,14 +296,7 @@ export default class Main extends ViewBase {
       render: (hh: any, { row: { mageList } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        return (
-          <a
-            href="javascript:;"
-            on-click={this.onView.bind(mageList.url)}
-            class="operation">
-            查看汇款凭证
-          </a>
-        )
+        return <a href='javascript:;' on-click={this.onView.bind( mageList.url )} class="operation" >查看汇款凭证</a>
         /* tslint:enable */
       }
     },
@@ -350,10 +305,7 @@ export default class Main extends ViewBase {
       key: 'statusText',
       width: 100,
       align: 'center',
-      render: (
-        hh: any,
-        { row: { rejectReason, approvalStatus, statusText } }: any
-      ) => {
+      render: (hh: any, { row: { rejectReason , approvalStatus, statusText } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         if (approvalStatus == 1) {
@@ -361,22 +313,65 @@ export default class Main extends ViewBase {
         } else if (approvalStatus == 2) {
           return <span class={`status-${2}`}>充值通过</span>
         } else if (approvalStatus == 3) {
-          return (
-            <tooltip content={rejectReason} placement="top">
+          return <tooltip content={rejectReason} placement="top">
               <span class={`status-${3}`}>充值拒绝</span>
             </tooltip>
-          )
         }
         /* tslint:enable */
       }
     }
   ]
 
+  async init() {
+
+  }
+
+  addNumber(number: any) {
+    this.newend = ''
+    this.count = 0
+    if (number.indexOf('.') == -1) {
+      for (let i = number.length - 1; i >= 0; i-- ) {
+      if ( this.count % 3 == 0 && this.count != 0) {
+        this.newend = number.charAt(i) + ',' + this.newend
+      } else {
+        this.newend = number.charAt(i) + this.newend
+      }
+      this.count++
+      }
+      number = this.newend + '.00' // 自动补小数点后两位
+      return number
+    } else {
+      for (let i = number.indexOf('.') - 1; i >= 0; i-- ) {
+      if (this.count % 3 == 0 && this.count != 0) {
+        this.newend = number.charAt(i) + ',' + this.newend // 碰到3的倍数则加上“,”号
+      } else {
+        this.newend = number.charAt(i) + this.newend // 逐个字符相接起来
+      }
+      this.count++
+      }
+      number = this.newend + (number + '00').substr((number + '00').indexOf('.'), 3)
+      return number
+    }
+    // number = ''
+  }
+  addset(str: any , str1: any) {
+    setInterval(() => {
+      if (Number(this.end) < Number(str1)) {
+        this.end += Math.floor(Math.random() * 50000)
+        str = this.addNumber(String(this.end))
+      } else {
+        return this.end = str1
+      }
+    }, 1)
+  }
+
+
   created() {
     // this.getUser()
     // console.log(user)
     this.userList = user
     this.seach()
+    this.init()
   }
 
   // 每页数
@@ -393,7 +388,7 @@ export default class Main extends ViewBase {
 
   get cachedMap() {
     return {
-      approvalStatus: this.approvalStatusList
+      approvalStatus: this.approvalStatusList,
     }
   }
 
@@ -402,42 +397,91 @@ export default class Main extends ViewBase {
     const list = (this.items || []).map((it: any) => {
       return {
         ...it,
-        statusText: it.approvalStatus
+        statusText: it.approvalStatus,
       }
     })
     return list
   }
+
 
   async seach() {
     this.tableLoading = true
     try {
       const query = { ...this.dataFormget }
       const {
-        data: { items, totalCount, approvalStatusList }
-      } = await queryList(clean({ ...query }))
-      //   console.log(items.length)
-      if (items.length <= 5) {
+        data: {
+          items,
+          totalCount,
+          approvalStatusList
+        }
+      } = await queryList(clean({...query}))
+      if (items.length <= 5 ) {
         this.items = items
       } else {
-        this.items.push(items[0], items[1], items[2], items[3], items[4])
+        this.items.push(items[0] , items[1] , items[2] , items[3] , items[4])
       }
       this.total = totalCount
       this.approvalStatusList = approvalStatusList
       // 财产信息
-      //   const {
-      //     data
-      //   } = await moneyList(user.companyId)
-      //   this.datamoney = data
-      // 银行卡信息
-      const { data } = await defaultList(clean({ ...query }))
-      this.defaultdata = data
-      // 身份证 分割符号
-      this.accounNumId = data.accountNumber
-        ? '' +
-          data.accountNumber.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
-        : ''
+      const res  = await moneyList(user.companyId)
+      this.datamoney = res.data
+      // if (this.datamoney.balance == null) {
+      //   this.balance = 0
+      // } else {
+      //   this.balance = this.addNumber(String(this.datamoney.balance))
+      // }
+      // if (this.datamoney.availableAmount == null) {
+      //   this.availableAmount = 0
+      // } else {
+      //   this.availableAmount = this.addNumber(String(this.datamoney.availableAmount))
+      // }
+      // this.addset(this.balance , this.datamoney.balance)
 
-      // console.log(data)
+        const balance = setInterval(() => {
+          if (Number(this.end) < Number(this.datamoney.balance)) {
+            this.end += Math.floor(Math.random() * 2000)
+            this.balance = this.addNumber(String(this.end))
+          } else {
+            return this.end
+          }
+        }, 1)
+        setTimeout(() => {
+          clearInterval(balance)
+          this.balance = this.addNumber(String(this.datamoney.balance))
+        }, 5000)
+
+        const availableAmount = setInterval(() => {
+          if (Number(this.end2) < Number(this.datamoney.availableAmount)) {
+            this.end2 += Math.floor(Math.random() * 2000)
+            this.availableAmount = this.addNumber(String(this.end2))
+          } else {
+            return this.end2
+          }
+        }, 1)
+        setTimeout(() => {
+          clearInterval(availableAmount)
+          this.availableAmount = this.addNumber(String(this.datamoney.availableAmount))
+        }, 5000)
+
+        const freezeAmount = setInterval(() => {
+          if (Number(this.end3) < Number(this.datamoney.freezeAmount)) {
+            this.end3 += Math.floor(Math.random() * 2000)
+            this.freezeAmount = this.addNumber(String(this.end3))
+          } else {
+            return this.end3
+          }
+        }, 1)
+        setTimeout(() => {
+          clearInterval(freezeAmount)
+          this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
+        }, 5000)
+
+      // this.availableAmount = this.addNumber(String(this.datamoney.availableAmount))
+      // this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
+    // 银行卡信息
+    const { data } = await defaultList(user.companyId)
+    this.defaultdata = data
+    // console.log(data)
     } catch (ex) {
       this.handleError(ex)
     } finally {
@@ -445,34 +489,26 @@ export default class Main extends ViewBase {
     }
   }
 
-  // 表单提交
+
+
+    // 表单提交
   async dataFormSubmit(dataForms: any) {
-    // for ( const i in this.companys) {
-    //   if (this.dataForm.companyId == this.companys[i].id) {
-    //     this.dataForm.companyName = this.companys[i].name
-    //   }
-    // }
-    this.dataForm.remittanceDate = new Date(
-      this.dataForm.remittanceDate
-    ).getTime()
-    this.dataForm.receipt =
-      this.dataForm.receipts.length > 0 ? this.dataForm.receipts[0].fileId : []
+    this.dataForm.remittanceDate = new Date(this.dataForm.remittanceDate).getTime()
+    this.dataForm.receipt = this.dataForm.receipts.length > 0 ? this.dataForm.receipts[0].fileId : []
     const myThis: any = this
-    myThis.$refs[dataForms].validate(async (valid: any) => {
-      // debugger
+    myThis.$refs[dataForms].validate( async ( valid: any ) => {
+  // debugger
       if (valid) {
-        const query = !this.id
-          ? this.dataForm
-          : {
-              id: this.id,
-              ...this.dataForm
-            }
+        const query = !this.id ? this.dataForm : {
+          id: this.id,
+          ...this.dataForm
+        }
         const title = '添加'
         try {
-          const res = await add(query)
+           const res =  await add (query)
           //  this.$router.push({ name : 'Finance-examine' })
         } catch (ex) {
-          this.handleError(ex)
+           this.handleError(ex)
         }
       }
     })
@@ -486,10 +522,10 @@ export default class Main extends ViewBase {
   }
 
   toDetail(id: any) {
-    this.$router.push({ name: 'account-cinema-detail', params: { id } })
+    this.$router.push({ name: 'account-cinema-detail', params: {id} })
   }
   @Watch('dataForms', { deep: true })
-  watchdataForms(val: any[]) {
+    watchdataForms(val: any[]) {
     this.dataForm.receipts = val.map(it => it.fileId)
   }
 }
@@ -525,8 +561,7 @@ export default class Main extends ViewBase {
       }
     }
     /deep/ .ivu-select-dropdown {
-      /deep/ li,
-      /deep/ .ivu-select-loading {
+      /deep/ li, /deep/ .ivu-select-loading {
         line-height: 35px;
         height: 35px;
       }
@@ -541,7 +576,7 @@ export default class Main extends ViewBase {
       display: inline-block;
     }
     background: rgba(249, 249, 249, 1);
-    border-radius: 2px 2px 0 0;
+    border-radius: 2px 2px 0  0;
     height: 50px;
     text-align: center;
     line-height: 50px;
@@ -722,7 +757,9 @@ export default class Main extends ViewBase {
   }
   /deep/ .ivu-input {
     height: 40px;
-    border-radius: 5px;
+  }
+  /deep/ .inp-style-tex .ivu-input {
+    height: 100px;
   }
 }
 </style>
