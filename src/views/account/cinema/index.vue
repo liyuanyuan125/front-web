@@ -4,18 +4,6 @@
       <span class="nav-top-title">影院管理</span>
     </h3>
     <div class="flex-box  search-input">
-      <!-- {{query}} -->
-      <!-- <Select
-        v-model="dataForm.query"
-        filterable
-        remote
-        clearable
-        placeholder="请输入转资编码或影院名称"
-        @on-query-change = "querySet"
-        :remote-method="queryCode"
-        :loading="loading">
-        <Option v-for="(option, index) in options" :value="option.value" :key="index">{{option.label}}</Option>
-      </Select> -->
       <Input v-model="dataForm.query"  placeholder="请输入转资编码或影院名称" />
       <span @click="seach">
         <Icon type="ios-search" size="22"/>
@@ -97,47 +85,9 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
-  // async queryCode(query: any) {
-  //   this.query = query
-  //   if (query !== '') {
-  //     this.loading = true
-  //     try {
-  //       const {
-  //         data: {
-  //           items
-  //         }
-  //       } = await cinmeaList({
-  //         query
-  //       })
-  //       const code: any = []
-  //       const shortName: any = []
-  //       items.forEach((it: any) => {
-  //         if ( it.code.includes(query) ) {
-  //           code.push({
-  //             value: it.code,
-  //             label: it.code
-  //           })
-  //         }
-  //       })
-  //       items.forEach((it: any) => {
-  //         if ( it.shortName.includes(query) ) {
-  //           shortName.push({
-  //             value: it.shortName,
-  //             label: it.shortName
-  //           })
-  //         }
-  //       })
-  //       this.options = [...code, ...shortName]
-  //       this.loading = false
-  //     } catch (ex) {
-  //       this.options = []
-  //     }
-  //   } else {
-  //     this.options = []
-  //   }
-  // }
 
   async seach() {
+    this.dataForm.pageIndex = 1
     this.tableLoading = true
     try {
       const {

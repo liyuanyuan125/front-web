@@ -32,7 +32,7 @@
         </Select>
       </FormItem>
       <FormItem label="相关权限">
-         <PermTree v-model="permTreeModal" readonly v-if="permTreeModal"/>
+        <PermTree v-model="permTreeModal" readonly v-if="permTreeModal"/>
       </FormItem>
     </Form>
     <div class="btnCenter">
@@ -87,8 +87,14 @@ export default class Main extends ViewBase {
   }
   async handleInforma() {
     // 提交代码
+    const user: any = getUser()
+    let typeCode: any = ''
+    if (user != null) {
+      typeCode = user.systemCode
+    }
+
     try {
-      const { data } = await addUser(this.form)
+      const { data } = await addUser(this.form, typeCode)
       this.$router.push({ name: 'account-user' })
     } catch (ex) {
       this.handleError.call(this, ex)
@@ -96,11 +102,13 @@ export default class Main extends ViewBase {
   }
   async handleChange() {
     const id = this.form.role
-    const { data: { menu, role}} = await roleIdDetail({id})
-     this.permTreeModal = {
-          menu,
-          perms: (role && role.perms) || []
-     }
+    const {
+      data: { menu, role }
+    } = await roleIdDetail({ id })
+    this.permTreeModal = {
+      menu,
+      perms: (role && role.perms) || []
+    }
   }
   handleEdit() {
     this.editVisible.editVis = true

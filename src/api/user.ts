@@ -33,7 +33,7 @@ export async function subAccount(data: any) {
  * @param id
  */
 export async function userDetail(data: any) {
-    const res = get(`/customer/sub-accounts/${systemCode}/${data.id}`)
+    const res = get(`/customer/sub-accounts/${data.systemCode}/${data.id}`)
     return res
 }
 
@@ -97,8 +97,8 @@ export async function activeEmailSumbit(data: any) {
  *  添加待激活子账户(增加子账户)
  * @param status
  */
-export async function addUser(data: any) {
-    const res = post(`/customer/sub-accounts/${systemCode}`, data)
+export async function addUser(data: any, type: any) {
+    const res = post(`/customer/sub-accounts/${type}`, data)
     return res
 }
 

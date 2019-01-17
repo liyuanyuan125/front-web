@@ -38,7 +38,8 @@
             <label>客户</label>
             {{customer}} 个
           </p>
-          <p class="query-cinema" @click="queryCustomer">查看关联客户</p>
+          <p class="query-cinema" v-if="typeCode == 'ads'" @click="queryCustomer">查看关联客户</p>
+          <p class="query-cinema" v-if="typeCode == 'resource'" @click="queryCustomer">查看关联影院列表</p>
         </Col>
       </Row>
     </div>
@@ -63,6 +64,7 @@
       <Button type="primary" class="button-ok submitBtn" @click="goBack">返回</Button>
     </div>
     <detailDlg v-model="objDlg" v-if="objDlg.visibleDetail"></detailDlg>
+    <resDefaultDlg v-model="resDlg" v-if="resDlg.visible"></resDefaultDlg>
   </div>
 </template>
 <script lang="ts">
@@ -70,28 +72,41 @@ import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { userDetail, operationLog, roleIdDetail } from '@/api/user'
 import detailDlg from './detailDlg.vue'
+import resDefaultDlg from './resDefaultDlg.vue'
 import PermTree, { PermTreeModal } from '@/components/permTree'
+import { getUser } from '@/store'
 
 @Component({
   components: {
     detailDlg,
-    PermTree
+    PermTree,
+    resDefaultDlg
   }
 })
 export default class Main extends ViewBase {
   data: any = []
   customer: any = ''
   roleName = ''
+  // 广告主
   objDlg = {
     visibleDetail: false,
     customer: ''
   }
+  // 资源方
+  resDlg = {
+    visible: false,
+    customer: ''
+  }
 
+  typeCode = ''
   permTreeModal: PermTreeModal | null = null
 
   async mounted() {
     const id = this.$route.params.useid
-    const { data } = await userDetail({ id })
+    const user: any = getUser()!
+    const systemCode = user.systemCode
+    this.typeCode = user.systemCode
+    const { data } = await userDetail({ id, systemCode })
     this.data = data
     this.roleName = data.role.name
     this.customer = this.data.partners == null ? 0 : this.data.partners.length
@@ -111,8 +126,18 @@ export default class Main extends ViewBase {
   }
 
   queryCustomer() {
-    this.objDlg.visibleDetail = true
-    this.objDlg.customer = this.data.partners
+    // 资源方 cinemas  广告主partners
+    if (this.typeCode == 'ads') {
+      this.objDlg = {
+        visibleDetail: true,
+        customer: this.data.partners
+      }
+    } else if (this.typeCode == 'resource') {
+      this.resDlg = {
+        visible: true,
+        customer: this.data.cinemas
+      }
+    }
   }
   goBack() {
     this.$router.push({ name: 'account-user' })
