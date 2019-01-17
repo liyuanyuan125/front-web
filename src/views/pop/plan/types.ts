@@ -51,7 +51,7 @@ export const areaTypeList: KeyText[] = [
   { key: 1, text: '按区域' },
   { key: 2, text: '按省份' },
   { key: 3, text: '按城市' },
-  { key: 4, text: '安影院' },
+  { key: 4, text: '按影院' },
 ]
 
 export interface Film {
