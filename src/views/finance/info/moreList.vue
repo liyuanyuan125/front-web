@@ -1,13 +1,24 @@
 <template>
   <div class="page home-bg">
     <h3 class="userTitle">
-      <span class="nav-top-title">财务信息</span>
+      <Button type="default" icon="md-return-left" @click="goback">返回</Button>
+      <!-- <span class="nav-top-title">财务信息</span> -->
     </h3>
-    <div class="table-box">
+    <div class="flex-box">
+      <!-- {{query}} -->
+      <form class="form flex-1" @submit.prevent="seach">
+        <Select v-model="dataForm.status" placeholder="启用状态" clearable>
+          <Option v-for="it in approvalStatusList" :key="it.key" :value="it.key"
+            :label="it.text">{{it.text}}</Option>
+        </Select>
+        <Button type="warning" @click="seach" class="btn-reset"><Icon type="ios-search" size="18"/>搜索</Button>
+      </form>
+    </div>
+    <!-- <div class="table-box">
       <div class="table-left-title">最近充值记录</div>
       <router-link :to="{path:'/finance/info/more' , params: {companyId: userList.companyId,}}" tag="div" class="table-right-title">查看更多</router-link>
-      <!-- <div class="table-right-title">查看更多</div> -->
-    </div>
+    </div> -->
+    <div class='total'>当前共有记录{{total}}条</div>
     <Table ref="selection" stripe class="tables" :loading="tableLoading" :columns="columns4" :data="tableData"></Table>
     <Page :total="total" v-if="total>0" class="btnCenter"
       :current="dataForm.pageIndex"
@@ -25,7 +36,7 @@
 </template>
 
 <script lang="tsx">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Watch , Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
 import { queryList } from '@/api/financeinfo'
@@ -47,6 +58,7 @@ export default class Main extends ViewBase {
 //   user : any = getUser()
   dataForm = {
     companyId: user.companyId,
+    status: null,
     pageIndex: 1,
     pageSize: 10,
   }
@@ -162,11 +174,10 @@ export default class Main extends ViewBase {
   ]
 
   created() {
-    // this.getUser()
-    // console.log(user.companyId)
     this.userList = user
     this.seach()
   }
+
 
   // 每页数
   sizeChangeHandle(val: any) {
@@ -204,6 +215,10 @@ export default class Main extends ViewBase {
     this.viewerShow = true
   }
 
+  goback() {
+    this.$router.go(-1)
+  }
+
 
   async seach() {
     this.tableLoading = true
@@ -217,11 +232,11 @@ export default class Main extends ViewBase {
         }
       } = await queryList(clean({...query}))
     //   console.log(items.length)
-      if (items.length <= 5 ) {
+      // if (items.length <= 5 ) {
         this.items = items
-      } else {
-        return
-      }
+      // } else {
+        // return
+      // }
       this.total = totalCount
       this.approvalStatusList = approvalStatusList
     } catch (ex) {
@@ -231,9 +246,6 @@ export default class Main extends ViewBase {
     }
   }
 
-  toDetail(id: any) {
-    this.$router.push({ name: 'account-cinema-detail', params: {id} })
-  }
 }
 </script>
 
@@ -258,8 +270,15 @@ export default class Main extends ViewBase {
   .ivu-select {
     width: auto;
     margin-left: 25px;
+    /deep/ .ivu-select-placeholder {
+      line-height: 37px;
+    }
+    /deep/ .ivu-select-selected-value {
+      line-height: 37px;
+    }
     /deep/ .ivu-select-selection {
       height: 40px;
+      width: 200px;
       /deep/ .ivu-select-input {
         height: 40px;
         width: 400px;
@@ -276,6 +295,26 @@ export default class Main extends ViewBase {
         height: 35px;
       }
     }
+  }
+  /deep/ .ivu-btn-default {
+    border: 0;
+    color: #222;
+  }
+  .flex-box {
+    span {
+      display: block;
+      height: 40px;
+      width: 60px;
+      color: #fff;
+      text-align: center;
+      padding-top: 8px;
+      background: @c-button;
+    }
+  }
+  .total {
+    padding-left: 2%;
+    padding-top: 2%;
+    margin-bottom: -1.5%;
   }
   .table-box {
     div {
@@ -393,6 +432,10 @@ export default class Main extends ViewBase {
     width: 98.5%;
     border: 1px solid rgba(210, 210, 210, 1);
     border-radius: 2px;
+  }
+  /deep/ .ivu-btn {
+    font-size: 14px;
+    height: 40px;
   }
 }
 </style>

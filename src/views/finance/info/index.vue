@@ -436,6 +436,7 @@ export default class Main extends ViewBase {
         ? '' +
           data.accountNumber.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
         : ''
+
       // console.log(data)
     } catch (ex) {
       this.handleError(ex)
@@ -475,18 +476,6 @@ export default class Main extends ViewBase {
         }
       }
     })
-    // const valid = await (this.$refs[dataForms] as any).validate()
-    //   if (!valid) {
-    //     return
-    //   }
-    //   try {
-    //     // const {oldPassword, newPassword} = this.dataForm
-    //     const data = this.dataForm
-    //     await add(data)
-    //     // toast('密码修改成功')
-    //   } catch (ex) {
-    //     this.handleError(ex)
-    //   }
   }
 
   // 查看图片
