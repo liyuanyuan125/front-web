@@ -53,7 +53,15 @@
         </RadioGroup>
       </FormItem>
 
-      <FormItem label="权益" class="form-item-quanyi" :label-width="45"
+      <FormItem label="总预算" class="form-item-yusuan" :label-width="60"
+        v-if="form.xingshi == 1">
+        <CheckboxGroup v-model="form.yusuan" class="item-radio-top">
+          <Checkbox v-for="it in yusuanList" :key="it.key" :label="it.key"
+            class="check-item">{{it.text}}</Checkbox>
+        </CheckboxGroup>
+      </FormItem>
+
+      <FormItem label="权益" class="form-item-quanyi" :label-width="60"
         v-if="form.xingshi == 2">
         <CheckboxGroup v-model="form.quanyi" class="item-radio-top">
           <Checkbox v-for="it in quanyiList" :key="it.key" :label="it.key"
@@ -65,13 +73,16 @@
 
       <FormItem label="定向地区" class="form-item-type">
         <RadioGroup v-model="form.areaType" class="item-radio-top">
-          <Radio
-            v-for="it in areaTypeList"
-            :key="it.key"
-            :label="it.key"
-            class="radio-item"
-          >{{it.text}}</Radio>
+          <Radio v-for="it in areaTypeList" :key="it.key"
+            :label="it.key" class="radio-item">{{it.text}}</Radio>
         </RadioGroup>
+      </FormItem>
+
+      <FormItem label="线级" class="form-item-xianji" v-if="form.areaType == 4">
+        <CheckboxGroup v-model="form.xianji" class="item-radio-top">
+          <Checkbox v-for="it in xianjiList" :key="it.key" :label="it.key"
+            class="check-item">{{it.text}}</Checkbox>
+        </CheckboxGroup>
       </FormItem>
 
       <div class="city-wrap">
@@ -130,7 +141,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cityList, City, sexList, ageStageList, filmHobbyList,
+import { sexList, ageStageList, filmHobbyList,
   areaTypeList, filmList as allFilmList, Film } from './types'
 import CitySelect from './citySelect.vue'
 
@@ -185,7 +196,9 @@ export default class Main extends ViewBase {
 
     // 新增的
     xingshi: 1,
+    yusuan: [],
     quanyi: [1, 2],
+    xianji: [],
     nengli: [0],
     pptype: 1,
     ggtype: [],
@@ -194,6 +207,16 @@ export default class Main extends ViewBase {
   xingshiList = [
     { key: 1, text: '广告投放' },
     { key: 2, text: '联合推广' },
+  ]
+
+  yusuanList = [
+    { key: 1, text: '5万以下' },
+    { key: 2, text: '5-10万' },
+    { key: 3, text: '10-15万' },
+    { key: 4, text: '15-20万' },
+    { key: 5, text: '20-30万' },
+    { key: 6, text: '30-50万' },
+    { key: 7, text: '50万以上' },
   ]
 
   quanyiList = [
@@ -234,7 +257,21 @@ export default class Main extends ViewBase {
     { key: 2, text: '按单部影片' }
   ]
 
-  areaTypeList = areaTypeList
+  areaTypeList = [
+    { key: 0, text: '不限' },
+    { key: 1, text: '按区域' },
+    { key: 2, text: '按省份' },
+    { key: 3, text: '按城市' },
+    { key: 4, text: '按线级' },
+  ]
+
+  xianjiList = [
+    { key: 1, text: '一线城市' },
+    { key: 2, text: '二线城市' },
+    { key: 3, text: '三线城市' },
+    { key: 4, text: '四线城市' },
+    { key: 5, text: '五线城市' },
+  ]
 
   sexList = sexList
 
@@ -677,11 +714,15 @@ export default class Main extends ViewBase {
   }
 }
 
+.form-item-yusuan,
 .form-item-quanyi {
   margin-left: 170px !important;
   margin-top: -18px !important;
   background-color: #f2f2f2;
   padding: 5px 0 5px 16px;
+  .item-radio-top {
+    margin-top: 1px;
+  }
   .check-item {
     background-color: #fff;
   }
