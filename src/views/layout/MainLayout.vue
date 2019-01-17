@@ -61,6 +61,8 @@ import { getUser, logout, User, switchToSystem } from '@/store'
 import { systemList as allSystemList, SystemCode } from '@/util/types'
 import allSiderMenuList, { SiderMenuItem } from './allSiderMenuList'
 import { cloneDeep } from 'lodash'
+import event from '@/fn/event'
+import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
 
 const isSystemCode = (code: SystemCode) =>
   (it: SiderMenuItem) => it.systems == null || it.systems.includes(code)
@@ -153,9 +155,20 @@ export default class App extends ViewBase {
     return this.siderActiveMap[name]
   }
 
+  mounted() {
+    // tslint:disable-next-line:no-console
+    console.log('-> main layout mounted')
+    // 是有低优先级监听，以便其他地方可以拦截取消
+    event.on(systemSwitched, (ev: SystemSwitchedEvent) => {
+      const name = ev.systemCode == 'ads'
+        ? 'pop-plan'
+        : 'pop-planps'
+      this.$router.push({ name })
+    }, false)
+  }
+
   onSwitcherClick(name: SystemCode) {
     switchToSystem(name)
-    this.$router.push({ name: 'home' })
   }
 
   logout() {

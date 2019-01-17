@@ -120,15 +120,20 @@ router.afterEach((to, from) => {
   window.scrollTo(0, 0)
 })
 
+// 采用低优先级监听 ajax*** 事件，以便其他地方可以拦截取消
 event.on({
-  ajax401(ev: any) {
-    ev.handled = true
-    router.push({ name: 'login' })
+  ajax401: {
+    handler() {
+      router.push({ name: 'login' })
+    },
+    priority: false
   },
 
-  ajax403(ev: any) {
-    ev.handled = true
-    alert('权限不足')
+  ajax403: {
+    handler() {
+      alert('权限不足')
+    },
+    priority: false,
   }
 })
 

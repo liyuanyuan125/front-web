@@ -10,10 +10,9 @@ const ajaxBaseUrl = VAR.ajaxBaseUrl
 
 const isAbsoluteUrl = (url: string) => /^[a-z][a-z0-9+.-]*:/.test(url)
 
-const emit = (r: any) => {
-  r.handled = false
-  event.emit(`ajax${r.code}`, r)
-  return r
+const emit = (data: any) => {
+  event.emit(`ajax${data.code}`, data)
+  return data
 }
 
 // 确保最终的数据，始终有值

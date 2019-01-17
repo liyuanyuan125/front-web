@@ -40,7 +40,6 @@ export default class ViewBase extends Vue {
     if (!(ex.code in ignoreCodes)) {
       const msg = this.formatError(ex)
       this.showError(msg)
-      ex.handled = true
       // tslint:disable-next-line
       console.error(msg)
     }

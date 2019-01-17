@@ -144,6 +144,8 @@ import ViewBase from '@/util/ViewBase'
 import { sexList, ageStageList, filmHobbyList,
   areaTypeList, filmList as allFilmList, Film } from './types'
 import CitySelect from './citySelect.vue'
+import { systemSwitched } from '@/util/globalEvents'
+import event from '@/fn/event'
 
 // 保持互斥
 const keepExclusion = <T>(
@@ -354,6 +356,15 @@ export default class Main extends ViewBase {
 
   selectFilm(film: Film) {
     this.form.filmIdSelected = film.id
+  }
+
+  mounted() {
+    // const handler = () => {
+    //   this.$router.push({ name: 'pop-plan' })
+    //   event.off(systemSwitched, handler)
+    //   return false
+    // }
+    // event.on(systemSwitched, handler)
   }
 
   @Watch('form.age', { deep: true })
