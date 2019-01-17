@@ -99,7 +99,7 @@ const allSiderMenuList: SiderMenuItem[] = [
   {
     name: 'finance',
     label: '财务管理',
-    systems: ['ads', 'resource'],
+    systems: ['ads'],
     subList: [
       {
         name: 'finance-info',
@@ -108,6 +108,25 @@ const allSiderMenuList: SiderMenuItem[] = [
       {
         name: 'finance-bill',
         label: '资金账单',
+      }
+    ]
+  },
+  {
+    name: 'resfinance',
+    label: '财务管理',
+    systems: ['resource'],
+    subList: [
+      {
+        name: 'resfinance-info',
+        label: '财务信息',
+      },
+      {
+        name: 'resfinance-profitbill',
+        label: '收益账单',
+      },
+      {
+        name: 'resfinance-mouthbill',
+        label: '月对账单',
       }
     ]
   },

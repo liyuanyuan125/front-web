@@ -128,7 +128,23 @@ export default [
     name: 'report-plan-xibei',
     component: () => import('./views/report/plan/xibei.vue'),
   },
-
+  // 资源方 - 财务管理 - 财务信息
+  {
+    path: '/resfinance/info',
+    name: 'resfinance-info',
+    component: () => import('./views/resFinance/info/index.vue')
+  },
+  // 资源方 - 财务管理 - 收益账单
+  {
+    path: 'resfinance/profitbill',
+    name: 'resfinance-profitbill',
+    component: () => import('./views/resFinance/profItBill/index.vue')
+  },
+  {
+    path: 'resfinance/mouthbill',
+    name: 'resfinance-mouthbill',
+    component: () => import('./views/resFinance/mouthBill/index.vue')
+  },
   // 示例，没有实际用处
   {
     path: '/about',
