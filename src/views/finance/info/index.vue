@@ -11,17 +11,22 @@
       <div class='fince-list'>
           <div class='fince-list-big'>
             <!-- <div class='fince-list-acc'>{{datamoney.balance}}</div> -->
-            <div class='fince-list-acc count-to-count-text count-style'>53200.00</div>
+            <div class='fince-list-acc count-to-count-text count-style'>{{balance}}</div>
+            <!-- <Row type="flex" justify="center" align="middle" class="countto-page-row">
+              <div class="count-to-con">
+                <count-to :end="2534"/>
+              </div>
+            </Row> -->
             <p class='fince-list-sm'>账户余额/元</p>
           </div>
           <div class='fince-list-big'>
             <!-- <div class='fince-list-acc'>{{datamoney.availableAmount}}</div> -->
-            <div class='fince-list-acc'>53200.00</div>
+            <div class='fince-list-acc'>{{availableAmount}}</div>
             <p class='fince-list-sm'>可用金额/元</p>
           </div>
           <div class='fince-list-big'>
             <!-- <div class='fince-list-accd'>{{datamoney.freezeAmount}}</div> -->
-            <div class='fince-list-accd'>53200.00</div>
+            <div class='fince-list-accd'>{{freezeAmount}}</div>
             <p class='fince-list-sm'>冻结金额/元</p>
           </div>
       </div>
@@ -134,6 +139,7 @@ import { toMap } from '@/fn/array'
 import moment from 'moment'
 import Upload from '@/components/upload/Upload.vue'
 import { slice, clean } from '@/fn/object'
+// import countTo from './count-to/count-to.vue'
 
 // 获取当前登录用户信息
 const user: any = getUser()!
@@ -156,7 +162,8 @@ const dataForm = {
 
 @Component({
   components: {
-    Upload
+    Upload,
+    // countTo
   }
 })
 export default class Main extends ViewBase {
@@ -199,6 +206,13 @@ export default class Main extends ViewBase {
 
     ]
   }
+  count = 0
+  end: any = 0
+  balance: any = ''
+  availableAmount: any = ''
+  freezeAmount: any = ''
+  newend: any = ''
+
 
   // 查看图片
   viewerShow = false
@@ -305,12 +319,56 @@ export default class Main extends ViewBase {
     }
   ]
 
+  async init() {
+
+  }
+
+  addNumber(number: any) {
+    this.newend = ''
+    this.count = 0
+    if (number.indexOf('.') == -1) {
+      for (let i = number.length - 1; i >= 0; i-- ) {
+      if ( this.count % 3 == 0 && this.count != 0) {
+        this.newend = number.charAt(i) + ',' + this.newend
+      } else {
+        this.newend = number.charAt(i) + this.newend
+      }
+      this.count++
+      }
+      number = this.newend + '.00' // 自动补小数点后两位
+      return number
+    } else {
+      for (let i = number.indexOf('.') - 1; i >= 0; i-- ) {
+      if (this.count % 3 == 0 && this.count != 0) {
+        this.newend = number.charAt(i) + ',' + this.newend // 碰到3的倍数则加上“,”号
+      } else {
+        this.newend = number.charAt(i) + this.newend // 逐个字符相接起来
+      }
+      this.count++
+      }
+      number = this.newend + (number + '00').substr((number + '00').indexOf('.'), 3)
+      return number
+    }
+    // number = ''
+  }
+  addset(str: any , str1: any) {
+    setInterval(() => {
+      if (Number(this.end) < Number(str1)) {
+        this.end += Math.floor(Math.random() * 50000)
+        str = this.addNumber(String(this.end))
+      } else {
+        return this.end = str1
+      }
+    }, 1)
+  }
+
 
   created() {
     // this.getUser()
     // console.log(user)
     this.userList = user
     this.seach()
+    this.init()
   }
 
   // 每页数
@@ -354,7 +412,6 @@ export default class Main extends ViewBase {
           approvalStatusList
         }
       } = await queryList(clean({...query}))
-    //   console.log(items.length)
       if (items.length <= 5 ) {
         this.items = items
       } else {
@@ -363,12 +420,49 @@ export default class Main extends ViewBase {
       this.total = totalCount
       this.approvalStatusList = approvalStatusList
       // 财产信息
-    //   const {
-    //     data
-    //   } = await moneyList(user.companyId)
-    //   this.datamoney = data
+      const res  = await moneyList(user.companyId)
+      this.datamoney = res.data
+      // if (this.datamoney.balance == null) {
+      //   this.balance = 0
+      // } else {
+      //   this.balance = this.addNumber(String(this.datamoney.balance))
+      // }
+      // if (this.datamoney.availableAmount == null) {
+      //   this.availableAmount = 0
+      // } else {
+      //   this.availableAmount = this.addNumber(String(this.datamoney.availableAmount))
+      // }
+      // this.addset(this.balance , this.datamoney.balance)
+        setInterval(() => {
+          if (Number(this.end) < Number(this.datamoney.balance)) {
+            this.end += Math.floor(Math.random() * 50000)
+            this.balance = this.addNumber(String(this.end))
+          } else {
+            return this.end = this.datamoney.balance
+          }
+        }, 1)
+      // setInterval(() => {
+      //   if (Number(this.end) < Number(this.datamoney.availableAmount)) {
+      //     this.end += Math.floor(Math.random() * 50000)
+      //     this.availableAmount = this.addNumber(String(this.end))
+      //   } else {
+      //     return this.end = this.datamoney.availableAmount
+      //   }
+      // }, 1)
+
+      // setInterval(() => {
+      //   if (Number(this.end) < Number(this.datamoney.freezeAmount)) {
+      //     this.end += Math.floor(Math.random() * 50000)
+      //     this.freezeAmount = this.addNumber(String(this.end))
+      //   } else {
+      //     return this.end = this.datamoney.freezeAmount
+      //   }
+      // }, 1)
+
+      // this.availableAmount = this.addNumber(String(this.datamoney.availableAmount))
+      // this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
     // 银行卡信息
-    const { data } = await defaultList(clean({...query}))
+    const { data } = await defaultList(user.companyId)
     this.defaultdata = data
     // console.log(data)
     } catch (ex) {
@@ -382,15 +476,10 @@ export default class Main extends ViewBase {
 
     // 表单提交
   async dataFormSubmit(dataForms: any) {
-    // for ( const i in this.companys) {
-    //   if (this.dataForm.companyId == this.companys[i].id) {
-    //     this.dataForm.companyName = this.companys[i].name
-    //   }
-    // }
-  this.dataForm.remittanceDate = new Date(this.dataForm.remittanceDate).getTime()
-  this.dataForm.receipt = this.dataForm.receipts.length > 0 ? this.dataForm.receipts[0].fileId : []
-   const myThis: any = this
-   myThis.$refs[dataForms].validate( async ( valid: any ) => {
+    this.dataForm.remittanceDate = new Date(this.dataForm.remittanceDate).getTime()
+    this.dataForm.receipt = this.dataForm.receipts.length > 0 ? this.dataForm.receipts[0].fileId : []
+    const myThis: any = this
+    myThis.$refs[dataForms].validate( async ( valid: any ) => {
   // debugger
       if (valid) {
         const query = !this.id ? this.dataForm : {
@@ -406,18 +495,6 @@ export default class Main extends ViewBase {
         }
       }
     })
-  // const valid = await (this.$refs[dataForms] as any).validate()
-  //   if (!valid) {
-  //     return
-  //   }
-  //   try {
-  //     // const {oldPassword, newPassword} = this.dataForm
-  //     const data = this.dataForm
-  //     await add(data)
-  //     // toast('密码修改成功')
-  //   } catch (ex) {
-  //     this.handleError(ex)
-  //   }
   }
 
   // 查看图片
