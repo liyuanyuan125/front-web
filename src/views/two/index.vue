@@ -14,11 +14,11 @@
         <Col :span="6" offset="1" class="pt20">
           <div class="report-title-left">
             <dl>
-              <dd>广告计划</dd>
+              <dd>广告影片</dd>
               <dt>{{forMat.name}}</dt>
             </dl>
             <dl>
-              <dd>客户名称</dd>
+              <dd>上映日期</dd>
               <dt>{{forMat.client}}</dt>
             </dl>
             <dl>
@@ -64,7 +64,7 @@
         </Col>
         <Col :span="23" class="mt30" offset="1">
           <div class="flex">
-            <span>平台花费=</span>
+            <span>平台服务费=</span>
             <h4 class="ceil">¥{{forMat.ceil}}</h4>
           </div>
         </Col>
@@ -207,7 +207,7 @@ export default class Main extends ViewBase {
     }
     .report-title-left {
       dl {
-        margin-bottom: 18px;
+        margin-bottom: 20px;
         display: flex;
         font-size: 14px;
         dd {
