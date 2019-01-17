@@ -68,6 +68,7 @@ export function validateEmail(email: string): string | undefined {
  * 时间戳格式转换年月日
  */
 export function formatTimes(value: any) {
+  if (!value) { return ''}
   const date: any = new Date(value)
   const y = date.getFullYear()
   let MM = date.getMonth() + 1
@@ -87,5 +88,8 @@ export function formatTimes(value: any) {
  * 年月日转换时间戳格式
  */
 export function formatTimestamp(val: any) {
+  if (!val) {
+    return ''
+  }
   return new Date(val).getTime() / 1000
 }

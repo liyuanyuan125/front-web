@@ -23,6 +23,7 @@
  import { Component } from 'vue-property-decorator'
  import ViewBase from '@/util/ViewBase'
  import { bill } from '@/api/bill'
+ import { formatTimestamp, formatTimes } from '@/util/validateRules'
 
  @Component
  export default class Index extends ViewBase {
@@ -31,9 +32,7 @@
    total = 0
 
    beginDate = []
-   form = {
-     beginDate: '',
-     endDate: '',
+   form: any = {
      billType: '-1'
    }
    billTypeList = []
@@ -41,7 +40,7 @@
    dataList = []
    columns = [
      { title: '账单ID', key: 'id'},
-     { title: '交易时间', key: 'createTime'},
+     { title: '交易时间', key: 'createTimeName'},
      { title: '费用/元', key: 'transactionAmount'},
      { title: '类型', key: 'transactionType'},
      { title: '交易说明', key: 'remark'},
@@ -55,10 +54,19 @@
        pageIndex: this.pageIndex,
        pageSize: this.pageSize,
        ...this.form,
+       beginDate: formatTimestamp(this.beginDate[0]),
+       endDate: formatTimestamp(this.beginDate[1])
      })
      this.dataList = data.item
      this.billTypeList = data.transactionTypeList
      this.total = data.totalCount
+
+     // createTime 时间戳转化
+     if (data.item) {
+       data.item.map( (item: any) => {
+         item.createTimeName = formatTimes(item.createTime)
+       })
+     }
    }
 
    handleChange(data: any) {

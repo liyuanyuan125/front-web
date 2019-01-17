@@ -1,24 +1,15 @@
 <template>
   <div class="page home-bg">
-    <h3 class="userTitle">
-      <Button type="default" icon="md-return-left" @click="goback">返回</Button>
-      <!-- <span class="nav-top-title">财务信息</span> -->
-    </h3>
+     <h2 class="layout-nav-title">财务信息 > 充值记录</h2>
     <div class="flex-box">
-      <!-- {{query}} -->
-      <form class="form flex-1" @submit.prevent="seach">
+      <form class="form item-top" @submit.prevent="seach">
         <Select v-model="dataForm.status" placeholder="启用状态" clearable>
           <Option v-for="it in approvalStatusList" :key="it.key" :value="it.key"
             :label="it.text">{{it.text}}</Option>
         </Select>
-        <Button type="warning" @click="seach" class="btn-reset"><Icon type="ios-search" size="18"/>搜索</Button>
+        <Button type="primary" @click="seach" class="button-ok">查询</Button>
       </form>
     </div>
-    <!-- <div class="table-box">
-      <div class="table-left-title">最近充值记录</div>
-      <router-link :to="{path:'/finance/info/more' , params: {companyId: userList.companyId,}}" tag="div" class="table-right-title">查看更多</router-link>
-    </div> -->
-    <div class='total'>当前共有记录{{total}}条</div>
     <Table ref="selection" stripe class="tables" :loading="tableLoading" :columns="columns4" :data="tableData"></Table>
     <Page :total="total" v-if="total>0" class="btnCenter"
       :current="dataForm.pageIndex"
@@ -215,11 +206,6 @@ export default class Main extends ViewBase {
     this.viewerShow = true
   }
 
-  goback() {
-    this.$router.go(-1)
-  }
-
-
   async seach() {
     this.tableLoading = true
     try {
@@ -278,7 +264,8 @@ export default class Main extends ViewBase {
     }
     /deep/ .ivu-select-selection {
       height: 40px;
-      width: 200px;
+      width: 300px;
+      margin-right: 30px;
       /deep/ .ivu-select-input {
         height: 40px;
         width: 400px;
