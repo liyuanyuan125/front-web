@@ -208,6 +208,9 @@ export default class Main extends ViewBase {
   }
   count = 0
   end: any = 0
+  end2: any = 0
+  end3: any = 0
+
   balance: any = ''
   availableAmount: any = ''
   freezeAmount: any = ''
@@ -433,31 +436,45 @@ export default class Main extends ViewBase {
       //   this.availableAmount = this.addNumber(String(this.datamoney.availableAmount))
       // }
       // this.addset(this.balance , this.datamoney.balance)
-        setInterval(() => {
+
+        const balance = setInterval(() => {
           if (Number(this.end) < Number(this.datamoney.balance)) {
             this.end += Math.floor(Math.random() * 50000)
             this.balance = this.addNumber(String(this.end))
           } else {
-            return this.end = this.datamoney.balance
+            return this.end
           }
         }, 1)
-      // setInterval(() => {
-      //   if (Number(this.end) < Number(this.datamoney.availableAmount)) {
-      //     this.end += Math.floor(Math.random() * 50000)
-      //     this.availableAmount = this.addNumber(String(this.end))
-      //   } else {
-      //     return this.end = this.datamoney.availableAmount
-      //   }
-      // }, 1)
+        setTimeout(() => {
+          clearInterval(balance)
+          this.balance = this.addNumber(String(this.datamoney.balance))
+        }, 5000)
 
-      // setInterval(() => {
-      //   if (Number(this.end) < Number(this.datamoney.freezeAmount)) {
-      //     this.end += Math.floor(Math.random() * 50000)
-      //     this.freezeAmount = this.addNumber(String(this.end))
-      //   } else {
-      //     return this.end = this.datamoney.freezeAmount
-      //   }
-      // }, 1)
+        const availableAmount = setInterval(() => {
+          if (Number(this.end2) < Number(this.datamoney.availableAmount)) {
+            this.end2 += Math.floor(Math.random() * 50000)
+            this.availableAmount = this.addNumber(String(this.end2))
+          } else {
+            return this.end2
+          }
+        }, 1)
+        setTimeout(() => {
+          clearInterval(availableAmount)
+          this.availableAmount = this.addNumber(String(this.datamoney.availableAmount))
+        }, 5000)
+
+        const freezeAmount = setInterval(() => {
+          if (Number(this.end3) < Number(this.datamoney.freezeAmount)) {
+            this.end3 += Math.floor(Math.random() * 50000)
+            this.freezeAmount = this.addNumber(String(this.end3))
+          } else {
+            return this.end3
+          }
+        }, 1)
+        setTimeout(() => {
+          clearInterval(freezeAmount)
+          this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
+        }, 5000)
 
       // this.availableAmount = this.addNumber(String(this.datamoney.availableAmount))
       // this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
