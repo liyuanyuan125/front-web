@@ -1,5 +1,4 @@
 stages:
-  - lint
   - build
   - package
   - deploy
@@ -8,23 +7,13 @@ variables:
   SERVICE_NAME: iadp-front-web-demo
   YARN_REGISTRY: https://nexus.aiads.com/repository/npm-public/
 
-lint:
-  image: $REGISTRY_ADDRESS/devops/nodejs/build
-  stage: lint
-  script:
-    - yarn config set registry $YARN_REGISTRY && yarn && yarn lint
-  only:
-    - demo
-  tags:
-    - nodejs
-
 build:
   image: $REGISTRY_ADDRESS/devops/nodejs/build
   stage: build
   only:
     - demo
   script:
-    - yarn config set registry $YARN_REGISTRY && yarn && yarn build
+    - yarn config set registry $YARN_REGISTRY && yarn && yarn lint && yarn build
   artifacts:
     paths:
       - dist
