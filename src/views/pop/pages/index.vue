@@ -112,7 +112,7 @@
                 <img style="vertical-align: middle;" src="./assets/man.png" alt="">
               </li>
               <li class="tag-ltme">
-                <span>30-40岁</span>
+                <span>30-34岁</span>
               </li>
               <li class="tag-ltme">
                 <span>科幻</span>
@@ -130,17 +130,17 @@
            <Row :gutter="30">
              <Col :span="8">
               <dl class="cinema-img">
-                <dd><img src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgv9f4i893rg0080030g.png" alt=""></dd>
+                <dd><img src="./assets/four.png" alt=""></dd>
               </dl>
              </Col>
              <Col :span="8">
               <dl class="cinema-img">
-                <dd><img src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgv9feq893rg00800310.png" alt=""></dd>
+                <dd><img src="./assets/one.png" alt=""></dd>
               </dl>
              </Col>
              <Col :span="8">
               <dl class="cinema-img">
-                <dd><img src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgv9fj2893rg0080031g.png" alt=""></dd>
+                <dd><img src="./assets/five.png" alt=""></dd>
               </dl>
              </Col>
            </Row>
@@ -481,7 +481,7 @@ export default class Main extends ViewBase {
     }
     .cinema-img {
       img {
-        width: 95%;
+        width: 100%;
       }
     }
     .poster-title {
