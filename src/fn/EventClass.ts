@@ -1,20 +1,20 @@
 /** 事件处理函数 */
 export type Handler = (...args: any[]) => any
 
+/** 事件项 */
+export interface HandlerMap {
+  [name: string]: Handler
+}
+
 /** 事件处理函数与优先级 */
-export interface HandlerWithPriority {
+interface HandlerPriority {
   handler: Handler
   priority: boolean
 }
 
-/** 事件项 */
-export interface EventItem {
-  [name: string]: Handler | HandlerWithPriority
-}
-
 /** 事件 Map */
 interface EventMap {
-  [key: string]: HandlerWithPriority[]
+  [key: string]: HandlerPriority[]
 }
 
 /** 事件类 */
@@ -23,20 +23,27 @@ export default class EventClass {
 
   /**
    * 监听事件
-   * @param name 事件名或者 EventItem 对象，若为 EventItem 对象，则后面两个参数忽略
+   * @param name 事件名
    * @param handler 事件处理函数
-   * @param priority 优先级，默认 true
+   * @param priority 优先级，默认为 true
    */
-  on(name: string | EventItem, handler?: Handler, priority = true) {
-    const map = typeof name === 'string'
-      ? { [name]: { handler: handler!, priority } }
-      : name
-    Object.entries(map).forEach(([key, val]) => {
-      const item = typeof val == 'function'
-        ? { handler: val, priority: true }
-        : val as HandlerWithPriority
+  on(name: string, handler: Handler, priority?: boolean): this
+  /**
+   * 监听事件
+   * @param handlerMap 事件处理 Map
+   * @param priority 优先级，默认为 true
+   */
+  on(handlerMap: HandlerMap, priority?: boolean): this
+  on(name: any, handlerOrPriority: any = true, last = true) {
+    const [ map, priority ]: [ HandlerMap, boolean ] = typeof name === 'string'
+      ? [ { [name]: handlerOrPriority }, last ]
+      : [ name, handlerOrPriority ]
+
+    Object.entries(map).forEach(([key, handler]) => {
+      const item = { handler, priority }
       ; (this._eventMap[key] || (this._eventMap[key] = [])).push(item)
     })
+
     return this
   }
 
@@ -46,7 +53,7 @@ export default class EventClass {
    * @param handler 事件处理函数，可选，若不传，则取消 `name` 事件的所有监听者
    */
   off(name: string, handler?: Handler) {
-    const list: HandlerWithPriority[] = this._eventMap[name] || []
+    const list: HandlerPriority[] = this._eventMap[name] || []
     if (handler != null) {
       const index = list.findIndex(it => it.handler === handler)
       index > -1 && list.splice(index, 1)
