@@ -29,7 +29,7 @@ export async function userDetail(data: any) {
 }
 
 /**
- * 账户管理 -> 子账户编辑  ----- 待修改
+ * 账户管理 -> 子账户编辑
  * @param data
  */
 export async function userEditSub(data: any, id: any, type: any) {
@@ -126,6 +126,13 @@ export async function resEditCustomer(data: any) {
 export async function vaildNonEmail(data: any) {
     const res = get(`customer/sub-accounts/non-${data.type}/${data.email}`)
     return res
+}
+/**
+ * 子账户存在 修改账户的系统类别和权限
+ * @param email
+ */
+export async function accountSystem(data: any) {
+    const res = put('customer/sub-accounts/system', data)
 }
 
 

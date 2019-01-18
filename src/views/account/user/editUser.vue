@@ -52,7 +52,7 @@
     <detailDlg v-model="detailVisible" v-if="detailVisible.visibleDetail"></detailDlg>
     <editDig v-model="editVisible" @save="save" v-if="editVisible.editVis"></editDig>
     <resDefaultDlg v-model="resDlg" v-if="resDlg.visible"></resDefaultDlg>
-    <resEditDlg v-model="resEditDlg" v-if="resEditDlg.visible"></resEditDlg>
+    <resEditDlg v-model="resEditDlg"  @save="save" v-if="resEditDlg.visible"></resEditDlg>
   </div>
 </template>
 <script lang="ts">
@@ -76,8 +76,8 @@ import PermTree, { PermTreeModal } from '@/components/permTree'
   }
 })
 export default class Main extends ViewBase {
-  customer = ''
-  cinemaLen = ''
+  customer = 0
+  cinemaLen = 0
   // 广告主查看
   detailVisible = {
     visibleDetail: false,
@@ -103,16 +103,14 @@ export default class Main extends ViewBase {
     contactName: '',
     mobile: '',
     role: '',
-    partnerIds: []
   }
-
+  partnerIds = []
   data: any = []
   rolelist = []
   typeCode = ''
   permTreeModal: PermTreeModal | null = null
 
   async mounted() {
-    this.getRoleList()
     try {
       const id = this.$route.params.useid
       const user: any = getUser()!
@@ -134,10 +132,11 @@ export default class Main extends ViewBase {
     } catch (ex) {
       this.handleError(ex)
     }
+     this.getRoleList()
   }
   async getRoleList() {
-    const user: any = getUser()!
-    const systemCode = user.systemCode
+    const systemCode = this.typeCode
+
     const role = { pageIndex: 1, pageSize: 100, systemCode }
     const { data } = await rolesList(role)
     this.rolelist = data.items
@@ -173,7 +172,9 @@ export default class Main extends ViewBase {
   }
   save(val: any) {
     if (val.length > 0) {
-      this.form.partnerIds = val.map((item: any) => item.id)
+      this.partnerIds = val.map((item: any) => item.id)
+      this.customer = this.partnerIds.length
+      this.cinemaLen = this.partnerIds.length
     }
   }
   async handleSelect(id: any) {
@@ -189,7 +190,18 @@ export default class Main extends ViewBase {
     try {
       const id = this.$route.params.useid
       const type = this.typeCode
-      const { data } = await userEditSub(this.form, id, type)
+      // 判断资源方 广告主 partnerIds
+      if (this.typeCode == 'ads') {
+         const { data } = await userEditSub({
+           ...this.form,
+           partnerIds: this.partnerIds
+         }, id, type)
+      } else if (this.typeCode == 'resource')  {
+        const { data } = await userEditSub({
+           ...this.form,
+           cinemaIds: this.partnerIds
+         }, id, type)
+      }
       this.$router.push({ name: 'account-user' })
     } catch (ex) {
       this.handleError(ex)

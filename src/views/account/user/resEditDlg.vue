@@ -4,7 +4,7 @@
       <Row type="flex" justify="space-between">
         <Col :span="6">
           <Select v-model="form.areaCode">
-            <Option :value="item.id" :key="item.id" v-for="item in areaList">{{item.name}}</Option>
+            <Option :value="item.key" :key="item.key" v-for="item in areaList">{{item.text}}</Option>
           </Select>
         </Col>
         <Col :span="6">
@@ -12,7 +12,7 @@
         </Col>
         <Col :span="11" class="search-btn flex-box">
           <Input v-model="form.searchKey" @click="getList" placeholder="请输入影院专资编码或名称"/>
-          <span @click="getList">
+          <span @click="searchList">
             <Icon type="ios-search" size="22"/>
           </span>
         </Col>
@@ -64,7 +64,7 @@ export default class Change extends ViewBase {
     searchKey: null,
     areaCode: ''
   }
-  areaList = [{ id: 1, name: '华东' }, { id: 2, name: '华西' }]
+  areaList = []
   area = []
   data: any = []
   selectList = []
@@ -103,6 +103,7 @@ export default class Change extends ViewBase {
       ...obj,
       ...this.form
     })
+    this.areaList = data.areaCodes
     // 在渲染之前添加选中的key
     if (this.value.check) {
       data.items.map((item: any) => {
@@ -116,6 +117,10 @@ export default class Change extends ViewBase {
 
     this.data = data.items || []
     this.value.totalCount = data.totalCount || 0
+  }
+  searchList() {
+     this.current = 1
+     this.getList()
   }
   handlepageChange(size: any) {
     this.current = size
