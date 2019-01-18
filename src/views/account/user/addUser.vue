@@ -1,10 +1,11 @@
 <template>
   <div class="page home-bg">
     <h2 class="layout-nav-title">用户管理 > 新增子用户</h2>
-    <Form :model="form" label-position="left" class="edit-input" :label-width="100">
+    <Form ref="forms" :model="form" :rules="rules" label-position="left" class="edit-input" :label-width="100"
+    >
       <h3 class="layout-title">设置登录账号</h3>
-      <FormItem label="登录邮箱" class="item-top">
-        <Input v-model="form.email" placeholder="请输入正确的邮箱地址"></Input>
+      <FormItem label="登录邮箱" class="item-top" prop="email">
+        <Input v-model="form.email" @on-blur="handleEmail" placeholder="请输入正确的邮箱地址"></Input>
       </FormItem>
       <h3 class="layout-title">设置联系人（选项）</h3>
       <FormItem label="联系人名称" class="item-top">
@@ -26,7 +27,7 @@
         </Row>
       </div>
       <h3 class="layout-title">设置账号权限</h3>
-      <FormItem label="权限角色" class="item-top">
+      <FormItem label="权限角色" class="item-top" prop="role">
         <Select v-model="form.role" style="width:400px" @on-change="handleChange">
           <Option :value="item.id" :key="item.id" v-for="item in roleList">{{item.name}}</Option>
         </Select>
@@ -45,7 +46,7 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import editDig from '@/views/account/user/editDlg.vue'
-import { rolesList, roleIdDetail, addUser } from '@/api/user'
+import { rolesList, roleIdDetail, addUser, vaildNonEmail} from '@/api/user'
 import { getUser } from '@/store'
 import PermTree, { PermTreeModal } from '@/components/permTree'
 
@@ -69,11 +70,22 @@ export default class Main extends ViewBase {
     role: '',
     partnerIds: []
   }
+  systemCode = ''
   roleList = []
 
+  get rules() {
+    return {
+      email: [
+        { require: true, message: '请输入登录邮箱', trigger: 'blur' },
+        { type: 'email', message: '邮箱格式有误', trigger: 'blur' }
+      ],
+      role: [{ require: true, message: '请选择权限角色', trigger: 'change' }]
+    }
+  }
   async mounted() {
     const user: any = getUser()!
     const systemCode = user.systemCode
+    this.systemCode = user.systemCode
     const role = { pageIndex: 1, pageSize: 100, systemCode }
     const { data } = await rolesList(role)
     this.roleList = data.items || []
@@ -85,8 +97,16 @@ export default class Main extends ViewBase {
       this.form.partnerIds = val.map((item: any) => item.id)
     }
   }
+  async handleEmail() {
+    // 判断当前有效子用户
+    const { data } = await vaildNonEmail( {
+      type: this.systemCode,
+      email: this.form.email
+    })
+  }
   async handleInforma() {
-    // 提交代码
+    // ;(this.$refs.forms as any).validate((valid: any) => {
+    // })
     const user: any = getUser()
     let typeCode: any = ''
     if (user != null) {

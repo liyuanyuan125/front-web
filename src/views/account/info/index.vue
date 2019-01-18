@@ -184,6 +184,8 @@ export default class Main extends ViewBase {
             },
             splitText
           )
+        } else if (!row.remark) {
+           return h('span', {}, '/')
         } else {
           return h('span', {}, row.remark)
         }

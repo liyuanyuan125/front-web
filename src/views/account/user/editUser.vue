@@ -18,13 +18,18 @@
         <Row>
           <Col :span="12">
             <div v-if="typeCode == 'ads'">
-              <p><label>关联客户</label>{{customer}}个</p>
+              <p>
+                <label>关联客户</label>
+                {{customer}}个
+              </p>
               <p class="query-cinema" @click="queryList">查看关联客户</p>
               <p class="query-cinema" @click="handleEdit">编辑关联客户</p>
             </div>
             <div v-if="typeCode == 'resource'">
-              <p> 覆盖区域  &nbsp;0个 &nbsp;&nbsp; &nbsp; &nbsp; 覆盖省份  &nbsp;0个&nbsp;&nbsp; &nbsp; &nbsp;
-                  覆盖城市  &nbsp;0个&nbsp;&nbsp; &nbsp; &nbsp;  影院  &nbsp;0个</p>
+              <p>
+                覆盖区域 &nbsp;{{data.cinemaAreaCount || 0}}个 &nbsp;&nbsp; &nbsp; &nbsp; 覆盖省份 &nbsp;{{data.cinemaProvinceCount || 0}}个&nbsp;&nbsp; &nbsp; &nbsp;
+                覆盖城市 &nbsp;{{data.cinemaCityCount || 0}}个&nbsp;&nbsp; &nbsp; &nbsp; 影院 &nbsp;{{cinemaLen}}个
+              </p>
               <p class="query-cinema" @click="queryList">查看关联影院</p>
               <p class="query-cinema" @click="handleEdit">编辑关联影院</p>
             </div>
@@ -72,6 +77,7 @@ import PermTree, { PermTreeModal } from '@/components/permTree'
 })
 export default class Main extends ViewBase {
   customer = ''
+  cinemaLen = ''
   // 广告主查看
   detailVisible = {
     visibleDetail: false,
@@ -122,7 +128,7 @@ export default class Main extends ViewBase {
       }
       this.data = data
       this.customer = data.partners == null ? 0 : data.partners.length
-
+      this.cinemaLen = data.cinemas == null ? 0 : data.cinemas.length
       // tree
       this.handleSelect(data.role.id)
     } catch (ex) {
@@ -152,7 +158,7 @@ export default class Main extends ViewBase {
     }
   }
   handleEdit() {
-    // 判断资源方 广告方 ----
+    // 判断资源方 广告方
     if (this.typeCode == 'ads') {
       this.editVisible = {
         editVis: true,
@@ -182,7 +188,8 @@ export default class Main extends ViewBase {
   async handleInforma() {
     try {
       const id = this.$route.params.useid
-      const { data } = await userEditSub(this.form, id)
+      const type = this.typeCode
+      const { data } = await userEditSub(this.form, id, type)
       this.$router.push({ name: 'account-user' })
     } catch (ex) {
       this.handleError(ex)

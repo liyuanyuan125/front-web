@@ -43,7 +43,24 @@
       :data="data"
       @on-select="singleSelect"
       @on-select-all="selectAll"
-    ></Table>
+    >
+      <template slot-scope="{row, index}" slot="status">
+        <span v-if="row.status === 1" class="aneble">已启用</span>
+        <span v-else-if="row.status === 2" class="display">已禁用</span>
+        <span v-else-if="row.status === 3" class="warting">待激活</span>
+      </template>
+      <template slot-scope="{row, index}" slot="lastLoginTime">
+        <span>{{formatTimes(row.lastLoginTime)}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="action">
+        <a class="action-btn" @click="toDetail(row.id)">查看</a>
+        <a class="action-btn" @click="toEdit(row.id)">编辑</a>
+        
+        <a class="action-btn" v-if="row.status == 2" @click="handleEnable(row.id, 1)">启用</a>
+        <a class="action-btn" v-else-if="row.status == 1" @click="handleEnable(row.id, 2)">禁用</a>
+        <a class="action-btn" v-else-if="row.status == 3" @click="activeEmail(row.id)">重新激活</a>
+      </template>
+    </Table>
     <h4 class="checkAll">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
@@ -67,7 +84,7 @@
 <script lang="tsx">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import jsxReactToVue from '@/util/jsxReactToVue'
+import { formatTimes } from '@/util/validateRules'
 import {
   rolesList,
   subAccount,
@@ -99,6 +116,7 @@ export default class Main extends ViewBase {
   data = []
   selectIds = []
 
+  formatTimes: any = ''
   columns = [
     {
       type: 'selection',
@@ -121,64 +139,16 @@ export default class Main extends ViewBase {
     },
     {
       title: '状态',
-      key: 'status',
-      render: (h: any, params: any) => {
-        const status = params.row.status
-        if (status === 1) {
-          return h('span', { style: { color: '#444' } }, '已启用')
-        }
-        if (status === 3) {
-          return h('span', { style: { color: '#05B824' } }, '待激活')
-        }
-        if (status === 2) {
-          return h('span', { style: { color: '#FF002D' } }, '已禁用')
-        }
-      }
+      slot: 'status'
     },
     {
       title: '上次登录时间',
-      key: 'lastLoginTime'
+      slot: 'lastLoginTime'
     },
     {
       title: '操作',
-      key: '',
-      width: 160,
-      render: (hh: any, { row }: any) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        if (row.status == 2) {
-          return (
-            <div>
-              <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
-              &nbsp;&nbsp;&nbsp;
-              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>
-              &nbsp;&nbsp;&nbsp;
-              <a on-click={this.handleEnable.bind(this, row.id, 1)}>启用</a>
-            </div>
-          )
-        } else if (row.status == 1) {
-          return (
-            <div>
-              <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
-              &nbsp;&nbsp;&nbsp;
-              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>
-              &nbsp;&nbsp;&nbsp;
-              <a on-click={this.handleEnable.bind(this, row.id, 2)}>禁用</a>
-            </div>
-          )
-        } else if (row.status == 3) {
-          return (
-            <div>
-              <a on-click={this.toDetail.bind(this, row.id)}>查看</a>
-              &nbsp;&nbsp;&nbsp;
-              <a on-click={this.toEdit.bind(this, row.id)}>编辑</a>
-              &nbsp;&nbsp;&nbsp;
-              <a on-click={this.activeEmail.bind(this, row.id)}>重新激活</a>
-            </div>
-          )
-        }
-        /* tslint:enable */
-      }
+      slot: 'action',
+      width: 160
     }
   ]
 
@@ -186,6 +156,8 @@ export default class Main extends ViewBase {
     const user: any = getUser()!
     this.form.systemCode = user.systemCode
     this.userList()
+
+    this.formatTimes = formatTimes
   }
 
   async userList() {
@@ -209,7 +181,7 @@ export default class Main extends ViewBase {
   }
   addUser() {
     if (this.rolelist.length) {
-      this.$router.push({ name: 'account-user-add'})
+      this.$router.push({ name: 'account-user-add' })
     } else {
       this.showWaring('当前您没有角色列表, 请到权限管理添加角色')
     }
@@ -255,7 +227,11 @@ export default class Main extends ViewBase {
     this.$router.push({ name: 'account-user-edit', params: { useid: id } })
   }
   async activeEmail(id: any) {
-    await activeEmail({ id })
+    try {
+      await activeEmail({ id })
+    } catch (ex) {
+      this.showError(ex)
+    }
   }
 
   handlepageChange(size: any) {
@@ -271,7 +247,12 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+.action-btn {
+  margin-right: 10px;
+}
+.aneble { color: @c-text; }
+.display { color: @c-fail; }
+.warting { color: @c-done; }
 .colBg {
   font-size: 14px;
   height: 50px;
