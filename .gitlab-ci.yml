@@ -6,7 +6,7 @@ stages:
 
 variables:
   SERVICE_NAME: iadp-front-web
-  YARN_REGISTRY: https://registry.yarnpkg.com
+  YARN_REGISTRY: https://nexus.aiads.com/repository/npm-public/
 
 lint:
   image: $REGISTRY_ADDRESS/devops/nodejs/build
