@@ -1,13 +1,4 @@
 import {get, post, put, del} from '@/fn/ajax'
-import { getUser } from '@/store'
-const user: any = getUser()!
-let systemCode: any = ''
-if (user == null) {
-    systemCode = ''
-} else {
-    systemCode = user.systemCode
-}
-
 
 // liyuanyuan
 /**
@@ -38,11 +29,11 @@ export async function userDetail(data: any) {
 }
 
 /**
- * 账户管理 -> 子账户编辑
+ * 账户管理 -> 子账户编辑  ----- 待修改
  * @param data
  */
-export async function userEditSub(data: any, id: any) {
-    const res = put(`/customer/sub-accounts/${systemCode}/${id}`, data)
+export async function userEditSub(data: any, id: any, type: any) {
+    const res = put(`/customer/sub-accounts/${type}/${id}`, data)
     return res
 }
 
@@ -125,6 +116,15 @@ export async function addEditCustomer(data: any) {
  */
 export async function resEditCustomer(data: any) {
     const res = get('customer/account_cinemas', data)
+    return res
+}
+
+/**
+ * 查询非当前系统的有效子账户信息
+ * @param email
+ */
+export async function vaildNonEmail(data: any) {
+    const res = get(`customer/sub-accounts/non-${data.type}/${data.email}`)
     return res
 }
 
