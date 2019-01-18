@@ -103,15 +103,6 @@ export async function addUser(data: any, type: any) {
 }
 
 /**
- * 新增子用户 -> 账号权限角色
- * @param data
- */
-// export async function roleList(data: any) {
-//     const res = get(`/customer/roles/`, data)
-//     return res
-// }
-
-/**
  *  根据角色id 获取权限列表
  * @param data
  */
@@ -120,7 +111,7 @@ export async function roleIdDetail(data: any) {
     return res
 }
 /**
- * 新增子用户 -编辑关联客户
+ * 广告主 -编辑关联客户
  * @param data
  */
 export async function addEditCustomer(data: any) {
@@ -128,6 +119,14 @@ export async function addEditCustomer(data: any) {
     return res
 }
 
+/**
+ * 资源方 -编辑关联影院列表
+ * @param data
+ */
+export async function resEditCustomer(data: any) {
+    const res = get('customer/account_cinemas', data)
+    return res
+}
 
 
 

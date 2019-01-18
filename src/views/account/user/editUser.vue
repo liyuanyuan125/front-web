@@ -17,15 +17,14 @@
       <div class="text-rows">
         <Row>
           <Col :span="12">
-            <p>
-              <label>关联客户</label>
-              {{customer}}个
-            </p>
             <div v-if="typeCode == 'ads'">
+              <p><label>关联客户</label>{{customer}}个</p>
               <p class="query-cinema" @click="queryList">查看关联客户</p>
               <p class="query-cinema" @click="handleEdit">编辑关联客户</p>
             </div>
             <div v-if="typeCode == 'resource'">
+              <p> 覆盖区域  &nbsp;0个 &nbsp;&nbsp; &nbsp; &nbsp; 覆盖省份  &nbsp;0个&nbsp;&nbsp; &nbsp; &nbsp;
+                  覆盖城市  &nbsp;0个&nbsp;&nbsp; &nbsp; &nbsp;  影院  &nbsp;0个</p>
               <p class="query-cinema" @click="queryList">查看关联影院</p>
               <p class="query-cinema" @click="handleEdit">编辑关联影院</p>
             </div>
@@ -48,6 +47,7 @@
     <detailDlg v-model="detailVisible" v-if="detailVisible.visibleDetail"></detailDlg>
     <editDig v-model="editVisible" @save="save" v-if="editVisible.editVis"></editDig>
     <resDefaultDlg v-model="resDlg" v-if="resDlg.visible"></resDefaultDlg>
+    <resEditDlg v-model="resEditDlg" v-if="resEditDlg.visible"></resEditDlg>
   </div>
 </template>
 <script lang="ts">
@@ -56,6 +56,7 @@ import ViewBase from '@/util/ViewBase'
 import detailDlg from '@/views/account/user/detailDlg.vue'
 import editDig from '@/views/account/user/editDlg.vue'
 import resDefaultDlg from './resDefaultDlg.vue'
+import resEditDlg from './resEditDlg.vue'
 import { userDetail, rolesList, roleIdDetail, userEditSub } from '@/api/user'
 import { getUser } from '@/store'
 import PermTree, { PermTreeModal } from '@/components/permTree'
@@ -65,26 +66,32 @@ import PermTree, { PermTreeModal } from '@/components/permTree'
     detailDlg,
     editDig,
     resDefaultDlg,
-    PermTree
+    PermTree,
+    resEditDlg
   }
 })
 export default class Main extends ViewBase {
   customer = ''
+  // 广告主查看
   detailVisible = {
     visibleDetail: false,
     customer: []
   }
-  // 资源方
+  // 资源方查看
   resDlg = {
     visible: false,
     customer: ''
   }
-
+  // 广告主编辑
   editVisible = {
     editVis: false,
     check: []
   }
-
+  // 资源方编辑
+  resEditDlg = {
+    visible: false,
+    check: []
+  }
   form: any = {
     email: '',
     contactName: '',
@@ -146,8 +153,17 @@ export default class Main extends ViewBase {
   }
   handleEdit() {
     // 判断资源方 广告方 ----
-    this.editVisible.editVis = true
-    this.editVisible.check = this.data.partners
+    if (this.typeCode == 'ads') {
+      this.editVisible = {
+        editVis: true,
+        check: this.data.partners
+      }
+    } else if (this.typeCode == 'resource') {
+      this.resEditDlg = {
+        visible: true,
+        check: this.data.cinemas
+      }
+    }
   }
   save(val: any) {
     if (val.length > 0) {
