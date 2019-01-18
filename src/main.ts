@@ -120,17 +120,16 @@ router.afterEach((to, from) => {
   window.scrollTo(0, 0)
 })
 
+// 采用低优先级监听 ajax*** 事件，以便其他地方可以拦截取消
 event.on({
-  ajax401(ev: any) {
-    ev.handled = true
+  ajax401() {
     router.push({ name: 'login' })
   },
 
-  ajax403(ev: any) {
-    ev.handled = true
+  ajax403() {
     alert('权限不足')
   }
-})
+}, false)
 
 new Vue({
   router,

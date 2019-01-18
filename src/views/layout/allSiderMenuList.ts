@@ -111,6 +111,7 @@ const allSiderMenuList: SiderMenuItem[] = [
       }
     ]
   },
+
   {
     name: 'resfinance',
     label: '财务管理',
