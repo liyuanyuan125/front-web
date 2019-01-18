@@ -392,7 +392,8 @@ export default class App extends ViewBase {
     }
   }
 
-  .menu-node-finance {
+  .menu-node-finance,
+  .menu-node-resfinance {
     /deep/ .ivu-menu-submenu-title {
       background-image: url(./assets/finance.png);
     }
