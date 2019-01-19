@@ -163,12 +163,13 @@ import { toMap } from '@/fn/array'
 import moment from 'moment'
 import Upload from '@/components/upload/Upload.vue'
 import { slice, clean } from '@/fn/object'
+import { warning , success, toast } from '@/ui/modal'
 
 // 获取当前登录用户信息
 const user: any = getUser()!
 
 const makeMap = (list: any[]) => toMap(list, 'id', 'name')
-const timeFormat = 'YYYY-MM-DD HH:mm'
+const timeFormat = 'YYYY-MM-DD'
 
 const dataForm = {
   accountNumber: '',
@@ -291,23 +292,23 @@ export default class Main extends ViewBase {
     },
     {
       title: '备注',
-      key: 'freceipt',
+      key: 'remark',
       align: 'center',
-      render: (hh: any, { row: { freceipt } }: any) => {
+      render: (hh: any, { row: { remark } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        const html1 = String(freceipt).slice(0, 10) + '...'
-        if (String(freceipt).length >= 10) {
+        const html1 = String(remark).slice(0, 10) + '...'
+        if (String(remark).length >= 10) {
           return (
             <div>
-              <span class="datetime" v-html={html1} />
+              <tooltip content={remark} placement="top">
+                <span class="datetime" v-html={html1} />
+              </tooltip>
             </div>
           )
         } else {
           return (
-            <div>
-              <span class="datetime" v-html={freceipt} />
-            </div>
+              <span class="datetime" v-html={remark} />
           )
         }
         /* tslint:enable */
@@ -316,13 +317,15 @@ export default class Main extends ViewBase {
     {
       title: '汇款凭证',
       align: 'center',
-      render: (hh: any, { row: { mageList } }: any) => {
+      render: (hh: any, { row: { imageList } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
+        // const url = imageList.url
+        // console.log(url)
         return (
           <a
             href="javascript:;"
-            on-click={this.onView.bind(mageList.url)}
+            on-click={this.onView.bind(this , imageList.url)}
             class="operation">
             查看汇款凭证
           </a>
@@ -465,7 +468,7 @@ export default class Main extends ViewBase {
 
       const balance = setInterval(() => {
         if (Number(this.end) < Number(this.datamoney.balance)) {
-          this.end += Math.floor(Math.random() * 2000)
+          this.end += Math.floor(Math.random() * 50)
           this.balance = this.addNumber(String(this.end))
         } else {
           return this.end
@@ -474,11 +477,11 @@ export default class Main extends ViewBase {
       setTimeout(() => {
         clearInterval(balance)
         this.balance = this.addNumber(String(this.datamoney.balance))
-      }, 5000)
+      }, 3000)
 
       const availableAmount = setInterval(() => {
         if (Number(this.end2) < Number(this.datamoney.availableAmount)) {
-          this.end2 += Math.floor(Math.random() * 2000)
+          this.end2 += Math.floor(Math.random() * 50)
           this.availableAmount = this.addNumber(String(this.end2))
         } else {
           return this.end2
@@ -489,20 +492,34 @@ export default class Main extends ViewBase {
         this.availableAmount = this.addNumber(
           String(this.datamoney.availableAmount)
         )
-      }, 5000)
-
-      const freezeAmount = setInterval(() => {
-        if (Number(this.end3) < Number(this.datamoney.freezeAmount)) {
-          this.end3 += Math.floor(Math.random() * 2000)
-          this.freezeAmount = this.addNumber(String(this.end3))
-        } else {
-          return this.end3
-        }
-      }, 1)
-      setTimeout(() => {
-        clearInterval(freezeAmount)
-        this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
-      }, 5000)
+      }, 3000)
+      if (this.datamoney.freezeAmount == 0 ) {
+        const freezeAmount = setInterval(() => {
+          if (Number(this.end3) < Number(this.datamoney.freezeAmount)) {
+            this.end3 += Math.floor(Math.random() * 50)
+            this.freezeAmount = this.addNumber(String(this.end3))
+          } else {
+            return this.end3
+          }
+        }, 1)
+        setTimeout(() => {
+          clearInterval(freezeAmount)
+          this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
+        }, 0)
+      } else {
+        const freezeAmount = setInterval(() => {
+          if (Number(this.end3) < Number(this.datamoney.freezeAmount)) {
+            this.end3 += Math.floor(Math.random() * 50)
+            this.freezeAmount = this.addNumber(String(this.end3))
+          } else {
+            return this.end3
+          }
+        }, 1)
+        setTimeout(() => {
+          clearInterval(freezeAmount)
+          this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
+        }, 3000)
+      }
 
       // 银行卡信息
       const { data } = await defaultList(user.companyId)
@@ -536,6 +553,8 @@ export default class Main extends ViewBase {
         const title = '添加'
         try {
           const res = await add(query)
+          toast('添加成功')
+          this.seach()
         } catch (ex) {
           this.handleError(ex)
         }
@@ -545,7 +564,6 @@ export default class Main extends ViewBase {
 
   // 查看图片
   onView(url: string) {
-    // console.log(url)
     this.viewerImage = url
     this.viewerShow = true
   }

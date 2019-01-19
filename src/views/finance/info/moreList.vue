@@ -42,7 +42,7 @@ import { slice, clean } from '@/fn/object'
 const user: any = getUser()!
 
 const makeMap = (list: any[]) => toMap(list, 'id', 'name')
-const timeFormat = 'YYYY-MM-DD HH:mm'
+const timeFormat = 'YYYY-MM-DD'
 
 @Component
 export default class Main extends ViewBase {
@@ -114,19 +114,21 @@ export default class Main extends ViewBase {
     },
     {
       title: '备注',
-      key: 'freceipt',
+      key: 'remark',
       align: 'center',
-      render: (hh: any, { row: { freceipt } }: any) => {
+      render: (hh: any, { row: { remark } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        const html1 = String(freceipt).slice(0,10) + '...'
-        if (String(freceipt).length >= 10) {
+        const html1 = String(remark).slice(0,10) + '...'
+        if (String(remark).length >= 10) {
           return <div>
-            <span class='datetime' v-html={html1}></span>
+            <tooltip content={remark} placement="top">
+                <span class="datetime" v-html={html1} />
+              </tooltip>
           </div>
         } else {
           return <div>
-            <span class='datetime' v-html={freceipt}></span>
+            <span class='datetime' v-html={remark}></span>
           </div>
         }
         /* tslint:enable */
@@ -135,10 +137,19 @@ export default class Main extends ViewBase {
     {
       title: '汇款凭证',
       align: 'center',
-      render: (hh: any, { row: { mageList } }: any) => {
+      render: (hh: any, { row: { imageList } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        return <a href='javascript:;' on-click={this.onView.bind( mageList.url )} class="operation" >查看汇款凭证</a>
+        // const url = imageList.url
+        // console.log(url)
+        return (
+          <a
+            href="javascript:;"
+            on-click={this.onView.bind(this , imageList.url)}
+            class="operation">
+            查看汇款凭证
+          </a>
+        )
         /* tslint:enable */
       }
     },
@@ -296,6 +307,9 @@ export default class Main extends ViewBase {
       text-align: center;
       padding-top: 8px;
       background: @c-button;
+    }
+    /deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
+      padding-left: 120px;
     }
   }
   .total {
