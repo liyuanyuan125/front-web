@@ -27,7 +27,7 @@
             <div :class="{active: form.systemCode == 'ads'}"
               @click="form.systemCode = 'ads'">我是广告主</div>
             <div :class="{active: form.systemCode == 'resource'}"
-              @click="form.systemCode = 'resource'">我是片商</div>
+              @click="form.systemCode = 'resource'">我是资源方</div>
           </div>
 
           <Form :model="form" :rules="rules" ref="form" class="form"
