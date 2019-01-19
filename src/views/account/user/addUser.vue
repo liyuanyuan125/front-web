@@ -20,15 +20,25 @@
       <FormItem label="手机号码" class="padbottom" v-if="!isAccountAuth">
         <Input v-model="form.mobile" :maxlength="11" placeholder="请输入手机号码"></Input>
       </FormItem>
-      <h3 class="layout-title">关联影院（选项）</h3>
+      <h3 class="layout-title" v-if="systemCode == 'ads'">关联客户（选项）</h3>
+      <h3 class="layout-title" v-else-if="systemCode == 'resource'">关联影院（选项）</h3>
       <div class="text-rows">
         <Row>
-          <Col :span="4">
-            <p>
-              <label>客户</label>
-              {{custList}} 个
-            </p>
-            <p class="query-cinema" @click="handleEdit">编辑关联客户</p>
+          <Col :span="24">
+            <div v-if="systemCode == 'ads'">
+              <p>
+                <label>客户</label>
+                {{custList}} 个
+              </p>
+              <p class="query-cinema" @click="handleEdit">编辑关联客户</p>
+            </div>
+            <div v-else-if="systemCode == 'resource'">
+              <p>
+                覆盖区域 &nbsp;0个 &nbsp;&nbsp; &nbsp; &nbsp; 覆盖省份 &nbsp;0个&nbsp;&nbsp; &nbsp; &nbsp;
+                覆盖城市 &nbsp;0个&nbsp;&nbsp; &nbsp; &nbsp; 影院 &nbsp;{{cinemaLen || 0}}个
+              </p>
+              <p class="query-cinema" @click="handleEdit">编辑关联影院</p>
+            </div>
           </Col>
         </Row>
       </div>
@@ -51,13 +61,15 @@
       >确定增加</Button>
       <Button type="primary" v-else class="button-ok addSumbit" @click="handleChangeAccount">更改信息</Button>
     </div>
-    <editDig v-model="editVisible" @save="save"></editDig>
+    <editDig v-model="editVisible" v-if="editVisible.editVis" @save="save"></editDig>
+    <resEditDlg v-model="resEditDlg" @save="save" v-if="resEditDlg.visible"></resEditDlg>
   </div>
 </template>
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import editDig from '@/views/account/user/editDlg.vue'
+import resEditDlg from './resEditDlg.vue'
 import {
   rolesList,
   roleIdDetail,
@@ -71,13 +83,19 @@ import PermTree, { PermTreeModal } from '@/components/permTree'
 @Component({
   components: {
     editDig,
-    PermTree
+    PermTree,
+    resEditDlg
   }
 })
 export default class Main extends ViewBase {
+  // 广告主
   editVisible = {
-    editVis: false,
-    totalCount: null
+    editVis: false
+  }
+  // 资源方
+  resEditDlg = {
+    visible: false,
+    check: []
   }
   permTreeModal: PermTreeModal | null = null
 
@@ -92,6 +110,7 @@ export default class Main extends ViewBase {
   roleList = []
 
   custList = 0
+  cinemaLen = 0
 
   // 查询非当前系统的有效子账户信息
   isAccountAuth: any = false
@@ -106,18 +125,12 @@ export default class Main extends ViewBase {
   }
   async mounted() {
     const user: any = getUser()!
-    const systemCode = user.systemCode
-    this.systemCode = user.systemCode
+    const systemCode = (this.systemCode = user.systemCode)
     const role = { pageIndex: 1, pageSize: 100, systemCode }
     const { data } = await rolesList(role)
     this.roleList = data.items || []
   }
-  save(val: any) {
-    if (val.length > 0) {
-      this.partnerIds = val.map((item: any) => item.id)
-      this.custList = this.partnerIds.length
-    }
-  }
+
   async handleEmail() {
     // 判断当前有效子用户
     if (this.form.email) {
@@ -155,6 +168,7 @@ export default class Main extends ViewBase {
       this.handleError.call(this, ex)
     }
   }
+
   async handleChangeAccount() {
     // 子账户存在 变更权限
     const obj = {
@@ -172,6 +186,7 @@ export default class Main extends ViewBase {
       this.showError(ex)
     }
   }
+
   async handleChange() {
     const id = this.form.role
     const {
@@ -182,8 +197,20 @@ export default class Main extends ViewBase {
       perms: (role && role.perms) || []
     }
   }
+
+  save(val: any) {
+    if (val.length > 0) {
+      this.partnerIds = val.map((item: any) => item.id)
+      this.custList = this.cinemaLen = this.partnerIds.length
+    }
+  }
+
   handleEdit() {
-    this.editVisible.editVis = true
+    if (this.systemCode == 'ads') {
+      this.editVisible.editVis = true
+    } else if (this.systemCode == 'resource') {
+      this.resEditDlg.visible = true
+    }
   }
 }
 </script>
