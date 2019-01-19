@@ -44,6 +44,12 @@ export default [
     name: 'account-user-detail',
     component: () => import('./views/account/user/detailUser.vue')
   },
+  // 账户管理 - 查看子用户 - 日志
+  {
+    path: '/account/user/detail/log/:id',
+    name: 'account-user-detail-log',
+    component: () => import('./views/account/user/logList.vue')
+  },
 
   // 账户管理 - 权限管理
   {
@@ -63,8 +69,6 @@ export default [
     name: 'account-auth-detail',
     component: () => import('./views/account/auth/detailRole.vue')
   },
-
-
   // 账户管理 - 影院管理
   {
     path: '/account/cinema',

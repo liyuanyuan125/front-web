@@ -26,7 +26,8 @@
           <p class="flex-box">
             <label>资质图片</label>
             <em>
-              <img :src="item" v-for=" item in list.qualificationImageList" width="150">
+              <ImagePreviewer v-for="(item, i) in list.qualificationImageList" :key="i"
+                :url="item.url" class="qualification-image"/>
             </em>
           </p>
         </Col>
@@ -40,8 +41,13 @@
 <script lang="ts">
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import ImagePreviewer from '@/components/imagePreviewer'
 
-@Component
+@Component({
+  components: {
+    ImagePreviewer
+  }
+})
 export default class Change extends ViewBase {
   @Prop({ type: Object }) value!: any
   list: any = {}
@@ -57,6 +63,9 @@ export default class Change extends ViewBase {
 }
 </script>
 <style lang="less" scoped>
+.qualification-image {
+  width: 150px;
+}
 /deep/ .ivu-modal-header {
   border-bottom: 0;
   padding: 10px 13px;

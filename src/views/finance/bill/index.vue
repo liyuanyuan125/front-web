@@ -11,10 +11,25 @@
       <FormItem label="账单日期">
         <DatePicker type="daterange" v-model="beginDate" @on-change="handleChange" 
         placement="bottom-end" placeholder="请选择开始日期和结束日期" ></DatePicker>
-        <Button class="search" @click="tableList">查询</Button>
+        <Button class="search" @click="searchTableList">查询</Button>
       </FormItem>
     </Form>
-    <Table stripe :columns="columns" :data="dataList"></Table>
+    <Table stripe :columns="columns" :data="dataList">
+      <template slot-scope="{row, index}" slot="transactionTime">
+        <span>{{formatTimes(row.transactionTime)}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="transactionAmount">
+        <span v-if="row.transactionAmount < 0">{{row.transactionAmount}}</span>
+        <span v-else class="success">{{row.transactionAmount}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="transactionType">
+        <span>{{formatTypeList(row.transactionType)}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="remark">
+        <span v-if="!row.remark">/</span>
+        <span v-else>{{row.remark}}</span>
+      </template>
+    </Table>
     <Page  :total="total"  class="btnCenter page-list" :current="pageIndex" 
       :page-size="pageSize" show-total show-elevator/>
   </div>
@@ -35,20 +50,24 @@
    form: any = {
      billType: '-1'
    }
+
    billTypeList = []
+   formatTimes: any = ''
 
    dataList = []
    columns = [
      { title: '账单ID', key: 'id'},
-     { title: '交易时间', key: 'createTimeName'},
-     { title: '费用/元', key: 'transactionAmount'},
-     { title: '类型', key: 'transactionType'},
-     { title: '交易说明', key: 'remark'},
+     { title: '交易时间', slot: 'transactionTime'},
+     { title: '费用/元', slot: 'transactionAmount'},
+     { title: '类型', slot: 'transactionType'},
+     { title: '交易说明', slot: 'remark'},
    ]
 
    async mounted() {
+     this.formatTimes = formatTimes
      this.tableList()
    }
+
    async tableList() {
      const { data }  = await bill({
        pageIndex: this.pageIndex,
@@ -57,18 +76,22 @@
        beginDate: formatTimestamp(this.beginDate[0]),
        endDate: formatTimestamp(this.beginDate[1])
      })
-     this.dataList = data.item
+     this.dataList = data.items
      this.billTypeList = data.transactionTypeList
      this.total = data.totalCount
-
-     // createTime 时间戳转化
-     if (data.item) {
-       data.item.map( (item: any) => {
-         item.createTimeName = formatTimes(item.createTime)
-       })
+   }
+   searchTableList() {
+     this.pageIndex = 1
+     this.tableList()
+   }
+   formatTypeList(id: any) {
+     const list: any = this.billTypeList
+     for (let i = 0; list.length; i++) {
+       if (list[i].key == id) {
+         return list[i].text
+       }
      }
    }
-
    handleChange(data: any) {
      this.beginDate = data
    }
@@ -77,6 +100,9 @@
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.success {
+  color: @c-done;
+}
 .page-list {
   margin-top: 30px;
 }

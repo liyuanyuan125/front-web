@@ -27,7 +27,7 @@
           <FormItem>
             <div class="flex-box">
               <Input v-model="form.searchKey" placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
-              <span @click="userList">
+              <span @click="searchTableList">
                 <Icon type="ios-search" size="22"/>
               </span>
             </div>
@@ -44,6 +44,9 @@
       @on-select="singleSelect"
       @on-select-all="selectAll"
     >
+      <template slot-scope="{row, index}" slot="roleId">
+        <span>{{roleList(row.roleId)}}</span>
+      </template>
       <template slot-scope="{row, index}" slot="status">
         <span v-if="row.status === 1" class="aneble">已启用</span>
         <span v-else-if="row.status === 2" class="display">已禁用</span>
@@ -93,7 +96,7 @@ import {
   activeEmail
 } from '@/api/user'
 import { getUser } from '@/store'
-import { confirm } from '@/ui/modal'
+import { confirm, info } from '@/ui/modal'
 
 @Component({})
 export default class Main extends ViewBase {
@@ -135,7 +138,7 @@ export default class Main extends ViewBase {
     },
     {
       title: '权限角色',
-      key: 'roleName'
+      slot: 'roleId'
     },
     {
       title: '状态',
@@ -162,22 +165,22 @@ export default class Main extends ViewBase {
 
   async userList() {
     const { data } = await subAccount({ ...this.form, ...this.pageObject })
-
-    // 处理 roleList 新增 releName
-    if (data.list) {
-      data.list.map((item: any) => {
-        data.roleList.map((role: any) => {
-          if (role.id == item.roleId) {
-            item.roleName = role.name
-          }
-        })
-      })
-      this.data = data.list
-    }
-
+    this.data = data.list || []
     this.rolelist = data.roleList
     this.statusList = data.statusList
     this.total = data.totalCount
+  }
+  searchTableList() {
+    this.pageObject.pageIndex = 1
+    this.userList()
+  }
+  roleList(id: any) {
+    const list: any = this.rolelist
+    for (const item of list) {
+      if (item.id == id) {
+        return item.name
+      }
+    }
   }
   addUser() {
     if (this.rolelist.length) {
@@ -202,6 +205,7 @@ export default class Main extends ViewBase {
   async deleteList() {
     if (this.selectIds.length) {
       const ids = this.selectIds.map((item: any) => item.id)
+      await confirm('您确定要删除当前信息吗？')
       await delectSub({ ids })
       this.userList()
     } else {
@@ -211,12 +215,24 @@ export default class Main extends ViewBase {
   async handleEnable(id: any, type: any) {
     if (type == 1) {
       await confirm('您确定启用当前信息吗？')
-      await accountStatu({ status: 1 }, id)
-      this.userList()
+      try {
+        await accountStatu({ status: 1 }, id)
+        this.userList()
+      } catch (ex) {
+        this.showError(ex)
+      }
     } else {
       await confirm('您确定禁用当前信息吗？')
-      await accountStatu({ status: 2 }, id)
-      this.userList()
+      try {
+        await accountStatu({ status: 2 }, id)
+        this.userList()
+      } catch (ex) {
+        if (ex.code == '8007403') {
+          this.showError('无权操错')
+        } else {
+          this.showError(ex)
+        }
+      }
     }
   }
 
@@ -229,8 +245,13 @@ export default class Main extends ViewBase {
   async activeEmail(id: any) {
     try {
       await activeEmail({ id })
+      await info('激活链接已重新发送，请查收激活邮件', { title: '提示' })
     } catch (ex) {
-      this.showError(ex)
+      if (ex.code != 0) {
+        this.showError(ex.msg)
+      } else {
+        this.showError(ex.msg)
+      }
     }
   }
 
@@ -250,9 +271,15 @@ export default class Main extends ViewBase {
 .action-btn {
   margin-right: 10px;
 }
-.aneble { color: @c-text; }
-.display { color: @c-fail; }
-.warting { color: @c-done; }
+.aneble {
+  color: @c-text;
+}
+.display {
+  color: @c-fail;
+}
+.warting {
+  color: @c-done;
+}
 .colBg {
   font-size: 14px;
   height: 50px;

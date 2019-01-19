@@ -5,7 +5,7 @@
     </h3>
     <div class="flex-box  search-input">
       <Input v-model="dataForm.query"  placeholder="请输入转资编码或影院名称" />
-      <span @click="seach">
+      <span @click="seachList">
         <Icon type="ios-search" size="22"/>
       </span>
     </div>
@@ -85,9 +85,7 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
-
   async seach() {
-    this.dataForm.pageIndex = 1
     this.tableLoading = true
     try {
       const {
@@ -104,7 +102,10 @@ export default class Main extends ViewBase {
       this.tableLoading = false
     }
   }
-
+  seachList() {
+    this.dataForm.pageIndex = 1
+    this.seach()
+  }
   toDetail(id: any) {
     this.$router.push({ name: 'account-cinema-detail', params: {id} })
   }

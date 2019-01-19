@@ -1,9 +1,9 @@
 <template>
   <div>
-    <Modal v-model="value.editVis"  title="查看关联客户" width="800">
+    <Modal v-model="value.editVis" title="查看关联客户" width="800">
       <div class="flex-box">
-        <Input v-model="search" @click="getList" placeholder="请输入客户ID或名称"/>
-        <span @click="getList">
+        <Input v-model="search" placeholder="请输入客户ID或名称"/>
+        <span @click="searchList">
           <Icon type="ios-search" size="22"/>
         </span>
       </div>
@@ -56,26 +56,33 @@ export default class Change extends ViewBase {
   async mounted() {
     this.getList()
   }
+  searchList() {
+    this.current = 1
+    this.getList()
+  }
   async getList() {
     const obj = {
       pageIndex: this.current,
       pageSize: this.pageSize,
       searchKey: this.search
     }
-    const { data } = await addEditCustomer(obj)
-    // 在渲染之前添加选中的key
-    if (this.value.check) {
-      data.items.map((item: any) => {
-        this.value.check.map((check: any) => {
-          if (item.id == check.id) {
-            item._checked = true
-          }
+    try {
+      const { data } = await addEditCustomer(obj)
+      // 在渲染之前添加选中的key
+      if (this.value.check) {
+        data.items.map((item: any) => {
+          this.value.check.map((check: any) => {
+            if (item.id == check.id) {
+              item._checked = true
+            }
+          })
         })
-      })
+      }
+      this.data = data.items
+      this.value.totalCount = data.totalCount
+    } catch (ex) {
+      this.showError(ex)
     }
-
-    this.data = data.items
-    this.value.totalCount = data.totalCount
   }
   handlepageChange(size: any) {
     this.current = size

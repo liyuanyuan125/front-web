@@ -58,8 +58,16 @@
         </Col>
       </Row>
     </div>
-    <h3 class="layout-title">操作日志</h3>
-    <div class="text-rows"></div>
+    <h3 class="layout-title more-list">操作日志
+      <em @click="moreList">更多...</em>
+    </h3>
+    <div class="text-rows log-list">
+      <p v-for="(item, index) in logList" :key="index">
+        <span>{{formatTimes(item.createTime)}}</span>
+        <span>{{item.operatorName}}</span>
+        <em>{{item.operateDesc}}</em>
+      </p>
+    </div>
     <div class="btnCenter">
       <Button type="primary" class="button-ok submitBtn" @click="goBack">返回</Button>
     </div>
@@ -70,11 +78,12 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { userDetail, operationLog, roleIdDetail } from '@/api/user'
+import { getUser } from '@/store'
+import { formatTimes } from '@/util/validateRules'
+import { userDetail, operationLog } from '@/api/user'
 import detailDlg from './detailDlg.vue'
 import resDefaultDlg from './resDefaultDlg.vue'
 import PermTree, { PermTreeModal } from '@/components/permTree'
-import { getUser } from '@/store'
 
 @Component({
   components: {
@@ -97,31 +106,43 @@ export default class Main extends ViewBase {
     visible: false,
     customer: ''
   }
-
+  userId: any = ''
+  logList = []
   typeCode = ''
+  formatTimes: any = ''
   permTreeModal: PermTreeModal | null = null
 
   async mounted() {
-    const id = this.$route.params.useid
+    this.formatTimes = formatTimes
     const user: any = getUser()!
-    const systemCode = user.systemCode
-    this.typeCode = user.systemCode
-    const { data } = await userDetail({ id, systemCode })
-    this.data = data
-    this.roleName = data.role.name
-    this.customer = this.data.partners == null ? 0 : this.data.partners.length
+    const systemCode = (this.typeCode = user.systemCode)
+
+    const id = this.userId = this.$route.params.useid
+    try {
+      const { data } = await userDetail({ id, systemCode })
+      this.data = data
+      this.permTreeModal = {
+        menu: data.menu,
+        perms: (data.role && data.role.perms) || []
+      }
+      this.roleName = data.role.name
+      this.customer = this.data.partners == null ? 0 : this.data.partners.length
+    } catch (ex) {
+      this.showError(ex)
+    }
 
     // 操作日志
+    this.operationLog()
+  }
+  async operationLog() {
+    // 操作日志
+    const id = this.userId
     const obj = { pageIndex: 1, pageSize: 10 }
-    const datalog = operationLog(obj, id)
-
-    // tree
-    const {
-      data: { menu, role }
-    } = await roleIdDetail({ id: data.role.id })
-    this.permTreeModal = {
-      menu,
-      perms: (role && role.perms) || []
+    try {
+      const { data } = await operationLog(obj, id)
+      this.logList = data.items || []
+    } catch (ex) {
+      this.showError(ex)
     }
   }
 
@@ -139,6 +160,10 @@ export default class Main extends ViewBase {
       }
     }
   }
+
+  moreList() {
+    this.$router.push({ name: 'account-user-detail-log', params: {id: this.userId}})
+  }
   goBack() {
     this.$router.push({ name: 'account-user' })
   }
@@ -147,9 +172,24 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-.page {
-  .submitBtn {
-    margin-bottom: 30px;
+
+.submitBtn {
+  margin-bottom: 30px;
+}
+.more-list {
+  position: relative;
+  em {
+    color: #0f4d96;
+    position: absolute;
+    right: 20px;
+    top: 0;
+    cursor: pointer;
+  }
+}
+.log-list {
+  color: #444;
+  span {
+    margin-right: 30px;
   }
 }
 </style>

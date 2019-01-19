@@ -91,5 +91,5 @@ export function formatTimestamp(val: any) {
   if (!val) {
     return ''
   }
-  return new Date(val).getTime() / 1000
+  return new Date(val).getTime()
 }
