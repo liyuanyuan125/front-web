@@ -360,6 +360,6 @@ export default class Main extends ViewBase {
   transition: all 0s !important;
 }
 ///deep/ .ivu-tabs-bar div:nth-child(2) {
- // border-left:2px solid #ff8237;
+// border-left:2px solid #ff8237;
 //}
 </style>
