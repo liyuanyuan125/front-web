@@ -3,23 +3,37 @@
      <h2 class="layout-nav-title">财务信息 > 充值记录</h2>
     <div class="flex-box">
       <form class="form item-top" @submit.prevent="seach">
-        <Select v-model="dataForm.status" placeholder="启用状态" clearable>
+        充值状态
+        <Select v-model="dataForm.status" placeholder="所有状态" clearable @on-change="seach">
           <Option v-for="it in approvalStatusList" :key="it.key" :value="it.key"
             :label="it.text">{{it.text}}</Option>
         </Select>
-        <Button type="primary" @click="seach" class="button-ok">查询</Button>
+        <!-- <Button type="primary" @click="seach" class="button-ok">查询</Button> -->
       </form>
     </div>
+    <!-- <div class='tiao'>
+      当前共有记录<span style='color:#222'>&nbsp;&nbsp;{{total}}条</span>
+      <span style='float: right; margin-right: 2.5%;'>当前结果共项&nbsp;&nbsp;第{{currentsize}}页/共{{dataForm.pageSize}}页</span>
+    </div> -->
     <Table ref="selection" stripe class="tables" :loading="tableLoading" :columns="columns4" :data="tableData"></Table>
-    <Page :total="total" v-if="total>0" class="btnCenter"
+    <!-- <Page v-if="total>0" class="btnCenter"
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
-      :page-size-opts="[10, 20, 50, 100]"
-      show-total
       show-sizer
       show-elevator
       @on-change="sizeChangeHandle"
-      @on-page-size-change="currentChangeHandle"/>
+      @on-page-size-change="currentChangeHandle"/> -->
+      <Page
+      :total="total"
+      v-if="total>0"
+      class="btnCenter"
+      :current="dataForm.pageIndex"
+      :page-size="dataForm.pageSize"
+      show-total
+      show-elevator
+      @on-change="sizeChangeHandle"
+      @on-page-size-change="currentChangeHandle"
+    />
       <Modal v-model="viewerShow" title="查看图片" width="500" height='500'>
         <img style='width: 100%;' :src=viewerImage alt="" sizes="" srcset="">
     </Modal>
@@ -65,6 +79,8 @@ export default class Main extends ViewBase {
   // 查看图片
   viewerShow = false
   viewerImage = ''
+
+  currentsize = 1
 
   columns4 = [
     { title: '充值ID', key: 'id', align: 'center' },
@@ -184,13 +200,20 @@ export default class Main extends ViewBase {
   // 每页数
   sizeChangeHandle(val: any) {
     this.dataForm.pageIndex = val
+    // console.log(val)
+    this.currentsize = val
     this.seach()
   }
 
   // 当前页
   currentChangeHandle(val: any) {
+    // console.log(val)
     this.dataForm.pageSize = val
     this.seach()
+  }
+  search() {
+    // console.log(123)
+    this.dataForm.pageIndex = 1
   }
 
   get cachedMap() {
@@ -248,7 +271,13 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+.tiao {
+  width: 100%;
+  line-height: 31px;
+  padding-left: 20px;
+  padding-top: 20px;
+  // font-weight: bold;
+}
 .colBg {
   font-size: 14px;
   height: 50px;
@@ -308,14 +337,14 @@ export default class Main extends ViewBase {
       padding-top: 8px;
       background: @c-button;
     }
-    /deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
-      padding-left: 120px;
-    }
   }
   .total {
     padding-left: 2%;
     padding-top: 2%;
     margin-bottom: -1.5%;
+  }
+  /deep/ .item-top {
+    padding-left: 20px;
   }
   .table-box {
     div {
@@ -360,8 +389,10 @@ export default class Main extends ViewBase {
   }
   .tables {
     margin: 20px;
-    /deep/ .status-2,
-    /deep/ .aptitude-status-3 {
+    /deep/ .status-3 {
+      color: red;
+    }
+    /deep/ .status-1 {
       color: #19be6b;
     }
     /deep/ .aptitude-status-2 {
