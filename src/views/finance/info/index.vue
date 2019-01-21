@@ -554,7 +554,9 @@ export default class Main extends ViewBase {
         try {
           const res = await add(query)
           toast('添加成功')
-          this.seach()
+          this.dataForm = {}
+          // this.seach()
+          history.go(0)
         } catch (ex) {
           this.handleError(ex)
         }
@@ -659,8 +661,10 @@ export default class Main extends ViewBase {
   }
   .tables {
     margin: 20px;
-    /deep/ .status-2,
-    /deep/ .aptitude-status-3 {
+    /deep/ .status-3 {
+      color: red;
+    }
+    /deep/ .status-1 {
       color: #19be6b;
     }
     /deep/ .aptitude-status-2 {
