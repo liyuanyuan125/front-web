@@ -27,7 +27,7 @@
             <label>资质图片</label>
             <em>
               <ImagePreviewer v-for="(item, i) in list.qualificationImageList" :key="i"
-                :url="item.url" class="qualification-image"/>
+                :url="item" class="qualification-image"/>
             </em>
           </p>
         </Col>

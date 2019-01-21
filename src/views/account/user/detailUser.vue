@@ -30,14 +30,21 @@
         </Col>
       </Row>
     </div>
-    <h3 class="layout-title">关联客户</h3>
+    <h3 class="layout-title" v-if="typeCode == 'ads'">关联客户</h3>
+    <h3 class="layout-title" v-if="typeCode == 'resource'">关联影院</h3>
     <div class="text-rows">
       <Row>
-        <Col :span="12">
-          <p>
-            <label>客户</label>
-            {{customer}} 个
-          </p>
+        <Col :span="20">
+          <div v-if="typeCode == 'ads'">
+             <p><label>客户</label> {{customer}} 个</p>
+          </div>
+          <div v-if="typeCode == 'resource'">
+            <p>
+                覆盖区域 &nbsp;{{data.cinemaAreaCount || 0}}个 &nbsp;&nbsp; &nbsp; &nbsp; 覆盖省份 &nbsp;{{data.cinemaProvinceCount || 0}}个&nbsp;&nbsp; &nbsp; &nbsp;
+                覆盖城市 &nbsp;{{data.cinemaCityCount || 0}}个&nbsp;&nbsp; &nbsp; &nbsp; 影院 &nbsp;{{cinemaLen}}个
+              </p>
+          </div>
+         
           <p class="query-cinema" v-if="typeCode == 'ads'" @click="queryCustomer">查看关联客户</p>
           <p class="query-cinema" v-if="typeCode == 'resource'" @click="queryCustomer">查看关联影院列表</p>
         </Col>
@@ -95,6 +102,7 @@ import PermTree, { PermTreeModal } from '@/components/permTree'
 export default class Main extends ViewBase {
   data: any = []
   customer: any = ''
+  cinemaLen: any = 0
   roleName = ''
   // 广告主
   objDlg = {
@@ -127,6 +135,7 @@ export default class Main extends ViewBase {
       }
       this.roleName = data.role.name
       this.customer = this.data.partners == null ? 0 : this.data.partners.length
+      this.cinemaLen = this.data.cinemas == null ? 0 : this.data.cinemas.length
     } catch (ex) {
       this.showError(ex)
     }

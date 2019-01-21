@@ -14,11 +14,11 @@
         <Input v-model="form.email" @on-blur="handleEmail" placeholder="请输入正确的邮箱地址"></Input>
       </FormItem>
       <h3 class="layout-title">设置联系人（选项）</h3>
-      <FormItem label="联系人名称" class="item-top" v-if="!isAccountAuth">
-        <Input v-model="form.contactName" placeholder="请输入联系人名称"></Input>
+      <FormItem label="联系人名称" class="item-top" >
+        <Input v-model="form.contactName" :disabled="!isAccountAuth" placeholder="请输入联系人名称"></Input>
       </FormItem>
-      <FormItem label="手机号码" class="padbottom" v-if="!isAccountAuth">
-        <Input v-model="form.mobile" :maxlength="11" placeholder="请输入手机号码"></Input>
+      <FormItem label="手机号码" class="padbottom" >
+        <Input v-model="form.mobile" :maxlength="11" :disabled="!isAccountAuth" placeholder="请输入手机号码"></Input>
       </FormItem>
       <h3 class="layout-title" v-if="systemCode == 'ads'">关联客户（选项）</h3>
       <h3 class="layout-title" v-else-if="systemCode == 'resource'">关联影院（选项）</h3>
@@ -79,6 +79,7 @@ import {
 } from '@/api/user'
 import { getUser } from '@/store'
 import PermTree, { PermTreeModal } from '@/components/permTree'
+import { confirm, info } from '@/ui/modal'
 
 @Component({
   components: {
@@ -113,7 +114,7 @@ export default class Main extends ViewBase {
   cinemaLen = 0
 
   // 查询非当前系统的有效子账户信息
-  isAccountAuth: any = false
+  isAccountAuth: any = true
 
   get rules() {
     return {
@@ -140,8 +141,15 @@ export default class Main extends ViewBase {
           email: this.form.email
         })
         // 如果能查询出信息说明在别的系统存在，需要变更权限
-        this.isAccountAuth = data == null ? false : true
-      } catch (ex) {}
+        if (data == null) {
+          this.isAccountAuth = false
+        } else {
+          this.isAccountAuth = true
+          await confirm('该邮箱已存在，是否填充信息？', { okText: '填充'})
+        }
+      } catch (ex) {
+        if (ex.code == '8007205') { }
+      }
     }
   }
   async handleInforma() {
@@ -165,7 +173,7 @@ export default class Main extends ViewBase {
       }
       this.$router.push({ name: 'account-user' })
     } catch (ex) {
-      this.handleError.call(this, ex)
+      this.handleError.call(this, ex.msg)
     }
   }
 
@@ -182,8 +190,9 @@ export default class Main extends ViewBase {
       } else if (this.systemCode == 'resource') {
         await accountSystem({ ...obj, cinemaIds: this.partnerIds })
       }
+      this.$router.push({ name: 'account-user' })
     } catch (ex) {
-      this.showError(ex)
+      this.showError(ex.msg)
     }
   }
 
