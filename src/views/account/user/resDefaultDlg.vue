@@ -2,7 +2,11 @@
   <div>
     <Modal v-model="value.visible" title="查看关联影院" width="800">
       <div v-if="visible">当前没有关联的客户</div>
-      <Table v-else stripe :columns="columns" :data="data"></Table>
+      <Table v-else stripe :columns="columns" :data="data">
+        <template slot-scope="{row, index}" slot="areaName">
+          <span>{{row.areaName}}/{{row.provinceName}}/{{row.cityName}}</span>
+        </template>
+      </Table>
       <div slot="footer" class="btnCenter footer-bottom">
         <Button type="primary" class="button-cancel" @click="value.visible = false">关闭</Button>
       </div>
@@ -19,7 +23,7 @@ export default class Change extends ViewBase {
   visible = true
   data = []
   columns = [
-    { title: '省市区', key: 'district' },
+    { title: '省市区', slot: 'areaName' },
     { title: '专资编码', key: 'code', align: 'center' },
     { title: '影院名称', key: 'name', align: 'center' }
   ]

@@ -25,7 +25,7 @@
           </p>
           <p class="flex-box">
             <label>资质图片</label>
-            <em>
+            <em class="flex-box">
               <ImagePreviewer v-for="(item, i) in list.qualificationImageList" :key="i"
                 :url="item" class="qualification-image"/>
             </em>
@@ -65,6 +65,7 @@ export default class Change extends ViewBase {
 <style lang="less" scoped>
 .qualification-image {
   width: 150px;
+  margin-right: 25px;
 }
 /deep/ .ivu-modal-header {
   border-bottom: 0;

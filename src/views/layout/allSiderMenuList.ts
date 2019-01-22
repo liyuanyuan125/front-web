@@ -151,6 +151,7 @@ const allSiderMenuList: SiderMenuItem[] = [
       },
       {
         name: 'account-cinema',
+        systems: ['resource'],
         label: '影院管理',
       },
       {

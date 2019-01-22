@@ -63,7 +63,7 @@ export default class Main extends ViewBase {
     const id = this.$route.params.id || 0
     try {
       if (id == 0) {
-        const { data } = await meanList(this.systemCode, { type: 2 })
+        const { data } = await meanList(this.systemCode, { type: 1 })
         this.permTreeModal = {
           menu: data,
           perms: id > 0 ? data.role.perms : []

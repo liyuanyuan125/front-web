@@ -128,7 +128,7 @@ export default class Main extends ViewBase {
 
       this.emailMes = '重新获取验证码'
     } catch (ex) {
-      this.handleError(ex)
+      this.handleError(ex.msg)
     } finally {
       // this.displayCode = false
     }

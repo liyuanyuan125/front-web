@@ -118,6 +118,7 @@ export default class Main extends ViewBase {
   statusList = []
   data = []
   selectIds = []
+  systemCode: any = ''
 
   formatTimes: any = ''
   columns = [
@@ -157,7 +158,7 @@ export default class Main extends ViewBase {
 
   async mounted() {
     const user: any = getUser()!
-    this.form.systemCode = user.systemCode
+    this.form.systemCode = this.systemCode = user.systemCode
     this.userList()
 
     this.formatTimes = formatTimes
@@ -205,9 +206,14 @@ export default class Main extends ViewBase {
   async deleteList() {
     if (this.selectIds.length) {
       const ids = this.selectIds.map((item: any) => item.id)
+      const systemCode = this.systemCode
       await confirm('您确定要删除当前信息吗？')
-      await delectSub({ ids })
-      this.userList()
+      try {
+        await delectSub({ ids, systemCode })
+        this.userList()
+      } catch (ex) {
+        this.showError(ex.msg)
+      }
     } else {
       this.showWaring('请选择你要删除的元素')
     }
@@ -228,9 +234,9 @@ export default class Main extends ViewBase {
         this.userList()
       } catch (ex) {
         if (ex.code == '8007403') {
-          this.showError('无权操错')
+          this.showError(ex.msg)
         } else {
-          this.showError(ex)
+          this.showError(ex.msg)
         }
       }
     }
