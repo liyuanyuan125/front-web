@@ -3,7 +3,7 @@
     <h3 class="layout-title nav-top-title">资金账单</h3>
     <Form :model="form" label-position="left" class="edit-input" :label-width="100">
       <FormItem label="账单类型" class="item-top">
-        <RadioGroup v-model="form.billType" class="radio-item-type" @on-change="tableList">
+        <RadioGroup v-model="form.transactionType" class="radio-item-type" @on-change="tableList">
             <Radio label="-1" >全部</Radio>
             <Radio :label="item.key"  :key="item.key" v-for="item in billTypeList">{{item.text}}</Radio>
         </RadioGroup>
@@ -48,7 +48,7 @@
 
    beginDate = []
    form: any = {
-     billType: '-1'
+     transactionType: '-1'
    }
 
    billTypeList = []
@@ -69,10 +69,17 @@
    }
 
    async tableList() {
+     let types: any = ''
+     if (this.form.transactionType < 0) {
+       types = null
+     } else {
+       types = this.form.transactionType
+     }
      const { data }  = await bill({
        pageIndex: this.pageIndex,
        pageSize: this.pageSize,
        ...this.form,
+       transactionType: types,
        beginDate: formatTimestamp(this.beginDate[0]),
        endDate: formatTimestamp(this.beginDate[1])
      })
