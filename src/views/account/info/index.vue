@@ -62,8 +62,12 @@
           <p class="flex-box">
             <label>资质图片</label>
             <em class="flex-box">
-              <ImagePreviewer v-for="(item, i) in company.images" :key="i"
-                :url="item.url" class="qualification-image"/>
+              <ImagePreviewer
+                v-for="(item, i) in company.images"
+                :key="i"
+                :url="item.url"
+                class="qualification-image"
+              />
             </em>
           </p>
         </Col>
@@ -185,7 +189,7 @@ export default class Main extends ViewBase {
             splitText
           )
         } else if (!row.remark) {
-           return h('span', {}, '/')
+          return h('span', {}, '/')
         } else {
           return h('span', {}, row.remark)
         }
@@ -213,21 +217,22 @@ export default class Main extends ViewBase {
   }
   queryAccuontList() {
     // 账号类型转换
-    let array:any[] = []
-    this.account.systems.map( (item: any) => {
-     const a = this.systemList.filter( (sys: any) => {
-       if (sys.code == item) {
-        array.push(sys.desc)
-         return sys.desc
-       }
-     })
+    let array: any[] = []
+    this.account.systems.map((item: any) => {
+      const a = this.systemList.filter((sys: any) => {
+        if (sys.code == item) {
+          array.push(sys.desc)
+          return sys.desc
+        }
+      })
     })
-    this.accountType = array.length > 1 ? `${array[0]} / ${array[1]}` : array.toString()
+    this.accountType =
+      array.length > 1 ? `${array[0]} / ${array[1]}` : array.toString()
   }
   queryTypeList(val: any) {
     // 查询资质类型
     let list: any = this.informa.qualificationTypeList
-    for ( let i =0; i<list.length; i++) {
+    for (let i = 0; i < list.length; i++) {
       if (list[i].code == val) {
         return list[i].desc
       }
@@ -235,11 +240,15 @@ export default class Main extends ViewBase {
   }
 
   async accountChangeList() {
-    const { data } = await accountChangeList()
-    data.map( (item: any) => {
-      item.timeName = formatTimes(item.submitTime)
-    })
-    this.dataList = data
+    try {
+      const { data } = await accountChangeList()
+      data.map((item: any) => {
+        item.timeName = formatTimes(item.submitTime)
+      })
+      this.dataList = data
+    } catch (ex) {
+      this.handleError(ex.msg)
+    }
   }
 
   beforeChange(list: any) {

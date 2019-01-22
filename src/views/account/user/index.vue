@@ -165,11 +165,15 @@ export default class Main extends ViewBase {
   }
 
   async userList() {
-    const { data } = await subAccount({ ...this.form, ...this.pageObject })
-    this.data = data.list || []
-    this.rolelist = data.roleList
-    this.statusList = data.statusList
-    this.total = data.totalCount
+    try {
+      const { data } = await subAccount({ ...this.form, ...this.pageObject })
+      this.data = data.list || []
+      this.rolelist = data.roleList
+      this.statusList = data.statusList
+      this.total = data.totalCount
+    } catch (ex) {
+      this.handleError(ex.msg)
+    }
   }
   searchTableList() {
     this.pageObject.pageIndex = 1

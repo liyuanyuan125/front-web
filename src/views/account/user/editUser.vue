@@ -52,7 +52,7 @@
     <detailDlg v-model="detailVisible" v-if="detailVisible.visibleDetail"></detailDlg>
     <editDig v-model="editVisible" @save="save" v-if="editVisible.editVis"></editDig>
     <resDefaultDlg v-model="resDlg" v-if="resDlg.visible"></resDefaultDlg>
-    <resEditDlg v-model="resEditDlg"  @save="save" v-if="resEditDlg.visible"></resEditDlg>
+    <resEditDlg v-model="resEditDlg" @save="save" v-if="resEditDlg.visible"></resEditDlg>
   </div>
 </template>
 <script lang="ts">
@@ -102,7 +102,7 @@ export default class Main extends ViewBase {
     email: '',
     contactName: '',
     mobile: '',
-    role: '',
+    role: ''
   }
   partnerIds = []
   data: any = []
@@ -132,14 +132,17 @@ export default class Main extends ViewBase {
     } catch (ex) {
       this.handleError(ex)
     }
-     this.getRoleList()
+    this.getRoleList()
   }
   async getRoleList() {
     const systemCode = this.typeCode
-
     const role = { pageIndex: 1, pageSize: 100, systemCode }
-    const { data } = await rolesList(role)
-    this.rolelist = data.items
+    try {
+      const { data } = await rolesList(role)
+      this.rolelist = data.items
+    } catch (ex) {
+      this.handleError(ex.msg)
+    }
   }
 
   queryList() {
@@ -179,12 +182,16 @@ export default class Main extends ViewBase {
     }
   }
   async handleSelect(id: any) {
-    const {
-      data: { menu, role }
-    } = await roleIdDetail({ id })
-    this.permTreeModal = {
-      menu,
-      perms: (role && role.perms) || []
+    try {
+      const {
+        data: { menu, role }
+      } = await roleIdDetail({ id })
+      this.permTreeModal = {
+        menu,
+        perms: (role && role.perms) || []
+      }
+    } catch (ex) {
+      this.handleError(ex.msg)
     }
   }
   async handleInforma() {
@@ -193,15 +200,23 @@ export default class Main extends ViewBase {
       const type = this.typeCode
       // 判断资源方 广告主 partnerIds
       if (this.typeCode == 'ads') {
-         const { data } = await userEditSub({
-           ...this.form,
-           partnerIds: this.partnerIds
-         }, id, type)
-      } else if (this.typeCode == 'resource')  {
-        const { data } = await userEditSub({
-           ...this.form,
-           cinemaIds: this.partnerIds
-         }, id, type)
+        const { data } = await userEditSub(
+          {
+            ...this.form,
+            partnerIds: this.partnerIds
+          },
+          id,
+          type
+        )
+      } else if (this.typeCode == 'resource') {
+        const { data } = await userEditSub(
+          {
+            ...this.form,
+            cinemaIds: this.partnerIds
+          },
+          id,
+          type
+        )
       }
       this.$router.push({ name: 'account-user' })
     } catch (ex) {

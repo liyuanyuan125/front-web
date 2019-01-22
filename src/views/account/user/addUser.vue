@@ -128,11 +128,16 @@ export default class Main extends ViewBase {
   get rules() {
     return {
       email: [
-        { require: true, message: '请输入登录邮箱', trigger: 'blur',  validator(rule: any, value: string[], callback: any) {
+        {
+          require: true,
+          message: '请输入登录邮箱',
+          trigger: 'blur',
+          validator(rule: any, value: string[], callback: any) {
             value.length == 0
               ? callback(new Error('请输入登录邮箱'))
               : callback()
-          }},
+          }
+        },
         { type: 'email', message: '邮箱格式有误', trigger: 'blur' }
       ],
       role: [
@@ -150,11 +155,15 @@ export default class Main extends ViewBase {
   }
 
   async mounted() {
-    const user: any = getUser()!
-    const systemCode = (this.systemCode = user.systemCode)
-    const role = { pageIndex: 1, pageSize: 100, systemCode }
-    const { data } = await rolesList(role)
-    this.roleList = data.items || []
+    try {
+      const user: any = getUser()!
+      const systemCode = (this.systemCode = user.systemCode)
+      const role = { pageIndex: 1, pageSize: 100, systemCode }
+      const { data } = await rolesList(role)
+      this.roleList = data.items || []
+    } catch (ex) {
+      this.handleError(ex.msg)
+    }
   }
 
   async handleEmail() {
@@ -166,12 +175,12 @@ export default class Main extends ViewBase {
           email: this.form.email
         })
         // “邮箱”在本公司账号其它系统存在时 code =0
-          this.isAccountAuth = false
-          await confirm('该邮箱已存在，是否填充信息？', { okText: '填充' })
-          this.form = {
-            contactName: data.name,
-            mobile: data.mobile
-          }
+        this.isAccountAuth = false
+        await confirm('该邮箱已存在，是否填充信息？', { okText: '填充' })
+        this.form = {
+          contactName: data.name,
+          mobile: data.mobile
+        }
       } catch (ex) {
         if (ex.code == '8007205') {
         } else if (ex.code == '8007220') {
@@ -182,7 +191,7 @@ export default class Main extends ViewBase {
           this.showWaring(ex.msg)
         } else if (ex.code == '9006201') {
           // “邮箱”在账号库里不存在时，正常新增子用户
-           this.isAccountAuth = true
+          this.isAccountAuth = true
         } else {
           this.showWaring(ex.msg)
         }

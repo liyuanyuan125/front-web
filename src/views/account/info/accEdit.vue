@@ -95,6 +95,7 @@ export default class Main extends ViewBase {
         provinceId: this.form.area[0],
         cityId: this.form.area[1]
       })
+      // 变更主账户信息
       if (this.form.email) {
         updateEmail(this.form.email)
       }

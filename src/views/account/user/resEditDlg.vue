@@ -99,28 +99,32 @@ export default class Change extends ViewBase {
       provinceId: this.area[0],
       cityId: this.area[1]
     }
-    const { data } = await resEditCustomer({
-      ...obj,
-      ...this.form
-    })
-    this.areaList = data.areaCodes
-    // 在渲染之前添加选中的key
-    if (this.value.check) {
-      data.items.map((item: any) => {
-        this.value.check.map((check: any) => {
-          if (item.id == check.id) {
-            item._checked = true
-          }
-        })
-      })
-    }
 
-    this.data = data.items || []
-    this.value.totalCount = data.totalCount || 0
+    try {
+      const { data } = await resEditCustomer({
+        ...obj,
+        ...this.form
+      })
+      this.areaList = data.areaCodes
+      // 在渲染之前添加选中的key
+      if (this.value.check) {
+        data.items.map((item: any) => {
+          this.value.check.map((check: any) => {
+            if (item.id == check.id) {
+              item._checked = true
+            }
+          })
+        })
+      }
+      this.data = data.items || []
+      this.value.totalCount = data.totalCount || 0
+    } catch (ex) {
+      this.handleError(ex.msg)
+    }
   }
   searchList() {
-     this.current = 1
-     this.getList()
+    this.current = 1
+    this.getList()
   }
   handlepageChange(size: any) {
     this.current = size

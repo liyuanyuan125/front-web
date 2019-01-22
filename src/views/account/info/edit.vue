@@ -65,6 +65,7 @@ import ViewBase from '@/util/ViewBase'
 import AreaSelect from '@/components/AreaSelect.vue'
 import { accountDetail, getLoginEmail, pendingAudit } from '@/api/account'
 import Upload, { FileItem } from '@/components/upload'
+import { updateEmail } from '@/store'
 
 @Component({
   components: {
@@ -120,17 +121,19 @@ export default class Main extends ViewBase {
     }
   }
   async getEmailCode() {
+    this.displayCode = true
     try {
       const msg = await getLoginEmail(this.form.email)
-      await countDown(10, sec => {
+      await countDown(60, sec => {
         this.emailMes = sec + 's'
       })
 
       this.emailMes = '重新获取验证码'
     } catch (ex) {
       this.handleError(ex.msg)
+      this.displayCode = false
     } finally {
-      // this.displayCode = false
+      this.displayCode = false
     }
   }
 
@@ -153,6 +156,9 @@ export default class Main extends ViewBase {
             provinceId: this.form.area[0],
             cityId: this.form.area[1]
          })
+      }
+      if (this.form.email) {
+        updateEmail(this.form.email)
       }
       this.$router.push({ name: 'account-info' })
     } catch (ex) {
