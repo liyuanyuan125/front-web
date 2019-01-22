@@ -41,7 +41,7 @@
       stripe
       :columns="columns"
       :data="data"
-      @on-select="singleSelect"
+      @on-selection-change="singleSelect"
       @on-select-all="selectAll"
     >
       <template slot-scope="{row, index}" slot="roleId">
@@ -190,6 +190,7 @@ export default class Main extends ViewBase {
       this.showWaring('当前您没有角色列表, 请到权限管理添加角色')
     }
   }
+  // 单选
   singleSelect(select: any) {
     this.selectIds = select
   }

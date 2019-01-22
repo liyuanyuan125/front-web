@@ -172,9 +172,10 @@ export default class Main extends ViewBase {
   }
   save(val: any) {
     if (val.length > 0) {
+      this.data.partners = val
+      this.data.cinemas = val
       this.partnerIds = val.map((item: any) => item.id)
-      this.customer = this.partnerIds.length
-      this.cinemaLen = this.partnerIds.length
+      this.customer = this.cinemaLen = this.partnerIds.length
     }
   }
   async handleSelect(id: any) {
