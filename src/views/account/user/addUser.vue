@@ -75,6 +75,8 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import editDig from '@/views/account/user/editDlg.vue'
 import resEditDlg from './resEditDlg.vue'
+import { updateEmail } from '@/store'
+
 import {
   rolesList,
   roleIdDetail,

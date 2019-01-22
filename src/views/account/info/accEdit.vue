@@ -36,7 +36,7 @@ import ViewBase from '@/util/ViewBase'
 import { countDown } from '@/fn/timer'
 import AreaSelect from '@/components/AreaSelect.vue'
 import { accountDetail, getLoginEmail, auditingAccount } from '@/api/account'
-import { setUser } from '@/store'
+import { updateEmail } from '@/store'
 
 @Component({
   components: {
@@ -95,6 +95,9 @@ export default class Main extends ViewBase {
         provinceId: this.form.area[0],
         cityId: this.form.area[1]
       })
+      if (this.form.email) {
+        updateEmail(this.form.email)
+      }
       this.$router.push({ name: 'account-info' })
     } catch (ex) {
       this.handleError(ex.msg)
