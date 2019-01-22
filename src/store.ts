@@ -76,10 +76,19 @@ export function setUser(user: User) {
   saveUser()
 }
 
-export function switchToSystem(systemCode: SystemCode) {
+export function switchSystem(systemCode: SystemCode) {
   if (theUser != null) {
     accessToken.can = true
     theUser.systemCode = systemCode
+    accessToken.can = false
+    saveUser()
+  }
+}
+
+export function updateEmail(email: string) {
+  if (theUser != null) {
+    accessToken.can = true
+    theUser.email = email
     accessToken.can = false
     saveUser()
   }
