@@ -57,7 +57,7 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getUser, logout, User, switchToSystem } from '@/store'
+import { getUser, logout, User, switchSystem } from '@/store'
 import { systemList as allSystemList, SystemCode } from '@/util/types'
 import allSiderMenuList, { SiderMenuItem } from './allSiderMenuList'
 import { cloneDeep } from 'lodash'
@@ -154,7 +154,7 @@ export default class App extends ViewBase {
   }
 
   onSwitcherClick(name: SystemCode) {
-    switchToSystem(name)
+    switchSystem(name)
     this.$router.push({ name: 'home' })
   }
 
