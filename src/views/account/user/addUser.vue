@@ -243,7 +243,7 @@ export default class Main extends ViewBase {
       } else if (this.systemCode == 'resource') {
         await accountSystem({ ...obj, cinemaIds: this.partnerIds })
       }
-      this.$router.push({ name: 'account-user' })
+      // this.$router.push({ name: 'account-user' })
     } catch (ex) {
       this.showError(ex.msg)
     }

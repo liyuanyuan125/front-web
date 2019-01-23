@@ -173,14 +173,13 @@ export default class Main extends ViewBase {
       this.total = data.totalCount
       // 读取当前广告主或资源方statusCode
       const code = this.systemCode
-      this.data.map( (item: any) => {
+      this.data.map((item: any) => {
         for (const i of item.systems) {
           if (i.code == code) {
             item.statusCode = i.status
           }
         }
       })
-
     } catch (ex) {
       this.handleError(ex.msg)
     }
@@ -226,10 +225,9 @@ export default class Main extends ViewBase {
       const systemCode = this.systemCode
       await confirm('您确定要删除当前信息吗？')
       try {
-         await delectSub({ ids, systemCode })
-        this.userList()
+        await delectSub({ ids, systemCode })
       } catch (ex) {
-        this.handleError(ex.msg)
+        this.handleError(ex)
       }
     } else {
       this.showWaring('请选择你要删除的元素')
