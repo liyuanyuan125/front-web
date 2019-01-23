@@ -1,12 +1,5 @@
 import { get } from '@/fn/ajax'
 
-interface PromiseCache {
-  [id: number]: Promise<any[]>
-}
-
-// 刷新浏览器后重置
-const subListCache: PromiseCache = {}
-
 /**
  * 获取子区域列表，并按照 orderNum 进行排序
  * @param pid 父区域ID
