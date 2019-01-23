@@ -105,7 +105,9 @@ export default class Change extends ViewBase {
         ...obj,
         ...this.form
       })
-      this.areaList = data.areaCodes
+      // 过滤掉禁用状态2
+      this.areaList = data.areaCodes.filter( (item: any) => item.controlStatus == 1)
+      
       // 在渲染之前添加选中的key
       if (this.value.check) {
         data.items.map((item: any) => {
