@@ -226,8 +226,13 @@ export default class Main extends ViewBase {
       await confirm('您确定要删除当前信息吗？')
       try {
         await delectSub({ ids, systemCode })
+        this.userList()
       } catch (ex) {
-        this.handleError(ex)
+        if (ex.code == '8007222') {
+          this.handleError('账号状态不是禁 用')
+        } else {
+          this.handleError(ex)
+        }
       }
     } else {
       this.showWaring('请选择你要删除的元素')
