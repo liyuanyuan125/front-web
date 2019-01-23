@@ -6,7 +6,7 @@ import { get, post, put } from '@/fn/ajax'
  * @returns
  */
 export async function cinmeaList(query: any) {
-  return get('/theater/cinemas', query)
+  return get('/customer/cinemas', query)
 }
 
 /**

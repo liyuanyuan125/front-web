@@ -46,7 +46,7 @@ export default class Main extends ViewBase {
     { title: '省份', key: 'provinceName', align: 'center' },
     {
       title: '城市',
-      key: 'countyName',
+      key: 'cityName',
       align: 'center'
     },
     {
@@ -56,7 +56,7 @@ export default class Main extends ViewBase {
     },
     {
       title: '影院名称',
-      key: 'shortName',
+      key: 'name',
       align: 'center'
     },
     {
