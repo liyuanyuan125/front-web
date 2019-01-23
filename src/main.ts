@@ -92,24 +92,24 @@ const router = new Router({
         {
           path: '/',
           name: 'home',
-          component: home,
+          component: home
         }
-      ].concat(routes),
+      ].concat(routes)
     }
   ]
 })
 
 iView.LoadingBar.config({
   color: '#fe8135',
-  width: 6,
+  width: 6
 })
 
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start()
   if (!to.meta.unauth && !hasLogin()) {
     next({ name: 'login' })
-  // } else if (!store.getters.canSee(to.name)) {
-  //   next({ name: '403' })
+    // } else if (!store.getters.canSee(to.name)) {
+    //   next({ name: '403' })
   } else {
     next()
   }
@@ -121,17 +121,20 @@ router.afterEach((to, from) => {
 })
 
 // 采用低优先级监听 ajax*** 事件，以便其他地方可以拦截取消
-event.on({
-  ajax401() {
-    router.push({ name: 'login' })
-  },
+event.on(
+  {
+    ajax401() {
+      router.push({ name: 'login' })
+    },
 
-  ajax403() {
-    alert('权限不足')
-  }
-}, false)
+    ajax403() {
+      alert('权限不足')
+    }
+  },
+  false
+)
 
 new Vue({
   router,
-  render: h => h(app),
+  render: h => h(app)
 }).$mount('#app')

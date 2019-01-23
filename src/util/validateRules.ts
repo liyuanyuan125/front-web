@@ -93,3 +93,10 @@ export function formatTimestamp(val: any) {
   }
   return new Date(val).getTime()
 }
+
+/**
+ * 数字格式化保留两位小数每个三位加逗号
+ */
+export function formatNumber(num: number) {
+  return  num.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
+}

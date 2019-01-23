@@ -19,8 +19,8 @@
         <span>{{formatTimes(row.transactionTime)}}</span>
       </template>
       <template slot-scope="{row, index}" slot="transactionAmount">
-        <span v-if="row.transactionAmount < 0">{{row.transactionAmount}}</span>
-        <span v-else class="success">{{row.transactionAmount}}</span>
+        <span v-if="row.transactionAmount < 0">{{formatNumber(row.transactionAmount) }}</span>
+        <span v-else class="success">{{formatNumber(row.transactionAmount) }}</span>
       </template>
       <template slot-scope="{row, index}" slot="transactionType">
         <span>{{formatTypeList(row.transactionType)}}</span>
@@ -38,7 +38,7 @@
  import { Component } from 'vue-property-decorator'
  import ViewBase from '@/util/ViewBase'
  import { bill } from '@/api/bill'
- import { formatTimestamp, formatTimes } from '@/util/validateRules'
+ import { formatTimestamp, formatTimes, formatNumber } from '@/util/validateRules'
 
  @Component
  export default class Index extends ViewBase {
@@ -62,6 +62,7 @@
      { title: '类型', slot: 'transactionType'},
      { title: '交易说明', slot: 'remark'},
    ]
+   formatNumber = formatNumber
 
    async mounted() {
      this.formatTimes = formatTimes
