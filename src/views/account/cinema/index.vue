@@ -4,7 +4,7 @@
       <span class="nav-top-title">影院管理</span>
     </h3>
     <div class="flex-box  search-input">
-      <Input v-model="dataForm.query"  placeholder="请输入转资编码或影院名称" />
+      <Input v-model="dataForm.searchKey"  placeholder="请输入专资编码或影院名称" />
       <span @click="seachList">
         <Icon type="ios-search" size="22"/>
       </span>
@@ -32,7 +32,7 @@ import jsxReactToVue from '@/util/jsxReactToVue'
 @Component
 export default class Main extends ViewBase {
   dataForm = {
-    query: '',
+    searchKey: '',
     pageIndex: 1,
     pageSize: 10,
   }

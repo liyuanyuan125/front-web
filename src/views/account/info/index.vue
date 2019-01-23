@@ -87,8 +87,8 @@
     </div>
 
     <div class="btnCenter sumbit-button" v-else>
-      <Button class="button-ok" type="primary">
-        <router-link tag="span" :to="{ name: 'account-info-edit' }">修改信息</router-link>
+      <Button class="button-ok" type="primary" @click="toChangeMes"> 修改信息
+        <!-- <router-link tag="span" :to="{ name: 'account-info-edit' }"></router-link> -->
       </Button>
     </div>
 
@@ -214,6 +214,9 @@ export default class Main extends ViewBase {
     }
     // 审核后 账号变更记录
     this.accountChangeList()
+  }
+  toChangeMes() {
+    this.$router.push({name: 'account-info-edit'})
   }
   queryAccuontList() {
     // 账号类型转换

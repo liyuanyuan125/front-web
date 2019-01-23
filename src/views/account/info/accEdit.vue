@@ -25,7 +25,12 @@
       </FormItem>
     </Form>
     <div class="btnCenter">
-      <Button type="primary" class="button-ok edit-submit" @click="editAccount">提交申请</Button>
+      <Button
+        type="primary"
+        :disabled="submitDisabled"
+        class="button-ok edit-submit"
+        @click="editAccount"
+      >提交申请</Button>
     </div>
   </div>
 </template>
@@ -44,6 +49,8 @@ import { updateEmail } from '@/store'
   }
 })
 export default class Main extends ViewBase {
+  submitDisabled = false
+
   isEmailCode = false
   emailMes = '获取邮箱验证码'
   displayCode = false
@@ -84,6 +91,7 @@ export default class Main extends ViewBase {
   }
 
   async editAccount() {
+    this.submitDisabled = true
     const cloneForm = Object.assign(this.form)
     if (!this.form.emailCaptcha) {
       cloneForm.emailCaptcha = null
@@ -102,6 +110,8 @@ export default class Main extends ViewBase {
       this.$router.push({ name: 'account-info' })
     } catch (ex) {
       this.handleError(ex.msg)
+    } finally {
+      this.submitDisabled = false
     }
   }
 }

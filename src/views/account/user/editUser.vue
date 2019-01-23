@@ -47,7 +47,7 @@
       </FormItem>
     </Form>
     <div class="btnCenter">
-      <Button type="primary" class="button-ok editSumbit" @click="handleInforma">确定修改</Button>
+      <Button type="primary" class="button-ok editSumbit" :disabled="submitDisabled" @click="handleInforma">确定修改</Button>
     </div>
     <detailDlg v-model="detailVisible" v-if="detailVisible.visibleDetail"></detailDlg>
     <editDig v-model="editVisible" @save="save" v-if="editVisible.editVis"></editDig>
@@ -76,6 +76,8 @@ import PermTree, { PermTreeModal } from '@/components/permTree'
   }
 })
 export default class Main extends ViewBase {
+  submitDisabled = false
+
   customer = 0
   cinemaLen = 0
   // 广告主查看
@@ -195,6 +197,7 @@ export default class Main extends ViewBase {
     }
   }
   async handleInforma() {
+    this.submitDisabled = true
     try {
       const id = this.$route.params.useid
       const type = this.typeCode
@@ -221,6 +224,8 @@ export default class Main extends ViewBase {
       this.$router.push({ name: 'account-user' })
     } catch (ex) {
       this.handleError(ex)
+    } finally {
+      this.submitDisabled = false
     }
   }
 }

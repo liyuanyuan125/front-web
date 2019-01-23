@@ -63,8 +63,9 @@
         v-if="isAccountAuth"
         class="button-ok addSumbit"
         @click="handleInforma"
+        :disabled="submitDisabled"
       >确定增加</Button>
-      <Button type="primary" v-else class="button-ok addSumbit" @click="handleInforma">更改信息</Button>
+      <Button type="primary" v-else class="button-ok addSumbit" :disabled="submitDisabled" @click="handleInforma">更改信息</Button>
     </div>
     <editDig v-model="editVisible" v-if="editVisible.editVis" @save="save"></editDig>
     <resEditDlg v-model="resEditDlg" @save="save" v-if="resEditDlg.visible"></resEditDlg>
@@ -96,6 +97,7 @@ import { confirm, info } from '@/ui/modal'
   }
 })
 export default class Main extends ViewBase {
+  submitDisabled = false
   // 广告主
   editVisible = {
     editVis: false,
@@ -211,6 +213,7 @@ export default class Main extends ViewBase {
     })
   }
   async submit() {
+    this.submitDisabled = true
     try {
       if (this.systemCode == 'ads') {
         const { data } = await addUser(
@@ -232,6 +235,8 @@ export default class Main extends ViewBase {
       this.$router.push({ name: 'account-user' })
     } catch (ex) {
       this.handleError.call(this, ex.msg)
+    } finally {
+      this.submitDisabled = false
     }
   }
   async handleChangeAccount() {
@@ -241,6 +246,7 @@ export default class Main extends ViewBase {
       system: this.systemCode,
       role: this.form.role
     }
+     this.submitDisabled = true
     try {
       if (this.systemCode == 'ads') {
         await accountSystem({ ...obj, partnerIds: this.partnerIds })
@@ -250,6 +256,8 @@ export default class Main extends ViewBase {
       this.$router.push({ name: 'account-user' })
     } catch (ex) {
       this.handleError(ex.msg)
+    } finally {
+       this.submitDisabled = false
     }
   }
 
