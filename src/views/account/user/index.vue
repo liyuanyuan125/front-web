@@ -47,10 +47,10 @@
       <template slot-scope="{row, index}" slot="roleId">
         <span>{{roleList(row.roleId)}}</span>
       </template>
-      <template slot-scope="{row, index}" slot="status">
-        <span v-if="row.status === 1" class="aneble">已启用</span>
-        <span v-else-if="row.status === 2" class="display">已禁用</span>
-        <span v-else-if="row.status === 3" class="warting">待激活</span>
+      <template slot-scope="{row, index}" slot="statusCode">
+        <span v-if="row.statusCode === 1" class="aneble">已启用</span>
+        <span v-else-if="row.statusCode === 2" class="display">已禁用</span>
+        <span v-else-if="row.statusCode === 3" class="warting">待激活</span>
       </template>
       <template slot-scope="{row, index}" slot="lastLoginTime">
         <span>{{formatTimes(row.lastLoginTime)}}</span>
@@ -59,9 +59,9 @@
         <a class="action-btn" @click="toDetail(row.id)">查看</a>
         <a class="action-btn" @click="toEdit(row.id)">编辑</a>
         
-        <a class="action-btn" v-if="row.status == 2" @click="handleEnable(row.id, 1)">启用</a>
-        <a class="action-btn" v-else-if="row.status == 1" @click="handleEnable(row.id, 2)">禁用</a>
-        <a class="action-btn" v-else-if="row.status == 3" @click="activeEmail(row.id)">重新激活</a>
+        <a class="action-btn" v-if="row.statusCode == 2" @click="handleEnable(row.id, 1)">启用</a>
+        <a class="action-btn" v-else-if="row.statusCode == 1" @click="handleEnable(row.id, 2)">禁用</a>
+        <a class="action-btn" v-else-if="row.statusCode == 3" @click="activeEmail(row.id)">重新激活</a>
       </template>
     </Table>
     <h4 class="checkAll">
@@ -143,7 +143,7 @@ export default class Main extends ViewBase {
     },
     {
       title: '状态',
-      slot: 'status'
+      slot: 'statusCode'
     },
     {
       title: '上次登录时间',
@@ -171,6 +171,16 @@ export default class Main extends ViewBase {
       this.rolelist = data.roleList
       this.statusList = data.statusList
       this.total = data.totalCount
+      // 读取当前广告主或资源方statusCode
+      const code = this.systemCode
+      this.data.map( (item: any) => {
+        for (const i of item.systems) {
+          if (i.code == code) {
+            item.statusCode = i.status
+          }
+        }
+      })
+
     } catch (ex) {
       this.handleError(ex.msg)
     }
@@ -196,10 +206,12 @@ export default class Main extends ViewBase {
   }
   // 单选
   singleSelect(select: any) {
+    this.checkboxAll = select.length == this.data.length ? true : false
     this.selectIds = select
   }
   // 全选
   selectAll(select: any) {
+    this.checkboxAll = true
     this.selectIds = select
   }
 
@@ -214,10 +226,10 @@ export default class Main extends ViewBase {
       const systemCode = this.systemCode
       await confirm('您确定要删除当前信息吗？')
       try {
-        await delectSub({ ids, systemCode })
+         await delectSub({ ids, systemCode })
         this.userList()
       } catch (ex) {
-        this.showError(ex.msg)
+        this.handleError(ex.msg)
       }
     } else {
       this.showWaring('请选择你要删除的元素')
@@ -230,7 +242,7 @@ export default class Main extends ViewBase {
         await accountStatu({ status: 1, systemCode: this.systemCode }, id)
         this.userList()
       } catch (ex) {
-        this.showError(ex)
+        this.handleError(ex.msg)
       }
     } else {
       await confirm('您确定禁用当前信息吗？')
@@ -239,9 +251,9 @@ export default class Main extends ViewBase {
         this.userList()
       } catch (ex) {
         if (ex.code == '8007403') {
-          this.showError(ex.msg)
+          this.handleError(ex.msg)
         } else {
-          this.showError(ex.msg)
+          this.handleError(ex.msg)
         }
       }
     }
@@ -259,9 +271,9 @@ export default class Main extends ViewBase {
       await info('激活链接已重新发送，请查收激活邮件', { title: '提示' })
     } catch (ex) {
       if (ex.code != 0) {
-        this.showError(ex.msg)
+        this.handleError(ex.msg)
       } else {
-        this.showError(ex.msg)
+        this.handleError(ex.msg)
       }
     }
   }

@@ -178,6 +178,7 @@ export default class Main extends ViewBase {
         this.isAccountAuth = false
         await confirm('该邮箱已存在，是否填充信息？', { okText: '填充' })
         this.form = {
+          email: data.email,
           contactName: data.name,
           mobile: data.mobile
         }

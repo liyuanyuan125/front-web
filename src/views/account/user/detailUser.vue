@@ -7,7 +7,7 @@
         <Col :span="12">
           <p>
             <label>账户状态</label>
-            {{data.status}}
+            {{statusCode}}
           </p>
           <p>
             <label>账号ID</label>
@@ -117,6 +117,7 @@ export default class Main extends ViewBase {
   userId: any = ''
   logList = []
   typeCode = ''
+  statusCode = ''
   formatTimes: any = ''
   permTreeModal: PermTreeModal | null = null
 
@@ -134,10 +135,11 @@ export default class Main extends ViewBase {
         perms: (data.role && data.role.perms) || []
       }
       this.roleName = data.role.name
+      this.statusCode = data.systems[0].statusDesc
       this.customer = this.data.partners == null ? 0 : this.data.partners.length
       this.cinemaLen = this.data.cinemas == null ? 0 : this.data.cinemas.length
     } catch (ex) {
-      this.showError(ex)
+      this.showError(ex.msg)
     }
 
     // 操作日志
