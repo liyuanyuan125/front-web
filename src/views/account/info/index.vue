@@ -220,7 +220,7 @@ export default class Main extends ViewBase {
     let array: any[] = []
     this.account.systems.map((item: any) => {
       const a = this.systemList.filter((sys: any) => {
-        if (sys.code == item) {
+        if (sys.code == item.code) {
           array.push(sys.desc)
           return sys.desc
         }

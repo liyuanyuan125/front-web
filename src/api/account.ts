@@ -1,6 +1,4 @@
 import { get, post, put } from '@/fn/ajax'
-import { getUser } from '@/store'
-const getUseId: any = getUser()
 
 /**
  * 主账号详情接口

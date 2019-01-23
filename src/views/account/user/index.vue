@@ -227,7 +227,7 @@ export default class Main extends ViewBase {
     if (type == 1) {
       await confirm('您确定启用当前信息吗？')
       try {
-        await accountStatu({ status: 1 }, id)
+        await accountStatu({ status: 1, systemCode: this.systemCode }, id)
         this.userList()
       } catch (ex) {
         this.showError(ex)
@@ -235,7 +235,7 @@ export default class Main extends ViewBase {
     } else {
       await confirm('您确定禁用当前信息吗？')
       try {
-        await accountStatu({ status: 2 }, id)
+        await accountStatu({ status: 2, systemCode: this.systemCode }, id)
         this.userList()
       } catch (ex) {
         if (ex.code == '8007403') {
