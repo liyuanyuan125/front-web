@@ -64,7 +64,7 @@
         class="button-ok addSumbit"
         @click="handleInforma"
       >确定增加</Button>
-      <Button type="primary" v-else class="button-ok addSumbit" @click="handleChangeAccount">更改信息</Button>
+      <Button type="primary" v-else class="button-ok addSumbit" @click="handleInforma">更改信息</Button>
     </div>
     <editDig v-model="editVisible" v-if="editVisible.editVis" @save="save"></editDig>
     <resEditDlg v-model="resEditDlg" @save="save" v-if="resEditDlg.visible"></resEditDlg>
@@ -145,7 +145,7 @@ export default class Main extends ViewBase {
           require: true,
           trigger: 'change',
           validator(rule: any, value: string[], callback: any) {
-            value.length == 0
+            !value
               ? callback(new Error('请选择权限角色'))
               : callback()
           }
@@ -175,8 +175,8 @@ export default class Main extends ViewBase {
           email: this.form.email
         })
         // “邮箱”在本公司账号其它系统存在时 code =0
-        this.isAccountAuth = false
         await confirm('该邮箱已存在，是否填充信息？', { okText: '填充' })
+        this.isAccountAuth = false
         this.form = {
           email: data.email,
           contactName: data.name,
@@ -202,7 +202,11 @@ export default class Main extends ViewBase {
   async handleInforma() {
     (this.$refs.forms as any).validate((valid: any) => {
       if (valid) {
-        this.submit()
+        if (this.isAccountAuth) {
+          this.submit()
+        } else {
+          this.handleChangeAccount()
+        }
       }
     })
   }
@@ -243,9 +247,9 @@ export default class Main extends ViewBase {
       } else if (this.systemCode == 'resource') {
         await accountSystem({ ...obj, cinemaIds: this.partnerIds })
       }
-      // this.$router.push({ name: 'account-user' })
+      this.$router.push({ name: 'account-user' })
     } catch (ex) {
-      this.showError(ex.msg)
+      this.handleError(ex.msg)
     }
   }
 

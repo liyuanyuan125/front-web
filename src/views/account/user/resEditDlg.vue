@@ -3,7 +3,7 @@
     <Modal v-model="value.visible" title="编辑关联影院" width="800">
       <Row type="flex" justify="space-between">
         <Col :span="6">
-          <Select v-model="form.areaCode">
+          <Select v-model="form.areaCode" clearable>
             <Option :value="item.key" :key="item.key" v-for="item in areaList">{{item.text}}</Option>
           </Select>
         </Col>
