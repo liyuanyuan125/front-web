@@ -20,7 +20,7 @@
 
       <div class="flex-box">
         <span class="corp-name">{{systemName}}：{{user.companyName}}</span>
-        <span class="user-name">用户：{{user.name}}</span>
+        <span class="user-name">用户：{{user.email}}</span>
         <a class="logout" title="退出" @click="logout">退出</a>
       </div>
     </header>
