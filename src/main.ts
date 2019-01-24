@@ -47,7 +47,7 @@ const router = new Router({
     },
     {
       path: '/account-activate',
-      name: 'active-email',
+      name: 'account-activate',
       component: activeEmail,
       meta: {
         unauth: true
