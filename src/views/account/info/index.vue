@@ -93,7 +93,7 @@
     </div>
 
     <dlgChange v-model="queryDetail" v-if="queryDetail.visibleMess"></dlgChange>
-    <dlgInforma v-model="informa" v-if="informa.visibleInforma"></dlgInforma>
+    <dlgInforma v-model="informa" v-if="informa.visibleInforma" @updataChangeList="updataChangeList"></dlgInforma>
   </div>
 </template>
 
@@ -213,6 +213,9 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     }
     // 审核后 账号变更记录
+    this.accountChangeList()
+  }
+  updataChangeList() {
     this.accountChangeList()
   }
   toChangeMes() {

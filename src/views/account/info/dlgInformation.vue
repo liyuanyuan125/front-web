@@ -133,6 +133,7 @@ export default class Change extends ViewBase {
       const cloneForm = Object.assign(this.form)
       cloneForm.imageList = cloneForm.imageList.map((item: any) => item.fileId)
       await changeCompanyList(cloneForm)
+      this.$emit('updataChangeList')
       this.value.visibleInforma = false
     } catch (ex) {
       this.handleError(ex)

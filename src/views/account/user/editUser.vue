@@ -4,7 +4,7 @@
     <Form :model="form" label-position="left" :label-width="100" class="edit-input">
       <h3 class="layout-title">设置登录账号</h3>
       <FormItem label="登录邮箱" class="item-top">
-        <Input v-model="form.email" placeholder="请输入登录邮箱"></Input>
+        <Input v-model="form.email" :disabled="disEmail" placeholder="请输入登录邮箱"></Input>
       </FormItem>
       <h3 class="layout-title">设置联系人（选项）</h3>
       <FormItem label="联系人名称" class="item-top">
@@ -77,6 +77,7 @@ import PermTree, { PermTreeModal } from '@/components/permTree'
 })
 export default class Main extends ViewBase {
   submitDisabled = false
+  disEmail = false
 
   customer = 0
   cinemaLen = 0
@@ -127,6 +128,13 @@ export default class Main extends ViewBase {
         role: data.role.id
       }
       this.data = data
+      // 禁用启用状态 邮箱不可编辑
+      const systems = data.systems[0].status
+      if (systems == 1 || systems == 2) {
+        this.disEmail = true
+      } else {
+        this.disEmail = false
+      }
       this.customer = data.partners == null ? 0 : data.partners.length
       this.cinemaLen = data.cinemas == null ? 0 : data.cinemas.length
       // tree
