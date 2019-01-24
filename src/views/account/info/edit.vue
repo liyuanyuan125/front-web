@@ -140,7 +140,7 @@ export default class Main extends ViewBase {
   async updateAccount() {
     // 如果验证码为空，不必传邮箱
     const cloneForm = this.form
-    cloneForm.imageList = cloneForm.imageList.map( (item: any) => item.fileId)
+    cloneForm.imageList = cloneForm.imageList.length != 0 ? cloneForm.imageList.map( (item: any) => item.fileId) : []
     try {
       if (!cloneForm.emailCaptcha) {
          await pendingAudit({
