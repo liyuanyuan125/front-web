@@ -1,27 +1,40 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title"><span @click="toAuth">权限管理</span> >
+    <h2 class="layout-nav-title">
+      <span @click="toAuth">权限管理</span> >
       <span v-if="!$route.params.id">新建权限角色</span>
       <span v-else>编辑权限角色</span>
     </h2>
-    <Form ref="form" :model="form" label-position="left" :rules="rules" :label-width="100" class="edit-input">
-      <FormItem label="角色名称" class="item-top" prop='name'>
+    <Form
+      ref="form"
+      :model="form"
+      label-position="left"
+      :rules="rules"
+      :label-width="100"
+      class="edit-input"
+    >
+      <FormItem label="角色名称" class="item-top" prop="name">
         <Input v-model="form.name" placeholder="请输入权限角色名称"></Input>
       </FormItem>
-      <FormItem label="相关权限">
+      <FormItem label="相关权限" :error="errorPerm">
         <PermTree v-model="permTreeModal" v-if="permTreeModal"/>
       </FormItem>
     </Form>
     <div class="tableSubmit btnCenter">
-      <button class="submitBtn button-ok" v-if="!$route.params.id" @click="handleInforma('form')">确定增加</button>
-      <button class="submitBtn button-ok" v-else @click="handleInforma('form')">确定修改</button>
+      <button class="submitBtn button-ok" v-if="!$route.params.id" @click="handleInforma">确定增加</button>
+      <button class="submitBtn button-ok" v-else @click="handleInforma">确定修改</button>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { meanList, customerAdd, customerRole, customerSet } from '@/api/authUser'
+import {
+  meanList,
+  customerAdd,
+  customerRole,
+  customerSet
+} from '@/api/authUser'
 import { getUser } from '@/store.ts'
 import { isArray, isString } from '@/fn/type.ts'
 import { uniq } from 'lodash'
@@ -37,22 +50,23 @@ export default class Main extends ViewBase {
   role = []
   list: any = []
 
-  form = {
-    name: ''
-  }
-
-  perms: any = []
-
+  errorPerm = ''
   permTreeModal: PermTreeModal | null = null
 
-  rules = {
-    name: [
-       { required: true, message: '请输入角色名称', trigger: 'change' }
-    ]
+  form = {
+    name: ''
+    // permsa: this.permTreeModal
   }
+  perms: any = []
 
   created() {
     this.seach()
+  }
+
+  get rules() {
+    return {
+      name: [{ required: true, message: '请输入角色名称', trigger: 'change' }]
+    }
   }
 
   get systemCode() {
@@ -70,10 +84,7 @@ export default class Main extends ViewBase {
         }
       } else {
         const {
-          data: {
-            menu,
-            role
-          }
+          data: { menu, role }
         } = await customerRole(id)
 
         this.permTreeModal = {
@@ -89,24 +100,31 @@ export default class Main extends ViewBase {
     }
   }
 
-  async handleInforma(form: string) {
-    const valid = await (this.$refs[form] as any).validate()
+  async handleInforma() {
+    if (this.permTreeModal != null) {
+      if (this.permTreeModal.perms.length == 0) {
+        this.errorPerm = '请输入西悉尼'
+      } else {
+        this.errorPerm = ''
+      }
+    }
+    const valid = await (this.$refs.form as any).validate()
     const id = this.$route.params.id || 0
     if (!valid) {
       return
     }
     try {
-      !id ? await customerAdd({
-        name: this.form.name,
-        systemCode: this.systemCode,
-        perms: this.permTreeModal ? this.permTreeModal.perms : []
-      }) : await customerSet(
-        id,
-        {
-        name: this.form.name,
-        systemCode: this.systemCode,
-        perms: this.permTreeModal ? this.permTreeModal.perms : []
-      })
+      !id
+        ? await customerAdd({
+            name: this.form.name,
+            systemCode: this.systemCode,
+            perms: this.permTreeModal ? this.permTreeModal.perms : []
+          })
+        : await customerSet(id, {
+            name: this.form.name,
+            systemCode: this.systemCode,
+            perms: this.permTreeModal ? this.permTreeModal.perms : []
+          })
       toast(!id ? '添加成功' : '修改成功')
       this.toAuth()
     } catch (ex) {
@@ -115,7 +133,7 @@ export default class Main extends ViewBase {
   }
 
   toAuth() {
-    this.$router.push({name: 'account-auth'})
+    this.$router.push({ name: 'account-auth' })
   }
 }
 </script>

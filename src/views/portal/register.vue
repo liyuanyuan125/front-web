@@ -209,7 +209,7 @@ export default class Main extends ViewBase {
     try {
       await sendRegisterEmail(this.form.email)
 
-      await countDown(10, sec => {
+      await countDown(60, sec => {
         this.codeMsg = sec + 's'
       })
 

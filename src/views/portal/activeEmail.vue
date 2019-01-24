@@ -23,15 +23,22 @@ import { activeEmailSumbit } from '@/api/user'
 
 @Component
 export default class Main extends ViewBase {
+  ticket = ''
+
   form = {
     firstPass: '',
     secondPass: ''
+  }
+  mounted() {
+    const url = this.$route.path
+    const lastNum = url.lastIndexOf('/') + 1
+    this.ticket = url.substr(lastNum)
   }
   async handleInforma() {
     try {
       await activeEmailSumbit({
         password: this.form.firstPass,
-        ticket: '33333'
+        ticket: this.ticket
       })
     } catch (ex) {
       this.handleError(ex)
