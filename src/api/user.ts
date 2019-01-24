@@ -80,7 +80,7 @@ export async function activeEmail(data: any) {
  * @param status
  */
 export async function activeEmailSumbit(data: any) {
-    const res = get('customer/sub-accounts/active', data)
+    const res = put('customer/sub-accounts/active', data)
     return res
 }
 

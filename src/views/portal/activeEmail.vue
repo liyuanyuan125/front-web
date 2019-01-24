@@ -4,11 +4,11 @@
       <h3 class="logo">
         <img src="../../assets/login/logo.png">
       </h3>
-      <FormItem label="登录邮箱" class="item-top">
-        <Input v-model="form.firstPass" placeholder="请输入正确的邮箱地址"></Input>
+      <FormItem label="密码" class="item-top">
+        <Input v-model="form.firstPass"  placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位" ></Input>
       </FormItem>
-      <FormItem label="登录邮箱" class="item-top">
-        <Input v-model="form.secondPass" placeholder="请输入正确的邮箱地址"></Input>
+      <FormItem label="确定密码" class="item-top">
+        <Input v-model="form.secondPass" placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"></Input>
       </FormItem>
     </Form>
     <div class="btnCenter">
