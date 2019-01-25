@@ -20,6 +20,7 @@ interface UserData {
   systems: SystemItem[]
   userId: number
   username: string
+  accountType: number
   // systemCode 通常不会返回，应通过 postData 设置
   systemCode: SystemCode
 }
@@ -34,6 +35,7 @@ export default function setUserByData(data: UserData) {
     name: data.email as string,
     email: data.email as string,
     isAdmin: data.admin as boolean,
+    accountType: data.accountType as number,
 
     systemCode: data.systemCode as SystemCode,
     systems: (data.systems || []).filter(it => it.status == 1).map(it => it.code),

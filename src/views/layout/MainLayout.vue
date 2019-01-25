@@ -11,8 +11,12 @@
         <a class="switcher-node"></a>
         <DropdownMenu slot="list">
           <div class="switcher-arrow"></div>
-          <DropdownItem v-for="it in systemList" :key="it.code" :name="it.code"
-            :selected="user.systemCode == it.code">{{it.name}}投放管理平台</DropdownItem>
+          <DropdownItem
+            v-for="it in systemList"
+            :key="it.code"
+            :name="it.code"
+            :selected="user.systemCode == it.code"
+          >{{it.name}}投放管理平台</DropdownItem>
         </DropdownMenu>
       </Dropdown>
 
@@ -26,15 +30,17 @@
     </header>
 
     <Layout class="site-center">
-      <Sider collapsible hide-trigger v-model="isOff" class="site-sider"
-        :width="180" ref="sider">
-        <Menu width="auto" theme="dark" class="sider-menu"
+      <Sider collapsible hide-trigger v-model="isOff" class="site-sider" :width="180" ref="sider">
+        <Menu
+          width="auto"
+          theme="dark"
+          class="sider-menu"
           :class="isOff && 'sider-menu-off'"
           :active-name="siderActiveName"
-          :open-names="siderOpenNames">
+          :open-names="siderOpenNames"
+        >
           <template v-for="menu in siderMenuList">
-            <Submenu v-if="menu.subList" :name="menu.name"
-              :class="`menu-node-${menu.name}`">
+            <Submenu v-if="menu.subList" :name="menu.name" :class="`menu-node-${menu.name}`">
               <template slot="title">{{menu.label}}</template>
               <MenuItem v-for="sub in menu.subList" :key="sub.name" :name="sub.name">
                 <router-link :to="{ name: sub.name }">{{sub.label}}</router-link>
@@ -62,8 +68,8 @@ import { systemList as allSystemList, SystemCode } from '@/util/types'
 import allSiderMenuList, { SiderMenuItem } from './allSiderMenuList'
 import { cloneDeep } from 'lodash'
 
-const isSystemCode = (code: SystemCode) =>
-  (it: SiderMenuItem) => it.systems == null || it.systems.includes(code)
+const isSystemCode = (code: SystemCode) => (it: SiderMenuItem) =>
+  it.systems == null || it.systems.includes(code)
 
 @Component
 export default class App extends ViewBase {
@@ -102,25 +108,38 @@ export default class App extends ViewBase {
       it.subList = it.subList && it.subList.filter(isSystem)
       return isSystem(it)
     })
+
+    // accountType 1=主账户（显示账号信息） 2=子账户 0 未知  {name: "account-info", label: "账号信息"}
+    let extractList: any = []
+    let subList: any = []
+    list.map((item, index) => {
+      if (item.name == 'account') {
+        subList = item.subList || []
+        extractList = item.subList!.slice(1)
+        if (user.accountType !== 1) {
+          list[index].subList = extractList
+        }
+      }
+    })
     return list
   }
 
   get siderOpenNames() {
     const activeName = this.siderActiveName
     const item = this.siderMenuList.find(it => {
-      const exists = (it.subList! || [{ name: it.name }]).some(t => t.name === activeName)
+      const exists = (it.subList! || [{ name: it.name }]).some(
+        t => t.name === activeName
+      )
       return exists
     })
-    return item != null ? [ item.name ] : []
+    return item != null ? [item.name] : []
   }
 
   // 获取导航中全部可点击的页面 name
   get siderMenuNameMap() {
     const result = this.siderMenuList.reduce((map: any, it) => {
-      const names = it.subList != null
-        ? it.subList.map(t => t.name)
-        : [ it.name ]
-      names.forEach(name => map[name] = 1)
+      const names = it.subList != null ? it.subList.map(t => t.name) : [it.name]
+      names.forEach(name => (map[name] = 1))
       return map
     }, {})
     return result
@@ -255,7 +274,7 @@ export default class App extends ViewBase {
   border-bottom-color: rgba(217, 217, 217, 0.5);
 }
 .switcher-arrow::after {
-  content: " ";
+  content: ' ';
   top: 1px;
   margin-left: -10px;
   border-width: 0 10px 10px 10px;

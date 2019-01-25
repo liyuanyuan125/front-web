@@ -137,7 +137,6 @@ export default class Main extends ViewBase {
     try {
       const postData = { ...this.form }
       const { data } = await login(postData)
-
       setUserByData({
         ...data,
         systemCode: postData.systemCode

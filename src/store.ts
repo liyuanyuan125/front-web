@@ -30,7 +30,8 @@ export interface User {
   companyId: number
   /** 所属公司名 */
   companyName: string
-
+  /** 主子账户类型 */
+  accountType: number
   /** 权限列表 */
   perms: string[]
 }
