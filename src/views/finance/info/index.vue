@@ -494,18 +494,19 @@ export default class Main extends ViewBase {
         )
       }, 3000)
       if (this.datamoney.freezeAmount == 0 ) {
-        const freezeAmount = setInterval(() => {
-          if (Number(this.end3) < Number(this.datamoney.freezeAmount)) {
-            this.end3 += Math.floor(Math.random() * 50)
-            this.freezeAmount = this.addNumber(String(this.end3))
-          } else {
-            return this.end3
-          }
-        }, 1)
-        setTimeout(() => {
-          clearInterval(freezeAmount)
-          this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
-        }, 0)
+        this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
+        // const freezeAmount = setInterval(() => {
+        //   if (Number(this.end3) < Number(this.datamoney.freezeAmount)) {
+        //     this.end3 += Math.floor(Math.random() * 50)
+        //     this.freezeAmount = this.addNumber(String(this.end3))
+        //   } else {
+        //     return this.end3
+        //   }
+        // }, 1)
+        // setTimeout(() => {
+        //   clearInterval(freezeAmount)
+        //   this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
+        // }, 0)
       } else {
         const freezeAmount = setInterval(() => {
           if (Number(this.end3) < Number(this.datamoney.freezeAmount)) {
