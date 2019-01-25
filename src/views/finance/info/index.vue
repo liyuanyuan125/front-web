@@ -468,7 +468,7 @@ export default class Main extends ViewBase {
 
       const balance = setInterval(() => {
         if (Number(this.end) < Number(this.datamoney.balance)) {
-          this.end += Math.floor(Math.random() * 20)
+          this.end += Math.floor(Math.random() * 15)
           this.balance = this.addNumber(String(this.end))
         } else {
           return this.end
@@ -477,11 +477,11 @@ export default class Main extends ViewBase {
       setTimeout(() => {
         clearInterval(balance)
         this.balance = this.addNumber(String(this.datamoney.balance))
-      }, 3000)
+      }, 2000)
 
       const availableAmount = setInterval(() => {
         if (Number(this.end2) < Number(this.datamoney.availableAmount)) {
-          this.end2 += Math.floor(Math.random() * 20)
+          this.end2 += Math.floor(Math.random() * 15)
           this.availableAmount = this.addNumber(String(this.end2))
         } else {
           return this.end2
@@ -492,7 +492,7 @@ export default class Main extends ViewBase {
         this.availableAmount = this.addNumber(
           String(this.datamoney.availableAmount)
         )
-      }, 3000)
+      }, 2000)
       if (this.datamoney.freezeAmount == 0 ) {
         this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
         // const freezeAmount = setInterval(() => {
@@ -510,7 +510,7 @@ export default class Main extends ViewBase {
       } else {
         const freezeAmount = setInterval(() => {
           if (Number(this.end3) < Number(this.datamoney.freezeAmount)) {
-            this.end3 += Math.floor(Math.random() * 20)
+            this.end3 += Math.floor(Math.random() * 15)
             this.freezeAmount = this.addNumber(String(this.end3))
           } else {
             return this.end3
@@ -519,7 +519,7 @@ export default class Main extends ViewBase {
         setTimeout(() => {
           clearInterval(freezeAmount)
           this.freezeAmount = this.addNumber(String(this.datamoney.freezeAmount))
-        }, 3000)
+        }, 2000)
       }
 
       // 银行卡信息
