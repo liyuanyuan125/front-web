@@ -16,7 +16,7 @@
       <FormItem label="角色名称" class="item-top" prop="name">
         <Input v-model="form.name" placeholder="请输入权限角色名称"></Input>
       </FormItem>
-      <FormItem label="相关权限" :error="errorPerm">
+      <FormItem label="相关权限" :error="errorPerm" :class="{'item-sign': isSign}">
         <PermTree v-model="permTreeModal" v-if="permTreeModal"/>
       </FormItem>
     </Form>
@@ -55,9 +55,9 @@ export default class Main extends ViewBase {
 
   form = {
     name: ''
-    // permsa: this.permTreeModal
   }
   perms: any = []
+  isSign = true
 
   created() {
     this.seach()
@@ -103,9 +103,11 @@ export default class Main extends ViewBase {
   async handleInforma() {
     if (this.permTreeModal != null) {
       if (this.permTreeModal.perms.length == 0) {
-        this.errorPerm = '请输入西悉尼'
+        this.errorPerm = '请输入相关权限'
+        this.isSign = true
       } else {
         this.errorPerm = ''
+        this.isSign = false
       }
     }
     const valid = await (this.$refs.form as any).validate()
@@ -128,7 +130,7 @@ export default class Main extends ViewBase {
       toast(!id ? '添加成功' : '修改成功')
       this.toAuth()
     } catch (ex) {
-      this.handleError(ex)
+      this.handleError(ex.msg)
     }
   }
 
@@ -148,6 +150,17 @@ export default class Main extends ViewBase {
 }
 .ivu-tree {
   min-height: 300px;
+}
+.submitBtn {
+  margin-bottom: 30px;
+}
+/deep/ .item-sign .ivu-form-item-label::before {
+  content: '*';
+  display: inline-block;
+  margin-right: 4px;
+  line-height: 1;
+  font-size: 12px;
+  color: #ed4014;
 }
 </style>
 
