@@ -468,7 +468,7 @@ export default class Main extends ViewBase {
 
       const balance = setInterval(() => {
         if (Number(this.end) < Number(this.datamoney.balance)) {
-          this.end += Math.floor(Math.random() * 50)
+          this.end += Math.floor(Math.random() * 20)
           this.balance = this.addNumber(String(this.end))
         } else {
           return this.end
@@ -481,7 +481,7 @@ export default class Main extends ViewBase {
 
       const availableAmount = setInterval(() => {
         if (Number(this.end2) < Number(this.datamoney.availableAmount)) {
-          this.end2 += Math.floor(Math.random() * 50)
+          this.end2 += Math.floor(Math.random() * 20)
           this.availableAmount = this.addNumber(String(this.end2))
         } else {
           return this.end2
@@ -510,7 +510,7 @@ export default class Main extends ViewBase {
       } else {
         const freezeAmount = setInterval(() => {
           if (Number(this.end3) < Number(this.datamoney.freezeAmount)) {
-            this.end3 += Math.floor(Math.random() * 50)
+            this.end3 += Math.floor(Math.random() * 20)
             this.freezeAmount = this.addNumber(String(this.end3))
           } else {
             return this.end3
