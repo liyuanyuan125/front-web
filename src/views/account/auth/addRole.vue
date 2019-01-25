@@ -112,7 +112,7 @@ export default class Main extends ViewBase {
     }
     const valid = await (this.$refs.form as any).validate()
     const id = this.$route.params.id || 0
-    if (!valid) {
+    if (!valid || this.permTreeModal!.perms.length == 0) {
       return
     }
     try {
