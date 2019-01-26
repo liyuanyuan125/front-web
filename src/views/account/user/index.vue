@@ -289,7 +289,7 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-@import '~@/site/lib.less';
+@import '~@/site/common.less';
 .action-btn {
   margin-right: 10px;
 }
@@ -302,17 +302,7 @@ export default class Main extends ViewBase {
 .warting {
   color: @c-done;
 }
-.colBg {
-  font-size: 14px;
-  height: 50px;
-  line-height: 50px;
-  padding: 0 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  background: @c-head-bg;
-}
+
 .page {
   font-size: 14px;
   .checkAll {
@@ -323,19 +313,7 @@ export default class Main extends ViewBase {
       color: @c-link;
     }
   }
-  .userTitle {
-    .colBg;
-    .addUser {
-      width: 140px;
-      height: 40px;
-      line-height: 40px;
-      display: block;
-      text-align: center;
-      color: #fff;
-      cursor: pointer;
-      background: @c-button;
-    }
-  }
+
   .tableTotal {
     padding: 0 30px 0;
     display: flex;
