@@ -114,11 +114,11 @@ export default [
     name: 'pop-plan',
     component: () => import('./views/pop/plan/index.vue'),
   },
-  // 推广管理 - 广告计划 - 计划列表
+  // 推广管理 - 广告计划 - 计划列表indexList.vue
   {
     path: '/pop/planlist',
     name: 'pop-planlist',
-    component: () => import('./views/pop/plan/indexList.vue')
+    component: () => import('./views/pop/plan/planIndex.vue')
   },
   // 推广管理 - 广告计划 - 生成广告方案
   {

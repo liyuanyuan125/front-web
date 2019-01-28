@@ -44,20 +44,46 @@
     </Form>
 
     <Table
+      stripe
       :columns="columns"
       :data="tableDate"
       ref="selection"
       @on-selection-change="singleSelect"
       @on-select-all="selectAll"
     >
+      <template slot="stauts" slot-scope="{row, index}">
+        <span>{{queryStatus(row.stauts)}}</span>
+      </template>
+      <template slot="beginDate" slot-scope="{row, index}">
+        <span>{{formatYell(row.beginDate)}} ~ {{formatYell(row.endDate)}}</span>
+      </template>
       <template slot="createTime" slot-scope="{row, index}">
         <span>{{formatTimes(row.createTime)}}</span>
       </template>
-      <template slot="id" slot-scope="{row, index}">
-        <span>广告计划ID：{{row.id}}</span>
-      </template>
-      <template slot="name" slot-scope="{row, index}">
-        <span>{{row.name}}</span>
+      <template slot="operation" slot-scope="{row, index}">
+        <div v-if="row.stauts == 1 || row.stauts == 2" class="operation-btn">
+          <p><span>查看</span></p>
+          <p><span>编辑</span></p>
+          <p><span>取消</span></p>
+          <p><span @click="relevanceAdv(row.id)">关联广告片</span></p>
+        </div>
+        <div v-else-if="row.stauts ==  4 ">
+          <p><span>查看</span></p>
+          <p><span>支付</span></p>
+          <p><span>取消</span></p>
+          <p><span>关联广告片</span></p>
+        </div>
+        <div v-else-if="row.stauts ==  5 ">
+          <p><span>查看</span></p>
+          <p><span @click="relevanceAdv(row.id)">关联广告片</span></p>
+        </div>
+        <div v-else-if="row.stauts == 3 || row.stauts == 6 || row.stauts == 7 || row.stauts == 8 || row.stauts == 9 ">
+          <p><span>查看</span></p>
+        </div>
+        <div v-else-if="row.stauts == 10">
+          <p><span>查看</span></p>
+          <p><span>编辑</span></p>
+        </div>
       </template>
     </Table>
     <h4 class="checkAll">
@@ -77,19 +103,20 @@
       @on-change="handlepageChange"
       @on-page-size-change="handlePageSize"
     />
+     <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible"></relevanceDlg>
   </div>
 </template>
 <script lang="tsx">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
-import { formatTimes } from '@/util/validateRules'
+import { formatTimes, formatYell} from '@/util/validateRules'
 import { planList, delCheckPlanList } from '@/api/plan'
-import tableExpand from './tableExpand.vue'
+import relevanceDlg from '../plan/relevanceAdVDlg.vue'
 
 @Component({
   components: {
-    tableExpand
+    relevanceDlg
   }
 })
 export default class Plan extends ViewBase {
@@ -103,39 +130,60 @@ export default class Plan extends ViewBase {
     pageIndex: 1,
     pageSize: 10
   }
+  relevanVis = {
+    visible: false,
+    title: '关联广告片'
+  }
+
   totalCount = 2
   data: any = []
   selectIds = []
   checkboxAll = false
 
   columns = [
+    { type: 'selection', width: 50, align: 'center' },
+    { title: '广告计划ID', key: 'id', minWidth: 100 },
     {
-      type: 'expand',
-      className: 'expand-list',
-      width: 1,
+      title: '广告计划名称',
+      key: 'name',
+      minWidth: 150,
       render: (h: any, params: any) => {
-        return h(tableExpand, {
-          props: {
-            row: params.row
-          },
-          on: {
-            getID: (val: any) => {
-              this.pagea()
-            }
-          }
-        })
+        const { row } = params
+        if (row.name && row.name.length > 15) {
+          const splitText = row.name.substr(0, 15) + '.......'
+          return h(
+            'Tooltip',
+            {
+              props: {
+                placement: 'top',
+                content: row.name,
+                maxWidth: '200px'
+              }
+            },
+            splitText
+          )
+        } else if (!row.name) {
+          return h('span', {}, '/')
+        } else {
+          return h('span', {}, row.name)
+        }
       }
     },
-    { type: 'selection', width: 30, align: 'center' },
+    { title: '广告计划状态', slot: 'stauts', width: 150 },
+    { title: '广告片规格', key: 'specification', width: 150 },
+    { title: '广告片名称/ID', key: 'videoName', width: 150 },
+    { title: '投放排期', slot: 'beginDate', width: 150 },
+    { title: '投放周期', key: 'cycle', width: 80 },
+    { title: '冻结金额(元）', key: 'freezeAmount', width: 150 },
+    { title: '结算状态', key: 'settlementStatus', width: 150 },
+    { title: '广告花费(元）', key: 'settlementAmount', width: 150 },
     { title: '创建时间', slot: 'createTime', width: 150 },
-    { title: '广告计划ID', slot: 'id', width: 200 },
-    { title: '广告计划名称', slot: 'name', minWidth: 300 }
+    { title: '操作', slot: 'operation', width: 150, align: 'center' }
   ]
   tableDate = [
     {
-      id: '广告计划1',
-      name:
-        '2019奔驰影院广告－春节档2019奔驰影院广告－春节档哈2019奔驰影院广告－春节档2019奔驰影院广告',
+      id: '22222222',
+      name: '2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院',
       stauts: 2,
       specification: '广告片规格',
       videoId: '广告片ID',
@@ -146,11 +194,10 @@ export default class Plan extends ViewBase {
       settlementAmount: '广告花费(元）',
       createTime: 333333333,
       beginDate: 3333333333,
-      endDate: 333333333333,
-      _expanded: true
+      endDate: 333333333333
     },
     {
-      id: '广告计划2',
+      id: '333333333',
       name: '广告计划名称',
       stauts: 5,
       specification: '广告片规格',
@@ -162,18 +209,21 @@ export default class Plan extends ViewBase {
       settlementAmount: '广告花费(元）',
       createTime: 3333333333333,
       beginDate: 33333333333333,
-      endDate: 333333333333,
-      _expanded: true
+      endDate: 333333333333
     }
   ]
   get formatTimes() {
     return formatTimes
   }
+  get formatYell() {
+    return formatYell
+  }
   async mounted() {
     this.tableList()
   }
-  pagea() {
-    this.tableList()
+
+  async relevanceAdv(id: any) {
+    this.relevanVis.visible = true
   }
   async tableList() {
     const { data } = await planList({ ...this.form, ...this.pageList })
@@ -197,6 +247,12 @@ export default class Plan extends ViewBase {
     } else {
       this.showWaring('请选择你要删除的元素')
     }
+  }
+  queryStatus(id: any) {
+     const items = this.data.statusList ? this.data.statusList.filter( (item: any) => item.key == id) : null
+     if (items) {
+       return items[0].text
+     }
   }
   // 单选
   singleSelect(select: any) {
@@ -224,24 +280,13 @@ export default class Plan extends ViewBase {
 </script>
 <style lang="less" scoped>
 @import '~@/site/common.less';
-
-/deep/ .ivu-table-header {
-  margin-bottom: 25px;
-}
-/deep/ .ivu-table-tbody {
-  .ivu-table-row td {
-    background: #ffefe7;
+.operation-btn {
+  text-align: center;
+  span {
+    cursor: pointer;
+    display: inline-block;
+    line-height: 22px;
   }
-  td.ivu-table-expanded-cell {
-    background: #fff;
-    padding: 0;
-    border: solid 1px #d3e7f8;
-    border-top: none;
-    margin-bottom: 20px;
-  }
-}
-/deep/ .ivu-table-cell-with-expand {
-  display: none;
 }
 .checkAll {
   cursor: pointer;
@@ -250,9 +295,6 @@ export default class Plan extends ViewBase {
   span:last-child {
     color: @c-link;
   }
-}
-/deep/ .ivu-table-cell {
-  padding-left: 14px;
 }
 </style>
 
