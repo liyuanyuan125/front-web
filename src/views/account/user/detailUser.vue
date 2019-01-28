@@ -71,7 +71,6 @@
     <div class="text-rows log-list">
       <p v-for="(item, index) in logList" :key="index">
         <span>{{formatTimes(item.createTime)}}</span>
-        <span>{{item.operatorName}}</span>
         <em>{{item.operateDesc}}</em>
       </p>
     </div>
@@ -135,7 +134,7 @@ export default class Main extends ViewBase {
         perms: (data.role && data.role.perms) || []
       }
       this.roleName = data.role.name
-      this.statusCode = data.systems[0].statusDesc
+      this.statusCode = data.systems[0].codeDesc
       this.customer = this.data.partners == null ? 0 : this.data.partners.length
       this.cinemaLen = this.data.cinemas == null ? 0 : this.data.cinemas.length
     } catch (ex) {

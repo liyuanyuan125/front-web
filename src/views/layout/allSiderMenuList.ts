@@ -26,7 +26,7 @@ const allSiderMenuList: SiderMenuItem[] = [
     systems: ['ads', 'ps'],
     subList: [
       {
-        name: 'pop-plan',
+        name: 'pop-planlist',
         label: '广告计划',
         systems: ['ads'],
       },
