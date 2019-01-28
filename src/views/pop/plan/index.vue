@@ -71,7 +71,7 @@
       </FormItem>
 
       <FormItem label="投放地区" class="form-item-type" v-if="!isSingle">
-        <RadioGroup v-model="form.areaType" class="item-radio-top">
+        <RadioGroup v-model="form.areaType" @on-change="handleChange" class="item-radio-top">
           <Radio
             v-for="it in areaTypeList"
             :key="it.key"
@@ -81,8 +81,8 @@
         </RadioGroup>
       </FormItem>
 
-      <div class="city-wrap" v-if="!isSingle">
-        <CitySelect/>
+      <div class="city-wrap" v-if="citySel">
+           <CitySelect/>
       </div>
 
       <div class="people-wrap" v-if="isRefBefore && !isSingle">
@@ -306,7 +306,7 @@ export default class Main extends ViewBase {
 
     // 定向类型
     type: 1,
-    areaType: 3,
+    areaType: 0,
     sex: 0,
     age: [0],
     filmHobby: [0],
@@ -316,6 +316,8 @@ export default class Main extends ViewBase {
     filmType: [0],
     filmIdSelected: 0,
   }
+
+  citySel = false
 
   // 是否为映前广告
   get isRefBefore() {
@@ -369,6 +371,13 @@ export default class Main extends ViewBase {
     { id: 7, name: '门贴' }
   ]
 
+  handleChange() {
+    if (this.form.areaType == 0) {
+      this.citySel = false
+    } else {
+      this.citySel = true
+    }
+  }
   handleVenue() {
     if (this.allType && this.form.venueType.length >= 1) {
       this.allType = false
