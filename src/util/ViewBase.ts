@@ -23,6 +23,7 @@ export default class ViewBase extends Vue {
   showWaring(msg: string) {
     warning(msg, { title: '提示' })
   }
+
   /**
    * 将错误格式化成字符串
    * @param ex 错误对象
