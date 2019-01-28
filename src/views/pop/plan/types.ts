@@ -11,6 +11,7 @@ export interface City {
 
 export const cityList: City[] = [
   { id: 1, name: '北京市', regionId: 1, provinceId: 1, cinemaCount: 318, pinyin: 'beijing' },
+  { id: 8, name: '石家庄市', regionId: 1, provinceId: 7, cinemaCount: 168, pinyin: 'shijiazhuang' },
   { id: 2, name: '上海市', regionId: 2, provinceId: 2, cinemaCount: 338, pinyin: 'shanghai' },
   { id: 3, name: '广州市', regionId: 3, provinceId: 3, cinemaCount: 388, pinyin: 'guangzhou' },
   { id: 4, name: '深圳市', regionId: 3, provinceId: 3, cinemaCount: 298, pinyin: 'shenzhen' },
@@ -51,7 +52,7 @@ export const areaTypeList: KeyText[] = [
   { key: 1, text: '按区域' },
   { key: 2, text: '按省份' },
   { key: 3, text: '按城市' },
-  { key: 4, text: '安影院' },
+  { key: 4, text: '按影院' },
 ]
 
 export interface Film {

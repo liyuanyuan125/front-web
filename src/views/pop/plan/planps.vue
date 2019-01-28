@@ -6,26 +6,12 @@
       <h3 class="layout-title">基本信息</h3>
 
       <FormItem label="投放类型" class="item-top select-adv-type">
-        <span
-          :class="{active: form.putType == 'refBefore'}"
-          @click="form.putType = 'refBefore'"
-        >映前广告</span>
-        <span :class="{active: form.putType == 'refafter'}" @click="form.putType = 'refafter'">线下场馆</span>
-        <span>视频贴片</span>
-        <span>电视广告</span>
-        <span>名人</span>
-      </FormItem>
-
-      <FormItem label="广告计划">
-        <Input v-model="form.advMes" placeholder="如：2019款全新奔驰G级影院广告"></Input>
-        <Select
-          v-model="form.advType"
-          class="select-adv-list"
-          style="width:200px"
-          placeholder="请选择类型"
-        >
-          <Option :value="item.id" :key="item.id" v-for="item in advTypeList">{{item.name}}</Option>
-        </Select>
+        <span :class="{active: form.putType == 'refBefore'}"
+          @click="form.putType = 'refBefore'">品牌</span>
+        <span :class="{active: form.putType == 'refafter'}"
+          @click="form.putType = 'refafter'">线下场馆</span>
+        <span>艺人</span>
+        <span>KOL</span>
       </FormItem>
 
       <FormItem label="投放排期">
@@ -38,13 +24,8 @@
           </div>
           <div class="tabs-active">
             <div v-if="tabs == 1">
-              <DatePicker
-                v-model="form.date"
-                format="yyyy/MM/dd"
-                type="daterange"
-                placement="bottom-end"
-                placeholder="请输入投放开始日期和结束日期"
-              ></DatePicker>
+              <DatePicker v-model="form.date" format="yyyy/MM/dd" type="daterange"
+                placement="bottom-end" placeholder="请输入投放开始日期和结束日期"></DatePicker>
             </div>
             <div v-else>
               <RadioGroup v-model="form.vacation">
@@ -57,198 +38,97 @@
           </div>
         </div>
       </FormItem>
+
+      <FormItem label="广告影片">
+        <Select v-model="form.advType" class="select-adv-list"
+          style="width:400px;margin-left:-35px" placeholder="请选择影片">
+          <Option :value="item.id" :key="item.id" v-for="item in advTypeList">{{item.name}}</Option>
+        </Select>
+      </FormItem>
+
+      <FormItem label="投放形式" class="form-item-xingshi">
+        <RadioGroup v-model="form.xingshi" type="button" class="orient-tabs">
+          <Radio v-for="it in xingshiList" :key="it.key" :label="it.key"
+            class="target-type">{{it.text}}</Radio>
+        </RadioGroup>
+      </FormItem>
+
+      <FormItem label="总预算" class="form-item-yusuan" :label-width="60"
+        v-if="form.xingshi == 1">
+        <CheckboxGroup v-model="form.yusuan" class="item-radio-top">
+          <Checkbox v-for="it in yusuanList" :key="it.key" :label="it.key"
+            class="check-item">{{it.text}}</Checkbox>
+        </CheckboxGroup>
+      </FormItem>
+
+      <FormItem label="权益" class="form-item-quanyi" :label-width="60"
+        v-if="form.xingshi == 2">
+        <CheckboxGroup v-model="form.quanyi" class="item-radio-top">
+          <Checkbox v-for="it in quanyiList" :key="it.key" :label="it.key"
+            class="check-item">{{it.text}}</Checkbox>
+        </CheckboxGroup>
+      </FormItem>
+
       <h3 class="layout-title">投放定向</h3>
 
-      <FormItem label="定向类型" class="form-item-type" v-if="isRefBefore">
-        <RadioGroup v-model="form.type" type="button" class="orient-tabs">
-          <Radio
-            v-for="it in typeList"
-            :key="it.key"
-            :label="it.key"
-            class="target-type"
-          >{{it.text}}</Radio>
-        </RadioGroup>
-      </FormItem>
-
-      <FormItem label="投放地区" class="form-item-type" v-if="!isSingle">
+      <FormItem label="定向地区" class="form-item-type">
         <RadioGroup v-model="form.areaType" class="item-radio-top">
-          <Radio
-            v-for="it in areaTypeList"
-            :key="it.key"
-            :label="it.key"
-            class="radio-item"
-          >{{it.text}}</Radio>
+          <Radio v-for="it in areaTypeList" :key="it.key"
+            :label="it.key" class="radio-item">{{it.text}}</Radio>
         </RadioGroup>
       </FormItem>
 
-      <div class="city-wrap" v-if="!isSingle">
+      <FormItem label="线级" class="form-item-xianji" v-if="form.areaType == 4">
+        <CheckboxGroup v-model="form.xianji" class="item-radio-top">
+          <Checkbox v-for="it in xianjiList" :key="it.key" :label="it.key"
+            class="check-item">{{it.text}}</Checkbox>
+        </CheckboxGroup>
+      </FormItem>
+
+      <div class="city-wrap">
         <CitySelect/>
       </div>
 
-      <div class="people-wrap" v-if="isRefBefore && !isSingle">
-        <h3 class="group-title">观影人群</h3>
+      <div class="people-wrap">
+        <h3 class="group-title">品牌受众</h3>
 
-        <FormItem label="观影人群性别" class="form-item-sex">
+        <FormItem label="品牌类型" class="form-item-pptype">
+          <RadioGroup v-model="form.pptype" class="item-radio-top">
+            <Radio v-for="it in pptypeList" :key="it.key" :label="it.key"
+              class="radio-item">{{it.text}}</Radio>
+          </RadioGroup>
+        </FormItem>
+
+        <FormItem label="受众性别" class="form-item-sex">
           <RadioGroup v-model="form.sex" class="item-radio-top">
             <Radio v-for="it in sexList" :key="it.key" :label="it.key"
               class="radio-item">{{it.text}}</Radio>
           </RadioGroup>
         </FormItem>
 
-        <FormItem label="观影人群年龄" class="form-item-age">
+        <FormItem label="受众年龄" class="form-item-age">
           <CheckboxGroup v-model="form.age" class="item-radio-top">
             <Checkbox v-for="it in ageStageList" :key="it.key" :label="it.key"
               class="check-item">{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
 
-        <FormItem label="观影人群偏好" class="form-item-hobby">
-          <CheckboxGroup v-model="form.filmHobby" class="float item-radio-top">
-            <Checkbox v-for="it in filmHobbyList" :key="it.key"
+        <FormItem label="消费能力" class="form-item-nengli">
+          <CheckboxGroup v-model="form.nengli" class="float item-radio-top">
+            <Checkbox v-for="it in nengliList" :key="it.key"
               :label="it.key" class="check-item">{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
       </div>
 
-      <div class="single-wrap" v-if="isSingle">
-        <FormItem label="观影人群性别" class="form-item-sex">
-          <RadioGroup v-model="form.sex">
-            <Radio
-              v-for="it in sexList"
-              :key="it.key"
-              :label="it.key"
-              class="radio-item"
-            >{{it.text}}</Radio>
-          </RadioGroup>
-        </FormItem>
-
-        <FormItem label="观影人群年龄" class="form-item-age">
-          <CheckboxGroup v-model="form.age" class="item-radio-top">
-            <Checkbox v-for="it in ageStageList" :key="it.key" :label="it.key"
-              class="check-item">{{it.text}}</Checkbox>
-          </CheckboxGroup>
-        </FormItem>
-
-        <FormItem label="观影人群偏好" class="form-item-hobby">
-          <CheckboxGroup v-model="form.filmHobby" class="float">
-            <Checkbox
-              v-for="it in filmHobbyList"
-              :key="it.key"
-              :label="it.key"
-              class="check-item"
-            >{{it.text}}</Checkbox>
-          </CheckboxGroup>
-        </FormItem>
-
-        <FormItem label="选择影片" class="form-item-film-name">
-          <Input
-            v-model="form.filmName"
-            class="input-film-name"
-            placeholder="输入影片名字"
-            search
-            enter-button
-          />
-        </FormItem>
-
-        <FormItem label="影片类型" class="form-item-film-type">
-          <CheckboxGroup v-model="form.filmType" class="float">
-            <Checkbox
-              v-for="it in filmHobbyList"
-              :key="it.key"
-              :label="it.key"
-              class="check-item"
-            >{{it.text}}</Checkbox>
-          </CheckboxGroup>
-        </FormItem>
-
-        <p class="single-result" v-if="foundFilmList.length > 0">已为您匹配以下{{foundFilmList.length}}部影片：</p>
-
-        <ul class="single-film-list" v-if="foundFilmList.length > 0">
-          <li v-for="it in foundFilmList" :key="it.id" @click="selectFilm(it)"
-            :class="['single-film-item',
-            form.filmIdSelected == it.id ? 'single-film-item-on' : '']">
-            <div class="film-cover-box">
-              <img :src="it.cover" class="film-cover">
-              <div class="film-date">上映时间：{{it.date}}</div>
-            </div>
-            <h4 class="film-name">{{it.name}}</h4>
-            <div class="film-tags">{{it.tags}}</div>
-          </li>
-        </ul>
-      </div>
-
-      <FormItem label="场馆类型" class="item-top" v-if="!isRefBefore">
-        <span
-          class="float check-type all-type"
-          @click="handleAllType"
-          :class="{checked: allType}"
-        >不限</span>
-        <CheckboxGroup v-model="form.venueType" @on-change="handleVenue" class="float">
-          <Checkbox
-            label="剧院"
-            class="check-type"
-            :class="{checked: form.venueType.includes('剧院') }"
-          />
-          <Checkbox
-            label="剧场"
-            class="check-type"
-            :class="{checked: form.venueType.includes('剧场') }"
-          />
-          <Checkbox
-            label="文化馆"
-            class="check-type"
-            :class="{checked: form.venueType.includes('文化馆') }"
-          />
-          <Checkbox
-            label="体育馆"
-            class="check-type"
-            :class="{checked: form.venueType.includes('体育馆') }"
-          />
-          <Checkbox
-            label="商场"
-            class="check-type"
-            :class="{checked: form.venueType.includes('商场') }"
-          />
-          <Checkbox
-            label="写字楼"
-            class="check-type"
-            :class="{checked: form.venueType.includes('写字楼') }"
-          />
+      <FormItem label="广告形式" class="form-item-ggtype">
+        <CheckboxGroup v-model="form.ggtype" class="item-radio-top">
+          <Checkbox v-for="it in ggtypeList" :key="it.id"
+            :label="it.id" class="ggtype-check">
+            <img :src="it.url" class="ggtype-img">
+            <h4 class="ggtype-name">{{it.name}}</h4>
+          </Checkbox>
         </CheckboxGroup>
-      </FormItem>
-
-      <FormItem label="广告形式" v-if="!isRefBefore">
-        <div class="flex-box">
-          <div class="adv-position">
-            <span
-              v-for="(item, index) in advList"
-              :key="item.key"
-              :class="{'adv-active': index == ding}"
-              @click="handleTabs(item.id)"
-            >{{item.name}}</span>
-          </div>
-          <div class="select-tabs" :class="selectTab"></div>
-        </div>
-      </FormItem>
-
-      <h3 class="layout-title">预算与计费</h3>
-
-      <FormItem label="总预算/￥" class="item-top">
-        <RadioGroup v-model="form.totalMonery" class="item-radio-top">
-          <Radio :label="item.label" v-for="item in amountList" :key="item.key" class="radio-item"></Radio>
-          <Radio label="指定金额" class="radio-item">
-            指定金额
-            <em v-if="form.totalMonery == '指定金额'" class="custom-monery">
-              <Input v-model="form.custom" placeholder="请输入自定义金额"/>万
-            </em>
-          </Radio>
-        </RadioGroup>
-      </FormItem>
-
-      <FormItem label="计算方式">
-        <RadioGroup v-model="form.bill" class="item-radio-top">
-          <Radio label="按人次计费"></Radio>
-        </RadioGroup>
       </FormItem>
     </Form>
 
@@ -261,7 +141,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cityList, City, sexList, ageStageList, filmHobbyList,
+import { sexList, ageStageList, filmHobbyList,
   areaTypeList, filmList as allFilmList, Film } from './types'
 import CitySelect from './citySelect.vue'
 import { systemSwitched } from '@/util/globalEvents'
@@ -315,7 +195,54 @@ export default class Main extends ViewBase {
     filmName: '',
     filmType: [0],
     filmIdSelected: 0,
+
+    // 新增的
+    xingshi: 1,
+    yusuan: [],
+    quanyi: [1, 2],
+    xianji: [],
+    nengli: [0],
+    pptype: 1,
+    ggtype: [],
   }
+
+  xingshiList = [
+    { key: 1, text: '广告投放' },
+    { key: 2, text: '联合推广' },
+  ]
+
+  yusuanList = [
+    { key: 1, text: '5万以下' },
+    { key: 2, text: '5-10万' },
+    { key: 3, text: '10-15万' },
+    { key: 4, text: '15-20万' },
+    { key: 5, text: '20-30万' },
+    { key: 6, text: '30-50万' },
+    { key: 7, text: '50万以上' },
+  ]
+
+  quanyiList = [
+    { key: 1, text: '授权IP' },
+    { key: 2, text: '发放优惠券' },
+  ]
+
+  pptypeList = [
+    { key: 1, text: '快消品' },
+    { key: 2, text: '餐饮' },
+    { key: 3, text: '手机3C' },
+    { key: 4, text: '家居用品' },
+    { key: 5, text: '玩具礼品' },
+  ]
+
+  nengliList = [
+    { key: 0, text: '不限' },
+    { key: 1, text: '白领' },
+    { key: 2, text: '金领' },
+    { key: 3, text: '粉领' },
+    { key: 4, text: '灰领' },
+    { key: 5, text: '蓝领' },
+    { key: 6, text: '绿领' },
+  ]
 
   // 是否为映前广告
   get isRefBefore() {
@@ -327,9 +254,26 @@ export default class Main extends ViewBase {
     return this.isRefBefore && this.form.type == 2
   }
 
-  typeList = [{ key: 1, text: '标准定向' }, { key: 2, text: '按单部影片' }]
+  typeList = [
+    { key: 1, text: '标准定向' },
+    { key: 2, text: '按单部影片' }
+  ]
 
-  areaTypeList = areaTypeList
+  areaTypeList = [
+    { key: 0, text: '不限' },
+    { key: 1, text: '按区域' },
+    { key: 2, text: '按省份' },
+    { key: 3, text: '按城市' },
+    { key: 4, text: '按线级' },
+  ]
+
+  xianjiList = [
+    { key: 1, text: '一线城市' },
+    { key: 2, text: '二线城市' },
+    { key: 3, text: '三线城市' },
+    { key: 4, text: '四线城市' },
+    { key: 5, text: '五线城市' },
+  ]
 
   sexList = sexList
 
@@ -344,9 +288,9 @@ export default class Main extends ViewBase {
   }
 
   advTypeList = [
-    { id: 1, name: '奔驰' },
-    { id: 2, name: '西贝餐饮' },
-    { id: 3, name: '迪奥' }
+    { id: 1, name: '《阿丽塔：战斗天使》 2019-02-22 上映' },
+    { id: 2, name: '《掠食城市》 2019-01-18 上映' },
+    { id: 3, name: '《新喜剧之王》 2019-02-05 上映' }
   ]
 
   amountList = [
@@ -368,6 +312,17 @@ export default class Main extends ViewBase {
     { id: 6, name: '卖品柜台屏幕' },
     { id: 7, name: '门贴' }
   ]
+
+  // tslint:disable:max-line-length
+  ggtypeList = [
+    { id: 1, name: '易拉宝', url: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg00800470.png?x-oss-process=image/resize,w_180,h_300' },
+    { id: 2, name: '外卖袋', url: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg00800460.png?x-oss-process=image/resize,w_180,h_300' },
+    { id: 3, name: '外卖盒', url: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02a893rg0080045g.png?x-oss-process=image/resize,w_180,h_300' },
+    { id: 4, name: '宣传单', url: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg0080046g.png?x-oss-process=image/resize,w_180,h_300' },
+    { id: 5, name: '纸巾盒', url: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg0080047g.png?x-oss-process=image/resize,w_180,h_300' },
+    { id: 6, name: '餐桌贴纸', url: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg00800480.png?x-oss-process=image/resize,w_180,h_300' },
+  ]
+  // tslint:enable:max-line-length
 
   handleVenue() {
     if (this.allType && this.form.venueType.length >= 1) {
@@ -393,7 +348,7 @@ export default class Main extends ViewBase {
       ? (this.form.type == 1 ? 1 : 2)
       : 3
     const corp = this.form.advType || 1
-    this.$router.push({ name: 'pop-plan-scheme', params: {
+    this.$router.push({ name: 'pop-plan-scheme-two', params: {
       id: String(id),
       corp: String(corp),
     }})
@@ -405,7 +360,7 @@ export default class Main extends ViewBase {
 
   mounted() {
     // const handler = () => {
-    //   this.$router.push({ name: 'pop-planps' })
+    //   this.$router.push({ name: 'pop-plan' })
     //   event.off(systemSwitched, handler)
     //   return false
     // }
@@ -420,11 +375,11 @@ export default class Main extends ViewBase {
     })
   }
 
-  @Watch('form.filmHobby', { deep: true })
-  watchFilmHobby(value: number[], oldValue: number[]) {
+  @Watch('form.nengli', { deep: true })
+  watchNengli(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
     keepExclusion(value, oldValue, 0, newValue => {
-      this.form.filmHobby = newValue
+      this.form.nengli = newValue
     })
   }
 
@@ -768,5 +723,58 @@ export default class Main extends ViewBase {
       background-color: darken(@c-button, 10%) !important;
     }
   }
+}
+
+.form-item-yusuan,
+.form-item-quanyi {
+  margin-left: 170px !important;
+  margin-top: -18px !important;
+  background-color: #f2f2f2;
+  padding: 5px 0 5px 16px;
+  .item-radio-top {
+    margin-top: 1px;
+  }
+  .check-item {
+    background-color: #fff;
+  }
+  .check-item.ivu-checkbox-wrapper-checked {
+    background-color: @c-button;
+  }
+}
+.select-adv-list {
+  /deep/ .ivu-select-selection {
+    width: 100% !important;
+  }
+}
+
+.form-item-pptype,
+.form-item-sex {
+  .radio-item {
+    min-width: 62px;
+  }
+}
+
+.ggtype-check {
+  margin: 8px 15px 0 0;
+  padding: 2px;
+  /deep/&.ivu-checkbox-wrapper-checked {
+    background-color: @c-button;
+    .ggtype-name {
+      color: #fff;
+    }
+  }
+  /deep/ .ivu-checkbox {
+    display: none;
+  }
+}
+.ggtype-img {
+  width: 90px;
+  height: 150px;
+}
+.ggtype-name {
+  text-align: center;
+  margin-top: -8px;
+  line-height: 30px;
+  font-weight: normal;
 }
 </style>

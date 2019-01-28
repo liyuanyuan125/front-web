@@ -3,7 +3,7 @@
     <header>
       <div class="nav">
         <div class="logo">
-          <img src="~@/assets/login/logo.png" alt="alias" height="44px">
+          <img src="~@/assets/site/logo.png" alt="alias" height="50">
         </div>
         <div class="navTitle">
           <router-link tag="span" to>概览</router-link>
@@ -27,7 +27,7 @@
             <div :class="{active: form.systemCode == 'ads'}"
               @click="form.systemCode = 'ads'">我是广告主</div>
             <div :class="{active: form.systemCode == 'resource'}"
-              @click="form.systemCode = 'resource'">我是资源方</div>
+              @click="form.systemCode = 'resource'">我是片商</div>
           </div>
 
           <Form :model="form" :rules="rules" ref="form" class="form"
@@ -142,7 +142,8 @@ export default class Main extends ViewBase {
         systemCode: postData.systemCode
       })
 
-      this.$router.push({ name: 'home' })
+      this.$router.push({ name: 'account-info' })
+      // this.$router.push({ name: 'home' })
     } catch (ex) {
       ((this as any)[`onLogin${ex.code}`] || this.handleError).call(this, ex)
       this.resetCaptcha()

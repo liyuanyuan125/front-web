@@ -12,7 +12,7 @@
     <div class='top'>
       <div class='tops'>
         <div class='tops-img'>
-          <img src="./assets/1-1.png" alt="">
+          <img src="./assets/1-1.png" alt="" width="394" height="237">
         </div>
         <div class='tops-byte'>
           <row class='code-list'>
@@ -49,79 +49,79 @@
         </Tab-pane> -->
         <Tab-pane label="汇总" key="key1">
           <div class='imgs'>
-            <img src="./assets/1-2.png" alt="">
+            <img src="./assets/1-2.png" alt="" width="1009" height="235">
           </div>
           <div class='imgs'>
             <div class='ze'>投放人群</div>
-            <img src="./assets/1-3.png" alt="">
+            <img src="./assets/1-3.png" alt="" width="1009" height="315">
           </div>
           <div class='imgs'>
             <div class='ze'>投放影院</div>
-            <img src="./assets/1-4.png" alt="">
+            <img src="./assets/1-4.png" alt="" width="1009" height="549">
           </div>
           <div class='imgs'>
             <div class='ze'>投放影片</div>
-            <img src="./assets/1-5.png" alt="">
+            <img src="./assets/1-5.png" alt="" width="1009" height="409">
           </div>
           <div class='imgs'>
             <div class='ze'>投放地区</div>
-            <img src="./assets/1-6.png" alt="">
+            <img src="./assets/1-6.png" alt="" width="1009" height="479">
           </div>
         </Tab-pane>
         <Tab-pane label="按人群" key="key2">
           <div class='imgs'>
-            <img src="./assets/2-1.png" alt="">
+            <img src="./assets/2-1.png" alt="" width="1009" height="333">
           </div>
           <div class='imgs'>
             <div class='ze'>地域分布</div>
-            <img src="./assets/2-2.png" alt="">
+            <img src="./assets/2-2.png" alt="" width="1009" height="596">
           </div>
           <div class='imgs'>
             <div class='ze'>人群画像</div>
-            <img src="./assets/2-3.png" alt="">
+            <img src="./assets/2-3.png" alt="" width="1009" height="493">
           </div>
         </Tab-pane>
         <Tab-pane label="按影院" key="key3">
           <div class='imgs'>
-            <img src="./assets/3-1.png" alt="">
+            <img src="./assets/3-1.png" alt="" width="1008" height="427">
           </div>
           <div class='imgs'>
             <div class='ze'>成效概览</div>
-            <img src="./assets/3-2.png" alt="">
+            <img src="./assets/3-2.png" alt="" width="1008" height="469">
           </div>
           <div class='imgs'>
             <div class='ze'>单个影院成效</div>
-            <img src="./assets/3-3.png" alt="">
+            <img src="./assets/3-3.png" alt="" width="1008" height="379">
           </div>
         </Tab-pane>
         <Tab-pane label="按影片" key="key4">
           <div class='imgs'>
-            <img src="./assets/4-1.png" alt="">
+            <img src="./assets/4-1.png" alt="" width="1008" height="424">
           </div>
           <div class='imgs'>
             <div class='ze'>成效概览</div>
-            <img src="./assets/4-2.png" alt="">
+            <img src="./assets/4-2.png" alt="" width="1008" height="359">
           </div>
           <div class='imgs'>
             <div class='ze'>单个影院成效</div>
-            <img src="./assets/4-3.png" alt="">
+            <img src="./assets/4-3.png" alt="" width="1008" height="320">
           </div>
         </Tab-pane>
         <Tab-pane label="按地区" key="key5">
           <div class='imgs'>
-            <img src="./assets/5-1.png" alt="">
+            <img src="./assets/5-1.png" alt="" width="1011" height="232">
           </div>
           <div class='imgs'>
             <div class='ze'>投放地区</div>
-            <img src="./assets/5-2.png" alt="">
+            <img src="./assets/5-2.png" alt="" width="1011" height="492">
           </div>
           <div class='imgs'>
             <div class='ze'>成效概览</div>
-            <img src="./assets/5-3.png" alt="">
+            <img src="./assets/5-3.png" alt="" width="1011" height="356">
           </div>
           <div class='imgs'>
             <div class='ze'>单个城市成效</div>
-            <img src="./assets/5-4.png" alt="">
+            <img src="./assets/5-4.png" alt="" width="1011" height="329">
           </div>
         </Tab-pane>
       </Tabs>
@@ -187,6 +187,8 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import '~@/site/lib.less';
+
 .page {
   background: #fff;
 }
@@ -199,7 +201,7 @@ export default class Main extends ViewBase {
   img {
     display: block;
     width: 1009px;
-    height: 100%;
+    min-height: 100%;
     margin: 0 auto;
   }
   .ze {
@@ -365,6 +367,10 @@ export default class Main extends ViewBase {
   border-top: 2px solid #ff8237 !important;
   border-left: 2px solid #ff8237 !important;
   border-right: 2px solid #ff8237 !important;
+}
+
+/deep/ .ivu-tabs-nav .ivu-tabs-tab:hover {
+  color: @c-button;
 }
 
 /deep/ .ivu-tabs-tab-focused {

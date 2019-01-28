@@ -23,11 +23,17 @@ const allSiderMenuList: SiderMenuItem[] = [
   {
     name: 'pop',
     label: '推广管理',
-    systems: ['ads'],
+    systems: ['ads', 'ps'],
     subList: [
       {
         name: 'pop-plan',
         label: '广告计划',
+        systems: ['ads'],
+      },
+      {
+        name: 'pop-planps',
+        label: '广告计划',
+        systems: ['ps'],
       },
       {
         name: '',
@@ -39,7 +45,7 @@ const allSiderMenuList: SiderMenuItem[] = [
   {
     name: 'report',
     label: '数据报表',
-    systems: ['ads'],
+    systems: ['ads', 'ps'],
     subList: [
       {
         name: 'report-plan',
@@ -51,10 +57,10 @@ const allSiderMenuList: SiderMenuItem[] = [
   {
     name: 'customer',
     label: '客户管理',
-    systems: ['ads'],
+    systems: ['ads', 'ps'],
     subList: [
       {
-        name: 'report-plan',
+        name: '',
         label: '客户列表',
       },
     ]
@@ -66,7 +72,7 @@ const allSiderMenuList: SiderMenuItem[] = [
     systems: ['resource'],
     subList: [
       {
-        name: 'report-plan',
+        name: '',
         label: '广告单列表',
       },
     ]
@@ -78,7 +84,7 @@ const allSiderMenuList: SiderMenuItem[] = [
     systems: ['resource'],
     subList: [
       {
-        name: 'report-plan',
+        name: '',
         label: '排播列表',
       },
     ]
@@ -90,7 +96,7 @@ const allSiderMenuList: SiderMenuItem[] = [
     systems: ['resource'],
     subList: [
       {
-        name: 'report-plan',
+        name: '',
         label: '资源位列表',
       },
     ]
@@ -106,7 +112,7 @@ const allSiderMenuList: SiderMenuItem[] = [
         label: '财务信息',
       },
       {
-        name: 'finance-bill',
+        name: '',
         label: '资金账单',
       }
     ]
@@ -135,7 +141,7 @@ const allSiderMenuList: SiderMenuItem[] = [
   {
     name: 'account',
     label: '账户管理',
-    systems: ['ads', 'resource'],
+    systems: ['ads', 'resource', 'ps'],
     subList: [
       {
         name: 'account-info',

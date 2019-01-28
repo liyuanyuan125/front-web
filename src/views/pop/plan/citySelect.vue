@@ -216,6 +216,10 @@ export default class CitySelect extends ViewBase {
   top: 319px;
   left: 517px;
 }
+.dot-shijiazhuang {
+  top: 204px;
+  left: 444px;
+}
 .dot-1 {
   top: 357px;
   left: 375px;
