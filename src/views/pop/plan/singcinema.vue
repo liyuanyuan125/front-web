@@ -54,7 +54,7 @@
     <!-- :current="form.pageIndex" -->
     <Page :total="length" v-if="length>0" class="btnCenter"
       :page-size="form.pageSize"
-      :page-size-opts="[12, 24, 48, 96]"
+      :page-size-opts="[8, 12, 16, 24]"
       show-total
       show-sizer
       show-elevator
@@ -94,7 +94,7 @@ export default class Main extends ViewBase {
   releaseTime = [0]
   form: any = {
     name: '',
-    pageSize: 12
+    pageSize: 8
   }
   cinemaList: any = []
   showTime: any = []
@@ -158,6 +158,8 @@ export default class Main extends ViewBase {
   selectFilm(id: any) {
     if (!this.cinemaIdArray.includes(id)) {
       this.cinemaIdArray.push(id)
+    } else {
+      this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
     }
   }
   @Watch('releaseTime', { deep: true })
