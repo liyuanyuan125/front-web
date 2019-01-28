@@ -77,150 +77,147 @@
         </span>
       </FormItem>
 
-      <transition name="fade" mode="out-in">
-        <!-- 投放定向 标准定向 -->
-        <div v-if="putType == 1">
-          <FormItem label="投放地区" class="form-item-type">
-            <radioTab v-model="form.areaType" :tagMess="areaTypeList" />
-          </FormItem>
+      <!-- 投放定向 标准定向 -->
+      <div v-if="putType == 1">
+        <FormItem label="投放地区" class="form-item-type">
+          <radioTab v-model="form.areaType" :tagMess="areaTypeList" />
+        </FormItem>
 
-          <div class="city-wrap">
-            <CinemaNum :data="statisticsResults" :type="form.areaType" />
-          </div>
-          <!-- <div class="city-wrap">
-          </div> -->
-          <FormItem v-for="(item, index) in tags" :key="index" :label="item.name" class="form-item-age">
-            <CheckboxGroup v-model="form.age" class="item-radio-top">
-              <Checkbox class="check-item" :label="0">不限</Checkbox>
-              <Checkbox v-for="it in item.values" :key="it.key" :label="it.key"
-                class="check-item">{{it.text}}</Checkbox>
-            </CheckboxGroup>
-          </FormItem>
+        <div class="city-wrap">
+          <CinemaNum :data="statisticsResults" :type="form.areaType" />
         </div>
-
-        <!-- 投放定向 按单部影片 -->
-        <div v-else class="single-wrap">
-          <FormItem label="观影人群性别" class="form-item-sex">
-            <RadioGroup v-model="form.sex">
-              <Radio
-                v-for="it in sexList"
-                :key="it.key"
-                :label="it.key"
-                class="radio-item"
-              >{{it.text}}</Radio>
-            </RadioGroup>
-          </FormItem>
-
-          <FormItem label="观影人群年龄" class="form-item-age">
-            <CheckboxGroup v-model="form.age" class="item-radio-top">
-              <Checkbox v-for="it in ageStageList" :key="it.key" :label="it.key"
-                class="check-item">{{it.text}}</Checkbox>
-            </CheckboxGroup>
-          </FormItem>
-
-          <FormItem label="观影人群偏好" class="form-item-hobby">
-            <CheckboxGroup v-model="form.filmHobby" class="float">
-              <Checkbox
-                v-for="it in filmHobbyList"
-                :key="it.key"
-                :label="it.key"
-                class="check-item"
-              >{{it.text}}</Checkbox>
-            </CheckboxGroup>
-          </FormItem>
-
-          <FormItem label="选择影片" class="form-item-film-name">
-            <Input
-              v-model="form.filmName"
-              class="input-film-name"
-              placeholder="输入影片名字"
-              search
-              enter-button
-            />
-          </FormItem>
-
-          <FormItem label="影片类型" class="form-item-film-type">
-            <CheckboxGroup v-model="form.filmType" class="float">
-              <Checkbox
-                v-for="it in filmHobbyList"
-                :key="it.key"
-                :label="it.key"
-                class="check-item"
-              >{{it.text}}</Checkbox>
-            </CheckboxGroup>
-          </FormItem>
-
-          <p class="single-result" v-if="foundFilmList.length > 0">已为您匹配以下{{foundFilmList.length}}部影片：</p>
-
-          <ul class="single-film-list" v-if="foundFilmList.length > 0">
-            <li v-for="it in foundFilmList" :key="it.id" @click="selectFilm(it)"
-              :class="['single-film-item',
-              form.filmIdSelected == it.id ? 'single-film-item-on' : '']">
-              <div class="film-cover-box">
-                <img :src="it.cover" class="film-cover">
-                <div class="film-date">上映时间：{{it.date}}</div>
-              </div>
-              <h4 class="film-name">{{it.name}}</h4>
-              <div class="film-tags">{{it.tags}}</div>
-            </li>
-          </ul>
-        </div>
-
-        <FormItem label="场馆类型" class="item-top" v-if="!isRefBefore">
-          <span
-            class="float check-type all-type"
-            @click="handleAllType"
-            :class="{checked: allType}"
-          >不限</span>
-          <CheckboxGroup v-model="form.venueType" @on-change="handleVenue" class="float">
-            <Checkbox
-              label="剧院"
-              class="check-type"
-              :class="{checked: form.venueType.includes('剧院') }"
-            />
-            <Checkbox
-              label="剧场"
-              class="check-type"
-              :class="{checked: form.venueType.includes('剧场') }"
-            />
-            <Checkbox
-              label="文化馆"
-              class="check-type"
-              :class="{checked: form.venueType.includes('文化馆') }"
-            />
-            <Checkbox
-              label="体育馆"
-              class="check-type"
-              :class="{checked: form.venueType.includes('体育馆') }"
-            />
-            <Checkbox
-              label="商场"
-              class="check-type"
-              :class="{checked: form.venueType.includes('商场') }"
-            />
-            <Checkbox
-              label="写字楼"
-              class="check-type"
-              :class="{checked: form.venueType.includes('写字楼') }"
-            />
+        <!-- <div class="city-wrap">
+        </div> -->
+        <FormItem v-for="(item, index) in tags" :key="index" :label="item.name" class="form-item-age">
+          <CheckboxGroup v-model="cinema[item.code]" class="item-radio-top">
+            <Checkbox class="check-item" :label="0">不限</Checkbox>
+            <Checkbox v-for="it in item.values" :key="it.key" :label="it.key"
+              class="check-item">{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
-      </transition>
+
+        <FormItem label="推荐影片" class="form-item-age">
+          <ul class="film-list">
+            <li v-for="(it, index) in normCinema" :key="it.id"
+              :class="['film-item']">
+              <div :class="['film-cover-box']">
+                <b :class="`img-rank${index + 1}`"></b>
+                <img :src="it.mainPicUrl" class="film-cover">
+                <div class="film-date">上映时间：{{formatDate(it.openTime)}}</div>
+              </div>
+              <h4 class="film-name">{{it.name}}</h4>
+              <div class="film-tags">{{it.type.join(' / ')}}</div>
+            </li>
+          </ul>
+        </FormItem>
+      </div>
+
+      <!-- 投放定向 按单部影片 -->
+      <div v-else class="single-wrap">
+        <SingCinema :data="tags[0]" />
+        <!-- <FormItem :label="tags[0].name" class="form-item-film-type">
+          <CheckboxGroup v-model="form.filmType" class="float">
+            <Checkbox
+              v-for="it in tags[0].values"
+              :key="it.key"
+              :label="it.key"
+              class="check-item"
+            >{{it.text}}</Checkbox>
+          </CheckboxGroup>
+        </FormItem>
+
+        <FormItem label="上映时间" class="form-item-film-type">
+          <CheckboxGroup v-model="form.filmType" class="float">
+            <Checkbox class="check-item" :label="0">不限</Checkbox>
+            <Checkbox
+              :label="1"
+              class="check-item"
+            >指定时间段</Checkbox>
+          </CheckboxGroup>
+        </FormItem>
+
+        <FormItem label="选择影片" class="form-item-film-name">
+          <Input
+            v-model="form.filmName"
+            class="input-film-name"
+            placeholder="输入影片名字"
+            search
+            enter-button
+          />
+        </FormItem>
+
+        <p class="single-result" v-if="foundFilmList.length > 0">已为您匹配以下{{foundFilmList.length}}部影片：</p>
+
+        <ul class="single-film-list" v-if="foundFilmList.length > 0">
+          <li v-for="it in foundFilmList" :key="it.id" @click="selectFilm(it)"
+            :class="['single-film-item',
+            form.filmIdSelected == it.id ? 'single-film-item-on' : '']">
+            <div class="film-cover-box">
+              <img :src="it.cover" class="film-cover">
+              <div class="film-date">上映时间：{{it.date}}</div>
+            </div>
+            <h4 class="film-name">{{it.name}}</h4>
+            <div class="film-tags">{{it.type}}</div>
+          </li>
+        </ul> -->
+      </div>
+
+      <FormItem label="场馆类型" class="item-top" v-if="!isRefBefore">
+        <span
+          class="float check-type all-type"
+          @click="handleAllType"
+          :class="{checked: allType}"
+        >不限</span>
+        <CheckboxGroup v-model="form.venueType" @on-change="handleVenue" class="float">
+          <Checkbox
+            label="剧院"
+            class="check-type"
+            :class="{checked: form.venueType.includes('剧院') }"
+          />
+          <Checkbox
+            label="剧场"
+            class="check-type"
+            :class="{checked: form.venueType.includes('剧场') }"
+          />
+          <Checkbox
+            label="文化馆"
+            class="check-type"
+            :class="{checked: form.venueType.includes('文化馆') }"
+          />
+          <Checkbox
+            label="体育馆"
+            class="check-type"
+            :class="{checked: form.venueType.includes('体育馆') }"
+          />
+          <Checkbox
+            label="商场"
+            class="check-type"
+            :class="{checked: form.venueType.includes('商场') }"
+          />
+          <Checkbox
+            label="写字楼"
+            class="check-type"
+            :class="{checked: form.venueType.includes('写字楼') }"
+          />
+        </CheckboxGroup>
+      </FormItem>
 
       <!-- 预算与计费 -->
       <h3 class="layout-title">预算与计费</h3>
 
-      <!-- <FormItem label="总预算/￥" class="item-top">
-        <CheckboxGroup v-model="form.totalMonery" class="item-radio-top">
-          <Checkbox :label="item.label" v-for="item in amountList" :key="item.key" class="radio-item"></Checkbox>
-          <Checkbox label="指定金额" class="radio-item">
+      <FormItem label="总预算/￥" class="form-item-age">
+        <CheckboxGroup v-model="form.age" class="item-radio-top">
+          <Checkbox :label="item.label" v-for="item in tagCodes" :key="item.key" class="check-item">
+            {{item.text}}
+          </Checkbox>
+          <Checkbox label="指定金额" class="check-item">
             指定金额
             <em v-if="form.totalMonery == '指定金额'" class="custom-monery">
               <Input v-model="form.custom" placeholder="请输入自定义金额"/>万
             </em>
           </Checkbox>
         </CheckboxGroup>
-      </FormItem> -->
+      </FormItem>
 
       <FormItem label="计算方式">
         <RadioGroup v-model="form.bill" class="item-radio-top">
@@ -244,7 +241,11 @@ import CitySelect from './citySelect.vue'
 import Tags from './tag.vue'
 import CinemaNum from './comcinema/cinemaNum.vue'
 import radioTab from './radioTab.vue'
-import { drairesList, beforePlan, advertising, advertDetail } from '@/api/popPlan.ts'
+import { drairesList, beforePlan, advertising, advertDetail, cinemaList } from '@/api/popPlan.ts'
+import moment from 'moment'
+import SingCinema from './singcinema.vue'
+
+const timeFormat = 'YYYY-MM-DD'
 
 // 保持互斥
 const keepExclusion = <T>(
@@ -266,7 +267,8 @@ const keepExclusion = <T>(
     CitySelect,
     Tags,
     radioTab,
-    CinemaNum
+    CinemaNum,
+    SingCinema
   }
 })
 export default class Main extends ViewBase {
@@ -286,6 +288,10 @@ export default class Main extends ViewBase {
       label: 2
     }
   ]
+
+  // 影片列表
+  normCinema: any = []
+  singleCinema: any = []
 
   // 选择档期的开始时间 结束时间
   airiesList: any = []
@@ -331,6 +337,20 @@ export default class Main extends ViewBase {
     disabledDate: (date: any) => {
       return date && this.form.beginDate && date.valueOf() < new Date(this.form.beginDate).getTime()
     }
+  }
+
+  // 标准投放影片类型
+  cinema: any = {
+    MOVIE_TYPE: [ 0 ],
+    PLAN_GROUP_AGE: [ 0 ],
+    PLAN_GROUP_SEX: [ 0 ]
+  }
+
+  // 单步影片投放类型
+  formCinema: any = {
+    showTime: [],
+    types: [],
+    name: ''
   }
 
   form = {
@@ -391,6 +411,7 @@ export default class Main extends ViewBase {
   created() {
     this.beforePlan()
     this.beginAdver()
+    this.cinemaFind()
   }
 
   // amountList = [
@@ -403,6 +424,9 @@ export default class Main extends ViewBase {
   //   { key: 8, label: '1000万以上' }
   // ]
 
+  formatDate(data: any) {
+    return moment(data).format(timeFormat)
+  }
   async beforePlan() {
     try {
       const {
@@ -424,6 +448,7 @@ export default class Main extends ViewBase {
       this.tags = tags
       this.statisticsResults = statisticsResults
       this.typeList = this.filtertion(typeList)
+      this.tagCodes = tagCodes
     } catch (ex) {
       this.handleError(ex)
     }
@@ -470,6 +495,34 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     }
   }
+
+  // 影片列表查询
+  async cinemaFind() {
+    if (this.putType == 1) {
+      let type: any = this.cinema.MOVIE_TYPE
+      if ( this.cinema.MOVIE_TYPE.includes(0) ) {
+        type = []
+      }
+      try {
+        const {
+          data: {
+            data: {
+              items
+            }
+          }
+        } = await cinemaList({
+          types: type.join(','),
+          pageSize: 3
+        })
+        this.normCinema = items
+      } catch (ex) {
+        this.handleError(ex)
+      }
+    } else {
+
+    }
+  }
+
   // 过滤未知
   filtertion(data: any) {
     const list = data.filter((it: any) => it.key != 0)
@@ -489,13 +542,6 @@ export default class Main extends ViewBase {
     }
   }
 
-  handleChange() {
-    if (this.form.areaType == 0) {
-      this.citySel = false
-    } else {
-      this.citySel = true
-    }
-  }
   handleVenue() {
     if (this.allType && this.form.venueType.length >= 1) {
       this.allType = false
@@ -532,24 +578,48 @@ export default class Main extends ViewBase {
     // event.on(systemSwitched, handler)
   }
 
-  @Watch('form.age', { deep: true })
-  watchAge(value: number[], oldValue: number[]) {
+  @Watch('cinema.MOVIE_TYPE', { deep: true })
+  watchMOVIE_TYPE(value: any, oldValue: any) {
     // 不限与其他项互斥
     keepExclusion(value, oldValue, 0, newValue => {
-      this.form.age = newValue
+      this.cinema.MOVIE_TYPE = newValue
     })
     if (value.length == 0) {
-      this.form.age = [0]
+      this.cinema.MOVIE_TYPE = [0]
+    }
+    this.cinemaFind()
+  }
+
+  @Watch('cinema.PLAN_GROUP_AGE', { deep: true })
+  watchPLAN_GROUP_AGE(value: number[], oldValue: number[]) {
+    // 不限与其他项互斥
+    keepExclusion(value, oldValue, 0, newValue => {
+      this.cinema.PLAN_GROUP_AGE = newValue
+    })
+    if (value.length == 0) {
+      this.cinema.PLAN_GROUP_AGE = [0]
     }
   }
 
-  @Watch('form.filmHobby', { deep: true })
-  watchFilmHobby(value: number[], oldValue: number[]) {
+  @Watch('cinema.PLAN_GROUP_SEX', { deep: true })
+  watchPLAN_GROUP_SEX(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
     keepExclusion(value, oldValue, 0, newValue => {
-      this.form.filmHobby = newValue
+      this.cinema.PLAN_GROUP_SEX = newValue
     })
+    if (value.length == 0) {
+      this.cinema.PLAN_GROUP_SEX = [0]
+    }
+    this.cinemaFind()
   }
+
+  // @Watch('form.filmHobby', { deep: true })
+  // watchFilmHobby(value: number[], oldValue: number[]) {
+  //   // 不限与其他项互斥
+  //   keepExclusion(value, oldValue, 0, newValue => {
+  //     this.form.filmHobby = newValue
+  //   })
+  // }
 
   @Watch('form.filmType', { deep: true })
   watchfilmType(value: number[], oldValue: number[]) {
@@ -578,401 +648,5 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-@import '~@/site/lib.less';
-.float {
-  float: left;
-}
-.btn-center {
-  margin: 40px 0 30px;
-  text-align: center;
-}
-.radio-item {
-  font-size: 14px;
-  margin-right: 40px;
-  border-radius: 2px;
-  border-left: 0;
-  user-select: none;
-}
-.form-item-type {
-  margin-top: 35px;
-}
-
-.orient-tabs {
-  margin-top: 4px;
-  label {
-    margin-right: 30px;
-    border-radius: 4px;
-    &:hover {
-      border: 1px solid #d2d2d2;
-      border-radius: 4px;
-      color: @c-head;
-    }
-  }
-}
-
-.city-wrap {
-  padding-right: 40px;
-  margin-left: 130px;
-}
-.item-radio-top {
-  margin-top: 3px;
-}
-.forms {
-  font-size: 14px;
-  .clear-f::after {
-    clear: both;
-    content: '.';
-    display: block;
-  }
-  .float-left {
-    float: left;
-  }
-  .float-right {
-    float: right;
-  }
-  .pr30 {
-    padding-right: 30px;
-  }
-  .pr130 {
-    padding-right: 130px;
-  }
-  .tag, .tag1 {
-    width: 120px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    margin-right: 30px;
-    margin-top: 5px;
-  }
-  .tag-date {
-    /deep/ .ivu-form-item-content .ivu-input-wrapper {
-      width: 300px;
-    }
-  }
-  .all-type {
-    line-height: 22px;
-    margin-right: 6px;
-    cursor: pointer;
-    &.checked {
-      color: #fff;
-      background-color: @c-button;
-    }
-  }
-  .check-type {
-    margin: 8px 15px 0 0;
-    width: 60px;
-    height: 26px;
-    font-size: 14px;
-    text-align: center;
-    border-radius: 2px;
-    border: 1px solid rgba(210, 210, 210, 1);
-    &.checked {
-      color: #fff;
-      background-color: @c-button;
-    }
-    /deep/ .ivu-checkbox {
-      display: none;
-      & + span {
-        position: relative;
-        top: -4px;
-        margin-right: 0;
-      }
-    }
-  }
-  .xad {
-    width: 400px;
-    height: 40px;
-    line-height: 40px;
-    font-size: 14px;
-  }
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
-  .select-adv-type {
-    font-size: 0;
-    span {
-      display: inline-block;
-      width: 155px;
-      height: 50px;
-      line-height: 47px;
-      text-align: center;
-      color: #444;
-      margin-top: -3px;
-      font-size: 14px;
-      cursor: pointer;
-      background: #f7f7f7;
-    }
-    .put-active {
-      background: #fb8135;
-      color: #fff;
-    }
-  }
-  /deep/ .checkd .ivu-select-selection {
-    width: 300px;
-  }
-  /deep/ .ivu-input {
-    font-size: 14px;
-    &::placeholder {
-      font-size: 14px;
-    }
-  }
-  /deep/ .ivu-form-item {
-    margin-left: 30px;
-    font-size: 14px;
-  }
-  /deep/ .ivu-select-dropdown {
-    /deep/ li, /deep/ .ivu-select-loading {
-      line-height: 30px;
-      height: 30px;
-    }
-    /deep/ .ivu-select-item {
-      line-height: 25px;
-      height: 30px;
-    }
-  }
-  /deep/ .ivu-select-input {
-    height: 40px;
-    font-size: 14px;
-    line-height: 40px;
-  }
-  .put-tab {
-    font-size: 14px;
-    position: relative;
-    span {
-      position: absolute;
-      top: 11px;
-      right: -12px;
-      display: inline-block;
-      width: 2px;
-      height: 22px;
-      background: #ededed;
-      &:nth-child(2) {
-        right: -12px;
-        top: 51px;
-      }
-    }
-    p {
-      width: 120px;
-      padding: 4px 10px 4px 18px;
-      border-bottom: solid 1px #ededed;
-      cursor: pointer;
-      position: relative;
-      &.active {
-        color: @c-button;
-        background: url('./assets/active.png') no-repeat 1px center;
-        background-size: 11px;
-      }
-      &.active::before {
-        display: block;
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 5px;
-        width: 10px;
-        font-size: 14px;
-        color: @c-button;
-      }
-    }
-  }
-  .tabs-active {
-    margin-left: 30px;
-    padding-top: 5px;
-  }
-  .adv-position {
-    font-size: 14px;
-    color: #444;
-    width: 120px;
-    margin-top: 30px;
-    span {
-      display: block;
-      cursor: pointer;
-      margin-bottom: 10px;
-      padding-left: 35px;
-      width: 200px;
-      &.adv-active {
-        font-size: 17px;
-        background: url('./assets/arrow.png') no-repeat left center;
-        background-size: 20px;
-        color: @c-button;
-      }
-    }
-  }
-  /deep/ .ivu-input-icon {
-    height: 40px;
-    line-height: 40px;
-  }
-}
-
-/deep/ .custom-monery {
-  .ivu-input-wrapper {
-    width: 150px;
-    input {
-      height: 30px;
-      line-height: 30px;
-    }
-  }
-}
-/deep/ .ivu-radio-wrapper {
-  font-size: 14px;
-}
-.select-tabs {
-  margin: 30px 0 0 50px;
-  width: 536px;
-  height: 260px;
-}
-.tabs1 {
-  background: url('./assets/tabs1.png') no-repeat;
-  background-size: cover;
-}
-.tabs2 {
-  background: url('./assets/tabs2.png') no-repeat;
-  background-size: cover;
-}
-.tabs3 {
-  background: url('./assets/tabs3.png') no-repeat;
-  background-size: cover;
-}
-.tabs4 {
-  background: url('./assets/tabs4.png') no-repeat;
-  background-size: cover;
-}
-.tabs5 {
-  background: url('./assets/tabs5.png') no-repeat;
-  background-size: cover;
-}
-.tabs6 {
-  background: url('./assets/tabs6.png') no-repeat;
-  background-size: cover;
-}
-.tabs7 {
-  background: url('./assets/tabs7.png') no-repeat;
-  background-size: cover;
-}
-
-.people-wrap {
-  margin: 36px 0 23px 70px;
-  .ivu-form-item {
-    margin: 0 0 8px 52px;
-  }
-}
-.group-title {
-  font-size: 14px;
-  font-weight: normal;
-  margin-bottom: 10px;
-}
-
-.check-item {
-  position: relative;
-  top: 3px;
-  min-width: 80px;
-  height: 26px;
-  line-height: 26px;
-  text-align: center;
-  border: 1px solid #d2d2d2;
-  margin-right: 15px;
-  font-size: 14px;
-  user-select: none;
-  /deep/ .ivu-checkbox {
-    display: none;
-  }
-  /deep/&.ivu-checkbox-wrapper-checked {
-    color: #fff;
-    border-color: @c-button;
-    background-color: @c-button;
-  }
-}
-
-.single-result,
-.single-film-list {
-  margin-left: 169px;
-}
-.single-result {
-  color: @c-sub-text;
-}
-
-.single-film-list {
-  display: flex;
-  flex-wrap: wrap;
-  column-count: 3;
-  margin-top: -15px;
-  margin-bottom: 40px;
-}
-.single-film-item {
-  position: relative;
-  width: 270px;
-  margin: 25px 10px 0 0;
-
-  &::before {
-    content: '选择影片';
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    width: 60px;
-    height: 60px;
-    padding: 10px;
-    font-size: 18px;
-    font-weight: 600;
-    color: #fff;
-    background-color: fade(@c-button, 90%);
-    border-radius: 100%;
-    z-index: 1;
-    text-align: center;
-    line-height: 1.2;
-  }
-}
-.single-film-item-on {
-  &::before {
-    content: '已选影片';
-    background-color: fade(#059bfb, 90%);
-  }
-}
-
-.film-cover-box {
-  position: relative;
-  width: 270px;
-  height: 405px;
-  img {
-    max-width: 100%;
-    max-height: 100%;
-  }
-}
-.film-date {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 50px;
-  line-height: 50px;
-  font-size: 14px;
-  text-align: center;
-  color: #fff;
-  background-color: rgba(0, 0, 0, 0.8);
-}
-.film-name,
-.film-tags {
-  line-height: 22px;
-  text-align: center;
-  font-weight: normal;
-}
-.film-name {
-  margin-top: 10px;
-}
-
-.form-item-film-name {
-  /deep/ .ivu-input {
-    border-color: @c-button;
-  }
-  /deep/ .ivu-input-search {
-    border-color: @c-button !important;
-    background-color: @c-button !important;
-    &:hover,
-    &:active {
-      border-color: darken(@c-button, 10%) !important;
-      background-color: darken(@c-button, 10%) !important;
-    }
-  }
-}
+@import './ggadd.less';
 </style>
