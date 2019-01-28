@@ -206,7 +206,7 @@ export default class App extends ViewBase {
   height: 60px;
   line-height: 60px;
   background-color: #fff;
-  z-index: 8880;
+  z-index: 188;
 }
 
 .logo {

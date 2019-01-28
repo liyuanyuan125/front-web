@@ -1,5 +1,5 @@
 import { Vue, Component } from 'vue-property-decorator'
-import { alert } from '@/ui/modal'
+import { alert, warning } from '@/ui/modal'
 
 const ignoreCodes = { 401: 1, 403: 1 }
 
@@ -21,7 +21,7 @@ export default class ViewBase extends Vue {
    * @param msg 警告信息
    */
   showWaring(msg: string) {
-    alert(msg, { type: 'warning', title: '提示' })
+    warning(msg, { title: '提示' })
   }
   /**
    * 将错误格式化成字符串
