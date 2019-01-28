@@ -9,19 +9,9 @@ import { Modal, Message } from 'iview'
 // https://www.iviewui.com/components/modal
 
 /**
- * Modal 类型
- */
-export type ModalType = 'error' | 'info' | 'success' | 'warning' | 'confirm'
-
-/**
- * iView Modal 配置对象，并从原配置对象中去掉 onOk，多加了一个 type 对象
+ * iView Modal 配置对象，并从原配置对象中去掉 onOk
  */
 export interface ModalConfig {
-  /**
-   * Modal 类型，仅在内部使用，外部代码不要设置该值
-   */
-  type?: ModalType
-
   /**
    * 标题，默认为空
    */
@@ -75,22 +65,45 @@ export interface ModalConfig {
   onCancel?: () => any
 }
 
+const newConfirm = (msg: string, options: any = {}) => {
+  if ('onOk' in options) {
+    throw new Error('don\'t use `onOk`, use `await` or `then` instead')
+  }
+  return new Promise(resolve => {
+    const opts = {
+      icon: 'confirm',
+      content: msg,
+      showCancel: false,
+      onOk: () => {
+        resolve()
+      },
+      ...options
+    }
+
+    // TODO: 使用了 iview 未文档化的特性
+    let instance = Modal.newInstance({
+      closable: false,
+      maskClosable: false,
+      footerHide: true,
+    })
+
+    opts.onRemove = () => {
+      instance = null
+    }
+
+    instance.show(opts)
+  })
+}
+
 /**
  * 显示错误信息对话框，一般来说 alert 默认带一个错误提示图标
  * @param msg 要显示的消息
  * @param config 选项
  */
 export function alert(msg: string, config = {} as ModalConfig) {
-  return new Promise(resolve => {
-    const cfg: any = {
-      type: 'error',
-      content: msg,
-      onOk: () => {
-        resolve()
-      },
-      ...config
-    }
-    ; (Modal[cfg.type] || Modal.error).call(Modal, cfg)
+  return newConfirm(msg, {
+    icon: 'error',
+    ...config
   })
 }
 
@@ -100,7 +113,10 @@ export function alert(msg: string, config = {} as ModalConfig) {
  * @param config 选项
  */
 export function confirm(msg: string, config = {} as ModalConfig) {
-  return alert(msg, { type: 'confirm', ...config })
+  return newConfirm(msg, {
+    showCancel: true,
+    ...config
+  })
 }
 
 /**
@@ -109,7 +125,11 @@ export function confirm(msg: string, config = {} as ModalConfig) {
  * @param config 选项
  */
 export function info(msg: string, config = {} as ModalConfig) {
-  return alert(msg, { type: 'info', title: '信息', ...config })
+  return newConfirm(msg, {
+    icon: 'info',
+    title: '信息',
+    ...config
+  })
 }
 
 /**
@@ -118,7 +138,11 @@ export function info(msg: string, config = {} as ModalConfig) {
  * @param config 选项
  */
 export function success(msg: string, config = {} as ModalConfig) {
-  return alert(msg, { type: 'success', title: '成功', ...config })
+  return newConfirm(msg, {
+    icon: 'success',
+    title: '成功',
+    ...config
+  })
 }
 
 /**
@@ -127,7 +151,11 @@ export function success(msg: string, config = {} as ModalConfig) {
  * @param config 选项
  */
 export function warning(msg: string, config = {} as ModalConfig) {
-  return alert(msg, { type: 'warning', title: '警告', ...config })
+  return newConfirm(msg, {
+    icon: 'warning',
+    title: '警告',
+    ...config
+  })
 }
 
 /**

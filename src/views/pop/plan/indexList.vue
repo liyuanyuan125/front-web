@@ -43,16 +43,22 @@
       </Row>
     </Form>
 
-    <Table :columns="columns" :data="tableDate">
-        <template slot="createTime" slot-scope="{row, index}">
-           <span>{{row.createTime}}</span> 
-        </template>
-        <template slot="id" slot-scope="{row, index}">
-            <span>广告计划ID：{{row.id}}</span>
-        </template>
-        <template slot="name" slot-scope="{row, index}">
-            <span>{{row.name}}</span>
-        </template>
+    <Table
+      :columns="columns"
+      :data="tableDate"
+      ref="selection"
+      @on-selection-change="singleSelect"
+      @on-select-all="selectAll"
+    >
+      <template slot="createTime" slot-scope="{row, index}">
+        <span>{{formatTimes(row.createTime)}}</span>
+      </template>
+      <template slot="id" slot-scope="{row, index}">
+        <span>广告计划ID：{{row.id}}</span>
+      </template>
+      <template slot="name" slot-scope="{row, index}">
+        <span>{{row.name}}</span>
+      </template>
     </Table>
     <h4 class="checkAll">
       <span @click="handleSelectAll">
@@ -73,10 +79,12 @@
     />
   </div>
 </template>
-<script lang="ts">
+<script lang="tsx">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { planList } from '@/api/plan'
+import { confirm, toast } from '@/ui/modal'
+import { formatTimes } from '@/util/validateRules'
+import { planList, delCheckPlanList } from '@/api/plan'
 import tableExpand from './tableExpand.vue'
 
 @Component({
@@ -96,7 +104,8 @@ export default class Plan extends ViewBase {
     pageSize: 10
   }
   totalCount = 2
-  data: any = ''
+  data: any = []
+  selectIds = []
   checkboxAll = false
 
   columns = [
@@ -108,20 +117,26 @@ export default class Plan extends ViewBase {
         return h(tableExpand, {
           props: {
             row: params.row
+          },
+          on: {
+            getID: (val: any) => {
+              this.pagea()
+            }
           }
         })
       }
     },
-    { type: 'selection', width: 30 },
-    { title: '创建时间', slot: 'createTime', width: 150},
-    { title: '广告计划ID', slot: 'id', width: 200},
-    { title: '广告计划名称', slot: 'name', minWidth: 300},
+    { type: 'selection', width: 30, align: 'center' },
+    { title: '创建时间', slot: 'createTime', width: 150 },
+    { title: '广告计划ID', slot: 'id', width: 200 },
+    { title: '广告计划名称', slot: 'name', minWidth: 300 }
   ]
   tableDate = [
     {
-      id: '广告计划',
-      name: '2019奔驰影院广告－春节档2019奔驰影院广告－春节档哈2019奔驰影院广告－春节档2019奔驰影院广告',
-      stauts: '广告计划状态',
+      id: '广告计划1',
+      name:
+        '2019奔驰影院广告－春节档2019奔驰影院广告－春节档哈2019奔驰影院广告－春节档2019奔驰影院广告',
+      stauts: 2,
       specification: '广告片规格',
       videoId: '广告片ID',
       videoName: '广告片名称/ID',
@@ -129,15 +144,15 @@ export default class Plan extends ViewBase {
       freezeAmount: '冻结金额(元）',
       settlementStatus: '结算状态',
       settlementAmount: '广告花费(元）',
-      createTime: '创建时间',
-      beginDate: '投放排期开始',
-      endDate: '投放排期结束',
+      createTime: 333333333,
+      beginDate: 3333333333,
+      endDate: 333333333333,
       _expanded: true
     },
     {
-      id: '广告计划',
+      id: '广告计划2',
       name: '广告计划名称',
-      stauts: '广告计划状态',
+      stauts: 5,
       specification: '广告片规格',
       videoId: '广告片ID',
       videoName: '广告片名称/ID',
@@ -145,14 +160,19 @@ export default class Plan extends ViewBase {
       freezeAmount: '冻结金额(元）',
       settlementStatus: '结算状态',
       settlementAmount: '广告花费(元）',
-      createTime: '创建时间',
-      beginDate: '投放排期开始',
-      endDate: '投放排期结束',
+      createTime: 3333333333333,
+      beginDate: 33333333333333,
+      endDate: 333333333333,
       _expanded: true
     }
   ]
-
+  get formatTimes() {
+    return formatTimes
+  }
   async mounted() {
+    this.tableList()
+  }
+  pagea() {
     this.tableList()
   }
   async tableList() {
@@ -160,11 +180,37 @@ export default class Plan extends ViewBase {
     this.data = data
     this.totalCount = data.totalCount
   }
-  handleSelectAll() {}
-  deleteList() {}
+  handleSelectAll() {
+    const selection = this.$refs.selection as any
+    selection.selectAll(!this.checkboxAll)
+  }
+  async deleteList() {
+    if (this.selectIds.length) {
+      const ids = this.selectIds.map((item: any) => item.id) || []
+      await confirm('您确定要删除当前信息吗？')
+      try {
+        await delCheckPlanList({ ids })
+        this.tableList()
+      } catch (ex) {
+        this.handleError(ex.msg)
+      }
+    } else {
+      this.showWaring('请选择你要删除的元素')
+    }
+  }
+  // 单选
+  singleSelect(select: any) {
+    this.checkboxAll = select.length == this.data.length ? true : false
+    this.selectIds = select
+  }
+  // 全选
+  selectAll(select: any) {
+    this.checkboxAll = true
+    this.selectIds = select
+  }
   searchList() {
-     this.pageList.pageIndex = 1
-     this.tableList()
+    this.pageList.pageIndex = 1
+    this.tableList()
   }
   handlepageChange(size: any) {
     this.pageList.pageIndex = size
@@ -204,6 +250,9 @@ export default class Plan extends ViewBase {
   span:last-child {
     color: @c-link;
   }
+}
+/deep/ .ivu-table-cell {
+  padding-left: 14px;
 }
 </style>
 

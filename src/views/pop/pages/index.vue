@@ -192,6 +192,9 @@
               <li class="tag-ltmes">
                 <span>冒险</span>
               </li>
+              <li class="tag-ltme">
+                <span>动作</span>
+              </li>
             </ul>
           </Col>
         </Col>
@@ -791,6 +794,9 @@ export default class Main extends ViewBase {
     }
     .mt6 {
       margin-top: 6px;
+    }
+    .mt10 {
+      margin-top: 10px;
     }
     .mt20 {
       margin-top: 20px;
