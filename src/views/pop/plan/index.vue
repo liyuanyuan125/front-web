@@ -362,6 +362,8 @@ export default class Main extends ViewBase {
     filmIdSelected: 0,
   }
 
+  citySel = false
+
   // 是否为映前广告
   get isRefBefore() {
     return this.form.putType == 'refBefore'
@@ -487,6 +489,13 @@ export default class Main extends ViewBase {
     }
   }
 
+  handleChange() {
+    if (this.form.areaType == 0) {
+      this.citySel = false
+    } else {
+      this.citySel = true
+    }
+  }
   handleVenue() {
     if (this.allType && this.form.venueType.length >= 1) {
       this.allType = false
@@ -512,6 +521,15 @@ export default class Main extends ViewBase {
 
   selectFilm(film: Film) {
     this.form.filmIdSelected = film.id
+  }
+
+  mounted() {
+    // const handler = () => {
+    //   this.$router.push({ name: 'pop-planps' })
+    //   event.off(systemSwitched, handler)
+    //   return false
+    // }
+    // event.on(systemSwitched, handler)
   }
 
   @Watch('form.age', { deep: true })
@@ -677,7 +695,7 @@ export default class Main extends ViewBase {
     font-size: 0;
     span {
       display: inline-block;
-      width: 160px;
+      width: 155px;
       height: 50px;
       line-height: 47px;
       text-align: center;

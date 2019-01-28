@@ -84,6 +84,17 @@ export function formatTimes(value: any) {
   return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
 }
 
+export function formatYell(value: any) {
+  if (!value) { return ''}
+  const date: any = new Date(value)
+  const y = date.getFullYear()
+  let MM = date.getMonth() + 1
+  MM = MM < 10 ? '0' + MM : MM
+  let d = date.getDate()
+  d = d < 10 ? '0' + d : d
+  return y + '/' + MM + '/' + d
+}
+
 /**
  * 年月日转换时间戳格式
  */

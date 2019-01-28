@@ -7,6 +7,8 @@ import cookie from 'js-cookie'
 import { logout as postLogout } from '@/api/auth'
 import { SystemCode } from '@/util/types'
 import innerAccess, { AccessToken } from '@/fn/innerAccess'
+import event from '@/fn/event'
+import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
 
 const accessToken: AccessToken = { can: false }
 
@@ -78,11 +80,16 @@ export function setUser(user: User) {
 }
 
 export function switchSystem(systemCode: SystemCode) {
-  if (theUser != null) {
+  if (theUser != null && theUser.systemCode !== systemCode) {
+    const oldSystemCode = theUser.systemCode
     accessToken.can = true
     theUser.systemCode = systemCode
     accessToken.can = false
+
     saveUser()
+
+    const ev: SystemSwitchedEvent = { systemCode, oldSystemCode }
+    event.emit(systemSwitched, ev)
   }
 }
 
