@@ -739,12 +739,12 @@ export default class Main extends ViewBase {
     border-radius: 5px;
   }
   .hui-div {
-    width: 400px;
+    width: 83%;
     height: 225px;
-    // background: linear-gradient(131deg, rgba(254, 89, 64, 1) 0%, rgba(253, 150, 68, 1) 100%);
     background: url('./../images/银行卡.png');
     border-radius: 6px;
     padding: 12px 30px;
+    background-size: cover;
     .hui-big {
       width: 100%;
     }
