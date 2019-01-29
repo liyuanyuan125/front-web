@@ -275,7 +275,7 @@ export default class Main extends ViewBase {
   form = {
     putType: 'refBefore',
     name: '',
-    videoId: '',
+    videoId: null,
     adverId: null,
     year: '',
     calendarId: '',
@@ -346,7 +346,7 @@ export default class Main extends ViewBase {
         { required: true, message: '请输入广告片名称', trigger: 'change' }
       ],
       videoId: [
-        { required: true, message: '请选择关联广告片', trigger: 'change' }
+        { required: true, message: '请选择关联广告片', trigger: 'change', type: 'number' }
       ],
       beginDate: [
         { required: true, type: 'date', message: '请选择开始时间', trigger: 'change' }
