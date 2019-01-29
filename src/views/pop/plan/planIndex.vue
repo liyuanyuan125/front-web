@@ -61,27 +61,28 @@
         <span>{{formatTimes(row.createTime)}}</span>
       </template>
       <template slot="operation" slot-scope="{row, index}">
+        <!-- 草稿 待审核 -->
         <div v-if="row.stauts == 1 || row.stauts == 2" class="operation-btn">
-          <p><span>查看</span></p>
+          <p><span @click="planDefault(row.id, row.stauts)">查看</span></p>
           <p><span>编辑</span></p>
           <p><span>取消</span></p>
           <p><span @click="relevanceAdv(row.id)">关联广告片</span></p>
         </div>
-        <div v-else-if="row.stauts ==  4 ">
-          <p><span>查看</span></p>
+        <div v-else-if="row.stauts ==  4 " class="operation-btn">
+          <p><span @click="planDefault(row.id, row.stauts)">查看</span></p>
           <p><span>支付</span></p>
           <p><span>取消</span></p>
           <p><span>关联广告片</span></p>
         </div>
-        <div v-else-if="row.stauts ==  5 ">
-          <p><span>查看</span></p>
+        <div v-else-if="row.stauts ==  5 " class="operation-btn">
+          <p><span @click="planDefault(row.id, row.stauts)">查看</span></p>
           <p><span @click="relevanceAdv(row.id)">关联广告片</span></p>
         </div>
-        <div v-else-if="row.stauts == 3 || row.stauts == 6 || row.stauts == 7 || row.stauts == 8 || row.stauts == 9 ">
-          <p><span>查看</span></p>
+        <div v-else-if="row.stauts == 3 || row.stauts == 6 || row.stauts == 7 || row.stauts == 8 || row.stauts == 9 " class="operation-btn">
+          <p><span @click="planDefault(row.id, row.stauts)">查看</span></p>
         </div>
-        <div v-else-if="row.stauts == 10">
-          <p><span>查看</span></p>
+        <div v-else-if="row.stauts == 10" class="operation-btn">
+          <p><span @click="planDefault(row.id, row.stauts)">查看</span></p>
           <p><span>编辑</span></p>
         </div>
       </template>
@@ -106,7 +107,7 @@
      <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible"></relevanceDlg>
   </div>
 </template>
-<script lang="tsx">
+<script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
@@ -182,7 +183,7 @@ export default class Plan extends ViewBase {
   ]
   tableDate = [
     {
-      id: '22222222',
+      id: 2,
       name: '2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院',
       stauts: 2,
       specification: '广告片规格',
@@ -197,7 +198,7 @@ export default class Plan extends ViewBase {
       endDate: 333333333333
     },
     {
-      id: '333333333',
+      id: 1,
       name: '广告计划名称',
       stauts: 5,
       specification: '广告片规格',
@@ -210,7 +211,22 @@ export default class Plan extends ViewBase {
       createTime: 3333333333333,
       beginDate: 33333333333333,
       endDate: 333333333333
-    }
+    },
+    {
+      id: 3,
+      name: '2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院',
+      stauts: 2,
+      specification: '广告片规格',
+      videoId: '广告片ID',
+      videoName: '广告片名称/ID',
+      cycle: '投放周期',
+      freezeAmount: '冻结金额(元）',
+      settlementStatus: '结算状态',
+      settlementAmount: '广告花费(元）',
+      createTime: 333333333,
+      beginDate: 3333333333,
+      endDate: 333333333333
+    },
   ]
   get formatTimes() {
     return formatTimes
@@ -230,6 +246,10 @@ export default class Plan extends ViewBase {
     this.data = data
     this.totalCount = data.totalCount
   }
+  planDefault(id: any, status: any) {
+    this.$router.push({ name: 'pop-plan-default', params: {id, status}})
+  }
+
   handleSelectAll() {
     const selection = this.$refs.selection as any
     selection.selectAll(!this.checkboxAll)

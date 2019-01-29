@@ -120,6 +120,11 @@ export default [
     name: 'pop-planlist',
     component: () => import('./views/pop/plan/planIndex.vue')
   },
+  {
+    path: '/pop/plan-default/:id/:status',
+    name: 'pop-plan-default',
+    component: () => import('./views/pop/plan/planDefault.vue')
+  },
   // 推广管理 - 广告计划 - 生成广告方案
   {
     path: '/pop/plan/scheme/:id/:corp',
