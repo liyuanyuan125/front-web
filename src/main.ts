@@ -12,6 +12,8 @@ import LazyInput from '@/components/LazyInput'
 import { hasLogin } from './store'
 import routes from './routes'
 
+// Vue.prototype.$echarts = echarts //引入组件
+
 // 将登陆注册等模块「静态」到主文件中，以便用户更流畅
 import home from './views/home.vue'
 import login from './views/portal/login.vue'
@@ -121,18 +123,15 @@ router.afterEach((to, from) => {
 })
 
 // 采用低优先级监听 ajax*** 事件，以便其他地方可以拦截取消
-event.on(
-  {
-    ajax401() {
-      router.push({ name: 'login' })
-    },
-
-    ajax403() {
-      alert('权限不足')
-    }
+event.on({
+  ajax401() {
+    router.push({ name: 'login' })
   },
-  false
-)
+
+  ajax403() {
+    alert('权限不足')
+  },
+}, false)
 
 new Vue({
   router,

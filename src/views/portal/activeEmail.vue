@@ -2,7 +2,7 @@
   <div class="activeEmail">
     <Form :model="form" ref="form" :rules="rules" label-position="left" class="edit-input" :label-width="100">
       <h3 class="logo">
-        <img src="../../assets/login/logo.png" @click="toLogin">
+        <img src="~@/assets/site/logo.png" @click="toLogin">
       </h3>
       <FormItem label="密码" prop="firstPass" class="item-top">
         <Input
@@ -73,9 +73,11 @@ export default class Main extends ViewBase {
     const lastNum = url.lastIndexOf('/') + 1
     this.ticket = url.substr(lastNum)
   }
+
   toLogin() {
     this.$router.push({ name: 'login' })
   }
+
   async handleInforma() {
     const valid = await (this.$refs.form as any).validate()
     if (!valid) {
@@ -93,6 +95,7 @@ export default class Main extends ViewBase {
   }
 }
 </script>
+
 <style lang="less" scoped>
 .activeEmail {
   position: absolute;

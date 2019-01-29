@@ -13,7 +13,7 @@ build:
     - develop
     - release
   script:
-    - rm -r yarn.lock && yarn && yarn lint && yarn build
+    - rm -f yarn.lock && yarn && yarn lint && yarn build
   artifacts:
     paths:
       - dist

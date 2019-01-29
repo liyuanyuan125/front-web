@@ -58,7 +58,7 @@
       <template slot-scope="{row, index}" slot="action">
         <a class="action-btn" @click="toDetail(row.id)">查看</a>
         <a class="action-btn" @click="toEdit(row.id)">编辑</a>
-        
+
         <a class="action-btn" v-if="row.statusCode == 2" @click="handleEnable(row.id, 1)">启用</a>
         <a class="action-btn" v-else-if="row.statusCode == 1" @click="handleEnable(row.id, 2)">禁用</a>
         <a class="action-btn" v-else-if="row.statusCode == 3" @click="activeEmail(row.id)">重新激活</a>
@@ -234,6 +234,7 @@ export default class Main extends ViewBase {
       this.showWaring('请选择你要删除的元素')
     }
   }
+
   async handleEnable(id: any, type: any) {
     if (type == 1) {
       await confirm('您确定启用当前信息吗？')
