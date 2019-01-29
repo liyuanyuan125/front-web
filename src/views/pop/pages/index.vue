@@ -1,123 +1,195 @@
 <template>
   <div class="page home-bg">
     <h3 class="reportTitle">
-      投放类型: <span v-if="$route.params.id == 1">映前广告－标准定向</span>
-      <span v-if="$route.params.id == 2">映前广告－按单部影片</span>
-      <span v-if="$route.params.id == 3">线下场馆</span>
+      广告计划 > 新建广告计划 > 生成投放方案
     </h3>
     <Row class="body">
       <Row>
         <Col :span="24">
+          <div class="fince-list">
+            <div @click='showClass(1)' :class="['fince-list-big',  {'fince-list-active ':showClassbiao}]">
+              <div class="fince-list-acc"><img src="./assets/标准-选中.png" alt="" v-if='showClassbiao'><img src="./assets/标准-灰.png" alt="" v-if='!showClassbiao'>&nbsp;&nbsp;<span>标准投放</span></div>
+              <p class="fince-list-sm">普通投放 ， 不支持选择投放影片</p>
+            </div>
+            <div @click='showClass(2)' :class="['fince-list-big',  {'fince-list-active ':showClassjia}]">
+              <div class="fince-list-acc"><img src="./assets/加速.png" alt="" v-if='showClassjia'><img src="./assets/加速-灰.png" alt="" v-if='!showClassjia'>&nbsp;&nbsp;<span>加速投放</span></div>
+              <p class="fince-list-sm">快速覆盖人次 ， 支持自主选择3部投放影片</p>
+            </div>
+            <div @click='showClass(3)' :class="['fince-list-big',  {'fince-list-active ':showClassyou}]">
+              <div class="fince-list-acc"><img src="./assets/优享-选中.png" alt="" v-if='showClassyou'><img src="./assets/优享-灰.png" alt="" v-if='!showClassyou'>&nbsp;&nbsp;<span>优享投放</span></div>
+              <p class="fince-list-sm">最快覆盖人次 ， 支持自主选择6部投放影片</p>
+            </div>
+          </div>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col :span="24">
           <h3 class="square">概览</h3>
         </Col>
-        <Col :span="10">
+        <Col :span="10" style='margin-left: 30px;'>
           <div class="report-title-left">
             <dl>
               <dd>广告计划</dd>
-              <dt>{{forMat.name}}</dt>
+              <dt>映前广告</dt>
+            </dl>
+            <dl>
+              <dd>广告计划名称</dd>
+              <dt>喔喔奶糖北京复古营销计划</dt>
             </dl>
             <dl>
               <dd>客户名称</dd>
-              <dt>{{forMat.client}}</dt>
+              <dt>奔驰 (ID 748596)</dt>
+            </dl>
+            <dl>
+              <dd>广告片规格</dd>
+              <dt>30s</dt>
+            </dl>
+            <dl>
+              <dd>广告片名称</dd>
+              <dt>喔喔奶糖北京影院映前广告</dt>
             </dl>
             <dl>
               <dd>投放排期</dd>
-              <dt>{{forMat.time}}</dt>
+              <dt>2019-2-4 周五 ~ 2019-2-10 周二</dt>
             </dl>
             <dl>
-              <dd>投放周期</dd>
-              <dt>{{forMat.longTime}}天</dt>
+              <dd>投放天数</dd>
+              <dt>7天</dt>
             </dl>
             <dl>
               <dd>档期</dd>
-              <dt>{{forMat.data}}</dt>
+              <dt>春节档</dt>
             </dl>
           </div>
         </Col>
-        <Col :span="14">
+        <Col :span="12">
           <Row>
             <Col :span="12">
-              <p class="report-title-p1">预计覆盖人次</p>
               <div class="people">
-                <img style="width: 80%" src="./assets/money.png" alt="">
+                <!-- <div style="height: 100%"> -->
+                  <img src="./assets/粉圈.png" alt="">
+                  <div class='canpos'>
+                    <p style='font-size: 30px;'>{{aboutcount}}</p>
+                    <p>预估覆盖场次</p>
+                  </div>
+                <!-- </div> -->
               </div>
-              <p class="report-title-p2">{{forMat.man}}</p>
+              <!-- <p class="report-title-p2">{{forMat.man}}</p> -->
             </Col>
             <Col :span="12">
-              <p class="report-title-p1">预估投放花费</p>
               <div class="people">
-                <img style="width: 80%" src="./assets/people.png" alt="">
+                <!-- <div ref="container2" style="height: 100%"></div> -->
+                <img src="./assets/蓝圈.png" alt="">
+                <div class='canpos'>
+                  <p style='font-size: 30px;'>￥{{pricecount}}</p>
+                  <p>预估投放花费</p>
+                </div>
               </div>
-              <p class="report-title-p2">¥{{forMat.ceil}}</p>
+              <!-- <p class="report-title-p2">¥{{forMat.ceil}}</p> -->
             </Col>
           </Row>
         </Col>
       </Row>
 
-      <Row class="pt40">
+      <Row class="pt40" v-if="$route.params.id == 2">
         <Col :span="24">
-          <h3 class="square">覆盖区域</h3>
+          <h3 class="square">投放影片</h3>
         </Col>
-        <Col class="mt20" :span="24">
-          <ul class="tag" style="left: 0px">
-            <li class="tag-ltme" v-if="$route.params.corp != 2">
-              <span>区域</span>
-              <span>4个</span>
-            </li>
-            <li class="tag-ltme" v-if="$route.params.corp != 2">
-              <span>省份</span>
-              <span>6个</span>
-            </li>
-            <li class="tag-ltme" v-if="$route.params.corp != 2">
-              <span>城市</span>
-              <span>8个</span>
-            </li>
-            <li class="tag-ltme" v-if="$route.params.corp != 2">
-              <span>影院</span>
-              <span>500个</span>
-            </li>
-             <li class="tag-ltme" v-if="$route.params.corp == 2">
-              <span>城市</span>
-              <span>1个</span>
-            </li>
-            <li class="tag-ltme" v-if="$route.params.corp == 2">
-              <span>门店</span>
-              <span>67</span>
-            </li>
-            <li class="tag-ltme" v-if="$route.params.corp == 2">
-              <span>场馆</span>
-              <span>237个</span>
-            </li>
-          </ul>
-        </Col>
-        <Col class="mt70" :span="12">
-          <CitySelect v-if="$route.params.corp != 2" :value="[1,2,3,4,5,6,7]" readonly class="city-map"/>
-          <CitySelect v-else :value="[1,2,3,4,5,6]" type="beijing" readonly class="city-map"/>
-        </Col>
-        <Col class="mt70" :span="12">
-          <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
-          <Button v-if="$route.params.corp == 2" type="primary" class="mt30" @click="edit" style="float: right; height: 40px">查看全部</Button>
+        <Col class="mt30 xq-m" :span="22">
+           <Row :gutter="30">
+             <Col :span="6" class='img-c' style="height: 240px">
+              <img src="./assets/poster.png" alt="">
+             </Col>
+             <Col class="poster-title" :span="18" style="height: 240px">
+              <Row class='row-xq'>
+                <Col span='10'><span>影片名称</span>《大黄蜂》</Col>
+                <Col span='14'><span style='width: 28%;'>影片标语</span> 纽特与邓布利多组队对决黑巫师</Col>
+              </Row>
+              <Row class='row-xq'>
+                <Col span='10'><span>上映日期</span> 2019-1-4</Col>
+                <Col span='14'><span style='width: 28%;'>片长</span> 125分钟</Col>
+              </Row>
+              <Row class='row-xq-24'>
+                <Col span='24'><span>影片类型</span> 动作 / 科幻 / 冒险</Col>
+              </Row>
+              <Row class='row-xq-24'>
+                <Col span='24'><span>导演</span> 特拉维斯 奈特</Col>
+              </Row>
+              <Row class='row-xq-24'>
+                <Col span='24'><span>演员</span> 海莉 斯坦菲尔德／小豪尔赫 兰登伯格／约翰 塞纳／杰森 德鲁克...</Col>
+              </Row>
+              <Row class='row-xq-l24'>
+                <Col span='24'><span>根据您选择的地域偏好，我们将优先为您覆盖以下地域</span> 华北 | 华东 | 华南</Col>
+              </Row>
+             </Col>
+           </Row>
         </Col>
       </Row>
 
-      <Row class="pt40" v-if="$route.params.corp == 1">
+      <Row class="pt40">
+        <Col :span="24">
+          <h3 class="square">覆盖地区</h3>
+        </Col>
+        <Col class="mt20" :span="24">
+          <ul class="tag" style="left: 0px">
+            <li class="tag-ltme">
+              <span>区域</span>
+              <span>4个</span>
+            </li>
+            <li class="tag-ltme">
+              <span>省份</span>
+              <span>6个</span>
+            </li>
+            <li class="tag-ltme">
+              <span>城市</span>
+              <span>8个</span>
+            </li>
+            <li class="tag-ltme">
+              <span>影院</span>
+              <span>500个</span>
+            </li>
+          </ul>
+        </Col>
+        <Col class="mt70 posi-map" :span="12">
+          <CitySelect :value="[1,2,3,4,5,6,7]" readonly class="city-map"/>
+          <div class='pos-map'>
+            <ul>
+              <li>华北</li>
+              <li>华南</li>
+              <li>华中</li>
+            </ul>
+            <div>一线城市3个</div>
+            <div>二线城市3个</div>
+            <div>三线城市3个</div>
+            <div>四线城市3个</div>
+          </div>
+          <!-- <CitySelect v-else :value="[1,2,3,4,5,6]" type="beijing" readonly class="city-map"/> -->
+        </Col>
+        <Col class="mt70" :span="12">
+          <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
+          <Button  type="primary" class="mt30" @click="view" style="float: right; height: 40px; margin-right: 10px; margin-bottom: 10px;">查看全部影院</Button>
+        </Col>
+      </Row>
+
+      <Row class="pt40" style='margin-bottom: 30px;' v-if='$route.params.id == 1'>
         <Col :span="24">
           <h3 class="square">投放影片</h3>
         </Col>
         <Col class="mt20" :span="24">
-          <Col :span="4"><h4 class="select-people">您选择的观影人群画像</h4></Col>
+          <Col :span="4"><h4 class="select-people">观影人群画像</h4></Col>
           <Col :span="20">
            <ul class="tag" style="left:2px">
-              <li class="tag-ltme">
+              <li class="tag-ltme" style='margin-left:30px;'>
                 <img style="vertical-align: middle;" src="./assets/man.png" alt="">
               </li>
-              <li class="tag-ltme">
-                <span>30-34岁</span>
+              <li class="tag-ltmes">
+                <span>30-40岁</span>
               </li>
-              <li class="tag-ltme">
-                <span>科幻</span>
+              <li class="tag-ltmes">
+                <span>剧情</span>
               </li>
-              <li class="tag-ltme">
+              <li class="tag-ltmes">
                 <span>冒险</span>
               </li>
               <li class="tag-ltme">
@@ -126,74 +198,36 @@
             </ul>
           </Col>
         </Col>
-        <Col class="mt30" :span="24">
-           <Row :gutter="30">
-             <Col :span="8">
-              <dl class="cinema-img">
-                <dd><img src="./assets/four.png" alt=""></dd>
-              </dl>
-             </Col>
-             <Col :span="8">
-              <dl class="cinema-img">
-                <dd><img src="./assets/one.png" alt=""></dd>
-              </dl>
-             </Col>
-             <Col :span="8">
-              <dl class="cinema-img">
-                <dd><img src="./assets/five.png" alt=""></dd>
-              </dl>
-             </Col>
+        <Col class="mt30" style='margin-top: 10px;' :span="24">
+          <Row :gutter="30">
+            <Col :span="4" style="text-indent: 1em;padding-left:30px;line-height: 50px;">推荐影片</Col>
+            <Col :span="17" style="text-indent: 1em;padding-left:30px;line-height: 50px;">说明：请选择不超过3部影片，系统将优先为您排播所选择影片的映前广告。</Col>
+            <Col :span='3' style='line-height:50px;color:#fe8135'>已选3部影片</Col>
+          </Row>
+           <Row class='pi' :gutter="30">
+            <Col :span="4" style="text-indent: 1em;padding-left:30px;">&nbsp;&nbsp;&nbsp;&nbsp;</Col>
+            <img class='pi-one' src="./assets/匹配度一.png" alt="">
+            <img class='pi-two' src="./assets/匹配度二.png" alt="">
+            <img class='pi-three' src="./assets/匹配度三.png" alt="">
+            <Col :span='20'>
+              <Col :span="5" class='sp-c' v-for='(it , index) in tuifilm' :key='index'>
+                <dl @click='showimg(index)' :class="['cinema-img',  {'cinema-img-active ': showClassimg}]">
+                  <dd class='s-img'>
+                    <img class='img' :src=it.mainPicUrl alt="">
+                    <div>上映日期：{{it.openTime}}</div>
+                    <img class='posimg' src='./assets/已选.png' alt=''>
+                  </dd>
+                  <dt>《{{it.name}}》</dt>
+                  <dt><span v-for='(item , index) in it.type' :key='index'>{{item}}/</span></dt>
+                </dl>
+              </Col>
+            </Col>
            </Row>
         </Col>
       </Row>
 
-      <Row class="pt40" v-if="$route.params.corp == 3">
-        <Col :span="24">
-          <h3 class="square">投放影片</h3>
-        </Col>
-        <Col class="mt20" :span="24">
-          <Col :span="4"><h4 class="select-people">您选择的观影人群画像</h4></Col>
-          <Col :span="20">
-           <ul class="tag" style="left:2px">
-              <li class="tag-ltme">
-                <img style="vertical-align: middle;" src="./assets/woman.png" alt="">
-              </li>
-              <li class="tag-ltme">
-                <span>30-40岁</span>
-              </li>
-              <li class="tag-ltme">
-                <span>剧情</span>
-              </li>
-              <li class="tag-ltme">
-                <span>冒险</span>
-              </li>
-            </ul>
-          </Col>
-        </Col>
-        <Col class="mt30" :span="24">
-           <Row :gutter="30">
-             <Col :span="4" style="text-indent: 2em">已选定投放的影片</Col>
-             <Col :span="7" style="height: 430px">
-              <img src="./assets/poster.png" alt="">
-             </Col>
-             <Col class="poster-title" :span="13" style="height: 430px">
-              <h3 class="pt40">《飞驰人生》</h3>
-              <p class="pt40">导演: <span>韩寒</span> </p>
-              <p class="mt6">编剧: <span>韩寒</span></p>
-              <p class="mt6">主演: <span>沈腾 / 黄景瑜 / 尹正 / 尹昉 / 田雨 / 腾格尔 / 赵文瑄 / 张本</span></p>
-              <p class="mt6">类型：<span>喜剧</span></p>
-              <p class="mt6">制片国家/地区：<span>中国大陆</span></p>
-              <p class="mt6">语言：<span>汉语普通话</span></p>
-              <p class="mt6">上映时间：<span>2019-02-05(中国大陆)</span></p>
-              <p class="mt6">片长：<span>125分钟</span></p>
-              <p class="mt6">又名：<span>Pegasus</span></p>
-              <p class="pt40"><span style="margin-left: 0px">预告片(1)</span><span>新闻(10)</span></p>
-             </Col>
-           </Row>
-        </Col>
-      </Row>
 
-      <Row class="pt40" v-if="$route.params.corp == 2">
+      <!-- <Row class="pt40" v-if="$route.params.corp == 2">
         <Col :span="24">
           <h3 class="square">广告版位－海报灯箱</h3>
         </Col>
@@ -212,22 +246,22 @@
              </Col>
            </Row>
         </Col>
-      </Row>
+      </Row> -->
 
       <Row class="pt40">
         <Col :span="24">
-          <h3 class="square">预算和计费</h3>
+          <h3 class="square">费用预估<span>说明：实际投放花费需要在广告播放后生成，会与预计花费有一定偏差。</span></h3>
         </Col>
         <Col :span="23" class="mt30" offset="1">
           <div class="flex">
-            <span>预期投放花费=</span>
-            <h4 class="ceil">¥{{forMat.ceil}}</h4>
+            <span>预估投放花费=</span>
+            <h4 class="ceil">¥{{pricecount}}</h4>
           </div>
         </Col>
         <Col :span="23" class="mt30" offset="1">
           <div class="flex">
             <span>预估冻结金额 = 预估投放发费 = </span>
-            <h4 class="ceil">¥{{forMat.ceil}}</h4>
+            <h4 class="ceil">¥{{pricecount}}</h4>
           </div>
         </Col>
       </Row>
@@ -236,7 +270,11 @@
       <Button type="primary" @click="edit" style="width: 370px">确认投放方案</Button>
       <Button type="default">存为草稿</Button>
     </div>
+    <!-- 确认生成 -->
     <DlgDetail v-if="addOrUpdateVisible" ref="addOrUpdate" />
+    <!-- 查看已选影院 -->
+    <dlgCinema v-if="addcinema" ref="addcine" />
+
   </div>
 </template>
 
@@ -244,8 +282,17 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DlgDetail from './dlgdetail.vue'
+import dlgCinema from './dlgCinema.vue'
 import CitySelect from '../plan/citySelect.vue'
+import { toMap } from '@/fn/array'
+import moment from 'moment'
 import jsxReactToVue from '@/util/jsxReactToVue'
+import { queryList , addplan , abcount , pricount , tuijian , cinemaList } from '@/api/planput'
+import echarts from 'echarts' // 引入echarts
+
+// const makeMap = (list: any[]) => toMap(list, 'id', 'name')
+const timeFormat = 'YYYY-MM-DD'
+
 
 const mockMap = [
   {
@@ -286,22 +333,58 @@ const mockMap = [
 @Component ({
   components: {
     DlgDetail,
-    CitySelect
+    CitySelect,
+    dlgCinema
   }
 })
 export default class Main extends ViewBase {
+  // tab
+  showClassbiao: any = true
+  showClassjia: any = false
+  showClassyou: any = false
+
+  // img
+  showClassimg: any = false
+  isActive: any = null
+
+
   addOrUpdateVisible = false
+  addcinema = false
+
+  // 加速类型
+  typeList: any = []
+  // 预估chanci
+  aboutcount: any = 0
+  // 预估huafei
+  pricecount: any = 0
+  // 推荐影片
+  tuifilm: any = []
+  // yingyuan
+  cinemaList: any = []
+
+  dataFrom: any = {
+    type: '1', // 方案类型
+    name: '', // 计划名称
+    videoId: null, // 广告片ID
+    calendarId: null, // 档期ID
+    beginDate: null, // 排期开始时间
+    endDate: null, // 排期结束时间
+    deliveryType: null, // 投放类型
+    budgetCode: '', // 预算区间
+    budgetAmount: null, // 预算金额
+    billingMode: null, // 击飞方式
+    deliveryMovies: [], // 投放影片
+    status: null, // 计划状态
+    estimateCostAmount: null, // 预估花费
+    estimateShowCount: null, // 预估曝光场次
+    directionType: null, // 定向投放类型（1标准投放2单片投放）
+    deliveryGroups: [], // 观影人群画像
+    cinemas: [], // 影院列表
+  }
 
   get tableData() {
     if (this.$route.params.corp != '2') {
-      return [
-        { name : '北京横店影视电影城', code: '23375741', seat: '10,000'},
-        { name : '深圳万众国际影城', code: '70023342', seat: '10,000'},
-        { name : '上海中影国际影城', code: '98574212', seat: '10,000'},
-        { name : '北京万达影城', code: '12668473', seat: '10,000'},
-        { name : '浙江新远国际影城', code: '12358553', seat: '10,000'},
-        { name : '杭州百老汇影城', code: '66273647', seat: '10,000'}
-      ]
+      return this.cinemaList
     } else {
       return [
         { names : '金源购物中心', codes: '商场', seats: '西贝筱面村(王府井店)', juli: '0.78km'},
@@ -318,8 +401,8 @@ export default class Main extends ViewBase {
     if (this.$route.params.corp != '2') {
       return [
         { title: '专资编码', key: 'code', align: 'center'},
-        { title: '影院名称', key: 'name', align: 'center'},
-        { title: '总座位数', key: 'seat', align: 'center'}
+        { title: '影院名称', key: 'officialName', align: 'center'},
+        { title: '总座位数', key: 'seatCount', align: 'center'}
       ]
     } else {
       return [
@@ -344,13 +427,89 @@ export default class Main extends ViewBase {
       return it.id == corp
     })[0]
   }
+  // 查看影院
+  view() {
+    this.addcinema = true
+    this.$nextTick(() => {
+      (this.$refs.addcine as any).init(this.forMat)
+    })
+  }
 
+  // 确认生成
   edit() {
     this.addOrUpdateVisible = true
     this.$nextTick(() => {
       (this.$refs.addOrUpdate as any).init(this.forMat)
     })
   }
+
+  showClass( index: any) {
+    if (index == 1) {
+      this.showClassbiao = true
+      this.showClassjia = false
+      this.showClassyou = false
+      this.dataFrom.type = '1'
+      this.seach()
+    } else if (index == 2) {
+      this.showClassbiao = false
+      this.showClassjia = true
+      this.showClassyou = false
+      this.dataFrom.type = '3'
+      this.seach()
+    } else if (index == 3) {
+      this.showClassbiao = false
+      this.showClassjia = false
+      this.showClassyou = true
+      this.dataFrom.type = '3'
+      this.seach()
+    }
+  }
+  showimg(index: any) {
+    this.isActive = index
+
+    // console.log(this.tuifilm)
+    // if (this.isActive == index) {
+    //   this.isActive = null
+    // } else if (this.isActive == null) {
+    //   this.isActive = index
+    // }
+  }
+
+  mounted() {
+    this.seach()
+  }
+
+  async seach() {
+    try {
+      const {
+        data
+      } = await queryList()
+      // 获取状态列表
+      this.typeList = data.typeList
+      // 获取预估覆盖场次
+      const resab = await abcount({cinemaCount: 5 , type: this.dataFrom.type})
+      this.aboutcount = resab.data
+      // console.log(this.aboutcount)
+      // 获取预估投放花费
+      const respri = await pricount({budgetCode: '00-50' , type: this.dataFrom.type , budgetAmount: ''})
+      this.pricecount = respri.data
+      // 推荐影片
+      const tui = await tuijian({types: 'juqing' , pageSize : 8})
+      this.tuifilm = (tui.data.data.items || []).map((it: any) => {
+        return {
+          ...it,
+          openTime: moment(it.openTime).format(timeFormat)
+        }
+      })
+      // yingyuan
+      const cinema = await cinemaList({ids: '233,156', pageIndex: 1, pageSize: 6})
+      this.cinemaList = cinema.data.items
+    } catch (ex) {
+      this.handleError(ex)
+    } finally {
+    }
+  }
+
 }
 </script>
 
@@ -368,7 +527,6 @@ export default class Main extends ViewBase {
 }
 .page {
   background: #fff;
-  border-top: 3px solid #fe8135;
   height: 100%;
   font-size: 14px;
   .ivu-table-wrapper {
@@ -400,46 +558,126 @@ export default class Main extends ViewBase {
     cursor: pointer;
   }
   .reportTitle {
-    .colBg;
-    .addUser {
-      width: 140px;
-      height: 40px;
-      line-height: 40px;
-      display: block;
-      text-align: center;
-      color: #333;
-      font-weight: normal;
-      cursor: pointer;
-      background: @c-button;
+    background: rgba(249, 249, 249, 1);
+    height: 50px;
+    line-height: 50px;
+    display: block;
+    color: #2481d7;
+    font-family: normal;
+    cursor: pointer;
+    font-size: 14px;
+    padding-left: 30px;
+  }
+  .posi-map {
+    position: relative;
+    font-size: 12px;
+    .pos-map {
+      position: absolute;
+      top: 0;
+      left: 20px;
+      ul {
+        height: 20px;
+        margin-bottom: 8px;
+        li {
+          float: left;
+          margin-right: 2px;
+          border: 1px solid #fe8135;
+          background: rgba(255, 239, 231, 0.5);
+          line-height: 20px;
+          color: #fe8135;
+          padding: 2px 14px 2px 14px;
+        }
+      }
+      div {
+        width: 100px;
+        border: 1px solid #fe8135;
+        background: rgba(255, 239, 231, 0.5);
+        line-height: 20px;
+        margin-top: 2px;
+        color: #fe8135;
+        text-align: center;
+        // padding: 2px 5px 2px 5px;
+      }
     }
-    span {
-      margin-left: 8px;
+  }
+  .pi {
+    position: relative;
+    .pi-one {
+      position: absolute;
+      top: 0.8%;
+      left: 21.3%;
+      z-index: 10;
+    }
+    .pi-two {
+      position: absolute;
+      top: 0.8%;
+      left: 40.6%;
+      z-index: 10;
+    }
+    .pi-three {
+      position: absolute;
+      top: 0.8%;
+      left: 59.7%;
+      z-index: 10;
+    }
+  }
+  .s-img {
+    position: relative;
+    div {
+      width: 100%;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      color: #fff;
+      background: rgba(0, 0, 0, 1);
+    }
+    .posimg {
+      position: absolute;
+      top: 0;
+      right: 0;
     }
   }
   .money, .people {
-    margin-top: 10px;
+    width: 100%;
+    margin-top: 72px;
     text-align: center;
+    height: 300px;
+    .canpos {
+      width: 96%;
+      height: 50px;
+      margin-top: -152px;
+    }
   }
   .select-people {
     height: 40px;
     line-height: 40px;
     font-weight: 400;
+    padding-left: 30px;
+  }
+  .sp-c {
+    margin-left: 3%;
+    margin-bottom: 1%;
   }
   .body {
-    padding: 16px 40px 40px;
+    padding: 16px 0 40px;
     .square {
-      padding-left: 24px;
-      font-size: 18px;
+      font-size: 14px;
+      height: 50px;
+      line-height: 50px;
+      padding-left: 30px;
+      background: rgba(249, 249, 249, 1);
+      border-radius: 2px 2px 0 0;
+      span {
+        float: right;
+      }
     }
-    .square::before {
-      position: absolute;
-      left: 0;
-      top: 4px;
-      content: "";
-      width: 16px;
-      height: 16px;
-      background: #fe8135;
-      margin-right: 8px;
+    .img-c {
+      img {
+        height: 100%;
+      }
     }
     .report-title-left {
       padding-top: 48px;
@@ -448,7 +686,7 @@ export default class Main extends ViewBase {
         display: flex;
         font-size: 14px;
         dd {
-          width: 80px;
+          width: 30%;
           color: #989898;
         }
         dt {
@@ -461,14 +699,34 @@ export default class Main extends ViewBase {
       position: absolute;
       top: 0;
       left: 160px;
-      li {
+      .tag-ltme {
         float: left;
         width: 120px;
-        height: 40px;
-        background-color: rgba(255, 248, 242, 1);
+        height: 30px;
+        background: rgba(249, 249, 249, 1);
         text-align: center;
-        line-height: 40px;
-        margin-right: 20px;
+        line-height: 30px;
+        margin-left: 20px;
+        span {
+          margin-right: 10px;
+          color: #222;
+        }
+        span:nth-child(1) {
+          color: #fe8135;
+        }
+        .orgrn {
+          color: #fe8135;
+          margin-right: 5px;
+        }
+      }
+      .tag-ltmes {
+        float: left;
+        width: 120px;
+        height: 30px;
+        background: rgba(249, 249, 249, 1);
+        text-align: center;
+        line-height: 30px;
+        margin-left: 20px;
         span {
           margin-right: 10px;
           color: #222;
@@ -480,9 +738,15 @@ export default class Main extends ViewBase {
       }
     }
     .cinema-img {
-      img {
+      text-align: center;
+      border: 5px solid #fff;
+      .img {
         width: 100%;
+        height: 265px;
       }
+    }
+    .cinema-img-active {
+      border: 5px solid #fe8135 !important;
     }
     .poster-title {
       background: #f9f9f9;
@@ -523,7 +787,7 @@ export default class Main extends ViewBase {
       display: flex;
     }
     .pt40 {
-      padding-top: 40px;
+      // padding-top: 40px;
     }
     .pt20 {
       padding-top: 20px;
@@ -539,6 +803,11 @@ export default class Main extends ViewBase {
     }
     .mt30 {
       margin-top: 30px;
+    }
+    .xq-m {
+      margin: 30px;
+      background: rgba(249, 249, 249, 1);
+      padding: 20px 30px 20px 30px;
     }
     .mt70 {
       margin-top: 70px;
@@ -575,4 +844,64 @@ export default class Main extends ViewBase {
     zoom: 0.62;
   }
 }
+.fince-list {
+  .fince-list-big {
+    width: 32%;
+    display: inline-block;
+    height: 120px;
+    background: rgba(242, 242, 242, 1);
+    border-radius: 2px;
+    margin-left: 1%;
+    margin-bottom: 12px;
+    border-top: 10px solid #f2f2f2;
+    .fince-list-acc {
+      width: 100%;
+      font-size: 22px;
+      font-weight: 400;
+      color: #222;
+      line-height: 22px;
+      text-align: center;
+      padding-top: 30px;
+    }
+    .fince-list-sm {
+      width: 100%;
+      height: 14px;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(136, 136, 136, 1);
+      line-height: 14px;
+      text-align: center;
+      margin-top: 20px;
+    }
+  }
+  .fince-list-active {
+    border-top: 10px solid #fe8135 !important;
+  }
+}
+.row-xq {
+  line-height: 40px;
+  span {
+    color: #989898;
+    display: inline-block;
+    width: 36%;
+  }
+}
+.row-xq-24 {
+  line-height: 40px;
+  span {
+    color: #989898;
+    display: inline-block;
+    width: 15%;
+  }
+}
+.row-xq-l24 {
+  line-height: 40px;
+  span {
+    color: #989898;
+    display: inline-block;
+    width: 67%;
+  }
+}
 </style>
+
+

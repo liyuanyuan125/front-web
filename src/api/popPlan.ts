@@ -23,3 +23,9 @@ export async function advertDetail(id: any) {
   const data = await get(`/xadvert/videos/${id}`)
   return data
 }
+
+// 查询广告片信息
+export async function cinemaList(query: any) {
+  const data = await get('/xadvert/plans/movie', query)
+  return data
+}

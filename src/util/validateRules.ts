@@ -68,7 +68,9 @@ export function validateEmail(email: string): string | undefined {
  * 时间戳格式转换年月日
  */
 export function formatTimes(value: any) {
-  if (!value) { return ''}
+  if (!value) {
+    return ''
+  }
   const date: any = new Date(value)
   const y = date.getFullYear()
   let MM = date.getMonth() + 1
@@ -85,7 +87,9 @@ export function formatTimes(value: any) {
 }
 
 export function formatYell(value: any) {
-  if (!value) { return ''}
+  if (!value) {
+    return ''
+  }
   const date: any = new Date(value)
   const y = date.getFullYear()
   let MM = date.getMonth() + 1
@@ -109,5 +113,7 @@ export function formatTimestamp(val: any) {
  * 数字格式化保留两位小数每个三位加逗号
  */
 export function formatNumber(num: number) {
-  return  num.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
+  if (num != undefined) {
+    return num.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
+  }
 }

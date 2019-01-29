@@ -1,0 +1,413 @@
+@import '~@/site/lib.less';
+.float {
+    float: left;
+  }
+  .btn-center {
+    margin: 40px 0 30px;
+    text-align: center;
+  }
+  .radio-item {
+    font-size: 14px;
+    margin-right: 40px;
+    border-radius: 2px;
+    border-left: 0;
+    user-select: none;
+  }
+  .form-item-type {
+    margin-top: 35px;
+  }
+  .form-item-type-sort {
+    margin-top: 15px;
+  }
+  .orient-tabs {
+    margin-top: 4px;
+    label {
+      margin-right: 30px;
+      border-radius: 4px;
+      &:hover {
+        border: 1px solid #d2d2d2;
+        border-radius: 4px;
+        color: @c-head;
+      }
+    }
+  }
+  
+  .city-wrap {
+    padding-right: 40px;
+    margin-left: 130px;
+  }
+  .item-radio-top {
+    margin-top: 3px;
+  }
+  .forms {
+    font-size: 14px;
+    .clear-f::after {
+      clear: both;
+      content: '.';
+      display: block;
+    }
+    .float-left {
+      float: left;
+    }
+    .float-right {
+      float: right;
+    }
+    .pr30 {
+      padding-right: 30px;
+    }
+    .pr130 {
+      padding-right: 130px;
+    }
+    .tag, .tag1 {
+      width: 120px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      margin-right: 30px;
+      margin-top: 5px;
+    }
+    .tag-date {
+      /deep/ .ivu-form-item-content .ivu-input-wrapper {
+        width: 300px;
+      }
+    }
+    .all-type {
+      line-height: 22px;
+      margin-right: 6px;
+      cursor: pointer;
+      &.checked {
+        color: #fff;
+        background-color: @c-button;
+      }
+    }
+    .check-type {
+      margin: 8px 15px 0 0;
+      width: 60px;
+      height: 26px;
+      font-size: 14px;
+      text-align: center;
+      border-radius: 2px;
+      border: 1px solid rgba(210, 210, 210, 1);
+      &.checked {
+        color: #fff;
+        background-color: @c-button;
+      }
+      /deep/ .ivu-checkbox {
+        display: none;
+        & + span {
+          position: relative;
+          top: -4px;
+          margin-right: 0;
+        }
+      }
+    }
+    .xad {
+      width: 400px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 14px;
+    }
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+      opacity: 0;
+    }
+    .select-adv-type {
+      font-size: 0;
+      span {
+        display: inline-block;
+        width: 155px;
+        height: 50px;
+        line-height: 47px;
+        text-align: center;
+        color: #444;
+        margin-top: -3px;
+        font-size: 14px;
+        cursor: pointer;
+        background: #f7f7f7;
+      }
+      .put-active {
+        background: #fb8135;
+        color: #fff;
+      }
+    }
+    /deep/ .checkd .ivu-select-selection {
+      width: 300px;
+    }
+    /deep/ .ivu-input {
+      font-size: 14px;
+      &::placeholder {
+        font-size: 14px;
+      }
+    }
+    /deep/ .ivu-form-item {
+      margin-left: 30px;
+      font-size: 14px;
+    }
+    /deep/ .ivu-select-dropdown {
+      /deep/ li, /deep/ .ivu-select-loading {
+        line-height: 30px;
+        height: 30px;
+      }
+      /deep/ .ivu-select-item {
+        line-height: 25px;
+        height: 30px;
+      }
+    }
+    /deep/ .ivu-select-input {
+      height: 40px;
+      font-size: 14px;
+      line-height: 40px;
+    }
+    .put-tab {
+      font-size: 14px;
+      position: relative;
+      span {
+        position: absolute;
+        top: 11px;
+        right: -12px;
+        display: inline-block;
+        width: 2px;
+        height: 22px;
+        background: #ededed;
+        &:nth-child(2) {
+          right: -12px;
+          top: 51px;
+        }
+      }
+      p {
+        width: 120px;
+        padding: 4px 10px 4px 18px;
+        border-bottom: solid 1px #ededed;
+        cursor: pointer;
+        position: relative;
+        &.active {
+          color: @c-button;
+          background: url('./assets/active.png') no-repeat 1px center;
+          background-size: 11px;
+        }
+        &.active::before {
+          display: block;
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 5px;
+          width: 10px;
+          font-size: 14px;
+          color: @c-button;
+        }
+      }
+    }
+    .tabs-active {
+      margin-left: 30px;
+      padding-top: 5px;
+    }
+    .adv-position {
+      font-size: 14px;
+      color: #444;
+      width: 120px;
+      margin-top: 30px;
+      span {
+        display: block;
+        cursor: pointer;
+        margin-bottom: 10px;
+        padding-left: 35px;
+        width: 200px;
+        &.adv-active {
+          font-size: 17px;
+          background: url('./assets/arrow.png') no-repeat left center;
+          background-size: 20px;
+          color: @c-button;
+        }
+      }
+    }
+    /deep/ .ivu-input-icon {
+      height: 40px;
+      line-height: 40px;
+    }
+  }
+  .money {
+    position: absolute;
+    width: 330px;
+    bottom: -2px;
+    z-index: 999;
+    left: 103px;
+    /deep/ .ivu-input-wrapper {
+      width: 160px;
+      input {
+        height: 26px;
+        line-height: 26px;
+        font-size: 12px;
+      }
+    }
+  }
+  .crown {
+    position: absolute;
+    right: 10px;
+    width: 70px;
+    height: 70px;
+    background: url('./assets/crown.png') no-repeat;
+  }
+  /deep/ .custom-monery {
+    .ivu-input-wrapper {
+      width: 150px;
+      input {
+        height: 30px;
+        line-height: 30px;
+      }
+    }
+  }
+  /deep/ .ivu-radio-wrapper {
+    font-size: 14px;
+  }
+  .select-tabs {
+    margin: 30px 0 0 50px;
+    width: 536px;
+    height: 260px;
+  }
+
+  .people-wrap {
+    margin: 36px 0 23px 70px;
+    .ivu-form-item {
+      margin: 0 0 8px 52px;
+    }
+  }
+  .group-title {
+    font-size: 14px;
+    font-weight: normal;
+    margin-bottom: 10px;
+  }
+
+  .form-item-first:first-child {
+    margin-bottom: 20px;
+  }
+
+  .check-item {
+    position: relative;
+    top: 3px;
+    min-width: 80px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    border: 1px solid #d2d2d2;
+    margin-right: 15px;
+    font-size: 14px;
+    user-select: none;
+    /deep/ .ivu-checkbox {
+      display: none;
+    }
+    /deep/&.ivu-checkbox-wrapper-checked {
+      color: #fff;
+      border-color: @c-button;
+      background-color: @c-button;
+    }
+  }
+  .pb3 {
+    padding-bottom: 3px;
+  }
+  .single-result,
+  .single-film-list {
+    margin-left: 130px;
+  }
+  .single-result {
+    color: @c-sub-text;
+  }
+
+  .film-list {
+    display: flex;
+    flex-wrap: wrap;
+    column-count: 3;
+    margin-top: -15px;
+    margin-bottom: 40px;
+  }
+  .single-film-list {
+    display: flex;
+    flex-wrap: wrap;
+    column-count: 4;
+    margin-top: -15px;
+    margin-bottom: 40px;
+  }
+  .film-item {
+    position: relative;
+    width: 270px;
+    margin: 25px 10px 0 0;
+    background:rgba(249, 249, 249, 1);
+    padding-bottom: 5px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .single-film-item {
+    position: relative;
+    width: 180px;
+    margin: 25px 45px 0 0;
+    background:rgba(249, 249, 249, 1);
+    padding-bottom: 5px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .single-film-item-on {
+    &::before {
+      content: '已选影片';
+      background-color: fade(#059bfb, 90%);
+    }
+  }
+  
+  .film-cover-box {
+    position: relative;
+    width: 270px;
+    height: 405px;
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+  .single-cover-box {
+    position: relative;
+    width: 180px;
+    height: 285px;
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+  .film-date {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    font-size: 14px;
+    text-align: center;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  .film-name,
+  .film-tags {
+    line-height: 22px;
+    text-align: center;
+    font-weight: normal;
+  }
+  .film-name {
+    margin-top: 10px;
+  }
+  
+  .form-item-film-name {
+    /deep/ .ivu-input {
+      border-color: @c-button;
+    }
+    /deep/ .ivu-input-search {
+      border-color: @c-button !important;
+      background-color: @c-button !important;
+      &:hover,
+      &:active {
+        border-color: darken(@c-button, 10%) !important;
+        background-color: darken(@c-button, 10%) !important;
+      }
+    }
+  }
