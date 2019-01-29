@@ -118,7 +118,6 @@
       <!-- 投放定向 按单部影片 -->
       <div v-else class="single-wrap">
         <SingCinema v-model="singleObject" :data="tags[0]" />
-
         <FormItem label="地域偏好" class="form-item-age">
           <CheckboxGroup v-model="form.tagTypeCode" class="item-radio-top">
             <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
@@ -535,10 +534,10 @@ export default class Main extends ViewBase {
         deliveryGroups: [
           {
             tagTypeCode: 'MOVIE_TYPE',
-            text: this.cinema.MOVIE_TYPE.includes(0) ? '' : this.cinema.MOVIE_TYPE
+            text: this.cinema.MOVIE_TYPE.includes(0) ? '' : this.formCinema.types
           }
         ],
-        deliveryMovies: this.formCinema.types,
+        deliveryMovies: this.singleObject.id,
         tagTypeCode: this.form.tagTypeCode.includes(0) ? [] : this.form.tagTypeCode
       }
     }
