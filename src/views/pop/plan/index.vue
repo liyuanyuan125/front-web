@@ -2,7 +2,7 @@
   <div class="page home-bg">
     <h2 class="layout-nav-title">创建广告计划</h2>
 
-    <Form :model="form" label-position="left" :label-width="100" class="edit-input forms">
+    <Form :model="form" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
       <h3 class="layout-title">基本信息</h3>
 
       <!-- 投放类型 -->
@@ -129,7 +129,7 @@
 
       <!-- 预算与计费 -->
       <h3 class="layout-title">预算与计费</h3>
-      <FormItem label="总预算/￥" class="form-item-age">
+      <FormItem label="总预算/￥" style="margin-top: 20px" class="form-item-age">
         <radioTab v-model="form.budgetCode" width="100" :tagMess="tagCodes" />
         <FormItem v-if="form.budgetCode == '00-00'" class="money">
           <Input v-model="form.budgetAmount" placeholder="请输入自定义金额"/>万
@@ -324,6 +324,11 @@ export default class Main extends ViewBase {
 
   allFilmList = allFilmList
 
+  get rule() {
+    return {
+
+    }
+  }
   get foundFilmList() {
     return this.allFilmList
   }
@@ -607,8 +612,8 @@ export default class Main extends ViewBase {
   }
 
   // 观测广告片Id
-  @Watch('form.adverId', { deep: true })
-  watchadverId(val: any) {
+  @Watch('form.videoId', { deep: true })
+  watchvideoId(val: any) {
     if (val) {
       this.adverDetail(val)
     }
