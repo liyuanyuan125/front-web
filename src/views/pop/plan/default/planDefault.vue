@@ -1,24 +1,25 @@
 <template>
   <div class="home-bg">
     <h2 class="layout-nav-title">广告计划 > 查看广告计划</h2>
+    <StatusCode :statuCode="status" v-if="status"></StatusCode>
     <h3 class="layout-title">概览</h3>
     <div class="text-rows">
       <Row>
         <Col :span="12">
-          <p><label>投放类型</label> {{items.deliveryType}}</p>
+          <p><label>投放类型</label> {{deliveryType(items.deliveryType)}}</p>
           <p><label>广告计划名称</label> {{items.name}} </p>
-          <p><label>广告片规格</label> {{items.specification}}</p>
-          <p><label>投放排期</label> {{items.beginDate}} ~  {{items.endDate}} </p>
+          <p><label>广告片规格</label> {{items.specification}}s</p>
+          <p><label>投放排期</label> {{formatYell(items.beginDate)}} ~  {{formatYell(items.endDate)}} </p>
           <p><label>档期</label> {{items.calendarName}}</p>
-          <p><label>冻结金额/￥</label> {{items.freezeAmount}} </p>
+          <p><label>冻结金额/￥</label> {{formatNumber(items.freezeAmount)}} </p>
         </Col>
         <Col :span="12">
           <p><label>广告计划ID</label> {{items.id}}</p>
           <p><label>客户名称</label> {{items.customerName}} </p>
           <p><label>关联广告片</label> {{items.videoName}}</p>
-          <p><label>投放天数</label> {{items.cycle}} </p>
-          <p><label>创建时间</label> {{items.approvalTime}}</p>
-          <p><label>计费类型</label> {{items.billingMode}} </p>
+          <p><label>投放天数</label> {{items.cycle}} 天</p>
+          <p><label>创建时间</label> {{formatTimes(items.approvalTime)}}</p>
+          <p><label>计费类型</label> {{billingModeList(items.billingMode)}} </p>
         </Col>
       </Row>
     </div>
@@ -54,17 +55,17 @@
             <div  v-if="sex == 'man'">
                 <i class="gender-text" >男性</i>
                 <i class="age-text" >{{age}}</i>
-                <img width="145" class="gender-img" src="./assets/man.png">
+                <img width="145" class="gender-img" src="../assets/man.png">
             </div>
             <div  v-if="sex == 'woman'">
                 <i class="gender-text" >女性</i>
                 <i class="age-text" >{{age}}</i>
-                <img width="145" class="gender-img" src="./assets/woman.png">
+                <img width="145" class="gender-img" src="../assets/woman.png">
             </div>
             <div  v-if="sex == 'unknow'">
                 <i class="gender-text" >性别不详</i>
                 <i class="age-text" >年龄不详</i>
-                <img width="145" class="gender-img" src="./assets/unknow.png">
+                <img width="145" class="gender-img" src="../assets/unknow.png">
             </div>
             
             <div class="film-type">
@@ -85,11 +86,14 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import CinemaList from './cinemaDlg.vue'
+import StatusCode from './status.vue'
 import { planDefault } from '@/api/plan'
+import { formatTimes, formatYell, formatNumber} from '@/util/validateRules'
 
 @Component({
     components: {
-        CinemaList
+        CinemaList,
+        StatusCode
     }
 })
 export default class PlanDefault extends ViewBase {
@@ -97,6 +101,7 @@ export default class PlanDefault extends ViewBase {
     launchList: any = []
     defaultData: any = []
     tags = []
+    status: any = ''
 
     sex = ''
     age = ''
@@ -106,7 +111,17 @@ export default class PlanDefault extends ViewBase {
         visible: false,
         id: ''
     }
+    get formatYell() {
+        return formatYell
+    }
+    get formatTimes() {
+        return formatTimes
+    }
+    get formatNumber() {
+        return formatNumber
+    }
     async mounted() {
+        this.status = this.$route.params.status
         this.list()
     }
     async list() {
@@ -127,6 +142,26 @@ export default class PlanDefault extends ViewBase {
             this.queryTypeList(types)
         } catch (ex) {
             this.handleError(ex.msg)
+        }
+    }
+    billingModeList(id: any) {
+        const list = this.defaultData.billingModeList
+        if (list) {
+            for (const i of list) {
+                if (i.key == id) {
+                    return i.text
+                }
+            }
+        }
+    }
+    deliveryType(id: any) {
+        const list = this.defaultData.deliveryTypeList
+        if (list) {
+            for (const i of list) {
+                if (i.key == id) {
+                    return i.text
+                }
+            }
         }
     }
     queryAgeList(ary: any[]) {

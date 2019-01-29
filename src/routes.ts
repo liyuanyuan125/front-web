@@ -123,7 +123,7 @@ export default [
   {
     path: '/pop/plan-default/:id/:status',
     name: 'pop-plan-default',
-    component: () => import('./views/pop/plan/planDefault.vue')
+    component: () => import('./views/pop/plan/default/planDefault.vue')
   },
   // 推广管理 - 广告计划 - 生成广告方案
   {

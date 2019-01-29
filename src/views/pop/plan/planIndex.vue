@@ -185,7 +185,7 @@ export default class Plan extends ViewBase {
     {
       id: 2,
       name: '2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院',
-      stauts: 2,
+      stauts: 1,
       specification: '广告片规格',
       videoId: '广告片ID',
       videoName: '广告片名称/ID',
@@ -200,7 +200,7 @@ export default class Plan extends ViewBase {
     {
       id: 1,
       name: '广告计划名称',
-      stauts: 5,
+      stauts: 3,
       specification: '广告片规格',
       videoId: '广告片ID',
       videoName: '广告片名称/ID',
@@ -215,7 +215,22 @@ export default class Plan extends ViewBase {
     {
       id: 3,
       name: '2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院',
-      stauts: 2,
+      stauts: 9,
+      specification: '广告片规格',
+      videoId: '广告片ID',
+      videoName: '广告片名称/ID',
+      cycle: '投放周期',
+      freezeAmount: '冻结金额(元）',
+      settlementStatus: '结算状态',
+      settlementAmount: '广告花费(元）',
+      createTime: 333333333,
+      beginDate: 3333333333,
+      endDate: 333333333333
+    },
+     {
+      id: 3,
+      name: '2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院',
+      stauts: 10,
       specification: '广告片规格',
       videoId: '广告片ID',
       videoName: '广告片名称/ID',
