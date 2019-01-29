@@ -4,7 +4,6 @@
 
     <Form :model="form" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
       <h3 class="layout-title">基本信息</h3>
-
       <!-- 投放类型 -->
       <FormItem label="投放类型" class="item-top select-adv-type">
         <span class="put-active" v-for="item in deliveryTypeList" :key="item.text">
@@ -13,10 +12,10 @@
       </FormItem>
 
       <div class="clear-f">
-        <FormItem class="float-left" label="广告片名称">
+        <FormItem class="float-left" label="广告片名称" prop="name">
           <Input v-model="form.name" placeholder="请输入广告片名称"></Input>
         </FormItem>
-        <FormItem class="float-right pr30" label="关联广告片">
+        <FormItem class="float-right pr30" label="关联广告片" prop="videoId">
           <Select v-model="form.videoId" filterable clearable>
             <Option v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
@@ -191,6 +190,7 @@ export default class Main extends ViewBase {
   tabs = 1
   ding = 0
   selectTab = 'tabs1'
+  auctionName = ''
   allType = true
   putType = 1
   dateObj: any = [
@@ -208,6 +208,7 @@ export default class Main extends ViewBase {
   normCinema: any = []
   singleCinema: any = []
 
+  advertisingName: any = []
   // 选择档期的开始时间 结束时间
   airiesList: any = []
   beginDateId = ''
@@ -326,7 +327,9 @@ export default class Main extends ViewBase {
 
   get rule() {
     return {
-
+      name: [
+        {}
+      ]
     }
   }
   get foundFilmList() {
@@ -406,6 +409,7 @@ export default class Main extends ViewBase {
           item
         }
       } = await advertDetail(id)
+      this.advertisingName = item.name
       this.specification = item.length
       this.customerName = item.customerName
     } catch (ex) {
@@ -493,6 +497,7 @@ export default class Main extends ViewBase {
       videoId: this.form.videoId,
       specification: this.specification,
       customerName: this.customerName,
+      advertisingName: this.advertisingName,
       status: this.form.status,
       budgetCode: this.form.budgetCode,
       budgetAmount: this.form.budgetCode == '00-00' ? this.form.budgetAmount : ''
@@ -509,7 +514,8 @@ export default class Main extends ViewBase {
       schedule = {
         beginDate: Number(moment(this.beginDateId).format(timeFormats)),
         endDate: Number(moment(this.endDateId).format(timeFormats)),
-        calendarId: this.form.calendarId
+        calendarId: this.form.calendarId,
+        customerName: this.customerName
       }
     }
 
@@ -625,6 +631,7 @@ export default class Main extends ViewBase {
     if (val) {
       this.beginDateId = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].beginDate)
       this.endDateId = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].endDate)
+      this.customerName = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].name)
     }
   }
 }
