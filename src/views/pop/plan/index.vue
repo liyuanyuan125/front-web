@@ -546,7 +546,7 @@ export default class Main extends ViewBase {
     }
     const index = Math.floor(Math.random() * 100 + 1)
     sessionStorage.setItem(`${index}`, addObject)
-    this.$router.push({ name: 'pop-plan-scheme' })
+    this.$router.push({ name: 'pop-plan-scheme', params: { id: index} })
   }
 
   mounted() {
