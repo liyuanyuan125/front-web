@@ -39,10 +39,10 @@
 
       <!-- 投放排期 自定义时间 -->
       <div class="clear-f" key="save" v-if="dateType == 1">
-        <FormItem class="tag-date float-left" label="开始时间">
+        <FormItem class="tag-date float-left" label="开始时间" prop="beginDate">
           <DatePicker type="date" v-model="form.beginDate" :options="startDate" placeholder="请选择开始时间"></DatePicker>
         </FormItem>
-        <FormItem class="tag-date float-right pr130" label="结束时间">
+        <FormItem class="tag-date float-right pr130" label="结束时间" prop="endDate">
           <DatePicker type="date" v-model="form.endDate" :options="endDate" placeholder="请选择结束时间"></DatePicker>
         </FormItem>
       </div>
@@ -50,10 +50,10 @@
       <!-- 投放排期 按热门档期 -->
       <div v-else key="edited" class="checkd">
         <div class="clear-f">
-          <FormItem class="tag-date float-left" label="选择年份">
+          <FormItem class="tag-date float-left" label="选择年份" prop="year">
             <DatePicker type="year" v-model="form.year" @on-change="diaries()" placeholder="请选择年份"></DatePicker>
           </FormItem>
-          <FormItem class="tag-date float-right pr130" label="选择档期">
+          <FormItem class="tag-date float-right pr130" label="选择档期" prop="calendarId">
             <Select style="width: 300px" :disabled="!form.year" v-model="form.calendarId" filterable clearable>
               <Option v-for="(item, index) in airiesList" :value="item.id" :key="index">{{ item.name }}</Option>
             </Select>
@@ -91,7 +91,8 @@
         <!-- <div class="city-wrap">
         </div> -->
         <FormItem v-if="index != 3" v-for="(item, index) in tags" :key="index" :label="item.name" :class="['form-item-age', index == 0 ? 'pb3' : '']">
-          <CheckboxGroup v-model="cinema[item.code]" class="item-radio-top">
+          <radioTab v-if="index != 0" v-model="cinema[item.code]" :tagMess="item.values" />
+          <CheckboxGroup v-else v-model="cinema[item.code]" class="item-radio-top">
             <Checkbox :class="index == 0 ? 'check-item form-item-first' : 'check-item'" :label="0">不限</Checkbox>
             <Checkbox v-for="it in item.values" :key="it.key" :label="it.key"
               class="check-item">{{it.text}}</Checkbox>
@@ -128,14 +129,14 @@
 
       <!-- 预算与计费 -->
       <h3 class="layout-title">预算与计费</h3>
-      <FormItem label="总预算/￥" style="margin-top: 20px" class="form-item-age">
-        <radioTab v-model="form.budgetCode" width="100" :tagMess="tagCodes" />
-        <FormItem v-if="form.budgetCode == '00-00'" class="money">
+      <FormItem label="总预算/￥" style="margin-top: 20px" class="form-cell">
+        <radioTab typeName='1' v-model="form.budgetCode" width="100" :tagMess="tagCodes" />
+        <FormItem v-if="form.budgetCode == '00-00'" prop="money" class="money">
           <Input v-model="form.budgetAmount" placeholder="请输入自定义金额"/>万
         </FormItem>
       </FormItem>
       <FormItem label="计算方式">
-        <radioTab v-model="form.status" width="100" :tagMess="billingModeList" />
+        <radioTab v-model="form.status" typeName='1' width="100" :tagMess="billingModeList" />
       </FormItem>
     </Form>
 
@@ -152,6 +153,7 @@ import { cityList, City, sexList, ageStageList, filmHobbyList,
   areaTypeList, filmList as allFilmList, Film } from './types'
 import CitySelect from './citySelect.vue'
 import Tags from './tag.vue'
+import { info } from '@/ui/modal.ts'
 import CinemaNum from './comcinema/cinemaNum.vue'
 import radioTab from './radioTab.vue'
 import { drairesList, beforePlan, advertising, advertDetail, cinemaList } from '@/api/popPlan.ts'
@@ -259,8 +261,8 @@ export default class Main extends ViewBase {
   // 标准投放影片类型
   cinema: any = {
     MOVIE_TYPE: [ 0 ],
-    PLAN_GROUP_AGE: [ 0 ],
-    PLAN_GROUP_SEX: [ 0 ]
+    PLAN_GROUP_AGE: 0,
+    PLAN_GROUP_SEX: 0
   }
 
   // 单步影片投放类型
@@ -284,8 +286,6 @@ export default class Main extends ViewBase {
     budgetAmount: null,
     status: 1,
     budgetCode: '00-50',
-    vacation: '春节档',
-    totalMonery: '50万以下',
     bill: '按人次计费',
     custom: '',
     venueType: [],
@@ -326,9 +326,39 @@ export default class Main extends ViewBase {
   allFilmList = allFilmList
 
   get rule() {
+    const moneyvalidator = ( rules: any, value: any, callback: any) => {
+      if (this.form.budgetCode != '00-00') {
+        callback()
+      } else {
+        const msg = value + ''
+        if (msg.length > 0) {
+          callback()
+        } else {
+          callback(new Error('请输入指定金额'))
+        }
+      }
+    }
     return {
       name: [
-        {}
+        { required: true, message: '请输入广告片名称', trigger: 'change' }
+      ],
+      videoId: [
+        { required: true, message: '请选择关联广告片', trigger: 'change' }
+      ],
+      beginDate: [
+        { required: true, type: 'date', message: '请选择开始时间', trigger: 'change' }
+      ],
+      year: [
+        { required: true, type: 'date', message: '请选择年份', trigger: 'change' }
+      ],
+      endDate: [
+        { required: true, type: 'date', message: '请选择结束时间', trigger: 'change' }
+      ],
+      calendarId: [
+        { required: true, message: '请选择档期', trigger: 'change', type: 'number' }
+      ],
+      money: [
+        { validator: moneyvalidator }
       ]
     }
   }
@@ -531,11 +561,11 @@ export default class Main extends ViewBase {
           },
           {
             tagTypeCode: 'PLAN_GROUP_AGE',
-            text: this.cinema.PLAN_GROUP_AGE.includes(0) ? '' : this.cinema.PLAN_GROUP_AGE
+            text: this.cinema.PLAN_GROUP_AGE == 0 ? '' : this.cinema.PLAN_GROUP_AGE
           },
           {
             tagTypeCode: 'PLAN_GROUP_SEX',
-            text: this.cinema.PLAN_GROUP_SEX.includes(0) ? '' : this.cinema.PLAN_GROUP_SEX
+            text: this.cinema.PLAN_GROUP_SEX == 0 ? '' : this.cinema.PLAN_GROUP_SEX
           }
         ]
       }
@@ -568,35 +598,18 @@ export default class Main extends ViewBase {
   @Watch('cinema.MOVIE_TYPE', { deep: true })
   watchMOVIE_TYPE(value: any, oldValue: any) {
     // 不限与其他项互斥
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.cinema.MOVIE_TYPE = newValue
-    })
-    if (value.length == 0) {
-      this.cinema.MOVIE_TYPE = [0]
+    if (value.length > 3) {
+      info('电影类型最多选3项')
+      this.cinema.MOVIE_TYPE = value.slice(0, 3)
+    } else {
+      keepExclusion(value, oldValue, 0, newValue => {
+        this.cinema.MOVIE_TYPE = newValue
+      })
+      if (value.length == 0) {
+        this.cinema.MOVIE_TYPE = [0]
+      }
+      this.cinemaFind()
     }
-    this.cinemaFind()
-  }
-
-  @Watch('cinema.PLAN_GROUP_AGE', { deep: true })
-  watchPLAN_GROUP_AGE(value: number[], oldValue: number[]) {
-    // 不限与其他项互斥
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.cinema.PLAN_GROUP_AGE = newValue
-    })
-    if (value.length == 0) {
-      this.cinema.PLAN_GROUP_AGE = [0]
-    }
-  }
-  @Watch('cinema.PLAN_GROUP_SEX', { deep: true })
-  watchPLAN_GROUP_SEX(value: number[], oldValue: number[]) {
-    // 不限与其他项互斥
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.cinema.PLAN_GROUP_SEX = newValue
-    })
-    if (value.length == 0) {
-      this.cinema.PLAN_GROUP_SEX = [0]
-    }
-    this.cinemaFind()
   }
 
   @Watch('form.tagTypeCode', { deep: true })

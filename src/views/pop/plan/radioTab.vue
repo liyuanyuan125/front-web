@@ -1,8 +1,8 @@
 <template>
   <div class="page">
-      <div @click="active(item.key)" :style="{width: width + 'px'}" :class="['tag', invalue == item.key ? 'activeClass' : '']" v-for="item in tagMess" :key="item.key">
-        {{item.text}}
-      </div>
+    <div @click="active(item.key)" :style="{width: width + 'px'}" :class="['tag', invalue == item.key ? 'activeClass' : '']" v-for="item in msg" :key="item.key">
+      {{item.text}}
+    </div>
   </div>
 </template>
 
@@ -13,10 +13,24 @@ import ViewBase from '@/util/ViewBase'
 @Component
 export default class Main extends ViewBase {
     @Prop({default: 1}) value!: number
+    @Prop() typeName!: any
     @Prop({type: Array, default: () => []}) tagMess!: any[]
     @Prop({default: () => 80}) width: any
     invalue = this.value
-
+    get msg() {
+      let msg = [...this.tagMess]
+      if (this.typeName != '1') {
+        msg = msg.filter((item: any) => item.text != '未知')
+        const flag = this.tagMess.map((it: any) => it.text).includes('不限')
+        if (!flag) {
+          msg.unshift({
+            text: '不限',
+            key: 0
+          })
+        }
+      }
+      return msg
+    }
     active(id: any) {
       this.invalue = id
       this.$emit('input', this.invalue)
@@ -29,9 +43,6 @@ export default class Main extends ViewBase {
   display: flex;
   flex-wrap: wrap;
   margin-top: 5px;
-  .tag:first-child {
-    margin-bottom: 20px;
-  }
   .tag {
     box-sizing: content-box;
     text-align: center;
@@ -50,5 +61,8 @@ export default class Main extends ViewBase {
     background: rgba(254, 129, 53, 1);
     border: 1px solid rgba(254, 129, 53, 1);
   }
+}
+.form-cell .tag:first-child {
+  margin-bottom: 20px;
 }
 </style>
