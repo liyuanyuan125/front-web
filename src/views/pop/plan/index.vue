@@ -2,7 +2,7 @@
   <div class="page home-bg">
     <h2 class="layout-nav-title">创建广告计划</h2>
 
-    <Form :model="form" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
+    <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
       <h3 class="layout-title">基本信息</h3>
       <!-- 投放类型 -->
       <FormItem label="投放类型" class="item-top select-adv-type">
@@ -131,7 +131,7 @@
       <h3 class="layout-title">预算与计费</h3>
       <FormItem label="总预算/￥" style="margin-top: 20px" class="form-cell">
         <radioTab typeName='1' v-model="form.budgetCode" width="100" :tagMess="tagCodes" />
-        <FormItem v-if="form.budgetCode == '00-00'" prop="money" class="money">
+        <FormItem v-if="form.budgetCode == '00-00'" prop="budgetAmount" class="money">
           <Input v-model="form.budgetAmount" placeholder="请输入自定义金额"/>万
         </FormItem>
       </FormItem>
@@ -141,7 +141,7 @@
     </Form>
 
     <div class="btn-center">
-      <Button type="primary" class="button-ok" @click="createSolutions">生成投放方案</Button>
+      <Button type="primary" class="button-ok" @click="createSolutions('dataform')">生成投放方案</Button>
     </div>
   </div>
 </template>
@@ -330,11 +330,14 @@ export default class Main extends ViewBase {
       if (this.form.budgetCode != '00-00') {
         callback()
       } else {
-        const msg = value + ''
-        if (msg.length > 0) {
-          callback()
-        } else {
+        const msg: any = value + ''
+        const reg = /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+        if (msg.length == 0) {
           callback(new Error('请输入指定金额'))
+        } else if (!reg.test(msg)) {
+          callback(new Error('金额格式不正确'))
+        } else {
+          callback()
         }
       }
     }
@@ -357,7 +360,7 @@ export default class Main extends ViewBase {
       calendarId: [
         { required: true, message: '请选择档期', trigger: 'change', type: 'number' }
       ],
-      money: [
+      budgetAmount: [
         { validator: moneyvalidator }
       ]
     }
@@ -520,7 +523,11 @@ export default class Main extends ViewBase {
     this.form.filmIdSelected = film.id
   }
 
-  createSolutions() {
+  async createSolutions(dataform: any) {
+    const volid = await (this.$refs[dataform] as any).validate()
+    if (!volid) {
+      return
+    }
     const query = {
       deliveryType: 1,
       name: this.form.name,
