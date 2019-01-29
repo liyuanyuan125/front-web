@@ -7,7 +7,9 @@
 
       <!-- 投放类型 -->
       <FormItem label="投放类型" class="item-top select-adv-type">
-        <span v-for="item in deliveryTypeList" :key="item.text">{{item.text}}</span>
+        <span class="put-active" v-for="item in deliveryTypeList" :key="item.text">
+          <img src="./assets/icon3.png"/>
+        {{item.text}}</span>
       </FormItem>
 
       <div class="clear-f">
@@ -72,7 +74,8 @@
       <h3 class="layout-title">投放定向</h3>
 
       <FormItem label="投放类型" class="item-top select-adv-type">
-        <span :class="['put', putType== item.key ? 'put-active' : '']" v-for="item in directionTypeList" @click="putActive(item.key)" :key="item.key">
+        <span :class="['put', putType== item.key ? 'put-active' : '']" v-for="(item, index) in directionTypeList" @click="putActive(item.key)" :key="item.key">
+          <b :class="`put-icon${index + 1}`"></b>
           {{item.text}}
         </span>
       </FormItem>
@@ -544,9 +547,9 @@ export default class Main extends ViewBase {
       ...schedule,
       ...direction
     }
-    const index = Math.floor(Math.random() * 100 + 1)
-    sessionStorage.setItem(`${index}`, addObject)
-    this.$router.push({ name: 'pop-plan-scheme' })
+    const index: any = Math.floor(Math.random() * 100 + 1)
+    sessionStorage.setItem(`${index}`, JSON.stringify(addObject))
+    this.$router.push({ name: 'pop-plan-scheme', params: { id: index}})
   }
 
   mounted() {
