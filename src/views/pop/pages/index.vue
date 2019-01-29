@@ -211,11 +211,12 @@
             <img class='pi-three' src="./assets/匹配度三.png" alt="">
             <Col :span='20'>
               <Col :span="5" class='sp-c' v-for='(it , index) in tuifilm' :key='index'>
-                <dl @click='showimg(index)' :class="['cinema-img',  {'cinema-img-active ': showClassimg}]">
+                <dl  @click="selectFilm(it.id)" :class="['cinema-img',  {'cinema-img-active ': showClassimg}]">
+                  <div class="cinema-check" v-if="cinemaIdArray.includes(it.id)"></div>
                   <dd class='s-img'>
                     <img class='img' :src=it.mainPicUrl alt="">
                     <div>上映日期：{{it.openTime}}</div>
-                    <img class='posimg' src='./assets/已选.png' alt=''>
+                    <!-- <img class='posimg' src='./assets/已选.png' alt='' v-if="cinemaIdArray.includes(it.id)"> -->
                   </dd>
                   <dt>《{{it.name}}》</dt>
                   <dt><span v-for='(item , index) in it.type' :key='index'>{{item}}/</span></dt>
@@ -282,7 +283,7 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DlgDetail from './dlgdetail.vue'
-import dlgCinema from './dlgCinema.vue'
+import dlgCinema from '../plan/default/cinemaDlg.vue'
 import CitySelect from '../plan/citySelect.vue'
 import { toMap } from '@/fn/array'
 import moment from 'moment'
@@ -361,6 +362,9 @@ export default class Main extends ViewBase {
   tuifilm: any = []
   // yingyuan
   cinemaList: any = []
+
+  cinemaIdArray: any = []
+
 
   dataFrom: any = {
     type: '1', // 方案类型
@@ -475,8 +479,19 @@ export default class Main extends ViewBase {
     // }
   }
 
+  selectFilm(id: any) {
+    // console.log(123)
+    if (!this.cinemaIdArray.includes(id)) {
+      this.cinemaIdArray.push(id)
+    } else {
+      this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+    }
+  }
+
   mounted() {
     this.seach()
+    // console.log(this.$route.params.id)
+    // console.log(sessionStorage.getItem(this.$route.params.id))
   }
 
   async seach() {
@@ -515,6 +530,16 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.cinema-check {
+  position: absolute;
+  left: -5px;
+  right: -5px;
+  top: -5px;
+  bottom: -5px;
+  z-index: 8;
+  border: 5px solid #fe8135;
+  background: url('./assets/已选.png') no-repeat top right;
+}
 .colBg {
   font-size: 18px;
   font-weight: 400;
