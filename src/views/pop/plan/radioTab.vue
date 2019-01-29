@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-      <div @click="active(item.key)" :class="['tag', invalue == item.key ? 'activeClass' : '']" v-for="item in tagMess" :key="item.key">
+      <div @click="active(item.key)" :style="{width: width + 'px'}" :class="['tag', invalue == item.key ? 'activeClass' : '']" v-for="item in tagMess" :key="item.key">
         {{item.text}}
       </div>
   </div>
@@ -14,6 +14,7 @@ import ViewBase from '@/util/ViewBase'
 export default class Main extends ViewBase {
     @Prop({default: 1}) value!: number
     @Prop({type: Array, default: () => []}) tagMess!: any[]
+    @Prop({default: () => 80}) width: any
     invalue = this.value
 
     active(id: any) {
@@ -26,7 +27,11 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 .page {
   display: flex;
+  flex-wrap: wrap;
   margin-top: 5px;
+  .tag:first-child {
+    margin-bottom: 20px;
+  }
   .tag {
     box-sizing: content-box;
     text-align: center;

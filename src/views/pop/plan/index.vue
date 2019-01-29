@@ -15,15 +15,15 @@
           <Input v-model="form.name" placeholder="请输入广告片名称"></Input>
         </FormItem>
         <FormItem class="float-right pr30" label="关联广告片">
-          <Select v-model="form.adverId" filterable clearable>
+          <Select v-model="form.videoId" filterable clearable>
             <Option v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
         </FormItem>
       </div>
 
-      <div class="clear-f" v-if="form.adverId">
+      <div class="clear-f" v-if="form.videoId">
         <FormItem class="float-left pr30" label="广告片规格">
-          <div class="xad"><span>{{length}}</span></div>
+          <div class="xad"><span>{{specification}}</span></div>
         </FormItem>
         <FormItem class="float-right pr30" label="选择客户">
           <div class="xad"><span>{{customerName}}</span></div>
@@ -88,15 +88,15 @@
         </div>
         <!-- <div class="city-wrap">
         </div> -->
-        <FormItem v-for="(item, index) in tags" :key="index" :label="item.name" class="form-item-age">
+        <FormItem v-if="index != 3" v-for="(item, index) in tags" :key="index" :label="item.name" :class="['form-item-age', index == 0 ? 'pb3' : '']">
           <CheckboxGroup v-model="cinema[item.code]" class="item-radio-top">
-            <Checkbox class="check-item" :label="0">不限</Checkbox>
+            <Checkbox :class="index == 0 ? 'check-item form-item-first' : 'check-item'" :label="0">不限</Checkbox>
             <Checkbox v-for="it in item.values" :key="it.key" :label="it.key"
               class="check-item">{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
 
-        <FormItem label="推荐影片" class="form-item-age">
+        <FormItem label="推荐影片" class="form-item-type-sort">
           <ul class="film-list">
             <li v-for="(it, index) in normCinema" :key="it.id"
               :class="['film-item']">
@@ -114,120 +114,32 @@
 
       <!-- 投放定向 按单部影片 -->
       <div v-else class="single-wrap">
-        <SingCinema :data="tags[0]" />
-        <!-- <FormItem :label="tags[0].name" class="form-item-film-type">
-          <CheckboxGroup v-model="form.filmType" class="float">
-            <Checkbox
-              v-for="it in tags[0].values"
-              :key="it.key"
-              :label="it.key"
-              class="check-item"
-            >{{it.text}}</Checkbox>
+        <SingCinema v-model="singleObject" :data="tags[0]" />
+
+        <FormItem label="地域偏好" class="form-item-age">
+          <CheckboxGroup v-model="form.tagTypeCode" class="item-radio-top">
+            <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
+            <Checkbox v-for="it in tags[3].values" :key="it.key" :label="it.key"
+              class="check-item">{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
-
-        <FormItem label="上映时间" class="form-item-film-type">
-          <CheckboxGroup v-model="form.filmType" class="float">
-            <Checkbox class="check-item" :label="0">不限</Checkbox>
-            <Checkbox
-              :label="1"
-              class="check-item"
-            >指定时间段</Checkbox>
-          </CheckboxGroup>
-        </FormItem>
-
-        <FormItem label="选择影片" class="form-item-film-name">
-          <Input
-            v-model="form.filmName"
-            class="input-film-name"
-            placeholder="输入影片名字"
-            search
-            enter-button
-          />
-        </FormItem>
-
-        <p class="single-result" v-if="foundFilmList.length > 0">已为您匹配以下{{foundFilmList.length}}部影片：</p>
-
-        <ul class="single-film-list" v-if="foundFilmList.length > 0">
-          <li v-for="it in foundFilmList" :key="it.id" @click="selectFilm(it)"
-            :class="['single-film-item',
-            form.filmIdSelected == it.id ? 'single-film-item-on' : '']">
-            <div class="film-cover-box">
-              <img :src="it.cover" class="film-cover">
-              <div class="film-date">上映时间：{{it.date}}</div>
-            </div>
-            <h4 class="film-name">{{it.name}}</h4>
-            <div class="film-tags">{{it.type}}</div>
-          </li>
-        </ul> -->
       </div>
-
-      <FormItem label="场馆类型" class="item-top" v-if="!isRefBefore">
-        <span
-          class="float check-type all-type"
-          @click="handleAllType"
-          :class="{checked: allType}"
-        >不限</span>
-        <CheckboxGroup v-model="form.venueType" @on-change="handleVenue" class="float">
-          <Checkbox
-            label="剧院"
-            class="check-type"
-            :class="{checked: form.venueType.includes('剧院') }"
-          />
-          <Checkbox
-            label="剧场"
-            class="check-type"
-            :class="{checked: form.venueType.includes('剧场') }"
-          />
-          <Checkbox
-            label="文化馆"
-            class="check-type"
-            :class="{checked: form.venueType.includes('文化馆') }"
-          />
-          <Checkbox
-            label="体育馆"
-            class="check-type"
-            :class="{checked: form.venueType.includes('体育馆') }"
-          />
-          <Checkbox
-            label="商场"
-            class="check-type"
-            :class="{checked: form.venueType.includes('商场') }"
-          />
-          <Checkbox
-            label="写字楼"
-            class="check-type"
-            :class="{checked: form.venueType.includes('写字楼') }"
-          />
-        </CheckboxGroup>
-      </FormItem>
 
       <!-- 预算与计费 -->
       <h3 class="layout-title">预算与计费</h3>
-
       <FormItem label="总预算/￥" class="form-item-age">
-        <CheckboxGroup v-model="form.age" class="item-radio-top">
-          <Checkbox :label="item.label" v-for="item in tagCodes" :key="item.key" class="check-item">
-            {{item.text}}
-          </Checkbox>
-          <Checkbox label="指定金额" class="check-item">
-            指定金额
-            <em v-if="form.totalMonery == '指定金额'" class="custom-monery">
-              <Input v-model="form.custom" placeholder="请输入自定义金额"/>万
-            </em>
-          </Checkbox>
-        </CheckboxGroup>
+        <radioTab v-model="form.budgetCode" width="100" :tagMess="tagCodes" />
+        <FormItem v-if="form.budgetCode == '00-00'" class="money">
+          <Input v-model="form.budgetAmount" placeholder="请输入自定义金额"/>万
+        </FormItem>
       </FormItem>
-
       <FormItem label="计算方式">
-        <RadioGroup v-model="form.bill" class="item-radio-top">
-          <Radio label="按人次计费"></Radio>
-        </RadioGroup>
+        <radioTab v-model="form.status" width="100" :tagMess="billingModeList" />
       </FormItem>
     </Form>
 
     <div class="btn-center">
-      <Button type="primary" class="button-ok">生成投放方案</Button>
+      <Button type="primary" class="button-ok" @click="createSolutions">生成投放方案</Button>
     </div>
   </div>
 </template>
@@ -246,6 +158,7 @@ import moment from 'moment'
 import SingCinema from './singcinema.vue'
 
 const timeFormat = 'YYYY-MM-DD'
+const timeFormats = 'YYYYMMDD'
 
 // 保持互斥
 const keepExclusion = <T>(
@@ -300,7 +213,7 @@ export default class Main extends ViewBase {
 
   // 关联广告片
   adverList: any = []
-  length: any = ''
+  specification: any = ''
   customerName: any = ''
   // 计费方式
   billingModeList: any = []
@@ -326,6 +239,7 @@ export default class Main extends ViewBase {
   // 统计
   statisticsResults: any = []
 
+  singleObject: any = {}
   // 时间格式
   dateType: number = 1
   startDate: any = {
@@ -356,6 +270,7 @@ export default class Main extends ViewBase {
   form = {
     putType: 'refBefore',
     name: '',
+    videoId: '',
     adverId: null,
     year: '',
     calendarId: '',
@@ -363,12 +278,15 @@ export default class Main extends ViewBase {
     endDate: '',
     advType: '',
     date: '',
+    budgetAmount: null,
+    status: 1,
+    budgetCode: '00-50',
     vacation: '春节档',
     totalMonery: '50万以下',
     bill: '按人次计费',
     custom: '',
     venueType: [],
-
+    tagTypeCode: [0],
     // 定向类型
     type: 1,
     areaType: '',
@@ -414,19 +332,10 @@ export default class Main extends ViewBase {
     this.cinemaFind()
   }
 
-  // amountList = [
-  //   { key: 1, label: '50万以下' },
-  //   { key: 2, label: '50~100万以下' },
-  //   { key: 4, label: '100~300万以下' },
-  //   { key: 5, label: '300~500万以下' },
-  //   { key: 6, label: '500~800万以下' },
-  //   { key: 7, label: '800~1000万以下' },
-  //   { key: 8, label: '1000万以上' }
-  // ]
-
   formatDate(data: any) {
     return moment(data).format(timeFormat)
   }
+
   async beforePlan() {
     try {
       const {
@@ -447,8 +356,9 @@ export default class Main extends ViewBase {
       this.statusList = this.filtertion(statusList)
       this.tags = tags
       this.statisticsResults = statisticsResults
+      const cell = tagCodes.shift()
       this.typeList = this.filtertion(typeList)
-      this.tagCodes = tagCodes
+      this.tagCodes = [ ...tagCodes, cell]
     } catch (ex) {
       this.handleError(ex)
     }
@@ -489,7 +399,7 @@ export default class Main extends ViewBase {
           item
         }
       } = await advertDetail(id)
-      this.length = item.length
+      this.specification = item.length
       this.customerName = item.customerName
     } catch (ex) {
       this.handleError(ex)
@@ -569,13 +479,77 @@ export default class Main extends ViewBase {
     this.form.filmIdSelected = film.id
   }
 
+  createSolutions() {
+    const query = {
+      deliveryType: 1,
+      name: this.form.name,
+      videoId: this.form.videoId,
+      specification: this.specification,
+      customerName: this.customerName,
+      status: this.form.status,
+      budgetCode: this.form.budgetCode,
+      budgetAmount: this.form.budgetCode == '00-00' ? this.form.budgetAmount : ''
+    }
+
+    // 排期
+    let schedule: any = {}
+    if (this.dateType == 1) {
+      schedule = {
+        beginDate: Number(moment(this.form.beginDate).format(timeFormats)),
+        endDate: Number(moment(this.form.endDate).format(timeFormats))
+      }
+    } else {
+      schedule = {
+        beginDate: Number(moment(this.beginDateId).format(timeFormats)),
+        endDate: Number(moment(this.endDateId).format(timeFormats)),
+        calendarId: this.form.calendarId
+      }
+    }
+
+    // 投放定向
+    let direction: any = {}
+    if (this.putType == 1) {
+      direction = {
+        directionType: this.putType,
+        deliveryGroups: [
+          {
+            tagTypeCode: 'MOVIE_TYPE',
+            text: this.cinema.MOVIE_TYPE.includes(0) ? '' : this.cinema.MOVIE_TYPE
+          },
+          {
+            tagTypeCode: 'PLAN_GROUP_AGE',
+            text: this.cinema.PLAN_GROUP_AGE.includes(0) ? '' : this.cinema.PLAN_GROUP_AGE
+          },
+          {
+            tagTypeCode: 'PLAN_GROUP_SEX',
+            text: this.cinema.PLAN_GROUP_SEX.includes(0) ? '' : this.cinema.PLAN_GROUP_SEX
+          }
+        ]
+      }
+    } else {
+      direction = {
+        directionType: this.putType,
+        deliveryGroups: [
+          {
+            tagTypeCode: 'MOVIE_TYPE',
+            text: this.cinema.MOVIE_TYPE.includes(0) ? '' : this.cinema.MOVIE_TYPE
+          }
+        ],
+        deliveryMovies: this.formCinema.types,
+        tagTypeCode: this.form.tagTypeCode.includes(0) ? [] : this.form.tagTypeCode
+      }
+    }
+    const addObject = {
+      ...query,
+      ...schedule,
+      ...direction
+    }
+    const index = Math.floor(Math.random() * 100 + 1)
+    sessionStorage.setItem(`${index}`, addObject)
+    this.$router.push({ name: 'pop-plan-scheme' })
+  }
+
   mounted() {
-    // const handler = () => {
-    //   this.$router.push({ name: 'pop-planps' })
-    //   event.off(systemSwitched, handler)
-    //   return false
-    // }
-    // event.on(systemSwitched, handler)
   }
 
   @Watch('cinema.MOVIE_TYPE', { deep: true })
@@ -600,7 +574,6 @@ export default class Main extends ViewBase {
       this.cinema.PLAN_GROUP_AGE = [0]
     }
   }
-
   @Watch('cinema.PLAN_GROUP_SEX', { deep: true })
   watchPLAN_GROUP_SEX(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
@@ -613,13 +586,16 @@ export default class Main extends ViewBase {
     this.cinemaFind()
   }
 
-  // @Watch('form.filmHobby', { deep: true })
-  // watchFilmHobby(value: number[], oldValue: number[]) {
-  //   // 不限与其他项互斥
-  //   keepExclusion(value, oldValue, 0, newValue => {
-  //     this.form.filmHobby = newValue
-  //   })
-  // }
+  @Watch('form.tagTypeCode', { deep: true })
+  watchformtagTypeCode(value: number[], oldValue: number[]) {
+    // 不限与其他项互斥
+    keepExclusion(value, oldValue, 0, newValue => {
+      this.form.tagTypeCode = newValue
+    })
+    if (value.length == 0) {
+      this.form.tagTypeCode = [0]
+    }
+  }
 
   @Watch('form.filmType', { deep: true })
   watchfilmType(value: number[], oldValue: number[]) {

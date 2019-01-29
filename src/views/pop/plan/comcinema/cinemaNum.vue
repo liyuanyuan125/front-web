@@ -61,19 +61,19 @@
       <div class="cinema-right">
         <dl>
           <dt><img src="../assets/check.png" alt=""><span>覆盖区域</span></dt>
-          <dd>{{areaCount}}个</dd>
+          <dd>个</dd>
         </dl>
         <dl>
           <dt><img src="../assets/check.png" alt=""><span>覆盖省份</span></dt>
-          <dd>{{provinceCount}}个</dd>
+          <dd>个</dd>
         </dl>
         <dl>
           <dt><img src="../assets/check.png" alt=""><span>覆盖城市</span></dt>
-          <dd>{{cityCount}}个</dd>
+          <dd>个</dd>
         </dl>
         <dl>
           <dt><img src="../assets/check.png" alt=""><span>覆盖影院</span></dt>
-          <dd>{{cinemaCount}}个</dd>
+          <dd>个</dd>
         </dl>
       </div>
     </div>
@@ -103,26 +103,6 @@ export default class Main extends ViewBase {
 
   form: any = {
 
-  }
-
-  get areaCount() {
-    const data = this.data.categorizedByAreaCode || []
-    return data.length
-  }
-
-  get provinceCount() {
-    const data = this.data.categorizedByProvinceId || []
-    return data.length
-  }
-
-  get cityCount() {
-    const data = this.data.categorizedByCityId || []
-    return data.length
-  }
-
-  get cinemaCount() {
-    const data = this.data.categorizedByCityId || []
-    return data.length
   }
 }
 </script>

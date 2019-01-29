@@ -16,7 +16,9 @@
   .form-item-type {
     margin-top: 35px;
   }
-  
+  .form-item-type-sort {
+    margin-top: 15px;
+  }
   .orient-tabs {
     margin-top: 4px;
     label {
@@ -225,27 +227,20 @@
       line-height: 40px;
     }
   }
-  
-  .img-rank1 {
+  .money {
     position: absolute;
-    left: 10px;
-    width: 70px;
-    height: 70px;
-    background: url('./assets/rank1.png') no-repeat;
-  }
-  .img-rank2 {
-    position: absolute;
-    left: 10px;
-    width: 70px;
-    height: 70px;
-    background: url('./assets/rank2.png') no-repeat;
-  }
-  .img-rank3 {
-    position: absolute;
-    left: 10px;
-    width: 70px;
-    height: 70px;
-    background: url('./assets/rank3.png') no-repeat;
+    width: 330px;
+    bottom: -2px;
+    z-index: 999;
+    left: 103px;
+    /deep/ .ivu-input-wrapper {
+      width: 160px;
+      input {
+        height: 26px;
+        line-height: 26px;
+        font-size: 12px;
+      }
+    }
   }
   .crown {
     position: absolute;
@@ -284,6 +279,10 @@
     margin-bottom: 10px;
   }
 
+  .form-item-first:first-child {
+    margin-bottom: 20px;
+  }
+
   .check-item {
     position: relative;
     top: 3px;
@@ -304,7 +303,9 @@
       background-color: @c-button;
     }
   }
-
+  .pb3 {
+    padding-bottom: 3px;
+  }
   .single-result,
   .single-film-list {
     margin-left: 130px;

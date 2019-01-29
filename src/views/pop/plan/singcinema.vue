@@ -3,7 +3,7 @@
     <Form :model="form" label-position="left" :label-width="100" class="edit-input forms">
       <FormItem :label="data.name" class="form-item-film-type">
         <CheckboxGroup v-model="types" class="float">
-          <Checkbox class="check-item" :label="0">不限</Checkbox>
+          <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
           <Checkbox
             v-for="it in data.values"
             :key="it.key"
@@ -36,8 +36,11 @@
         />
       </FormItem>
     </Form>
-    <p class="single-result" v-if="length.length > 0">已为您匹配以下{{length.length}}部影片：</p>
-
+    <div class="flex-box">
+      <p class="single-length" v-if="length > 0">已为您匹配以下{{length}}部影片：</p>
+      <p class="red">已选中{{cinemaIdArray.length}}部影片</p>
+    </div>
+    
     <ul class="single-film-list" v-if="length > 0">
       <li v-for="(it, index) in cinemaList" :key="index" @click="selectFilm(it.id)"
       :class="['single-film-item']">
@@ -106,6 +109,15 @@ export default class Main extends ViewBase {
     return this.cinemaList.length > 0 ? this.cinemaList.map((it: any) => it.id) : []
   }
 
+  get parents() {
+    return {
+      id: this.cinemaIdArray,
+      name: this.form.name,
+      startTime: this.showTime[0] ? Number(moment(this.showTime[0]).format(timeFormat)) : '',
+      endTime: this.showTime[1] ? Number(moment(this.showTime[1]).format(timeFormat)) : '',
+      types: this.types
+    }
+  }
   created() {
     this.cinemaFind()
   }
@@ -183,6 +195,12 @@ export default class Main extends ViewBase {
       this.types = [0]
     }
   }
+
+  @Watch('parents', { deep: true })
+
+  watchparents(value: any, oldValue: any) {
+    this.$emit('input', value)
+  }
 }
 </script>
 
@@ -202,5 +220,17 @@ export default class Main extends ViewBase {
   z-index: 8;
   border: 5px solid #fe8135;
   background: url('./assets/crown.png') no-repeat top right;
+}
+.single-length {
+  margin-left: 30px;
+  margin-bottom: 20px;
+}
+.red {
+  position: absolute;
+  right: 50px;
+  color: red;
+}
+.btnCenter {
+  margin-bottom: 24px;
 }
 </style>
