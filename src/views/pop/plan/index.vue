@@ -153,7 +153,6 @@ import { cityList, City, sexList, ageStageList, filmHobbyList,
 import CitySelect from './citySelect.vue'
 import Tags from './tag.vue'
 import { info } from '@/ui/modal.ts'
-import CinemaNum from './comcinema/cinemaNum.vue'
 import radioTab from './radioTab.vue'
 import { drairesList, beforePlan, advertising, advertDetail, cinemaList } from '@/api/popPlan.ts'
 import moment from 'moment'
@@ -183,7 +182,6 @@ const keepExclusion = <T>(
     CitySelect,
     Tags,
     radioTab,
-    CinemaNum,
     SingCinema,
     AreaPane
   }
