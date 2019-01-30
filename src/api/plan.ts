@@ -58,4 +58,11 @@ export async function subExamine(id: any) {
     const res = await put(`xadvert/plans/${id}/submit`)
     return res
 }
-
+/**
+ * 推广管理 - 广告计划 - 支付
+ * @param id
+ */
+export async function planPayment(id: any) {
+    const res = await put(`xadvert/plans/${id}/pay`)
+    return res
+}
