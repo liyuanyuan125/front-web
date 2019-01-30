@@ -25,6 +25,6 @@ export async function cinmeaId(id: any) {
  * 预防 GET 参数长度有限制，改为 POST 请求
  */
 export async function queryStats(query: any = {}) {
-  const res = get('/theater/cinemas/statistics')
+  const res = post('/theater/cinemas/statistics', query)
   return res
 }

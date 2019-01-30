@@ -70,7 +70,7 @@ const request = async (url: string, opts: object) => {
   }
 }
 
-export async function get(url: string, data?: object, opts?: object) {
+export async function get(url: string, data: object = {}, opts: object = {}) {
   return request(url, {
     method: 'get',
     params: {
@@ -81,7 +81,7 @@ export async function get(url: string, data?: object, opts?: object) {
   })
 }
 
-export async function post(url: string, data?: object, opts?: object) {
+export async function post(url: string, data: object = {}, opts: object = {}) {
   return request(url, {
     method: 'post',
     data,
@@ -89,7 +89,7 @@ export async function post(url: string, data?: object, opts?: object) {
   })
 }
 
-export async function put(url: string, data?: object, opts?: object) {
+export async function put(url: string, data: object = {}, opts: object = {}) {
   return request(url, {
     method: 'put',
     data,
@@ -97,7 +97,7 @@ export async function put(url: string, data?: object, opts?: object) {
   })
 }
 
-export async function del(url: string, data?: object, opts?: object) {
+export async function del(url: string, data: object = {}, opts: object = {}) {
   return request(url, {
     method: 'delete',
     data,

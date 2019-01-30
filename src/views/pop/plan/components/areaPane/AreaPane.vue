@@ -164,11 +164,15 @@ export default class AreaPane extends ViewBase {
   }
 
   async fetchAndUpdate() {
-    const ids = this.model[this.type]
-    const name = idsNameMap[this.type]
-    const query = name ? { [name]: ids } : {}
-    const data = await this.fetch(query)
-    this.updateStats(data, this.type)
+    const ids = [ ...this.model[this.type] ]
+    if (ids.length > 0) {
+      const name = idsNameMap[this.type]
+      const query = name ? { [name]: ids } : {}
+      const data = await this.fetch(query)
+      this.updateStats(data, this.type)
+    } else {
+      this.resetStats(this.type)
+    }
   }
 
   updateStats(data: any, type: number) {
@@ -177,6 +181,15 @@ export default class AreaPane extends ViewBase {
       province: (data && data.provinceList || []).length,
       city: (data && data.cityList || []).length,
       cinema: data.cinemaCount || 0,
+    }
+  }
+
+  resetStats(type: number) {
+    this.statsMap[type] = {
+      region: 0,
+      province: 0,
+      city: 0,
+      cinema: 0,
     }
   }
 
