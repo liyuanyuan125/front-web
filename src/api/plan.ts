@@ -50,3 +50,12 @@ export async function cinemaList(data: any) {
     const res = await get('xadvert/plans/cinemas', data)
     return res
 }
+/**
+ * 推广管理 - 广告计划 - 详情提交审核
+ * @param id
+ */
+export async function subExamine(id: any) {
+    const res = await put(`xadvert/plans/${id}/submit`)
+    return res
+}
+
