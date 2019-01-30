@@ -8,34 +8,32 @@
       <div class="mb50">
         <span class="header-title">方案确认单</span>
       </div>
-      <div style='background:rgba(249, 249, 249, 1);padding: 10px 20px 0 20px;'>
+      <div style='background:rgba(249, 249, 249, 1);padding: 10px 20px 0px 20px;'>
         <Row class="mb20">
           <Col :span="3">投放类型</Col>
           <Col :span="7">
-            <span v-if="$route.params.id == 1">映前广告&nbsp;&nbsp;(标准定向)</span>
-            <span v-if="$route.params.id == 2">映前广告&nbsp;&nbsp; (按单部影片)</span>
-            <span v-if="$route.params.id == 3">线下场馆</span>
+            <span>映前广告</span>
           </Col>
           <Col :span="4">广告计划名称</Col>
-          <Col :span="10"><span>123</span></Col>
+          <Col :span="10"><span>{{data.name}}</span></Col>
         </Row>
         <Row class="mb20">
           <Col :span="3">客户名称</Col>
-          <Col :span="7"><span>123</span></Col>
+          <Col :span="7"><span>{{data.customerName}}</span></Col>
           <Col :span="4">广告片规格</Col>
-          <Col :span="10"><span>30s</span></Col>
+          <Col :span="10"><span>{{data.specification}}s</span></Col>
         </Row>
         <Row class="mb20">
           <Col :span="3">关联广告片</Col>
-          <Col :span="7"><span>待关联</span></Col>
+          <Col :span="7"><span>{{data.advertisingName}}</span></Col>
           <Col :span="4">投放排期</Col>
-          <Col :span="10"><span>2019-2-4 周五~2019-2-10周二</span></Col>
+          <Col :span="10"><span>{{begin}}~{{end}}</span></Col>
         </Row>
         <Row class="mb20">
           <Col :span="3">档期</Col>
           <Col :span="7"><span>春节档</span></Col>
           <Col :span="4">投放天数</Col>
-          <Col :span="10"><span>7天</span></Col>
+          <Col :span="10"><span>{{day}}天</span></Col>
         </Row>
         <Row class="mb20">
           <Col :span="3">冻结金额/￥</Col>
@@ -44,7 +42,7 @@
           <Col :span="10"><span>CPM/30s</span></Col>
         </Row>
       </div>
-      <div v-if='$route.params.id == 2' style='background:rgba(249, 249, 249, 1);padding: 10px 20px 0 20px; margin-top: 10px;'>
+      <div v-if='data.directionType == 2' style='background:rgba(249, 249, 249, 1);padding: 10px 20px 1px 20px; margin-top: 10px;'>
         <Row class="mb20">
           <Col :span="3">投放影片</Col>
           <Col :span="5" class='im'>
@@ -125,7 +123,8 @@
       </div>
     </div>
     <div slot="footer" class="foot">
-        <Button class="foot-button" type="primary" @click="open">开启投放</Button>
+      <Button class="foot-cancel-button" type="primary" @click="cancel">取消计划</Button>
+      <Button class="foot-button" type="primary" @click="open">开启投放</Button>
     </div>
   </Modal>
 </template>
@@ -138,40 +137,71 @@ import ViewBase from '@/util/ViewBase'
 export default class Main extends ViewBase {
   showDlg = false
   forMat: any = {}
+  data: any = {}
+
+  get begin() {
+    return this.formatTime(this.data.beginDate)
+  }
+
+  get end() {
+    return this.formatTime(this.data.endDate)
+  }
+
+  get day() {
+    const day = (new Date(this.end).getTime() - new Date(this.begin).getTime()) / (24 * 3600000)
+    return day
+  }
+
   init(forMat: any) {
     this.showDlg = true
     this.forMat = forMat
+  }
+
+  created() {
+    this.getData()
+  }
+
+  getData() {
+    const id = this.$route.params.id
+    this.data = JSON.parse(sessionStorage.getItem(`${id}`)!)
   }
 
   cancel() {
     this.showDlg = false
   }
 
+  // 格式化档期时间
+  formatTime(num: any) {
+    num = num + ''
+    if (!num) {
+      return ''
+    }
+    const year = num.slice(0, 4)
+    const month = num.slice(4, 6)
+    const day = num.slice(6)
+    return `${year}-${month}-${day}`
+  }
+
   open() {
-    // const id: any = this.$route.params.id || 1
-    // if (this.$route.params.corp == '2') {
-    //    this.$router.push({
-    //     name: 'report-plan-xibei',
-    //     params: {id}
-    //   })
-    // } else {
-    //   this.$router.push({
-    //     name: 'report-plan',
-    //     params: {id}
-    //   })
-    // }
   }
 }
 </script>
 
 <style lang="less" scoped>
+.foot-button-box(@color: #fe8135, @text-color: #fff) {
+  width: 196px;
+  height: 50px;
+  color: @text-color;
+  background-color: @color;
+}
 .foot {
   text-align: center;
   height: 90px;
   .foot-button {
-    background-color: #fe8135;
-    width: 196px;
-    height: 50px;
+    .foot-button-box;
+  }
+  .foot-cancel-button {
+    .foot-button-box(#FFF8F2, #fe8135);
   }
 }
 .header-title {
