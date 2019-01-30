@@ -1,6 +1,6 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title">创建广告计划</h2>
+    <h2 class="layout-nav-title">创建广告计划 > 新建广告计划</h2>
 
     <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
       <h3 class="layout-title">基本信息</h3>
@@ -85,7 +85,7 @@
           <radioTab v-model="form.throwInAreaType" :tagMess="areaTypeList" />
         </FormItem>
 
-        <div class="city-wrap">
+        <div class="city-wrap mb20">
           <AreaPane v-model="form.ids" :type="form.throwInAreaType"/>
         </div>
 
@@ -566,8 +566,13 @@ export default class Main extends ViewBase {
     // 投放定向
     let direction: any = {}
     if (this.putType == 1) {
+      if (this.form.ids.length != 1) {
+        info('请选择投放区域')
+        return
+      }
       direction = {
         directionType: this.putType,
+        ids: this.form.ids,
         deliveryGroups: [
           {
             tagTypeCode: 'MOVIE_TYPE',
