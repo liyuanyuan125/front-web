@@ -43,17 +43,17 @@
         </Row>
       </div>
       <div v-if='data.directionType == 2' style='background:rgba(249, 249, 249, 1);padding: 10px 20px 1px 20px; margin-top: 10px;'>
-        <Row class="mb10">
+        <Row class="mb30">
           <Col :span="3">投放影片</Col>
-          <Col :span="5" class='im'>
+          <Col :span="8" class='im'>
             <!-- <div> -->
               <div class='im-div'>
-                <img src='./assets/cinem5.png' alt=''>
-                <div>上映日期：2019-10-10</div>
+                <img :src='cinema.seacinemaList.mainPicUrl' alt=''>
+                <div>上映日期：{{formatMoment(cinema.seacinemaList.openTime)}}</div>
               </div>
               <div class='ims-div'>
-                <p>《大人物》</p>
-                <p>动作/犯罪</p>
+                <p>{{cinema.seacinemaList.name}}</p>
+                <p class="cinema-type"><span v-for="it in cinemaType" :key="it">{{it}}</span></p>
               </div>
             <!-- </div> -->
           </Col>
@@ -61,7 +61,14 @@
         <Row class="mb10">
           <Col :span="3">地域偏好</Col>
           <Col :span="21">
-            河北省 | 北京市 | 上海市 | 安徽省 | 广东省
+           <div class="cinema-area">
+             <span v-if="data.tagTypeCode && data.tagTypeCode.length == 0">不限</span>
+             <p v-else>
+               <span v-for="it in tagTypeCodeName" :key="it.key">
+                 {{it.text}}
+               </span>
+             </p>
+           </div>
           </Col>
         </Row>
       </div>
@@ -133,13 +140,16 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { formatCurrency } from '@/fn/string'
+import moment from 'moment'
 
+const timeFormat = 'YYYY-MM-DD'
 @Component
 export default class Main extends ViewBase {
   showDlg = false
   forMat: any = {}
   data: any = {}
   money: any = ''
+  cinema: any = {}
 
   get begin() {
     return this.formatTime(this.data.beginDate)
@@ -154,10 +164,22 @@ export default class Main extends ViewBase {
     return day
   }
 
-  init(forMat: any) {
+  get cinemaType() {
+    return this.cinema.seacinemaList.type || []
+  }
+
+  get tagTypeCodeName() {
+    if (this.data.tagTypeCode && this.data.tagTypeCode.length > 0) {
+      return this.cinema.diqutype.values.filter((it: any) => this.data.tagTypeCode.includes(it.key))
+    }
+    return []
+  }
+
+  init(forMat: any, cinema: any) {
     this.showDlg = true
     this.forMat = forMat
-    this.money = formatCurrency(this.forMat.estimateCostAmount * 1000)
+    this.cinema = cinema
+    this.money = formatCurrency(this.forMat.estimateCostAmount * 10000)
   }
 
   created() {
@@ -171,6 +193,10 @@ export default class Main extends ViewBase {
 
   cancel() {
     this.showDlg = false
+  }
+
+  formatMoment(time: any) {
+    return moment(time).format(timeFormat)
   }
 
   // 格式化档期时间
@@ -197,6 +223,12 @@ export default class Main extends ViewBase {
   color: @text-color;
   background-color: @color;
   margin-right: 20px;
+}
+.before(@content: '/', @color: #222) {
+  content: @content;
+  margin-left: 3px;
+  margin-right: 3px;
+  color: @color;
 }
 .mb-cyc(8);
 .mb-cyc(@n, @i: 1) when (@i =< @n) {
@@ -225,8 +257,7 @@ export default class Main extends ViewBase {
   font-style: normal;
   font-size: 20px;
   color: #000;
-  padding: 5px 15px 8px 15px;
-  border-bottom: 2px solid #000;
+  padding: 5px 15px 0 15px;
 }
 /deep/ .ivu-modal-content {
   margin-top: -40px;
@@ -252,10 +283,10 @@ export default class Main extends ViewBase {
   }
 }
 .im {
-  height: 260px;
+  height: 300px;
   .im-div {
-    width: 100%;
-    height: 200px;
+    width: 180px;
+    height: 250px;
     position: relative;
     img {
       width: 100%;
@@ -274,10 +305,27 @@ export default class Main extends ViewBase {
     }
   }
   .ims-div {
-    width: 100%;
-    line-height: 23px;
+    width: 180px;
+    .pd5;
     text-align: center;
     background: #fff;
+    p {
+      color: #222;
+    }
+    .cinema-type {
+      padding-bottom: 4px;
+      span:first-child {
+        color: red;
+      }
+      span:not(:last-child)::after {
+        .before;
+      }
+    }
+  }
+}
+.cinema-area {
+  span:not(:last-child)::after {
+    .before;
   }
 }
 </style>

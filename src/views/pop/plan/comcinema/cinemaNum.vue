@@ -46,7 +46,7 @@
           <CinemaSave />
         </div>
         <div v-else-if="type == 1">
-          <area :data="data.categorizedByAreaCode" />
+          <Area :data="data.categorizedByAreaCode" />
         </div>
         <div v-else-if="type == 2">
           <Privince :data="data.categorizedByAreaCode" />
@@ -84,14 +84,14 @@
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import CinemaSave from './cinemaSave.vue'
-import area from './area.vue'
+import Area from './area.vue'
 import Privince from './province.vue'
 import City from './city.vue'
 import Cinema from './cinema.vue'
 @Component({
   components: {
     CinemaSave,
-    area,
+    Area,
     Privince,
     City,
     Cinema
