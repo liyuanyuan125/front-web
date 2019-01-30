@@ -38,7 +38,7 @@
     </Form>
     <div class="flex-box">
       <p class="single-length" v-if="length > 0">已为您匹配以下{{length}}部影片：</p>
-      <p class="red">已选中{{cinemaIdArray.length}}部影片</p>
+      <!-- <p class="red">已选中{{cinemaIdArray.length}}部影片</p> -->
     </div>
     
     <ul class="single-film-list" v-if="length > 0">
@@ -72,6 +72,7 @@ import ViewBase from '@/util/ViewBase'
 import { cinemaList } from '@/api/popPlan.ts'
 import { clean } from '@/fn/object'
 import moment from 'moment'
+import { info } from '@/ui/modal.ts'
 
 // 保持互斥
 const keepExclusion = <T>(
@@ -168,11 +169,12 @@ export default class Main extends ViewBase {
   }
 
   selectFilm(id: any) {
-    if (!this.cinemaIdArray.includes(id)) {
-      this.cinemaIdArray.push(id)
-    } else {
-      this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
-    }
+    this.cinemaIdArray = [id]
+    // if (!this.cinemaIdArray.includes(id)) {
+    //   this.cinemaIdArray.push(id)
+    // } else {
+    //   this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+    // }
   }
   @Watch('releaseTime', { deep: true })
 
@@ -188,11 +190,16 @@ export default class Main extends ViewBase {
   @Watch('types', { deep: true })
 
   watchtypes(value: any, oldValue: any) {
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.types = newValue
-    })
-    if (value.length == 0) {
-      this.types = [0]
+    if (value.length > 3) {
+      info('电影类型最多选3项')
+      this.types = value.slice(0, 3)
+    } else {
+      keepExclusion(value, oldValue, 0, newValue => {
+        this.types = newValue
+      })
+      if (value.length == 0) {
+        this.types = [0]
+      }
     }
   }
 

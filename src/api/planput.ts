@@ -6,8 +6,8 @@ export async function queryList() {
 }
 
 // i新建计划
-export async function addplan() {
-  const res = await post('/xadvert/plans')
+export async function addplan(query: any) {
+  const res = await post('/xadvert/plans' , query)
   return res
 }
 
@@ -31,8 +31,18 @@ export async function tuijian(query: any) {
 
 
 // 推荐影片
-export async function cinemaList(query: any) {
+export async function TcinemaList(query: any) {
   const res = await get('/xadvert/plans/cinemas', query)
+  return res
+}
+
+export async function video(id: any) {
+  const res = await get(`/xadvert/videos/${id}`)
+  return res
+}
+
+export async function dataFrom(query: any) {
+  const res = await get('/xadvert/plans', query)
   return res
 }
 

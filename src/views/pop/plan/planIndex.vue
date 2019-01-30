@@ -200,7 +200,7 @@ export default class Plan extends ViewBase {
     {
       id: 1,
       name: '广告计划名称',
-      stauts: 3,
+      stauts: 2,
       specification: '广告片规格',
       videoId: '广告片ID',
       videoName: '广告片名称/ID',
@@ -215,7 +215,7 @@ export default class Plan extends ViewBase {
     {
       id: 3,
       name: '2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院',
-      stauts: 9,
+      stauts: 3,
       specification: '广告片规格',
       videoId: '广告片ID',
       videoName: '广告片名称/ID',
@@ -228,9 +228,9 @@ export default class Plan extends ViewBase {
       endDate: 333333333333
     },
      {
-      id: 3,
+      id: 4,
       name: '2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院',
-      stauts: 10,
+      stauts: 4,
       specification: '广告片规格',
       videoId: '广告片ID',
       videoName: '广告片名称/ID',
@@ -262,7 +262,11 @@ export default class Plan extends ViewBase {
     this.totalCount = data.totalCount
   }
   planDefault(id: any, status: any) {
-    this.$router.push({ name: 'pop-plan-default', params: {id, status}})
+    if (status == '1' || status == '3' || status == '9' || status == '10') {
+      this.$router.push({ name: 'pop-plan-default', params: {id, status}})
+    } else {
+      this.$router.push({ name: 'pop-plan-defaultpayment', params: {id, status}})
+    }
   }
 
   handleSelectAll() {

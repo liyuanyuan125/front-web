@@ -120,14 +120,27 @@ export default [
     name: 'pop-planlist',
     component: () => import('./views/pop/plan/planIndex.vue')
   },
+  // 推广管理 - 广告计划 - 详情
   {
     path: '/pop/plan-default/:id/:status',
     name: 'pop-plan-default',
     component: () => import('./views/pop/plan/default/planDefault.vue')
   },
+  // 推广管理 - 广告计划 - 支付详情
+  {
+    path: '/pop/plan-defaultpayment/:id/:status',
+    name: 'pop-plan-defaultpayment',
+    component: () => import('./views/pop/plan/default/defaultPayment.vue')
+  },
+  // 推广管理 - 广告计划 - 编辑
+  {
+    path: '/pop/plan-edit',
+    name: 'pop-plan-edit',
+    component: () => import('./views/pop/plan/edit/index.vue')
+  },
   // 推广管理 - 广告计划 - 生成广告方案
   {
-    path: '/pop/plan/scheme/:id/:corp',
+    path: '/pop/plan/scheme/:id',
     name: 'pop-plan-scheme',
     component: () => import('./views/pop/pages/index.vue'),
   },

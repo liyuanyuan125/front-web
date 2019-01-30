@@ -15,7 +15,7 @@ import ViewBase from '@/util/ViewBase'
 
 @Component
 export default class InfoStatus extends ViewBase {
-  @Prop({ type: String }) statuCode: any
+  @Prop({ type: Number }) statuCode: any
   statuList = []
   list: any = [
       {
