@@ -121,10 +121,10 @@
               <Row class='row-xq-24'>
                 <!-- <Col span='24'><span>演员</span><b v-for='it in seacinemaList.performers'> {{it}}</b></Col> -->
               </Row>
-              <Row class='row-xq-l24'>
+              <!-- <Row class='row-xq-l24'>
                 {{list.tagTypeCode}}
                 <Col span='24' ><span>根据您选择的地域偏好，我们将优先为您覆盖以下地域</span><span v-for='(it,index) in list.tagTypeCode' :key='index'><b v-for='(item) in diqutype[0].values' :key='item.key' v-if='it == item.key'>{{item}}</b></span></Col>
-              </Row>
+              </Row> -->
              </Col>
            </Row>
         </Col>
@@ -175,7 +175,7 @@
         </Col>
       </Row>
 
-      <Row class="pt40" style='margin-bottom: 30px;' v-if='this.list.directionType == 1'>
+      <!-- <Row class="pt40" style='margin-bottom: 30px;' v-if='this.list.directionType == 1'>
         <Col :span="24">
           <h3 class="square">投放影片</h3>
         </Col>
@@ -217,7 +217,6 @@
                   <dd class='s-img'>
                     <img class='img' :src=it.mainPicUrl alt="">
                     <div>上映日期：{{it.openTime}}</div>
-                    <!-- <img class='posimg' src='./assets/已选.png' alt='' v-if="cinemaIdArray.includes(it.id)"> -->
                   </dd>
                   <dt>《{{it.name}}》</dt>
                   <dt><span v-for='(item , index) in it.type' :key='index'>{{item}}/</span></dt>
@@ -226,7 +225,7 @@
             </Col>
            </Row>
         </Col>
-      </Row>
+      </Row> -->
 
       <Row class="pt40">
         <Col :span="24">
@@ -452,6 +451,7 @@ export default class Main extends ViewBase {
   }
 
   showClass( index: any) {
+    // console.log(123)
     if (index == 1) {
       this.showClassbiao = true
       this.showClassjia = false
@@ -459,6 +459,7 @@ export default class Main extends ViewBase {
       this.dataFrom.type = '1'
       this.seach()
     } else if (index == 2) {
+      // console.log(456)
       this.showClassbiao = false
       this.showClassjia = true
       this.showClassyou = false
