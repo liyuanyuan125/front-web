@@ -31,7 +31,7 @@ export async function tuijian(query: any) {
 
 
 // 推荐影片
-export async function cinemaList(query: any) {
+export async function TcinemaList(query: any) {
   const res = await get('/xadvert/plans/cinemas', query)
   return res
 }

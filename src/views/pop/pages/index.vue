@@ -101,28 +101,28 @@
         <Col class="mt30 xq-m" :span="22">
            <Row :gutter="30">
              <Col :span="6" class='img-c' style="height: 240px">
-              <img src="./assets/poster.png" alt="">
+              <img :src=seacinemaList.mainPicUrl alt="">
              </Col>
              <Col class="poster-title" :span="18" style="height: 240px">
               <Row class='row-xq'>
-                <Col span='10'><span>影片名称</span>《大黄蜂》</Col>
-                <Col span='14'><span style='width: 28%;'>影片标语</span> 纽特与邓布利多组队对决黑巫师</Col>
+                <Col span='10'><span>影片名称</span>《{{seacinemaList.name}}》</Col>
+                <Col span='14'><span style='width: 28%;'>影片标语</span> {{seacinemaList.slogan}}</Col>
               </Row>
               <Row class='row-xq'>
-                <Col span='10'><span>上映日期</span> 2019-1-4</Col>
-                <Col span='14'><span style='width: 28%;'>片长</span> 125分钟</Col>
+                <Col span='10'><span>上映日期</span> {{seacinemaList.openTime}}</Col>
+                <Col span='14'><span style='width: 28%;'>片长</span> {{seacinemaList.length}}分钟</Col>
               </Row>
               <Row class='row-xq-24'>
-                <Col span='24'><span>影片类型</span> 动作 / 科幻 / 冒险</Col>
+                <Col span='24'>影片类型<span v-for='it in seacinemaList.type'> {{it}}</span></Col>
               </Row>
               <Row class='row-xq-24'>
-                <Col span='24'><span>导演</span> 特拉维斯 奈特</Col>
+                <Col span='24'><span>导演</span> {{seacinemaList.director}}</Col>
               </Row>
               <Row class='row-xq-24'>
-                <Col span='24'><span>演员</span> 海莉 斯坦菲尔德／小豪尔赫 兰登伯格／约翰 塞纳／杰森 德鲁克...</Col>
+                <Col span='24'>演员<span v-for='it in seacinemaList.performers'></span> {{it}}...</Col>
               </Row>
               <Row class='row-xq-l24'>
-                <Col span='24'><span>根据您选择的地域偏好，我们将优先为您覆盖以下地域</span> 华北 | 华东 | 华南</Col>
+                <Col span='24' ><span>根据您选择的地域偏好，我们将优先为您覆盖以下地域</span> <span v-for='(it,index) in list.deliveryGroups[0].text' :key='index'><b v-for='(item) in tagstype[0].values' :key='item.key' v-if='it == item.key'>{{item}}</b></span></Col>
               </Row>
              </Col>
            </Row>
@@ -199,8 +199,10 @@
         <Col class="mt30" style='margin-top: 10px;' :span="24">
           <Row :gutter="30">
             <Col :span="4" style="text-indent: 1em;padding-left:30px;line-height: 50px;">推荐影片</Col>
-            <Col :span="17" style="text-indent: 1em;padding-left:30px;line-height: 50px;">说明：请选择不超过3部影片，系统将优先为您排播所选择影片的映前广告。</Col>
-            <Col :span='3' style='line-height:50px;color:#fe8135'>已选3部影片</Col>
+            <Col v-if='dataFrom.type == "1"' :span="17" style="text-indent: 1em;padding-left:30px;line-height: 50px;">说明：不支持选择投放影片。</Col>
+            <Col v-if='dataFrom.type == "2"' :span="17" style="text-indent: 1em;padding-left:30px;line-height: 50px;">说明：请选择不超过3部影片，系统将优先为您排播所选择影片的映前广告。</Col>
+            <Col v-if='dataFrom.type == "3"' :span="17" style="text-indent: 1em;padding-left:30px;line-height: 50px;">说明：请选择不超过6部影片，系统将优先为您排播所选择影片的映前广告。</Col>
+            <Col :span='3' style='line-height:50px;color:#fe8135'>已选{{cinemaIdArray.length}}部影片</Col>
           </Row>
            <Row class='pi' :gutter="30">
             <Col :span="4" style="text-indent: 1em;padding-left:30px;">&nbsp;&nbsp;&nbsp;&nbsp;</Col>
@@ -286,7 +288,8 @@ import CitySelect from '../plan/citySelect.vue'
 import { toMap } from '@/fn/array'
 import moment from 'moment'
 import jsxReactToVue from '@/util/jsxReactToVue'
-import { queryList , addplan , abcount , pricount , tuijian , cinemaList , video } from '@/api/planput'
+import { queryList , addplan , abcount , pricount , tuijian , TcinemaList , video } from '@/api/planput'
+import { cinemaList } from '@/api/popPlan'
 import echarts from 'echarts' // 引入echarts
 
 // const makeMap = (list: any[]) => toMap(list, 'id', 'name')
@@ -359,7 +362,11 @@ export default class Main extends ViewBase {
   // 推荐影片
   tuifilm: any = []
   // yingyuan
-  cinemaList: any = []
+  tcinemaList: any = []
+
+  // 查询影片信息
+  seacinemaList: any = []
+
 
   cinemaIdArray: any = []
 
@@ -387,9 +394,9 @@ export default class Main extends ViewBase {
     deliveryType: 1, // 投放类型
     budgetCode: this.list.budgetCode, // 预算区间
     budgetAmount: this.list.budgetAmount, // 预算金额
-    billingMode: 1, // 击飞方式
+    billingMode: this.list.billingMode, // 击飞方式
     deliveryMovies: [], // 投放影片
-    status: this.list.status, // 计划状态
+    status: 1, // 计划状态
     estimateCostAmount: this.pricecount, // 预估花费
     estimateShowCount: this.aboutcount, // 预估曝光场次
     directionType: this.list.directionType, // 定向投放类型（1标准投放2单片投放）
@@ -397,9 +404,18 @@ export default class Main extends ViewBase {
     cinemas: [], // 影院列表
   }
 
+  addlist: any = {
+    aboutcount: this.aboutcount, // 预估场次
+    pricecount: this.pricecount, // 预估花费
+    seacinemaList: this.seacinemaList, // 单步影片详情
+    tagstype: this.tagstype, // 标准 / 单步 影片类型
+    tagsyear: this.tagsyear, // 标准影片 年龄 (单步的话没有)
+    tagsex: this.list.deliveryGroups //  标准影片性别(数组取值)
+  }
+
   get tableData() {
     // if (this.$route.params.corp != '2') {
-      return this.cinemaList
+      return this.tcinemaList
     // } else {
     //   return [
     //     { names : '金源购物中心', codes: '商场', seats: '西贝筱面村(王府井店)', juli: '0.78km'},
@@ -454,7 +470,7 @@ export default class Main extends ViewBase {
   edit() {
     this.addOrUpdateVisible = true
     this.$nextTick(() => {
-      (this.$refs.addOrUpdate as any).init(this.forMat)
+      (this.$refs.addOrUpdate as any).init(this.dataFrom , this.addlist)
     })
   }
 
@@ -469,7 +485,7 @@ export default class Main extends ViewBase {
       this.showClassbiao = false
       this.showClassjia = true
       this.showClassyou = false
-      this.dataFrom.type = '3'
+      this.dataFrom.type = '2'
       this.seach()
     } else if (index == 3) {
       this.showClassbiao = false
@@ -483,18 +499,32 @@ export default class Main extends ViewBase {
     this.isActive = index
   }
 
-  selectFilm(id: any) {
-    // if ( this.dataFrom.type = '1' ) {
-    //   return
-    // } else if ( this.dataFrom.type = '2' ) {
-
-    // } else if ( this.dataFrom.type = '3' ) {
-
-    // }
-    if (!this.cinemaIdArray.includes(id)) {
-      this.cinemaIdArray.push(id)
-    } else {
-      this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+  async selectFilm(id: any) {
+    if ( this.dataFrom.type == '1' ) {
+      alert('暂不支持选择影片')
+      return
+    } else if ( this.dataFrom.type == '2' ) {
+      if (this.cinemaIdArray.length <= 3) {
+        if (!this.cinemaIdArray.includes(id)) {
+          this.cinemaIdArray.push(id)
+        } else {
+          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+        }
+      } else {
+        alert('只支持选择3部影片')
+        return
+      }
+    } else if ( this.dataFrom.type == '3' ) {
+      if (this.cinemaIdArray.length <= 6) {
+        if (!this.cinemaIdArray.includes(id)) {
+          this.cinemaIdArray.push(id)
+        } else {
+          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+        }
+      } else {
+        alert('只支持选择6部影片')
+        return
+      }
     }
   }
 
@@ -516,6 +546,7 @@ export default class Main extends ViewBase {
       // 获取状态列表
       this.typeList = data.typeList
       if (this.list.directionType == 1) {
+        // console.log(78465132)
         this.tagstype = (data.tags || []).filter((it: any) => {
           if (it.code == this.list.deliveryGroups[0].tagTypeCode) {
             return {
@@ -532,13 +563,13 @@ export default class Main extends ViewBase {
         })
       }
       if (this.list.directionType == 2) {
-        // this.tagstype = (data.tags || []).filter((it: any) => {
-        //   if (it.code == this.list.deliveryGroups[0].tagTypeCode) {
-        //     return {
-        //       ...it
-        //     }
-        //   }
-        // })
+        this.tagstype = (data.tags || []).filter((it: any) => {
+          if (it.code == this.list.deliveryGroups[0].tagTypeCode) {
+            return {
+              ...it
+            }
+          }
+        })
       }
       // console.log(this.tagsyear)
       // 获取预估覆盖场次
@@ -558,12 +589,18 @@ export default class Main extends ViewBase {
           openTime: moment(it.openTime).format(timeFormat)
         }
       })
-      // yingyuan
-      const cinema = await cinemaList({ids: '233,156', pageIndex: 1, pageSize: 6})
-      this.cinemaList = cinema.data.items
+      // yingyuan列表
+      const cinema = await TcinemaList({ids: '233,156', pageIndex: 1, pageSize: 6})
+      this.tcinemaList = cinema.data.items
       // guanggaopian
       const videoitem = await video(this.list.videoId)
       this.videos = videoitem.data.items
+      // 查询影片列表
+      if (this.list.deliveryMovies) {
+        const seacinema = await cinemaList({id : this.list.deliveryMovies[0]})
+        this.seacinemaList = seacinema.data.data.items[0]
+        // console.log(this.seacinemaList)
+      }
     } catch (ex) {
       this.handleError(ex)
     } finally {
