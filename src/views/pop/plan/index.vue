@@ -12,8 +12,8 @@
       </FormItem>
 
       <div class="clear-f">
-        <FormItem class="float-left" label="广告片名称" prop="name">
-          <Input v-model="form.name" placeholder="请输入广告片名称"></Input>
+        <FormItem class="float-left" label="广告计划名称" prop="name">
+          <Input v-model="form.name" placeholder="请输入广告计划名称"></Input>
         </FormItem>
         <FormItem class="float-right pr30" label="关联广告片" prop="videoId">
           <Select v-model="form.videoId" filterable clearable>
