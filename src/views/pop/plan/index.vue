@@ -535,7 +535,7 @@ export default class Main extends ViewBase {
       specification: this.specification,
       customerName: this.customerName,
       advertisingName: this.advertisingName,
-      status: this.form.status,
+      billingMode: this.form.status,
       budgetCode: this.form.budgetCode,
       budgetAmount: this.form.budgetCode == '00-00' ? this.form.budgetAmount : ''
     }
