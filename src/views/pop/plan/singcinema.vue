@@ -3,7 +3,7 @@
     <Form :model="form" label-position="left" :label-width="100" class="edit-input forms">
       <FormItem :label="data.name" class="form-item-film-type">
         <CheckboxGroup v-model="types" class="float">
-          <Checkbox class="check-item" :label="0">不限</Checkbox>
+          <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
           <Checkbox
             v-for="it in data.values"
             :key="it.key"
@@ -36,8 +36,11 @@
         />
       </FormItem>
     </Form>
-    <p class="single-result" v-if="length.length > 0">已为您匹配以下{{length.length}}部影片：</p>
-
+    <div class="flex-box">
+      <p class="single-length" v-if="length > 0">已为您匹配以下{{length}}部影片：</p>
+      <!-- <p class="red">已选中{{cinemaIdArray.length}}部影片</p> -->
+    </div>
+    
     <ul class="single-film-list" v-if="length > 0">
       <li v-for="(it, index) in cinemaList" :key="index" @click="selectFilm(it.id)"
       :class="['single-film-item']">
@@ -69,6 +72,7 @@ import ViewBase from '@/util/ViewBase'
 import { cinemaList } from '@/api/popPlan.ts'
 import { clean } from '@/fn/object'
 import moment from 'moment'
+import { info } from '@/ui/modal.ts'
 
 // 保持互斥
 const keepExclusion = <T>(
@@ -106,6 +110,15 @@ export default class Main extends ViewBase {
     return this.cinemaList.length > 0 ? this.cinemaList.map((it: any) => it.id) : []
   }
 
+  get parents() {
+    return {
+      id: this.cinemaIdArray,
+      name: this.form.name,
+      startTime: this.showTime[0] ? Number(moment(this.showTime[0]).format(timeFormat)) : '',
+      endTime: this.showTime[1] ? Number(moment(this.showTime[1]).format(timeFormat)) : '',
+      types: this.types
+    }
+  }
   created() {
     this.cinemaFind()
   }
@@ -156,11 +169,12 @@ export default class Main extends ViewBase {
   }
 
   selectFilm(id: any) {
-    if (!this.cinemaIdArray.includes(id)) {
-      this.cinemaIdArray.push(id)
-    } else {
-      this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
-    }
+    this.cinemaIdArray = [id]
+    // if (!this.cinemaIdArray.includes(id)) {
+    //   this.cinemaIdArray.push(id)
+    // } else {
+    //   this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+    // }
   }
   @Watch('releaseTime', { deep: true })
 
@@ -176,12 +190,23 @@ export default class Main extends ViewBase {
   @Watch('types', { deep: true })
 
   watchtypes(value: any, oldValue: any) {
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.types = newValue
-    })
-    if (value.length == 0) {
-      this.types = [0]
+    if (value.length > 3) {
+      info('电影类型最多选3项')
+      this.types = value.slice(0, 3)
+    } else {
+      keepExclusion(value, oldValue, 0, newValue => {
+        this.types = newValue
+      })
+      if (value.length == 0) {
+        this.types = [0]
+      }
     }
+  }
+
+  @Watch('parents', { deep: true })
+
+  watchparents(value: any, oldValue: any) {
+    this.$emit('input', value)
   }
 }
 </script>
@@ -202,5 +227,17 @@ export default class Main extends ViewBase {
   z-index: 8;
   border: 5px solid #fe8135;
   background: url('./assets/crown.png') no-repeat top right;
+}
+.single-length {
+  margin-left: 30px;
+  margin-bottom: 20px;
+}
+.red {
+  position: absolute;
+  right: 50px;
+  color: red;
+}
+.btnCenter {
+  margin-bottom: 24px;
 }
 </style>

@@ -16,7 +16,9 @@
   .form-item-type {
     margin-top: 35px;
   }
-  
+  .form-item-type-sort {
+    margin-top: 15px;
+  }
   .orient-tabs {
     margin-top: 4px;
     label {
@@ -29,7 +31,12 @@
       }
     }
   }
-  
+  /deep/ .ivu-form-item-label:before {
+    content: '';
+    height: 0;
+    width: 0;
+    display: none;
+  }
   .city-wrap {
     padding-right: 40px;
     margin-left: 130px;
@@ -117,17 +124,50 @@
         display: inline-block;
         width: 155px;
         height: 50px;
-        line-height: 47px;
+        line-height: 48px;
         text-align: center;
         color: #444;
         margin-top: -3px;
         font-size: 14px;
         cursor: pointer;
         background: #f7f7f7;
+        .put-icon1 {
+          display: inline-block;
+          width: 20px;
+          height: 18px;
+          margin-bottom: -5px;
+          background: url('./assets/icon1.png') no-repeat;
+        }
+        .put-icon2 {
+          display: inline-block;
+          width: 20px;
+          height: 18px;
+          margin-bottom: -5px;
+          background: url('./assets/icon2.png') no-repeat;
+        }
+      }
+      img {
+        vertical-align: middle;
+        margin-right: 5px;
       }
       .put-active {
+        line-height: 48px;
         background: #fb8135;
         color: #fff;
+        .put-icon1 {
+          display: inline-block;
+          width: 20px;
+          height: 18px;
+          margin-bottom: -5px;
+          background: url('./assets/iconcheck1.png') no-repeat;
+        }
+        .put-icon2 {
+          display: inline-block;
+          width: 20px;
+          height: 18px;
+          margin-bottom: -5px;
+          background: url('./assets/iconcheck2.png') no-repeat;
+        }
       }
     }
     /deep/ .checkd .ivu-select-selection {
@@ -225,27 +265,20 @@
       line-height: 40px;
     }
   }
-  
-  .img-rank1 {
+  .money {
     position: absolute;
-    left: 10px;
-    width: 70px;
-    height: 70px;
-    background: url('./assets/rank1.png') no-repeat;
-  }
-  .img-rank2 {
-    position: absolute;
-    left: 10px;
-    width: 70px;
-    height: 70px;
-    background: url('./assets/rank2.png') no-repeat;
-  }
-  .img-rank3 {
-    position: absolute;
-    left: 10px;
-    width: 70px;
-    height: 70px;
-    background: url('./assets/rank3.png') no-repeat;
+    width: 330px;
+    bottom: -2px;
+    z-index: 999;
+    left: 103px;
+    /deep/ .ivu-input-wrapper {
+      width: 160px;
+      input {
+        height: 26px;
+        line-height: 26px;
+        font-size: 12px;
+      }
+    }
   }
   .crown {
     position: absolute;
@@ -284,6 +317,10 @@
     margin-bottom: 10px;
   }
 
+  .form-item-first:first-child {
+    margin-bottom: 20px;
+  }
+
   .check-item {
     position: relative;
     top: 3px;
@@ -304,7 +341,9 @@
       background-color: @c-button;
     }
   }
-
+  .pb3 {
+    padding-bottom: 3px;
+  }
   .single-result,
   .single-film-list {
     margin-left: 130px;
