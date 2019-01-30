@@ -36,3 +36,8 @@ export async function cinemaList(query: any) {
   return res
 }
 
+export async function video(id: any) {
+  const res = await get(`/xadvert/videos/${id}`)
+  return res
+}
+

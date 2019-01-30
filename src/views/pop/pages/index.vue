@@ -35,31 +35,33 @@
             </dl>
             <dl>
               <dd>广告计划名称</dd>
-              <dt>喔喔奶糖北京复古营销计划</dt>
+              <dt>{{list.name}}</dt>
             </dl>
             <dl>
               <dd>客户名称</dd>
-              <dt>奔驰 (ID 748596)</dt>
+              <dt>{{list.customerName}}</dt>
             </dl>
             <dl>
               <dd>广告片规格</dd>
-              <dt>30s</dt>
+              <dt>{{list.specification}}s</dt>
             </dl>
             <dl>
               <dd>广告片名称</dd>
-              <dt>喔喔奶糖北京影院映前广告</dt>
+              <dt v-if='!list.advertisingName'>{{videos.name}}</dt>
+              <dt v-if='list.advertisingName'>{{list.advertisingName}}</dt>
             </dl>
             <dl>
               <dd>投放排期</dd>
-              <dt>2019-2-4 周五 ~ 2019-2-10 周二</dt>
+              <dt>{{bed}} ~ {{end}}</dt>
             </dl>
             <dl>
               <dd>投放天数</dd>
-              <dt>7天</dt>
+              <dt>{{list.endDate - list.beginDate}}天</dt>
             </dl>
             <dl>
               <dd>档期</dd>
-              <dt>春节档</dt>
+              <dt v-if='!this.list.calendarId'>暂无</dt>
+              <dt v-if='this.list.calendarId'>{{list.customerName}}</dt>
             </dl>
           </div>
         </Col>
@@ -92,7 +94,7 @@
         </Col>
       </Row>
 
-      <Row class="pt40" v-if="$route.params.id == 2">
+      <Row class="pt40" v-if="this.list.directionType == 2">
         <Col :span="24">
           <h3 class="square">投放影片</h3>
         </Col>
@@ -172,7 +174,7 @@
         </Col>
       </Row>
 
-      <Row class="pt40" style='margin-bottom: 30px;' v-if='$route.params.id == 1'>
+      <Row class="pt40" style='margin-bottom: 30px;' v-if='this.list.directionType == 1'>
         <Col :span="24">
           <h3 class="square">投放影片</h3>
         </Col>
@@ -181,19 +183,15 @@
           <Col :span="20">
            <ul class="tag" style="left:2px">
               <li class="tag-ltme" style='margin-left:30px;'>
-                <img style="vertical-align: middle;" src="./assets/man.png" alt="">
+                <img v-if='list.deliveryGroups[2].text == "man"' style="vertical-align: middle;" src="./assets/man.png" alt="">
+                <img v-if='list.deliveryGroups[2].text == "woman"' style="vertical-align: middle;" src="./assets/woman.png" alt="">
+                <span v-if='list.deliveryGroups[2].text == "" && list.deliveryGroups[1].text == "" && list.deliveryGroups[0].text == ""'>不限</span>
               </li>
-              <li class="tag-ltmes">
-                <span>30-40岁</span>
+              <li v-for='(item) in tagsyear[0].values' :key='item.key' v-if='list.deliveryGroups[1].text == item.key' class="tag-ltmes">
+                <span>{{item.text}}</span>
               </li>
-              <li class="tag-ltmes">
-                <span>剧情</span>
-              </li>
-              <li class="tag-ltmes">
-                <span>冒险</span>
-              </li>
-              <li class="tag-ltme">
-                <span>动作</span>
+              <li v-for='(it,index) in list.deliveryGroups[0].text' :key='index' class="tag-ltmes">
+                <span v-for='(item) in tagstype[0].values' :key='item.key' v-if='it == item.key'>{{item.text}}</span>
               </li>
             </ul>
           </Col>
@@ -206,9 +204,9 @@
           </Row>
            <Row class='pi' :gutter="30">
             <Col :span="4" style="text-indent: 1em;padding-left:30px;">&nbsp;&nbsp;&nbsp;&nbsp;</Col>
-            <img class='pi-one' src="./assets/匹配度一.png" alt="">
-            <img class='pi-two' src="./assets/匹配度二.png" alt="">
-            <img class='pi-three' src="./assets/匹配度三.png" alt="">
+            <img v-if='tuifilm.length >= 1' class='pi-one' src="./assets/匹配度一.png" alt="">
+            <img v-if='tuifilm.length >= 2' class='pi-two' src="./assets/匹配度二.png" alt="">
+            <img v-if='tuifilm.length >= 3' class='pi-three' src="./assets/匹配度三.png" alt="">
             <Col :span='20'>
               <Col :span="5" class='sp-c' v-for='(it , index) in tuifilm' :key='index'>
                 <dl  @click="selectFilm(it.id)" :class="['cinema-img',  {'cinema-img-active ': showClassimg}]">
@@ -288,7 +286,7 @@ import CitySelect from '../plan/citySelect.vue'
 import { toMap } from '@/fn/array'
 import moment from 'moment'
 import jsxReactToVue from '@/util/jsxReactToVue'
-import { queryList , addplan , abcount , pricount , tuijian , cinemaList } from '@/api/planput'
+import { queryList , addplan , abcount , pricount , tuijian , cinemaList , video } from '@/api/planput'
 import echarts from 'echarts' // 引入echarts
 
 // const makeMap = (list: any[]) => toMap(list, 'id', 'name')
@@ -365,64 +363,77 @@ export default class Main extends ViewBase {
 
   cinemaIdArray: any = []
 
+  // 全部数据
+  list: any = {}
+
+  bed: any = null
+  end: any = null
+
+  // tab标签
+  tagstype: any = []
+  tagsyear: any = []
+
+  // video item
+  videos: any = []
+
 
   dataFrom: any = {
     type: '1', // 方案类型
-    name: '', // 计划名称
-    videoId: null, // 广告片ID
-    calendarId: null, // 档期ID
-    beginDate: null, // 排期开始时间
-    endDate: null, // 排期结束时间
-    deliveryType: null, // 投放类型
-    budgetCode: '', // 预算区间
-    budgetAmount: null, // 预算金额
-    billingMode: null, // 击飞方式
+    name: this.list.name, // 计划名称
+    videoId: this.list.videoId, // 广告片ID
+    calendarId: this.list.calendarId, // 档期ID
+    beginDate: this.list.beginDate, // 排期开始时间
+    endDate: this.list.endDate, // 排期结束时间
+    deliveryType: 1, // 投放类型
+    budgetCode: this.list.budgetCode, // 预算区间
+    budgetAmount: this.list.budgetAmount, // 预算金额
+    billingMode: 1, // 击飞方式
     deliveryMovies: [], // 投放影片
-    status: null, // 计划状态
-    estimateCostAmount: null, // 预估花费
-    estimateShowCount: null, // 预估曝光场次
-    directionType: null, // 定向投放类型（1标准投放2单片投放）
-    deliveryGroups: [], // 观影人群画像
+    status: this.list.status, // 计划状态
+    estimateCostAmount: this.pricecount, // 预估花费
+    estimateShowCount: this.aboutcount, // 预估曝光场次
+    directionType: this.list.directionType, // 定向投放类型（1标准投放2单片投放）
+    deliveryGroups: this.list.deliveryGroups, // 观影人群画像
     cinemas: [], // 影院列表
   }
 
   get tableData() {
-    if (this.$route.params.corp != '2') {
+    // if (this.$route.params.corp != '2') {
       return this.cinemaList
-    } else {
-      return [
-        { names : '金源购物中心', codes: '商场', seats: '西贝筱面村(王府井店)', juli: '0.78km'},
-        { names : '伊斯特大厦', codes: '商场', seats: '西贝筱面村(王府井店)', juli: '0.90km'},
-        { names : '万达广场', codes: '商场', seats: '西贝筱面村(通州万达店)', juli: '0.10km'},
-        { names : '爱沐咖啡私人影院', codes: '商场', seats: '西贝筱面村(通州万达店)', juli: '1.21km'},
-        { names : '奥体中心', codes: '体育馆', seats: '西贝筱面村(小关店)', juli: '0.28km'},
-        { names : '中国木偶剧院', codes: '商场', seats: '西贝筱面村(小关店)', juli: '1.78km'}
-      ]
-    }
+    // } else {
+    //   return [
+    //     { names : '金源购物中心', codes: '商场', seats: '西贝筱面村(王府井店)', juli: '0.78km'},
+    //     { names : '伊斯特大厦', codes: '商场', seats: '西贝筱面村(王府井店)', juli: '0.90km'},
+    //     { names : '万达广场', codes: '商场', seats: '西贝筱面村(通州万达店)', juli: '0.10km'},
+    //     { names : '爱沐咖啡私人影院', codes: '商场', seats: '西贝筱面村(通州万达店)', juli: '1.21km'},
+    //     { names : '奥体中心', codes: '体育馆', seats: '西贝筱面村(小关店)', juli: '0.28km'},
+    //     { names : '中国木偶剧院', codes: '商场', seats: '西贝筱面村(小关店)', juli: '1.78km'}
+    //   ]
+    // }
   }
 
   get columns() {
-    if (this.$route.params.corp != '2') {
+    // if (this.$route.params.corp != '2') {
       return [
         { title: '专资编码', key: 'code', align: 'center'},
         { title: '影院名称', key: 'officialName', align: 'center'},
         { title: '总座位数', key: 'seatCount', align: 'center'}
       ]
-    } else {
-      return [
-        { title: '场馆名称', width: 150, key: 'names', align: 'center'},
-        { title: '场馆类型', key: 'codes', align: 'center'},
-        { title: '最近门店', width: 170, key: 'seats', align: 'center'},
-        { title: '距离', key: 'juli', align: 'center',
-          render: (hh: any, { row: { juli } }: any) => {
-            /* tslint:disable */
-            const h = jsxReactToVue(hh)
-            return <span class="orange">{juli}</span>
-            /* tslint:enable */
-          }
-        }
-      ]
-    }
+    // } else {
+    //   return [
+    //     { title: '场馆名称', width: 150, key: 'names', align: 'center'},
+    //     { title: '场馆类型', key: 'codes', align: 'center'},
+    //     { title: '最近门店', width: 170, key: 'seats', align: 'center'},
+    //     { title: '距离', key: 'juli', align: 'center',
+    //       render: (hh: any, { row: { juli } }: any) => {
+    //         /* tslint:disable */
+    //         const h = jsxReactToVue(hh)
+    //         return <span class="orange">{juli}</span>
+    //         /* tslint:enable */
+    //       }
+    //     }
+    //   ]
+    // }
   }
 
   get forMat() {
@@ -470,17 +481,16 @@ export default class Main extends ViewBase {
   }
   showimg(index: any) {
     this.isActive = index
-
-    // console.log(this.tuifilm)
-    // if (this.isActive == index) {
-    //   this.isActive = null
-    // } else if (this.isActive == null) {
-    //   this.isActive = index
-    // }
   }
 
   selectFilm(id: any) {
-    // console.log(123)
+    // if ( this.dataFrom.type = '1' ) {
+    //   return
+    // } else if ( this.dataFrom.type = '2' ) {
+
+    // } else if ( this.dataFrom.type = '3' ) {
+
+    // }
     if (!this.cinemaIdArray.includes(id)) {
       this.cinemaIdArray.push(id)
     } else {
@@ -490,8 +500,12 @@ export default class Main extends ViewBase {
 
   mounted() {
     this.seach()
-    // console.log(this.$route.params.id)
-    // console.log(sessionStorage.getItem(this.$route.params.id))
+    this.list = JSON.parse(sessionStorage.getItem(this.$route.params.id) as any)
+    this.bed = String(this.list.beginDate).slice(0, 4) + '-' + String(this.list.beginDate).slice(4, 6)
+    + '-' + String(this.list.beginDate).slice(6, 8)
+    this.end = String(this.list.endDate).slice(0, 4) + '-' + String(this.list.endDate).slice(4, 6)
+    + '-' + String(this.list.endDate).slice(6, 8)
+    // console.log(this.list)
   }
 
   async seach() {
@@ -501,15 +515,43 @@ export default class Main extends ViewBase {
       } = await queryList()
       // 获取状态列表
       this.typeList = data.typeList
+      if (this.list.directionType == 1) {
+        this.tagstype = (data.tags || []).filter((it: any) => {
+          if (it.code == this.list.deliveryGroups[0].tagTypeCode) {
+            return {
+              ...it
+            }
+          }
+        })
+        this.tagsyear = (data.tags || []).filter((it: any) => {
+          if (it.code == this.list.deliveryGroups[1].tagTypeCode) {
+            return {
+              ...it
+            }
+          }
+        })
+      }
+      if (this.list.directionType == 2) {
+        // this.tagstype = (data.tags || []).filter((it: any) => {
+        //   if (it.code == this.list.deliveryGroups[0].tagTypeCode) {
+        //     return {
+        //       ...it
+        //     }
+        //   }
+        // })
+      }
+      // console.log(this.tagsyear)
       // 获取预估覆盖场次
       const resab = await abcount({cinemaCount: 5 , type: this.dataFrom.type})
       this.aboutcount = resab.data
-      // console.log(this.aboutcount)
       // 获取预估投放花费
-      const respri = await pricount({budgetCode: '00-50' , type: this.dataFrom.type , budgetAmount: ''})
+      const respri = await pricount({budgetCode: this.list.budgetCode , type: this.dataFrom.type , budgetAmount: ''})
       this.pricecount = respri.data
       // 推荐影片
-      const tui = await tuijian({types: 'juqing' , pageSize : 8})
+      const tui = await tuijian({
+                      types: this.list.deliveryGroups[0].text == '' ? '' : (this.list.deliveryGroups[0].text).join(','),
+                      pageSize : 8
+                                })
       this.tuifilm = (tui.data.data.items || []).map((it: any) => {
         return {
           ...it,
@@ -519,6 +561,9 @@ export default class Main extends ViewBase {
       // yingyuan
       const cinema = await cinemaList({ids: '233,156', pageIndex: 1, pageSize: 6})
       this.cinemaList = cinema.data.items
+      // guanggaopian
+      const videoitem = await video(this.list.videoId)
+      this.videos = videoitem.data.items
     } catch (ex) {
       this.handleError(ex)
     } finally {
@@ -532,10 +577,10 @@ export default class Main extends ViewBase {
 @import '~@/site/lib.less';
 .cinema-check {
   position: absolute;
-  left: -5px;
-  right: -5px;
-  top: -5px;
-  bottom: -5px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
   z-index: 8;
   border: 5px solid #fe8135;
   background: url('./assets/已选.png') no-repeat top right;

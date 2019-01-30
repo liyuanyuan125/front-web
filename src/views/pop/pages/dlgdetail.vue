@@ -17,11 +17,11 @@
             <span v-if="$route.params.id == 3">线下场馆</span>
           </Col>
           <Col :span="4">广告计划名称</Col>
-          <Col :span="10"><span>{{forMat.name}}</span></Col>
+          <Col :span="10"><span>123</span></Col>
         </Row>
         <Row class="mb20">
           <Col :span="3">客户名称</Col>
-          <Col :span="7"><span>{{forMat.client}}</span></Col>
+          <Col :span="7"><span>123</span></Col>
           <Col :span="4">广告片规格</Col>
           <Col :span="10"><span>30s</span></Col>
         </Row>
@@ -39,7 +39,7 @@
         </Row>
         <Row class="mb20">
           <Col :span="3">冻结金额/￥</Col>
-          <Col :span="7"><span class="money">{{forMat.ceil}}</span></Col>
+          <Col :span="7"><span class="money">789</span></Col>
           <Col :span="4">计费类型</Col>
           <Col :span="10"><span>CPM/30s</span></Col>
         </Row>
@@ -148,18 +148,18 @@ export default class Main extends ViewBase {
   }
 
   open() {
-    const id: any = this.$route.params.id || 1
-    if (this.$route.params.corp == '2') {
-       this.$router.push({
-        name: 'report-plan-xibei',
-        params: {id}
-      })
-    } else {
-      this.$router.push({
-        name: 'report-plan',
-        params: {id}
-      })
-    }
+    // const id: any = this.$route.params.id || 1
+    // if (this.$route.params.corp == '2') {
+    //    this.$router.push({
+    //     name: 'report-plan-xibei',
+    //     params: {id}
+    //   })
+    // } else {
+    //   this.$router.push({
+    //     name: 'report-plan',
+    //     params: {id}
+    //   })
+    // }
   }
 }
 </script>
