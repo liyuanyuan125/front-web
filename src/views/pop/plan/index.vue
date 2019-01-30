@@ -304,7 +304,7 @@ export default class Main extends ViewBase {
   }
 
   citySel = false
-
+  calendarName = ''
   // 是否为映前广告
   get isRefBefore() {
     return this.form.putType == 'refBefore'
@@ -553,7 +553,7 @@ export default class Main extends ViewBase {
         beginDate: Number(moment(this.beginDateId).format(timeFormats)),
         endDate: Number(moment(this.endDateId).format(timeFormats)),
         calendarId: this.form.calendarId,
-        calendarName: this.customerName
+        calendarName: this.calendarName
       }
     }
 
@@ -578,7 +578,7 @@ export default class Main extends ViewBase {
         ]
       }
     } else {
-      if (this.singleObject.length != 1) {
+      if (this.singleObject.id.length != 1) {
         info('请选择一部影片')
         return
       }
@@ -656,7 +656,7 @@ export default class Main extends ViewBase {
     if (val) {
       this.beginDateId = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].beginDate)
       this.endDateId = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].endDate)
-      this.customerName = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].name)
+      this.calendarName = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].name)
     }
   }
 }
