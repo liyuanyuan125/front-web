@@ -78,9 +78,9 @@
           <p v-if="launchList.categorizedByCityId" class="flex-box">
             <label>投放城市（{{account}}个）</label>
             <em class="city-list">
-              <p v-for="item in launchList.categorizedByCityGradeCode">
+              <p v-for="(item, index) in launchList.categorizedByCityGradeCode" :key="index">
                 <i>{{item.name}}（{{item.infos.length}}个）</i>
-                <span v-for="it in item.infos">{{it.name}}</span>
+                <span v-for="(it, ind) in item.infos" :key="ind">{{it.name}}</span>
               </p>
               <!-- <p><i>1级城市（0个）</i><span></span></p>
                <p><i>2级城市（0个）</i><span></span></p>
@@ -109,7 +109,7 @@
         <p class="flex-box">
           <label>地域偏好</label>
           <em>
-            <i v-for="item in areaList">{{item}}</i>
+            <i v-for="(item, index) in areaList" :key="index">{{item}}</i>
           </em>
         </p>
       </div>
@@ -138,21 +138,21 @@
           </div>
 
           <div class="film-type">
-            <i class v-for="item in typeList">{{item}}</i>
+            <i class v-for="(item, index) in typeList" :key="index">{{item}}</i>
           </div>
         </div>
       </div>
       <div class="flex-box film-list">
         <label>影片</label>
         <div class="flex-box">
-          <div class="item" v-for="item in defaultData.movieList">
+          <div class="item" v-for="(item, index) in defaultData.movieList" :key="index">
             <div class="film-img-item">
               <img :src="item.mainPicUrl" width="180" height="240">
               <div class="open-time">上映时间：{{formatYell(item.openTime)}}</div>
             </div>
             <div class="film-name">《{{item.name}}》</div>
             <div class="film-type-items">
-              <i v-for="it in item.types">
+              <i v-for="(it, index) in item.types" :key="index">
                 {{queryFilmList(it)}}
                 <em>/</em>
               </i>
@@ -378,7 +378,7 @@ export default class PlanDefault extends ViewBase {
   }
   &.unknow-atv i {
     background: #fff8f2;
-    color: #fe8135;
+    color: @c-button;
   }
   .gender-text {
     position: absolute;

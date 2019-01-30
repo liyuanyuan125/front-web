@@ -113,7 +113,7 @@ import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
 import { formatTimes, formatYell} from '@/util/validateRules'
 import { planList, delCheckPlanList } from '@/api/plan'
-import relevanceDlg from '../plan/relevanceAdVDlg.vue'
+import relevanceDlg from '../plan/default/relevanceAdVDlg.vue'
 
 @Component({
   components: {
@@ -131,9 +131,10 @@ export default class Plan extends ViewBase {
     pageIndex: 1,
     pageSize: 10
   }
-  relevanVis = {
+  relevanVis: any = {
     visible: false,
-    title: '关联广告片'
+    title: '关联广告片',
+    item: ''
   }
 
   totalCount = 2
@@ -254,7 +255,10 @@ export default class Plan extends ViewBase {
   }
 
   async relevanceAdv(id: any) {
-    this.relevanVis.visible = true
+     this.relevanVis = {
+      visible: true,
+      item: ''
+    }
   }
   async tableList() {
     const { data } = await planList({ ...this.form, ...this.pageList })
