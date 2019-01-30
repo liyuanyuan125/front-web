@@ -553,7 +553,7 @@ export default class Main extends ViewBase {
         beginDate: Number(moment(this.beginDateId).format(timeFormats)),
         endDate: Number(moment(this.endDateId).format(timeFormats)),
         calendarId: this.form.calendarId,
-        customerName: this.customerName
+        calendarName: this.customerName
       }
     }
 
