@@ -528,6 +528,7 @@ export default class Main extends ViewBase {
     if (!volid) {
       return
     }
+
     const query = {
       deliveryType: 1,
       name: this.form.name,
@@ -577,6 +578,10 @@ export default class Main extends ViewBase {
         ]
       }
     } else {
+      if (this.singleObject.length != 1) {
+        info('请选择一部影片')
+        return
+      }
       direction = {
         directionType: this.putType,
         deliveryGroups: [

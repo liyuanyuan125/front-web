@@ -38,7 +38,7 @@
     </Form>
     <div class="flex-box">
       <p class="single-length" v-if="length > 0">已为您匹配以下{{length}}部影片：</p>
-      <p class="red">已选中{{cinemaIdArray.length}}部影片</p>
+      <!-- <p class="red">已选中{{cinemaIdArray.length}}部影片</p> -->
     </div>
     
     <ul class="single-film-list" v-if="length > 0">
@@ -169,11 +169,12 @@ export default class Main extends ViewBase {
   }
 
   selectFilm(id: any) {
-    if (!this.cinemaIdArray.includes(id)) {
-      this.cinemaIdArray.push(id)
-    } else {
-      this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
-    }
+    this.cinemaIdArray = [id]
+    // if (!this.cinemaIdArray.includes(id)) {
+    //   this.cinemaIdArray.push(id)
+    // } else {
+    //   this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+    // }
   }
   @Watch('releaseTime', { deep: true })
 
