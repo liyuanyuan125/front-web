@@ -6,8 +6,8 @@ export async function queryList() {
 }
 
 // i新建计划
-export async function addplan() {
-  const res = await post('/xadvert/plans')
+export async function addplan(query: any) {
+  const res = await post('/xadvert/plans' , query)
   return res
 }
 
@@ -38,6 +38,11 @@ export async function TcinemaList(query: any) {
 
 export async function video(id: any) {
   const res = await get(`/xadvert/videos/${id}`)
+  return res
+}
+
+export async function dataFrom(query: any) {
+  const res = await get('/xadvert/plans', query)
   return res
 }
 

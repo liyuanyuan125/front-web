@@ -56,7 +56,7 @@
             </dl>
             <dl>
               <dd>投放天数</dd>
-              <dt>{{list.endDate - list.beginDate}}天</dt>
+              <dt>{{day}}天</dt>
             </dl>
             <dl>
               <dd>档期</dd>
@@ -105,26 +105,28 @@
              </Col>
              <Col class="poster-title" :span="18" style="height: 240px">
               <Row class='row-xq'>
-                <Col span='10'><span>影片名称</span>《{{seacinemaList.name}}》</Col>
-                <Col span='14'><span style='width: 28%;'>影片标语</span> {{seacinemaList.slogan}}</Col>
+                <Col span='10'><span>影片名称</span><b>《{{seacinemaList.name}}》</b></Col>
+                <Col span='14'><span style='width: 28%;'>影片标语</span> <b>{{seacinemaList.slogan}}</b></Col>
               </Row>
               <Row class='row-xq'>
-                <Col span='10'><span>上映日期</span> {{seacinemaList.openTime}}</Col>
-                <Col span='14'><span style='width: 28%;'>片长</span> {{seacinemaList.length}}</Col>
+                <Col span='10'><span>上映日期</span> <b>{{seacinemaList.openTime}}</b></Col>
+                <Col span='14'><span style='width: 28%;'>片长</span> <b>{{seacinemaList.length}}</b></Col>
               </Row>
               <Row class='row-xq-24'>
                 <Col span='24'><span>影片类型</span><b v-for='it in seacinemaList.type'> {{it}}</b></Col>
               </Row>
               <Row class='row-xq-24'>
-                <Col span='24'><span>导演</span> {{seacinemaList.director}}</Col>
+                <Col span='24'><span>导演</span> <b>{{seacinemaList.director}}</b></Col>
               </Row>
               <Row class='row-xq-24'>
-                <!-- <Col span='24'><span>演员</span><b v-for='it in seacinemaList.performers'> {{it}}</b></Col> -->
+                <Col span='24' style='height: 40px;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>演员</span><b v-for='it in seacinemaList.performers'> {{it}}</b></Col>
               </Row>
-              <!-- <Row class='row-xq-l24'>
-                {{list.tagTypeCode}}
-                <Col span='24' ><span>根据您选择的地域偏好，我们将优先为您覆盖以下地域</span><span v-for='(it,index) in list.tagTypeCode' :key='index'><b v-for='(item) in diqutype[0].values' :key='item.key' v-if='it == item.key'>{{item}}</b></span></Col>
-              </Row> -->
+              <Row class='row-xq-l24'>
+                <Col span='24' >
+                <span>根据您选择的地域偏好，我们将优先为您覆盖以下地域</span>
+                <span v-if='list.tagTypeCode.length == 0'>暂无</span>
+                <span v-for='(it,index) in list.tagTypeCode' :key='index'><b v-for='(item) in diqutype.values' :key='item.key' v-if='it == item.key'>{{item.text}} </b></span></Col>
+              </Row>
              </Col>
            </Row>
         </Col>
@@ -175,7 +177,7 @@
         </Col>
       </Row>
 
-      <!-- <Row class="pt40" style='margin-bottom: 30px;' v-if='this.list.directionType == 1'>
+      <Row class="pt40" style='margin-bottom: 30px;' v-if='this.list.directionType == 1'>
         <Col :span="24">
           <h3 class="square">投放影片</h3>
         </Col>
@@ -225,7 +227,7 @@
             </Col>
            </Row>
         </Col>
-      </Row> -->
+      </Row>
 
       <Row class="pt40">
         <Col :span="24">
@@ -247,12 +249,12 @@
     </Row>
     <div class="report-button">
       <Button type="primary" @click="edit" style="width: 370px">确认投放方案</Button>
-      <Button type="default">存为草稿</Button>
+      <Button type="default" @click="caoEdit">存为草稿</Button>
     </div>
     <!-- 确认生成 -->
     <DlgDetail v-if="addOrUpdateVisible" ref="addOrUpdate" />
     <!-- 查看已选影院 -->
-    <dlgCinema v-if="addcinema" ref="addcine" />
+    <dlgCinema v-model="cinema" v-if="cinema.visible"  />
 
   </div>
 </template>
@@ -269,6 +271,8 @@ import jsxReactToVue from '@/util/jsxReactToVue'
 import { queryList , addplan , abcount , pricount , tuijian , TcinemaList , video } from '@/api/planput'
 import { cinemaList } from '@/api/popPlan'
 import echarts from 'echarts' // 引入echarts
+import { warning , success, toast } from '@/ui/modal'
+
 
 // const makeMap = (list: any[]) => toMap(list, 'id', 'name')
 const timeFormat = 'YYYY-MM-DD'
@@ -318,6 +322,11 @@ const mockMap = [
   }
 })
 export default class Main extends ViewBase {
+  cinema: any = {
+    visible: false,
+    id: ''
+  }
+
   // tab
   showClassbiao: any = true
   showClassjia: any = false
@@ -353,6 +362,7 @@ export default class Main extends ViewBase {
 
   bed: any = null
   end: any = null
+  day: any = 0
 
   // tab标签
   tagstype: any = []
@@ -367,8 +377,8 @@ export default class Main extends ViewBase {
     name: this.list.name, // 计划名称
     videoId: this.list.videoId, // 广告片ID
     calendarId: this.list.calendarId, // 档期ID
-    beginDate: this.list.beginDate, // 排期开始时间
-    endDate: this.list.endDate, // 排期结束时间
+    beginDate: new Date(this.bed).getTime(), // 排期开始时间
+    endDate: new Date(this.end).getTime(), // 排期结束时间
     deliveryType: 1, // 投放类型
     budgetCode: this.list.budgetCode, // 预算区间
     budgetAmount: this.list.budgetAmount, // 预算金额
@@ -379,6 +389,7 @@ export default class Main extends ViewBase {
     estimateShowCount: this.aboutcount, // 预估曝光场次
     directionType: this.list.directionType, // 定向投放类型（1标准投放2单片投放）
     deliveryGroups: this.list.deliveryGroups, // 观影人群画像
+    throwInAreaType: 0,
     cinemas: [], // 影院列表
   }
 
@@ -389,7 +400,8 @@ export default class Main extends ViewBase {
       seacinemaList: this.seacinemaList, // 单步影片详情
       tagstype: this.tagstype, // 标准 / 单步 影片类型
       tagsyear: this.tagsyear, // 标准影片 年龄 (单步的话没有)
-      tagsex: this.list.deliveryGroups //  标准影片性别(数组取值)
+      tagsex: this.list.deliveryGroups, //  标准影片性别(数组取值)
+      diqutype: this.diqutype
     }
   }
 
@@ -399,18 +411,19 @@ export default class Main extends ViewBase {
       name: this.list.name, // 计划名称
       videoId: this.list.videoId, // 广告片ID
       calendarId: this.list.calendarId, // 档期ID
-      beginDate: this.list.beginDate, // 排期开始时间
-      endDate: this.list.endDate, // 排期结束时间
+      beginDate: new Date(this.bed).getTime(), // 排期开始时间
+      endDate: new Date(this.end).getTime(), // 排期结束时间
       deliveryType: 1, // 投放类型
       budgetCode: this.list.budgetCode, // 预算区间
       budgetAmount: this.list.budgetAmount, // 预算金额
       billingMode: this.list.billingMode, // 击飞方式
-      deliveryMovies: [], // 投放影片
+      deliveryMovies: this.cinemaIdArray, // 投放影片
       status: 1, // 计划状态
       estimateCostAmount: this.pricecount, // 预估花费
       estimateShowCount: this.aboutcount, // 预估曝光场次
       directionType: this.list.directionType, // 定向投放类型（1标准投放2单片投放）
       deliveryGroups: this.list.deliveryGroups, // 观影人群画像
+      throwInAreaType: 0,
       cinemas: [], // 影院列表
     }
   }
@@ -435,10 +448,14 @@ export default class Main extends ViewBase {
   }
   // 查看影院
   view() {
-    this.addcinema = true
-    this.$nextTick(() => {
-      (this.$refs.addcine as any).init(this.forMat)
-    })
+    // this.addcinema = true
+    // this.$nextTick(() => {
+    //   (this.$refs.addcine as any).init(this.forMat)
+    // })
+    this.cinema = {
+      visible: true,
+      id: '233,156'
+    }
   }
 
   // 确认生成
@@ -448,6 +465,18 @@ export default class Main extends ViewBase {
     this.$nextTick(() => {
       (this.$refs.addOrUpdate as any).init(this.datafroms , this.addlist)
     })
+  }
+  async caoEdit() {
+    this.datafroms.status = 2
+    try {
+      const res = await addplan(this.datafroms)
+      toast('添加成功')
+      // this.dataFrom = {}
+      // this.seach()
+      // history.go(0)
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   showClass( index: any) {
@@ -482,7 +511,7 @@ export default class Main extends ViewBase {
       alert('暂不支持选择影片')
       return
     } else if ( this.dataFrom.type == '2' ) {
-      if (this.cinemaIdArray.length <= 3) {
+      if (this.cinemaIdArray.length < 3) {
         if (!this.cinemaIdArray.includes(id)) {
           this.cinemaIdArray.push(id)
         } else {
@@ -493,7 +522,7 @@ export default class Main extends ViewBase {
         return
       }
     } else if ( this.dataFrom.type == '3' ) {
-      if (this.cinemaIdArray.length <= 6) {
+      if (this.cinemaIdArray.length < 6) {
         if (!this.cinemaIdArray.includes(id)) {
           this.cinemaIdArray.push(id)
         } else {
@@ -513,6 +542,7 @@ export default class Main extends ViewBase {
     + '-' + String(this.list.beginDate).slice(6, 8)
     this.end = String(this.list.endDate).slice(0, 4) + '-' + String(this.list.endDate).slice(4, 6)
     + '-' + String(this.list.endDate).slice(6, 8)
+    this.day = (new Date(this.end).getTime() - new Date(this.bed).getTime()) / (24 * 3600000)
     // console.log(this.list)
   }
 
@@ -539,8 +569,9 @@ export default class Main extends ViewBase {
           }
         })
       }
+      // 地区
       if (this.list.directionType == 2) {
-        // this.diqutype = data.tags[3]
+        this.diqutype = data.tags[3]
       }
       // 获取预估覆盖场次
       const resab = await abcount({cinemaCount: 5 , type: this.dataFrom.type})
@@ -972,10 +1003,10 @@ export default class Main extends ViewBase {
 }
 .row-xq-l24 {
   line-height: 40px;
-  span {
+  span:nth-child(1) {
     color: #989898;
     display: inline-block;
-    width: 67%;
+    width: 48%;
   }
 }
 </style>
