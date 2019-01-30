@@ -1,6 +1,6 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title">创建广告计划</h2>
+    <h2 class="layout-nav-title">创建广告计划 > 新建广告计划</h2>
 
     <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
       <h3 class="layout-title">基本信息</h3>
@@ -82,14 +82,13 @@
       <!-- 投放定向 标准定向 -->
       <div v-if="putType == 1">
         <FormItem label="投放地区" class="form-item-type">
-          <radioTab v-model="form.areaType" :tagMess="areaTypeList" />
+          <radioTab v-model="form.throwInAreaType" :tagMess="areaTypeList" />
         </FormItem>
 
-        <div class="city-wrap">
-          <CinemaNum :data="statisticsResults" :type="form.areaType" />
+        <div class="city-wrap mb20">
+          <AreaPane v-model="form.ids" :type="form.throwInAreaType"/>
         </div>
-        <!-- <div class="city-wrap">
-        </div> -->
+
         <FormItem v-if="index != 3" v-for="(item, index) in tags" :key="index" :label="item.name" :class="['form-item-age', index == 0 ? 'pb3' : '']">
           <radioTab v-if="index != 0" v-model="cinema[item.code]" :tagMess="item.values" />
           <CheckboxGroup v-else v-model="cinema[item.code]" class="item-radio-top">
@@ -159,6 +158,7 @@ import radioTab from './radioTab.vue'
 import { drairesList, beforePlan, advertising, advertDetail, cinemaList } from '@/api/popPlan.ts'
 import moment from 'moment'
 import SingCinema from './singcinema.vue'
+import AreaPane from './components/areaPane'
 
 const timeFormat = 'YYYY-MM-DD'
 const timeFormats = 'YYYYMMDD'
@@ -184,7 +184,8 @@ const keepExclusion = <T>(
     Tags,
     radioTab,
     CinemaNum,
-    SingCinema
+    SingCinema,
+    AreaPane
   }
 })
 export default class Main extends ViewBase {
@@ -290,12 +291,17 @@ export default class Main extends ViewBase {
     custom: '',
     venueType: [],
     tagTypeCode: [0],
+
     // 定向类型
     type: 1,
-    areaType: '',
     sex: 0,
     age: [0],
     filmHobby: [0],
+
+    // 投放地区类型
+    throwInAreaType: 0,
+    // 投放地区所选 id 列表
+    ids: [],
 
     // 单个影片
     filmName: '',
@@ -560,20 +566,25 @@ export default class Main extends ViewBase {
     // 投放定向
     let direction: any = {}
     if (this.putType == 1) {
+      if (this.form.ids.length != 1) {
+        info('请选择投放区域')
+        return
+      }
       direction = {
         directionType: this.putType,
+        ids: this.form.ids,
         deliveryGroups: [
           {
             tagTypeCode: 'MOVIE_TYPE',
-            text: this.cinema.MOVIE_TYPE.includes(0) ? '' : this.cinema.MOVIE_TYPE
+            text: this.cinema.MOVIE_TYPE.includes(0) ? [] : this.cinema.MOVIE_TYPE
           },
           {
             tagTypeCode: 'PLAN_GROUP_AGE',
-            text: this.cinema.PLAN_GROUP_AGE == 0 ? '' : this.cinema.PLAN_GROUP_AGE
+            text: this.cinema.PLAN_GROUP_AGE == 0 ? [] : this.cinema.PLAN_GROUP_AGE
           },
           {
             tagTypeCode: 'PLAN_GROUP_SEX',
-            text: this.cinema.PLAN_GROUP_SEX == 0 ? '' : this.cinema.PLAN_GROUP_SEX
+            text: this.cinema.PLAN_GROUP_SEX == 0 ? [] : this.cinema.PLAN_GROUP_SEX
           }
         ]
       }
@@ -587,7 +598,7 @@ export default class Main extends ViewBase {
         deliveryGroups: [
           {
             tagTypeCode: 'MOVIE_TYPE',
-            text: this.cinema.MOVIE_TYPE.includes(0) ? '' : this.formCinema.types
+            text: this.cinema.MOVIE_TYPE.includes(0) ? [] : this.formCinema.types
           }
         ],
         deliveryMovies: this.singleObject.id,
@@ -664,4 +675,8 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import './ggadd.less';
+
+.city-wrap {
+  margin-top: -12px;
+}
 </style>

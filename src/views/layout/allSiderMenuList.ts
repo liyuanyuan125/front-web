@@ -23,17 +23,12 @@ const allSiderMenuList: SiderMenuItem[] = [
   {
     name: 'pop',
     label: '推广管理',
-    systems: ['ads', 'ps'],
+    systems: ['ads'],
     subList: [
       {
         name: 'pop-planlist',
         label: '广告计划',
         systems: ['ads'],
-      },
-      {
-        name: 'pop-planps',
-        label: '广告计划',
-        systems: ['ps'],
       },
       {
         name: '',
@@ -45,7 +40,7 @@ const allSiderMenuList: SiderMenuItem[] = [
   {
     name: 'report',
     label: '数据报表',
-    systems: ['ads', 'ps'],
+    systems: ['ads'],
     subList: [
       {
         name: 'report-plan',
@@ -57,7 +52,7 @@ const allSiderMenuList: SiderMenuItem[] = [
   {
     name: 'customer',
     label: '客户管理',
-    systems: ['ads', 'ps'],
+    systems: ['ads'],
     subList: [
       {
         name: '',
@@ -141,7 +136,7 @@ const allSiderMenuList: SiderMenuItem[] = [
   {
     name: 'account',
     label: '账户管理',
-    systems: ['ads', 'resource', 'ps'],
+    systems: ['ads', 'resource'],
     subList: [
       {
         name: 'account-info',

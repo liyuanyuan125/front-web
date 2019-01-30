@@ -1,3 +1,5 @@
+import makeMd5 from 'md5'
+
 /**
  * 取 object 的某些属性，作为新对象
  * @param object 对象
@@ -57,5 +59,17 @@ export function clean(object: any, cleanList: any[] = [null, undefined, '']) {
       cleanList.includes(val) || (result[key] = val)
     }
   }
+  return result
+}
+
+/**
+ * 返回对象的 hash 值（将对象 JSON 的串，进行 MD5 取值）
+ * @param object 对象
+ * @param salt 加盐
+ */
+export function hash(object: any, salt = '') {
+  const json = JSON.stringify(object)
+  const text = salt + json
+  const result = makeMd5(text)
   return result
 }

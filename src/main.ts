@@ -2,7 +2,7 @@
 import '@/util/hooks'
 import Vue from 'vue'
 import iView from 'iview'
-import 'iview/dist/styles/iview.css'
+import '@/site/iview.less'
 import app from './app.vue'
 import Router from 'vue-router'
 import locale from 'iview/dist/locale/zh-CN'
@@ -11,8 +11,6 @@ import { alert } from './ui/modal'
 import LazyInput from '@/components/LazyInput'
 import { hasLogin } from './store'
 import routes from './routes'
-
-// Vue.prototype.$echarts = echarts //引入组件
 
 // 将登陆注册等模块「静态」到主文件中，以便用户更流畅
 import home from './views/home.vue'

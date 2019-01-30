@@ -59,7 +59,7 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getUser, logout, User, switchSystem } from '@/store'
+import { getUser, checkUser, logout, User, switchSystem } from '@/store'
 import { systemList as allSystemList, SystemCode } from '@/util/types'
 import allSiderMenuList, { SiderMenuItem } from './allSiderMenuList'
 import { cloneDeep } from 'lodash'
@@ -168,6 +168,10 @@ export default class App extends ViewBase {
 
     // 最后的手段：硬编码映射关系
     return this.siderActiveMap[name]
+  }
+
+  created() {
+    checkUser()
   }
 
   mounted() {

@@ -76,5 +76,9 @@ module.exports = {
     })
 
     config.performance.hints(false)
+
+    // 为了支持 iview theme
+    config.module.rule('less').oneOf('normal').use('less-loader')
+    .tap(args => ({ ...args, javascriptEnabled: true }))
   }
 }

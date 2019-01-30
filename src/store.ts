@@ -5,7 +5,7 @@
 import tryParseJson from '@/fn/tryParseJson'
 import cookie from 'js-cookie'
 import { logout as postLogout } from '@/api/auth'
-import { SystemCode } from '@/util/types'
+import { SystemCode, systemList } from '@/util/types'
 import innerAccess, { AccessToken } from '@/fn/innerAccess'
 import event from '@/fn/event'
 import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
@@ -38,6 +38,7 @@ export interface User {
   perms: string[]
 }
 
+const KEY_USER = 'user@www.aiads.com'
 const KEY_TOKEN = 'X-API-TOKEN'
 
 const COOKIE_OPTIONS = {
@@ -47,11 +48,11 @@ const COOKIE_OPTIONS = {
 
 let theUser: User | null = null
 
-const saveUser = () => localStorage.user = JSON.stringify(theUser)
+const saveUser = () => localStorage[KEY_USER] = JSON.stringify(theUser)
 
 const restoreUser = (): User | null => {
   const token = cookie.get(KEY_TOKEN)
-  const user = tryParseJson(localStorage.user)
+  const user = tryParseJson(localStorage[KEY_USER])
   return token && user ? user : null
 }
 
@@ -77,6 +78,35 @@ export function getUser() {
 export function setUser(user: User) {
   theUser = user
   saveUser()
+}
+
+// 简单的断言
+const assert = (expression: any, errorMessage: string) => {
+  if (!!expression === false) {
+    throw new Error(errorMessage)
+  }
+}
+
+/** 检查用户信息完成性，若不完整，则清空，退出  */
+export function checkUser() {
+  const user = getUser()
+  if (user != null) {
+    try {
+      assert(user.id > 0, '用户 ID 必须大于 0')
+      assert((user.email || '').trim(), '邮箱不能为空')
+      assert('isAdmin' in user, '必须存在 isAdmin')
+      const codeList = systemList.map(it => it.code)
+      assert(codeList.includes(user.systemCode), '角色不正确')
+      assert(user.systems && user.systems.length > 0, '没有角色')
+      assert(user.companyId > 0, '没有所属公司')
+      assert(user.accountType > 0, '没有子账户类型')
+      assert(user.perms && user.perms.length > 0, '没有权限列表')
+    } catch (ex) {
+      // tslint:disable-next-line:no-console
+      console.error(`用户信息不完整：${ex.message}，退出重新登录`)
+      logout()
+    }
+  }
 }
 
 export function switchSystem(systemCode: SystemCode) {
@@ -114,7 +144,7 @@ export function hasLogin() {
  */
 export function logout() {
   cookie.remove(KEY_TOKEN, COOKIE_OPTIONS)
-  delete localStorage.user
+  delete localStorage[KEY_USER]
   theUser = null
   postLogout()
 }
