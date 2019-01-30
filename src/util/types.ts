@@ -19,9 +19,8 @@ export interface KeyTextControlStatus extends KeyText {
 
 /**
  * 系统 code 枚举
- * TODO: ps 只是展示用，后面要去掉
  */
-export type SystemCode = 'ads' | 'resource' | 'ps'
+export type SystemCode = 'ads' | 'resource'
 
 /**
  * 系统类型
@@ -40,10 +39,8 @@ export interface SystemType {
 
 /**
  * 系统列表
- * TODO: 片商只是展示用，后面要去掉
  */
 export const systemList: SystemType[] = [
   { code: 'ads', name: '广告主' },
   { code: 'resource', name: '资源方' },
-  { code: 'ps', name: '片商' },
 ]

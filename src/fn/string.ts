@@ -71,3 +71,11 @@ export function pascalCase(str: string) {
 export function hyphenCase(str: string) {
   return str.replace(/_/g, '-').replace(/([A-Z])/g, v => '-' + v.toLowerCase())
 }
+
+/**
+ * 判断是否为 null 或为空（trim 后）
+ * @param str 要判断的字符串
+ */
+export function isNullOrEmpty(str: any) {
+  return str == null || String(str).trim() === ''
+}

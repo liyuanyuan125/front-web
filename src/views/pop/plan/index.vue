@@ -80,14 +80,13 @@
       <!-- 投放定向 标准定向 -->
       <div v-if="putType == 1">
         <FormItem label="投放地区" class="form-item-type">
-          <radioTab v-model="form.areaType" :tagMess="areaTypeList" />
+          <radioTab v-model="form.throwInAreaType" :tagMess="areaTypeList" />
         </FormItem>
 
         <div class="city-wrap">
-          <CinemaNum :data="statisticsResults" :type="form.areaType" />
+          <AreaPane v-model="form.ids" :type="form.throwInAreaType"/>
         </div>
-        <!-- <div class="city-wrap">
-        </div> -->
+
         <FormItem v-if="index != 3" v-for="(item, index) in tags" :key="index" :label="item.name" :class="['form-item-age', index == 0 ? 'pb3' : '']">
           <CheckboxGroup v-model="cinema[item.code]" class="item-radio-top">
             <Checkbox :class="index == 0 ? 'check-item form-item-first' : 'check-item'" :label="0">不限</Checkbox>
@@ -156,6 +155,7 @@ import radioTab from './radioTab.vue'
 import { drairesList, beforePlan, advertising, advertDetail, cinemaList } from '@/api/popPlan.ts'
 import moment from 'moment'
 import SingCinema from './singcinema.vue'
+import AreaPane from './components/areaPane'
 
 const timeFormat = 'YYYY-MM-DD'
 const timeFormats = 'YYYYMMDD'
@@ -181,7 +181,8 @@ const keepExclusion = <T>(
     Tags,
     radioTab,
     CinemaNum,
-    SingCinema
+    SingCinema,
+    AreaPane
   }
 })
 export default class Main extends ViewBase {
@@ -287,12 +288,17 @@ export default class Main extends ViewBase {
     custom: '',
     venueType: [],
     tagTypeCode: [0],
+
     // 定向类型
     type: 1,
-    areaType: '',
     sex: 0,
     age: [0],
     filmHobby: [0],
+
+    // 投放地区类型
+    throwInAreaType: 0,
+    // 投放地区所选 id 列表
+    ids: [],
 
     // 单个影片
     filmName: '',
@@ -625,4 +631,8 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import './ggadd.less';
+
+.city-wrap {
+  margin-top: -12px;
+}
 </style>
