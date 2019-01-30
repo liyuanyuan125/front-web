@@ -39,7 +39,7 @@
           <Col :span="4">预估冻结金额／¥</Col>
           <Col :span="7"><span class="money">{{money}}</span></Col>
           <Col :span="4">计费类型</Col>
-          <Col :span="9"><span>CPM/30s</span></Col>
+          <Col :span="9"><span>CPM/{{data.specification}}s</span></Col>
         </Row>
       </div>
       <div v-if='data.directionType == 2' style='background:rgba(249, 249, 249, 1);padding: 10px 20px 1px 20px; margin-top: 10px;'>
