@@ -5,6 +5,7 @@
         <StatsPane :value="statsMap[0]" class="stats-pane"/>
       </div>
     </section>
+
     <section v-if="type == 1">
       <div class="pane-content region-box">
         <CheckboxPane v-model="model[1]" :list="regionList" value-key="code"
@@ -17,6 +18,7 @@
         <StatsPane :value="statsMap[1]" class="stats-pane"/>
       </div>
     </section>
+
     <section v-if="type == 2">
       <div class="pane-content province-box">
         <CheckboxPane v-model="model[2]" :list="provinceList" value-key="id"
@@ -29,6 +31,7 @@
         <StatsPane :value="statsMap[2]" class="stats-pane"/>
       </div>
     </section>
+
     <section v-if="type == 3">
       <div class="pane-content city-box">
         <form class="filter-form" @submit.prevent>
@@ -37,7 +40,7 @@
             <Option v-for="item in cityLevelList" :key="item.code"
               :value="item.code">{{item.name}}</Option>
           </Select>
-          <Input v-model="cityKeyword" placeholder="请输入城市名称进行搜索"
+          <Input v-model="cityKeyword" placeholder="搜索城市名称"
             class="input-search" clearable/>
           <Button type="primary" class="button-search"/>
 
@@ -59,7 +62,40 @@
         <StatsPane :value="statsMap[3]" class="stats-pane"/>
       </div>
     </section>
-    <section v-if="type == 4">4</section>
+
+    <section v-if="type == 4">
+      <div class="pane-content cinema-box">
+        <form class="filter-form" @submit.prevent>
+          <Select v-model="boxLevel" placeholder="请选择票房级别" class="select-level"
+            @on-change="cinemaKeyword = ''">
+            <Option v-for="item in boxLevelListValid" :key="item.key"
+              :value="item.key">{{item.text}}</Option>
+          </Select>
+          <Input v-model="cinemaKeyword" placeholder="搜索影院名称"
+            class="input-search" clearable/>
+          <Button type="primary" class="button-search"/>
+
+          <Button class="button-all" :disabled="cinemaList.length == 0"
+            @click="onCinemaSelectAll">{{cinemaAllText}}</Button>
+        </form>
+
+        <TinyLoading v-if="cinemaLoading" class="cinema-loading"/>
+
+        <CheckboxPane v-model="model[4]" :list="cinemaList" value-key="id"
+          class="checkbox-pane" no-all v-if="!cinemaLoading">
+          <span slot="item" slot-scope="{ item: { boxLevelName, officialName, provinceName, cityName } }" class="name-sub">
+            <i class="box-level-flag">{{boxLevelName}}</i>
+            <em>{{officialName}}</em>
+            <sub>{{provinceName}}</sub>
+            <sub>{{cityName}}</sub>
+          </span>
+        </CheckboxPane>
+
+        <Page :current.sync="cinemaPage" :total="cinemaTotal" size="small"
+          show-total class="pane-page" v-if="!cinemaLoading"/>
+        <StatsPane :value="statsMap[4]" class="stats-pane"/>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -67,14 +103,17 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import StatsPane from './StatsPane.vue'
-import { Stats } from './types'
+import { Stats, StatsCityLevel } from './types'
 import { areaTypeList } from '../../types'
 import CheckboxPane from '@/components/checkboxPane'
 import cachedStore from '@/fn/cachedStore'
-import { queryStats } from '@/api/cinema'
+import { queryStats, queryAll } from '@/api/cinema'
 import { hash } from '@/fn/object'
 import { isNullOrEmpty } from '@/fn/string'
-import { groupBy, uniq } from 'lodash'
+import { groupBy, uniq, debounce, cloneDeep } from 'lodash'
+import { KeyTextControlStatus } from '@/util/types'
+import TinyLoading from '@/components/TinyLoading.vue'
+import { slice } from '@/fn/object'
 
 // 对查询进行适当缓存
 const store = cachedStore({ timeout: 1888 })
@@ -119,6 +158,20 @@ interface CityLevel {
   name: string
 }
 
+interface Cinema {
+  id: number
+  shortName: string
+  officialName: string
+  areaCode: string
+  areaName: string
+  provinceId: number
+  provinceName: string
+  cityId: number
+  cityName: string
+  boxLevelCode: number
+  boxLevelName: string
+}
+
 // 后端接口设计为，不同的 type 传不同的 ids
 const idsNameMap: any = {
   1: 'areaCodes',
@@ -136,6 +189,7 @@ const idsNameMap: any = {
   components: {
     StatsPane,
     CheckboxPane,
+    TinyLoading,
   }
 })
 export default class AreaPane extends ViewBase {
@@ -144,6 +198,9 @@ export default class AreaPane extends ViewBase {
 
   /** model 属性 */
   @Prop({ type: Array, default: () => [], required: true }) value!: number[]
+
+  /** 票房级别 */
+  @Prop({ type: Array, default: () => [], required: true }) boxLevelList!: KeyTextControlStatus[]
 
   model = areaTypeList.reduce<ListMap>((map, { key }) => {
     map[key as number] = []
@@ -156,6 +213,8 @@ export default class AreaPane extends ViewBase {
       province: 0,
       city: 0,
       cinema: 0,
+      regionNames: [],
+      cityLevels: [],
     }
     return map
   }, {})
@@ -193,8 +252,8 @@ export default class AreaPane extends ViewBase {
   get cityShowList() {
     const page = this.cityPage || 1
     const list = this.citySearchList
-    const slice = list.slice((page - 1) * 10, page * 10)
-    return slice
+    const result = list.slice((page - 1) * 10, page * 10)
+    return result
   }
 
   get cityAllText() {
@@ -202,6 +261,26 @@ export default class AreaPane extends ViewBase {
     const item = this.cityLevelList.find(it => it.code == this.cityLevel)
     const name = item && item.name || ''
     const text = keyword ? '全选所有搜索结果' : `全选所有${name}`
+    return text
+  }
+
+  boxLevel = ''
+  cinemaPage = 1
+  cinemaTotal = 0
+  cinemaKeyword = ''
+  cinemaLoading = false
+  cinemaList = [] as Cinema[]
+
+  get boxLevelListValid() {
+    const list = this.boxLevelList
+    return list.filter(it => it.controlStatus == 1)
+  }
+
+  get cinemaAllText() {
+    const keyword = (this.cinemaKeyword || '').trim()
+    const item = this.boxLevelList.find(it => it.key == this.boxLevel)
+    const name = item && item.text || ''
+    const text = keyword ? '全选所有搜索结果' : `全选所有${name}影院`
     return text
   }
 
@@ -213,19 +292,37 @@ export default class AreaPane extends ViewBase {
 
     this.updateStats(data, 0)
 
-    // TODO: 假数据
-    // for (let i = 0; i < 100; i++) {
-    //   this.cityList.push({
-    //     id: 88888 + i,
-    //     name: `假城市${i}`,
-    //     count: 88 + i,
-    //     cityGradeCode: 'erxianchengshi',
-    //     cityGradeName: '二线城市',
-    //   })
-    // }
-
     // 默认选择第一个级别
     this.cityLevel = ((this.cityLevelList || [])[0] || {}).code || ''
+    this.boxLevel = ((this.boxLevelList || [])[0] || {}).key as string || ''
+  }
+
+  fetchCinema(flush = true) {
+    const handler = debounce(async () => {
+      this.cinemaLoading = true
+      try {
+        const query: any = {
+          // status: 1,
+          pageIndex: this.cinemaPage,
+          pageSize: 10
+        }
+        const keyword = (this.cinemaKeyword || '').trim()
+        keyword
+          ? (query.query = keyword)
+          : (query.boxLevelCode = this.boxLevel)
+
+        const { data } = await queryAll(query)
+
+        this.cinemaList = data.items || []
+        this.cinemaTotal = data.totalCount || 0
+      } catch (ex) {
+        this.handleError(ex)
+      } finally {
+        this.cinemaLoading = false
+      }
+    }, 588)
+    handler()
+    flush && handler.flush()
   }
 
   async fetch(query: any = {}) {
@@ -235,12 +332,14 @@ export default class AreaPane extends ViewBase {
         categorizedByAreaCode: regionList = [],
         categorizedByProvinceId: provinceList = [],
         categorizedByCityId: cityList = [],
+        categorizedByCityGradeCode: cityLevelList = [],
         cinemaCount = 0,
       } = data && data.statisticsResult || {}
       return {
         regionList: (regionList || []).filter(filterByName),
         provinceList: (provinceList || []).filter(filterByName),
         cityList: (cityList || []).filter(filterByName),
+        cityLevelList: (cityLevelList || []).filter(filterByName),
         cinemaCount: cinemaCount || 0
       }
     } catch (ex) {
@@ -261,12 +360,17 @@ export default class AreaPane extends ViewBase {
   }
 
   updateStats(data: any, type: number) {
-    this.statsMap[type] = {
-      region: (data && data.regionList || []).length,
+    const regionList: any[] = data && data.regionList || []
+    const levelList: any[] = data && data.cityLevelList || []
+    const result = {
+      region: regionList.length,
       province: (data && data.provinceList || []).length,
       city: (data && data.cityList || []).length,
       cinema: data.cinemaCount || 0,
+      regionNames: regionList.map(it => it.name),
+      cityLevels: levelList.map(it => slice(it, 'name,count')) as StatsCityLevel[]
     }
+    this.statsMap[type] = result
   }
 
   resetStats(type: number) {
@@ -275,6 +379,8 @@ export default class AreaPane extends ViewBase {
       province: 0,
       city: 0,
       cinema: 0,
+      regionNames: [],
+      cityLevels: [],
     }
   }
 
@@ -283,6 +389,13 @@ export default class AreaPane extends ViewBase {
     const newIds = this.citySearchList.map(it => it.id)
     const ids = uniq(oldIds.concat(newIds))
     this.model[3] = ids
+  }
+
+  onCinemaSelectAll() {
+    const oldIds = this.model[4] as number[]
+    const newIds = this.cinemaList.map(it => it.id)
+    const ids = uniq(oldIds.concat(newIds))
+    this.model[4] = ids
   }
 
   @Watch('value')
@@ -302,6 +415,34 @@ export default class AreaPane extends ViewBase {
   @Watch('cityKeyword')
   watchCityLevelKeyword() {
     this.cityPage = 1
+  }
+
+  @Watch('type', { immediate: true })
+  watchType(value: number) {
+    if (value == 4) {
+      this.cinemaPage = 1
+      this.fetchCinema()
+    }
+  }
+
+  @Watch('boxLevel')
+  watchBoxLevel() {
+    this.cinemaPage = 1
+    this.cinemaKeyword = ''
+    this.fetchCinema()
+  }
+
+  @Watch('cinemaPage')
+  @Watch('cinemaKeyword')
+  watchCinemaPage() {
+    this.fetchCinema()
+  }
+
+  @Watch('statsMap', { deep: true, immediate: true })
+  watchStatsMap(value: StatsMap) {
+    const stats = value[this.type]
+    const result = cloneDeep(stats)
+    this.$emit('statsChange', result)
   }
 }
 </script>
@@ -394,10 +535,15 @@ export default class AreaPane extends ViewBase {
   }
 }
 
-.city-box {
+.city-box,
+.cinema-box {
   .checkbox-pane {
     height: 306px;
     overflow: hidden;
   }
+}
+
+.cinema-loading {
+  margin: 16px 0 0 20px;
 }
 </style>

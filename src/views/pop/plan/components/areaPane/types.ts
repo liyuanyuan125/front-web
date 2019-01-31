@@ -1,4 +1,14 @@
 /**
+ * 统计数据中的几级城市统计项
+ */
+export interface StatsCityLevel {
+  /** 级别名 */
+  name: string
+  /** 个数 */
+  count: number
+}
+
+/**
  * 统计数据接口
  */
 export interface Stats {
@@ -10,4 +20,10 @@ export interface Stats {
   city: number
   /** 覆盖影院个数 */
   cinema: number
+
+  /** 区域名列表 */
+  regionNames: string[]
+
+  /** 城市级别列表 */
+  cityLevels: StatsCityLevel[]
 }

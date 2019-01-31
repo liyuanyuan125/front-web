@@ -86,7 +86,8 @@
         </FormItem>
 
         <div class="city-wrap mb20">
-          <AreaPane v-model="form.ids" :type="form.throwInAreaType"/>
+          <AreaPane v-model="form.ids" :type="form.throwInAreaType"
+            :boxLevelList="boxLevelList" @statsChange="onThrowInStatsChange"/>
         </div>
 
         <FormItem v-if="index != 3" v-for="(item, index) in tags" :key="index" :label="item.name" :class="['form-item-age', index == 0 ? 'pb3' : '']">
@@ -157,7 +158,7 @@ import radioTab from './radioTab.vue'
 import { drairesList, beforePlan, advertising, advertDetail, cinemaList } from '@/api/popPlan.ts'
 import moment from 'moment'
 import SingCinema from './singcinema.vue'
-import AreaPane from './components/areaPane'
+import AreaPane, { Stats } from './components/areaPane'
 
 const timeFormat = 'YYYY-MM-DD'
 const timeFormats = 'YYYYMMDD'
@@ -329,6 +330,11 @@ export default class Main extends ViewBase {
 
   allFilmList = allFilmList
 
+  boxLevelList = []
+
+  // 投放统计信息，要在第二步显示
+  throwInStats = {} as Stats
+
   get rule() {
     const moneyvalidator = ( rules: any, value: any, callback: any) => {
       if (this.form.budgetCode != '00-00') {
@@ -394,7 +400,8 @@ export default class Main extends ViewBase {
           tags,
           typeList,
           tagCodes,
-          statisticsResults
+          statisticsResults,
+          boxLevelList
         }
       } = await beforePlan()
       this.billingModeList = this.filtertion(billingModeList)
@@ -406,6 +413,7 @@ export default class Main extends ViewBase {
       const cell = tagCodes.shift()
       this.typeList = this.filtertion(typeList)
       this.tagCodes = [ ...tagCodes, cell]
+      this.boxLevelList = boxLevelList
     } catch (ex) {
       this.handleError(ex)
     }
@@ -608,11 +616,16 @@ export default class Main extends ViewBase {
     const addObject = {
       ...query,
       ...schedule,
-      ...direction
+      ...direction,
+      throwInStats: this.throwInStats,
     }
     const index: any = Math.floor(Math.random() * 100 + 1)
     sessionStorage.setItem(`${index}`, JSON.stringify(addObject))
     this.$router.push({ name: 'pop-plan-scheme', params: { id: index}})
+  }
+
+  onThrowInStatsChange(stats: Stats) {
+    this.throwInStats = stats
   }
 
   mounted() {
