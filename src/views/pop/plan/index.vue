@@ -564,7 +564,7 @@ export default class Main extends ViewBase {
     // 投放定向
     let direction: any = {}
     if (this.putType == 1) {
-      if (this.form.ids.length < 1) {
+      if (this.form.throwInAreaType != 0 && this.form.ids.length < 1) {
         info('请选择投放区域')
         return
       }
