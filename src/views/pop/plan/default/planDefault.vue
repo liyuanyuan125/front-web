@@ -224,7 +224,6 @@ export default class PlanDefault extends ViewBase {
     return formatNumber
   }
   async mounted() {
-    this.status = this.$route.params.status
     this.list()
   }
   async list() {
@@ -233,6 +232,7 @@ export default class PlanDefault extends ViewBase {
       const { data } = await planDefault(id)
       this.defaultData = data
       this.items = data.item || {}
+      this.status = this.items.status
       this.launchList = data.statisticsResults
 
       // MOVIE_TYPE=电影类型  PLAN_GROUP_AGE = 年龄  PLAN_GROUP_SEX = 性别 DISTRICT_AREA = 区域

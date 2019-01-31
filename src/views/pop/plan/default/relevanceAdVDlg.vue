@@ -3,12 +3,12 @@
     <Modal v-model="value.visible" :title="value.title" width="800">
       <Form ref="forms" :model="form" :rules="rules" class="edit-input" :label-width="100">
         <FormItem label="已关联广告片" class="item-top">
-          <div class="relvanMess" v-if="value.item">
+          <div class="relvanMess">
             <p>
               <span>广告片ID</span>
               <em>{{value.item.id}}</em>
             </p>
-            <p>
+            <p class="flex-box">
               <span>广告片名称</span>
               <em>{{value.item.name}}</em>
             </p>
