@@ -63,8 +63,8 @@
         </Col>
       </Row>
     </div>
-    <h3 class="layout-title">投放地区</h3>
-    <div class="text-rows rows-list">
+    <h3 class="layout-title" v-if="launchList">投放地区</h3>
+    <div class="text-rows rows-list" v-if="launchList">
       <Row>
         <Col :span="24">
           <p v-if="launchList.categorizedByAreaCode" class="flex-box">
@@ -255,12 +255,15 @@ export default class PlanDefault extends ViewBase {
         (item: any) => item.tagTypeCode == 'DISTRICT_AREA'
       )
       this.queryAreas(areas)
+
       // 获取城市个数 categorizedByCityGradeCode
-      let account = 0
-      this.launchList.categorizedByCityGradeCode.map((item: any) => {
-        account += item.infos.length
-      })
-      this.account = account
+      if (this.launchList) {
+        let account = 0
+        this.launchList.categorizedByCityGradeCode.map((item: any) => {
+          account += item.infos.length
+        })
+        this.account = account
+      }
     } catch (ex) {
       this.handleError(ex.msg)
     }
@@ -350,7 +353,7 @@ export default class PlanDefault extends ViewBase {
   queryCinemaList() {
     this.cinema = {
       visible: true,
-      id: this.items.deliveryCinemas
+      id: this.items.id
     }
   }
 }

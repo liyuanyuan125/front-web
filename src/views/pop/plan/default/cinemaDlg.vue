@@ -44,12 +44,12 @@ export default class Change extends ViewBase {
     { title: '票房级别', key: 'boxLevelName', align: 'center' },
   ]
   async mounted() {
-      const ids = (this.value.id).toString()
+      const id = (this.value.id).toString()
     try {
       const { data } = await cinemaList({
         pageIndex: this.pageIndex,
         pageSize: this.pageSize,
-        ids
+        id
       })
       this.data = data.items
       this.total = data.totalCount
