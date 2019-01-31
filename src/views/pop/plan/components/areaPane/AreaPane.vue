@@ -75,16 +75,18 @@
             class="input-search" clearable/>
           <Button type="primary" class="button-search"/>
 
-          <Button class="button-all" :disabled="cinemaList.length == 0"
-            @click="onCinemaSelectAll">{{cinemaAllText}}</Button>
+          <Button class="button-all" @click="onCinemaSelectAll"
+            :disabled="cinemaList.length == 0 || cinemaAllLoading">{{cinemaAllText}}</Button>
         </form>
 
         <TinyLoading v-if="cinemaLoading" class="cinema-loading"/>
 
         <CheckboxPane v-model="model[4]" :list="cinemaList" value-key="id"
           class="checkbox-pane" no-all v-if="!cinemaLoading">
-          <span slot="item" slot-scope="{ item: { boxLevelName, officialName, provinceName, cityName } }" class="name-sub">
-            <i class="box-level-flag">{{boxLevelName}}</i>
+          <span slot="item" slot-scope="{ item: { boxLevelCode, boxLevelName,
+            officialName, provinceName, cityName } }" class="name-sub">
+            <i v-if="boxLevelCode" class="box-level-flag"
+              :class="`box-level-flag-${boxLevelCode.toLowerCase()}`">{{boxLevelName}}</i>
             <em>{{officialName}}</em>
             <sub>{{provinceName}}</sub>
             <sub>{{cityName}}</sub>
@@ -271,6 +273,9 @@ export default class AreaPane extends ViewBase {
   cinemaLoading = false
   cinemaList = [] as Cinema[]
 
+  // 当选择全部的时候，加 loading
+  cinemaAllLoading = false
+
   get boxLevelListValid() {
     const list = this.boxLevelList
     return list.filter(it => it.controlStatus == 1)
@@ -299,30 +304,53 @@ export default class AreaPane extends ViewBase {
 
   fetchCinema(flush = true) {
     const handler = debounce(async () => {
-      this.cinemaLoading = true
+      const delayLoading = debounce(() => this.cinemaLoading = true, 500)
+      delayLoading()
       try {
-        const query: any = {
-          // status: 1,
-          pageIndex: this.cinemaPage,
-          pageSize: 10
-        }
-        const keyword = (this.cinemaKeyword || '').trim()
-        keyword
-          ? (query.query = keyword)
-          : (query.boxLevelCode = this.boxLevel)
-
-        const { data } = await queryAll(query)
-
+        const data = await this.doFetchCinema()
         this.cinemaList = data.items || []
         this.cinemaTotal = data.totalCount || 0
       } catch (ex) {
         this.handleError(ex)
       } finally {
         this.cinemaLoading = false
+        delayLoading.cancel()
       }
     }, 588)
     handler()
     flush && handler.flush()
+  }
+
+  // 根据当前条件，获取全部数据，以便选中全部
+  async fetchCinemaAll() {
+    this.cinemaAllLoading = true
+    try {
+      const data = await this.doFetchCinema({
+        pageIndex: 1,
+        pageSize: 88888888,
+      })
+      return data
+    } catch (ex) {
+      this.handleError(ex)
+    } finally {
+      this.cinemaAllLoading = false
+    }
+  }
+
+  async doFetchCinema(query: any = {}) {
+    const qdata: any = {
+      // status: 1,
+      pageIndex: this.cinemaPage,
+      pageSize: 10,
+      ...query,
+    }
+    const keyword = (this.cinemaKeyword || '').trim()
+    keyword
+      ? (qdata.query = keyword)
+      : (qdata.boxLevelCode = this.boxLevel)
+
+    const { data } = await queryAll(qdata)
+    return data
   }
 
   async fetch(query: any = {}) {
@@ -391,9 +419,15 @@ export default class AreaPane extends ViewBase {
     this.model[3] = ids
   }
 
-  onCinemaSelectAll() {
+  async onCinemaSelectAll() {
     const oldIds = this.model[4] as number[]
-    const newIds = this.cinemaList.map(it => it.id)
+    let list = this.cinemaList
+    // 若当前列表个数大于 10，说明还有，调用接口，将所有影院提取过来
+    if (this.cinemaTotal > 10) {
+      const { items } = await this.fetchCinemaAll()
+      list = items as Cinema[]
+    }
+    const newIds = list.map(it => it.id)
     const ids = uniq(oldIds.concat(newIds))
     this.model[4] = ids
   }
@@ -545,5 +579,21 @@ export default class AreaPane extends ViewBase {
 
 .cinema-loading {
   margin: 16px 0 0 20px;
+}
+.box-level-flag {
+  padding: 1px 8px;
+  color: #fff;
+  border-radius: 2px;
+  font-size: 12px;
+  margin: 0 5px 0 3px;
+  position: relative;
+  top: -1px;
+  background-color: @c-button;
+}
+.box-level-flag-b {
+  background-color: #19be6b;
+}
+.box-level-flag-c {
+  background-color: #2d8cf0;
 }
 </style>
