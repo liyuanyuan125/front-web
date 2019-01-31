@@ -153,7 +153,6 @@ import { cityList, City, sexList, ageStageList, filmHobbyList,
 import CitySelect from './citySelect.vue'
 import Tags from './tag.vue'
 import { info } from '@/ui/modal.ts'
-import CinemaNum from './comcinema/cinemaNum.vue'
 import radioTab from './radioTab.vue'
 import { drairesList, beforePlan, advertising, advertDetail, cinemaList } from '@/api/popPlan.ts'
 import moment from 'moment'
@@ -183,7 +182,6 @@ const keepExclusion = <T>(
     CitySelect,
     Tags,
     radioTab,
-    CinemaNum,
     SingCinema,
     AreaPane
   }
@@ -566,29 +564,31 @@ export default class Main extends ViewBase {
     // 投放定向
     let direction: any = {}
     if (this.putType == 1) {
-      if (this.form.ids.length != 1) {
+      if (this.form.throwInAreaType != 0 && this.form.ids.length < 1) {
         info('请选择投放区域')
         return
       }
       direction = {
         directionType: this.putType,
         ids: this.form.ids,
+        throwInAreaType: this.areaTypeList.filter((it: any) => this.form.throwInAreaType == it.key),
         deliveryGroups: [
           {
             tagTypeCode: 'MOVIE_TYPE',
-            text: this.cinema.MOVIE_TYPE.includes(0) ? [] : this.cinema.MOVIE_TYPE
+            text: this.cinema.MOVIE_TYPE.includes(0) ? [] : [...this.cinema.MOVIE_TYPE]
           },
           {
             tagTypeCode: 'PLAN_GROUP_AGE',
-            text: this.cinema.PLAN_GROUP_AGE == 0 ? [] : this.cinema.PLAN_GROUP_AGE
+            text: this.cinema.PLAN_GROUP_AGE == 0 ? [] : [this.cinema.PLAN_GROUP_AGE]
           },
           {
             tagTypeCode: 'PLAN_GROUP_SEX',
-            text: this.cinema.PLAN_GROUP_SEX == 0 ? [] : this.cinema.PLAN_GROUP_SEX
+            text: this.cinema.PLAN_GROUP_SEX == 0 ? [] : [this.cinema.PLAN_GROUP_SEX]
           }
         ]
       }
     } else {
+
       if (this.singleObject.id.length != 1) {
         info('请选择一部影片')
         return
@@ -598,7 +598,7 @@ export default class Main extends ViewBase {
         deliveryGroups: [
           {
             tagTypeCode: 'MOVIE_TYPE',
-            text: this.cinema.MOVIE_TYPE.includes(0) ? [] : this.formCinema.types
+            text: this.cinema.MOVIE_TYPE.includes(0) ? [] : [...this.formCinema.types]
           }
         ],
         deliveryMovies: this.singleObject.id,
