@@ -2,7 +2,7 @@
   <div class="home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">广告计划</span>
-      <em class="addUser">
+      <em class="addUser" @click="$router.push({name: 'pop-plan'})">
         <Icon type="ios-add" size="27"/>新建广告计划
       </em>
     </h3>
@@ -51,10 +51,10 @@
       @on-selection-change="singleSelect"
       @on-select-all="selectAll"
     >
-      <template slot="stauts" slot-scope="{row, index}">
-        <span v-if="row.stauts == 4 || row.stauts == 3" class="status-over">{{queryStatus(row.stauts)}}</span>
-        <span v-else-if="row.stauts == 6 || row.stauts == 7" class="status-wating">{{queryStatus(row.stauts)}}</span>
-        <span v-else>{{queryStatus(row.stauts)}}</span>
+      <template slot="status" slot-scope="{row, index}">
+        <span v-if="row.status == 4 || row.status == 3" class="status-over">{{queryStatus(row.status)}}</span>
+        <span v-else-if="row.status == 6 || row.status == 7" class="status-wating">{{queryStatus(row.status)}}</span>
+        <span v-else>{{queryStatus(row.status)}}</span>
       </template>
       <!-- <template slot="freezeAmount" slot-scope="{row}">
         <span>{{formatNumber(row.freezeAmount)}}</span>
@@ -68,32 +68,32 @@
       </template> -->
       <template slot="operation" slot-scope="{row, index}">
         <!-- 草稿 待审核 -->
-        <div v-if="row.stauts == 1 || row.stauts == 2" class="operation-btn">
+        <div v-if="row.status == 1 || row.status == 2" class="operation-btn">
           <p>
-            <a class="table-action-btn" @click="planDefault(row.id, row.stauts)">查看</a>
+            <a class="table-action-btn" @click="planDefault(row.id, row.status)">查看</a>
             <a class="table-action-btn" @click="planEdit(row.id)">编辑</a>
             <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
           </p>
           <p><a @click="relevanceAdv(row)">关联广告片</a></p>
         </div>
-        <div v-else-if="row.stauts ==  4 " class="operation-btn">
+        <div v-else-if="row.status ==  4 " class="operation-btn">
            <p>
-            <a class="table-action-btn" @click="planDefault(row.id, row.stauts)">查看</a>
+            <a class="table-action-btn" @click="planDefault(row.id, row.status)">查看</a>
             <a class="table-action-btn" @click="handlePayment(row)">支付</a>
             <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
           </p>
           <p><a @click="relevanceAdv(row)">关联广告片</a></p>
         </div>
-        <div v-else-if="row.stauts ==  5 " class="operation-btn">
-          <p><a @click="planDefault(row.id, row.stauts)">查看</a></p>
+        <div v-else-if="row.status ==  5 " class="operation-btn">
+          <p><a @click="planDefault(row.id, row.status)">查看</a></p>
           <p><a @click="relevanceAdv(row)">关联广告片</a></p>
         </div>
-        <div v-else-if="row.stauts == 3 || row.stauts == 6 || row.stauts == 7 || row.stauts == 8 || row.stauts == 9 " class="operation-btn">
-          <p><a @click="planDefault(row.id, row.stauts)">查看</a></p>
+        <div v-else-if="row.status == 3 || row.status == 6 || row.status == 7 || row.status == 8 || row.status == 9 " class="operation-btn">
+          <p><a @click="planDefault(row.id, row.status)">查看</a></p>
         </div>
-        <div v-else-if="row.stauts == 10" class="operation-btn">
+        <div v-else-if="row.status == 10" class="operation-btn">
           <p>
-            <a @click="planDefault(row.id, row.stauts)">查看</a>
+            <a @click="planDefault(row.id, row.status)">查看</a>
             <a @click="planEdit(row.id)">编辑</a>
           </p>
         </div>
@@ -183,7 +183,7 @@ export default class Plan extends ViewBase {
         }
       }
     },
-    { title: '广告计划状态', slot: 'stauts', minWidth: 120 },
+    { title: '广告计划状态', slot: 'status', minWidth: 120 },
     { title: '广告片规格', key: 'specification', minWidth: 120 },
     { title: '广告片名称/ID', key: 'videoName', minWidth: 150 },
     // { title: '投放排期', slot: 'beginDate', minWidth: 210 },
@@ -194,68 +194,8 @@ export default class Plan extends ViewBase {
     // { title: '创建时间', slot: 'createTime', width: 150 },
     { title: '操作', slot: 'operation', width: 150, align: 'center' }
   ]
-  tableDate = [
-    {
-      id: 2,
-      name: '2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院',
-      stauts: 1,
-      specification: '广告片规格',
-      videoId: '广告片ID',
-      videoName: '广告片名称/ID',
-      cycle: '投放周期',
-      freezeAmount: 88888888888,
-      settlementStatus: 0,
-      settlementAmount: 88888888888888,
-      createTime: 333333333,
-      beginDate: 3333333333,
-      endDate: 333333333333
-    },
-    {
-      id: 1,
-      name: '广告计划名称',
-      stauts: 2,
-      specification: '广告片规格',
-      videoId: '广告片ID',
-      videoName: '广告片名称/ID',
-      cycle: '投放周期',
-      freezeAmount: 88888888888,
-      settlementStatus: 1,
-      settlementAmount: 88888,
-      createTime: 3333333333333,
-      beginDate: 33333333333333,
-      endDate: 333333333333
-    },
-    {
-      id: 3,
-      name: '2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院',
-      stauts: 3,
-      specification: '广告片规格',
-      videoId: '广告片ID',
-      videoName: '广告片名称/ID',
-      cycle: '投放周期',
-      freezeAmount: 88888888,
-      settlementStatus: 2,
-      settlementAmount: 8888888888,
-      createTime: 333333333,
-      beginDate: 3333333333,
-      endDate: 333333333333
-    },
-     {
-      id: 4,
-      name: '2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院2019奔驰影院',
-      stauts: 4,
-      specification: '广告片规格',
-      videoId: '广告片ID',
-      videoName: '广告片名称/ID',
-      cycle: '投放周期',
-      freezeAmount: 2222222222,
-      settlementStatus: 2,
-      settlementAmount: 333333333,
-      createTime: 333333333,
-      beginDate: 3333333333,
-      endDate: 333333333333
-    },
-  ]
+  tableDate = []
+
   get formatTimes() {
     return formatTimes
   }
@@ -271,6 +211,7 @@ export default class Plan extends ViewBase {
   async tableList() {
     const { data } = await planList({ ...this.form, ...this.pageList })
     this.data = data
+    this.tableDate = data.items
     this.totalCount = data.totalCount
   }
   async handlePayment(item: any) {
