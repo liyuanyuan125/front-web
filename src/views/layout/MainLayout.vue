@@ -27,23 +27,17 @@
 
     <Layout class="site-center">
       <Sider collapsible hide-trigger v-model="isOff" class="site-sider" :width="180" ref="sider">
-        <Menu
-          width="auto"
-          theme="dark"
-          class="sider-menu"
-          :class="isOff && 'sider-menu-off'"
-          :active-name="siderActiveName"
-          :open-names="siderOpenNames"
-        >
+        <Menu width="auto" theme="dark" class="sider-menu" :class="isOff && 'sider-menu-off'"
+          :active-name="siderActiveName" :open-names="siderOpenNames">
           <template v-for="menu in siderMenuList">
             <Submenu v-if="menu.subList" :name="menu.name" :class="`menu-node-${menu.name}`">
               <template slot="title">{{menu.label}}</template>
               <MenuItem v-for="sub in menu.subList" :key="sub.name" :name="sub.name">
-                <router-link :to="{ name: sub.name }">{{sub.label}}</router-link>
+                <router-link :to="{name: sub.name}">{{sub.label}}</router-link>
               </MenuItem>
             </Submenu>
             <MenuItem v-else :name="menu.name" :class="`menu-node-${menu.name}`">
-              <router-link :to="{ name: menu.name }">{{menu.label}}</router-link>
+              <router-link :to="{name: menu.name}">{{menu.label}}</router-link>
             </MenuItem>
           </template>
         </Menu>
@@ -172,17 +166,9 @@ export default class App extends ViewBase {
 
   created() {
     checkUser()
-  }
-
-  mounted() {
-    // tslint:disable-next-line:no-console
-    console.log('-> main layout mounted')
     // 是有低优先级监听，以便其他地方可以拦截取消
     event.on(systemSwitched, (ev: SystemSwitchedEvent) => {
-      const name = ev.systemCode == 'ads'
-        ? 'pop-plan'
-        : 'pop-planps'
-      this.$router.push({ name })
+      this.$router.push({ name: 'home' })
     }, false)
   }
 

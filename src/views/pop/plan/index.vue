@@ -673,5 +673,13 @@ export default class Main extends ViewBase {
 
 .city-wrap {
   margin-top: -12px;
+  /deep/ .input-search .ivu-input-icon {
+    height: 32px;
+    line-height: 32px;
+  }
+  /deep/ .ivu-select-item {
+    line-height: normal !important;
+    height: auto !important;
+  }
 }
 </style>

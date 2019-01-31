@@ -1,15 +1,16 @@
 <template>
   <div class="checkbox-pane">
-    <span class="checkbox-all" v-if="!noAll">
+    <span class="checkbox-all" v-if="!noAll && list.length > 0">
       <Checkbox :value="allHasChecked" :indeterminate="indeterminate"
         @click.prevent.native="onCheckAll">全选</Checkbox>
     </span>
-    <CheckboxGroup v-model="model" class="checkbox-group">
+    <CheckboxGroup v-model="model" class="checkbox-group" v-if="list.length > 0">
       <Checkbox v-for="it in list" :key="it[valueKey]"
         :label="it[valueKey]">
         <slot name="item" :item="it">{{it[textKey]}}</slot>
       </Checkbox>
     </CheckboxGroup>
+    <span class="checkbox-pane-empty" v-else>空空如也~</span>
   </div>
 </template>
 
@@ -75,6 +76,7 @@ export default class CheckboxPane extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+
 .checkbox-pane {
   padding: 14px 18px;
   line-height: 2;
@@ -84,5 +86,8 @@ export default class CheckboxPane extends ViewBase {
     display: block;
     font-size: 14px;
   }
+}
+.checkbox-pane-empty {
+  color: @c-sub-text;
 }
 </style>
