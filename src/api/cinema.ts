@@ -1,9 +1,11 @@
 import { get, post, put } from '@/fn/ajax'
 
 /**
- * @export 分页查询影院列表
+ * @export 查看关联影院列表
  * @param {*} query
- * @returns
+ * https://yapi.aiads.com/project/94/interface/api/1031
+ * TODO: 注意，这个方法不是查询所有影院列表的接口
+ * TODO: 这个不应该放在这里，应该放在 customer 或者别的文件里
  */
 export async function cinmeaList(query: any) {
   return get('/customer/cinemas', query)
@@ -26,5 +28,15 @@ export async function cinmeaId(id: any) {
  */
 export async function queryStats(query: any = {}) {
   const res = post('/theater/cinemas/statistics', query)
+  return res
+}
+
+/**
+ * 分页查询影院列表（根据ids做IN操作）
+ * @param query 查询参数
+ * https://yapi.aiads.com/project/103/interface/api/845
+ */
+export async function queryAll(query: any = {}) {
+  const res = get('/theater/cinemas', query)
   return res
 }
