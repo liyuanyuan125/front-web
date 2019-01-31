@@ -339,7 +339,9 @@ export default class App extends ViewBase {
   padding: 10px;
   overflow-x: auto !important;
 }
-
+.ivu-menu {
+  z-index: 99;
+}
 .sider-menu {
   margin-bottom: 188px;
   background-color: @c-sider-bg;

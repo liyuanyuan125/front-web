@@ -6,7 +6,6 @@
     <div class="text-rows log-list">
       <p v-for="(item, index) in logList" :key="index">
         <span>{{formatTimes(item.createTime)}}</span>
-        <span>{{item.operatorName}}</span>
         <em>{{item.operateDesc}}</em>
       </p>
     </div>
