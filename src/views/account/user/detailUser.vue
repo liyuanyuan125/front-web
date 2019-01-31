@@ -7,7 +7,7 @@
         <Col :span="12">
           <p>
             <label>账户状态</label>
-            {{statusCode}}
+            {{statusCode.statusDesc}}
           </p>
           <p>
             <label>账号ID</label>
@@ -124,7 +124,6 @@ export default class Main extends ViewBase {
     this.formatTimes = formatTimes
     const user: any = getUser()!
     const systemCode = (this.typeCode = user.systemCode)
-
     const id = this.userId = this.$route.params.useid
     try {
       const { data } = await userDetail({ id, systemCode })
@@ -134,7 +133,7 @@ export default class Main extends ViewBase {
         perms: (data.role && data.role.perms) || []
       }
       this.roleName = data.role.name
-      this.statusCode = data.systems[0].codeDesc
+      this.statusCode = data.systems.filter((item: any) => item.code == systemCode)[0]
       this.customer = this.data.partners == null ? 0 : this.data.partners.length
       this.cinemaLen = this.data.cinemas == null ? 0 : this.data.cinemas.length
     } catch (ex) {

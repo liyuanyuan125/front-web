@@ -3,14 +3,14 @@
     <Modal v-model="value.visible" :title="value.title" width="800">
       <Form ref="forms" :model="form" :rules="rules" class="edit-input" :label-width="100">
         <FormItem label="已关联广告片" class="item-top">
-          <div class="relvanMess">
+          <div class="relvanMess" v-if="value.item">
             <p>
               <span>广告片ID</span>
-              <em>xxxxx</em>
+              <em>{{value.item.id}}</em>
             </p>
             <p>
               <span>广告片名称</span>
-              <em>xxxxx</em>
+              <em>{{value.item.name}}</em>
             </p>
           </div>
         </FormItem>
@@ -55,7 +55,17 @@ export default class Relevan extends ViewBase {
   mounted() {
     this.queryReleList()
   }
-  handleSumbit() {}
+  async handleSumbit() {
+    try {
+      await relevanceVideo({
+        id: this.value.item.id,
+        videoId: this.form.voidID
+      })
+      this.$router.push({name: 'pop-planlist'})
+    } catch (ex) {
+      this.handleError(ex.msg)
+    }
+  }
 
   async queryReleList() {
     try {

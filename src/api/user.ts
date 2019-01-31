@@ -115,7 +115,7 @@ export async function addEditCustomer(data: any) {
  * @param data
  */
 export async function resEditCustomer(data: any) {
-    const res = get('customer/account_cinemas', data)
+    const res = get('customer/account-cinemas', data)
     return res
 }
 
