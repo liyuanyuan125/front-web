@@ -299,7 +299,6 @@ export default class AreaPane extends ViewBase {
 
     // 默认选择第一个级别
     this.cityLevel = ((this.cityLevelList || [])[0] || {}).code || ''
-    this.boxLevel = ((this.boxLevelList || [])[0] || {}).key as string || ''
   }
 
   fetchCinema(flush = true) {
@@ -376,6 +375,10 @@ export default class AreaPane extends ViewBase {
   }
 
   async fetchAndUpdate() {
+    if (this.type == 0) {
+      return
+    }
+
     const ids = [ ...this.model[this.type] ]
     if (ids.length > 0) {
       const name = idsNameMap[this.type]
@@ -454,6 +457,10 @@ export default class AreaPane extends ViewBase {
   @Watch('type', { immediate: true })
   watchType(value: number) {
     if (value == 4) {
+      if (!this.boxLevel) {
+        this.boxLevel = ((this.boxLevelList || [])[0] || {}).key as string || ''
+      }
+
       this.cinemaPage = 1
       this.fetchCinema()
     }
