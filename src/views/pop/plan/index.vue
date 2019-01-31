@@ -571,6 +571,7 @@ export default class Main extends ViewBase {
       direction = {
         directionType: this.putType,
         ids: this.form.ids,
+        throwInAreaType: this.form.throwInAreaType,
         deliveryGroups: [
           {
             tagTypeCode: 'MOVIE_TYPE',
