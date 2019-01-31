@@ -29,7 +29,36 @@
         <StatsPane :value="statsMap[2]" class="stats-pane"/>
       </div>
     </section>
-    <section v-if="type == 3">3</section>
+    <section v-if="type == 3">
+      <div class="pane-content city-box">
+        <form class="filter-form" @submit.prevent>
+          <Select v-model="cityLevel" placeholder="请选择城市级别" class="select-level"
+            @on-change="cityKeyword = ''">
+            <Option v-for="item in cityLevelList" :key="item.code"
+              :value="item.code">{{item.name}}</Option>
+          </Select>
+          <Input v-model="cityKeyword" placeholder="请输入城市名称进行搜索"
+            class="input-search" clearable/>
+          <Button type="primary" class="button-search"/>
+
+          <Button class="button-all" :disabled="citySearchList.length == 0"
+            @click="onCitySelectAll">{{cityAllText}}</Button>
+        </form>
+
+        <CheckboxPane v-model="model[3]" :list="cityShowList" value-key="id"
+          class="checkbox-pane" no-all>
+          <span slot="item" slot-scope="{ item: { name, count, cityGradeName } }" class="name-sub">
+            <em>{{name}}</em>
+            <sub>{{cityGradeName}}</sub>
+            <sub>{{count}}家影院</sub>
+          </span>
+        </CheckboxPane>
+
+        <Page :current.sync="cityPage" :total="citySearchList.length" size="small"
+          show-total class="pane-page"/>
+        <StatsPane :value="statsMap[3]" class="stats-pane"/>
+      </div>
+    </section>
     <section v-if="type == 4">4</section>
   </div>
 </template>
@@ -45,6 +74,7 @@ import cachedStore from '@/fn/cachedStore'
 import { queryStats } from '@/api/cinema'
 import { hash } from '@/fn/object'
 import { isNullOrEmpty } from '@/fn/string'
+import { groupBy, uniq } from 'lodash'
 
 // 对查询进行适当缓存
 const store = cachedStore({ timeout: 1888 })
@@ -82,6 +112,11 @@ interface City {
   count: number
   cityGradeCode: string
   cityGradeName: string
+}
+
+interface CityLevel {
+  code: string
+  name: string
 }
 
 // 后端接口设计为，不同的 type 传不同的 ids
@@ -129,6 +164,47 @@ export default class AreaPane extends ViewBase {
   provinceList: Province[] = []
   cityList: City[] = []
 
+  cityLevel = ''
+  cityPage = 1
+  cityKeyword = ''
+
+  get cityGroup() {
+    const group = groupBy(this.cityList, 'cityGradeCode')
+    return group
+  }
+
+  get cityLevelList() {
+    const group = this.cityGroup
+    const list = Object.entries(group).map(([ code, ls ]) => ({
+      code,
+      name: ls[0].cityGradeName
+    }))
+    return list
+  }
+
+  get citySearchList() {
+    const keyword = (this.cityKeyword || '').trim()
+    const list = keyword
+      ? this.cityList.filter(it => it.name.includes(keyword))
+      : this.cityGroup[this.cityLevel]
+    return list || []
+  }
+
+  get cityShowList() {
+    const page = this.cityPage || 1
+    const list = this.citySearchList
+    const slice = list.slice((page - 1) * 10, page * 10)
+    return slice
+  }
+
+  get cityAllText() {
+    const keyword = (this.cityKeyword || '').trim()
+    const item = this.cityLevelList.find(it => it.code == this.cityLevel)
+    const name = item && item.name || ''
+    const text = keyword ? '全选所有搜索结果' : `全选所有${name}`
+    return text
+  }
+
   async created() {
     const data = await this.fetch()
     this.regionList = data && data.regionList || []
@@ -138,25 +214,34 @@ export default class AreaPane extends ViewBase {
     this.updateStats(data, 0)
 
     // TODO: 假数据
-    for (let i = 0; i < 100; i++) {
-      this.regionList.push({ code: `xxx${i}`, name: `华南(假数据)${i}`, count: 88 + i })
-    }
+    // for (let i = 0; i < 100; i++) {
+    //   this.cityList.push({
+    //     id: 88888 + i,
+    //     name: `假城市${i}`,
+    //     count: 88 + i,
+    //     cityGradeCode: 'erxianchengshi',
+    //     cityGradeName: '二线城市',
+    //   })
+    // }
+
+    // 默认选择第一个级别
+    this.cityLevel = ((this.cityLevelList || [])[0] || {}).code || ''
   }
 
   async fetch(query: any = {}) {
     try {
       const { data } = await cachedQueryStats(query)
       const {
-        categorizedByAreaCode = [],
-        categorizedByProvinceId = [],
-        categorizedByCityId = [],
+        categorizedByAreaCode: regionList = [],
+        categorizedByProvinceId: provinceList = [],
+        categorizedByCityId: cityList = [],
         cinemaCount = 0,
       } = data && data.statisticsResult || {}
       return {
-        regionList: categorizedByAreaCode.filter(filterByName),
-        provinceList: categorizedByProvinceId.filter(filterByName),
-        cityList: categorizedByCityId.filter(filterByName),
-        cinemaCount
+        regionList: (regionList || []).filter(filterByName),
+        provinceList: (provinceList || []).filter(filterByName),
+        cityList: (cityList || []).filter(filterByName),
+        cinemaCount: cinemaCount || 0
       }
     } catch (ex) {
       this.handleError(ex)
@@ -193,6 +278,13 @@ export default class AreaPane extends ViewBase {
     }
   }
 
+  onCitySelectAll() {
+    const oldIds = this.model[3] as number[]
+    const newIds = this.citySearchList.map(it => it.id)
+    const ids = uniq(oldIds.concat(newIds))
+    this.model[3] = ids
+  }
+
   @Watch('value')
   watchValue(value: number[]) {
     this.model[this.type] = value
@@ -204,6 +296,12 @@ export default class AreaPane extends ViewBase {
     const list = this.model[this.type]
     this.$emit('input', list)
     this.fetchAndUpdate()
+  }
+
+  @Watch('cityLevel')
+  @Watch('cityKeyword')
+  watchCityLevelKeyword() {
+    this.cityPage = 1
   }
 }
 </script>
@@ -240,6 +338,9 @@ export default class AreaPane extends ViewBase {
     left: 8px;
     color: @c-sub-text;
   }
+  sub ~ sub {
+    margin-left: 8px;
+  }
 }
 
 .checkbox-pane {
@@ -247,5 +348,56 @@ export default class AreaPane extends ViewBase {
   height: 400px;
   margin: 20px 0 0 20px;
   background-color: #fff;
+}
+
+.filter-form {
+  padding: 20px 20px 0;
+}
+
+.select-level {
+  width: 110px;
+  /deep/ .ivu-select-selection {
+    border-radius: 2px 0 0 2px;
+  }
+}
+.input-search {
+  width: 180px;
+  /deep/ .ivu-input {
+    border-radius: 0;
+    border-width: 1px 0;
+  }
+}
+.button-search {
+  width: 60px;
+  height: 32px;
+  border-radius: 0 2px 2px 0;
+  background-image: url(./assets/search.png);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.button-all {
+  width: 130px;
+  height: 32px;
+  font-size: 12px;
+  padding: 0;
+  margin-left: 20px;
+}
+
+.pane-page {
+  margin: 16px 0 0 20px;
+  /deep/ .ivu-page-total {
+    position: relative;
+    top: 1px;
+    font-size: 12px;
+    color: @c-sub-text;
+  }
+}
+
+.city-box {
+  .checkbox-pane {
+    height: 306px;
+    overflow: hidden;
+  }
 }
 </style>
