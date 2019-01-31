@@ -56,16 +56,9 @@
         <span v-else-if="row.status == 6 || row.status == 7" class="status-wating">{{queryStatus(row.status)}}</span>
         <span v-else>{{queryStatus(row.status)}}</span>
       </template>
-      <!-- <template slot="freezeAmount" slot-scope="{row}">
-        <span>{{formatNumber(row.freezeAmount)}}</span>
-      </template> -->
-      <!-- <template slot="settlementStatus" slot-scope="{row}"> </template> -->
-      <!-- <template slot="beginDate" slot-scope="{row, index}">
-        <span>{{formatYell(row.beginDate)}} ~ {{formatYell(row.endDate)}}</span>
-      </template> -->
-      <!-- <template slot="createTime" slot-scope="{row, index}">
-        <span>{{formatTimes(row.createTime)}}</span>
-      </template> -->
+      <template slot="specification" slot-scope="{row, index}">
+        <span>{{row.specification}}s</span>
+      </template>
       <template slot="operation" slot-scope="{row, index}">
         <!-- 草稿 待审核 -->
         <div v-if="row.status == 1 || row.status == 2" class="operation-btn">
@@ -108,7 +101,7 @@
     <Page
       :total="totalCount"
       v-if="totalCount>0"
-      class="btnCenter"
+      class="btnCenter plan-pages"
       :current="pageList.pageIndex"
       :page-size="pageList.pageSize"
       show-total
@@ -184,7 +177,7 @@ export default class Plan extends ViewBase {
       }
     },
     { title: '广告计划状态', slot: 'status', minWidth: 120 },
-    { title: '广告片规格', key: 'specification', minWidth: 120 },
+    { title: '广告片规格', slot: 'specification', minWidth: 120 },
     { title: '广告片名称/ID', key: 'videoName', minWidth: 150 },
     // { title: '投放排期', slot: 'beginDate', minWidth: 210 },
     // { title: '投放周期', key: 'cycle', minWidth: 130 },
@@ -323,6 +316,9 @@ export default class Plan extends ViewBase {
   span:last-child {
     color: @c-link;
   }
+}
+.plan-pages {
+  margin: 30px 0 40px;
 }
 </style>
 
