@@ -574,15 +574,15 @@ export default class Main extends ViewBase {
         deliveryGroups: [
           {
             tagTypeCode: 'MOVIE_TYPE',
-            text: this.cinema.MOVIE_TYPE.includes(0) ? [] : this.cinema.MOVIE_TYPE
+            text: this.cinema.MOVIE_TYPE.includes(0) ? [] : [...this.cinema.MOVIE_TYPE]
           },
           {
             tagTypeCode: 'PLAN_GROUP_AGE',
-            text: this.cinema.PLAN_GROUP_AGE == 0 ? [] : this.cinema.PLAN_GROUP_AGE
+            text: this.cinema.PLAN_GROUP_AGE == 0 ? [] : [this.cinema.PLAN_GROUP_AGE]
           },
           {
             tagTypeCode: 'PLAN_GROUP_SEX',
-            text: this.cinema.PLAN_GROUP_SEX == 0 ? [] : this.cinema.PLAN_GROUP_SEX
+            text: this.cinema.PLAN_GROUP_SEX == 0 ? [] : [this.cinema.PLAN_GROUP_SEX]
           }
         ]
       }
@@ -597,7 +597,7 @@ export default class Main extends ViewBase {
         deliveryGroups: [
           {
             tagTypeCode: 'MOVIE_TYPE',
-            text: this.cinema.MOVIE_TYPE.includes(0) ? [] : this.formCinema.types
+            text: this.cinema.MOVIE_TYPE.includes(0) ? [] : [...this.formCinema.types]
           }
         ],
         deliveryMovies: this.singleObject.id,
