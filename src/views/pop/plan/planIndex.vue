@@ -52,38 +52,50 @@
       @on-select-all="selectAll"
     >
       <template slot="stauts" slot-scope="{row, index}">
-        <span>{{queryStatus(row.stauts)}}</span>
+        <span v-if="row.stauts == 4 || row.stauts == 3" class="status-over">{{queryStatus(row.stauts)}}</span>
+        <span v-else-if="row.stauts == 6 || row.stauts == 7" class="status-wating">{{queryStatus(row.stauts)}}</span>
+        <span v-else>{{queryStatus(row.stauts)}}</span>
       </template>
-      <template slot="beginDate" slot-scope="{row, index}">
+      <!-- <template slot="freezeAmount" slot-scope="{row}">
+        <span>{{formatNumber(row.freezeAmount)}}</span>
+      </template> -->
+      <!-- <template slot="settlementStatus" slot-scope="{row}"> </template> -->
+      <!-- <template slot="beginDate" slot-scope="{row, index}">
         <span>{{formatYell(row.beginDate)}} ~ {{formatYell(row.endDate)}}</span>
-      </template>
-      <template slot="createTime" slot-scope="{row, index}">
+      </template> -->
+      <!-- <template slot="createTime" slot-scope="{row, index}">
         <span>{{formatTimes(row.createTime)}}</span>
-      </template>
+      </template> -->
       <template slot="operation" slot-scope="{row, index}">
         <!-- 草稿 待审核 -->
         <div v-if="row.stauts == 1 || row.stauts == 2" class="operation-btn">
-          <p><span @click="planDefault(row.id, row.stauts)">查看</span></p>
-          <p><span>编辑</span></p>
-          <p><span>取消</span></p>
-          <p><span @click="relevanceAdv(row.id)">关联广告片</span></p>
+          <p>
+            <a class="table-action-btn" @click="planDefault(row.id, row.stauts)">查看</a>
+            <a class="table-action-btn" @click="planEdit(row.id)">编辑</a>
+            <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
+          </p>
+          <p><a @click="relevanceAdv(row)">关联广告片</a></p>
         </div>
         <div v-else-if="row.stauts ==  4 " class="operation-btn">
-          <p><span @click="planDefault(row.id, row.stauts)">查看</span></p>
-          <p><span>支付</span></p>
-          <p><span>取消</span></p>
-          <p><span>关联广告片</span></p>
+           <p>
+            <a class="table-action-btn" @click="planDefault(row.id, row.stauts)">查看</a>
+            <a class="table-action-btn" @click="handlePayment(row)">支付</a>
+            <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
+          </p>
+          <p><a @click="relevanceAdv(row)">关联广告片</a></p>
         </div>
         <div v-else-if="row.stauts ==  5 " class="operation-btn">
-          <p><span @click="planDefault(row.id, row.stauts)">查看</span></p>
-          <p><span @click="relevanceAdv(row.id)">关联广告片</span></p>
+          <p><a @click="planDefault(row.id, row.stauts)">查看</a></p>
+          <p><a @click="relevanceAdv(row)">关联广告片</a></p>
         </div>
         <div v-else-if="row.stauts == 3 || row.stauts == 6 || row.stauts == 7 || row.stauts == 8 || row.stauts == 9 " class="operation-btn">
-          <p><span @click="planDefault(row.id, row.stauts)">查看</span></p>
+          <p><a @click="planDefault(row.id, row.stauts)">查看</a></p>
         </div>
         <div v-else-if="row.stauts == 10" class="operation-btn">
-          <p><span @click="planDefault(row.id, row.stauts)">查看</span></p>
-          <p><span>编辑</span></p>
+          <p>
+            <a @click="planDefault(row.id, row.stauts)">查看</a>
+            <a @click="planEdit(row.id)">编辑</a>
+          </p>
         </div>
       </template>
     </Table>
@@ -111,8 +123,8 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
-import { formatTimes, formatYell} from '@/util/validateRules'
-import { planList, delCheckPlanList } from '@/api/plan'
+import { formatTimes, formatYell, formatNumber} from '@/util/validateRules'
+import { planList, delCheckPlanList, planCancel, planPayment } from '@/api/plan'
 import relevanceDlg from '../plan/default/relevanceAdVDlg.vue'
 
 @Component({
@@ -133,7 +145,7 @@ export default class Plan extends ViewBase {
   }
   relevanVis: any = {
     visible: false,
-    title: '关联广告片',
+    title: '',
     item: ''
   }
 
@@ -171,15 +183,15 @@ export default class Plan extends ViewBase {
         }
       }
     },
-    { title: '广告计划状态', slot: 'stauts', width: 150 },
-    { title: '广告片规格', key: 'specification', width: 150 },
-    { title: '广告片名称/ID', key: 'videoName', width: 150 },
-    { title: '投放排期', slot: 'beginDate', width: 150 },
-    { title: '投放周期', key: 'cycle', width: 80 },
-    { title: '冻结金额(元）', key: 'freezeAmount', width: 150 },
-    { title: '结算状态', key: 'settlementStatus', width: 150 },
-    { title: '广告花费(元）', key: 'settlementAmount', width: 150 },
-    { title: '创建时间', slot: 'createTime', width: 150 },
+    { title: '广告计划状态', slot: 'stauts', minWidth: 120 },
+    { title: '广告片规格', key: 'specification', minWidth: 120 },
+    { title: '广告片名称/ID', key: 'videoName', minWidth: 150 },
+    // { title: '投放排期', slot: 'beginDate', minWidth: 210 },
+    // { title: '投放周期', key: 'cycle', minWidth: 130 },
+    // { title: '冻结金额(元）', slot: 'freezeAmount', width: 150 },
+    // { title: '结算状态', key: 'settlementStatus', width: 150 },
+    // { title: '广告花费(元）', key: 'settlementAmount', width: 150 },
+    // { title: '创建时间', slot: 'createTime', width: 150 },
     { title: '操作', slot: 'operation', width: 150, align: 'center' }
   ]
   tableDate = [
@@ -191,9 +203,9 @@ export default class Plan extends ViewBase {
       videoId: '广告片ID',
       videoName: '广告片名称/ID',
       cycle: '投放周期',
-      freezeAmount: '冻结金额(元）',
-      settlementStatus: '结算状态',
-      settlementAmount: '广告花费(元）',
+      freezeAmount: 88888888888,
+      settlementStatus: 0,
+      settlementAmount: 88888888888888,
       createTime: 333333333,
       beginDate: 3333333333,
       endDate: 333333333333
@@ -206,9 +218,9 @@ export default class Plan extends ViewBase {
       videoId: '广告片ID',
       videoName: '广告片名称/ID',
       cycle: '投放周期',
-      freezeAmount: '冻结金额(元）',
-      settlementStatus: '结算状态',
-      settlementAmount: '广告花费(元）',
+      freezeAmount: 88888888888,
+      settlementStatus: 1,
+      settlementAmount: 88888,
       createTime: 3333333333333,
       beginDate: 33333333333333,
       endDate: 333333333333
@@ -221,9 +233,9 @@ export default class Plan extends ViewBase {
       videoId: '广告片ID',
       videoName: '广告片名称/ID',
       cycle: '投放周期',
-      freezeAmount: '冻结金额(元）',
-      settlementStatus: '结算状态',
-      settlementAmount: '广告花费(元）',
+      freezeAmount: 88888888,
+      settlementStatus: 2,
+      settlementAmount: 8888888888,
       createTime: 333333333,
       beginDate: 3333333333,
       endDate: 333333333333
@@ -236,9 +248,9 @@ export default class Plan extends ViewBase {
       videoId: '广告片ID',
       videoName: '广告片名称/ID',
       cycle: '投放周期',
-      freezeAmount: '冻结金额(元）',
-      settlementStatus: '结算状态',
-      settlementAmount: '广告花费(元）',
+      freezeAmount: 2222222222,
+      settlementStatus: 2,
+      settlementAmount: 333333333,
       createTime: 333333333,
       beginDate: 3333333333,
       endDate: 333333333333
@@ -250,29 +262,55 @@ export default class Plan extends ViewBase {
   get formatYell() {
     return formatYell
   }
+  get formatNumber() {
+    return formatNumber
+  }
   async mounted() {
     this.tableList()
-  }
-
-  async relevanceAdv(id: any) {
-     this.relevanVis = {
-      visible: true,
-      item: ''
-    }
   }
   async tableList() {
     const { data } = await planList({ ...this.form, ...this.pageList })
     this.data = data
     this.totalCount = data.totalCount
   }
-  planDefault(id: any, status: any) {
-    if (status == '1' || status == '3' || status == '9' || status == '10') {
-      this.$router.push({ name: 'pop-plan-default', params: {id, status}})
-    } else {
-      this.$router.push({ name: 'pop-plan-defaultpayment', params: {id, status}})
+  async handlePayment(item: any) {
+    await confirm(`是否要支付冻结金额${item.freezeAmount}元`, {
+      title: '支付广告计划'
+    })
+    try {
+      const id = item.id
+      await planPayment(id)
+       this.tableList()
+    } catch (ex) {
+      this.handleError(ex.msg)
     }
   }
-
+  planDefault(id: any, status: any) {
+    if (status == '1' || status == '3' || status == '9' || status == '10') {
+      this.$router.push({ name: 'pop-plan-default', params: {id}})
+    } else {
+      this.$router.push({ name: 'pop-plan-defaultpayment', params: {id}})
+    }
+  }
+  planEdit(id: any) {
+    this.$router.push({name: 'pop-plan-edit', params: {id}})
+  }
+  async planCancel(val: any, id: any) {
+    await confirm(`是否取消广告计划：${val}`, {title: '取消广告计划'})
+    try {
+      await planCancel(id)
+      this.tableList()
+    } catch (ex) {
+      this.handleError(ex.msg)
+    }
+  }
+  async relevanceAdv(val: any) {
+     this.relevanVis = {
+      visible: true,
+      title: '关联广告片',
+      item: val
+    }
+  }
   handleSelectAll() {
     const selection = this.$refs.selection as any
     selection.selectAll(!this.checkboxAll)
@@ -323,6 +361,12 @@ export default class Plan extends ViewBase {
 </script>
 <style lang="less" scoped>
 @import '~@/site/common.less';
+.status-wating {
+  color: @c-done;
+}
+.status-over {
+  color: @c-fail;
+}
 .operation-btn {
   text-align: center;
   span {

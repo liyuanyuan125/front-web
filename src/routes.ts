@@ -122,19 +122,19 @@ export default [
   },
   // 推广管理 - 广告计划 - 详情
   {
-    path: '/pop/plan-default/:id/:status',
+    path: '/pop/plan-default/:id',
     name: 'pop-plan-default',
     component: () => import('./views/pop/plan/default/planDefault.vue')
   },
   // 推广管理 - 广告计划 - 支付详情
   {
-    path: '/pop/plan-defaultpayment/:id/:status',
+    path: '/pop/plan-defaultpayment/:id',
     name: 'pop-plan-defaultpayment',
     component: () => import('./views/pop/plan/default/defaultPayment.vue')
   },
   // 推广管理 - 广告计划 - 编辑
   {
-    path: '/pop/plan-edit',
+    path: '/pop/plan-edit/:id',
     name: 'pop-plan-edit',
     component: () => import('./views/pop/plan/edit/index.vue')
   },

@@ -66,3 +66,11 @@ export async function planPayment(id: any) {
     const res = await put(`xadvert/plans/${id}/pay`)
     return res
 }
+/**
+ * 推广管理 - 广告计划 - 取消广告计划
+ * @param id
+ */
+export async function planCancel(id: any) {
+    const res = await put(`xadvert/plans/${id}/cancel`)
+    return res
+}
