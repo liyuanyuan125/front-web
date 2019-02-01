@@ -61,7 +61,7 @@
             <dl>
               <dd>档期</dd>
               <dt v-if='!this.list.calendarId'>暂无</dt>
-              <dt v-if='this.list.calendarId'>{{list.calendarName}}</dt>
+              <dt v-if='this.list.calendarId'>{{list.calendarName.split('--')[0]}}</dt>
             </dl>
           </div>
         </Col>
@@ -160,14 +160,14 @@
           <CitySelect :value="[1,2,3,4,5,6,7]" readonly class="city-map"/>
           <div class='pos-map'>
             <ul>
-              <li>华北</li>
-              <li>华南</li>
-              <li>华中</li>
+              <li v-for='item in list.throwInStats.regionNames' :key='item'>{{item.split('地区')[0]}}</li>
+              <!-- <li>华南</li> -->
+              <!-- <li>华中</li> -->
             </ul>
-            <div>一线城市3个</div>
-            <div>二线城市3个</div>
-            <div>三线城市3个</div>
-            <div>四线城市3个</div>
+            <div v-for='item in list.throwInStats.cityLevels' :key='item'>{{item.name}}{{item.count}}个</div>
+            <!-- <div>二线城市3个</div> -->
+            <!-- <div>三线城市3个</div> -->
+            <!-- <div>四线城市3个</div> -->
           </div>
           <!-- <CitySelect v-else :value="[1,2,3,4,5,6]" type="beijing" readonly class="city-map"/> -->
         </Col>
@@ -558,38 +558,38 @@ export default class Main extends ViewBase {
     this.isActive = index
   }
 
-  async selectFilm(id: any) {
+  async selectFilm(index: any) {
     if ( this.dataFrom.type == '1' ) {
       info('暂不支持选择影片')
       return
     } else if ( this.dataFrom.type == '2' ) {
       if (this.cinemaIdArray.length < 3 ) {
-        if (!this.cinemaIdArray.includes(id)) {
-          this.cinemaIdArray.push(id)
+        if (!this.cinemaIdArray.includes(index.id)) {
+          this.cinemaIdArray.push(index)
         } else {
-          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it.id != index.id )
         }
       } else if (this.cinemaIdArray.length == 3 )  {
-        if (!this.cinemaIdArray.includes(id)) {
+        if (!this.cinemaIdArray.includes(index.id)) {
           info('最多可以选择3部影片')
           // this.cinemaIdArray.push(id)
         } else {
-          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it.id != index.id )
         }
       }
     } else if ( this.dataFrom.type == '3' ) {
       if (this.cinemaIdArray.length < 6 ) {
-        if (!this.cinemaIdArray.includes(id)) {
-          this.cinemaIdArray.push(id)
+        if (!this.cinemaIdArray.includes(index.id)) {
+          this.cinemaIdArray.push(index)
         } else {
-          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it.id != index.id )
         }
       } else if (this.cinemaIdArray.length == 6 )  {
-        if (!this.cinemaIdArray.includes(id)) {
+        if (!this.cinemaIdArray.includes(index.id)) {
           info('最多可以选择6部影片')
           // this.cinemaIdArray.push(id)
         } else {
-          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it.id != index.id )
         }
       }
     }
