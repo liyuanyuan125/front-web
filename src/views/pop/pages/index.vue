@@ -160,11 +160,11 @@
           <CitySelect :value="[1,2,3,4,5,6,7]" readonly class="city-map"/>
           <div class='pos-map'>
             <ul>
-              <li v-for='item in list.throwInStats.regionNames' :key='item'>{{item.split('地区')[0]}}</li>
+              <li v-for='item in list.throwInStats.regionList' :key='item'>{{item.name.split('地区')[0]}}</li>
               <!-- <li>华南</li> -->
               <!-- <li>华中</li> -->
             </ul>
-            <div v-for='item in list.throwInStats.cityLevels' :key='item'>{{item.name}}{{item.count}}个</div>
+            <div v-for='item in list.throwInStats.cityLevelList' :key='item'>{{item.name}}{{item.count}}个</div>
             <!-- <div>二线城市3个</div> -->
             <!-- <div>三线城市3个</div> -->
             <!-- <div>四线城市3个</div> -->
@@ -370,6 +370,15 @@ export default class Main extends ViewBase {
   // video item
   videos: any = []
 
+  // 区域
+  regionList: any = []
+  // 省份
+  provinceList: any = []
+  // 城市
+  cityLevelList: any = []
+  // 影院
+  ids: any = []
+
   dataFrom: any = {
     type: '1', // 方案类型
     name: this.list.name, // 计划名称
@@ -530,7 +539,6 @@ export default class Main extends ViewBase {
       const res = await addplan(this.datafroms)
       toast('添加成功')
       this.$router.push({name: 'pop-planlist'})
-
     } catch (ex) {
       this.handleError(ex)
     }
@@ -657,9 +665,78 @@ export default class Main extends ViewBase {
           openTime: moment(it.openTime).format(timeFormat)
         }
       })
+
       // yingyuan列表
-      // const cinema = await TcinemaList({ids: [233,156], pageIndex: 1, pageSize: 6})
-      // this.tcinemaList = cinema.data.items
+      // 区域
+      this.regionList = (this.list.throwInStats.regionList || []).map((it: any) => {
+        return it.code
+      })
+      // 省份
+      this.provinceList = (this.list.throwInStats.provinceList || []).map((it: any) => {
+        return it.id
+      })
+      // 城市
+      this.cityLevelList = (this.list.throwInStats.cityLevelList || []).map((it: any) => {
+        const aaa = (it.cityList || []).map((item: any) => {
+          // console.log(item.id)
+          // this.cityLevelList.push(item.id)
+          return item.id
+        })[0]
+        return aaa
+      })
+      // console.log(this.cityLevelList)
+      // 影院
+      // console.log(this.list.ids)
+      if (this.list.throwInAreaType[0].key == 0) {
+        // 0 不限
+        const cinema = await TcinemaList({
+          areaCodes: this.regionList ,
+          provinceIds: this.provinceList ,
+          cityIds: this.cityLevelList ,
+          ids: this.list.ids , pageIndex : 1 , pageSize : 6})
+        // if (cinema.data.items.length <= 5) {
+          this.tcinemaList = cinema.data.items
+        // } else {
+        //   this.tcinemaList.push(
+        //     cinema.data.items[0],
+        //     cinema.data.items[1],
+        //     cinema.data.items[2],
+        //     cinema.data.items[3],
+        //     cinema.data.items[4],
+        //     cinema.data.items[5])
+        // }
+      }
+      if (this.list.throwInAreaType[0].key == 1) {
+        // 1 区域
+        const cinema1 = await TcinemaList({areaCodes: this.regionList, pageIndex : 1 , pageSize : 6})
+        this.tcinemaList = cinema1.data.items
+      }
+      if (this.list.throwInAreaType[0].key == 2) {
+        // 2 省份
+        const cinema2 = await TcinemaList({provinceIds: this.provinceList, pageIndex : 1 , pageSize : 6})
+        this.tcinemaList = cinema2.data.items
+      }
+      if (this.list.throwInAreaType[0].key == 3) {
+        // 3 城市
+        const cinema3 = await TcinemaList({cityIds: this.cityLevelList, pageIndex : 1 , pageSize : 6})
+        this.tcinemaList = cinema3.data.items
+      }
+      if (this.list.throwInAreaType[0].key == 4) {
+        // 4 影院
+        const cinema4 = await TcinemaList({ids: this.list.ids, pageIndex : 1 , pageSize : 6})
+        this.tcinemaList = cinema4.data.items
+      }
+      // if (cinema.data.items.length <= 5) {
+      //   this.tcinemaList = cinema.data.items
+      // } else {
+      //   this.tcinemaList.push(
+      //     cinema.data.items[0],
+      //     cinema.data.items[1],
+      //     cinema.data.items[2],
+      //     cinema.data.items[3],
+      //     cinema.data.items[4],
+      //     cinema.data.items[5])
+      // }
       // 广告片
       const videoitem = await video(this.list.videoId)
       this.videos = videoitem.data.items
