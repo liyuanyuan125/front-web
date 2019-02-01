@@ -2,7 +2,7 @@
   <Modal v-model='showDlg'
   title="方案确认单"
   :transfer='false'
-  :width='750'
+  :width='770'
   @on-cancel="cancel()">
     <div style=" text-align: center">
       <div class="mb30">
@@ -73,59 +73,82 @@
           </Col>
         </Row>
       </div>
-      <div style='background:rgba(249, 249, 249, 1);padding: 10px 20px 0 20px; margin-top: 10px;'>
+      <div v-if='data.directionType == 1' style='background:rgba(249, 249, 249, 1);padding: 10px 20px 0 20px; margin-top: 10px;'>
         <Row class="mb10">
-          <Col :span="4">投放区域 (3个)</Col>
+          <Col :span="4">投放区域 ({{data.throwInStats.region}}个)</Col>
           <Col :span="20">
-            华北 | 华中 | 华南
+            <span v-for="it in data.throwInStats.regionList" :key="it.key">{{it.name}}</span>
           </Col>
         </Row>
         <Row class="mb10">
-          <Col :span="4">投放省份 (5个)</Col>
+          <Col :span="4">投放省份 ({{data.throwInStats.province}}个)</Col>
           <Col :span="20">
-            河北省 | 北京市 | 上海市 | 安徽省 | 广东省
+            <span class="cityCount" v-for="it in data.throwInStats.provinceList" :key="it.key">{{it.name}}</span>
           </Col>
         </Row>
         <Row class="mb10">
-          <Col :span="4">投放城市 (6个)</Col>
+          <Col :span="4">投放城市 ({{data.throwInStats.city}}个)</Col>
           <Col :span="20">
-            <Row class="mb10">
-              <Col :span="4">1级城市(2个)</Col>
-              <Col :span="20">北京市 | 上海市</Col>
-            </Row>
-            <Row class="mb10">
-              <Col :span="4">2级城市(2个)</Col>
-              <Col :span="20">广州市 | 佛山市</Col>
-            </Row>
-            <Row class="mb10">
-              <Col :span="4">3级城市(2个)</Col>
-              <Col :span="20">石家庄市 | 合肥市</Col>
-            </Row>
-            <Row class="mb10">
-              <Col :span="4">4级城市(0个)</Col>
-              <Col :span="20"></Col>
+            <Row class="mb10" v-for="it in data.throwInStats.cityLevelList" :key="it.key">
+              <Col :span="6">{{it.name}}({{it.count}}个)</Col>
+              <Col :span="18" v-for="item in it.cityList" :key="item.id"><span class="cityCount">{{item.name}}</span></Col>
             </Row>
           </Col>
         </Row>
         <Row class="mb10">
-          <Col :span="4">投放影院 (60个)</Col>
+          <Col :span="4">投放影院 ({{data.throwInStats.cinema}}个)</Col>
           <Col :span="20">
-            <Row class="mb10">
-              <Col :span="24">A级票房 (20个)</Col>
+            <Row class="mb10" v-for="it in data.throwInStats.boxLevelList" :key="it.key">
+              <Col :span="24"><span class="cityCount">{{it.name}} ({{it.count}}个)</span></Col>
               <!-- <Col :span="20">北京市 | 上海市</Col> -->
             </Row>
-            <Row class="mb10">
-              <Col :span="24">B级票房 (20个)</Col>
-              <!-- <Col :span="20">广州市 | 佛山市</Col> -->
-            </Row>
-            <Row class="mb10">
-              <Col :span="24">C级票房 (20个)</Col>
-              <!-- <Col :span="20">石家庄市 | 合肥市</Col> -->
-            </Row>
-            <Row class="mb10">
-              <Col :span="24">D级票房 (0个)</Col>
-              <!-- <Col :span="20"></Col> -->
-            </Row>
+          </Col>
+        </Row>
+      </div>
+      <div v-if='data.directionType == 1' style='background:rgba(249, 249, 249, 1);padding: 10px 20px 0 20px; margin-top: 10px;'>
+        <Row class="mb10">
+          <Col :span="4">观影人群画像</Col>
+          <Col :span="20" class="cinema-flex">
+           <div
+              :class="['portrait', {'woman-atv': cinema.tagsex[2].text[0] == 'woman', 'man-atv': cinema.tagsex[2].text[0] == 'man', 'unknow-atv': cinema.tagsex[2].text[0] == 'unknow'}]"
+            >
+              <div v-if="cinema.tagsex[2].text[0] == 'man'">
+                <i class="gender-text">男性</i>
+                <img width="145" class="gender-img" src="../plan/assets/man.png">
+              </div>
+              <div v-else-if="cinema.tagsex[2].text[0] == 'woman'">
+                <i class="gender-text">女性</i>
+                <img width="145" class="gender-img" src="../plan/assets/woman.png">
+              </div>
+              <div v-else>
+                <i class="gender-text">性别不详</i>
+                <img width="145" class="gender-img" src="../plan/assets/unknow.png">
+              </div>
+              <div class="film-type" v-if="cinema.tagsex[1].text.length > 0">
+                <i>{{ageName(cinema.tagsex[1].text[0])}}</i>
+              </div>
+              <div v-else>
+                <i>年龄不详</i>
+              </div>
+              <div v-if="cinema.tagsex[0].text.length > 0">
+                <i :class="`cinemapos${index}`" v-for="(it , index) in cinema.tagsex[0].text" :key="index">{{cinemaTypes(it)}}</i>
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Row class="mb10">
+          <Col :span="4">影片</Col>
+          <Col :span="20" class="cinema-flex">
+            <div class='im' style="float-left" v-for="item in cinema.cinemaIdArray" :key="item.id">
+              <div class='im-div'>
+                <img :src='item.mainPicUrl' alt=''>
+                <div>上映日期：{{formatMoment(item.openTime)}}</div>
+              </div>
+              <div class='ims-div'>
+                <p>{{item.name}}</p>
+                <p class="cinema-type"><span v-for="it in item.type" :key="it">{{it}}</span></p>
+              </div>
+            </div>
           </Col>
         </Row>
       </div>
@@ -200,6 +223,18 @@ export default class Main extends ViewBase {
     return moment(time).format(timeFormat)
   }
 
+  ageName(age: any) {
+    if (this.cinema.tagsyear) {
+      return this.cinema.tagsyear[0].values.filter((it: any) => it.key == age)[0].text
+    }
+  }
+
+  cinemaTypes(type: any) {
+    if (this.cinema.tagstype) {
+      return this.cinema.tagstype[0].values.filter((it: any) => it.key == type)[0].text
+    }
+  }
+
   // 格式化档期时间
   formatTime(num: any) {
     num = num + ''
@@ -218,6 +253,8 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import '~@/site/lib.less';
+@bag: rgba(255, 237, 237, 1);
 .foot-button-box(@color: #fe8135, @text-color: #fff) {
   width: 196px;
   height: 50px;
@@ -283,8 +320,14 @@ export default class Main extends ViewBase {
     color: #333;
   }
 }
+.cinema-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
 .im {
   height: 300px;
+  margin-right: 10px;
+  margin-bottom: 10px;
   .im-div {
     width: 180px;
     height: 250px;
@@ -324,9 +367,67 @@ export default class Main extends ViewBase {
     }
   }
 }
+.portrait {
+  position: relative;
+  i {
+    width: 80px;
+    height: 36px;
+    line-height: 36px;
+    border-radius: 2px;
+    text-align: center;
+    display: inline-block;
+  }
+  &.woman-atv i {
+    background: @bag;
+    color: #ff7d7d;
+  }
+  &.man-atv i {
+    background: @bag;
+    color: #3b98ff;
+  }
+  &.unknow-atv i {
+    background: @bag;
+    color: @c-button;
+  }
+  .gender-text {
+    position: absolute;
+    top: 36px;
+    left: -30px;
+  }
+  .film-type {
+    position: absolute;
+    top: 140px;
+    left: -25px;
+    i {
+      display: block;
+      margin-bottom: 16px;
+    }
+  }
+  .gender-img {
+    margin: 40px 0 30px 50px;
+  }
+  .cinemapos1 {
+    position: absolute;
+    right: -80px;
+    top: 90px;
+  }
+  .cinemapos2 {
+    position: absolute;
+    right: -80px;
+    top: 35px;
+  }
+  .cinemapos0 {
+    position: absolute;
+    right: -80px;
+    top: 140px;
+  }
+}
 .cinema-area {
   span:not(:last-child)::after {
     .before;
   }
+}
+.cityCount:not(:last-child)::after {
+  .before('|');
 }
 </style>
