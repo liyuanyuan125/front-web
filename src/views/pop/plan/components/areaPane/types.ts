@@ -1,10 +1,52 @@
 /**
- * 统计数据中的几级城市统计项
+ * 区域统计项
  */
-export interface StatsCityLevel {
+export interface Region {
+  code: string
+  name: string
+  count: number
+}
+
+/**
+ * 省份统计项
+ */
+export interface Province {
+  id: number
+  name: string
+  count: number
+}
+
+/**
+ * 城市统计项
+ */
+export interface City {
+  id: number
+  name: string
+  count: number
+  cityGradeCode: string
+  cityGradeName: string
+}
+
+/**
+ * 城市按级别统计项
+ */
+export interface CityLevel {
+  /** 级别 code */
+  code: string
   /** 级别名 */
   name: string
   /** 个数 */
+  count: number
+  /** 城市列表 */
+  cityList: Array<{ id: number, name: string }>
+}
+
+/**
+ * 影院级别统计项
+ */
+export interface BoxLevel {
+  code: string
+  name: string
   count: number
 }
 
@@ -21,9 +63,12 @@ export interface Stats {
   /** 覆盖影院个数 */
   cinema: number
 
-  /** 区域名列表 */
-  regionNames: string[]
-
+  /** 区域列表 */
+  regionList: Region[]
+  /** 省份列表 */
+  provinceList: Province[]
   /** 城市级别列表 */
-  cityLevels: StatsCityLevel[]
+  cityLevelList: CityLevel[]
+  /** 影院级别列表 */
+  boxLevelList: BoxLevel[]
 }
