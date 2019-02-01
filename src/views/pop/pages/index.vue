@@ -144,15 +144,15 @@
             </li>
             <li class="tag-ltme">
               <span>省份</span>
-              <span>6个</span>
+              <span>{{list.throwInStats.province}}个</span>
             </li>
             <li class="tag-ltme">
               <span>城市</span>
-              <span>8个</span>
+              <span>{{list.throwInStats.city}}个</span>
             </li>
             <li class="tag-ltme">
               <span>影院</span>
-              <span>500个</span>
+              <span>{{list.throwInStats.cinema}}个</span>
             </li>
           </ul>
         </Col>
