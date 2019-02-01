@@ -43,6 +43,7 @@ export default class Main extends ViewBase {
   display: flex;
   flex-wrap: wrap;
   margin-top: 5px;
+  width: 1000px;
   .tag {
     box-sizing: content-box;
     text-align: center;

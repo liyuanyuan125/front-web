@@ -61,7 +61,7 @@
             <dl>
               <dd>档期</dd>
               <dt v-if='!this.list.calendarId'>暂无</dt>
-              <dt v-if='this.list.calendarId'>{{list.customerName}}</dt>
+              <dt v-if='this.list.calendarId'>{{list.calendarName.split('--')[0]}}</dt>
             </dl>
           </div>
         </Col>
@@ -140,19 +140,19 @@
           <ul class="tag" style="left: 0px">
             <li class="tag-ltme">
               <span>区域</span>
-              <span>4个</span>
+              <span>{{list.throwInStats.region}}个</span>
             </li>
             <li class="tag-ltme">
               <span>省份</span>
-              <span>6个</span>
+              <span>{{list.throwInStats.province}}个</span>
             </li>
             <li class="tag-ltme">
               <span>城市</span>
-              <span>8个</span>
+              <span>{{list.throwInStats.city}}个</span>
             </li>
             <li class="tag-ltme">
               <span>影院</span>
-              <span>500个</span>
+              <span>{{list.throwInStats.cinema}}个</span>
             </li>
           </ul>
         </Col>
@@ -160,18 +160,18 @@
           <CitySelect :value="[1,2,3,4,5,6,7]" readonly class="city-map"/>
           <div class='pos-map'>
             <ul>
-              <li>华北</li>
-              <li>华南</li>
-              <li>华中</li>
+              <li v-for='item in list.throwInStats.regionNames' :key='item'>{{item.split('地区')[0]}}</li>
+              <!-- <li>华南</li> -->
+              <!-- <li>华中</li> -->
             </ul>
-            <div>一线城市3个</div>
-            <div>二线城市3个</div>
-            <div>三线城市3个</div>
-            <div>四线城市3个</div>
+            <div v-for='item in list.throwInStats.cityLevels' :key='item'>{{item.name}}{{item.count}}个</div>
+            <!-- <div>二线城市3个</div> -->
+            <!-- <div>三线城市3个</div> -->
+            <!-- <div>四线城市3个</div> -->
           </div>
           <!-- <CitySelect v-else :value="[1,2,3,4,5,6]" type="beijing" readonly class="city-map"/> -->
         </Col>
-        <Col class="mt70" :span="12">
+        <Col :span="12">
           <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
           <Button  type="primary" class="mt30" @click="view" style="float: right; height: 40px; margin-right: 10px; margin-bottom: 10px;">查看全部影院</Button>
         </Col>
@@ -186,11 +186,11 @@
           <Col :span="20">
            <ul class="tag" style="left:2px">
               <li class="tag-ltme" style='margin-left:30px;'>
-                <img v-if='list.deliveryGroups[2].text == "man"' style="vertical-align: middle;" src="./assets/man.png" alt="">
-                <img v-if='list.deliveryGroups[2].text == "woman"' style="vertical-align: middle;" src="./assets/woman.png" alt="">
-                <span v-if='list.deliveryGroups[2].text == "" && list.deliveryGroups[1].text == "" && list.deliveryGroups[0].text == ""'>不限</span>
+                <img v-if='list.deliveryGroups[2].text[0] == "man"' style="vertical-align: middle;" src="./assets/man.png" alt="">
+                <img v-if='list.deliveryGroups[2].text[0] == "woman"' style="vertical-align: middle;" src="./assets/woman.png" alt="">
+                <span v-if='list.deliveryGroups[2].text.length == 0 && list.deliveryGroups[1].text.length == 0 && list.deliveryGroups[0].text.length == 0'>不限</span>
               </li>
-              <li v-for='(item) in tagsyear[0].values' :key='item.key' v-if='list.deliveryGroups[1].text == item.key' class="tag-ltmes">
+              <li v-for='(item) in tagsyear[0].values' :key='item.key' v-if='list.deliveryGroups[1].text[0] == item.key' class="tag-ltmes">
                 <span>{{item.text}}</span>
               </li>
               <li v-for='(it,index) in list.deliveryGroups[0].text' :key='index' class="tag-ltmes">
@@ -205,7 +205,7 @@
             <Col v-if='dataFrom.type == "1"' :span="17" style="text-indent: 1em;padding-left:30px;line-height: 50px;">说明：不支持选择投放影片。</Col>
             <Col v-if='dataFrom.type == "2"' :span="17" style="text-indent: 1em;padding-left:30px;line-height: 50px;">说明：请选择不超过3部影片，系统将优先为您排播所选择影片的映前广告。</Col>
             <Col v-if='dataFrom.type == "3"' :span="17" style="text-indent: 1em;padding-left:30px;line-height: 50px;">说明：请选择不超过6部影片，系统将优先为您排播所选择影片的映前广告。</Col>
-            <Col :span='3' style='line-height:50px;color:#fe8135'>已选{{cinemaIdArray.length}}部影片</Col>
+            <Col :span='3' v-if='dataFrom.type != "1"' style='line-height:50px;color:#fe8135'>已选{{cinemaIdArray.length}}部影片</Col>
           </Row>
            <Row class='pi' :gutter="30">
             <Col :span="4" style="text-indent: 1em;padding-left:30px;">&nbsp;&nbsp;&nbsp;&nbsp;</Col>
@@ -214,7 +214,7 @@
             <img v-if='tuifilm.length >= 3' class='pi-three' src="./assets/匹配度三.png" alt="">
             <Col :span='20'>
               <Col :span="5" class='sp-c' v-for='(it , index) in tuifilm' :key='index'>
-                <dl  @click="selectFilm(it.id)" :class="['cinema-img',  {'cinema-img-active ': showClassimg}]">
+                <dl  @click="selectFilm(it)" :class="['cinema-img',  {'cinema-img-active ': showClassimg}]">
                   <div class="cinema-check" v-if="cinemaIdArray.includes(it.id)"></div>
                   <dd class='s-img'>
                     <img class='img' :src=it.mainPicUrl alt="">
@@ -248,7 +248,7 @@
       </Row>
     </Row>
     <div class="report-button">
-      <Button type="primary" @click="edit" style="width: 370px">确认投放方案</Button>
+      <Button type="primary" @click="edit" >确认投放方案</Button>
       <Button type="default" @click="caoEdit">存为草稿</Button>
     </div>
     <!-- 确认生成 -->
@@ -271,12 +271,9 @@ import jsxReactToVue from '@/util/jsxReactToVue'
 import { queryList , addplan , abcount , pricount , tuijian , TcinemaList , video } from '@/api/planput'
 import { cinemaList } from '@/api/popPlan'
 import echarts from 'echarts' // 引入echarts
-import { warning , success, toast } from '@/ui/modal'
+import { warning , success, toast , info } from '@/ui/modal'
 
-
-// const makeMap = (list: any[]) => toMap(list, 'id', 'name')
 const timeFormat = 'YYYY-MM-DD'
-
 
 const mockMap = [
   {
@@ -354,7 +351,6 @@ export default class Main extends ViewBase {
   // 查询影片信息
   seacinemaList: any = []
 
-
   cinemaIdArray: any = []
 
   // 全部数据
@@ -368,6 +364,8 @@ export default class Main extends ViewBase {
   tagstype: any = []
   tagsyear: any = []
   diqutype: any = []
+
+  codeList: any = []
 
   // video item
   videos: any = []
@@ -384,13 +382,13 @@ export default class Main extends ViewBase {
     budgetAmount: this.list.budgetAmount, // 预算金额
     billingMode: this.list.billingMode, // 击飞方式
     deliveryMovies: [], // 投放影片
-    status: 1, // 计划状态
+    status: 2, // 计划状态
     estimateCostAmount: this.pricecount, // 预估花费
     estimateShowCount: this.aboutcount, // 预估曝光场次
-    directionType: this.list.directionType, // 定向投放类型（1标准投放2单片投放）
-    deliveryGroups: this.list.deliveryGroups, // 观影人群画像
+    directionType: this.list.directionType, // 定向投放类型（1标准投放2单片投放
+    deliveryGroups: [], // 观影人群画像
     throwInAreaType: 0,
-    cinemas: [], // 影院列表
+    ids: this.list.ids, // 影院列表
   }
 
   get addlist() {
@@ -401,13 +399,16 @@ export default class Main extends ViewBase {
       tagstype: this.tagstype, // 标准 / 单步 影片类型
       tagsyear: this.tagsyear, // 标准影片 年龄 (单步的话没有)
       tagsex: this.list.deliveryGroups, //  标准影片性别(数组取值)
-      diqutype: this.diqutype
+      diqutype: this.diqutype,
+      tagTypeCode: this.list.tagTypeCode,
+      cinemaIdArray: this.cinemaIdArray,
+      throwInStats: this.list.throwInStats
     }
   }
 
   get datafroms() {
     return {
-      type: '1', // 方案类型
+      type: this.dataFrom.type, // 方案类型
       name: this.list.name, // 计划名称
       videoId: this.list.videoId, // 广告片ID
       calendarId: this.list.calendarId, // 档期ID
@@ -418,13 +419,13 @@ export default class Main extends ViewBase {
       budgetAmount: this.list.budgetAmount, // 预算金额
       billingMode: this.list.billingMode, // 击飞方式
       deliveryMovies: this.cinemaIdArray, // 投放影片
-      status: 1, // 计划状态
+      status: this.dataFrom.status, // 计划状态
       estimateCostAmount: this.pricecount, // 预估花费
       estimateShowCount: this.aboutcount, // 预估曝光场次
-      directionType: this.list.directionType, // 定向投放类型（1标准投放2单片投放）
-      deliveryGroups: this.list.deliveryGroups, // 观影人群画像
-      throwInAreaType: 0,
-      cinemas: [], // 影院列表
+      directionType: this.list.directionType, // 定向投放类型（1标准投放2单片投放
+      deliveryGroups: this.dataFrom.deliveryGroups, // 观影人群画像
+      throwInAreaType: this.dataFrom.throwInAreaType,
+      ids: this.list.ids, // 影院列表
     }
   }
 
@@ -448,10 +449,6 @@ export default class Main extends ViewBase {
   }
   // 查看影院
   view() {
-    // this.addcinema = true
-    // this.$nextTick(() => {
-    //   (this.$refs.addcine as any).init(this.forMat)
-    // })
     this.cinema = {
       visible: true,
       id: '233,156'
@@ -467,20 +464,76 @@ export default class Main extends ViewBase {
     })
   }
   async caoEdit() {
-    this.datafroms.status = 2
+    this.dataFrom.status = 1
+
+    if (this.list.directionType == 1) {
+      this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
+      if (this.list.deliveryGroups[0].text.length != 0) {
+        const one = (this.list.deliveryGroups[0].text || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push( {
+            tagTypeCode: this.list.deliveryGroups[0].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (this.list.deliveryGroups[0].text.length != 0) {
+        const two = (this.list.deliveryGroups[1].text || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push ({
+            tagTypeCode: this.list.deliveryGroups[1].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (this.list.deliveryGroups[0].text.length != 0) {
+        const three = (this.list.deliveryGroups[2].text || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push ({
+            tagTypeCode: this.list.deliveryGroups[2].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (
+        this.list.deliveryGroups[0].text.length == 0 &&
+        this.list.deliveryGroups[0].text.length == 0 &&
+        this.list.deliveryGroups[0].text.length == 0) {
+        this.dataFrom.deliveryGroups = (this.list.deliveryGroups || []).map((it: any) => {
+          return {
+            tagTypeCode: it.tagTypeCode,
+            text: 'ALL'
+          }
+        })
+      }
+    }
+    if (this.list.directionType == 2) {
+      // console.log(this.list.tagTypeCode)
+      const one = (this.list.tagTypeCode || []).map((it: any) => {
+        this.dataFrom.deliveryGroups.push( {
+          tagTypeCode: 'DISTRICT_AREA',
+          text: it
+        })
+      })
+      if (
+        this.list.tagTypeCode.length == 0) {
+        // this.dataFrom.deliveryGroups = (this.list.deliveryGroups || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push ({
+            tagTypeCode: 'DISTRICT_AREA',
+            text: 'ALL'
+          })
+        // })
+      }
+      // console.log(this.dataFrom.deliveryGroups)
+    }
     try {
       const res = await addplan(this.datafroms)
       toast('添加成功')
-      // this.dataFrom = {}
-      // this.seach()
-      // history.go(0)
+      this.$router.push({name: 'pop-planlist'})
+
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
   showClass( index: any) {
-    // console.log(123)
     if (index == 1) {
       this.showClassbiao = true
       this.showClassjia = false
@@ -488,7 +541,6 @@ export default class Main extends ViewBase {
       this.dataFrom.type = '1'
       this.seach()
     } else if (index == 2) {
-      // console.log(456)
       this.showClassbiao = false
       this.showClassjia = true
       this.showClassyou = false
@@ -506,31 +558,39 @@ export default class Main extends ViewBase {
     this.isActive = index
   }
 
-  async selectFilm(id: any) {
+  async selectFilm(index: any) {
     if ( this.dataFrom.type == '1' ) {
-      alert('暂不支持选择影片')
+      info('暂不支持选择影片')
       return
     } else if ( this.dataFrom.type == '2' ) {
-      if (this.cinemaIdArray.length < 3) {
-        if (!this.cinemaIdArray.includes(id)) {
-          this.cinemaIdArray.push(id)
+      if (this.cinemaIdArray.length < 3 ) {
+        if (!this.cinemaIdArray.includes(index.id)) {
+          this.cinemaIdArray.push(index)
         } else {
-          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it.id != index.id )
         }
-      } else {
-        alert('只支持选择3部影片')
-        return
+      } else if (this.cinemaIdArray.length == 3 )  {
+        if (!this.cinemaIdArray.includes(index.id)) {
+          info('最多可以选择3部影片')
+          // this.cinemaIdArray.push(id)
+        } else {
+          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it.id != index.id )
+        }
       }
     } else if ( this.dataFrom.type == '3' ) {
-      if (this.cinemaIdArray.length < 6) {
-        if (!this.cinemaIdArray.includes(id)) {
-          this.cinemaIdArray.push(id)
+      if (this.cinemaIdArray.length < 6 ) {
+        if (!this.cinemaIdArray.includes(index.id)) {
+          this.cinemaIdArray.push(index)
         } else {
-          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it != id )
+          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it.id != index.id )
         }
-      } else {
-        alert('只支持选择6部影片')
-        return
+      } else if (this.cinemaIdArray.length == 6 )  {
+        if (!this.cinemaIdArray.includes(index.id)) {
+          info('最多可以选择6部影片')
+          // this.cinemaIdArray.push(id)
+        } else {
+          this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it.id != index.id )
+        }
       }
     }
   }
@@ -577,7 +637,11 @@ export default class Main extends ViewBase {
       const resab = await abcount({cinemaCount: 5 , type: this.dataFrom.type})
       this.aboutcount = resab.data
       // 获取预估投放花费
-      const respri = await pricount({budgetCode: this.list.budgetCode , type: this.dataFrom.type , budgetAmount: ''})
+      const respri = await pricount({
+                      budgetCode: this.list.budgetCode ,
+                      type: this.dataFrom.type ,
+                      budgetAmount: this.list.budgetAmount
+                                    })
       this.pricecount = respri.data
       // 推荐影片
       const tui = await tuijian({
@@ -591,8 +655,8 @@ export default class Main extends ViewBase {
         }
       })
       // yingyuan列表
-      const cinema = await TcinemaList({ids: '233,156', pageIndex: 1, pageSize: 6})
-      this.tcinemaList = cinema.data.items
+      // const cinema = await TcinemaList({ids: [233,156], pageIndex: 1, pageSize: 6})
+      // this.tcinemaList = cinema.data.items
       // 广告片
       const videoitem = await video(this.list.videoId)
       this.videos = videoitem.data.items
