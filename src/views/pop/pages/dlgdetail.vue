@@ -110,7 +110,7 @@
           <Col :span="4">观影人群画像</Col>
           <Col :span="20" class="cinema-flex">
            <div
-              :class="['portrait', {'woman-atv': cinema.tagsex[2].text[0] == 'woman', 'man-atv': cinema.tagsex[2].text[0] == 'man', 'unknow-atv': cinema.tagsex[2].text[0] == 'unknow'}]"
+              :class="['portrait', {'woman-atv': cinema.tagsex[2].text[0] == 'woman', 'man-atv': cinema.tagsex[2].text[0] == 'man', 'unknow-atv': cinema.tagsex[2].text.length == 0}]"
             >
               <div v-if="cinema.tagsex[2].text[0] == 'man'">
                 <i class="gender-text">男性</i>
@@ -127,7 +127,7 @@
               <div class="film-type" v-if="cinema.tagsex[1].text.length > 0">
                 <i>{{ageName(cinema.tagsex[1].text[0])}}</i>
               </div>
-              <div v-else>
+              <div class="film-type" v-else>
                 <i>年龄不详</i>
               </div>
               <div v-if="cinema.tagsex[0].text.length > 0">
@@ -165,6 +165,8 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { formatCurrency } from '@/fn/string'
 import moment from 'moment'
+import { addplan } from '@/api/planput'
+import { warning , success, toast , info } from '@/ui/modal'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component
@@ -247,7 +249,75 @@ export default class Main extends ViewBase {
     return `${year}-${month}-${day}`
   }
 
-  open() {
+  async open() {
+    if (this.data.directionType == 1) {
+      this.forMat.throwInAreaType = this.data.throwInAreaType[0].key
+      if (this.data.deliveryGroups[0].text.length != 0) {
+        const one = (this.data.deliveryGroups[0].text || []).map((it: any) => {
+          this.forMat.deliveryGroups.push( {
+            tagTypeCode: this.data.deliveryGroups[0].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (this.data.deliveryGroups[0].text.length != 0) {
+        const two = (this.data.deliveryGroups[1].text || []).map((it: any) => {
+          this.forMat.deliveryGroups.push ({
+            tagTypeCode: this.data.deliveryGroups[1].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (this.data.deliveryGroups[0].text.length != 0) {
+        const three = (this.data.deliveryGroups[2].text || []).map((it: any) => {
+          this.forMat.deliveryGroups.push ({
+            tagTypeCode: this.data.deliveryGroups[2].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (
+        this.data.deliveryGroups[0].text.length == 0 &&
+        this.data.deliveryGroups[0].text.length == 0 &&
+        this.data.deliveryGroups[0].text.length == 0) {
+        this.forMat.deliveryGroups = (this.data.deliveryGroups || []).map((it: any) => {
+          return {
+            tagTypeCode: it.tagTypeCode,
+            text: 'ALL'
+          }
+        })
+      }
+    }
+    if (this.data.directionType == 2) {
+      // console.log(this.data.tagTypeCode)
+      const one = (this.data.tagTypeCode || []).map((it: any) => {
+        this.forMat.deliveryGroups.push( {
+          tagTypeCode: 'DISTRICT_AREA',
+          text: it
+        })
+      })
+      if (
+        this.data.tagTypeCode.length == 0) {
+        // this.forMat.deliveryGroups = (this.list.deliveryGroups || []).map((it: any) => {
+          this.forMat.deliveryGroups.push ({
+            tagTypeCode: 'DISTRICT_AREA',
+            text: 'ALL'
+          })
+        // })
+      }
+      // console.log(this.forMat.deliveryGroups)
+    }
+    try {
+      const res = await addplan({
+        ...this.forMat,
+        status: 2
+      })
+      toast('添加成功')
+      this.$router.push({name: 'pop-planlist'})
+
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 }
 </script>
