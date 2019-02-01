@@ -215,7 +215,7 @@
             <Col :span='20'>
               <Col :span="5" class='sp-c' v-for='(it , index) in tuifilm' :key='index'>
                 <dl  @click="selectFilm(it)" :class="['cinema-img',  {'cinema-img-active ': showClassimg}]">
-                  <div class="cinema-check" v-if="cinemaIdArray.includes(it.id)"></div>
+                  <div class="cinema-check" v-if="cinemaIdiD.includes(it.id)"></div>
                   <dd class='s-img'>
                     <img class='img' :src=it.mainPicUrl alt="">
                     <div>上映日期：{{it.openTime}}</div>
@@ -391,6 +391,9 @@ export default class Main extends ViewBase {
     ids: this.list.ids, // 影院列表
   }
 
+  get cinemaIdiD() {
+    return this.cinemaIdArray.map((it: any) => it.id)
+  }
   get addlist() {
     return {
       aboutcount: this.aboutcount, // 预估场次
