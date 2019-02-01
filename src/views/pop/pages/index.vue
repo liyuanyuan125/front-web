@@ -140,7 +140,7 @@
           <ul class="tag" style="left: 0px">
             <li class="tag-ltme">
               <span>区域</span>
-              <span>4个</span>
+              <span>{{list.throwInStats.region}}个</span>
             </li>
             <li class="tag-ltme">
               <span>省份</span>
@@ -382,7 +382,7 @@ export default class Main extends ViewBase {
     budgetAmount: this.list.budgetAmount, // 预算金额
     billingMode: this.list.billingMode, // 击飞方式
     deliveryMovies: [], // 投放影片
-    status: 1, // 计划状态
+    status: 2, // 计划状态
     estimateCostAmount: this.pricecount, // 预估花费
     estimateShowCount: this.aboutcount, // 预估曝光场次
     directionType: this.list.directionType, // 定向投放类型（1标准投放2单片投放
@@ -401,7 +401,8 @@ export default class Main extends ViewBase {
       tagsex: this.list.deliveryGroups, //  标准影片性别(数组取值)
       diqutype: this.diqutype,
       tagTypeCode: this.list.tagTypeCode,
-      cinemaIdArray: this.cinemaIdArray
+      cinemaIdArray: this.cinemaIdArray,
+      throwInStats: this.list.throwInStats
     }
   }
 
@@ -463,44 +464,64 @@ export default class Main extends ViewBase {
     })
   }
   async caoEdit() {
-    this.dataFrom.status = 2
-    this.dataFrom.throwInAreaType = (this.list.throwInAreaType || []).map((it: any) => {
-      return it.key
-    })[0]
-    if (this.list.deliveryGroups[0].text.length != 0) {
-      const one = (this.list.deliveryGroups[0].text || []).map((it: any) => {
+    this.dataFrom.status = 1
+
+    if (this.list.directionType == 1) {
+      this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
+      if (this.list.deliveryGroups[0].text.length != 0) {
+        const one = (this.list.deliveryGroups[0].text || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push( {
+            tagTypeCode: this.list.deliveryGroups[0].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (this.list.deliveryGroups[0].text.length != 0) {
+        const two = (this.list.deliveryGroups[1].text || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push ({
+            tagTypeCode: this.list.deliveryGroups[1].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (this.list.deliveryGroups[0].text.length != 0) {
+        const three = (this.list.deliveryGroups[2].text || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push ({
+            tagTypeCode: this.list.deliveryGroups[2].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (
+        this.list.deliveryGroups[0].text.length == 0 &&
+        this.list.deliveryGroups[0].text.length == 0 &&
+        this.list.deliveryGroups[0].text.length == 0) {
+        this.dataFrom.deliveryGroups = (this.list.deliveryGroups || []).map((it: any) => {
+          return {
+            tagTypeCode: it.tagTypeCode,
+            text: 'ALL'
+          }
+        })
+      }
+    }
+    if (this.list.directionType == 2) {
+      // console.log(this.list.tagTypeCode)
+      const one = (this.list.tagTypeCode || []).map((it: any) => {
         this.dataFrom.deliveryGroups.push( {
-          tagTypeCode: this.list.deliveryGroups[0].tagTypeCode,
+          tagTypeCode: 'DISTRICT_AREA',
           text: it
         })
       })
-    }
-    if (this.list.deliveryGroups[0].text.length != 0) {
-      const two = (this.list.deliveryGroups[1].text || []).map((it: any) => {
-        this.dataFrom.deliveryGroups.push ({
-          tagTypeCode: this.list.deliveryGroups[1].tagTypeCode,
-          text: it
-        })
-      })
-    }
-    if (this.list.deliveryGroups[0].text.length != 0) {
-      const three = (this.list.deliveryGroups[2].text || []).map((it: any) => {
-        this.dataFrom.deliveryGroups.push ({
-          tagTypeCode: this.list.deliveryGroups[2].tagTypeCode,
-          text: it
-        })
-      })
-    }
-    if (
-      this.list.deliveryGroups[0].text.length == 0 &&
-      this.list.deliveryGroups[0].text.length == 0 &&
-      this.list.deliveryGroups[0].text.length == 0) {
-      this.dataFrom.deliveryGroups = (this.list.deliveryGroups || []).map((it: any) => {
-        return {
-          tagTypeCode: it.tagTypeCode,
-          text: ''
-        }
-      })
+      if (
+        this.list.tagTypeCode.length == 0) {
+        // this.dataFrom.deliveryGroups = (this.list.deliveryGroups || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push ({
+            tagTypeCode: 'DISTRICT_AREA',
+            text: 'ALL'
+          })
+        // })
+      }
+      // console.log(this.dataFrom.deliveryGroups)
     }
     try {
       const res = await addplan(this.datafroms)
