@@ -114,7 +114,8 @@
       </Row>
     </div>
     <div v-if="status == 7 || status == 8">
-      <h3 class="layout-title">投放成效
+      <h3 class="layout-title">
+        投放成效
         <em>查看数据报表</em>
       </h3>
       <div class="text-rows">
@@ -158,26 +159,30 @@
     <div class="text-rows rows-list" v-if="launchList">
       <Row>
         <Col :span="24">
-          <p v-if="launchList.categorizedByAreaCode" class="flex-box">
+          <p v-if="launchList.categorizedByAreaCode" class="flex-box division-line">
             <label>投放区域（{{launchList.categorizedByAreaCode.length}}个）</label>
-            <span v-for="item in launchList.categorizedByAreaCode" :key="item.code">{{item.name}}</span>
+            <span v-for="item in launchList.categorizedByAreaCode" :key="item.code">
+              {{item.name}}
+              <i>/</i>
+            </span>
           </p>
-          <p v-if="launchList.categorizedByProvinceId">
+          <p v-if="launchList.categorizedByProvinceId" class="division-line">
             <label>投放省份（{{launchList.categorizedByProvinceId.length || 0}}个）</label>
-            <span v-for="item in launchList.categorizedByProvinceId" :key="item.id">{{item.name}}</span>
+            <span v-for="item in launchList.categorizedByProvinceId" :key="item.id">
+              {{item.name}}
+              <i>/</i>
+            </span>
           </p>
           <p v-if="launchList.categorizedByCityId" class="flex-box">
             <label>投放城市（{{account}}个）</label>
-            <em class="city-list">
+            <em class="city-list division-line">
               <p v-for="(item, ind) in launchList.categorizedByCityGradeCode" :key="ind">
                 <i>{{item.name}}（{{item.infos.length}}个）</i>
-                <span v-for="(it, index) in item.infos" :key="index">{{it.name}}</span>
+                <span v-for="(it, index) in item.infos" :key="index">
+                  {{it.name}}
+                  <i>/</i>
+                </span>
               </p>
-              <!-- <p><i>1级城市（0个）</i><span></span></p>
-               <p><i>2级城市（0个）</i><span></span></p>
-               <p><i>3级城市（0个）</i><span></span></p>
-               <p><i>4级城市（0个）</i><span></span></p>
-              <p><i>5级城市（0个）</i><span></span></p>-->
             </em>
           </p>
           <p v-if="launchList.categorizedByBoxLevelCode">
@@ -186,10 +191,11 @@
               <br>
               <em class="cinema-list" @click="queryCinemaList">查看影院列表</em>
             </label>
-            <span
-              v-for="item in launchList.categorizedByBoxLevelCode"
-              :key="item.code"
-            >{{item.name}}</span>
+            <em class="city-list">
+              <p v-for="item in launchList.categorizedByBoxLevelCode" :key="item.code">
+                <span>{{item.name || '未知'}}票房（{{item.count}}个）</span>
+              </p>
+            </em>
           </p>
         </Col>
       </Row>
@@ -491,6 +497,11 @@ export default class PlanDefault extends ViewBase {
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.division-line span {
+  &:last-child i {
+    display: none;
+  }
+}
 .text-col {
   color: @c-button;
 }

@@ -33,15 +33,15 @@ export default class Change extends ViewBase {
 
   data = []
   columns = [
-    { title: '区域', key: 'areaName', align: 'center' },
-    { title: '省份', key: 'provinceName', align: 'center' },
-    { title: '城市', key: 'cityName', align: 'center' },
-    { title: '城市级别', key: 'cityLevel', align: 'center' },
-    { title: '专资编码', key: 'code', align: 'center' },
-    { title: '影院名称', key: 'officialName', align: 'center' },
-    { title: '影厅数', key: 'hallCount', align: 'center' },
-    { title: '总座位数', key: 'seatCount', align: 'center' },
-    { title: '票房级别', key: 'boxLevelName', align: 'center' },
+    { title: '区域', key: 'areaName', align: 'center', width: 100 },
+    { title: '省份', key: 'provinceName', align: 'center',  width: 100},
+    { title: '城市', key: 'cityName', align: 'center',  width: 100 },
+    { title: '城市级别', key: 'cityLevel', align: 'center',  width: 100 },
+    { title: '专资编码', key: 'code', align: 'center',  width: 100 },
+    { title: '影院名称', key: 'officialName', align: 'center', minWidth: 200 },
+    { title: '影厅数', key: 'hallCount', align: 'center',  width: 100 },
+    { title: '总座位数', key: 'seatCount', align: 'center',  width: 100 },
+    { title: '票房级别', key: 'boxLevelName', align: 'center',  width: 100},
   ]
   async mounted() {
       const id = (this.value.id).toString()
