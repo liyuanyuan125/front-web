@@ -144,15 +144,15 @@
             </li>
             <li class="tag-ltme">
               <span>省份</span>
-              <span>6个</span>
+              <span>{{list.throwInStats.province}}个</span>
             </li>
             <li class="tag-ltme">
               <span>城市</span>
-              <span>8个</span>
+              <span>{{list.throwInStats.city}}个</span>
             </li>
             <li class="tag-ltme">
               <span>影院</span>
-              <span>500个</span>
+              <span>{{list.throwInStats.cinema}}个</span>
             </li>
           </ul>
         </Col>
@@ -214,7 +214,7 @@
             <img v-if='tuifilm.length >= 3' class='pi-three' src="./assets/匹配度三.png" alt="">
             <Col :span='20'>
               <Col :span="5" class='sp-c' v-for='(it , index) in tuifilm' :key='index'>
-                <dl  @click="selectFilm(it.id)" :class="['cinema-img',  {'cinema-img-active ': showClassimg}]">
+                <dl  @click="selectFilm(it)" :class="['cinema-img',  {'cinema-img-active ': showClassimg}]">
                   <div class="cinema-check" v-if="cinemaIdArray.includes(it.id)"></div>
                   <dd class='s-img'>
                     <img class='img' :src=it.mainPicUrl alt="">
