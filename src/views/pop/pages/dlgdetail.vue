@@ -251,6 +251,7 @@ export default class Main extends ViewBase {
 
   async open() {
     if (this.data.directionType == 1) {
+      this.forMat.deliveryMovies = this.forMat.deliveryMovies.map((it: any) => it.id)
       this.forMat.throwInAreaType = this.data.throwInAreaType[0].key
       if (this.data.deliveryGroups[0].text.length != 0) {
         const one = (this.data.deliveryGroups[0].text || []).map((it: any) => {

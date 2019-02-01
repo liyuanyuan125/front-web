@@ -480,6 +480,7 @@ export default class Main extends ViewBase {
 
     if (this.list.directionType == 1) {
       this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
+      this.dataFrom.deliveryMovies = this.cinemaIdArray.map((it: any) => it.id)
       if (this.list.deliveryGroups[0].text.length != 0) {
         const one = (this.list.deliveryGroups[0].text || []).map((it: any) => {
           this.dataFrom.deliveryGroups.push( {
@@ -550,16 +551,19 @@ export default class Main extends ViewBase {
       this.showClassjia = false
       this.showClassyou = false
       this.dataFrom.type = '1'
+      this.cinemaIdArray = []
       this.seach()
     } else if (index == 2) {
       this.showClassbiao = false
       this.showClassjia = true
       this.showClassyou = false
+      this.cinemaIdArray = []
       this.dataFrom.type = '2'
       this.seach()
     } else if (index == 3) {
       this.showClassbiao = false
       this.showClassjia = false
+      this.cinemaIdArray = []
       this.showClassyou = true
       this.dataFrom.type = '3'
       this.seach()
@@ -570,18 +574,19 @@ export default class Main extends ViewBase {
   }
 
   async selectFilm(index: any) {
+    const iDarray = this.cinemaIdArray.map((it: any) => it.id)
     if ( this.dataFrom.type == '1' ) {
       info('暂不支持选择影片')
       return
     } else if ( this.dataFrom.type == '2' ) {
       if (this.cinemaIdArray.length < 3 ) {
-        if (!this.cinemaIdArray.includes(index.id)) {
+        if (!iDarray.includes(index.id)) {
           this.cinemaIdArray.push(index)
         } else {
           this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it.id != index.id )
         }
       } else if (this.cinemaIdArray.length == 3 )  {
-        if (!this.cinemaIdArray.includes(index.id)) {
+        if (!iDarray.includes(index.id)) {
           info('最多可以选择3部影片')
           // this.cinemaIdArray.push(id)
         } else {
@@ -590,13 +595,13 @@ export default class Main extends ViewBase {
       }
     } else if ( this.dataFrom.type == '3' ) {
       if (this.cinemaIdArray.length < 6 ) {
-        if (!this.cinemaIdArray.includes(index.id)) {
+        if (!iDarray.includes(index.id)) {
           this.cinemaIdArray.push(index)
         } else {
           this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it.id != index.id )
         }
       } else if (this.cinemaIdArray.length == 6 )  {
-        if (!this.cinemaIdArray.includes(index.id)) {
+        if (!iDarray.includes(index.id)) {
           info('最多可以选择6部影片')
           // this.cinemaIdArray.push(id)
         } else {
