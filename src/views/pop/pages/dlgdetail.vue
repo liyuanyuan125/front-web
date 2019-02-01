@@ -42,6 +42,7 @@
           <Col :span="9"><span>CPM/{{data.specification}}s</span></Col>
         </Row>
       </div>
+
       <div v-if='data.directionType == 2' style='background:rgba(249, 249, 249, 1);padding: 10px 20px 1px 20px; margin-top: 10px;'>
         <Row class="mb30">
           <Col :span="3">投放影片</Col>

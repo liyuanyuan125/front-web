@@ -105,7 +105,7 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import StatsPane from './StatsPane.vue'
-import { Stats, StatsCityLevel } from './types'
+import { Region, Province, City, Stats, CityLevel } from './types'
 import { areaTypeList } from '../../types'
 import CheckboxPane from '@/components/checkboxPane'
 import cachedStore from '@/fn/cachedStore'
@@ -135,31 +135,6 @@ interface StatsMap {
   [name: number]: Stats
 }
 
-interface Region {
-  code: string
-  name: string
-  count: number
-}
-
-interface Province {
-  id: number
-  name: string
-  count: number
-}
-
-interface City {
-  id: number
-  name: string
-  count: number
-  cityGradeCode: string
-  cityGradeName: string
-}
-
-interface CityLevel {
-  code: string
-  name: string
-}
-
 interface Cinema {
   id: number
   shortName: string
@@ -180,6 +155,18 @@ const idsNameMap: any = {
   2: 'provinceIds',
   3: 'cityIds',
   4: 'ids',
+}
+
+const defaultStats: Stats = {
+  region: 0,
+  province: 0,
+  city: 0,
+  cinema: 0,
+
+  regionList: [],
+  provinceList: [],
+  cityLevelList: [],
+  boxLevelList: [],
 }
 
 /**
@@ -210,14 +197,7 @@ export default class AreaPane extends ViewBase {
   }, {})
 
   statsMap = areaTypeList.reduce<StatsMap>((map, { key }) => {
-    map[key as number] = {
-      region: 0,
-      province: 0,
-      city: 0,
-      cinema: 0,
-      regionNames: [],
-      cityLevels: [],
-    }
+    map[key as number] = cloneDeep(defaultStats)
     return map
   }, {})
 
@@ -360,6 +340,7 @@ export default class AreaPane extends ViewBase {
         categorizedByProvinceId: provinceList = [],
         categorizedByCityId: cityList = [],
         categorizedByCityGradeCode: cityLevelList = [],
+        categorizedByBoxLevelCode: boxLevelList = [],
         cinemaCount = 0,
       } = data && data.statisticsResult || {}
       return {
@@ -367,6 +348,7 @@ export default class AreaPane extends ViewBase {
         provinceList: (provinceList || []).filter(filterByName),
         cityList: (cityList || []).filter(filterByName),
         cityLevelList: (cityLevelList || []).filter(filterByName),
+        boxLevelList: (boxLevelList || []).filter(filterByName),
         cinemaCount: cinemaCount || 0
       }
     } catch (ex) {
@@ -391,28 +373,29 @@ export default class AreaPane extends ViewBase {
   }
 
   updateStats(data: any, type: number) {
-    const regionList: any[] = data && data.regionList || []
+    const regionList: Region[] = data && data.regionList || []
+    const provinceList: Province[] = data && data.provinceList || []
+    const cityList: City[] = data && data.cityList || []
     const levelList: any[] = data && data.cityLevelList || []
+    const boxLevelList: any[] = data && data.boxLevelList || []
     const result = {
       region: regionList.length,
-      province: (data && data.provinceList || []).length,
-      city: (data && data.cityList || []).length,
+      province: provinceList.length,
+      city: cityList.length,
       cinema: data.cinemaCount || 0,
-      regionNames: regionList.map(it => it.name),
-      cityLevels: levelList.map(it => slice(it, 'name,count')) as StatsCityLevel[]
+      regionList,
+      provinceList,
+      cityLevelList: levelList.map((it: any) => ({
+        ...slice(it, 'code,name,count'),
+        cityList: it.infos || [],
+      })),
+      boxLevelList,
     }
-    this.statsMap[type] = result
+    this.statsMap[type] = result as Stats
   }
 
   resetStats(type: number) {
-    this.statsMap[type] = {
-      region: 0,
-      province: 0,
-      city: 0,
-      cinema: 0,
-      regionNames: [],
-      cityLevels: [],
-    }
+    this.statsMap[type] = cloneDeep(defaultStats)
   }
 
   onCitySelectAll() {
