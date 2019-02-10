@@ -2,7 +2,7 @@
   <div class="area-pane">
     <section v-if="type == 0">
       <div class="pane-content map-box">
-        <StatsPane :value="statsMap[0]" class="stats-pane"/>
+        <StatsPane :value="statsMap[0]" :type="type" class="stats-pane"/>
       </div>
     </section>
 
@@ -15,7 +15,8 @@
             <sub>{{count}}家影院</sub>
           </span>
         </CheckboxPane>
-        <StatsPane :value="statsMap[1]" class="stats-pane"/>
+
+        <StatsPane :value="statsMap[1]" :type="type"  class="stats-pane"/>
       </div>
     </section>
 
@@ -28,7 +29,8 @@
             <sub>{{count}}家影院</sub>
           </span>
         </CheckboxPane>
-        <StatsPane :value="statsMap[2]" class="stats-pane"/>
+
+        <StatsPane :value="statsMap[2]" :type="type"  class="stats-pane"/>
       </div>
     </section>
 
@@ -59,7 +61,8 @@
 
         <Page :current.sync="cityPage" :total="citySearchList.length" size="small"
           show-total class="pane-page"/>
-        <StatsPane :value="statsMap[3]" class="stats-pane"/>
+
+        <StatsPane :value="statsMap[3]" :type="type"  class="stats-pane"/>
       </div>
     </section>
 
@@ -95,7 +98,8 @@
 
         <Page :current.sync="cinemaPage" :total="cinemaTotal" size="small"
           show-total class="pane-page" v-if="!cinemaLoading"/>
-        <StatsPane :value="statsMap[4]" class="stats-pane"/>
+
+        <StatsPane :value="statsMap[4]" :type="type" class="stats-pane"/>
       </div>
     </section>
   </div>
