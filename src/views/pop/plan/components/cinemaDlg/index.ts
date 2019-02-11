@@ -1,4 +1,3 @@
-import CinemaDlg from './CinemaDlg.vue'
-export default CinemaDlg
+export { default as CinemaDlgByStats } from './CinemaDlgByStats.vue'
 
 export * from './types'

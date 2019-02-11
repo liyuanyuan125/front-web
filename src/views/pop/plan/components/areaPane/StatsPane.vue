@@ -20,8 +20,8 @@
     </ul>
     <Button type="primary" :disabled="noCinema" class="btn-view"
       @click="viewCinema">查看已选影院</Button>
-    <CinemaDlg v-model="cinemaShow" :loading="cinemaLoading" :total="cinemaTotal"
-      :list="cinemaList" @change="cinemaChange"/>
+
+    <CinemaDlgByStats v-model="cinemaShow" :stats="value"/>
   </div>
 </template>
 
@@ -29,88 +29,28 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { Stats } from './types'
-import CinemaDlg, { CinemaDlgItem } from '../cinemaDlg'
-import { queryCinemas } from '@/api/plan'
-import { debounce, flatten, uniq } from 'lodash'
+import { CinemaDlgByStats } from '../cinemaDlg'
 
 /**
  * 统计面板
  */
 @Component({
   components: {
-    CinemaDlg
+    CinemaDlgByStats
   }
 })
 export default class StatsPane extends ViewBase {
   /** model 属性 */
   @Prop({ type: Object, default: () => {}, required: true }) value!: Stats
 
-  /** 统计类型 */
-  @Prop({ type: Number, required: true }) type!: number
-
   get noCinema() {
     return Object.values(this.value).every(it => it == 0)
   }
 
   cinemaShow = false
-  cinemaLoading = false
-  cinemaTotal = 0
-  cinemaList: CinemaDlgItem[] = []
-
-  addQuerySalt0(qdata: any) {
-  }
-
-  addQuerySalt1(qdata: any) {
-    qdata.areaCodes = (this.value.regionList || []).map(it => it.code)
-  }
-
-  addQuerySalt2(qdata: any) {
-    qdata.provinceIds = (this.value.provinceList || []).map(it => it.id)
-  }
-
-  addQuerySalt3(qdata: any) {
-    const cityListList = this.value.cityLevelList.map(it => it.cityList)
-    const cityList = flatten(cityListList)
-    const ids = cityList.map(it => it.id)
-    qdata.cityIds = uniq(ids)
-  }
-
-  addQuerySalt4(qdata: any) {
-    // TODO
-  }
-
-  async queryCinema(query: any = {}, immediateLoading = false) {
-    const qdata = {
-      pageIndex: 1,
-      pageSize: 10,
-      ...query
-    }
-
-    ; (this as any)[`addQuerySalt${this.type}`](qdata)
-
-    immediateLoading && (this.cinemaLoading = true)
-
-    const delayLoading = debounce(() => this.cinemaLoading = true, 500)
-    delayLoading()
-    try {
-      const { data } = await queryCinemas(qdata)
-      this.cinemaTotal = data.totalCount || 0
-      this.cinemaList = data.items
-    } catch (ex) {
-      this.handleError(ex)
-    } finally {
-      this.cinemaLoading = false
-      delayLoading.cancel()
-    }
-  }
 
   viewCinema() {
     this.cinemaShow = true
-    this.queryCinema({}, true)
-  }
-
-  cinemaChange(query: any) {
-    this.queryCinema(query)
   }
 }
 </script>

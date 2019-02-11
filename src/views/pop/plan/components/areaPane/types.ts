@@ -71,4 +71,9 @@ export interface Stats {
   cityLevelList: CityLevel[]
   /** 影院级别列表 */
   boxLevelList: BoxLevel[]
+
+  /** 统计类型，为了方便显示查看影院对话框 */
+  type: number
+  /** 选中的 ids，查看影院对话框需要 */
+  ids: string[] | number[]
 }

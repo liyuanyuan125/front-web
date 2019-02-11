@@ -86,7 +86,7 @@ export async function planCancel(id: any) {
  * @param data 查询数据
  * https://yapi.aiads.com/project/103/interface/api/1571
  */
-export async function queryCinemas(data: any) {
+export async function queryCinema(data: any) {
   const res = await post('/theater/cinemas/page-query', data)
   return res
 }
