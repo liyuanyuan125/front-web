@@ -15,6 +15,7 @@
             <sub>{{count}}家影院</sub>
           </span>
         </CheckboxPane>
+
         <StatsPane :value="statsMap[1]" class="stats-pane"/>
       </div>
     </section>
@@ -28,6 +29,7 @@
             <sub>{{count}}家影院</sub>
           </span>
         </CheckboxPane>
+
         <StatsPane :value="statsMap[2]" class="stats-pane"/>
       </div>
     </section>
@@ -59,6 +61,7 @@
 
         <Page :current.sync="cityPage" :total="citySearchList.length" size="small"
           show-total class="pane-page"/>
+
         <StatsPane :value="statsMap[3]" class="stats-pane"/>
       </div>
     </section>
@@ -95,6 +98,7 @@
 
         <Page :current.sync="cinemaPage" :total="cinemaTotal" size="small"
           show-total class="pane-page" v-if="!cinemaLoading"/>
+
         <StatsPane :value="statsMap[4]" class="stats-pane"/>
       </div>
     </section>
@@ -167,6 +171,9 @@ const defaultStats: Stats = {
   provinceList: [],
   cityLevelList: [],
   boxLevelList: [],
+
+  type: 0,
+  ids: [],
 }
 
 /**
@@ -197,7 +204,8 @@ export default class AreaPane extends ViewBase {
   }, {})
 
   statsMap = areaTypeList.reduce<StatsMap>((map, { key }) => {
-    map[key as number] = cloneDeep(defaultStats)
+    const value = cloneDeep(defaultStats)
+    map[key as number] = { ...value, type: key as number }
     return map
   }, {})
 
@@ -390,12 +398,15 @@ export default class AreaPane extends ViewBase {
         cityList: it.infos || [],
       })),
       boxLevelList,
+      type,
+      ids: this.model[type],
     }
     this.statsMap[type] = result as Stats
   }
 
   resetStats(type: number) {
-    this.statsMap[type] = cloneDeep(defaultStats)
+    const value = cloneDeep(defaultStats)
+    this.statsMap[type] = { ...value, type }
   }
 
   onCitySelectAll() {

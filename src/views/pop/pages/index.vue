@@ -106,7 +106,7 @@
              <Col class="poster-title" :span="18" style="height: 240px">
               <Row class='row-xq'>
                 <Col span='10'><span>影片名称</span><b>《{{seacinemaList.name}}》</b></Col>
-                <Col span='14'><span style='width: 28%;'>影片标语</span> <b>{{seacinemaList.slogan}}</b></Col>
+                <Col span='14'><span style='width: 28%;'>影片标语</span> <b>{{seacinemaList.slogan == '' ? '暂无' : seacinemaList.slogan}}</b></Col>
               </Row>
               <Row class='row-xq'>
                 <Col span='10'><span>上映日期</span> <b>{{seacinemaList.openTime}}</b></Col>
@@ -125,7 +125,8 @@
                 <Col span='24' >
                 <span>根据您选择的地域偏好，我们将优先为您覆盖以下地域</span>
                 <span v-if='list.tagTypeCode.length == 0'>暂无</span>
-                <span v-for='(it,index) in list.tagTypeCode' :key='index'><b v-for='(item) in diqutype.values' :key='item.key' v-if='it == item.key'>{{item.text}} </b></span></Col>
+                <span v-for='(it,index) in list.tagTypeCode' :key='index'><b v-for='(item) in diqutype.values' :key='item.key' v-if='it == item.key'>{{item.text}} </b></span>
+                </Col>
               </Row>
              </Col>
            </Row>
@@ -160,11 +161,11 @@
           <CitySelect :value="[1,2,3,4,5,6,7]" readonly class="city-map"/>
           <div class='pos-map'>
             <ul>
-              <li v-for='item in list.throwInStats.regionNames' :key='item'>{{item.split('地区')[0]}}</li>
+              <li v-for='item in list.throwInStats.regionList' :key='item.name'>{{item.name.split('地区')[0]}}</li>
               <!-- <li>华南</li> -->
               <!-- <li>华中</li> -->
             </ul>
-            <div v-for='item in list.throwInStats.cityLevels' :key='item'>{{item.name}}{{item.count}}个</div>
+            <div v-for='item in list.throwInStats.cityLevelList' :key='item.name'>{{item.name}}{{item.count}}个</div>
             <!-- <div>二线城市3个</div> -->
             <!-- <div>三线城市3个</div> -->
             <!-- <div>四线城市3个</div> -->
@@ -173,7 +174,7 @@
         </Col>
         <Col :span="12">
           <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
-          <Button  type="primary" class="mt30" @click="view" style="float: right; height: 40px; margin-right: 10px; margin-bottom: 10px;">查看全部影院</Button>
+          <Button  type="primary" class="mt30" @click="viewCinema" style="float: right; height: 40px; margin-right: 10px; margin-bottom: 10px;">查看全部影院</Button>
         </Col>
       </Row>
 
@@ -220,8 +221,8 @@
                     <img class='img' :src=it.mainPicUrl alt="">
                     <div>上映日期：{{it.openTime}}</div>
                   </dd>
-                  <dt>《{{it.name}}》</dt>
-                  <dt><span v-for='(item , index) in it.type' :key='index'>{{item}}/</span></dt>
+                  <dt class='dts'>《{{it.name}}》</dt>
+                  <dt><span v-for='(item , index) in it.type' :key='index'>{{item}} </span></dt>
                 </dl>
               </Col>
             </Col>
@@ -254,13 +255,16 @@
     <!-- 确认生成 -->
     <DlgDetail v-if="addOrUpdateVisible" ref="addOrUpdate" />
     <!-- 查看已选影院 -->
-    <dlgCinema v-model="cinema" v-if="cinema.visible"  />
+    <!-- <dlgCinema v-model="cinema" v-if="cinema.visible"  /> -->
+    <!-- <CinemaDlg v-model="cinemaShow" :loading="cinemaLoading" :total="dlgCinema.length"
+      :list="dlgCinema"/> -->
+      <CinemaDlgByStats v-model="cinemaShow" :stats="list.throwInStats"/>
 
   </div>
 </template>
 
 <script lang="tsx">
-import { Component } from 'vue-property-decorator'
+import { Component , Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DlgDetail from './dlgdetail.vue'
 import dlgCinema from '../plan/default/cinemaDlg.vue'
@@ -272,6 +276,10 @@ import { queryList , addplan , abcount , pricount , tuijian , TcinemaList , vide
 import { cinemaList } from '@/api/popPlan'
 import echarts from 'echarts' // 引入echarts
 import { warning , success, toast , info } from '@/ui/modal'
+// import { Stats } from '../plan/components/areaPane/types'
+// import CinemaDlg, { CinemaDlgItem } from '../plan/components/cinemaDlg'
+import { CinemaDlgByStats } from '../plan/components/cinemaDlg'
+
 
 const timeFormat = 'YYYY-MM-DD'
 
@@ -315,10 +323,17 @@ const mockMap = [
   components: {
     DlgDetail,
     CitySelect,
-    dlgCinema
+    CinemaDlgByStats
   }
 })
 export default class Main extends ViewBase {
+  // @Prop({ type: Object, default: () => {}, required: true }) value!: Stats
+  cinemaShow = false
+  // cinemaLoading = false
+  // cinemaTotal = 0
+  // cinemaList: CinemaDlgItem[] = []
+
+
   cinema: any = {
     visible: false,
     id: ''
@@ -369,6 +384,26 @@ export default class Main extends ViewBase {
 
   // video item
   videos: any = []
+
+  // 区域
+  regionList: any = []
+  // 省份
+  provinceList: any = []
+  // 城市
+  cityLevelList: any = []
+  // 影院
+  ids: any = []
+
+  idArr = []
+  // 查看影院
+  dlgCinema: any = []
+
+
+  abc: any = []
+
+  // get noCinema() {
+  //   return this.list.throwInStats
+  // }
 
   dataFrom: any = {
     type: '1', // 方案类型
@@ -451,11 +486,9 @@ export default class Main extends ViewBase {
     })[0]
   }
   // 查看影院
-  view() {
-    this.cinema = {
-      visible: true,
-      id: '233,156'
-    }
+  viewCinema() {
+    this.cinemaShow = true
+    // this.seach()
   }
 
   // 确认生成
@@ -471,6 +504,7 @@ export default class Main extends ViewBase {
 
     if (this.list.directionType == 1) {
       this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
+      this.dataFrom.deliveryMovies = this.cinemaIdArray.map((it: any) => it.id)
       if (this.list.deliveryGroups[0].text.length != 0) {
         const one = (this.list.deliveryGroups[0].text || []).map((it: any) => {
           this.dataFrom.deliveryGroups.push( {
@@ -508,7 +542,6 @@ export default class Main extends ViewBase {
       }
     }
     if (this.list.directionType == 2) {
-      // console.log(this.list.tagTypeCode)
       const one = (this.list.tagTypeCode || []).map((it: any) => {
         this.dataFrom.deliveryGroups.push( {
           tagTypeCode: 'DISTRICT_AREA',
@@ -517,20 +550,16 @@ export default class Main extends ViewBase {
       })
       if (
         this.list.tagTypeCode.length == 0) {
-        // this.dataFrom.deliveryGroups = (this.list.deliveryGroups || []).map((it: any) => {
           this.dataFrom.deliveryGroups.push ({
             tagTypeCode: 'DISTRICT_AREA',
             text: 'ALL'
           })
-        // })
       }
-      // console.log(this.dataFrom.deliveryGroups)
     }
     try {
       const res = await addplan(this.datafroms)
       toast('添加成功')
       this.$router.push({name: 'pop-planlist'})
-
     } catch (ex) {
       this.handleError(ex)
     }
@@ -542,16 +571,19 @@ export default class Main extends ViewBase {
       this.showClassjia = false
       this.showClassyou = false
       this.dataFrom.type = '1'
+      this.cinemaIdArray = []
       this.seach()
     } else if (index == 2) {
       this.showClassbiao = false
       this.showClassjia = true
       this.showClassyou = false
+      this.cinemaIdArray = []
       this.dataFrom.type = '2'
       this.seach()
     } else if (index == 3) {
       this.showClassbiao = false
       this.showClassjia = false
+      this.cinemaIdArray = []
       this.showClassyou = true
       this.dataFrom.type = '3'
       this.seach()
@@ -562,18 +594,19 @@ export default class Main extends ViewBase {
   }
 
   async selectFilm(index: any) {
+    const iDarray = this.cinemaIdArray.map((it: any) => it.id)
     if ( this.dataFrom.type == '1' ) {
       info('暂不支持选择影片')
       return
     } else if ( this.dataFrom.type == '2' ) {
       if (this.cinemaIdArray.length < 3 ) {
-        if (!this.cinemaIdArray.includes(index.id)) {
+        if (!iDarray.includes(index.id)) {
           this.cinemaIdArray.push(index)
         } else {
           this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it.id != index.id )
         }
       } else if (this.cinemaIdArray.length == 3 )  {
-        if (!this.cinemaIdArray.includes(index.id)) {
+        if (!iDarray.includes(index.id)) {
           info('最多可以选择3部影片')
           // this.cinemaIdArray.push(id)
         } else {
@@ -582,13 +615,13 @@ export default class Main extends ViewBase {
       }
     } else if ( this.dataFrom.type == '3' ) {
       if (this.cinemaIdArray.length < 6 ) {
-        if (!this.cinemaIdArray.includes(index.id)) {
+        if (!iDarray.includes(index.id)) {
           this.cinemaIdArray.push(index)
         } else {
           this.cinemaIdArray = this.cinemaIdArray.filter((it: any) => it.id != index.id )
         }
       } else if (this.cinemaIdArray.length == 6 )  {
-        if (!this.cinemaIdArray.includes(index.id)) {
+        if (!iDarray.includes(index.id)) {
           info('最多可以选择6部影片')
           // this.cinemaIdArray.push(id)
         } else {
@@ -631,10 +664,160 @@ export default class Main extends ViewBase {
             }
           }
         })
+        // yingyuan列表
+        // 区域
+        this.regionList = (this.list.throwInStats.regionList || []).map((it: any) => {
+          return it.code
+        })
+        // 省份
+        this.provinceList = (this.list.throwInStats.provinceList || []).map((it: any) => {
+          return it.id
+        })
+        // 城市
+        this.cityLevelList = (this.list.throwInStats.cityLevelList || []).map((it: any) => {
+          const aaa = (it.cityList || []).map((item: any) => {
+            // console.log(item.id)
+            // this.cityLevelList.push(item.id)
+            return item.id
+          })[0]
+          return aaa
+        })
+        // console.log(this.cityLevelList)
+        // 影院
+        // console.log(this.list.ids)
+        if (this.list.throwInAreaType[0].key == 0) {
+          this.tcinemaList = []
+          // 0 不限
+          const cinema = await TcinemaList({
+            areaCodes: this.regionList ,
+            provinceIds: this.provinceList ,
+            cityIds: this.cityLevelList ,
+            ids: this.list.ids  })
+            this.dlgCinema = cinema.data.items
+            // console.log(this.dlgCinema)
+            if (cinema.data.items.length <= 5) {
+              this.tcinemaList = cinema.data.items
+            } else {
+              this.tcinemaList.push(
+                cinema.data.items[0],
+                cinema.data.items[1],
+                cinema.data.items[2],
+                cinema.data.items[3],
+                cinema.data.items[4],
+                cinema.data.items[5])
+            }
+          // this.idArr = (cinema.data.items || []).map((it: any) => {
+          //   return it.id
+          // })
+        }
+        if (this.list.throwInAreaType[0].key == 1) {
+          this.tcinemaList = []
+          // 1 区域
+          const cinema1 = await TcinemaList({areaCodes: this.regionList })
+          this.dlgCinema = cinema1.data.items
+          // this.tcinemaList = cinema1.data.items
+          if (cinema1.data.items.length <= 5) {
+            this.tcinemaList = cinema1.data.items
+          } else {
+            this.tcinemaList.push(
+              cinema1.data.items[0],
+              cinema1.data.items[1],
+              cinema1.data.items[2],
+              cinema1.data.items[3],
+              cinema1.data.items[4],
+              cinema1.data.items[5])
+          }
+          // this.idArr = (cinema1.data.items || []).map((it: any) => {
+          //   return it.id
+          // })
+        }
+        if (this.list.throwInAreaType[0].key == 2) {
+          // 2 省份
+          this.tcinemaList = []
+          const cinema2 = await TcinemaList({provinceIds: this.provinceList })
+          this.dlgCinema = cinema2.data.items
+          // this.tcinemaList = cinema2.data.items
+          if (cinema2.data.items.length <= 5) {
+            this.tcinemaList = cinema2.data.items
+          } else {
+            this.tcinemaList.push(
+              cinema2.data.items[0],
+              cinema2.data.items[1],
+              cinema2.data.items[2],
+              cinema2.data.items[3],
+              cinema2.data.items[4],
+              cinema2.data.items[5])
+          }
+          // this.idArr = (cinema2.data.items || []).map((it: any) => {
+          //   return it.id
+          // })
+        }
+        if (this.list.throwInAreaType[0].key == 3) {
+          this.tcinemaList = []
+          // 3 城市
+          const cinema3 = await TcinemaList({cityIds: this.cityLevelList })
+          this.dlgCinema = cinema3.data.items
+          // this.tcinemaList = cinema3.data.items
+          if (cinema3.data.items.length <= 5) {
+            this.tcinemaList = cinema3.data.items
+          } else {
+            this.tcinemaList.push(
+              cinema3.data.items[0],
+              cinema3.data.items[1],
+              cinema3.data.items[2],
+              cinema3.data.items[3],
+              cinema3.data.items[4],
+              cinema3.data.items[5])
+          }
+          // this.idArr = (cinema3.data.items || []).map((it: any) => {
+          //   return it.id
+          // })
+        }
+        if (this.list.throwInAreaType[0].key == 4) {
+          this.tcinemaList = []
+          // 4 影院
+          const cinema4 = await TcinemaList({ids: this.list.ids })
+          this.dlgCinema = cinema4.data.items
+          // console.log(this.dlgCinema)
+          // this.tcinemaList = cinema4.data.items
+          if (cinema4.data.items.length <= 5) {
+            this.tcinemaList = cinema4.data.items
+          } else {
+            this.tcinemaList.push(
+              cinema4.data.items[0],
+              cinema4.data.items[1],
+              cinema4.data.items[2],
+              cinema4.data.items[3],
+              cinema4.data.items[4],
+              cinema4.data.items[5])
+          }
+          // this.idArr = (cinema4.data.items || []).map((it: any) => {
+          //   return it.id
+          // })
+        }
       }
       // 地区
       if (this.list.directionType == 2) {
         this.diqutype = data.tags[3]
+        this.tcinemaList = []
+        // 0 不限
+        const cinema = await TcinemaList({
+          areaCodes: this.regionList ,
+          provinceIds: this.provinceList ,
+          cityIds: this.cityLevelList ,
+          ids: this.list.ids  })
+          this.dlgCinema = cinema.data.items
+          if (cinema.data.items.length <= 5) {
+            this.tcinemaList = cinema.data.items
+          } else {
+            this.tcinemaList.push(
+              cinema.data.items[0],
+              cinema.data.items[1],
+              cinema.data.items[2],
+              cinema.data.items[3],
+              cinema.data.items[4],
+              cinema.data.items[5])
+          }
       }
       // 获取预估覆盖场次
       const resab = await abcount({cinemaCount: 5 , type: this.dataFrom.type})
@@ -657,9 +840,7 @@ export default class Main extends ViewBase {
           openTime: moment(it.openTime).format(timeFormat)
         }
       })
-      // yingyuan列表
-      // const cinema = await TcinemaList({ids: [233,156], pageIndex: 1, pageSize: 6})
-      // this.tcinemaList = cinema.data.items
+
       // 广告片
       const videoitem = await video(this.list.videoId)
       this.videos = videoitem.data.items
@@ -679,6 +860,12 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.dts {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .cinema-check {
   position: absolute;
   left: 0;

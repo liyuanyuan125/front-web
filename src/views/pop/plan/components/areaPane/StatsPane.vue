@@ -18,7 +18,10 @@
         <em>{{value.cinema}}家</em>
       </li>
     </ul>
-    <Button type="primary" :disabled="noCinema" class="btn-view">查看已选影院</Button>
+    <Button type="primary" :disabled="noCinema" class="btn-view"
+      @click="viewCinema">查看已选影院</Button>
+
+    <CinemaDlgByStats v-model="cinemaShow" :stats="value"/>
   </div>
 </template>
 
@@ -26,17 +29,28 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { Stats } from './types'
+import { CinemaDlgByStats } from '../cinemaDlg'
 
 /**
  * 统计面板
  */
-@Component
+@Component({
+  components: {
+    CinemaDlgByStats
+  }
+})
 export default class StatsPane extends ViewBase {
   /** model 属性 */
   @Prop({ type: Object, default: () => {}, required: true }) value!: Stats
 
   get noCinema() {
     return Object.values(this.value).every(it => it == 0)
+  }
+
+  cinemaShow = false
+
+  viewCinema() {
+    this.cinemaShow = true
   }
 }
 </script>

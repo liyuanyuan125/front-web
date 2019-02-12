@@ -15,7 +15,7 @@
         <FormItem class="float-left" label="广告计划名称" prop="name">
           <Input v-model="form.name" placeholder="请输入广告计划名称"></Input>
         </FormItem>
-        <FormItem class="float-right pr30" label="关联广告片" prop="videoId">
+        <FormItem style="margin-left:0px" class="float-right pr30" label="关联广告片" prop="videoId">
           <Select v-model="form.videoId" filterable clearable>
             <Option v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
@@ -154,6 +154,7 @@ import { cityList, City, sexList, ageStageList, filmHobbyList,
 import CitySelect from './citySelect.vue'
 import Tags from './tag.vue'
 import { info } from '@/ui/modal.ts'
+import { scrollToError } from '@/util/form'
 import radioTab from './radioTab.vue'
 import { drairesList, beforePlan, advertising, advertDetail, cinemaList } from '@/api/popPlan.ts'
 import moment from 'moment'
@@ -389,6 +390,11 @@ export default class Main extends ViewBase {
     return moment(data).format(timeFormat)
   }
 
+  scrollToError() {
+    const form = this.$refs.dataform as any
+    this.$nextTick(() => scrollToError(form))
+  }
+
   async beforePlan() {
     try {
       const {
@@ -538,7 +544,7 @@ export default class Main extends ViewBase {
   async createSolutions(dataform: any) {
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) {
-      return
+      return this.scrollToError()
     }
 
     const query = {
