@@ -133,7 +133,7 @@
         </Col>
       </Row>
 
-      <Row class="pt40">
+      <Row class="pt40" v-if="this.list.directionType">
         <Col :span="24">
           <h3 class="square">覆盖地区</h3>
         </Col>
@@ -191,10 +191,13 @@
                 <img v-if='list.deliveryGroups[2].text[0] == "woman"' style="vertical-align: middle;" src="./assets/woman.png" alt="">
                 <span v-if='list.deliveryGroups[2].text.length == 0 && list.deliveryGroups[1].text.length == 0 && list.deliveryGroups[0].text.length == 0'>不限</span>
               </li>
-              <li v-for='(item) in tagsyear[0].values' :key='item.key' v-if='list.deliveryGroups[1].text[0] == item.key' class="tag-ltmes">
+              <!-- <li v-for='(item) in tagsyear[0].values' :key='item.key' v-if=' tagsyear.length > 0 && list.deliveryGroups[1].text[0] == item.key' class="tag-ltmes">
                 <span>{{item.text}}</span>
+              </li> -->
+              <li v-if='tagsyear.length > 0' class="tag-ltmes" v-for='(it,index) in list.deliveryGroups[1].text'>
+                <span v-for='(item) in tagsyear[0].values' :key='item.key' v-if='list.deliveryGroups[1].text[0] == item.key'>{{item.text}}</span>
               </li>
-              <li v-for='(it,index) in list.deliveryGroups[0].text' :key='index' class="tag-ltmes">
+              <li v-if='tagstype.length > 0' v-for='(it,index) in list.deliveryGroups[0].text' :key='index' class="tag-ltmes">
                 <span v-for='(item) in tagstype[0].values' :key='item.key' v-if='it == item.key'>{{item.text}}</span>
               </li>
             </ul>
@@ -258,7 +261,7 @@
     <!-- <dlgCinema v-model="cinema" v-if="cinema.visible"  /> -->
     <!-- <CinemaDlg v-model="cinemaShow" :loading="cinemaLoading" :total="dlgCinema.length"
       :list="dlgCinema"/> -->
-      <CinemaDlgByStats v-model="cinemaShow" :stats="list.throwInStats"/>
+      <CinemaDlgByStats v-model="cinemaShow" :stats="abc"/>
 
   </div>
 </template>
@@ -283,41 +286,41 @@ import { CinemaDlgByStats } from '../plan/components/cinemaDlg'
 
 const timeFormat = 'YYYY-MM-DD'
 
-const mockMap = [
-  {
-    name: '2019款全新奔驰G级影院广告－春节档',
-    client: '奔驰',
-    time: '2019-2-4 ～2019-2-10',
-    longTime : '7',
-    data: '春节档',
-    man : '400,000',
-    ceil: '4,000,000.00',
-    sex: '男',
-    id: '1'
-  },
-  {
-    name: '“我爱筱面”美食节6月推广',
-    client: '西贝餐饮',
-    time: '2019-6-1 ～2019-6-10',
-    longTime : '10',
-    data: '无',
-    man : '400,000',
-    ceil: '4,000,000.00',
-    sex: '女',
-    id: '2'
-  },
-  {
-    name: 'DIOR 新品红管唇釉推广',
-    client: '迪奥',
-    time: '2019-2-4 ～2019-2-10',
-    longTime : '7',
-    data: '无',
-    man : '400,000',
-    ceil: '4,000,000.00',
-    sex: '男',
-    id: '3'
-  }
-]
+// const mockMap = [
+//   {
+//     name: '2019款全新奔驰G级影院广告－春节档',
+//     client: '奔驰',
+//     time: '2019-2-4 ～2019-2-10',
+//     longTime : '7',
+//     data: '春节档',
+//     man : '400,000',
+//     ceil: '4,000,000.00',
+//     sex: '男',
+//     id: '1'
+//   },
+//   {
+//     name: '“我爱筱面”美食节6月推广',
+//     client: '西贝餐饮',
+//     time: '2019-6-1 ～2019-6-10',
+//     longTime : '10',
+//     data: '无',
+//     man : '400,000',
+//     ceil: '4,000,000.00',
+//     sex: '女',
+//     id: '2'
+//   },
+//   {
+//     name: 'DIOR 新品红管唇釉推广',
+//     client: '迪奥',
+//     time: '2019-2-4 ～2019-2-10',
+//     longTime : '7',
+//     data: '无',
+//     man : '400,000',
+//     ceil: '4,000,000.00',
+//     sex: '男',
+//     id: '3'
+//   }
+// ]
 
 @Component ({
   components: {
@@ -399,7 +402,7 @@ export default class Main extends ViewBase {
   dlgCinema: any = []
 
 
-  abc: any = []
+  abc: any = {}
 
   // get noCinema() {
   //   return this.list.throwInStats
@@ -479,12 +482,12 @@ export default class Main extends ViewBase {
       ]
   }
 
-  get forMat() {
-    const corp: any = ((this.$route.params as any).corp) || 0
-    return mockMap.filter((it: any) => {
-      return it.id == corp
-    })[0]
-  }
+  // get forMat() {
+    // const corp: any = ((this.$route.params as any).corp) || 0
+    // return mockMap.filter((it: any) => {
+    //   return it.id == corp
+    // })[0]
+  // }
   // 查看影院
   viewCinema() {
     this.cinemaShow = true
@@ -650,6 +653,7 @@ export default class Main extends ViewBase {
       // 获取状态列表
       this.typeList = data.typeList
       if (this.list.directionType == 1) {
+        this.abc = this.list.throwInStats
         this.tagstype = (data.tags || []).filter((it: any) => {
           if (it.code == this.list.deliveryGroups[0].tagTypeCode) {
             return {
@@ -965,19 +969,19 @@ export default class Main extends ViewBase {
     position: relative;
     .pi-one {
       position: absolute;
-      top: 0.8%;
+      top: 1.5%;
       left: 21.3%;
       z-index: 10;
     }
     .pi-two {
       position: absolute;
-      top: 0.8%;
+      top: 1.5%;
       left: 40.6%;
       z-index: 10;
     }
     .pi-three {
       position: absolute;
-      top: 0.8%;
+      top: 1.5%;
       left: 59.7%;
       z-index: 10;
     }
