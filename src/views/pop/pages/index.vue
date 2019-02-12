@@ -158,7 +158,7 @@
           </ul>
         </Col>
         <Col class="mt70 posi-map" :span="12">
-          <CitySelect :value="[1,2,3,4,5,6,7]" readonly class="city-map"/>
+          <CityMap :names="cityMapNames" class="city-map"/>
           <div class='pos-map'>
             <ul>
               <li v-for='item in list.throwInStats.regionList' :key='item.name'>{{item.name.split('地区')[0]}}</li>
@@ -271,7 +271,7 @@ import { Component , Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DlgDetail from './dlgdetail.vue'
 import dlgCinema from '../plan/default/cinemaDlg.vue'
-import CitySelect from '../plan/citySelect.vue'
+import CityMap from '@/components/cityMap'
 import { toMap } from '@/fn/array'
 import moment from 'moment'
 import jsxReactToVue from '@/util/jsxReactToVue'
@@ -279,7 +279,7 @@ import { queryList , addplan , abcount , pricount , tuijian , TcinemaList , vide
 import { cinemaList } from '@/api/popPlan'
 import echarts from 'echarts' // 引入echarts
 import { warning , success, toast , info } from '@/ui/modal'
-// import { Stats } from '../plan/components/areaPane/types'
+import { Stats } from '../plan/components/areaPane'
 // import CinemaDlg, { CinemaDlgItem } from '../plan/components/cinemaDlg'
 import { CinemaDlgByStats } from '../plan/components/cinemaDlg'
 
@@ -325,7 +325,7 @@ const timeFormat = 'YYYY-MM-DD'
 @Component ({
   components: {
     DlgDetail,
-    CitySelect,
+    CityMap,
     CinemaDlgByStats
   }
 })
@@ -404,9 +404,18 @@ export default class Main extends ViewBase {
 
   abc: any = {}
 
-  // get noCinema() {
-  //   return this.list.throwInStats
-  // }
+  get cityMapNames() {
+    const { provinceList, cityLevelList } = (this.list.throwInStats || {}) as Stats
+    // 将城市名 & 省份名一股脑全传给 CityMap 组件
+    const provinceNames = (provinceList || []).map(it => it.name)
+    const cityNames = (cityLevelList || []).reduce((list: string[], it) => {
+      const names = (it.cityList || []).map(t => t.name)
+      return list.concat(names)
+    }, [])
+    // 保持城市名在前，城市优先级高于省份
+    const result = cityNames.concat(provinceNames)
+    return result
+  }
 
   dataFrom: any = {
     type: '1', // 方案类型
@@ -432,6 +441,7 @@ export default class Main extends ViewBase {
   get cinemaIdiD() {
     return this.cinemaIdArray.map((it: any) => it.id)
   }
+
   get addlist() {
     return {
       aboutcount: this.aboutcount, // 预估场次
@@ -1204,10 +1214,8 @@ export default class Main extends ViewBase {
 }
 
 .city-map {
-  /deep/ .map-box {
-    margin-top: 0;
-    zoom: 0.62;
-  }
+  transform: scale(.76923);
+  transform-origin: 0 0;
 }
 .fince-list {
   .fince-list-big {

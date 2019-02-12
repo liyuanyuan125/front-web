@@ -33,7 +33,7 @@
             placeholder="请再次输入密码"/>
         </FormItem>
 
-        <FormItem label="公司名称" prop="company">
+        <FormItem label="公司名称" prop="company" :error="companyError">
           <Input v-model="form.company" placeholder="请输入公司名称，并与营业执照保持一致"/>
         </FormItem>
         <FormItem label="公司所在地" prop="area">
@@ -91,6 +91,7 @@ export default class Main extends ViewBase {
 
   emailError = ''
   captchaError = ''
+  companyError = ''
 
   agreement = true
 
@@ -267,6 +268,11 @@ export default class Main extends ViewBase {
 
   onSubmit8007303() {
     this.captchaError = '验证码错误'
+    this.scrollToError()
+  }
+
+  onSubmit9006305() {
+    this.companyError = '公司名称已被使用'
     this.scrollToError()
   }
 
