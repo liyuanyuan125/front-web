@@ -33,7 +33,7 @@
       </FormItem>
       <h3 class="layout-title">开户资质</h3>
       <FormItem label="资质类型" class="item-top">
-        <Select v-model="form.qualificationType" style="width:400px">
+        <Select v-model="form.qualificationType" clearable style="width:400px">
           <Option
             v-for="item in queryDate.qualificationTypeList"
             :value="item.code"
