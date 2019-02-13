@@ -95,9 +95,10 @@ const timeFormats = 'YYYY-MM-DD'
 @Component
 export default class Main extends ViewBase {
   @Prop({type: Object, default: () => {}}) data!: any
+  @Prop({type: Object, default: () => {}}) value!: any
   releaseTime = [0]
   form: any = {
-    name: '',
+    name: this.value.name ? this.value.name : '',
     pageSize: 8
   }
   cinemaList: any = []
@@ -106,6 +107,7 @@ export default class Main extends ViewBase {
   length = 0
 
   cinemaIdArray: any = []
+
   get ItemIdArray() {
     return this.cinemaList.length > 0 ? this.cinemaList.map((it: any) => it.id) : []
   }
@@ -121,6 +123,9 @@ export default class Main extends ViewBase {
   }
   created() {
     this.cinemaFind()
+    if (this.value.id) {
+      this.selectFilm(this.value.id)
+    }
   }
 
   async cinemaFind() {

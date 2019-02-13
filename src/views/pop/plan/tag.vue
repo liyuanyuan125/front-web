@@ -1,13 +1,13 @@
 <template>
   <div class="page">
       <div @click="active(item.label)" :class="['tag', invalue == item.label ? 'activeClass' : '']" v-for="item in tagMess" :key="item.label">
-        {{item.name}}
+        {{value}}{{item.name}}
       </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 
 @Component
@@ -19,6 +19,11 @@ export default class Main extends ViewBase {
     active(id: any) {
       this.invalue = id
       this.$emit('input', this.invalue)
+    }
+
+    @Watch('value')
+    watchvalue(val: any) {
+      this.invalue = val
     }
 }
 </script>

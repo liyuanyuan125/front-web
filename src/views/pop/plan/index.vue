@@ -1,6 +1,9 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title">创建广告计划 > 新建广告计划</h2>
+    <h2 class="layout-nav-title">创建广告计划 > 
+      <span v-if="!$route.params.id">新建</span>
+      <span v-else>编辑</span>广告计划
+    </h2>
 
     <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
       <h3 class="layout-title">基本信息</h3>
@@ -36,7 +39,6 @@
       <FormItem label="定向类型" class="form-item-type">
         <Tags v-model="dateType" :tagMess = 'dateObj' />
       </FormItem>
-
       <!-- 投放排期 自定义时间 -->
       <div class="clear-f" key="save" v-if="dateType == 1">
         <FormItem class="tag-date float-left" label="开始时间" prop="beginDate">
@@ -86,6 +88,7 @@
         </FormItem>
 
         <div class="city-wrap mb20">
+          {{form.ids}}
           <AreaPane v-model="form.ids" :type="form.throwInAreaType"
             :boxLevelList="boxLevelList" @statsChange="onThrowInStatsChange"/>
         </div>
@@ -160,6 +163,8 @@ import { drairesList, beforePlan, advertising, advertDetail, cinemaList } from '
 import moment from 'moment'
 import SingCinema from './singcinema.vue'
 import AreaPane, { Stats } from './components/areaPane'
+import { formatYell } from '@/util/validateRules'
+import { planDefault, queryRelevanceList } from '@/api/plan'
 
 const timeFormat = 'YYYY-MM-DD'
 const timeFormats = 'YYYYMMDD'
@@ -192,6 +197,7 @@ export default class Main extends ViewBase {
   tagColor = '#fe8135'
   tabs = 1
   ding = 0
+  item: any = null
   selectTab = 'tabs1'
   auctionName = ''
   allType = true
@@ -384,6 +390,55 @@ export default class Main extends ViewBase {
     this.beforePlan()
     this.beginAdver()
     this.cinemaFind()
+    this.editId()
+  }
+
+  async editId() {
+    if (!this.$route.params.id) {
+      return
+    }
+    try {
+      const id = this.$route.params.id
+      const {
+        data: {
+          item,
+          movieList
+        }
+      } = await planDefault(id)
+      this.item = item
+      this.form.name = item.name
+      this.form.videoId = item.videoId
+
+      // 投放区域Id
+      if (item.calendarId) {
+        this.dateType = 2
+
+        ; (this.form.year as any) = new Date(item.calendarYear + 1, 0, 0)
+        this.diaries(item.calendarId)
+      } else {
+        this.form.beginDate = this.formatDate(item.beginDate)
+        this.form.endDate = this.formatDate(item.endDate)
+      }
+      // 投放区域类型
+      if (item.directionType == 2) {
+        this.putType = 2
+        this.singleObject = movieList[0]
+        this.form.tagTypeCode = item.deliveryGroups.map((it: any) => it.text)
+      } else {
+        this.form.throwInAreaType = item.throwInAreaType
+        ; (this.form.ids as any) = item.throwInAreaIds.split(',')
+        this.cinema.MOVIE_TYPE = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'MOVIE_TYPE')
+        .map((items: any) => items.text)
+        this.cinema.PLAN_GROUP_AGE = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'PLAN_GROUP_AGE')[0].text
+        this.cinema.PLAN_GROUP_SEX = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'PLAN_GROUP_SEX')[0].text
+      }
+      this.form.budgetCode = item.budgetCode
+      if (item.budgetCode == '00-00') {
+        this.form.budgetAmount = item.budgetAmount
+      }
+    } catch (ex) {
+      this.handleError(ex.msg)
+    }
   }
 
   formatDate(data: any) {
@@ -502,7 +557,7 @@ export default class Main extends ViewBase {
   }
 
   // 查询档期
-  async diaries() {
+  async diaries(val?: any) {
     if (this.form.year) {
       const year = new Date(this.form.year).getFullYear()
       const {
@@ -511,6 +566,7 @@ export default class Main extends ViewBase {
         }
       } = await drairesList(year)
       this.airiesList = items || []
+      this.form.calendarId = val || ''
     }
   }
 

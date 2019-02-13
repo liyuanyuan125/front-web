@@ -1,6 +1,6 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title">创建广告计划 > 新建广告计划</h2>
+    <h2 class="layout-nav-title">创建广告计划 >编辑广告计划</h2>
 
     <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input">
       <h3 class="layout-title">基本信息</h3>
@@ -423,6 +423,7 @@ export default class Main extends ViewBase {
       this.handleError(ex.msg)
     }
   }
+
   deliveryType(id: any) {
     const list = this.deliveryTypeList
     if (list) {
