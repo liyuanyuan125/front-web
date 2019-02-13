@@ -11,6 +11,12 @@ export async function addplan(query: any) {
   return res
 }
 
+// i编辑计划
+export async function editplan(id: any , query: any) {
+  const res = await put(`/xadvert/plans/${id}` , query)
+  return res
+}
+
 // 预估场次
 export async function abcount(query: any) {
   const res = await get('/xadvert/plans/estimate-count', query)

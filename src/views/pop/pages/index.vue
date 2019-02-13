@@ -255,13 +255,13 @@
         </Col>
       </Row>
     </Row>
-    <div class="report-button">
+    <div v-if='!this.list.id' class="report-button">
       <Button type="primary" @click="edit" >确认投放方案</Button>
       <Button type="default" @click="caoEdit">存为草稿</Button>
     </div>
-    <!-- <div class="report-button">
+    <div v-if='this.list.id' class="report-button">
       <Button type="primary" @click="okEdit" >确认修改方案</Button>
-    </div> -->
+    </div>
     <!-- 确认生成 -->
     <DlgDetail v-if="addOrUpdateVisible" ref="addOrUpdate" />
     <!-- 查看已选影院 -->
@@ -282,7 +282,7 @@ import CityMap from '@/components/cityMap'
 import { toMap } from '@/fn/array'
 import moment from 'moment'
 import jsxReactToVue from '@/util/jsxReactToVue'
-import { queryList , addplan , abcount , pricount , tuijian , TcinemaList , video } from '@/api/planput'
+import { queryList , addplan , editplan , abcount , pricount , tuijian , TcinemaList , video } from '@/api/planput'
 import { cinemaList } from '@/api/popPlan'
 import echarts from 'echarts' // 引入echarts
 import { warning , success, toast , info } from '@/ui/modal'
@@ -643,8 +643,8 @@ export default class Main extends ViewBase {
       }
     }
     try {
-      const res = await addplan(this.datafroms)
-      toast('添加成功')
+      const res = await editplan(this.list.id , this.datafroms)
+      toast('编辑成功')
       this.$router.push({name: 'pop-planlist'})
     } catch (ex) {
       this.handleError(ex)
