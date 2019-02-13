@@ -680,15 +680,21 @@ export default class Main extends ViewBase {
         tagTypeCode: this.form.tagTypeCode.includes(0) ? [] : this.form.tagTypeCode
       }
     }
-    const addObject = {
+    let addObject = {
       ...query,
       ...schedule,
       ...direction,
       throwInStats: this.throwInStats,
     }
+    if (this.$route.params.id) {
+      addObject = {
+        ...addObject,
+        id: this.$route.params.id
+      }
+    }
     const index: any = Math.floor(Math.random() * 100 + 1)
     sessionStorage.setItem(`${index}`, JSON.stringify(addObject))
-    this.$router.push({ name: 'pop-plan-scheme', params: { id: this.$route.params.id}})
+    this.$router.push({ name: 'pop-plan-scheme', params: { id: index}})
   }
 
   onThrowInStatsChange(stats: Stats) {
