@@ -602,8 +602,7 @@ export default class Main extends ViewBase {
         ]
       }
     } else {
-
-      if (this.singleObject.id.length != 1) {
+      if (!this.singleObject.id || this.singleObject.id.length != 1) {
         info('请选择一部影片')
         return
       }

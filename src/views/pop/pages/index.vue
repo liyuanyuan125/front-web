@@ -133,7 +133,7 @@
         </Col>
       </Row>
 
-      <Row class="pt40">
+      <Row class="pt40" v-if="this.list.directionType">
         <Col :span="24">
           <h3 class="square">覆盖地区</h3>
         </Col>
@@ -158,7 +158,7 @@
           </ul>
         </Col>
         <Col class="mt70 posi-map" :span="12">
-          <CitySelect :value="[1,2,3,4,5,6,7]" readonly class="city-map"/>
+          <CityMap :names="cityMapNames" class="city-map"/>
           <div class='pos-map'>
             <ul>
               <li v-for='item in list.throwInStats.regionList' :key='item.name'>{{item.name.split('地区')[0]}}</li>
@@ -172,9 +172,9 @@
           </div>
           <!-- <CitySelect v-else :value="[1,2,3,4,5,6]" type="beijing" readonly class="city-map"/> -->
         </Col>
-        <Col :span="12">
+        <Col :span="12" style='margin-top: 70px;'>
           <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
-          <Button  type="primary" class="mt30" @click="viewCinema" style="float: right; height: 40px; margin-right: 10px; margin-bottom: 10px;">查看全部影院</Button>
+          <Button  type="primary" class="mt30 bp" @click="viewCinema" style="position: absolute; height: 40px; right: 10px; top: 350px;">查看全部影院</Button>
         </Col>
       </Row>
 
@@ -186,15 +186,21 @@
           <Col :span="4"><h4 class="select-people">观影人群画像</h4></Col>
           <Col :span="20">
            <ul class="tag" style="left:2px">
-              <li class="tag-ltme" style='margin-left:30px;'>
-                <img v-if='list.deliveryGroups[2].text[0] == "man"' style="vertical-align: middle;" src="./assets/man.png" alt="">
-                <img v-if='list.deliveryGroups[2].text[0] == "woman"' style="vertical-align: middle;" src="./assets/woman.png" alt="">
+              <li v-if='list.deliveryGroups[2].text.length > 0' v-for='(it,index) in list.deliveryGroups[2].text' class="tag-ltme" style='margin-left:30px;'>
+                <img v-if='list.deliveryGroups[2].text.length > 0 && list.deliveryGroups[2].text[0] == "man"' style="vertical-align: middle;" src="./assets/man.png" alt="">
+                <img v-if='list.deliveryGroups[2].text.length > 0 && list.deliveryGroups[2].text[0] == "woman"' style="vertical-align: middle;" src="./assets/woman.png" alt="">
                 <span v-if='list.deliveryGroups[2].text.length == 0 && list.deliveryGroups[1].text.length == 0 && list.deliveryGroups[0].text.length == 0'>不限</span>
               </li>
-              <li v-for='(item) in tagsyear[0].values' :key='item.key' v-if='list.deliveryGroups[1].text[0] == item.key' class="tag-ltmes">
-                <span>{{item.text}}</span>
+              <li v-if='list.deliveryGroups[2].text.length == 0 && list.deliveryGroups[1].text.length == 0 && list.deliveryGroups[0].text.length == 0'  class="tag-ltme" style='margin-left:30px;'>
+                <span v-if='list.deliveryGroups[2].text.length == 0 && list.deliveryGroups[1].text.length == 0 && list.deliveryGroups[0].text.length == 0'>不限</span>
               </li>
-              <li v-for='(it,index) in list.deliveryGroups[0].text' :key='index' class="tag-ltmes">
+              <!-- <li v-for='(item) in tagsyear[0].values' :key='item.key' v-if=' tagsyear.length > 0 && list.deliveryGroups[1].text[0] == item.key' class="tag-ltmes">
+                <span>{{item.text}}</span>
+              </li> -->
+              <li v-if='tagsyear.length > 0' class="tag-ltmes" v-for='(it,index) in list.deliveryGroups[1].text'>
+                <span v-for='(item) in tagsyear[0].values' :key='item.key' v-if='list.deliveryGroups[1].text[0] == item.key'>{{item.text}}</span>
+              </li>
+              <li v-if='tagstype.length > 0' v-for='(it,index) in list.deliveryGroups[0].text' :key='index' class="tag-ltmes">
                 <span v-for='(item) in tagstype[0].values' :key='item.key' v-if='it == item.key'>{{item.text}}</span>
               </li>
             </ul>
@@ -222,7 +228,8 @@
                     <div>上映日期：{{it.openTime}}</div>
                   </dd>
                   <dt class='dts'>《{{it.name}}》</dt>
-                  <dt><span v-for='(item , index) in it.type' :key='index'>{{item}} </span></dt>
+                  <!-- <dt><span v-for='(item , index) in it.type' :key='index'>{{item}} </span></dt> -->
+                  <dt class='dts'>{{it.type.join(' / ')}}</dt>
                 </dl>
               </Col>
             </Col>
@@ -258,7 +265,7 @@
     <!-- <dlgCinema v-model="cinema" v-if="cinema.visible"  /> -->
     <!-- <CinemaDlg v-model="cinemaShow" :loading="cinemaLoading" :total="dlgCinema.length"
       :list="dlgCinema"/> -->
-      <CinemaDlgByStats v-model="cinemaShow" :stats="list.throwInStats"/>
+      <CinemaDlgByStats v-model="cinemaShow" :stats="abc"/>
 
   </div>
 </template>
@@ -268,7 +275,7 @@ import { Component , Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DlgDetail from './dlgdetail.vue'
 import dlgCinema from '../plan/default/cinemaDlg.vue'
-import CitySelect from '../plan/citySelect.vue'
+import CityMap from '@/components/cityMap'
 import { toMap } from '@/fn/array'
 import moment from 'moment'
 import jsxReactToVue from '@/util/jsxReactToVue'
@@ -276,53 +283,53 @@ import { queryList , addplan , abcount , pricount , tuijian , TcinemaList , vide
 import { cinemaList } from '@/api/popPlan'
 import echarts from 'echarts' // 引入echarts
 import { warning , success, toast , info } from '@/ui/modal'
-// import { Stats } from '../plan/components/areaPane/types'
+import { Stats } from '../plan/components/areaPane'
 // import CinemaDlg, { CinemaDlgItem } from '../plan/components/cinemaDlg'
 import { CinemaDlgByStats } from '../plan/components/cinemaDlg'
 
 
 const timeFormat = 'YYYY-MM-DD'
 
-const mockMap = [
-  {
-    name: '2019款全新奔驰G级影院广告－春节档',
-    client: '奔驰',
-    time: '2019-2-4 ～2019-2-10',
-    longTime : '7',
-    data: '春节档',
-    man : '400,000',
-    ceil: '4,000,000.00',
-    sex: '男',
-    id: '1'
-  },
-  {
-    name: '“我爱筱面”美食节6月推广',
-    client: '西贝餐饮',
-    time: '2019-6-1 ～2019-6-10',
-    longTime : '10',
-    data: '无',
-    man : '400,000',
-    ceil: '4,000,000.00',
-    sex: '女',
-    id: '2'
-  },
-  {
-    name: 'DIOR 新品红管唇釉推广',
-    client: '迪奥',
-    time: '2019-2-4 ～2019-2-10',
-    longTime : '7',
-    data: '无',
-    man : '400,000',
-    ceil: '4,000,000.00',
-    sex: '男',
-    id: '3'
-  }
-]
+// const mockMap = [
+//   {
+//     name: '2019款全新奔驰G级影院广告－春节档',
+//     client: '奔驰',
+//     time: '2019-2-4 ～2019-2-10',
+//     longTime : '7',
+//     data: '春节档',
+//     man : '400,000',
+//     ceil: '4,000,000.00',
+//     sex: '男',
+//     id: '1'
+//   },
+//   {
+//     name: '“我爱筱面”美食节6月推广',
+//     client: '西贝餐饮',
+//     time: '2019-6-1 ～2019-6-10',
+//     longTime : '10',
+//     data: '无',
+//     man : '400,000',
+//     ceil: '4,000,000.00',
+//     sex: '女',
+//     id: '2'
+//   },
+//   {
+//     name: 'DIOR 新品红管唇釉推广',
+//     client: '迪奥',
+//     time: '2019-2-4 ～2019-2-10',
+//     longTime : '7',
+//     data: '无',
+//     man : '400,000',
+//     ceil: '4,000,000.00',
+//     sex: '男',
+//     id: '3'
+//   }
+// ]
 
 @Component ({
   components: {
     DlgDetail,
-    CitySelect,
+    CityMap,
     CinemaDlgByStats
   }
 })
@@ -399,11 +406,20 @@ export default class Main extends ViewBase {
   dlgCinema: any = []
 
 
-  abc: any = []
+  abc: any = {}
 
-  // get noCinema() {
-  //   return this.list.throwInStats
-  // }
+  get cityMapNames() {
+    const { provinceList, cityLevelList } = (this.list.throwInStats || {}) as Stats
+    // 将城市名 & 省份名一股脑全传给 CityMap 组件
+    const provinceNames = (provinceList || []).map(it => it.name)
+    const cityNames = (cityLevelList || []).reduce((list: string[], it) => {
+      const names = (it.cityList || []).map(t => t.name)
+      return list.concat(names)
+    }, [])
+    // 保持城市名在前，城市优先级高于省份
+    const result = cityNames.concat(provinceNames)
+    return result
+  }
 
   dataFrom: any = {
     type: '1', // 方案类型
@@ -429,6 +445,7 @@ export default class Main extends ViewBase {
   get cinemaIdiD() {
     return this.cinemaIdArray.map((it: any) => it.id)
   }
+
   get addlist() {
     return {
       aboutcount: this.aboutcount, // 预估场次
@@ -479,12 +496,12 @@ export default class Main extends ViewBase {
       ]
   }
 
-  get forMat() {
-    const corp: any = ((this.$route.params as any).corp) || 0
-    return mockMap.filter((it: any) => {
-      return it.id == corp
-    })[0]
-  }
+  // get forMat() {
+    // const corp: any = ((this.$route.params as any).corp) || 0
+    // return mockMap.filter((it: any) => {
+    //   return it.id == corp
+    // })[0]
+  // }
   // 查看影院
   viewCinema() {
     this.cinemaShow = true
@@ -650,6 +667,7 @@ export default class Main extends ViewBase {
       // 获取状态列表
       this.typeList = data.typeList
       if (this.list.directionType == 1) {
+        this.abc = this.list.throwInStats
         this.tagstype = (data.tags || []).filter((it: any) => {
           if (it.code == this.list.deliveryGroups[0].tagTypeCode) {
             return {
@@ -965,19 +983,19 @@ export default class Main extends ViewBase {
     position: relative;
     .pi-one {
       position: absolute;
-      top: 0.8%;
+      top: 1.5%;
       left: 21.3%;
       z-index: 10;
     }
     .pi-two {
       position: absolute;
-      top: 0.8%;
+      top: 1.5%;
       left: 40.6%;
       z-index: 10;
     }
     .pi-three {
       position: absolute;
-      top: 0.8%;
+      top: 1.5%;
       left: 59.7%;
       z-index: 10;
     }
@@ -1200,10 +1218,8 @@ export default class Main extends ViewBase {
 }
 
 .city-map {
-  /deep/ .map-box {
-    margin-top: 0;
-    zoom: 0.62;
-  }
+  transform: scale(.76923);
+  transform-origin: 0 0;
 }
 .fince-list {
   .fince-list-big {
