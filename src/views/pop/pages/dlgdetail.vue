@@ -48,11 +48,11 @@
           <Col :span="3">投放影片</Col>
           <Col :span="8" class='im'>
             <!-- <div> -->
-              <div class='im-div'>
+              <div class='im-div' v-if="cinema.seacinemaList">
                 <img :src='cinema.seacinemaList.mainPicUrl' alt=''>
                 <div>上映日期：{{formatMoment(cinema.seacinemaList.openTime)}}</div>
               </div>
-              <div class='ims-div'>
+              <div class='ims-div' v-if="cinema.seacinemaList">
                 <p>{{cinema.seacinemaList.name}}</p>
                 <p class="cinema-type"><span v-for="it in cinemaType" :key="it">{{it}}</span></p>
               </div>
@@ -73,17 +73,17 @@
           </Col>
         </Row>
       </div>
-      <div v-if='data.directionType == 1' style='background:rgba(249, 249, 249, 1);padding: 10px 20px 0 20px; margin-top: 10px;'>
+      <div style='background:rgba(249, 249, 249, 1);padding: 10px 20px 0 20px; margin-top: 10px;'>
         <Row class="mb10">
           <Col :span="4">投放区域 ({{data.throwInStats.region}}个)</Col>
           <Col :span="20">
-            <span v-for="it in data.throwInStats.regionList" :key="it.key">{{it.name}}</span>
+            <span class="cityCount offset" v-for="it in data.throwInStats.regionList" :key="it.key">{{it.name}}</span>
           </Col>
         </Row>
         <Row class="mb10">
           <Col :span="4">投放省份 ({{data.throwInStats.province}}个)</Col>
           <Col :span="20">
-            <span class="cityCount" v-for="it in data.throwInStats.provinceList" :key="it.key">{{it.name}}</span>
+            <span class="cityCount offset" v-for="it in data.throwInStats.provinceList" :key="it.key">{{it.name}}</span>
           </Col>
         </Row>
         <Row class="mb10">
@@ -91,7 +91,7 @@
           <Col :span="20">
             <Row class="mb10" v-for="it in data.throwInStats.cityLevelList" :key="it.key">
               <Col :span="6">{{it.name}}({{it.count}}个)</Col>
-              <Col :span="18" v-for="item in it.cityList" :key="item.id"><span class="cityCount">{{item.name}}</span></Col>
+              <Col :span="18"><span v-for="item in it.cityList" :key="item.id" class="cityCount">{{item.name}}</span></Col>
             </Row>
           </Col>
         </Row>
@@ -335,8 +335,8 @@ export default class Main extends ViewBase {
 }
 .before(@content: '/', @color: #222) {
   content: @content;
-  margin-left: 3px;
-  margin-right: 3px;
+  margin-left: 6px;
+  margin-right: 6px;
   color: @color;
 }
 .mb-cyc(8);
@@ -390,6 +390,9 @@ export default class Main extends ViewBase {
   span {
     color: #333;
   }
+}
+.offset {
+  margin-right: 5px;
 }
 .cinema-flex {
   display: flex;
