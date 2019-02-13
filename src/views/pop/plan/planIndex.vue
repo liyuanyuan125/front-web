@@ -109,7 +109,7 @@
       @on-change="handlepageChange"
       @on-page-size-change="handlePageSize"
     />
-     <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible"></relevanceDlg>
+     <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible" @submitRelevance="submitRelevance"></relevanceDlg>
   </div>
 </template>
 <script lang="ts">
@@ -206,6 +206,9 @@ export default class Plan extends ViewBase {
     this.data = data
     this.tableDate = data.items
     this.totalCount = data.totalCount
+  }
+  submitRelevance() {
+    this.tableList()
   }
   async handlePayment(item: any) {
     await confirm(`是否要支付冻结金额${item.freezeAmount}元`, {

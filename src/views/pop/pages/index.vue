@@ -587,7 +587,6 @@ export default class Main extends ViewBase {
 
   async okEdit() {
     this.dataFrom.status = 2
-
     if (this.list.directionType == 1) {
       this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
       this.dataFrom.deliveryMovies = this.cinemaIdArray.map((it: any) => it.id)
@@ -628,6 +627,10 @@ export default class Main extends ViewBase {
       }
     }
     if (this.list.directionType == 2) {
+      // console.log(this.seacinemaList)
+      this.cinemaIdArray = []
+      this.cinemaIdArray = [this.seacinemaList.id]
+      // console.log(this.dataFrom.deliveryMovies)
       const one = (this.list.tagTypeCode || []).map((it: any) => {
         this.dataFrom.deliveryGroups.push( {
           tagTypeCode: 'DISTRICT_AREA',
