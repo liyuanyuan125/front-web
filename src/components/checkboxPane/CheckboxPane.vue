@@ -62,7 +62,7 @@ export default class CheckboxPane extends ViewBase {
     this.model = this.allHasChecked ? [] : this.allKeyList
   }
 
-  @Watch('value')
+  @Watch('value', { immediate: true })
   watchValue(value: number[] | string[]) {
     this.model = value
   }

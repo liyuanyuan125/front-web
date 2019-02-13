@@ -116,7 +116,7 @@ import cachedStore from '@/fn/cachedStore'
 import { queryStats, queryAll } from '@/api/cinema'
 import { hash } from '@/fn/object'
 import { isNullOrEmpty } from '@/fn/string'
-import { groupBy, uniq, debounce, cloneDeep } from 'lodash'
+import { groupBy, uniq, debounce, cloneDeep, isEqual } from 'lodash'
 import { KeyTextControlStatus } from '@/util/types'
 import TinyLoading from '@/components/TinyLoading.vue'
 import { slice } from '@/fn/object'
@@ -159,6 +159,28 @@ const idsNameMap: any = {
   2: 'provinceIds',
   3: 'cityIds',
   4: 'ids',
+}
+
+// 将一组数据转换为 int 数组
+const toInt = (list: any[]) => {
+  const intList = list.map(it => parseInt(it, 10))
+  // 一定要在绝对相等时，返回 list 本身，否则会造成 vue 死循环
+  return isEqual(intList, list) ? list : intList
+}
+
+// 不做任何转换
+const noCast = (list: any[]) => list
+
+// 不同 type，对传入的 value 值进行类型转换，其中：
+// type = 0 为空数组，不需要转换
+// type = 1 为字符串数组，不需要转换
+// type = 2、3、4 为纯数字数组，但传入的值可能为字符串，需要进行转换
+const typeCastMap: any = {
+  0: noCast,
+  1: noCast,
+  2: toInt,
+  3: toInt,
+  4: toInt,
 }
 
 const defaultStats: Stats = {
@@ -429,9 +451,10 @@ export default class AreaPane extends ViewBase {
     this.model[4] = ids
   }
 
-  @Watch('value')
+  @Watch('value', { immediate: true })
   watchValue(value: number[]) {
-    this.model[this.type] = value
+    const castList = typeCastMap[this.type](value)
+    this.model[this.type] = castList
   }
 
   @Watch('model', { deep: true })
