@@ -423,6 +423,7 @@ export default class Main extends ViewBase {
       this.handleError(ex.msg)
     }
   }
+
   deliveryType(id: any) {
     const list = this.deliveryTypeList
     if (list) {

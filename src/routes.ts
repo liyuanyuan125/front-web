@@ -134,7 +134,7 @@ export default [
   },
   // 推广管理 - 广告计划 - 编辑
   {
-    path: '/pop/plan-edit/:id',
+    path: '/pop/plan-edit/:id?',
     name: 'pop-plan-edit',
     component: () => import('./views/pop/plan/edit/index.vue')
   },
@@ -149,6 +149,50 @@ export default [
     path: '/pop/plan/scheme/two',
     name: 'pop-plan-scheme-two',
     component: () => import('./views/two/index.vue'),
+  },
+
+  // 推广管理 - 广告片 - 列表
+  {
+    path: '/pop/film',
+    name: 'pop-film',
+    component: () => import('./views/pop/film/index.vue'),
+  },
+  // 推广管理 - 广告片 - 创建、编辑（存在 id 为编辑，否则为创建）
+  {
+    path: '/pop/film/edit/:id?',
+    name: 'pop-film-edit',
+    component: () => import('./views/pop/film/edit.vue'),
+  },
+  // 推广管理 - 广告片 - 查看
+  {
+    path: '/pop/film/detail/:id',
+    name: 'pop-film-detail',
+    component: () => import('./views/pop/film/detail.vue'),
+  },
+
+  // 广告单管理 - 广告单列表
+  {
+    path: '/order/dispatch',
+    name: 'order-dispatch',
+    component: () => import('./views/order/dispatch/index.vue'),
+  },
+  // 广告单管理 - 执行单列表
+  {
+    path: '/order/execute',
+    name: 'order-execute',
+    component: () => import('./views/order/execute/index.vue'),
+  },
+  // 广告单管理 - DCP包列表
+  {
+    path: '/order/dcp',
+    name: 'order-dcp',
+    component: () => import('./views/order/dcp/index.vue'),
+  },
+  // 广告单管理 - DCP包下载
+  {
+    path: '/order/dcp/detail/:id',
+    name: 'order-dcp-detail',
+    component: () => import('./views/order/dcp/detail.vue'),
   },
 
   // 数据报表 - 投放成效报告
