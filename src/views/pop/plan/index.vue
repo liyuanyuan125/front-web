@@ -433,9 +433,9 @@ export default class Main extends ViewBase {
         const sex: any = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'PLAN_GROUP_SEX')
         const age: any = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'PLAN_GROUP_AGE')
         const types: any = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'MOVIE_TYPE')
-        this.cinema.MOVIE_TYPE = types.length > 0 ? types.map((items: any) => items.text) : [0]
-        this.cinema.PLAN_GROUP_AGE = age.length > 0 ? age[0].text : 0
-        this.cinema.PLAN_GROUP_SEX = sex.length > 0 ? sex[0].text : 0
+        this.cinema.MOVIE_TYPE = types[0].text != 'ALL' ? types.map((items: any) => items.text) : [0]
+        this.cinema.PLAN_GROUP_AGE = age[0].text != 'ALL' ? age[0].text : 0
+        this.cinema.PLAN_GROUP_SEX = sex[0].text != 'ALL' ? sex[0].text : 0
       }
       this.form.budgetCode = item.budgetCode
       if (item.budgetCode == '00-00') {
