@@ -88,7 +88,6 @@
         </FormItem>
 
         <div class="city-wrap mb20">
-          {{form.ids}}
           <AreaPane v-model="form.ids" :type="form.throwInAreaType"
             :boxLevelList="boxLevelList" @statsChange="onThrowInStatsChange"/>
         </div>
@@ -430,7 +429,7 @@ export default class Main extends ViewBase {
         }
       } else {
         this.form.throwInAreaType = item.throwInAreaType
-        ; (this.form.ids as any) = item.throwInAreaIds.split(',')
+        ; (this.form.ids as any) = item.throwInAreaIds.length > 0 ? item.throwInAreaIds.split(',') : []
         const sex: any = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'PLAN_GROUP_SEX')
         const age: any = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'PLAN_GROUP_AGE')
         const types: any = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'MOVIE_TYPE')
