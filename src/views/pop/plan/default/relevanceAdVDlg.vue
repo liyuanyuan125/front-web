@@ -14,7 +14,7 @@
             </p>
           </div>
         </FormItem>
-        <FormItem label="关联广告片">
+        <FormItem label="关联广告片" prop="voidID">
           <Select v-model="form.voidID" clearable filterable style="width:400px">
             <Option v-for="item in releList" :value="item.id" :key="item.id">{{ item.name }}</Option>
           </Select>
@@ -44,7 +44,7 @@ export default class Relevan extends ViewBase {
     voidID: [
       {
         require: true,
-        trigger: 'change',
+        trigger: 'blur',
         validator(rule: any, value: string, callback: any) {
           !value ? callback(new Error('请选择关联广告片')) : callback()
         }
@@ -56,12 +56,18 @@ export default class Relevan extends ViewBase {
     this.queryReleList()
   }
   async handleSumbit() {
+    const volid = await (this.$refs.forms as any).validate()
+    if (!volid) {
+      return
+    }
+
     try {
       await relevanceVideo({
         id: this.value.item.id,
         videoId: this.form.voidID
       })
-      this.$router.push({name: 'pop-planlist'})
+      this.value.visible = false
+      this.$emit('submitRelevance')
     } catch (ex) {
       this.handleError(ex.msg)
     }
