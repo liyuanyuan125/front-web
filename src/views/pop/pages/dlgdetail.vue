@@ -297,6 +297,7 @@ export default class Main extends ViewBase {
           text: it
         })
       })
+      this.forMat.deliveryMovies = this.data.deliveryMovies
       if (
         this.data.tagTypeCode.length == 0) {
         // this.forMat.deliveryGroups = (this.list.deliveryGroups || []).map((it: any) => {
