@@ -228,7 +228,8 @@
                     <div>上映日期：{{it.openTime}}</div>
                   </dd>
                   <dt class='dts'>《{{it.name}}》</dt>
-                  <dt><span v-for='(item , index) in it.type' :key='index'>{{item}} </span></dt>
+                  <!-- <dt><span v-for='(item , index) in it.type' :key='index'>{{item}} </span></dt> -->
+                  <dt class='dts'>{{it.type.join(' / ')}}</dt>
                 </dl>
               </Col>
             </Col>
