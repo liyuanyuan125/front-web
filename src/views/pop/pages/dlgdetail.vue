@@ -290,6 +290,9 @@ export default class Main extends ViewBase {
       }
     }
     if (this.data.directionType == 2) {
+      // console.log(this.cinema.seacinemaList.id)
+      this.forMat.deliveryMovies = []
+      this.forMat.deliveryMovies = [this.cinema.seacinemaList.id]
       // console.log(this.data.tagTypeCode)
       const one = (this.data.tagTypeCode || []).map((it: any) => {
         this.forMat.deliveryGroups.push( {

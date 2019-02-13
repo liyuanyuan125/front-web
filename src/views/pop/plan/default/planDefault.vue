@@ -26,9 +26,13 @@
             <label>档期</label>
             {{items.calendarName}}
           </p>
-          <p>
-            <label>冻结金额/￥</label>
-            {{formatNumber(items.freezeAmount)}}
+          <p v-if="status == 1 || status == 2 || status == 9 || status == 10">
+            <label>预估冻结金额/￥</label>
+            {{formatNumber(items.estimateCostAmount)}}
+          </p>
+          <p v-else>
+             <label>冻结金额/￥</label>
+             {{formatNumber(items.freezeAmount)}}
           </p>
         </Col>
         <Col :span="12">
@@ -71,14 +75,14 @@
             <label>投放区域（{{launchList.categorizedByAreaCode.length}}个）</label>
             <span v-for="item in launchList.categorizedByAreaCode" :key="item.code">
               {{item.name}}
-              <i>/</i>
+              <i class="dividing-line">&nbsp;&nbsp;|&nbsp;&nbsp;</i>
             </span>
           </p>
           <p v-if="launchList.categorizedByProvinceId" class="division-line">
             <label>投放省份（{{launchList.categorizedByProvinceId.length || 0}}个）</label>
             <span v-for="item in launchList.categorizedByProvinceId" :key="item.id">
               {{item.name}}
-              <i>/</i>
+              <i class="dividing-line">&nbsp;&nbsp;|&nbsp;&nbsp;</i>
             </span>
           </p>
           <p v-if="launchList.categorizedByCityId" class="flex-box">
@@ -88,7 +92,7 @@
                 <i>{{item.name}}（{{item.infos.length}}个）</i>
                 <span v-for="(it, ind) in item.infos" :key="ind">
                   {{it.name}}
-                  <i>/</i>
+                   <b class="dividing-line">&nbsp;&nbsp;|&nbsp;&nbsp;</b>
                 </span>
               </p>
             </em>
@@ -111,18 +115,28 @@
     <h3 class="layout-title">投放影片</h3>
     <div class="text-rows">
       <div v-if="status == 9">
-        <p class="flex-box">
+        <p class="flex-box division-line">
           <label>地域偏好</label>
-          <em>
-            <i v-for="(item, index) in areaList" :key="index">{{item}}</i>
-          </em>
+          <span v-for="(item, index) in areaList" :key="index">
+            {{item}}
+            <i class="dividing-line">&nbsp;&nbsp;|&nbsp;&nbsp;</i>
+          </span>
+        </p>
+        <!-- 影片 -->
+        <p class="flex-box division-line">
+          <label>影片</label>
+          <!-- <span v-for="(item, index) in areaList" :key="index">
+            {{item}}
+            <i class="dividing-line">&nbsp;&nbsp;|&nbsp;&nbsp;</i>
+          </span> -->
         </p>
       </div>
       <div v-else>
-        <p>
+        <p v-if="sex">
           <label>观影人群画像</label>
         </p>
         <div
+        v-if="sex"
           class="portrait"
           :class="{'woman-atv': sex == 'woman', 'man-atv': sex == 'man', 'unknow-atv': sex == 'unknow'}"
         >
@@ -147,7 +161,7 @@
           </div>
         </div>
       </div>
-      <div class="flex-box film-list">
+      <div class="flex-box film-list" v-if="defaultData.movieList && defaultData.movieList.length > 0">
         <label>影片</label>
         <div class="flex-box">
           <div class="item" v-for="(item, index) in defaultData.movieList" :key="index">
@@ -265,9 +279,28 @@ export default class PlanDefault extends ViewBase {
       if (this.launchList) {
         let account = 0
         this.launchList.categorizedByCityGradeCode.map((item: any) => {
+          if (item.code == 'new-first-tier') {
+            item.accountNum = 0
+          } else if (item.code == 'first-tier') {
+             item.accountNum = 1
+          } else if (item.code == 'second-tier') {
+            item.accountNum = 2
+          } else if (item.code == 'third-tier') {
+            item.accountNum = 3
+          } else if (item.code == 'four-tier') {
+            item.accountNum = 4
+          } else if (item.code == 'five-tier') {
+            item.accountNum = 5
+          }
           account += item.infos.length
         })
         this.account = account
+        // 重新定义投放城市排序
+        let sort: any = []
+         sort = this.launchList.categorizedByCityGradeCode.sort((a: any, b: any) => {
+          return a.accountNum - b.accountNum
+        })
+        this.launchList.categorizedByCityGradeCode = sort
       }
     } catch (ex) {
       this.handleError(ex.msg)
@@ -365,8 +398,14 @@ export default class PlanDefault extends ViewBase {
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.dividing-line {
+  color: #d8d8d8;
+}
 .division-line span {
   &:last-child i {
+    display: none;
+  }
+  &:last-child b {
     display: none;
   }
 }

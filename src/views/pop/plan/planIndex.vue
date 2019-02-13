@@ -227,7 +227,8 @@ export default class Plan extends ViewBase {
     }
   }
   planEdit(id: any) {
-    this.$router.push({name: 'pop-plan', params: {id}})
+    // this.$router.push({name: 'pop-plan', params: {id}})
+    this.$router.push({name: 'pop-plan-edit', params: {id}})
   }
   async planCancel(val: any, id: any) {
     await confirm(`是否取消广告计划：${val}`, {title: '取消广告计划'})
@@ -313,6 +314,7 @@ export default class Plan extends ViewBase {
   cursor: pointer;
   margin: 10px 20px 0;
   .colBg;
+  padding: 0 30px 0 18px;
   span:last-child {
     color: @c-link;
   }
