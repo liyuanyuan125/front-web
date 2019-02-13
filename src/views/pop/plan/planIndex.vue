@@ -227,8 +227,8 @@ export default class Plan extends ViewBase {
     }
   }
   planEdit(id: any) {
-    // this.$router.push({name: 'pop-plan', params: {id}})
-    this.$router.push({name: 'pop-plan-edit', params: {id}})
+    this.$router.push({name: 'pop-plan', params: {id}})
+    // this.$router.push({name: 'pop-plan-edit', params: {id}})
   }
   async planCancel(val: any, id: any) {
     await confirm(`是否取消广告计划：${val}`, {title: '取消广告计划'})

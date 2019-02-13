@@ -46,7 +46,7 @@
           <span :class="{'text-col': status == 7}">执行中</span>
         </div>
         <div class="step-item-end">
-          <em class="default-circle" :class="{'active-circle': status == 8}"></em>
+          <em class="default-circle" :class="{'end-active-circle': status == 8}"></em>
           <p class="step-tip-over" v-if="status == 8">您的广告计划已执行结束</p>
           <span :class="{'text-col': status == 8}">已结束</span>
         </div>
@@ -267,7 +267,7 @@
       <Button
         type="primary"
         class="button-ok edit-btn"
-        @click="$router.push({name: 'pop-plan-edit'})"
+        @click="toEdit"
       >编辑</Button>
     </div>
     <div class="btnCenter btn-footer" v-if="status == 4">
@@ -419,6 +419,9 @@ export default class PlanDefault extends ViewBase {
     } catch (ex) {
       this.handleError(ex.msg)
     }
+  }
+  toEdit() {
+    this.$router.push({name: 'pop-plan', params: {id: this.items.id}})
   }
   async relevanceAdv(id: any) {
     this.relevanVis = {
@@ -602,6 +605,19 @@ export default class PlanDefault extends ViewBase {
   width: 36px;
   height: 36px;
   background: @c-button url('../assets/circle.png') no-repeat center center;
+  background-size: 14px auto;
+  border-radius: 100%;
+  display: inline-block;
+  z-index: 10;
+  border: solid 2px @c-button;
+}
+.end-active-circle {
+  position: absolute;
+  top: -52px;
+  left: -7px;
+  width: 36px;
+  height: 36px;
+  background: @c-button url('../assets/end-active-circle.png') no-repeat center center;
   background-size: 14px auto;
   border-radius: 100%;
   display: inline-block;
