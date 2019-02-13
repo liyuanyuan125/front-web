@@ -983,19 +983,19 @@ export default class Main extends ViewBase {
     position: relative;
     .pi-one {
       position: absolute;
-      top: 1.5%;
+      top: 0.8%;
       left: 21.3%;
       z-index: 10;
     }
     .pi-two {
       position: absolute;
-      top: 1.5%;
+      top: 0.8%;
       left: 40.6%;
       z-index: 10;
     }
     .pi-three {
       position: absolute;
-      top: 1.5%;
+      top: 0.8%;
       left: 59.7%;
       z-index: 10;
     }
