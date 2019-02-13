@@ -86,7 +86,7 @@ export function formatTimes(value: any) {
   return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
 }
 
-export function formatYell(value: any) {
+export function formatYell(value: any, flag?: any) {
   if (!value) {
     return ''
   }
@@ -96,7 +96,11 @@ export function formatYell(value: any) {
   MM = MM < 10 ? '0' + MM : MM
   let d = date.getDate()
   d = d < 10 ? '0' + d : d
-  return y + '/' + MM + '/' + d
+  if (flag) {
+    return y + '-' + MM + '-' + d
+  } else {
+    return y + '/' + MM + '/' + d
+  }
 }
 
 /**

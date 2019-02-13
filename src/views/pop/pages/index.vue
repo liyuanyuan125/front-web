@@ -133,7 +133,7 @@
         </Col>
       </Row>
 
-      <Row class="pt40">
+      <Row class="pt40" v-if="this.list.directionType">
         <Col :span="24">
           <h3 class="square">覆盖地区</h3>
         </Col>
@@ -172,9 +172,9 @@
           </div>
           <!-- <CitySelect v-else :value="[1,2,3,4,5,6]" type="beijing" readonly class="city-map"/> -->
         </Col>
-        <Col :span="12">
+        <Col :span="12" style='margin-top: 70px;'>
           <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
-          <Button  type="primary" class="mt30" @click="viewCinema" style="float: right; height: 40px; margin-right: 10px; margin-bottom: 10px;">查看全部影院</Button>
+          <Button  type="primary" class="mt30 bp" @click="viewCinema" style="position: absolute; height: 40px; right: 10px; top: 350px;">查看全部影院</Button>
         </Col>
       </Row>
 
@@ -186,15 +186,21 @@
           <Col :span="4"><h4 class="select-people">观影人群画像</h4></Col>
           <Col :span="20">
            <ul class="tag" style="left:2px">
-              <li class="tag-ltme" style='margin-left:30px;'>
-                <img v-if='list.deliveryGroups[2].text[0] == "man"' style="vertical-align: middle;" src="./assets/man.png" alt="">
-                <img v-if='list.deliveryGroups[2].text[0] == "woman"' style="vertical-align: middle;" src="./assets/woman.png" alt="">
+              <li v-if='list.deliveryGroups[2].text.length > 0' v-for='(it,index) in list.deliveryGroups[2].text' class="tag-ltme" style='margin-left:30px;'>
+                <img v-if='list.deliveryGroups[2].text.length > 0 && list.deliveryGroups[2].text[0] == "man"' style="vertical-align: middle;" src="./assets/man.png" alt="">
+                <img v-if='list.deliveryGroups[2].text.length > 0 && list.deliveryGroups[2].text[0] == "woman"' style="vertical-align: middle;" src="./assets/woman.png" alt="">
                 <span v-if='list.deliveryGroups[2].text.length == 0 && list.deliveryGroups[1].text.length == 0 && list.deliveryGroups[0].text.length == 0'>不限</span>
               </li>
-              <li v-for='(item) in tagsyear[0].values' :key='item.key' v-if='list.deliveryGroups[1].text[0] == item.key' class="tag-ltmes">
-                <span>{{item.text}}</span>
+              <li v-if='list.deliveryGroups[2].text.length == 0 && list.deliveryGroups[1].text.length == 0 && list.deliveryGroups[0].text.length == 0'  class="tag-ltme" style='margin-left:30px;'>
+                <span v-if='list.deliveryGroups[2].text.length == 0 && list.deliveryGroups[1].text.length == 0 && list.deliveryGroups[0].text.length == 0'>不限</span>
               </li>
-              <li v-for='(it,index) in list.deliveryGroups[0].text' :key='index' class="tag-ltmes">
+              <!-- <li v-for='(item) in tagsyear[0].values' :key='item.key' v-if=' tagsyear.length > 0 && list.deliveryGroups[1].text[0] == item.key' class="tag-ltmes">
+                <span>{{item.text}}</span>
+              </li> -->
+              <li v-if='tagsyear.length > 0' class="tag-ltmes" v-for='(it,index) in list.deliveryGroups[1].text'>
+                <span v-for='(item) in tagsyear[0].values' :key='item.key' v-if='list.deliveryGroups[1].text[0] == item.key'>{{item.text}}</span>
+              </li>
+              <li v-if='tagstype.length > 0' v-for='(it,index) in list.deliveryGroups[0].text' :key='index' class="tag-ltmes">
                 <span v-for='(item) in tagstype[0].values' :key='item.key' v-if='it == item.key'>{{item.text}}</span>
               </li>
             </ul>
@@ -222,7 +228,8 @@
                     <div>上映日期：{{it.openTime}}</div>
                   </dd>
                   <dt class='dts'>《{{it.name}}》</dt>
-                  <dt><span v-for='(item , index) in it.type' :key='index'>{{item}} </span></dt>
+                  <!-- <dt><span v-for='(item , index) in it.type' :key='index'>{{item}} </span></dt> -->
+                  <dt class='dts'>{{it.type.join(' / ')}}</dt>
                 </dl>
               </Col>
             </Col>
@@ -248,9 +255,12 @@
         </Col>
       </Row>
     </Row>
-    <div class="report-button">
+    <div v-if='!this.list.id' class="report-button">
       <Button type="primary" @click="edit" >确认投放方案</Button>
       <Button type="default" @click="caoEdit">存为草稿</Button>
+    </div>
+    <div v-if='this.list.id' class="report-button">
+      <Button type="primary" @click="okEdit" >确认修改方案</Button>
     </div>
     <!-- 确认生成 -->
     <DlgDetail v-if="addOrUpdateVisible" ref="addOrUpdate" />
@@ -258,7 +268,7 @@
     <!-- <dlgCinema v-model="cinema" v-if="cinema.visible"  /> -->
     <!-- <CinemaDlg v-model="cinemaShow" :loading="cinemaLoading" :total="dlgCinema.length"
       :list="dlgCinema"/> -->
-      <CinemaDlgByStats v-model="cinemaShow" :stats="list.throwInStats"/>
+      <CinemaDlgByStats v-model="cinemaShow" :stats="abc"/>
 
   </div>
 </template>
@@ -272,7 +282,7 @@ import CityMap from '@/components/cityMap'
 import { toMap } from '@/fn/array'
 import moment from 'moment'
 import jsxReactToVue from '@/util/jsxReactToVue'
-import { queryList , addplan , abcount , pricount , tuijian , TcinemaList , video } from '@/api/planput'
+import { queryList , addplan , editplan , abcount , pricount , tuijian , TcinemaList , video } from '@/api/planput'
 import { cinemaList } from '@/api/popPlan'
 import echarts from 'echarts' // 引入echarts
 import { warning , success, toast , info } from '@/ui/modal'
@@ -283,41 +293,41 @@ import { CinemaDlgByStats } from '../plan/components/cinemaDlg'
 
 const timeFormat = 'YYYY-MM-DD'
 
-const mockMap = [
-  {
-    name: '2019款全新奔驰G级影院广告－春节档',
-    client: '奔驰',
-    time: '2019-2-4 ～2019-2-10',
-    longTime : '7',
-    data: '春节档',
-    man : '400,000',
-    ceil: '4,000,000.00',
-    sex: '男',
-    id: '1'
-  },
-  {
-    name: '“我爱筱面”美食节6月推广',
-    client: '西贝餐饮',
-    time: '2019-6-1 ～2019-6-10',
-    longTime : '10',
-    data: '无',
-    man : '400,000',
-    ceil: '4,000,000.00',
-    sex: '女',
-    id: '2'
-  },
-  {
-    name: 'DIOR 新品红管唇釉推广',
-    client: '迪奥',
-    time: '2019-2-4 ～2019-2-10',
-    longTime : '7',
-    data: '无',
-    man : '400,000',
-    ceil: '4,000,000.00',
-    sex: '男',
-    id: '3'
-  }
-]
+// const mockMap = [
+//   {
+//     name: '2019款全新奔驰G级影院广告－春节档',
+//     client: '奔驰',
+//     time: '2019-2-4 ～2019-2-10',
+//     longTime : '7',
+//     data: '春节档',
+//     man : '400,000',
+//     ceil: '4,000,000.00',
+//     sex: '男',
+//     id: '1'
+//   },
+//   {
+//     name: '“我爱筱面”美食节6月推广',
+//     client: '西贝餐饮',
+//     time: '2019-6-1 ～2019-6-10',
+//     longTime : '10',
+//     data: '无',
+//     man : '400,000',
+//     ceil: '4,000,000.00',
+//     sex: '女',
+//     id: '2'
+//   },
+//   {
+//     name: 'DIOR 新品红管唇釉推广',
+//     client: '迪奥',
+//     time: '2019-2-4 ～2019-2-10',
+//     longTime : '7',
+//     data: '无',
+//     man : '400,000',
+//     ceil: '4,000,000.00',
+//     sex: '男',
+//     id: '3'
+//   }
+// ]
 
 @Component ({
   components: {
@@ -399,7 +409,7 @@ export default class Main extends ViewBase {
   dlgCinema: any = []
 
 
-  abc: any = []
+  abc: any = {}
 
   get cityMapNames() {
     const { provinceList, cityLevelList } = (this.list.throwInStats || {}) as Stats
@@ -489,12 +499,12 @@ export default class Main extends ViewBase {
       ]
   }
 
-  get forMat() {
-    const corp: any = ((this.$route.params as any).corp) || 0
-    return mockMap.filter((it: any) => {
-      return it.id == corp
-    })[0]
-  }
+  // get forMat() {
+    // const corp: any = ((this.$route.params as any).corp) || 0
+    // return mockMap.filter((it: any) => {
+    //   return it.id == corp
+    // })[0]
+  // }
   // 查看影院
   viewCinema() {
     this.cinemaShow = true
@@ -569,6 +579,72 @@ export default class Main extends ViewBase {
     try {
       const res = await addplan(this.datafroms)
       toast('添加成功')
+      this.$router.push({name: 'pop-planlist'})
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async okEdit() {
+    this.dataFrom.status = 2
+
+    if (this.list.directionType == 1) {
+      this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
+      this.dataFrom.deliveryMovies = this.cinemaIdArray.map((it: any) => it.id)
+      if (this.list.deliveryGroups[0].text.length != 0) {
+        const one = (this.list.deliveryGroups[0].text || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push( {
+            tagTypeCode: this.list.deliveryGroups[0].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (this.list.deliveryGroups[0].text.length != 0) {
+        const two = (this.list.deliveryGroups[1].text || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push ({
+            tagTypeCode: this.list.deliveryGroups[1].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (this.list.deliveryGroups[0].text.length != 0) {
+        const three = (this.list.deliveryGroups[2].text || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push ({
+            tagTypeCode: this.list.deliveryGroups[2].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (
+        this.list.deliveryGroups[0].text.length == 0 &&
+        this.list.deliveryGroups[0].text.length == 0 &&
+        this.list.deliveryGroups[0].text.length == 0) {
+        this.dataFrom.deliveryGroups = (this.list.deliveryGroups || []).map((it: any) => {
+          return {
+            tagTypeCode: it.tagTypeCode,
+            text: 'ALL'
+          }
+        })
+      }
+    }
+    if (this.list.directionType == 2) {
+      const one = (this.list.tagTypeCode || []).map((it: any) => {
+        this.dataFrom.deliveryGroups.push( {
+          tagTypeCode: 'DISTRICT_AREA',
+          text: it
+        })
+      })
+      if (
+        this.list.tagTypeCode.length == 0) {
+          this.dataFrom.deliveryGroups.push ({
+            tagTypeCode: 'DISTRICT_AREA',
+            text: 'ALL'
+          })
+      }
+    }
+    try {
+      const res = await editplan(this.list.id , this.datafroms)
+      toast('编辑成功')
       this.$router.push({name: 'pop-planlist'})
     } catch (ex) {
       this.handleError(ex)
@@ -660,6 +736,7 @@ export default class Main extends ViewBase {
       // 获取状态列表
       this.typeList = data.typeList
       if (this.list.directionType == 1) {
+        this.abc = this.list.throwInStats
         this.tagstype = (data.tags || []).filter((it: any) => {
           if (it.code == this.list.deliveryGroups[0].tagTypeCode) {
             return {

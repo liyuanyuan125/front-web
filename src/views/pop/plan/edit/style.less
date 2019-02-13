@@ -13,9 +13,9 @@
     border-left: 0;
     user-select: none;
   }
-  .form-item-type {
-    margin-top: 35px;
-  }
+  // .form-item-type {
+  //   margin-top: 35px;
+  // }
   .form-item-type-sort {
     margin-top: 15px;
   }
@@ -119,58 +119,7 @@
     .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
       opacity: 0;
     }
-    .select-adv-type {
-      font-size: 0;
-      span {
-        display: inline-block;
-        width: 155px;
-        height: 50px;
-        line-height: 48px;
-        text-align: center;
-        color: #444;
-        margin-top: -3px;
-        font-size: 14px;
-        cursor: pointer;
-        background: #f7f7f7;
-        .put-icon1 {
-          display: inline-block;
-          width: 20px;
-          height: 18px;
-          margin-bottom: -5px;
-          background: url('./assets/icon1.png') no-repeat;
-        }
-        .put-icon2 {
-          display: inline-block;
-          width: 20px;
-          height: 18px;
-          margin-bottom: -5px;
-          background: url('./assets/icon2.png') no-repeat;
-        }
-      }
-      img {
-        vertical-align: middle;
-        margin-right: 5px;
-      }
-      .put-active {
-        line-height: 48px;
-        background: #fb8135;
-        color: #fff;
-        .put-icon1 {
-          display: inline-block;
-          width: 20px;
-          height: 18px;
-          margin-bottom: -5px;
-          background: url('./assets/iconcheck1.png') no-repeat;
-        }
-        .put-icon2 {
-          display: inline-block;
-          width: 20px;
-          height: 18px;
-          margin-bottom: -5px;
-          background: url('./assets/iconcheck2.png') no-repeat;
-        }
-      }
-    }
+    
     /deep/ .checkd .ivu-select-selection {
       width: 300px;
     }
@@ -194,11 +143,7 @@
         height: 30px;
       }
     }
-    /deep/ .ivu-select-input {
-      height: 40px;
-      font-size: 14px;
-      line-height: 40px;
-    }
+    
     .put-tab {
       font-size: 14px;
       position: relative;
@@ -223,7 +168,7 @@
         position: relative;
         &.active {
           color: @c-button;
-          background: url('./assets/active.png') no-repeat 1px center;
+          background: url('../assets/active.png') no-repeat 1px center;
           background-size: 11px;
         }
         &.active::before {
@@ -255,7 +200,7 @@
         width: 200px;
         &.adv-active {
           font-size: 17px;
-          background: url('./assets/arrow.png') no-repeat left center;
+          background: url('../assets/arrow.png') no-repeat left center;
           background-size: 20px;
           color: @c-button;
         }
@@ -286,7 +231,7 @@
     right: 10px;
     width: 70px;
     height: 70px;
-    background: url('./assets/crown.png') no-repeat;
+    background: url('../assets/crown.png') no-repeat;
   }
   /deep/ .custom-monery {
     .ivu-input-wrapper {
@@ -320,28 +265,6 @@
 
   .form-item-first:first-child {
     margin-bottom: 20px;
-  }
-
-  .check-item {
-    position: relative;
-    top: 3px;
-    min-width: 80px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 2px;
-    text-align: center;
-    border: 1px solid #d2d2d2;
-    margin-right: 15px;
-    font-size: 14px;
-    user-select: none;
-    /deep/ .ivu-checkbox {
-      display: none;
-    }
-    /deep/&.ivu-checkbox-wrapper-checked {
-      color: #fff;
-      border-color: @c-button;
-      background-color: @c-button;
-    }
   }
   .pb3 {
     padding-bottom: 3px;
@@ -450,4 +373,120 @@
         background-color: darken(@c-button, 10%) !important;
       }
     }
+  }
+
+  // 全局
+
+  /deep/ .ivu-select-input {
+    height: 40px;
+    font-size: 14px;
+    line-height: 40px;
+  }
+  .check-item {
+    position: relative;
+    top: 3px;
+    min-width: 80px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 2px;
+    text-align: center;
+    border: 1px solid #d2d2d2;
+    margin-right: 15px;
+    font-size: 14px;
+    user-select: none;
+    /deep/ .ivu-checkbox {
+      display: none;
+    }
+    /deep/&.ivu-checkbox-wrapper-checked {
+      color: #fff;
+      border-color: @c-button;
+      background-color: @c-button;
+    }
+  }
+  .select-adv-type {
+    span {
+      display: inline-block;
+      width: 160px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      color: #444;
+      font-size: 14px;
+      border-radius: 2px;
+      cursor: pointer;
+      background: #f7f7f7;
+      .put-icon1 {
+        display: inline-block;
+        width: 20px;
+        height: 18px;
+        margin-bottom: -5px;
+        background: url('../assets/icon1.png') no-repeat;
+      }
+      .put-icon2 {
+        display: inline-block;
+        width: 20px;
+        height: 18px;
+        margin-bottom: -5px;
+        background: url('../assets/icon2.png') no-repeat;
+      }
+    }
+    img {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+    .put-active {
+      line-height: 40px;
+      background: #fb8135;
+      color: #fff;
+      .put-icon1 {
+        display: inline-block;
+        width: 20px;
+        height: 18px;
+        margin-bottom: -5px;
+        background: url('../assets/iconcheck1.png') no-repeat;
+      }
+      .put-icon2 {
+        display: inline-block;
+        width: 20px;
+        height: 18px;
+        margin-bottom: -5px;
+        background: url('../assets/iconcheck2.png') no-repeat;
+      }
+    }
+  }
+  .edit-item-text {
+    display: inline-block;
+    width: 350px;
+    line-height: 40px;
+  }
+.ivu-form-item {
+    padding-left: 30px;
+    color: @c-text;
+    /deep/ .ivu-select-selection,
+    .ivu-input-wrapper input {
+      width: 350px;
+    }
+  }
+  /deep/ .ivu-form-item-content .ivu-input-wrapper {
+    width: 350px;
+    input {
+      width: 350px;
+    }
+    .ivu-input-icon {
+      height: 40px;
+      line-height: 40px;
+    }
+  }
+  .edit-adv-type {
+    width: 160px;
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    border-radius: 2px;
+    text-align: center;
+    padding-left: 21px;
+    font-size: 14px;
+    background: @c-button url('../assets/icon3.png') no-repeat 40px center;
+    background-size: 16px;
   }

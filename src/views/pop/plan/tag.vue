@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 
 @Component
@@ -19,6 +19,11 @@ export default class Main extends ViewBase {
     active(id: any) {
       this.invalue = id
       this.$emit('input', this.invalue)
+    }
+
+    @Watch('value')
+    watchvalue(val: any) {
+      this.invalue = val
     }
 }
 </script>
