@@ -110,7 +110,7 @@ export default [
 
   // 推广管理 - 广告计划 - 创建广告计划
   {
-    path: '/pop/plan/:id',
+    path: '/pop/plan/:id?',
     name: 'pop-plan',
     component: () => import('./views/pop/plan/index.vue'),
   },
