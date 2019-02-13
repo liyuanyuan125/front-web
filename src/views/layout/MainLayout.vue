@@ -323,7 +323,7 @@ export default class App extends ViewBase {
 .site-content {
   position: relative;
   padding: 10px;
-  overflow-x: auto !important;
+  // overflow-x: auto !important;
 }
 .ivu-menu {
   z-index: 99;
