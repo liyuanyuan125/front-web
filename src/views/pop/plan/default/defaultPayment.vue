@@ -76,9 +76,13 @@
             <label>档期</label>
             {{items.calendarName}}
           </p>
-          <p>
-            <label>冻结金额/￥</label>
-            {{formatNumber(items.freezeAmount)}}
+          <p v-if="status == 1 || status == 2 || status == 9 || status == 10">
+            <label>预估冻结金额/￥</label>
+            {{formatNumber(items.estimateCostAmount)}}
+          </p>
+          <p v-else>
+             <label>冻结金额/￥</label>
+             {{formatNumber(items.freezeAmount)}}
           </p>
         </Col>
         <Col :span="12">
@@ -163,14 +167,14 @@
             <label>投放区域（{{launchList.categorizedByAreaCode.length}}个）</label>
             <span v-for="item in launchList.categorizedByAreaCode" :key="item.code">
               {{item.name}}
-              <i>/</i>
+              <i class="dividing-line">&nbsp;&nbsp;|&nbsp;&nbsp;</i>
             </span>
           </p>
           <p v-if="launchList.categorizedByProvinceId" class="division-line">
             <label>投放省份（{{launchList.categorizedByProvinceId.length || 0}}个）</label>
             <span v-for="item in launchList.categorizedByProvinceId" :key="item.id">
               {{item.name}}
-              <i>/</i>
+              <i class="dividing-line">&nbsp;&nbsp;|&nbsp;&nbsp;</i>
             </span>
           </p>
           <p v-if="launchList.categorizedByCityId" class="flex-box">
@@ -180,12 +184,12 @@
                 <i>{{item.name}}（{{item.infos.length}}个）</i>
                 <span v-for="(it, index) in item.infos" :key="index">
                   {{it.name}}
-                  <i>/</i>
+                  <b class="dividing-line">&nbsp;&nbsp;|&nbsp;&nbsp;</b>
                 </span>
               </p>
             </em>
           </p>
-          <p v-if="launchList.categorizedByBoxLevelCode">
+          <p v-if="launchList.categorizedByBoxLevelCode" class="flex-box">
             <label>
               投放影院（{{launchList.categorizedByBoxLevelCode.length || 0}}个）
               <br>
@@ -241,7 +245,7 @@
       </div>
       <div class="flex-box film-list">
         <label>影片</label>
-        <div class="flex-box">
+        <div class="flex-box flex-wrap">
           <div class="item" v-for="(item, index) in defaultData.movieList" :key="index">
             <div class="film-img-item">
               <img :src="item.mainPicUrl" width="180" height="240">
@@ -388,10 +392,29 @@ export default class PlanDefault extends ViewBase {
       // 获取城市个数 categorizedByCityGradeCode
       if (this.launchList) {
         let account = 0
-        this.launchList.categorizedByCityGradeCode.map((item: any) => {
+         this.launchList.categorizedByCityGradeCode.map((item: any) => {
+          if (item.code == 'new-first-tier') {
+            item.accountNum = 0
+          } else if (item.code == 'first-tier') {
+             item.accountNum = 1
+          } else if (item.code == 'second-tier') {
+            item.accountNum = 2
+          } else if (item.code == 'third-tier') {
+            item.accountNum = 3
+          } else if (item.code == 'four-tier') {
+            item.accountNum = 4
+          } else if (item.code == 'five-tier') {
+            item.accountNum = 5
+          }
           account += item.infos.length
         })
         this.account = account
+        // 重新定义投放城市排序
+        let sort: any = []
+        sort = this.launchList.categorizedByCityGradeCode.sort((a: any, b: any) => {
+          return a.accountNum - b.accountNum
+        })
+        this.launchList.categorizedByCityGradeCode = sort
       }
     } catch (ex) {
       this.handleError(ex.msg)
@@ -497,8 +520,17 @@ export default class PlanDefault extends ViewBase {
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.dividing-line {
+  color: #d8d8d8;
+}
 .division-line span {
   &:last-child i {
+    display: none;
+  }
+  &:last-child b {
     display: none;
   }
 }
@@ -700,6 +732,7 @@ export default class PlanDefault extends ViewBase {
   .item {
     background: #f9f9f9;
     margin-right: 20px;
+    margin-bottom: 20px;
     text-align: center;
     position: relative;
     .film-img-item {
