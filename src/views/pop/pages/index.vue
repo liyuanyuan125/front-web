@@ -186,9 +186,12 @@
           <Col :span="4"><h4 class="select-people">观影人群画像</h4></Col>
           <Col :span="20">
            <ul class="tag" style="left:2px">
-              <li class="tag-ltme" style='margin-left:30px;'>
-                <img v-if='list.deliveryGroups[2].text[0] == "man"' style="vertical-align: middle;" src="./assets/man.png" alt="">
-                <img v-if='list.deliveryGroups[2].text[0] == "woman"' style="vertical-align: middle;" src="./assets/woman.png" alt="">
+              <li v-if='list.deliveryGroups[2].text.length > 0' v-for='(it,index) in list.deliveryGroups[2].text' class="tag-ltme" style='margin-left:30px;'>
+                <img v-if='list.deliveryGroups[2].text.length > 0 && list.deliveryGroups[2].text[0] == "man"' style="vertical-align: middle;" src="./assets/man.png" alt="">
+                <img v-if='list.deliveryGroups[2].text.length > 0 && list.deliveryGroups[2].text[0] == "woman"' style="vertical-align: middle;" src="./assets/woman.png" alt="">
+                <span v-if='list.deliveryGroups[2].text.length == 0 && list.deliveryGroups[1].text.length == 0 && list.deliveryGroups[0].text.length == 0'>不限</span>
+              </li>
+              <li v-if='list.deliveryGroups[2].text.length == 0 && list.deliveryGroups[1].text.length == 0 && list.deliveryGroups[0].text.length == 0'  class="tag-ltme" style='margin-left:30px;'>
                 <span v-if='list.deliveryGroups[2].text.length == 0 && list.deliveryGroups[1].text.length == 0 && list.deliveryGroups[0].text.length == 0'>不限</span>
               </li>
               <!-- <li v-for='(item) in tagsyear[0].values' :key='item.key' v-if=' tagsyear.length > 0 && list.deliveryGroups[1].text[0] == item.key' class="tag-ltmes">
