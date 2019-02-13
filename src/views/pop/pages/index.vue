@@ -259,6 +259,9 @@
       <Button type="primary" @click="edit" >确认投放方案</Button>
       <Button type="default" @click="caoEdit">存为草稿</Button>
     </div>
+    <!-- <div class="report-button">
+      <Button type="primary" @click="okEdit" >确认修改方案</Button>
+    </div> -->
     <!-- 确认生成 -->
     <DlgDetail v-if="addOrUpdateVisible" ref="addOrUpdate" />
     <!-- 查看已选影院 -->
@@ -518,6 +521,72 @@ export default class Main extends ViewBase {
   }
   async caoEdit() {
     this.dataFrom.status = 1
+
+    if (this.list.directionType == 1) {
+      this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
+      this.dataFrom.deliveryMovies = this.cinemaIdArray.map((it: any) => it.id)
+      if (this.list.deliveryGroups[0].text.length != 0) {
+        const one = (this.list.deliveryGroups[0].text || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push( {
+            tagTypeCode: this.list.deliveryGroups[0].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (this.list.deliveryGroups[0].text.length != 0) {
+        const two = (this.list.deliveryGroups[1].text || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push ({
+            tagTypeCode: this.list.deliveryGroups[1].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (this.list.deliveryGroups[0].text.length != 0) {
+        const three = (this.list.deliveryGroups[2].text || []).map((it: any) => {
+          this.dataFrom.deliveryGroups.push ({
+            tagTypeCode: this.list.deliveryGroups[2].tagTypeCode,
+            text: it
+          })
+        })
+      }
+      if (
+        this.list.deliveryGroups[0].text.length == 0 &&
+        this.list.deliveryGroups[0].text.length == 0 &&
+        this.list.deliveryGroups[0].text.length == 0) {
+        this.dataFrom.deliveryGroups = (this.list.deliveryGroups || []).map((it: any) => {
+          return {
+            tagTypeCode: it.tagTypeCode,
+            text: 'ALL'
+          }
+        })
+      }
+    }
+    if (this.list.directionType == 2) {
+      const one = (this.list.tagTypeCode || []).map((it: any) => {
+        this.dataFrom.deliveryGroups.push( {
+          tagTypeCode: 'DISTRICT_AREA',
+          text: it
+        })
+      })
+      if (
+        this.list.tagTypeCode.length == 0) {
+          this.dataFrom.deliveryGroups.push ({
+            tagTypeCode: 'DISTRICT_AREA',
+            text: 'ALL'
+          })
+      }
+    }
+    try {
+      const res = await addplan(this.datafroms)
+      toast('添加成功')
+      this.$router.push({name: 'pop-planlist'})
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async okEdit() {
+    this.dataFrom.status = 2
 
     if (this.list.directionType == 1) {
       this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
