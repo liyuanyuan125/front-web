@@ -172,9 +172,9 @@
           </div>
           <!-- <CitySelect v-else :value="[1,2,3,4,5,6]" type="beijing" readonly class="city-map"/> -->
         </Col>
-        <Col :span="12">
+        <Col :span="12" style='margin-top: 70px;'>
           <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
-          <Button  type="primary" class="mt30" @click="viewCinema" style="float: right; height: 40px; margin-right: 10px; margin-bottom: 10px;">查看全部影院</Button>
+          <Button  type="primary" class="mt30 bp" @click="viewCinema" style="position: absolute; height: 40px; right: 10px; top: 350px;">查看全部影院</Button>
         </Col>
       </Row>
 
