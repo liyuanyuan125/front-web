@@ -423,14 +423,20 @@ export default class Main extends ViewBase {
       if (item.directionType == 2) {
         this.putType = 2
         this.singleObject = movieList[0]
-        this.form.tagTypeCode = item.deliveryGroups.map((it: any) => it.text)
+        if (item.deliveryGroups[0].text == 'ALL') {
+          this.form.tagTypeCode = [0]
+        } else {
+          this.form.tagTypeCode = item.deliveryGroups.map((it: any) => it.text)
+        }
       } else {
         this.form.throwInAreaType = item.throwInAreaType
         ; (this.form.ids as any) = item.throwInAreaIds.split(',')
-        this.cinema.MOVIE_TYPE = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'MOVIE_TYPE')
-        .map((items: any) => items.text)
-        this.cinema.PLAN_GROUP_AGE = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'PLAN_GROUP_AGE')[0].text
-        this.cinema.PLAN_GROUP_SEX = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'PLAN_GROUP_SEX')[0].text
+        const sex: any = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'PLAN_GROUP_SEX')
+        const age: any = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'PLAN_GROUP_AGE')
+        const types: any = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'MOVIE_TYPE')
+        this.cinema.MOVIE_TYPE = types.length > 0 ? types.map((items: any) => items.text) : [0]
+        this.cinema.PLAN_GROUP_AGE = age.length > 0 ? age[0].text : 0
+        this.cinema.PLAN_GROUP_SEX = sex.length > 0 ? sex[0].text : 0
       }
       this.form.budgetCode = item.budgetCode
       if (item.budgetCode == '00-00') {
@@ -682,7 +688,7 @@ export default class Main extends ViewBase {
     }
     const index: any = Math.floor(Math.random() * 100 + 1)
     sessionStorage.setItem(`${index}`, JSON.stringify(addObject))
-    this.$router.push({ name: 'pop-plan-scheme', params: { id: index}})
+    this.$router.push({ name: 'pop-plan-scheme', params: { id: this.$route.params.id}})
   }
 
   onThrowInStatsChange(stats: Stats) {
@@ -712,12 +718,23 @@ export default class Main extends ViewBase {
   @Watch('form.tagTypeCode', { deep: true })
   watchformtagTypeCode(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.form.tagTypeCode = newValue
-    })
-    if (value.length == 0) {
-      this.form.tagTypeCode = [0]
+    if (value.length > 3) {
+      info('地域偏好最多选3项')
+      this.form.tagTypeCode = value.slice(0, 3)
+    } else {
+      keepExclusion(value, oldValue, 0, newValue => {
+        this.form.tagTypeCode = newValue
+      })
+      if (value.length == 0) {
+        this.form.tagTypeCode = [0]
+      }
     }
+    // keepExclusion(value, oldValue, 0, newValue => {
+    //   this.form.tagTypeCode = newValue
+    // })
+    // if (value.length == 0) {
+    //   this.form.tagTypeCode = [0]
+    // }
   }
 
   @Watch('form.filmType', { deep: true })

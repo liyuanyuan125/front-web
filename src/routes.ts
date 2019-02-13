@@ -134,7 +134,7 @@ export default [
   },
   // 推广管理 - 广告计划 - 编辑
   {
-    path: '/pop/plan-edit/:id',
+    path: '/pop/plan-edit/:id?',
     name: 'pop-plan-edit',
     component: () => import('./views/pop/plan/edit/index.vue')
   },

@@ -1,7 +1,7 @@
 <template>
   <div class="page">
       <div @click="active(item.label)" :class="['tag', invalue == item.label ? 'activeClass' : '']" v-for="item in tagMess" :key="item.label">
-        {{value}}{{item.name}}
+        {{item.name}}
       </div>
   </div>
 </template>
