@@ -31,8 +31,32 @@ const allSiderMenuList: SiderMenuItem[] = [
         systems: ['ads'],
       },
       {
-        name: '',
+        name: 'pop-film',
         label: '广告片',
+        systems: ['ads'],
+      },
+    ]
+  },
+
+  {
+    name: 'order',
+    label: '广告单管理',
+    systems: ['resource'],
+    subList: [
+      {
+        name: 'order-dispatch',
+        label: '广告单',
+        systems: ['resource'],
+      },
+      {
+        name: 'order-execute',
+        label: '执行单',
+        systems: ['resource'],
+      },
+      {
+        name: 'order-dcp',
+        label: 'DCP包',
+        systems: ['resource'],
       },
     ]
   },
@@ -57,18 +81,6 @@ const allSiderMenuList: SiderMenuItem[] = [
       {
         name: '',
         label: '客户列表',
-      },
-    ]
-  },
-
-  {
-    name: 'order',
-    label: '广告单管理',
-    systems: ['resource'],
-    subList: [
-      {
-        name: '',
-        label: '广告单列表',
       },
     ]
   },

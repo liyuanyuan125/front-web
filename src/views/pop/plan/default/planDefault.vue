@@ -117,18 +117,13 @@
       <div v-if="status == 9">
         <p class="flex-box division-line">
           <label>地域偏好</label>
-          <span v-for="(item, index) in areaList" :key="index">
+          <span v-if="areaList && areaList.length == 0">
+            不限
+          </span>
+          <span v-else v-for="(item, index) in areaList" :key="index">
             {{item}}
             <i class="dividing-line">&nbsp;&nbsp;|&nbsp;&nbsp;</i>
           </span>
-        </p>
-        <!-- 影片 -->
-        <p class="flex-box division-line">
-          <label>影片</label>
-          <!-- <span v-for="(item, index) in areaList" :key="index">
-            {{item}}
-            <i class="dividing-line">&nbsp;&nbsp;|&nbsp;&nbsp;</i>
-          </span> -->
         </p>
       </div>
       <div v-else>
@@ -185,7 +180,7 @@
       <Button
         type="primary"
         class="button-ok edit-btn"
-        @click="$router.push({name: 'pop-plan-edit'})"
+        @click="toEdit"
       >编辑</Button>
       <Button type="primary" class="button-ok" @click="submitExamine">提交审核</Button>
     </div>
@@ -193,7 +188,7 @@
       <Button
         type="primary"
         class="button-ok edit-btn"
-        @click="$router.push({name: 'pop-plan-edit'})"
+        @click="toEdit"
       >编辑</Button>
     </div>
     <CinemaList v-model="cinema" v-if="cinema.visible"/>
@@ -339,6 +334,9 @@ export default class PlanDefault extends ViewBase {
       }
     })
     return text[0].text
+  }
+  toEdit() {
+    this.$router.push({name: 'pop-plan', params: {id: this.items.id}})
   }
   billingModeList(id: any) {
     const list = this.defaultData.billingModeList
