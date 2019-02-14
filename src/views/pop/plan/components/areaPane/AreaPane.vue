@@ -87,10 +87,10 @@
         <CheckboxPane v-model="model[4]" :list="cinemaList" value-key="id"
           class="checkbox-pane" no-all v-if="!cinemaLoading">
           <span slot="item" slot-scope="{ item: { boxLevelCode, boxLevelName,
-            officialName, provinceName, cityName } }" class="name-sub">
+            shortName, provinceName, cityName } }" class="name-sub">
             <i v-if="boxLevelCode" class="box-level-flag"
               :class="`box-level-flag-${boxLevelCode.toLowerCase()}`">{{boxLevelName}}</i>
-            <em>{{officialName}}</em>
+            <em>{{shortName}}</em>
             <sub>{{provinceName}}</sub>
             <sub>{{cityName}}</sub>
           </span>
