@@ -14,23 +14,23 @@
         {{item.text}}</span>
       </FormItem>
 
-      <div class="clear-f">
+      <div class="clear-f sel-header">
         <FormItem class="float-left" label="广告计划名称" prop="name">
-          <Input v-model="form.name" placeholder="请输入广告计划名称"></Input>
+          <Input class="input-media" v-model="form.name" placeholder="请输入广告计划名称"></Input>
         </FormItem>
         <FormItem style="margin-left:0px" class="float-right pr30" label="关联广告片" prop="videoId">
-          <Select v-model="form.videoId" filterable clearable>
+          <Select class="input-media" v-model="form.videoId" filterable clearable>
             <Option v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
         </FormItem>
       </div>
 
       <div class="clear-f" v-if="form.videoId">
-        <FormItem class="float-left pr30" label="广告片规格">
-          <div class="xad"><span>{{specification}}</span></div>
+        <FormItem class="float-left" label="广告片规格">
+          <div class="xad input-media"><span>{{specification}}</span></div>
         </FormItem>
-        <FormItem class="float-right pr30" label="选择客户">
-          <div class="xad"><span>{{customerName}}</span></div>
+        <FormItem class="float-right pr30" style="margin-left:0px" label="选择客户">
+          <div class="xad input-media"><span>{{customerName}}</span></div>
         </FormItem>
       </div>
 
@@ -433,9 +433,9 @@ export default class Main extends ViewBase {
         const sex: any = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'PLAN_GROUP_SEX')
         const age: any = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'PLAN_GROUP_AGE')
         const types: any = item.deliveryGroups.filter((it: any) => it.tagTypeCode == 'MOVIE_TYPE')
-        this.cinema.MOVIE_TYPE = types.length > 0 ? types.map((items: any) => items.text) : [0]
-        this.cinema.PLAN_GROUP_AGE = age.length > 0 ? age[0].text : 0
-        this.cinema.PLAN_GROUP_SEX = sex.length > 0 ? sex[0].text : 0
+        this.cinema.MOVIE_TYPE = types[0].text != 'ALL' ? types.map((items: any) => items.text) : [0]
+        this.cinema.PLAN_GROUP_AGE = age[0].text != 'ALL' ? age[0].text : 0
+        this.cinema.PLAN_GROUP_SEX = sex[0].text != 'ALL' ? sex[0].text : 0
       }
       this.form.budgetCode = item.budgetCode
       if (item.budgetCode == '00-00') {

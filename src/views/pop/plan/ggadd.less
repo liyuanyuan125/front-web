@@ -436,7 +436,15 @@
   .film-name {
     margin-top: 10px;
   }
-  
+  @media screen and (min-width: 960px) and  (max-width: 1340px) {
+    .edit-input .ivu-form-item-content .ivu-input-wrapper {
+      width: 360px;
+    }
+    .edit-input /deep/ .ivu-form-item-content .ivu-select-selection {
+      width: 360px;
+      margin-right: 40px;
+    }
+  }
   .form-item-film-name {
     /deep/ .ivu-input {
       border-color: @c-button;
