@@ -2,7 +2,7 @@
   <div class="home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">广告计划</span>
-      <em class="addUser" @click="$router.push({name: 'pop-plan'})">
+      <em class="addUser" @click="$router.push({name: 'pop-planlist-add'})">
         <Icon type="ios-add" size="27"/>新建广告计划
       </em>
     </h3>
@@ -59,9 +59,6 @@
       <template slot="specification" slot-scope="{row, index}">
         <span>{{row.specification}}s</span>
       </template>
-      <template slot="beginDate" slot-scope="{row, index}">
-        <span>{{formatYell(row.beginDate)}}-{{formatYell(row.endDate)}}</span>
-      </template>
       <template slot="operation" slot-scope="{row, index}">
         <!-- 草稿 待审核 -->
         <div v-if="row.status == 1 || row.status == 2" class="operation-btn">
@@ -103,6 +100,7 @@
     </h4>
     <Page
       :total="totalCount"
+      v-if="totalCount>0"
       class="btnCenter plan-pages"
       :current="pageList.pageIndex"
       :page-size="pageList.pageSize"
@@ -144,7 +142,7 @@ export default class Plan extends ViewBase {
     item: ''
   }
 
-  totalCount = 0
+  totalCount = 2
   data: any = []
   selectIds = []
   checkboxAll = false
@@ -180,8 +178,8 @@ export default class Plan extends ViewBase {
     },
     { title: '广告计划状态', slot: 'status', minWidth: 120 },
     { title: '广告片规格', slot: 'specification', minWidth: 120 },
-    { title: '广告片名称', key: 'videoName', minWidth: 150 },
-    { title: '投放排期', slot: 'beginDate', minWidth: 210 },
+    { title: '广告片名称/ID', key: 'videoName', minWidth: 150 },
+    // { title: '投放排期', slot: 'beginDate', minWidth: 210 },
     // { title: '投放周期', key: 'cycle', minWidth: 130 },
     // { title: '冻结金额(元）', slot: 'freezeAmount', width: 150 },
     // { title: '结算状态', key: 'settlementStatus', width: 150 },
@@ -232,7 +230,7 @@ export default class Plan extends ViewBase {
     }
   }
   planEdit(id: any) {
-    this.$router.push({name: 'pop-plan', params: {id}})
+    this.$router.push({name: 'pop-planlist-add', params: {id}})
     // this.$router.push({name: 'pop-plan-edit', params: {id}})
   }
   async planCancel(val: any, id: any) {
@@ -315,7 +313,18 @@ export default class Plan extends ViewBase {
     line-height: 22px;
   }
 }
-
+.checkAll {
+  cursor: pointer;
+  margin: 10px 20px 0;
+  .colBg;
+  padding: 0 30px 0 18px;
+  span:last-child {
+    color: @c-link;
+  }
+}
+.plan-pages {
+  margin: 30px 0 40px;
+}
 </style>
 
 
