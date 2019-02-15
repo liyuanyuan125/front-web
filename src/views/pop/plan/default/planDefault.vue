@@ -340,6 +340,7 @@ export default class PlanDefault extends ViewBase {
   }
   async cancelPlan() {
     const id = this.$route.params.id
+    await confirm(`是否取消广告计划：${this.items.name}`, {title: '取消广告计划'})
     try {
       const { data } = await planCancel(id)
       this.$router.push({name: 'pop-planlist'})
