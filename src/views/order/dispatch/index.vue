@@ -14,7 +14,7 @@
               <p class="fince-list-sm">已接单数</p>
             </div>
             <div class='fince-list-big' style='background: #fff; border-top: 10px solid #fff;'>
-              <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.refuse></numAdd></span><span class='smas2'>以拒绝单数</span></div>
+              <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.refuse></numAdd></span><span class='smas2'>已拒绝单数</span></div>
               <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.faliure></numAdd></span><span class='smas2'>已失效单数</span></div>
             </div>
           </div>
@@ -74,8 +74,9 @@
             <Col span='8'>下单时间      {{it.createTime}}</Col>
             <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenue}}</span></Col>
             <Col span='6'>
-              <span class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
-              <span @click="editReject(it.id)" class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
+              <span v-if='it.status == 1' @click="editReject(it.id)" class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
+              <span v-if='it.status == 1' class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
+              <span v-if='it.status == 2' class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>查看执行单</span>
             </Col>
           </Row>
           <Row class='li-item'>
@@ -126,7 +127,7 @@
           </Row>
         </li>
       </ul>
-      <ul class='itemul' v-if='itemlist.length == 0'> 暂无订单</ul>
+      <ul class='itemul' style='padding-left: 28px;' v-if='itemlist.length == 0'> 暂无订单</ul>
       <Page
       :total="totalCount"
       v-if="totalCount>0"
@@ -373,7 +374,8 @@ export default class Main extends ViewBase {
         color: rgba(254, 129, 53, 1);
       }
       .button {
-        display: inline-block;
+        display: block;
+        float: right;
         border: 1px solid rgba(59, 152, 255, 1);
         width: 100px;
         height: 40px;
@@ -427,6 +429,7 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked::before {
   background: #3b98ff;
+  opacity: 1;
 }
 
 </style>

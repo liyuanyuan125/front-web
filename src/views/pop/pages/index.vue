@@ -953,6 +953,11 @@ export default class Main extends ViewBase {
               cinema.data.items[4],
               cinema.data.items[5])
           }
+        const a = (cinema.data.items || []).map((it: any) => {
+          return it.id
+        })
+        const resab = await abcount({ids: a.join(',') , type: this.dataFrom.type})
+        this.aboutcount = resab.data
       }
       // 获取预估覆盖场次
       // const resab = await abcount({ids: 5 , type: this.dataFrom.type})

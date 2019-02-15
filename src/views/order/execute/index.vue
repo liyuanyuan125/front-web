@@ -124,7 +124,9 @@
                 <Col v-if='it.planType == 1' span='12' class='img-order'><img src="./assets/标准单.png" alt=""><span>标准单</span></Col>
                 <Col v-if='it.planType == 2' span='12' class='img-order'><img src="./assets/加速单.png" alt=""><span>加速单</span></Col>
                 <Col v-if='it.planType == 3' span='12' class='img-order'><img src="./assets/优享单.png" alt=""><span>优享单</span></Col>
-                
+              </Row>
+              <Row>
+                <Progress v-if='it.status == 2' :percent="it.bili" status="active" />
               </Row>
             </Col>
           </Row>
@@ -209,7 +211,8 @@ export default class Main extends ViewBase {
           ...it,
           createTime: moment(it.createTime).format(timeFormat),
           beginDate: moment(it.beginDate).format(timeFormat),
-          endDate: moment(it.endDate).format(timeFormat)
+          endDate: moment(it.endDate).format(timeFormat),
+          bili: Math.floor(((new Date().getTime() - it.beginDate) / (it.endDate - it.beginDate)) * 100)
         }
       })
     } catch (ex) {
@@ -372,7 +375,7 @@ export default class Main extends ViewBase {
       }
     }
     .img-order {
-      line-height: 150px;
+      line-height: 110px;
       span {
         margin-left: 10px;
         font-size: 14px;
