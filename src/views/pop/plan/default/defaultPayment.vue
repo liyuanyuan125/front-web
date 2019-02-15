@@ -421,7 +421,7 @@ export default class PlanDefault extends ViewBase {
     }
   }
   toEdit() {
-    this.$router.push({name: 'pop-plan', params: {id: this.items.id}})
+    this.$router.push({name: 'pop-planlist-add', params: {id: this.items.id}})
   }
   async relevanceAdv(id: any) {
     this.relevanVis = {

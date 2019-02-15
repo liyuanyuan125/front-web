@@ -43,7 +43,7 @@
             </dl>
             <dl>
               <dd>广告片规格</dd>
-              <dt>{{list.specification}}s</dt>
+              <dt>{{list.length}}s</dt>
             </dl>
             <dl>
               <dd>广告片名称</dd>
@@ -249,7 +249,7 @@
         </Col>
         <Col :span="23" class="mt30" offset="1">
           <div class="flex">
-            <span>预估冻结金额 = 预估投放发费 = </span>
+            <span>预估冻结金额 = 预估投放花费 = </span>
             <h4 class="ceil">¥{{pricecount}}</h4>
           </div>
         </Col>
@@ -370,6 +370,7 @@ export default class Main extends ViewBase {
   pricecount: any = 0
   // 推荐影片
   tuifilm: any = []
+  tuifilms: any = []
   // yingyuan
   tcinemaList: any = []
 
@@ -460,7 +461,8 @@ export default class Main extends ViewBase {
       diqutype: this.diqutype,
       tagTypeCode: this.list.tagTypeCode,
       cinemaIdArray: this.cinemaIdArray,
-      throwInStats: this.list.throwInStats
+      throwInStats: this.list.throwInStats,
+      tuifilms: this.tuifilms // 默认类型1推荐影片
     }
   }
 
@@ -513,7 +515,11 @@ export default class Main extends ViewBase {
 
   // 确认生成
   edit() {
+    this.tuifilms = []
     this.addOrUpdateVisible = true
+    if (this.dataFrom.type == 1) {
+      this.cinemaIdArray = this.tuifilms
+    }
     // console.log(this.addlist)
     this.$nextTick(() => {
       (this.$refs.addOrUpdate as any).init(this.datafroms , this.addlist)
@@ -930,6 +936,20 @@ export default class Main extends ViewBase {
           openTime: moment(it.openTime).format(timeFormat)
         }
       })
+
+      // const tuifilms = await tuijian({
+      //      types: this.list.deliveryGroups[0].text == '' ? '' : (this.list.deliveryGroups[0].text).join(','),
+      //                 pageSize : 3
+      //                           })
+      // this.tuifilms = tuifilms.data.data.items
+      if (tui.data.data.items.length <= 5) {
+            this.tuifilms = tui.data.data.items
+          } else {
+            this.tuifilms.push(
+              tui.data.data.items[0],
+              tui.data.data.items[1],
+              tui.data.data.items[2])
+          }
 
       // 广告片
       const videoitem = await video(this.list.videoId)
