@@ -217,7 +217,7 @@ export default class Main extends ViewBase {
   normCinema: any = []
   singleCinema: any = []
 
-  advertisingName: any = []
+  advertisingName: any = ''
   // 选择档期的开始时间 结束时间
   airiesList: any = []
   beginDateId = ''
