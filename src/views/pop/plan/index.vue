@@ -700,7 +700,8 @@ export default class Main extends ViewBase {
     if (this.$route.params.id) {
       addObject = {
         ...addObject,
-        id: this.$route.params.id
+        id: this.$route.params.id,
+        status: this.item.status
       }
     }
     const index: any = 'pop_plan_edit_' + Math.floor(Math.random() * 1000 + 1)
