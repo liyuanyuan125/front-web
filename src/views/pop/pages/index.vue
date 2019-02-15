@@ -84,7 +84,7 @@
                 <!-- <div ref="container2" style="height: 100%"></div> -->
                 <img src="./assets/蓝圈.png" alt="">
                 <div class='canpos'>
-                  <p style='font-size: 30px;'>￥{{pricecount}}</p>
+                  <p style='font-size: 30px;'>￥{{pricecounts}}</p>
                   <p>预估投放花费</p>
                 </div>
               </div>
@@ -244,13 +244,13 @@
         <Col :span="23" class="mt30" offset="1">
           <div class="flex">
             <span>预估投放花费=</span>
-            <h4 class="ceil">¥{{pricecount}}</h4>
+            <h4 class="ceil">¥{{pricecounts}}</h4>
           </div>
         </Col>
         <Col :span="23" class="mt30" offset="1">
           <div class="flex">
             <span>预估冻结金额 = 预估投放花费 = </span>
-            <h4 class="ceil">¥{{pricecount}}</h4>
+            <h4 class="ceil">¥{{pricecounts}}</h4>
           </div>
         </Col>
       </Row>
@@ -370,6 +370,7 @@ export default class Main extends ViewBase {
   aboutcount: any = 0
   // 预估huafei
   pricecount: any = 0
+  pricecounts: any = 0
   // 推荐影片
   tuifilm: any = []
   tuifilms: any = []
@@ -522,7 +523,6 @@ export default class Main extends ViewBase {
     if (this.dataFrom.type == 1) {
       this.cinemaIdArray = this.tuifilms
     }
-    // console.log(this.addlist)
     this.$nextTick(() => {
       (this.$refs.addOrUpdate as any).init(this.datafroms , this.addlist)
     })
@@ -960,8 +960,8 @@ export default class Main extends ViewBase {
                       type: this.dataFrom.type ,
                       budgetAmount: this.list.budgetAmount
                                     })
-      // this.pricecount = respri.data
-      this.pricecount = formatCurrency(respri.data)
+      this.pricecount = respri.data
+      this.pricecounts = formatCurrency(respri.data)
       // 推荐影片
       const tui = await tuijian({
                       types: this.list.deliveryGroups[0].text == '' ? '' : (this.list.deliveryGroups[0].text).join(','),
