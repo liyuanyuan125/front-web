@@ -13,8 +13,8 @@ export async function planList(data: any) {
  * 推广管理 - 广告计划 - 批量删除
  * @param data
  */
-export async function delCheckPlanList(data: any) {
-  const res = await del('xadvert/plans', data)
+export async function delCheckPlanList(query: any) {
+  const res = await del('xadvert/plans', query)
   return res
 }
 

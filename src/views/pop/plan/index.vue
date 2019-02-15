@@ -18,16 +18,16 @@
         <FormItem class="float-left" label="广告计划名称" prop="name">
           <Input class="input-media" v-model="form.name" placeholder="请输入广告计划名称"></Input>
         </FormItem>
-        <FormItem style="margin-left:0px" class="float-right pr30" label="关联广告片" prop="videoId">
+        <FormItem style="margin-left:0px" class="float-right pr30" label="关联广告片">
           <Select class="input-media" v-model="form.videoId" filterable clearable>
-            <Option v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }}</Option>
+            <Option v-if="item.status == 4" v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
         </FormItem>
       </div>
 
       <div class="clear-f" v-if="form.videoId">
         <FormItem class="float-left" label="广告片规格">
-          <div class="xad input-media"><span>{{specification}}</span></div>
+          <div class="xad input-media"><span>{{specification}}s</span></div>
         </FormItem>
         <FormItem class="float-right pr30" style="margin-left:0px" label="选择客户">
           <div class="xad input-media"><span>{{customerName}}</span></div>
@@ -42,10 +42,10 @@
       <!-- 投放排期 自定义时间 -->
       <div class="clear-f" key="save" v-if="dateType == 1">
         <FormItem class="tag-date float-left" label="开始时间" prop="beginDate">
-          <DatePicker type="date" v-model="form.beginDate" :options="startDate" placeholder="请选择开始时间"></DatePicker>
+          <DatePicker type="date" @on-change="cinemaFind" v-model="form.beginDate" :options="startDate" placeholder="请选择开始时间"></DatePicker>
         </FormItem>
         <FormItem class="tag-date float-right pr130" label="结束时间" prop="endDate">
-          <DatePicker type="date" v-model="form.endDate" :options="endDate" placeholder="请选择结束时间"></DatePicker>
+          <DatePicker type="date" @on-change="cinemaFind" v-model="form.endDate" :options="endDate" placeholder="请选择结束时间"></DatePicker>
         </FormItem>
       </div>
 
@@ -123,7 +123,7 @@
         <FormItem label="地域偏好" class="form-item-age">
           <CheckboxGroup v-model="form.tagTypeCode" class="item-radio-top">
             <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
-            <Checkbox v-for="it in tags[3].values" :key="it.key" :label="it.key"
+            <Checkbox v-if="it.controlStatus != 2" v-for="it in tags[3].values" :key="it.key" :label="it.key"
               class="check-item">{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
@@ -164,6 +164,7 @@ import SingCinema from './singcinema.vue'
 import AreaPane, { Stats } from './components/areaPane'
 import { formatYell } from '@/util/validateRules'
 import { planDefault, queryRelevanceList } from '@/api/plan'
+import { clean } from '@/fn/object'
 
 const timeFormat = 'YYYY-MM-DD'
 const timeFormats = 'YYYYMMDD'
@@ -216,7 +217,7 @@ export default class Main extends ViewBase {
   normCinema: any = []
   singleCinema: any = []
 
-  advertisingName: any = []
+  advertisingName: any = ''
   // 选择档期的开始时间 结束时间
   airiesList: any = []
   beginDateId = ''
@@ -421,7 +422,7 @@ export default class Main extends ViewBase {
       // 投放区域类型
       if (item.directionType == 2) {
         this.putType = 2
-        this.singleObject = movieList[0]
+        this.singleObject = movieList[0] || []
         if (item.deliveryGroups[0].text == 'ALL') {
           this.form.tagTypeCode = [0]
         } else {
@@ -521,7 +522,7 @@ export default class Main extends ViewBase {
         }
       } = await advertDetail(id)
       this.advertisingName = item.name
-      this.specification = item.length
+      this.specification = item.specification
       this.customerName = item.customerName
     } catch (ex) {
       this.handleError(ex)
@@ -535,6 +536,14 @@ export default class Main extends ViewBase {
       if ( this.cinema.MOVIE_TYPE.includes(0) ) {
         type = []
       }
+      const times: any = {}
+      if (this.dateType == 1) {
+        times.startTime = this.form.beginDate ? Number(moment(this.form.beginDate).format(timeFormats)) : ''
+        times.endTime = this.form.endDate ? Number(moment(this.form.endDate).format(timeFormats)) : ''
+      } else {
+        times.startTime = this.beginDateId ? Number(moment(this.beginDateId).format(timeFormats)) : ''
+        times.endTime = this.endDateId ? Number(moment(this.endDateId).format(timeFormats)) : ''
+      }
       try {
         const {
           data: {
@@ -542,10 +551,11 @@ export default class Main extends ViewBase {
               items
             }
           }
-        } = await cinemaList({
+        } = await cinemaList(clean({
           types: type.join(','),
-          pageSize: 3
-        })
+          pageSize: 3,
+          ...times
+        }))
         this.normCinema = items
       } catch (ex) {
         this.handleError(ex)
@@ -691,7 +701,7 @@ export default class Main extends ViewBase {
         id: this.$route.params.id
       }
     }
-    const index: any = Math.floor(Math.random() * 100 + 1)
+    const index: any = 'pop_plan_edit_' + Math.floor(Math.random() * 1000 + 1)
     sessionStorage.setItem(`${index}`, JSON.stringify(addObject))
     this.$router.push({ name: 'pop-plan-scheme', params: { id: index}})
   }
@@ -754,6 +764,10 @@ export default class Main extends ViewBase {
   watchvideoId(val: any) {
     if (val) {
       this.adverDetail(val)
+    } else {
+      this.advertisingName = ''
+      this.specification = ''
+      this.customerName = ''
     }
   }
 
@@ -764,6 +778,14 @@ export default class Main extends ViewBase {
       this.beginDateId = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].beginDate)
       this.endDateId = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].endDate)
       this.calendarName = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].name)
+      if (this.putType == 1) {
+        this.cinemaFind()
+      }
+    } else {
+      this.beginDateId = ''
+      this.endDateId = ''
+      this.calendarName = ''
+      this.cinemaFind()
     }
   }
 }

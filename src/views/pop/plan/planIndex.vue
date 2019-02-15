@@ -2,7 +2,7 @@
   <div class="home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">广告计划</span>
-      <em class="addUser" @click="$router.push({name: 'pop-plan'})">
+      <em class="addUser" @click="$router.push({name: 'pop-planlist-add'})">
         <Icon type="ios-add" size="27"/>新建广告计划
       </em>
     </h3>
@@ -10,12 +10,12 @@
     <Form :model="form" class="formInline">
       <Row type="flex" justify="space-between">
         <Col span="5">
-          <Select v-model="form.status" clearable placeholder="请选择广告计划状态">
+          <Select v-model="form.status" style="width: 200px" clearable placeholder="请选择广告计划状态">
             <Option v-for="item in data.statusList" :key="item.key" :value="item.key">{{item.text}}</Option>
           </Select>
         </Col>
-        <Col span="5">
-          <Select v-model="form.settlementStatus" clearable placeholder="请选择结算状态">
+        <Col span="4">
+          <Select v-model="form.settlementStatus" style="width: 150px" clearable placeholder="请选择结算状态">
             <Option
               v-for="item in data.settlementStatusList"
               :key="item.key"
@@ -23,18 +23,16 @@
             >{{item.text}}</Option>
           </Select>
         </Col>
-        <Col span="5">
-          <Select v-model="form.level" clearable placeholder="请选择广告层级">
+        <Col span="12" class="flex-box">
+          <Select v-model="form.level" style="width: 200px" clearable placeholder="请选择广告层级">
             <Option
               v-for="item in data.levelTypeList"
               :key="item.key"
               :value="item.key"
             >{{item.text}}</Option>
           </Select>
-        </Col>
-        <Col span="7">
-          <div class="flex-box">
-            <Input v-model="form.query" placeholder="请输入ID/名称进行搜索"/>
+          <div class="flex-box search-border-left">
+            <Input v-model="form.query"  placeholder="请输入ID/名称进行搜索"/>
             <span class="btn-search-list" @click="searchList">
               <Icon type="ios-search" size="22"/>
             </span>
@@ -56,6 +54,12 @@
         <span v-else-if="row.status == 6 || row.status == 7" class="status-wating">{{queryStatus(row.status)}}</span>
         <span v-else>{{queryStatus(row.status)}}</span>
       </template>
+      <template slot="videoName" slot-scope="{row, index}">
+        <span>{{row.videoName || '/'}}</span>
+      </template>
+      <template slot="beginDate" slot-scope="{row, index}">
+        <span>{{formatYell(row.beginDate)}}-{{formatYell(row.endDate)}}</span>
+      </template>
       <template slot="specification" slot-scope="{row, index}">
         <span>{{row.specification}}s</span>
       </template>
@@ -67,7 +71,10 @@
             <a class="table-action-btn" @click="planEdit(row.id)">编辑</a>
             <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
           </p>
-          <p><a @click="relevanceAdv(row)">关联广告片</a></p>
+          <p>
+            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</a>
+            <a v-else @click="relevanceAdv(row, 2)">修改广告片</a>
+          </p>
         </div>
         <div v-else-if="row.status ==  4 " class="operation-btn">
            <p>
@@ -75,19 +82,25 @@
             <a class="table-action-btn" @click="handlePayment(row)">支付</a>
             <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
           </p>
-          <p><a @click="relevanceAdv(row)">关联广告片</a></p>
+          <p>
+            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</a>
+            <a v-else @click="relevanceAdv(row, 2)">修改广告片</a>
+          </p>
         </div>
         <div v-else-if="row.status ==  5 " class="operation-btn">
           <p><a @click="planDefault(row.id, row.status)">查看</a></p>
-          <p><a @click="relevanceAdv(row)">关联广告片</a></p>
+          <p>
+            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</a>
+            <a v-else @click="relevanceAdv(row, 2)">修改广告片</a>
+          </p>
         </div>
         <div v-else-if="row.status == 3 || row.status == 6 || row.status == 7 || row.status == 8 || row.status == 9 " class="operation-btn">
           <p><a @click="planDefault(row.id, row.status)">查看</a></p>
         </div>
         <div v-else-if="row.status == 10" class="operation-btn">
           <p>
-            <a @click="planDefault(row.id, row.status)">查看</a>
-            <a @click="planEdit(row.id)">编辑</a>
+            <a class="table-action-btn" @click="planDefault(row.id, row.status)">查看</a>
+            <a class="table-action-btn" @click="planEdit(row.id)">编辑</a>
           </p>
         </div>
       </template>
@@ -178,8 +191,8 @@ export default class Plan extends ViewBase {
     },
     { title: '广告计划状态', slot: 'status', minWidth: 120 },
     { title: '广告片规格', slot: 'specification', minWidth: 120 },
-    { title: '广告片名称/ID', key: 'videoName', minWidth: 150 },
-    // { title: '投放排期', slot: 'beginDate', minWidth: 210 },
+    { title: '广告片名称', slot: 'videoName', minWidth: 150 },
+    { title: '投放排期', slot: 'beginDate', minWidth: 210 },
     // { title: '投放周期', key: 'cycle', minWidth: 130 },
     // { title: '冻结金额(元）', slot: 'freezeAmount', width: 150 },
     // { title: '结算状态', key: 'settlementStatus', width: 150 },
@@ -230,8 +243,7 @@ export default class Plan extends ViewBase {
     }
   }
   planEdit(id: any) {
-    this.$router.push({name: 'pop-plan', params: {id}})
-    // this.$router.push({name: 'pop-plan-edit', params: {id}})
+    this.$router.push({name: 'pop-planlist-add', params: {id}})
   }
   async planCancel(val: any, id: any) {
     await confirm(`是否取消广告计划：${val}`, {title: '取消广告计划'})
@@ -242,11 +254,19 @@ export default class Plan extends ViewBase {
       this.handleError(ex.msg)
     }
   }
-  async relevanceAdv(val: any) {
-     this.relevanVis = {
-      visible: true,
-      title: '关联广告片',
-      item: val
+  async relevanceAdv(val: any, id: any) {
+    if (id == 1) {
+      this.relevanVis = {
+        visible: true,
+        title: '关联广告片',
+        item: ''
+      }
+    } else {
+      this.relevanVis = {
+        visible: true,
+        title: '编辑广告片',
+        item: val
+      }
     }
   }
   handleSelectAll() {
@@ -255,7 +275,7 @@ export default class Plan extends ViewBase {
   }
   async deleteList() {
     if (this.selectIds.length) {
-      const ids = this.selectIds.map((item: any) => item.id) || []
+      const ids: any = this.selectIds.map((item: any) => item.id) || []
       await confirm('您确定要删除当前信息吗？')
       try {
         await delCheckPlanList({ ids })
@@ -304,6 +324,11 @@ export default class Plan extends ViewBase {
 }
 .status-over {
   color: @c-fail;
+}
+/deep/ .search-border-left {
+  input {
+    border-left: none;
+  }
 }
 .operation-btn {
   text-align: center;

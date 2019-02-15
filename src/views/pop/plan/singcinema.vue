@@ -98,7 +98,7 @@ export default class Main extends ViewBase {
   @Prop({type: Object, default: () => {}}) value!: any
   releaseTime = [0]
   form: any = {
-    name: this.value.name ? this.value.name : '',
+    name: !!this.value.name ? this.value.name : '',
     pageSize: 8
   }
   cinemaList: any = []

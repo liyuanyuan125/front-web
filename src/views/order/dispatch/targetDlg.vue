@@ -12,7 +12,7 @@
     <div class="detail">
       <p>查看全部已关联影院 <span>{{tableDate.length}}个</span></p>
     </div>
-    <Table   stripe :columns="columns" :data=" countData ">
+    <Table   stripe :columns="columns" :data="id == 0 ? countData : tableDate">
       <template slot-scope="{ row }" slot="citys">
         {{row.citys}}
       </template>
@@ -43,7 +43,8 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { queryList, leafletList, sureLeaflet } from '@/api/leafletDlg'
+import { queryList, leafletList, sureLeaflet, findCinema } from '@/api/leafletDlg'
+import targetDlg from './targetDlg.vue'
 
 @Component
 export default class DlgEditCinema extends ViewBase {
@@ -63,7 +64,7 @@ export default class DlgEditCinema extends ViewBase {
   columns: any = [
     {
       title: '区/县/市',
-      width: 180,
+      width: 190,
       slot: 'citys',
       align: 'center'
     },
@@ -84,23 +85,38 @@ export default class DlgEditCinema extends ViewBase {
     // this.init(31)
   }
 
-  async init(id: any, data?: any) {
+  init(id: any, data?: any) {
     this.id = id
+    this.target = true
     if (id == 0) {
       this.tableDate = data
       this.total = data.length
       this.forMat()
-    }
-    this.target = true
-    try {
-      await queryList()
-    } catch (ex) {
-      this.handleError(ex)
+    } else {
+      this.seach()
     }
   }
 
-  seach() {
-
+  async seach() {
+    try {
+      const {
+        data: {
+          items,
+          totalCount
+        }
+      } = await findCinema(this.id, {...this.dataForm})
+      this.total = totalCount
+      if (items && items.length > 0) {
+        this.tableDate = items.map((it: any) => {
+          return {
+            ...it,
+            citys: `${it.areaName}${it.provinceName}${it.cityName}`,
+          }
+        })
+      }
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
    // 每页数

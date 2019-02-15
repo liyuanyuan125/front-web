@@ -54,7 +54,7 @@
           </p>
           <p>
             <label>创建时间</label>
-            {{formatTimes(items.approvalTime)}}
+            {{formatTimes(items.applyTime)}}
           </p>
           <p>
             <label>计费类型</label>
@@ -176,7 +176,7 @@
       </div>
     </div>
     <div class="btnCenter btn-footer" v-if="status == 1">
-      <Button class="button-cancel" @click="$router.push({name: 'pop-planlist'})">取消计划</Button>
+      <Button class="button-cancel" @click="cancelPlan">取消计划</Button>
       <Button
         type="primary"
         class="button-ok edit-btn"
@@ -200,7 +200,7 @@ import ViewBase from '@/util/ViewBase'
 import { confirm, info } from '@/ui/modal'
 import CinemaList from './cinemaDlg.vue'
 import StatusCode from './status.vue'
-import { planDefault, subExamine } from '@/api/plan'
+import { planDefault, subExamine, planCancel } from '@/api/plan'
 import { formatTimes, formatYell, formatNumber } from '@/util/validateRules'
 
 @Component({
@@ -336,8 +336,18 @@ export default class PlanDefault extends ViewBase {
     return text[0].text
   }
   toEdit() {
-    this.$router.push({name: 'pop-plan', params: {id: this.items.id}})
+    this.$router.push({name: 'pop-planlist-add', params: {id: this.items.id}})
   }
+  async cancelPlan() {
+    const id = this.$route.params.id
+    try {
+      const { data } = await planCancel(id)
+      this.$router.push({name: 'pop-planlist'})
+    } catch (ex) {
+      this.handleError(ex.msg)
+    }
+  }
+
   billingModeList(id: any) {
     const list = this.defaultData.billingModeList
     if (list) {

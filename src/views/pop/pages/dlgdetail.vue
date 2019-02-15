@@ -21,7 +21,9 @@
           <Col :span="4">客户名称</Col>
           <Col :span="7"><span>{{data.customerName}}</span></Col>
           <Col :span="4">广告片规格</Col>
-          <Col :span="9"><span>{{data.specification}}s</span></Col>
+          <Col :span="7"><span v-if="data.specification">{{data.specification}}s</span>
+            <span v-else></span>
+          </Col>
         </Row>
         <Row class="mb10">
           <Col :span="4">关联广告片</Col>
@@ -205,7 +207,7 @@ export default class Main extends ViewBase {
     this.showDlg = true
     this.forMat = forMat
     this.cinema = cinema
-    this.money = formatCurrency(this.forMat.estimateCostAmount * 10000)
+    this.money = formatCurrency(this.forMat.estimateCostAmount)
   }
 
   created() {
@@ -250,6 +252,7 @@ export default class Main extends ViewBase {
   }
 
   async open() {
+    this.forMat.deliveryGroups = []
     if (this.data.directionType == 1) {
       this.forMat.deliveryMovies = this.forMat.deliveryMovies.map((it: any) => it.id)
       this.forMat.throwInAreaType = this.data.throwInAreaType[0].key

@@ -1,19 +1,14 @@
 <template>
   <Modal v-model='showDlg'
-  title="拒绝接单确认"
+  title="是否拒绝该执行单"
   :transfer='false'
   :width='770'
   @on-cancel="cancel()">
-    <div class="flex-box search-input">
-      <Input class="name-input" v-model="dataForm.searchKey"  placeholder="请输入影院专资编码／影院名称进行搜索" />
-      <span @click="seach">
-        <Icon type="ios-search" size="22"/>
-      </span>
-    </div>
+    <h3>是否拒绝该执行单</h3>
 
     <div slot="footer" class="foot">
-      <Button class="foot-cancel-button" type="info" @click="cancel">取消计划</Button>
-      <Button class="foot-button" type="primary" @click="open">开启投放</Button>
+      <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
+      <Button class="foot-button" type="primary" @click="open">拒绝执行</Button>
     </div>
   </Modal>
 </template>
@@ -26,43 +21,6 @@ import { queryList, leafletList, sureLeaflet } from '@/api/leafletDlg'
 @Component
 export default class DlgEditCinema extends ViewBase {
   showDlg = true
-  total = 0
-  dataForm: any = {
-    searchKey: '',
-    pageIndex: 1,
-    pageSize: 10,
-  }
-
-  data: any = []
-
-  columns: any = [
-    {
-      type: 'selection',
-      width: 60,
-      align: 'right'
-    },
-    {
-      title: '区/县/市',
-      slot: 'name',
-      width: 160,
-      align: 'center'
-    },
-    {
-      title: '转资编码',
-      slot: 'name',
-      width: 120,
-      align: 'center'
-    },
-    {
-      title: '影院名称',
-      slot: 'name',
-      align: 'center'
-    }
-  ]
-
-  created() {
-    this.init(31)
-  }
 
   async init(id: any) {
     try {
@@ -74,18 +32,6 @@ export default class DlgEditCinema extends ViewBase {
 
   seach() {
 
-  }
-
-   // 每页数
-  sizeChangeHandle(val: any) {
-    this.dataForm.pageIndex = val
-    this.seach()
-  }
-
-  // 当前页
-  currentChangeHandle(val: any) {
-    this.dataForm.pageSize = val
-    this.seach()
   }
 
   cancel() {
