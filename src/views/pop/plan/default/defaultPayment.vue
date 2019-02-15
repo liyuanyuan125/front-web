@@ -1,6 +1,6 @@
 <template>
   <div class="home-bg">
-    <h2 class="layout-nav-title">广告计划2 > 查看广告计划</h2>
+    <h2 class="layout-nav-title">广告计划 > 查看广告计划</h2>
     <div class="payment-step">
       <div class="step-line-bg"></div>
       <div class="step-solid-bg" :style="{width: solidWidth}"></div>
@@ -104,7 +104,7 @@
           </p>
           <p>
             <label>创建时间</label>
-            {{formatTimes(items.approvalTime)}}
+            {{formatTimes(items.applyTime)}}
           </p>
           <p>
             <label>计费类型</label>
@@ -263,7 +263,7 @@
       </div>
     </div>
     <div class="btnCenter btn-footer" v-if="status == 2">
-      <Button class="button-cancel" @click="$router.push({name: 'pop-planlist'})">取消计划</Button>
+      <Button class="button-cancel" @click="cancelPlan">取消计划</Button>
       <Button
         type="primary"
         class="button-ok edit-btn"
@@ -271,7 +271,7 @@
       >编辑</Button>
     </div>
     <div class="btnCenter btn-footer" v-if="status == 4">
-      <Button class="button-cancel" @click="$router.push({name: 'pop-planlist'})">取消计划</Button>
+      <Button class="button-cancel" @click="cancelPlan" >取消计划</Button>
       <Button type="primary" class="button-ok" @click="handlePayment">支付</Button>
     </div>
     <div class="btnCenter btn-footer" v-if="status == 5">
@@ -286,7 +286,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, info } from '@/ui/modal'
 import CinemaList from './cinemaDlg.vue'
-import { planDefault, planPayment } from '@/api/plan'
+import { planDefault, planPayment, planCancel } from '@/api/plan'
 import { formatTimes, formatYell, formatNumber } from '@/util/validateRules'
 import relevanceDlg from './relevanceAdVDlg.vue'
 
@@ -356,6 +356,15 @@ export default class PlanDefault extends ViewBase {
       case 8:
         this.solidWidth = '100%'
         break
+    }
+  }
+  async cancelPlan() {
+    const id = this.$route.params.id
+    try {
+      const { data } = await planCancel(id)
+      this.$router.push({name: 'pop-planlist'})
+    } catch (ex) {
+      this.handleError(ex.msg)
     }
   }
   async list() {
