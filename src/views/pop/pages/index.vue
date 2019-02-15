@@ -287,6 +287,8 @@ import { cinemaList } from '@/api/popPlan'
 import echarts from 'echarts' // 引入echarts
 import { warning , success, toast , info } from '@/ui/modal'
 import { Stats } from '../plan/components/areaPane'
+import { formatCurrency } from '@/fn/string'
+
 // import CinemaDlg, { CinemaDlgItem } from '../plan/components/cinemaDlg'
 import { CinemaDlgByStats } from '../plan/components/cinemaDlg'
 
@@ -783,6 +785,7 @@ export default class Main extends ViewBase {
         // console.log(this.list.ids)
         if (this.list.throwInAreaType[0].key == 0) {
           this.tcinemaList = []
+          this.aboutcount = 0
           // 0 不限
           const cinema = await TcinemaList({
             areaCodes: this.regionList ,
@@ -802,12 +805,18 @@ export default class Main extends ViewBase {
                 cinema.data.items[4],
                 cinema.data.items[5])
             }
+            const a = (cinema.data.items || []).map((it: any) => {
+              return it.id
+            })
+            const resab = await abcount({ids: a.join(',') , type: this.dataFrom.type})
+            this.aboutcount = resab.data
           // this.idArr = (cinema.data.items || []).map((it: any) => {
           //   return it.id
           // })
         }
         if (this.list.throwInAreaType[0].key == 1) {
           this.tcinemaList = []
+          this.aboutcount = 0
           // 1 区域
           const cinema1 = await TcinemaList({areaCodes: this.regionList })
           this.dlgCinema = cinema1.data.items
@@ -823,6 +832,12 @@ export default class Main extends ViewBase {
               cinema1.data.items[4],
               cinema1.data.items[5])
           }
+
+          const a = (cinema1.data.items || []).map((it: any) => {
+              return it.id
+            })
+            const resab = await abcount({ids: a.join(',') , type: this.dataFrom.type})
+            this.aboutcount = resab.data
           // this.idArr = (cinema1.data.items || []).map((it: any) => {
           //   return it.id
           // })
@@ -830,6 +845,7 @@ export default class Main extends ViewBase {
         if (this.list.throwInAreaType[0].key == 2) {
           // 2 省份
           this.tcinemaList = []
+          this.aboutcount = 0
           const cinema2 = await TcinemaList({provinceIds: this.provinceList })
           this.dlgCinema = cinema2.data.items
           // this.tcinemaList = cinema2.data.items
@@ -844,12 +860,19 @@ export default class Main extends ViewBase {
               cinema2.data.items[4],
               cinema2.data.items[5])
           }
+
+          const a = (cinema2.data.items || []).map((it: any) => {
+              return it.id
+            })
+            const resab = await abcount({ids: a.join(',') , type: this.dataFrom.type})
+            this.aboutcount = resab.data
           // this.idArr = (cinema2.data.items || []).map((it: any) => {
           //   return it.id
           // })
         }
         if (this.list.throwInAreaType[0].key == 3) {
           this.tcinemaList = []
+          this.aboutcount = 0
           // 3 城市
           const cinema3 = await TcinemaList({cityIds: this.cityLevelList })
           this.dlgCinema = cinema3.data.items
@@ -865,12 +888,19 @@ export default class Main extends ViewBase {
               cinema3.data.items[4],
               cinema3.data.items[5])
           }
+
+          const a = (cinema3.data.items || []).map((it: any) => {
+              return it.id
+            })
+            const resab = await abcount({ids: a.join(',') , type: this.dataFrom.type})
+            this.aboutcount = resab.data
           // this.idArr = (cinema3.data.items || []).map((it: any) => {
           //   return it.id
           // })
         }
         if (this.list.throwInAreaType[0].key == 4) {
           this.tcinemaList = []
+          this.aboutcount = 0
           // 4 影院
           const cinema4 = await TcinemaList({ids: this.list.ids })
           this.dlgCinema = cinema4.data.items
@@ -887,6 +917,12 @@ export default class Main extends ViewBase {
               cinema4.data.items[4],
               cinema4.data.items[5])
           }
+
+          const a = (cinema4.data.items || []).map((it: any) => {
+              return it.id
+            })
+            const resab = await abcount({ids: a.join(',') , type: this.dataFrom.type})
+            this.aboutcount = resab.data
           // this.idArr = (cinema4.data.items || []).map((it: any) => {
           //   return it.id
           // })
@@ -916,15 +952,16 @@ export default class Main extends ViewBase {
           }
       }
       // 获取预估覆盖场次
-      const resab = await abcount({cinemaCount: 5 , type: this.dataFrom.type})
-      this.aboutcount = resab.data
+      // const resab = await abcount({ids: 5 , type: this.dataFrom.type})
+      // this.aboutcount = resab.data
       // 获取预估投放花费
       const respri = await pricount({
                       budgetCode: this.list.budgetCode ,
                       type: this.dataFrom.type ,
                       budgetAmount: this.list.budgetAmount
                                     })
-      this.pricecount = respri.data
+      // this.pricecount = respri.data
+      this.pricecount = formatCurrency(respri.data)
       // 推荐影片
       const tui = await tuijian({
                       types: this.list.deliveryGroups[0].text == '' ? '' : (this.list.deliveryGroups[0].text).join(','),
