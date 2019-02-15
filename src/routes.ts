@@ -182,6 +182,11 @@ export default [
     name: 'order-execute',
     component: () => import('./views/order/execute/index.vue'),
   },
+  {
+    path: '/order/execute/:id',
+    name: 'order-execute-xq',
+    component: () => import('./views/order/execute/index.vue'),
+  },
   // 广告单管理 - DCP包列表
   {
     path: '/order/dcp',

@@ -74,7 +74,7 @@
                 <!-- <div style="height: 100%"> -->
                   <img src="./assets/粉圈.png" alt="">
                   <div class='canpos'>
-                    <p style='font-size: 26px;'>{{aboutcount}}</p>
+                    <p style='font-size: 26px; height: 40px;'>{{aboutcount}}</p>
                     <p>预估覆盖场次</p>
                   </div>
                 <!-- </div> -->
@@ -86,7 +86,7 @@
                 <!-- <div ref="container2" style="height: 100%"></div> -->
                 <img src="./assets/蓝圈.png" alt="">
                 <div class='canpos'>
-                  <p style='font-size: 26px;'>￥{{pricecounts}}</p>
+                  <p style='font-size: 26px; height: 40px;'>￥{{pricecounts}}</p>
                   <p>预估投放花费</p>
                 </div>
               </div>
@@ -369,10 +369,10 @@ export default class Main extends ViewBase {
   // 加速类型
   typeList: any = []
   // 预估chanci
-  aboutcount: any = 0
+  aboutcount: any = ' '
   // 预估huafei
-  pricecount: any = 0
-  pricecounts: any = 0
+  pricecount: any = null
+  pricecounts: any = null
   // 推荐影片
   tuifilm: any = []
   tuifilms: any = []
@@ -788,7 +788,7 @@ export default class Main extends ViewBase {
         // console.log(this.list.ids)
         if (this.list.throwInAreaType[0].key == 0) {
           this.tcinemaList = []
-          this.aboutcount = 0
+          this.aboutcount = ' '
           // 0 不限
           const cinema = await TcinemaList({
             areaCodes: this.regionList ,
@@ -819,7 +819,7 @@ export default class Main extends ViewBase {
         }
         if (this.list.throwInAreaType[0].key == 1) {
           this.tcinemaList = []
-          this.aboutcount = 0
+          // this.aboutcount = ' '
           // 1 区域
           const cinema1 = await TcinemaList({areaCodes: this.regionList })
           this.dlgCinema = cinema1.data.items
@@ -848,7 +848,7 @@ export default class Main extends ViewBase {
         if (this.list.throwInAreaType[0].key == 2) {
           // 2 省份
           this.tcinemaList = []
-          this.aboutcount = 0
+          // this.aboutcount = ' '
           const cinema2 = await TcinemaList({provinceIds: this.provinceList })
           this.dlgCinema = cinema2.data.items
           // this.tcinemaList = cinema2.data.items
@@ -875,7 +875,7 @@ export default class Main extends ViewBase {
         }
         if (this.list.throwInAreaType[0].key == 3) {
           this.tcinemaList = []
-          this.aboutcount = 0
+          // this.aboutcount = ' '
           // 3 城市
           const cinema3 = await TcinemaList({cityIds: this.cityLevelList })
           this.dlgCinema = cinema3.data.items
@@ -903,7 +903,7 @@ export default class Main extends ViewBase {
         }
         if (this.list.throwInAreaType[0].key == 4) {
           this.tcinemaList = []
-          this.aboutcount = 0
+          // this.aboutcount = ' '
           // 4 影院
           const cinema4 = await TcinemaList({ids: this.list.ids })
           this.dlgCinema = cinema4.data.items
@@ -935,6 +935,7 @@ export default class Main extends ViewBase {
       if (this.list.directionType == 2) {
         this.diqutype = data.tags[3]
         this.tcinemaList = []
+        // this.aboutcount = ' '
         // 0 不限
         const cinema = await TcinemaList({
           areaCodes: this.regionList ,
