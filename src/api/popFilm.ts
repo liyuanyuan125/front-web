@@ -59,6 +59,14 @@ export async function detailPop(id: any) {
     return res
 }
 
+/**
+ * 计算转制费用
+ * @param specification 广告片规格
+ */
+export async function transFee(data: any) {
+    const res = await get(`xadvert/videos/trans-fee`, data)
+    return res
+}
 
 
 /**

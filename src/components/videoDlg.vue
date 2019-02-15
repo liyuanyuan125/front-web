@@ -1,9 +1,11 @@
 <template>
   <div>
-    <Modal v-model="value.visible" width="500" class="viewer" @click.native="value.visible = false">
-      <p class="viewer-tip">轻点关闭</p>
+    <Modal v-model="value.visible" width="500" class="viewer" >
+      <p @click.native="value.visible = false" class="viewer-tip">轻点关闭</p>
       <div class="flex-mid">
-         <video  autoplay :src="value.url" width="500"/>
+         <video  autoplay :src="value.url" width="500" controls>
+           <!-- <img :src="value.url" width="500"> -->
+         </video>
       </div>
       <div slot="footer"></div>
     </Modal>

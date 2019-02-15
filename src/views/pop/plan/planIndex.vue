@@ -10,12 +10,12 @@
     <Form :model="form" class="formInline">
       <Row type="flex" justify="space-between">
         <Col span="5">
-          <Select v-model="form.status" clearable placeholder="请选择广告计划状态">
+          <Select v-model="form.status" style="width: 200px" clearable placeholder="请选择广告计划状态">
             <Option v-for="item in data.statusList" :key="item.key" :value="item.key">{{item.text}}</Option>
           </Select>
         </Col>
-        <Col span="5">
-          <Select v-model="form.settlementStatus" clearable placeholder="请选择结算状态">
+        <Col span="4">
+          <Select v-model="form.settlementStatus" style="width: 150px" clearable placeholder="请选择结算状态">
             <Option
               v-for="item in data.settlementStatusList"
               :key="item.key"
@@ -23,16 +23,14 @@
             >{{item.text}}</Option>
           </Select>
         </Col>
-        <Col span="5">
-          <Select v-model="form.level" clearable placeholder="请选择广告层级">
+        <Col span="12" class="flex-box">
+          <Select v-model="form.level" style="width: 200px" clearable placeholder="请选择广告层级">
             <Option
               v-for="item in data.levelTypeList"
               :key="item.key"
               :value="item.key"
             >{{item.text}}</Option>
           </Select>
-        </Col>
-        <Col span="7">
           <div class="flex-box">
             <Input v-model="form.query" placeholder="请输入ID/名称进行搜索"/>
             <span class="btn-search-list" @click="searchList">
@@ -274,7 +272,7 @@ export default class Plan extends ViewBase {
       const ids = this.selectIds.map((item: any) => item.id) || []
       await confirm('您确定要删除当前信息吗？')
       try {
-        await delCheckPlanList({ ids })
+        await delCheckPlanList({ ids: ids.join(',') })
         this.tableList()
       } catch (ex) {
         this.handleError(ex.msg)

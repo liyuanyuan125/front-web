@@ -37,7 +37,8 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
-import { popPartners, detailPop, createPop, editPop} from '@/api/popFilm'
+import { confirm } from '@/ui/modal'
+import { popPartners, detailPop, createPop, editPop, transFee} from '@/api/popFilm'
 
 @Component
 export default class Main extends ViewBase {
@@ -48,11 +49,11 @@ export default class Main extends ViewBase {
   }
 
   // 源视频文件上传后的ID
-  srcFileId = ''
+  srcFileId = 'bgs39la893rg008001i0'
   // 广告片时长
-  length = ''
+  length = 29
   // 转码费
-  transFee = ''
+  transFee = 1
 
   customerList = []
   specificationList: any = []
@@ -71,7 +72,7 @@ export default class Main extends ViewBase {
     }
   }
 
-  mounted() {
+  async mounted() {
     this.partnersList()
     this.creSpecificationList()
     // 编辑
@@ -103,13 +104,27 @@ export default class Main extends ViewBase {
     if (!volid) {
       return
     }
+    // 二次确定弹框
+    const specification = this.form.specification
+    try {
+      const { data } = await transFee({ specification })
+      await confirm(`数字转制费用：${data} 元`, {title: '确认新建广告片'})
+      this.createSub()
+    } catch (ex) {
+      this.handleError(ex.msg)
+    }
+  }
+  async createSub() {
+    const customerName: any = this.customerList.filter( (item: any) => item.id == this.form.customerId)
     try {
       const { data } = await createPop({
         ...this.form,
         srcFileId: this.srcFileId,
         length: this.length,
-        transFee: this.transFee
+        transFee: this.transFee,
+        customerName: customerName[0].name
       })
+
       this.$router.push({name: 'pop-film'})
     } catch (ex) {
       this.handleError(ex.msg)
