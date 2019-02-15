@@ -70,7 +70,10 @@
             <a class="table-action-btn" @click="planEdit(row.id)">编辑</a>
             <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
           </p>
-          <p><a @click="relevanceAdv(row)">关联广告片</a></p>
+          <p>
+            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</a>
+            <a v-else @click="relevanceAdv(row, 2)">修改广告片</a>
+          </p>
         </div>
         <div v-else-if="row.status ==  4 " class="operation-btn">
            <p>
@@ -78,11 +81,17 @@
             <a class="table-action-btn" @click="handlePayment(row)">支付</a>
             <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
           </p>
-          <p><a @click="relevanceAdv(row)">关联广告片</a></p>
+          <p>
+            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</a>
+            <a v-else @click="relevanceAdv(row, 2)">修改广告片</a>
+          </p>
         </div>
         <div v-else-if="row.status ==  5 " class="operation-btn">
           <p><a @click="planDefault(row.id, row.status)">查看</a></p>
-          <p><a @click="relevanceAdv(row)">关联广告片</a></p>
+          <p>
+            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</a>
+            <a v-else @click="relevanceAdv(row, 2)">修改广告片</a>
+          </p>
         </div>
         <div v-else-if="row.status == 3 || row.status == 6 || row.status == 7 || row.status == 8 || row.status == 9 " class="operation-btn">
           <p><a @click="planDefault(row.id, row.status)">查看</a></p>
@@ -232,8 +241,8 @@ export default class Plan extends ViewBase {
     }
   }
   planEdit(id: any) {
-    this.$router.push({name: 'pop-plan', params: {id}})
-    // this.$router.push({name: 'pop-plan-edit', params: {id}})
+    this.$router.push({name: 'pop-planlist-add', params: {id}})
+    // this.$router.push({name: 'pop-plan', params: {id}})
   }
   async planCancel(val: any, id: any) {
     await confirm(`是否取消广告计划：${val}`, {title: '取消广告计划'})
@@ -244,11 +253,19 @@ export default class Plan extends ViewBase {
       this.handleError(ex.msg)
     }
   }
-  async relevanceAdv(val: any) {
-     this.relevanVis = {
-      visible: true,
-      title: '关联广告片',
-      item: val
+  async relevanceAdv(val: any, id: any) {
+    if (id == 1) {
+      this.relevanVis = {
+        visible: true,
+        title: '关联广告片',
+        item: ''
+      }
+    } else {
+      this.relevanVis = {
+        visible: true,
+        title: '编辑广告片',
+        item: val
+      }
     }
   }
   handleSelectAll() {

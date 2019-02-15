@@ -2,15 +2,15 @@
   <div>
     <Modal v-model="value.visible" :title="value.title" width="800">
       <Form ref="forms" :model="form" :rules="rules" class="edit-input" :label-width="100">
-        <FormItem label="已关联广告片" class="item-top">
+        <FormItem label="已关联广告片" class="item-top" v-if="value.item">
           <div class="relvanMess">
             <p>
               <span>广告片ID</span>
-              <em>{{value.item.id}}</em>
+              <em>{{value.item.videoId}}</em>
             </p>
             <p class="flex-box">
               <span>广告片名称</span>
-              <em>{{value.item.name}}</em>
+              <em>{{value.item.videoName}}</em>
             </p>
           </div>
         </FormItem>
@@ -53,6 +53,10 @@ export default class Relevan extends ViewBase {
   }
 
   mounted() {
+    // 编辑
+    if (this.value.item) {
+      this.form.voidID = this.value.item.videoId
+    }
     this.queryReleList()
   }
   async handleSumbit() {
