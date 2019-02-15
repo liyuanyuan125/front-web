@@ -422,7 +422,7 @@ export default class Main extends ViewBase {
       // 投放区域类型
       if (item.directionType == 2) {
         this.putType = 2
-        this.singleObject = movieList[0]
+        this.singleObject = movieList[0] || []
         if (item.deliveryGroups[0].text == 'ALL') {
           this.form.tagTypeCode = [0]
         } else {
@@ -532,14 +532,17 @@ export default class Main extends ViewBase {
   // 影片列表查询
   async cinemaFind() {
     if (this.putType == 1) {
-      let type: any = this.cinema.MOVIE_TYPE
+      const type: any = this.cinema.MOVIE_TYPE
       if ( this.cinema.MOVIE_TYPE.includes(0) ) {
         type = []
       }
       const times: any = {}
       if (this.dateType == 1) {
+        times.startTime = this.form.beginDate ? Number(moment(this.form.beginDate).format(timeFormats)) : ''
+        times.endTime = this.form.endDate ? Number(moment(this.form.endDate).format(timeFormats)) : ''
       } else {
-
+        times.startTime = this.beginDateId ? Number(moment(this.beginDateId).format(timeFormats)) : ''
+        times.endTime = this.endDateId ? Number(moment(this.endDateId).format(timeFormats)) : ''
       }
       try {
         const {
