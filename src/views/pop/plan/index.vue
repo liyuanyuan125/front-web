@@ -522,7 +522,7 @@ export default class Main extends ViewBase {
         }
       } = await advertDetail(id)
       this.advertisingName = item.name
-      this.specification = item.length
+      this.specification = item.specification
       this.customerName = item.customerName
     } catch (ex) {
       this.handleError(ex)
