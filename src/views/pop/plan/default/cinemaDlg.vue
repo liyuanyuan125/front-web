@@ -44,7 +44,10 @@ export default class Change extends ViewBase {
     { title: '票房级别', key: 'boxLevelName', align: 'center',  width: 100},
   ]
   async mounted() {
-      const id = (this.value.id).toString()
+    this.list()
+  }
+  async list() {
+    const id = (this.value.id).toString()
     try {
       const { data } = await cinemaList({
         pageIndex: this.pageIndex,
@@ -57,8 +60,14 @@ export default class Change extends ViewBase {
       this.handleError(ex.msg)
     }
   }
-  handlepageChange(size: any) { this.pageIndex = size}
-  handlePageSize(size: any) { this.pageIndex = size}
+  handlepageChange(size: any) {
+    this.pageIndex = size
+    this.list()
+  }
+  handlePageSize(size: any) {
+    this.pageIndex = size
+    this.list()
+  }
 }
 </script>
 <style lang="less" scoped>
