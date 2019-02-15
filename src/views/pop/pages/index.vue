@@ -531,7 +531,7 @@ export default class Main extends ViewBase {
   }
   async caoEdit() {
     this.dataFrom.status = 1
-
+    this.dataFrom.deliveryGroups = []
     if (this.list.directionType == 1) {
       this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
       this.dataFrom.deliveryMovies = this.cinemaIdArray.map((it: any) => it.id)
@@ -597,6 +597,7 @@ export default class Main extends ViewBase {
 
   async okEdit() {
     this.dataFrom.status = 2
+    this.dataFrom.deliveryGroups = []
     if (this.list.directionType == 1) {
       this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
       this.dataFrom.deliveryMovies = this.cinemaIdArray.map((it: any) => it.id)

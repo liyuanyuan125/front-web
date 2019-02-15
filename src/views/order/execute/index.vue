@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class='t-title'>广告单</div>
+    <div class='t-title'>执行单</div>
     <Row class="body">
       <Row>
         <Col :span="24">
@@ -44,11 +44,11 @@
 
       <Row class='row-ul'>
         <Col :span="12">
-          <div class='guanggao'>执行时间</div>
+          <div class='guanggao'>执行时间&nbsp;&nbsp;</div>
           <Col style='margin-left: 12px;' span="5">
-            <Select v-model='query.type'  clearable placeholder="广告单时间" @on-change="nulldata">
+            <Select v-model='query.queryType'  clearable placeholder="广告单时间" @on-change="nulldata">
               <Option
-                v-for="item in typeList"
+                v-for="item in executeQueryTypeList"
                 :key="item.key"
                 :value="item.key"
                 v-if='item.key!=0'
@@ -72,10 +72,17 @@
         <li v-for='(it,index) in itemlist' :key='index'>
           <Row class='li-title'>
             <Col span='8'>下单时间      {{it.createTime}}</Col>
-            <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenue}}</span></Col>
+            <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenueestimateRevenue}}</span></Col>
             <Col span='6'>
-              <span class='button' v-if='it.status == 1' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>修改执行影院</span>
-              <span class='button' v-if='it.status == 1 || it.status == 2' style='background: #3B98FF; color: #fff;cursor: pointer;'>下载DCP包</span>
+            <router-link
+              v-if='it.status == 1 || it.status == 2'
+              :to="{ name: 'order-dcp-detail', params: { id: it.id } }"
+              tag="span"
+              class='button'
+              style='background: #3B98FF; color: #fff;cursor: pointer;'
+            >下载DCP包</router-link>
+              <!-- <span class='button' v-if='it.status == 1 || it.status == 2' style='background: #3B98FF; color: #fff;cursor: pointer;'>下载DCP包</span> -->
+              <span class='button' v-if='it.status == 1' style='background: #3B98FF; color: #fff;cursor: pointer;'>修改执行影院</span>
             </Col>
           </Row>
           <Row class='li-item'>
@@ -96,7 +103,7 @@
                 <Col span='3' class='row-list-hui'>投放时间</Col>
                 <Col span='9' class='row-list-huis'>{{it.beginDate}} ~ {{it.endDate}}</Col>
                 <Col span='3' class='row-list-hui'>目标场次</Col>
-                <Col span='9' class='row-list-huis'>所有场次</Col>
+                <Col span='9' class='row-list-huis'>{{it.sceneCount}}</Col>
               </Row>
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>投放周期</Col>
@@ -117,12 +124,13 @@
                 <Col v-if='it.planType == 1' span='12' class='img-order'><img src="./assets/标准单.png" alt=""><span>标准单</span></Col>
                 <Col v-if='it.planType == 2' span='12' class='img-order'><img src="./assets/加速单.png" alt=""><span>加速单</span></Col>
                 <Col v-if='it.planType == 3' span='12' class='img-order'><img src="./assets/优享单.png" alt=""><span>优享单</span></Col>
+                
               </Row>
             </Col>
           </Row>
         </li>
       </ul>
-      <ul class='itemul' v-if='itemlist.length == 0'> 暂无订单</ul>
+      <ul class='itemul' style='padding-left: 28px;' v-if='itemlist.length == 0'> 暂无订单</ul>
       <Page
       :total="totalCount"
       v-if="totalCount>0"
@@ -171,7 +179,7 @@ export default class Main extends ViewBase {
   // 数据列表
   statusList: any = []
   planTypeList: any = []
-  typeList: any = []
+  executeQueryTypeList: any = []
   itemlist: any = []
   // loading: false
 
@@ -194,7 +202,7 @@ export default class Main extends ViewBase {
       const datalist = await querylist(this.query)
       this.statusList = datalist.data.statusList
       this.planTypeList = datalist.data.planTypeList
-      this.typeList = datalist.data.typeList
+      this.executeQueryTypeList = datalist.data.executeQueryTypeList
       this.totalCount = datalist.data.totalCount
       this.itemlist = (datalist.data.items || []).map((it: any) => {
         return {
@@ -340,7 +348,8 @@ export default class Main extends ViewBase {
         color: rgba(254, 129, 53, 1);
       }
       .button {
-        display: inline-block;
+        display: block;
+        float: right;
         border: 1px solid rgba(59, 152, 255, 1);
         width: 100px;
         height: 40px;
@@ -394,6 +403,6 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked::before {
   background: #3b98ff;
+  opacity: 1;
 }
-
 </style>
