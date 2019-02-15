@@ -205,7 +205,7 @@ export default class Main extends ViewBase {
     this.showDlg = true
     this.forMat = forMat
     this.cinema = cinema
-    this.money = formatCurrency(this.forMat.estimateCostAmount * 10000)
+    this.money = formatCurrency(this.forMat.estimateCostAmount)
   }
 
   created() {
