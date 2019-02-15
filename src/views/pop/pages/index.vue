@@ -515,7 +515,7 @@ export default class Main extends ViewBase {
 
   // 确认生成
   edit() {
-    this.tuifilms = []
+    // this.tuifilms = []
     this.addOrUpdateVisible = true
     if (this.dataFrom.type == 1) {
       this.cinemaIdArray = this.tuifilms
