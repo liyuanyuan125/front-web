@@ -18,16 +18,16 @@
         <FormItem class="float-left" label="广告计划名称" prop="name">
           <Input class="input-media" v-model="form.name" placeholder="请输入广告计划名称"></Input>
         </FormItem>
-        <FormItem style="margin-left:0px" class="float-right pr30" label="关联广告片" prop="videoId">
+        <FormItem style="margin-left:0px" class="float-right pr30" label="关联广告片">
           <Select class="input-media" v-model="form.videoId" filterable clearable>
-            <Option v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }}</Option>
+            <Option v-if="item.status == 4" v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
         </FormItem>
       </div>
 
       <div class="clear-f" v-if="form.videoId">
         <FormItem class="float-left" label="广告片规格">
-          <div class="xad input-media"><span>{{specification}}</span></div>
+          <div class="xad input-media"><span>{{specification}}s</span></div>
         </FormItem>
         <FormItem class="float-right pr30" style="margin-left:0px" label="选择客户">
           <div class="xad input-media"><span>{{customerName}}</span></div>
@@ -123,7 +123,7 @@
         <FormItem label="地域偏好" class="form-item-age">
           <CheckboxGroup v-model="form.tagTypeCode" class="item-radio-top">
             <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
-            <Checkbox v-for="it in tags[3].values" :key="it.key" :label="it.key"
+            <Checkbox v-if="it.controlStatus != 2" v-for="it in tags[3].values" :key="it.key" :label="it.key"
               class="check-item">{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
@@ -164,6 +164,7 @@ import SingCinema from './singcinema.vue'
 import AreaPane, { Stats } from './components/areaPane'
 import { formatYell } from '@/util/validateRules'
 import { planDefault, queryRelevanceList } from '@/api/plan'
+import { clean } from '@/fn/object'
 
 const timeFormat = 'YYYY-MM-DD'
 const timeFormats = 'YYYYMMDD'
@@ -535,6 +536,11 @@ export default class Main extends ViewBase {
       if ( this.cinema.MOVIE_TYPE.includes(0) ) {
         type = []
       }
+      const times: any = {}
+      if (this.dateType == 1) {
+      } else {
+
+      }
       try {
         const {
           data: {
@@ -544,7 +550,8 @@ export default class Main extends ViewBase {
           }
         } = await cinemaList({
           types: type.join(','),
-          pageSize: 3
+          pageSize: 3,
+          ...times
         })
         this.normCinema = items
       } catch (ex) {
@@ -691,7 +698,7 @@ export default class Main extends ViewBase {
         id: this.$route.params.id
       }
     }
-    const index: any = Math.floor(Math.random() * 100 + 1)
+    const index: any = 'pop_plan_edit_' + Math.floor(Math.random() * 1000 + 1)
     sessionStorage.setItem(`${index}`, JSON.stringify(addObject))
     this.$router.push({ name: 'pop-plan-scheme', params: { id: index}})
   }

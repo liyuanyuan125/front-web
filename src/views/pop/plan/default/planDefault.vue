@@ -336,7 +336,7 @@ export default class PlanDefault extends ViewBase {
     return text[0].text
   }
   toEdit() {
-    this.$router.push({name: 'pop-plan', params: {id: this.items.id}})
+    this.$router.push({name: 'pop-planlist-add', params: {id: this.items.id}})
   }
   billingModeList(id: any) {
     const list = this.defaultData.billingModeList
