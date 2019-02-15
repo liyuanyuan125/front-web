@@ -42,10 +42,10 @@
       <!-- 投放排期 自定义时间 -->
       <div class="clear-f" key="save" v-if="dateType == 1">
         <FormItem class="tag-date float-left" label="开始时间" prop="beginDate">
-          <DatePicker type="date" v-model="form.beginDate" :options="startDate" placeholder="请选择开始时间"></DatePicker>
+          <DatePicker type="date" @on-change="cinemaFind" v-model="form.beginDate" :options="startDate" placeholder="请选择开始时间"></DatePicker>
         </FormItem>
         <FormItem class="tag-date float-right pr130" label="结束时间" prop="endDate">
-          <DatePicker type="date" v-model="form.endDate" :options="endDate" placeholder="请选择结束时间"></DatePicker>
+          <DatePicker type="date" @on-change="cinemaFind" v-model="form.endDate" :options="endDate" placeholder="请选择结束时间"></DatePicker>
         </FormItem>
       </div>
 
@@ -532,7 +532,7 @@ export default class Main extends ViewBase {
   // 影片列表查询
   async cinemaFind() {
     if (this.putType == 1) {
-      const type: any = this.cinema.MOVIE_TYPE
+      let type: any = this.cinema.MOVIE_TYPE
       if ( this.cinema.MOVIE_TYPE.includes(0) ) {
         type = []
       }
@@ -551,11 +551,11 @@ export default class Main extends ViewBase {
               items
             }
           }
-        } = await cinemaList({
+        } = await cinemaList(clean({
           types: type.join(','),
           pageSize: 3,
           ...times
-        })
+        }))
         this.normCinema = items
       } catch (ex) {
         this.handleError(ex)
@@ -774,6 +774,14 @@ export default class Main extends ViewBase {
       this.beginDateId = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].beginDate)
       this.endDateId = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].endDate)
       this.calendarName = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].name)
+      if (this.putType == 1) {
+        this.cinemaFind()
+      }
+    } else {
+      this.beginDateId = ''
+      this.endDateId = ''
+      this.calendarName = ''
+      this.cinemaFind()
     }
   }
 }
