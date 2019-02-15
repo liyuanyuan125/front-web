@@ -39,16 +39,18 @@
             </dl>
             <dl>
               <dd>客户名称</dd>
-              <dt>{{list.customerName}}</dt>
+              <dt v-if='this.list.customerName'>{{list.customerName}}</dt>
+              <dt v-if='!this.list.customerName'>暂无</dt>
             </dl>
             <dl>
               <dd>广告片规格</dd>
-              <dt>{{list.specification}}s</dt>
+              <dt v-if='this.list.specification'>{{list.specification}}s</dt>
+              <dt v-if='!this.list.specification'>暂无</dt>
             </dl>
             <dl>
               <dd>广告片名称</dd>
-              <dt v-if='!list.advertisingName'>{{videos.name}}</dt>
-              <dt v-if='list.advertisingName'>{{list.advertisingName}}</dt>
+              <dt v-if='!this.list.advertisingName.length'>暂无</dt>
+              <dt v-if='this.list.advertisingName'>{{list.advertisingName}}</dt>
             </dl>
             <dl>
               <dd>投放排期</dd>
@@ -989,8 +991,10 @@ export default class Main extends ViewBase {
           }
 
       // 广告片
-      const videoitem = await video(this.list.videoId)
-      this.videos = videoitem.data.items
+      if (this.list.videoId) {
+        const videoitem = await video(this.list.videoId)
+        this.videos = videoitem.data.items
+      }
       // 查询影片列表
       if (this.list.deliveryMovies) {
         const seacinema = await cinemaList({id : this.list.deliveryMovies[0]})

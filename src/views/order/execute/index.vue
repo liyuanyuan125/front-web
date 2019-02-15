@@ -6,15 +6,15 @@
         <Col :span="24">
           <div class="fince-list">
             <div class='fince-list-big'>
-              <div class="fince-list-acc"><img src="./assets/待执行单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.waiting></numAdd></span></div>
+              <div class="fince-list-acc"><img src="./assets/待执行单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.unExecuteCount></numAdd></span></div>
               <p class="fince-list-sm">待执行单</p>
             </div>
             <div class='fince-list-big'>
-              <div class="fince-list-acc"><img src="./assets/执行中.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.received></numAdd></span></div>
+              <div class="fince-list-acc"><img src="./assets/执行中.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.beExecuteCount></numAdd></span></div>
               <p class="fince-list-sm">执行中</p>
             </div>
             <div class='fince-list-big'>
-              <div class="fince-list-acc"><img src="./assets/已完成单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.received></numAdd></span></div>
+              <div class="fince-list-acc"><img src="./assets/已完成单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.outExecuteCount></numAdd></span></div>
               <p class="fince-list-sm">已完成单</p>
             </div>
           </div>

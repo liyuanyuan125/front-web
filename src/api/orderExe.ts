@@ -8,6 +8,6 @@ export async function querylist(query: any) {
 
 // 数据统计
 export async function nums() {
-  const res = await get('/xadvert/dispatchs/statistics')
+  const res = await get('/xadvert/execute-orders/statistics')
   return res
 }
