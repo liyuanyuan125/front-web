@@ -95,8 +95,8 @@
         <FormItem v-if="index != 3" v-for="(item, index) in tags" :key="index" :label="item.name" :class="['form-item-age', index == 0 ? 'pb3' : '']">
           <radioTab v-if="index != 0" v-model="cinema[item.code]" :tagMess="item.values" />
           <CheckboxGroup v-else v-model="cinema[item.code]" class="item-radio-top">
-            <Checkbox :class="index == 0 ? 'check-item form-item-first' : 'check-item'" :label="0">不限</Checkbox>
-            <Checkbox v-for="it in item.values" :key="it.key" :label="it.key"
+            <Checkbox  :class="index == 0 ? 'check-item form-item-first' : 'check-item'" :label="0">不限</Checkbox>
+            <Checkbox  v-for="it in item.values" :key="it.key" :label="it.key"
               class="check-item">{{it.text}}</Checkbox>
           </CheckboxGroup>
         </FormItem>
@@ -256,12 +256,14 @@ export default class Main extends ViewBase {
   dateType: number = 1
   startDate: any = {
     disabledDate: (date: any) => {
-      return date && this.form.endDate && date.valueOf() > new Date(this.form.endDate).getTime()
+      return date && (this.form.endDate && date.valueOf() > new Date(this.form.endDate).getTime())
+      || date.valueOf() < Date.now()
     }
   }
   endDate: any = {
     disabledDate: (date: any) => {
       return date && this.form.beginDate && date.valueOf() < new Date(this.form.beginDate).getTime()
+      || date.valueOf() < Date.now()
     }
   }
 
@@ -579,7 +581,7 @@ export default class Main extends ViewBase {
         data: {
           items
         }
-      } = await drairesList(year)
+      } = await drairesList({years: year})
       this.airiesList = items || []
       this.form.calendarId = val || ''
     }
@@ -728,6 +730,18 @@ export default class Main extends ViewBase {
       }
       this.cinemaFind()
     }
+  }
+
+  @Watch('cinema.PLAN_GROUP_AGE', { deep: true })
+  watchPLAN_GROUP_AGE(value: any, oldValue: any) {
+    // 不限与其他项互斥
+      this.cinemaFind()
+  }
+
+  @Watch('cinema.PLAN_GROUP_SEX', { deep: true })
+  watchPLAN_GROUP_SEX(value: any, oldValue: any) {
+    // 不限与其他项互斥
+      this.cinemaFind()
   }
 
   @Watch('form.tagTypeCode', { deep: true })

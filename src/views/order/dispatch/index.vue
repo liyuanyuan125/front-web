@@ -74,7 +74,7 @@
             <Col span='8'>下单时间      {{it.createTime}}</Col>
             <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenue}}</span></Col>
             <Col span='6'>
-              <span class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
+              <span class='button' @click="editrefuse(it)" style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
               <span @click="editReject(it.id)" class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
             </Col>
           </Row>
@@ -141,7 +141,7 @@
     </Row>
     <dlgRejec ref="reject" v-if="rejectShow"/>
     <targetDlg ref="target" v-if="targetShow" />
-    <rejectDlg ref="reject" v-if="rejectShow" />
+    <refuseDlg ref="refuse" v-if="refuseShow" />
   </div>
 </template>
 
@@ -154,7 +154,7 @@ import { formatTimestamp } from '@/util/validateRules'
 import numAdd from './number.vue'
 import dlgRejec from './dlgReject.vue'
 import targetDlg from './targetDlg.vue'
-import refusetDlg from './refusetDlg.vue'
+import refuseDlg from './refuseDlg.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 
@@ -162,7 +162,8 @@ const timeFormat = 'YYYY-MM-DD'
   components: {
     numAdd,
     dlgRejec,
-    targetDlg
+    targetDlg,
+    refuseDlg
   }
 })
 export default class Main extends ViewBase {
