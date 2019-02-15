@@ -43,7 +43,7 @@
             </dl>
             <dl>
               <dd>广告片规格</dd>
-              <dt>{{list.length}}s</dt>
+              <dt>{{list.specification}}s</dt>
             </dl>
             <dl>
               <dd>广告片名称</dd>
@@ -499,7 +499,7 @@ export default class Main extends ViewBase {
   get columns() {
       return [
         { title: '专资编码', key: 'code', align: 'center'},
-        { title: '影院名称', key: 'officialName', align: 'center'},
+        { title: '影院名称', key: 'shortName', align: 'center'},
         { title: '总座位数', key: 'seatCount', align: 'center'}
       ]
   }
