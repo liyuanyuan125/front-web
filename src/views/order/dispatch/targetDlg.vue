@@ -186,6 +186,9 @@ export default class DlgEditCinema extends ViewBase {
   height: 50px;
   margin-right: 20px;
 }
+/deep/ .ivu-table-wrapper {
+  margin-top: 20px;
+}
 .foot {
   text-align: center;
   height: 90px;

@@ -82,7 +82,7 @@
               style='background: #3B98FF; color: #fff;cursor: pointer;'
             >下载DCP包</router-link>
               <!-- <span class='button' v-if='it.status == 1 || it.status == 2' style='background: #3B98FF; color: #fff;cursor: pointer;'>下载DCP包</span> -->
-              <span class='button' v-if='it.status == 1' style='background: #3B98FF; color: #fff;cursor: pointer;'>修改执行影院</span>
+              <span class='button' @click="editReject(it.id)" v-if='it.status == 1' style='background: #3B98FF; color: #fff;cursor: pointer;'>修改执行影院</span>
             </Col>
           </Row>
           <Row class='li-item'>
@@ -91,7 +91,7 @@
                 <Col span='3' class='row-list-hui'>广告单名称</Col>
                 <Col span='9' class='row-list-huis'>{{it.videoName}}</Col>
                 <Col span='3' class='row-list-hui'>目标影院</Col>
-                <Col span='9' class='row-list-huis'>{{it.cinemas.length}}家   <span style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
+                <Col span='9' class='row-list-huis'>{{it.cinemas.length}}家   <span @click="editReject(it.id)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
               </Row>
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>广告片规格</Col>
@@ -145,7 +145,8 @@
       @on-page-size-change="handlePageSize"
     />
     </Row>
-    
+    <dlgRejec ref="reject" v-if="rejectShow" @rejReload="rejload"/>
+    <targetDlg ref="target" v-if="targetShow" />
   </div>
 </template>
 
@@ -156,13 +157,16 @@ import moment from 'moment'
 import { nums , querylist  } from '@/api/orderExe'
 import { formatTimestamp } from '@/util/validateRules'
 import numAdd from '../dispatch/number.vue'
-
+import dlgRejec from '../dispatch/dlgReject.vue'
+import targetDlg from '../dispatch/targetDlg.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 
 @Component({
   components: {
-    numAdd
+    numAdd,
+    dlgRejec,
+    targetDlg
   }
 })
 export default class Main extends ViewBase {
@@ -176,6 +180,8 @@ export default class Main extends ViewBase {
     pageIndex: 1,
     pageSize: 4,
   }
+  rejectShow = false
+  targetShow = false
   // 统计数据
   nums: any = []
   // 数据列表
@@ -220,6 +226,20 @@ export default class Main extends ViewBase {
     } finally {
       // this.loading = false
     }
+  }
+
+  editReject(id: any) {
+    this.rejectShow = true
+    this.$nextTick(() => {
+      (this.$refs.reject as any).init(id, 1)
+    })
+  }
+
+  edittarget(id: any) {
+    this.targetShow = true
+    this.$nextTick(() => {
+      (this.$refs.target as any).init(id, 1)
+    })
   }
 
   nulldata() {
