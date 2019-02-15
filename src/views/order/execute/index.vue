@@ -82,7 +82,7 @@
               style='background: #3B98FF; color: #fff;cursor: pointer;'
             >下载DCP包</router-link>
               <!-- <span class='button' v-if='it.status == 1 || it.status == 2' style='background: #3B98FF; color: #fff;cursor: pointer;'>下载DCP包</span> -->
-              <span class='button' v-if='it.status == 1' style='background: #3B98FF; color: #fff;cursor: pointer;'>修改执行影院</span>
+              <span class='button' @click="editReject(it.id)" v-if='it.status == 1' style='background: #3B98FF; color: #fff;cursor: pointer;'>修改执行影院</span>
             </Col>
           </Row>
           <Row class='li-item'>
@@ -91,7 +91,7 @@
                 <Col span='3' class='row-list-hui'>广告单名称</Col>
                 <Col span='9' class='row-list-huis'>{{it.videoName}}</Col>
                 <Col span='3' class='row-list-hui'>目标影院</Col>
-                <Col span='9' class='row-list-huis'>{{it.cinemas.length}}家   <span style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
+                <Col span='9' class='row-list-huis'>{{it.cinemas.length}}家   <span @click="edittarget(it.id)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
               </Row>
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>广告片规格</Col>
@@ -124,7 +124,9 @@
                 <Col v-if='it.planType == 1' span='12' class='img-order'><img src="./assets/标准单.png" alt=""><span>标准单</span></Col>
                 <Col v-if='it.planType == 2' span='12' class='img-order'><img src="./assets/加速单.png" alt=""><span>加速单</span></Col>
                 <Col v-if='it.planType == 3' span='12' class='img-order'><img src="./assets/优享单.png" alt=""><span>优享单</span></Col>
-                
+              </Row>
+              <Row>
+                <Progress v-if='it.status == 2' :percent="it.bili" status="active" />
               </Row>
             </Col>
           </Row>
@@ -143,7 +145,8 @@
       @on-page-size-change="handlePageSize"
     />
     </Row>
-    
+    <dlgRejec ref="reject" v-if="rejectShow" @rejReload="rejload"/>
+    <targetDlg ref="target" v-if="targetShow" />
   </div>
 </template>
 
@@ -154,13 +157,16 @@ import moment from 'moment'
 import { nums , querylist  } from '@/api/orderExe'
 import { formatTimestamp } from '@/util/validateRules'
 import numAdd from '../dispatch/number.vue'
-
+import dlgRejec from '../dispatch/dlgReject.vue'
+import targetDlg from '../dispatch/targetDlg.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 
 @Component({
   components: {
-    numAdd
+    numAdd,
+    dlgRejec,
+    targetDlg
   }
 })
 export default class Main extends ViewBase {
@@ -174,6 +180,8 @@ export default class Main extends ViewBase {
     pageIndex: 1,
     pageSize: 4,
   }
+  rejectShow = false
+  targetShow = false
   // 统计数据
   nums: any = []
   // 数据列表
@@ -187,6 +195,13 @@ export default class Main extends ViewBase {
 
   showTime = []
 
+  rejload() {
+    this.seach()
+  }
+
+  refload() {
+    this.seach()
+  }
 
   mounted() {
     this.seach()
@@ -199,24 +214,56 @@ export default class Main extends ViewBase {
       const data = await nums()
       this.nums = data.data
       // 数据列表
-      const datalist = await querylist(this.query)
-      this.statusList = datalist.data.statusList
-      this.planTypeList = datalist.data.planTypeList
-      this.executeQueryTypeList = datalist.data.executeQueryTypeList
-      this.totalCount = datalist.data.totalCount
-      this.itemlist = (datalist.data.items || []).map((it: any) => {
-        return {
-          ...it,
-          createTime: moment(it.createTime).format(timeFormat),
-          beginDate: moment(it.beginDate).format(timeFormat),
-          endDate: moment(it.endDate).format(timeFormat)
-        }
-      })
+      if (this.$route.params) {
+        const datalist1 = await querylist({videoName: this.$route.params.id})
+        this.statusList = datalist1.data.statusList
+        this.planTypeList = datalist1.data.planTypeList
+        this.executeQueryTypeList = datalist1.data.executeQueryTypeList
+        this.totalCount = datalist1.data.totalCount
+        this.itemlist = (datalist1.data.items || []).map((it: any) => {
+          return {
+            ...it,
+            createTime: moment(it.createTime).format(timeFormat),
+            beginDate: moment(it.beginDate).format(timeFormat),
+            endDate: moment(it.endDate).format(timeFormat),
+            bili: Math.floor(((new Date().getTime() - it.beginDate) / (it.endDate - it.beginDate)) * 100)
+          }
+        })
+      } else {
+        const datalist = await querylist(this.query)
+        this.statusList = datalist.data.statusList
+        this.planTypeList = datalist.data.planTypeList
+        this.executeQueryTypeList = datalist.data.executeQueryTypeList
+        this.totalCount = datalist.data.totalCount
+        this.itemlist = (datalist.data.items || []).map((it: any) => {
+          return {
+            ...it,
+            createTime: moment(it.createTime).format(timeFormat),
+            beginDate: moment(it.beginDate).format(timeFormat),
+            endDate: moment(it.endDate).format(timeFormat),
+            bili: Math.floor(((new Date().getTime() - it.beginDate) / (it.endDate - it.beginDate)) * 100)
+          }
+        })
+      }
     } catch (ex) {
       this.handleError(ex)
     } finally {
       // this.loading = false
     }
+  }
+
+  editReject(id: any) {
+    this.rejectShow = true
+    this.$nextTick(() => {
+      (this.$refs.reject as any).init(id, 2)
+    })
+  }
+
+  edittarget(id: any) {
+    this.targetShow = true
+    this.$nextTick(() => {
+      (this.$refs.target as any).init(id, 2)
+    })
   }
 
   nulldata() {
@@ -372,7 +419,7 @@ export default class Main extends ViewBase {
       }
     }
     .img-order {
-      line-height: 150px;
+      line-height: 110px;
       span {
         margin-left: 10px;
         font-size: 14px;

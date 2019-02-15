@@ -14,7 +14,7 @@
         </span>
       </div>
       <div class="detail" @click="edit">
-      <p>查看全部已关联影院 <span>{{checkId.length}}个</span></p>
+      <p>查看全部已关联影院 <span>{{checktotal}}个</span></p>
       </div>
       <Table :loading="loading"  stripe @on-selection-change="check" :columns="columns" :data="tableDate">
         <template slot-scope="{ row }" slot="citys">
@@ -41,8 +41,14 @@
         @on-page-size-change="currentChangeHandle"/>
     </div>
     <div slot="footer" class="foot">
-      <Button class="foot-cancel-button" type="info" @click="cancel">取消计划</Button>
-      <Button class="foot-button" type="primary" @click="open">开启投放</Button>
+      <div v-if="type == 1">
+        <Button class="foot-cancel-button" type="info" @click="cancel">取消计划</Button>
+        <Button class="foot-button" type="primary" @click="open">开启投放</Button>
+      </div>
+      <div v-else>
+        <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
+        <Button class="foot-button" type="primary" @click="open">确定</Button>
+      </div>
     </div>
     <targetDlg ref="target" />
   </Modal>
@@ -51,7 +57,7 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { queryList, carryList, leafletList, sureLeaflet, carrySet } from '@/api/leafletDlg'
+import { queryList, findCinema, carryList, leafletList, sureLeaflet, carrySet } from '@/api/leafletDlg'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import targetDlg from './targetDlg.vue'
@@ -71,6 +77,7 @@ export default class DlgEditCinema extends ViewBase {
     pageIndex: 1,
     pageSize: 6,
   }
+  checktotal: any = 0
   loading = false
   id: any = ''
   data: any = []
@@ -117,7 +124,7 @@ export default class DlgEditCinema extends ViewBase {
         } else {
           return {
             ...it,
-            citys: `${it.areaName}${it.provinceName}${it.cityName}`
+            citys: `${it.areaName} / ${it.provinceName} / ${it.cityName}`
           }
         }
       })
@@ -140,11 +147,22 @@ export default class DlgEditCinema extends ViewBase {
     this.checkObj = this.checkObj.filter((it: any) => !filterId.includes(it.id))
   }
 
-  init(id: any, type: any) {
+  async init(id: any, type: any) {
     this.id = id
     this.type = type
     this.loading = true
     this.showDlg = true
+    let res: any = null
+    try {
+      if (this.type == 1) {
+        res = await findCinema(this.id, {...this.dataForm})
+      } else {
+        res = await carryList(this.id, {...this.dataForm})
+      }
+      this.checktotal = res.data.totalCount
+    } catch (ex) {
+      this.handleError(ex)
+    }
     this.seach()
   }
 
@@ -155,12 +173,15 @@ export default class DlgEditCinema extends ViewBase {
           items,
           totalCount
         }
-      } = await leafletList(this.id, clean({
+      } = this.type == 1 ? await leafletList(this.id, clean({
+        ...this.dataForm
+      })) : await carryList(this.id, clean({
         ...this.dataForm
       }))
       this.total = totalCount
       this.data = items || []
       this.loading = false
+      this.$emit('ref')
     } catch (ex) {
       this.handleError(ex)
     }
@@ -180,7 +201,7 @@ export default class DlgEditCinema extends ViewBase {
 
   edit() {
     this.$nextTick(() => {
-      (this.$refs.target as any).init(0, this.checkObj)
+      (this.$refs.target as any).init(this.id, this.type)
     })
   }
 
@@ -191,7 +212,7 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   async open() {
-    if (this.checkId.length == 0 && this.type == 1) {
+    if (this.checkId.length == 0) {
       warning('请选择目标影院')
       return
     }
@@ -202,6 +223,8 @@ export default class DlgEditCinema extends ViewBase {
       }) : await carrySet(this.id, {
         cinemas: this.checkId
       })
+      this.$emit('rejReload')
+      toast('操作成功')
       this.cancel()
     } catch (ex) {
       this.handleError(ex)

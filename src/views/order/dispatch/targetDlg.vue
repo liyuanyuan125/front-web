@@ -2,7 +2,7 @@
   <Modal 
   v-model='target'
   title="查看目标影院"
-  :transfer='false'
+  :transfer='true'
   :styles="{top: '70px'}"
   :width='720'
   footer-hide
@@ -10,7 +10,7 @@
   @on-cancel="cancel()">
   <div  class="targer-cinema">
     <div class="detail">
-      <p>查看全部已关联影院 <span>{{tableDate.length}}个</span></p>
+      <p>当前共有目标影院 <span>{{total}}个</span></p>
     </div>
     <Table   stripe :columns="columns" :data="id == 0 ? countData : tableDate">
       <template slot-scope="{ row }" slot="citys">
@@ -43,13 +43,14 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { queryList, leafletList, sureLeaflet, findCinema } from '@/api/leafletDlg'
+import { carryList, leafletList, sureLeaflet, findCinema } from '@/api/leafletDlg'
 import targetDlg from './targetDlg.vue'
 
 @Component
 export default class DlgEditCinema extends ViewBase {
   target = false
   mask = false
+  type: any = ''
   id = 0
   total = 0
   dataForm: any = {
@@ -85,8 +86,9 @@ export default class DlgEditCinema extends ViewBase {
     // this.init(31)
   }
 
-  init(id: any, data?: any) {
+  init(id: any, type: any, data?: any) {
     this.id = id
+    this.type = type
     this.target = true
     if (id == 0) {
       this.tableDate = data
@@ -99,18 +101,18 @@ export default class DlgEditCinema extends ViewBase {
 
   async seach() {
     try {
-      const {
-        data: {
-          items,
-          totalCount
-        }
-      } = await findCinema(this.id, {...this.dataForm})
-      this.total = totalCount
-      if (items && items.length > 0) {
-        this.tableDate = items.map((it: any) => {
+      let res: any = null
+      if (this.type == 1) {
+        res = await findCinema(this.id, {...this.dataForm})
+      } else {
+        res = await carryList(this.id, {...this.dataForm})
+      }
+      this.total = res.data.totalCount
+      if (res.data.items && res.data.items.length > 0) {
+        this.tableDate = res.data.items.map((it: any) => {
           return {
             ...it,
-            citys: `${it.areaName}${it.provinceName}${it.cityName}`,
+            citys: `${it.areaName} / ${it.provinceName} / ${it.cityName}`,
           }
         })
       }
@@ -183,6 +185,9 @@ export default class DlgEditCinema extends ViewBase {
   width: 196px;
   height: 50px;
   margin-right: 20px;
+}
+/deep/ .ivu-table-wrapper {
+  margin-top: 20px;
 }
 .foot {
   text-align: center;
