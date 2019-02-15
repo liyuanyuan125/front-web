@@ -91,7 +91,7 @@
                 <Col span='3' class='row-list-hui'>广告单名称</Col>
                 <Col span='9' class='row-list-huis'>{{it.videoName}}</Col>
                 <Col span='3' class='row-list-hui'>目标影院</Col>
-                <Col span='9' class='row-list-huis'>{{it.cinemas.length}}家   <span @click="editReject(it.id)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
+                <Col span='9' class='row-list-huis'>{{it.cinemas.length}}家   <span @click="edittarget(it.id)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
               </Row>
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>广告片规格</Col>
@@ -195,6 +195,13 @@ export default class Main extends ViewBase {
 
   showTime = []
 
+  rejload() {
+    this.seach()
+  }
+
+  refload() {
+    this.seach()
+  }
 
   mounted() {
     this.seach()
@@ -248,14 +255,14 @@ export default class Main extends ViewBase {
   editReject(id: any) {
     this.rejectShow = true
     this.$nextTick(() => {
-      (this.$refs.reject as any).init(id, 1)
+      (this.$refs.reject as any).init(id, 2)
     })
   }
 
   edittarget(id: any) {
     this.targetShow = true
     this.$nextTick(() => {
-      (this.$refs.target as any).init(id, 1)
+      (this.$refs.target as any).init(id, 2)
     })
   }
 

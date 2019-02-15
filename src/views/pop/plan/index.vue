@@ -623,7 +623,7 @@ export default class Main extends ViewBase {
     const query = {
       deliveryType: 1,
       name: this.form.name,
-      videoId: this.form.videoId,
+      videoId: this.form.videoId ? this.form.videoId : null,
       specification: this.specification,
       customerName: this.customerName,
       advertisingName: this.advertisingName,

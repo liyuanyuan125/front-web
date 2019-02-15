@@ -254,12 +254,6 @@ export default class Main extends ViewBase {
     })
   }
 
-  editrefuse(id: any) {
-    this.refuseShow = true
-    this.$nextTick(() => {
-      (this.$refs.refuse as any).init(id, 1)
-    })
-  }
 
   nulldata() {
     this.showTime = []
