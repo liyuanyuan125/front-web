@@ -14,7 +14,7 @@
         </span>
       </div>
       <div class="detail" @click="edit">
-      <p>查看全部已关联影院 <span>{{checkId.length}}个</span></p>
+      <p>查看全部已关联影院 <span>{{checktotal}}个</span></p>
       </div>
       <Table :loading="loading"  stripe @on-selection-change="check" :columns="columns" :data="tableDate">
         <template slot-scope="{ row }" slot="citys">
@@ -57,7 +57,7 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { queryList, carryList, leafletList, sureLeaflet, carrySet } from '@/api/leafletDlg'
+import { queryList, findCinema, carryList, leafletList, sureLeaflet, carrySet } from '@/api/leafletDlg'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import targetDlg from './targetDlg.vue'
@@ -77,6 +77,7 @@ export default class DlgEditCinema extends ViewBase {
     pageIndex: 1,
     pageSize: 6,
   }
+  checktotal: any = 0
   loading = false
   id: any = ''
   data: any = []
@@ -123,7 +124,7 @@ export default class DlgEditCinema extends ViewBase {
         } else {
           return {
             ...it,
-            citys: `${it.areaName}${it.provinceName}${it.cityName}`
+            citys: `${it.areaName} / ${it.provinceName} / ${it.cityName}`
           }
         }
       })
@@ -146,11 +147,22 @@ export default class DlgEditCinema extends ViewBase {
     this.checkObj = this.checkObj.filter((it: any) => !filterId.includes(it.id))
   }
 
-  init(id: any, type: any) {
+  async init(id: any, type: any) {
     this.id = id
     this.type = type
     this.loading = true
     this.showDlg = true
+    let res: any = null
+    try {
+      if (this.type == 1) {
+        res = await findCinema(this.id, {...this.dataForm})
+      } else {
+        res = await carryList(this.id, {...this.dataForm})
+      }
+      this.checktotal = res.data.totalCount
+    } catch (ex) {
+      this.handleError(ex)
+    }
     this.seach()
   }
 
@@ -189,7 +201,7 @@ export default class DlgEditCinema extends ViewBase {
 
   edit() {
     this.$nextTick(() => {
-      (this.$refs.target as any).init(0, this.checkObj)
+      (this.$refs.target as any).init(this.id, this.type)
     })
   }
 
@@ -200,7 +212,7 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   async open() {
-    if (this.checkId.length == 0 && this.type == 1) {
+    if (this.checkId.length == 0) {
       warning('请选择目标影院')
       return
     }

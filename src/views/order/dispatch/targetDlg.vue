@@ -2,7 +2,7 @@
   <Modal 
   v-model='target'
   title="查看目标影院"
-  :transfer='false'
+  :transfer='true'
   :styles="{top: '70px'}"
   :width='720'
   footer-hide
@@ -101,18 +101,18 @@ export default class DlgEditCinema extends ViewBase {
 
   async seach() {
     try {
-      const {
-        data: {
-          items,
-          totalCount
-        }
-      } = await findCinema(this.id, {...this.dataForm})
-      this.total = totalCount
-      if (items && items.length > 0) {
-        this.tableDate = items.map((it: any) => {
+      let res: any = null
+      if (this.type == 1) {
+        res = await findCinema(this.id, {...this.dataForm})
+      } else {
+        res = await carryList(this.id, {...this.dataForm})
+      }
+      this.total = res.data.totalCount
+      if (res.data.items && res.data.items.length > 0) {
+        this.tableDate = res.data.items.map((it: any) => {
           return {
             ...it,
-            citys: `${it.areaName}${it.provinceName}${it.cityName}`,
+            citys: `${it.areaName} / ${it.provinceName} / ${it.cityName}`,
           }
         })
       }
