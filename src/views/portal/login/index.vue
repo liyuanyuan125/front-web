@@ -16,10 +16,10 @@
     <content class="content">
       <div class="main-wrap">
         <div>
-          <img src="~@/assets/login/bannerlogo.png" alt="alias" height="115px">
+          <img src="./assets/bannerlogo.png" alt="alias" height="115px">
           <br>
           <router-link to="/register">
-            <img src="~@/assets/login/bannerbtn.png" alt="alias" height="50px">
+            <img src="./assets/bannerbtn.png" alt="alias" height="50px">
           </router-link>
         </div>
         <div>
@@ -216,7 +216,7 @@ export default class Main extends ViewBase {
     width: 100%;
     height: 100%;
     min-height: 600px;
-    background: url('~@/assets/login/loginBg.png') no-repeat center;
+    background: url(http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bhj7kl98jlg00080873g.jpg) no-repeat center;
     background-size: cover;
     .main-wrap {
       .wid-auto;

@@ -14,7 +14,7 @@ import routes from './routes'
 
 // 将登陆注册等模块「静态」到主文件中，以便用户更流畅
 import home from './views/home.vue'
-import login from './views/portal/login.vue'
+import login from './views/portal/login/index.vue'
 import register from './views/portal/register.vue'
 import registerComplete from './views/portal/registerComplete.vue'
 import activeEmail from './views/portal/activeEmail.vue'
