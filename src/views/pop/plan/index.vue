@@ -764,6 +764,10 @@ export default class Main extends ViewBase {
   watchvideoId(val: any) {
     if (val) {
       this.adverDetail(val)
+    } else {
+      this.advertisingName = ''
+      this.specification = ''
+      this.customerName = ''
     }
   }
 
