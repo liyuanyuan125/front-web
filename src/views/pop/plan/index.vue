@@ -791,7 +791,7 @@ export default class Main extends ViewBase {
     if (val) {
       this.beginDateId = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].beginDate)
       this.endDateId = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].endDate)
-      this.calendarName = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].name)
+      this.calendarName = this.airiesList.filter((it: any) => it.id == val)[0].name
       if (this.putType == 1) {
         this.cinemaFind()
       }

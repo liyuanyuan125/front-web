@@ -5,7 +5,7 @@
   :width='720'
   :styles="{top: '30px'}"
   @on-cancel="cancel()">
-    <h3 class="refuse">是否拒绝该执行单</h3>
+    <h3 class="refuse">是否拒绝该执行单?</h3>
     <Row class="refuse-body" style="margin-top: 20px">
       <Row>
         <Col :span="4">广告片名称</Col>
@@ -44,7 +44,7 @@
         <Col :span="18"><span  v-if='data.movieList.length > 0' v-for='item in data.movieList'>《{{item.name}}》 </span><span v-if='data.movieList.length == 0'>暂无  </span></Col>
       </Row>
       <Row>
-        <Col :span="4">预估最大金额</Col>
+        <Col :span="4"><span style="padding-top: 10px">预估最大金额</span></Col>
         <Col :span="7"><span class="red">{{data.estimateRevenue}}</span></Col>
       </Row>
     </Row>
@@ -58,7 +58,7 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { queryList, leafletList, sureLeaflet } from '@/api/leafletDlg'
+import { queryList, leafletList, carryRefuse } from '@/api/leafletDlg'
 import { formatCurrency } from '@/fn/string'
 
 @Component
@@ -83,8 +83,14 @@ export default class DlgEditCinema extends ViewBase {
     this.showDlg = false
   }
 
-  open() {
-
+  async open() {
+    try {
+      await carryRefuse(this.data.id)
+      this.cancel()
+      this.$emit('refload')
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 }
 </script>
@@ -139,6 +145,7 @@ export default class DlgEditCinema extends ViewBase {
   }
 }
 .red {
+  font-size: 24px;
   color: red;
 }
 .foot {

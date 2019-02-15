@@ -139,9 +139,9 @@
       @on-page-size-change="handlePageSize"
     />
     </Row>
-    <dlgRejec ref="reject" v-if="rejectShow"/>
+    <dlgRejec ref="reject" v-if="rejectShow" @rejReload="rejload"/>
     <targetDlg ref="target" v-if="targetShow" />
-    <refuseDlg ref="refuse" v-if="refuseShow" />
+    <refuseDlg ref="refuse" v-if="refuseShow"  @refReload="refload" />
   </div>
 </template>
 
@@ -194,6 +194,14 @@ export default class Main extends ViewBase {
 
 
   mounted() {
+    this.seach()
+  }
+
+  rejload() {
+    this.seach()
+  }
+
+  refload() {
     this.seach()
   }
 

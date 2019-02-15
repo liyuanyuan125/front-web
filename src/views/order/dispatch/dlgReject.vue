@@ -161,6 +161,7 @@ export default class DlgEditCinema extends ViewBase {
       this.total = totalCount
       this.data = items || []
       this.loading = false
+      this.$emit('ref')
     } catch (ex) {
       this.handleError(ex)
     }
@@ -202,6 +203,7 @@ export default class DlgEditCinema extends ViewBase {
       }) : await carrySet(this.id, {
         cinemas: this.checkId
       })
+      this.$emit('rejReload')
       this.cancel()
     } catch (ex) {
       this.handleError(ex)

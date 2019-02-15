@@ -10,7 +10,7 @@
   @on-cancel="cancel()">
   <div  class="targer-cinema">
     <div class="detail">
-      <p>查看全部已关联影院 <span>{{tableDate.length}}个</span></p>
+      <p>查看全部已关联影院 <span>{{total.length}}个</span></p>
     </div>
     <Table   stripe :columns="columns" :data="id == 0 ? countData : tableDate">
       <template slot-scope="{ row }" slot="citys">
