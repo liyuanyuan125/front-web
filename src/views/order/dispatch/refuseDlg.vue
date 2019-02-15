@@ -44,7 +44,7 @@
         <Col :span="18"><span  v-if='data.movieList.length > 0' v-for='item in data.movieList'>《{{item.name}}》 </span><span v-if='data.movieList.length == 0'>暂无  </span></Col>
       </Row>
       <Row>
-        <Col :span="4"><span style="padding-top: 10px">预估最大金额</span></Col>
+        <Col :span="4" style="padding-top: 10px"><span>预估最大金额</span></Col>
         <Col :span="7"><span class="red">{{data.estimateRevenue}}</span></Col>
       </Row>
     </Row>
@@ -60,6 +60,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { queryList, leafletList, carryRefuse } from '@/api/leafletDlg'
 import { formatCurrency } from '@/fn/string'
+import { toast, warning } from '@/ui/modal.ts'
 
 @Component
 export default class DlgEditCinema extends ViewBase {
@@ -88,6 +89,7 @@ export default class DlgEditCinema extends ViewBase {
       await carryRefuse(this.data.id)
       this.cancel()
       this.$emit('refload')
+      toast('操作成功')
     } catch (ex) {
       this.handleError(ex)
     }
