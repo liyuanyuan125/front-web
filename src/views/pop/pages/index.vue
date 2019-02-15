@@ -74,7 +74,7 @@
                 <!-- <div style="height: 100%"> -->
                   <img src="./assets/粉圈.png" alt="">
                   <div class='canpos'>
-                    <p style='font-size: 30px;'>{{aboutcount}}</p>
+                    <p style='font-size: 26px;'>{{aboutcount}}</p>
                     <p>预估覆盖场次</p>
                   </div>
                 <!-- </div> -->
@@ -86,7 +86,7 @@
                 <!-- <div ref="container2" style="height: 100%"></div> -->
                 <img src="./assets/蓝圈.png" alt="">
                 <div class='canpos'>
-                  <p style='font-size: 30px;'>￥{{pricecounts}}</p>
+                  <p style='font-size: 26px;'>￥{{pricecounts}}</p>
                   <p>预估投放花费</p>
                 </div>
               </div>
