@@ -21,7 +21,7 @@
           <Col :span="4">客户名称</Col>
           <Col :span="7"><span>{{data.customerName}}</span></Col>
           <Col :span="4">广告片规格</Col>
-          <Col :span="9"><span>{{data.specification}}s</span></Col>
+          <Col :span="9"><span>{{data.length}}s</span></Col>
         </Row>
         <Row class="mb10">
           <Col :span="4">关联广告片</Col>
@@ -39,7 +39,7 @@
           <Col :span="4">预估冻结金额／¥</Col>
           <Col :span="7"><span class="money">{{money}}</span></Col>
           <Col :span="4">计费类型</Col>
-          <Col :span="9"><span>CPM/{{data.specification}}s</span></Col>
+          <Col :span="9"><span>CPM/{{data.length}}s</span></Col>
         </Row>
       </div>
 
