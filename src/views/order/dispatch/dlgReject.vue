@@ -41,8 +41,14 @@
         @on-page-size-change="currentChangeHandle"/>
     </div>
     <div slot="footer" class="foot">
-      <Button class="foot-cancel-button" type="info" @click="cancel">取消计划</Button>
-      <Button class="foot-button" type="primary" @click="open">开启投放</Button>
+      <div v-if="type == 1">
+        <Button class="foot-cancel-button" type="info" @click="cancel">取消计划</Button>
+        <Button class="foot-button" type="primary" @click="open">开启投放</Button>
+      </div>
+      <div v-else>
+        <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
+        <Button class="foot-button" type="primary" @click="open">确定</Button>
+      </div>
     </div>
     <targetDlg ref="target" />
   </Modal>
@@ -142,7 +148,7 @@ export default class DlgEditCinema extends ViewBase {
 
   init(id: any, type: any) {
     this.id = id
-    this.type = 2
+    this.type = type
     this.loading = true
     this.showDlg = true
     this.seach()
@@ -157,7 +163,7 @@ export default class DlgEditCinema extends ViewBase {
         }
       } = this.type == 1 ? await leafletList(this.id, clean({
         ...this.dataForm
-      })) : await carryList(10, clean({
+      })) : await carryList(this.id, clean({
         ...this.dataForm
       }))
       this.total = totalCount
