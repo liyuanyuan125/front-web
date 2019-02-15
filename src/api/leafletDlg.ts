@@ -35,3 +35,9 @@ export async function carrySet(id: any, query: any) {
   const res = await put(`/xadvert/execute-orders/${id}/cinemas`, query)
   return res
 }
+
+// 修改执行单
+export async function carryRefuse(id: any) {
+  const res = await put(`/xadvert/dispatchs/${id}/refuse`)
+  return res
+}

@@ -142,7 +142,7 @@ export default class DlgEditCinema extends ViewBase {
 
   init(id: any, type: any) {
     this.id = id
-    this.type = type
+    this.type = 2
     this.loading = true
     this.showDlg = true
     this.seach()
@@ -155,12 +155,15 @@ export default class DlgEditCinema extends ViewBase {
           items,
           totalCount
         }
-      } = await leafletList(this.id, clean({
+      } = this.type == 1 ? await leafletList(this.id, clean({
+        ...this.dataForm
+      })) : await carryList(10, clean({
         ...this.dataForm
       }))
       this.total = totalCount
       this.data = items || []
       this.loading = false
+      this.$emit('ref')
     } catch (ex) {
       this.handleError(ex)
     }
@@ -202,6 +205,8 @@ export default class DlgEditCinema extends ViewBase {
       }) : await carrySet(this.id, {
         cinemas: this.checkId
       })
+      this.$emit('rejReload')
+      toast('操作成功')
       this.cancel()
     } catch (ex) {
       this.handleError(ex)

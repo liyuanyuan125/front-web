@@ -140,9 +140,9 @@
       @on-page-size-change="handlePageSize"
     />
     </Row>
-    <dlgRejec ref="reject" v-if="rejectShow"/>
+    <dlgRejec ref="reject" v-if="rejectShow" @rejReload="rejload"/>
     <targetDlg ref="target" v-if="targetShow" />
-    <rejectDlg ref="reject" v-if="rejectShow" />
+    <refuseDlg ref="refuse" v-if="refuseShow"  @refReload="refload" />
   </div>
 </template>
 
@@ -155,7 +155,7 @@ import { formatTimestamp } from '@/util/validateRules'
 import numAdd from './number.vue'
 import dlgRejec from './dlgReject.vue'
 import targetDlg from './targetDlg.vue'
-import refusetDlg from './refusetDlg.vue'
+import refuseDlg from './refuseDlg.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 
@@ -163,7 +163,8 @@ const timeFormat = 'YYYY-MM-DD'
   components: {
     numAdd,
     dlgRejec,
-    targetDlg
+    targetDlg,
+    refuseDlg
   }
 })
 export default class Main extends ViewBase {
@@ -194,6 +195,14 @@ export default class Main extends ViewBase {
 
 
   mounted() {
+    this.seach()
+  }
+
+  rejload() {
+    this.seach()
+  }
+
+  refload() {
     this.seach()
   }
 

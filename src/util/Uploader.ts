@@ -66,7 +66,7 @@ const defaultOptions: UploaderOptions = {
   fileFieldName: 'files',
   imageCompress: {
     minWidth: null,
-    maxWidth: 1800,
+    maxWidth: 2000,
     minHeight: null,
     maxHeight: null,
     quality: 0.9,

@@ -55,7 +55,7 @@
         <span v-else>{{queryStatus(row.status)}}</span>
       </template>
       <template slot="videoName" slot-scope="{row, index}">
-        <span>{{row.videoName || '/'}}</span>
+        <span>{{row.videoName || '—'}}</span>
       </template>
       <template slot="beginDate" slot-scope="{row, index}">
         <span>{{formatYell(row.beginDate)}}-{{formatYell(row.endDate)}}</span>
@@ -183,7 +183,7 @@ export default class Plan extends ViewBase {
             splitText
           )
         } else if (!row.name) {
-          return h('span', {}, '/')
+          return h('span', {}, '-')
         } else {
           return h('span', {}, row.name)
         }
@@ -217,6 +217,13 @@ export default class Plan extends ViewBase {
   async tableList() {
     const { data } = await planList({ ...this.form, ...this.pageList })
     this.data = data
+    for (const item of data.items) {
+      if (item.status == 1 || item.status == 9 || item.status == 10) {
+        item._checked = false
+      } else {
+        item._disabled = true
+      }
+    }
     this.tableDate = data.items
     this.totalCount = data.totalCount
   }

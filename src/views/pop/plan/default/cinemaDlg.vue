@@ -38,7 +38,7 @@ export default class Change extends ViewBase {
     { title: '城市', key: 'cityName', align: 'center',  width: 100 },
     { title: '城市级别', key: 'cityLevel', align: 'center',  width: 100 },
     { title: '专资编码', key: 'code', align: 'center',  width: 100 },
-    { title: '影院名称', key: 'officialName', align: 'center', minWidth: 200 },
+    { title: '影院名称', key: 'shortName', align: 'center', minWidth: 200 },
     { title: '影厅数', key: 'hallCount', align: 'center',  width: 100 },
     { title: '总座位数', key: 'seatCount', align: 'center',  width: 100 },
     { title: '票房级别', key: 'boxLevelName', align: 'center',  width: 100},
