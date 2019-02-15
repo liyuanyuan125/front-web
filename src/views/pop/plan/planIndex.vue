@@ -31,8 +31,8 @@
               :value="item.key"
             >{{item.text}}</Option>
           </Select>
-          <div class="flex-box">
-            <Input v-model="form.query" placeholder="请输入ID/名称进行搜索"/>
+          <div class="flex-box search-border-left">
+            <Input v-model="form.query"  placeholder="请输入ID/名称进行搜索"/>
             <span class="btn-search-list" @click="searchList">
               <Icon type="ios-search" size="22"/>
             </span>
@@ -53,6 +53,12 @@
         <span v-if="row.status == 4 || row.status == 3" class="status-over">{{queryStatus(row.status)}}</span>
         <span v-else-if="row.status == 6 || row.status == 7" class="status-wating">{{queryStatus(row.status)}}</span>
         <span v-else>{{queryStatus(row.status)}}</span>
+      </template>
+      <template slot="videoName" slot-scope="{row, index}">
+        <span>{{row.videoName || '/'}}</span>
+      </template>
+      <template slot="beginDate" slot-scope="{row, index}">
+        <span>{{formatYell(row.beginDate)}}-{{formatYell(row.endDate)}}</span>
       </template>
       <template slot="specification" slot-scope="{row, index}">
         <span>{{row.specification}}s</span>
@@ -93,8 +99,8 @@
         </div>
         <div v-else-if="row.status == 10" class="operation-btn">
           <p>
-            <a @click="planDefault(row.id, row.status)">查看</a>
-            <a @click="planEdit(row.id)">编辑</a>
+            <a class="table-action-btn" @click="planDefault(row.id, row.status)">查看</a>
+            <a class="table-action-btn" @click="planEdit(row.id)">编辑</a>
           </p>
         </div>
       </template>
@@ -185,8 +191,8 @@ export default class Plan extends ViewBase {
     },
     { title: '广告计划状态', slot: 'status', minWidth: 120 },
     { title: '广告片规格', slot: 'specification', minWidth: 120 },
-    { title: '广告片名称/ID', key: 'videoName', minWidth: 150 },
-    // { title: '投放排期', slot: 'beginDate', minWidth: 210 },
+    { title: '广告片名称', slot: 'videoName', minWidth: 150 },
+    { title: '投放排期', slot: 'beginDate', minWidth: 210 },
     // { title: '投放周期', key: 'cycle', minWidth: 130 },
     // { title: '冻结金额(元）', slot: 'freezeAmount', width: 150 },
     // { title: '结算状态', key: 'settlementStatus', width: 150 },
@@ -269,10 +275,10 @@ export default class Plan extends ViewBase {
   }
   async deleteList() {
     if (this.selectIds.length) {
-      const ids = this.selectIds.map((item: any) => item.id) || []
+      const ids: any = this.selectIds.map((item: any) => item.id) || []
       await confirm('您确定要删除当前信息吗？')
       try {
-        await delCheckPlanList({ ids: ids.join(',') })
+        await delCheckPlanList({ ids })
         this.tableList()
       } catch (ex) {
         this.handleError(ex.msg)
@@ -318,6 +324,11 @@ export default class Plan extends ViewBase {
 }
 .status-over {
   color: @c-fail;
+}
+/deep/ .search-border-left {
+  input {
+    border-left: none;
+  }
 }
 .operation-btn {
   text-align: center;
