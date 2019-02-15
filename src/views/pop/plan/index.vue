@@ -42,10 +42,10 @@
       <!-- 投放排期 自定义时间 -->
       <div class="clear-f" key="save" v-if="dateType == 1">
         <FormItem class="tag-date float-left" label="开始时间" prop="beginDate">
-          <DatePicker type="date" v-model="form.beginDate" :options="startDate" placeholder="请选择开始时间"></DatePicker>
+          <DatePicker type="date" @on-change="cinemaFind" v-model="form.beginDate" :options="startDate" placeholder="请选择开始时间"></DatePicker>
         </FormItem>
         <FormItem class="tag-date float-right pr130" label="结束时间" prop="endDate">
-          <DatePicker type="date" v-model="form.endDate" :options="endDate" placeholder="请选择结束时间"></DatePicker>
+          <DatePicker type="date" @on-change="cinemaFind" v-model="form.endDate" :options="endDate" placeholder="请选择结束时间"></DatePicker>
         </FormItem>
       </div>
 
@@ -217,7 +217,7 @@ export default class Main extends ViewBase {
   normCinema: any = []
   singleCinema: any = []
 
-  advertisingName: any = []
+  advertisingName: any = ''
   // 选择档期的开始时间 结束时间
   airiesList: any = []
   beginDateId = ''
@@ -422,7 +422,7 @@ export default class Main extends ViewBase {
       // 投放区域类型
       if (item.directionType == 2) {
         this.putType = 2
-        this.singleObject = movieList[0]
+        this.singleObject = movieList[0] || []
         if (item.deliveryGroups[0].text == 'ALL') {
           this.form.tagTypeCode = [0]
         } else {
@@ -522,7 +522,7 @@ export default class Main extends ViewBase {
         }
       } = await advertDetail(id)
       this.advertisingName = item.name
-      this.specification = item.length
+      this.specification = item.specification
       this.customerName = item.customerName
     } catch (ex) {
       this.handleError(ex)
@@ -538,8 +538,11 @@ export default class Main extends ViewBase {
       }
       const times: any = {}
       if (this.dateType == 1) {
+        times.startTime = this.form.beginDate ? Number(moment(this.form.beginDate).format(timeFormats)) : ''
+        times.endTime = this.form.endDate ? Number(moment(this.form.endDate).format(timeFormats)) : ''
       } else {
-
+        times.startTime = this.beginDateId ? Number(moment(this.beginDateId).format(timeFormats)) : ''
+        times.endTime = this.endDateId ? Number(moment(this.endDateId).format(timeFormats)) : ''
       }
       try {
         const {
@@ -548,11 +551,11 @@ export default class Main extends ViewBase {
               items
             }
           }
-        } = await cinemaList({
+        } = await cinemaList(clean({
           types: type.join(','),
           pageSize: 3,
           ...times
-        })
+        }))
         this.normCinema = items
       } catch (ex) {
         this.handleError(ex)
@@ -761,6 +764,10 @@ export default class Main extends ViewBase {
   watchvideoId(val: any) {
     if (val) {
       this.adverDetail(val)
+    } else {
+      this.advertisingName = ''
+      this.specification = ''
+      this.customerName = ''
     }
   }
 
@@ -771,6 +778,14 @@ export default class Main extends ViewBase {
       this.beginDateId = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].beginDate)
       this.endDateId = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].endDate)
       this.calendarName = this.formatTime(this.airiesList.filter((it: any) => it.id == val)[0].name)
+      if (this.putType == 1) {
+        this.cinemaFind()
+      }
+    } else {
+      this.beginDateId = ''
+      this.endDateId = ''
+      this.calendarName = ''
+      this.cinemaFind()
     }
   }
 }

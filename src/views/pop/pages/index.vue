@@ -39,16 +39,18 @@
             </dl>
             <dl>
               <dd>客户名称</dd>
-              <dt>{{list.customerName}}</dt>
+              <dt v-if='this.list.customerName'>{{list.customerName}}</dt>
+              <dt v-if='!this.list.customerName'>暂无</dt>
             </dl>
             <dl>
               <dd>广告片规格</dd>
-              <dt>{{list.length}}s</dt>
+              <dt v-if='this.list.specification'>{{list.specification}}s</dt>
+              <dt v-if='!this.list.specification'>暂无</dt>
             </dl>
             <dl>
               <dd>广告片名称</dd>
-              <dt v-if='!list.advertisingName'>{{videos.name}}</dt>
-              <dt v-if='list.advertisingName'>{{list.advertisingName}}</dt>
+              <dt v-if='!this.list.advertisingName.length'>暂无</dt>
+              <dt v-if='this.list.advertisingName'>{{list.advertisingName}}</dt>
             </dl>
             <dl>
               <dd>投放排期</dd>
@@ -84,7 +86,7 @@
                 <!-- <div ref="container2" style="height: 100%"></div> -->
                 <img src="./assets/蓝圈.png" alt="">
                 <div class='canpos'>
-                  <p style='font-size: 30px;'>￥{{pricecount}}</p>
+                  <p style='font-size: 30px;'>￥{{pricecounts}}</p>
                   <p>预估投放花费</p>
                 </div>
               </div>
@@ -244,13 +246,13 @@
         <Col :span="23" class="mt30" offset="1">
           <div class="flex">
             <span>预估投放花费=</span>
-            <h4 class="ceil">¥{{pricecount}}</h4>
+            <h4 class="ceil">¥{{pricecounts}}</h4>
           </div>
         </Col>
         <Col :span="23" class="mt30" offset="1">
           <div class="flex">
             <span>预估冻结金额 = 预估投放花费 = </span>
-            <h4 class="ceil">¥{{pricecount}}</h4>
+            <h4 class="ceil">¥{{pricecounts}}</h4>
           </div>
         </Col>
       </Row>
@@ -287,6 +289,8 @@ import { cinemaList } from '@/api/popPlan'
 import echarts from 'echarts' // 引入echarts
 import { warning , success, toast , info } from '@/ui/modal'
 import { Stats } from '../plan/components/areaPane'
+import { formatCurrency } from '@/fn/string'
+
 // import CinemaDlg, { CinemaDlgItem } from '../plan/components/cinemaDlg'
 import { CinemaDlgByStats } from '../plan/components/cinemaDlg'
 
@@ -368,6 +372,7 @@ export default class Main extends ViewBase {
   aboutcount: any = 0
   // 预估huafei
   pricecount: any = 0
+  pricecounts: any = 0
   // 推荐影片
   tuifilm: any = []
   tuifilms: any = []
@@ -496,7 +501,7 @@ export default class Main extends ViewBase {
   get columns() {
       return [
         { title: '专资编码', key: 'code', align: 'center'},
-        { title: '影院名称', key: 'officialName', align: 'center'},
+        { title: '影院名称', key: 'shortName', align: 'center'},
         { title: '总座位数', key: 'seatCount', align: 'center'}
       ]
   }
@@ -515,12 +520,11 @@ export default class Main extends ViewBase {
 
   // 确认生成
   edit() {
-    this.tuifilms = []
+    // this.tuifilms = []
     this.addOrUpdateVisible = true
     if (this.dataFrom.type == 1) {
       this.cinemaIdArray = this.tuifilms
     }
-    // console.log(this.addlist)
     this.$nextTick(() => {
       (this.$refs.addOrUpdate as any).init(this.datafroms , this.addlist)
     })
@@ -783,6 +787,7 @@ export default class Main extends ViewBase {
         // console.log(this.list.ids)
         if (this.list.throwInAreaType[0].key == 0) {
           this.tcinemaList = []
+          this.aboutcount = 0
           // 0 不限
           const cinema = await TcinemaList({
             areaCodes: this.regionList ,
@@ -802,12 +807,18 @@ export default class Main extends ViewBase {
                 cinema.data.items[4],
                 cinema.data.items[5])
             }
+            const a = (cinema.data.items || []).map((it: any) => {
+              return it.id
+            })
+            const resab = await abcount({ids: a.join(',') , type: this.dataFrom.type})
+            this.aboutcount = resab.data
           // this.idArr = (cinema.data.items || []).map((it: any) => {
           //   return it.id
           // })
         }
         if (this.list.throwInAreaType[0].key == 1) {
           this.tcinemaList = []
+          this.aboutcount = 0
           // 1 区域
           const cinema1 = await TcinemaList({areaCodes: this.regionList })
           this.dlgCinema = cinema1.data.items
@@ -823,6 +834,12 @@ export default class Main extends ViewBase {
               cinema1.data.items[4],
               cinema1.data.items[5])
           }
+
+          const a = (cinema1.data.items || []).map((it: any) => {
+              return it.id
+            })
+            const resab = await abcount({ids: a.join(',') , type: this.dataFrom.type})
+            this.aboutcount = resab.data
           // this.idArr = (cinema1.data.items || []).map((it: any) => {
           //   return it.id
           // })
@@ -830,6 +847,7 @@ export default class Main extends ViewBase {
         if (this.list.throwInAreaType[0].key == 2) {
           // 2 省份
           this.tcinemaList = []
+          this.aboutcount = 0
           const cinema2 = await TcinemaList({provinceIds: this.provinceList })
           this.dlgCinema = cinema2.data.items
           // this.tcinemaList = cinema2.data.items
@@ -844,12 +862,19 @@ export default class Main extends ViewBase {
               cinema2.data.items[4],
               cinema2.data.items[5])
           }
+
+          const a = (cinema2.data.items || []).map((it: any) => {
+              return it.id
+            })
+            const resab = await abcount({ids: a.join(',') , type: this.dataFrom.type})
+            this.aboutcount = resab.data
           // this.idArr = (cinema2.data.items || []).map((it: any) => {
           //   return it.id
           // })
         }
         if (this.list.throwInAreaType[0].key == 3) {
           this.tcinemaList = []
+          this.aboutcount = 0
           // 3 城市
           const cinema3 = await TcinemaList({cityIds: this.cityLevelList })
           this.dlgCinema = cinema3.data.items
@@ -865,12 +890,19 @@ export default class Main extends ViewBase {
               cinema3.data.items[4],
               cinema3.data.items[5])
           }
+
+          const a = (cinema3.data.items || []).map((it: any) => {
+              return it.id
+            })
+            const resab = await abcount({ids: a.join(',') , type: this.dataFrom.type})
+            this.aboutcount = resab.data
           // this.idArr = (cinema3.data.items || []).map((it: any) => {
           //   return it.id
           // })
         }
         if (this.list.throwInAreaType[0].key == 4) {
           this.tcinemaList = []
+          this.aboutcount = 0
           // 4 影院
           const cinema4 = await TcinemaList({ids: this.list.ids })
           this.dlgCinema = cinema4.data.items
@@ -887,6 +919,12 @@ export default class Main extends ViewBase {
               cinema4.data.items[4],
               cinema4.data.items[5])
           }
+
+          const a = (cinema4.data.items || []).map((it: any) => {
+              return it.id
+            })
+            const resab = await abcount({ids: a.join(',') , type: this.dataFrom.type})
+            this.aboutcount = resab.data
           // this.idArr = (cinema4.data.items || []).map((it: any) => {
           //   return it.id
           // })
@@ -916,8 +954,8 @@ export default class Main extends ViewBase {
           }
       }
       // 获取预估覆盖场次
-      const resab = await abcount({cinemaCount: 5 , type: this.dataFrom.type})
-      this.aboutcount = resab.data
+      // const resab = await abcount({ids: 5 , type: this.dataFrom.type})
+      // this.aboutcount = resab.data
       // 获取预估投放花费
       const respri = await pricount({
                       budgetCode: this.list.budgetCode ,
@@ -925,6 +963,7 @@ export default class Main extends ViewBase {
                       budgetAmount: this.list.budgetAmount
                                     })
       this.pricecount = respri.data
+      this.pricecounts = formatCurrency(respri.data)
       // 推荐影片
       const tui = await tuijian({
                       types: this.list.deliveryGroups[0].text == '' ? '' : (this.list.deliveryGroups[0].text).join(','),
@@ -952,8 +991,10 @@ export default class Main extends ViewBase {
           }
 
       // 广告片
-      const videoitem = await video(this.list.videoId)
-      this.videos = videoitem.data.items
+      if (this.list.videoId) {
+        const videoitem = await video(this.list.videoId)
+        this.videos = videoitem.data.items
+      }
       // 查询影片列表
       if (this.list.deliveryMovies) {
         const seacinema = await cinemaList({id : this.list.deliveryMovies[0]})

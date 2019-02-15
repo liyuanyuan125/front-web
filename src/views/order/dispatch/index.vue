@@ -75,7 +75,7 @@
             <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenue}}</span></Col>
             <Col span='6'>
               <span class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
-              <span class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
+              <span @click="editReject(it.id)" class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
             </Col>
           </Row>
           <Row class='li-item'>
@@ -84,7 +84,7 @@
                 <Col span='3' class='row-list-hui'>广告单名称</Col>
                 <Col span='9' class='row-list-huis'>{{it.videoName}}</Col>
                 <Col span='3' class='row-list-hui'>目标影院</Col>
-                <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   <span style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
+                <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   <span @click="edittarget(it.id)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
               </Row>
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>广告片规格</Col>
@@ -139,7 +139,9 @@
       @on-page-size-change="handlePageSize"
     />
     </Row>
-    
+    <dlgRejec ref="reject" v-if="rejectShow"/>
+    <targetDlg ref="target" v-if="targetShow" />
+    <rejectDlg ref="reject" v-if="rejectShow" />
   </div>
 </template>
 
@@ -150,13 +152,17 @@ import moment from 'moment'
 import { nums , querylist } from '@/api/orderDis'
 import { formatTimestamp } from '@/util/validateRules'
 import numAdd from './number.vue'
-
+import dlgRejec from './dlgReject.vue'
+import targetDlg from './targetDlg.vue'
+import refusetDlg from './refusetDlg.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 
 @Component({
   components: {
-    numAdd
+    numAdd,
+    dlgRejec,
+    targetDlg
   }
 })
 export default class Main extends ViewBase {
@@ -178,7 +184,9 @@ export default class Main extends ViewBase {
   typeList: any = []
   itemlist: any = []
   // loading: false
-
+  rejectShow = false
+  targetShow = false
+  refuseShow = false
   totalCount = 0
 
   showTime = []
@@ -213,6 +221,27 @@ export default class Main extends ViewBase {
     } finally {
       // this.loading = false
     }
+  }
+
+  editReject(id: any) {
+    this.rejectShow = true
+    this.$nextTick(() => {
+      (this.$refs.reject as any).init(id, 1)
+    })
+  }
+
+  edittarget(id: any) {
+    this.targetShow = true
+    this.$nextTick(() => {
+      (this.$refs.target as any).init(id, 1)
+    })
+  }
+
+  editrefuse(id: any) {
+    this.refuseShow = true
+    this.$nextTick(() => {
+      (this.$refs.refuse as any).init(id, 1)
+    })
   }
 
   nulldata() {

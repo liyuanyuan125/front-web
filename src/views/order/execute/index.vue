@@ -6,15 +6,15 @@
         <Col :span="24">
           <div class="fince-list">
             <div class='fince-list-big'>
-              <div class="fince-list-acc"><img src="./assets/待执行单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.waiting></numAdd></span></div>
+              <div class="fince-list-acc"><img src="./assets/待执行单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.unExecuteCount></numAdd></span></div>
               <p class="fince-list-sm">待执行单</p>
             </div>
             <div class='fince-list-big'>
-              <div class="fince-list-acc"><img src="./assets/执行中.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.received></numAdd></span></div>
+              <div class="fince-list-acc"><img src="./assets/执行中.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.beExecuteCount></numAdd></span></div>
               <p class="fince-list-sm">执行中</p>
             </div>
             <div class='fince-list-big'>
-              <div class="fince-list-acc"><img src="./assets/已完成单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.received></numAdd></span></div>
+              <div class="fince-list-acc"><img src="./assets/已完成单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.outExecuteCount></numAdd></span></div>
               <p class="fince-list-sm">已完成单</p>
             </div>
           </div>
@@ -24,7 +24,7 @@
         <Col :span="12">
           <div class='guanggao'>执行单状态</div>
           <RadioGroup v-model="query.status" type="button" @on-change='seach'>
-            <Radio v-for='it in statusList' :key='it.key' :value='it.key' v-if='it.key!=0' :label='it.key'>{{it.text}}</Radio>
+            <Radio v-for='it in statusList' :key='it.key' :value='it.key' v-if='it.key!=0 && it.key!=4' :label='it.key'>{{it.text}}</Radio>
           </RadioGroup>
         </Col>
         <Col :span="12">
@@ -45,7 +45,7 @@
       <Row class='row-ul'>
         <Col :span="12">
           <div class='guanggao'>执行时间</div>
-          <!-- <Col style='margin-left: 12px;' span="5">
+          <Col style='margin-left: 12px;' span="5">
             <Select v-model='query.type'  clearable placeholder="广告单时间" @on-change="nulldata">
               <Option
                 v-for="item in typeList"
@@ -54,7 +54,7 @@
                 v-if='item.key!=0'
               >{{item.text}}</Option>
             </Select>
-          </Col> -->
+          </Col>
           <Col style='margin-left: 26px;' span="10">
             <DatePicker type="daterange" style="width: 300px" v-model='showTime' @on-change="handleChange"
         placement="bottom-start" placeholder="请选择开始日期和结束日期" ></DatePicker>
@@ -75,7 +75,7 @@
             <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenue}}</span></Col>
             <Col span='6'>
               <span class='button' v-if='it.status == 1' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>修改执行影院</span>
-              <span class='button' v-if='it.status == 1 || it.status == 2'style='background: #3B98FF; color: #fff;cursor: pointer;'>下载DCP包</span>
+              <span class='button' v-if='it.status == 1 || it.status == 2' style='background: #3B98FF; color: #fff;cursor: pointer;'>下载DCP包</span>
             </Col>
           </Row>
           <Row class='li-item'>
@@ -84,7 +84,7 @@
                 <Col span='3' class='row-list-hui'>广告单名称</Col>
                 <Col span='9' class='row-list-huis'>{{it.videoName}}</Col>
                 <Col span='3' class='row-list-hui'>目标影院</Col>
-                <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   <span style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
+                <Col span='9' class='row-list-huis'>{{it.cinemas.length}}家   <span style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
               </Row>
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>广告片规格</Col>
@@ -114,9 +114,9 @@
                 <Col v-if='it.status == 1' span='12' class='img-order'><img src="./assets/待执行.png" alt=""><span>待执行</span></Col>
                 <Col v-if='it.status == 2' span='12' class='img-order'><img src="./assets/执行中-小.png" alt=""><span>执行中</span></Col>
                 <Col v-if='it.status == 3' span='12' class='img-order'><img src="./assets/已完成.png" alt=""><span>已完成</span></Col>
-                <Col v-if='it.planType == 1' span='12' class='img-order'><img src="./assets/待执行.png" alt=""><span>待执行</span></Col>
-                <Col v-if='it.planType == 2' span='12' class='img-order'><img src="./assets/执行中.png" alt=""><span>执行中</span></Col>
-                <Col v-if='it.planType == 3' span='12' class='img-order'><img src="./assets/已完成.png" alt=""><span>已完成</span></Col>
+                <Col v-if='it.planType == 1' span='12' class='img-order'><img src="./assets/标准单.png" alt=""><span>标准单</span></Col>
+                <Col v-if='it.planType == 2' span='12' class='img-order'><img src="./assets/加速单.png" alt=""><span>加速单</span></Col>
+                <Col v-if='it.planType == 3' span='12' class='img-order'><img src="./assets/优享单.png" alt=""><span>优享单</span></Col>
               </Row>
             </Col>
           </Row>

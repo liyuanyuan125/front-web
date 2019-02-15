@@ -6,39 +6,40 @@
   :mask-closable='false'
   :styles="{top: '10px'}"
   @on-cancel="cancel()">
-    <div class="flex-box search-input">
-      <Input class="name-input" v-model="dataForm.name"  placeholder="请输入影院专资编码／影院名称进行搜索" />
-      <span @click="seach">
-        <Icon type="ios-search" size="22"/>
-      </span>
+    <div class="reject-cinema">
+      <div class="flex-box search-input">
+        <Input class="name-input" v-model="dataForm.name"  placeholder="请输入影院专资编码／影院名称进行搜索" />
+        <span @click="seach">
+          <Icon type="ios-search" size="22"/>
+        </span>
+      </div>
+      <div class="detail" @click="edit">
+      <p>查看全部已关联影院 <span>{{checkId.length}}个</span></p>
+      </div>
+      <Table :loading="loading"  stripe @on-selection-change="check" :columns="columns" :data="tableDate">
+        <template slot-scope="{ row }" slot="citys">
+          {{row.citys}}
+        </template>
+
+        <template slot-scope="{ row }" slot="code">
+          {{row.code}}
+        </template>
+
+        <template slot-scope="{ row }" slot="shortName">
+          {{row.shortName}}
+        </template>
+      </Table>
+
+      <Page :total="total" v-if="total>0" class="btnCenter"
+        :current="dataForm.pageIndex"
+        :page-size="dataForm.pageSize"
+        :page-size-opts="[6, 20, 50, 100]"
+        show-total
+        show-sizer
+        show-elevator
+        @on-change="sizeChangeHandle"
+        @on-page-size-change="currentChangeHandle"/>
     </div>
-    <div class="detail" @click="edit">
-     <p>查看全部已关联影院 <span>{{checkId.length}}个</span></p>
-    </div>
-    <Table   stripe @on-selection-change="check" :columns="columns" :data="tableDate">
-      <template slot-scope="{ row }" slot="citys">
-        {{row.citys}}
-      </template>
-
-      <template slot-scope="{ row }" slot="code">
-        {{row.code}}
-      </template>
-
-      <template slot-scope="{ row }" slot="shortName">
-        {{row.shortName}}
-      </template>
-    </Table>
-
-    <Page :total="total" v-if="total>0" class="btnCenter"
-      :current="dataForm.pageIndex"
-      :page-size="dataForm.pageSize"
-      :page-size-opts="[6, 20, 50, 100]"
-      show-total
-      show-sizer
-      show-elevator
-      @on-change="sizeChangeHandle"
-      @on-page-size-change="currentChangeHandle"/>
-
     <div slot="footer" class="foot">
       <Button class="foot-cancel-button" type="info" @click="cancel">取消计划</Button>
       <Button class="foot-button" type="primary" @click="open">开启投放</Button>
@@ -50,17 +51,19 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { queryList, leafletList, sureLeaflet } from '@/api/leafletDlg'
+import { queryList, carryList, leafletList, sureLeaflet, carrySet } from '@/api/leafletDlg'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import targetDlg from './targetDlg.vue'
+import { toast, warning } from '@/ui/modal.ts'
+
 @Component({
   components: {
     targetDlg
   }
 })
 export default class DlgEditCinema extends ViewBase {
-  showDlg = true
+  showDlg = false
   type = 1
   total = 0
   dataForm: any = {
@@ -68,6 +71,7 @@ export default class DlgEditCinema extends ViewBase {
     pageIndex: 1,
     pageSize: 6,
   }
+  loading = false
   id: any = ''
   data: any = []
   checkId: any = []
@@ -97,9 +101,9 @@ export default class DlgEditCinema extends ViewBase {
     }
   ]
 
-  created() {
-    this.init(32)
-  }
+  // created() {
+  //   this.init(32)
+  // }
 
   get tableDate() {
     if (this.data && this.data.length > 0) {
@@ -136,8 +140,11 @@ export default class DlgEditCinema extends ViewBase {
     this.checkObj = this.checkObj.filter((it: any) => !filterId.includes(it.id))
   }
 
-  init(id: any) {
+  init(id: any, type: any) {
     this.id = id
+    this.type = type
+    this.loading = true
+    this.showDlg = true
     this.seach()
   }
 
@@ -153,6 +160,7 @@ export default class DlgEditCinema extends ViewBase {
       }))
       this.total = totalCount
       this.data = items || []
+      this.loading = false
     } catch (ex) {
       this.handleError(ex)
     }
@@ -178,10 +186,26 @@ export default class DlgEditCinema extends ViewBase {
 
   cancel() {
     this.showDlg = false
+    this.checkId = []
+    this.checkObj = []
   }
 
-  open() {
-
+  async open() {
+    if (this.checkId.length == 0 && this.type == 1) {
+      warning('请选择目标影院')
+      return
+    }
+    try {
+      this.type == 1 ? await sureLeaflet({
+        id: this.id,
+        cinemas: this.checkId
+      }) : await carrySet(this.id, {
+        cinemas: this.checkId
+      })
+      this.cancel()
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 }
 </script>
@@ -235,5 +259,8 @@ export default class DlgEditCinema extends ViewBase {
 }
 /deep/ .ivu-table-wrapper {
   margin-top: 10px;
+}
+.reject-cinema {
+  min-height: 400px;
 }
 </style>
