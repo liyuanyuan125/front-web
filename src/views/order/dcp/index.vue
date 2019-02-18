@@ -34,7 +34,7 @@ import moment from 'moment'
 import { confirm, toast } from '@/ui/modal'
 import { querylist } from '@/api/orderExe'
 
-const timeFormatDate = 'YYYY-MM-DD HH:mm:ss'
+const timeFormatDate = 'YYYY/MM/DD'
 
 @Component
 export default class Main extends ViewBase {
@@ -73,10 +73,11 @@ export default class Main extends ViewBase {
     {
       title: '下发时间',
       align: 'center',
-      render: (hh: any, { row: { endDate } }: any) => {
+      render: (hh: any, { row: { createTime } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        return <span></span>
+        const html = createTime ? moment(createTime).format(timeFormatDate) : ''
+        return <span v-html={html}></span>
         /* tslint:enable */
       }
     },
@@ -86,7 +87,9 @@ export default class Main extends ViewBase {
       render: (hh: any, { row: { id } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        return <div>
+        const img = require('./assets/down.png')
+        return <div class="edit">
+          <img src={img}/>
           <a on-click={this.toDetail.bind(this, id)} class="operation" >下载DCP包</a>
         </div>
         /* tslint:enable */
@@ -247,6 +250,12 @@ export default class Main extends ViewBase {
     width: 400px;
     line-height: 40px;
     height: 40px;
+  }
+}
+/deep/ .edit {
+  img {
+    vertical-align: middle;
+    margin-right: 3px;
   }
 }
 /deep/ .ivu-table-cell > span:only-child:empty {
