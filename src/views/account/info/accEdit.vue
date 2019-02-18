@@ -39,7 +39,7 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { countDown } from '@/fn/timer'
-import AreaSelect from '@/components/AreaSelect.vue'
+import AreaSelect from '@/components/areaSelect'
 import { accountDetail, getLoginEmail, auditingAccount } from '@/api/account'
 import { updateEmail } from '@/store'
 
