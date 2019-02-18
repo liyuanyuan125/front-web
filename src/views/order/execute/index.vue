@@ -214,20 +214,37 @@ export default class Main extends ViewBase {
       const data = await nums()
       this.nums = data.data
       // 数据列表
-      const datalist = await querylist(this.query)
-      this.statusList = datalist.data.statusList
-      this.planTypeList = datalist.data.planTypeList
-      this.executeQueryTypeList = datalist.data.executeQueryTypeList
-      this.totalCount = datalist.data.totalCount
-      this.itemlist = (datalist.data.items || []).map((it: any) => {
-        return {
-          ...it,
-          createTime: moment(it.createTime).format(timeFormat),
-          beginDate: moment(it.beginDate).format(timeFormat),
-          endDate: moment(it.endDate).format(timeFormat),
-          bili: Math.floor(((new Date().getTime() - it.beginDate) / (it.endDate - it.beginDate)) * 100)
-        }
-      })
+      if (this.$route.params) {
+        const datalist1 = await querylist({videoName: this.$route.params.id})
+        this.statusList = datalist1.data.statusList
+        this.planTypeList = datalist1.data.planTypeList
+        this.executeQueryTypeList = datalist1.data.executeQueryTypeList
+        this.totalCount = datalist1.data.totalCount
+        this.itemlist = (datalist1.data.items || []).map((it: any) => {
+          return {
+            ...it,
+            createTime: moment(it.createTime).format(timeFormat),
+            beginDate: moment(it.beginDate).format(timeFormat),
+            endDate: moment(it.endDate).format(timeFormat),
+            bili: Math.floor(((new Date().getTime() - it.beginDate) / (it.endDate - it.beginDate)) * 100)
+          }
+        })
+      } else {
+        const datalist = await querylist(this.query)
+        this.statusList = datalist.data.statusList
+        this.planTypeList = datalist.data.planTypeList
+        this.executeQueryTypeList = datalist.data.executeQueryTypeList
+        this.totalCount = datalist.data.totalCount
+        this.itemlist = (datalist.data.items || []).map((it: any) => {
+          return {
+            ...it,
+            createTime: moment(it.createTime).format(timeFormat),
+            beginDate: moment(it.beginDate).format(timeFormat),
+            endDate: moment(it.endDate).format(timeFormat),
+            bili: Math.floor(((new Date().getTime() - it.beginDate) / (it.endDate - it.beginDate)) * 100)
+          }
+        })
+      }
     } catch (ex) {
       this.handleError(ex)
     } finally {

@@ -76,7 +76,14 @@
             <Col span='6'>
               <span v-if='it.status == 1' @click="editReject(it.id)" class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
               <span v-if='it.status == 1' class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
-              <span v-if='it.status == 2' class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>查看执行单</span>
+              <!-- <span v-if='it.status == 2' class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>查看执行单</span> -->
+              <router-link
+              v-if='it.status == 2'
+              :to="{ name: 'order-execute-xq', params: { id: it.id } }"
+              tag="span"
+              class='button'
+              style='background: #3B98FF; color: #fff;cursor: pointer;'
+            >查看执行单</router-link>
             </Col>
           </Row>
           <Row class='li-item'>

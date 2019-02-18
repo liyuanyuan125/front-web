@@ -135,6 +135,9 @@
               <div v-if="cinema.tagsex[0].text.length > 0">
                 <i :class="`cinemapos${index}`" v-for="(it , index) in cinema.tagsex[0].text" :key="index">{{cinemaTypes(it)}}</i>
               </div>
+              <div v-else>
+                <i :class="`cinemapos1`">类型不详</i>
+              </div>
             </div>
           </Col>
         </Row>
@@ -148,7 +151,7 @@
               </div>
               <div class='ims-div'>
                 <p>{{item.name}}</p>
-                <p class="cinema-type"><span v-for="it in item.type" :key="it">{{it}}</span></p>
+                <p class="cinema-type"><span :class="{red: autos(it)}" v-for="it in item.type" :key="it">{{it}}</span></p>
               </div>
             </div>
           </Col>
@@ -249,6 +252,11 @@ export default class Main extends ViewBase {
     const month = num.slice(4, 6)
     const day = num.slice(6)
     return `${year}-${month}-${day}`
+  }
+
+  autos(it: any) {
+    const data = this.data.typeName.map((item: any) => item.text)
+    return data.includes(it)
   }
 
   async open() {
@@ -439,7 +447,7 @@ export default class Main extends ViewBase {
     }
     .cinema-type {
       padding-bottom: 4px;
-      span:first-child {
+      .red {
         color: red;
       }
       span:not(:last-child)::after {

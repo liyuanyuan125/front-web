@@ -51,26 +51,26 @@
       <!-- 待审核 -->
       <span v-if="row.status == 1">
         <p>
-          <a class="table-action-btn">查看</a>
+          <a class="table-action-btn" @click="popDetail(row.id)">查看</a>
           <a class="table-action-btn" @click="popEdit(row.id)">编辑</a>
           <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
         </p>
       </span>
       <span v-else-if="row.status == 2">
         <p>
-          <a class="table-action-btn">查看</a>
+          <a class="table-action-btn" @click="popDetail(row.id)">查看</a>
           <a class="table-action-btn" @click="handlePayment(row)">支付</a>
           <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
         </p>
       </span>
       <span v-else-if="row.status == 3 || row.status == 6 || row.status == 4">
         <p>
-          <a class="table-action-btn">查看</a>
+          <a class="table-action-btn"  @click="popDetail(row.id)">查看</a>
         </p>
       </span>
       <span v-else-if="row.status == 5">
         <p>
-          <a class="table-action-btn">查看</a>
+          <a class="table-action-btn"  @click="popDetail(row.id)">查看</a>
           <a class="table-action-btn" @click="popEdit(row.id)">编辑</a>
         </p>
       </span>
@@ -142,6 +142,7 @@ export default class Main extends ViewBase {
     { title: '操作', slot: 'operation', width: 150},
   ]
   tableDate = []
+
   get formatTimes() {
     return formatTimes
   }
@@ -156,6 +157,14 @@ export default class Main extends ViewBase {
         ...this.form,
         ...this.pageList
       })
+      // 待审核 待支付  已取消 已拒绝 可批量删除
+      for (const it of items) {
+        if (it.status == 1 || it.status == 2 || it.status == 6 || it.status == 4 ) {
+          it._checked = false
+        } else {
+          it._disabled = true
+        }
+      }
       this.tableDate = items || []
       this.statusList = statusList
       this.totalCount = totalCount || 0
@@ -184,6 +193,9 @@ export default class Main extends ViewBase {
     } catch (ex) {
       this.handleError(ex.msg)
     }
+  }
+  popDetail(id: any) {
+    this.$router.push({name: 'pop-film-detail', params: {id}})
   }
   queryStatus(id: any) {
      const items = this.statusList ? this.statusList.filter( (item: any) => item.key == id) : []
