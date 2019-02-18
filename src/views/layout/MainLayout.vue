@@ -56,7 +56,7 @@ import ViewBase from '@/util/ViewBase'
 import { getUser, checkUser, logout, User, switchSystem } from '@/store'
 import { systemList as allSystemList, SystemCode } from '@/util/types'
 import allSiderMenuList, { SiderMenuItem } from './allSiderMenuList'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, kebabCase } from 'lodash'
 import event from '@/fn/event'
 import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
 
@@ -167,9 +167,24 @@ export default class App extends ViewBase {
   created() {
     checkUser()
     // 是有低优先级监听，以便其他地方可以拦截取消
+    this.changeTheme()
     event.on(systemSwitched, (ev: SystemSwitchedEvent) => {
       this.$router.push({ name: 'home' })
+      this.changeTheme()
     }, false)
+  }
+
+  changeTheme() {
+    const user = getUser()
+    if (user != null) {
+      // classList 的兼容性不太好
+      const html = document.documentElement
+      const className = (html.className || '').trim()
+      const remain = className.replace(/\btheme-\w+\b/, '')
+      const name = kebabCase(user.systemCode)
+      const newClass = [remain, `theme-${name}`].join(' ').trim()
+      html.className = newClass
+    }
   }
 
   onSwitcherClick(name: SystemCode) {
