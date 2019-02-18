@@ -255,7 +255,8 @@ export default class Main extends ViewBase {
   }
 
   autos(it: any) {
-    return this.cinema.tagsex[0].text.includes(it)
+    const data = this.data.typeName.map((item: any) => item.text)
+    return data.includes(it)
   }
 
   async open() {
@@ -446,7 +447,7 @@ export default class Main extends ViewBase {
     }
     .cinema-type {
       padding-bottom: 4px;
-      span:first-child {
+      .red {
         color: red;
       }
       span:not(:last-child)::after {

@@ -91,7 +91,6 @@
           <AreaPane v-model="form.ids" :type="form.throwInAreaType"
             :boxLevelList="boxLevelList" @statsChange="onThrowInStatsChange"/>
         </div>
-
         <FormItem v-if="index != 3" v-for="(item, index) in tags" :key="index" :label="item.name" :class="['form-item-age', index == 0 ? 'pb3' : '']">
           <radioTab v-if="index != 0" v-model="cinema[item.code]" :tagMess="item.values" />
           <CheckboxGroup v-else v-model="cinema[item.code]" class="item-radio-top">
@@ -202,6 +201,7 @@ export default class Main extends ViewBase {
   auctionName = ''
   allType = true
   putType = 1
+  typeName: any = []
   dateObj: any = [
     {
       name: '自定义时间',
@@ -658,6 +658,7 @@ export default class Main extends ViewBase {
       direction = {
         directionType: this.putType,
         ids: this.form.ids,
+        typeName: this.typeName,
         throwInAreaType: this.areaTypeList.filter((it: any) => this.form.throwInAreaType == it.key),
         deliveryGroups: [
           {
@@ -722,6 +723,7 @@ export default class Main extends ViewBase {
     if (value.length > 3) {
       info('电影类型最多选3项')
       this.cinema.MOVIE_TYPE = value.slice(0, 3)
+      this.typeName = this.tags[0].values.filter((it: any) => this.cinema.MOVIE_TYPE.includes(it.key))
     } else {
       keepExclusion(value, oldValue, 0, newValue => {
         this.cinema.MOVIE_TYPE = newValue
@@ -729,6 +731,7 @@ export default class Main extends ViewBase {
       if (value.length == 0) {
         this.cinema.MOVIE_TYPE = [0]
       }
+      this.typeName = this.tags[0].values.filter((it: any) => this.cinema.MOVIE_TYPE.includes(it.key))
       this.cinemaFind()
     }
   }
