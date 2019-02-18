@@ -119,7 +119,7 @@ const allSiderMenuList: SiderMenuItem[] = [
         label: '财务信息',
       },
       {
-        name: '',
+        name: 'finance-bill',
         label: '资金账单',
       }
     ]

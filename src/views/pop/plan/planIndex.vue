@@ -11,13 +11,14 @@
       <Row type="flex" justify="space-between">
         <Col span="5">
           <Select v-model="form.status" style="width: 200px" clearable placeholder="请选择广告计划状态">
-            <Option v-for="item in data.statusList" :key="item.key" :value="item.key">{{item.text}}</Option>
+            <Option v-for="item in data.statusList" v-if="item.key != 0" :key="item.key" :value="item.key">{{item.text}}</Option>
           </Select>
         </Col>
         <Col span="4">
           <Select v-model="form.settlementStatus" style="width: 150px" clearable placeholder="请选择结算状态">
             <Option
               v-for="item in data.settlementStatusList"
+              v-if="item.key != 0"
               :key="item.key"
               :value="item.key"
             >{{item.text}}</Option>
@@ -27,6 +28,7 @@
           <Select v-model="form.level" style="width: 200px" clearable placeholder="请选择广告层级">
             <Option
               v-for="item in data.levelTypeList"
+              v-if="item.key != 0"
               :key="item.key"
               :value="item.key"
             >{{item.text}}</Option>
