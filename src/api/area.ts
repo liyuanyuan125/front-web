@@ -57,3 +57,19 @@ export async function isValidArea(ids: number[] | null) {
   // 通过所有父子关系查找验证后，才能证明是合法的区域组合
   return true
 }
+
+/**
+ * 大区类型，例如：华北地区
+ */
+export interface Region {
+  code: string
+  name: string
+}
+
+/**
+ * 获取大区列表
+ */
+export async function getRegionList() {
+  const { data } = await get('/basis/areas')
+  return (data || []) as Region[]
+}

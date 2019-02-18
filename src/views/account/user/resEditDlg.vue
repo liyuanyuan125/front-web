@@ -46,7 +46,7 @@
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import jsxReactToVue from '@/util/jsxReactToVue'
-import AreaSelect from '@/components/AreaSelect.vue'
+import AreaSelect from '@/components/areaSelect'
 import { resEditCustomer } from '@/api/user'
 
 @Component({
@@ -107,7 +107,7 @@ export default class Change extends ViewBase {
       })
       // 过滤掉禁用状态2
       this.areaList = data.areaCodes.filter( (item: any) => item.controlStatus == 1)
-      
+
       // 在渲染之前添加选中的key
       if (this.value.check) {
         data.items.map((item: any) => {
