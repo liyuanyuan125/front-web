@@ -50,15 +50,34 @@
         </p>
       </Col>
     </Row>
-    <div class="btnCenter btn-footer" v-if="stauts == 1">
+
+    <!-- dcp下载 -->
+    <div v-if="status == 4">
+      <h3 class="layout-title">DCP包下载</h3>
+      <Row type="flex" justify="space-between" class="code-row-bg">
+          <Col span="11" v-if="item.attachments" v-for="it in item.attachments" :key="it.id" class="down-load-dcp flex-box">
+            <span>{{queryTypeList(it.typeCode)}}</span>
+            <a :href="it.fileUrl" target="_blank"><img class="down-img" src="./assets/down-dcp.png"  width="14"/>下载DCP包</a>
+          </Col>
+      </Row>
+     <h3 class="layout-title more-list">下载链接更新日志</h3>
+      <div class="text-rows log-list">
+        <p v-if="item.attachments" v-for="(ite, index) in item.attachments" :key="index">
+          <span>{{formatTimes(ite.uploadTime)}}</span>
+          <em>{{queryTypeList(ite.typeCode)}}Flat 格式DCP包下载链接已更新</em>
+        </p>
+      </div>
+    </div>
+
+    <div class="btnCenter btn-footer" v-if="status == 1">
       <Button class="button-cancel" @click="cancelPlan" >取消广告计划</Button>
       <Button type="primary" class="button-ok" @click="toEdit">编辑</Button>
     </div>
-    <div class="btnCenter btn-footer" v-else-if="stauts == 2">
+    <div class="btnCenter btn-footer" v-else-if="status == 2">
       <Button class="button-cancel" @click="cancelPlan" >取消广告计划</Button>
       <Button type="primary" class="button-ok" @click="handlePayment">支付</Button>
     </div>
-    <div class="btnCenter btn-footer" v-else-if="stauts == 5">
+    <div class="btnCenter btn-footer" v-else-if="status == 5">
       <Button type="primary" class="button-ok" @click="toEdit">编辑</Button>
     </div>
   </div>
@@ -68,6 +87,7 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
+import { formatTimes } from '@/util/validateRules'
 import { detailPop, popCancel, popPayment } from '@/api/popFilm'
 import payDefault from './payDefault.vue'
 import statusCode from './status.vue'
@@ -83,7 +103,9 @@ export default class Main extends ViewBase {
   item: any = []
   typeList = []
   statusList = []
-
+  get formatTimes() {
+    return formatTimes
+  }
   mounted() {
     this.list()
   }
@@ -123,7 +145,11 @@ export default class Main extends ViewBase {
       this.handleError(ex.msg)
     }
   }
-
+  queryTypeList(id: any) {
+    let list: any = []
+    list = this.typeList.filter((item: any) => item.key == id)
+    return list[0].text || null
+  }
   toEdit() {
     const id = this.item.id
     this.$router.push({name: 'pop-film-edit', params: {id}})
@@ -136,6 +162,27 @@ export default class Main extends ViewBase {
   margin: 10px 0 40px;
   .edit-btn {
     margin-right: 20px;
+  }
+}
+.code-row-bg {
+  padding: 20px 30px;
+  .down-load-dcp {
+    height: 60px;
+    line-height: 60px;
+    background: #f9f9f9;
+    justify-content: space-between;
+    padding: 0 30px;
+    .down-img {
+      position: relative;
+      top: 3px;
+      right: 10px;
+    }
+  }
+}
+.log-list {
+  color: #444;
+  span {
+    margin-right: 30px;
   }
 }
 </style>
