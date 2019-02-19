@@ -132,7 +132,7 @@
           </Row>
         </li>
       </ul>
-      <ul class='itemul' style='padding-left: 28px;' v-if='itemlist.length == 0'> 暂无订单</ul>
+      <ul class='itemul' style='padding-left: 28px;text-align: center;' v-if='itemlist.length == 0'> 暂无订单</ul>
       <Page
       :total="totalCount"
       v-if="totalCount>0"
