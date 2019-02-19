@@ -1,11 +1,11 @@
 <template>
   <div>
-    <Modal v-model="value.visible" width="500" class="viewer" >
-      <p @click.native="value.visible = false" class="viewer-tip">轻点关闭</p>
-      <div class="flex-mid">
-         <video  autoplay :src="value.url" width="500" controls>
-           <!-- <img :src="value.url" width="500"> -->
-         </video>
+    <Modal v-model="value.visible" width="600" class="viewer" >
+      <p @click="value.visible = false" class="viewer-tip">轻点关闭</p>
+      <div class="player-wrap">
+        <vue-plyr>
+          <video :src="value.url" width="500" ></video>
+        </vue-plyr>
       </div>
       <div slot="footer"></div>
     </Modal>
@@ -14,8 +14,14 @@
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { VuePlyr } from 'vue-plyr'
+import 'vue-plyr/dist/vue-plyr.css'
 
-@Component
+@Component({
+  components: {
+    VuePlyr
+  }
+})
 export default class Video extends ViewBase {
     @Prop({ type: Object}) value: any
 }
