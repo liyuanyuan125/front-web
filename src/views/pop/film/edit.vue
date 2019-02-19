@@ -8,17 +8,20 @@
         <FormItem  label="广告片名称" prop="name">
           <Input v-model="form.name" placeholder="请输入广告片名称"></Input>
         </FormItem>
+
         <FormItem  label="选择客户" prop="customerId">
-              <Select v-model="form.customerId"  clearable>
-                <Option v-for="(item, index) in customerList" :value="item.id" :key="index">{{ item.name }}</Option>
-              </Select>
+          <Select v-model="form.customerId"  clearable>
+            <Option v-for="(item, index) in customerList" :value="item.id" :key="index">{{ item.name }}</Option>
+          </Select>
         </FormItem>
+
         <FormItem  label="广告片规格" prop="specification">
-              <Select v-model="form.specification"  clearable filterable>
-                <Option v-for="(item, index) in specificationList" :value="item.id" :key="index">{{ item.name }}</Option>
-              </Select>
-              <em class="remark">备注：广告片规格请输入15s的倍数</em>
+          <Select v-model="form.specification"  clearable filterable>
+            <Option v-for="(item, index) in specificationList" :value="item.id" :key="index">{{ item.name }}</Option>
+          </Select>
+          <em class="remark">备注：广告片规格请输入15s的倍数</em>
         </FormItem>
+
         <FormItem  label="上传广告片">
           <UploadLabel class="upload-label" @start="uploadStart" @success="uploadSuccess">
             <div class="update">
