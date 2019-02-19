@@ -44,8 +44,10 @@
       <Col :span="12">
         <p class="flex-box">
           <label>广告片</label>
-          <em>
-             <video :src="item.srcFileUrl" width="300" controls="controls"></video>
+          <em class="video-play">
+            <VuePlyr>
+               <video :src="item.srcFileUrl"  ></video>
+            </VuePlyr>
           </em>
         </p>
       </Col>
@@ -91,11 +93,14 @@ import { formatTimes } from '@/util/validateRules'
 import { detailPop, popCancel, popPayment } from '@/api/popFilm'
 import payDefault from './payDefault.vue'
 import statusCode from './status.vue'
+import { VuePlyr } from 'vue-plyr'
+import 'vue-plyr/dist/vue-plyr.css'
 
 @Component({
   components: {
     payDefault,
-    statusCode
+    statusCode,
+    VuePlyr
   }
 })
 export default class Main extends ViewBase {
@@ -158,6 +163,9 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+.video-play {
+  width: 300px;
+}
 .btn-footer {
   margin: 10px 0 40px;
   .edit-btn {
