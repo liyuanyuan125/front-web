@@ -132,7 +132,7 @@
           </Row>
         </li>
       </ul>
-      <ul class='itemul' style='padding-left: 28px;' v-if='itemlist.length == 0'> 暂无订单</ul>
+      <ul class='itemul' style='padding-left: 28px;text-align: center;' v-if='itemlist.length == 0'> 暂无订单</ul>
       <Page
       :total="totalCount"
       v-if="totalCount>0"
@@ -214,7 +214,7 @@ export default class Main extends ViewBase {
       const data = await nums()
       this.nums = data.data
       // 数据列表
-      if (this.$route.params) {
+      if (this.$route.params.id) {
         const datalist1 = await querylist({videoName: this.$route.params.id})
         this.statusList = datalist1.data.statusList
         this.planTypeList = datalist1.data.planTypeList

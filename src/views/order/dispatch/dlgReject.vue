@@ -8,7 +8,8 @@
   @on-cancel="cancel()">
     <div class="reject-cinema">
       <div class="flex-box search-input">
-        <Input class="name-input" v-model="dataForm.name"  placeholder="请输入影院专资编码／影院名称进行搜索" />
+        <AreaSelect class="name-input" show-region v-model="name" />
+        <Input class="name-input" style="margin-right: 0px" v-model="dataForm.name"  placeholder="请输入影院专资编码／影院名称进行搜索" />
         <span @click="seach">
           <Icon type="ios-search" size="22"/>
         </span>
@@ -55,17 +56,19 @@
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { queryList, findCinema, carryList, leafletList, sureLeaflet, carrySet } from '@/api/leafletDlg'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import targetDlg from './targetDlg.vue'
 import { toast, warning } from '@/ui/modal.ts'
+import AreaSelect from '@/components/areaSelect'
 
 @Component({
   components: {
-    targetDlg
+    targetDlg,
+    AreaSelect
   }
 })
 export default class DlgEditCinema extends ViewBase {
@@ -77,6 +80,8 @@ export default class DlgEditCinema extends ViewBase {
     pageIndex: 1,
     pageSize: 6,
   }
+  reject: any = {}
+  name: any = []
   checktotal: any = 0
   loading = false
   id: any = ''
@@ -174,9 +179,11 @@ export default class DlgEditCinema extends ViewBase {
           totalCount
         }
       } = this.type == 1 ? await leafletList(this.id, clean({
-        ...this.dataForm
+        ...this.dataForm,
+        ...this.reject
       })) : await carryList(this.id, clean({
-        ...this.dataForm
+        ...this.dataForm,
+        ...this.reject
       }))
       this.total = totalCount
       this.data = items || []
@@ -230,15 +237,23 @@ export default class DlgEditCinema extends ViewBase {
       this.handleError(ex)
     }
   }
+
+  @Watch('name', { deep: true })
+  watchArea(val: number[]) {
+    this.reject.areaCode = val[0] == 0 ? '' : val[0]
+    this.reject.provinceId = val[1] == 0 ? '' : val[1]
+    this.reject.cityId = val[2] == 0 ? '' : val[2]
+  }
 }
 </script>
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 .search-input {
-  margin-left: 30px;
+  margin-left: 20px;
   .name-input {
     width: 300px;
+    margin-right: 20px;
     /deep/ .ivu-input {
       height: 40px;
       line-height: 40px;
@@ -257,7 +272,7 @@ export default class DlgEditCinema extends ViewBase {
 @cancel-color: rgba(59, 152, 255, 1);
 .detail {
   margin-top: 16px;
-  margin-left: 30px;
+  margin-left: 20px;
   color: rgba(152, 152, 152, 1);
   cursor: pointer;
 }

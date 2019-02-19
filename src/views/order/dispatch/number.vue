@@ -42,7 +42,7 @@ export default class ComponentMain extends ViewBase {
     }
   }
   mounted() {
-    if (this.addNum < 15 ) {
+    if (this.addNum < '15' ) {
       this.numbers = this.addNumber(String(this.addNum))
     } else {
       const numbers = setInterval(() => {
@@ -56,7 +56,7 @@ export default class ComponentMain extends ViewBase {
       setTimeout(() => {
         clearInterval(numbers)
         this.numbers = this.addNumber(String(this.addNum))
-      }, 2000)
+      }, 400)
     }
   }
 }
