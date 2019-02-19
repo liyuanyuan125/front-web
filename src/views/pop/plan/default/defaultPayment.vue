@@ -193,7 +193,7 @@
           </p>
           <p v-if="launchList.categorizedByBoxLevelCode" class="flex-box">
             <label>
-              投放影院（{{launchList.categorizedByBoxLevelCode.length || 0}}个）
+              投放影院（{{items.deliveryCinemas.length || 0}}个）
               <br>
               <em class="cinema-list" @click="queryCinemaList">查看影院列表</em>
             </label>
@@ -802,7 +802,7 @@ export default class PlanDefault extends ViewBase {
   }
 }
 .rows-list p label {
-  width: 130px;
+  width: 136px;
 }
 .cinema-list {
   cursor: pointer;
