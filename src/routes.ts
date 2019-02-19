@@ -232,6 +232,6 @@ export default [
   {
     path: '/about',
     name: 'about',
-    component: () => import('./views/about.vue'),
+    component: () => import(/* webpackChunkName: "about" */'./views/about.vue'),
   },
 ] as any[]

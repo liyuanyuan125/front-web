@@ -17,6 +17,10 @@ declare module 'iview/dist/locale/zh-CN' {
   export default locale
 }
 
+declare module 'vue-plyr' {
+  export const VuePlyr: any // tslint:disable-line
+}
+
 interface VarType {
   env: string
   baseUrl: string
