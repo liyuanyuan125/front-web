@@ -16,7 +16,7 @@
             </Select>
           </FormItem>
         </Col>
-        <Col :span="5">
+        <Col :span="6">
           <FormItem label="所属品类" :label-width="100">
             <Select v-model="form.businessCategoryCode" clearable style='width: 200px;'>
               <Option :value="item.code" :key="item.code" v-for="item in businessCodeList">{{item.desc}}</Option>
@@ -40,7 +40,7 @@
       stripe
       :columns="columns"
       :data="data"
-      :key="data"
+      :key="data.length"
     >
       <template slot-scope="{row}" slot="action">
         <a class="action-btn" @click="toDetail(row.id)">查看</a>
@@ -126,13 +126,13 @@ export default class Main extends ViewBase {
 
   async userList() {
     try {
+      const datas = await codeList(this.form.businessCode)
+      this.form.businessCategoryCode = (datas.data || [])[0].code
+      this.businessCodeList = datas.data || []
       const { data } = await subAccount({ ...this.form})
       this.data = data.items || []
       this.businessList = data.businessList
       this.total = data.totalCount
-      const datas = await codeList(this.form.businessCode)
-      this.form.businessCategoryCode = (datas.data || [])[0].code
-      this.businessCodeList = datas.data || []
     } catch (ex) {
       this.handleError(ex.msg)
     }
