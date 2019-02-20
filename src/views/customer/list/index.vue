@@ -18,7 +18,7 @@
         </Col>
         <Col :span="6">
           <FormItem label="所属品类" :label-width="100">
-            <Select v-model="form.businessCategoryCode" clearable style='width: 200px;'>
+            <Select v-model="form.businessCategoryCode" @on-change='gorycode' clearable style='width: 200px;'>
               <Option :value="item.code" :key="item.code" v-for="item in businessCodeList">{{item.desc}}</Option>
             </Select>
           </FormItem>
@@ -149,6 +149,12 @@ export default class Main extends ViewBase {
     const { data } = await subAccount({ ...this.form})
     this.data = data.items || []
     this.businessList = data.businessList
+    this.total = data.totalCount
+  }
+  async gorycode(value: any) {
+    const { data } = await subAccount({ ...this.form})
+    this.data = data.items || []
+    // this.businessList = data.businessList
     this.total = data.totalCount
   }
   // 添加
