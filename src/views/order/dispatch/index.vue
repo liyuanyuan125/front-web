@@ -79,7 +79,7 @@
             <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenue}}</span></Col>
             <Col span='6'>
               <span v-if='it.status == 1' @click="editReject(it.id)" class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
-              <span v-if='it.status == 1' class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
+              <span v-if='it.status == 1' @click="editRefuse(it)" class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
               <!-- <span v-if='it.status == 2' class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>查看执行单</span> -->
               <router-link
               v-if='it.status == 2'
@@ -248,6 +248,13 @@ export default class Main extends ViewBase {
     this.rejectShow = true
     this.$nextTick(() => {
       (this.$refs.reject as any).init(id, 1)
+    })
+  }
+
+  editRefuse(id: any) {
+    this.refuseShow = true
+    this.$nextTick(() => {
+      (this.$refs.refuse as any).init(id)
     })
   }
 

@@ -150,7 +150,7 @@ export default class Main extends ViewBase {
   }
   // 添加
   addUser() {
-
+    this.$router.push({name: 'customer-list-edit'})
   }
   // 查看
   toDetail(id: any) {
