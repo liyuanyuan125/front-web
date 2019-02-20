@@ -75,7 +75,7 @@
         <li v-for='(it,index) in itemlist' :key='index'>
           <Row class='li-title'>
             <Col span='8'>下单时间      {{it.createTime}}</Col>
-            <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenueestimateRevenue}}</span></Col>
+            <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenue}}</span></Col>
             <Col span='6'>
             <router-link
               v-if='it.status == 1 || it.status == 2'
