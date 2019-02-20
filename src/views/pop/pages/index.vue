@@ -1006,7 +1006,7 @@ export default class Main extends ViewBase {
       this.tuifilm = (tui.data.data.items || []).map((it: any) => {
         return {
           ...it,
-          openTime: moment(it.openTime).format(timeFormat)
+          openTime: it.openTime ? moment(it.openTime).format(timeFormat) : '暂无'
         }
       })
 
