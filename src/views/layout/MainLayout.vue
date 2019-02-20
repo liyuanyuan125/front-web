@@ -355,11 +355,14 @@ export default class App extends ViewBase {
     .ivu-menu-submenu-title {
       padding-left: 60px;
       background: no-repeat 30px center;
+      i {
+        margin-right: 15px;
+      }
     }
     .ivu-menu-item {
       font-size: 12px;
       & > a {
-        padding-left: 77px;
+        padding: 10px 24px 10px 77px;
       }
     }
     .ivu-menu-item-selected {
@@ -376,7 +379,7 @@ export default class App extends ViewBase {
     & > a {
       position: relative;
       display: block;
-      padding: 18px 24px 18px 60px;
+      padding: 10px 24px 10px 77px;
       color: @c-sider-text;
       background: @c-sider-bg no-repeat 30px center;
     }
@@ -387,12 +390,13 @@ export default class App extends ViewBase {
       &::before {
         content: '';
         position: absolute;
-        left: 62px;
+        left: 57px;
         top: 50%;
-        width: 8px;
-        height: 8px;
-        margin-top: -4px;
-        background: url(./assets/selected.png) no-repeat;
+        margin-top: -6px;
+        width: 10px;
+        height: 10px;
+        border: solid 1px #f65202;
+        border-radius: 50%;
       }
     }
   }

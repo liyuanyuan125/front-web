@@ -44,7 +44,7 @@
         <Table
           stripe
           :columns="columns"
-          :data="data"
+          :data="tabledata"
         ></Table>
       </Row>
     </div>
@@ -55,17 +55,18 @@ import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
 import { formatTimes } from '@/util/validateRules'
-import { contact } from '@/api/customer'
+import { contact, adminId } from '@/api/customer'
 import PermTree, { PermTreeModal } from '@/components/permTree'
 
 @Component
 export default class Main extends ViewBase {
   data: any = []
+  tabledata: any = []
   businessCategoryList: any = []
   businessList: any = []
 
   columns = [
-    { title: '联系人名称', key: 'id', align: 'center' },
+    { title: '联系人名称', key: 'name', align: 'center' },
     {
       title: '登录邮箱',
       width: 160,
@@ -74,12 +75,12 @@ export default class Main extends ViewBase {
     },
     {
       title: '权限角色',
-      key: 'businessName',
+      key: 'roleName',
       align: 'center'
     },
     {
       title: '手机号码',
-      slot: 'businessCategoryName',
+      key: 'mobile',
       align: 'center'
     }
   ]
@@ -106,6 +107,20 @@ export default class Main extends ViewBase {
   }
 
   async tableInit() {
+    try {
+      const {
+        data: {
+          accountList
+        }
+      } = await adminId({
+        partnerId: this.$route.params.id,
+        pageSize: 100,
+        pageIndex: 1
+      })
+      this.tabledata = accountList
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   async init() {

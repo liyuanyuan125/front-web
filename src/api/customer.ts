@@ -35,3 +35,9 @@ export async function business() {
   const res = await get(`/customer/partners/business`)
   return res
 }
+
+// 获取客户下所关联的账号列表
+export async function adminId(query: any) {
+  const res = await get(`/customer/partners/accounts`, query)
+  return res
+}

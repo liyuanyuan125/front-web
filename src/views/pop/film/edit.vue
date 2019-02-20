@@ -16,23 +16,24 @@
         </FormItem>
 
         <FormItem  label="广告片规格" prop="specification">
-          <Select v-model="form.specification"  clearable filterable>
+          <Select v-model="form.specification" @on-change="handleChangeSpe"  clearable filterable>
             <Option v-for="(item, index) in specificationList" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
           <em class="remark">备注：广告片规格请输入15s的倍数</em>
         </FormItem>
 
         <FormItem  label="上传广告片">
-          <UploadLabel class="upload-label" @start="uploadStart" @success="uploadSuccess">
+          <UploadLabel class="upload-label" id="play" @start="uploadStart" @success="uploadSuccess">
             <div class="update">
               <p class="update-video">上传广告片</p>
               <p>小于2G的视频文件</p>
             </div>
+            <span slot="suffix" v-if="length > 0">{{duration}}</span>
           </UploadLabel>
         </FormItem>
      </Form>
      <div class="btnCenter create-submit-btn">
-       <Button v-if="!$route.params.id" type="primary" @click="createSubmit('dataform')" class="button-ok">提交审核</Button>
+       <Button v-if="!$route.params.id" type="primary" :disabled="btnSubmit" @click="createSubmit('dataform')" class="button-ok">提交审核</Button>
        <Button v-else type="primary" class="button-ok" @click="editSubmit('dataform')">保存修改</Button>
      </div>
   </div>
@@ -44,7 +45,9 @@ import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
 import { confirm } from '@/ui/modal'
 import { popPartners, detailPop, createPop, editPop, transFee} from '@/api/popFilm'
-import UploadLabel, { SuccessEvent } from '@/components/uploadLabel'
+import UploadLabel, { StartEvent, SuccessEvent } from '@/components/uploadLabel'
+import { format as durationFormat } from '@/fn/duration'
+import getBlobDuration from 'get-blob-duration'
 
 @Component({
   components: {
@@ -61,10 +64,11 @@ export default class Main extends ViewBase {
   // 源视频文件上传后的ID
   srcFileId = ''
   // 广告片时长
-  length = 29
+  length = 0
   // 转码费
-  transFee = 1
-
+  transFee = ''
+  // 视频上传but按钮置灰
+  btnSubmit = false
   customerList = []
   specificationList: any = []
 
@@ -82,6 +86,10 @@ export default class Main extends ViewBase {
     }
   }
 
+  get duration() {
+    return durationFormat(this.length)
+  }
+
   async mounted() {
     this.partnersList()
     this.creSpecificationList()
@@ -91,12 +99,17 @@ export default class Main extends ViewBase {
     }
   }
 
-  uploadStart() {
+  async uploadStart({ blob }: StartEvent) {
     this.srcFileId = ''
+    this.btnSubmit = true
+    this.length = 0
+    const duration = await getBlobDuration(blob)
+    this.length = Math.floor(duration)
   }
 
-  uploadSuccess({ file }: SuccessEvent) {
+  uploadSuccess({ file, blob }: SuccessEvent) {
     this.srcFileId = file.fileId
+    this.btnSubmit = false
   }
 
   creSpecificationList() {
@@ -134,7 +147,10 @@ export default class Main extends ViewBase {
       this.handleError(ex.msg)
     }
   }
-
+  async handleChangeSpe(specification: any) {
+     const { data } = await transFee({ specification })
+     this.transFee = data
+  }
   async createSub() {
     const customerName: any = this.customerList.filter( (item: any) => item.id == this.form.customerId)
     try {
