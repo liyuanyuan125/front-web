@@ -24,8 +24,14 @@ export async function putcontact(id: any, query: any) {
   return res
 }
 
-// 获取客户详细信息
+// 添加客户详细信息
 export async function postcontact(query: any) {
   const res = await post(`/customer/partners`, query)
+  return res
+}
+
+// 获取客户的行业列表
+export async function business() {
+  const res = await get(`/customer/partners/business`)
   return res
 }

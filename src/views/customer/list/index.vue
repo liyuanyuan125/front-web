@@ -154,11 +154,11 @@ export default class Main extends ViewBase {
   }
   // 查看
   toDetail(id: any) {
-
+    this.$router.push({name: 'customer-list-detail', params: {id}})
   }
   // 编辑
   toEdit(id: any) {
-
+    this.$router.push({name: 'customer-list-edit', params: {id}})
   }
 
   handlepageChange(size: any) {
