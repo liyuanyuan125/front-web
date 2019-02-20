@@ -40,9 +40,8 @@
       stripe
       :columns="columns"
       :data="data"
-      :key="data.length"
     >
-      <template slot-scope="{row}" slot="action">
+      <template slot-scope="{row , index}" slot="action">
         <a class="action-btn" @click="toDetail(row.id)">查看</a>
         <a class="action-btn" @click="toEdit(row.id)">编辑</a>
       </template>
@@ -103,15 +102,15 @@ export default class Main extends ViewBase {
     },
     {
       title: '所属品类',
-      slot: 'businessCategoryName'
+      key: 'businessCategoryName'
     },
     {
       title: '联系人',
-      slot: 'contactName'
+      key: 'contactName'
     },
     {
       title: '联系电话',
-      slot: 'contactTel'
+      key: 'contactTel'
     },
     {
       title: '操作',
@@ -126,11 +125,6 @@ export default class Main extends ViewBase {
 
   async userList() {
     try {
-      if (this.form.businessCategoryCode != '') {
-        const datas = await codeList(this.form.businessCode)
-        this.form.businessCategoryCode = (datas.data || [])[0].code
-        this.businessCodeList = datas.data || []
-      }
       const { data } = await subAccount({ ...this.form})
       this.data = data.items || []
       this.businessList = data.businessList
@@ -146,13 +140,16 @@ export default class Main extends ViewBase {
 
   async searchcode(value: any) {
     if (value == undefined) {
-      this.form.businessCode = ''
       this.form.businessCategoryCode = ''
+      this.userList()
     }
-    // const datas = await codeList(this.form.businessCode)
-    // this.form.businessCategoryCode = (datas.data || [])[0].code
-    // this.businessCodeList = datas.data || []
-    this.userList()
+    const datas = await codeList(this.form.businessCode)
+    this.form.businessCategoryCode = (datas.data || [])[0].code
+    this.businessCodeList = datas.data || []
+    const { data } = await subAccount({ ...this.form})
+    this.data = data.items || []
+    this.businessList = data.businessList
+    this.total = data.totalCount
   }
   // 添加
   addUser() {
