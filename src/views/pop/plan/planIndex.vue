@@ -57,13 +57,16 @@
         <span v-else>{{queryStatus(row.status)}}</span>
       </template>
       <template slot="videoName" slot-scope="{row, index}">
-        <span>{{row.videoName || '—'}}</span>
+        <span>{{row.videoName || '待关联'}}</span>
       </template>
       <template slot="beginDate" slot-scope="{row, index}">
         <span>{{formatYell(row.beginDate)}}-{{formatYell(row.endDate)}}</span>
       </template>
       <template slot="specification" slot-scope="{row, index}">
-        <span>{{row.specification}}s</span>
+        <span>{{row.specification || '/'}}s</span>
+      </template>
+      <template slot="settlementStatus" slot-scope="{row, index}">
+        <span>{{querySettlementList(row.settlementStatus)}}</span>
       </template>
       <template slot="operation" slot-scope="{row, index}">
         <!-- 草稿 待审核 -->
@@ -194,13 +197,13 @@ export default class Plan extends ViewBase {
     { title: '广告计划状态', slot: 'status', minWidth: 120 },
     { title: '广告片规格', slot: 'specification', minWidth: 120 },
     { title: '广告片名称', slot: 'videoName', minWidth: 150 },
-    { title: '投放排期', slot: 'beginDate', minWidth: 210 },
+    { title: '投放排期', slot: 'beginDate', minWidth: 170 },
     // { title: '投放周期', key: 'cycle', minWidth: 130 },
     // { title: '冻结金额(元）', slot: 'freezeAmount', width: 150 },
-    // { title: '结算状态', key: 'settlementStatus', width: 150 },
+    { title: '结算状态', slot: 'settlementStatus', width: 90 },
     // { title: '广告花费(元）', key: 'settlementAmount', width: 150 },
     // { title: '创建时间', slot: 'createTime', width: 150 },
-    { title: '操作', slot: 'operation', width: 150, align: 'center' }
+    { title: '操作', slot: 'operation', width: 150, align: 'left' }
   ]
   tableDate = []
 
@@ -246,9 +249,9 @@ export default class Plan extends ViewBase {
   }
   planDefault(id: any, status: any) {
     if (status == '1' || status == '3' || status == '9' || status == '10') {
-      this.$router.push({ name: 'pop-plan-default', params: {id}})
+      this.$router.push({ name: 'pop-planlist-default', params: {id}})
     } else {
-      this.$router.push({ name: 'pop-plan-defaultpayment', params: {id}})
+      this.$router.push({ name: 'pop-planlist-defaultpayment', params: {id}})
     }
   }
   planEdit(id: any) {
@@ -268,13 +271,15 @@ export default class Plan extends ViewBase {
       this.relevanVis = {
         visible: true,
         title: '关联广告片',
-        item: ''
+        item: '',
+        id: val.id
       }
     } else {
       this.relevanVis = {
         visible: true,
         title: '编辑广告片',
-        item: val
+        item: val,
+        id: val.id
       }
     }
   }
@@ -301,6 +306,13 @@ export default class Plan extends ViewBase {
      if (items) {
        return items[0].text
      }
+  }
+  querySettlementList(id: any) {
+    const list = this.data.settlementStatusList
+    const items = list ? list.filter( (item: any) => item.key == id) : null
+    if (items) {
+       return items[0].text
+    }
   }
   // 单选
   singleSelect(select: any) {
@@ -340,7 +352,6 @@ export default class Plan extends ViewBase {
   }
 }
 .operation-btn {
-  text-align: center;
   span {
     cursor: pointer;
     display: inline-block;

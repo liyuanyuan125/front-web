@@ -67,7 +67,7 @@ export default class Relevan extends ViewBase {
 
     try {
       await relevanceVideo({
-        id: this.value.item.id,
+        id: this.value.id,
         videoId: this.form.voidID
       })
       this.value.visible = false

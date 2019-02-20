@@ -128,7 +128,7 @@ export default class Main extends ViewBase {
   }
   .modifyCode {
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     color: @c-button;
     margin-left: 20px;
   }
