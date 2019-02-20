@@ -5,6 +5,7 @@
       <Progress :percent="item.percent" :status="item.progressStatus" class="progress"/>
       <div class="name" v-if="item.clientName">{{item.clientName}}</div>
       <div class="error" v-if="item.error">{{item.error}}</div>
+      <slot name="suffix"></slot>
     </span>
     <span class="upload-empty" v-else>
       <slot>上传文件</slot>
@@ -18,7 +19,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Uploader from '@/util/Uploader'
 import { slice } from '@/fn/object'
-import { FileItem, SuccessEvent } from './types'
+import { FileItem, StartEvent, SuccessEvent } from './types'
 import { cloneDeep } from 'lodash'
 
 // 状态，loading 表示正在生成预览（针对图片），uploading 正在上传，done 完成，fail 失败
@@ -34,6 +35,7 @@ interface UploadItem extends FileItem {
   progressStatus: string
   /** 错误消息，内部使用 */
   error: string
+  blob?: File,
 }
 
 const defItem: UploadItem = {
@@ -77,11 +79,12 @@ export default class UploadLabel extends ViewBase {
       percent: 0,
       progressStatus: 'active',
       error: '',
+      blob: file,
     }
 
     this.isUploading = true
 
-    this.$emit('start')
+    this.$emit('start', { blob: file } as StartEvent)
 
     const uploader = new Uploader()
     uploader.on(this.uploadHandlers()).upload(file)
@@ -127,7 +130,8 @@ export default class UploadLabel extends ViewBase {
   onUploadEnd() {
     this.isUploading = false
     const file = slice(this.item, 'url,fileId,clientName,clientSize,clientType') as FileItem
-    this.$emit('success', { file } as SuccessEvent)
+    const blob = this.item.blob
+    this.$emit('success', { file, blob } as SuccessEvent)
   }
 }
 </script>

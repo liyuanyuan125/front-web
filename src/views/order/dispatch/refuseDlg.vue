@@ -6,7 +6,7 @@
   :styles="{top: '30px'}"
   @on-cancel="cancel()">
     <h3 class="refuse">是否拒绝该执行单?</h3>
-    <Row class="refuse-body" style="margin-top: 20px">
+    <Row v-if="data.videoName" class="refuse-body" style="margin-top: 20px">
       <Row>
         <Col :span="4">广告片名称</Col>
         <Col :span="7"><span>{{data.videoName}}</span></Col>

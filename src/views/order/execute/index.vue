@@ -7,17 +7,17 @@
           <div class="fince-list">
             <div class='fince-list-big'>
               <!-- <div class="fince-list-acc"><img src="./assets/待执行单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.unExecuteCount></numAdd></span></div> -->
-              <div class="fince-list-acc"><img src="./assets/待执行单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.unExecuteCount}}</span></div>
+              <div class="fince-list-acc"><img style='width: 6%;' src="./assets/待执行单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.unExecuteCount}}</span></div>
               <p class="fince-list-sm">待执行单</p>
             </div>
             <div class='fince-list-big'>
               <!-- <div class="fince-list-acc"><img src="./assets/执行中.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.beExecuteCount></numAdd></span></div> -->
-              <div class="fince-list-acc"><img src="./assets/执行中.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.beExecuteCount}}</span></div>
+              <div class="fince-list-acc"><img style='width: 6%;' src="./assets/执行中.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.beExecuteCount}}</span></div>
               <p class="fince-list-sm">执行中</p>
             </div>
             <div class='fince-list-big'>
               <!-- <div class="fince-list-acc"><img src="./assets/已完成单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.outExecuteCount></numAdd></span></div> -->
-              <div class="fince-list-acc"><img src="./assets/已完成单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.outExecuteCount}}</span></div>
+              <div class="fince-list-acc"><img style='width: 6%;' src="./assets/已完成单.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.outExecuteCount}}</span></div>
               <p class="fince-list-sm">已完成单</p>
             </div>
           </div>
@@ -75,7 +75,7 @@
         <li v-for='(it,index) in itemlist' :key='index'>
           <Row class='li-title'>
             <Col span='8'>下单时间      {{it.createTime}}</Col>
-            <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenueestimateRevenue}}</span></Col>
+            <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenue}}</span></Col>
             <Col span='6'>
             <router-link
               v-if='it.status == 1 || it.status == 2'
@@ -85,7 +85,7 @@
               style='background: #3B98FF; color: #fff;cursor: pointer;'
             >下载DCP包</router-link>
               <!-- <span class='button' v-if='it.status == 1 || it.status == 2' style='background: #3B98FF; color: #fff;cursor: pointer;'>下载DCP包</span> -->
-              <span class='button' @click="editReject(it.id)" v-if='it.status == 1' style='background: #3B98FF; color: #fff;cursor: pointer;'>修改执行影院</span>
+              <span class='button' @click="editReject(it.id, it.id, it.cinemas.length)" v-if='it.status == 1' style='background: #3B98FF; color: #fff;cursor: pointer;'>修改执行影院</span>
             </Col>
           </Row>
           <Row class='li-item'>
@@ -255,10 +255,10 @@ export default class Main extends ViewBase {
     }
   }
 
-  editReject(id: any) {
+  editReject(id: any, planId: any, length: any) {
     this.rejectShow = true
     this.$nextTick(() => {
-      (this.$refs.reject as any).init(id, 2)
+      (this.$refs.reject as any).init(id, planId, length, 2)
     })
   }
 
@@ -427,6 +427,9 @@ export default class Main extends ViewBase {
       }
     }
     .img-order {
+      img {
+        width: 10%;
+      }
       line-height: 110px;
       span {
         margin-left: 10px;
@@ -437,6 +440,7 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
   margin-left: 12px;
+  transition: all 0s !important;
 }
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
   color: #fff;
@@ -459,5 +463,8 @@ export default class Main extends ViewBase {
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked::before {
   background: #3b98ff;
   opacity: 1;
+}
+/deep/ .ivu-radio-group-button .ivu-radio-wrapper::before, .ivu-radio-group-button .ivu-radio-wrapper::after {
+  transition: all 0s !important;
 }
 </style>

@@ -3660,6 +3660,11 @@ gauge@~2.7.3:
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
 
+get-blob-duration@^1.0.1:
+  version "1.0.1"
+  resolved "http://registry.npm.taobao.org/get-blob-duration/download/get-blob-duration-1.0.1.tgz#0cd1c2aa333086b8f02b27a7515e3315652504c5"
+  integrity sha1-DNHCqjMwhrjwKyenUV4zFWUlBMU=
+
 get-caller-file@^1.0.1:
   version "1.0.3"
   resolved "http://registry.npm.taobao.org/get-caller-file/download/get-caller-file-1.0.3.tgz#f978fa4c90d1dfe7ff2d6beda2a515e713bdcf4a"

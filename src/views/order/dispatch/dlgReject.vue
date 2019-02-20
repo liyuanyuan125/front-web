@@ -80,6 +80,7 @@ export default class DlgEditCinema extends ViewBase {
     pageIndex: 1,
     pageSize: 6,
   }
+  planId: any = ''
   reject: any = {}
   name: any = []
   checktotal: any = 0
@@ -123,7 +124,7 @@ export default class DlgEditCinema extends ViewBase {
         if (this.checkId .includes(it.id)) {
           return {
             ...it,
-            citys: `${it.areaName}${it.provinceName}${it.cityName}`,
+            citys: `${it.areaName} / ${it.provinceName} / ${it.cityName}`,
             _checked: true
           }
         } else {
@@ -152,22 +153,14 @@ export default class DlgEditCinema extends ViewBase {
     this.checkObj = this.checkObj.filter((it: any) => !filterId.includes(it.id))
   }
 
-  async init(id: any, type: any) {
+  async init(id: any, planId: any, length: any, type: any) {
     this.id = id
+    this.planId = planId
     this.type = type
     this.loading = true
     this.showDlg = true
-    let res: any = null
-    try {
-      if (this.type == 1) {
-        res = await findCinema(this.id, {...this.dataForm})
-      } else {
-        res = await carryList(this.id, {...this.dataForm})
-      }
-      this.checktotal = res.data.totalCount
-    } catch (ex) {
-      this.handleError(ex)
-    }
+    const res: any = null
+    this.checktotal = length
     this.seach()
   }
 
@@ -208,7 +201,7 @@ export default class DlgEditCinema extends ViewBase {
 
   edit() {
     this.$nextTick(() => {
-      (this.$refs.target as any).init(this.id, this.type)
+      (this.$refs.target as any).init(this.planId, this.type)
     })
   }
 

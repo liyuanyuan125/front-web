@@ -102,4 +102,10 @@ export default class Main extends ViewBase {
 .from {
   padding: 30px 0 0 30px;
 }
+/deep/ .ivu-input {
+  font-size: 14px;
+}
+/deep/ .ivu-form-item-label::before {
+  display: none;
+}
 </style>

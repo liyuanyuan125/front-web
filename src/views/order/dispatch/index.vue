@@ -7,19 +7,19 @@
           <div class="fince-list">
             <div class='fince-list-big'>
               <!-- <div class="fince-list-acc"><img src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.waiting></numAdd></span></div> -->
-              <div class="fince-list-acc"><img src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.waiting}}</span></div>
+              <div class="fince-list-acc"><img style='width: 6%;' src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.waiting}}</span></div>
               <p class="fince-list-sm">待接单数</p>
             </div>
             <div class='fince-list-big'>
               <!-- <div class="fince-list-acc"><img src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.received></numAdd></span></div> -->
-              <div class="fince-list-acc"><img src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.received}}</span></div>
+              <div class="fince-list-acc"><img style='width: 7%;' src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.received}}</span></div>
               <p class="fince-list-sm">已接单数</p>
             </div>
             <div class='fince-list-big' style='background: #fff; border-top: 10px solid #fff;'>
               <!-- <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.refuse></numAdd></span><span class='smas2'>已拒绝单数</span></div>
               <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.faliure></numAdd></span><span class='smas2'>已失效单数</span></div> -->
-              <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.refuse}}</span><span class='smas2'>已拒绝单数</span></div>
-              <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.faliure}}</span><span class='smas2'>已失效单数</span></div>
+              <div class='fin-bigs'><img style='width: 7%;' src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.refuse}}</span><span class='smas2'>已拒绝单数</span></div>
+              <div class='fin-bigs' style='margin-top: 10px;'><img style='width: 7%;' src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.faliure}}</span><span class='smas2'>已失效单数</span></div>
             </div>
           </div>
         </Col>
@@ -78,7 +78,7 @@
             <Col span='8'>下单时间      {{it.createTime}}</Col>
             <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenue}}</span></Col>
             <Col span='6'>
-              <span v-if='it.status == 1' @click="editReject(it.id)" class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
+              <span v-if='it.status == 1' @click="editReject(it.id, it.planId, it.cinemaCount)" class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
               <span v-if='it.status == 1' @click="editRefuse(it)" class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
               <!-- <span v-if='it.status == 2' class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>查看执行单</span> -->
               <router-link
@@ -96,7 +96,7 @@
                 <Col span='3' class='row-list-hui'>广告片名称</Col>
                 <Col span='9' class='row-list-huis'>{{it.videoName}}</Col>
                 <Col span='3' class='row-list-hui'>目标影院</Col>
-                <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   <span @click="edittarget(it.id)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
+                <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   <span @click="edittarget(it.planId)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
               </Row>
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>广告片规格</Col>
@@ -249,10 +249,10 @@ export default class Main extends ViewBase {
     }
   }
 
-  editReject(id: any) {
+  editReject(id: any, planId: any, length: any) {
     this.rejectShow = true
     this.$nextTick(() => {
-      (this.$refs.reject as any).init(id, 1)
+      (this.$refs.reject as any).init(id, planId, length, 1)
     })
   }
 
@@ -346,7 +346,7 @@ export default class Main extends ViewBase {
       background: rgba(242, 242, 242, 1);
       border-radius: 2px;
       text-align: center;
-      line-height: 60px;
+      line-height: 77px;
       .accs-sma {
         font-size: 30px;
       }
@@ -424,6 +424,9 @@ export default class Main extends ViewBase {
       }
     }
     .img-order {
+      img {
+        width: 10%;
+      }
       line-height: 150px;
       span {
         margin-left: 10px;
@@ -434,6 +437,7 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
   margin-left: 12px;
+  transition: all 0s !important;
 }
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
   color: #fff;
@@ -457,5 +461,7 @@ export default class Main extends ViewBase {
   background: #3b98ff;
   opacity: 1;
 }
-
+/deep/ .ivu-radio-group-button .ivu-radio-wrapper::before, .ivu-radio-group-button .ivu-radio-wrapper::after {
+  transition: all 0s !important;
+}
 </style>

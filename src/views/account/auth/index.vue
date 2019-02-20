@@ -295,6 +295,7 @@ export default class Main extends ViewBase {
   .ivu-input {
     width: 400px;
     line-height: 40px;
+    font-size: 14px;
     height: 40px;
   }
 }
