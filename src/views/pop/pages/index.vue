@@ -230,8 +230,8 @@
                     <div>上映日期：{{it.openTime}}</div>
                   </dd>
                   <dt class='dts'>《{{it.name}}》</dt>
-                  <dt class='dts'><span :class="{red: autos(it)}" v-for="it in it.type" :key="it">{{it}}</span></dt>
-                  <dt class='dts'>{{it.type.join(' / ')}}</dt>
+                  <dt class='dts'><span :class="{red: autos(it)}" v-for="it in it.type" :key="it">{{it}} </span></dt>
+                  <!-- <dt class='dts'>{{it.type.join(' / ')}}</dt> -->
                 </dl>
               </Col>
             </Col>
@@ -1043,6 +1043,12 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.before(@content: '/', @color: #222) {
+  content: @content;
+  margin-left: 6px;
+  margin-right: 6px;
+  color: @color;
+}
 .red {
   color: red;
 }
@@ -1051,6 +1057,9 @@ export default class Main extends ViewBase {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  span:not(:last-child)::after {
+    .before;
+  }
 }
 .cinema-check {
   position: absolute;
