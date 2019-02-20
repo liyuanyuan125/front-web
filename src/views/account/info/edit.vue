@@ -178,7 +178,7 @@ export default class Main extends ViewBase {
 .page {
   .upload-wrap {
     position: relative;
-    margin-top: 10px;
+    margin-top: 5px;
   }
   .ivu-form-item {
     padding-left: 30px;
@@ -195,7 +195,7 @@ export default class Main extends ViewBase {
   }
   .modifyCode {
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     color: @c-button;
     margin-left: 20px;
   }

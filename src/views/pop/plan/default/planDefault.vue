@@ -131,7 +131,7 @@
           <label>观影人群画像</label>
         </p>
         <div
-        v-if="sex"
+          v-if="sex"
           class="portrait"
           :class="{'woman-atv': sex == 'woman', 'man-atv': sex == 'man', 'unknow-atv': sex == 'unknow'}"
         >
@@ -150,11 +150,13 @@
             <i class="age-text">年龄不详</i>
             <img width="145" class="gender-img" src="../assets/unknow.png">
           </div>
-
           <div class="film-type">
             <i class v-for="(item, index) in typeList" :key="index">{{item}}</i>
           </div>
         </div>
+        <div v-else>
+            <span>不限</span>
+          </div>
       </div>
       <div class="flex-box film-list" v-if="defaultData.movieList && defaultData.movieList.length > 0">
         <label>影片</label>
@@ -162,7 +164,7 @@
           <div class="item" v-for="(item, index) in defaultData.movieList" :key="index">
             <div class="film-img-item">
               <img :src="item.mainPicUrl" width="180" height="240">
-              <div class="open-time">上映时间：{{formatYell(item.openTime)}}</div>
+              <div class="open-time">上映时间：{{formatYell(item.openTime)|| "暂无"}}</div>
             </div>
             <div class="film-name">《{{item.name}}》</div>
             <div class="film-type-items">

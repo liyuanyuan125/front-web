@@ -10,15 +10,15 @@
     <Form :model="form" class="form">
       <Row type="flex" justify="space-between">
         <Col :span="6">
-          <FormItem label="权限角色" :label-width="100">
-            <Select v-model="form.roleId" clearable>
+          <FormItem label="权限角色" :label-width="90">
+            <Select v-model="form.roleId" clearable style="width: 200px">
               <Option :value="item.id" :key="item.id" v-for="item in rolelist">{{item.name}}</Option>
             </Select>
           </FormItem>
         </Col>
         <Col :span="5">
-          <FormItem label="账号状态" :label-width="100">
-            <Select v-model="form.status" clearable>
+          <FormItem label="账号状态" :label-width="90">
+            <Select v-model="form.status" style="width: 100px" clearable>
               <Option :value="item.key" :key="item.id" v-for="item in statusList">{{item.text}}</Option>
             </Select>
           </FormItem>
@@ -64,12 +64,12 @@
         <a class="action-btn" v-else-if="row.statusCode == 3" @click="activeEmail(row.id)">重新激活</a>
       </template>
     </Table>
-    <h4 class="checkAll">
+    <div class="checkAll">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
       </span>
       <span @click="deleteList">批量删除</span>
-    </h4>
+    </div>
     <Page
       :total="total"
       v-if="total>0"
@@ -306,14 +306,6 @@ export default class Main extends ViewBase {
 
 .page {
   font-size: 14px;
-  .checkAll {
-    cursor: pointer;
-    margin: 10px 20px 0;
-    .colBg;
-    span:last-child {
-      color: @c-link;
-    }
-  }
 
   .tableTotal {
     padding: 0 30px 0;
@@ -361,6 +353,7 @@ export default class Main extends ViewBase {
           input {
             height: 40px;
             line-height: 40px;
+            font-size: 14px;
           }
         }
       }
