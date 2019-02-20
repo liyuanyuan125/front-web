@@ -6,16 +6,20 @@
         <Col :span="24">
           <div class="fince-list">
             <div class='fince-list-big'>
-              <div class="fince-list-acc"><img src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.waiting></numAdd></span></div>
+              <!-- <div class="fince-list-acc"><img src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.waiting></numAdd></span></div> -->
+              <div class="fince-list-acc"><img src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.waiting}}</span></div>
               <p class="fince-list-sm">待接单数</p>
             </div>
             <div class='fince-list-big'>
-              <div class="fince-list-acc"><img src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.received></numAdd></span></div>
+              <!-- <div class="fince-list-acc"><img src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.received></numAdd></span></div> -->
+              <div class="fince-list-acc"><img src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.received}}</span></div>
               <p class="fince-list-sm">已接单数</p>
             </div>
             <div class='fince-list-big' style='background: #fff; border-top: 10px solid #fff;'>
-              <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.refuse></numAdd></span><span class='smas2'>已拒绝单数</span></div>
-              <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.faliure></numAdd></span><span class='smas2'>已失效单数</span></div>
+              <!-- <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.refuse></numAdd></span><span class='smas2'>已拒绝单数</span></div>
+              <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.faliure></numAdd></span><span class='smas2'>已失效单数</span></div> -->
+              <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.refuse}}</span><span class='smas2'>已拒绝单数</span></div>
+              <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.faliure}}</span><span class='smas2'>已失效单数</span></div>
             </div>
           </div>
         </Col>
@@ -23,14 +27,14 @@
       <Row class='row-ul'>
         <Col :span="12">
           <div class='guanggao'>广告单状态</div>
-          <RadioGroup v-model="query.status" type="button" @on-change='seach'>
+          <RadioGroup v-model="query.status" type="button" @on-change='seachs'>
             <Radio v-for='it in statusList' :key='it.key' :value='it.key' v-if='it.key!=0' :label='it.key'>{{it.text}}</Radio>
           </RadioGroup>
         </Col>
         <Col :span="12">
           <div class='guanggao'>广告单类型</div>
           <Col style='margin-left: 12px;' span="7">
-            <Select v-model='query.planType'  clearable placeholder="广告单类型" @on-change="seach">
+            <Select v-model='query.planType'  clearable placeholder="广告单类型" @on-change="seachs">
               <Option
                 v-for="item in planTypeList"
                 :key="item.key"
@@ -63,7 +67,7 @@
         <Col :span="8">
           <!-- <div class='guanggao'>广告单类型</div> -->
           <Col style='margin-left: 12px;' span="20">
-            <Input v-model='query.videoName' search enter-button placeholder="请输入广告片名称进行搜索" @on-change="seach"/>
+            <Input v-model='query.videoName' search enter-button placeholder="请输入广告片名称进行搜索" @on-change="seachs"/>
           </Col>
         </Col>
       </Row>
@@ -75,7 +79,7 @@
             <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenue}}</span></Col>
             <Col span='6'>
               <span v-if='it.status == 1' @click="editReject(it.id)" class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
-              <span v-if='it.status == 1' class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
+              <span v-if='it.status == 1' @click="editRefuse(it)" class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
               <!-- <span v-if='it.status == 2' class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>查看执行单</span> -->
               <router-link
               v-if='it.status == 2'
@@ -89,7 +93,7 @@
           <Row class='li-item'>
             <Col span='18'>
               <Row class='row-list'>
-                <Col span='3' class='row-list-hui'>广告单名称</Col>
+                <Col span='3' class='row-list-hui'>广告片名称</Col>
                 <Col span='9' class='row-list-huis'>{{it.videoName}}</Col>
                 <Col span='3' class='row-list-hui'>目标影院</Col>
                 <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   <span @click="edittarget(it.id)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
@@ -213,6 +217,11 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
+  seachs() {
+    this.query.pageIndex = 1
+    this.seach()
+  }
+
   async seach() {
     // this.loading = true
     try {
@@ -247,6 +256,13 @@ export default class Main extends ViewBase {
     })
   }
 
+  editRefuse(id: any) {
+    this.refuseShow = true
+    this.$nextTick(() => {
+      (this.$refs.refuse as any).init(id)
+    })
+  }
+
   edittarget(id: any) {
     this.targetShow = true
     this.$nextTick(() => {
@@ -263,7 +279,7 @@ export default class Main extends ViewBase {
      this.showTime = data
      this.query.beginDate = formatTimestamp(this.showTime[0])
      this.query.endDate = formatTimestamp(this.showTime[1])
-     this.seach()
+     this.seachs()
    }
 
   handlepageChange(size: any) {

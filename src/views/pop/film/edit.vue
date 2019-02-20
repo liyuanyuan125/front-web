@@ -8,22 +8,27 @@
         <FormItem  label="广告片名称" prop="name">
           <Input v-model="form.name" placeholder="请输入广告片名称"></Input>
         </FormItem>
+
         <FormItem  label="选择客户" prop="customerId">
-              <Select v-model="form.customerId"  clearable>
-                <Option v-for="(item, index) in customerList" :value="item.id" :key="index">{{ item.name }}</Option>
-              </Select>
+          <Select v-model="form.customerId"  clearable>
+            <Option v-for="(item, index) in customerList" :value="item.id" :key="index">{{ item.name }}</Option>
+          </Select>
         </FormItem>
+
         <FormItem  label="广告片规格" prop="specification">
-              <Select v-model="form.specification"  clearable filterable>
-                <Option v-for="(item, index) in specificationList" :value="item.id" :key="index">{{ item.name }}</Option>
-              </Select>
-              <em class="remark">备注：广告片规格请输入15s的倍数</em>
+          <Select v-model="form.specification"  clearable filterable>
+            <Option v-for="(item, index) in specificationList" :value="item.id" :key="index">{{ item.name }}</Option>
+          </Select>
+          <em class="remark">备注：广告片规格请输入15s的倍数</em>
         </FormItem>
-        <FormItem  label="上传广告片" >
-             <div class="update">
-               <p class="update-video">上传广告片</p>
-               <p>小于2G的视频文件</p>
-             </div>
+
+        <FormItem  label="上传广告片">
+          <UploadLabel class="upload-label" @start="uploadStart" @success="uploadSuccess">
+            <div class="update">
+              <p class="update-video">上传广告片</p>
+              <p>小于2G的视频文件</p>
+            </div>
+          </UploadLabel>
         </FormItem>
      </Form>
      <div class="btnCenter create-submit-btn">
@@ -39,8 +44,13 @@ import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
 import { confirm } from '@/ui/modal'
 import { popPartners, detailPop, createPop, editPop, transFee} from '@/api/popFilm'
+import UploadLabel, { SuccessEvent } from '@/components/uploadLabel'
 
-@Component
+@Component({
+  components: {
+    UploadLabel
+  }
+})
 export default class Main extends ViewBase {
   form: any = {
     name: '',
@@ -49,7 +59,7 @@ export default class Main extends ViewBase {
   }
 
   // 源视频文件上传后的ID
-  srcFileId = 'bgs39la893rg008001i0'
+  srcFileId = ''
   // 广告片时长
   length = 29
   // 转码费
@@ -80,11 +90,21 @@ export default class Main extends ViewBase {
        this.detailList()
     }
   }
+
+  uploadStart() {
+    this.srcFileId = ''
+  }
+
+  uploadSuccess({ file }: SuccessEvent) {
+    this.srcFileId = file.fileId
+  }
+
   creSpecificationList() {
     for ( let i = 1 ; i < 41; i ++) {
       this.specificationList.push({id: i * 15, name: i * 15})
     }
   }
+
   async detailList() {
     const id = this.$route.params.id
     try {
@@ -114,6 +134,7 @@ export default class Main extends ViewBase {
       this.handleError(ex.msg)
     }
   }
+
   async createSub() {
     const customerName: any = this.customerList.filter( (item: any) => item.id == this.form.customerId)
     try {
@@ -130,6 +151,7 @@ export default class Main extends ViewBase {
       this.handleError(ex.msg)
     }
   }
+
   async editSubmit(dataform: any) {
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) {
@@ -176,12 +198,17 @@ export default class Main extends ViewBase {
     margin-left: 20px;
     font-size: 13px;
   }
-  .update {
+  .upload-label {
+    margin-top: 15px;
     width: 300px;
     height: 225px;
     border: solid 1px #ccc;
     border-radius: 2px;
-    margin-top: 15px;
+  }
+  .update {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
     text-align: center;
     color: #888;
     font-size: 12px;

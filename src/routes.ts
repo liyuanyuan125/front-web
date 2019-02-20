@@ -228,6 +228,24 @@ export default [
     name: 'resfinance-mouthbill',
     component: () => import('./views/resFinance/mouthBill/index.vue')
   },
+  // 广告主 - 客户管理 - 客户列表
+  {
+    path: 'customer/list',
+    name: 'customer-list',
+    component: () => import('./views/customer/list/index.vue')
+  },
+  // 广告主 - 客户管理 - 新建编辑客户
+  {
+    path: 'customer/list/edit/:id?',
+    name: 'customer-list-edit',
+    component: () => import('./views/customer/list/edit.vue')
+  },
+  // 广告主 - 客户管理 - 客户列表
+  {
+    path: 'customer/list/detail/:id',
+    name: 'customer-list-detail',
+    component: () => import('./views/customer/list/detail.vue')
+  },
   // 示例，没有实际用处
   {
     path: '/about',

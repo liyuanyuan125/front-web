@@ -79,7 +79,7 @@ const allSiderMenuList: SiderMenuItem[] = [
     systems: ['ads'],
     subList: [
       {
-        name: '',
+        name: 'customer-list',
         label: '客户列表',
       },
     ]

@@ -230,8 +230,8 @@
                     <div>上映日期：{{it.openTime}}</div>
                   </dd>
                   <dt class='dts'>《{{it.name}}》</dt>
-                  <!-- <dt><span v-for='(item , index) in it.type' :key='index'>{{item}} </span></dt> -->
-                  <dt class='dts'>{{it.type.join(' / ')}}</dt>
+                  <dt class='dts'><span :class="{red: autos(it)}" v-for="it in it.type" :key="it">{{it}} </span></dt>
+                  <!-- <dt class='dts'>{{it.type.join(' / ')}}</dt> -->
                 </dl>
               </Col>
             </Col>
@@ -506,6 +506,12 @@ export default class Main extends ViewBase {
       ]
   }
 
+  autos(it: any) {
+    const data = this.list.typeName.map((item: any) => item.text)
+    return data.includes(it)
+  }
+
+
   // get forMat() {
     // const corp: any = ((this.$route.params as any).corp) || 0
     // return mockMap.filter((it: any) => {
@@ -525,12 +531,24 @@ export default class Main extends ViewBase {
     if (this.dataFrom.type == 1) {
       this.cinemaIdArray = this.tuifilms
     }
+    if (this.dataFrom.type == 2 || this.dataFrom.type == 3) {
+      if (this.cinemaIdArray.length == 0) {
+        info('请至少选择一部影片')
+        return
+      }
+    }
     this.$nextTick(() => {
       (this.$refs.addOrUpdate as any).init(this.datafroms , this.addlist)
     })
   }
   async caoEdit() {
     this.dataFrom.status = 1
+    if (this.dataFrom.type == 2 || this.dataFrom.type == 3) {
+      if (this.cinemaIdArray.length == 0) {
+        info('请至少选择一部影片')
+        return
+      }
+    }
     this.dataFrom.deliveryGroups = []
     if (this.list.directionType == 1) {
       this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
@@ -596,6 +614,12 @@ export default class Main extends ViewBase {
   }
 
   async okEdit() {
+    if (this.dataFrom.type == 2 || this.dataFrom.type == 3) {
+      if (this.cinemaIdArray.length == 0) {
+        info('请至少选择一部影片')
+        return
+      }
+    }
     this.dataFrom.status = this.list.status
     this.dataFrom.deliveryGroups = []
     if (this.list.directionType == 1) {
@@ -988,7 +1012,8 @@ export default class Main extends ViewBase {
       //                 pageSize : 3
       //                           })
       // this.tuifilms = tuifilms.data.data.items
-      if (tui.data.data.items.length <= 5) {
+      this.tuifilms = []
+      if (tui.data.data.items.length <= 3) {
             this.tuifilms = tui.data.data.items
           } else {
             this.tuifilms.push(
@@ -1018,11 +1043,26 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.before(@content: '/', @color: #222) {
+  content: @content;
+  margin-left: 6px;
+  margin-right: 6px;
+  color: @color;
+}
+.red {
+  color: red;
+}
 .dts {
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  span:not(:last-child)::after {
+    content: '/';
+    margin-left: 6px;
+    margin-right: 6px;
+    color: #222;
+  }
 }
 .cinema-check {
   position: absolute;

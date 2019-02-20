@@ -48,7 +48,7 @@
       <div class="single-cover-box">
         <!-- <b :class="`img-rank${index + 1}`"></b> -->
         <img :src="it.mainPicUrl" class="film-cover">
-        <div class="film-date">上映时间：{{formatDate(it.date)}}</div>
+        <div class="film-date">上映时间：{{formatDate(it.openTime)}}</div>
       </div>
       <h4 class="film-name">{{it.name}}</h4>
       <div class="film-tags">{{it.type.join(',')}}</div>
@@ -158,7 +158,7 @@ export default class Main extends ViewBase {
   }
 
   formatDate(data: any) {
-    return moment(data).format(timeFormats)
+    return data ? moment(data).format(timeFormats) : '暂无'
   }
 
    // 每页数
