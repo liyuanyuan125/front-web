@@ -450,7 +450,7 @@ export default class Main extends ViewBase {
   }
 
   formatDate(data: any) {
-    return moment(data).format(timeFormat)
+    return data ? moment(data).format(timeFormat) : '暂无'
   }
 
   scrollToError() {
