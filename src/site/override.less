@@ -19,6 +19,10 @@
 .ivu-table:before, .ivu-table:after {
   height: 0;
 }
+// form left-label-color
+.ivu-form .ivu-form-item-label {
+  color: #26344B;
+}
 
 // iview model
 .ivu-modal-footer {
@@ -40,6 +44,7 @@
 .ivu-btn {
   font-size: 16px;
   height: 50px;
+  border-radius: 2px;
 }
 
 .ivu-modal .ivu-btn {
@@ -87,7 +92,6 @@
     // box-shadow: 0 0 0 2px fade(@c-button, 20%);
   }
 }
-
 .ivu-input {
   border-radius: 2px;
   border-color: @c-border;
@@ -155,4 +159,8 @@
   .ivu-radio-wrapper-checked.ivu-radio-focus:after {
     opacity: 0;
   }
+}
+
+.form .ivu-input {
+  font-size: 15px;
 }

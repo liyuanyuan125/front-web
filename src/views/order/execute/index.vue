@@ -85,7 +85,7 @@
               style='background: #3B98FF; color: #fff;cursor: pointer;'
             >下载DCP包</router-link>
               <!-- <span class='button' v-if='it.status == 1 || it.status == 2' style='background: #3B98FF; color: #fff;cursor: pointer;'>下载DCP包</span> -->
-              <span class='button' @click="editReject(it.id)" v-if='it.status == 1' style='background: #3B98FF; color: #fff;cursor: pointer;'>修改执行影院</span>
+              <span class='button' @click="editReject(it.id, it.id, it.cinemas.length)" v-if='it.status == 1' style='background: #3B98FF; color: #fff;cursor: pointer;'>修改执行影院</span>
             </Col>
           </Row>
           <Row class='li-item'>
@@ -255,10 +255,10 @@ export default class Main extends ViewBase {
     }
   }
 
-  editReject(id: any) {
+  editReject(id: any, planId: any, length: any) {
     this.rejectShow = true
     this.$nextTick(() => {
-      (this.$refs.reject as any).init(id, 2)
+      (this.$refs.reject as any).init(id, planId, length, 2)
     })
   }
 

@@ -23,21 +23,28 @@
           </router-link>
         </div>
         <div>
-          <div class="tablist">
-            <div :class="{active: form.systemCode == 'ads'}"
-              @click="form.systemCode = 'ads'">我是广告主</div>
-            <div :class="{active: form.systemCode == 'resource'}"
-              @click="form.systemCode = 'resource'">我是片商</div>
+          <div class="tablist flex-box">
+            <div :class="{active: form.systemCode == 'ads'}" @click="form.systemCode = 'ads'">
+              <p v-if="form.systemCode == 'resource'" >我是广告主</p>
+              <p v-if="form.systemCode == 'ads'" class="adv-ative-text"><span>广告主</span><em>我是</em></p>
+            </div>
+            <div :class="{active: form.systemCode == 'resource'}" @click="form.systemCode = 'resource'">
+              <p v-if="form.systemCode == 'ads'" >我是资源方</p>
+              <p v-if="form.systemCode == 'resource'" class="adv-ative-text"><span>资源方</span><em>我是</em></p>
+            </div>
           </div>
 
           <Form :model="form" :rules="rules" ref="form" class="form"
             @submit.native.prevent="submit" novalidate>
             <FormItem prop="email" :error="emailError">
-              <Input type="email" v-model="form.email" prefix="md-person" placeholder="请输入邮箱"/>
+              <Input type="email" v-model="form.email" placeholder="请输入邮箱">
+                <i class="iconfont icon-ren" slot="prefix" />
+              </Input>
             </FormItem>
             <FormItem prop="password" :error="passwordError">
-              <Input type="password" v-model="form.password" prefix="ios-unlock-outline"
-                placeholder="请输入密码" :maxlength="16"/>
+              <Input type="password" v-model="form.password" placeholder="请输入密码" :maxlength="16">
+                 <i class="iconfont icon-mima" slot="prefix" size="20" />
+              </Input>
             </FormItem>
             <FormItem prop="captchaCode" :error="captchaCodeError">
               <div class="captcha-wrap">
@@ -169,7 +176,20 @@ export default class Main extends ViewBase {
 <style lang='less' scoped>
 @import '~@/site/lib.less';
 @import '~@/site/login.less';
+@import '~@/assets/iconFont/iconfont.css';
 
+.adv-ative-text {
+  padding-top: 23px;
+  color: #444;
+  span {
+    display: block;
+    font-size: 22px;
+  }
+  em {
+    display: block;
+    font-size: 14px;
+  }
+}
 .login-home {
   height: 100%;
   width: 100%;
@@ -181,8 +201,17 @@ export default class Main extends ViewBase {
       padding-left: 16px;
     }
   }
-  /deep/ .ivu-input-prefix i {
-    line-height: 50px;
+  /deep/ .ivu-input-with-prefix {
+    padding-left: 40px;
+  }
+  /deep/ .ivu-input-prefix {
+    width: 33px;
+    text-align: right;
+    i {
+      line-height: 50px;
+      font-size: 19px;
+      color: #bbb;
+    }
   }
   .login-etc {
     margin-top: 20px;
@@ -242,17 +271,17 @@ export default class Main extends ViewBase {
       .tablist {
         width: 100%;
         height: 100px;
-        line-height: 100px;
         background: rgba(239, 239, 239, 1);
         margin-bottom: 55px;
-        .flex;
-
         div {
           flex: 1;
           height: 100%;
           text-align: center;
           font-size: 16px;
           position: relative;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           &.active {
             background: #fff;
             &::before {
