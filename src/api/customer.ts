@@ -12,3 +12,20 @@ export async function codeList(businessCode: any) {
   return res
 }
 
+// 获取客户详细信息
+export async function contact(id: any) {
+  const res = await get(`/customer/partners/detail/${id}/`)
+  return res
+}
+
+// 获取客户详细信息
+export async function putcontact(id: any, query: any) {
+  const res = await put(`/customer/partners/${id}`, query)
+  return res
+}
+
+// 获取客户详细信息
+export async function postcontact(query: any) {
+  const res = await post(`/customer/partners`, query)
+  return res
+}
