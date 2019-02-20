@@ -230,7 +230,7 @@
                     <div>上映日期：{{it.openTime}}</div>
                   </dd>
                   <dt class='dts'>《{{it.name}}》</dt>
-                  <!-- <dt><span v-for='(item , index) in it.type' :key='index'>{{item}} </span></dt> -->
+                  <dt class='dts'><span :class="{red: autos(it)}" v-for="it in it.type" :key="it">{{it}}</span></dt>
                   <dt class='dts'>{{it.type.join(' / ')}}</dt>
                 </dl>
               </Col>
@@ -505,6 +505,12 @@ export default class Main extends ViewBase {
         { title: '总座位数', key: 'seatCount', align: 'center'}
       ]
   }
+
+  autos(it: any) {
+    const data = this.tagstype.map((item: any) => item.text)
+    return data.includes(it)
+  }
+
 
   // get forMat() {
     // const corp: any = ((this.$route.params as any).corp) || 0
@@ -988,7 +994,8 @@ export default class Main extends ViewBase {
       //                 pageSize : 3
       //                           })
       // this.tuifilms = tuifilms.data.data.items
-      if (tui.data.data.items.length <= 5) {
+      this.tuifilms = []
+      if (tui.data.data.items.length <= 3) {
             this.tuifilms = tui.data.data.items
           } else {
             this.tuifilms.push(
@@ -1018,6 +1025,9 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.red {
+  color: red;
+}
 .dts {
   width: 100%;
   overflow: hidden;
