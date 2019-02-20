@@ -115,6 +115,8 @@ export default class DlgEditCinema extends ViewBase {
             citys: `${it.areaName} / ${it.provinceName} / ${it.cityName}`,
           }
         })
+      } else {
+        this.tableDate = []
       }
     } catch (ex) {
       this.handleError(ex)

@@ -124,7 +124,7 @@ export default class DlgEditCinema extends ViewBase {
         if (this.checkId .includes(it.id)) {
           return {
             ...it,
-            citys: `${it.areaName}${it.provinceName}${it.cityName}`,
+            citys: `${it.areaName} / ${it.provinceName} / ${it.cityName}`,
             _checked: true
           }
         } else {
