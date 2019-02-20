@@ -1058,7 +1058,10 @@ export default class Main extends ViewBase {
   text-overflow: ellipsis;
   white-space: nowrap;
   span:not(:last-child)::after {
-    .before;
+    content: '/';
+    margin-left: 6px;
+    margin-right: 6px;
+    color: #222;
   }
 }
 .cinema-check {

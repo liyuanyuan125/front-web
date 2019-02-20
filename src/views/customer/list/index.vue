@@ -79,8 +79,8 @@ export default class Main extends ViewBase {
   form = {
     pageIndex: 1,
     pageSize: 10,
-    businessCode: 'PARTNER_BUSINESS_CAR', // 行业code
-    businessCategoryCode: null, // 行业分类code
+    businessCode: '', // 行业code
+    businessCategoryCode: '', // 行业分类code
     searchKey: null // 查询关键字
   }
   // 行业列表
@@ -126,9 +126,11 @@ export default class Main extends ViewBase {
 
   async userList() {
     try {
-      const datas = await codeList(this.form.businessCode)
-      this.form.businessCategoryCode = (datas.data || [])[0].code
-      this.businessCodeList = datas.data || []
+      if (this.form.businessCategoryCode != '') {
+        const datas = await codeList(this.form.businessCode)
+        this.form.businessCategoryCode = (datas.data || [])[0].code
+        this.businessCodeList = datas.data || []
+      }
       const { data } = await subAccount({ ...this.form})
       this.data = data.items || []
       this.businessList = data.businessList
@@ -143,6 +145,10 @@ export default class Main extends ViewBase {
   }
 
   async searchcode(value: any) {
+    if (value == undefined) {
+      this.form.businessCode = ''
+      this.form.businessCategoryCode = ''
+    }
     // const datas = await codeList(this.form.businessCode)
     // this.form.businessCategoryCode = (datas.data || [])[0].code
     // this.businessCodeList = datas.data || []

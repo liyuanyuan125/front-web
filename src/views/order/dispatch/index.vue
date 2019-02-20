@@ -27,14 +27,14 @@
       <Row class='row-ul'>
         <Col :span="12">
           <div class='guanggao'>广告单状态</div>
-          <RadioGroup v-model="query.status" type="button" @on-change='seach'>
+          <RadioGroup v-model="query.status" type="button" @on-change='seachs'>
             <Radio v-for='it in statusList' :key='it.key' :value='it.key' v-if='it.key!=0' :label='it.key'>{{it.text}}</Radio>
           </RadioGroup>
         </Col>
         <Col :span="12">
           <div class='guanggao'>广告单类型</div>
           <Col style='margin-left: 12px;' span="7">
-            <Select v-model='query.planType'  clearable placeholder="广告单类型" @on-change="seach">
+            <Select v-model='query.planType'  clearable placeholder="广告单类型" @on-change="seachs">
               <Option
                 v-for="item in planTypeList"
                 :key="item.key"
@@ -67,7 +67,7 @@
         <Col :span="8">
           <!-- <div class='guanggao'>广告单类型</div> -->
           <Col style='margin-left: 12px;' span="20">
-            <Input v-model='query.videoName' search enter-button placeholder="请输入广告片名称进行搜索" @on-change="seach"/>
+            <Input v-model='query.videoName' search enter-button placeholder="请输入广告片名称进行搜索" @on-change="seachs"/>
           </Col>
         </Col>
       </Row>
@@ -217,6 +217,11 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
+  seachs() {
+    this.query.pageIndex = 1
+    this.seach()
+  }
+
   async seach() {
     // this.loading = true
     try {
@@ -274,7 +279,7 @@ export default class Main extends ViewBase {
      this.showTime = data
      this.query.beginDate = formatTimestamp(this.showTime[0])
      this.query.endDate = formatTimestamp(this.showTime[1])
-     this.seach()
+     this.seachs()
    }
 
   handlepageChange(size: any) {
