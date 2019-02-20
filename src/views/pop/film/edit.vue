@@ -28,6 +28,7 @@
               <p class="update-video">上传广告片</p>
               <p>小于2G的视频文件</p>
             </div>
+            <span slot="suffix" v-if="length > 0">{{duration}}</span>
           </UploadLabel>
         </FormItem>
      </Form>
@@ -44,7 +45,9 @@ import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
 import { confirm } from '@/ui/modal'
 import { popPartners, detailPop, createPop, editPop, transFee} from '@/api/popFilm'
-import UploadLabel, { SuccessEvent } from '@/components/uploadLabel'
+import UploadLabel, { StartEvent, SuccessEvent } from '@/components/uploadLabel'
+import { format as durationFormat } from '@/fn/duration'
+import getBlobDuration from 'get-blob-duration'
 
 @Component({
   components: {
@@ -61,7 +64,7 @@ export default class Main extends ViewBase {
   // 源视频文件上传后的ID
   srcFileId = ''
   // 广告片时长
-  length = 29
+  length = 0
   // 转码费
   transFee = 1
 
@@ -82,6 +85,10 @@ export default class Main extends ViewBase {
     }
   }
 
+  get duration() {
+    return durationFormat(this.length)
+  }
+
   async mounted() {
     this.partnersList()
     this.creSpecificationList()
@@ -91,11 +98,14 @@ export default class Main extends ViewBase {
     }
   }
 
-  uploadStart() {
+  async uploadStart({ blob }: StartEvent) {
     this.srcFileId = ''
+    this.length = 0
+    const duration = await getBlobDuration(blob)
+    this.length = Math.floor(duration)
   }
 
-  uploadSuccess({ file }: SuccessEvent) {
+  uploadSuccess({ file, blob }: SuccessEvent) {
     this.srcFileId = file.fileId
   }
 
