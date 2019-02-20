@@ -227,7 +227,7 @@ export default class Main extends ViewBase {
   }
 
   formatMoment(time: any) {
-    return moment(time).format(timeFormat)
+    return time ? moment(time).format(timeFormat) : '暂无'
   }
 
   ageName(age: any) {
