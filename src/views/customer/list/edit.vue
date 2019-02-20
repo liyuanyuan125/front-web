@@ -10,18 +10,18 @@
       <FormItem label="客户简称" prop="nameShort">
         <Input type="text" v-model="from.nameShort" ></Input>
       </FormItem>
-      <!-- <FormItem label="客户行业" prop="businessCode">
+      <FormItem label="客户行业" prop="businessCode">
         <Select v-model="from.businessCode" clearable>
-          <Option v-for="it in qualificationTypeList" :key="it.key"
-            :value="it.key">{{it.text}}</Option>
+          <Option v-for="it in businessList" :key="it.code"
+            :value="it.code">{{it.desc}}</Option>
         </Select>
       </FormItem>
-      <FormItem label="所属品类" prop="businessCategoryCode">
-        <Select v-model="form.businessCategoryCode" clearable>
-          <Option v-for="it in qualificationTypeList" :key="it.key"
-            :value="it.key">{{it.text}}</Option>
+      <FormItem label="所属品类" prop="businessCategoryCode" :show-message="!!from.businessCode">
+        <Select :disabled="!from.businessCode" v-model="from.businessCategoryCode" clearable>
+          <Option v-for="it in codeList" :key="it.code"
+            :value="it.code">{{it.desc}}</Option>
         </Select>
-      </FormItem> -->
+      </FormItem>
       <FormItem label="联系人" prop="contactName">
         <Input type="text" v-model="from.contactName" ></Input>
       </FormItem>
@@ -33,23 +33,26 @@
       </FormItem>
     </Form>
     <div class="btnCenter sumbit-button">
-      <Button type="primary" class="button-ok" @click="passwordkSet('form')">修改</Button>
+      <Button type="primary" v-if="!$route.params.id" class="button-ok" @click="passwordkSet('form')">提交</Button>
+      <Button type="primary" v-else class="button-ok" @click="passwordkSet('form')">修改</Button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { toast } from '@/ui/modal'
 import { slice } from '@/fn/object'
 import ViewBase from '@/util/ViewBase'
 import { setPassword } from '@/api/password'
 import { getUser } from '@/store'
-import { postcontact, contact, putcontact } from '@/api/customer'
+import { postcontact, contact, putcontact, business, codeList } from '@/api/customer'
 
 @Component
 export default class Main extends ViewBase {
   title = '新增客户'
+  businessList: any = []
+  codeList: any = []
   from = {
     name: '',
     nameShort: '',
@@ -74,6 +77,21 @@ export default class Main extends ViewBase {
 
   created() {
     this.init()
+    this.business()
+  }
+
+  async business() {
+    try {
+      const { data } = await business()
+      this.businessList = data
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async codeSearch() {
+    const datas = await codeList(this.from.businessCode)
+    this.codeList = datas.data || []
   }
 
   async init() {
@@ -82,7 +100,6 @@ export default class Main extends ViewBase {
     }
     this.title = '编辑客户'
     try {
-
     } catch (ex) {
       this.handleError(ex)
     }
@@ -94,13 +111,21 @@ export default class Main extends ViewBase {
       return
     }
     try {
-      // const {oldPassword, newPassword} = this.from
-      // const data = { oldPassword, newPassword }
-      // // await setPassword(data)
-      toast('密码修改成功')
+      await postcontact({...this.from})
+      toast('操作成功')
+      this.$router.push({name: 'customer-list'})
       ; (this.$refs.form as any).resetFields()
     } catch (ex) {
       this.handleError(ex)
+    }
+  }
+
+  @Watch('from.businessCode', {deep: true})
+  watchbusinessCode(val: any) {
+    if (val) {
+      this.codeSearch()
+    } else {
+      this.from.businessCategoryCode = ''
     }
   }
 }
@@ -120,6 +145,9 @@ export default class Main extends ViewBase {
 .from {
   padding: 30px 0 0 30px;
 }
+.sumbit-button {
+  margin-top: 80px;
+}
 .userTitle {
   background: rgba(249, 249, 249, 1);
   height: 50px;
@@ -129,5 +157,31 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-form-item-label::before {
   display: none;
+}
+.ivu-select {
+  width: auto;
+  /deep/ .ivu-select-selection {
+    height: 40px;
+    /deep/ .ivu-select-input {
+      height: 40px;
+      width: 400px;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+  }
+  /deep/ .ivu-select-dropdown {
+    /deep/ li, /deep/ .ivu-select-loading {
+      line-height: 35px;
+      height: 35px;
+    }
+    /deep/ .ivu-select-item {
+      font-size: 14px;
+      line-height: 25px;
+      height: 35px;
+    }
+  }
+}
+/deep/ .ivu-input {
+  font-size: 14px;
 }
 </style>
