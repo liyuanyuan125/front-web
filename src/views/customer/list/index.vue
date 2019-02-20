@@ -1,32 +1,32 @@
 <template>
   <div class="page home-bg">
     <h3 class="userTitle">
-      <span class="nav-top-title">用户管理</span>
+      <span class="nav-top-title">客户管理</span>
       <em class="addUser" @click="addUser">
-        <Icon type="ios-add" size="27"/>新增子用户
+        <Icon type="ios-add" size="27"/>新建客户
       </em>
     </h3>
 
     <Form :model="form" class="form">
       <Row type="flex" justify="space-between">
         <Col :span="6">
-          <FormItem label="权限角色" :label-width="100">
-            <Select v-model="form.roleId" clearable>
-              <Option :value="item.id" :key="item.id" v-for="item in rolelist">{{item.name}}</Option>
+          <FormItem label="客户行业" :label-width="100">
+            <Select v-model="form.businessCode" clearable @on-change='searchcode' style='width: 200px;'>
+              <Option :value="item.code" :key="item.code" v-for="item in businessList">{{item.desc}}</Option>
             </Select>
           </FormItem>
         </Col>
         <Col :span="5">
-          <FormItem label="账号状态" :label-width="100">
-            <Select v-model="form.status" clearable>
-              <Option :value="item.key" :key="item.id" v-for="item in statusList">{{item.text}}</Option>
+          <FormItem label="所属品类" :label-width="100">
+            <Select v-model="form.businessCategoryCode" clearable style='width: 200px;'>
+              <Option :value="item.code" :key="item.code" v-for="item in businessCodeList">{{item.desc}}</Option>
             </Select>
           </FormItem>
         </Col>
         <Col :span="10">
           <FormItem>
             <div class="flex-box">
-              <Input v-model="form.searchKey" placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
+              <Input v-model="form.searchKey" placeholder="搜索客户ID/联系人/联系电话"/>
               <span @click="searchTableList">
                 <Icon type="ios-search" size="22"/>
               </span>
@@ -37,24 +37,12 @@
     </Form>
 
     <Table
-      ref="selection"
       stripe
       :columns="columns"
       :data="data"
-      @on-selection-change="singleSelect"
+      key="data"
     >
-      <template slot-scope="{row, index}" slot="roleId">
-        <span>{{roleList(row.roleId)}}</span>
-      </template>
-      <template slot-scope="{row, index}" slot="statusCode">
-        <span v-if="row.statusCode === 1" class="aneble">已启用</span>
-        <span v-else-if="row.statusCode === 2" class="display">已禁用</span>
-        <span v-else-if="row.statusCode === 3" class="warting">待激活</span>
-      </template>
-      <template slot-scope="{row, index}" slot="lastLoginTime">
-        <span>{{formatTimes(row.lastLoginTime)}}</span>
-      </template>
-      <template slot-scope="{row, index}" slot="action">
+      <template slot-scope="{row}" slot="action">
         <a class="action-btn" @click="toDetail(row.id)">查看</a>
         <a class="action-btn" @click="toEdit(row.id)">编辑</a>
       </template>
@@ -63,8 +51,8 @@
       :total="total"
       v-if="total>0"
       class="btnCenter"
-      :current="pageObject.pageIndex"
-      :page-size="pageObject.pageSize"
+      :current="form.pageIndex"
+      :page-size="form.pageSize"
       show-total
       show-elevator
       @on-change="handlepageChange"
@@ -76,67 +64,54 @@
 <script lang="tsx">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { formatTimes } from '@/util/validateRules'
-import {
-  rolesList,
-  subAccount,
-  delectSub,
-  accountStatu,
-  activeEmail
-} from '@/api/user'
+import { subAccount , codeList } from '@/api/customer'
 import { getUser } from '@/store'
 import { confirm, info } from '@/ui/modal'
-
 @Component({})
 export default class Main extends ViewBase {
   checkboxAll = false
   total = 0
-  pageObject = {
-    pageIndex: 1,
-    pageSize: 10
-  }
+  // pageObject = {
+  //   pageIndex: 1,
+  //   pageSize: 10
+  // }
 
   form = {
-    systemCode: null,
-    roleId: null,
-    status: null,
-    searchKey: null
+    pageIndex: 1,
+    pageSize: 10,
+    businessCode: 'PARTNER_BUSINESS_CAR', // 行业code
+    businessCategoryCode: null, // 行业分类code
+    searchKey: null // 查询关键字
   }
+  // 行业列表
+  businessList: any = []
+  // 行业分类列表
+  businessCodeList: any = []
+  // 客户列表
+  data: any = []
 
-  rolelist = []
-  statusList = []
-  data = []
-  selectIds = []
-  systemCode: any = ''
-
-  formatTimes: any = ''
   columns = [
+    { title: '客户ID', key: 'id' },
     {
-      type: 'selection',
-      width: 60,
-      align: 'center'
-    },
-    { title: '联系人', key: 'name' },
-    {
-      title: '登录邮箱',
+      title: '客户名称',
       width: 160,
-      key: 'email'
+      key: 'name'
     },
     {
-      title: '手机号码',
-      key: 'mobile'
+      title: '客户行业',
+      key: 'businessName'
     },
     {
-      title: '权限角色',
-      slot: 'roleId'
+      title: '所属品类',
+      slot: 'businessCategoryName'
     },
     {
-      title: '状态',
-      slot: 'statusCode'
+      title: '联系人',
+      slot: 'contactName'
     },
     {
-      title: '上次登录时间',
-      slot: 'lastLoginTime'
+      title: '联系电话',
+      slot: 'contactTel'
     },
     {
       title: '操作',
@@ -146,133 +121,52 @@ export default class Main extends ViewBase {
   ]
 
   async mounted() {
-    const user: any = getUser()!
-    this.form.systemCode = this.systemCode = user.systemCode
     this.userList()
-
-    this.formatTimes = formatTimes
   }
 
   async userList() {
     try {
-      const { data } = await subAccount({ ...this.form, ...this.pageObject })
-      this.data = data.list || []
-      this.rolelist = data.roleList
-      this.statusList = data.statusList
+      const { data } = await subAccount({ ...this.form})
+      this.data = data.items || []
+      this.businessList = data.businessList
       this.total = data.totalCount
-      // 读取当前广告主或资源方statusCode
-      const code = this.systemCode
-      this.data.map((item: any) => {
-        for (const i of item.systems) {
-          if (i.code == code) {
-            item.statusCode = i.status
-          }
-        }
-      })
+      const datas = await codeList(this.form.businessCode)
+      this.form.businessCategoryCode = (datas.data || [])[0].code
+      this.businessCodeList = datas.data || []
     } catch (ex) {
       this.handleError(ex.msg)
     }
   }
   searchTableList() {
-    this.pageObject.pageIndex = 1
+    this.form.pageIndex = 1
     this.userList()
   }
-  roleList(id: any) {
-    const list: any = this.rolelist
-    for (const item of list) {
-      if (item.id == id) {
-        return item.name
-      }
-    }
+
+  async searchcode(value: any) {
+    // const datas = await codeList(this.form.businessCode)
+    // this.form.businessCategoryCode = (datas.data || [])[0].code
+    // this.businessCodeList = datas.data || []
+    this.userList()
   }
+  // 添加
   addUser() {
-    if (this.rolelist.length) {
-      this.$router.push({ name: 'account-user-add' })
-    } else {
-      this.showWaring('当前您没有角色列表, 请到权限管理添加角色')
-    }
-  }
-  // 单选
-  singleSelect(select: any) {
-    this.checkboxAll = select.length == this.data.length ? true : false
-    this.selectIds = select
-  }
-  // 全选
-  selectAll(select: any) {
-    this.checkboxAll = true
-    this.selectIds = select
-  }
 
-  handleSelectAll() {
-    const selection = this.$refs.selection as any
-    selection.selectAll(!this.checkboxAll)
   }
-
-  async deleteList() {
-    if (this.selectIds.length) {
-      const ids = this.selectIds.map((item: any) => item.id)
-      const systemCode = this.systemCode
-      await confirm('您确定要删除当前信息吗？')
-      try {
-        await delectSub({ ids, systemCode })
-        this.userList()
-      } catch (ex) {
-        this.handleError(ex)
-      }
-    } else {
-      this.showWaring('请选择你要删除的元素')
-    }
-  }
-
-  async handleEnable(id: any, type: any) {
-    if (type == 1) {
-      await confirm('您确定启用当前信息吗？')
-      try {
-        await accountStatu({ status: 1, systemCode: this.systemCode }, id)
-        this.userList()
-      } catch (ex) {
-        this.handleError(ex.msg)
-      }
-    } else {
-      await confirm('您确定禁用当前信息吗？')
-      try {
-        await accountStatu({ status: 2, systemCode: this.systemCode }, id)
-        this.userList()
-      } catch (ex) {
-        if (ex.code == '8007403') {
-          this.handleError(ex.msg)
-        } else {
-          this.handleError(ex.msg)
-        }
-      }
-    }
-  }
-
+  // 查看
   toDetail(id: any) {
-    this.$router.push({ name: 'account-user-detail', params: { useid: id } })
+
   }
+  // 编辑
   toEdit(id: any) {
-    this.$router.push({ name: 'account-user-edit', params: { useid: id } })
-  }
-  async activeEmail(id: any) {
-    try {
-      await activeEmail({ id })
-      await info('激活链接已重新发送，请查收激活邮件', { title: '提示' })
-    } catch (ex) {
-      if (ex.code != 0) {
-        this.handleError(ex.msg)
-      } else {
-        this.handleError(ex.msg)
-      }
-    }
+
   }
 
   handlepageChange(size: any) {
-    this.pageObject.pageIndex = size
+    this.form.pageIndex = size
     this.userList()
   }
   handlePageSize(size: any) {
-    this.pageObject.pageIndex = size
+    this.form.pageIndex = size
     this.userList()
   }
 }
