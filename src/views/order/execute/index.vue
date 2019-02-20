@@ -26,14 +26,14 @@
       <Row class='row-ul'>
         <Col :span="12">
           <div class='guanggao'>执行单状态</div>
-          <RadioGroup v-model="query.status" type="button" @on-change='seach'>
+          <RadioGroup v-model="query.status" type="button" @on-change='seachs'>
             <Radio v-for='it in statusList' :key='it.key' :value='it.key' v-if='it.key!=0 && it.key!=4' :label='it.key'>{{it.text}}</Radio>
           </RadioGroup>
         </Col>
         <Col :span="12">
           <div class='guanggao'>广告单类型</div>
           <Col style='margin-left: 12px;' span="7">
-            <Select v-model='query.planType'  clearable placeholder="广告单类型" @on-change="seach">
+            <Select v-model='query.planType'  clearable placeholder="广告单类型" @on-change="seachs">
               <Option
                 v-for="item in planTypeList"
                 :key="item.key"
@@ -66,7 +66,7 @@
         <Col :span="8">
           <!-- <div class='guanggao'>广告单类型</div> -->
           <Col style='margin-left: 12px;' span="20">
-            <Input v-model='query.videoName' search enter-button placeholder="请输入执行单ID/广告片名称进行搜索" @on-change="seach"/>
+            <Input v-model='query.videoName' search enter-button placeholder="请输入执行单ID/广告片名称进行搜索" @on-change="seachs"/>
           </Col>
         </Col>
       </Row>
@@ -262,6 +262,11 @@ export default class Main extends ViewBase {
     })
   }
 
+  seachs() {
+    this.query.pageIndex = 1
+    this.seach()
+  }
+
   edittarget(id: any) {
     this.targetShow = true
     this.$nextTick(() => {
@@ -282,7 +287,7 @@ export default class Main extends ViewBase {
 
   handlepageChange(size: any) {
     this.query.pageIndex = size
-    this.seach()
+    this.seachs()
   }
   handlePageSize(size: any) {
     this.query.pageIndex = size
