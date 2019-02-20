@@ -346,7 +346,7 @@ export default class Main extends ViewBase {
       background: rgba(242, 242, 242, 1);
       border-radius: 2px;
       text-align: center;
-      line-height: 60px;
+      line-height: 77px;
       .accs-sma {
         font-size: 30px;
       }
@@ -424,6 +424,9 @@ export default class Main extends ViewBase {
       }
     }
     .img-order {
+      img {
+        width: 10%;
+      }
       line-height: 150px;
       span {
         margin-left: 10px;
