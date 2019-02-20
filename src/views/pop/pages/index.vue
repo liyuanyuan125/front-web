@@ -531,12 +531,24 @@ export default class Main extends ViewBase {
     if (this.dataFrom.type == 1) {
       this.cinemaIdArray = this.tuifilms
     }
+    if (this.dataFrom.type == 2 || this.dataFrom.type == 3) {
+      if (this.cinemaIdArray.length == 0) {
+        info('请至少选择一部影片')
+        return
+      }
+    }
     this.$nextTick(() => {
       (this.$refs.addOrUpdate as any).init(this.datafroms , this.addlist)
     })
   }
   async caoEdit() {
     this.dataFrom.status = 1
+    if (this.dataFrom.type == 2 || this.dataFrom.type == 3) {
+      if (this.cinemaIdArray.length == 0) {
+        info('请至少选择一部影片')
+        return
+      }
+    }
     this.dataFrom.deliveryGroups = []
     if (this.list.directionType == 1) {
       this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
@@ -602,6 +614,12 @@ export default class Main extends ViewBase {
   }
 
   async okEdit() {
+    if (this.dataFrom.type == 2 || this.dataFrom.type == 3) {
+      if (this.cinemaIdArray.length == 0) {
+        info('请至少选择一部影片')
+        return
+      }
+    }
     this.dataFrom.status = this.list.status
     this.dataFrom.deliveryGroups = []
     if (this.list.directionType == 1) {
