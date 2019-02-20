@@ -437,6 +437,7 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
   margin-left: 12px;
+  transition: all 0s !important;
 }
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
   color: #fff;
@@ -459,5 +460,8 @@ export default class Main extends ViewBase {
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked::before {
   background: #3b98ff;
   opacity: 1;
+}
+/deep/ .ivu-radio-group-button .ivu-radio-wrapper::before, .ivu-radio-group-button .ivu-radio-wrapper::after {
+  transition: all 0s !important;
 }
 </style>

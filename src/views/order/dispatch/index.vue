@@ -7,19 +7,19 @@
           <div class="fince-list">
             <div class='fince-list-big'>
               <!-- <div class="fince-list-acc"><img src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.waiting></numAdd></span></div> -->
-              <div class="fince-list-acc"><img src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.waiting}}</span></div>
+              <div class="fince-list-acc"><img style='width: 6%;' src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.waiting}}</span></div>
               <p class="fince-list-sm">待接单数</p>
             </div>
             <div class='fince-list-big'>
               <!-- <div class="fince-list-acc"><img src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.received></numAdd></span></div> -->
-              <div class="fince-list-acc"><img src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.received}}</span></div>
+              <div class="fince-list-acc"><img style='width: 7%;' src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.received}}</span></div>
               <p class="fince-list-sm">已接单数</p>
             </div>
             <div class='fince-list-big' style='background: #fff; border-top: 10px solid #fff;'>
               <!-- <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.refuse></numAdd></span><span class='smas2'>已拒绝单数</span></div>
               <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.faliure></numAdd></span><span class='smas2'>已失效单数</span></div> -->
-              <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.refuse}}</span><span class='smas2'>已拒绝单数</span></div>
-              <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.faliure}}</span><span class='smas2'>已失效单数</span></div>
+              <div class='fin-bigs'><img style='width: 7%;' src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.refuse}}</span><span class='smas2'>已拒绝单数</span></div>
+              <div class='fin-bigs' style='margin-top: 10px;'><img style='width: 7%;' src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.faliure}}</span><span class='smas2'>已失效单数</span></div>
             </div>
           </div>
         </Col>
@@ -434,6 +434,7 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
   margin-left: 12px;
+  transition: all 0s !important;
 }
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
   color: #fff;
@@ -457,5 +458,7 @@ export default class Main extends ViewBase {
   background: #3b98ff;
   opacity: 1;
 }
-
+/deep/ .ivu-radio-group-button .ivu-radio-wrapper::before, .ivu-radio-group-button .ivu-radio-wrapper::after {
+  transition: all 0s !important;
+}
 </style>
