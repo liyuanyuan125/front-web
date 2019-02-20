@@ -40,7 +40,7 @@
       stripe
       :columns="columns"
       :data="data"
-      key="data"
+      :key="data"
     >
       <template slot-scope="{row}" slot="action">
         <a class="action-btn" @click="toDetail(row.id)">查看</a>
