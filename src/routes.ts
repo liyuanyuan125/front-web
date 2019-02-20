@@ -228,6 +228,12 @@ export default [
     name: 'resfinance-mouthbill',
     component: () => import('./views/resFinance/mouthBill/index.vue')
   },
+
+  {
+    path: 'customer/list',
+    name: 'customer-list',
+    component: () => import('./views/customer/list/index.vue')
+  },
   // 示例，没有实际用处
   {
     path: '/about',

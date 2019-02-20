@@ -6,16 +6,20 @@
         <Col :span="24">
           <div class="fince-list">
             <div class='fince-list-big'>
-              <div class="fince-list-acc"><img src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.waiting></numAdd></span></div>
+              <!-- <div class="fince-list-acc"><img src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.waiting></numAdd></span></div> -->
+              <div class="fince-list-acc"><img src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.waiting}}</span></div>
               <p class="fince-list-sm">待接单数</p>
             </div>
             <div class='fince-list-big'>
-              <div class="fince-list-acc"><img src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.received></numAdd></span></div>
+              <!-- <div class="fince-list-acc"><img src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.received></numAdd></span></div> -->
+              <div class="fince-list-acc"><img src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.received}}</span></div>
               <p class="fince-list-sm">已接单数</p>
             </div>
             <div class='fince-list-big' style='background: #fff; border-top: 10px solid #fff;'>
-              <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.refuse></numAdd></span><span class='smas2'>已拒绝单数</span></div>
-              <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.faliure></numAdd></span><span class='smas2'>已失效单数</span></div>
+              <!-- <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.refuse></numAdd></span><span class='smas2'>已拒绝单数</span></div>
+              <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.faliure></numAdd></span><span class='smas2'>已失效单数</span></div> -->
+              <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.refuse}}</span><span class='smas2'>已拒绝单数</span></div>
+              <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.faliure}}</span><span class='smas2'>已失效单数</span></div>
             </div>
           </div>
         </Col>
