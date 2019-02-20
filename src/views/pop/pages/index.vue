@@ -507,7 +507,7 @@ export default class Main extends ViewBase {
   }
 
   autos(it: any) {
-    const data = this.tagstype.map((item: any) => item.text)
+    const data = this.list.typeName.map((item: any) => item.text)
     return data.includes(it)
   }
 
