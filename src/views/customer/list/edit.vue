@@ -1,7 +1,7 @@
 <template>
   <div class="page home-bg">
     <h3 class="userTitle">
-      <span class="nav-top-title">客户管理 > {{title}}</span>
+      <span class="nav-top-title"><span @click="goBack">客户管理</span> > {{title}}</span>
     </h3>
     <Form ref="form" :model="from" class="edit-input from" :rules="dataRule" :label-width="100">
       <FormItem label="客户名称" class="item-account-email" prop="name">
@@ -76,8 +76,8 @@ export default class Main extends ViewBase {
   }
 
   created() {
-    this.init()
     this.business()
+    this.init()
   }
 
   async business() {
@@ -100,6 +100,14 @@ export default class Main extends ViewBase {
     }
     this.title = '编辑客户'
     try {
+      const { data: { partner } } = await contact(this.$route.params.id)
+      this.from.name = partner.name
+      this.from.nameShort = partner.nameShort
+      this.from.businessCode = partner.businessCode
+      this.from.businessCategoryCode = partner.businessCategoryCode
+      this.from.contactName = partner.contactName
+      this.from.contactTel = partner.contactTel
+      this.from.contactAddress = partner.contactAddress
     } catch (ex) {
       this.handleError(ex)
     }
@@ -111,6 +119,7 @@ export default class Main extends ViewBase {
       return
     }
     try {
+      this.$route.params.id ? await putcontact(this.$route.params.id, {...this.from}) :
       await postcontact({...this.from})
       toast('操作成功')
       this.$router.push({name: 'customer-list'})
@@ -118,6 +127,10 @@ export default class Main extends ViewBase {
     } catch (ex) {
       this.handleError(ex)
     }
+  }
+
+  goBack() {
+    this.$router.push({ name: 'customer-list' })
   }
 
   @Watch('from.businessCode', {deep: true})

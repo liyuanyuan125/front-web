@@ -1,47 +1,51 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title">客户管理 > 查看客户</h2>
-    <h3 class="layout-title">账号信息</h3>
+    <h2 class="layout-nav-title"><span @click="goBack">客户管理</span> > 查看客户</h2>
+    <h3 class="layout-title">概览</h3>
     <div class="text-rows">
       <Row>
         <Col :span="12">
           <p>
             <label>客户名称</label>
-            {{statusCode.statusDesc}}
+            <span>{{data.name}}</span>
           </p>
           <p>
-            <label>联系人</label>
-            {{data.id}}
+            <label>客户简称</label>
+            <span>{{data.nameShort}}</span>
+          </p>
+          <p>
+            <label>客户行业</label>
+            <span>{{code}}</span>
+          </p>
+          <p>
+            <label>所属品类</label>
+            <span>{{businss}}</span>
           </p>
         </Col>
         <Col :span="12">
           <p>
-            <label>客户简称</label>
-            {{data.email}}
+            <label>联系人</label>
+            <span>{{data.contactName}}</span>
           </p>
           <p>
             <label>联系电话</label>
-            {{data.name}}
-          </p>
-          <p>
-            <label>客户行业</label>
-            {{data.mobile}}
+            <span>{{data.contactTel}}</span>
           </p>
           <p>
             <label>联系地址</label>
-            {{data.mobile}}
-          </p>
-          <p>
-            <label>所属品类</label>
-            {{data.mobile}}
+            <span>{{data.contactAddress}}</span>
           </p>
         </Col>
       </Row>
     </div>
     <h3 class="layout-title">已关联子账号</h3>
-    <div class="text-rows">
+    <div class="">
       <Row>
-        
+        <Table
+          stripe
+          :columns="columns"
+          :data="data"
+        ></Table>
       </Row>
     </div>
   </div>
@@ -51,87 +55,79 @@ import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
 import { formatTimes } from '@/util/validateRules'
-import { userDetail, operationLog } from '@/api/user'
+import { contact } from '@/api/customer'
 import PermTree, { PermTreeModal } from '@/components/permTree'
 
 @Component
 export default class Main extends ViewBase {
   data: any = []
-  customer: any = ''
-  cinemaLen: any = 0
-  roleName = ''
-  // 广告主
-  objDlg = {
-    visibleDetail: false,
-    customer: ''
-  }
-  // 资源方
-  resDlg = {
-    visible: false,
-    customer: ''
-  }
-  userId: any = ''
-  logList = []
-  typeCode = ''
-  statusCode = ''
-  formatTimes: any = ''
-  permTreeModal: PermTreeModal | null = null
+  businessCategoryList: any = []
+  businessList: any = []
 
-  async mounted() {
-    this.formatTimes = formatTimes
-    const user: any = getUser()!
-    const systemCode = (this.typeCode = user.systemCode)
-    const id = this.userId = this.$route.params.useid
+  columns = [
+    { title: '联系人名称', key: 'id', align: 'center' },
+    {
+      title: '登录邮箱',
+      width: 160,
+      key: 'name',
+      align: 'center'
+    },
+    {
+      title: '权限角色',
+      key: 'businessName',
+      align: 'center'
+    },
+    {
+      title: '手机号码',
+      slot: 'businessCategoryName',
+      align: 'center'
+    }
+  ]
+
+  created() {
+    this.init()
+    this.tableInit()
+  }
+
+  get code() {
+    if (this.businessList.length > 0) {
+      return this.businessList.filter((it: any) => it.code == this.data.businessCode)[0].desc
+    } else {
+      return ''
+    }
+  }
+
+  get businss() {
+    if (this.businessCategoryList.length > 0) {
+      return this.businessCategoryList.filter((it: any) => it.code == this.data.businessCategoryCode)[0].desc
+    } else {
+      return ''
+    }
+  }
+
+  async tableInit() {
+  }
+
+  async init() {
+    if (!this.$route.params.id) {
+      return
+    }
     try {
-      const { data } = await userDetail({ id, systemCode })
-      this.data = data
-      this.permTreeModal = {
-        menu: data.menu,
-        perms: (data.role && data.role.perms) || []
-      }
-      this.roleName = data.role.name
-      this.statusCode = data.systems.filter((item: any) => item.code == systemCode)[0]
-      this.customer = this.data.partners == null ? 0 : this.data.partners.length
-      this.cinemaLen = this.data.cinemas == null ? 0 : this.data.cinemas.length
+      const { data: {
+        partner,
+        businessCategoryList,
+        businessList }
+      } = await contact(this.$route.params.id)
+      this.data = partner
+      this.businessCategoryList = businessCategoryList
+      this.businessList = businessList
     } catch (ex) {
-      this.showError(ex.msg)
-    }
-
-    // 操作日志
-    this.operationLog()
-  }
-  async operationLog() {
-    // 操作日志
-    const id = this.userId
-    const obj = { pageIndex: 1, pageSize: 10 }
-    try {
-      const { data } = await operationLog(obj, id)
-      this.logList = data.items || []
-    } catch (ex) {
-      this.showError(ex)
+      this.handleError(ex)
     }
   }
 
-  queryCustomer() {
-    // 资源方 cinemas  广告主partners
-    if (this.typeCode == 'ads') {
-      this.objDlg = {
-        visibleDetail: true,
-        customer: this.data.partners
-      }
-    } else if (this.typeCode == 'resource') {
-      this.resDlg = {
-        visible: true,
-        customer: this.data.cinemas
-      }
-    }
-  }
-
-  moreList() {
-    this.$router.push({ name: 'account-user-detail-log', params: {id: this.userId}})
-  }
   goBack() {
-    this.$router.push({ name: 'account-user' })
+    this.$router.push({ name: 'customer-list' })
   }
 }
 </script>
@@ -141,6 +137,9 @@ export default class Main extends ViewBase {
 
 .submitBtn {
   margin-bottom: 30px;
+}
+.layout-nav-title {
+  background: rgba(249, 249, 249, 1);
 }
 .more-list {
   position: relative;
