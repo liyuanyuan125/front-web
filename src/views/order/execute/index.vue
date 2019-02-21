@@ -280,8 +280,8 @@ export default class Main extends ViewBase {
 
   handleChange(data: any) {
      this.showTime = data
-     this.query.beginDate = formatTimestamp(this.showTime[0])
-     this.query.endDate = formatTimestamp(this.showTime[1])
+     this.query.beginDate = Number(formatTimestamp(this.showTime[0])) - 8 * 60 * 60 * 1000
+     this.query.endDate = Number(formatTimestamp(this.showTime[1])) + 16 * 60 * 60 * 1000
      this.seach()
    }
 

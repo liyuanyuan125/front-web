@@ -91,6 +91,7 @@
             >{{item.text}}</Option>
         </Select></Col>
     </Row>
+    <div ref="container" style='height: 400px;'></div>
   </div>
 </template>
 
@@ -99,6 +100,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { effect , nums } from '@/api/home'
+import echarts from 'echarts'
 
 @Component
 export default class Main extends ViewBase {
@@ -144,6 +146,48 @@ export default class Main extends ViewBase {
             text: '覆盖城市'
         }
     ]
+
+    // option: any = null
+    option: any = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#FE8135'
+                }
+            }
+        },
+        legend: {
+            data: ['邮件营销']
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data: ['周一' , '周二' , '周三' , '周四' , '周五' , '周六' , '周日']
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '邮件营销',
+                type: 'line',
+                stack: '总量',
+                areaStyle: {},
+                data: [120 , 132 , 101 , 134 , 90 , 230 , 210]
+            },
+        ]
+    }
 
     effectTypeList: any = []
     dataList: any = []
@@ -191,6 +235,10 @@ export default class Main extends ViewBase {
             const datas = await effect(this.query)
             this.effectTypeList = datas.data.effectTypeList
             this.dataList = datas.data.dataList
+
+            if (this.option && typeof this.option === 'object') {
+                echarts.init(this.$refs.container as any).setOption(this.option, true)
+            }
         } catch (ex) {
         this.handleError(ex)
         } finally {
