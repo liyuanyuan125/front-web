@@ -71,7 +71,6 @@
           </Col>
         </Col>
       </Row>
-      <!-- {{itemlist}} -->
       <ul class='itemul'>
         <li v-for='(it,index) in itemlist' :key='index'>
           <Row class='li-title'>
@@ -184,7 +183,7 @@ export default class Main extends ViewBase {
     videoName: '',
     beginDate: null,
     endDate: null,
-    status: 1,
+    status: 2,
     type: 1,
     pageIndex: 1,
     pageSize: 4,
