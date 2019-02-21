@@ -167,19 +167,29 @@ export default class Main extends ViewBase {
   async userList() {
     try {
       const { data } = await subAccount({ ...this.form, ...this.pageObject })
-      this.data = data.list || []
       this.rolelist = data.roleList
       this.statusList = data.statusList
       this.total = data.totalCount
+
       // 读取当前广告主或资源方statusCode
       const code = this.systemCode
-      this.data.map((item: any) => {
+      data.list.map((item: any) => {
         for (const i of item.systems) {
           if (i.code == code) {
             item.statusCode = i.status
           }
         }
       })
+
+      // 只有禁用数据可以删除
+      for (const it of data.list) {
+        if (it.statusCode == 2 ) {
+          it._checked = false
+        } else {
+          it._disabled = true
+        }
+      }
+      this.data = data.list || []
     } catch (ex) {
       this.handleError(ex.msg)
     }
