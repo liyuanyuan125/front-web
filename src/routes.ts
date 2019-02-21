@@ -246,6 +246,18 @@ export default [
     name: 'customer-list-detail',
     component: () => import('./views/customer/list/detail.vue')
   },
+  // 广告主 - 账户概览
+  {
+    path: 'home/overview',
+    name: 'home-overview',
+    component: () => import('./views/home/overview/index.vue')
+  },
+  // 资源方 - 账户概览
+  {
+    path: 'home/resoverview',
+    name: 'home-resoverview',
+    component: () => import('./views/home/resoverview/index.vue')
+  },
   // 示例，没有实际用处
   {
     path: '/about',
