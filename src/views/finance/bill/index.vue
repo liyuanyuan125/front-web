@@ -5,7 +5,7 @@
       <FormItem label="账单类型" class="item-top">
         <RadioGroup v-model="form.transactionType" class="radio-item-type" @on-change="tableList">
             <Radio label="-1" >全部</Radio>
-            <Radio :label="item.key"  :key="item.key" v-for="item in billTypeList">{{item.text}}</Radio>
+            <Radio :label="item.key"  :key="item.key" v-for="item in billTypeList" v-if="item.key != 6">{{item.text}}</Radio>
         </RadioGroup>
       </FormItem>
       <FormItem label="账单日期">
@@ -31,7 +31,8 @@
       </template>
     </Table>
     <Page  :total="total"  class="btnCenter page-list" :current="pageIndex" 
-      :page-size="pageSize" show-total show-elevator/>
+      :page-size="pageSize" show-total show-elevator @on-change="handlepageChange"
+      @on-page-size-change="handlePageSize"/>
   </div>
 </template>
 <script lang="ts">
@@ -103,6 +104,14 @@
    handleChange(data: any) {
      this.beginDate = data
    }
+   handlepageChange(size: any) {
+    this.pageIndex = size
+    this.tableList()
+  }
+   handlePageSize(size: any) {
+    this.pageIndex = size
+    this.tableList()
+  }
  }
 
 </script>
@@ -112,7 +121,7 @@
   color: @c-done;
 }
 .page-list {
-  margin-top: 30px;
+  margin: 40px 0 100px;
 }
 .ivu-form-item {
   padding-left: 30px;

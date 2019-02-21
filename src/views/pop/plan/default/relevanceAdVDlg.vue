@@ -16,7 +16,7 @@
         </FormItem>
         <FormItem label="关联广告片" prop="voidID">
           <Select v-model="form.voidID" clearable filterable style="width:400px">
-            <Option v-for="item in releList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+            <Option v-for="item in releList" :value="item.id" :key="item.id" v-if="item.status == 4">{{ item.name }}</Option>
           </Select>
         </FormItem>
       </Form>
