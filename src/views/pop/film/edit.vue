@@ -22,8 +22,8 @@
           <em class="remark">备注：广告片规格请输入15s的倍数</em>
         </FormItem>
 
-        <FormItem  label="上传广告片">
-          <UploadLabel class="upload-label" id="play" @start="uploadStart" @success="uploadSuccess">
+        <FormItem  label="上传广告片" :error="errorPerm">
+          <UploadLabel class="upload-label"  @start="uploadStart" @success="uploadSuccess">
             <div class="update">
               <p class="update-video">上传广告片</p>
               <p>小于2G的视频文件</p>
@@ -58,7 +58,7 @@ export default class Main extends ViewBase {
   form: any = {
     name: '',
     customerId: '',
-    specification: '',
+    specification: ''
   }
 
   // 源视频文件上传后的ID
@@ -69,6 +69,8 @@ export default class Main extends ViewBase {
   transFee = ''
   // 视频上传but按钮置灰
   btnSubmit = false
+  errorPerm = ''
+
   customerList = []
   specificationList: any = []
 
@@ -82,7 +84,7 @@ export default class Main extends ViewBase {
       ],
       specification: [
         { required: true, message: '请选择广告片规格', trigger: 'change', type: 'number'  }
-      ],
+      ]
     }
   }
 
@@ -105,6 +107,7 @@ export default class Main extends ViewBase {
     this.length = 0
     const duration = await getBlobDuration(blob)
     this.length = Math.floor(duration)
+     this.errorPerm = ''
   }
 
   uploadSuccess({ file, blob }: SuccessEvent) {
@@ -128,11 +131,12 @@ export default class Main extends ViewBase {
          specification: item.specification,
       }
     } catch (ex) {
-      // this.handleError(ex.msg)
+      this.handleError(ex.msg)
     }
   }
 
   async createSubmit(dataform: any) {
+    this.errorPerm =  this.srcFileId == '' ? '请选择上传视频' : ''
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) {
       return
@@ -169,6 +173,7 @@ export default class Main extends ViewBase {
   }
 
   async editSubmit(dataform: any) {
+    this.errorPerm =  this.srcFileId == '' ? '请选择上传视频' : ''
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) {
       return

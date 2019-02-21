@@ -356,7 +356,7 @@ export default class App extends ViewBase {
       padding-left: 60px;
       background: no-repeat 30px center;
       i {
-        margin-right: 15px;
+        margin-right: 5px;
       }
     }
     .ivu-menu-item {
@@ -398,6 +398,12 @@ export default class App extends ViewBase {
         border: solid 1px #f65202;
         border-radius: 50%;
       }
+    }
+    &.menu-node-home > a::before {
+      content: '';
+      width: 0;
+      height: 0;
+      border: none;
     }
   }
   .menu-node-home a {

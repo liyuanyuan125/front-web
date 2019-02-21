@@ -63,7 +63,8 @@
         <span>{{formatYell(row.beginDate)}}-{{formatYell(row.endDate)}}</span>
       </template>
       <template slot="specification" slot-scope="{row, index}">
-        <span>{{row.specification || '/'}}s</span>
+        <span v-if="row.specification">{{row.specification}}s</span>
+        <span v-else>/</span>
       </template>
       <template slot="settlementStatus" slot-scope="{row, index}">
         <span>{{querySettlementList(row.settlementStatus)}}</span>
