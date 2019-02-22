@@ -76,7 +76,7 @@
           </p>
           <p>
             <label>档期</label>
-            {{items.calendarName}}
+            {{items.calendarName || '暂无' }}
           </p>
           <p v-if="status == 1 || status == 2 || status == 9 || status == 10">
             <label>预估冻结金额/￥</label>
@@ -119,7 +119,7 @@
         </Col>
       </Row>
     </div>
-    <div v-if="status == 7 || status == 8">
+    <!-- <div v-if="status == 7 || status == 8">
       <h3 class="layout-title">
         投放成效
         <em>查看数据报表</em>
@@ -159,7 +159,7 @@
           </Col>
         </Row>
       </div>
-    </div>
+    </div> -->
 
     <h3 class="layout-title" v-if="launchList">投放地区</h3>
     <div class="text-rows rows-list" v-if="launchList">
@@ -216,52 +216,53 @@
           </em>
         </p>
       </div>
-      <div v-else>
+      <div class="flex-box" v-else>
         <p>
           <label>观影人群画像</label>
         </p>
         <div
           class="portrait"
-          :class="{'woman-atv': sex == 'woman', 'man-atv': sex == 'man', 'unknow-atv': sex == 'unknow'}"
+          :class="{'woman-atv': sex == 'woman', 'man-atv': sex == 'man', 'unknow-atv': sex == 'ALL'}"
         >
           <div v-if="sex == 'man'">
             <i class="gender-text">男性</i>
             <i class="age-text">{{age}}</i>
-            <img width="145" class="gender-img" src="../assets/man.png">
+            <img width="156" class="gender-img" src="../assets/man.png">
           </div>
-          <div v-if="sex == 'woman'">
+          <div v-else-if="sex == 'woman'">
             <i class="gender-text">女性</i>
             <i class="age-text">{{age}}</i>
-            <img width="145" class="gender-img" src="../assets/woman.png">
+            <img width="156" class="gender-img" src="../assets/woman.png">
           </div>
-          <div v-if="sex == 'unknow'">
+          <div v-else-if="sex == 'ALL' ">
             <i class="gender-text">性别不详</i>
             <i class="age-text">年龄不详</i>
-            <img width="145" class="gender-img" src="../assets/unknow.png">
+            <img width="156" class="gender-img" src="../assets/unknow.png">
           </div>
-
-          <div class="film-type">
-            <i class v-for="(item, index) in typeList" :key="index">{{item}}</i>
+          <div class="film-type flex-box">
+            <i v-if="typeList.length == 0" class="notType">类型不详</i>
+            <i v-else v-for="(item, index) in typeList" :key="index">{{item}}</i>
           </div>
         </div>
       </div>
       <div class="flex-box film-list">
         <label>影片</label>
-        <div class="flex-box flex-wrap">
+        <div class="flex-box flex-wrap" v-if="defaultData.movieList && defaultData.movieList.length > 0">
           <div class="item" v-for="(item, index) in defaultData.movieList" :key="index">
             <div class="film-img-item">
               <img :src="item.mainPicUrl" width="180" height="240">
-              <div class="open-time">上映时间：{{formatYell(item.openTime)}}</div>
+              <div class="open-time">上映时间：{{subTimes(item.openTime) || '暂无'}}</div>
             </div>
             <div class="film-name">《{{item.name}}》</div>
             <div class="film-type-items">
-              <i v-for="(it, index) in item.types" :key="index">
+              <i v-for="(it, index) in item.types" :key="index" :class="{'flag-active': typeList.includes(queryFilmList(it))}">
                 {{queryFilmList(it)}}
                 <em>/</em>
               </i>
             </div>
           </div>
         </div>
+        <div v-else>暂无</div>
       </div>
     </div>
     <div class="btnCenter btn-footer" v-if="status == 2">
@@ -335,6 +336,11 @@ export default class PlanDefault extends ViewBase {
   get formatNumber() {
     return formatNumber
   }
+  subTimes(tim: any) {
+    if (!tim) { return ''}
+    tim = tim.toString()
+    return `${tim.substring(0, 4)}-${tim.substring(4, 6)}-${tim.substring(6)}`
+  }
   async mounted() {
     this.list()
   }
@@ -387,7 +393,8 @@ export default class PlanDefault extends ViewBase {
           return item
         }
       })
-      this.sex = sex && sex.length != 0 ? sex[0].text : ''
+      this.sex = sex && sex.length != 0 ? sex[0].text : 'ALL'
+
       const age = data.item.deliveryGroups.filter(
         (item: any) => item.tagTypeCode == 'PLAN_GROUP_AGE'
       )
@@ -713,24 +720,24 @@ export default class PlanDefault extends ViewBase {
   .gender-text {
     position: absolute;
     top: 26px;
-    left: 120px;
+    left: 0;
   }
   .film-type {
     position: absolute;
-    top: 30px;
-    left: 349px;
+    top: 84px;
+    left: 237px;
     i {
-      display: block;
+      margin-right: 5px;
       margin-bottom: 16px;
     }
   }
   .age-text {
     position: absolute;
-    top: 130px;
-    left: 120px;
+    top: 140px;
+    left: 0;
   }
   .gender-img {
-    margin: 30px 0 30px 200px;
+    margin: 30px 0 30px 80px;
   }
 }
 .city-list {
@@ -755,9 +762,10 @@ export default class PlanDefault extends ViewBase {
   label {
     display: inline-block;
     color: #888;
-    width: 120px;
+    width: 108px;
   }
   .item {
+    width: 180px;
     background: #f9f9f9;
     margin-right: 20px;
     margin-bottom: 20px;
@@ -780,11 +788,17 @@ export default class PlanDefault extends ViewBase {
     .film-name {
       padding: 10px 0 10px;
       font-size: 14px;
+      width: 180px;
+      word-wrap: break-word;
+      word-break: normal;
     }
     .film-type-items {
       margin-bottom: 10px;
+      padding: 0 10px;
       i {
-        color: #ff1000;
+        &.flag-active {
+          color: #ff1000;
+        }
         em {
           color: #888;
         }

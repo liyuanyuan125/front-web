@@ -37,6 +37,12 @@ export async function business() {
   return res
 }
 
+// 获取客户下所关联的账号列表
+export async function adminId(query: any) {
+  const res = await get(`/customer/partners/accounts`, query)
+  return res
+}
+
 /**
  * 获取菜单列表
  * @param systemCode 系统类型

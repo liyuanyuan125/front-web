@@ -91,25 +91,25 @@
           <Row class='li-item'>
             <Col span='18'>
               <Row class='row-list'>
-                <Col span='3' class='row-list-hui'>广告单名称</Col>
+                <Col span='3' class='row-list-hui'>广告片名称</Col>
                 <Col span='9' class='row-list-huis'>{{it.videoName}}</Col>
-                <Col span='3' class='row-list-hui'>目标影院</Col>
+                <Col span='3' class='row-list-hui'>执行影院</Col>
                 <Col span='9' class='row-list-huis'>{{it.cinemas.length}}家   <span @click="edittarget(it.id)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
               </Row>
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>广告片规格</Col>
                 <Col span='9' class='row-list-huis'>{{it.specification}}s</Col>
-                <Col span='3' class='row-list-hui'>目标影厅</Col>
+                <Col span='3' class='row-list-hui'>执行影厅</Col>
                 <Col span='9' class='row-list-huis'>所有影厅</Col>
               </Row>
               <Row class='row-list'>
-                <Col span='3' class='row-list-hui'>投放时间</Col>
+                <Col span='3' class='row-list-hui'>执行时间</Col>
                 <Col span='9' class='row-list-huis'>{{it.beginDate}} ~ {{it.endDate}}</Col>
-                <Col span='3' class='row-list-hui'>目标场次</Col>
+                <Col span='3' class='row-list-hui'>执行场次</Col>
                 <Col span='9' class='row-list-huis'>{{it.sceneCount}}</Col>
               </Row>
               <Row class='row-list'>
-                <Col span='3' class='row-list-hui'>投放周期</Col>
+                <Col span='3' class='row-list-hui'>执行周期</Col>
                 <Col span='9' class='row-list-huis'>{{it.cycle}}天</Col>
                 <Col span='3' class='row-list-hui'>投放类型</Col>
                 <Col span='9' class='row-list-huis'>{{it.directionType == 1 ? '标准投放' : '单片投放'}}</Col>
@@ -280,8 +280,8 @@ export default class Main extends ViewBase {
 
   handleChange(data: any) {
      this.showTime = data
-     this.query.beginDate = formatTimestamp(this.showTime[0])
-     this.query.endDate = formatTimestamp(this.showTime[1])
+     this.query.beginDate = Number(formatTimestamp(this.showTime[0])) - 8 * 60 * 60 * 1000
+     this.query.endDate = Number(formatTimestamp(this.showTime[1])) + 16 * 60 * 60 * 1000 - 1
      this.seach()
    }
 

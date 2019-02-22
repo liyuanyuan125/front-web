@@ -18,6 +18,26 @@ const allSiderMenuList: SiderMenuItem[] = [
   {
     name: 'home',
     label: '首页',
+    systems: ['ads'],
+    subList: [
+      {
+        name: 'home-overview',
+        label: '账户概览',
+        systems: ['ads'],
+      }
+    ]
+  },
+  {
+    name: 'home',
+    label: '首页',
+    systems: ['resource'],
+    subList: [
+      {
+        name: 'home-resoverview',
+        label: '账户概览',
+        systems: ['resource'],
+      }
+    ]
   },
 
   {

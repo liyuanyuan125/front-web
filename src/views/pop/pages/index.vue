@@ -435,8 +435,8 @@ export default class Main extends ViewBase {
     name: this.list.name, // 计划名称
     videoId: this.list.videoId, // 广告片ID
     calendarId: this.list.calendarId, // 档期ID
-    beginDate: new Date(this.bed).getTime(), // 排期开始时间
-    endDate: new Date(this.end).getTime(), // 排期结束时间
+    beginDate: Number(new Date(this.bed).getTime()), // 排期开始时间
+    endDate: Number(new Date(this.end).getTime()) + 24 * 60 * 60 * 1000 - 1, // 排期结束时间
     deliveryType: 1, // 投放类型
     budgetCode: this.list.budgetCode, // 预算区间
     budgetAmount: this.list.budgetAmount, // 预算金额
@@ -478,7 +478,7 @@ export default class Main extends ViewBase {
       videoId: this.list.videoId, // 广告片ID
       calendarId: this.list.calendarId, // 档期ID
       beginDate: new Date(this.bed).getTime(), // 排期开始时间
-      endDate: new Date(this.end).getTime(), // 排期结束时间
+      endDate: new Date(this.end).getTime() + 24 * 60 * 60 * 1000 - 1, // 排期结束时间
       deliveryType: 1, // 投放类型
       budgetCode: this.list.budgetCode, // 预算区间
       budgetAmount: this.list.budgetAmount, // 预算金额
@@ -531,28 +531,40 @@ export default class Main extends ViewBase {
     if (this.dataFrom.type == 1) {
       this.cinemaIdArray = this.tuifilms
     }
-    if (this.dataFrom.type == 2 || this.dataFrom.type == 3) {
-      if (this.cinemaIdArray.length == 0) {
-        info('请至少选择一部影片')
-        return
+    if (this.list.directionType == 1) {
+      if (this.dataFrom.type == 2 || this.dataFrom.type == 3) {
+        if (this.cinemaIdArray.length == 0) {
+          info('请至少选择一部影片')
+          return
+        }
       }
     }
+
     this.$nextTick(() => {
       (this.$refs.addOrUpdate as any).init(this.datafroms , this.addlist)
     })
   }
   async caoEdit() {
     this.dataFrom.status = 1
-    if (this.dataFrom.type == 2 || this.dataFrom.type == 3) {
-      if (this.cinemaIdArray.length == 0) {
-        info('请至少选择一部影片')
-        return
-      }
-    }
     this.dataFrom.deliveryGroups = []
     if (this.list.directionType == 1) {
+      if (this.dataFrom.type == 2 || this.dataFrom.type == 3) {
+        if (this.cinemaIdArray.length == 0) {
+          info('请至少选择一部影片')
+          return
+        } else {
+          this.cinemaIdArray = this.cinemaIdArray.map((it: any) => it.id)
+        }
+      }
       this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
-      this.dataFrom.deliveryMovies = this.cinemaIdArray.map((it: any) => it.id)
+      if (this.dataFrom.type == 1) {
+        // this.cinemaIdArray = this.tuifilms
+        this.cinemaIdArray = this.tuifilms.map((it: any) => it.id)
+      }
+      // console.log(this.cinemaIdArray.map((it: any) => it.id))
+      // this.dataFrom.deliveryMovies = this.cinemaIdArray.map((it: any) => it.id)
+      // console.log(this.dataFrom.deliveryMovies)
+      // debugger
       if (this.list.deliveryGroups[0].text.length != 0) {
         const one = (this.list.deliveryGroups[0].text || []).map((it: any) => {
           this.dataFrom.deliveryGroups.push( {
@@ -614,15 +626,15 @@ export default class Main extends ViewBase {
   }
 
   async okEdit() {
-    if (this.dataFrom.type == 2 || this.dataFrom.type == 3) {
-      if (this.cinemaIdArray.length == 0) {
-        info('请至少选择一部影片')
-        return
-      }
-    }
     this.dataFrom.status = this.list.status
     this.dataFrom.deliveryGroups = []
     if (this.list.directionType == 1) {
+      if (this.dataFrom.type == 2 || this.dataFrom.type == 3) {
+        if (this.cinemaIdArray.length == 0) {
+          info('请至少选择一部影片')
+          return
+        }
+      }
       this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
       this.dataFrom.deliveryMovies = this.cinemaIdArray.map((it: any) => it.id)
       if (this.list.deliveryGroups[0].text.length != 0) {
@@ -762,7 +774,7 @@ export default class Main extends ViewBase {
     + '-' + String(this.list.beginDate).slice(6, 8)
     this.end = String(this.list.endDate).slice(0, 4) + '-' + String(this.list.endDate).slice(4, 6)
     + '-' + String(this.list.endDate).slice(6, 8)
-    this.day = (new Date(this.end).getTime() - new Date(this.bed).getTime()) / (24 * 3600000)
+    this.day = Number((new Date(this.end).getTime() - new Date(this.bed).getTime()) / (24 * 3600000)) + 1
     // console.log(this.list)
   }
 
@@ -1003,7 +1015,7 @@ export default class Main extends ViewBase {
       this.tuifilm = (tui.data.data.items || []).map((it: any) => {
         return {
           ...it,
-          openTime: moment(it.openTime).format(timeFormat)
+          openTime: it.openTime ? moment(it.openTime).format(timeFormat) : '暂无'
         }
       })
 

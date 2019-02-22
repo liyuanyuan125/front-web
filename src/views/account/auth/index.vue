@@ -24,7 +24,7 @@
       </span>
     </div>
     <Table ref="selection" stripe :loading="tableLoading"  :columns="columns4" :data="authDate"></Table>
-    <Page :total="total" v-if="total>0" class="btnCenter"
+    <Page :total="total" v-if="total>0" class="btnCenter page-bottom"
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
       :page-size-opts="[10, 20, 50, 100]"
@@ -215,6 +215,9 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.page-bottom {
+  padding: 40px 0 100px;
+}
 .bth-search {
   cursor: pointer;
 }

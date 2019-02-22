@@ -142,6 +142,9 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+/deep/ .ivu-form-item-required .ivu-form-item-label::before {
+  content: '';
+}
 .page {
   .ivu-form-item {
     padding-left: 30px;
@@ -154,13 +157,13 @@ export default class Main extends ViewBase {
 .submitBtn {
   margin-bottom: 30px;
 }
-/deep/ .item-sign .ivu-form-item-label::before {
-  content: '*';
-  display: inline-block;
-  margin-right: 4px;
-  line-height: 1;
-  font-size: 12px;
-  color: #ed4014;
-}
+// /deep/ .item-sign .ivu-form-item-label::before {
+//   content: '*';
+//   display: inline-block;
+//   margin-right: 4px;
+//   line-height: 1;
+//   font-size: 12px;
+//   color: #ed4014;
+// }
 </style>
 

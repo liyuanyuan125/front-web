@@ -16,24 +16,26 @@
         </FormItem>
 
         <FormItem  label="广告片规格" prop="specification">
-          <Select v-model="form.specification"  clearable filterable>
+          <Select v-model="form.specification" @on-change="handleChangeSpe"  clearable filterable>
             <Option v-for="(item, index) in specificationList" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
           <em class="remark">备注：广告片规格请输入15s的倍数</em>
         </FormItem>
 
-        <FormItem  label="上传广告片">
-          <UploadLabel class="upload-label" @start="uploadStart" @success="uploadSuccess">
+        <FormItem  label="上传广告片" :error="errorPerm">
+          <UploadLabel class="upload-label"  @start="uploadStart" @success="uploadSuccess">
             <div class="update">
               <p class="update-video">上传广告片</p>
               <p>小于2G的视频文件</p>
             </div>
-            <span slot="suffix" v-if="length > 0">{{duration}}</span>
           </UploadLabel>
+        </FormItem>
+        <FormItem label="广告片时长" v-if="$route.params.id">
+          <span>{{duration}}s</span>
         </FormItem>
      </Form>
      <div class="btnCenter create-submit-btn">
-       <Button v-if="!$route.params.id" type="primary" @click="createSubmit('dataform')" class="button-ok">提交审核</Button>
+       <Button v-if="!$route.params.id" type="primary" :disabled="btnSubmit" @click="createSubmit('dataform')" class="button-ok">提交审核</Button>
        <Button v-else type="primary" class="button-ok" @click="editSubmit('dataform')">保存修改</Button>
      </div>
   </div>
@@ -58,7 +60,7 @@ export default class Main extends ViewBase {
   form: any = {
     name: '',
     customerId: '',
-    specification: '',
+    specification: ''
   }
 
   // 源视频文件上传后的ID
@@ -66,7 +68,10 @@ export default class Main extends ViewBase {
   // 广告片时长
   length = 0
   // 转码费
-  transFee = 1
+  transFee = ''
+  // 视频上传but按钮置灰
+  btnSubmit = false
+  errorPerm = ''
 
   customerList = []
   specificationList: any = []
@@ -81,7 +86,7 @@ export default class Main extends ViewBase {
       ],
       specification: [
         { required: true, message: '请选择广告片规格', trigger: 'change', type: 'number'  }
-      ],
+      ]
     }
   }
 
@@ -100,13 +105,16 @@ export default class Main extends ViewBase {
 
   async uploadStart({ blob }: StartEvent) {
     this.srcFileId = ''
+    this.btnSubmit = true
     this.length = 0
     const duration = await getBlobDuration(blob)
     this.length = Math.floor(duration)
+     this.errorPerm = ''
   }
 
   uploadSuccess({ file, blob }: SuccessEvent) {
     this.srcFileId = file.fileId
+    this.btnSubmit = false
   }
 
   creSpecificationList() {
@@ -125,11 +133,12 @@ export default class Main extends ViewBase {
          specification: item.specification,
       }
     } catch (ex) {
-      // this.handleError(ex.msg)
+      this.handleError(ex.msg)
     }
   }
 
   async createSubmit(dataform: any) {
+    this.errorPerm =  this.srcFileId == '' ? '请选择上传视频' : ''
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) {
       return
@@ -144,7 +153,10 @@ export default class Main extends ViewBase {
       this.handleError(ex.msg)
     }
   }
-
+  async handleChangeSpe(specification: any) {
+     const { data } = await transFee({ specification })
+     this.transFee = data
+  }
   async createSub() {
     const customerName: any = this.customerList.filter( (item: any) => item.id == this.form.customerId)
     try {
@@ -163,6 +175,7 @@ export default class Main extends ViewBase {
   }
 
   async editSubmit(dataform: any) {
+    this.errorPerm =  this.srcFileId == '' ? '请选择上传视频' : ''
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) {
       return

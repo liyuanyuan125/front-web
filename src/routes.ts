@@ -221,14 +221,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
   // 推广管理 - 广告计划 - 详情
   {
-    path: '/pop/plan-default/:id',
-    name: 'pop-plan-default',
+    path: '/pop/planlist/default/:id',
+    name: 'pop-planlist-default',
     component: () => import('./views/pop/plan/default/planDefault.vue')
   },
   // 推广管理 - 广告计划 - 支付详情
   {
-    path: '/pop/plan-defaultpayment/:id',
-    name: 'pop-plan-defaultpayment',
+    path: '/pop/planlist/defaultpayment/:id',
+    name: 'pop-planlist-defaultpayment',
     component: () => import('./views/pop/plan/default/defaultPayment.vue')
   },
   // 推广管理 - 广告计划 - 编辑
@@ -344,6 +344,18 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: 'customer/list/detail/:id',
     name: 'customer-list-detail',
     component: () => import('./views/customer/list/detail.vue')
+  },
+  // 广告主 - 账户概览
+  {
+    path: 'home/overview',
+    name: 'home-overview',
+    component: () => import('./views/home/overview/index.vue')
+  },
+  // 资源方 - 账户概览
+  {
+    path: 'home/resoverview',
+    name: 'home-resoverview',
+    component: () => import('./views/home/resoverview/index.vue')
   },
   // 示例，没有实际用处
   {

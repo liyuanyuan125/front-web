@@ -163,8 +163,8 @@ export default class Main extends ViewBase {
     this.emailError = '账号不存在'
   }
 
-  onLogin10002() {
-    this.passwordError = '密码错误'
+  onLogin10002(ex: any) {
+    this.handleError(ex.msg)
   }
 
   onLogin10006() {

@@ -10,15 +10,15 @@
     <Form :model="form" class="form">
       <Row type="flex" justify="space-between">
         <Col :span="6">
-          <FormItem label="权限角色" :label-width="100">
-            <Select v-model="form.roleId" clearable>
+          <FormItem label="权限角色" :label-width="90">
+            <Select v-model="form.roleId" clearable style="width: 200px">
               <Option :value="item.id" :key="item.id" v-for="item in rolelist">{{item.name}}</Option>
             </Select>
           </FormItem>
         </Col>
         <Col :span="5">
-          <FormItem label="账号状态" :label-width="100">
-            <Select v-model="form.status" clearable>
+          <FormItem label="账号状态" :label-width="90">
+            <Select v-model="form.status" style="width: 100px" clearable>
               <Option :value="item.key" :key="item.id" v-for="item in statusList">{{item.text}}</Option>
             </Select>
           </FormItem>
@@ -64,16 +64,16 @@
         <a class="action-btn" v-else-if="row.statusCode == 3" @click="activeEmail(row.id)">重新激活</a>
       </template>
     </Table>
-    <h4 class="checkAll">
+    <div class="checkAll">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
       </span>
       <span @click="deleteList">批量删除</span>
-    </h4>
+    </div>
     <Page
       :total="total"
       v-if="total>0"
-      class="btnCenter"
+      class="btnCenter page-bottom"
       :current="pageObject.pageIndex"
       :page-size="pageObject.pageSize"
       show-total
@@ -167,19 +167,29 @@ export default class Main extends ViewBase {
   async userList() {
     try {
       const { data } = await subAccount({ ...this.form, ...this.pageObject })
-      this.data = data.list || []
       this.rolelist = data.roleList
       this.statusList = data.statusList
       this.total = data.totalCount
+
       // 读取当前广告主或资源方statusCode
       const code = this.systemCode
-      this.data.map((item: any) => {
+      data.list.map((item: any) => {
         for (const i of item.systems) {
           if (i.code == code) {
             item.statusCode = i.status
           }
         }
       })
+
+      // 只有禁用数据可以删除
+      for (const it of data.list) {
+        if (it.statusCode == 2 ) {
+          it._checked = false
+        } else {
+          it._disabled = true
+        }
+      }
+      this.data = data.list || []
     } catch (ex) {
       this.handleError(ex.msg)
     }
@@ -306,14 +316,6 @@ export default class Main extends ViewBase {
 
 .page {
   font-size: 14px;
-  .checkAll {
-    cursor: pointer;
-    margin: 10px 20px 0;
-    .colBg;
-    span:last-child {
-      color: @c-link;
-    }
-  }
 
   .tableTotal {
     padding: 0 30px 0;
@@ -361,10 +363,14 @@ export default class Main extends ViewBase {
           input {
             height: 40px;
             line-height: 40px;
+            font-size: 14px;
           }
         }
       }
     }
   }
+}
+.page-bottom {
+  padding: 40px 0 100px;
 }
 </style>

@@ -80,6 +80,7 @@ export default class DlgEditCinema extends ViewBase {
     pageIndex: 1,
     pageSize: 6,
   }
+  page: any = []
   planId: any = ''
   reject: any = {}
   name: any = []
@@ -181,6 +182,16 @@ export default class DlgEditCinema extends ViewBase {
       this.total = totalCount
       this.data = items || []
       this.loading = false
+      if (this.type != 1) {
+        if (!this.page.includes(this.dataForm.pageIndex)) {
+          items.forEach((it: any) => {
+            if (it.defautChecked && !this.checkId.includes(it.id)) {
+              this.checkId.push(it.id)
+            }
+          })
+          this.page.push(this.dataForm.pageIndex)
+        }
+      }
       this.$emit('ref')
     } catch (ex) {
       this.handleError(ex)

@@ -76,23 +76,13 @@
       </span>
     </template>
     </Table>
-    <h4 class="checkAll">
+    <div class="checkAll">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
       </span>
       <span @click="deleteList">批量删除广告片</span>
-    </h4>
-
-    <Page
-      :total="totalCount"
-      class="btnCenter plan-pages"
-      :current="pageList.pageIndex"
-      :page-size="pageList.pageSize"
-      show-total
-      show-elevator
-      @on-change="handlepageChange"
-      @on-page-size-change="handlePageSize"
-    />
+    </div>
+    <pagination v-model="pageList" :total="totalCount" @uplist="uplist"></pagination>
     <updataVideo v-model="updataVideo" v-if="updataVideo.visible"></updataVideo>
   </div>
 </template>
@@ -104,10 +94,12 @@ import { confirm, toast } from '@/ui/modal'
 import { dataList, delList, popCancel, popPayment } from '@/api/popFilm'
 import { formatTimes, formatYell, formatNumber} from '@/util/validateRules'
 import updataVideo from '@/components/videoDlg.vue'
+import pagination from '@/components/page.vue'
 
 @Component({
   components: {
-    updataVideo
+    updataVideo,
+    pagination
   }
 })
 export default class Main extends ViewBase {
@@ -132,14 +124,14 @@ export default class Main extends ViewBase {
 
   columns = [
     { type: 'selection', width: 50, align: 'center' },
-    { title: '广告片ID', key: 'id' },
-    { title: '广告片名称', slot: 'name', width: 140 },
-    { title: '广告片规格', slot: 'specification' },
-    { title: '广告片时长', slot: 'length' },
-    { title: '数字转制费用(元）', key: 'transFee', width: 150 },
-    { title: '广告片状态', slot: 'status' },
-    { title: '创建时间', slot: 'applyTime', width: 200 },
-    { title: '操作', slot: 'operation', width: 150},
+    { title: '广告片ID', key: 'id', minWidth: 100 },
+    { title: '广告片名称', slot: 'name', minWidth: 170 },
+    { title: '广告片规格', slot: 'specification', minWidth: 100 },
+    { title: '广告片时长', slot: 'length', minWidth: 100 },
+    { title: '数字转制费用(元）', key: 'transFee', minWidth: 150 },
+    { title: '广告片状态', slot: 'status', minWidth: 100 },
+    { title: '创建时间', slot: 'applyTime', minWidth: 200 },
+    { title: '操作', slot: 'operation', minWidth: 150},
   ]
   tableDate = []
 
@@ -235,12 +227,7 @@ export default class Main extends ViewBase {
       this.showWaring('请选择你要删除的元素')
     }
   }
-
-  handlepageChange(size: any) {
-    this.pageList.pageIndex = size
-    this.tableList()
-  }
-  handlePageSize(size: any) {
+  uplist(size: any) {
     this.pageList.pageIndex = size
     this.tableList()
   }
