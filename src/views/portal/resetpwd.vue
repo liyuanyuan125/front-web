@@ -115,7 +115,7 @@ export default class Main extends ViewBase {
     try {
       await sendResetpwdEmail(this.form.email)
 
-      await countDown(10, sec => {
+      await countDown(60, sec => {
         this.codeMsg = sec + 's'
       })
 
@@ -168,7 +168,9 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import './common.less';
-
+/deep/ .ivu-form-item-required .ivu-form-item-label::before {
+  content: '';
+}
 .forgetpass {
   max-width: 1100px;
   margin: 0 auto;
