@@ -1,6 +1,10 @@
 <template>
   <div class="home-bg">
-    <h2 class="layout-nav-title">广告计划 > 查看广告计划</h2>
+    <!-- <h2 class="layout-nav-title">广告计划 > 查看广告计划</h2> -->
+    <div class="layout-nav-title">
+       <router-link :to="{name: 'pop-planlist'}" >广告计划</router-link> > 
+       <span>查看广告计划</span>
+    </div>
     <StatusCode :statuCode="Number(status)" v-if="status"></StatusCode>
     <h3 class="layout-title">概览</h3>
     <div class="text-rows">
