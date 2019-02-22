@@ -1,6 +1,10 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title">用户管理 > 查看子用户</h2>
+    <!-- <h2 class="layout-nav-title">用户管理 > 查看子用户</h2> -->
+    <div class="layout-nav-title">
+       <router-link :to="{name: 'account-user'}" >用户管理</router-link> > 
+       <span>查看子用户</span>
+    </div>
     <h3 class="layout-title">账号信息</h3>
     <div class="text-rows">
       <Row>
@@ -51,20 +55,14 @@
       </Row>
     </div>
     <h3 class="layout-title">账号权限</h3>
-    <div class="text-rows">
-      <Row>
-        <Col :span="24">
-          <p>
-            <label>权限角色</label>
-            {{roleName}}
-          </p>
-          <p class="flex-box">
-            <label>相关权限</label>
-            <PermTree v-model="permTreeModal" readonly v-if="permTreeModal"/>
-          </p>
-        </Col>
-      </Row>
-    </div>
+    <Form  :label-width="120"  class="edit-input forms">
+      <FormItem label="权限角色" >
+        <span class="span-class">{{roleName}}</span>
+      </FormItem>
+      <FormItem label="相关权限">
+        <PermTree v-model="permTreeModal" readonly v-if="permTreeModal"/>
+      </FormItem>
+    </Form>
     <h3 class="layout-title more-list">操作日志
       <em @click="moreList">更多...</em>
     </h3>
@@ -181,7 +179,9 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+.forms {
+  padding: 20px 0 30px 30px;
+}
 .submitBtn {
   margin-bottom: 30px;
 }

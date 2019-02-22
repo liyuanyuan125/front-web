@@ -1,7 +1,10 @@
 <template>
   <div class="home-bg">
-    <h2 class="layout-nav-title">广告计划 > 查看广告计划</h2>
-    
+    <!-- <h2 class="layout-nav-title">广告计划 > 查看广告计划</h2> -->
+    <div class="layout-nav-title">
+       <router-link :to="{name: 'pop-planlist'}" >广告计划</router-link> > 
+       <span>查看广告计划</span>
+    </div>
     <div class="payment-step">
       <div class="step-line-bg"></div>
       <div class="step-solid-bg" :style="{width: solidWidth}"></div>
