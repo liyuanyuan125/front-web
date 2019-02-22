@@ -136,7 +136,7 @@
                 <i :class="`cinemapos${index}`" v-for="(it , index) in cinema.tagsex[0].text" :key="index">{{cinemaTypes(it)}}</i>
               </div>
               <div v-else>
-                <i :class="`cinemapos1`">类型不详</i>
+                <i :class="`cinemapos0`">类型不详</i>
               </div>
             </div>
           </Col>
@@ -497,12 +497,12 @@ export default class Main extends ViewBase {
   }
   .cinemapos1 {
     position: absolute;
-    right: -260px;
+    right: -170px;
     top: 90px;
   }
   .cinemapos2 {
     position: absolute;
-    right: -170px;
+    right: -260px;
     top: 90px;
   }
   .cinemapos0 {
