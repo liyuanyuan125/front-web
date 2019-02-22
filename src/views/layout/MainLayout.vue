@@ -53,8 +53,8 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getUser, checkUser, logout, User, switchSystem } from '@/store'
-import { systemList as allSystemList, SystemCode } from '@/util/types'
+import { getUser, checkUser, logout, User, switchSystem, getCurrentPerms } from '@/store'
+import { systemList as allSystemList, SystemCode, PermPage } from '@/util/types'
 import allSiderMenuList, { SiderMenuItem } from './allSiderMenuList'
 import { cloneDeep, kebabCase } from 'lodash'
 import event from '@/fn/event'
@@ -89,11 +89,17 @@ export default class App extends ViewBase {
 
   isOff = false
 
+  permMenu: PermPage[] | null = null
+
   get siderMenuList() {
     const user = this.user
-    if (user == null) {
+    if (user == null || this.permMenu == null) {
       return []
     }
+
+    const permMenu = this.permMenu
+    // debugger
+
     const systemCode = user.systemCode
     const isSystem = isSystemCode(systemCode)
     const list = cloneDeep(allSiderMenuList).filter(it => {
@@ -101,6 +107,7 @@ export default class App extends ViewBase {
       return isSystem(it)
     })
 
+    // TODO: 下面这段代码是做什么用的？
     // accountType 1=主账户（显示账号信息） 2=子账户 0 未知  {name: "account-info", label: "账号信息"}
     let extractList: any = []
     let subList: any = []
@@ -113,6 +120,7 @@ export default class App extends ViewBase {
         }
       }
     })
+
     return list
   }
 
@@ -164,8 +172,17 @@ export default class App extends ViewBase {
     return this.siderActiveMap[name]
   }
 
-  created() {
+  async created() {
     checkUser()
+
+    const perms = await getCurrentPerms()
+    // 若无法获取权限，则退出
+    if (perms == null) {
+      return logout()
+    }
+
+    this.permMenu = perms.menu
+
     // 是有低优先级监听，以便其他地方可以拦截取消
     this.changeTheme()
     event.on(systemSwitched, (ev: SystemSwitchedEvent) => {

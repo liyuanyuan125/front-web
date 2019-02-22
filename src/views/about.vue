@@ -1,9 +1,11 @@
 <template>
   <div class="page">
     <div class="player-wrap">
-      <vue-plyr>
+      <Button v-auth="'ads.account-manage.infochange'">bbb😆</Button>
+      <Button v-auth="'xxx'">哈哈😆</Button>
+      <!-- <vue-plyr>
         <video src="http://www.runoob.com/try/demo_source/mov_bbb.mp4"></video>
-      </vue-plyr>
+      </vue-plyr> -->
     </div>
   </div>
 </template>

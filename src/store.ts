@@ -1,16 +1,21 @@
-/**
- * 全部数据结构，这里做了简化，暂不使用 Vuex
- */
-
+///
+/// 全局数据结构，这里做了简化，暂不使用 Vuex
+///
 import tryParseJson from '@/fn/tryParseJson'
 import cookie from 'js-cookie'
 import { logout as postLogout } from '@/api/auth'
-import { SystemCode, systemList } from '@/util/types'
+import { SystemCode, systemList, PermPage, MapType } from '@/util/types'
 import innerAccess, { AccessToken } from '@/fn/innerAccess'
 import event from '@/fn/event'
 import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
+import { getMenus } from '@/api/customer'
+import { walkTree } from '@/fn/tree'
 
 const accessToken: AccessToken = { can: false }
+
+// 权限缓存，刷新、重新登录、退出丢失
+// TODO: 实现重新登录清空权限缓存
+const permCache: MapType<Promise<PermResult>> = {}
 
 /** 用户类型 */
 export interface User {
@@ -145,6 +150,81 @@ export function hasLogin() {
 export function logout() {
   cookie.remove(KEY_TOKEN, COOKIE_OPTIONS)
   delete localStorage[KEY_USER]
+
+  // 清除权限缓存
+  if (theUser != null) {
+    delete permCache[theUser.id]
+  }
+
   theUser = null
   postLogout()
+}
+
+export interface PermResult {
+  menu: PermPage[]
+  permMap: MapType<number>
+}
+
+/**
+ * 获取当前菜单与权限，带缓存，刷新、重新登录、退出丢失
+ */
+export async function getCurrentPerms() {
+  const user = getUser()
+  if (user != null) {
+    // 先从缓存中查找
+    const cached = permCache[user.id]
+    if (cached != null) {
+      return cached
+    }
+
+    const promise = getMenus(user.systemCode, 2).then(({ data }) => {
+      const tree = data as PermPage
+      const permMap: MapType<number> = {}
+      const menu: PermPage[] = walkTree(tree.subPages || [], {
+        childrenKey: 'subPages',
+
+        onEachBefore(node) {
+          // 预防 actions、subPages 为 null
+          node.actions = (node.actions || []).filter(it => it.check)
+          node.subPages = node.subPages || []
+        },
+
+        onEachAfter(node: PermPage, parentNodes) {
+          // 目前只支持 2 级菜单，取 tree 的 2、3 级别，其他忽略
+          if (parentNodes.length > 1) {
+            // 明确返回 false，删除该节点，参见 walkTree 实现
+            return false
+          }
+
+          // 提取所有权限
+          const key = node.key
+          node.actions.forEach(({ code }) => permMap[`${key}${code}`.toLowerCase()] = 1)
+        }
+      })
+
+      const result: PermResult = { menu, permMap }
+
+      return result
+    })
+    .catch(() => {
+      // 如果遇到错误，则清空相应的 permCache，以便下次可以重试
+      delete permCache[user.id]
+      // 返回一个空的 PermResult，以便消除上层代码的错误？
+      return { menu: [], permMap: {} } as PermResult
+    })
+
+    permCache[user.id] = promise
+
+    return promise
+  }
+}
+
+/**
+ * 判断当前用户是否有相应的权限
+ * @param perm
+ */
+export async function hasPerm(perm: string) {
+  const { permMap = {} } = await getCurrentPerms() || {}
+  const lower = (perm || '').toLowerCase()
+  return lower in permMap
 }
