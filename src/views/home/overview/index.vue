@@ -54,7 +54,7 @@
     </Row>
     <div class='t-title' style='margin-top: 20px;'>广告成效</div>
     <Row class='ses'>
-        <Col span='6'><Select v-model='form.status'  clearable @on-change='search'>
+        <Col style='width: 23.8%'><Select v-model='form.status'  clearable @on-change='searchs'>
             <Option
             v-for="item in data"
             :key="item.key"
@@ -82,7 +82,7 @@
         </Col>
     </Row>
     <Row class='ses'>
-        <Col span='6'><Select v-model='query.effectType'  clearable @on-change='search'>
+        <Col style='width: 23.8%'><Select v-model='query.effectType'  clearable @on-change='searchs'>
             <Option
             v-for="item in effectTypeList"
             :key="item.key"
@@ -166,24 +166,8 @@ export default class Main extends ViewBase {
         this.search()
     }
 
-    async search() {
+    async searchs() {
         try {
-            const { data } = await nums({accountType: 'ads'})
-            this.accountBalance = data.accountBalance
-            this.video = data.video
-            this.plan = data.plan
-            // if (this.form.status == 1) {
-            //     this.query.beginDate = moment().subtract(1, 'days').calendar()
-            //     this.query.endDate = moment().calendar()
-            // }
-            // if (this.form.status == 2) {
-            //     this.query.beginDate = moment().subtract(7, 'days').calendar()
-            //     this.query.endDate = moment().calendar()
-            // }
-            // if (this.form.status == 3) {
-            //     this.query.beginDate = moment().subtract(30, 'days').calendar()
-            //     this.query.endDate = moment().calendar()
-            // }  // 昨天下午3点41分
             if (this.form.status == 1) {
                 this.query.beginDate =
                 Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - 24 * 60 * 60 * 1000 + 1
@@ -254,6 +238,30 @@ export default class Main extends ViewBase {
             if (this.option && typeof this.option === 'object') {
                 echarts.init(this.$refs.container as any).setOption(this.option, true)
             }
+        } catch (ex) {
+        } finally {
+        }
+    }
+
+    async search() {
+        try {
+            const { data } = await nums({accountType: 'ads'})
+            this.accountBalance = data.accountBalance
+            this.video = data.video
+            this.plan = data.plan
+            // if (this.form.status == 1) {
+            //     this.query.beginDate = moment().subtract(1, 'days').calendar()
+            //     this.query.endDate = moment().calendar()
+            // }
+            // if (this.form.status == 2) {
+            //     this.query.beginDate = moment().subtract(7, 'days').calendar()
+            //     this.query.endDate = moment().calendar()
+            // }
+            // if (this.form.status == 3) {
+            //     this.query.beginDate = moment().subtract(30, 'days').calendar()
+            //     this.query.endDate = moment().calendar()
+            // }  // 昨天下午3点41分
+            this.searchs()
         } catch (ex) {
         } finally {
         }

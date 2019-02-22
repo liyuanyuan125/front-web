@@ -52,7 +52,7 @@
     </Row>
     <div class='t-title' style='margin-top: 20px;'>广告成效</div>
     <Row class='ses'>
-        <Col span='6'><Select v-model='form.status'  clearable @on-change='search'>
+        <Col style='width: 23.8%;'><Select v-model='form.status'  clearable @on-change='searchs'>
             <Option
             v-for="item in data"
             :key="item.key"
@@ -80,7 +80,7 @@
         </Col>
     </Row>
     <Row class='ses'>
-        <Col span='6'><Select v-model='query.effectType'  clearable @on-change='search'>
+        <Col style='width: 23.8%;'><Select v-model='query.effectType'  clearable @on-change='searchs'>
             <Option
             v-for="item in effectTypeList"
             :key="item.key"
@@ -144,12 +144,8 @@ export default class Main extends ViewBase {
         this.search()
     }
 
-    async search() {
-        try {
-            const { data } = await nums({accountType: 'resource'})
-            this.accountBalance = data.accountBalance
-            this.executeOrder = data.executeOrder
-            this.dispatch = data.dispatch
+    async searchs() {
+      try {
             if (this.form.status == 1) {
                 this.query.beginDate =
                 Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - 24 * 60 * 60 * 1000 + 1
@@ -220,6 +216,20 @@ export default class Main extends ViewBase {
             if (this.option && typeof this.option === 'object') {
                 echarts.init(this.$refs.container as any).setOption(this.option, true)
             }
+        } catch (ex) {
+        this.handleError(ex)
+        } finally {
+        }
+    }
+
+    async search() {
+        try {
+            const { data } = await nums({accountType: 'resource'})
+            this.accountBalance = data.accountBalance
+            this.executeOrder = data.executeOrder
+            this.dispatch = data.dispatch
+
+            this.searchs()
         } catch (ex) {
         this.handleError(ex)
         } finally {
