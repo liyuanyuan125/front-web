@@ -194,6 +194,7 @@ export default class Main extends ViewBase {
                 legend: {
                     data: ['广告收益']
                 },
+                color: ['#FE8135'],
                 xAxis: [
                     {
                         type : 'category',
