@@ -1,9 +1,11 @@
 <template>
   <div class="page home-bg">
-     <h2 class="layout-nav-title">广告片 >
-       <span v-if="!$route.params.id"> 新建广告片</span>
-       <span v-else> 编辑广告片</span>
-     </h2>
+     <div class="layout-nav-title">
+       <router-link :to="{name: 'pop-film'}" >广告片</router-link> > 
+        <span v-if="!$route.params.id"> 新建广告片</span>
+        <span v-else> 编辑广告片</span>
+     </div>
+     
      <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input edit-form">
         <FormItem  label="广告片名称" prop="name">
           <Input v-model="form.name" placeholder="请输入广告片名称"></Input>
@@ -31,7 +33,7 @@
           </UploadLabel>
         </FormItem>
         <FormItem label="广告片时长" v-if="$route.params.id">
-          <span>{{duration}}s</span>
+          <span class="span-class">{{editLength}}s</span>
         </FormItem>
      </Form>
      <div class="btnCenter create-submit-btn">
@@ -67,6 +69,7 @@ export default class Main extends ViewBase {
   srcFileId = ''
   // 广告片时长
   length = 0
+  editLength = 0
   // 转码费
   transFee = ''
   // 视频上传but按钮置灰
@@ -132,6 +135,7 @@ export default class Main extends ViewBase {
          customerId: item.customerId,
          specification: item.specification,
       }
+      this.editLength = item.length
     } catch (ex) {
       this.handleError(ex.msg)
     }
@@ -208,8 +212,9 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/common.less';
-/deep/ .ivu-form-item-required .ivu-form-item-label::before {
-  content: '';
+
+.duration-len {
+  padding-top: 5px;
 }
 .create-submit-btn {
   margin-bottom: 30px;

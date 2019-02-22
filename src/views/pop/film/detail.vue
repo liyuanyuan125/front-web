@@ -1,5 +1,9 @@
 <template>
   <div class="page home-bg">
+     <div class="layout-nav-title">
+       <router-link :to="{name: 'pop-film'}" >广告片</router-link> > 
+        <span > 查看广告片</span>
+     </div>
     <payDefault :status="status" v-if="status == 1 || status == 2 || status == 3 || status == 4"></payDefault>
     <statusCode :statuCode="status" v-else-if="status == 5 || status == 6"></statusCode>
     <h3 class="layout-title">概览</h3>

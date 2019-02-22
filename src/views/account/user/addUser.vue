@@ -1,6 +1,10 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title">用户管理 > 新增子用户</h2>
+    <!-- <h2 class="layout-nav-title">用户管理 > 新增子用户</h2> -->
+    <div class="layout-nav-title">
+       <router-link :to="{name: 'account-user'}" >用户管理</router-link> > 
+       <span>新增子用户</span>
+    </div>
     <Form
       ref="forms"
       :model="form"

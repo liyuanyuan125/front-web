@@ -1,6 +1,10 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title">用户管理 > 编辑子用户</h2>
+    <!-- <h2 class="layout-nav-title">用户管理 > 编辑子用户</h2> -->
+    <div class="layout-nav-title">
+       <router-link :to="{name: 'account-user'}" >用户管理</router-link> > 
+       <span>编辑子用户</span>
+    </div>
     <Form :model="form" label-position="left" :label-width="100" class="edit-input">
       <h3 class="layout-title">设置登录账号</h3>
       <FormItem label="登录邮箱" class="item-top">

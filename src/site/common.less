@@ -13,6 +13,7 @@
   background: @c-head-bg;
 }
 .userTitle {
+  font-weight: 500;
   .colBg;
   .addUser {
     width: 140px;
@@ -104,4 +105,8 @@
 
 .plan-pages {
   margin: 30px 0 40px;
+}
+// 去除必填项前面的 * 号
+/deep/ .ivu-form-item-required .ivu-form-item-label::before {
+  content: '';
 }
