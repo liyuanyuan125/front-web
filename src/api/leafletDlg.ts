@@ -30,6 +30,11 @@ export async function carryList(id: any, query: any) {
   return res
 }
 
+// 查看执行单关联影院
+export async function findcarry(id: any, query: any) {
+  const res = await get(`/xadvert/execute-orders/${id}/check/cinemas`, query)
+  return res
+}
 // 修改执行单
 export async function carrySet(id: any, query: any) {
   const res = await put(`/xadvert/execute-orders/${id}/cinemas`, query)

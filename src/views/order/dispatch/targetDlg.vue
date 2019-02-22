@@ -43,7 +43,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { carryList, leafletList, sureLeaflet, findCinema } from '@/api/leafletDlg'
+import { findcarry, leafletList, sureLeaflet, findCinema } from '@/api/leafletDlg'
 import targetDlg from './targetDlg.vue'
 
 @Component
@@ -105,7 +105,7 @@ export default class DlgEditCinema extends ViewBase {
       if (this.type == 1) {
         res = await findCinema(this.id, {...this.dataForm})
       } else {
-        res = await carryList(this.id, {...this.dataForm})
+        res = await findcarry(this.id, {...this.dataForm})
       }
       this.total = res.data.totalCount
       if (res.data.items && res.data.items.length > 0) {
