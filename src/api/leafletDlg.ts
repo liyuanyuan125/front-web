@@ -20,7 +20,7 @@ export async function sureLeaflet(query: any) {
 
 // 执行单影院列表
 export async function findCinema(id: any, query: any) {
-  const res = await get(`/xadvert/dispatchs/${id}/plan-target-cinemas`, query)
+  const res = await get(`/xadvert/dispatchs/${id}/cinemas`, query)
   return res
 }
 
