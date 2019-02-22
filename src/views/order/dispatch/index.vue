@@ -215,11 +215,15 @@ export default class Main extends ViewBase {
   }
 
   rejload() {
+    // console.log(12313213)
     this.seach()
+    // history.go(0)
   }
 
   refload() {
+    // console.log(456465465)
     this.seach()
+    // history.go(0)
   }
 
   seachs() {
