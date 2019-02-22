@@ -76,7 +76,7 @@
           </p>
           <p>
             <label>档期</label>
-            {{items.calendarName}}
+            {{items.calendarName || '暂无' }}
           </p>
           <p v-if="status == 1 || status == 2 || status == 9 || status == 10">
             <label>预估冻结金额/￥</label>
