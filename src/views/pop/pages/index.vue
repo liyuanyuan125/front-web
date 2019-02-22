@@ -774,7 +774,7 @@ export default class Main extends ViewBase {
     + '-' + String(this.list.beginDate).slice(6, 8)
     this.end = String(this.list.endDate).slice(0, 4) + '-' + String(this.list.endDate).slice(4, 6)
     + '-' + String(this.list.endDate).slice(6, 8)
-    this.day = (new Date(this.end).getTime() - new Date(this.bed).getTime()) / (24 * 3600000)
+    this.day = Number((new Date(this.end).getTime() - new Date(this.bed).getTime()) / (24 * 3600000)) + 1
     // console.log(this.list)
   }
 
