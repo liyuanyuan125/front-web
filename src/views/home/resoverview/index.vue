@@ -4,16 +4,17 @@
     <Row class='ov-list'>
         <Col class='ovs ov-list-img1'>
             <Row class='ovs-title'>
-                <Col span='3'><img src='./assets/账户余额.png' /></Col>
+                <Col span='3'><img src='./assets/money.png' /></Col>
                 <Col span='20' style='font-size: 18px;'>账户余额</Col>
             </Row>
             <Row class='ovs-sma poovs'>
-                ￥{{accountBalance}}
+                <!-- ￥{{accountBalance}} -->
+                ￥<numAdd v-if='abc' :addNum=accountBalance></numAdd>
             </Row>
         </Col>
         <Col class='ovs ov-list-img2'>
             <Row class='ovs-title'>
-                <Col span='3'><img src='./assets/广告单.png' /></Col>
+                <Col span='3'><img src='./assets/gdan.png' /></Col>
                 <Col span='20' style='font-size: 18px;'>广告单</Col>
             </Row>
             <Row class='ovs-sma'>
@@ -33,7 +34,7 @@
         </Col>
         <Col class='ovs ov-list-img3'>
             <Row class='ovs-title'>
-                <Col span='3'><img src='./assets/执行单.png' /></Col>
+                <Col span='3'><img src='./assets/zdan.png' /></Col>
                 <Col span='20' style='font-size: 18px;'>执行单</Col>
             </Row>
             <Row class='ovs-sma'>
@@ -101,9 +102,15 @@ import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { effect , nums } from '@/api/home'
 import echarts from 'echarts'
+import numAdd from '../number.vue'
 
-@Component
+@Component({
+  components: {
+    numAdd
+  }
+})
 export default class Main extends ViewBase {
+    abc: any = false
     query: any = {
         beginDate: null,
         endDate: null,
@@ -142,6 +149,21 @@ export default class Main extends ViewBase {
 
     mounted() {
         this.search()
+    }
+
+    async search() {
+      try {
+          const { data } = await nums({accountType: 'resource'})
+          this.accountBalance = data.accountBalance
+          this.executeOrder = data.executeOrder
+          this.dispatch = data.dispatch
+          this.abc = true
+
+          this.searchs()
+      } catch (ex) {
+      this.handleError(ex)
+      } finally {
+      }
     }
 
     async searchs() {
@@ -222,19 +244,6 @@ export default class Main extends ViewBase {
         }
     }
 
-    async search() {
-        try {
-            const { data } = await nums({accountType: 'resource'})
-            this.accountBalance = data.accountBalance
-            this.executeOrder = data.executeOrder
-            this.dispatch = data.dispatch
-
-            this.searchs()
-        } catch (ex) {
-        this.handleError(ex)
-        } finally {
-        }
-    }
 }
 </script>
 
@@ -269,15 +278,15 @@ export default class Main extends ViewBase {
     }
   }
   .ov-list-img1 {
-    background: url('./assets/账户余额背景.png') center center no-repeat;
+    background: url('./assets/moneybg.png') center center no-repeat;
     background-size: cover;
   }
   .ov-list-img2 {
-    background: url('./assets/广告单背景.png') center center no-repeat;
+    background: url('./assets/gdanbg.png') center center no-repeat;
     background-size: cover;
   }
   .ov-list-img3 {
-    background: url('./assets/执行单背景.png') center center no-repeat;
+    background: url('./assets/zdanbg.png') center center no-repeat;
     background-size: cover;
   }
   .ovs-line {

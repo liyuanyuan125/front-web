@@ -4,16 +4,17 @@
     <Row class='ov-list'>
         <Col class='ovs ov-list-img1'>
             <Row class='ovs-title'>
-                <Col span='3'><img src='./assets/账户余额.png' /></Col>
+                <Col span='3'><img src='./assets/money.png' /></Col>
                 <Col span='20' style='font-size: 18px;'>账户余额</Col>
             </Row>
             <Row class='ovs-sma poovs'>
-                ￥{{accountBalance}}
+                <!-- ￥{{accountBalance}} -->
+                ￥<numAdd  v-if='abc' :addNum=accountBalance></numAdd>
             </Row>
         </Col>
         <Col class='ovs ov-list-img2'>
             <Row class='ovs-title'>
-                <Col span='3'><img src='./assets/广告计划.png' /></Col>
+                <Col span='3'><img src='./assets/plan.png' /></Col>
                 <Col span='20' style='font-size: 18px;'>广告计划</Col>
             </Row>
             <Row class='ovs-sma'>
@@ -33,7 +34,7 @@
         </Col>
         <Col class='ovs ov-list-img3'>
             <Row class='ovs-title'>
-                <Col span='3'><img src='./assets/广告片.png' /></Col>
+                <Col span='3'><img src='./assets/video.png' /></Col>
                 <Col span='20' style='font-size: 18px;'>广告片</Col>
             </Row>
             <Row class='ovs-sma'>
@@ -102,10 +103,17 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { effect , nums } from '@/api/home'
+import numAdd from '../number.vue'
 import echarts from 'echarts'
 
-@Component
+
+@Component({
+  components: {
+    numAdd
+  }
+})
 export default class Main extends ViewBase {
+    abc: any = false
     query: any = {
         beginDate: null,
         endDate: null,
@@ -164,6 +172,31 @@ export default class Main extends ViewBase {
 
     mounted() {
         this.search()
+    }
+
+    async search() {
+        try {
+            const { data } = await nums({accountType: 'ads'})
+            this.accountBalance = data.accountBalance
+            this.video = data.video
+            this.plan = data.plan
+            this.abc = true
+            // if (this.form.status == 1) {
+            //     this.query.beginDate = moment().subtract(1, 'days').calendar()
+            //     this.query.endDate = moment().calendar()
+            // }
+            // if (this.form.status == 2) {
+            //     this.query.beginDate = moment().subtract(7, 'days').calendar()
+            //     this.query.endDate = moment().calendar()
+            // }
+            // if (this.form.status == 3) {
+            //     this.query.beginDate = moment().subtract(30, 'days').calendar()
+            //     this.query.endDate = moment().calendar()
+            // }  // 昨天下午3点41分
+            this.searchs()
+        } catch (ex) {
+        } finally {
+        }
     }
 
     async searchs() {
@@ -242,30 +275,6 @@ export default class Main extends ViewBase {
         } finally {
         }
     }
-
-    async search() {
-        try {
-            const { data } = await nums({accountType: 'ads'})
-            this.accountBalance = data.accountBalance
-            this.video = data.video
-            this.plan = data.plan
-            // if (this.form.status == 1) {
-            //     this.query.beginDate = moment().subtract(1, 'days').calendar()
-            //     this.query.endDate = moment().calendar()
-            // }
-            // if (this.form.status == 2) {
-            //     this.query.beginDate = moment().subtract(7, 'days').calendar()
-            //     this.query.endDate = moment().calendar()
-            // }
-            // if (this.form.status == 3) {
-            //     this.query.beginDate = moment().subtract(30, 'days').calendar()
-            //     this.query.endDate = moment().calendar()
-            // }  // 昨天下午3点41分
-            this.searchs()
-        } catch (ex) {
-        } finally {
-        }
-    }
 }
 </script>
 
@@ -300,15 +309,15 @@ export default class Main extends ViewBase {
     }
   }
   .ov-list-img1 {
-    background: url('./assets/账户余额背景.png') center center no-repeat;
+    background: url('./assets/moneybg.png') center center no-repeat;
     background-size: cover;
   }
   .ov-list-img2 {
-    background: url('./assets/广告计划背景.png') center center no-repeat;
+    background: url('./assets/planbg.png') center center no-repeat;
     background-size: cover;
   }
   .ov-list-img3 {
-    background: url('./assets/广告片背景.png') center center no-repeat;
+    background: url('./assets/videobg.png') center center no-repeat;
     background-size: cover;
   }
   .ovs-line {
