@@ -435,8 +435,8 @@ export default class Main extends ViewBase {
     name: this.list.name, // 计划名称
     videoId: this.list.videoId, // 广告片ID
     calendarId: this.list.calendarId, // 档期ID
-    beginDate: new Date(this.bed).getTime(), // 排期开始时间
-    endDate: new Date(this.end).getTime(), // 排期结束时间
+    beginDate: Number(new Date(this.bed).getTime()), // 排期开始时间
+    endDate: Number(new Date(this.end).getTime()) + 24 * 60 * 60 * 1000 - 1, // 排期结束时间
     deliveryType: 1, // 投放类型
     budgetCode: this.list.budgetCode, // 预算区间
     budgetAmount: this.list.budgetAmount, // 预算金额
@@ -478,7 +478,7 @@ export default class Main extends ViewBase {
       videoId: this.list.videoId, // 广告片ID
       calendarId: this.list.calendarId, // 档期ID
       beginDate: new Date(this.bed).getTime(), // 排期开始时间
-      endDate: new Date(this.end).getTime(), // 排期结束时间
+      endDate: new Date(this.end).getTime() + 24 * 60 * 60 * 1000 - 1, // 排期结束时间
       deliveryType: 1, // 投放类型
       budgetCode: this.list.budgetCode, // 预算区间
       budgetAmount: this.list.budgetAmount, // 预算金额
@@ -774,7 +774,7 @@ export default class Main extends ViewBase {
     + '-' + String(this.list.beginDate).slice(6, 8)
     this.end = String(this.list.endDate).slice(0, 4) + '-' + String(this.list.endDate).slice(4, 6)
     + '-' + String(this.list.endDate).slice(6, 8)
-    this.day = (new Date(this.end).getTime() - new Date(this.bed).getTime()) / (24 * 3600000)
+    this.day = Number((new Date(this.end).getTime() - new Date(this.bed).getTime()) / (24 * 3600000)) + 1
     // console.log(this.list)
   }
 

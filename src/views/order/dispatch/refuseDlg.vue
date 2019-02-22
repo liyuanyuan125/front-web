@@ -44,7 +44,7 @@
         <Col :span="18"><span  v-if='data.movieList.length > 0' v-for='item in data.movieList'>《{{item.name}}》 </span><span v-if='data.movieList.length == 0'>暂无  </span></Col>
       </Row>
       <Row>
-        <Col :span="4" style="padding-top: 10px"><span>预估最大金额</span></Col>
+        <Col :span="4" style="padding-top: 10px"><span>预估最大收益/¥</span></Col>
         <Col :span="7"><span class="red">{{data.estimateRevenue}}</span></Col>
       </Row>
     </Row>
@@ -88,7 +88,7 @@ export default class DlgEditCinema extends ViewBase {
     try {
       await carryRefuse(this.data.id)
       this.cancel()
-      this.$emit('refload')
+      this.$emit('refReload')
       toast('操作成功')
     } catch (ex) {
       this.handleError(ex)
@@ -148,7 +148,7 @@ export default class DlgEditCinema extends ViewBase {
 }
 .red {
   font-size: 24px;
-  color: red;
+  color: #fe8135;
 }
 .foot {
   text-align: center;
