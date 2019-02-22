@@ -77,7 +77,7 @@
             <Col span='8'>下单时间      {{it.createTime}}</Col>
             <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenue}}</span></Col>
             <Col span='6'>
-              <span v-if='it.status == 1' @click="editReject(it.id, it.planId, it.cinemaCount)" class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
+              <span v-if='it.status == 1' @click="editReject(it.id, it.id, it.cinemaCount)" class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
               <span v-if='it.status == 1' @click="editRefuse(it)" class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
               <!-- <span v-if='it.status == 2' class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>查看执行单</span> -->
               <router-link
@@ -96,7 +96,10 @@
                 <Col span='9' class='row-list-huis'>{{it.videoName}}</Col>
                 <Col v-if='it.status != 2' span='3' class='row-list-hui'>目标影院</Col>
                 <Col v-if='it.status == 2' span='3' class='row-list-hui'>接单影院</Col>
-                <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   <span @click="edittarget(it.id)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
+                <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   
+                  <span v-if="it.status == 1" @click="edittarget(it.id, 1)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span>
+                  <span v-else @click="edittarget(it.executeOrderId, 2)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span>
+                </Col>
               </Row>
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>广告片规格</Col>
@@ -265,10 +268,10 @@ export default class Main extends ViewBase {
     })
   }
 
-  edittarget(id: any) {
+  edittarget(id: any, type: any) {
     this.targetShow = true
     this.$nextTick(() => {
-      (this.$refs.target as any).init(id, 1)
+      (this.$refs.target as any).init(id, type)
     })
   }
 
