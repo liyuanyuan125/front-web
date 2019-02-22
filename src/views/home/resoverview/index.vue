@@ -89,7 +89,9 @@
             >{{item.text}}</Option>
         </Select></Col>
     </Row>
-    <div ref="container" style='height: 400px;'></div>
+    <Row style='height: 400px;background: #fff;'>
+        <div ref="container" style='height: 400px;'></div>
+    </Row>
   </div>
 </template>
 
@@ -131,47 +133,7 @@ export default class Main extends ViewBase {
     data1: any = []
     data2: any = []
 
-    // option: any = null
-    option: any = {
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'cross',
-                label: {
-                    backgroundColor: '#FE8135'
-                }
-            }
-        },
-        legend: {
-            data: ['广告收益分布图']
-        },
-        toolbox: {
-            feature: {
-                saveAsImage: {}
-            }
-        },
-        xAxis: [
-            {
-                type : 'category',
-                boundaryGap : false,
-                data: this.data1,
-            }
-        ],
-        yAxis: [
-            {
-                type: 'value'
-            }
-        ],
-        series: [
-            {
-                name: '广告收益',
-                type: 'line',
-                stack: '总量',
-                areaStyle: {},
-                data: this.data2,
-            },
-        ]
-    }
+    option: any = null
 
 
     dispatch: any = []
@@ -219,6 +181,41 @@ export default class Main extends ViewBase {
             this.data2 = (this.dataList || []).map((it: any) => {
                     return it.data
                 })
+            this.option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#FE8135'
+                        }
+                    }
+                },
+                legend: {
+                    data: ['广告收益']
+                },
+                xAxis: [
+                    {
+                        type : 'category',
+                        boundaryGap : false,
+                        data: this.data1,
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: '广告收益',
+                        type: 'line',
+                        stack: '总量',
+                        areaStyle: {},
+                        data: this.data2,
+                    },
+                ]
+            }
             if (this.option && typeof this.option === 'object') {
                 echarts.init(this.$refs.container as any).setOption(this.option, true)
             }
@@ -282,7 +279,7 @@ export default class Main extends ViewBase {
     line-height: 183px;
     position: absolute;
     top: 7%;
-    left: 19%;
+    left: 8%;
   }
 }
 .ses {
