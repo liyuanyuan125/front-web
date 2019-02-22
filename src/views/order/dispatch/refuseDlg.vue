@@ -88,7 +88,7 @@ export default class DlgEditCinema extends ViewBase {
     try {
       await carryRefuse(this.data.id)
       this.cancel()
-      this.$emit('refload')
+      this.$emit('refReload')
       toast('操作成功')
     } catch (ex) {
       this.handleError(ex)
