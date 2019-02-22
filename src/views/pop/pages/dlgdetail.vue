@@ -35,7 +35,7 @@
           <Col :span="4">档期</Col>
           <Col :span="7"><span>{{data.calendarName}}</span></Col>
           <Col :span="4">投放天数</Col>
-          <Col :span="9"><span>{{day}}天</span></Col>
+          <Col :span="9"><span>{{day + 1}}天</span></Col>
         </Row>
         <Row class="mb5">
           <Col :span="4">预估冻结金额／¥</Col>
@@ -497,18 +497,18 @@ export default class Main extends ViewBase {
   }
   .cinemapos1 {
     position: absolute;
-    right: -80px;
+    right: -260px;
     top: 90px;
   }
   .cinemapos2 {
     position: absolute;
-    right: -80px;
-    top: 35px;
+    right: -170px;
+    top: 90px;
   }
   .cinemapos0 {
     position: absolute;
     right: -80px;
-    top: 140px;
+    top: 90px;
   }
 }
 .cinema-area {
