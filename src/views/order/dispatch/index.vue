@@ -94,7 +94,7 @@
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>广告片名称</Col>
                 <Col span='9' class='row-list-huis'>{{it.videoName}}</Col>
-                <Col span='3' class='row-list-hui'>目标影院</Col>
+                <Col v-if='it.status != 2' span='3' class='row-list-hui'>目标影院</Col>
                 <Col v-if='it.status == 2' span='3' class='row-list-hui'>接单影院</Col>
                 <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   
                   <span v-if="it.status == 1" @click="edittarget(it.id, 1)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span>
@@ -104,14 +104,14 @@
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>广告片规格</Col>
                 <Col span='9' class='row-list-huis'>{{it.specification}}s</Col>
-                <Col span='3' class='row-list-hui'>目标影厅</Col>
+                <Col v-if='it.status != 2' span='3' class='row-list-hui'>目标影厅</Col>
                 <Col v-if='it.status == 2' span='3' class='row-list-hui'>接单影厅</Col>
                 <Col span='9' class='row-list-huis'>所有影厅</Col>
               </Row>
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>投放时间</Col>
                 <Col span='9' class='row-list-huis'>{{it.beginDate}} ~ {{it.endDate}}</Col>
-                <Col span='3' class='row-list-hui'>目标场次</Col>
+                <Col v-if='it.status != 2' span='3' class='row-list-hui'>目标场次</Col>
                 <Col v-if='it.status == 2' span='3' class='row-list-hui'>接单场次</Col>
                 <Col span='9' class='row-list-huis'>所有场次</Col>
               </Row>
@@ -189,7 +189,7 @@ export default class Main extends ViewBase {
     videoName: '',
     beginDate: null,
     endDate: null,
-    status: 2,
+    status: 1,
     type: 1,
     pageIndex: 1,
     pageSize: 4,

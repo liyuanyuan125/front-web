@@ -66,25 +66,25 @@
     <Row style='background: #fff;'>
         <Col class='data-list one'>
             <div class='data-one'>广告花费 / ￥</div>
-            <div class='data-two'>800000</div>
+            <div class='data-two'>{{dataitem.advertAmount}}</div>
         </Col>
         <Col class='data-list two'>
-            <div class='data-one'>覆盖人次 / ￥</div>
-            <div class='data-two'>800000</div>
+            <div class='data-one'>覆盖人次</div>
+            <div class='data-two'>{{dataitem.coverPeople}}</div>
         </Col>
         <Col class='data-list three'>
-            <div class='data-one'>覆盖影院数 / ￥</div>
-            <div class='data-two'>800000</div>
+            <div class='data-one'>覆盖影院数</div>
+            <div class='data-two'>{{dataitem.coverCinema}}</div>
         </Col>
         <Col class='data-list four'>
-            <div class='data-one'>覆盖场次数 / ￥</div>
-            <div class='data-two'>800000</div>
+            <div class='data-one'>覆盖场次数</div>
+            <div class='data-two'>{{dataitem.coverScene}}</div>
         </Col>
     </Row>
     <Row class='ses'>
         <Col span='6'><Select v-model='query.effectType'  clearable @on-change='search'>
             <Option
-            v-for="item in types"
+            v-for="item in effectTypeList"
             :key="item.key"
             :value="item.key"
             v-if='item.key!=0'
@@ -146,6 +146,11 @@ export default class Main extends ViewBase {
             text: '覆盖城市'
         }
     ]
+    dataitem: any = []
+    effectTypeList: any = []
+    dataList: any = []
+    data1: any = []
+    data2: any = []
 
     // option: any = null
     option: any = {
@@ -159,7 +164,7 @@ export default class Main extends ViewBase {
             }
         },
         legend: {
-            data: ['邮件营销']
+            data: ['广告花费']
         },
         toolbox: {
             feature: {
@@ -170,7 +175,7 @@ export default class Main extends ViewBase {
             {
                 type : 'category',
                 boundaryGap : false,
-                data: ['周一' , '周二' , '周三' , '周四' , '周五' , '周六' , '周日']
+                data: this.data1,
             }
         ],
         yAxis: [
@@ -180,17 +185,15 @@ export default class Main extends ViewBase {
         ],
         series: [
             {
-                name: '邮件营销',
+                name: '广告花费',
                 type: 'line',
                 stack: '总量',
                 areaStyle: {},
-                data: [120 , 132 , 101 , 134 , 90 , 230 , 210]
+                data: this.data2,
             },
         ]
     }
 
-    effectTypeList: any = []
-    dataList: any = []
 
     plan: any = []
     video: any = []
@@ -219,23 +222,36 @@ export default class Main extends ViewBase {
             //     this.query.endDate = moment().calendar()
             // }  // 昨天下午3点41分
             if (this.form.status == 1) {
-                this.query.beginDate = (new Date(Date.parse(String(new Date()))).getTime() / 1000) - 24 * 60 * 60 * 1000
-                this.query.endDate = new Date().setTime(Date.parse(String(new Date())) / 1000 + 24 * 60 * 60 - 1)
+                this.query.beginDate =
+                Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - 24 * 60 * 60 * 1000 + 1
+                this.query.endDate =
+                Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
+                24 * 60 * 60 * 1000
             }
             if (this.form.status == 2) {
                 this.query.beginDate =
-                (new Date(Date.parse(String(new Date()))).getTime() / 1000) - (24 * 60 * 60 * 1000) * 7
-                this.query.endDate = new Date().setTime(Date.parse(String(new Date())) / 1000 + 24 * 60 * 60 - 1)
+                Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - (24 * 60 * 60 * 1000) * 7 + 1
+                this.query.endDate =
+                Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
+                24 * 60 * 60 * 1000
             }
             if (this.form.status == 3) {
                 this.query.beginDate =
-                (new Date(Date.parse(String(new Date()))).getTime() / 1000) - (24 * 60 * 60 * 1000) * 30
-                this.query.endDate = new Date().setTime(Date.parse(String(new Date())) / 1000 + 24 * 60 * 60 - 1)
+                Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - (24 * 60 * 60 * 1000) * 30 + 1
+                this.query.endDate =
+                Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
+                24 * 60 * 60 * 1000
             }
             const datas = await effect(this.query)
+            this.dataitem = datas.data
             this.effectTypeList = datas.data.effectTypeList
             this.dataList = datas.data.dataList
-
+            this.data1 = (this.dataList || []).map((it: any) => {
+                    return it.date
+                })
+            this.data2 = (this.dataList || []).map((it: any) => {
+                    return it.data
+                })
             if (this.option && typeof this.option === 'object') {
                 echarts.init(this.$refs.container as any).setOption(this.option, true)
             }
