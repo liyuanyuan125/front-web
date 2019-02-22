@@ -96,7 +96,7 @@
                 <Col span='9' class='row-list-huis'>{{it.videoName}}</Col>
                 <Col v-if='it.status != 2' span='3' class='row-list-hui'>目标影院</Col>
                 <Col v-if='it.status == 2' span='3' class='row-list-hui'>接单影院</Col>
-                <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   <span @click="edittarget(it.planId)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
+                <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   <span @click="edittarget(it.id)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span></Col>
               </Row>
               <Row class='row-list'>
                 <Col span='3' class='row-list-hui'>广告片规格</Col>
