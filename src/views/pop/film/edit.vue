@@ -28,8 +28,10 @@
               <p class="update-video">上传广告片</p>
               <p>小于2G的视频文件</p>
             </div>
-            <span slot="suffix" v-if="length > 0">{{duration}}</span>
           </UploadLabel>
+        </FormItem>
+        <FormItem label="广告片时长" v-if="$route.params.id">
+          <span>{{duration}}s</span>
         </FormItem>
      </Form>
      <div class="btnCenter create-submit-btn">

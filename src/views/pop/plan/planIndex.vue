@@ -111,13 +111,13 @@
         </div>
       </template>
     </Table>
-    <h4 class="checkAll">
+    <div class="checkAll">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
       </span>
       <span @click="deleteList">批量删除广告计划</span>
-    </h4>
-    <Page
+    </div>
+    <!-- <Page
       :total="totalCount"
       v-if="totalCount>0"
       class="btnCenter plan-pages"
@@ -127,7 +127,8 @@
       show-elevator
       @on-change="handlepageChange"
       @on-page-size-change="handlePageSize"
-    />
+    /> -->
+     <pagination v-model="pageList" :total="totalCount" @uplist="uplist"></pagination>
      <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible" @submitRelevance="submitRelevance"></relevanceDlg>
   </div>
 </template>
@@ -138,10 +139,12 @@ import { confirm, toast } from '@/ui/modal'
 import { formatTimes, formatYell, formatNumber} from '@/util/validateRules'
 import { planList, delCheckPlanList, planCancel, planPayment } from '@/api/plan'
 import relevanceDlg from '../plan/default/relevanceAdVDlg.vue'
+import pagination from '@/components/page.vue'
 
 @Component({
   components: {
-    relevanceDlg
+    relevanceDlg,
+    pagination
   }
 })
 export default class Plan extends ViewBase {
@@ -161,7 +164,7 @@ export default class Plan extends ViewBase {
     item: ''
   }
 
-  totalCount = 2
+  totalCount = 0
   data: any = []
   selectIds = []
   checkboxAll = false
@@ -329,11 +332,7 @@ export default class Plan extends ViewBase {
     this.pageList.pageIndex = 1
     this.tableList()
   }
-  handlepageChange(size: any) {
-    this.pageList.pageIndex = size
-    this.tableList()
-  }
-  handlePageSize(size: any) {
+  uplist(size: any) {
     this.pageList.pageIndex = size
     this.tableList()
   }
@@ -358,18 +357,6 @@ export default class Plan extends ViewBase {
     display: inline-block;
     line-height: 22px;
   }
-}
-.checkAll {
-  cursor: pointer;
-  margin: 10px 20px 0;
-  .colBg;
-  padding: 0 30px 0 18px;
-  span:last-child {
-    color: @c-link;
-  }
-}
-.plan-pages {
-  margin: 30px 0 40px;
 }
 </style>
 

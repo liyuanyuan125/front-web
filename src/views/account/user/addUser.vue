@@ -13,7 +13,7 @@
       <FormItem label="登录邮箱" class="item-top" prop="email" :error="emailError">
         <Input v-model="form.email" @on-blur="handleEmail" placeholder="请输入正确的邮箱地址"></Input>
       </FormItem>
-      <h3 class="layout-title">设置联系人（选项）</h3>
+      <h3 class="layout-title">设置联系人（选填）</h3>
       <FormItem label="联系人名称" class="item-top">
         <Input v-model="form.contactName" :disabled="!isAccountAuth" placeholder="请输入联系人名称"></Input>
       </FormItem>
@@ -25,8 +25,8 @@
           placeholder="请输入手机号码"
         ></Input>
       </FormItem>
-      <h3 class="layout-title" v-if="systemCode == 'ads'">关联客户（选项）</h3>
-      <h3 class="layout-title" v-else-if="systemCode == 'resource'">关联影院（选项）</h3>
+      <h3 class="layout-title" v-if="systemCode == 'ads'">关联客户（选填）</h3>
+      <h3 class="layout-title" v-else-if="systemCode == 'resource'">关联影院（选填）</h3>
       <div class="text-rows">
         <Row>
           <Col :span="24">

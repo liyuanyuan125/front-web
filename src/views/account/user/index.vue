@@ -73,7 +73,7 @@
     <Page
       :total="total"
       v-if="total>0"
-      class="btnCenter"
+      class="btnCenter page-bottom"
       :current="pageObject.pageIndex"
       :page-size="pageObject.pageSize"
       show-total
@@ -369,5 +369,8 @@ export default class Main extends ViewBase {
       }
     }
   }
+}
+.page-bottom {
+  padding: 40px 0 100px;
 }
 </style>

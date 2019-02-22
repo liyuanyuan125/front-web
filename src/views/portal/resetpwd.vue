@@ -45,6 +45,7 @@ import { scrollToError } from '@/util/form'
 import DisableAutoFill from '@/components/DisableAutoFill.vue'
 import { sendResetpwdEmail, resetPassword } from '@/api/register'
 import { success } from '@/ui/modal'
+import { setTimeout } from 'timers'
 
 @Component({
   components: {
@@ -108,7 +109,6 @@ export default class Main extends ViewBase {
     const failMsg = validateEmail(this.form.email)
     return !!failMsg
   }
-
   async getCode() {
     this.codeDisabled = true
 
