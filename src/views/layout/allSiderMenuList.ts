@@ -1,10 +1,13 @@
 import { SystemCode } from '@/util/types'
 
+/** 边栏菜单项 */
 export interface SiderMenuItem {
   name: string
   label: string
   systems?: SystemCode[]
   subList?: SiderMenuItem[]
+  /** 节点 route 名称，如果不提供，则使用 name */
+  route?: string
 }
 
 /**
@@ -19,25 +22,13 @@ const allSiderMenuList: SiderMenuItem[] = [
     name: 'home',
     label: '首页',
     systems: ['ads'],
-    subList: [
-      {
-        name: 'home-overview',
-        label: '账户概览',
-        systems: ['ads'],
-      }
-    ]
+    route: 'home-overview',
   },
   {
     name: 'home',
     label: '首页',
     systems: ['resource'],
-    subList: [
-      {
-        name: 'home-resoverview',
-        label: '账户概览',
-        systems: ['resource'],
-      }
-    ]
+    route: 'home-resoverview',
   },
 
   {
@@ -97,12 +88,7 @@ const allSiderMenuList: SiderMenuItem[] = [
     name: 'customer',
     label: '客户管理',
     systems: ['ads'],
-    subList: [
-      {
-        name: 'customer-list',
-        label: '客户列表',
-      },
-    ]
+    route: 'customer-list',
   },
 
   {

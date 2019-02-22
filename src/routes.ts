@@ -35,7 +35,7 @@ const singleRoutes: RouteConfigEnhance[] = [
     name: 'login',
     component: login,
     meta: {
-      unauth: true
+      unauth: true,
     }
   },
 
