@@ -40,20 +40,20 @@
             <Row class='ovs-sma'>
                 <Row class='ovs-line'>
                     <Col span='4'>待执行:</Col>
-                    <Col span='8'>{{executeOrder.unExecute}}个</Col>
+                    <Col span='8'>{{executeOrder.unExecuteCount}}个</Col>
                     <Col span='4'>执行中:</Col>
-                    <Col span='8'>{{executeOrder.beExecute}}个</Col>
+                    <Col span='8'>{{executeOrder.beExecuteCount}}个</Col>
                 </Row>
                 <Row class='ovs-line'>
                     <Col span='4'>已完成:</Col>
-                    <Col span='20'>{{executeOrder.outExecute}}个</Col>
+                    <Col span='20'>{{executeOrder.outExecuteCount}}个</Col>
                 </Row>
             </Row>
         </Col>
     </Row>
     <div class='t-title' style='margin-top: 20px;'>广告成效</div>
     <Row class='ses'>
-        <Col style='width: 23.8%;'><Select v-model='form.status'  clearable @on-change='searchs'>
+        <Col style='width: 23.8%;'><Select v-model='form.status'  clearable @on-change='searchsas'>
             <Option
             v-for="item in data"
             :key="item.key"
@@ -100,7 +100,7 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { effect , nums } from '@/api/home'
+import { effect , nums , resdata , viewdata } from '@/api/home'
 import echarts from 'echarts'
 import numAdd from '../number.vue'
 
@@ -153,17 +153,43 @@ export default class Main extends ViewBase {
 
     async search() {
       try {
-          const { data } = await nums({accountType: 'resource'})
-          this.accountBalance = data.accountBalance
+          const { data } = await resdata()
+          this.accountBalance = data.balance
           this.executeOrder = data.executeOrder
-          this.dispatch = data.dispatch
+          this.dispatch = data.dispatchMsg
           this.abc = true
-
+          this.searchsas()
           this.searchs()
       } catch (ex) {
       this.handleError(ex)
       } finally {
       }
+    }
+
+    async searchsas() {
+      if (this.form.status == 1) {
+          this.query.beginDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - 24 * 60 * 60 * 1000 + 1
+          this.query.endDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
+          24 * 60 * 60 * 1000
+      }
+      if (this.form.status == 2) {
+          this.query.beginDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - (24 * 60 * 60 * 1000) * 7 + 1
+          this.query.endDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
+          24 * 60 * 60 * 1000
+      }
+      if (this.form.status == 3) {
+          this.query.beginDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - (24 * 60 * 60 * 1000) * 30 + 1
+          this.query.endDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
+          24 * 60 * 60 * 1000
+      }
+      const dataitem = await viewdata(this.query)
+      this.dataitem = dataitem.data
     }
 
     async searchs() {
@@ -189,8 +215,10 @@ export default class Main extends ViewBase {
                 Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
                 24 * 60 * 60 * 1000
             }
+            // const dataitem = await viewdata(this.query)
+            // this.dataitem = dataitem.data
             const datas = await effect(this.query)
-            this.dataitem = datas.data
+            // this.dataitem = datas.data
             this.effectTypeList = datas.data.effectTypeList
             this.dataList = datas.data.dataList
             this.data1 = (this.dataList || []).map((it: any) => {
