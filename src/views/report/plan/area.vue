@@ -6,14 +6,14 @@
           :size="200"
           :trail-width="10"
           :stroke-width="10"
-          :percent="10"
+          :percent="nums[index]"
           class="square"
           trail-color="#d2d2d2"
           stroke-linecap="square"
           :stroke-color="crirleColor[index]">
           <div class="circle-custom">
             <h3>{{crirle[index]}}</h3>
-            <number :addNum="123">个</number>
+            <number :addNum="nums[index]">个</number>
           </div>
         </i-circle>
       </Col>
@@ -22,10 +22,11 @@
       <Col :span="24">
         <h3 class="area-title mb50">投放地区</h3>
       </Col>
-      <Col :span="10">
+      <Col :span="9">
         <Row class="put-body">
-          <Col :span="8" class="area-put">
-            <h3>区域</h3>
+          <Col :span="10" v-for="(item, index) in statisArea" :key="index" class="area-put">
+            <h3>{{statisArea[index].name}}</h3>
+            <number :addNum="statisArea[index].num"></number>
           </Col>
         </Row>
       </Col>
@@ -47,25 +48,28 @@
         <h3 class="area-title">单部城市成效</h3>
       </Col>
       <Col :span="24"><AreaSelect class="name-input" show-region v-model="name" /></Col>
-      <Col :span="10">
+      <Col :span="9">
         <Row class="put-body">
-          <Col :span="8" class="area-put">
-            <h3>覆盖人次</h3>
+          <<Col :span="10" v-for="(item, index) in cover" :key="index" class="area-put">
+            <h3>{{cover[index].name}}</h3>
+            <number :addNum="cover[index].num"></number>
           </Col>
         </Row>
       </Col>
       <Col :span="14">
+        <div ref="container"></div>
       </Col>
     </Row>
   </div>
 </template>
 
 <script lang="tsx">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import number from '@/views/order/dispatch/number.vue'
 import CityMap from '@/components/cityMap'
 import AreaSelect from '@/components/areaSelect'
+import echarts from 'echarts'
 
 @Component({
   components: {
@@ -75,15 +79,22 @@ import AreaSelect from '@/components/areaSelect'
   }
 })
 export default class Main extends ViewBase {
+  @Prop() value: any
+
   crirle: any = ['覆盖区域数', '覆盖城市', '覆盖影院']
   crirleColor: string[] = ['#fe5f5e', '#3b98ff', '#41d9c1']
   cricleNumber: any = []
   name: any = []
   reject: any = {
   }
+  effectTypeList: any = null
+  dataList: any = null
+  dom: any = null
+
   get tableData() {
     return []
   }
+
   get columns() {
     return [
       { title: '区域', key: 'code', align: 'center'},
@@ -93,8 +104,106 @@ export default class Main extends ViewBase {
       { title: '广告花费／¥', key: 'seatCount', align: 'center'},
     ]
   }
+
+  get nums() {
+    const value = this.value.provinceDataList
+    return [value.areaCount, value.cityCount, value.cinemaCount]
+  }
+
+  get statisArea() {
+    const value = this.value.provinceDataList
+    return [{
+      name: '区域数',
+      num: value.areaCount ? value.areaCount : 0
+    }, {
+      name: '省份数',
+      num: value.provinceCount ? value.provinceCount : 0
+    }, {
+      name: '城市数',
+      num: value.cityCount ? value.cityCount : 0
+    }, {
+      name: '影院数',
+      num: value.cinemaCount ? value.cinemaCount : 0
+    }]
+  }
+
+  get cover() {
+    const value = this.value.provinceDataList
+    return [{
+      name: '覆盖人次',
+      num: value.areaCount ? value.areaCount : 0
+    }, {
+      name: '覆盖场次',
+      num: value.provinceCount ? value.provinceCount : 0
+    }]
+  }
+
   viewCinema() {
 
+  }
+
+  resize() {
+    this.dom.resize()
+  }
+
+  async searchs() {
+    try {
+      const datas: any = {}
+      // this.dataitem = datas.data
+      this.effectTypeList = datas.data.effectTypeList
+      this.dataList = datas.data.dataList
+      const data1 = (this.dataList || []).map((it: any) => {
+        return it.date
+      })
+      const data2 = (this.dataList || []).map((it: any) => {
+        return it.data
+      })
+      const option: any = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            label: {
+              backgroundColor: '#FE8135'
+            }
+          }
+        },
+        legend: {
+          data: ['广告花费']
+        },
+        color: ['#FE8135'],
+        xAxis: [
+          {
+            type : 'category',
+            boundaryGap : false,
+            data: data1
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
+        series: [
+          {
+            name: '广告花费',
+            type: 'line',
+            stack: '总量',
+            areaStyle: {},
+            data: data2,
+          }
+        ]
+      }
+      this.dom  = echarts.init(this.$refs.container as any)
+      this.dom.setOption(option)
+    } catch (ex) {
+    }
+  }
+
+  mounted() {
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.resize)
+    })
   }
 
   @Watch('name', { deep: true })
@@ -135,14 +244,25 @@ export default class Main extends ViewBase {
     padding-left: 30px;
     padding-top: 40px;
     .area-put {
+      &:nth-child(2n - 1) {
+        margin-right: 20px;
+      }
       height: 120px;
+      margin-bottom: 20px;
       text-align: center;
       background: rgba(255, 248, 242, 1);
       h3 {
-        margin-top: 15px;
+        margin-top: 20px;
         font-size: 24px;
-        color: rgba(68, 68, 68, 1);
+        font-weight: 500;
+        color: #444;
+        margin-bottom: 14px;
       }
+    }
+    /deep/ span {
+      font-size: 26px;
+      font-weight: 500;
+      color: rgba(254, 129, 53, 1);
     }
   }
 }
