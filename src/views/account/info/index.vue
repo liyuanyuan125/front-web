@@ -79,8 +79,8 @@
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
       <div class="btnCenter sumbit-button">
-        <Button class="button-ok button-offset" type="primary">
-          <router-link tag="span" :to="{ name: 'account-info-accedit' }">修改信息</router-link>
+        <Button class="button-ok button-offset" @click="toEidtMes" type="primary">修改信息
+          <!-- <router-link tag="span" :to="{ name: 'account-info-accedit' }"></router-link> -->
         </Button>
         <Button type="primary" class="button-ok" @click="informa.visibleInforma = true">变更账号</Button>
       </div>
@@ -215,6 +215,11 @@ export default class Main extends ViewBase {
     // 审核后 账号变更记录
     this.accountChangeList()
   }
+
+  toEidtMes() {
+    this.$router.push({ name: 'account-info-accedit'})
+  }
+
   updataChangeList() {
     this.accountChangeList()
   }

@@ -34,8 +34,8 @@
     <i-col span="24" class="demo-tabs-style2">
       <Tabs type="card" :animated="false" @on-click="handleChange">
         <Tab-pane :label="item.name" v-for="(item,index) in tabObjList" :key="item.key"></Tab-pane>
-        <component v-bind:is="comName"></component>
       </Tabs>
+      <div :is="comName" v-model="mockDate" v-if="mockDate"></div>
     </i-col>
   </div>
 </template>
@@ -67,6 +67,14 @@ export default class Main extends ViewBase {
   dataList: any = []
   queryList: any = []
   defaultData: any = []
+  mockDate: any = ''
+
+  mockObj: any = {
+    id: '',
+    planDataType: '',
+    beginDate: '',
+    endDate: ''
+  }
 
   tabObjList = [
     { key: 0, name: '汇总' },
@@ -100,13 +108,14 @@ export default class Main extends ViewBase {
     const { data } = await planDefault(id)
     this.defaultData = data
     this.queryList = data.item
-     // mock数据
-    this.mockList({
+    // mock数据
+    this.mockObj = {
       id: this.queryList.id, // 广告计划id
       planDataType: this.planDataType, // 数据类型
       beginDate: this.queryList.beginDate, // 投放排期
       endDate: this.queryList.endDate
-    })
+    }
+    this.mockList({...this.mockObj})
   }
   handleChangeName(id: any) {
     this.detailList(id)
@@ -114,6 +123,7 @@ export default class Main extends ViewBase {
 
   async mockList(form: any) {
     const { data } = await dateMockList({...form})
+    this.mockDate = data.items
   }
 
   deliveryType(id: any) {
