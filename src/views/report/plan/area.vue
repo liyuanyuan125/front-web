@@ -50,14 +50,14 @@
       <Col :span="24"><AreaSelect class="name-input" show-region v-model="name" /></Col>
       <Col :span="9">
         <Row class="put-body">
-          <<Col :span="10" v-for="(item, index) in cover" :key="index" class="area-put">
+          <Col :span="10" v-for="(item, index) in cover" :key="index" class="area-put">
             <h3>{{cover[index].name}}</h3>
             <number :addNum="cover[index].num"></number>
           </Col>
         </Row>
       </Col>
-      <Col :span="14">
-        <div ref="container"></div>
+      <Col :span="15">
+        <div ref="container" style='height: 400px;'></div>
       </Col>
     </Row>
   </div>
@@ -69,6 +69,7 @@ import ViewBase from '@/util/ViewBase'
 import number from '@/views/order/dispatch/number.vue'
 import CityMap from '@/components/cityMap'
 import AreaSelect from '@/components/areaSelect'
+import { cinemadata , querylist } from '@/api/cinemadata'
 import echarts from 'echarts'
 
 @Component({
@@ -143,54 +144,82 @@ export default class Main extends ViewBase {
   }
 
   resize() {
-    this.dom.resize()
+    // this.dom.resize()
   }
 
+  created() {
+    this.searchs()
+  }
   async searchs() {
     try {
-      const datas: any = {}
-      // this.dataitem = datas.data
-      this.effectTypeList = datas.data.effectTypeList
-      this.dataList = datas.data.dataList
-      const data1 = (this.dataList || []).map((it: any) => {
-        return it.date
+      const {
+        data
+      } = await querylist({
+        beginDate: 1550309688000,
+        endDate: 1550482488000,
+        movieId: 70
       })
-      const data2 = (this.dataList || []).map((it: any) => {
-        return it.data
+      const data1 = (data.dataList || []).map((it: any) => {
+          return it.date
+      })
+      const data2 = (data.dataList || []).map((it: any) => {
+          return it.data
       })
       const option: any = {
         tooltip: {
           trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-            label: {
-              backgroundColor: '#FE8135'
-            }
-          }
+          formatter: ' {c0}<br />{b0}',
+          padding: [ 5, 10 ],
+          backgroundColor: '#FE8135'
         },
         legend: {
-          data: ['广告花费']
+          data: ['曝光分布']
         },
         color: ['#FE8135'],
         xAxis: [
           {
             type : 'category',
             boundaryGap : false,
-            data: data1
+            axisLabel: {
+              color: '#444'
+            },
+            axisLine: {
+              lineStyle: {
+                color: '#EFEFEF'
+              }
+            },
+            axisTick: {
+              show: false
+            },
+            data: ['', ...data1]
           }
         ],
         yAxis: [
           {
-            type: 'value'
+            type: 'value',
+            axisLine: {
+              lineStyle: {
+                color: ['#EFEFEF']
+              }
+            },
+            axisLabel: {
+              color: '#444',
+            },
+            axisTick: {
+              show: false
+            }
           }
         ],
         series: [
           {
-            name: '广告花费',
+            name: '曝光分布',
             type: 'line',
             stack: '总量',
-            areaStyle: {},
-            data: data2,
+            areaStyle: {
+              color: '#FE8135',
+              opacity: 0.2005,
+            },
+            data: [0, ...data2],
           }
         ]
       }
@@ -200,11 +229,11 @@ export default class Main extends ViewBase {
     }
   }
 
-  mounted() {
-    this.$nextTick(() => {
-      window.addEventListener('resize', this.resize)
-    })
-  }
+  // mounted() {
+  //   this.$nextTick(() => {
+  //     window.addEventListener('resize', this.resize)
+  //   })
+  // }
 
   @Watch('name', { deep: true })
   watchArea(val: number[]) {
