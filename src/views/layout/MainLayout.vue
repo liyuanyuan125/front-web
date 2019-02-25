@@ -28,16 +28,16 @@
     <Layout class="site-center">
       <Sider collapsible hide-trigger v-model="isOff" class="site-sider" :width="180" ref="sider">
         <Menu width="auto" theme="dark" class="sider-menu" :class="isOff && 'sider-menu-off'"
-          :active-name="siderActiveName" :open-names="siderOpenNames">
+          :active-name="siderActiveName" :open-names="siderOpenNames" v-if="siderMenuList.length > 0">
           <template v-for="menu in siderMenuList">
             <Submenu v-if="menu.subList" :name="menu.name" :class="`menu-node-${menu.name}`">
               <template slot="title">{{menu.label}}</template>
               <MenuItem v-for="sub in menu.subList" :key="sub.name" :name="sub.name">
-                <router-link :to="{name: sub.name}">{{sub.label}}</router-link>
+                <router-link :to="{name: sub.route || sub.name}">{{sub.label}}</router-link>
               </MenuItem>
             </Submenu>
-            <MenuItem v-else :name="menu.name" :class="`menu-node-${menu.name}`">
-              <router-link :to="{name: menu.name}">{{menu.label}}</router-link>
+            <MenuItem v-else :name="menu.name" class="menu-item-lv1" :class="`menu-node-${menu.name}`">
+              <router-link :to="{name: menu.route || menu.name}">{{menu.label}}</router-link>
             </MenuItem>
           </template>
         </Menu>
@@ -53,8 +53,8 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getUser, checkUser, logout, User, switchSystem } from '@/store'
-import { systemList as allSystemList, SystemCode } from '@/util/types'
+import { getUser, checkUser, logout, User, switchSystem, getCurrentPerms } from '@/store'
+import { systemList as allSystemList, SystemCode, PermPage } from '@/util/types'
 import allSiderMenuList, { SiderMenuItem } from './allSiderMenuList'
 import { cloneDeep, kebabCase } from 'lodash'
 import event from '@/fn/event'
@@ -64,7 +64,7 @@ const isSystemCode = (code: SystemCode) => (it: SiderMenuItem) =>
   it.systems == null || it.systems.includes(code)
 
 @Component
-export default class App extends ViewBase {
+export default class MainLayout extends ViewBase {
   user = getUser()
 
   allSystemList = allSystemList
@@ -89,11 +89,17 @@ export default class App extends ViewBase {
 
   isOff = false
 
+  permMenu: PermPage[] | null = null
+
   get siderMenuList() {
     const user = this.user
-    if (user == null) {
+    if (user == null || this.permMenu == null) {
       return []
     }
+
+    const permMenu = this.permMenu
+    // debugger
+
     const systemCode = user.systemCode
     const isSystem = isSystemCode(systemCode)
     const list = cloneDeep(allSiderMenuList).filter(it => {
@@ -101,6 +107,7 @@ export default class App extends ViewBase {
       return isSystem(it)
     })
 
+    // TODO: 下面这段代码是做什么用的？
     // accountType 1=主账户（显示账号信息） 2=子账户 0 未知  {name: "account-info", label: "账号信息"}
     let extractList: any = []
     let subList: any = []
@@ -113,6 +120,7 @@ export default class App extends ViewBase {
         }
       }
     })
+
     return list
   }
 
@@ -164,8 +172,17 @@ export default class App extends ViewBase {
     return this.siderActiveMap[name]
   }
 
-  created() {
+  async created() {
     checkUser()
+
+    const perms = await getCurrentPerms()
+    // 若无法获取权限，则退出
+    if (perms == null) {
+      return logout()
+    }
+
+    this.permMenu = perms.menu
+
     // 是有低优先级监听，以便其他地方可以拦截取消
     this.changeTheme()
     event.on(systemSwitched, (ev: SystemSwitchedEvent) => {
@@ -344,6 +361,7 @@ export default class App extends ViewBase {
   z-index: 99;
 }
 .sider-menu {
+  padding-top: 9px;
   margin-bottom: 188px;
   background-color: @c-sider-bg;
   &::after {
@@ -355,6 +373,7 @@ export default class App extends ViewBase {
     .ivu-menu-submenu-title {
       padding-left: 60px;
       background: no-repeat 30px center;
+      line-height: 20px;
       i {
         margin-right: 5px;
       }
@@ -384,6 +403,16 @@ export default class App extends ViewBase {
       background: @c-sider-bg no-repeat 30px center;
     }
   }
+  .menu-item-lv1 {
+    & > a {
+      padding-left: 59px;
+      line-height: 28px;
+      background-position: 30px 48.5%;
+      &::before {
+        display: none;
+      }
+    }
+  }
   .ivu-menu-item-selected {
     & > a {
       color: @c-button !important;
@@ -392,7 +421,7 @@ export default class App extends ViewBase {
         position: absolute;
         left: 57px;
         top: 50%;
-        margin-top: -6px;
+        margin-top: -5px;
         width: 10px;
         height: 10px;
         border: solid 1px #f65202;
@@ -419,10 +448,9 @@ export default class App extends ViewBase {
       background-image: url(./assets/report.png);
     }
   }
-  .menu-node-customer {
-    /deep/ .ivu-menu-submenu-title {
-      background-image: url(./assets/customer.png);
-    }
+
+  .menu-node-customer a {
+    background-image: url(./assets/customer.png);
   }
 
   .menu-node-order {

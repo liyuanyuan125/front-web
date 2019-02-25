@@ -97,8 +97,8 @@
                 <Col v-if='it.status != 2' span='3' class='row-list-hui'>目标影院</Col>
                 <Col v-if='it.status == 2' span='3' class='row-list-hui'>接单影院</Col>
                 <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   
-                  <span v-if="it.status == 1" @click="edittarget(it.id, 1)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span>
-                  <span v-else @click="edittarget(it.executeOrderId, 2)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span>
+                  <span v-if="it.status == 2" @click="edittarget(it.executeOrderId, 2)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span>
+                  <span v-else @click="edittarget(it.id, 1)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span>
                 </Col>
               </Row>
               <Row class='row-list'>

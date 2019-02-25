@@ -76,7 +76,7 @@ export interface WalkTreeOptions<T> extends TreeOptions {
   onEachBefore?(node: T, parentNodes: any[]): any
 
   /**
-   * 遍历每一个节点之后时的回调
+   * 遍历每一个节点之后时的回调，若明确地返回 false，则删除该节点
    * @param newNode 当前新节点，注意与 onEachBefore 的区别，这里是 onEachBefore 返回的新节点
    * @param parentNodes 所有父级节点
    * @return 可以返回新节点，也可什么都不返回，返回新节点将生成一棵新的树
@@ -84,10 +84,11 @@ export interface WalkTreeOptions<T> extends TreeOptions {
   onEachAfter?(newNode: any, parentNodes: any[]): any
 }
 
+// 深度优先遍历树，树的节点必须为对象
 const doWalkTree = <T>(nodes: T[], opts: WalkTreeOptions<T>, parentNodes: any[]) => {
   const childrenKey = opts.childrenKey!
 
-  return nodes.map(node => {
+  const list = (nodes || []).map(node => {
     const newNode = opts.onEachBefore!(node, parentNodes) || node
 
     const children = (node as any)[childrenKey]
@@ -104,10 +105,17 @@ const doWalkTree = <T>(nodes: T[], opts: WalkTreeOptions<T>, parentNodes: any[])
       newNode[childrenKey] = newNodeChildren
     }
 
-    const finalNode = opts.onEachAfter!(newNode, parentNodes) || newNode
+    // 若 onEachAfter 明确地返回 false，则删除该节点
+    const afterNode = opts.onEachAfter!(newNode, parentNodes)
+    const finalNode = afterNode === false ? null : (afterNode || newNode)
 
     return finalNode
   })
+
+  // 过滤掉为 null 的节点
+  const result = list.filter(it => it != null)
+
+  return result
 }
 
 const walkTreeDefaultOptions = {

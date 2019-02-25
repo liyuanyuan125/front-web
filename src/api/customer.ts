@@ -1,4 +1,5 @@
 import { get , post , put , del } from '@/fn/ajax'
+import { SystemCode } from '@/util/types'
 
 // 充值记录
 export async function subAccount(query: any) {
@@ -39,5 +40,16 @@ export async function business() {
 // 获取客户下所关联的账号列表
 export async function adminId(query: any) {
   const res = await get(`/customer/partners/accounts`, query)
+  return res
+}
+
+/**
+ * 获取菜单列表
+ * @param systemCode 系统类型
+ * @param type 类型，1: 所有菜单，2: 当前用户的
+ * https://yapi.aiads.com/project/94/interface/api/857
+ */
+export async function getMenus(systemCode: SystemCode, type: 1 | 2) {
+  const res = await get(`/customer/menus/${systemCode}`, { type })
   return res
 }

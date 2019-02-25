@@ -1,7 +1,106 @@
+// 将登陆注册等模块「静态」到主文件中，以便用户更流畅
+import home from './views/home.vue'
+import login from './views/portal/login/index.vue'
+import register from './views/portal/register.vue'
+import registerComplete from './views/portal/registerComplete.vue'
+import activeEmail from './views/portal/activeEmail.vue'
+import registerSuccess from './views/portal/registerSuccess.vue'
+import MainLayout from './views/layout/MainLayout.vue'
+
+import { RouteConfig } from 'vue-router'
+
+/** 标准化 Meta 的类型 */
+export interface RouteConfigMeta {
+  /** 标记是否需要登录 */
+  unauth: boolean
+}
+
 /**
+ * 重新定义 meta，使 meta 的类型更具体
+ */
+export interface RouteConfigEnhance extends RouteConfig {
+  /** 附加信息 */
+  meta?: RouteConfigMeta
+}
+
+/**
+ * 单独的 routes
+ *
  * 请注意，相似的路径写在一起，并用「一个」空行隔开
  */
-export default [
+const singleRoutes: RouteConfigEnhance[] = [
+  // 登录
+  {
+    path: '/login',
+    name: 'login',
+    component: login,
+    meta: {
+      unauth: true,
+    }
+  },
+
+  // 激活邮箱
+  {
+    path: '/account-activate/:id',
+    name: 'account-activate',
+    component: activeEmail,
+    meta: {
+      unauth: true
+    }
+  },
+
+  // 注册
+  {
+    path: '/register',
+    name: 'register',
+    component: register,
+    meta: {
+      unauth: true
+    }
+  },
+  // 注册完成信息
+  {
+    path: '/register/complete',
+    name: 'register-complete',
+    component: registerComplete,
+    meta: {
+      unauth: true
+    }
+  },
+  // 注册成功
+  {
+    path: '/register/success',
+    name: 'register-success',
+    component: registerSuccess,
+    meta: {
+      unauth: true
+    }
+  },
+
+  // 重置密码
+  {
+    path: '/resetpwd',
+    name: 'resetpwd',
+    component: () => import('./views/portal/resetpwd.vue'),
+    meta: {
+      unauth: true
+    }
+  },
+] // end of singleRoutes
+
+/**
+ * 放在 mainLayout 中的 routes
+ *
+ * 请注意，相似的路径写在一起，并用「一个」空行隔开
+ */
+const mainLayoutRoutes: RouteConfigEnhance[] = [
+  // 管理首页
+  {
+    path: '/',
+    name: 'home',
+    component: home
+  },
+
   // 账户管理 - 账号信息
   {
     path: '/account/info',
@@ -264,4 +363,15 @@ export default [
     name: 'about',
     component: () => import(/* webpackChunkName: "about" */'./views/about.vue'),
   },
-] as any[]
+] // // end of mainLayoutRoutes
+
+const routes: RouteConfig[] = [
+  ...singleRoutes,
+  {
+    path: '/',
+    component: MainLayout,
+    children: mainLayoutRoutes,
+  }
+]
+
+export default routes

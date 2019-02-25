@@ -4,28 +4,29 @@
     <Row class='ov-list'>
         <Col class='ovs ov-list-img1'>
             <Row class='ovs-title'>
-                <Col span='3'><img src='./assets/账户余额.png' /></Col>
+                <Col span='3'><img src='./assets/money.png' /></Col>
                 <Col span='20' style='font-size: 18px;'>账户余额</Col>
             </Row>
             <Row class='ovs-sma poovs'>
-                ￥{{accountBalance}}
+                <!-- ￥{{accountBalance}} -->
+                ￥<numAdd  v-if='abc' :addNum=balance></numAdd>
             </Row>
         </Col>
         <Col class='ovs ov-list-img2'>
             <Row class='ovs-title'>
-                <Col span='3'><img src='./assets/广告计划.png' /></Col>
+                <Col span='3'><img src='./assets/plan.png' /></Col>
                 <Col span='20' style='font-size: 18px;'>广告计划</Col>
             </Row>
             <Row class='ovs-sma'>
                 <Row class='ovs-line'>
                     <Col span='4'>待审核:</Col>
-                    <Col span='8'>{{plan.unApprove}}个</Col>
+                    <Col span='8'>{{plan.unapprove}}个</Col>
                     <Col span='4'>待支付:</Col>
-                    <Col span='8'>{{plan.unPay}}个</Col>
+                    <Col span='8'>{{plan.unpay}}个</Col>
                 </Row>
                 <Row class='ovs-line'>
                     <Col span='4'>执行中:</Col>
-                    <Col span='8'>{{plan.onExecute}}个</Col>
+                    <Col span='8'>{{plan.onexecute}}个</Col>
                     <Col span='4'>已拒绝:</Col>
                     <Col span='8'>{{plan.refuse}}个</Col>
                 </Row>
@@ -33,15 +34,15 @@
         </Col>
         <Col class='ovs ov-list-img3'>
             <Row class='ovs-title'>
-                <Col span='3'><img src='./assets/广告片.png' /></Col>
+                <Col span='3'><img src='./assets/video.png' /></Col>
                 <Col span='20' style='font-size: 18px;'>广告片</Col>
             </Row>
             <Row class='ovs-sma'>
                 <Row class='ovs-line'>
                     <Col span='4'>待审核:</Col>
-                    <Col span='8'>{{video.unApprove}}个</Col>
+                    <Col span='8'>{{video.pendingapproval}}个</Col>
                     <Col span='4'>待支付:</Col>
-                    <Col span='8'>{{video.unPay}}个</Col>
+                    <Col span='8'>{{video.paying}}个</Col>
                 </Row>
                 <Row class='ovs-line'>
                     <Col span='4'>转码中:</Col>
@@ -54,7 +55,7 @@
     </Row>
     <div class='t-title' style='margin-top: 20px;'>广告成效</div>
     <Row class='ses'>
-        <Col style='width: 23.8%'><Select v-model='form.status'  clearable @on-change='searchs'>
+        <Col style='width: 23.8%'><Select v-model='form.status'  clearable @on-change='searchsas'>
             <Option
             v-for="item in data"
             :key="item.key"
@@ -101,11 +102,18 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { effect , nums } from '@/api/home'
+import { effect , nums , aisdata  , viewdata} from '@/api/home'
+import numAdd from '../number.vue'
 import echarts from 'echarts'
 
-@Component
+
+@Component({
+  components: {
+    numAdd
+  }
+})
 export default class Main extends ViewBase {
+    abc: any = false
     query: any = {
         beginDate: null,
         endDate: null,
@@ -160,10 +168,63 @@ export default class Main extends ViewBase {
 
     plan: any = []
     video: any = []
-    accountBalance: any = 0
+    balance: any = 0
 
     mounted() {
         this.search()
+    }
+
+    async search() {
+        try {
+            const { data } = await aisdata()
+            this.balance = data.balance
+            this.video = data.video
+            this.plan = data.plan
+            this.abc = true
+            // if (this.form.status == 1) {
+            //     this.query.beginDate = moment().subtract(1, 'days').calendar()
+            //     this.query.endDate = moment().calendar()
+            // }
+            // if (this.form.status == 2) {
+            //     this.query.beginDate = moment().subtract(7, 'days').calendar()
+            //     this.query.endDate = moment().calendar()
+            // }
+            // if (this.form.status == 3) {
+            //     this.query.beginDate = moment().subtract(30, 'days').calendar()
+            //     this.query.endDate = moment().calendar()
+            // }  // 昨天下午3点41分
+            this.searchsas()
+            this.searchs()
+        } catch (ex) {
+          this.handleError(ex)
+        } finally {
+        }
+    }
+
+    async searchsas() {
+      if (this.form.status == 1) {
+          this.query.beginDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - 24 * 60 * 60 * 1000 + 1
+          this.query.endDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
+          24 * 60 * 60 * 1000
+      }
+      if (this.form.status == 2) {
+          this.query.beginDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - (24 * 60 * 60 * 1000) * 7 + 1
+          this.query.endDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
+          24 * 60 * 60 * 1000
+      }
+      if (this.form.status == 3) {
+          this.query.beginDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - (24 * 60 * 60 * 1000) * 30 + 1
+          this.query.endDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
+          24 * 60 * 60 * 1000
+      }
+      const dataitem = await viewdata(this.query)
+      this.dataitem = dataitem.data
     }
 
     async searchs() {
@@ -189,8 +250,9 @@ export default class Main extends ViewBase {
                 Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
                 24 * 60 * 60 * 1000
             }
+
             const datas = await effect(this.query)
-            this.dataitem = datas.data
+            // this.dataitem = datas.data
             this.effectTypeList = datas.data.effectTypeList
             this.dataList = datas.data.dataList
             this.data1 = (this.dataList || []).map((it: any) => {
@@ -242,30 +304,6 @@ export default class Main extends ViewBase {
         } finally {
         }
     }
-
-    async search() {
-        try {
-            const { data } = await nums({accountType: 'ads'})
-            this.accountBalance = data.accountBalance
-            this.video = data.video
-            this.plan = data.plan
-            // if (this.form.status == 1) {
-            //     this.query.beginDate = moment().subtract(1, 'days').calendar()
-            //     this.query.endDate = moment().calendar()
-            // }
-            // if (this.form.status == 2) {
-            //     this.query.beginDate = moment().subtract(7, 'days').calendar()
-            //     this.query.endDate = moment().calendar()
-            // }
-            // if (this.form.status == 3) {
-            //     this.query.beginDate = moment().subtract(30, 'days').calendar()
-            //     this.query.endDate = moment().calendar()
-            // }  // 昨天下午3点41分
-            this.searchs()
-        } catch (ex) {
-        } finally {
-        }
-    }
 }
 </script>
 
@@ -300,15 +338,15 @@ export default class Main extends ViewBase {
     }
   }
   .ov-list-img1 {
-    background: url('./assets/账户余额背景.png') center center no-repeat;
+    background: url('./assets/moneybg.png') center center no-repeat;
     background-size: cover;
   }
   .ov-list-img2 {
-    background: url('./assets/广告计划背景.png') center center no-repeat;
+    background: url('./assets/planbg.png') center center no-repeat;
     background-size: cover;
   }
   .ov-list-img3 {
-    background: url('./assets/广告片背景.png') center center no-repeat;
+    background: url('./assets/videobg.png') center center no-repeat;
     background-size: cover;
   }
   .ovs-line {

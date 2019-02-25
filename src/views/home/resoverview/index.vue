@@ -4,16 +4,17 @@
     <Row class='ov-list'>
         <Col class='ovs ov-list-img1'>
             <Row class='ovs-title'>
-                <Col span='3'><img src='./assets/账户余额.png' /></Col>
+                <Col span='3'><img src='./assets/money.png' /></Col>
                 <Col span='20' style='font-size: 18px;'>账户余额</Col>
             </Row>
             <Row class='ovs-sma poovs'>
-                ￥{{accountBalance}}
+                <!-- ￥{{accountBalance}} -->
+                ￥<numAdd v-if='abc' :addNum=accountBalance></numAdd>
             </Row>
         </Col>
         <Col class='ovs ov-list-img2'>
             <Row class='ovs-title'>
-                <Col span='3'><img src='./assets/广告单.png' /></Col>
+                <Col span='3'><img src='./assets/gdan.png' /></Col>
                 <Col span='20' style='font-size: 18px;'>广告单</Col>
             </Row>
             <Row class='ovs-sma'>
@@ -33,26 +34,26 @@
         </Col>
         <Col class='ovs ov-list-img3'>
             <Row class='ovs-title'>
-                <Col span='3'><img src='./assets/执行单.png' /></Col>
+                <Col span='3'><img src='./assets/zdan.png' /></Col>
                 <Col span='20' style='font-size: 18px;'>执行单</Col>
             </Row>
             <Row class='ovs-sma'>
                 <Row class='ovs-line'>
                     <Col span='4'>待执行:</Col>
-                    <Col span='8'>{{executeOrder.unExecute}}个</Col>
+                    <Col span='8'>{{executeOrder.unExecuteCount}}个</Col>
                     <Col span='4'>执行中:</Col>
-                    <Col span='8'>{{executeOrder.beExecute}}个</Col>
+                    <Col span='8'>{{executeOrder.beExecuteCount}}个</Col>
                 </Row>
                 <Row class='ovs-line'>
                     <Col span='4'>已完成:</Col>
-                    <Col span='20'>{{executeOrder.outExecute}}个</Col>
+                    <Col span='20'>{{executeOrder.outExecuteCount}}个</Col>
                 </Row>
             </Row>
         </Col>
     </Row>
     <div class='t-title' style='margin-top: 20px;'>广告成效</div>
     <Row class='ses'>
-        <Col style='width: 23.8%;'><Select v-model='form.status'  clearable @on-change='searchs'>
+        <Col style='width: 23.8%;'><Select v-model='form.status'  clearable @on-change='searchsas'>
             <Option
             v-for="item in data"
             :key="item.key"
@@ -99,11 +100,17 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { effect , nums } from '@/api/home'
+import { effect , nums , resdata , viewdata } from '@/api/home'
 import echarts from 'echarts'
+import numAdd from '../number.vue'
 
-@Component
+@Component({
+  components: {
+    numAdd
+  }
+})
 export default class Main extends ViewBase {
+    abc: any = false
     query: any = {
         beginDate: null,
         endDate: null,
@@ -144,6 +151,47 @@ export default class Main extends ViewBase {
         this.search()
     }
 
+    async search() {
+      try {
+          const { data } = await resdata()
+          this.accountBalance = data.balance
+          this.executeOrder = data.executeOrder
+          this.dispatch = data.dispatchMsg
+          this.abc = true
+          this.searchsas()
+          this.searchs()
+      } catch (ex) {
+      this.handleError(ex)
+      } finally {
+      }
+    }
+
+    async searchsas() {
+      if (this.form.status == 1) {
+          this.query.beginDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - 24 * 60 * 60 * 1000 + 1
+          this.query.endDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
+          24 * 60 * 60 * 1000
+      }
+      if (this.form.status == 2) {
+          this.query.beginDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - (24 * 60 * 60 * 1000) * 7 + 1
+          this.query.endDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
+          24 * 60 * 60 * 1000
+      }
+      if (this.form.status == 3) {
+          this.query.beginDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime())) - (24 * 60 * 60 * 1000) * 30 + 1
+          this.query.endDate =
+          Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
+          24 * 60 * 60 * 1000
+      }
+      const dataitem = await viewdata(this.query)
+      this.dataitem = dataitem.data
+    }
+
     async searchs() {
       try {
             if (this.form.status == 1) {
@@ -167,8 +215,10 @@ export default class Main extends ViewBase {
                 Number(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1)) -
                 24 * 60 * 60 * 1000
             }
+            // const dataitem = await viewdata(this.query)
+            // this.dataitem = dataitem.data
             const datas = await effect(this.query)
-            this.dataitem = datas.data
+            // this.dataitem = datas.data
             this.effectTypeList = datas.data.effectTypeList
             this.dataList = datas.data.dataList
             this.data1 = (this.dataList || []).map((it: any) => {
@@ -222,19 +272,6 @@ export default class Main extends ViewBase {
         }
     }
 
-    async search() {
-        try {
-            const { data } = await nums({accountType: 'resource'})
-            this.accountBalance = data.accountBalance
-            this.executeOrder = data.executeOrder
-            this.dispatch = data.dispatch
-
-            this.searchs()
-        } catch (ex) {
-        this.handleError(ex)
-        } finally {
-        }
-    }
 }
 </script>
 
@@ -269,15 +306,15 @@ export default class Main extends ViewBase {
     }
   }
   .ov-list-img1 {
-    background: url('./assets/账户余额背景.png') center center no-repeat;
+    background: url('./assets/moneybg.png') center center no-repeat;
     background-size: cover;
   }
   .ov-list-img2 {
-    background: url('./assets/广告单背景.png') center center no-repeat;
+    background: url('./assets/gdanbg.png') center center no-repeat;
     background-size: cover;
   }
   .ov-list-img3 {
-    background: url('./assets/执行单背景.png') center center no-repeat;
+    background: url('./assets/zdanbg.png') center center no-repeat;
     background-size: cover;
   }
   .ovs-line {
