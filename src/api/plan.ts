@@ -90,3 +90,11 @@ export async function queryCinema(data: any) {
   const res = await post('/theater/cinemas/page-query', data)
   return res
 }
+
+/**
+ * 数据报表-数据  mock数据
+ */
+export async function dateMockList(data: any) {
+  const res = await get('xadvert/plans/alldata', data)
+  return res
+}

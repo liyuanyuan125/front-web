@@ -1,20 +1,22 @@
 <template>
   <div class="page">
-    <!-- <ul class='tab'>
-      <li @click='tab(index)' v-for='(item,index) in tabObj' :key='item'>{{item}}</li>
-    </ul> -->
-    <div class='top-btn'>
-      <div class='tops-btn'>
-        <div class='code'>投放成效报告</div>
-        <Button class='btn-dao' type="warning">报表导出</Button>
-      </div>
-    </div>
+    <div class="layout-nav-title">
+        <span> 广告计划</span>
+     </div>
     <div class='top'>
       <div class='tops'>
         <div class='tops-img'>
           <img src="./assets/1-1.png" alt="" width="394" height="237">
         </div>
         <div class='tops-byte'>
+          <Select v-model="level" style="width: 200px" clearable placeholder="请选择广告层级">
+            <Option
+              v-for="item in levelTypeList"
+              v-if="item.key != 0"
+              :key="item.key"
+              :value="item.key"
+            >{{item.text}}</Option>
+          </Select>
           <row class='code-list'>
             <Col span='3' style='color:#888'>投放类型</Col>
             <Col span='12'>{{forMat.id}}</Col>
@@ -41,13 +43,12 @@
       </div>
     </div>
     <i-col span="24" class="demo-tabs-style2">
-      <Tabs type="card" :animated="false">
-        <div class='one'></div>
-        <div class='two'></div>
-        <!-- <Tab-pane :label=item v-for='(item,index) in tabObj'  :key="index">
-          {{item}}的内容
-        </Tab-pane> -->
-        <Tab-pane label="汇总" key="key1">
+      <Tabs type="card" :animated="false" @on-click="handleChange">
+        <!-- <div class='one'></div>
+        <div class='two'></div> -->
+        <Tab-pane :label="item.name" v-for="(item,index) in tabObjList"  :key="item.key"></Tab-pane>
+         <component v-bind:is="comName"></component>
+        <!-- <Tab-pane label="汇总" key="key1">
           <div class='imgs'>
             <img src="./assets/1-2.png" alt="" width="1009" height="235">
           </div>
@@ -92,7 +93,7 @@
           <div class='imgs'>
             <div class='ze'>单个影院成效</div>
             <img src="./assets/3-3.png" alt="" width="1008" height="379">
-          </div>
+          </div> 
         </Tab-pane>
         <Tab-pane label="按影片" key="key4">
           <div class='imgs'>
@@ -123,7 +124,7 @@
             <div class='ze'>单个城市成效</div>
             <img src="./assets/5-4.png" alt="" width="1011" height="329">
           </div>
-        </Tab-pane>
+        </Tab-pane> -->
       </Tabs>
     </i-col>
   </div>
@@ -132,7 +133,12 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-
+import { planList } from '@/api/plan'
+import summany from './summary.vue'
+import crowd from './crowd.vue'
+import cinema from './cinema.vue'
+import film from './film.vue'
+import areaCom from './area.vue'
 
 const mockMap = [
   {
@@ -173,16 +179,51 @@ const mockMap = [
   },
 ]
 
-@Component
+@Component({
+  components: {
+    summany,
+    crowd,
+    cinema,
+    film,
+    areaCom
+  }
+})
 export default class Main extends ViewBase {
-
-  tabObj: any = ['汇总', '按人群' , '按影院' , '按影片' , '按地区']
-
+  level = ''
+  // tabObj: any = ['汇总', '按人群' , '按影院' , '按影片' , '按地区']
+  levelTypeList = []
+  tabObjList = [
+    {key: 1, name: '汇总'},
+    {key: 2, name: '按人群'},
+    {key: 3, name: '按影院'},
+    {key: 4, name: '按影片'},
+    {key: 5, name: '按地区'},
+  ]
+  comName = 'summany'
   get forMat() {
     const id: any = (this.$route.params as any).id - 1 || 0
     return mockMap[id]
   }
 
+  mounted() {
+    // this.advList()
+  }
+  handleChange(val: any) {
+    if (val == 0) {
+      this.comName = 'summany'
+    } else if (val == 1) {
+      this.comName = 'crowd'
+    } else if (val == 2) {
+       this.comName = 'cinema'
+    } else if (val == 3) {
+       this.comName = 'film'
+    } else if (val == 4) {
+       this.comName = 'areaCom'
+    }
+  }
+  async advList() {
+    const { data } = await planList({})
+  }
 }
 </script>
 
