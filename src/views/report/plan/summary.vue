@@ -1,7 +1,7 @@
 <template>
     <div>
         <p>汇总</p>
-        <p>{{value.beginDate}}</p>
+        <p>{{value.advertAmount}}</p>
          <p>{{value.id}}</p>
     </div>
 </template>
@@ -14,7 +14,6 @@ export default class Main extends ViewBase {
     @Prop({type: Object}) value: any
 
     mounted() {
-        // console.log(this.value)
     }
 }
 </script>

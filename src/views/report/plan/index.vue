@@ -35,7 +35,7 @@
       <Tabs type="card" :animated="false" @on-click="handleChange">
         <Tab-pane :label="item.name" v-for="(item,index) in tabObjList" :key="item.key"></Tab-pane>
       </Tabs>
-      <div :is="comName" v-model="mockDate" v-if="mockDate.length > 0"></div>
+      <div :is="comName" v-model="mockDate" v-if="mockDate"></div>
     </i-col>
   </div>
 </template>
@@ -67,7 +67,7 @@ export default class Main extends ViewBase {
   dataList: any = []
   queryList: any = []
   defaultData: any = []
-  mockDate = []
+  mockDate: any = ''
 
   mockObj: any = {
     id: '',
