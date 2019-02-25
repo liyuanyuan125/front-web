@@ -77,7 +77,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
+import { Component, Prop  } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { cinemadata , querylist } from '@/api/cinemadata'
@@ -87,6 +87,7 @@ import echarts from 'echarts'
 
 @Component
 export default class Main extends ViewBase {
+  @Prop({type: Object}) value: any
   query: any = {
     beginDate: 1550309688000,
     endDate: 1550482488000,
