@@ -1,5 +1,5 @@
 <template>
-  <span>{{numbers}}</span>
+  <span>{{numbers}}<slot /></span>
 </template>
 
 <script lang="ts">
