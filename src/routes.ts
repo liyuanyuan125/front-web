@@ -305,6 +305,12 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'report-plan',
     component: () => import('./views/report/plan/index.vue'),
   },
+  // 数据报表 - 投放成效报告 - 按影院
+  // {
+  //   path: '/report/plan/cinema',
+  //   name: 'report-plan-cinema',
+  //   component: () => import('./views/report/plan/cinema.vue'),
+  // },
   {
     path: '/report/plan/xibei/:id?',
     name: 'report-plan-xibei',
