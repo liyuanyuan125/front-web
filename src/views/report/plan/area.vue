@@ -62,7 +62,7 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-@cicle-color: rgba(34, 34,34, 1);
+@cicle-color: rgb(58, 27, 27);
 .circle-body {
   text-align: center;
   .square {
