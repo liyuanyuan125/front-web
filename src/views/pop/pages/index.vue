@@ -436,7 +436,7 @@ export default class Main extends ViewBase {
     videoId: this.list.videoId, // 广告片ID
     calendarId: this.list.calendarId, // 档期ID
     beginDate: Number(new Date(this.bed).getTime()) - 8 * 60 * 60 * 1000, // 排期开始时间
-    endDate: Number(new Date(this.end).getTime()) - 1, // 排期结束时间
+    endDate: Number(new Date(this.end).getTime()) + 16 * 60 * 60 * 1000 - 1, // 排期结束时间
     deliveryType: 1, // 投放类型
     budgetCode: this.list.budgetCode, // 预算区间
     budgetAmount: this.list.budgetAmount, // 预算金额
@@ -478,7 +478,7 @@ export default class Main extends ViewBase {
       videoId: this.list.videoId, // 广告片ID
       calendarId: this.list.calendarId, // 档期ID
       beginDate: new Date(this.bed).getTime() - 8 * 60 * 60 * 1000, // 排期开始时间
-      endDate: new Date(this.end).getTime() - 1, // 排期结束时间
+      endDate: new Date(this.end).getTime() + 16 * 60 * 60 * 1000 - 1, // 排期结束时间
       deliveryType: 1, // 投放类型
       budgetCode: this.list.budgetCode, // 预算区间
       budgetAmount: this.list.budgetAmount, // 预算金额

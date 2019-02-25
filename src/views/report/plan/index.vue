@@ -67,6 +67,7 @@ export default class Main extends ViewBase {
   dataList: any = []
   queryList: any = []
   defaultData: any = []
+  mockDate = []
 
   tabObjList = [
     { key: 0, name: '汇总' },
@@ -114,6 +115,7 @@ export default class Main extends ViewBase {
 
   async mockList(form: any) {
     const { data } = await dateMockList({...form})
+    this.mockDate = data
   }
 
   deliveryType(id: any) {
