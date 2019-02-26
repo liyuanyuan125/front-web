@@ -41,7 +41,7 @@
     </div>
     <div class='imgs'>
         <div class='ze'>单个影院成效</div>
-        <Select style='width: 300px; margin-top: 20px;' v-model='form.movieId'  clearable placeholder="选择影院" @on-change="seachmov">
+        <Select style='width: 300px; margin-top: 20px;margin-left: 25px;' v-model='form.movieId'  clearable placeholder="选择影院" @on-change="seachmov">
               <Option
                 v-for="item in movies"
                 :key="item.movieId"

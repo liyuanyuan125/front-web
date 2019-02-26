@@ -51,7 +51,7 @@
     </div>
     <div class='imgs'>
         <div class='ze'>单个影院成效</div>
-        <Select style='width: 300px; margin-top: 20px;' v-model='form.cinemaId'  clearable placeholder="选择影院" @on-change="seachcin">
+        <Select style='width: 300px; margin-top: 20px;margin-left: 25px' v-model='form.cinemaId'  clearable placeholder="选择影院" @on-change="seachcin">
               <Option
                 v-for="item in cinemaDataList.cinemas"
                 :key="item.cinemaId"
@@ -163,6 +163,7 @@ export default class Main extends ViewBase {
     })
   }
   mounted() {
+    this.asd = false
     this.seach()
   }
 
