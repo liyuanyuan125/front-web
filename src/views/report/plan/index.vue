@@ -68,6 +68,7 @@ export default class Main extends ViewBase {
   queryList: any = []
   defaultData: any = []
   mockDate: any = ''
+  tagsObjList: any = []
 
   mockObj: any = {
     id: '',
@@ -108,6 +109,7 @@ export default class Main extends ViewBase {
     const { data } = await planDefault(id)
     this.defaultData = data
     this.queryList = data.item
+    this.tagsObjList = data.tags
     // mock数据
     this.mockObj = {
       id: this.queryList.id, // 广告计划id
@@ -125,6 +127,7 @@ export default class Main extends ViewBase {
     const { data } = await dateMockList({...form})
     this.mockDate = data.items
     this.mockDate.mockObj = form
+    this.mockDate.tagsObjList = this.tagsObjList
   }
 
   deliveryType(id: any) {

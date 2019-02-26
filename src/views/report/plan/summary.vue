@@ -46,31 +46,92 @@
           <div class="flex-box">
             <div class="sum-model">
               <h4>影院数</h4>
-              <p>{{value.peopleDataList.totalCount}}</p>
+              <p>{{value.coverCinema}}家</p>
             </div>
             <div class="sum-model list-flot">
               <h4>影厅数</h4>
-              <p>{{value.coverDay}}天</p>
+              <p>{{value.cinemaDataList.hall}}</p>
             </div>
           </div>
           <div class="flex-box">
             <div class="sum-model">
               <h4>场次数</h4>
-              <p>{{value.peopleDataList.totalCount}}</p>
+              <p>{{value.cinemaDataList.scene}}</p>
             </div>
             <div class="sum-model">
               <h4>银屏数</h4>
-              <p>{{value.coverDay}}天</p>
+              <p>{{value.cinemaDataList.screen}}</p>
             </div>
           </div>
         </Col>
         <Col :span="14">
-        <Table stripe :columns="columns" :data="tableDate"></Table>
+          <Table stripe :columns="columns" :data="tableDate"></Table>
+          <div class="btn-query-all">
+            <Button type="primary" class="button-ok" @click="btnQueryAll">查看全部</Button>
+          </div>
         </Col>
       </Row>
     </div>
     <h3 class="layout-title">投放影片</h3>
+    <div class="summary-map">
+      <Row type="flex" justify="space-between">
+        <Col :span="9" class="flex-box">
+          <div class="sum-model">
+            <h4>影片数</h4>
+            <p>{{value.movieDataList.totalCount}}</p>
+          </div>
+          <div class="sum-model">
+            <h4>类型</h4>
+            <p class="model-type">{{value.movieDataList.type}}</p>
+          </div>
+        </Col>
+        <Col :span="15">
+          <Table stripe :columns="columnsMovie" :data="tableDateMovie">
+            <template slot="openTime" slot-scope="{row, index}">
+              <span>{{getOpentime(row.openTime)}}</span>
+            </template>
+            <template slot="types" slot-scope="{row, index}">
+              <span>{{queryMovieList(row.types)}}</span>
+              <em></em>
+            </template>
+          </Table>
+        </Col>
+      </Row>
+    </div>
     <h3 class="layout-title">投放地区</h3>
+    <div class="summary-map">
+      <Row type="flex" justify="space-between">
+        <Col :span="10">
+          <div class="flex-box">
+            <div class="sum-model">
+              <h4>地域数</h4>
+              <p>{{value.provinceDataList.areaCount}}家</p>
+            </div>
+            <div class="sum-model list-flot">
+              <h4>省份数</h4>
+              <p>{{value.provinceDataList.provinceCount}}</p>
+            </div>
+          </div>
+          <div class="flex-box">
+            <div class="sum-model">
+              <h4>城市数</h4>
+              <p>{{value.provinceDataList.cityCount}}</p>
+            </div>
+            <div class="sum-model">
+              <h4>影院数</h4>
+              <p>{{value.provinceDataList.cinemaCount}}</p>
+            </div>
+          </div>
+        </Col>
+        <Col :span="14">
+          <Table stripe :columns="columnsProvince" :data="provinceDataList"></Table>
+          <div class="btn-query-all">
+            <Button type="primary" class="button-ok" @click="btnQueryAll">查看全部</Button>
+          </div>
+        </Col>
+      </Row>
+    </div>
+    <cinemaDlg v-model="cinemaVisible" v-if="cinemaVisible.visible"></cinemaDlg>
   </div>
 </template>
 <script lang="ts">
@@ -79,10 +140,12 @@ import ViewBase from '@/util/ViewBase'
 import number from '@/views/order/dispatch/number.vue'
 import CityMap from '@/components/cityMap'
 import echarts from 'echarts'
+import cinemaDlg from './dlg/cinemaDlg.vue'
 
 @Component({
   components: {
-    number
+    number,
+    cinemaDlg
   }
 })
 export default class Main extends ViewBase {
@@ -96,12 +159,49 @@ export default class Main extends ViewBase {
   columns = [
     { title: '专资编码', key: 'code' },
     { title: '影院名称', key: 'shortName' },
-    { title: '总座位数', key: 'seatCount' },
+    { title: '总座位数', key: 'seatCount' }
   ]
   tableDate = []
 
+  columnsMovie = [
+    { title: '影片名称', key: 'name' },
+    { title: '上映时间', slot: 'openTime' },
+    { title: '类型', slot: 'types' }
+  ]
+  tableDateMovie = []
+
+  columnsProvince = [
+    { title: '区域', key: 'areaName' },
+    { title: '省份', key: 'provinceName' },
+    { title: '城市', key: 'cityName' },
+    { title: '影院数', key: 'cinema' }
+  ]
+  provinceDataList = []
+
+  cinemaVisible = {
+    visible: false,
+    id: ''
+  }
+
+  movieType: any = []
+
+  getOpentime(val: any) {
+    val = val.toString()
+    val =
+      val.substring(0, 4) + '-' + val.substring(4, 6) + '-' + val.substring(6)
+    return val
+  }
+
   mounted() {
     this.tableDate = this.value.cinemaDataList.cinemas.items
+    this.tableDateMovie = this.value.movieDataList.movies
+    this.provinceDataList = this.value.provinceDataList.provinceData
+
+    const movieType = this.value.tagsObjList
+    this.movieType = movieType
+      ? movieType.filter((item: any) => item.code == 'MOVIE_TYPE')
+      : []
+    this.movieType = this.movieType[0].values
     // 获取投放人群option数据
     const peopleData = this.value.peopleDataList.peopleData
     this.xaxisList = peopleData.map((item: any) => item.date)
@@ -148,9 +248,29 @@ export default class Main extends ViewBase {
       myChart.setOption(option)
     })
   }
+
+  queryMovieList(val: any) {
+    const arry: any = []
+    val.map((item: any) => {
+      this.movieType.map((it: any) => {
+        if (it.key == item) {
+          arry.push(it.text + '/')
+        }
+      })
+    })
+    const len = arry.join('')
+    return len.substring(0, len.length - 1)
+  }
+
+  btnQueryAll() {
+    this.cinemaVisible = {
+      visible: true,
+      id: this.value.mockObj.id
+    }
+  }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .circle-body {
   padding: 60px 50px;
   /deep/ .ivu-col {
@@ -186,6 +306,16 @@ export default class Main extends ViewBase {
   }
   p {
     color: #fe8135;
+    &.model-type {
+      font-size: 14px;
+    }
   }
+}
+.btn-query-all {
+  text-align: right;
+  margin: 30px 0 10px 0;
+}
+.ivu-table-wrapper {
+  margin: 0;
 }
 </style>
