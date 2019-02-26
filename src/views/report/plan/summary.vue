@@ -6,7 +6,7 @@
           :size="200"
           :trail-width="8"
           :stroke-width="8"
-          :percent="10"
+          :percent="percenAry[index]"
           class="square"
           trail-color="#d2d2d2"
           stroke-linecap="square"
@@ -14,9 +14,12 @@
         >
           <div class="circle-custom">
             <div>{{crirle[index]}}</div>
-            <number :addNum="value.advertAmount" v-if="index == 0">￥</number>
-            <number :addNum="value.peopleDataList.totalCount" v-else-if="index == 1">人</number>
-            <number :addNum="value.coverCinema || 0" v-else-if="index == 2">个</number>
+            <p class="advert-amount" v-if="index == 0">
+              <em>￥</em>
+              <number :addNum="percenAry[index]"></number>
+            </p>
+            <number :addNum="percenAry[index]" v-else-if="index == 1">人</number>
+            <number :addNum="percenAry[index] || 0" v-else-if="index == 2">个</number>
           </div>
         </i-circle>
       </Col>
@@ -105,7 +108,7 @@
           <div class="flex-box">
             <div class="sum-model">
               <h4>地域数</h4>
-              <p>{{value.provinceDataList.areaCount}}家</p>
+              <p>{{value.provinceDataList.areaCount}}</p>
             </div>
             <div class="sum-model list-flot">
               <h4>省份数</h4>
@@ -182,7 +185,10 @@ export default class Main extends ViewBase {
     visible: false,
     id: ''
   }
-
+  get percenAry() {
+    const val = this.value
+    return [val.advertAmount, val.peopleDataList.totalCount, val.coverCinema]
+  }
   movieType: any = []
 
   getOpentime(val: any) {
@@ -317,5 +323,15 @@ export default class Main extends ViewBase {
 }
 .ivu-table-wrapper {
   margin: 0;
+}
+.advert-amount {
+  padding-top: 16px;
+  color: #222;
+  em {
+    font-size: 26px;
+  }
+  span {
+    display: inline;
+  }
 }
 </style>

@@ -36,7 +36,7 @@
         <div class='ze'>成效概览</div>
         <Row style='margin-top: 20px;'>
           <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
-          <Button v-if='movies.length > 3'  type="primary" class="mt30 bp" @click="viewCinema" style='margin-left: 43%;'>查看全部影院</Button>
+          <Button v-if='movies.length > 3'  type="primary" class="mt30 bp" @click="viewCinema" style='margin-left: 86.5%;'>查看全部影院</Button>
         </Row>
     </div>
     <div class='imgs'>
@@ -197,10 +197,10 @@ export default class Main extends ViewBase {
 
         this.cin1 = (this.movielist || []).map((it: any) => {
             return it.movie
-        })
+        }).slice(0, 8)
         this.cin2 = (this.movielist || []).map((it: any) => {
             return Number(it.movieAccount)
-        })
+        }).slice(0, 8)
         this.data1 = (this.querydatalist.dataList || []).map((it: any) => {
             return it.date
         })
@@ -249,9 +249,20 @@ export default class Main extends ViewBase {
                 trigger: 'axis',
                 axisPointer : {            // 坐标轴指示器，坐标轴触发有效
                     type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                }
+                },
+                formatter: '{c}%'
             },
-            color: ['#F58588'],
+            color(params: any) {
+                    // build a color map as your need.
+                    const colorList = [
+                      '#F8C5B9', '#F2B39D', '#FBB1A0', '#F5A48E', '#F58588',
+                      '#F85886', '#E72361', '#961322', '#6E1D48'
+                  ]
+                    return colorList[params.dataIndex]
+            },
+            label: {
+              formatter: '{b}\n{c}%' // 这是关键，在需要的地方加上就行了
+            },
             grid: {
                 left: '3%',
                 right: '4%',
