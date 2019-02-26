@@ -30,8 +30,8 @@
           </Col>
         </Row>
       </Col>
-      <Col :span="10" :offset="3">
-        <CityMap />
+      <Col :span="10" :offset="2">
+        <CityMap :names="cityMapNames" />
       </Col>
     </Row>
     <Row>
@@ -49,7 +49,7 @@
       </Col>
       <Col :span="24">
         <Select class="city-select" clearable v-model="cityId" style="width:300px">
-          <Option v-for="item in items" :value="item.id" :key="item.id">
+          <Option v-for="(item, index) in items" :value="item.id" :key="index">
             {{ item.areaName }} - {{ item.provinceName }} - {{ item.cityName }}
           </Option>
         </Select>
@@ -75,7 +75,6 @@ import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import number from '@/views/order/dispatch/number.vue'
 import CityMap from '@/components/cityMap'
-import AreaSelect from '@/components/areaSelect'
 import { cinemadata , querylist } from '@/api/cinemadata'
 import echarts from 'echarts'
 import { clean } from '@/fn/object'
@@ -88,7 +87,6 @@ import { Stats } from '@/views/pop/plan/components/areaPane'
   components: {
     number,
     CityMap,
-    AreaSelect,
     commonDlg
   }
 })
@@ -140,12 +138,16 @@ export default class Main extends ViewBase {
   }
 
   get nums() {
-    const value = this.value.provinceDataList
-    return [value.areaCount, value.cityCount, value.cinemaCount]
+    const value = this.value.provinceDataList || 0
+    if (value) {
+      return [value.areaCount, value.cityCount, value.cinemaCount]
+    } else {
+      return [0, 0, 0]
+    }
   }
 
   get statisArea() {
-    const value = this.value.provinceDataList
+    const value = this.value.provinceDataList || {}
     return [{
       name: '区域数',
       num: value.areaCount ? value.areaCount : 0
@@ -162,7 +164,7 @@ export default class Main extends ViewBase {
   }
 
   get cover() {
-    const value = this.value.provinceDataList
+    const value = this.value.provinceDataList || {}
     return [{
       name: '覆盖人次',
       num: value.areaCount ? value.areaCount : 0
@@ -185,12 +187,21 @@ export default class Main extends ViewBase {
   }
 
   resize() {
-    // this.dom.resize()
   }
 
   created() {
     this.searchs()
     this.cityList()
+  }
+
+  get cityMapNames() {
+    const provinceName = (this.items || []).map((it: any) => {
+      return it.provinceName
+    })
+    const city = (this.items || []).map((it: any) => {
+      return it.cityName
+    })
+    return [...provinceName, ...city]
   }
 
   async cityList() {
@@ -207,7 +218,6 @@ export default class Main extends ViewBase {
       })
       this.items = provinceData || []
     } catch (ex) {
-      this.handleError(ex)
     }
   }
 
@@ -287,7 +297,6 @@ export default class Main extends ViewBase {
       this.dom  = echarts.init(this.$refs.container as any)
       this.dom.setOption(option)
     } catch (ex) {
-      this.handleError(ex)
     }
   }
 
@@ -389,8 +398,8 @@ export default class Main extends ViewBase {
   }
 }
 /deep/ .city-map {
-  width: 100%;
-  height: 420px;
+  margin-top: -30px;
+  transform: scale(0.72);
   background: url(/img/map.d8b2bd68.png) no-repeat;
   background-size: 100%;
 }
