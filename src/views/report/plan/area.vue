@@ -30,7 +30,7 @@
           </Col>
         </Row>
       </Col>
-      <Col :span="10" :offset="3">
+      <Col :span="10" :offset="2">
         <CityMap :names="cityMapNames" />
       </Col>
     </Row>
@@ -187,7 +187,6 @@ export default class Main extends ViewBase {
   }
 
   resize() {
-    // this.dom.resize()
   }
 
   created() {
@@ -399,8 +398,8 @@ export default class Main extends ViewBase {
   }
 }
 /deep/ .city-map {
-  width: 100%;
-  height: 420px;
+  margin-top: -30px;
+  transform: scale(0.72);
   background: url(/img/map.d8b2bd68.png) no-repeat;
   background-size: 100%;
 }
