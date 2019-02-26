@@ -14,7 +14,8 @@
                     stroke-color="#41D9C1">
                     <div class="demo-Circle-custom">
                         <h1>覆盖影院</h1>
-                        <p>{{datalist.coverCinema}}</p>
+                        <!-- <p>{{datalist.coverCinema}}个</p> -->
+                        <p><number v-if='asd' :addNum="datalist.coverCinema">个</number></p>
                     </div>
                 </i-circle>
             </Col>
@@ -28,50 +29,51 @@
         <Row style='margin-top: 20px'>
             <Col style='margin-left: 1.7%' class='chen-fu'>
                 <p class='ps1'>影院数</p>
-                <p class='ps2'>{{cinemaDataList.cinemas.length}}</p>
+                <p class='ps2'><number v-if='asd' :addNum="datalist.coverCinema"></number></p>
             </Col>
             <Col class='chen-fu'>
                 <p class='ps1'>影厅数</p>
-                <p class='ps2'>{{cinemaDataList.hall}}</p>
+                <p class='ps2'><number v-if='asd' :addNum="cinemaDataList.hall"></number></p>
             </Col>
             <Col class='chen-fu'>
                 <p class='ps1'>场次数</p>
-                <p class='ps2'>{{cinemaDataList.scene}}</p>
+                <p class='ps2'><number v-if='asd' :addNum="cinemaDataList.scene"></number></p>
             </Col>
             <Col class='chen-fu'>
                 <p class='ps1'>银屏数</p>
-                <p class='ps2'>{{cinemaDataList.screen}}</p>
+                <p class='ps2'><number v-if='asd' :addNum="cinemaDataList.screen"></number></p>
             </Col>
         </Row>
         <Row style='margin-top: 20px;'>
           <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
-          <Button  type="primary" class="mt30 bp" @click="viewCinema" style="position: absolute; height: 40px; right: 10px; top: 350px;">查看全部影院</Button>
+          <Button type="primary" class="mt30 bp" @click="viewCinema" style='margin-left: 86.5%;' >查看全部影院</Button>
         </Row>
     </div>
     <div class='imgs'>
         <div class='ze'>单个影院成效</div>
-        <Select style='width: 300px; margin-top: 20px;' v-model='form.cinemaId'  clearable placeholder="选择影院" @on-change="seach">
+        <Select style='width: 300px; margin-top: 20px;margin-left: 25px' v-model='form.cinemaId'  clearable placeholder="选择影院" @on-change="seachcin">
               <Option
                 v-for="item in cinemaDataList.cinemas"
-                :key="item.id"
-                :value="item.id"
+                :key="item.cinemaId"
+                :value="item.cinemaId"
               >{{item.cinema}}</Option>
             </Select>
         <Row>
             <Col span='9'>
                 <div class='dan-fu'>
                     <p class='ps1'>覆盖人次</p>
-                    <p class='ps2'>{{querydatalist.coverPeople}}</p>
+                    <p class='ps2'><number v-if='asd' :addNum="querydatalist.coverPeople"></number></p>
                 </div>
                 <div class='dan-fu'>
                     <p class='ps1'>覆盖场次</p>
-                    <p class='ps2'>{{querydatalist.coverScene}}</p>
+                    <p class='ps2'><number v-if='asd' :addNum="querydatalist.coverScene"></number></p>
                 </div>
             </Col>
             <Col span='15' style='height: 400px;background: #fff;'>
                 <div ref="container" style='height: 400px;'></div>
             </Col>
         </Row>
+        <commonDlg ref="dlg" v-if="loadding" />
     </div>
   </div>
 </template>
@@ -80,24 +82,34 @@
 import { Component, Prop  } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
+import number from '@/views/order/dispatch/number.vue'
 import { cinemadata , querylist } from '@/api/cinemadata'
 import { formatTimestamp } from '@/util/validateRules'
-import numAdd from './number.vue'
+// import numAdd from './number.vue'
 import echarts from 'echarts'
+import { formatCurrency } from '@/fn/string.ts'
+import commonDlg from './dlg/commonDlg.vue'
 
-@Component
+@Component({
+  components: {
+    number,
+    commonDlg
+  }
+})
 export default class Main extends ViewBase {
-  @Prop({type: Object}) value: any
+  @Prop() value: any
+  asd: any = false
+  loadding = false
   query: any = {
-    beginDate: 1550309688000,
-    endDate: 1550482488000,
-    id: 70,
+    beginDate: this.value.mockObj.beginDate,
+    endDate: this.value.mockObj.endDate,
+    id: this.value.mockObj.id,
     planDataType: 2
   }
   form: any = {
     beginDate: this.query.beginDate,
     endDate: this.query.endDate,
-    movieId: 70, // 影片id
+    movieId: null, // 影片id
     cinemaId: null, // 影院id
     cityId: null, // 城市id
   }
@@ -107,9 +119,11 @@ export default class Main extends ViewBase {
   datalist: any = []
   // cinemaDataList 成效概览
   cinemaDataList: any = []
+  cinemas: any = []
+//   itemsss: any= []
   // 单部数据
   querydatalist: any = []
-  showTime = []
+  showTime: any = []
   option: any = null
   option2: any = null
   cin1: any = []
@@ -117,7 +131,14 @@ export default class Main extends ViewBase {
   data1: any = []
   data2: any = []
   get tableData() {
-      return this.cinemaDataList.cinemas.items
+      return (this.tcinemaList || []).map((item: any) => {
+        return {
+          ...item,
+          scheduleTime: item.scheduleTime + 's',
+          coverPeople: formatCurrency(item.coverPeople).slice(0, -3),
+          advertAmount: formatCurrency(item.advertAmount).slice(0, -3),
+        }
+      })
   }
 
   get columns() {
@@ -131,9 +152,18 @@ export default class Main extends ViewBase {
   }
 
   viewCinema() {
-
+    this.loadding = true
+    this.$nextTick(() => {
+      (this.$refs.dlg as any).init({
+        id: this.value.mockObj.id,
+        beginDate: this.value.mockObj.beginDate,
+        endDate: this.value.mockObj.endDate,
+        planDataType: 2,
+      })
+    })
   }
   mounted() {
+    this.asd = false
     this.seach()
   }
 
@@ -141,17 +171,32 @@ export default class Main extends ViewBase {
       try {
         const cinemadatalist = await cinemadata(this.query)
         this.datalist = cinemadatalist.data.items
-        this.cinemaDataList = cinemadatalist.data.items.cinemaDataList
-
+        // this.datalist = this.value
+        this.cinemaDataList = this.datalist.cinemaDataList
+        this.tcinemaList = []
+        this.cinemas = this.datalist.cinemaDataList.cinemas
+        if (this.cinemas.length <= 3 ) {
+          this.tcinemaList = this.cinemas
+        } else {
+          this.tcinemaList.push(this.cinemas[0] , this.cinemas[1] , this.cinemas[2])
+        }
+        if (this.cinemas.length != 0) {
+          this.form.cinemaId = (this.cinemas || []).map((it: any) => {
+           return it.cinemaId
+        })[0]
+        }
+        this.asd = true
+        // console.log(this.datalist)
+        // console.log(this.form.cinemaId)
         const querydatalist = await querylist(this.form)
         this.querydatalist = querydatalist.data
 
         this.cin1 = (this.cinemaDataList.cinemas || []).map((it: any) => {
             return it.cinema
-        })
+        }).slice(0, 9)
         this.cin2 = (this.cinemaDataList.cinemas || []).map((it: any) => {
             return Number(it.cinemaAccount)
-        })
+        }).slice(0, 9)
         this.data1 = (this.querydatalist.dataList || []).map((it: any) => {
             return it.date
         })
@@ -170,7 +215,7 @@ export default class Main extends ViewBase {
                 }
             },
             legend: {
-                data: ['曝光分布0']
+                data: ['曝光分布']
             },
             color: ['#FE8135'],
             xAxis: [
@@ -200,9 +245,20 @@ export default class Main extends ViewBase {
                 trigger: 'axis',
                 axisPointer : {            // 坐标轴指示器，坐标轴触发有效
                     type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                }
+                },
+                formatter: '{c}%'
             },
-            color: ['#F58588'],
+            color(params: any) {
+                    // build a color map as your need.
+                    const colorList = [
+                      '#F8C5B9', '#F2B39D', '#FBB1A0', '#F5A48E', '#F58588',
+                      '#F85886', '#E72361', '#961322', '#6E1D48'
+                  ]
+                    return colorList[params.dataIndex]
+            },
+            label: {
+              formatter: '{b}\n{c}%' // 这是关键，在需要的地方加上就行了
+            },
             grid: {
                 left: '3%',
                 right: '4%',
@@ -218,7 +274,7 @@ export default class Main extends ViewBase {
             },
             series: [
                 {
-                    name: '直接访问',
+                    name: '占比',
                     type: 'bar',
                     stack: '总量',
                     label: {
@@ -240,6 +296,57 @@ export default class Main extends ViewBase {
       } catch (ex) {
           this.handleError(ex)
       } finally {
+    }
+  }
+
+  async seachcin() {
+    const querydatalist = await querylist(this.form)
+    this.querydatalist = querydatalist.data
+    this.data1 = (this.querydatalist.dataList || []).map((it: any) => {
+        return it.date
+    })
+    this.data2 = (this.querydatalist.dataList || []).map((it: any) => {
+        return it.data
+    })
+    //   单个影院折现
+    this.option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#FE8135'
+                }
+            }
+        },
+        legend: {
+            data: ['曝光分布']
+        },
+        color: ['#FE8135'],
+        xAxis: [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data: this.data1
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '曝光分布',
+                type: 'line',
+                stack: '总量',
+                areaStyle: {},
+                data: this.data2,
+            },
+        ]
+    }
+    if (this.option && typeof this.option === 'object') {
+        echarts.init(this.$refs.container as any).setOption(this.option, true)
     }
   }
 
