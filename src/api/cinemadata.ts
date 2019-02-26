@@ -8,8 +8,16 @@ export async function cinemadata(query: any) {
 
 // 单步成效数据统计
 export async function querylist(query: any) {
-    const res = await get('/xadvert/plans/single-effect' , query)
-    return res
-  }
+  const res = await get('/xadvert/plans/single-effect' , query)
+  return res
+}
 
+/**
+ * 广告成效
+ * @param data
+ */
+export async function planList(data: any) {
+  const res = get('/xadvert/plans/effect', data)
+  return res
+}
 
