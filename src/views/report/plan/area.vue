@@ -217,6 +217,7 @@ export default class Main extends ViewBase {
         planDataType: 4,
       })
       this.items = provinceData || []
+      this.cityId = this.items[0].id || ''
     } catch (ex) {
     }
   }
