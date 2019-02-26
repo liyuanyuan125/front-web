@@ -3,7 +3,9 @@
     <div class="layout-nav-title"><span>广告计划</span></div>
       <div class="tops flex-box">
         <div class="tops-img">
-          <img src="./assets/1-1.png" alt width="380" >
+          <router-link :to="{name: 'pop-film'}">
+            <img src="./assets/img.png" alt width="380" >
+          </router-link>
         </div>
         <div class="tops-byte">
           <Row class="text-rows">
@@ -110,6 +112,13 @@ export default class Main extends ViewBase {
     this.defaultData = data
     this.queryList = data.item
     this.tagsObjList = data.tags
+    this.mockList()
+  }
+  handleChangeName(id: any) {
+    this.detailList(id)
+  }
+
+  async mockList() {
     // mock数据
     this.mockObj = {
       id: this.queryList.id, // 广告计划id
@@ -117,16 +126,9 @@ export default class Main extends ViewBase {
       beginDate: this.queryList.beginDate, // 投放排期
       endDate: this.queryList.endDate
     }
-    this.mockList({...this.mockObj})
-  }
-  handleChangeName(id: any) {
-    this.detailList(id)
-  }
-
-  async mockList(form: any) {
-    const { data } = await dateMockList({...form})
+    const { data } = await dateMockList({...this.mockObj})
     this.mockDate = data.items
-    this.mockDate.mockObj = form
+    this.mockDate.mockObj = this.mockObj
     this.mockDate.tagsObjList = this.tagsObjList
   }
 
@@ -154,6 +156,7 @@ export default class Main extends ViewBase {
     } else if (val == 4) {
       this.comName = 'areaCom'
     }
+    this.advList()
   }
 }
 </script>
@@ -212,18 +215,9 @@ export default class Main extends ViewBase {
 /deep/ .ivu-tabs-nav .ivu-tabs-tab:hover {
   color: @c-button;
 }
-
-/deep/ .ivu-tabs-tab-focused {
-  // border-top:  #ff8237 !important;
-  // border-left:  #ff8237 !important;
-  // border-top:  #ff8237 !important;
-}
 /deep/ .ivu-tabs-bar .ivu-tabs-tab {
   // border-color: #ff8237;
   // border-top: 2px solid #fff !important;
   transition: all 0s !important;
 }
-///deep/ .ivu-tabs-bar div:nth-child(2) {
-// border-left:2px solid #ff8237;
-//}
 </style>
