@@ -121,7 +121,7 @@ export default class Change extends ViewBase {
       this.data = data.items || []
       this.value.totalCount = data.totalCount || 0
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   searchList() {

@@ -79,17 +79,15 @@
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
       <div class="btnCenter sumbit-button">
-        <Button class="button-ok button-offset" type="primary">
-          <router-link tag="span" :to="{ name: 'account-info-accedit' }">修改信息</router-link>
-        </Button>
+        <Button type="primary" class="button-ok button-offset"
+          :to="{ name: 'account-info-accedit' }">修改信息</Button>
         <Button type="primary" class="button-ok" @click="informa.visibleInforma = true">变更账号</Button>
       </div>
     </div>
 
     <div class="btnCenter sumbit-button" v-else>
-      <Button class="button-ok" type="primary" @click="toChangeMes"> 修改信息
-        <!-- <router-link tag="span" :to="{ name: 'account-info-edit' }"></router-link> -->
-      </Button>
+      <Button type="primary" class="button-ok"
+        :to="{ name: 'account-info-edit' }">修改信息</Button>
     </div>
 
     <dlgChange v-model="queryDetail" v-if="queryDetail.visibleMess"></dlgChange>
@@ -215,12 +213,11 @@ export default class Main extends ViewBase {
     // 审核后 账号变更记录
     this.accountChangeList()
   }
+
   updataChangeList() {
     this.accountChangeList()
   }
-  toChangeMes() {
-    this.$router.push({name: 'account-info-edit'})
-  }
+
   queryAccuontList() {
     // 账号类型转换
     let array: any[] = []
@@ -253,7 +250,7 @@ export default class Main extends ViewBase {
       })
       this.dataList = data
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 
@@ -291,5 +288,9 @@ export default class Main extends ViewBase {
 .qualification-image {
   width: 150px;
   margin-right: 25px;
+}
+
+a.button-ok {
+  line-height: 37px;
 }
 </style>

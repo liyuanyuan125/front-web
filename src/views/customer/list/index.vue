@@ -130,7 +130,7 @@ export default class Main extends ViewBase {
       this.businessList = data.businessList
       this.total = data.totalCount
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   searchTableList() {

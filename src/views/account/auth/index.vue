@@ -2,7 +2,7 @@
   <div class="page home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">权限管理</span>
-      <router-link class="addUser" tag="span" :to="{name:'account-auth-add', params: {id: 0}}">
+      <router-link class="addUser" tag="span" :to="{name:'account-auth-add'}">
         <Icon type="ios-add" size="27"/>新建权限角色
       </router-link>
     </h3>

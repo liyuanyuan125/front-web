@@ -164,7 +164,7 @@ export default class Main extends ViewBase {
   }
 
   onLogin10002(ex: any) {
-    this.handleError(ex.msg)
+    this.handleError(ex)
   }
 
   onLogin10006() {

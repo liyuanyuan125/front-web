@@ -162,7 +162,7 @@ export default class Main extends ViewBase {
       this.totalCount = totalCount || 0
 
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   async planCancel(val: any, id: any) {
@@ -171,7 +171,7 @@ export default class Main extends ViewBase {
       await popCancel(id)
       this.tableList()
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   async handlePayment(item: any) {
@@ -183,7 +183,7 @@ export default class Main extends ViewBase {
       await popPayment(id)
        this.tableList()
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   popDetail(id: any) {
@@ -221,7 +221,7 @@ export default class Main extends ViewBase {
         await delList({ ids })
         this.tableList()
       } catch (ex) {
-        this.handleError(ex.msg)
+        this.handleError(ex)
       }
     } else {
       this.showWaring('请选择你要删除的元素')

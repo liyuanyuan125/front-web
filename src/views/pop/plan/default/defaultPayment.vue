@@ -376,7 +376,7 @@ export default class PlanDefault extends ViewBase {
       const { data } = await planCancel(id)
       this.$router.push({name: 'pop-planlist'})
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   async list() {
@@ -439,7 +439,7 @@ export default class PlanDefault extends ViewBase {
         this.launchList.categorizedByCityGradeCode = sort
       }
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   toEdit() {
@@ -460,7 +460,7 @@ export default class PlanDefault extends ViewBase {
       await planPayment(id)
       this.$router.push({ name: 'pop-planlist' })
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   queryAreas(ary: any[]) {

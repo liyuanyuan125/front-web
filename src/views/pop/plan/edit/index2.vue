@@ -358,7 +358,7 @@ export default class EditPlan extends ViewBase {
         year: item.calendarYear
       }
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   onThrowInStatsChange(stats: Stats) {
@@ -396,7 +396,7 @@ export default class EditPlan extends ViewBase {
       })
       this.videoIDList = items
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 

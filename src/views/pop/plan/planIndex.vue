@@ -248,7 +248,7 @@ export default class Plan extends ViewBase {
       await planPayment(id)
        this.tableList()
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   planDefault(id: any, status: any) {
@@ -267,7 +267,7 @@ export default class Plan extends ViewBase {
       await planCancel(id)
       this.tableList()
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   async relevanceAdv(val: any, id: any) {
@@ -299,7 +299,7 @@ export default class Plan extends ViewBase {
         await delCheckPlanList({ ids })
         this.tableList()
       } catch (ex) {
-        this.handleError(ex.msg)
+        this.handleError(ex)
       }
     } else {
       this.showWaring('请选择你要删除的元素')

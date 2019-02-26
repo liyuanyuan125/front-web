@@ -130,7 +130,7 @@ export default class Main extends ViewBase {
       toast(!id ? '添加成功' : '修改成功')
       this.toAuth()
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 

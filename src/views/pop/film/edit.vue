@@ -137,7 +137,7 @@ export default class Main extends ViewBase {
       }
       this.editLength = item.length
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 
@@ -154,7 +154,7 @@ export default class Main extends ViewBase {
       await confirm(`数字转制费用：${data} 元`, {title: '确认新建广告片'})
       this.createSub()
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   async handleChangeSpe(specification: any) {
@@ -174,7 +174,7 @@ export default class Main extends ViewBase {
 
       this.$router.push({name: 'pop-film'})
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 
@@ -194,7 +194,7 @@ export default class Main extends ViewBase {
       }, id)
       this.$router.push({name: 'pop-film'})
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 
@@ -204,7 +204,7 @@ export default class Main extends ViewBase {
       const { data: {items} } = await popPartners(id)
       this.customerList = items
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 }

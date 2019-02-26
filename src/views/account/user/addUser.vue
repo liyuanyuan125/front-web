@@ -168,7 +168,7 @@ export default class Main extends ViewBase {
       const { data } = await rolesList(role)
       this.roleList = data.items || []
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 
@@ -259,7 +259,7 @@ export default class Main extends ViewBase {
       }
       this.$router.push({ name: 'account-user' })
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     } finally {
        this.submitDisabled = false
     }
