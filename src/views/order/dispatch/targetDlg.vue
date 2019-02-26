@@ -140,6 +140,8 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   cancel() {
+    this.dataForm.pageIndex = 1
+    this.dataForm.pageSize = 6
     this.target = false
   }
 

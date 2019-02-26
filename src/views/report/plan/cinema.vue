@@ -46,7 +46,7 @@
         </Row>
         <Row style='margin-top: 20px;'>
           <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
-          <Button v-if='cinemas.length > 3' type="primary" class="mt30 bp" @click="viewCinema" style='margin-left: 43%;' >查看全部影院</Button>
+          <Button type="primary" class="mt30 bp" @click="viewCinema" style='margin-left: 43%;' >查看全部影院</Button>
         </Row>
     </div>
     <div class='imgs'>
@@ -73,6 +73,7 @@
                 <div ref="container" style='height: 400px;'></div>
             </Col>
         </Row>
+        <commonDlg ref="dlg" v-if="loadding" />
     </div>
   </div>
 </template>
@@ -87,15 +88,18 @@ import { formatTimestamp } from '@/util/validateRules'
 // import numAdd from './number.vue'
 import echarts from 'echarts'
 import { formatCurrency } from '@/fn/string.ts'
+import commonDlg from './dlg/commonDlg.vue'
 
 @Component({
   components: {
     number,
+    commonDlg
   }
 })
 export default class Main extends ViewBase {
   @Prop() value: any
   asd: any = false
+  loadding = false
   query: any = {
     beginDate: this.value.mockObj.beginDate,
     endDate: this.value.mockObj.endDate,
@@ -148,7 +152,15 @@ export default class Main extends ViewBase {
   }
 
   viewCinema() {
-
+    this.loadding = true
+    this.$nextTick(() => {
+      (this.$refs.dlg as any).init({
+        id: this.value.mockObj.id,
+        beginDate: this.value.mockObj.beginDate,
+        endDate: this.value.mockObj.endDate,
+        planDataType: 2,
+      })
+    })
   }
   mounted() {
     this.seach()
