@@ -68,6 +68,7 @@
                 <div ref="container" style='height: 400px;'></div>
             </Col>
         </Row>
+        <commonDlg ref="dlg" v-if="loadding" />
     </div>
   </div>
 </template>
@@ -83,14 +84,17 @@ import { formatTimestamp } from '@/util/validateRules'
 // import numAdd from './number.vue'
 import echarts from 'echarts'
 import { formatCurrency } from '@/fn/string.ts'
+import commonDlg from './dlg/commonDlg.vue'
 
 @Component({
   components: {
     number,
+    commonDlg
   }
 })
 export default class Main extends ViewBase {
   @Prop() value: any
+  loadding = false
   query: any = {
     beginDate: this.value.mockObj.beginDate,
     endDate: this.value.mockObj.endDate,
@@ -152,7 +156,15 @@ export default class Main extends ViewBase {
   }
 
   viewCinema() {
-
+    this.loadding = true
+    this.$nextTick(() => {
+      (this.$refs.dlg as any).init({
+        id: this.value.mockObj.id,
+        beginDate: this.value.mockObj.beginDate,
+        endDate: this.value.mockObj.endDate,
+        planDataType: 3,
+      })
+    })
   }
   mounted() {
     this.seach()

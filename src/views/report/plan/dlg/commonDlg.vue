@@ -23,13 +23,14 @@
     </Modal>
   </div>
 </template>
-<script lang="ts">
+<script lang="tsx">
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { cinemaList } from '@/api/plan'
 import { clean } from '@/fn/object'
 import { formatCurrency } from '@/fn/string.ts'
 import { cinemadata } from '@/api/cinemadata'
+import jsxReactToVue from '@/util/jsxReactToVue'
 
 @Component
 export default class Change extends ViewBase {
@@ -62,8 +63,20 @@ export default class Change extends ViewBase {
       ]
     } else {
       return  [
-        { title: '影片名称', key: 'cinema', align: 'center'},
-        { title: '上映时间', key: 'scheduleScene', align: 'center'},
+        { title: '影片名称', key: 'movie', align: 'center'},
+        { title: '上映时间', key: 'openTime', align: 'center',
+          render: (hh: any, { row: { openTime } }: any) => {
+            /* tslint:disable */
+            const h = jsxReactToVue(hh)
+            const html = openTime ? openTime.replace(/(\d{4})(?=\d)/g, '-') : ''
+            return openTime == null ? (
+              <span class="datetime" v-html="-" />
+            ) : (
+              <span class="datetime" v-html={html} />
+            )
+            /* tslint:enable */
+          }
+        },
         { title: '覆盖人次', key: 'coverPeople', align: 'center'},
         { title: '广告花费／¥', key: 'advertAmount', align: 'center'}
       ]
@@ -82,12 +95,21 @@ export default class Change extends ViewBase {
     try {
       const { data: {
         items: {
-          provinceDataList
+          provinceDataList,
+          cinemaDataList,
+          movieDataList
         }
       } } = await cinemadata(clean({
         ...this.value
       }))
-      const datas = provinceDataList ? provinceDataList.provinceData : []
+      let datas = []
+      if ( this.value.planDataType == 4 ) {
+          datas = provinceDataList ? provinceDataList.provinceData : []
+      } else if (this.value.planDataType == 3) {
+          datas = movieDataList ? movieDataList.movies : []
+      } else {
+         datas = cinemaDataList ? cinemaDataList.cinemas : []
+      }
       this.data = datas.map((it: any) => {
         return {
           ...it,
