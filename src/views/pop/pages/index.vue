@@ -95,7 +95,6 @@
           </Row>
         </Col>
       </Row>
-
       <Row class="pt40" v-if="this.list.directionType == 2">
         <Col :span="24">
           <h3 class="square">投放影片</h3>

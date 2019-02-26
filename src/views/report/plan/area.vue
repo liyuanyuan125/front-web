@@ -31,7 +31,7 @@
         </Row>
       </Col>
       <Col :span="10" :offset="3">
-        <CityMap />
+        <CityMap :names="cityMapNames" />
       </Col>
     </Row>
     <Row>
@@ -193,6 +193,16 @@ export default class Main extends ViewBase {
   created() {
     this.searchs()
     this.cityList()
+  }
+
+  get cityMapNames() {
+    const provinceName = (this.items || []).map((it: any) => {
+      return it.provinceName
+    })
+    const city = (this.items || []).map((it: any) => {
+      return it.cityName
+    })
+    return [...provinceName, ...city]
   }
 
   async cityList() {
