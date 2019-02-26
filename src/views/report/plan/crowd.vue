@@ -84,7 +84,7 @@ export default class Main extends ViewBase {
   mounted() {
     const dateList = this.value.provinceDataList
     this.tableDate = dateList ? dateList.provinceData : []
-    this.sex = this.value.portraitDataList || 'ALL'
+    this.sex = 'ALL'
     // 获取投放人群option数据
     const peolist = this.value.peopleDataList
     this.xaxisList = peolist.peopleData ? peolist.peopleData.map((item: any) => item.date) : []
@@ -182,7 +182,7 @@ export default class Main extends ViewBase {
   .film-type {
     position: absolute;
     top: 84px;
-    left: 237px;
+    left: 277px;
     i {
       margin-right: 5px;
       margin-bottom: 16px;

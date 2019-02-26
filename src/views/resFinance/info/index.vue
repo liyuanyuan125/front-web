@@ -11,7 +11,7 @@
       <Col span="7" class="item-col">
         <h6>{{accountMoney.totalRevenue}}</h6>
         <p>总收益/元</p>
-        <p>截止日期：xxxx</p>
+        <p>截止日期：{{getYear}}</p>
       </Col>
       <Col span="7" class="item-col">
         <h6>{{accountMoney.balance}}</h6>
@@ -34,7 +34,7 @@
       @on-change="handlepageChange"
       @on-page-size-change="handlePageSize"
     ></Page>
-    <queryVoucher v-model="tableImgs" v-if ="tableImgs.visible"></queryVoucher>
+    <queryVoucher v-model="tableImgs" v-if="tableImgs.visible"></queryVoucher>
   </div>
 </template>
 <script lang="tsx">
@@ -60,6 +60,12 @@ export default class Info extends ViewBase {
   tableImgs: any = {
     visible: false
   }
+
+  get getYear() {
+    const myDate: string = new Date().toLocaleDateString()
+    return myDate.split('/').join('-')
+  }
+
   columns = [
     { title: '提现时间', key: 'withdrawalTimeName' },
     { title: '项目', key: 'type' },
@@ -95,7 +101,7 @@ export default class Info extends ViewBase {
     }
   ]
 
-  async mounted() {
+  async mounted() { 
     const { data } = await resInfo({
       pageIndex: this.pageIndex,
       pageSize: this.pageSize
