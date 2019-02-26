@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { Component , Prop } from 'vue-property-decorator'
+import { Component , Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 
 @Component
@@ -42,6 +42,10 @@ export default class ComponentMain extends ViewBase {
     }
   }
   mounted() {
+    this.update()
+  }
+
+  update() {
     if (this.addNum < '15' ) {
       this.numbers = this.addNumber(String(this.addNum))
     } else {
@@ -58,6 +62,11 @@ export default class ComponentMain extends ViewBase {
         this.numbers = this.addNumber(String(this.addNum))
       }, 400)
     }
+  }
+
+  @Watch('addNum', { deep: true })
+  watchaddNum(val: any) {
+    this.update()
   }
 }
 </script>
