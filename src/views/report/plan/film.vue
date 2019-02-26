@@ -41,7 +41,7 @@
     </div>
     <div class='imgs'>
         <div class='ze'>单个影院成效</div>
-        <Select style='width: 300px; margin-top: 20px;' v-model='form.movieId'  clearable placeholder="选择影院" @on-change="seachmov">
+        <Select style='width: 300px; margin-top: 20px;margin-left: 25px;' v-model='form.movieId'  clearable placeholder="选择影院" @on-change="seachmov">
               <Option
                 v-for="item in movies"
                 :key="item.movieId"
@@ -57,11 +57,11 @@
                 </div> -->
                 <div class='dan-fu'>
                     <p class='ps1'>覆盖人次</p>
-                    <p class='ps2'>{{querydatalist.coverPeople}}</p>
+                    <p class='ps2'><number v-if='asd' :addNum="querydatalist.coverPeople"></number></p>
                 </div>
                 <div class='dan-fu'>
                     <p class='ps1'>覆盖场次</p>
-                    <p class='ps2'>{{querydatalist.coverScene}}</p>
+                    <p class='ps2'><number v-if='asd' :addNum="querydatalist.coverPeople"></number></p>
                 </div>
             </Col>
             <Col span='15' style='height: 400px;background: #fff;'>
@@ -94,6 +94,7 @@ import commonDlg from './dlg/commonDlg.vue'
 })
 export default class Main extends ViewBase {
   @Prop() value: any
+  asd: any = false
   loadding = false
   query: any = {
     beginDate: this.value.mockObj.beginDate,
@@ -141,7 +142,7 @@ export default class Main extends ViewBase {
           render: (hh: any, { row: { openTime } }: any) => {
             /* tslint:disable */
             const h = jsxReactToVue(hh)
-            const html = openTime ? openTime.replace(/(\d{4})(?=\d)/g, '-') : ''
+            const html = openTime == null ? '-' : String(openTime).slice(0, 4) + '-' + String(openTime).slice(4, 6) + '-' + String(openTime).slice(6, 8)
             return openTime == null ? (
               <span class="datetime" v-html="-" />
             ) : (
@@ -167,6 +168,7 @@ export default class Main extends ViewBase {
     })
   }
   mounted() {
+    this.asd = false
     this.seach()
   }
 
@@ -183,9 +185,12 @@ export default class Main extends ViewBase {
         } else {
           this.movielist.push(this.movies[0] , this.movies[1] , this.movies[2])
         }
-        this.form.movieId = (this.movielist || []).map((it: any) => {
-          return it.movieId
-        })[0]
+        if (this.movielist.length != 0) {
+          this.form.movieId = (this.movielist || []).map((it: any) => {
+            return it.movieId
+          })[0]
+        }
+        this.asd = true
         // console.log(this.form.movieId)
         const querydatalist = await querylist(this.form)
         this.querydatalist = querydatalist.data

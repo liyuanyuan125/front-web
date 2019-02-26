@@ -14,7 +14,8 @@
                     stroke-color="#41D9C1">
                     <div class="demo-Circle-custom">
                         <h1>覆盖影院</h1>
-                        <p><number :addNum="datalist.advertAmount"></number></p>
+                        <!-- <p>{{datalist.coverCinema}}个</p> -->
+                        <p><number v-if='asd' :addNum="datalist.coverCinema">个</number></p>
                     </div>
                 </i-circle>
             </Col>
@@ -28,19 +29,19 @@
         <Row style='margin-top: 20px'>
             <Col style='margin-left: 1.7%' class='chen-fu'>
                 <p class='ps1'>影院数</p>
-                <p class='ps2'><number :addNum="datalist.coverCinema"></number></p>
+                <p class='ps2'><number v-if='asd' :addNum="datalist.coverCinema"></number></p>
             </Col>
             <Col class='chen-fu'>
                 <p class='ps1'>影厅数</p>
-                <p class='ps2'><number :addNum="cinemaDataList.hall"></number></p>
+                <p class='ps2'><number v-if='asd' :addNum="cinemaDataList.hall"></number></p>
             </Col>
             <Col class='chen-fu'>
                 <p class='ps1'>场次数</p>
-                <p class='ps2'><number :addNum="cinemaDataList.scene"></number></p>
+                <p class='ps2'><number v-if='asd' :addNum="cinemaDataList.scene"></number></p>
             </Col>
             <Col class='chen-fu'>
                 <p class='ps1'>银屏数</p>
-                <p class='ps2'><number :addNum="cinemaDataList.screen"></number></p>
+                <p class='ps2'><number v-if='asd' :addNum="cinemaDataList.screen"></number></p>
             </Col>
         </Row>
         <Row style='margin-top: 20px;'>
@@ -50,7 +51,7 @@
     </div>
     <div class='imgs'>
         <div class='ze'>单个影院成效</div>
-        <Select style='width: 300px; margin-top: 20px;' v-model='form.cinemaId'  clearable placeholder="选择影院" @on-change="seachcin">
+        <Select style='width: 300px; margin-top: 20px;margin-left: 25px' v-model='form.cinemaId'  clearable placeholder="选择影院" @on-change="seachcin">
               <Option
                 v-for="item in cinemaDataList.cinemas"
                 :key="item.cinemaId"
@@ -61,11 +62,11 @@
             <Col span='9'>
                 <div class='dan-fu'>
                     <p class='ps1'>覆盖人次</p>
-                    <p class='ps2'><number :addNum="querydatalist.coverPeople"></number></p>
+                    <p class='ps2'><number v-if='asd' :addNum="querydatalist.coverPeople"></number></p>
                 </div>
                 <div class='dan-fu'>
                     <p class='ps1'>覆盖场次</p>
-                    <p class='ps2'><number :addNum="querydatalist.coverScene"></number></p>
+                    <p class='ps2'><number v-if='asd' :addNum="querydatalist.coverScene"></number></p>
                 </div>
             </Col>
             <Col span='15' style='height: 400px;background: #fff;'>
@@ -86,6 +87,7 @@ import { cinemadata , querylist } from '@/api/cinemadata'
 import { formatTimestamp } from '@/util/validateRules'
 // import numAdd from './number.vue'
 import echarts from 'echarts'
+import { formatCurrency } from '@/fn/string.ts'
 import commonDlg from './dlg/commonDlg.vue'
 
 @Component({
@@ -96,6 +98,7 @@ import commonDlg from './dlg/commonDlg.vue'
 })
 export default class Main extends ViewBase {
   @Prop() value: any
+  asd: any = false
   loadding = false
   query: any = {
     beginDate: this.value.mockObj.beginDate,
@@ -128,7 +131,14 @@ export default class Main extends ViewBase {
   data1: any = []
   data2: any = []
   get tableData() {
-      return this.tcinemaList
+      return (this.tcinemaList || []).map((item: any) => {
+        return {
+          ...item,
+          scheduleTime: item.scheduleTime + 's',
+          coverPeople: formatCurrency(item.coverPeople).slice(0, -3),
+          advertAmount: formatCurrency(item.advertAmount).slice(0, -3),
+        }
+      })
   }
 
   get columns() {
@@ -153,6 +163,7 @@ export default class Main extends ViewBase {
     })
   }
   mounted() {
+    this.asd = false
     this.seach()
   }
 
@@ -171,9 +182,10 @@ export default class Main extends ViewBase {
         }
         if (this.cinemas.length != 0) {
           this.form.cinemaId = (this.cinemas || []).map((it: any) => {
-            return it.cinemaId
-          })[0]
+           return it.cinemaId
+        })[0]
         }
+        this.asd = true
         // console.log(this.datalist)
         // console.log(this.form.cinemaId)
         const querydatalist = await querylist(this.form)

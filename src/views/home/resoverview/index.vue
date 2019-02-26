@@ -190,6 +190,7 @@ export default class Main extends ViewBase {
       }
       const dataitem = await viewdata(this.query)
       this.dataitem = dataitem.data
+      this.searchs()
     }
 
     async searchs() {

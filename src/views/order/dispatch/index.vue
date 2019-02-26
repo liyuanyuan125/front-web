@@ -82,7 +82,7 @@
               <!-- <span v-if='it.status == 2' class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>查看执行单</span> -->
               <router-link
               v-if='it.status == 2'
-              :to="{ name: 'order-execute-xq', params: { id: it.id } }"
+              :to="{ name: 'order-execute-xq', params: { id: it.planMessageId } }"
               tag="span"
               class='button'
               style='background: #3B98FF; color: #fff;cursor: pointer;'
