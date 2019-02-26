@@ -68,7 +68,7 @@ export default class Change extends ViewBase {
           render: (hh: any, { row: { openTime } }: any) => {
             /* tslint:disable */
             const h = jsxReactToVue(hh)
-            const html = openTime ? openTime.replace(/(\d{4})(?=\d)/g, '-') : ''
+            const html = openTime == null ? '-' : String(openTime).slice(0, 4) + '-' + String(openTime).slice(4, 6) + '-' + String(openTime).slice(6, 8)
             return openTime == null ? (
               <span class="datetime" v-html="-" />
             ) : (
