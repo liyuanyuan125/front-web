@@ -82,6 +82,7 @@ import { clean } from '@/fn/object'
 import { getUser } from '@/store.ts'
 import { formatCurrency } from '@/fn/string.ts'
 import commonDlg from './dlg/commonDlg.vue'
+import { Stats } from '@/views/pop/plan/components/areaPane'
 
 @Component({
   components: {

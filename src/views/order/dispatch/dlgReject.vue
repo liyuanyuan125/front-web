@@ -218,6 +218,7 @@ export default class DlgEditCinema extends ViewBase {
 
   cancel() {
     this.showDlg = false
+    this.page = []
     this.checkId = []
     this.checkObj = []
   }
