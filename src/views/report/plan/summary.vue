@@ -53,17 +53,17 @@
             </div>
             <div class="sum-model list-flot">
               <h4>影厅数</h4>
-              <p>{{value.cinemaDataList.hall}}</p>
+              <p>{{value.cinemaDataList.hall || 0}}</p>
             </div>
           </div>
           <div class="flex-box">
             <div class="sum-model">
               <h4>场次数</h4>
-              <p>{{value.cinemaDataList.scene}}</p>
+              <p>{{value.cinemaDataList.scene || 0}}</p>
             </div>
             <div class="sum-model">
               <h4>银屏数</h4>
-              <p>{{value.cinemaDataList.screen}}</p>
+              <p>{{value.cinemaDataList.screen || 0}}</p>
             </div>
           </div>
         </Col>
@@ -208,7 +208,7 @@ export default class Main extends ViewBase {
       ? movieType.filter((item: any) => item.code == 'MOVIE_TYPE')
       : []
     this.movieType = this.movieType[0].values
-    // 获取投放人群option数据
+     // 获取投放人群option数据
     const peopleData = this.value.peopleDataList.peopleData
     this.xaxisList = peopleData.map((item: any) => item.date)
     this.yAxList = peopleData.map((item: any) => item.data)

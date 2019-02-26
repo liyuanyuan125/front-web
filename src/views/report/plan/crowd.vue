@@ -75,15 +75,20 @@ export default class Main extends ViewBase {
   tableDate = []
 
   get peopleDate() {
-    return this.value.peopleDataList.totalCount
+      if (this.value.peopleDataList) {
+          return this.value.peopleDataList.totalCount
+      } else {
+          return 0
+      }
   }
   mounted() {
-    this.tableDate = this.value.provinceDataList.provinceData
+    const dateList = this.value.provinceDataList
+    this.tableDate = dateList ? dateList.provinceData : []
     this.sex = this.value.portraitDataList || 'ALL'
     // 获取投放人群option数据
-    const peopleData = this.value.peopleDataList.peopleData
-    this.xaxisList = peopleData.map((item: any) => item.date)
-    this.yAxList = peopleData.map((item: any) => item.data)
+    const peolist = this.value.peopleDataList
+    this.xaxisList = peolist.peopleData ? peolist.peopleData.map((item: any) => item.date) : []
+    this.yAxList = peolist.peopleData ? peolist.peopleData.map((item: any) => item.data) : []
 
     this.$nextTick(() => {
       const myChart = echarts.init(this.$refs.crowd as any)
