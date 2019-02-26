@@ -124,6 +124,7 @@ export default class Main extends ViewBase {
   async mockList(form: any) {
     const { data } = await dateMockList({...form})
     this.mockDate = data.items
+    this.mockDate.mockObj = form
   }
 
   deliveryType(id: any) {
