@@ -48,7 +48,7 @@
         <h3 class="area-title">单部城市成效</h3>
       </Col>
       <Col :span="24">
-        <Select class="city-select" v-model="cityId" style="width:300px">
+        <Select class="city-select" clearable v-model="cityId" style="width:300px">
           <Option v-for="item in items" :value="item.id" :key="item.id">
             {{ item.areaName }} - {{ item.provinceName }} - {{ item.cityName }}
           </Option>
@@ -66,6 +66,7 @@
         <div ref="container" style='height: 400px;'></div>
       </Col>
     </Row>
+    <commonDlg ref="dlg" v-if="loadding" />
   </div>
 </template>
 
@@ -80,17 +81,19 @@ import echarts from 'echarts'
 import { clean } from '@/fn/object'
 import { getUser } from '@/store.ts'
 import { formatCurrency } from '@/fn/string.ts'
+import commonDlg from './dlg/commonDlg.vue'
 
 @Component({
   components: {
     number,
     CityMap,
-    AreaSelect
+    AreaSelect,
+    commonDlg
   }
 })
 export default class Main extends ViewBase {
   @Prop() value: any
-
+  loadding: any = false
   crirle: any = ['覆盖区域数', '覆盖城市', '覆盖影院']
   crirleColor: string[] = ['#fe5f5e', '#3b98ff', '#41d9c1']
   cricleNumber: any = []
@@ -169,7 +172,15 @@ export default class Main extends ViewBase {
   }
 
   viewCinema() {
-
+    this.loadding = true
+    this.$nextTick(() => {
+      (this.$refs.dlg as any).init({
+        id: this.value.mockObj.id,
+        beginDate: this.value.mockObj.beginDate,
+        endDate: this.value.mockObj.endDate,
+        planDataType: 4,
+      })
+    })
   }
 
   resize() {
@@ -346,7 +357,7 @@ export default class Main extends ViewBase {
 .circle-body {
   text-align: center;
   .square {
-    margin: 0 0 90px;
+    margin: 70px 0 90px;
     h3 {
       font-size: 14px;
       margin-bottom: 15px;
