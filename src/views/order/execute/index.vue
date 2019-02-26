@@ -229,7 +229,8 @@ export default class Main extends ViewBase {
             createTime: moment(it.createTime).format(timeFormat),
             beginDate: moment(it.beginDate).format(timeFormat),
             endDate: moment(it.endDate).format(timeFormat),
-            bili: Math.floor(((new Date().getTime() - it.beginDate) / (it.endDate - it.beginDate)) * 100)
+            bili: Math.floor(((new Date().getTime() - it.beginDate) /
+            ((it.endDate + (24 * 60 * 60 * 1000 - 1)) - it.beginDate)) * 100)
           }
         })
       } else {
@@ -244,7 +245,8 @@ export default class Main extends ViewBase {
             createTime: moment(it.createTime).format(timeFormat),
             beginDate: moment(it.beginDate).format(timeFormat),
             endDate: moment(it.endDate).format(timeFormat),
-            bili: Math.floor(((new Date().getTime() - it.beginDate) / (it.endDate - it.beginDate)) * 100)
+            bili: Math.floor(((new Date().getTime() - it.beginDate) /
+            ((it.endDate + (24 * 60 * 60 * 1000 - 1)) - it.beginDate)) * 100)
           }
         })
       }
@@ -287,7 +289,7 @@ export default class Main extends ViewBase {
 
   handlepageChange(size: any) {
     this.query.pageIndex = size
-    this.seachs()
+    this.seach()
   }
   handlePageSize(size: any) {
     this.query.pageIndex = size
