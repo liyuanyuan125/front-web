@@ -15,7 +15,7 @@
               <div class="fince-list-acc"><img style='width: 7%;' src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.received}}</span></div>
               <p class="fince-list-sm">已接单数</p>
             </div>
-            <div class='fince-list-big' style='background: #fff; border-top: 10px solid #fff;'>
+            <div class='fince-list-big' style='background: #fff; border-top: 10px solid #fff;position: absolute;top: -6%;'>
               <!-- <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.refuse></numAdd></span><span class='smas2'>已拒绝单数</span></div>
               <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.faliure></numAdd></span><span class='smas2'>已失效单数</span></div> -->
               <div class='fin-bigs'><img style='width: 7%;' src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.refuse}}</span><span class='smas2'>已拒绝单数</span></div>

@@ -356,7 +356,7 @@ export default class Main extends ViewBase {
     font-size: 15px;
   }
   .poovs {
-    font-size: 50px;
+    font-size: 36px;
     line-height: 183px;
     position: absolute;
     top: 7%;

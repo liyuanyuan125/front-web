@@ -1,43 +1,70 @@
 <template>
   <div class="page home-bg">
-    <div class="layout-nav-title"><span>广告计划</span></div>
-      <div class="tops flex-box">
-        <div class="tops-img">
-          <router-link :to="{name: 'pop-film'}">
-            <img src="./assets/img.png" alt width="380" >
-          </router-link>
-        </div>
-        <div class="tops-byte">
-          <Row class="text-rows">
-            <Col :span="24">
-              <p>
-                <label>广告计划</label>
-                <Select v-model="level" style="width: 400px" clearable @on-change="handleChangeName">
-                  <Option v-for="item in dataList" :key="item.id" :value="item.id">{{item.name}}</Option>
-                </Select>
-              </p>
-            </Col>
-          </Row>
-          <Row class="text-rows">
-            <Col :span="12">
-              <p><label>公司计划ID</label>{{queryList.id}}</p>
-              <p><label>投放类型</label>{{deliveryType(queryList.deliveryType)}}</p>
-              <p><label>投放周期</label>{{queryList.cycle}}天</p>
-              <p><label>广告片规格</label>{{queryList.specification}}s</p>
-            </Col>
-            <Col :span="12">
-              <p><label>广告片</label>{{queryList.videoName}}</p>
-              <p><label>客户名称</label>{{queryList.customerName}}</p>
-              <p><label>投放排期</label>{{formatYell(queryList.beginDate)}}~{{formatYell(queryList.endDate)}}</p>
-            </Col>
-          </Row>
-        </div>
+    <div class="layout-nav-title">
+      <span>广告计划</span>
+    </div>
+    <div class="tops flex-box">
+      <div class="tops-img">
+        <router-link :to="{name: 'pop-film'}">
+          <img src="./assets/img.png" alt width="380">
+        </router-link>
       </div>
+      <div class="tops-byte">
+        <Row class="text-rows">
+          <Col :span="24">
+            <p>
+              <label>广告计划</label>
+              <Select v-model="level" style="width: 400px" clearable @on-change="handleChangeName">
+                <Option v-for="item in dataList" :key="item.id" :value="item.id">{{item.name}}</Option>
+              </Select>
+            </p>
+          </Col>
+        </Row>
+        <Row class="text-rows">
+          <Col :span="12">
+            <p>
+              <label>公司计划ID</label>
+              {{queryList.id}}
+            </p>
+            <p>
+              <label>投放类型</label>
+              {{deliveryType(queryList.deliveryType)}}
+            </p>
+            <p>
+              <label>投放周期</label>
+              {{queryList.cycle}}天
+            </p>
+            <p>
+              <label>广告片规格</label>
+              {{queryList.specification}}s
+            </p>
+          </Col>
+          <Col :span="12">
+            <p>
+              <label>广告片</label>
+              {{queryList.videoName}}
+            </p>
+            <p>
+              <label>客户名称</label>
+              {{queryList.customerName}}
+            </p>
+            <p>
+              <label>投放排期</label>
+              {{formatYell(queryList.beginDate)}}~{{formatYell(queryList.endDate)}}
+            </p>
+          </Col>
+        </Row>
+      </div>
+    </div>
     <i-col span="24" class="demo-tabs-style2">
       <Tabs type="card" :animated="false" @on-click="handleChange">
         <Tab-pane :label="item.name" v-for="(item,index) in tabObjList" :key="item.key"></Tab-pane>
       </Tabs>
-      <div :is="comName" v-model="mockDate" v-if="mockDate"></div>
+      <summany  v-model="mockDate" v-if=" mockDate && modelType == 0 " />
+      <crowd  v-model="mockDate" v-if=" mockDate && modelType == 1 " />
+      <cinema v-model="mockDate" v-if=" mockDate && modelType == 2 "/>
+      <film v-model="mockDate" v-if=" mockDate && modelType == 3 "/>
+      <areaCom v-model="mockDate" v-if=" mockDate && modelType == 4 "/>
     </i-col>
   </div>
 </template>
@@ -52,7 +79,6 @@ import crowd from './crowd.vue'
 import cinema from './cinema.vue'
 import film from './film.vue'
 import areaCom from './area.vue'
-
 
 @Component({
   components: {
@@ -72,9 +98,11 @@ export default class Main extends ViewBase {
   mockDate: any = ''
   tagsObjList: any = []
 
+  mockDatevisible = false
+
   mockObj: any = {
     id: '',
-    planDataType: '',
+    planDataType: 0,
     beginDate: '',
     endDate: ''
   }
@@ -88,6 +116,7 @@ export default class Main extends ViewBase {
   ]
   comName = 'summany'
   planDataType = 0
+  modelType = 0
 
   get formatYell() {
     return formatYell
@@ -126,10 +155,13 @@ export default class Main extends ViewBase {
       beginDate: this.queryList.beginDate, // 投放排期
       endDate: this.queryList.endDate
     }
-    const { data } = await dateMockList({...this.mockObj})
+    const { data } = await dateMockList({ ...this.mockObj })
     this.mockDate = data.items
     this.mockDate.mockObj = this.mockObj
     this.mockDate.tagsObjList = this.tagsObjList
+    // 解决传递新数据
+    this.modelType = this.planDataType
+
   }
 
   deliveryType(id: any) {
