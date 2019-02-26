@@ -4,8 +4,8 @@
       <Col :span="8" v-for="(item, index) in crirle" :key="index">
         <i-circle
           :size="200"
-          :trail-width="10"
-          :stroke-width="10"
+          :trail-width="8"
+          :stroke-width="8"
           :percent="nums[index]"
           class="square"
           trail-color="#d2d2d2"
@@ -71,6 +71,8 @@ import CityMap from '@/components/cityMap'
 import AreaSelect from '@/components/areaSelect'
 import { cinemadata , querylist } from '@/api/cinemadata'
 import echarts from 'echarts'
+import { clean } from '@/fn/object'
+import { getUser } from '@/store.ts'
 
 @Component({
   components: {
@@ -88,12 +90,17 @@ export default class Main extends ViewBase {
   name: any = []
   reject: any = {
   }
+  cityId: any = ''
   effectTypeList: any = null
   dataList: any = null
   dom: any = null
 
   get tableData() {
     return []
+  }
+
+  get systemCode() {
+    return getUser()!.systemCode
   }
 
   get columns() {
@@ -149,16 +156,22 @@ export default class Main extends ViewBase {
 
   created() {
     this.searchs()
+    this.cityList()
   }
+
+  cityList() {
+    await ()
+  }
+
   async searchs() {
     try {
       const {
         data
-      } = await querylist({
-        beginDate: 1550309688000,
-        endDate: 1550482488000,
-        movieId: 70
-      })
+      } = await querylist(clean({
+        beginDate: this.value.mockObj.beginDate,
+        endDate: this.value.mockObj.endDate,
+        cityId: this.cityId
+      }))
       const data1 = (data.dataList || []).map((it: any) => {
           return it.date
       })
@@ -298,7 +311,7 @@ export default class Main extends ViewBase {
 .circle-body {
   text-align: center;
   .square {
-    margin: 70px 0 90px;
+    margin: 0 0 90px;
     h3 {
       font-size: 14px;
       margin-bottom: 15px;
