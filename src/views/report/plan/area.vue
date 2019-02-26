@@ -47,7 +47,13 @@
       <Col :span="24">
         <h3 class="area-title">单部城市成效</h3>
       </Col>
-      <Col :span="24"><AreaSelect class="name-input" show-region v-model="name" /></Col>
+      <Col :span="24">
+        <Select class="city-select" v-model="cityId" style="width:300px">
+          <Option v-for="item in items" :value="item.id" :key="item.id">
+            {{ item.areaName }} - {{ item.provinceName }} - {{ item.cityName }}
+          </Option>
+        </Select>
+      </Col>
       <Col :span="9">
         <Row class="put-body">
           <Col :span="10" v-for="(item, index) in cover" :key="index" class="area-put">
@@ -73,6 +79,7 @@ import { cinemadata , querylist } from '@/api/cinemadata'
 import echarts from 'echarts'
 import { clean } from '@/fn/object'
 import { getUser } from '@/store.ts'
+import { formatCurrency } from '@/fn/string.ts'
 
 @Component({
   components: {
@@ -90,13 +97,28 @@ export default class Main extends ViewBase {
   name: any = []
   reject: any = {
   }
+  items: any = []
   cityId: any = ''
   effectTypeList: any = null
   dataList: any = null
   dom: any = null
 
   get tableData() {
-    return []
+    return this.items.slice(0, 8).map((item: any) => {
+      return {
+        ...item,
+        coverPeople: formatCurrency(item.coverPeople).slice(0, -3),
+        advertAmount: formatCurrency(item.advertAmount).slice(0, -3),
+      }
+    })
+  }
+
+  get echartmsg() {
+    return {
+      beginDate: this.value.mockObj.beginDate,
+      endDate: this.value.mockObj.endDate,
+      cityId: this.cityId
+    }
   }
 
   get systemCode() {
@@ -105,11 +127,11 @@ export default class Main extends ViewBase {
 
   get columns() {
     return [
-      { title: '区域', key: 'code', align: 'center'},
-      { title: '省份', key: 'shortName', align: 'center'},
-      { title: '城市', key: 'seatCount', align: 'center'},
-      { title: '覆盖人次', key: 'seatCount', align: 'center'},
-      { title: '广告花费／¥', key: 'seatCount', align: 'center'},
+      { title: '区域', key: 'areaName', align: 'center'},
+      { title: '省份', key: 'provinceName', align: 'center'},
+      { title: '城市', key: 'cityName', align: 'center'},
+      { title: '覆盖人次', key: 'coverPeople', align: 'center'},
+      { title: '广告花费／¥', key: 'advertAmount', align: 'center'},
     ]
   }
 
@@ -159,8 +181,22 @@ export default class Main extends ViewBase {
     this.cityList()
   }
 
-  cityList() {
-    await ()
+  async cityList() {
+    try {
+      const { data: {
+        items: {
+          provinceDataList: { provinceData }
+        }
+      } } = await cinemadata({
+        id: this.value.mockObj.id,
+        beginDate: this.value.mockObj.beginDate,
+        endDate: this.value.mockObj.endDate,
+        planDataType: 4,
+      })
+      this.items = provinceData || []
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   async searchs() {
@@ -239,6 +275,7 @@ export default class Main extends ViewBase {
       this.dom  = echarts.init(this.$refs.container as any)
       this.dom.setOption(option)
     } catch (ex) {
+      this.handleError(ex)
     }
   }
 
@@ -248,11 +285,9 @@ export default class Main extends ViewBase {
   //   })
   // }
 
-  @Watch('name', { deep: true })
-  watchArea(val: number[]) {
-    this.reject.areaCode = val[0] == 0 ? '' : val[0]
-    this.reject.provinceId = val[1] == 0 ? '' : val[1]
-    this.reject.cityId = val[2] == 0 ? '' : val[2]
+  @Watch('echartmsg', { deep: true })
+  watchArea(val: any) {
+    this.searchs()
   }
 }
 </script>
@@ -355,5 +390,8 @@ export default class Main extends ViewBase {
 }
 .pb40 {
   padding-bottom: 40px;
+}
+.city-select {
+  margin: 30px 0 20px 30px;
 }
 </style>
