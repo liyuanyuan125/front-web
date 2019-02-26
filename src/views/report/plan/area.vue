@@ -357,8 +357,8 @@ export default class Main extends ViewBase {
 }
 .circle-body {
   text-align: center;
+  padding: 60px 50px;
   .square {
-    margin: 70px 0 90px;
     h3 {
       font-size: 14px;
       margin-bottom: 15px;
