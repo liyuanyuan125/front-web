@@ -6,15 +6,15 @@
         <Row>
             <Col span='9' style='height: 400px;padding: 86px 0 0 85px;'>
                 <i-circle
-                    :size="250"
-                    :trail-width="4"
-                    :stroke-width="5"
-                    :percent="75"
+                    :size="200"
+                    :trail-width="8"
+                    :stroke-width="8"
+                    :percent="movies.length"
                     stroke-linecap="square"
                     stroke-color="#FE8135">
                     <div class="demo-Circle-custom">
                         <h1>影片数</h1>
-                        <p>{{(movies.length)}}个</p>
+                        <p>{{movies.length}}个</p>
                     </div>
                 </i-circle>
             </Col>
