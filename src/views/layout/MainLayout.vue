@@ -19,7 +19,7 @@
       <div class="flex-1"></div>
 
       <div class="flex-box">
-        <span class="corp-name">{{systemName}}：{{user.companyName}}</span>
+        <span class="corp-name">{{system.name}}：{{user.companyName}}</span>
         <span class="user-name">用户：{{user.email}}</span>
         <a class="logout" title="退出" @click="logout"></a>
       </div>
@@ -27,17 +27,17 @@
 
     <Layout class="site-center">
       <Sider collapsible hide-trigger v-model="isOff" class="site-sider" :width="180" ref="sider">
-        <Menu width="auto" theme="dark" class="sider-menu" :class="isOff && 'sider-menu-off'"
+        <Menu width="auto" theme="dark" :key="`menu-${system.code}`" class="sider-menu" :class="isOff && 'sider-menu-off'"
           :active-name="siderActiveName" :open-names="siderOpenNames" v-if="siderMenuList.length > 0">
           <template v-for="menu in siderMenuList">
-            <Submenu v-if="menu.subList" :name="menu.name" :class="`menu-node-${menu.name}`">
+            <Submenu v-if="menu.subPages.length > 0" :name="menu.name" :class="`menu-node-${menu.name}`">
               <template slot="title">{{menu.label}}</template>
-              <MenuItem v-for="sub in menu.subList" :key="sub.name" :name="sub.name">
-                <router-link :to="{name: sub.route || sub.name}">{{sub.label}}</router-link>
+              <MenuItem v-for="sub in menu.subPages" :key="sub.name" :name="sub.name">
+                <router-link :to="{name: sub.route}">{{sub.label}}</router-link>
               </MenuItem>
             </Submenu>
             <MenuItem v-else :name="menu.name" class="menu-item-lv1" :class="`menu-node-${menu.name}`">
-              <router-link :to="{name: menu.route || menu.name}">{{menu.label}}</router-link>
+              <router-link :to="{name: menu.route}">{{menu.label}}</router-link>
             </MenuItem>
           </template>
         </Menu>
@@ -55,13 +55,11 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser, checkUser, logout, User, switchSystem, getCurrentPerms } from '@/store'
 import { systemList as allSystemList, SystemCode, PermPage } from '@/util/types'
-import allSiderMenuList, { SiderMenuItem } from './allSiderMenuList'
+import { getMenuList, SiderMenuItem } from './menuList'
 import { cloneDeep, kebabCase } from 'lodash'
 import event from '@/fn/event'
 import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
-
-const isSystemCode = (code: SystemCode) => (it: SiderMenuItem) =>
-  it.systems == null || it.systems.includes(code)
+import { devInfo } from '@/util/dev'
 
 @Component
 export default class MainLayout extends ViewBase {
@@ -79,12 +77,11 @@ export default class MainLayout extends ViewBase {
     return []
   }
 
-  get systemName() {
-    if (this.user != null) {
-      const item = allSystemList.find(it => it.code == this.user!.systemCode)
-      return item != null ? item.name : ''
-    }
-    return ''
+  get system(): { code: string, name: string } {
+    const result = this.user != null
+      && allSystemList.find(it => it.code == this.user!.systemCode)
+      || { code: '', name: '' }
+    return result
   }
 
   isOff = false
@@ -98,28 +95,10 @@ export default class MainLayout extends ViewBase {
     }
 
     const permMenu = this.permMenu
-    // debugger
 
-    const systemCode = user.systemCode
-    const isSystem = isSystemCode(systemCode)
-    const list = cloneDeep(allSiderMenuList).filter(it => {
-      it.subList = it.subList && it.subList.filter(isSystem)
-      return isSystem(it)
-    })
+    const list = getMenuList(permMenu, user.systemCode)
 
-    // TODO: 下面这段代码是做什么用的？
-    // accountType 1=主账户（显示账号信息） 2=子账户 0 未知  {name: "account-info", label: "账号信息"}
-    let extractList: any = []
-    let subList: any = []
-    list.map((item, index) => {
-      if (item.name == 'account') {
-        subList = item.subList || []
-        extractList = item.subList!.slice(1)
-        if (user.accountType !== 1) {
-          list[index].subList = extractList
-        }
-      }
-    })
+    devInfo('menuList', list)
 
     return list
   }
@@ -127,7 +106,7 @@ export default class MainLayout extends ViewBase {
   get siderOpenNames() {
     const activeName = this.siderActiveName
     const item = this.siderMenuList.find(it => {
-      const exists = (it.subList! || [{ name: it.name }]).some(
+      const exists = (it.subPages! || [{ name: it.name }]).some(
         t => t.name === activeName
       )
       return exists
@@ -138,7 +117,9 @@ export default class MainLayout extends ViewBase {
   // 获取导航中全部可点击的页面 name
   get siderMenuNameMap() {
     const result = this.siderMenuList.reduce((map: any, it) => {
-      const names = it.subList != null ? it.subList.map(t => t.name) : [it.name]
+      const names = it.subPages && it.subPages.length > 0
+        ? it.subPages.map(t => t.name)
+        : [it.name]
       names.forEach(name => (map[name] = 1))
       return map
     }, {})
@@ -172,16 +153,14 @@ export default class MainLayout extends ViewBase {
     return this.siderActiveMap[name]
   }
 
-  async created() {
+  created() {
     checkUser()
 
-    const perms = await getCurrentPerms()
-    // 若无法获取权限，则退出
-    if (perms == null) {
-      return logout()
-    }
-
-    this.permMenu = perms.menu
+    // 切换权限
+    this.changePerm()
+    event.on(systemSwitched, (ev: SystemSwitchedEvent) => {
+      this.changePerm()
+    })
 
     // 是有低优先级监听，以便其他地方可以拦截取消
     this.changeTheme()
@@ -189,6 +168,16 @@ export default class MainLayout extends ViewBase {
       this.$router.push({ name: 'home' })
       this.changeTheme()
     }, false)
+  }
+
+  async changePerm() {
+    const perms = await getCurrentPerms()
+    // 若无法获取权限，则退出
+    if (perms == null) {
+      return logout()
+    }
+
+    this.permMenu = perms.menu
   }
 
   changeTheme() {
@@ -435,48 +424,63 @@ export default class MainLayout extends ViewBase {
       border: none;
     }
   }
-  .menu-node-home a {
-    background-image: url(./assets/home.png);
+  .menu-node-home {
+    /deep/ & > .ivu-menu-submenu-title,
+    & > a {
+      background-image: url(./assets/home.png);
+    }
   }
   .menu-node-pop {
-    /deep/ .ivu-menu-submenu-title {
+    /deep/ & > .ivu-menu-submenu-title,
+    & > a {
       background-image: url(./assets/pop.png);
     }
   }
   .menu-node-report {
-    /deep/ .ivu-menu-submenu-title {
+    /deep/ & > .ivu-menu-submenu-title,
+    & > a {
       background-image: url(./assets/report.png);
     }
   }
 
-  .menu-node-customer a {
-    background-image: url(./assets/customer.png);
+  .menu-node-customer {
+    /deep/ & > .ivu-menu-submenu-title,
+    & > a {
+      background-image: url(./assets/customer.png);
+    }
   }
 
   .menu-node-order {
-    /deep/ .ivu-menu-submenu-title {
+    /deep/ & > .ivu-menu-submenu-title,
+    & > a {
       background-image: url(./assets/order.png);
     }
   }
-  .menu-node-play {
-    /deep/ .ivu-menu-submenu-title {
-      background-image: url(./assets/play.png);
-    }
-  }
-  .menu-node-space {
-    /deep/ .ivu-menu-submenu-title {
-      background-image: url(./assets/space.png);
-    }
-  }
+
+  // .menu-node-play {
+  //   /deep/ & >  .ivu-menu-submenu-title,
+  //   & > a {
+  //     background-image: url(./assets/play.png);
+  //   }
+  // }
+  // .menu-node-space {
+  //   /deep/ & >  .ivu-menu-submenu-title,
+  //   & > a {
+  //     background-image: url(./assets/space.png);
+  //   }
+  // }
 
   .menu-node-finance,
   .menu-node-resfinance {
-    /deep/ .ivu-menu-submenu-title {
+    /deep/ & > .ivu-menu-submenu-title,
+    & > a {
       background-image: url(./assets/finance.png);
     }
   }
+
   .menu-node-account {
-    /deep/ .ivu-menu-submenu-title {
+    /deep/ & > .ivu-menu-submenu-title,
+    & > a {
       background-image: url(./assets/account.png);
     }
   }

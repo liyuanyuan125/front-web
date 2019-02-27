@@ -1,6 +1,5 @@
 <template>
   <div class="page">
-    <h1>Aiads 广告投放</h1>
   </div>
 </template>
 
@@ -16,7 +15,7 @@ const routeMap = {
 
 @Component
 export default class Main extends ViewBase {
-  created() {
+  beforeCreate() {
     const user = getUser()
     if (user != null) {
       const systemCode = user.systemCode

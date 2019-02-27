@@ -29,7 +29,7 @@ export default class ViewBase extends Vue {
    * @param ex 错误对象
    */
   formatError(ex: any = {}) {
-    const msg = ex.msg || ex.code ? `${ex.code} ${ex.msg}` : String(ex)
+    const msg = ex.code || ex.msg ? `${ex.code} ${ex.msg}` : String(ex)
     return msg
   }
 
@@ -38,7 +38,7 @@ export default class ViewBase extends Vue {
    * @param ex 错误对象
    */
   handleError(ex: any = {}) {
-    if (!(ex.code in ignoreCodes)) {
+    if (ex && !(ex.code in ignoreCodes)) {
       const msg = this.formatError(ex)
       this.showError(msg)
       // tslint:disable-next-line

@@ -1,6 +1,7 @@
 /**
  * 对 tree 进行操作，本文件所指的 Tree 为没有根的 tree
  * TODO: 未来增加对带有根节点的 tree 的支持
+ * TODO: 下面的代码，与业务逻辑捆绑太死，需要重构！！
  * @author zhangpeng
  */
 
@@ -96,12 +97,19 @@ const doWalkTree = <T>(nodes: T[], opts: WalkTreeOptions<T>, parentNodes: any[])
       // 确保 parentNodes 里都是新节点，此时刚添加的新节点还没有 children
       const newParentNodes = [ ...parentNodes ].concat(newNode)
 
+      // 深度遍历子节点
       const newChildren = doWalkTree(children, opts, newParentNodes) || children
-      // 支持在 newNode 中添加扩展 children
-      const extraChildren = newNode[childrenKey] || []
+
+      // 如果新节点是全新节点，支持在 newNode 中添加扩展 children
+      // 只有是全新节点时，才获取全新节点中的子节点
+      const extraChildren = newNode !== node && newNode[childrenKey] || []
+
+      // 与处理后的原节点的子节点进行合并
       const newNodeChildren = opts.extraChildrenInsertAfter!
         ? newChildren.concat(extraChildren)
         : extraChildren.concat(newChildren)
+
+      // 重新赋值给新节点
       newNode[childrenKey] = newNodeChildren
     }
 

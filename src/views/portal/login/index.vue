@@ -149,8 +149,7 @@ export default class Main extends ViewBase {
         systemCode: postData.systemCode
       })
 
-      this.$router.push({ name: 'account-info' })
-      // this.$router.push({ name: 'home' })
+      this.$router.push({ name: 'home' })
     } catch (ex) {
       ((this as any)[`onLogin${ex.code}`] || this.handleError).call(this, ex)
       this.resetCaptcha()
