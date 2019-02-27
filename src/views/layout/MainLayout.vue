@@ -69,9 +69,8 @@ export default class MainLayout extends ViewBase {
 
   get systemList() {
     if (this.user != null) {
-      const list = this.user.systems
-        .map(code => allSystemList.find(it => it.code == code))
-        .filter(it => it != null)
+      const systems = this.user.systems
+      const list = allSystemList.filter(it => systems.includes(it.code))
       return list
     }
     return []
