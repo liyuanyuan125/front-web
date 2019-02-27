@@ -49,7 +49,7 @@
             </dl>
             <dl>
               <dd>广告片名称</dd>
-              <dt v-if='!this.list.advertisingName.length'>暂无</dt>
+              <dt v-if='!this.list.advertisingName'>暂无</dt>
               <dt v-if='this.list.advertisingName'>{{list.advertisingName}}</dt>
             </dl>
             <dl>
