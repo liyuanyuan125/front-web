@@ -25,9 +25,9 @@
       </Col>
     </Row>
     <h3 class="layout-title">投放人群</h3>
-    <div class="summary-map">
+    <div class="summary-map sum-flex">
       <Row type="flex" justify="space-between">
-        <Col :span="9" class="flex-box">
+        <Col :span="9" class="flex-box left-circel">
           <div class="sum-model">
             <h4>覆盖人次</h4>
             <p>{{value.peopleDataList.totalCount}}</p>
@@ -37,7 +37,8 @@
             <p>{{value.coverDay}}天</p>
           </div>
         </Col>
-        <Col :span="15">
+        <Col :span="15" class="line-col-peopel">
+          <div class="peopel-title"><em></em><span>曝光分布图（人次）</span></div>
           <div id="summaryLint" ref="summaryLint" style="width: 100%; height: 400px"></div>
         </Col>
       </Row>
@@ -70,7 +71,7 @@
         <Col :span="14">
           <Table stripe :columns="columns" :data="tableDate"></Table>
           <div class="btn-query-all">
-            <Button type="primary" class="button-ok" @click="btnQueryAll">查看全部</Button>
+            <Button type="primary" class="button-ok" @click="btnQueryAll(1)">查看全部</Button>
           </div>
         </Col>
       </Row>
@@ -129,7 +130,7 @@
         <Col :span="14">
           <Table stripe :columns="columnsProvince" :data="provinceDataList"></Table>
           <div class="btn-query-all">
-            <Button type="primary" class="button-ok" @click="btnQueryAll">查看全部</Button>
+            <Button type="primary" class="button-ok" @click="btnQueryAll(2)">查看全部</Button>
           </div>
         </Col>
       </Row>
@@ -181,7 +182,7 @@ export default class Main extends ViewBase {
   ]
   provinceDataList = []
 
-  cinemaVisible = {
+  cinemaVisible: any = {
     visible: false,
     id: ''
   }
@@ -199,7 +200,7 @@ export default class Main extends ViewBase {
   }
 
   mounted() {
-    this.tableDate = this.value.cinemaDataList.cinemas.items
+    this.tableDate = this.value.cinemaDataList.cinemas.items.slice(0, 6)
     this.tableDateMovie = this.value.movieDataList.movies
     this.provinceDataList = this.value.provinceDataList.provinceData
 
@@ -268,15 +269,33 @@ export default class Main extends ViewBase {
     return len.substring(0, len.length - 1)
   }
 
-  btnQueryAll() {
+  btnQueryAll(val: number) {
     this.cinemaVisible = {
       visible: true,
-      id: this.value.mockObj.id
+      id: this.value.mockObj.id,
+      type: val
     }
   }
 }
 </script>
 <style lang="less" scoped>
+.left-circel {
+  padding-top: 57px;
+}
+.line-col-peopel {
+  .peopel-title {
+    position: absolute;
+    top: 15px;
+    right: 50px;
+    em {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #fe8135;
+      margin-right: 10px;
+    }
+  }
+}
 .circle-body {
   padding: 60px 50px;
   /deep/ .ivu-col {
@@ -295,6 +314,9 @@ export default class Main extends ViewBase {
 }
 .summary-map {
   padding: 40px 30px 50px;
+  &.sum-flex {
+    padding-top: 20px;
+  }
 }
 .sum-model {
   width: 150px;

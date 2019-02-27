@@ -1,7 +1,8 @@
 <template>
   <div>
     <Modal v-model="value.visible" title="查看影院数据" width="800">
-      <Table stripe :columns="columns" :data="data"></Table>
+      <Table stripe :columns="columns1" :data="data" v-if="value.type == 1"></Table>
+      <Table stripe :columns="columns2" :data="data" v-if="value.type == 2"></Table>
       <Page
         :total="total"
         v-if="total>0"
@@ -32,16 +33,28 @@ export default class Change extends ViewBase {
   pageSize = 10
 
   data = []
-  columns = [
-    { title: '区域', key: 'areaName', align: 'center', width: 100 },
-    { title: '省份', key: 'provinceName', align: 'center',  width: 100 },
-    { title: '城市', key: 'cityName', align: 'center',  width: 100 },
-    { title: '城市级别', key: 'cityLevel', align: 'center',  width: 100 },
-    { title: '专资编码', key: 'code', align: 'center', width: 100 },
-    { title: '影院名称', key: 'shortName', align: 'center', width: 100 },
-    { title: '影厅数', key: 'hallCount', align: 'center',  width: 100 },
-    { title: '总座位数', key: 'seatCount', align: 'center', width: 100 },
-    { title: '票房级别', key: 'boxLevelName', align: 'center',  width: 100},
+  columns1 = [
+    // { title: '区域', key: 'areaName', align: 'center', width: 100 },
+    // { title: '省份', key: 'provinceName', align: 'center',  width: 100 },
+    // { title: '城市', key: 'cityName', align: 'center',  width: 100 },
+    // { title: '城市级别', key: 'cityLevel', align: 'center',  width: 100 },
+    { title: '专资编码', key: 'code', align: 'center'},
+    { title: '影院名称', key: 'shortName', align: 'center'},
+    // { title: '影厅数', key: 'hallCount', align: 'center',  width: 100 },
+    { title: '总座位数', key: 'seatCount', align: 'center'},
+    // { title: '票房级别', key: 'boxLevelName', align: 'center',  width: 100},
+  ]
+  columns2 = [
+    { title: '区域', key: 'areaName', align: 'center'},
+    { title: '省份', key: 'provinceName', align: 'center'},
+    { title: '城市', key: 'cityName', align: 'center' },
+    { title: '影院数', key: 'cinema', align: 'center'},
+    // { title: '城市级别', key: 'cityLevel', align: 'center',  width: 100 },
+    // { title: '专资编码', key: 'code', align: 'center', width: 100 },
+    // { title: '影院名称', key: 'shortName', align: 'center', width: 100 },
+    // { title: '影厅数', key: 'hallCount', align: 'center',  width: 100 },
+    // { title: '总座位数', key: 'seatCount', align: 'center', width: 100 },
+    // { title: '票房级别', key: 'boxLevelName', align: 'center',  width: 100},
   ]
   async mounted() {
     this.list()
