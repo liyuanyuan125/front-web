@@ -1,5 +1,5 @@
 <template>
-  <div class="items">
+  <div class="items" >
     <div class='imgs'>
         <!-- <DatePicker type="daterange" style="margin-left: 20px;width: 300px;height:40px;background:rgba(255,255,255,1);border-radius:2px;" v-model='showTime' @on-change="handleChange"
         placement="bottom-start" placeholder="请选择开始日期和结束日期" ></DatePicker> -->

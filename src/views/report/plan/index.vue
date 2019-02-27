@@ -1,8 +1,10 @@
 <template>
   <div class="page home-bg">
+
     <div class="layout-nav-title">
       <span>广告计划</span>
     </div>
+
     <div class="tops flex-box">
       <div class="tops-img">
         <router-link :to="{name: 'pop-film'}">
@@ -56,15 +58,23 @@
         </Row>
       </div>
     </div>
+
     <i-col span="24" class="demo-tabs-style2">
-      <Tabs type="card" :animated="false" @on-click="handleChange">
-        <Tab-pane :label="item.name" v-for="(item,index) in tabObjList" :key="item.key"></Tab-pane>
+
+      <Tabs type="card" v-model="tabVal"  id="dataTabs"   :animated="false"  @on-click="handleChange">
+        <Tab-pane :label="item.name" v-for="(item,index) in tabObjList" :name="item.key" :key="item.key"></Tab-pane>
       </Tabs>
-      <summany  v-model="mockDate" v-if=" mockDate && modelType == 0 " />
-      <crowd  v-model="mockDate" v-if=" mockDate && modelType == 1 " />
-      <cinema v-model="mockDate" v-if=" mockDate && modelType == 2 "/>
-      <film v-model="mockDate" v-if=" mockDate && modelType == 3 "/>
-      <areaCom v-model="mockDate" v-if=" mockDate && modelType == 4 "/>
+
+      <Tabs v-show="isFlxed" v-model="tabVal" :style="{width: flxedWid }" type="card" class=" is-flxed" 
+      :animated="false" @on-click="handleChange" >
+        <Tab-pane :label="item.name" v-for="(item,index) in tabObjList" :name="item.key" :key="item.key"></Tab-pane>
+      </Tabs>
+
+      <summany id="anchor-0"  v-model="mockDate" v-if=" mockDate && modelType == 0 " />
+      <crowd id="anchor-1" v-model="mockDate" v-if=" mockDate && modelType == 1 " />
+      <cinema id="anchor-2" v-model="mockDate" v-if=" mockDate && modelType == 2 "/>
+      <film id="anchor-3" v-model="mockDate" v-if=" mockDate && modelType == 3 "/>
+      <areaCom id="#anchor-4" v-model="mockDate" v-if=" mockDate && modelType == 4 "/>
     </i-col>
   </div>
 </template>
@@ -74,6 +84,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { planList, planDefault, dateMockList } from '@/api/plan'
 import { formatYell } from '@/util/validateRules'
+import scrollIntoView from 'scroll-into-view-if-needed'
 import summany from './summary.vue'
 import crowd from './crowd.vue'
 import cinema from './cinema.vue'
@@ -90,6 +101,8 @@ import areaCom from './area.vue'
   }
 })
 export default class Main extends ViewBase {
+  tabVal = '0'
+
   level: any = ''
   levelTypeList = []
   dataList: any = []
@@ -108,15 +121,19 @@ export default class Main extends ViewBase {
   }
 
   tabObjList = [
-    { key: 0, name: '汇总' },
-    { key: 1, name: '按人群' },
-    { key: 2, name: '按影院' },
-    { key: 3, name: '按影片' },
-    { key: 4, name: '按地区' }
+    { key: '0', name: '汇总' },
+    { key: '1', name: '按人群' },
+    { key: '2', name: '按影院' },
+    { key: '3', name: '按影片' },
+    { key: '4', name: '按地区' }
   ]
-  comName = 'summany'
+
+  flxedWid = ''
+
   planDataType = 0
   modelType = 0
+
+  isFlxed = false
 
   get formatYell() {
     return formatYell
@@ -124,7 +141,28 @@ export default class Main extends ViewBase {
 
   mounted() {
     this.advList()
+    window.addEventListener('scroll', this.handleScroll)
   }
+  handleScroll() {
+    this.$nextTick(function() {
+      const dataTabs: any = document.getElementById('dataTabs')
+      this.flxedWid = dataTabs.offsetWidth + 'px'
+      // data-tabs 距离body距离
+      const tabsParent = dataTabs.offsetParent.offsetTop + dataTabs.offsetTop + 60
+      // 滚动距离
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      if ( scrollTop > tabsParent) {
+        this.isFlxed = true
+      } else {
+        this.isFlxed = false
+      }
+    })
+  }
+
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
+  }
+
   async advList() {
     // 拿取 已结束状态（status：8）  结算完成（settlementStatus：2） 并且已关联广告片 （videoId是否有值）
     const { data } = await planList({
@@ -136,6 +174,7 @@ export default class Main extends ViewBase {
     // 广告计划详情
     this.detailList(this.level)
   }
+
   async detailList(id: any) {
     const { data } = await planDefault(id)
     this.defaultData = data
@@ -161,7 +200,6 @@ export default class Main extends ViewBase {
     this.mockDate.tagsObjList = this.tagsObjList
     // 解决传递新数据
     this.modelType = this.planDataType
-
   }
 
   deliveryType(id: any) {
@@ -176,18 +214,8 @@ export default class Main extends ViewBase {
   }
 
   handleChange(val: any) {
+    this.tabVal = val
     this.planDataType = val
-    if (val == 0) {
-      this.comName = 'summany'
-    } else if (val == 1) {
-      this.comName = 'crowd'
-    } else if (val == 2) {
-      this.comName = 'cinema'
-    } else if (val == 3) {
-      this.comName = 'film'
-    } else if (val == 4) {
-      this.comName = 'areaCom'
-    }
     this.advList()
   }
 }
@@ -195,6 +223,7 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+
 .tops-byte {
   width: 100%;
 }
@@ -213,11 +242,11 @@ export default class Main extends ViewBase {
   height: 70px !important;
 }
 /deep/ .ivu-tabs-nav-scroll {
+  padding: 0 30px;
   border-bottom: 2px solid #ff8237 !important;
 }
 /deep/ .nav-text {
-  width: 96%;
-  margin-left: 2%;
+  width: 100%;
 }
 /deep/ .ivu-tabs-tab {
   border-radius: 0 !important;
@@ -250,6 +279,20 @@ export default class Main extends ViewBase {
 /deep/ .ivu-tabs-bar .ivu-tabs-tab {
   // border-color: #ff8237;
   // border-top: 2px solid #fff !important;
-  transition: all 0s !important;
+  // transition: all 0s !important;
+}
+/deep/ .ivu-tabs {
+  width: 100%;
+}
+.is-flxed {
+  // background: #fff;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  left: 190px;
+  // width: 84%;
+  // /deep/ .ivu-tabs-tab {
+  //   width: 17%;
+  // }
 }
 </style>
