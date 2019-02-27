@@ -63,7 +63,7 @@ export default class Main extends ViewBase {
       render: (hh: any, { row: { name, fileUrl } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        return <a href={fileUrl} download = {name}>{fileUrl}</a>
+        return <a href={fileUrl} target='_blank' download = {name}>{fileUrl}</a>
         /* tslint:enable */
       }
     }
