@@ -19,7 +19,8 @@
             </div>
           </i-circle>
         </Col>
-        <Col :span="15">
+        <Col :span="15" class="line-col-peopel">
+          <div class="peopel-title"><em></em><span>曝光分布图（人次）</span></div>
           <div id="crowd" ref="crowd" style="width: 100%; height: 400px"></div>
         </Col>
       </Row>
@@ -137,6 +138,20 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 
+.line-col-peopel {
+  .peopel-title {
+    position: absolute;
+    top: 15px;
+    right: 50px;
+    em {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #fe8135;
+      margin-right: 10px;
+    }
+  }
+}
 .circle-custom {
   font-size: 14px;
   span {
@@ -150,6 +165,7 @@ export default class Main extends ViewBase {
 .city-map {
   height: 440px;
   background-size: 437px auto;
+  margin-top: 30px;
 }
 
 .portrait {

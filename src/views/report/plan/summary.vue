@@ -79,7 +79,7 @@
     <h3 class="layout-title">投放影片</h3>
     <div class="summary-map">
       <Row type="flex" justify="space-between">
-        <Col :span="9" class="flex-box">
+        <Col :span="10" class="flex-box">
           <div class="sum-model">
             <h4>影片数</h4>
             <p>{{value.movieDataList.totalCount}}</p>
@@ -89,7 +89,7 @@
             <p class="model-type">{{value.movieDataList.type}}</p>
           </div>
         </Col>
-        <Col :span="15">
+        <Col :span="14">
           <Table stripe :columns="columnsMovie" :data="tableDateMovie">
             <template slot="openTime" slot-scope="{row, index}">
               <span>{{getOpentime(row.openTime)}}</span>

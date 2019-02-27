@@ -76,11 +76,11 @@
     </div>
 
     <div class="btnCenter btn-footer" v-if="status == 1">
-      <Button class="button-cancel" @click="cancelPlan" >取消广告计划</Button>
+      <Button class="button-cancel" @click="cancelPlan" >取消广告片</Button>
       <Button type="primary" class="button-ok" @click="toEdit">编辑</Button>
     </div>
     <div class="btnCenter btn-footer" v-else-if="status == 2">
-      <Button class="button-cancel" @click="cancelPlan" >取消广告计划</Button>
+      <Button class="button-cancel" @click="cancelPlan" >取消广告片</Button>
       <Button type="primary" class="button-ok" @click="handlePayment">支付</Button>
     </div>
     <div class="btnCenter btn-footer" v-else-if="status == 5">

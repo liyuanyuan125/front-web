@@ -163,14 +163,15 @@ export default class Main extends ViewBase {
     window.removeEventListener('scroll', this.handleScroll)
   }
 
-  async advList() {
+  async advList(level?: any) {
     // 拿取 已结束状态（status：8）  结算完成（settlementStatus：2） 并且已关联广告片 （videoId是否有值）
     const { data } = await planList({
       status: 8,
       settlementStatus: 2
     })
     this.dataList = data.items.filter((item: any) => item.videoId != 0)
-    this.level = this.dataList.length > 0 ? this.dataList[0].id : ''
+    const levelID = this.queryList.id
+    this.level = levelID == undefined ? this.dataList[0].id : levelID
     // 广告计划详情
     this.detailList(this.level)
   }
@@ -275,11 +276,6 @@ export default class Main extends ViewBase {
 
 /deep/ .ivu-tabs-nav .ivu-tabs-tab:hover {
   color: @c-button;
-}
-/deep/ .ivu-tabs-bar .ivu-tabs-tab {
-  // border-color: #ff8237;
-  // border-top: 2px solid #fff !important;
-  // transition: all 0s !important;
 }
 /deep/ .ivu-tabs {
   width: 100%;
