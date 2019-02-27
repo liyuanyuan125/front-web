@@ -275,7 +275,15 @@ export default class Main extends ViewBase {
                 legend: {
                     data: ['广告花费']
                 },
-                color: ['#FE8135'],
+                // color: ['#FE8135'],
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0, color: '#FE8D48' // 0% 处的颜色
+                        }, {
+                            offset: 0.4, color: '#FEA772' // 100% 处的颜色
+                        }, {
+                            offset: 1, color: '#FFFDFB' // 100% 处的颜色
+                        }]
+                    ), // 背景渐变色
                 xAxis: [
                     {
                         type : 'category',
