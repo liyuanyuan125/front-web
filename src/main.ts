@@ -43,8 +43,10 @@ router.beforeEach(async (to, from, next) => {
   } else {
     const has = await hasRoutePerm(to)
     if (!has) {
-      // 没有权限
-      next({ name: 'error-noauth', replace: true })
+      // 使用 next false 支持浏览器回退
+      next(false)
+      // 没有权限，不要使用 replace，否则导致回退异常
+      next({ name: 'error-noauth' })
 
       // 若当前页，已经是 error-noauth，则不会执行 afterEach
       // 这里需要手动对 loadingBar 进行 finish
