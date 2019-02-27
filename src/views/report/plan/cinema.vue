@@ -272,7 +272,7 @@ export default class Main extends ViewBase {
                     return colorList[params.dataIndex]
             },
             label: {
-              formatter: '{b}\n{c}%' // 这是关键，在需要的地方加上就行了
+              formatter: '{c}%' // 这是关键，在需要的地方加上就行了
             },
             grid: {
                 left: '3%',
