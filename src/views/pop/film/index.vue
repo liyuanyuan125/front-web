@@ -150,15 +150,17 @@ export default class Main extends ViewBase {
         ...this.pageList
       })
       // 待审核 待支付  已取消 已拒绝 可批量删除
-      for (const it of items) {
-        if (it.status == 1 || it.status == 2 || it.status == 6 || it.status == 4 ) {
-          it._checked = false
-        } else {
-          it._disabled = true
+      if (items) {
+        for (const it of items) {
+          if (it.status == 1 || it.status == 2 || it.status == 6 || it.status == 4 ) {
+            it._checked = false
+          } else {
+            it._disabled = true
+          }
         }
       }
       this.tableDate = items || []
-      this.statusList = statusList
+      this.statusList = statusList || []
       this.totalCount = totalCount || 0
 
     } catch (ex) {

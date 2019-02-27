@@ -150,7 +150,13 @@ export default class Main extends ViewBase {
           }
         }
       } = await cinemaList(clean(query))
-      this.cinemaList = items || []
+      const cover = require('./assets/nocover.png')
+      this.cinemaList = (items || []).map((item: any) => {
+        return {
+          ...item,
+          mainPicUrl: item.mainPicUrl ? item.mainPicUrl : cover
+        }
+      })
       this.length = totalCount
     } catch (ex) {
       this.handleError(ex)
@@ -195,7 +201,7 @@ export default class Main extends ViewBase {
   @Watch('types', { deep: true })
 
   watchtypes(value: any, oldValue: any) {
-    if (value.length > 3) {
+    if (value.length > 3 && value[value.length - 1] != 0) {
       info('电影类型最多选3项')
       this.types = value.slice(0, 3)
     } else {

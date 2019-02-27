@@ -26,7 +26,9 @@ import { clean } from '@/fn/object'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import moment from 'moment'
 import { confirm, toast } from '@/ui/modal'
+import { toMap } from '@/fn/array'
 
+const makeMap = (list: any[]) => toMap(list, 'key', 'text')
 const timeFormatDate = 'YYYY-MM-DD HH:mm:ss'
 
 @Component
@@ -37,6 +39,8 @@ export default class Main extends ViewBase {
     pageIndex: 1,
     pageSize: 10,
   }
+
+  typeList: any = null
   orderId = ''
   videoName = ''
   query = ''
@@ -51,7 +55,7 @@ export default class Main extends ViewBase {
   }
 
   columns4 = [
-    { title: '格式', width: 200, key: 'typeCode', align: 'center' },
+    { title: '格式', width: 200, key: 'typeListText', align: 'center' },
     {
       title: '下载链接',
       key: 'name',
@@ -59,16 +63,24 @@ export default class Main extends ViewBase {
       render: (hh: any, { row: { name, fileUrl } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        return <a href={fileUrl} download = {name}>{name}</a>
+        return <a href={fileUrl} target='_blank' download = {name}>{fileUrl}</a>
         /* tslint:enable */
       }
     }
   ]
 
+  get cachedMap() {
+    return {
+      typeList: makeMap(this.typeList),
+    }
+  }
+
   get authDate() {
+    const cachedMap = this.cachedMap
     const list = (this.list || []).map((it: any) => {
       return {
        ...it,
+       typeListText: cachedMap.typeList[it.typeCode]
       }
     })
     return list
@@ -92,6 +104,7 @@ export default class Main extends ViewBase {
       this.list = attachments
       this.orderId = orderId
       this.videoName = videoName
+      this.typeList = typeList
     } catch (ex) {
       this.handleError(ex)
     } finally {

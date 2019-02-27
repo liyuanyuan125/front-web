@@ -45,13 +45,13 @@
         </Row>
       </div>
 
-      <div v-if='data.directionType == 2' style='background:rgba(249, 249, 249, 1);padding: 10px 20px 1px 20px; margin-top: 10px;'>
+      <div v-if='data && data.directionType == 2' style='background:rgba(249, 249, 249, 1);padding: 10px 20px 1px 20px; margin-top: 10px;'>
         <Row class="mb30">
           <Col :span="3">投放影片</Col>
           <Col :span="8" class='im'>
             <!-- <div> -->
               <div class='im-div' v-if="cinema.seacinemaList">
-                <img :src='cinema.seacinemaList.mainPicUrl' alt=''>
+                <img :src='cinema.seacinemaList.mainPicUrl || cover' alt=''>
                 <div>上映日期：{{formatMoment(cinema.seacinemaList.openTime)}}</div>
               </div>
               <div class='ims-div' v-if="cinema.seacinemaList">
@@ -110,7 +110,7 @@
       <div v-if='data.directionType == 1' style='background:rgba(249, 249, 249, 1);padding: 10px 20px 0 20px; margin-top: 10px;'>
         <Row class="mb10">
           <Col :span="4">观影人群画像</Col>
-          <Col :span="20" class="cinema-flex">
+          <Col :span="20" class="cinema-flex" v-if="cinema">
            <div
               :class="['portrait', {'woman-atv': cinema.tagsex[2].text[0] == 'woman', 'man-atv': cinema.tagsex[2].text[0] == 'man', 'unknow-atv': cinema.tagsex[2].text.length == 0}]"
             >
@@ -143,10 +143,10 @@
         </Row>
         <Row class="mb10">
           <Col :span="4">影片</Col>
-          <Col :span="20" class="cinema-flex">
+          <Col :span="20" class="cinema-flex" v-if="cinema">
             <div class='im' style="float-left" v-for="item in cinema.cinemaIdArray" :key="item.id">
               <div class='im-div'>
-                <img :src='item.mainPicUrl' alt=''>
+                <img :src='item.mainPicUrl || cover' alt=''>
                 <div>上映日期：{{formatMoment(item.openTime)}}</div>
               </div>
               <div class='ims-div'>
@@ -180,7 +180,7 @@ export default class Main extends ViewBase {
   forMat: any = {}
   data: any = {}
   money: any = ''
-  cinema: any = {}
+  cinema: any = null
 
   get begin() {
     return this.formatTime(this.data.beginDate)
@@ -204,6 +204,11 @@ export default class Main extends ViewBase {
       return this.cinema.diqutype.values.filter((it: any) => this.data.tagTypeCode.includes(it.key))
     }
     return []
+  }
+
+  get cover() {
+    const cover = require('./assets/wu.png')
+    return cover
   }
 
   init(forMat: any, cinema: any) {

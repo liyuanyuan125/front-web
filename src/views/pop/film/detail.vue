@@ -34,7 +34,7 @@
           </p>
           <p>
             <label>创建时间</label>
-            {{item.applyTime}}
+            {{formatTimes(item.applyTime)}}
           </p>
           <p>
             <label>广告片时长</label>

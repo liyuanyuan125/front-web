@@ -67,11 +67,11 @@
           </p>
           <p>
             <label>广告计划名称</label>
-            {{items.name}}
+            {{items.name || '暂无'}}
           </p>
           <p>
             <label>广告片规格</label>
-            {{items.specification}}s
+            {{items.specification || 0}}s
           </p>
           <p>
             <label>投放排期</label>
@@ -83,11 +83,11 @@
           </p>
           <p v-if="status == 1 || status == 2 || status == 9 || status == 10">
             <label>预估冻结金额/￥</label>
-            {{formatNumber(items.estimateCostAmount)}}
+            {{formatNumber(items.estimateCostAmount) || '暂无'}}
           </p>
           <p v-else>
              <label>冻结金额/￥</label>
-             {{formatNumber(items.freezeAmount)}}
+             {{formatNumber(items.freezeAmount) || '暂无'}}
           </p>
         </Col>
         <Col :span="12">
@@ -97,19 +97,19 @@
           </p>
           <p>
             <label>客户名称</label>
-            {{items.customerName}}
+            {{items.customerName || '暂无'}}
           </p>
           <p>
             <label>关联广告片</label>
-            {{items.videoName}}
+            {{items.videoName || '暂无'}}
           </p>
           <p>
             <label>投放天数</label>
-            {{items.cycle}} 天
+            {{items.cycle || 0}} 天
           </p>
           <p>
             <label>创建时间</label>
-            {{formatTimes(items.applyTime)}}
+            {{formatTimes(items.applyTime) || '暂无'}}
           </p>
           <p>
             <label>计费类型</label>
@@ -117,7 +117,7 @@
           </p>
           <p v-if="status == 7 || status == 8">
             <label>订单折扣</label>
-            {{items.discount}}
+            {{items.discount || 0}}%
           </p>
         </Col>
       </Row>
@@ -253,7 +253,7 @@
         <div class="flex-box flex-wrap" v-if="defaultData.movieList && defaultData.movieList.length > 0">
           <div class="item" v-for="(item, index) in defaultData.movieList" :key="index">
             <div class="film-img-item">
-              <img :src="item.mainPicUrl" width="180" height="240">
+              <img :src="item.mainPicUrl || cover" width="180" height="240">
               <div class="open-time">上映时间：{{subTimes(item.openTime) || '暂无'}}</div>
             </div>
             <div class="film-name">《{{item.name}}》</div>
@@ -344,6 +344,12 @@ export default class PlanDefault extends ViewBase {
     tim = tim.toString()
     return `${tim.substring(0, 4)}-${tim.substring(4, 6)}-${tim.substring(6)}`
   }
+
+  get cover() {
+    const cover = require('../assets/nocover.png')
+    return cover
+  }
+
   async mounted() {
     this.list()
   }

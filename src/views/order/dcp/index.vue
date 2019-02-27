@@ -88,9 +88,9 @@ export default class Main extends ViewBase {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         const img = require('./assets/down.png')
-        return <div class="edit">
-          <img src={img}/>
-          <a on-click={this.toDetail.bind(this, id)} class="operation" >下载DCP包</a>
+        return <div class="edit" on-click={this.toDetail.bind(this, id)}>
+          <img style="width: 18px" src={img}/>
+          <a class="operation" >下载DCP包</a>
         </div>
         /* tslint:enable */
       }

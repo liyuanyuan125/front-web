@@ -190,6 +190,7 @@ export default class Main extends ViewBase {
       }
       const dataitem = await viewdata(this.query)
       this.dataitem = dataitem.data
+      this.searchs()
     }
 
     async searchs() {
@@ -238,9 +239,24 @@ export default class Main extends ViewBase {
                     }
                 },
                 legend: {
-                    data: ['广告收益']
+                    data: ['广告收益'],
+                    x: '85%',
+                    y: 'top',
                 },
-                color: ['#FE8135'],
+                // color: ['#FE8135'],
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                          offset: 0, color: '#FE8D48' // 0% 处的颜色
+                      }, {
+                          offset: 0.4, color: '#FEA772' // 100% 处的颜色
+                      }, {
+                          offset: 1, color: '#FFFDFB' // 100% 处的颜色
+                      }]
+                  ), // 背景渐变色
+                lineStyle: {
+                    width: 3,
+                    type: 'solid',
+                    color: '#FE8135' // 折线的颜色
+                },
                 xAxis: [
                     {
                         type : 'category',
@@ -323,7 +339,7 @@ export default class Main extends ViewBase {
     font-size: 15px;
   }
   .poovs {
-    font-size: 50px;
+    font-size: 36px;
     line-height: 183px;
     position: absolute;
     top: 7%;
