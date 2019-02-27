@@ -30,8 +30,8 @@
           </Col>
         </Row>
       </Col>
-      <Col :span="10" :offset="3">
-        <CityMap />
+      <Col :span="10" style="height: 470px" :offset="2">
+        <CityMap :names="cityMapNames" />
       </Col>
     </Row>
     <Row>
@@ -106,7 +106,7 @@ export default class Main extends ViewBase {
   dom: any = null
 
   get tableData() {
-    return this.items.slice(0, 8).map((item: any) => {
+    return this.items.slice(0, 6).map((item: any) => {
       return {
         ...item,
         coverPeople: formatCurrency(item.coverPeople).slice(0, -3),
@@ -187,12 +187,21 @@ export default class Main extends ViewBase {
   }
 
   resize() {
-    // this.dom.resize()
   }
 
   created() {
     this.searchs()
     this.cityList()
+  }
+
+  get cityMapNames() {
+    const provinceName = (this.items || []).map((it: any) => {
+      return it.provinceName
+    })
+    const city = (this.items || []).map((it: any) => {
+      return it.cityName
+    })
+    return [...provinceName, ...city]
   }
 
   async cityList() {
@@ -208,6 +217,7 @@ export default class Main extends ViewBase {
         planDataType: 4,
       })
       this.items = provinceData || []
+      this.cityId = this.items[0].id || ''
     } catch (ex) {
     }
   }
@@ -235,7 +245,9 @@ export default class Main extends ViewBase {
           backgroundColor: '#FE8135'
         },
         legend: {
-          data: ['曝光分布']
+          data: ['曝光分布'],
+          x: '80%',
+          y: 'top',
         },
         color: ['#FE8135'],
         xAxis: [
@@ -389,8 +401,9 @@ export default class Main extends ViewBase {
   }
 }
 /deep/ .city-map {
-  width: 100%;
-  height: 420px;
+  top: -60px;
+  right: 50px;
+  transform: scale(0.72);
   background: url(/img/map.d8b2bd68.png) no-repeat;
   background-size: 100%;
 }

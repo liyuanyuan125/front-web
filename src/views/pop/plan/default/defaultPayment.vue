@@ -253,7 +253,7 @@
         <div class="flex-box flex-wrap" v-if="defaultData.movieList && defaultData.movieList.length > 0">
           <div class="item" v-for="(item, index) in defaultData.movieList" :key="index">
             <div class="film-img-item">
-              <img :src="item.mainPicUrl" width="180" height="240">
+              <img :src="item.mainPicUrl || cover" width="180" height="240">
               <div class="open-time">上映时间：{{subTimes(item.openTime) || '暂无'}}</div>
             </div>
             <div class="film-name">《{{item.name}}》</div>
@@ -344,6 +344,12 @@ export default class PlanDefault extends ViewBase {
     tim = tim.toString()
     return `${tim.substring(0, 4)}-${tim.substring(4, 6)}-${tim.substring(6)}`
   }
+
+  get cover() {
+    const cover = require('../assets/nocover.png')
+    return cover
+  }
+
   async mounted() {
     this.list()
   }

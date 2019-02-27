@@ -558,7 +558,13 @@ export default class Main extends ViewBase {
           pageSize: 3,
           ...times
         }))
-        this.normCinema = items
+        const cover = require('./assets/nocover.png')
+        this.normCinema = (items || []).map((item: any) => {
+          return {
+            ...item,
+            mainPicUrl: item.mainPicUrl ? item.mainPicUrl : cover
+          }
+        })
       } catch (ex) {
         this.handleError(ex)
       }
@@ -720,7 +726,7 @@ export default class Main extends ViewBase {
   @Watch('cinema.MOVIE_TYPE', { deep: true })
   watchMOVIE_TYPE(value: any, oldValue: any) {
     // 不限与其他项互斥
-    if (value.length > 3) {
+    if (value.length > 3 && value[value.length - 1] != 0) {
       info('电影类型最多选3项')
       this.cinema.MOVIE_TYPE = value.slice(0, 3)
       this.typeName = this.tags[0].values.filter((it: any) => this.cinema.MOVIE_TYPE.includes(it.key))
@@ -751,7 +757,7 @@ export default class Main extends ViewBase {
   @Watch('form.tagTypeCode', { deep: true })
   watchformtagTypeCode(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
-    if (value.length > 3) {
+    if (value.length > 3 && value[value.length - 1] != 0) {
       info('地域偏好最多选3项')
       this.form.tagTypeCode = value.slice(0, 3)
     } else {
