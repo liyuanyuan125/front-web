@@ -99,6 +99,7 @@ export default class Main extends ViewBase {
   name: any = []
   reject: any = {
   }
+  nums: any = [0, 0, 0]
   items: any = []
   cityId: any = ''
   effectTypeList: any = null
@@ -135,15 +136,6 @@ export default class Main extends ViewBase {
       { title: '覆盖人次', key: 'coverPeople', align: 'center'},
       { title: '广告花费／¥', key: 'advertAmount', align: 'center'},
     ]
-  }
-
-  get nums() {
-    const value = this.value.provinceDataList || 0
-    if (value) {
-      return [value.areaCount, value.cityCount, value.cinemaCount]
-    } else {
-      return [0, 0, 0]
-    }
   }
 
   get statisArea() {
@@ -189,6 +181,12 @@ export default class Main extends ViewBase {
   resize() {
   }
 
+  mounted() {
+    const value = this.value.provinceDataList || 0
+    if (value) {
+      this.nums =  [value.areaCount, value.cityCount, value.cinemaCount]
+    }
+  }
   created() {
     this.searchs()
     this.cityList()
@@ -312,6 +310,14 @@ export default class Main extends ViewBase {
   @Watch('echartmsg', { deep: true })
   watchArea(val: any) {
     this.searchs()
+  }
+
+  @Watch('value', { deep: true })
+  watchvalue(val: any) {
+    const value = this.value.provinceDataList || 0
+    if (value) {
+      this.nums =  [value.areaCount, value.cityCount, value.cinemaCount]
+    }
   }
 }
 </script>
