@@ -106,7 +106,7 @@ export default class Main extends ViewBase {
   dom: any = null
 
   get tableData() {
-    return this.items.slice(0, 8).map((item: any) => {
+    return this.items.slice(0, 6).map((item: any) => {
       return {
         ...item,
         coverPeople: formatCurrency(item.coverPeople).slice(0, -3),
