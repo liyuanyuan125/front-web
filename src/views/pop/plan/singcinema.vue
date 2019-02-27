@@ -150,7 +150,13 @@ export default class Main extends ViewBase {
           }
         }
       } = await cinemaList(clean(query))
-      this.cinemaList = items || []
+      const cover = require('./assets/nocover.png')
+      this.cinemaList = (items || []).map((item: any) => {
+        return {
+          ...item,
+          mainPicUrl: item.mainPicUrl ? item.mainPicUrl : cover
+        }
+      })
       this.length = totalCount
     } catch (ex) {
       this.handleError(ex)

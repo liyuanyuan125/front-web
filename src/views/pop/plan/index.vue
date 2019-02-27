@@ -558,7 +558,13 @@ export default class Main extends ViewBase {
           pageSize: 3,
           ...times
         }))
-        this.normCinema = items
+        const cover = require('./assets/nocover.png')
+        this.normCinema = (items || []).map((item: any) => {
+          return {
+            ...item,
+            mainPicUrl: item.mainPicUrl ? item.mainPicUrl : cover
+          }
+        })
       } catch (ex) {
         this.handleError(ex)
       }
