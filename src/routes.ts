@@ -390,7 +390,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   {
     path: '/pop/planlist',
     name: 'pop-planlist',
-    component: () => import('./views/pop/plan/planIndex.vue'),
+    component: () => import('./views/pop/plan/planlist.vue'),
     meta: {
       authKey: 'promotion.ad-plan',
       authAction: 'viewList',

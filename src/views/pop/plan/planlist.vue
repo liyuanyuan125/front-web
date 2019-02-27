@@ -2,9 +2,11 @@
   <div class="home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">广告计划</span>
-      <em class="addUser" @click="$router.push({name: 'pop-planlist-add'})">
+
+      <Button type="primary" :to="{name: 'pop-planlist-add'}" class="btn-new"
+        v-auth="'ads.promotion.ad-plan#create'">
         <Icon type="ios-add" size="27"/>新建广告计划
-      </em>
+      </Button>
     </h3>
 
     <Form :model="form" class="formInline">
@@ -340,6 +342,15 @@ export default class Plan extends ViewBase {
 </script>
 <style lang="less" scoped>
 @import '~@/site/common.less';
+
+.btn-new {
+  width: 140px;
+  height: 40px;
+  line-height: 36px;
+  font-size: 14px;
+  padding: 0;
+}
+
 .status-wating {
   color: @c-done;
 }
