@@ -23,7 +23,11 @@
       </Col>
     </Row>
     <h3 class="layout-title">线下提现记录</h3>
-    <Table stripe :columns="columns" :data="dataList"></Table>
+    <Table stripe :columns="columns" :data="dataList">
+      <template  slot="type" slot-scope="{row, index}">
+        <span v-for="item in typeList" v-if="item.key == row.type">{{item.text}}</span>
+      </template>
+    </Table>
     <Page
       class="info-page"
       :total="total"
@@ -61,6 +65,8 @@ export default class Info extends ViewBase {
     visible: false
   }
 
+  typeList = []
+
   get getYear() {
     const myDate: string = new Date().toLocaleDateString()
     return myDate.split('/').join('-')
@@ -68,7 +74,7 @@ export default class Info extends ViewBase {
 
   columns = [
     { title: '提现时间', key: 'withdrawalTimeName' },
-    { title: '项目', key: 'type' },
+    { title: '项目', slot: 'type' },
     { title: '提现金额/元', key: 'amount' },
     { title: '实时账户余额/元', key: 'afterWithdrawalAmount' },
     {
@@ -109,6 +115,7 @@ export default class Info extends ViewBase {
     this.dataList = data.items || []
     this.accountMoney = data.account != null ? data.account : {}
     this.total = data.totalCount
+    this.typeList = data.typeList || []
     // 毫秒转时间戳
     if (data.items) {
       data.items.map((item: any) => {
