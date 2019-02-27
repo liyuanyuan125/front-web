@@ -102,6 +102,7 @@
         <Col class="mt30 xq-m" :span="22">
            <Row :gutter="30">
              <Col :span="6" class='img-c' style="height: 240px">
+              <img v-if='seacinemaList.mainPicUrl == null' src='./assets/wu.png' alt="">
               <img :src=seacinemaList.mainPicUrl alt="">
              </Col>
              <Col class="poster-title" :span="18" style="height: 240px">
@@ -111,16 +112,20 @@
               </Row>
               <Row class='row-xq'>
                 <Col span='10'><span>上映日期</span> <b>{{seacinemaList.openTime}}</b></Col>
-                <Col span='14'><span style='width: 28%;'>片长</span> <b>{{seacinemaList.length}}</b></Col>
+                <Col span='14'><span style='width: 28%;'>片长</span> <b>{{seacinemaList.length == '' ? '暂无' : seacinemaList.length}}</b></Col>
               </Row>
               <Row class='row-xq-24'>
                 <Col span='24'><span>影片类型</span><b v-for='it in seacinemaList.type'> {{it}}</b></Col>
               </Row>
               <Row class='row-xq-24'>
-                <Col span='24'><span>导演</span> <b>{{seacinemaList.director}}</b></Col>
+                <Col span='24'><span>导演</span> <b>{{seacinemaList.director == null ? '暂无' : seacinemaList.director}}</b></Col>
               </Row>
               <Row class='row-xq-24'>
-                <Col span='24' style='height: 40px;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>演员</span><b v-for='it in seacinemaList.performers'> {{it}}</b></Col>
+                <Col span='24' style='height: 40px;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>
+                <span>演员</span>
+                  <b v-for='it in seacinemaList.performers'> {{it}}</b>
+                  <b v-if='seacinemaList.performers.length == 0'>暂无</b>
+                </Col>
               </Row>
               <Row class='row-xq-l24'>
                 <Col span='24' >
@@ -226,6 +231,7 @@
                   <div class="cinema-check" v-if="cinemaIdiD.includes(it.id)"></div>
                   <dd class='s-img'>
                     <img class='img' :src=it.mainPicUrl alt="">
+                    <!-- <img v-if='it.mainPicUrl ==  null' class='img' src='./assets/wu.png' alt=""> -->
                     <div>上映日期：{{it.openTime}}</div>
                   </dd>
                   <dt class='dts'>《{{it.name}}》</dt>
@@ -1011,10 +1017,12 @@ export default class Main extends ViewBase {
                       types: this.list.deliveryGroups[0].text == '' ? '' : (this.list.deliveryGroups[0].text).join(','),
                       pageSize : 8
                                 })
+      const cover = require('./assets/wu.png')
       this.tuifilm = (tui.data.data.items || []).map((it: any) => {
         return {
           ...it,
-          openTime: it.openTime ? moment(it.openTime).format(timeFormat) : '暂无'
+          openTime: it.openTime ? moment(it.openTime).format(timeFormat) : '暂无',
+          mainPicUrl: it.mainPicUrl == null ? cover : it.mainPicUrl
         }
       })
 
