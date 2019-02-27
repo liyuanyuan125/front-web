@@ -51,7 +51,7 @@
           <Col :span="8" class='im'>
             <!-- <div> -->
               <div class='im-div' v-if="cinema.seacinemaList">
-                <img :src='cinema.seacinemaList.mainPicUrl' alt=''>
+                <img :src='cinema.seacinemaList.mainPicUrl || cover' alt=''>
                 <div>上映日期：{{formatMoment(cinema.seacinemaList.openTime)}}</div>
               </div>
               <div class='ims-div' v-if="cinema.seacinemaList">
@@ -146,7 +146,7 @@
           <Col :span="20" class="cinema-flex" v-if="cinema">
             <div class='im' style="float-left" v-for="item in cinema.cinemaIdArray" :key="item.id">
               <div class='im-div'>
-                <img :src='item.mainPicUrl' alt=''>
+                <img :src='item.mainPicUrl || cover' alt=''>
                 <div>上映日期：{{formatMoment(item.openTime)}}</div>
               </div>
               <div class='ims-div'>
@@ -204,6 +204,11 @@ export default class Main extends ViewBase {
       return this.cinema.diqutype.values.filter((it: any) => this.data.tagTypeCode.includes(it.key))
     }
     return []
+  }
+
+  get cover() {
+    const cover = require('./assets/wu.png')
+    return cover
   }
 
   init(forMat: any, cinema: any) {
