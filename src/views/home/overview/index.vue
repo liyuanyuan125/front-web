@@ -273,7 +273,9 @@ export default class Main extends ViewBase {
                     }
                 },
                 legend: {
-                    data: ['广告花费']
+                    data: ['广告花费'],
+                    x: '85%',
+                    y: 'top',
                 },
                 // color: ['#FE8135'],
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{

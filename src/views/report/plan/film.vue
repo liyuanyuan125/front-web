@@ -219,7 +219,9 @@ export default class Main extends ViewBase {
                 }
             },
             legend: {
-                data: ['曝光分布']
+                data: ['曝光分布'],
+                x: '80%',
+                y: 'top',
             },
             // color: ['#FE8135'],
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
@@ -337,7 +339,9 @@ export default class Main extends ViewBase {
             }
         },
         legend: {
-            data: ['曝光分布']
+            data: ['曝光分布'],
+            x: '80%',
+            y: 'top',
         },
         // color: ['#FE8135'],
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
