@@ -420,7 +420,7 @@ export default class Main extends ViewBase {
       this.putType = item.directionType
 
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 

@@ -57,7 +57,7 @@ export default class Change extends ViewBase {
       this.data = data.items
       this.total = data.totalCount
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   handlepageChange(size: any) {

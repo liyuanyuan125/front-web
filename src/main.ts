@@ -19,7 +19,7 @@ import app from './app.vue'
 import event from './fn/event'
 
 import { alert } from './ui/modal'
-import { hasLogin } from './store'
+import { hasLogin, hasRoutePerm } from './store'
 
 import routes from './routes'
 
@@ -36,14 +36,24 @@ Vue.use(Router)
 
 const router = new Router({ mode: 'history', routes })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   iView.LoadingBar.start()
   if (!to.meta.unauth && !hasLogin()) {
     next({ name: 'login' })
-    // } else if (!store.getters.canSee(to.name)) {
-    //   next({ name: '403' })
   } else {
-    next()
+    const has = await hasRoutePerm(to)
+    if (!has) {
+      // 没有权限
+      next({ name: 'error-noauth', replace: true })
+
+      // 若当前页，已经是 error-noauth，则不会执行 afterEach
+      // 这里需要手动对 loadingBar 进行 finish
+      if (from.name == 'error-noauth') {
+        iView.LoadingBar.finish()
+      }
+    } else {
+      next()
+    }
   }
 })
 

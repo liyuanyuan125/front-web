@@ -191,7 +191,7 @@ export default class Main extends ViewBase {
       }
       this.data = data.list || []
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   searchTableList() {
@@ -252,7 +252,7 @@ export default class Main extends ViewBase {
         await accountStatu({ status: 1, systemCode: this.systemCode }, id)
         this.userList()
       } catch (ex) {
-        this.handleError(ex.msg)
+        this.handleError(ex)
       }
     } else {
       await confirm('您确定禁用当前信息吗？')
@@ -261,9 +261,9 @@ export default class Main extends ViewBase {
         this.userList()
       } catch (ex) {
         if (ex.code == '8007403') {
-          this.handleError(ex.msg)
+          this.handleError(ex)
         } else {
-          this.handleError(ex.msg)
+          this.handleError(ex)
         }
       }
     }
@@ -281,9 +281,9 @@ export default class Main extends ViewBase {
       await info('激活链接已重新发送，请查收激活邮件', { title: '提示' })
     } catch (ex) {
       if (ex.code != 0) {
-        this.handleError(ex.msg)
+        this.handleError(ex)
       } else {
-        this.handleError(ex.msg)
+        this.handleError(ex)
       }
     }
   }

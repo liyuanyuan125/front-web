@@ -7,20 +7,74 @@ import activeEmail from './views/portal/activeEmail.vue'
 import registerSuccess from './views/portal/registerSuccess.vue'
 import MainLayout from './views/layout/MainLayout.vue'
 
-import { RouteConfig } from 'vue-router'
+import { RouteConfig, Route } from 'vue-router'
+
+/**
+ * meta 类型：基础类型，可以放一些别的成员
+ */
+// tslint:disable-next-line:no-empty-interface
+interface RouteMetaBase {
+}
+
+/**
+ * meta 类型成员，标记是否不需要登录，与 authKey 互斥
+ */
+export interface RouteMetaUnauth extends RouteMetaBase {
+  /**
+   * 标记是否不需要登录（注意不是是否不需要验证）
+   */
+  unauth: true
+}
+
+/**
+ * RouteMetaAuth 中 authAction 也可以为函数，该函数即是它的签名
+ * @param route 当前页面的 route
+ * @returns 权限字符串
+ */
+export type AuthActionFunction = (route: Route) => string
+
+/**
+ * meta 类型成员，标记权限对应的 key，与 unauth 互斥
+ */
+export interface RouteMetaAuth extends RouteMetaBase {
+  /**
+   * 权限对应的全路径 key，用来权限控制
+   * 注意：这里不要带前缀 ads. 或 resource. 等 systemCode 前缀
+   * 参见 https://zentao.aiads.com/index.php?m=story&f=view&storyID=82
+   */
+  authKey: string
+
+  /**
+   * 权限对应的操作，每个页面必须精确到操作（减少出错的机会），即：
+   * 1、在 authKey 不为空的情况下，该字段不能为空
+   * 2、但有些简单页面，例如首页，确实存在没有 actions，此时可以用 EMPTY 占位
+   * 参见上面的 authKey 中的链接
+   */
+  authAction: string | AuthActionFunction
+
+  /**
+   * 标记是否为菜单
+   */
+  authIsMenu?: true
+}
+
+/** 占位，不需要验证 */
+const emptyAuth: RouteMetaAuth = {
+  authKey: '',
+  authAction: '',
+}
 
 /** 标准化 Meta 的类型 */
-export interface RouteConfigMeta {
-  /** 标记是否需要登录 */
-  unauth: boolean
-}
+export type RouteMeta = RouteMetaUnauth | RouteMetaAuth
 
 /**
  * 重新定义 meta，使 meta 的类型更具体
  */
 export interface RouteConfigEnhance extends RouteConfig {
-  /** 附加信息 */
-  meta?: RouteConfigMeta
+  /** route name，变成必须提供 */
+  name: string
+  /** 附加信息，变成必须提供 */
+  meta: RouteMeta
 }
 
 /**
@@ -35,7 +89,7 @@ const singleRoutes: RouteConfigEnhance[] = [
     name: 'login',
     component: login,
     meta: {
-      unauth: true,
+      unauth: true
     }
   },
 
@@ -58,6 +112,7 @@ const singleRoutes: RouteConfigEnhance[] = [
       unauth: true
     }
   },
+
   // 注册完成信息
   {
     path: '/register/complete',
@@ -67,6 +122,7 @@ const singleRoutes: RouteConfigEnhance[] = [
       unauth: true
     }
   },
+
   // 注册成功
   {
     path: '/register/success',
@@ -98,7 +154,37 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   {
     path: '/',
     name: 'home',
-    component: home
+    component: home,
+    meta: {
+      authKey: 'index',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+    }
+  },
+
+  // 广告主 - 账户概览
+  {
+    path: '/home/overview',
+    name: 'home-overview',
+    component: () => import('./views/home/overview/index.vue'),
+    meta: emptyAuth,
+  },
+
+  // 资源方 - 账户概览
+  {
+    path: '/home/resoverview',
+    name: 'home-resoverview',
+    component: () => import('./views/home/resoverview/index.vue'),
+    meta: emptyAuth,
+  },
+
+  // 错误页面 - 没有权限
+  {
+    path: '/error/noauth',
+    name: 'error-noauth',
+    component: () => import('./views/error/index.vue'),
+    props: { code: 'noauth' },
+    meta: emptyAuth,
   },
 
   // 账户管理 - 账号信息
@@ -106,17 +192,35 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/account/info',
     name: 'account-info',
     component: () => import('./views/account/info/index.vue'),
+    meta: {
+      authKey: 'account-manage.info',
+      authAction: 'view',
+      authIsMenu: true,
+    }
   },
+
+  // TODO: 下面两个页面应该合并在一起？还是涉及权限，应该拆开以方便控制？
+
+  // 账户管理 - 账户编辑（全部信息编辑）
   {
     path: '/account/info/edit',
     name: 'account-info-edit',
     component: () => import('./views/account/info/edit.vue'),
+    meta: {
+      authKey: 'account-manage.info',
+      authAction: 'edit',
+    }
   },
-  // 账户管理 - 账号信息-账户编辑
+
+  // 账户管理 - 账户编辑（基本信息编辑）
   {
     path: '/account/info/accedit',
     name: 'account-info-accedit',
     component: () => import('./views/account/info/accEdit.vue'),
+    meta: {
+      authKey: 'account-manage.info',
+      authAction: 'edit',
+    }
   },
 
   // 账户管理 - 用户管理
@@ -124,30 +228,55 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/account/user',
     name: 'account-user',
     component: () => import('./views/account/user/index.vue'),
+    meta: {
+      authKey: 'account-manage.users',
+      authAction: 'viewList',
+      authIsMenu: true,
+    }
   },
+
   // 账户管理 - 用户管理 - 添加子用户
   {
     path: '/account/user/add',
     name: 'account-user-add',
-    component: () => import('./views/account/user/addUser.vue')
+    component: () => import('./views/account/user/addUser.vue'),
+    meta: {
+      authKey: 'account-manage.users',
+      authAction: 'create',
+    }
   },
+
   // 账户管理 - 用户管理 - 编辑
   {
     path: '/account/user/edit/:useid',
     name: 'account-user-edit',
-    component: () => import('./views/account/user/editUser.vue')
+    component: () => import('./views/account/user/editUser.vue'),
+    meta: {
+      authKey: 'account-manage.users',
+      authAction: 'edit',
+    }
   },
+
   // 账户管理 - 用户管理 - 查看
   {
     path: '/account/user/detail/:useid',
     name: 'account-user-detail',
-    component: () => import('./views/account/user/detailUser.vue')
+    component: () => import('./views/account/user/detailUser.vue'),
+    meta: {
+      authKey: 'account-manage.users',
+      authAction: 'view',
+    }
   },
+
   // 账户管理 - 查看子用户 - 日志
   {
     path: '/account/user/detail/log/:id',
     name: 'account-user-detail-log',
-    component: () => import('./views/account/user/logList.vue')
+    component: () => import('./views/account/user/logList.vue'),
+    meta: {
+      authKey: 'account-manage.users',
+      authAction: 'view',
+    }
   },
 
   // 账户管理 - 权限管理
@@ -155,30 +284,59 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/account/auth',
     name: 'account-auth',
     component: () => import('./views/account/auth/index.vue'),
+    meta: {
+      authKey: 'account-manage.roles',
+      authAction: 'viewList',
+      authIsMenu: true,
+    }
   },
-  // 账户管理 - 权限管理 - 添加子用户
+
+  // 账户管理 - 权限管理 - 添加角色
   {
-    path: '/account/auth/add/:id',
+    path: '/account/auth/add/:id?',
     name: 'account-auth-add',
-    component: () => import('./views/account/auth/addRole.vue')
+    component: () => import('./views/account/auth/addRole.vue'),
+    meta: {
+      authKey: 'account-manage.roles',
+      authAction(route) {
+        const id = parseInt(route.params.id, 10) || 0
+        return id > 0 ? 'edit' : 'create'
+      }
+    }
   },
+
   // 账户管理 - 权限管理 - 查看
   {
     path: '/account/auth/detail/:id',
     name: 'account-auth-detail',
-    component: () => import('./views/account/auth/detailRole.vue')
+    component: () => import('./views/account/auth/detailRole.vue'),
+    meta: {
+      authKey: 'account-manage.roles',
+      authAction: 'view',
+    }
   },
+
   // 账户管理 - 影院管理
   {
     path: '/account/cinema',
     name: 'account-cinema',
     component: () => import('./views/account/cinema/index.vue'),
+    meta: {
+      authKey: 'account-manage.managecinema',
+      authAction: 'viewList',
+      authIsMenu: true,
+    }
   },
+
    // 账户管理 - 影院管理 - 查看
    {
     path: '/account/cinema/detail/:id',
     name: 'account-cinema-detail',
-    component: () => import('./views/account/cinema/detailCinema.vue')
+    component: () => import('./views/account/cinema/detailCinema.vue'),
+    meta: {
+      authKey: 'account-manage.managecinema',
+      authAction: 'view',
+    }
   },
 
   // 账户管理 - 修改密码
@@ -186,68 +344,122 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/account/password',
     name: 'account-password',
     component: () => import('./views/account/password/index.vue'),
+    meta: {
+      authKey: 'account-manage.changePassword',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+    }
   },
 
-  // 财务信息 - 财务信息  - 查看
+  // 财务信息 - 财务信息 - 查看
   {
     path: '/finance/info',
     name: 'finance-info',
     component: () => import('./views/finance/info/index.vue'),
+    meta: {
+      authKey: 'financial-manage.info',
+      authAction: 'viewSummary',
+      authIsMenu: true,
+    }
   },
-  // 财务信息 - 财务信息  - 更多数据
+
+  // 财务信息 - 财务信息 - 更多数据（查看充值记录）
   {
     path: '/finance/info/more',
     name: 'finance-info-more',
     component: () => import('./views/finance/info/moreList.vue'),
+    meta: {
+      authKey: 'financial-manage.info',
+      authAction: 'viewList',
+    }
   },
+
   // 财务管理 - 资金账单
   {
     path: '/finance-bill',
     name: 'finance-bill',
-    component: () => import('./views/finance/bill/index.vue')
+    component: () => import('./views/finance/bill/index.vue'),
+    meta: {
+      authKey: 'financial-manage.bill',
+      authAction: 'view',
+      authIsMenu: true,
+    }
   },
+
+  // 推广管理 - 广告计划 - 计划列表
+  {
+    path: '/pop/planlist',
+    name: 'pop-planlist',
+    component: () => import('./views/pop/plan/planIndex.vue'),
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'viewList',
+      authIsMenu: true,
+    }
+  },
+
+  // TODO: 下面的两个页面应该合成一个
+
+  // 推广管理 - 广告计划 - 详情（草稿、拒绝、已取消状态下）
+  {
+    path: '/pop/planlist/default/:id',
+    name: 'pop-planlist-default',
+    component: () => import('./views/pop/plan/default/planDefault.vue'),
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'view',
+    }
+  },
+
+  // 推广管理 - 广告计划 - 详情（其他状态下）
+  {
+    path: '/pop/planlist/defaultpayment/:id',
+    name: 'pop-planlist-defaultpayment',
+    component: () => import('./views/pop/plan/default/defaultPayment.vue'),
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'view',
+    }
+  },
+
+  // 推广管理 - 广告计划 - 编辑
+  // TODO: 应该是 demo 分支搞出来的，注释掉，等确认了，再彻底删除
+  // {
+  //   path: '/pop/plan-edit/:id?',
+  //   name: 'pop-plan-edit',
+  //   component: () => import('./views/pop/plan/edit/index.vue'),
+  //   meta: {
+  //     authKey: 'promotion.ad-plan',
+  //     authAction: 'edit',
+  //   }
+  // },
 
   // 推广管理 - 广告计划 - 创建广告计划
   {
     path: '/pop/planlist/add/:id?',
     name: 'pop-planlist-add',
     component: () => import('./views/pop/plan/index.vue'),
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction(route) {
+        const id = parseInt(route.params.id, 10) || 0
+        return id > 0 ? 'edit' : 'create'
+      }
+    }
   },
-  // 推广管理 - 广告计划 - 计划列表indexList.vue
-  {
-    path: '/pop/planlist',
-    name: 'pop-planlist',
-    component: () => import('./views/pop/plan/planIndex.vue')
-  },
-  // 推广管理 - 广告计划 - 详情
-  {
-    path: '/pop/planlist/default/:id',
-    name: 'pop-planlist-default',
-    component: () => import('./views/pop/plan/default/planDefault.vue')
-  },
-  // 推广管理 - 广告计划 - 支付详情
-  {
-    path: '/pop/planlist/defaultpayment/:id',
-    name: 'pop-planlist-defaultpayment',
-    component: () => import('./views/pop/plan/default/defaultPayment.vue')
-  },
-  // 推广管理 - 广告计划 - 编辑
-  {
-    path: '/pop/plan-edit/:id?',
-    name: 'pop-plan-edit',
-    component: () => import('./views/pop/plan/edit/index.vue')
-  },
+
   // 推广管理 - 广告计划 - 生成广告方案
   {
     path: '/pop/plan/scheme/:id',
     name: 'pop-plan-scheme',
     component: () => import('./views/pop/pages/index.vue'),
-  },
-  // 推广管理 - 广告计划 - 生成广告方案2
-  {
-    path: '/pop/plan/scheme/two',
-    name: 'pop-plan-scheme-two',
-    component: () => import('./views/two/index.vue'),
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction(route) {
+        const id = parseInt(route.params.id, 10) || 0
+        return id > 0 ? 'edit' : 'create'
+      }
+    }
   },
 
   // 推广管理 - 广告片 - 列表
@@ -255,18 +467,36 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/pop/film',
     name: 'pop-film',
     component: () => import('./views/pop/film/index.vue'),
+    meta: {
+      authKey: 'promotion.ad-video',
+      authAction: 'viewList',
+      authIsMenu: true,
+    }
   },
+
   // 推广管理 - 广告片 - 创建、编辑（存在 id 为编辑，否则为创建）
   {
     path: '/pop/film/edit/:id?',
     name: 'pop-film-edit',
     component: () => import('./views/pop/film/edit.vue'),
+    meta: {
+      authKey: 'promotion.ad-video',
+      authAction(route) {
+        const id = parseInt(route.params.id, 10) || 0
+        return id > 0 ? 'edit' : 'create'
+      }
+    }
   },
+
   // 推广管理 - 广告片 - 查看
   {
     path: '/pop/film/detail/:id',
     name: 'pop-film-detail',
     component: () => import('./views/pop/film/detail.vue'),
+    meta: {
+      authKey: 'promotion.ad-video',
+      authAction: 'view',
+    }
   },
 
   // 广告单管理 - 广告单列表
@@ -274,29 +504,58 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/order/dispatch',
     name: 'order-dispatch',
     component: () => import('./views/order/dispatch/index.vue'),
+    meta: {
+      authKey: 'adOrderManage.order',
+      authAction: 'view',
+      authIsMenu: true,
+    }
   },
+
+  // TODO: 下面的两个页面应该合并
+
   // 广告单管理 - 执行单列表
   {
     path: '/order/execute',
     name: 'order-execute',
     component: () => import('./views/order/execute/index.vue'),
+    meta: {
+      authKey: 'adOrderManage.execute',
+      authAction: 'view',
+      authIsMenu: true,
+    }
   },
+
   {
     path: '/order/execute/:id',
     name: 'order-execute-xq',
     component: () => import('./views/order/execute/index.vue'),
+    meta: {
+      authKey: 'adOrderManage.execute',
+      authAction: 'view',
+    }
   },
+
   // 广告单管理 - DCP包列表
   {
     path: '/order/dcp',
     name: 'order-dcp',
     component: () => import('./views/order/dcp/index.vue'),
+    meta: {
+      authKey: 'adOrderManage.dcp',
+      authAction: 'view',
+      authIsMenu: true,
+    }
   },
+
   // 广告单管理 - DCP包下载
   {
     path: '/order/dcp/detail/:id',
     name: 'order-dcp-detail',
     component: () => import('./views/order/dcp/detail.vue'),
+    meta: {
+      authKey: 'adOrderManage.dcp',
+      authAction: 'download',
+    }
   },
 
   // 数据报表 - 投放成效报告
@@ -304,70 +563,87 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/report/plan/:id?',
     name: 'report-plan',
     component: () => import('./views/report/plan/index.vue'),
+    meta: {
+      authKey: 'data-report',
+      authAction: 'view',
+      authIsMenu: true,
+    }
   },
-  // 数据报表 - 投放成效报告 - 按影院
-  // {
-  //   path: '/report/plan/cinema',
-  //   name: 'report-plan-cinema',
-  //   component: () => import('./views/report/plan/cinema.vue'),
-  // },
-  {
-    path: '/report/plan/xibei/:id?',
-    name: 'report-plan-xibei',
-    component: () => import('./views/report/plan/xibei.vue'),
-  },
+
   // 资源方 - 财务管理 - 财务信息
   {
     path: '/resfinance/info',
     name: 'resfinance-info',
-    component: () => import('./views/resFinance/info/index.vue')
+    component: () => import('./views/resFinance/info/index.vue'),
+    meta: {
+      authKey: 'financeManage.info',
+      authAction: 'viewSummary',
+      authIsMenu: true,
+    }
   },
+
+  // TODO: 下面的两个先不做了
+
   // 资源方 - 财务管理 - 收益账单
-  {
-    path: 'resfinance/profitbill',
-    name: 'resfinance-profitbill',
-    component: () => import('./views/resFinance/profItBill/index.vue')
-  },
-  {
-    path: 'resfinance/mouthbill',
-    name: 'resfinance-mouthbill',
-    component: () => import('./views/resFinance/mouthBill/index.vue')
-  },
+  // {
+  //   path: '/resfinance/profitbill',
+  //   name: 'resfinance-profitbill',
+  //   component: () => import('./views/resFinance/profItBill/index.vue'),
+  //   meta: {
+  //     authKey: 'financeManage',
+  //     authAction: 'viewList',
+  //   }
+  // },
+
+  // {
+  //   path: 'resfinance/mouthbill',
+  //   name: 'resfinance-mouthbill',
+  //   component: () => import('./views/resFinance/mouthBill/index.vue')
+  // },
+
   // 广告主 - 客户管理 - 客户列表
   {
-    path: 'customer/list',
+    path: '/customer/list',
     name: 'customer-list',
-    component: () => import('./views/customer/list/index.vue')
+    component: () => import('./views/customer/list/index.vue'),
+    meta: {
+      authKey: 'customer-manage',
+      authAction: 'viewList',
+      authIsMenu: true,
+    }
   },
+
   // 广告主 - 客户管理 - 新建编辑客户
   {
-    path: 'customer/list/edit/:id?',
+    path: '/customer/list/edit/:id?',
     name: 'customer-list-edit',
-    component: () => import('./views/customer/list/edit.vue')
+    component: () => import('./views/customer/list/edit.vue'),
+    meta: {
+      authKey: 'customer-manage',
+      authAction(route) {
+        const id = parseInt(route.params.id, 10) || 0
+        return id > 0 ? 'edit' : 'create'
+      }
+    }
   },
-  // 广告主 - 客户管理 - 客户列表
+
+  // 广告主 - 客户管理 - 客户详情
   {
-    path: 'customer/list/detail/:id',
+    path: '/customer/list/detail/:id',
     name: 'customer-list-detail',
-    component: () => import('./views/customer/list/detail.vue')
+    component: () => import('./views/customer/list/detail.vue'),
+    meta: {
+      authKey: 'customer-manage',
+      authAction: 'view',
+    }
   },
-  // 广告主 - 账户概览
-  {
-    path: 'home/overview',
-    name: 'home-overview',
-    component: () => import('./views/home/overview/index.vue')
-  },
-  // 资源方 - 账户概览
-  {
-    path: 'home/resoverview',
-    name: 'home-resoverview',
-    component: () => import('./views/home/resoverview/index.vue')
-  },
+
   // 示例，没有实际用处
   {
     path: '/about',
     name: 'about',
     component: () => import(/* webpackChunkName: "about" */'./views/about.vue'),
+    meta: emptyAuth,
   },
 ] // // end of mainLayoutRoutes
 

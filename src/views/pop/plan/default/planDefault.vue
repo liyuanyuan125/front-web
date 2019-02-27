@@ -303,7 +303,7 @@ export default class PlanDefault extends ViewBase {
         this.launchList.categorizedByCityGradeCode = sort
       }
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   subTimes(tim: any) {
@@ -318,7 +318,7 @@ export default class PlanDefault extends ViewBase {
       await subExamine(id)
       this.$router.push({ name: 'pop-planlist' })
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   queryAreas(ary: any[]) {
@@ -355,7 +355,7 @@ export default class PlanDefault extends ViewBase {
       const { data } = await planCancel(id)
       this.$router.push({name: 'pop-planlist'})
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 

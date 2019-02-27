@@ -127,7 +127,7 @@ export default class Main extends ViewBase {
       this.statusList = statusList
       this.status = item.status
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 
@@ -139,7 +139,7 @@ export default class Main extends ViewBase {
       await popCancel(id)
       this.$router.push({name: 'pop-film'})
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   async handlePayment() {
@@ -151,7 +151,7 @@ export default class Main extends ViewBase {
       await popPayment(id)
       this.$router.push({name: 'pop-film'})
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   queryTypeList(id: any) {

@@ -90,7 +90,7 @@ export default class Main extends ViewBase {
       })
       toast('已激活成功')
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 }

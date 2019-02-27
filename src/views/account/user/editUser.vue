@@ -155,7 +155,7 @@ export default class Main extends ViewBase {
       const { data } = await rolesList(role)
       this.rolelist = data.items
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 
@@ -205,7 +205,7 @@ export default class Main extends ViewBase {
         perms: (role && role.perms) || []
       }
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
   async handleInforma() {

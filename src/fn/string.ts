@@ -35,6 +35,8 @@ export function subBytes(str: string, size: number, tail = '...') {
   return substr == str ? substr : substr + tail
 }
 
+let uniqueId = 0
+
 /**
  * 生成随机字符串
  * @param prefix 可选前缀
@@ -44,6 +46,7 @@ export function random(prefix = '', suffix = '') {
   return prefix
     + Math.random().toString(36).slice(2)
     + new Date().getTime().toString(36)
+    + uniqueId++
     + suffix
 }
 

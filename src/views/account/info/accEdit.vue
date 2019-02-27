@@ -83,7 +83,7 @@ export default class Main extends ViewBase {
       })
       this.emailMes = '重新获取验证码'
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
       this.displayCode = false
     } finally {
       this.displayCode = false
@@ -109,7 +109,7 @@ export default class Main extends ViewBase {
       }
       this.$router.push({ name: 'account-info' })
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     } finally {
       this.submitDisabled = false
     }

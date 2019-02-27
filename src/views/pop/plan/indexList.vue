@@ -192,7 +192,7 @@ export default class Plan extends ViewBase {
         await delCheckPlanList({ ids })
         this.tableList()
       } catch (ex) {
-        this.handleError(ex.msg)
+        this.handleError(ex)
       }
     } else {
       this.showWaring('请选择你要删除的元素')

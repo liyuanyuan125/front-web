@@ -10,6 +10,9 @@ import event from '@/fn/event'
 import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
 import { getMenus } from '@/api/customer'
 import { walkTree } from '@/fn/tree'
+import { RouteMetaUnauth, RouteMetaAuth } from './routes'
+import { Route } from 'vue-router'
+import { devInfo, devError } from '@/util/dev'
 
 const accessToken: AccessToken = { can: false }
 
@@ -107,13 +110,16 @@ export function checkUser() {
       assert(user.accountType > 0, '没有子账户类型')
       assert(user.perms && user.perms.length > 0, '没有权限列表')
     } catch (ex) {
-      // tslint:disable-next-line:no-console
-      console.error(`用户信息不完整：${ex.message}，退出重新登录`)
+      devError(`用户信息不完整：${ex.message}，退出重新登录`)
       logout()
     }
   }
 }
 
+/**
+ * 切换系统
+ * @param systemCode 系统
+ */
 export function switchSystem(systemCode: SystemCode) {
   if (theUser != null && theUser.systemCode !== systemCode) {
     const oldSystemCode = theUser.systemCode
@@ -128,6 +134,10 @@ export function switchSystem(systemCode: SystemCode) {
   }
 }
 
+/**
+ * 更新当前用户的邮箱
+ * @param email 邮箱地址
+ */
 export function updateEmail(email: string) {
   if (theUser != null) {
     accessToken.can = true
@@ -153,7 +163,10 @@ export function logout() {
 
   // 清除权限缓存
   if (theUser != null) {
-    delete permCache[theUser.id]
+    systemList.forEach(({ code }) => {
+      const permKey = `${theUser!.id}-${code}`
+      delete permCache[permKey]
+    })
   }
 
   theUser = null
@@ -172,7 +185,8 @@ export async function getCurrentPerms() {
   const user = getUser()
   if (user != null) {
     // 先从缓存中查找
-    const cached = permCache[user.id]
+    const permKey = `${user.id}-${user.systemCode}`
+    const cached = permCache[permKey]
     if (cached != null) {
       return cached
     }
@@ -196,24 +210,31 @@ export async function getCurrentPerms() {
             return false
           }
 
-          // 提取所有权限
-          const key = node.key
-          node.actions.forEach(({ code }) => permMap[`${key}${code}`.toLowerCase()] = 1)
+          const key = node.key.toLowerCase()
+
+          // 首先，页面本身也是一种权限，即本页面的查看权限（打开该页面的权限）
+          permMap[key] = 1
+
+          // 其次，将每个 action 作为单独的权限
+          node.actions.forEach(({ code }) => permMap[`${key}#${code}`.toLowerCase()] = 1)
         }
       })
 
       const result: PermResult = { menu, permMap }
 
+      devInfo('permMenu', menu)
+      devInfo('permMap', permMap)
+
       return result
     })
     .catch(() => {
       // 如果遇到错误，则清空相应的 permCache，以便下次可以重试
-      delete permCache[user.id]
+      delete permCache[permKey]
       // 返回一个空的 PermResult，以便消除上层代码的错误？
       return { menu: [], permMap: {} } as PermResult
     })
 
-    permCache[user.id] = promise
+    permCache[permKey] = promise
 
     return promise
   }
@@ -226,5 +247,61 @@ export async function getCurrentPerms() {
 export async function hasPerm(perm: string) {
   const { permMap = {} } = await getCurrentPerms() || {}
   const lower = (perm || '').toLowerCase()
-  return lower in permMap
+  const has = lower in permMap
+  !has && devError(`[perm] ${lower} not in permMap`)
+  return has
+}
+
+/**
+ * 验证当前用户是否有指定路由的访问权限
+ * @param route 页面路由
+ */
+export async function hasRoutePerm(route: Route) {
+  if (route.meta == null) {
+    devError('路由配置错误，必须含有 meta 信息')
+    return false
+  }
+
+  // 不需要登录的，认为具有任何权限
+  if ((route.meta as RouteMetaUnauth).unauth) {
+    return true
+  }
+
+  const { authKey, authAction } = route.meta as RouteMetaAuth
+
+  // authKey 不能为 null
+  if (authKey == null || authAction == null) {
+    devError('路由配置错误，authKey 或 authAction 不能为 null')
+    return false
+  }
+
+  const key = String(authKey).trim()
+
+  // authKey 为空的，被认为不做权限验证
+  if (key === '') {
+    return true
+  }
+
+  const action = typeof authAction === 'string'
+    ? authAction
+    : authAction(route)
+
+  const act = String(action).trim()
+
+  if (act == null || act === '') {
+    devError('路由配置错误，authAction 不能为空')
+    return false
+  }
+
+  const user = getUser()
+  const systemCode = user!.systemCode
+
+  const fullKey = [systemCode, key].join('.')
+
+  // 实现 routes 配置中的 EMPTY 约定
+  // 参见：src/routes.ts 中 RouteMetaAuth 类型 authAction 字段的注释
+  const perm = [fullKey, act].join('#').replace(/#EMPTY$/, '')
+
+  const has = await hasPerm(perm)
+  return has
 }

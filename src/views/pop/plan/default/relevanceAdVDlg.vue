@@ -73,7 +73,7 @@ export default class Relevan extends ViewBase {
       this.value.visible = false
       this.$emit('submitRelevance')
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 
@@ -88,7 +88,7 @@ export default class Relevan extends ViewBase {
       })
       this.releList = items
     } catch (ex) {
-      this.handleError(ex.msg)
+      this.handleError(ex)
     }
   }
 }
