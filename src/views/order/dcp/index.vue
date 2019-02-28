@@ -10,16 +10,18 @@
         <Icon type="ios-search" size="22"/>
       </span>
     </div>
-    <Table ref="selection" stripe :loading="tableLoading"  :columns="columns4" :data="authDate"></Table>
-    <Page :total="total" v-if="total>0" class="btnCenter"
-      :current="dataForm.pageIndex"
-      :page-size="dataForm.pageSize"
-      :page-size-opts="[10, 20, 50, 100]"
-      show-total
-      show-sizer
-      show-elevator
-      @on-change="sizeChangeHandle"
-      @on-page-size-change="currentChangeHandle"/>
+    <div v-auth="'adordermanage.dcp#view'">
+      <Table ref="selection" stripe :loading="tableLoading"  :columns="columns4" :data="authDate"></Table>
+      <Page :total="total" v-if="total>0" class="btnCenter"
+        :current="dataForm.pageIndex"
+        :page-size="dataForm.pageSize"
+        :page-size-opts="[10, 20, 50, 100]"
+        show-total
+        show-sizer
+        show-elevator
+        @on-change="sizeChangeHandle"
+        @on-page-size-change="currentChangeHandle"/>
+    </div>
   </div>
 </template>
 
