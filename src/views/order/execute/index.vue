@@ -80,12 +80,13 @@
             <router-link
               v-if='it.status == 1 || it.status == 2'
               :to="{ name: 'order-dcp-detail', params: { id: it.id } }"
+              v-auth="'adordermanage.execute#download'"
               tag="span"
               class='button'
               style='background: #3B98FF; color: #fff;cursor: pointer;'
             >下载DCP包</router-link>
               <!-- <span class='button' v-if='it.status == 1 || it.status == 2' style='background: #3B98FF; color: #fff;cursor: pointer;'>下载DCP包</span> -->
-              <span class='button' @click="editReject(it.id, it.id, it.cinemas.length)" v-if='it.status == 1' style='background: #3B98FF; color: #fff;cursor: pointer;'>修改执行影院</span>
+              <span v-auth="'adordermanage.execute#edit'" class='button' @click="editReject(it.id, it.id, it.cinemas.length)" v-if='it.status == 1' style='background: #3B98FF; color: #fff;cursor: pointer;'>修改执行影院</span>
             </Col>
           </Row>
           <Row class='li-item'>
