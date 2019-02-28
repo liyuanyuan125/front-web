@@ -222,7 +222,7 @@ export async function getCurrentPerms() {
 
       const result: PermResult = { menu, permMap }
 
-      devInfo('permMenu', menu)
+      // devInfo('permMenu', menu)
       devInfo('permMap', permMap)
 
       return result

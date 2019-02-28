@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { hasPerm } from '@/store'
+import { getUser, hasPerm } from '@/store'
 
 // 定义全局权限验证指令，应用在需要相应权限才能看到的元素上
 Vue.directive('auth', {
@@ -8,7 +8,10 @@ Vue.directive('auth', {
     const oldVisibility = el.style.visibility
     el.style.visibility = 'hidden'
 
-    const perm = binding.value
+    const user = getUser()
+    const systemCode = user && user.systemCode || ''
+
+    const perm = systemCode + '.' + binding.value
     const has = await hasPerm(perm)
 
     if (has) {
