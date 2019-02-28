@@ -9,7 +9,11 @@
         <Icon type="ios-search" size="22"/>
       </span>
     </div>
-    <Table ref="selection" stripe class="tables" :loading="tableLoading" :columns="columns4" :data="cinemaData"></Table>
+    <Table ref="selection" stripe class="tables" :loading="tableLoading" :columns="columns4" :data="cinemaData">
+      <template slot-scope="{row}" slot="action">
+        <a v-auth="'account-manage.managecinema#view'" @click="toDetail( row.id)" class="operation" >详情</a>
+      </template>
+    </Table>
     <Page :total="total" v-if="total>0" class="btnCenter"
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
@@ -72,12 +76,7 @@ export default class Main extends ViewBase {
     {
       title: '操作',
       align: 'center',
-      render: (hh: any, { row: { id } }: any) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        return <a v-auth="'account-manage.managecinema#view'" on-click={this.toDetail.bind(this, id)} class="operation" >详情</a>
-        /* tslint:enable */
-      }
+      slot: 'action'
     }
   ]
 

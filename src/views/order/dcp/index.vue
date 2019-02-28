@@ -11,7 +11,15 @@
       </span>
     </div>
     <div v-auth="'adordermanage.dcp#view'">
-      <Table ref="selection" stripe :loading="tableLoading"  :columns="columns4" :data="authDate"></Table>
+      <Table ref="selection" stripe :loading="tableLoading"  :columns="columns4" :data="authDate">
+        <template slot-scope="{row , index}" slot="action">
+          <div v-auth="'adordermanage.dcp#download'" class="edit" @click="toDetail(row.id)">
+            <img style="width: 18px" src="./assets/down.png"/>
+            <a class="operation" >下载DCP包</a>
+          </div>
+        </template>
+      </Table>
+
       <Page :total="total" v-if="total>0" class="btnCenter"
         :current="dataForm.pageIndex"
         :page-size="dataForm.pageSize"
@@ -86,16 +94,7 @@ export default class Main extends ViewBase {
     {
       title: '操作',
       align: 'center',
-      render: (hh: any, { row: { id } }: any) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        const img = require('./assets/down.png')
-        return <div class="edit" on-click={this.toDetail.bind(this, id)}>
-          <img style="width: 18px" src={img}/>
-          <a v-auth="'adordermanage.dcp#download'" class="operation" >下载DCP包</a>
-        </div>
-        /* tslint:enable */
-      }
+      slot: 'action'
     }
   ]
 

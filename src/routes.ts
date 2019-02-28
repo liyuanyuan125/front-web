@@ -450,7 +450,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 推广管理 - 广告计划 - 生成广告方案
   {
-    path: '/pop/plan/scheme/:id',
+    path: '/pop/plan/scheme/:id/:key',
     name: 'pop-plan-scheme',
     component: () => import('./views/pop/pages/index.vue'),
     meta: {
