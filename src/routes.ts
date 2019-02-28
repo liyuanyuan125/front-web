@@ -162,6 +162,15 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  // 错误页面 - 没有权限
+  {
+    path: '/error/noauth',
+    name: 'error-noauth',
+    component: () => import('./views/error/index.vue'),
+    props: { code: 'noauth' },
+    meta: emptyAuth,
+  },
+
   // 广告主 - 账户概览
   {
     path: '/home/overview',
@@ -178,16 +187,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth,
   },
 
-  // 错误页面 - 没有权限
-  {
-    path: '/error/noauth',
-    name: 'error-noauth',
-    component: () => import('./views/error/index.vue'),
-    props: { code: 'noauth' },
-    meta: emptyAuth,
-  },
-
-  // 账户管理 - 账号信息
+  // 广告主、资源方 - 账户管理 - 账号信息
   {
     path: '/account/info',
     name: 'account-info',
@@ -201,7 +201,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // TODO: 下面两个页面应该合并在一起？还是涉及权限，应该拆开以方便控制？
 
-  // 账户管理 - 账户编辑（全部信息编辑）
+  // 广告主、资源方 - 账户管理 - 账户编辑（全部信息编辑）
   {
     path: '/account/info/edit',
     name: 'account-info-edit',
@@ -212,7 +212,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 账户管理 - 账户编辑（基本信息编辑）
+  // 广告主、资源方 - 账户管理 - 账户编辑（基本信息编辑）
   {
     path: '/account/info/accedit',
     name: 'account-info-accedit',
@@ -223,7 +223,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 账户管理 - 用户管理
+  // 广告主、资源方 - 账户管理 - 用户管理
   {
     path: '/account/user',
     name: 'account-user',
@@ -235,7 +235,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 账户管理 - 用户管理 - 添加子用户
+  // 广告主、资源方 - 账户管理 - 用户管理 - 添加子用户
   {
     path: '/account/user/add',
     name: 'account-user-add',
@@ -246,7 +246,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 账户管理 - 用户管理 - 编辑
+  // 广告主、资源方 - 账户管理 - 用户管理 - 编辑
   {
     path: '/account/user/edit/:useid',
     name: 'account-user-edit',
@@ -257,7 +257,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 账户管理 - 用户管理 - 查看
+  // 广告主、资源方 - 账户管理 - 用户管理 - 查看
   {
     path: '/account/user/detail/:useid',
     name: 'account-user-detail',
@@ -268,7 +268,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 账户管理 - 查看子用户 - 日志
+  // 广告主、资源方 - 账户管理 - 查看子用户 - 日志
   {
     path: '/account/user/detail/log/:id',
     name: 'account-user-detail-log',
@@ -279,7 +279,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 账户管理 - 权限管理
+  // 广告主、资源方 - 账户管理 - 权限管理
   {
     path: '/account/auth',
     name: 'account-auth',
@@ -291,7 +291,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 账户管理 - 权限管理 - 添加角色
+  // 广告主、资源方 - 账户管理 - 权限管理 - 添加角色
   {
     path: '/account/auth/add/:id?',
     name: 'account-auth-add',
@@ -305,7 +305,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 账户管理 - 权限管理 - 查看
+  // 广告主、资源方 - 账户管理 - 权限管理 - 查看
   {
     path: '/account/auth/detail/:id',
     name: 'account-auth-detail',
@@ -316,7 +316,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 账户管理 - 影院管理
+  // 资源方 - 账户管理 - 影院管理
   {
     path: '/account/cinema',
     name: 'account-cinema',
@@ -328,7 +328,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-   // 账户管理 - 影院管理 - 查看
+   // 资源方 - 账户管理 - 影院管理 - 查看
    {
     path: '/account/cinema/detail/:id',
     name: 'account-cinema-detail',
@@ -339,7 +339,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 账户管理 - 修改密码
+  // 广告主、资源方 - 账户管理 - 修改密码
   {
     path: '/account/password',
     name: 'account-password',
@@ -351,7 +351,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 财务信息 - 财务信息 - 查看
+  // 广告主 - 财务信息 - 财务信息 - 查看
   {
     path: '/finance/info',
     name: 'finance-info',
@@ -363,7 +363,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 财务信息 - 财务信息 - 更多数据（查看充值记录）
+  // 广告主 - 财务信息 - 财务信息 - 更多数据（查看充值记录）
   {
     path: '/finance/info/more',
     name: 'finance-info-more',
@@ -374,7 +374,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 财务管理 - 资金账单
+  // 广告主 -财务管理 - 资金账单
   {
     path: '/finance-bill',
     name: 'finance-bill',
@@ -386,7 +386,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 推广管理 - 广告计划 - 计划列表
+  // 广告主 - 推广管理 - 广告计划 - 计划列表
   {
     path: '/pop/planlist',
     name: 'pop-planlist',
@@ -400,7 +400,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // TODO: 下面的两个页面应该合成一个
 
-  // 推广管理 - 广告计划 - 详情（草稿、拒绝、已取消状态下）
+  // 广告主 - 推广管理 - 广告计划 - 详情（草稿、拒绝、已取消状态下）
   {
     path: '/pop/planlist/default/:id',
     name: 'pop-planlist-default',
@@ -411,7 +411,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 推广管理 - 广告计划 - 详情（其他状态下）
+  // 广告主 - 推广管理 - 广告计划 - 详情（其他状态下）
   {
     path: '/pop/planlist/defaultpayment/:id',
     name: 'pop-planlist-defaultpayment',
@@ -434,7 +434,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   //   }
   // },
 
-  // 推广管理 - 广告计划 - 创建广告计划
+  // 广告主 - 推广管理 - 广告计划 - 创建广告计划
   {
     path: '/pop/planlist/add/:id?',
     name: 'pop-planlist-add',
@@ -448,7 +448,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 推广管理 - 广告计划 - 生成广告方案
+  // 广告主 - 推广管理 - 广告计划 - 生成广告方案
   {
     path: '/pop/plan/scheme/:id',
     name: 'pop-plan-scheme',
@@ -462,7 +462,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 推广管理 - 广告片 - 列表
+  // 广告主 - 推广管理 - 广告片 - 列表
   {
     path: '/pop/film',
     name: 'pop-film',
@@ -474,7 +474,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 推广管理 - 广告片 - 创建、编辑（存在 id 为编辑，否则为创建）
+  // 广告主 - 推广管理 - 广告片 - 创建、编辑（存在 id 为编辑，否则为创建）
   {
     path: '/pop/film/edit/:id?',
     name: 'pop-film-edit',
@@ -488,7 +488,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 推广管理 - 广告片 - 查看
+  // 广告主 - 推广管理 - 广告片 - 查看
   {
     path: '/pop/film/detail/:id',
     name: 'pop-film-detail',
@@ -499,7 +499,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 广告单管理 - 广告单列表
+  // 广告主 - 广告单管理 - 广告单列表
   {
     path: '/order/dispatch',
     name: 'order-dispatch',
@@ -513,7 +513,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // TODO: 下面的两个页面应该合并
 
-  // 广告单管理 - 执行单列表
+  // 广告主 - 广告单管理 - 执行单列表
   {
     path: '/order/execute',
     name: 'order-execute',
@@ -535,7 +535,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 广告单管理 - DCP包列表
+  // 广告主 - 广告单管理 - DCP包列表
   {
     path: '/order/dcp',
     name: 'order-dcp',
@@ -547,7 +547,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 广告单管理 - DCP包下载
+  // 广告主 - 广告单管理 - DCP包下载
   {
     path: '/order/dcp/detail/:id',
     name: 'order-dcp-detail',
@@ -558,7 +558,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 数据报表 - 投放成效报告
+  // 广告主 - 数据报表 - 投放成效报告
   {
     path: '/report/plan/:id?',
     name: 'report-plan',
