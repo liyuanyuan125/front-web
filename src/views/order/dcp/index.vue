@@ -10,16 +10,18 @@
         <Icon type="ios-search" size="22"/>
       </span>
     </div>
-    <Table ref="selection" stripe :loading="tableLoading"  :columns="columns4" :data="authDate"></Table>
-    <Page :total="total" v-if="total>0" class="btnCenter"
-      :current="dataForm.pageIndex"
-      :page-size="dataForm.pageSize"
-      :page-size-opts="[10, 20, 50, 100]"
-      show-total
-      show-sizer
-      show-elevator
-      @on-change="sizeChangeHandle"
-      @on-page-size-change="currentChangeHandle"/>
+    <div v-auth="'adordermanage.dcp#view'">
+      <Table ref="selection" stripe :loading="tableLoading"  :columns="columns4" :data="authDate"></Table>
+      <Page :total="total" v-if="total>0" class="btnCenter"
+        :current="dataForm.pageIndex"
+        :page-size="dataForm.pageSize"
+        :page-size-opts="[10, 20, 50, 100]"
+        show-total
+        show-sizer
+        show-elevator
+        @on-change="sizeChangeHandle"
+        @on-page-size-change="currentChangeHandle"/>
+    </div>
   </div>
 </template>
 
@@ -90,7 +92,7 @@ export default class Main extends ViewBase {
         const img = require('./assets/down.png')
         return <div class="edit" on-click={this.toDetail.bind(this, id)}>
           <img style="width: 18px" src={img}/>
-          <a class="operation" >下载DCP包</a>
+          <a v-auth="'adordermanage.dcp#download'" class="operation" >下载DCP包</a>
         </div>
         /* tslint:enable */
       }

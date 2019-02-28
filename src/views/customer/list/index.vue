@@ -2,7 +2,7 @@
   <div class="page home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">客户管理</span>
-      <em class="addUser" @click="addUser">
+      <em class="addUser" v-auth="'customer-manage#create'" @click="addUser">
         <Icon type="ios-add" size="27"/>新建客户
       </em>
     </h3>
@@ -42,8 +42,8 @@
       :data="data"
     >
       <template slot-scope="{row , index}" slot="action">
-        <a class="action-btn" @click="toDetail(row.id)">查看</a>
-        <a class="action-btn" @click="toEdit(row.id)">编辑</a>
+        <a v-auth="'customer-manage#view'" class="action-btn" @click="toDetail(row.id)">查看</a>
+        <a v-auth="'customer-manage#edit'" class="action-btn" @click="toEdit(row.id)">编辑</a>
       </template>
     </Table>
     <Page
