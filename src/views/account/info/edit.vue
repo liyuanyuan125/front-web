@@ -52,7 +52,8 @@
       </FormItem>
     </Form>
     <div class="btnCenter">
-      <Button type="primary" class="button-ok edit-submit" @click="updateAccount">更新账号</Button>
+      <Button v-auth="'account-manage.info#change'" type="primary" class="button-ok edit-submit"
+       @click="updateAccount">更新账号</Button>
     </div>
   </div>
 </template>

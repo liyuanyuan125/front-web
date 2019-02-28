@@ -21,8 +21,8 @@
       </FormItem>
     </Form>
     <div class="tableSubmit btnCenter">
-      <button class="submitBtn button-ok" v-if="!$route.params.id" @click="handleInforma">确定增加</button>
-      <button class="submitBtn button-ok" v-else @click="handleInforma">确定修改</button>
+      <Button type="primary" class="submitBtn button-ok" v-if="!$route.params.id" @click="handleInforma">确定增加</Button>
+      <Button type="primary" class="submitBtn button-ok" v-else @click="handleInforma">确定修改</Button>
     </div>
   </div>
 </template>
