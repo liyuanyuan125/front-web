@@ -81,6 +81,7 @@
               <span v-show='it.status == 1' v-auth="'adordermanage.order#refuse'"  @click="editRefuse(it)" class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
               <!-- <span v-if='it.status == 2' class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>查看执行单</span> -->
               <router-link
+              v-auth="'adordermanage.execute#view'"
               v-if='it.status == 2'
               :to="{ name: 'order-execute-xq', params: { id: it.planMessageId } }"
               tag="span"
