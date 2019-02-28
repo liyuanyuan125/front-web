@@ -111,7 +111,7 @@
                 <Col span='14'><span style='width: 28%;'>影片标语</span> <b>{{seacinemaList.slogan == '' ? '暂无' : seacinemaList.slogan}}</b></Col>
               </Row>
               <Row class='row-xq'>
-                <Col span='10'><span>上映日期</span> <b>{{seacinemaList.openTime}}</b></Col>
+                <Col span='10'><span>上映日期</span> <b>{{opentimes}}</b></Col>
                 <Col span='14'><span style='width: 28%;'>片长</span> <b>{{seacinemaList.length == '' ? '暂无' : seacinemaList.length}}</b></Col>
               </Row>
               <Row class='row-xq-24'>
@@ -349,6 +349,7 @@ export default class Main extends ViewBase {
   // @Prop({ type: Object, default: () => {}, required: true }) value!: Stats
   cinemaShow = false
   preshow: any = false
+  opentimes: any = ''
   // cinemaLoading = false
   // cinemaTotal = 0
   // cinemaList: CinemaDlgItem[] = []
@@ -1052,6 +1053,7 @@ export default class Main extends ViewBase {
       if (this.list.deliveryMovies) {
         const seacinema = await cinemaList({id : this.list.deliveryMovies[0]})
         this.seacinemaList = seacinema.data.data.items[0]
+        this.opentimes = this.seacinemaList.openTime ? moment(this.seacinemaList.openTime).format(timeFormat) : '暂无'
         if (this.seacinemaList.performers.length == 0) {
           this.preshow = true
         }
