@@ -3,7 +3,7 @@
     <h3 class="userTitle">
       <span class="nav-top-title">财务信息</span>
     </h3>
-    <div class="fince">
+    <div class="fince"  v-auth="'financial-manage.info#viewsummary'">
       <h3 class="userTitle">
         <span style="color:#222222;" class="nav-top-title">账户总览</span>
       </h3>
@@ -22,7 +22,7 @@
         </div>
       </div>
     </div>
-    <div class="table-box">
+    <div class="table-box" v-auth="'financial-manage.info#viewlist'">
       <div class="table-left-title">最近充值记录</div>
       <router-link
         :to="{path:'/finance/info/more' , params: {companyId: userList.companyId,}}"
@@ -34,6 +34,7 @@
       ref="selection"
       stripe
       class="tables"
+      v-auth="'financial-manage.info#viewlist'"
       :loading="tableLoading"
       :columns="columns4"
       :data="tableData"
@@ -136,7 +137,7 @@
           </Row>
         </Form>
         <div class='btnq' style="text-align: center">
-          <Button type="primary" @click="dataFormSubmit('dataForm')">提交充值申请</Button>
+          <Button  v-auth="'financial-manage.info#submit'" type="primary" @click="dataFormSubmit('dataForm')">提交充值申请</Button>
         </div>
       </div>
     </div>
