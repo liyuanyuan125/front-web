@@ -63,8 +63,8 @@
         <a v-auth="'account-manage.users#view'" class="action-btn" @click="toDetail(row.id)">查看</a>
         <a v-auth="'account-manage.users#edit'" class="action-btn" @click="toEdit(row.id)">编辑</a>
         
-        <a class="action-btn" v-if="row.statusCode == 2" @click="handleEnable(row.id, 1)">启用</a>
-        <a class="action-btn" v-else-if="row.statusCode == 1" @click="handleEnable(row.id, 2)">禁用</a>
+        <a  v-auth="'account-manage.users#enable'" class="action-btn" v-if="row.statusCode == 2" @click="handleEnable(row.id, 1)">启用</a>
+        <a  v-auth="'account-manage.users#enable'" class="action-btn" v-else-if="row.statusCode == 1" @click="handleEnable(row.id, 2)">禁用</a>
         <a class="action-btn" v-else-if="row.statusCode == 3" @click="activeEmail(row.id)">重新激活</a>
       </template>
     </Table>

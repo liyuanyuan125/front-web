@@ -181,8 +181,9 @@
       </div>
     </div>
     <div class="btnCenter btn-footer" v-if="status == 1">
-      <Button class="button-cancel" @click="cancelPlan">取消计划</Button>
+      <Button v-auth="'promotion.ad-plan#cancel'" class="button-cancel" @click="cancelPlan">取消计划</Button>
       <Button
+        v-auth="'promotion.ad-plan#edit'"
         type="primary"
         class="button-ok edit-btn"
         @click="toEdit"
@@ -191,6 +192,7 @@
     </div>
     <div class="btnCenter btn-footer" v-if="status == 10">
       <Button
+        v-auth="'promotion.ad-plan#edit'"
         type="primary"
         class="button-ok edit-btn"
         @click="toEdit"
