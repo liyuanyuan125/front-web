@@ -107,7 +107,7 @@
              </Col>
              <Col class="poster-title" :span="18" style="height: 240px">
               <Row class='row-xq'>
-                <Col span='10'><span>影片名称</span><b>《{{seacinemaList.name}}》</b></Col>
+                <Col span='10' style='height: 40px;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>影片名称</span><b>《{{seacinemaList.name}}》</b></Col>
                 <Col span='14'><span style='width: 28%;'>影片标语</span> <b>{{seacinemaList.slogan == '' ? '暂无' : seacinemaList.slogan}}</b></Col>
               </Row>
               <Row class='row-xq'>
