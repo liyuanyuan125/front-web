@@ -1,6 +1,5 @@
 <template>
   <div class="page home-bg">
-
     <div class="layout-nav-title">
       <span>广告计划</span>
     </div>
@@ -26,33 +25,34 @@
           <Col :span="12">
             <p>
               <label>公司计划ID</label>
-              {{queryList.id}}
+              {{queryList.id || '暂无'}}
             </p>
             <p>
               <label>投放类型</label>
-              {{deliveryType(queryList.deliveryType)}}
+              {{deliveryType(queryList.deliveryType) || '暂无'}}
             </p>
             <p>
               <label>投放周期</label>
-              {{queryList.cycle}}天
+              {{queryList.cycle || 0}}天
             </p>
             <p>
               <label>广告片规格</label>
-              {{queryList.specification}}s
+              {{queryList.specification || 0}}s
             </p>
           </Col>
           <Col :span="12">
             <p>
               <label>广告片</label>
-              {{queryList.videoName}}
+              {{queryList.videoName || '暂无'}}
             </p>
             <p>
               <label>客户名称</label>
-              {{queryList.customerName}}
+              {{queryList.customerName || '暂无'}}
             </p>
             <p>
               <label>投放排期</label>
-              {{formatYell(queryList.beginDate)}}~{{formatYell(queryList.endDate)}}
+              <span v-if="!queryList.beginDate">暂无</span>
+              <span v-else>{{formatYell(queryList.beginDate)}}~{{formatYell(queryList.endDate)}}</span>
             </p>
           </Col>
         </Row>
@@ -60,21 +60,38 @@
     </div>
 
     <i-col span="24" class="demo-tabs-style2">
-
-      <Tabs type="card" v-model="tabVal"  id="dataTabs"   :animated="false"  @on-click="handleChange">
-        <Tab-pane :label="item.name" v-for="(item,index) in tabObjList" :name="item.key" :key="item.key"></Tab-pane>
+      <Tabs type="card" v-model="tabVal" id="dataTabs" :animated="false" @on-click="handleChange">
+        <Tab-pane
+          :label="item.name"
+          v-for="(item,index) in tabObjList"
+          :name="item.key"
+          :key="item.key"
+        ></Tab-pane>
       </Tabs>
 
-      <Tabs v-show="isFlxed" v-model="tabVal" :style="{width: flxedWid }" type="card" class=" is-flxed" 
-      :animated="false" @on-click="handleChange" >
-        <Tab-pane :label="item.name" v-for="(item,index) in tabObjList" :name="item.key" :key="item.key"></Tab-pane>
+      <Tabs
+        v-show="isFlxed"
+        v-model="tabVal"
+        :style="{width: flxedWid }"
+        type="card"
+        class="is-flxed"
+        :animated="false"
+        @on-click="handleChange"
+      >
+        <Tab-pane
+          :label="item.name"
+          v-for="(item,index) in tabObjList"
+          :name="item.key"
+          :key="item.key"
+        ></Tab-pane>
       </Tabs>
 
-      <summany id="anchor-0"  v-model="mockDate" v-if=" mockDate && modelType == 0 " />
-      <crowd id="anchor-1" v-model="mockDate" v-if=" mockDate && modelType == 1 " />
-      <cinema id="anchor-2" v-model="mockDate" v-if=" mockDate && modelType == 2 "/>
-      <film id="anchor-3" v-model="mockDate" v-if=" mockDate && modelType == 3 "/>
-      <areaCom id="#anchor-4" v-model="mockDate" v-if=" mockDate && modelType == 4 "/>
+      <summany id="anchor-0" v-model="mockDate" v-if=" mockDate && modelType == 0 "/>
+      <crowd id="anchor-1" v-model="mockDate" v-else-if=" mockDate && modelType == 1 "/>
+      <cinema id="anchor-2" v-model="mockDate" v-else-if=" mockDate && modelType == 2 "/>
+      <film id="anchor-3" v-model="mockDate" v-else-if=" mockDate && modelType == 3 "/>
+      <areaCom id="#anchor-4" v-model="mockDate" v-else-if=" mockDate && modelType == 4 "/>
+      <p class="not-data-list" v-else>暂无数据</p>
     </i-col>
   </div>
 </template>
@@ -148,10 +165,14 @@ export default class Main extends ViewBase {
       const dataTabs: any = document.getElementById('dataTabs')
       this.flxedWid = dataTabs.offsetWidth + 'px'
       // data-tabs 距离body距离
-      const tabsParent = dataTabs.offsetParent.offsetTop + dataTabs.offsetTop + 60
+      const tabsParent =
+        dataTabs.offsetParent.offsetTop + dataTabs.offsetTop + 60
       // 滚动距离
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      if ( scrollTop > tabsParent) {
+      const scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop
+      if (scrollTop > tabsParent) {
         this.isFlxed = true
       } else {
         this.isFlxed = false
@@ -171,9 +192,12 @@ export default class Main extends ViewBase {
     })
     this.dataList = data.items.filter((item: any) => item.videoId != 0)
     const levelID = this.queryList.id
-    this.level = levelID == undefined ? this.dataList[0].id : levelID
-    // 广告计划详情
-    this.detailList(this.level)
+    if (this.dataList.length > 0) {
+      // 假如levelID 存在表示数据存在
+      this.level = levelID == undefined ? this.dataList[0].id : levelID
+      // 广告计划详情
+      this.detailList(this.level)
+    }
   }
 
   async detailList(id: any) {
@@ -225,6 +249,10 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 
+.not-data-list {
+  font-size: 14px;
+  text-align: center;
+}
 .tops-byte {
   width: 100%;
 }

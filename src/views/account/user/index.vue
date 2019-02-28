@@ -58,7 +58,7 @@
       <template slot-scope="{row, index}" slot="action">
         <a class="action-btn" @click="toDetail(row.id)">查看</a>
         <a class="action-btn" @click="toEdit(row.id)">编辑</a>
-
+        
         <a class="action-btn" v-if="row.statusCode == 2" @click="handleEnable(row.id, 1)">启用</a>
         <a class="action-btn" v-else-if="row.statusCode == 1" @click="handleEnable(row.id, 2)">禁用</a>
         <a class="action-btn" v-else-if="row.statusCode == 3" @click="activeEmail(row.id)">重新激活</a>
@@ -167,28 +167,33 @@ export default class Main extends ViewBase {
   async userList() {
     try {
       const { data } = await subAccount({ ...this.form, ...this.pageObject })
-      this.rolelist = data.roleList
-      this.statusList = data.statusList
-      this.total = data.totalCount
+      this.rolelist = data.roleList || []
+      this.statusList = data.statusList || []
+      this.total = data.totalCount || 0
 
       // 读取当前广告主或资源方statusCode
       const code = this.systemCode
-      data.list.map((item: any) => {
-        for (const i of item.systems) {
-          if (i.code == code) {
-            item.statusCode = i.status
+      if (data.list) {
+        data.list.map((item: any) => {
+          for (const i of item.systems) {
+            if (i.code == code) {
+              item.statusCode = i.status
+            }
           }
-        }
-      })
+        })
+      }
 
       // 只有禁用数据可以删除
-      for (const it of data.list) {
-        if (it.statusCode == 2 ) {
-          it._checked = false
-        } else {
-          it._disabled = true
+      if (data.list) {
+        for (const it of data.list) {
+          if (it.statusCode == 2) {
+            it._checked = false
+          } else {
+            it._disabled = true
+          }
         }
       }
+
       this.data = data.list || []
     } catch (ex) {
       this.handleError(ex)
