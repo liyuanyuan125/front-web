@@ -71,7 +71,7 @@
           </Col>
         </Col>
       </Row>
-      <ul class='itemul'>
+      <ul class='itemul' v-auth="'adordermanage.order#view'">
         <li v-for='(it,index) in itemlist' :key='index'>
           <Row class='li-title'>
             <Col span='8'>下单时间      {{it.createTime}}</Col>
