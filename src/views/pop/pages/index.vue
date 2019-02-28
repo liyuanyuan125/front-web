@@ -299,44 +299,7 @@ import { formatCurrency } from '@/fn/string'
 // import CinemaDlg, { CinemaDlgItem } from '../plan/components/cinemaDlg'
 import { CinemaDlgByStats } from '../plan/components/cinemaDlg'
 
-
 const timeFormat = 'YYYY-MM-DD'
-
-// const mockMap = [
-//   {
-//     name: '2019款全新奔驰G级影院广告－春节档',
-//     client: '奔驰',
-//     time: '2019-2-4 ～2019-2-10',
-//     longTime : '7',
-//     data: '春节档',
-//     man : '400,000',
-//     ceil: '4,000,000.00',
-//     sex: '男',
-//     id: '1'
-//   },
-//   {
-//     name: '“我爱筱面”美食节6月推广',
-//     client: '西贝餐饮',
-//     time: '2019-6-1 ～2019-6-10',
-//     longTime : '10',
-//     data: '无',
-//     man : '400,000',
-//     ceil: '4,000,000.00',
-//     sex: '女',
-//     id: '2'
-//   },
-//   {
-//     name: 'DIOR 新品红管唇釉推广',
-//     client: '迪奥',
-//     time: '2019-2-4 ～2019-2-10',
-//     longTime : '7',
-//     data: '无',
-//     man : '400,000',
-//     ceil: '4,000,000.00',
-//     sex: '男',
-//     id: '3'
-//   }
-// ]
 
 @Component ({
   components: {
@@ -349,10 +312,6 @@ export default class Main extends ViewBase {
   // @Prop({ type: Object, default: () => {}, required: true }) value!: Stats
   cinemaShow = false
   preshow: any = false
-  // cinemaLoading = false
-  // cinemaTotal = 0
-  // cinemaList: CinemaDlgItem[] = []
-
 
   cinema: any = {
     visible: false,
@@ -776,7 +735,7 @@ export default class Main extends ViewBase {
   mounted() {
     this.preshow = false
     this.seach()
-    this.list = JSON.parse(sessionStorage.getItem(this.$route.params.id) as any)
+    this.list = JSON.parse(sessionStorage.getItem(this.$route.params.key) as any)
     this.bed = String(this.list.beginDate).slice(0, 4) + '-' + String(this.list.beginDate).slice(4, 6)
     + '-' + String(this.list.beginDate).slice(6, 8)
     this.end = String(this.list.endDate).slice(0, 4) + '-' + String(this.list.endDate).slice(4, 6)

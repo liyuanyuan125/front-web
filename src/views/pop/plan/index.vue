@@ -1,6 +1,6 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title">创建广告计划 > 
+    <h2 class="layout-nav-title">创建广告计划 >
       <span v-if="!$route.params.id">新建</span>
       <span v-else>编辑</span>广告计划
     </h2>
@@ -714,7 +714,13 @@ export default class Main extends ViewBase {
     }
     const index: any = 'pop_plan_edit_' + Math.floor(Math.random() * 1000 + 1)
     sessionStorage.setItem(`${index}`, JSON.stringify(addObject))
-    this.$router.push({ name: 'pop-plan-scheme', params: { id: index}})
+    this.$router.push({
+      name: 'pop-plan-scheme',
+      params: {
+        id: addObject.id || 0,
+        key: index
+      }
+    })
   }
 
   onThrowInStatsChange(stats: Stats) {
