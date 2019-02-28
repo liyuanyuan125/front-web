@@ -7,7 +7,8 @@
         <Icon type="ios-add" size="27"/>提现
       </em>
     </h3>
-    <Row class="item-bill-list" type="flex" justify="space-between">
+    <Row class="item-bill-list" type="flex" justify="space-between" 
+    v-auth="'financeManage.info#viewSummary'">
       <Col span="7" class="item-col">
         <h6>{{accountMoney.totalRevenue}}</h6>
         <p>总收益/元</p>

@@ -53,11 +53,11 @@
         <Tab-pane :label="item.name" v-for="(item,index) in tabObjList" :name="item.key" :key="item.key"></Tab-pane>
       </Tabs>
 
-      <summany id="anchor-0" v-model="mockDate" v-if=" mockDate && modelType == 0 "/>
-      <crowd id="anchor-1" v-model="mockDate" v-else-if=" mockDate && modelType == 1 "/>
-      <cinema id="anchor-2" v-model="mockDate" v-else-if=" mockDate && modelType == 2 "/>
-      <film id="anchor-3" v-model="mockDate" v-else-if=" mockDate && modelType == 3 "/>
-      <areaCom id="anchor-4" v-model="mockDate" v-else-if=" mockDate && modelType == 4 "/>
+      <summany v-model="mockDate" v-if=" mockDate && modelType == 0 "/>
+      <crowd  v-model="mockDate" v-else-if=" mockDate && modelType == 1 "/>
+      <cinema  v-model="mockDate" v-else-if=" mockDate && modelType == 2 "/>
+      <film  v-model="mockDate" v-else-if=" mockDate && modelType == 3 "/>
+      <areaCom  v-model="mockDate" v-else-if=" mockDate && modelType == 4 "/>
       <p class="not-data-list" v-else>暂无数据</p>
     </i-col>
   </div>
@@ -207,11 +207,11 @@ export default class Main extends ViewBase {
     this.advList()
 
     // fixed 子组件回滚到顶部 距离 = tabs.offsetTop+tabs.offsetHeight
-    if (this.isFlxed) {
-      this.$nextTick(() => {
-        window.scrollTo(0, 424)
-      })
-    }
+    // if (this.isFlxed) {
+    //   this.$nextTick(() => {
+    //     window.scrollTo(0, 424)
+    //   })
+    // }
   }
 }
 </script>
