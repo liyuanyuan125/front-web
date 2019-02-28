@@ -268,19 +268,20 @@
       </div>
     </div>
     <div class="btnCenter btn-footer" v-if="status == 2">
-      <Button class="button-cancel" @click="cancelPlan">取消计划</Button>
+      <Button v-auth="'promotion.ad-plan#cancel'" class="button-cancel" @click="cancelPlan">取消计划</Button>
       <Button
+        v-auth="'promotion.ad-plan#edit'"
         type="primary"
         class="button-ok edit-btn"
         @click="toEdit"
       >编辑</Button>
     </div>
     <div class="btnCenter btn-footer" v-if="status == 4">
-      <Button class="button-cancel" @click="cancelPlan" >取消计划</Button>
-      <Button type="primary" class="button-ok" @click="handlePayment">支付</Button>
+      <Button v-auth="'promotion.ad-plan#cancel'" class="button-cancel" @click="cancelPlan" >取消计划</Button>
+      <Button v-auth="'promotion.ad-plan#pay'" type="primary" class="button-ok" @click="handlePayment">支付</Button>
     </div>
     <div class="btnCenter btn-footer" v-if="status == 5">
-      <Button type="primary" class="button-ok" @click="relevanceAdv">关联广告片</Button>
+      <Button v-auth="'promotion.ad-plan#relation'" type="primary" class="button-ok" @click="relevanceAdv">关联广告片</Button>
     </div>
     <CinemaList v-model="cinema" v-if="cinema.visible"/>
     <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible"></relevanceDlg>
