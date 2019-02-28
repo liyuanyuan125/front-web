@@ -23,22 +23,24 @@
         <p>总提现金额/元</p>
       </Col>
     </Row>
-    <h3 class="layout-title">线下提现记录</h3>
-    <Table stripe :columns="columns" :data="dataList">
-      <template  slot="type" slot-scope="{row, index}">
-        <span v-for="item in typeList" v-if="item.key == row.type">{{item.text}}</span>
-      </template>
-    </Table>
-    <Page
-      class="info-page"
-      :total="total"
-      :current="pageIndex"
-      :page-size="pageSize"
-      show-total
-      show-elevator
-      @on-change="handlepageChange"
-      @on-page-size-change="handlePageSize"
-    ></Page>
+    <div v-auth="'financeManage.info#viewlist'">
+      <h3 class="layout-title">线下提现记录</h3>
+      <Table stripe :columns="columns" :data="dataList">
+        <template  slot="type" slot-scope="{row, index}">
+          <span v-for="item in typeList" v-if="item.key == row.type">{{item.text}}</span>
+        </template>
+      </Table>
+      <Page
+        class="info-page"
+        :total="total"
+        :current="pageIndex"
+        :page-size="pageSize"
+        show-total
+        show-elevator
+        @on-change="handlepageChange"
+        @on-page-size-change="handlePageSize"
+      ></Page>
+    </div>
     <queryVoucher v-model="tableImgs" v-if="tableImgs.visible"></queryVoucher>
   </div>
 </template>
