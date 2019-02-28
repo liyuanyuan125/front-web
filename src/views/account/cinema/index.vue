@@ -75,7 +75,7 @@ export default class Main extends ViewBase {
       render: (hh: any, { row: { id } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        return <a on-click={this.toDetail.bind(this, id)} class="operation" >详情</a>
+        return <a v-auth="'account-manage.managecinema#view'" on-click={this.toDetail.bind(this, id)} class="operation" >详情</a>
         /* tslint:enable */
       }
     }

@@ -90,7 +90,7 @@ export default class Main extends ViewBase {
         const img = require('./assets/down.png')
         return <div class="edit" on-click={this.toDetail.bind(this, id)}>
           <img style="width: 18px" src={img}/>
-          <a class="operation" >下载DCP包</a>
+          <a v-auth="'adordermanage.dcp#download'" class="operation" >下载DCP包</a>
         </div>
         /* tslint:enable */
       }
