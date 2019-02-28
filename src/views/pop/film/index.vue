@@ -2,9 +2,11 @@
   <div class="page home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">广告片</span>
-      <em class="addUser" @click="$router.push({name: 'pop-film-edit'})">
-        <Icon type="ios-add" size="27"/>新增广告片
-      </em>
+
+       <Button type="primary" :to="{name: 'pop-film-edit'}" class="btn-new"
+        v-auth="'promotion.ad-video#create'">
+        <Icon type="ios-add" size="27"/>新建广告计划
+      </Button>
     </h3>
     <Form :model="form" class="formInline edit-input">
       <div class="flex-box">
@@ -51,32 +53,32 @@
       <!-- 待审核 -->
       <span v-if="row.status == 1">
         <p>
-          <a class="table-action-btn" @click="popDetail(row.id)">查看</a>
-          <a class="table-action-btn" @click="popEdit(row.id)">编辑</a>
-          <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
+          <a v-auth="'promotion.ad-video#view'" class="table-action-btn" @click="popDetail(row.id)">查看</a>
+          <a v-auth="'promotion.ad-video#edit'" class="table-action-btn" @click="popEdit(row.id)">编辑</a>
+          <a v-auth="'promotion.ad-video#cancel'" class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
         </p>
       </span>
       <span v-else-if="row.status == 2">
         <p>
-          <a class="table-action-btn" @click="popDetail(row.id)">查看</a>
-          <a class="table-action-btn" @click="handlePayment(row)">支付</a>
-          <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
+          <a v-auth="'promotion.ad-video#view'" class="table-action-btn" @click="popDetail(row.id)">查看</a>
+          <a v-auth="'promotion.ad-video#pay'" class="table-action-btn" @click="handlePayment(row)">支付</a>
+          <a v-auth="'promotion.ad-video#cancel'" class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
         </p>
       </span>
       <span v-else-if="row.status == 3 || row.status == 6 || row.status == 4">
         <p>
-          <a class="table-action-btn"  @click="popDetail(row.id)">查看</a>
+          <a v-auth="'promotion.ad-video#view'" class="table-action-btn"  @click="popDetail(row.id)">查看</a>
         </p>
       </span>
       <span v-else-if="row.status == 5">
         <p>
-          <a class="table-action-btn"  @click="popDetail(row.id)">查看</a>
-          <a class="table-action-btn" @click="popEdit(row.id)">编辑</a>
+          <a v-auth="'promotion.ad-video#view'" class="table-action-btn"  @click="popDetail(row.id)">查看</a>
+          <a v-auth="'promotion.ad-video#edit'" class="table-action-btn" @click="popEdit(row.id)">编辑</a>
         </p>
       </span>
     </template>
     </Table>
-    <div class="checkAll">
+    <div class="checkAll" v-auth="'promotion.ad-video#delete'">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
       </span>
@@ -128,9 +130,9 @@ export default class Main extends ViewBase {
     { title: '广告片名称', slot: 'name', minWidth: 170 },
     { title: '广告片规格', slot: 'specification', minWidth: 100 },
     { title: '广告片时长', slot: 'length', minWidth: 100 },
-    { title: '数字转制费用(元）', key: 'transFee', minWidth: 150 },
+    { title: '数字转制费用(元）', key: 'transFee', minWidth: 140 },
     { title: '广告片状态', slot: 'status', minWidth: 100 },
-    { title: '创建时间', slot: 'applyTime', minWidth: 200 },
+    { title: '创建时间', slot: 'applyTime', minWidth: 150 },
     { title: '操作', slot: 'operation', minWidth: 150},
   ]
   tableDate = []

@@ -21,7 +21,7 @@
       </Row>
     </div>
     <div class="btnCenter">
-      <button class="button-ok" @click="toAuth">编辑</button>
+      <Button v-auth="'account-manage.roles#edit'" type="primary" @click="toAuth" class="button-ok">编辑</Button>
     </div>
   </div>
 </template>
