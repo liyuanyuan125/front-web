@@ -97,7 +97,7 @@ export default class MainLayout extends ViewBase {
 
     const list = getMenuList(permMenu, user.systemCode)
 
-    devInfo('menuList', list)
+    // devInfo('menuList', list)
 
     return list
   }
