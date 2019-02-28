@@ -123,8 +123,8 @@
               <Row class='row-xq-24'>
                 <Col span='24' style='height: 40px;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>
                 <span>演员</span>
-                  <b v-for='it in seacinemaList.performers'> {{it}}</b>
-                  <b v-if='seacinemaList.performers.length == 0'>暂无</b>
+                  <b v-if='!preshow' v-for='it in seacinemaList.performers'> {{it}}</b>
+                  <b v-if='preshow'>暂无</b>
                 </Col>
               </Row>
               <Row class='row-xq-l24'>
@@ -348,6 +348,7 @@ const timeFormat = 'YYYY-MM-DD'
 export default class Main extends ViewBase {
   // @Prop({ type: Object, default: () => {}, required: true }) value!: Stats
   cinemaShow = false
+  preshow: any = false
   // cinemaLoading = false
   // cinemaTotal = 0
   // cinemaList: CinemaDlgItem[] = []
@@ -773,6 +774,7 @@ export default class Main extends ViewBase {
   }
 
   mounted() {
+    this.preshow = false
     this.seach()
     this.list = JSON.parse(sessionStorage.getItem(this.$route.params.id) as any)
     this.bed = String(this.list.beginDate).slice(0, 4) + '-' + String(this.list.beginDate).slice(4, 6)
@@ -1050,6 +1052,9 @@ export default class Main extends ViewBase {
       if (this.list.deliveryMovies) {
         const seacinema = await cinemaList({id : this.list.deliveryMovies[0]})
         this.seacinemaList = seacinema.data.data.items[0]
+        if (this.seacinemaList.performers.length == 0) {
+          this.preshow = true
+        }
       }
     } catch (ex) {
       this.handleError(ex)
