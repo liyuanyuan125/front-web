@@ -76,15 +76,15 @@
     </div>
 
     <div class="btnCenter btn-footer" v-if="status == 1">
-      <Button class="button-cancel" @click="cancelPlan" >取消广告片</Button>
-      <Button type="primary" class="button-ok" @click="toEdit">编辑</Button>
+      <Button v-auth="'promotion.ad-video#cancel'" class="button-cancel" @click="cancelPlan" >取消广告片</Button>
+      <Button v-auth="'promotion.ad-video#edit'" type="primary" class="button-ok" @click="toEdit">编辑</Button>
     </div>
     <div class="btnCenter btn-footer" v-else-if="status == 2">
-      <Button class="button-cancel" @click="cancelPlan" >取消广告片</Button>
-      <Button type="primary" class="button-ok" @click="handlePayment">支付</Button>
+      <Button v-auth="'promotion.ad-video#cancel'" class="button-cancel" @click="cancelPlan" >取消广告片</Button>
+      <Button v-auth="'promotion.ad-video#pay'" type="primary" class="button-ok" @click="handlePayment">支付</Button>
     </div>
     <div class="btnCenter btn-footer" v-else-if="status == 5">
-      <Button type="primary" class="button-ok" @click="toEdit">编辑</Button>
+      <Button v-auth="'promotion.ad-video#edit'" type="primary" class="button-ok" @click="toEdit">编辑</Button>
     </div>
   </div>
 </template>

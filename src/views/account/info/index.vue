@@ -79,14 +79,15 @@
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" stripe disabled-hover></Table>
       <div class="btnCenter sumbit-button">
-        <Button type="primary" class="button-ok button-offset"
+        <Button v-auth="'account-manage.info#edit'" type="primary" class="button-ok button-offset"
           :to="{ name: 'account-info-accedit' }">修改信息</Button>
-        <Button type="primary" class="button-ok" @click="informa.visibleInforma = true">变更账号</Button>
+        <Button v-auth="'account-manage.info#change'" type="primary" class="button-ok" 
+        @click="informa.visibleInforma = true">变更账号</Button>
       </div>
     </div>
 
     <div class="btnCenter sumbit-button" v-else>
-      <Button type="primary" class="button-ok"
+      <Button v-auth="'account-manage.info#edit'" type="primary" class="button-ok"
         :to="{ name: 'account-info-edit' }">修改信息</Button>
     </div>
 

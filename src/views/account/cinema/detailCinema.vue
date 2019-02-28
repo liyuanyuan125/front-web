@@ -83,7 +83,6 @@ export default class Main extends ViewBase {
   }
 
   async seach() {
-    await cinmeaId(this.$route.params.id)
     try {
       const {
         data: {

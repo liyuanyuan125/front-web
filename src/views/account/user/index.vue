@@ -2,9 +2,10 @@
   <div class="page home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">用户管理</span>
-      <em class="addUser" @click="addUser">
+      <Button type="primary" @click="addUser" class="btn-new"
+        v-auth="'account-manage.users#create'">
         <Icon type="ios-add" size="27"/>新增子用户
-      </em>
+      </Button>
     </h3>
 
     <Form :model="form" class="form">
@@ -27,9 +28,12 @@
           <FormItem>
             <div class="flex-box">
               <Input v-model="form.searchKey" placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
-              <span @click="searchTableList">
+              <Button type="primary" @click="searchTableList" class="bth-search">
                 <Icon type="ios-search" size="22"/>
-              </span>
+              </Button>
+              <!-- <span @click="searchTableList">
+                <Icon type="ios-search" size="22"/>
+              </span> -->
             </div>
           </FormItem>
         </Col>
@@ -56,15 +60,15 @@
         <span>{{formatTimes(row.lastLoginTime)}}</span>
       </template>
       <template slot-scope="{row, index}" slot="action">
-        <a class="action-btn" @click="toDetail(row.id)">查看</a>
-        <a class="action-btn" @click="toEdit(row.id)">编辑</a>
+        <a v-auth="'account-manage.users#view'" class="action-btn" @click="toDetail(row.id)">查看</a>
+        <a v-auth="'account-manage.users#edit'" class="action-btn" @click="toEdit(row.id)">编辑</a>
         
         <a class="action-btn" v-if="row.statusCode == 2" @click="handleEnable(row.id, 1)">启用</a>
         <a class="action-btn" v-else-if="row.statusCode == 1" @click="handleEnable(row.id, 2)">禁用</a>
         <a class="action-btn" v-else-if="row.statusCode == 3" @click="activeEmail(row.id)">重新激活</a>
       </template>
     </Table>
-    <div class="checkAll">
+    <div class="checkAll" v-auth="'account-manage.users#delete'">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
       </span>

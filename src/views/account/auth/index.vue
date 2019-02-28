@@ -2,28 +2,27 @@
   <div class="page home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">权限管理</span>
-      <router-link class="addUser" tag="span" :to="{name:'account-auth-add'}">
+      <Button type="primary" :to="{name: 'account-auth-add'}" class="btn-new"
+        v-auth="'account-manage.roles#create'">
         <Icon type="ios-add" size="27"/>新建权限角色
-      </router-link>
+      </Button>
     </h3>
     <div class="flex-box search-input">
-      <!-- <Select
-        v-model="dataForm.searchKey"
-        filterable
-        remote
-        @on-query-change = "querySet"
-        clearable
-        placeholder="请输入权限角色ID或名称"
-        :remote-method="authIdList"
-        :loading="loading">
-        <Option v-for="(option, index) in options" :value="option.value" :key="index">{{option.label}}</Option>
-      </Select> -->
       <Input  v-model="dataForm.searchKey" placeholder="请输入权限角色ID或名称"  />
-      <span @click="seach" class="bth-search">
+       <Button type="primary" @click="seach" class="bth-search">
         <Icon type="ios-search" size="22"/>
-      </span>
+      </Button>
     </div>
-    <Table ref="selection" stripe :loading="tableLoading"  :columns="columns4" :data="authDate"></Table>
+    <Table ref="selection" stripe :loading="tableLoading"  :columns="columns4" :data="authDate">
+      <template slot="modifyTime" slot-scope="{row, index}">
+        <span>{{formatTimes(row.modifyTime)}}</span>
+      </template>
+      <template slot="spaction" slot-scope="{row, index}" >
+         <a v-auth="'account-manage.roles#view'"  @click="toDetail(row.id)" style="margin-right: 8px">查看</a>
+         <a v-auth="'account-manage.roles#edit'"  @click="toEdit(row.id)" style="margin-right: 8px" class="operation" >编辑</a>
+         <a v-auth="'account-manage.roles#delete'"  @click="toDel(row.id)" class="operation" >删除</a>
+      </template>
+    </Table>
     <Page :total="total" v-if="total>0" class="btnCenter page-bottom"
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
@@ -36,7 +35,7 @@
   </div>
 </template>
 
-<script lang="tsx">
+<script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store.ts'
@@ -45,7 +44,7 @@ import { clean } from '@/fn/object'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import moment from 'moment'
 import { confirm, toast } from '@/ui/modal'
-
+import { formatTimes, formatYell, formatNumber} from '@/util/validateRules'
 const timeFormatDate = 'YYYY-MM-DD HH:mm:ss'
 
 @Component
@@ -72,36 +71,19 @@ export default class Main extends ViewBase {
     {
       title: '权限角色名称',
       key: 'name',
-      align: 'center'
     },
     {
       title: '上次编辑时间',
-      key: 'mobile',
-      align: 'center',
-      render: (hh: any, { row: { modifyTime } }: any) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        const html = modifyTime ? moment(modifyTime).format(timeFormatDate) : ''
-        return <span v-html={html}></span>
-        /* tslint:enable */
-      }
+      slot: 'modifyTime',
     },
     {
       title: '操作',
-      align: 'center',
-      render: (hh: any, { row: { id } }: any) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        return <div>
-          <a on-click={this.toDetail.bind(this, id)} class="operation" >查看</a>
-          <a on-click={this.toEdit.bind(this, id)} class="operation" >编辑</a>
-          <a on-click={this.toDel.bind(this, id)} class="operation" >删除</a>
-        </div>
-        /* tslint:enable */
-      }
+      slot: 'spaction',
     }
   ]
-
+  get formatTimes() {
+    return formatTimes
+  }
   get authDate() {
     const list = (this.list || []).map((it: any) => {
       return {
@@ -214,85 +196,18 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-@import '~@/site/lib.less';
+@import '~@/site/common.less';
+.operation {
+  margin-right: 8px;
+}
 .page-bottom {
   padding: 40px 0 100px;
 }
-.bth-search {
-  cursor: pointer;
-}
+
 .search-input {
   margin-left: 30px;
 }
-.colBg {
-  font-size: 14px;
-  height: 50px;
-  line-height: 50px;
-  padding: 0 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  background: @c-head-bg;
-}
-.page {
-  font-size: 14px;
-  .ivu-select {
-    width: auto;
-    margin-left: 25px;
-    /deep/ .ivu-select-selection {
-      height: 40px;
-      /deep/ .ivu-select-input {
-        height: 40px;
-        width: 400px;
-        margin-bottom: 30px;
-      }
-    }
-    /deep/ .ivu-select-dropdown {
-      /deep/ li, /deep/ .ivu-select-loading {
-        line-height: 35px;
-        height: 35px;
-      }
-      /deep/ .ivu-select-item {
-        line-height: 25px;
-        height: 35px;
-      }
-    }
-  }
-  .flex-box {
-    span {
-      display: block;
-      height: 40px;
-      width: 80px;
-      color: #fff;
-      text-align: center;
-      padding-top: 8px;
-      background: @c-button;
-    }
-  }
-  .userTitle {
-    .colBg;
-    .addUser {
-      width: 140px;
-      height: 40px;
-      line-height: 40px;
-      display: block;
-      text-align: center;
-      color: #fff;
-      cursor: pointer;
-      background: @c-button;
-    }
-  }
-  .tableTotal {
-    padding: 0 30px 0;
-    display: flex;
-    justify-content: space-between;
-    color: #989898;
-  }
-  /deep/ .operation {
-    margin-right: 6px;
-  }
-}
+
 /deep/ .ivu-input-wrapper {
   width: 400px;
   .ivu-input {
