@@ -219,10 +219,8 @@
           </em>
         </p>
       </div>
-      <div class="flex-box" v-else>
-        <p>
-          <label>观影人群画像</label>
-        </p>
+      <div class="flex-box" v-else-if="status != 9 && items.directionType != 2">
+        <p> <label>观影人群画像</label></p>
         <div
           class="portrait"
           :class="{'woman-atv': sex == 'woman', 'man-atv': sex == 'man', 'unknow-atv': sex == 'ALL'}"
@@ -248,6 +246,7 @@
           </div>
         </div>
       </div>
+      
       <div class="flex-box film-list">
         <label>影片</label>
         <div class="flex-box flex-wrap" v-if="defaultData.movieList && defaultData.movieList.length > 0">

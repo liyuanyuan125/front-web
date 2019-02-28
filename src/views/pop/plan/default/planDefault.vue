@@ -130,7 +130,7 @@
           </span>
         </p>
       </div>
-      <div v-else class="flex-box">
+      <div class="flex-box" v-else-if="status != 9 && items.directionType != 2">
         <p>
           <label>观影人群画像</label>
         </p>
