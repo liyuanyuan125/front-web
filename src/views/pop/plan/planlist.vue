@@ -4,7 +4,7 @@
       <span class="nav-top-title">广告计划</span>
 
       <Button type="primary" :to="{name: 'pop-planlist-add'}" class="btn-new"
-        v-auth="'ads.promotion.ad-plan#create'">
+        v-auth="'promotion.ad-plan#create'">
         <Icon type="ios-add" size="27"/>新建广告计划
       </Button>
     </h3>
@@ -58,62 +58,88 @@
         <span v-else-if="row.status == 6 || row.status == 7" class="status-wating">{{queryStatus(row.status)}}</span>
         <span v-else>{{queryStatus(row.status)}}</span>
       </template>
+
       <template slot="videoName" slot-scope="{row, index}">
         <span>{{row.videoName || '待关联'}}</span>
       </template>
+
       <template slot="beginDate" slot-scope="{row, index}">
         <span>{{formatYell(row.beginDate)}}-{{formatYell(row.endDate)}}</span>
       </template>
+
       <template slot="specification" slot-scope="{row, index}">
         <span v-if="row.specification">{{row.specification}}s</span>
         <span v-else>/</span>
       </template>
+
       <template slot="settlementStatus" slot-scope="{row, index}">
         <span>{{querySettlementList(row.settlementStatus)}}</span>
       </template>
+
       <template slot="operation" slot-scope="{row, index}">
         <!-- 草稿 待审核 -->
         <div v-if="row.status == 1 || row.status == 2" class="operation-btn">
           <p>
-            <a class="table-action-btn" @click="planDefault(row.id, row.status)">查看</a>
-            <a class="table-action-btn" @click="planEdit(row.id)">编辑</a>
-            <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
+            <a class="table-action-btn" @click="planDefault(row.id, row.status)"
+              v-auth="'promotion.ad-plan#view'">查看</a>
+            <a class="table-action-btn" @click="planEdit(row.id)"
+              v-auth="'promotion.ad-plan#edit'">编辑</a>
+            <a class="table-action-btn" @click="planCancel(row.name, row.id)"
+              v-auth="'promotion.ad-plan#cancel'">取消</a>
           </p>
           <p>
-            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</a>
-            <a v-else @click="relevanceAdv(row, 2)">修改广告片</a>
+            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)"
+              v-auth="'promotion.ad-plan#relation'">关联广告片</a>
+            <a v-else @click="relevanceAdv(row, 2)"
+              v-auth="'promotion.ad-plan#relation'">修改广告片</a>
           </p>
         </div>
+
         <div v-else-if="row.status ==  4 " class="operation-btn">
            <p>
-            <a class="table-action-btn" @click="planDefault(row.id, row.status)">查看</a>
-            <a class="table-action-btn" @click="handlePayment(row)">支付</a>
-            <a class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
+            <a class="table-action-btn" @click="planDefault(row.id, row.status)"
+              v-auth="'promotion.ad-plan#view'">查看</a>
+            <a class="table-action-btn" @click="handlePayment(row)"
+              v-auth="'promotion.ad-plan#pay'">支付</a>
+            <a class="table-action-btn" @click="planCancel(row.name, row.id)"
+              v-auth="'promotion.ad-plan#cancel'">取消</a>
           </p>
           <p>
-            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</a>
-            <a v-else @click="relevanceAdv(row, 2)">修改广告片</a>
+            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)"
+              v-auth="'promotion.ad-plan#relation'">关联广告片</a>
+            <a v-else @click="relevanceAdv(row, 2)"
+              v-auth="'promotion.ad-plan#relation'">修改广告片</a>
           </p>
         </div>
+
         <div v-else-if="row.status ==  5 " class="operation-btn">
-          <p><a @click="planDefault(row.id, row.status)">查看</a></p>
+          <p><a @click="planDefault(row.id, row.status)"
+            v-auth="'promotion.ad-plan#view'">查看</a></p>
           <p>
-            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</a>
-            <a v-else @click="relevanceAdv(row, 2)">修改广告片</a>
+            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)"
+              v-auth="'promotion.ad-plan#relation'">关联广告片</a>
+            <a v-else @click="relevanceAdv(row, 2)"
+              v-auth="'promotion.ad-plan#relation'">修改广告片</a>
           </p>
         </div>
+
         <div v-else-if="row.status == 3 || row.status == 6 || row.status == 7 || row.status == 8 || row.status == 9 " class="operation-btn">
-          <p><a @click="planDefault(row.id, row.status)">查看</a></p>
+          <p><a @click="planDefault(row.id, row.status)"
+            v-auth="'promotion.ad-plan#view'">查看</a></p>
         </div>
+
         <div v-else-if="row.status == 10" class="operation-btn">
           <p>
-            <a class="table-action-btn" @click="planDefault(row.id, row.status)">查看</a>
-            <a class="table-action-btn" @click="planEdit(row.id)">编辑</a>
+            <a class="table-action-btn" @click="planDefault(row.id, row.status)"
+              v-auth="'promotion.ad-plan#view'">查看</a>
+            <a class="table-action-btn" @click="planEdit(row.id)"
+              v-auth="'promotion.ad-plan#edit'">编辑</a>
           </p>
         </div>
       </template>
     </Table>
-    <div class="checkAll">
+
+    <div class="checkAll" v-auth="'promotion.ad-plan#delete'">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
       </span>
@@ -131,6 +157,7 @@
       @on-page-size-change="handlePageSize"
     /> -->
      <pagination v-model="pageList" :total="totalCount" @uplist="uplist"></pagination>
+
      <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible" @submitRelevance="submitRelevance"></relevanceDlg>
   </div>
 </template>
@@ -156,10 +183,12 @@ export default class Plan extends ViewBase {
     level: '',
     query: ''
   }
+
   pageList = {
     pageIndex: 1,
     pageSize: 10
   }
+
   relevanVis: any = {
     visible: false,
     title: '',
@@ -216,15 +245,19 @@ export default class Plan extends ViewBase {
   get formatTimes() {
     return formatTimes
   }
+
   get formatYell() {
     return formatYell
   }
+
   get formatNumber() {
     return formatNumber
   }
+
   async mounted() {
     this.tableList()
   }
+
   async tableList() {
     const { data } = await planList({ ...this.form, ...this.pageList })
     this.data = data
@@ -238,9 +271,11 @@ export default class Plan extends ViewBase {
     this.tableDate = data.items
     this.totalCount = data.totalCount
   }
+
   submitRelevance() {
     this.tableList()
   }
+
   async handlePayment(item: any) {
     await confirm(`是否要支付冻结金额${item.freezeAmount}元`, {
       title: '支付广告计划'
@@ -253,6 +288,7 @@ export default class Plan extends ViewBase {
       this.handleError(ex)
     }
   }
+
   planDefault(id: any, status: any) {
     if (status == '1' || status == '3' || status == '9' || status == '10') {
       this.$router.push({ name: 'pop-planlist-default', params: {id}})
@@ -260,9 +296,11 @@ export default class Plan extends ViewBase {
       this.$router.push({ name: 'pop-planlist-defaultpayment', params: {id}})
     }
   }
+
   planEdit(id: any) {
     this.$router.push({name: 'pop-planlist-add', params: {id}})
   }
+
   async planCancel(val: any, id: any) {
     await confirm(`是否取消广告计划：${val}`, {title: '取消广告计划'})
     try {
@@ -272,6 +310,7 @@ export default class Plan extends ViewBase {
       this.handleError(ex)
     }
   }
+
   async relevanceAdv(val: any, id: any) {
     if (id == 1) {
       this.relevanVis = {
@@ -289,10 +328,12 @@ export default class Plan extends ViewBase {
       }
     }
   }
+
   handleSelectAll() {
     const selection = this.$refs.selection as any
     selection.selectAll(!this.checkboxAll)
   }
+
   async deleteList() {
     if (this.selectIds.length) {
       const ids: any = this.selectIds.map((item: any) => item.id) || []
@@ -307,12 +348,14 @@ export default class Plan extends ViewBase {
       this.showWaring('请选择你要删除的元素')
     }
   }
+
   queryStatus(id: any) {
      const items = this.data.statusList ? this.data.statusList.filter( (item: any) => item.key == id) : null
      if (items) {
        return items[0].text
      }
   }
+
   querySettlementList(id: any) {
     const list = this.data.settlementStatusList
     const items = list ? list.filter( (item: any) => item.key == id) : null
@@ -320,20 +363,24 @@ export default class Plan extends ViewBase {
        return items[0].text
     }
   }
+
   // 单选
   singleSelect(select: any) {
     this.checkboxAll = select.length == this.data.length ? true : false
     this.selectIds = select
   }
+
   // 全选
   selectAll(select: any) {
     this.checkboxAll = true
     this.selectIds = select
   }
+
   searchList() {
     this.pageList.pageIndex = 1
     this.tableList()
   }
+
   uplist(size: any) {
     this.pageList.pageIndex = size
     this.tableList()

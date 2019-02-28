@@ -202,6 +202,7 @@ export default class Main extends ViewBase {
   allType = true
   putType = 1
   typeName: any = []
+  areaObject: any = null
   dateObj: any = [
     {
       name: '自定义时间',
@@ -708,7 +709,7 @@ export default class Main extends ViewBase {
       addObject = {
         ...addObject,
         id: this.$route.params.id,
-        status: this.item.status
+        status: this.form.throwInAreaType == 0 ? this.item.status : this.throwInStats
       }
     }
     const index: any = 'pop_plan_edit_' + Math.floor(Math.random() * 1000 + 1)
@@ -718,9 +719,9 @@ export default class Main extends ViewBase {
 
   onThrowInStatsChange(stats: Stats) {
     this.throwInStats = stats
-  }
-
-  mounted() {
+    if (this.form.throwInAreaType == 0) {
+      this.areaObject = stats
+    }
   }
 
   @Watch('cinema.MOVIE_TYPE', { deep: true })
