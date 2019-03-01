@@ -348,7 +348,7 @@ export default class AreaPane extends ViewBase {
 
   async doFetchCinema(query: any = {}) {
     const qdata: any = {
-      // status: 1,
+      controlStatus: 1,
       pageIndex: this.cinemaPage,
       pageSize: 10,
       ...query,
