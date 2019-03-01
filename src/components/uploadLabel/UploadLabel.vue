@@ -23,9 +23,9 @@
 // doc: https://github.com/kaorun343/vue-property-decorator
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import Uploader from '@/util/Uploader'
+import Uploader, { PrepareEvent } from '@/util/Uploader'
 import { slice } from '@/fn/object'
-import { FileItem, StartEvent, SuccessEvent } from './types'
+import { FileItem, DoneEvent } from './types'
 import { cloneDeep } from 'lodash'
 import CircleProgress, { CircleProgressOptions } from '@/components/circleProgress'
 
@@ -42,7 +42,7 @@ interface UploadItem extends FileItem {
   progressStatus: string
   /** 错误消息，内部使用 */
   error: string
-  blob?: File,
+  file?: File,
 }
 
 const defItem: UploadItem = {
@@ -100,14 +100,12 @@ export default class UploadLabel extends ViewBase {
       percent: 0,
       progressStatus: 'active',
       error: '',
-      blob: file,
+      file,
     }
 
-    this.isUploading = true
-
-    this.$emit('start', { blob: file } as StartEvent)
-
-    const uploader = new Uploader()
+    const uploader = new Uploader({
+      imageCompress: false
+    })
     uploader.on(this.uploadHandlers()).upload(file)
 
     // 将 input value 清空，以便可以重复上传相同的文件
@@ -120,6 +118,7 @@ export default class UploadLabel extends ViewBase {
 
   uploadHandlers() {
     return {
+      prepare: this.onUploadPrepare.bind(this),
       begin: this.onUploadBegin.bind(this),
       progress: this.onUploadProgress.bind(this),
       done: this.onUploadDone.bind(this),
@@ -128,7 +127,13 @@ export default class UploadLabel extends ViewBase {
     }
   }
 
+  onUploadPrepare(ev: PrepareEvent) {
+    this.$emit('prepare', ev)
+  }
+
   onUploadBegin() {
+    this.isUploading = true
+    this.$emit('begin')
     this.item!.status = 'uploading'
   }
 
@@ -145,9 +150,8 @@ export default class UploadLabel extends ViewBase {
     item.status = 'done'
     item.progressStatus = 'success'
 
-    const file = slice(item, 'url,fileId,clientName,clientSize,clientType') as FileItem
-    const blob = item.blob
-    this.$emit('done', { file, blob } as SuccessEvent)
+    const itemOut = slice(item, 'url,fileId,clientName,clientSize,clientType') as FileItem
+    this.$emit('done', { item: itemOut, file: item.file } as DoneEvent)
   }
 
   onUploadFail(ex: any) {

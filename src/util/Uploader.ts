@@ -7,6 +7,7 @@ import EventClass from '@/fn/EventClass'
 import deepExtend from 'deep-extend'
 import exif from 'exif-js'
 import { post } from '@/fn/ajax'
+import { CancelableEvent } from '@/util/types'
 
 /** 图片类型 */
 export enum ImageType {
@@ -20,31 +21,38 @@ export enum ImageType {
 /** 上传选项  */
 export interface UploaderOptions {
   /** 图片上传地址 */
-  imagePostUrl: string
+  imagePostUrl?: string
+
   /** 图片上传字段名 */
-  imageFieldName: string
+  imageFieldName?: string
+
   /** 文件上传地址 */
-  filePostUrl: string
+  filePostUrl?: string
+
   /** 文件上传字段名 */
-  fileFieldName: string
-  /** 图片压缩选项 */
-  imageCompress: {
+  fileFieldName?: string
+
+  /**
+   * 图片压缩选项，可以设置为 false，禁止对图片进行压缩处理
+   * 禁止后，将不会再发出 thumb 事件
+   */
+  imageCompress?: false | {
     /** 压缩限制 min width，为 null 则不限制 */
-    minWidth: number | null
+    minWidth?: number | null
     /** 压缩限制 max width，为 null 则不限制 */
-    maxWidth: number | null
+    maxWidth?: number | null
     /** 压缩限制 min height，为 null 则不限制 */
-    minHeight: number | null
+    minHeight?: number | null
     /** 压缩限制 max height，为 null 则不限制 */
-    maxHeight: number | null
+    maxHeight?: number | null
     /** 压缩比，用于 canvas 转成 jpeg */
-    quality: number
+    quality?: number
     /** 保留图片类型列表 */
-    keepTypes: ImageType[]
+    keepTypes?: ImageType[]
   }
 }
 
-interface UploadItem {
+export interface UploadItem {
   /** 文件对象 */
   file: File
   /** 文件主类型，例如 'image' */
@@ -57,6 +65,10 @@ interface UploadItem {
   width?: number
   /** 图片 height */
   height?: number
+}
+
+export interface PrepareEvent extends CancelableEvent {
+  file: File
 }
 
 const defaultOptions: UploaderOptions = {
@@ -169,6 +181,13 @@ export default class Uploader extends EventClass {
   }
 
   async upload(file: File) {
+    // 发出 perpare 事件，该事件可以通过设置 canceled 拦截接下来的操作
+    const ev: PrepareEvent = { file, canceled: false }
+    this.emit('prepare', ev)
+    if (ev.canceled) {
+      return
+    }
+
     let item: UploadItem
     try {
       item = await this.prepare(file)
@@ -190,8 +209,8 @@ export default class Uploader extends EventClass {
   private async postFile({ file, type }: UploadItem) {
     const { imagePostUrl, imageFieldName, filePostUrl, fileFieldName } = this.options
     const isImage = type === 'image'
-    const postUrl = isImage ? imagePostUrl : filePostUrl
-    const fieldName = isImage ? imageFieldName : fileFieldName
+    const postUrl = isImage ? imagePostUrl! : filePostUrl!
+    const fieldName = isImage ? imageFieldName! : fileFieldName!
 
     const form = new FormData
     form.append(fieldName, file, file.name)
@@ -206,10 +225,12 @@ export default class Uploader extends EventClass {
   // 准备文件，对于图片，按照配置进行压缩等操作
   private async prepare(file: File): Promise<UploadItem> {
     const [ type, subtype = '' ] = (file.type || '').split('/')
-    if (type === 'image') {
+
+    const compressOptions = this.options.imageCompress
+    if (type === 'image' && compressOptions !== false) {
       return new Promise<UploadItem>((resolve, reject) => {
         const { minWidth, maxWidth, minHeight, maxHeight,
-                quality, keepTypes } = this.options.imageCompress
+                quality, keepTypes } = compressOptions!
 
         const thumb = URL.createObjectURL(file)
         const image = new Image
@@ -239,7 +260,7 @@ export default class Uploader extends EventClass {
           this.emit('thumb', { ...result })
 
           // 是否跳过限制长宽，所有在 keepTypes 的都要直接 PASS
-          const shouldPass = keepTypes.includes(subtype as ImageType)
+          const shouldPass = keepTypes && keepTypes.includes(subtype as ImageType)
           if (shouldPass || (maxWidth == null && maxHeight == null)) {
             return resolve(result)
           }

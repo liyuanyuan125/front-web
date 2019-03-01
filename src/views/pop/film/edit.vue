@@ -40,8 +40,9 @@
               <a class="player-change" @click="uploader && uploader.pick()"></a>
             </div>
 
-            <UploadLabel class="upload-label" ref="uploader" @start="uploadStart"
-              @done="uploadDone" @end="uploadEnd" use-circle v-show="!videoUrl">
+            <UploadLabel accept="video/*" class="upload-label" ref="uploader"
+              @prepare="uploadPrepare" @start="uploadStart" @done="uploadDone"
+              @end="uploadEnd" use-circle v-show="!videoUrl">
               <div class="upload-in">
                 <p class="upload-tip">上传广告片</p>
                 <p>小于2G的视频文件</p>
@@ -67,7 +68,7 @@ import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
 import { confirm } from '@/ui/modal'
 import { popPartners, detailPop, createPop, editPop, transFee} from '@/api/popFilm'
-import UploadLabel, { StartEvent, SuccessEvent } from '@/components/uploadLabel'
+import UploadLabel, { PrepareEvent, DoneEvent } from '@/components/uploadLabel'
 import { format as durationFormat } from '@/fn/duration'
 import getBlobDuration from 'get-blob-duration'
 import { VuePlyr } from 'vue-plyr'
@@ -164,12 +165,15 @@ export default class Main extends ViewBase {
     player.on('ended', () => this.playing = false)
   }
 
-  async uploadStart({ blob }: StartEvent) {
+  async uploadPrepare({ file }: PrepareEvent) {
+    this.length = 0
+    const duration = await getBlobDuration(file)
+    this.length = Math.floor(duration)
+  }
+
+  async uploadStart() {
     this.srcFileId = ''
     this.btnSubmit = true
-    this.length = 0
-    const duration = await getBlobDuration(blob)
-    this.length = Math.floor(duration)
     this.errorPerm = ''
 
     this.uploading = true
@@ -178,9 +182,9 @@ export default class Main extends ViewBase {
     this.videoUrl = ''
   }
 
-  uploadDone({ file, blob }: SuccessEvent) {
-    this.srcFileId = file.fileId
-    this.videoUrl = file.url
+  uploadDone({ item }: DoneEvent) {
+    this.srcFileId = item.fileId
+    this.videoUrl = item.url
     this.btnSubmit = false
   }
 

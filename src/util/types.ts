@@ -8,6 +8,11 @@ export interface MapType<T = string> {
   [index: number]: T
 }
 
+/** 可取消的事件 */
+export interface CancelableEvent {
+  canceled: boolean
+}
+
 /** 全站枚举类型 */
 export interface KeyText {
   key: string | number

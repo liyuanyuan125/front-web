@@ -11,11 +11,7 @@ export interface FileItem {
   clientType: string
 }
 
-export interface StartEvent {
-  blob: File
-}
-
-export interface SuccessEvent {
-  file: FileItem
-  blob: File
+export interface DoneEvent {
+  item: FileItem
+  file: File
 }
