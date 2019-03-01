@@ -1,13 +1,19 @@
 <template>
-  <label class="upload-label" :class="{'has-error': !!item.error}">
-    <input type="file" :accept="accept" @change="onChange"/>
+  <label class="upload-label" :class="{
+      'upload-label-error': !!item.error,
+      'upload-label-empty': !(item.fileId || isUploading)
+    }">
+
+    <input type="file" :accept="accept" @change="onChange" ref="file"/>
+
     <span class="upload-has flex-mid" v-if="item.fileId || isUploading">
-      <Progress :percent="item.percent" :status="item.progressStatus" class="progress"/>
+      <CircleProgress :percent="item.percent" :fail="!!item.error" v-if="useCircle"/>
+      <Progress :percent="item.percent" :status="item.progressStatus" class="progress" v-else/>
       <div class="name" v-if="item.clientName">{{item.clientName}}</div>
       <div class="error" v-if="item.error">{{item.error}}</div>
       <slot name="suffix"></slot>
     </span>
-    <span class="upload-empty" v-else>
+    <span class="empty-wrap" v-else>
       <slot>上传文件</slot>
     </span>
   </label>
@@ -21,6 +27,7 @@ import Uploader from '@/util/Uploader'
 import { slice } from '@/fn/object'
 import { FileItem, StartEvent, SuccessEvent } from './types'
 import { cloneDeep } from 'lodash'
+import CircleProgress, { CircleProgressOptions } from '@/components/circleProgress'
 
 // 状态，loading 表示正在生成预览（针对图片），uploading 正在上传，done 完成，fail 失败
 type Status = '' | 'loading' | 'uploading' | 'done' | 'fail'
@@ -50,19 +57,33 @@ const defItem: UploadItem = {
   error: '',
 }
 
-@Component
+@Component({
+  components: {
+    CircleProgress
+  }
+})
 export default class UploadLabel extends ViewBase {
-  /**
-   * 接受的文件类型
-   */
+  /**  接受的文件类型，默认 */
   @Prop({ type: String, default: '*' }) accept!: string
+
+  /** 是否使用圆形进度条，默认不使用 */
+  @Prop({ type: Boolean, default: false }) useCircle!: boolean
 
   item: UploadItem = cloneDeep(defItem)
 
   isUploading = false
 
+  /**
+   * 主动发起文件选择
+   */
+  pick() {
+    const file = this.$refs.file as HTMLInputElement
+    file && file.click()
+  }
+
   onChange(ev: Event) {
-    const files = (ev.target as HTMLInputElement).files
+    const input = ev.target as HTMLInputElement
+    const files = input.files
     if (files == null || files.length === 0) {
       return
     }
@@ -88,6 +109,13 @@ export default class UploadLabel extends ViewBase {
 
     const uploader = new Uploader()
     uploader.on(this.uploadHandlers()).upload(file)
+
+    // 将 input value 清空，以便可以重复上传相同的文件
+    // 在某些浏览器上，通过代码设置 input.value 可能会抛出安全性错误
+    try {
+      input.value = ''
+    } catch {
+    }
   }
 
   uploadHandlers() {
@@ -116,6 +144,10 @@ export default class UploadLabel extends ViewBase {
     item.fileId = fileId
     item.status = 'done'
     item.progressStatus = 'success'
+
+    const file = slice(item, 'url,fileId,clientName,clientSize,clientType') as FileItem
+    const blob = item.blob
+    this.$emit('done', { file, blob } as SuccessEvent)
   }
 
   onUploadFail(ex: any) {
@@ -125,13 +157,12 @@ export default class UploadLabel extends ViewBase {
     item.status = 'fail'
     item.percent = 100
     item.progressStatus = 'wrong'
+    this.$emit('fail', { error })
   }
 
   onUploadEnd() {
     this.isUploading = false
-    const file = slice(this.item, 'url,fileId,clientName,clientSize,clientType') as FileItem
-    const blob = this.item.blob
-    this.$emit('success', { file, blob } as SuccessEvent)
+    this.$emit('end')
   }
 }
 </script>
@@ -166,10 +197,16 @@ export default class UploadLabel extends ViewBase {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.has-error {
+.upload-label-error {
   .name,
   .error {
     color: #ed4014;
+  }
+}
+
+.circle-progress {
+  ~ .name {
+    margin-top: 8px;
   }
 }
 </style>
