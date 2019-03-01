@@ -149,7 +149,7 @@ export default class Main extends ViewBase {
 
     this.partnersList()
     this.creSpecificationList()
-    // 编辑
+    // 编辑详情
     if (this.$route.params.id) {
       this.detailList()
     }
@@ -206,6 +206,8 @@ export default class Main extends ViewBase {
       this.length = item.length
       this.srcFileId = item.srcFileId
       this.videoUrl = item.srcFileUrl || ''
+      // 获取transFee
+      this.handleChangeSpe(this.form.specification)
     } catch (ex) {
       this.handleError(ex)
     }
@@ -214,7 +216,7 @@ export default class Main extends ViewBase {
   async createSubmit(dataform: any) {
     this.errorPerm =  this.srcFileId == '' ? '请选择上传视频' : ''
     const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) {
+    if (!volid || this.errorPerm) {
       return
     }
     // 二次确定弹框
@@ -253,16 +255,19 @@ export default class Main extends ViewBase {
   async editSubmit(dataform: any) {
     this.errorPerm =  this.srcFileId == '' ? '请选择上传视频' : ''
     const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) {
+    if (!volid || this.errorPerm) {
       return
     }
+    // 客户name
+    const customerName: any = this.customerList.filter( (item: any) => item.id == this.form.customerId)
     const id = this.$route.params.id
     try {
       const { data } = await editPop({
         ...this.form,
-        srcFileId: this.srcFileId,
-        length: this.length,
-        transFee: this.transFee
+        srcFileId: this.srcFileId, // 源视频文件上传后的ID
+        length: this.length, // 广告片时长
+        transFee: this.transFee, // transFee
+        customerName: customerName[0].name
       }, id)
       this.$router.push({name: 'pop-film'})
     } catch (ex) {

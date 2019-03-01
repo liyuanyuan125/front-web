@@ -223,7 +223,7 @@ export default class Main extends ViewBase {
   }
 
   getData() {
-    const id = this.$route.params.id
+    const id = this.$route.params.key
     this.data = JSON.parse(sessionStorage.getItem(`${id}`)!)
   }
 
@@ -334,6 +334,8 @@ export default class Main extends ViewBase {
         status: 2
       })
       toast('添加成功')
+      const id = this.$route.params.key
+      sessionStorage.removeItem(`${id}`)
       this.$router.push({name: 'pop-planlist'})
 
     } catch (ex) {
