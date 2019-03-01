@@ -5,9 +5,9 @@
     </h3>
     <div class="flex-box  search-input">
       <Input v-model="dataForm.searchKey"  placeholder="请输入专资编码或影院名称" />
-      <span @click="seachList">
+      <Button  type="primary" class="bth-search" @click="seachList">
         <Icon type="ios-search" size="22"/>
-      </span>
+      </Button>
     </div>
     <Table ref="selection" stripe class="tables" :loading="tableLoading" :columns="columns4" :data="cinemaData">
       <template slot-scope="{row}" slot="action">
@@ -128,6 +128,8 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/site/common.less';
+
 .search-input {
   margin-left: 30px;
 }

@@ -6,9 +6,9 @@
     <div class="flex-box search-input">
       <h4 class="info-title">搜索查询</h4>
       <Input  v-model="dataForm.videoName" placeholder="请输入执行单ID／广告片名称进行搜索"  />
-      <span @click="seach" class="bth-search">
+      <Button  type="primary" @click="seach" class="bth-search">
         <Icon type="ios-search" size="22"/>
-      </span>
+      </Button>
     </div>
     <div v-auth="'adordermanage.dcp#view'">
       <Table ref="selection" stripe :loading="tableLoading"  :columns="columns4" :data="authDate">
@@ -164,6 +164,8 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/site/common.less';
+
 .bth-search {
   cursor: pointer;
 }

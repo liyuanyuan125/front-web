@@ -12,7 +12,7 @@ import { getMenus } from '@/api/customer'
 import { walkTree } from '@/fn/tree'
 import { RouteMetaUnauth, RouteMetaAuth } from './routes'
 import { Route } from 'vue-router'
-import { devInfo, devError } from '@/util/dev'
+import { devInfo, devError, devWarn } from '@/util/dev'
 
 const accessToken: AccessToken = { can: false }
 
@@ -248,7 +248,7 @@ export async function hasPerm(perm: string) {
   const { permMap = {} } = await getCurrentPerms() || {}
   const lower = (perm || '').toLowerCase()
   const has = lower in permMap
-  !has && devError(`[perm] ${lower} not in permMap`)
+  !has && devWarn(`[perm] ${lower} not in permMap`)
   return has
 }
 
