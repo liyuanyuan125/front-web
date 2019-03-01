@@ -159,15 +159,15 @@ export default class Main extends ViewBase {
   }
   // 添加
   addUser() {
-    this.$router.push({name: 'customer-list-edit'})
+    this.$router.push({name: 'customer-edit'})
   }
   // 查看
   toDetail(id: any) {
-    this.$router.push({name: 'customer-list-detail', params: {id}})
+    this.$router.push({name: 'customer-detail', params: {id}})
   }
   // 编辑
   toEdit(id: any) {
-    this.$router.push({name: 'customer-list-edit', params: {id}})
+    this.$router.push({name: 'customer-edit', params: {id}})
   }
 
   handlepageChange(size: any) {

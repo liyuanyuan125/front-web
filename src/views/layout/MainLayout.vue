@@ -142,10 +142,14 @@ export default class MainLayout extends ViewBase {
       return name
     }
 
-    // 否则去掉最后的 -tail，再次判断
-    const remain = name.replace(/-\w+$/, '')
-    if (remain in this.siderMenuNameMap) {
-      return remain
+    // 否则去掉最后的 -tail，再次判断，最多支持 a-b-c-d 四级
+    const tail = /-\w+$/
+    let remain = name
+    for (let i = 0; i < 3 && tail.test(remain); i++) {
+      remain = remain.replace(tail, '')
+      if (remain in this.siderMenuNameMap) {
+        return remain
+      }
     }
 
     // 最后的手段：硬编码映射关系

@@ -616,7 +616,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   // 广告主 - 客户管理 - 新建编辑客户
   {
     path: '/customer/list/edit/:id?',
-    name: 'customer-list-edit',
+    name: 'customer-edit',
     component: () => import('./views/customer/list/edit.vue'),
     meta: {
       authKey: 'customer-manage',
@@ -630,7 +630,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   // 广告主 - 客户管理 - 客户详情
   {
     path: '/customer/list/detail/:id',
-    name: 'customer-list-detail',
+    name: 'customer-detail',
     component: () => import('./views/customer/list/detail.vue'),
     meta: {
       authKey: 'customer-manage',
