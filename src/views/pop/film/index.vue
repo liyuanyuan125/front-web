@@ -5,7 +5,7 @@
 
        <Button type="primary" :to="{name: 'pop-film-edit'}" class="btn-new"
         v-auth="'promotion.ad-video#create'">
-        <Icon type="ios-add" size="27"/>新建广告计划
+        <Icon type="ios-add" size="27"/>新建广告片
       </Button>
     </h3>
     <Form :model="form" class="formInline edit-input">
