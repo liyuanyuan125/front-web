@@ -36,11 +36,11 @@
         <div class='ze'>成效概览</div>
         <Row style='margin-top: 20px;'>
           <Table ref="selection" stripe class="tables" :columns="columns" :data="tableData"></Table>
-          <Button v-if='movies.length > 3'  type="primary" class="mt30 bp" @click="viewCinema" style='margin-left: 86.5%;'>查看全部影院</Button>
+          <Button v-if='movies.length > 3'  type="primary" class="mt30 bp" @click="viewCinema" style='margin-left: 86.5%;'>查看全部影片</Button>
         </Row>
     </div>
     <div class='imgs'>
-        <div class='ze'>单个影院成效</div>
+        <div class='ze'>单部影片成效</div>
         <Select style='width: 300px; margin-top: 20px;margin-left: 25px;' v-model='form.movieId'  clearable placeholder="选择影院" @on-change="seachmov">
               <Option
                 v-for="item in movies"

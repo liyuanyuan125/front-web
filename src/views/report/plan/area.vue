@@ -45,7 +45,7 @@
     </Row>
     <Row>
       <Col :span="24">
-        <h3 class="area-title">单部城市成效</h3>
+        <h3 class="area-title">单个城市成效</h3>
       </Col>
       <Col :span="24">
         <Select class="city-select" clearable v-model="cityId" style="width:300px">
