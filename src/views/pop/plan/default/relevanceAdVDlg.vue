@@ -2,7 +2,7 @@
   <div>
     <Modal v-model="value.visible" :title="value.title" width="800">
       <Form ref="forms" :model="form" :rules="rules" class="edit-input" :label-width="100">
-        <FormItem label="已关联广告片" class="item-top" v-if="value.item">
+        <FormItem label="已关联广告片" class="item-top" v-if="value.item.videoId">
           <div class="relvanMess">
             <p>
               <span>广告片ID</span>

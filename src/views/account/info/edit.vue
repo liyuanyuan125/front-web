@@ -1,10 +1,10 @@
 <template>
   <div class="page home-bg">
-    <Form :model="form" label-position="left" class="edit-input" :label-width="100">
+    <Form :model="form"  :rules="rule"  ref="dataform" label-position="left" class="edit-input" :label-width="100">
       <h3 class="layout-title">登录信息</h3>
       <FormItem label="账号类型" class="item-top">
-        <CheckboxGroup v-model="form.accountType">
-          <Checkbox :label="item.code" v-for="item in queryDate.systemList" :key="item.code">{{item.desc}}</Checkbox>
+        <CheckboxGroup v-model="form.accountType" >
+          <Checkbox :label="item.code" v-for="item in systems" :key="item.code">{{item.codeDesc}}</Checkbox>
         </CheckboxGroup>
       </FormItem>
       <FormItem label="登录邮箱">
@@ -16,19 +16,19 @@
         <Button class="btn-code" :disabled="displayCode" @click="getEmailCode">{{emailMes}}</Button>
       </FormItem>
       <h3 class="layout-title">公司名称</h3>
-      <FormItem label="公司名称" class="item-top">
+      <FormItem label="公司名称" class="item-top" prop="companyName">
         <Input v-model="form.companyName" placeholder="请输入公司名称"></Input>
       </FormItem>
-      <FormItem label="公司所在地">
+      <FormItem label="公司所在地" prop="area">
         <AreaSelect v-model="form.area" :max-level="2" no-self/>
       </FormItem>
-      <FormItem label="联系人">
+      <FormItem label="联系人" prop="contact">
         <Input v-model="form.contact" placeholder="请输入联系人"></Input>
       </FormItem>
-      <FormItem label="手机号">
+      <FormItem label="手机号" prop="contactTel">
         <Input v-model="form.contactTel" placeholder="请输入手机号"></Input>
       </FormItem>
-      <FormItem label="邮箱">
+      <FormItem label="邮箱" prop="companyEmail">
         <Input v-model="form.companyEmail" placeholder="请输入个人邮箱"></Input>
       </FormItem>
       <h3 class="layout-title">开户资质</h3>
@@ -53,7 +53,7 @@
     </Form>
     <div class="btnCenter">
       <Button v-auth="'account-manage.info#change'" type="primary" class="button-ok edit-submit"
-       @click="updateAccount">更新账号</Button>
+       @click="updateAccount('dataform')">更新账号</Button>
     </div>
   </div>
 </template>
@@ -79,7 +79,7 @@ export default class Main extends ViewBase {
   displayCode = false
   queryDate: any = ''
   isEmailCode = false
-
+  systems = []
   form: any = {
     accountType: [],
     email: '',
@@ -96,10 +96,24 @@ export default class Main extends ViewBase {
     qualificationCode: '',
     imageList: []
   }
+
+  get rule() {
+    return {
+      companyName: [{ required: true, message: '请输入公司名称', trigger: 'blur' }],
+      // area: [{ required: true, message: '请输入公司所在地', trigger: 'blur' },
+      //  { validator: (rule: any, value: any, callback: any) => {
+      //    console.log()
+      //  } }],
+      contact: [{ required: true, message: '请输入联系人', trigger: 'blur' }],
+      contactTel: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+      companyEmail: [{ required: true, message: '请输入个人邮箱', trigger: 'blur' }],
+    }
+  }
   async mounted() {
     try {
       const { data } = await accountDetail()
       this.queryDate = data
+      this.systems = data.account.systems
       const arryList: [number, string] = data.systemList.map((item: any) => {
         return item.code
       })
@@ -112,7 +126,7 @@ export default class Main extends ViewBase {
         area: [data.company.provinceId, data.company.cityId],
         contact: data.account.name,
         contactTel: data.account.mobile,
-        companyEmail: data.account.email,
+        companyEmail: data.company.email,
         qualificationType: data.company.qualificationType || '',
         qualificationCode: data.company.qualificationCode,
         imageList: data.company.images || []
@@ -138,7 +152,11 @@ export default class Main extends ViewBase {
     }
   }
 
-  async updateAccount() {
+  async updateAccount(dataform: any) {
+    const volid = await (this.$refs[dataform] as any).validate()
+    if (!volid) {
+      return
+    }
     // 如果验证码为空，不必传邮箱
     const cloneForm = this.form
     cloneForm.imageList = cloneForm.imageList.length != 0 ? cloneForm.imageList.map( (item: any) => item.fileId) : []
