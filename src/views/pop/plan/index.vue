@@ -15,7 +15,7 @@
       </FormItem>
 
       <div class="clear-f sel-header">
-        <FormItem class="float-left" label="广告计划名称" prop="name">
+        <FormItem class="float-left minInput" label="广告计划名称" prop="name">
           <Input class="input-media" v-model="form.name" placeholder="请输入广告计划名称"></Input>
         </FormItem>
         <FormItem style="margin-left:0px" class="float-right pr30" label="关联广告片">
