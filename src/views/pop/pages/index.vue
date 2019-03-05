@@ -1445,8 +1445,7 @@ export default class Main extends ViewBase {
   line-height: 40px;
   span:nth-child(1) {
     color: #989898;
-    display: inline-block;
-    width: 48%;
+    margin-right: 20px;
   }
 }
 </style>

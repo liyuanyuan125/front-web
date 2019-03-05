@@ -336,7 +336,7 @@ export default class Main extends ViewBase {
   .ovs-line {
     line-height: 50px;
     padding-left: 20px;
-    font-size: 15px;
+    font-size: 13px;
   }
   .poovs {
     font-size: 36px;

@@ -15,22 +15,22 @@
       </FormItem>
 
       <div class="clear-f sel-header">
-        <FormItem class="float-left" label="广告计划名称" prop="name">
-          <Input class="input-media" v-model="form.name" placeholder="请输入广告计划名称"></Input>
+        <FormItem class="float-left minInput" label="广告计划名称" prop="name">
+          <Input  v-model="form.name" placeholder="请输入广告计划名称"></Input>
         </FormItem>
         <FormItem style="margin-left:0px" class="float-right pr30" label="关联广告片">
-          <Select class="input-media" v-model="form.videoId" filterable clearable>
+          <Select v-model="form.videoId" filterable clearable>
             <Option v-if="item.status == 4" v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
         </FormItem>
       </div>
 
       <div class="clear-f" v-if="form.videoId">
-        <FormItem class="float-left" label="广告片规格">
+        <FormItem class="float-left minInput" label="广告片规格">
           <div class="xad input-media"><span>{{specification}}s</span></div>
         </FormItem>
         <FormItem class="float-right pr30" style="margin-left:0px" label="选择客户">
-          <div class="xad input-media"><span>{{customerName}}</span></div>
+          <div class="xad2 input-media"><span>{{customerName}}</span></div>
         </FormItem>
       </div>
 
@@ -101,7 +101,7 @@
         </FormItem>
 
         <FormItem label="推荐影片" class="form-item-type-sort">
-          <ul class="film-list">
+          <ul class="film-list" v-if="normCinema.length > 0">
             <li v-for="(it, index) in normCinema" :key="it.id"
               :class="['film-item']">
               <div :class="['film-cover-box']">
@@ -111,6 +111,15 @@
               </div>
               <h4 class="film-name">{{it.name}}</h4>
               <div class="film-tags">{{it.type.join(' / ')}}</div>
+            </li>
+          </ul>
+          <ul v-else>
+            <li
+              :class="['film-item']">
+              <div :class="['film-cover-box']">
+                <b :class="`img-rank${1}`"></b>
+                <img src="./assets/nosearch.png" class="film-cover">
+              </div>
             </li>
           </ul>
         </FormItem>

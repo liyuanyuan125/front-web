@@ -107,7 +107,7 @@
         }
       }
     }
-    .xad {
+    .xad, .xad2 {
       width: 400px;
       height: 40px;
       line-height: 40px;
@@ -371,7 +371,7 @@
   .film-item {
     position: relative;
     width: 270px;
-    margin: 25px 10px 0 0;
+    margin: 25px 20px 0 0;
     background:rgba(249, 249, 249, 1);
     padding-bottom: 5px;
     img {
@@ -436,13 +436,16 @@
   .film-name {
     margin-top: 10px;
   }
-  @media screen and (min-width: 960px) and  (max-width: 1340px) {
-    .edit-input .ivu-form-item-content .ivu-input-wrapper {
-      width: 360px;
+  @media screen and  (max-width: 1340px) {
+    .forms .xad, .edit-input .minInput .ivu-form-item-content .ivu-input-wrapper {
+      width: 320px;
     }
-    .edit-input /deep/ .ivu-form-item-content .ivu-select-selection {
-      width: 360px;
-      margin-right: 40px;
+    .single-film-item {
+      margin-right: 30px;
+    }
+    .forms .xad2,.edit-input /deep/ .ivu-form-item-content .ivu-select-selection {
+      width: 320px;
+      margin-right: 80px;
     }
   }
   .form-item-film-name {
