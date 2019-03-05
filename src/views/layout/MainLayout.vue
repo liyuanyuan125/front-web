@@ -2,7 +2,7 @@
   <div class="site-layout">
     <header class="site-header flex-box">
       <h1 class="logo">
-        <router-link to="/" class="logo-link">
+        <router-link :to="{ name: 'home' }" class="logo-link">
           <img src="~@/assets/site/logo.png" alt="Aiads投放管理平台" class="logo-img">
         </router-link>
       </h1>
@@ -44,7 +44,7 @@
       </Sider>
 
       <Content class="site-content">
-        <router-view></router-view>
+        <router-view :name="viewName"/>
       </Content>
     </Layout>
   </div>
@@ -60,6 +60,14 @@ import { cloneDeep, kebabCase } from 'lodash'
 import event from '@/fn/event'
 import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
 import { devInfo } from '@/util/dev'
+
+let instance: any = null
+let viewName: string = 'default'
+
+event.on('route-perm', ({ has, to, from }: any) => {
+  viewName = has ? 'default' : '403'
+  instance && (instance.viewName = viewName)
+})
 
 @Component
 export default class MainLayout extends ViewBase {
@@ -85,6 +93,8 @@ export default class MainLayout extends ViewBase {
 
   isOff = false
 
+  viewName = 'default'
+
   permMenu: PermPage[] | null = null
 
   get siderMenuList() {
@@ -94,10 +104,7 @@ export default class MainLayout extends ViewBase {
     }
 
     const permMenu = this.permMenu
-
     const list = getMenuList(permMenu, user.systemCode)
-
-    // devInfo('menuList', list)
 
     return list
   }
@@ -157,6 +164,10 @@ export default class MainLayout extends ViewBase {
   }
 
   created() {
+    // 初始化 viewName，设置全局 instance
+    this.viewName = viewName
+    instance = this
+
     checkUser()
 
     // 切换权限
