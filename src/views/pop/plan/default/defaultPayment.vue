@@ -284,7 +284,7 @@
       <Button v-auth="'promotion.ad-plan#relation'" type="primary" class="button-ok" @click="relevanceAdv">关联广告片</Button>
     </div>
     <CinemaList v-model="cinema" v-if="cinema.visible"/>
-    <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible"></relevanceDlg>
+    <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible"  @submitRelevance="submitRelevance"></relevanceDlg>
   </div>
 </template>
 <script lang="ts">
@@ -310,6 +310,8 @@ export default class PlanDefault extends ViewBase {
   defaultData: any = []
   tags = []
   status: any = 0
+
+  listId: any = ''
 
   sex = ''
   age = ''
@@ -387,7 +389,7 @@ export default class PlanDefault extends ViewBase {
   }
   async list() {
     try {
-      const id = this.$route.params.id
+      const id = this.listId = this.$route.params.id
       const { data } = await planDefault(id)
       this.defaultData = data
       this.items = data.item || {}
@@ -453,9 +455,15 @@ export default class PlanDefault extends ViewBase {
   }
   async relevanceAdv(id: any) {
     this.relevanVis = {
+      title: '关联广告片',
       visible: true,
-      item: this.items
+      item: this.items,
+      id: this.listId
     }
+  }
+
+  submitRelevance() {
+     this.$router.push({ name: 'pop-planlist' })
   }
   async handlePayment() {
     await confirm(`是否要支付冻结金额${this.items.freezeAmount}元`, {

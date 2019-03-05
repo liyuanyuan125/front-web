@@ -1,6 +1,6 @@
 <template>
   <div class="page home-bg">
-    <Form :model="form" label-position="left" :label-width="100" class="edit-input">
+    <Form :model="form"  :rules="rule"  ref="dataform" label-position="left" :label-width="100" class="edit-input">
       <h3 class="layout-title">登录信息</h3>
       <FormItem label="登录邮箱" class="item-top">
         <Input v-model="form.email" placeholder="请输入登录邮箱"></Input>
@@ -14,13 +14,13 @@
       <FormItem label="公司所在地" class="item-top">
         <AreaSelect v-model="form.area" :max-level="2" no-self/>
       </FormItem>
-      <FormItem label="联系人">
+      <FormItem label="联系人" prop="contact">
         <Input v-model="form.contact" placeholder="请输入联系人姓名"></Input>
       </FormItem>
-      <FormItem label="手机号">
+      <FormItem label="手机号" prop="contactTel">
         <Input v-model="form.contactTel" :maxlength="11" placeholder="请输入手机号"></Input>
       </FormItem>
-      <FormItem label="个人邮箱">
+      <FormItem label="个人邮箱" prop="companyEmail">
         <Input v-model="form.companyEmail" placeholder="请输入个人邮箱"></Input>
       </FormItem>
     </Form>
@@ -29,7 +29,7 @@
         type="primary"
         :disabled="submitDisabled"
         class="button-ok edit-submit"
-        @click="editAccount"
+        @click="editAccount('dataform')"
       >提交申请</Button>
     </div>
   </div>
@@ -63,6 +63,14 @@ export default class Main extends ViewBase {
     companyEmail: '',
     area: []
   }
+  get rule() {
+    return {
+      contact: [{ required: true, message: '请输入联系人', trigger: 'blur' }],
+      contactTel: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+      companyEmail: [{ required: true, message: '请输入个人邮箱', trigger: 'blur' }],
+    }
+  }
+
   async mounted() {
     const { data } = await accountDetail()
     this.form = {
@@ -90,7 +98,11 @@ export default class Main extends ViewBase {
     }
   }
 
-  async editAccount() {
+  async editAccount(dataform: any) {
+    const volid = await (this.$refs[dataform] as any).validate()
+    if (!volid) {
+      return
+    }
     this.submitDisabled = true
     const cloneForm = Object.assign(this.form)
     if (!this.form.emailCaptcha) {
