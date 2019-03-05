@@ -13,6 +13,7 @@ import { walkTree } from '@/fn/tree'
 import { RouteMetaUnauth, RouteMetaAuth } from './routes'
 import { Route } from 'vue-router'
 import { devInfo, devError, devWarn } from '@/util/dev'
+import { kebabCase } from 'lodash'
 
 const accessToken: AccessToken = { can: false }
 
@@ -135,6 +136,20 @@ export function switchSystem(systemCode: SystemCode) {
 }
 
 /**
+ * 切换主题
+ */
+export function switchTheme() {
+  const user = getUser()
+  // classList 的兼容性不太好
+  const html = document.documentElement
+  const className = (html.className || '').trim()
+  const remain = className.replace(/\btheme-\w+\b/, '')
+  const name = user && kebabCase(user.systemCode)
+  const newClass = (name ? [remain, `theme-${name}`].join(' ') : remain).trim()
+  html.className = newClass
+}
+
+/**
  * 更新当前用户的邮箱
  * @param email 邮箱地址
  */
@@ -170,6 +185,9 @@ export function logout() {
   }
 
   theUser = null
+
+  switchTheme()
+
   postLogout()
 }
 
