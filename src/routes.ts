@@ -6,8 +6,10 @@ import registerComplete from './views/portal/registerComplete.vue'
 import activeEmail from './views/portal/activeEmail.vue'
 import registerSuccess from './views/portal/registerSuccess.vue'
 import MainLayout from './views/layout/MainLayout.vue'
+import Error from './views/error/index.vue'
 
 import { RouteConfig, Route } from 'vue-router'
+import { devInfo, devError } from './util/dev'
 
 /**
  * meta 类型：基础类型，可以放一些别的成员
@@ -21,7 +23,7 @@ interface RouteMetaBase {
  */
 export interface RouteMetaUnauth extends RouteMetaBase {
   /**
-   * 标记是否不需要登录（注意不是是否不需要验证）
+   * 标记是否不需要登录（注意不是不需要验证）
    */
   unauth: true
 }
@@ -58,6 +60,11 @@ export interface RouteMetaAuth extends RouteMetaBase {
   authIsMenu?: true
 }
 
+/** 标记不需要登录 */
+const unauth: RouteMetaUnauth = {
+  unauth: true
+}
+
 /** 占位，不需要验证 */
 const emptyAuth: RouteMetaAuth = {
   authKey: '',
@@ -88,9 +95,7 @@ const singleRoutes: RouteConfigEnhance[] = [
     path: '/login',
     name: 'login',
     component: login,
-    meta: {
-      unauth: true
-    }
+    meta: unauth
   },
 
   // 激活邮箱
@@ -98,9 +103,7 @@ const singleRoutes: RouteConfigEnhance[] = [
     path: '/account-activate/:id',
     name: 'account-activate',
     component: activeEmail,
-    meta: {
-      unauth: true
-    }
+    meta: unauth
   },
 
   // 注册
@@ -108,9 +111,7 @@ const singleRoutes: RouteConfigEnhance[] = [
     path: '/register',
     name: 'register',
     component: register,
-    meta: {
-      unauth: true
-    }
+    meta: unauth
   },
 
   // 注册完成信息
@@ -118,9 +119,7 @@ const singleRoutes: RouteConfigEnhance[] = [
     path: '/register/complete',
     name: 'register-complete',
     component: registerComplete,
-    meta: {
-      unauth: true
-    }
+    meta: unauth
   },
 
   // 注册成功
@@ -128,9 +127,7 @@ const singleRoutes: RouteConfigEnhance[] = [
     path: '/register/success',
     name: 'register-success',
     component: registerSuccess,
-    meta: {
-      unauth: true
-    }
+    meta: unauth
   },
 
   // 重置密码
@@ -138,9 +135,7 @@ const singleRoutes: RouteConfigEnhance[] = [
     path: '/resetpwd',
     name: 'resetpwd',
     component: () => import('./views/portal/resetpwd.vue'),
-    meta: {
-      unauth: true
-    }
+    meta: unauth
   },
 ] // end of singleRoutes
 
@@ -148,6 +143,9 @@ const singleRoutes: RouteConfigEnhance[] = [
  * 放在 mainLayout 中的 routes
  *
  * 请注意，相似的路径写在一起，并用「一个」空行隔开
+ *
+ * TODO: 所有页面均要平坦化，不要使用 children
+ * 若需要使用 children，下面注入「没有权限」的代码也需要修改
  */
 const mainLayoutRoutes: RouteConfigEnhance[] = [
   // 管理首页
@@ -160,15 +158,6 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: 'EMPTY',
       authIsMenu: true,
     }
-  },
-
-  // 错误页面 - 没有权限
-  {
-    path: '/error/noauth',
-    name: 'error-noauth',
-    component: () => import('./views/error/index.vue'),
-    props: { code: 'noauth' },
-    meta: emptyAuth,
   },
 
   // 广告主 - 账户概览
@@ -647,13 +636,50 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
 ] // // end of mainLayoutRoutes
 
+const errorRoutes: RouteConfigEnhance[] = [
+  {
+    path: '*',
+    name: '404',
+    component: Error,
+    props: { code: 404 },
+    meta: unauth
+  },
+]
+
+// 将「没有权限」注入到 mainLayoutRoutes 中，目前只支持第一级
+const mainLayoutRoutesWith403 = mainLayoutRoutes.map(it => {
+  // 暂时不对含有 components 的组件进行操作
+  if (it.components != null) {
+    devError(`[config] ${it.name} has components, pass`)
+    return it
+  }
+
+  const components: any = {
+    default: it.component,
+    403: Error,
+  }
+
+  const result: RouteConfigEnhance = {
+    ...it,
+    components,
+    props: {
+      default: it.props || {},
+      403: { code: 403 }
+    }
+  }
+  delete result.component
+
+  return result
+})
+
 const routes: RouteConfig[] = [
   ...singleRoutes,
   {
     path: '/',
     component: MainLayout,
-    children: mainLayoutRoutes,
-  }
+    children: mainLayoutRoutesWith403,
+  },
+  ...errorRoutes,
 ]
 
 export default routes

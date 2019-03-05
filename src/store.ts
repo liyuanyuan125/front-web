@@ -248,7 +248,7 @@ export async function hasPerm(perm: string) {
   const { permMap = {} } = await getCurrentPerms() || {}
   const lower = (perm || '').toLowerCase()
   const has = lower in permMap
-  !has && devWarn(`[perm] ${lower} not in permMap`)
+  // !has && devWarn(`[perm] ${lower} not in permMap`)
   return has
 }
 

@@ -22,6 +22,7 @@ import { alert } from './ui/modal'
 import { hasLogin, hasRoutePerm } from './store'
 
 import routes from './routes'
+import { devError, devWarn } from './util/dev'
 
 // iview 配置
 Vue.use(iView, { locale })
@@ -42,20 +43,8 @@ router.beforeEach(async (to, from, next) => {
     next({ name: 'login' })
   } else {
     const has = await hasRoutePerm(to)
-    if (!has) {
-      // 使用 next false 支持浏览器回退
-      next(false)
-      // 没有权限，不要使用 replace，否则导致回退异常
-      next({ name: 'error-noauth' })
-
-      // 若当前页，已经是 error-noauth，则不会执行 afterEach
-      // 这里需要手动对 loadingBar 进行 finish
-      if (from.name == 'error-noauth') {
-        iView.LoadingBar.finish()
-      }
-    } else {
-      next()
-    }
+    event.emit('route-perm', { has, to, from })
+    next()
   }
 })
 
