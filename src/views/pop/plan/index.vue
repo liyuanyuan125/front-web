@@ -101,7 +101,7 @@
         </FormItem>
 
         <FormItem label="推荐影片" class="form-item-type-sort">
-          <ul class="film-list">
+          <ul class="film-list" v-if="normCinema.length > 0">
             <li v-for="(it, index) in normCinema" :key="it.id"
               :class="['film-item']">
               <div :class="['film-cover-box']">
@@ -111,6 +111,15 @@
               </div>
               <h4 class="film-name">{{it.name}}</h4>
               <div class="film-tags">{{it.type.join(' / ')}}</div>
+            </li>
+          </ul>
+          <ul v-else>
+            <li
+              :class="['film-item']">
+              <div :class="['film-cover-box']">
+                <b :class="`img-rank${1}`"></b>
+                <img src="./assets/nosearch.png" class="film-cover">
+              </div>
             </li>
           </ul>
         </FormItem>

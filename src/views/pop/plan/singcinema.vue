@@ -38,6 +38,7 @@
     </Form>
     <div class="flex-box">
       <p class="single-length" v-if="length > 0">已为您匹配以下{{length}}部影片：</p>
+      <p class="single-length" v-else>暂无搜索结果</p>
       <!-- <p class="red">已选中{{cinemaIdArray.length}}部影片</p> -->
     </div>
     
@@ -52,6 +53,13 @@
       </div>
       <h4 class="film-name">{{it.name}}</h4>
       <div class="film-tags">{{it.type.join(',')}}</div>
+      </li>
+    </ul>
+    <ul v-else class="single-film-list">
+      <li :class="['single-film-item']">
+      <div class="single-cover-box">
+         <img src="./assets/nosearch.png" class="film-cover">
+      </div>
       </li>
     </ul>
     <!-- :current="form.pageIndex" -->
