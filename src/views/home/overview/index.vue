@@ -41,14 +41,14 @@
                 <Row class='ovs-line'>
                     <Col span='4'>待审核:</Col>
                     <Col span='8'>{{video.pendingapproval}}个</Col>
-                    <Col span='4'>待支付:</Col>
-                    <Col span='8'>{{video.paying}}个</Col>
+                    <Col span='5'>待支付:</Col>
+                    <Col span='7'>{{video.paying}}个</Col>
                 </Row>
                 <Row class='ovs-line'>
                     <Col span='4'>转码中:</Col>
                     <Col span='8'>{{video.trans}}个</Col>
-                    <Col span='4'>转码完成:</Col>
-                    <Col span='8'>{{video.completed}}个</Col>
+                    <Col span='5'>转码完成:</Col>
+                    <Col span='7'>{{video.completed}}个</Col>
                 </Row>
             </Row>
         </Col>
@@ -368,7 +368,7 @@ export default class Main extends ViewBase {
   .ovs-line {
     line-height: 50px;
     padding-left: 20px;
-    font-size: 15px;
+    font-size: 13px;
   }
   .poovs {
     font-size: 36px;
