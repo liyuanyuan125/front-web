@@ -462,3 +462,17 @@
       }
     }
   }
+  .red {
+    color: red;
+  }
+  .before(@content: '/', @color: #222) {
+    content: @content;
+    margin-left: 6px;
+    margin-right: 6px;
+    color: @color;
+  }
+  .cinema-type {
+    span:not(:last-child)::after {
+      .before;
+    }
+  }
