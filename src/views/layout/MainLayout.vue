@@ -215,6 +215,12 @@ export default class MainLayout extends ViewBase {
 @c-menu-open: #002d5b;
 @c-sider-text: #91a5bc;
 
+.site-layout {
+  min-width: 1200px;
+  max-width: 1600px;
+  margin: auto;
+}
+
 .site-header {
   position: relative;
   height: 60px;
