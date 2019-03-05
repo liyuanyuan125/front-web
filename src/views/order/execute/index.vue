@@ -59,7 +59,7 @@
             </Select>
           </Col>
           <Col style='margin-left: 26px;' span="10">
-            <DatePicker type="daterange" style="width: 300px" v-model='showTime' @on-change="handleChange"
+            <DatePicker type="daterange" style="width: 250px" v-model='showTime' @on-change="handleChange"
         placement="bottom-start" placeholder="请选择开始日期和结束日期" ></DatePicker>
           </Col>
         </Col>
