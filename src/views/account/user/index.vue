@@ -126,38 +126,14 @@ export default class Main extends ViewBase {
 
   formatTimes: any = ''
   columns = [
-    {
-      type: 'selection',
-      width: 60,
-      align: 'center'
-    },
+    { type: 'selection', width: 60,  align: 'center' },
     { title: '联系人', key: 'name' },
-    {
-      title: '登录邮箱',
-      width: 160,
-      key: 'email'
-    },
-    {
-      title: '手机号码',
-      key: 'mobile'
-    },
-    {
-      title: '权限角色',
-      slot: 'roleId'
-    },
-    {
-      title: '状态',
-      slot: 'statusCode'
-    },
-    {
-      title: '上次登录时间',
-      slot: 'lastLoginTime'
-    },
-    {
-      title: '操作',
-      slot: 'action',
-      width: 160
-    }
+    { title: '登录邮箱', width: 160,  key: 'email'},
+    { title: '手机号码', key: 'mobile' },
+    {  title: '权限角色',   slot: 'roleId' },
+    { title: '状态',  slot: 'statusCode' },
+    { title: '上次登录时间',  slot: 'lastLoginTime' },
+    { title: '操作', slot: 'action',  width: 160  }
   ]
 
   async mounted() {
