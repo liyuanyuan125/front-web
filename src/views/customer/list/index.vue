@@ -2,23 +2,23 @@
   <div class="page home-bg">
     <h3 class="userTitle">
       <span class="nav-top-title">客户管理</span>
-      <em class="addUser" v-auth="'customer-manage#create'" @click="addUser">
+      <Button  class="btn-new" type="primary" v-auth="'customer-manage#create'" @click="addUser">
         <Icon type="ios-add" size="27"/>新建客户
-      </em>
+      </Button>
     </h3>
 
     <Form :model="form" class="form">
       <Row type="flex" justify="space-between">
-        <Col :span="6">
+        <Col :span="5">
           <FormItem label="客户行业" :label-width="100">
-            <Select v-model="form.businessCode" clearable @on-change='searchcode' style='width: 200px;'>
+            <Select v-model="form.businessCode" clearable @on-change='searchcode' style='width: 150px;'>
               <Option :value="item.code" :key="item.code" v-for="item in businessList">{{item.desc}}</Option>
             </Select>
           </FormItem>
         </Col>
-        <Col :span="6">
+        <Col :span="5">
           <FormItem label="所属品类" :label-width="100">
-            <Select v-model="form.businessCategoryCode" @on-change='gorycode' clearable style='width: 200px;'>
+            <Select v-model="form.businessCategoryCode" @on-change='gorycode' clearable style='width: 150px;'>
               <Option :value="item.code" :key="item.code" v-for="item in businessCodeList">{{item.desc}}</Option>
             </Select>
           </FormItem>
@@ -27,9 +27,9 @@
           <FormItem>
             <div class="flex-box">
               <Input v-model="form.searchKey" placeholder="搜索客户ID/联系人/联系电话"/>
-              <span @click="searchTableList">
+              <Button type="primary" @click="searchTableList" class="btn-new">
                 <Icon type="ios-search" size="22"/>
-              </span>
+              </Button>
             </div>
           </FormItem>
         </Col>
