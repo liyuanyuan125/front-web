@@ -1,6 +1,6 @@
 <template>
   <div class="page home-bg">
-    <h3 class="layout-title nav-top-title">资金账单</h3>
+    <div class="layout-title nav-top-title">资金账单</div>
     <Form :model="form" label-position="left" class="edit-input" :label-width="100">
       <FormItem label="账单类型" class="item-top">
         <RadioGroup v-model="form.transactionType" class="radio-item-type" @on-change="tableList">
