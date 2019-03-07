@@ -60,7 +60,8 @@
       </template>
 
       <template slot="settlementStatus" slot-scope="{row, index}">
-        <span>{{querySettlementList(row.settlementStatus)}}</span>
+        <!-- <span>{{querySettlementList(row.settlementStatus)}}</span> -->
+        <span v-for="item in data.settlementStatusList" v-if="item.key == row.settlementStatus">{{item.text}}</span>
       </template>
 
       <template slot="operation" slot-scope="{row, index}">
@@ -291,13 +292,13 @@ export default class Plan extends ViewBase {
      }
   }
 
-  querySettlementList(id: any) {
-    const list = this.data.settlementStatusList
-    const items = list ? list.filter( (item: any) => item.key == id) : null
-    if (items) {
-       return items[0].text
-    }
-  }
+  // querySettlementList(id: any) {
+  //   const list = this.data.settlementStatusList
+  //   const items = list ? list.filter( (item: any) => item.key == id) : null
+  //   if (items) {
+  //      return items[0].text
+  //   }
+  // }
 
   // 单选
   singleSelect(select: any) {

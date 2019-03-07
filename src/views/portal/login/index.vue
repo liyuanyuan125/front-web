@@ -1,7 +1,7 @@
 <template>
   <div class="login-home">
     <header>
-      <div class="nav">
+      <div class="nav flex-mid wid-auto">
         <div class="logo">
           <img src="~@/assets/site/logo.png" alt="alias" height="50">
         </div>
@@ -14,7 +14,7 @@
       </div>
     </header>
     <content class="content">
-      <div class="main-wrap">
+      <div class="main-wrap wid-auto">
         <div>
           <img src="./assets/bannerlogo.png" alt="alias" height="115px">
           <br>
@@ -220,8 +220,9 @@ export default class Main extends ViewBase {
   header {
     background: #fff;
     .nav {
-      .flex;
-      .wid-auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       height: 110px;
       font-size: 14px;
@@ -247,8 +248,6 @@ export default class Main extends ViewBase {
     background: url(http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bhj7kl98jlg00080873g.jpg) no-repeat center;
     background-size: cover;
     .main-wrap {
-      .wid-auto;
-
       cursor: pointer;
       display: -webkit-flex;
       display: flex;

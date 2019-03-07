@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="header">
+    <div class="header wid-auto">
       <Row type="flex" justify="center" class="headLogo" align="middle" style="height:144px;">
         <Col span="5">
           <router-link to="/login">
@@ -18,7 +18,6 @@
 <style lang="less" scoped>
 @import '../../site/login.less';
 .header {
-  .wid-auto;
   .toLogin {
     text-align: right;
     font-size: 15px;

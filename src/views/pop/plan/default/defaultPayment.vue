@@ -269,12 +269,7 @@
     </div>
     <div class="btnCenter btn-footer" v-if="status == 2">
       <Button v-auth="'promotion.ad-plan#cancel'" class="button-cancel" @click="cancelPlan">取消计划</Button>
-      <Button
-        v-auth="'promotion.ad-plan#edit'"
-        type="primary"
-        class="button-ok edit-btn"
-        @click="toEdit"
-      >编辑</Button>
+      <Button  v-auth="'promotion.ad-plan#edit'" type="primary"  class="button-ok edit-btn"  @click="toEdit">编辑</Button>
     </div>
     <div class="btnCenter btn-footer">
       <Button  v-if="status == 4" v-auth="'promotion.ad-plan#cancel'" class="button-cancel"

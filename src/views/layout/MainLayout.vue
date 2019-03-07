@@ -1,6 +1,6 @@
 <template>
   <div class="site-layout">
-    <header class="site-header flex-box">
+    <header class="site-header flex-box" ref="siteHeader">
       <h1 class="logo">
         <router-link :to="{ name: 'home' }" class="logo-link">
           <img src="~@/assets/site/logo.png" alt="Aiads投放管理平台" class="logo-img">
@@ -25,7 +25,7 @@
       </div>
     </header>
 
-    <Layout class="site-center">
+    <Layout ref="siteCenter" :style="{height: winHei, overflow: 'hidden'}" class="site-center">
       <Sider collapsible hide-trigger v-model="isOff" class="site-sider" :width="180" ref="sider">
         <Menu width="auto" theme="dark" :key="`menu-${system.code}`" class="sider-menu" :class="isOff && 'sider-menu-off'"
           :active-name="siderActiveName" :open-names="siderOpenNames" v-if="siderMenuList.length > 0">
@@ -74,6 +74,9 @@ export default class MainLayout extends ViewBase {
   user = getUser()
 
   allSystemList = allSystemList
+
+  // winHei
+  winHei: any = '100%'
 
   get systemList() {
     if (this.user != null) {
@@ -215,6 +218,16 @@ export default class MainLayout extends ViewBase {
   logout() {
     logout()
     this.$router.push({ name: 'login' })
+  }
+
+  mounted() {
+    this.$nextTick(() => {
+      const winHeight = document.documentElement.clientHeight || document.body.clientHeight
+      const headerHeight = (this.$refs.siteHeader as any).offsetHeight
+      this.winHei = winHeight - headerHeight + 'px'
+     //  console.log(headerHeight)
+      // (this.$refs.siteCenter as any).style = {height: '513px'}
+    })
   }
 }
 </script>
@@ -360,11 +373,11 @@ export default class MainLayout extends ViewBase {
   background-color: @c-sider-bg;
   border-right: 1px solid #eee;
   min-height: calc(100vh - 60px);
+  overflow: scroll;
 }
 .site-content {
   position: relative;
   padding: 10px;
-  // overflow-x: auto !important;
 }
 .ivu-menu {
   z-index: 99;
@@ -476,20 +489,6 @@ export default class MainLayout extends ViewBase {
       background-image: url(./assets/order.png);
     }
   }
-
-  // .menu-node-play {
-  //   /deep/ & >  .ivu-menu-submenu-title,
-  //   & > a {
-  //     background-image: url(./assets/play.png);
-  //   }
-  // }
-  // .menu-node-space {
-  //   /deep/ & >  .ivu-menu-submenu-title,
-  //   & > a {
-  //     background-image: url(./assets/space.png);
-  //   }
-  // }
-
   .menu-node-finance,
   .menu-node-resfinance {
     /deep/ & > .ivu-menu-submenu-title,
