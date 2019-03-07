@@ -812,7 +812,8 @@ export default class Main extends ViewBase {
     height: 100px;
   }
   .btnq {
-    margin-top: 100px;
+    margin-top: 60px;
+    margin-bottom: 40px;
   }
 }
 /deep/ .ivu-form .ivu-form-item-label {
