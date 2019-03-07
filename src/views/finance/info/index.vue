@@ -92,7 +92,7 @@
             </Col>
           </Row>
           <Row class="add-row">
-            <Col span="8">
+            <Col span="7">
               <FormItem label="汇款人姓名" prop="accountName">
                 <Input
                   v-model="dataForm.accountName"
@@ -101,7 +101,7 @@
                 />
               </FormItem>
             </Col>
-            <Col span="8">
+            <Col span="7" style='margin-left: 5%;'>
               <FormItem label="汇款时间">
                 <Date-picker
                   type="date"
@@ -113,7 +113,7 @@
                 ></Date-picker>
               </FormItem>
             </Col>
-            <Col span="8">
+            <Col span="7" style='margin-left: 5%;'>
               <FormItem label="联系电话" prop="contactPhone">
                 <Input
                   v-model="dataForm.contactPhone"
@@ -725,18 +725,18 @@ export default class Main extends ViewBase {
   }
   .inp-style {
     width: 97%;
-    border: 0.5px solid rgba(210, 210, 210, 1);
-    border-radius: 5px;
+    // border-radius: 2px;
+    // border: 1px solid rgba(210, 210, 210, 1);
   }
   .inp-style-center {
-    width: 95%;
-    border: 0.5px solid rgba(210, 210, 210, 1);
-    border-radius: 5px;
+    width: 105%;
+    // border-radius: 2px;
+    // border: 1px solid rgba(210, 210, 210, 1);
   }
   .inp-style-tex {
     width: 98.5%;
-    border: 0.5px solid rgba(210, 210, 210, 1);
-    border-radius: 5px;
+    // border-radius: 2px;
+    // border: 1px solid rgba(210, 210, 210, 1);
   }
   .hui-div {
     width: 83%;
@@ -814,5 +814,8 @@ export default class Main extends ViewBase {
   .btnq {
     margin-top: 100px;
   }
+}
+/deep/ .ivu-form .ivu-form-item-label {
+  font-size: 14px !important;
 }
 </style>
