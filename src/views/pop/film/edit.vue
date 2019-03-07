@@ -166,6 +166,7 @@ export default class Main extends ViewBase {
   }
 
   async uploadPrepare({ file }: PrepareEvent) {
+    this.btnSubmit = true
     this.length = 0
     const duration = await getBlobDuration(file)
     this.length = Math.floor(duration)
@@ -173,7 +174,6 @@ export default class Main extends ViewBase {
 
   async uploadStart() {
     this.srcFileId = ''
-    this.btnSubmit = true
     this.errorPerm = ''
 
     this.uploading = true
@@ -185,10 +185,10 @@ export default class Main extends ViewBase {
   uploadDone({ item }: DoneEvent) {
     this.srcFileId = item.fileId
     this.videoUrl = item.url
-    this.btnSubmit = false
   }
 
   uploadEnd() {
+    this.btnSubmit = false
     this.uploading = false
   }
 

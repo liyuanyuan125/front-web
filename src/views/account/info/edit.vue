@@ -4,7 +4,7 @@
       <h3 class="layout-title">登录信息</h3>
       <FormItem label="账号类型" class="item-top">
         <CheckboxGroup v-model="form.accountType" >
-          <Checkbox :label="item.code" v-for="item in systems" :key="item.code">{{item.codeDesc}}</Checkbox>
+          <Checkbox :label="item.code" v-for="item in queryDate.systemList" :key="item.code">{{item.desc}}</Checkbox>
         </CheckboxGroup>
       </FormItem>
       <FormItem label="登录邮箱">
@@ -114,7 +114,7 @@ export default class Main extends ViewBase {
       const { data } = await accountDetail()
       this.queryDate = data
       this.systems = data.account.systems
-      const arryList: [number, string] = data.systemList.map((item: any) => {
+      const arryList: [number, string] = data.account.systems.map((item: any) => {
         return item.code
       })
 

@@ -11,48 +11,35 @@
 
     <Form :model="form" class="formInline">
       <Row type="flex" justify="space-between">
+
         <Col span="5">
           <Select v-model="form.status" style="width: 200px" clearable placeholder="请选择广告计划状态">
             <Option v-for="item in data.statusList" v-if="item.key != 0" :key="item.key" :value="item.key">{{item.text}}</Option>
           </Select>
         </Col>
+
         <Col span="4">
           <Select v-model="form.settlementStatus" style="width: 150px" clearable placeholder="请选择结算状态">
-            <Option
-              v-for="item in data.settlementStatusList"
-              v-if="item.key != 0"
-              :key="item.key"
-              :value="item.key"
-            >{{item.text}}</Option>
+            <Option v-for="item in data.settlementStatusList"  v-if="item.key != 0"   :key="item.key"  :value="item.key" >{{item.text}}</Option>
           </Select>
         </Col>
+        
         <Col span="12" class="flex-box">
           <Select v-model="form.level" style="width: 200px" clearable placeholder="请选择广告层级">
-            <Option
-              v-for="item in data.levelTypeList"
-              v-if="item.key != 0"
-              :key="item.key"
-              :value="item.key"
-            >{{item.text}}</Option>
+            <Option v-for="item in data.levelTypeList"  v-if="item.key != 0"
+              :key="item.key" :value="item.key" >{{item.text}}</Option>
           </Select>
           <div class="flex-box search-border-left">
             <Input v-model="form.query"  placeholder="请输入ID/名称进行搜索"/>
-            <span class="btn-search-list" @click="searchList">
+            <Button type="primary" class="bth-search" @click="searchList">
               <Icon type="ios-search" size="22"/>
-            </span>
+            </Button>
           </div>
         </Col>
       </Row>
     </Form>
 
-    <Table
-      stripe
-      :columns="columns"
-      :data="tableDate"
-      ref="selection"
-      @on-selection-change="singleSelect"
-      @on-select-all="selectAll"
-    >
+    <Table stripe :columns="columns" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
       <template slot="status" slot-scope="{row, index}">
         <span v-if="row.status == 4 || row.status == 3" class="status-over">{{queryStatus(row.status)}}</span>
         <span v-else-if="row.status == 6 || row.status == 7" class="status-wating">{{queryStatus(row.status)}}</span>
@@ -77,63 +64,22 @@
       </template>
 
       <template slot="operation" slot-scope="{row, index}">
-        <!-- 草稿 待审核 -->
-        <div v-if="row.status == 1 || row.status == 2" class="operation-btn">
+        <div  class="operation-btn">
           <p>
             <a class="table-action-btn" @click="planDefault(row.id, row.status)"
               v-auth="'promotion.ad-plan#view'">查看</a>
-            <a class="table-action-btn" @click="planEdit(row.id)"
+            <a v-if="row.status == 1 || row.status == 2 || row.status == 10" class="table-action-btn" @click="planEdit(row.id)"
               v-auth="'promotion.ad-plan#edit'">编辑</a>
-            <a class="table-action-btn" @click="planCancel(row.name, row.id)"
+            <a v-if="row.status == 1 || row.status == 2 || row.status ==  4" class="table-action-btn" @click="planCancel(row.name, row.id)"
               v-auth="'promotion.ad-plan#cancel'">取消</a>
-          </p>
-          <p>
-            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)"
-              v-auth="'promotion.ad-plan#relation'">关联广告片</a>
-            <a v-else @click="relevanceAdv(row, 2)"
-              v-auth="'promotion.ad-plan#relation'">修改广告片</a>
-          </p>
-        </div>
-
-        <div v-else-if="row.status ==  4 " class="operation-btn">
-           <p>
-            <a class="table-action-btn" @click="planDefault(row.id, row.status)"
-              v-auth="'promotion.ad-plan#view'">查看</a>
-            <a class="table-action-btn" @click="handlePayment(row)"
+            <a v-if="row.status ==  4" class="table-action-btn" @click="handlePayment(row)"
               v-auth="'promotion.ad-plan#pay'">支付</a>
-            <a class="table-action-btn" @click="planCancel(row.name, row.id)"
-              v-auth="'promotion.ad-plan#cancel'">取消</a>
           </p>
-          <p>
+          <p v-if="row.status == 1 || row.status == 2 || row.status ==  4 || row.status ==  5">
             <a v-if="!row.videoId" @click="relevanceAdv(row, 1)"
               v-auth="'promotion.ad-plan#relation'">关联广告片</a>
             <a v-else @click="relevanceAdv(row, 2)"
               v-auth="'promotion.ad-plan#relation'">修改广告片</a>
-          </p>
-        </div>
-
-        <div v-else-if="row.status ==  5 " class="operation-btn">
-          <p><a @click="planDefault(row.id, row.status)"
-            v-auth="'promotion.ad-plan#view'">查看</a></p>
-          <p>
-            <a v-if="!row.videoId" @click="relevanceAdv(row, 1)"
-              v-auth="'promotion.ad-plan#relation'">关联广告片</a>
-            <a v-else @click="relevanceAdv(row, 2)"
-              v-auth="'promotion.ad-plan#relation'">修改广告片</a>
-          </p>
-        </div>
-
-        <div v-else-if="row.status == 3 || row.status == 6 || row.status == 7 || row.status == 8 || row.status == 9 " class="operation-btn">
-          <p><a @click="planDefault(row.id, row.status)"
-            v-auth="'promotion.ad-plan#view'">查看</a></p>
-        </div>
-
-        <div v-else-if="row.status == 10" class="operation-btn">
-          <p>
-            <a class="table-action-btn" @click="planDefault(row.id, row.status)"
-              v-auth="'promotion.ad-plan#view'">查看</a>
-            <a class="table-action-btn" @click="planEdit(row.id)"
-              v-auth="'promotion.ad-plan#edit'">编辑</a>
           </p>
         </div>
       </template>
@@ -145,19 +91,8 @@
       </span>
       <span @click="deleteList">批量删除广告计划</span>
     </div>
-    <!-- <Page
-      :total="totalCount"
-      v-if="totalCount>0"
-      class="btnCenter plan-pages"
-      :current="pageList.pageIndex"
-      :page-size="pageList.pageSize"
-      show-total
-      show-elevator
-      @on-change="handlepageChange"
-      @on-page-size-change="handlePageSize"
-    /> -->
-     <pagination v-model="pageList" :total="totalCount" @uplist="uplist"></pagination>
 
+     <pagination v-model="pageList" :total="totalCount" @uplist="uplist"></pagination>
      <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible" @submitRelevance="submitRelevance"></relevanceDlg>
   </div>
 </template>

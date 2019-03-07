@@ -1,8 +1,9 @@
 <template>
   <div class="page home-bg">
-    <h3 class="userTitle">
+    
+    <div class="userTitle">
       <span class="nav-top-title">财务信息</span>
-    </h3>
+    </div>
     <div class="fince"  v-auth="'financial-manage.info#viewsummary'">
       <h3 class="userTitle">
         <span style="color:#222222;" class="nav-top-title">账户总览</span>

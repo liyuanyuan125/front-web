@@ -5,7 +5,7 @@
         <span > 查看广告片</span>
      </div>
     <payDefault :status="status" v-if="status == 1 || status == 2 || status == 3 || status == 4"></payDefault>
-    <statusCode :statuCode="status" v-else-if="status == 5 || status == 6"></statusCode>
+    <statusCode :statuCode="status" :refuseReason="refuseReason" v-else-if="status == 5 || status == 6"></statusCode>
     <h3 class="layout-title">概览</h3>
     <div class="text-rows">
       <Row>
@@ -108,16 +108,23 @@ import 'vue-plyr/dist/vue-plyr.css'
   }
 })
 export default class Main extends ViewBase {
+  // status = 5 拒绝原因
+  refuseReason = ''
+
+  // 状态
   status = 0
+
   item: any = []
   typeList = []
   statusList = []
+
   get formatTimes() {
     return formatTimes
   }
   mounted() {
     this.list()
   }
+
   async list() {
     const id = this.$route.params.id
     try {
@@ -126,6 +133,7 @@ export default class Main extends ViewBase {
       this.typeList = typeList
       this.statusList = statusList
       this.status = item.status
+      this.refuseReason = item.refuseReason || ''
     } catch (ex) {
       this.handleError(ex)
     }
@@ -142,6 +150,7 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     }
   }
+
   async handlePayment() {
     await confirm(`是否要支付数字转制费用 ${this.item.transFee} 元`, {
       title: '支付广告片'
@@ -154,11 +163,13 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     }
   }
+
   queryTypeList(id: any) {
     let list: any = []
     list = this.typeList.filter((item: any) => item.key == id)
     return list[0].text || null
   }
+
   toEdit() {
     const id = this.item.id
     this.$router.push({name: 'pop-film-edit', params: {id}})

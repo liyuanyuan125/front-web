@@ -1,73 +1,33 @@
 <template>
   <div class="home-bg">
-    <!-- <h2 class="layout-nav-title">广告计划 > 查看广告计划</h2> -->
     <div class="layout-nav-title">
        <router-link :to="{name: 'pop-planlist'}" >广告计划</router-link> > 
        <span>查看广告计划</span>
     </div>
-    <StatusCode :statuCode="Number(status)" v-if="status"></StatusCode>
+    <StatusCode :statuCode="Number(status)" :refuseReason="refuseReason" v-if="status" ></StatusCode>
     <h3 class="layout-title">概览</h3>
     <div class="text-rows">
       <Row>
         <Col :span="12">
-          <p>
-            <label>投放类型</label>
-            {{deliveryType(items.deliveryType)}}
-          </p>
-          <p>
-            <label>广告计划名称</label>
-            {{items.name || '暂无'}}
-          </p>
-          <p>
-            <label>广告片规格</label>
-            {{items.specification || 0}}s
-          </p>
-          <p>
-            <label>投放排期</label>
-            {{formatYell(items.beginDate)}} ~ {{formatYell(items.endDate)}}
-          </p>
-          <p>
-            <label>档期</label>
-            {{items.calendarName || '暂无'}}
-          </p>
+          <p> <label>投放类型</label> {{deliveryType(items.deliveryType)}} </p>
+          <p> <label>广告计划名称</label> {{items.name || '暂无'}} </p>
+          <p> <label>广告片规格</label> {{items.specification || 0}}s </p>
+          <p> <label>投放排期</label> {{formatYell(items.beginDate)}} ~ {{formatYell(items.endDate)}} </p>
+          <p>  <label>档期</label>  {{items.calendarName || '暂无'}} </p>
           <p v-if="status == 1 || status == 2 || status == 9 || status == 10">
             <label>预估冻结金额/￥</label>
             {{formatNumber(items.estimateCostAmount) || '暂无'}}
           </p>
-          <p v-else>
-             <label>冻结金额/￥</label>
-             {{formatNumber(items.freezeAmount) || '暂无'}}
-          </p>
+          <p v-else> <label>冻结金额/￥</label> {{formatNumber(items.freezeAmount) || '暂无'}} </p>
         </Col>
         <Col :span="12">
-          <p>
-            <label>广告计划ID</label>
-            {{items.id || '暂无'}}
-          </p>
-          <p>
-            <label>客户名称</label>
-            {{items.customerName || '暂无'}}
-          </p>
-          <p>
-            <label>关联广告片</label>
-            {{items.videoName || '暂无'}}
-          </p>
-          <p>
-            <label>投放天数</label>
-            {{items.cycle || 0}} 天
-          </p>
-          <p>
-            <label>创建时间</label>
-            {{formatTimes(items.applyTime) || '暂无'}}
-          </p>
-          <p>
-            <label>计费类型</label>
-            {{billingModeList(items.billingMode) || '暂无'}}
-          </p>
-          <p v-if="status == 3">
-            <label>订单折扣</label>
-            {{items.discount || 0}}%
-          </p>
+          <p> <label>广告计划ID</label>   {{items.id || '暂无'}} </p>
+          <p>  <label>客户名称</label>  {{items.customerName || '暂无'}} </p>
+          <p>  <label>关联广告片</label>  {{items.videoName || '暂无'}} </p>
+          <p>  <label>投放天数</label>  {{items.cycle || 0}} 天 </p>
+          <p>  <label>创建时间</label>  {{formatTimes(items.applyTime) || '暂无'}}</p>
+          <p> <label>计费类型</label>  {{billingModeList(items.billingMode) || '暂无'}}</p>
+          <p v-if="status == 3"> <label>订单折扣</label> {{items.discount || 0}}% </p>
         </Col>
       </Row>
     </div>
@@ -102,10 +62,8 @@
             </em>
           </p>
           <p v-if="launchList.categorizedByBoxLevelCode" class="flex-box">
-            <label>
-              投放影院（{{items.deliveryCinemas.length || 0}}个）
-              <br>
-              <em class="cinema-list" @click="queryCinemaList">查看影院列表</em>
+            <label> 投放影院（{{items.deliveryCinemas.length || 0}}个） <br>
+            <em class="cinema-list" @click="queryCinemaList">查看影院列表</em>
             </label>
             <em class="city-list">
               <p v-for="item in launchList.categorizedByBoxLevelCode" :key="item.code">
@@ -121,9 +79,7 @@
       <div v-if="status == 9">
         <p class="flex-box division-line">
           <label>地域偏好</label>
-          <span v-if="areaList && areaList.length == 0">
-            不限
-          </span>
+          <span v-if="areaList && areaList.length == 0">  不限 </span>
           <span v-else v-for="(item, index) in areaList" :key="index">
             {{item}}
             <i class="dividing-line">&nbsp;&nbsp;|&nbsp;&nbsp;</i>
@@ -131,9 +87,7 @@
         </p>
       </div>
       <div class="flex-box" v-else-if="status != 9 && items.directionType != 2">
-        <p>
-          <label>观影人群画像</label>
-        </p>
+        <p> <label>观影人群画像</label> </p>
         <div
           v-if="sex"
           class="portrait"
@@ -181,22 +135,9 @@
       </div>
     </div>
     <div class="btnCenter btn-footer" v-if="status == 1">
-      <Button v-auth="'promotion.ad-plan#cancel'" class="button-cancel" @click="cancelPlan">取消计划</Button>
-      <Button
-        v-auth="'promotion.ad-plan#edit'"
-        type="primary"
-        class="button-ok edit-btn"
-        @click="toEdit"
-      >编辑</Button>
-      <Button type="primary" class="button-ok" @click="submitExamine">提交审核</Button>
-    </div>
-    <div class="btnCenter btn-footer" v-if="status == 10">
-      <Button
-        v-auth="'promotion.ad-plan#edit'"
-        type="primary"
-        class="button-ok edit-btn"
-        @click="toEdit"
-      >编辑</Button>
+      <Button v-if="status == 1" v-auth="'promotion.ad-plan#cancel'" class="button-cancel" @click="cancelPlan">取消计划</Button>
+      <Button v-if="status == 1 || status == 10" v-auth="'promotion.ad-plan#edit'" type="primary"  class="button-ok edit-btn"  @click="toEdit" >编辑</Button>
+      <Button v-if="status == 1" type="primary" class="button-ok" @click="submitExamine">提交审核</Button>
     </div>
     <CinemaList v-model="cinema" v-if="cinema.visible"/>
   </div>
@@ -217,6 +158,9 @@ import { formatTimes, formatYell, formatNumber } from '@/util/validateRules'
   }
 })
 export default class PlanDefault extends ViewBase {
+  // 拒绝原因
+  refuseReason = ''
+
   items: any = []
   launchList: any = []
   defaultData: any = []
@@ -241,12 +185,15 @@ export default class PlanDefault extends ViewBase {
   get formatTimes() {
     return formatTimes
   }
+
   get formatNumber() {
     return formatNumber
   }
+
   async mounted() {
     this.list()
   }
+
   async list() {
     try {
       const id = this.$route.params.id
@@ -255,6 +202,7 @@ export default class PlanDefault extends ViewBase {
       this.items = data.item || {}
       this.status = this.items.status
       this.launchList = data.statisticsResults
+      this.refuseReason = data.item.refuseReason || ''
 
       // MOVIE_TYPE=电影类型  PLAN_GROUP_AGE = 年龄  PLAN_GROUP_SEX = 性别 DISTRICT_AREA = 区域
       this.tags = data.tags
@@ -308,11 +256,13 @@ export default class PlanDefault extends ViewBase {
       this.handleError(ex)
     }
   }
+
   subTimes(tim: any) {
     if (!tim) { return ''}
     tim = tim.toString()
     return `${tim.substring(0, 4)}-${tim.substring(4, 6)}-${tim.substring(6)}`
   }
+
   async submitExamine() {
     await confirm('是否确定将广告计划提交审核', { title: '提交审核' })
     try {
@@ -323,6 +273,7 @@ export default class PlanDefault extends ViewBase {
       this.handleError(ex)
     }
   }
+
   queryAreas(ary: any[]) {
     if (ary.length > 0) {
       ary.map((item: any) => {
@@ -338,6 +289,7 @@ export default class PlanDefault extends ViewBase {
       })
     }
   }
+
   queryFilmList(id: any) {
     let text: any = ''
     this.tags.map((item: any) => {
@@ -347,9 +299,11 @@ export default class PlanDefault extends ViewBase {
     })
     return text[0].text
   }
+
   toEdit() {
     this.$router.push({name: 'pop-planlist-add', params: {id: this.items.id}})
   }
+
   async cancelPlan() {
     const id = this.$route.params.id
     await confirm(`是否取消广告计划：${this.items.name}`, {title: '取消广告计划'})

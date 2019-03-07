@@ -122,6 +122,8 @@ export default class Main extends ViewBase {
   systemList: any = []
   accountType = ''
 
+  detailDate: any = []
+
   // 公司信息变更记录
   queryDetail: any = {
     visibleMess: false,
@@ -129,7 +131,8 @@ export default class Main extends ViewBase {
   }
   // 审核后修改公司信息
   informa = {
-    visibleInforma: false
+    visibleInforma: false,
+    dataList: []
   }
   qualificationTypeList = []
   column = [
@@ -200,6 +203,7 @@ export default class Main extends ViewBase {
   async mounted() {
     try {
       const { data } = await accountDetail()
+      this.detailDate = data
       this.displayStatus = data.company.displayStatus - 1
       this.account = data.account
       this.company = data.company
@@ -272,7 +276,8 @@ export default class Main extends ViewBase {
 
   handleInforma() {
     this.informa = {
-      visibleInforma: true
+      visibleInforma: true,
+      dataList: this.detailDate
     }
   }
   // setErrorImg(e: any) {
