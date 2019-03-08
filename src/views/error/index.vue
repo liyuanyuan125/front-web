@@ -36,14 +36,14 @@ export default class Error extends ViewBase {
   &::before {
     width: 492px;
     height: 360px;
-    background-image: url(http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bhv1mvh8jlg0008089u0.png);
+    background-image: url(//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bhv1mvh8jlg0008089u0.png);
   }
 }
 .error-page-404 {
   &::before {
     width: 475px;
     height: 409px;
-    background-image: url(http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bhv23l18jlg0008089v0.png);
+    background-image: url(//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bhv23l18jlg0008089v0.png);
   }
   .btn-back {
     margin-top: 19px;

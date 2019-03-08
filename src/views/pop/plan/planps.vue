@@ -315,12 +315,12 @@ export default class Main extends ViewBase {
 
   // tslint:disable:max-line-length
   ggtypeList = [
-    { id: 1, name: '易拉宝', url: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg00800470.png?x-oss-process=image/resize,w_180,h_300' },
-    { id: 2, name: '外卖袋', url: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg00800460.png?x-oss-process=image/resize,w_180,h_300' },
-    { id: 3, name: '外卖盒', url: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02a893rg0080045g.png?x-oss-process=image/resize,w_180,h_300' },
-    { id: 4, name: '宣传单', url: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg0080046g.png?x-oss-process=image/resize,w_180,h_300' },
-    { id: 5, name: '纸巾盒', url: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg0080047g.png?x-oss-process=image/resize,w_180,h_300' },
-    { id: 6, name: '餐桌贴纸', url: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg00800480.png?x-oss-process=image/resize,w_180,h_300' },
+    { id: 1, name: '易拉宝', url: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg00800470.png?x-oss-process=image/resize,w_180,h_300' },
+    { id: 2, name: '外卖袋', url: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg00800460.png?x-oss-process=image/resize,w_180,h_300' },
+    { id: 3, name: '外卖盒', url: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02a893rg0080045g.png?x-oss-process=image/resize,w_180,h_300' },
+    { id: 4, name: '宣传单', url: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg0080046g.png?x-oss-process=image/resize,w_180,h_300' },
+    { id: 5, name: '纸巾盒', url: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg0080047g.png?x-oss-process=image/resize,w_180,h_300' },
+    { id: 6, name: '餐桌贴纸', url: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgvi02i893rg00800480.png?x-oss-process=image/resize,w_180,h_300' },
   ]
   // tslint:enable:max-line-length
 

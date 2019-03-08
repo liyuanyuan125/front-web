@@ -70,7 +70,7 @@ export const filmList: Film[] = [
     name: '《疯狂的外星人》',
     date: '2019年02月05日',
     // tslint:disable-next-line:max-line-length
-    cover: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgu62ki893rg00800280.jpg?x-oss-process=image/resize,w_320,h_480',
+    cover: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgu62ki893rg00800280.jpg?x-oss-process=image/resize,w_320,h_480',
     typeList: [4, 1, 6],
     tags: '喜剧/剧情/科幻',
   },
@@ -79,7 +79,7 @@ export const filmList: Film[] = [
     name: '《新喜剧之王》',
     date: '2019年02月05日',
     // tslint:disable-next-line:max-line-length
-    cover: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgu62uq893rg0080028g.jpg?x-oss-process=image/resize,w_320,h_480',
+    cover: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgu62uq893rg0080028g.jpg?x-oss-process=image/resize,w_320,h_480',
     typeList: [4],
     tags: '喜剧',
   },
@@ -88,7 +88,7 @@ export const filmList: Film[] = [
     name: '《情圣2》',
     date: '2019年02月05日',
     // tslint:disable-next-line:max-line-length
-    cover: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgu63j2893rg00800290.jpg?x-oss-process=image/resize,w_320,h_480',
+    cover: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgu63j2893rg00800290.jpg?x-oss-process=image/resize,w_320,h_480',
     typeList: [4, 5],
     tags: '喜剧/爱情',
   },
@@ -97,7 +97,7 @@ export const filmList: Film[] = [
     name: '《飞驰人生》',
     date: '2019年02月05日',
     // tslint:disable-next-line:max-line-length
-    cover: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgu63pi893rg0080029g.jpg?x-oss-process=image/resize,w_320,h_480',
+    cover: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgu63pi893rg0080029g.jpg?x-oss-process=image/resize,w_320,h_480',
     typeList: [4],
     tags: '喜剧',
   },
@@ -106,7 +106,7 @@ export const filmList: Film[] = [
     name: '《日不落酒店》',
     date: '2019年02月05日',
     // tslint:disable-next-line:max-line-length
-    cover: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgu640i893rg008002a0.jpg?x-oss-process=image/resize,w_320,h_480',
+    cover: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgu640i893rg008002a0.jpg?x-oss-process=image/resize,w_320,h_480',
     typeList: [4],
     tags: '喜剧',
   },
@@ -115,7 +115,7 @@ export const filmList: Film[] = [
     name: '《神探蒲松龄》',
     date: '2019年02月05日',
     // tslint:disable-next-line:max-line-length
-    cover: 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgu646i893rg008002ag.jpg?x-oss-process=image/resize,w_320,h_480',
+    cover: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bgu646i893rg008002ag.jpg?x-oss-process=image/resize,w_320,h_480',
     typeList: [3, 7, 4],
     tags: '动作/奇幻/喜剧',
   },

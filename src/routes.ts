@@ -634,7 +634,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import(/* webpackChunkName: "about" */'./views/about.vue'),
     meta: emptyAuth,
   },
-] // // end of mainLayoutRoutes
+] // end of mainLayoutRoutes
 
 const errorRoutes: RouteConfigEnhance[] = [
   {

@@ -245,7 +245,7 @@ export default class Main extends ViewBase {
     width: 100%;
     height: 100%;
     min-height: 600px;
-    background: url(http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bhj7kl98jlg00080873g.jpg) no-repeat center;
+    background: url(//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bhj7kl98jlg00080873g.jpg) no-repeat center;
     background-size: cover;
     .main-wrap {
       cursor: pointer;
