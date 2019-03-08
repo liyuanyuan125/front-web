@@ -359,19 +359,21 @@ export default class MainLayout extends ViewBase {
   position: relative;
   background-color: @c-sider-bg;
   border-right: 1px solid #eee;
-  min-height: calc(100vh - 60px);
-  overflow: scroll;
+  overflow-y: scroll;
+  min-height: 100%;
+  // min-height: calc(100vh - 60px);
 }
 .site-content {
   position: relative;
   padding: 10px;
+  overflow: auto;
 }
 .ivu-menu {
   z-index: 99;
 }
 .sider-menu {
   padding-top: 9px;
-  margin-bottom: 188px;
+  margin-bottom: 10px;
   background-color: @c-sider-bg;
   &::after {
     display: none;
