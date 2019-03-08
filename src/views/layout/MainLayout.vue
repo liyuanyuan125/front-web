@@ -392,7 +392,7 @@ export default class MainLayout extends ViewBase {
     .ivu-menu-item {
       font-size: 12px;
       & > a {
-        padding: 10px 24px 10px 77px;
+        padding: 12px 24px 12px 77px;
       }
     }
     .ivu-menu-item-selected {

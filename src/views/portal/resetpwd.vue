@@ -45,8 +45,6 @@ import { scrollToError } from '@/util/form'
 import DisableAutoFill from '@/components/DisableAutoFill.vue'
 import { sendResetpwdEmail, resetPassword } from '@/api/register'
 import { success } from '@/ui/modal'
-import { setTimeout } from 'timers'
-import { now } from 'moment'
 
 @Component({
   components: {

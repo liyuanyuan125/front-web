@@ -70,10 +70,11 @@
 
 .main {
   margin-top: 20px;
+  min-height: calc(100vh - 340px);
 }
 
 .footer {
-  padding: 180px 0 60px;
+  padding: 100px 0 60px;
   font-size: 14px;
 }
 .footer-in {
