@@ -30,6 +30,8 @@
 .home-bg {
   min-height: 100%;
   background: #fff;
+  overflow-y: scroll;
+  height: 100%;
 }
 .btnCenter {
   text-align: center;
@@ -176,3 +178,20 @@
   cursor: pointer;
 }
 
+::-webkit-scrollbar {/*滚动条整体样式*/
+  width: 7px;     /*高宽分别对应横竖滚动条的尺寸*/
+  height: 7px;
+}
+::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+  border-radius: 5px;
+  background-color: #ddd;
+}
+
+.site-sider::-webkit-scrollbar {/*滚动条整体样式*/
+  width: 7px;     /*高宽分别对应横竖滚动条的尺寸*/
+  height: 7px;
+}
+.site-sider::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+  border-radius: 5px;
+  background-color:fade(#5781AF, 50%);
+}
