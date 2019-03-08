@@ -15,22 +15,22 @@
       </FormItem>
 
       <div class="clear-f sel-header">
-        <FormItem class="float-left" label="广告计划名称" prop="name">
-          <Input class="input-media" v-model="form.name" placeholder="请输入广告计划名称"></Input>
+        <FormItem class="float-left minInput" label="广告计划名称" prop="name">
+          <Input  v-model="form.name" placeholder="请输入广告计划名称"></Input>
         </FormItem>
         <FormItem style="margin-left:0px" class="float-right pr30" label="关联广告片">
-          <Select class="input-media" v-model="form.videoId" filterable clearable>
+          <Select v-model="form.videoId" filterable clearable>
             <Option v-if="item.status == 4" v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
         </FormItem>
       </div>
 
       <div class="clear-f" v-if="form.videoId">
-        <FormItem class="float-left" label="广告片规格">
+        <FormItem class="float-left minInput" label="广告片规格">
           <div class="xad input-media"><span>{{specification}}s</span></div>
         </FormItem>
         <FormItem class="float-right pr30" style="margin-left:0px" label="选择客户">
-          <div class="xad input-media"><span>{{customerName}}</span></div>
+          <div class="xad2 input-media"><span>{{customerName}}</span></div>
         </FormItem>
       </div>
 
@@ -101,7 +101,7 @@
         </FormItem>
 
         <FormItem label="推荐影片" class="form-item-type-sort">
-          <ul class="film-list">
+          <ul class="film-list" v-if="normCinema.length > 0">
             <li v-for="(it, index) in normCinema" :key="it.id"
               :class="['film-item']">
               <div :class="['film-cover-box']">
@@ -110,7 +110,18 @@
                 <div class="film-date">上映时间：{{formatDate(it.openTime)}}</div>
               </div>
               <h4 class="film-name">{{it.name}}</h4>
-              <div class="film-tags">{{it.type.join(' / ')}}</div>
+              <div class="film-tags"><p class="cinema-type">
+                <span :class="{red: autos(it)}" v-for="it in it.type" :key="it">{{it}}</span></p>
+              </div>
+            </li>
+          </ul>
+          <ul v-else>
+            <li
+              :class="['film-item']">
+              <div :class="['film-cover-box']">
+                <b :class="`img-rank${1}`"></b>
+                <img src="./assets/nosearch.png" class="film-cover">
+              </div>
             </li>
           </ul>
         </FormItem>
@@ -193,6 +204,59 @@ const keepExclusion = <T>(
   }
 })
 export default class Main extends ViewBase {
+  // 是否为映前广告
+  get isRefBefore() {
+    return this.form.putType == 'refBefore'
+  }
+
+  // 是否为「按单部影片模式」
+  get isSingle() {
+    return this.isRefBefore && this.form.type == 2
+  }
+
+  get rule() {
+    const moneyvalidator = ( rules: any, value: any, callback: any) => {
+      if (this.form.budgetCode != '00-00') {
+        callback()
+      } else {
+        const msg: any = value + ''
+        const reg = /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+        if (msg.length == 0) {
+          callback(new Error('请输入指定金额'))
+        } else if (!reg.test(msg)) {
+          callback(new Error('金额格式不正确'))
+        } else {
+          callback()
+        }
+      }
+    }
+    return {
+      name: [
+        { required: true, message: '请输入广告片名称', trigger: 'change' }
+      ],
+      videoId: [
+        { required: true, message: '请选择关联广告片', trigger: 'change', type: 'number' }
+      ],
+      beginDate: [
+        { required: true, type: 'date', message: '请选择开始时间', trigger: 'change' }
+      ],
+      year: [
+        { required: true, type: 'date', message: '请选择年份', trigger: 'change' }
+      ],
+      endDate: [
+        { required: true, type: 'date', message: '请选择结束时间', trigger: 'change' }
+      ],
+      calendarId: [
+        { required: true, message: '请选择档期', trigger: 'change', type: 'number' }
+      ],
+      budgetAmount: [
+        { validator: moneyvalidator }
+      ]
+    }
+  }
+  get foundFilmList() {
+    return this.allFilmList
+  }
   tagColor = '#fe8135'
   tabs = 1
   ding = 0
@@ -320,15 +384,6 @@ export default class Main extends ViewBase {
 
   citySel = false
   calendarName = ''
-  // 是否为映前广告
-  get isRefBefore() {
-    return this.form.putType == 'refBefore'
-  }
-
-  // 是否为「按单部影片模式」
-  get isSingle() {
-    return this.isRefBefore && this.form.type == 2
-  }
 
   areaTypeList = areaTypeList
 
@@ -345,48 +400,9 @@ export default class Main extends ViewBase {
   // 投放统计信息，要在第二步显示
   throwInStats = {} as Stats
 
-  get rule() {
-    const moneyvalidator = ( rules: any, value: any, callback: any) => {
-      if (this.form.budgetCode != '00-00') {
-        callback()
-      } else {
-        const msg: any = value + ''
-        const reg = /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-        if (msg.length == 0) {
-          callback(new Error('请输入指定金额'))
-        } else if (!reg.test(msg)) {
-          callback(new Error('金额格式不正确'))
-        } else {
-          callback()
-        }
-      }
-    }
-    return {
-      name: [
-        { required: true, message: '请输入广告片名称', trigger: 'change' }
-      ],
-      videoId: [
-        { required: true, message: '请选择关联广告片', trigger: 'change', type: 'number' }
-      ],
-      beginDate: [
-        { required: true, type: 'date', message: '请选择开始时间', trigger: 'change' }
-      ],
-      year: [
-        { required: true, type: 'date', message: '请选择年份', trigger: 'change' }
-      ],
-      endDate: [
-        { required: true, type: 'date', message: '请选择结束时间', trigger: 'change' }
-      ],
-      calendarId: [
-        { required: true, message: '请选择档期', trigger: 'change', type: 'number' }
-      ],
-      budgetAmount: [
-        { validator: moneyvalidator }
-      ]
-    }
-  }
-  get foundFilmList() {
-    return this.allFilmList
+  autos(it: any) {
+    const data = this.typeName.map((item: any) => item.text)
+    return data.includes(it)
   }
 
   created() {

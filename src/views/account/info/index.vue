@@ -43,7 +43,7 @@
           </p>
           <p>
             <label>邮箱</label>
-            {{account.email}}
+            {{company.email}}
           </p>
         </Col>
       </Row>
@@ -82,7 +82,7 @@
         <Button v-auth="'account-manage.info#edit'" type="primary" class="button-ok button-offset"
           :to="{ name: 'account-info-accedit' }">修改信息</Button>
         <Button v-auth="'account-manage.info#change'" type="primary" class="button-ok" 
-        @click="informa.visibleInforma = true">变更账号</Button>
+        @click="handleInforma">变更账号</Button>
       </div>
     </div>
 
@@ -122,6 +122,8 @@ export default class Main extends ViewBase {
   systemList: any = []
   accountType = ''
 
+  detailDate: any = []
+
   // 公司信息变更记录
   queryDetail: any = {
     visibleMess: false,
@@ -130,9 +132,9 @@ export default class Main extends ViewBase {
   // 审核后修改公司信息
   informa = {
     visibleInforma: false,
-    qualificationTypeList: []
+    dataList: []
   }
-
+  qualificationTypeList = []
   column = [
     { title: '变更编号', key: 'id' },
     { title: '账号变更提交时间', key: 'timeName' },
@@ -201,11 +203,12 @@ export default class Main extends ViewBase {
   async mounted() {
     try {
       const { data } = await accountDetail()
+      this.detailDate = data
       this.displayStatus = data.company.displayStatus - 1
       this.account = data.account
       this.company = data.company
       this.systemList = data.systemList
-      this.informa.qualificationTypeList = data.qualificationTypeList
+      this.qualificationTypeList = data.qualificationTypeList
 
       this.queryAccuontList()
     } catch (ex) {
@@ -235,7 +238,7 @@ export default class Main extends ViewBase {
   }
   queryTypeList(val: any) {
     // 查询资质类型
-    let list: any = this.informa.qualificationTypeList
+    let list: any = this.qualificationTypeList
     for (let i = 0; i < list.length; i++) {
       if (list[i].code == val) {
         return list[i].desc
@@ -271,6 +274,12 @@ export default class Main extends ViewBase {
     }
   }
 
+  handleInforma() {
+    this.informa = {
+      visibleInforma: true,
+      dataList: this.detailDate
+    }
+  }
   // setErrorImg(e: any) {
   //   e.target.src = 'https://file.iviewui.com/iview-admin/login_bg.jpg'
   // }

@@ -16,6 +16,7 @@ import ViewBase from '@/util/ViewBase'
 @Component
 export default class InfoStatus extends ViewBase {
   @Prop({ type: Number }) statuCode: any
+  @Prop({ type: String }) refuseReason: any
   statuList = []
   list: any = [
       {
@@ -26,7 +27,7 @@ export default class InfoStatus extends ViewBase {
       },
       {
           code: 5,
-          text: '拒绝原因：视频内容违反播放条例。',
+          text: `拒绝原因：${this.refuseReason}。`,
           title: '已拒绝',
           img: require('../plan/assets/status-reject.png')
       },

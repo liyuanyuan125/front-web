@@ -17,21 +17,15 @@
          </FormItem>
         <div class="flex-box film-search">
             <Input v-model="form.query" placeholder="请输入广告ID/名称进行搜索"/>
-            <span class="btn-search-list" @click="searchList">
+            <Button type="primary" class="bth-search" @click="searchList">
               <Icon type="ios-search" size="22"/>
-            </span>
+            </Button>
         </div>
       </div>
     </Form>
 
-    <Table
-      stripe
-      :columns="columns"
-      :data="tableDate"
-      ref="selection"
-      @on-selection-change="singleSelect"
-      @on-select-all="selectAll"
-    >
+    <Table stripe  :columns="columns"  :data="tableDate"  ref="selection"
+     @on-selection-change="singleSelect" @on-select-all="selectAll" >
     <template slot="name" slot-scope="{row, index}">
       <span @click="queryFileUrl(row.srcFileUrl)" class="video-name-link">{{row.name}}</span>
       <!-- <video  autoplay controls :src="row.srcFileUrl" width="100" /> -->
@@ -51,29 +45,12 @@
     </template>
     <template slot="operation" slot-scope="{row, index}">
       <!-- 待审核 -->
-      <span v-if="row.status == 1">
+      <span>
         <p>
-          <a v-auth="'promotion.ad-video#view'" class="table-action-btn" @click="popDetail(row.id)">查看</a>
-          <a v-auth="'promotion.ad-video#edit'" class="table-action-btn" @click="popEdit(row.id)">编辑</a>
-          <a v-auth="'promotion.ad-video#cancel'" class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
-        </p>
-      </span>
-      <span v-else-if="row.status == 2">
-        <p>
-          <a v-auth="'promotion.ad-video#view'" class="table-action-btn" @click="popDetail(row.id)">查看</a>
-          <a v-auth="'promotion.ad-video#pay'" class="table-action-btn" @click="handlePayment(row)">支付</a>
-          <a v-auth="'promotion.ad-video#cancel'" class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
-        </p>
-      </span>
-      <span v-else-if="row.status == 3 || row.status == 6 || row.status == 4">
-        <p>
-          <a v-auth="'promotion.ad-video#view'" class="table-action-btn"  @click="popDetail(row.id)">查看</a>
-        </p>
-      </span>
-      <span v-else-if="row.status == 5">
-        <p>
-          <a v-auth="'promotion.ad-video#view'" class="table-action-btn"  @click="popDetail(row.id)">查看</a>
-          <a v-auth="'promotion.ad-video#edit'" class="table-action-btn" @click="popEdit(row.id)">编辑</a>
+          <a  v-auth="'promotion.ad-video#view'"  class="table-action-btn" @click="popDetail(row.id)">查看</a>
+          <a v-if="row.status == 1 || row.status == 5" v-auth="'promotion.ad-video#edit'" class="table-action-btn" @click="popEdit(row.id)">编辑</a>
+          <a v-if="row.status == 1 || row.status == 2" v-auth="'promotion.ad-video#cancel'" class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
+          <a v-if="row.status == 2" v-auth="'promotion.ad-video#pay'" class="table-action-btn" @click="handlePayment(row)">支付</a>
         </p>
       </span>
     </template>

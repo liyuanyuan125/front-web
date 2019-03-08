@@ -38,6 +38,7 @@
     </Form>
     <div class="flex-box">
       <p class="single-length" v-if="length > 0">已为您匹配以下{{length}}部影片：</p>
+      <p class="single-length" v-else>暂无搜索结果</p>
       <!-- <p class="red">已选中{{cinemaIdArray.length}}部影片</p> -->
     </div>
     
@@ -51,7 +52,15 @@
         <div class="film-date">上映时间：{{formatDate(it.openTime)}}</div>
       </div>
       <h4 class="film-name">{{it.name}}</h4>
-      <div class="film-tags">{{it.type.join(',')}}</div>
+      <div class="film-tags"><p class="cinema-type">
+        <span :class="{red: autos(item)}" v-for="item in it.type" :key="item">{{item}}</span></p></div>
+      </li>
+    </ul>
+    <ul v-else class="single-film-list">
+      <li :class="['single-film-item']">
+      <div class="single-cover-box">
+         <img src="./assets/nosearch.png" class="film-cover">
+      </div>
       </li>
     </ul>
     <!-- :current="form.pageIndex" -->
@@ -101,6 +110,7 @@ export default class Main extends ViewBase {
     name: !!this.value.name ? this.value.name : '',
     pageSize: 8
   }
+  typeName: any = []
   cinemaList: any = []
   showTime: any = []
   types = [0]
@@ -121,6 +131,12 @@ export default class Main extends ViewBase {
       types: this.types
     }
   }
+
+  autos(it: any) {
+    const data = this.typeName.map((item: any) => item.text)
+    return data.includes(it)
+  }
+
   created() {
     this.cinemaFind()
     if (this.value.id) {
@@ -204,14 +220,18 @@ export default class Main extends ViewBase {
     if (value.length > 3 && value[value.length - 1] != 0) {
       info('电影类型最多选3项')
       this.types = value.slice(0, 3)
+      this.typeName = this.data.values.filter((it: any) => this.types.includes(it.key))
     } else {
       keepExclusion(value, oldValue, 0, newValue => {
         this.types = newValue
       })
+
       if (value.length == 0) {
         this.types = [0]
       }
+      this.typeName = this.data.values.filter((it: any) => this.types.includes(it.key))
     }
+    this.cinemaFind()
   }
 
   @Watch('parents', { deep: true })
@@ -244,8 +264,6 @@ export default class Main extends ViewBase {
   margin-bottom: 20px;
 }
 .red {
-  position: absolute;
-  right: 50px;
   color: red;
 }
 .btnCenter {

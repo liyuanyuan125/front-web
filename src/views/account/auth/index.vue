@@ -67,7 +67,7 @@ export default class Main extends ViewBase {
   }
 
   columns4 = [
-    { title: 'ID', key: 'id', align: 'center' },
+    { title: 'ID', key: 'id', },
     {
       title: '权限角色名称',
       key: 'name',

@@ -18,7 +18,7 @@
         <FormItem label="资质类型" prop="qualificationType">
           <Select v-model="form.qualificationType" placeholder="请选择资质类型" style="width:400px">
             <Option
-              v-for="item in value.qualificationTypeList"
+              v-for="item in value.dataList.qualificationTypeList"
               :value="item.code"
               :key="item.code"
             >{{ item.desc }}</Option>
@@ -68,7 +68,22 @@ export default class Change extends ViewBase {
     qualificationType: '',
     qualificationCode: ''
   }
+  mounted() {
+    const company = this.value.dataList.company
+    const account = this.value.dataList.account
+    const systems = this.value.dataList.account.systems
+    const arryList: [number, string] = systems.map((item: any) => {
+      return item.code
+    })
+    this.form = {
+      accountType: arryList,
+      companyName: company.name,
 
+      qualificationType: company.qualificationType || '',
+      qualificationCode: company.qualificationCode,
+      imageList: company.images || []
+    }
+  }
   get formRules() {
     return {
       accountType: [
