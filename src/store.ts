@@ -191,6 +191,7 @@ export function logout() {
   postLogout()
 }
 
+/** 权限结果 */
 export interface PermResult {
   menu: PermPage[]
   permMap: MapType<number>
@@ -201,61 +202,63 @@ export interface PermResult {
  */
 export async function getCurrentPerms() {
   const user = getUser()
-  if (user != null) {
-    // 先从缓存中查找
-    const permKey = `${user.id}-${user.systemCode}`
-    const cached = permCache[permKey]
-    if (cached != null) {
-      return cached
-    }
-
-    const promise = getMenus(user.systemCode, 2).then(({ data }) => {
-      const tree = data as PermPage
-      const permMap: MapType<number> = {}
-      const menu: PermPage[] = walkTree(tree.subPages || [], {
-        childrenKey: 'subPages',
-
-        onEachBefore(node) {
-          // 预防 actions、subPages 为 null
-          node.actions = (node.actions || []).filter(it => it.check)
-          node.subPages = node.subPages || []
-        },
-
-        onEachAfter(node: PermPage, parentNodes) {
-          // 目前只支持 2 级菜单，取 tree 的 2、3 级别，其他忽略
-          if (parentNodes.length > 1) {
-            // 明确返回 false，删除该节点，参见 walkTree 实现
-            return false
-          }
-
-          const key = node.key.toLowerCase()
-
-          // 首先，页面本身也是一种权限，即本页面的查看权限（打开该页面的权限）
-          permMap[key] = 1
-
-          // 其次，将每个 action 作为单独的权限
-          node.actions.forEach(({ code }) => permMap[`${key}#${code}`.toLowerCase()] = 1)
-        }
-      })
-
-      const result: PermResult = { menu, permMap }
-
-      // devInfo('permMenu', menu)
-      devInfo('permMap', permMap)
-
-      return result
-    })
-    .catch(() => {
-      // 如果遇到错误，则清空相应的 permCache，以便下次可以重试
-      delete permCache[permKey]
-      // 返回一个空的 PermResult，以便消除上层代码的错误？
-      return { menu: [], permMap: {} } as PermResult
-    })
-
-    permCache[permKey] = promise
-
-    return promise
+  if (user == null) {
+    return null
   }
+
+  // 先从缓存中查找
+  const permKey = `${user.id}-${user.systemCode}`
+  const cached = permCache[permKey]
+  if (cached != null) {
+    return cached
+  }
+
+  const promise = getMenus(user.systemCode, 2).then(({ data }) => {
+    const tree = data as PermPage
+    const permMap: MapType<number> = {}
+    const menu: PermPage[] = walkTree(tree.subPages || [], {
+      childrenKey: 'subPages',
+
+      onEachBefore(node) {
+        // 预防 actions、subPages 为 null
+        node.actions = (node.actions || []).filter(it => it.check)
+        node.subPages = node.subPages || []
+      },
+
+      onEachAfter(node: PermPage, parentNodes) {
+        // 目前只支持 2 级菜单，取 tree 的 2、3 级别，其他忽略
+        if (parentNodes.length > 1) {
+          // 明确返回 false，删除该节点，参见 walkTree 实现
+          return false
+        }
+
+        const key = node.key.toLowerCase()
+
+        // 首先，页面本身也是一种权限，即本页面的查看权限（打开该页面的权限）
+        permMap[key] = 1
+
+        // 其次，将每个 action 作为单独的权限
+        node.actions.forEach(({ code }) => permMap[`${key}#${code}`.toLowerCase()] = 1)
+      }
+    })
+
+    const result: PermResult = { menu, permMap }
+
+    // devInfo('permMenu', menu)
+    devInfo('permMap', permMap)
+
+    return result
+  })
+  .catch(() => {
+    // 如果遇到错误，则清空相应的 permCache，以便下次可以重试
+    delete permCache[permKey]
+    // 返回一个空的 PermResult，以便消除上层代码的错误？
+    return { menu: [], permMap: {} } as PermResult
+  })
+
+  permCache[permKey] = promise
+
+  return promise
 }
 
 /**
