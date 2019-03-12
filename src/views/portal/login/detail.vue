@@ -14,11 +14,11 @@
           <div class="detail-little">
             <h3 class="title">机器算法</h3>
             <div class="detail-p">
-              <p>行业领先的个性化推荐算法</p>
-              <p>通过分析影响受众的特征与投放需求进行匹配</p>
-              <p>实现精准化营销</p>
-              <p>我们将您把商业信息精准推荐给真正有需要的人</p>
-              <p>以减少广告浪费</p>
+              <p>行业领先的个性化推荐算法，</p>
+              <p>通过分析影响受众的特征与投放需求进行匹配，</p>
+              <p>实现精准化营销，</p>
+              <p>我们将您把商业信息精准推荐给真正有需要的人，</p>
+              <p>以减少广告浪费。</p>
             </div>
             <Button :to="{name: 'register'}" class="detail-button" type="primary" html-type="submit" >立即注册</Button>
           </div>
@@ -32,11 +32,11 @@
           <div class="detail-little">
             <h3 class="title">人群画像</h3>
             <div class="detail-p">
-              <p>我们拥有观影用户的多维数据</p>
-              <p>真正帮助广告主了解受众特征</p>
-              <p>制定定向投放</p>
-              <p>通过算法预测投放结果</p>
-              <p>为品牌与产品触达最优人群</p>
+              <p>我们拥有观影用户的多维数据，</p>
+              <p>真正帮助广告主了解受众特征，</p>
+              <p>制定定向投放，</p>
+              <p>通过算法预测投放结果，</p>
+              <p>为品牌与产品触达最优人群。</p>
             </div>
             <Button :to="{name: 'register'}" class="detail-button1" type="primary" html-type="submit" >立即注册</Button>
           </div>
@@ -64,10 +64,10 @@
           <div class="detail-little">
             <h3 class="title">透明监控</h3>
             <div class="detail-p">
-              <p>打破传统映前广告投放形式</p>
-              <p>按观影人次计费</p>
-              <p>全面监控广告投放</p>
-              <p>广告效果清晰可见</p>
+              <p>打破传统映前广告投放形式，</p>
+              <p>按观影人次计费，</p>
+              <p>全面监控广告投放，</p>
+              <p>广告效果清晰可见。</p>
             </div>
             <Button :to="{name: 'register'}" class="detail-button" type="primary" html-type="submit" >立即注册</Button>
           </div>
@@ -81,9 +81,9 @@
           <div class="detail-little">
             <h3 class="title">精细报表</h3>
             <div class="detail-p">
-              <p>多维度展示投放效果数据</p>
+              <p>多维度展示投放效果数据，</p>
               <p>包括影院、影厅、场次、观影人次、人群画像等,</p>
-              <p>打造一站式服务</p>
+              <p>打造一站式服务。</p>
             </div>
             <Button :to="{name: 'register'}" class="detail-button1" type="primary" html-type="submit" >立即注册</Button>
           </div>
