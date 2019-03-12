@@ -69,6 +69,7 @@
         </div>
       </div>
     </content>
+    <detail />
   </div>
 </template>
 
@@ -78,8 +79,12 @@ import ViewBase from '@/util/ViewBase'
 import { login } from '@/api/auth'
 import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
-
-@Component
+import detail from './detail.vue'
+@Component({
+  components: {
+    detail
+  }
+})
 export default class Main extends ViewBase {
   form = {
     systemCode: 'ads',
@@ -190,6 +195,7 @@ export default class Main extends ViewBase {
   }
 }
 .login-home {
+  position: relative;
   height: 100%;
   width: 100%;
   /deep/ input {
@@ -241,7 +247,7 @@ export default class Main extends ViewBase {
     }
   }
   .content {
-    position: absolute;
+    display: block;
     width: 100%;
     height: 100%;
     min-height: 600px;
