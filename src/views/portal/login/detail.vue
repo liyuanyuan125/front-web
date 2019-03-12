@@ -4,7 +4,11 @@
     <Row :style="{height: documentClientHeight+'px'}">
       <Row class="detal-msg" :style="{marginTop: (documentClientHeight - 500)/2 + 'px'}">
         <Col :span="10" offset="3">
-        <div>123</div>
+        <div class="robot">
+          <img style="width: 100%" src="./assets/robot.png">
+          <img src="./assets/robot1.png">
+          <img src="./assets/robot2.png">
+        </div>
         </Col>
         <Col :span="10" offset="1">
           <div class="detail-little">
@@ -16,7 +20,7 @@
               <p>我们将您把商业信息精准推荐给真正有需要的人</p>
               <p>以减少广告浪费</p>
             </div>
-            <Button class="detail-button" type="primary" html-type="submit" >立即注册</Button>
+            <Button :to="{name: 'register'}" class="detail-button" type="primary" html-type="submit" >立即注册</Button>
           </div>
         </Col>
       </Row>
@@ -34,11 +38,15 @@
               <p>通过算法预测投放结果</p>
               <p>为品牌与产品触达最优人群</p>
             </div>
-            <Button class="detail-button" type="primary" html-type="submit" >立即注册</Button>
+            <Button :to="{name: 'register'}" class="detail-button1" type="primary" html-type="submit" >立即注册</Button>
           </div>
         </Col>
-        <Col :span="10" offset="1">
-        <div>123</div>
+        <Col :span="10">
+        <div class="people">
+          <img style="width: 100%" src="./assets/people.png">
+          <img src="./assets/people1.png">
+          <img src="./assets/people2.png">
+        </div>
         </Col>
       </Row>
     </Row>
@@ -46,7 +54,11 @@
     <Row :style="{height: documentClientHeight+'px'}">
       <Row class="detal-msg" :style="{marginTop: (documentClientHeight - 500)/2 + 'px'}">
         <Col :span="10" offset="3">
-        <div>123</div>
+        <div class="monitoring">
+          <img style="width: 100%" src="./assets/monitoring.png">
+          <img src="./assets/monitoring1.png">
+          <img src="./assets/monitoring2.png">
+        </div>
         </Col>
         <Col :span="8" offset="1">
           <div class="detail-little">
@@ -57,7 +69,7 @@
               <p>全面监控广告投放</p>
               <p>广告效果清晰可见</p>
             </div>
-            <Button class="detail-button" type="primary" html-type="submit" >立即注册</Button>
+            <Button :to="{name: 'register'}" class="detail-button" type="primary" html-type="submit" >立即注册</Button>
           </div>
         </Col>
       </Row>
@@ -73,11 +85,15 @@
               <p>包括影院、影厅、场次、观影人次、人群画像等,</p>
               <p>打造一站式服务</p>
             </div>
-            <Button class="detail-button" type="primary" html-type="submit" >立即注册</Button>
+            <Button :to="{name: 'register'}" class="detail-button1" type="primary" html-type="submit" >立即注册</Button>
           </div>
         </Col>
-        <Col :span="10" offset="1">
-        <div>123</div>
+        <Col :span="10">
+          <div class="report">
+            <img style="width: 100%" src="./assets/report.png">
+            <img src="./assets/report1.png">
+            <img src="./assets/report2.png">
+          </div>
         </Col>
       </Row>
     </Row>
@@ -115,18 +131,20 @@
     <Row class="detail-footer" :style="{height: documentClientHeight+'px'}">
       <Row :style="{marginTop: (documentClientHeight - 400)/2 + 'px'}">
         <Col :span="16" offset="4">
-          <h3 ref="prentes">合作伙伴</h3>
-          <div class="partner">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <div class="detail-brand">
-            <div>
-              <span>copyright&#169️2018 aiad</span>
-              <span>北京智能广宣科技有限公司</span>
-              <span>北京朝阳区亿利生态广场17层</span>
+          <div class="foot-box" ref="prentes">
+            <h3>合作伙伴</h3>
+            <div class="partner">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <div class="detail-brand">
+              <div>
+                <span>copyright&#169️2018 aiad</span>
+                <span>北京智能广宣科技有限公司</span>
+                <span>北京朝阳区亿利生态广场17层</span>
+              </div>
             </div>
           </div>
         </Col>
@@ -165,9 +183,36 @@ export default class Main extends ViewBase {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
     const title = document.querySelectorAll('.title')
     const detailP = document.querySelectorAll('.platform')
+    const robot = Array.from(document.querySelectorAll('.robot img'))
+    const report = Array.from(document.querySelectorAll('.report img'))
+    const people = Array.from(document.querySelectorAll('.people img'))
+    const monitoring = Array.from(document.querySelectorAll('.monitoring img'))
     /* tslint:disable */
-    Array.from(title).forEach((it: any) => {
+    Array.from(title).forEach((it: any, index: number, data: any) => {
       const top = it.getBoundingClientRect().top
+      const tops: any = []
+      tops[index] = (data[index].getBoundingClientRect().top)
+      console.log(tops)
+      if (index == 0 && tops[0] < this.documentClientHeight - 60 && tops[0] > 0) {
+        animation(robot[0], { 'margin-top': '0px' }, 1000, 'easeBothStrong')
+        animation(robot[1], { 'bottom': '340px' }, 2000, 'easeBothStrong')
+        animation(robot[2], { 'bottom': '320px' }, 2000, 'easeBothStrong')
+      }
+      if (index == 1 && tops[1] < this.documentClientHeight - 60 && tops[1] > 0) {
+        animation(people[0], { 'opacity': '1' }, 1000, 'easeBothStrong')
+        animation(people[1], { 'bottom': '110px' }, 2000, 'easeBothStrong')
+        animation(people[2], { 'bottom': '290px' }, 2000, 'easeBothStrong')
+      }
+      if (index == 2 && tops[2] < this.documentClientHeight - 60 && tops[2] > 0) {
+        animation(monitoring[0], { 'opacity': '1' }, 1000, 'easeBothStrong')
+        animation(monitoring[1], { 'right': '110px' }, 2000, 'easeBothStrong')
+        animation(monitoring[2], { 'bottom': '280px' }, 2000, 'easeBothStrong')
+      }
+      if (index == 3 && tops[3] < this.documentClientHeight - 60 && tops[3] > 0) {
+        animation(report[0], { 'opacity': '1' }, 1000, 'easeBothStrong')
+        animation(report[1], { 'bottom': '295px' }, 2000, 'easeBothStrong')
+        animation(report[2], { 'bottom': '200px' }, 2000, 'easeBothStrong')
+      }
       if (top < this.documentClientHeight - 60 && top > 0) {
         animation(it, { 'opacity': '1', 'margin-bottom': '40px' }, 1000, 'easeBothStrong')
       }
@@ -230,7 +275,16 @@ export default class Main extends ViewBase {
       .detail-button {
         margin-top: 20px;
         width: 200px;
+        line-height: 40px;
         height: 50px;
+      }
+      .detail-button1 {
+        margin-top: 20px;
+        width: 200px;
+        line-height: 40px;
+        height: 50px;
+        background: rgba(59, 152, 255, 1);
+        border: 1px solid #3b98ff;
       }
     }
   }
@@ -281,7 +335,6 @@ export default class Main extends ViewBase {
     font-weight: 500;
     margin-bottom: 60px;
     color: #222;
-    opacity: 0.1;
   }
   .partner {
     display: flex;
@@ -321,5 +374,71 @@ export default class Main extends ViewBase {
 }
 .detail-p {
   margin-bottom: 20px;
+}
+.robot {
+  img:nth-child(1) {
+    margin-top: 0;
+  }
+  img:nth-child(2) {
+    position: absolute;
+    left: 0;
+    bottom: 430px;
+  }
+  img:nth-child(3) {
+    position: absolute;
+    right: 70px;
+    bottom: 430px;
+  }
+}
+.people {
+  img:nth-child(1) {
+    opacity: 1;
+  }
+  img:nth-child(2) {
+    position: absolute;
+    right: 110px;
+    bottom: 400px;
+  }
+  img:nth-child(3) {
+    position: absolute;
+    left: 110px;
+    bottom: 400px;
+    z-index: 9;
+  }
+}
+.report {
+  img:nth-child(1) {
+    opacity: 1;
+  }
+  img:nth-child(2) {
+    position: absolute;
+    left: 302px;
+    bottom: 400px;
+  }
+  img:nth-child(3) {
+    position: absolute;
+    left: 100px;
+    bottom: 400px;
+    z-index: 9;
+  }
+}
+.monitoring {
+  img:nth-child(1) {
+    opacity: 1;
+  }
+  img:nth-child(2) {
+    position: absolute;
+    right: 410px;
+    bottom: 400px;
+  }
+  img:nth-child(3) {
+    position: absolute;
+    left: 230px;
+    bottom: 400px;
+    z-index: 9;
+  }
+}
+.foot-box {
+  opacity: 0.3;
 }
 </style>
