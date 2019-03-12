@@ -173,10 +173,8 @@ export default class Main extends ViewBase {
           trigger: 'change',
           type: 'array',
           validator(rule: any, value: number[], callback: any) {
-            const strVal = (value || []).join('')
-            ; /^0*$/.test(strVal)
-              ? callback(new Error(rule.message))
-              : callback()
+            const strVal = (value || []).join('');
+            /^0*$/.test(strVal) ? callback(new Error(rule.message)) : callback()
           }
         }
       ],

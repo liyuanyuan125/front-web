@@ -108,6 +108,7 @@ export default class Main extends ViewBase {
     const failMsg = validateEmail(this.form.email)
     return !!failMsg
   }
+
   async getCode() {
     this.codeDisabled = true
 
