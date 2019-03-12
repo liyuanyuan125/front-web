@@ -102,7 +102,7 @@
       <Row :style="{marginTop: (documentClientHeight - 500)/2 + 'px'}">
         <Col :span="10" offset="7">
           <div class="platform" ref="platform">
-            <h3 class="title">免费加入平台</h3>
+            <h3 class="title1">免费加入平台</h3>
             <Form :model="form" :rules="rules" ref="form" class="form"
                 @submit.native.prevent="submit" novalidate :label-width="120">
                 <FormItem label="联系人姓名" prop="email">
@@ -176,7 +176,18 @@ export default class Main extends ViewBase {
 
   mounted() {
     this.resetDocumentClientHeight()
-    window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('scroll', this.debounce(this.handleScroll, 100))
+  }
+
+  debounce(func: any, delay: any) {
+      let prev: any = Date.now()
+      return () => {
+          const now = Date.now()
+          if (now - prev >= delay) {
+              func()
+              prev = Date.now()
+          }
+      }
   }
 
   handleScroll() {
@@ -192,36 +203,57 @@ export default class Main extends ViewBase {
       const top = it.getBoundingClientRect().top
       const tops: any = []
       tops[index] = (data[index].getBoundingClientRect().top)
-      console.log(tops)
-      if (index == 0 && tops[0] < this.documentClientHeight - 60 && tops[0] > 0) {
-        animation(robot[0], { 'margin-top': '0px' }, 1000, 'easeBothStrong')
-        animation(robot[1], { 'bottom': '340px' }, 2000, 'easeBothStrong')
-        animation(robot[2], { 'bottom': '320px' }, 2000, 'easeBothStrong')
+      if (index == 0) {
+        if (tops[0] < this.documentClientHeight - 60 && tops[0] > -60) {
+          animation(robot[1], { 'bottom': '340px' }, 2000, 'easeBothStrong')
+          animation(robot[2], { 'bottom': '320px' }, 2000, 'easeBothStrong')
+        } else {
+          animation(robot[1], { 'bottom': '430px' }, 2000, 'easeBothStrong')
+          animation(robot[2], { 'bottom': '430px' }, 2000, 'easeBothStrong')
+        }
       }
-      if (index == 1 && tops[1] < this.documentClientHeight - 60 && tops[1] > 0) {
-        animation(people[0], { 'opacity': '1' }, 1000, 'easeBothStrong')
-        animation(people[1], { 'bottom': '110px' }, 2000, 'easeBothStrong')
-        animation(people[2], { 'bottom': '290px' }, 2000, 'easeBothStrong')
+      if (index == 1) {
+        if (tops[1] < this.documentClientHeight - 60 && tops[1] > -60) {
+          animation(people[1], { 'bottom': '110px' }, 2000, 'easeBothStrong')
+          animation(people[2], { 'bottom': '290px' }, 2000, 'easeBothStrong')
+        } else {
+          animation(people[1], { 'bottom': '400px' }, 2000, 'easeBothStrong')
+          animation(people[2], { 'bottom': '400px' }, 2000, 'easeBothStrong')
+        }
       }
-      if (index == 2 && tops[2] < this.documentClientHeight - 60 && tops[2] > 0) {
-        animation(monitoring[0], { 'opacity': '1' }, 1000, 'easeBothStrong')
-        animation(monitoring[1], { 'right': '110px' }, 2000, 'easeBothStrong')
-        animation(monitoring[2], { 'bottom': '280px' }, 2000, 'easeBothStrong')
+      if (index == 2) {
+        if (tops[2] < this.documentClientHeight - 60 && tops[2] > -60) {
+          animation(monitoring[1], { 'bottom': '110px' }, 2000, 'easeBothStrong')
+          animation(monitoring[2], { 'bottom': '280px' }, 2000, 'easeBothStrong')
+        } else {
+          animation(monitoring[1], { 'bottom': '350px' }, 2000, 'easeBothStrong')
+          animation(monitoring[2], { 'bottom': '440px' }, 2000, 'easeBothStrong')
+        }
       }
-      if (index == 3 && tops[3] < this.documentClientHeight - 60 && tops[3] > 0) {
-        animation(report[0], { 'opacity': '1' }, 1000, 'easeBothStrong')
-        animation(report[1], { 'bottom': '295px' }, 2000, 'easeBothStrong')
-        animation(report[2], { 'bottom': '200px' }, 2000, 'easeBothStrong')
+      if (index == 3) {
+        if (tops[3] < this.documentClientHeight - 60 && tops[3] > -60) {
+          animation(report[1], { 'bottom': '290px' }, 2000, 'easeBothStrong')
+          animation(report[2], { 'bottom': '165px' }, 2000, 'easeBothStrong')
+        } else {
+          animation(report[1], { 'bottom': '400px' }, 2000, 'easeBothStrong')
+          animation(report[2], { 'bottom': '400px' }, 2000, 'easeBothStrong')
+        }
       }
-      if (top < this.documentClientHeight - 60 && top > 0) {
+      if (top < this.documentClientHeight - 60 && top > -60) {
         animation(it, { 'opacity': '1', 'margin-bottom': '40px' }, 1000, 'easeBothStrong')
+      } else {
+        animation(it, { 'opacity': '1', 'margin-bottom': '0' }, 1000, 'easeBothStrong')
       }
     })
-    if (this.getTop('prentes') < this.documentClientHeight - 20 && this.getTop('prentes') > 0) {
+    if (this.getTop('prentes') < this.documentClientHeight + 10) {
       animation(this.$refs.prentes, { 'opacity': '1'}, 1000, 'easeBothStrong')
+    } else {
+      animation(this.$refs.prentes, { 'opacity': '.3'}, 1000, 'easeBothStrong')
     }
-    if (this.getTop('platform') < this.documentClientHeight - 20 && this.getTop('prentes') > 0) {
+    if (this.getTop('platform') < this.documentClientHeight - 20 && this.getTop('prentes') > -20) {
       animation(this.$refs.platform, { 'opacity': '1'}, 1000, 'easeBothStrong')
+    } else {
+      animation(this.$refs.platform, { 'opacity': '.3'}, 1000, 'easeBothStrong')
     }
     /* tslint:disable */
   }
@@ -292,7 +324,7 @@ export default class Main extends ViewBase {
 
 .blue {
   background: rgba(34, 91, 239, 1);
-  h3 {
+  .title1 {
     color: #fff;
     text-align: center;
     font-weight: 500;
@@ -412,12 +444,12 @@ export default class Main extends ViewBase {
   }
   img:nth-child(2) {
     position: absolute;
-    left: 302px;
+    left: 312px;
     bottom: 400px;
   }
   img:nth-child(3) {
     position: absolute;
-    left: 100px;
+    left: 14px;
     bottom: 400px;
     z-index: 9;
   }
@@ -428,13 +460,13 @@ export default class Main extends ViewBase {
   }
   img:nth-child(2) {
     position: absolute;
-    right: 410px;
-    bottom: 400px;
+    left: 211px;
+    bottom: 350px;
   }
   img:nth-child(3) {
     position: absolute;
     left: 230px;
-    bottom: 400px;
+    bottom: 440px;
     z-index: 9;
   }
 }
