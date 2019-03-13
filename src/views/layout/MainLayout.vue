@@ -386,7 +386,7 @@ export default class MainLayout extends ViewBase {
       background: no-repeat 30px center;
       line-height: 20px;
       i {
-        margin-right: 5px;
+        margin-right: 0;
       }
     }
     .ivu-menu-item {
