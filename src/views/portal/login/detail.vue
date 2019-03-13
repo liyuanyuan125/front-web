@@ -141,7 +141,7 @@
             </div>
             <div class="detail-brand">
               <div>
-                <span>copyright&#169️2018 aiad</span>
+                <span>copyright&#169️2018 aiads.com</span>
                 <span>北京智能广宣科技有限公司</span>
                 <span>北京朝阳区亿利生态广场17层</span>
               </div>
@@ -251,8 +251,7 @@ export default class Main extends ViewBase {
     } else {
       animation(this.$refs.prentes, { 'opacity': '.3'}, 1000, 'easeBothStrong')
     }
-    console.log(this.getTop('prentes'))
-    if (this.getTop('platform') < this.documentClientHeight + 20 && this.getTop('prentes') > -20) {
+    if (this.getTop('platform') < this.documentClientHeight + 20 && this.getTop('platform') > -20) {
       animation(this.$refs.platform, { 'opacity': '1'}, 1000, 'easeBothStrong')
     } else {
       animation(this.$refs.platform, { 'opacity': '.3'}, 1000, 'easeBothStrong')
