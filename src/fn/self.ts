@@ -50,6 +50,7 @@ export function animation(obj: any, json: any, d: number, type?: any, callback?:
   // obj = this;
   const target: any = {} /*目标值*/
   const init: any = {}/*初始值*/
+  let timer: any = null
   let styleV: any = '' /*样式*/
   // tslint:disable-next-line:forin
   for (const attr in json) {
@@ -64,13 +65,14 @@ export function animation(obj: any, json: any, d: number, type?: any, callback?:
   }
   const initT: any = new Date(); // 获取开始时间
   (function rQAF() {
+    window.cancelAnimationFrame(timer)
     let t = new Date() as any - initT// 获取当前时间与开始时间的差值--动画执行时长
     if (t >= d) {// 判断动画执行时长是否大于预设目标
       t = d// 让动画执行时长等于预设目标
+      window.cancelAnimationFrame(timer)
     } else {
-      window.requestAnimationFrame(rQAF)// 调用rQAF函数一次
+      timer = window.requestAnimationFrame(rQAF)// 调用rQAF函数一次
     }
-
     // tslint:disable-next-line:forin
     for (const attr in json) {
       const b: any = init[attr]

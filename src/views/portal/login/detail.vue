@@ -106,19 +106,19 @@
             <Form :model="form" :rules="rules" ref="form" class="form"
                 @submit.native.prevent="submit" novalidate :label-width="120">
                 <FormItem label="联系人姓名" prop="email">
-                  <Input type="email" v-model="form.email" placeholder="">
+                  <Input type="email" v-model="form.name" placeholder="">
                   </Input>
                 </FormItem>
                 <FormItem label="公司名称" prop="password">
-                  <Input type="text" v-model="form.password" placeholder="" :maxlength="16">
+                  <Input type="text" v-model="form.companyName" placeholder="" :maxlength="16">
                   </Input>
                 </FormItem>
                 <FormItem label="公司所在地" prop="password">
-                  <Input type="text" v-model="form.password" placeholder="" :maxlength="16">
+                  <Input type="text" v-model="form.adress" placeholder="" :maxlength="16">
                   </Input>
                 </FormItem>
                 <FormItem label="手机号码" prop="password">
-                  <Input type="text" v-model="form.password" placeholder="" :maxlength="16">
+                  <Input type="text" v-model="form.phone" placeholder="" :maxlength="16">
                   </Input>
                 </FormItem>
                 <Button class="detail-button" type="primary" html-type="submit" long >立即提交</Button>
@@ -176,7 +176,7 @@ export default class Main extends ViewBase {
 
   mounted() {
     this.resetDocumentClientHeight()
-    window.addEventListener('scroll', this.debounce(this.handleScroll, 100))
+    window.addEventListener('scroll', this.debounce(this.handleScroll, 500))
   }
 
   debounce(func: any, delay: any) {
@@ -200,11 +200,11 @@ export default class Main extends ViewBase {
     const monitoring = Array.from(document.querySelectorAll('.monitoring img'))
     /* tslint:disable */
     Array.from(title).forEach((it: any, index: number, data: any) => {
-      const top = it.getBoundingClientRect().top
+      const top = parseInt(it.getBoundingClientRect().top)
       const tops: any = []
-      tops[index] = (data[index].getBoundingClientRect().top)
+      tops[index] = parseInt((data[index].getBoundingClientRect().top))
       if (index == 0) {
-        if (tops[0] < this.documentClientHeight - 60 && tops[0] > -60) {
+        if (tops[0] < this.documentClientHeight - 20 && tops[0] > -20) {
           animation(robot[1], { 'bottom': '340px' }, 2000, 'easeBothStrong')
           animation(robot[2], { 'bottom': '320px' }, 2000, 'easeBothStrong')
         } else {
@@ -213,7 +213,7 @@ export default class Main extends ViewBase {
         }
       }
       if (index == 1) {
-        if (tops[1] < this.documentClientHeight - 60 && tops[1] > -60) {
+        if (tops[1] < this.documentClientHeight - 20 && tops[1] > -20) {
           animation(people[1], { 'bottom': '110px' }, 2000, 'easeBothStrong')
           animation(people[2], { 'bottom': '290px' }, 2000, 'easeBothStrong')
         } else {
@@ -222,7 +222,7 @@ export default class Main extends ViewBase {
         }
       }
       if (index == 2) {
-        if (tops[2] < this.documentClientHeight - 60 && tops[2] > -60) {
+        if (tops[2] < this.documentClientHeight - 20 && tops[2] > -20) {
           animation(monitoring[1], { 'bottom': '110px' }, 2000, 'easeBothStrong')
           animation(monitoring[2], { 'bottom': '280px' }, 2000, 'easeBothStrong')
         } else {
@@ -231,7 +231,7 @@ export default class Main extends ViewBase {
         }
       }
       if (index == 3) {
-        if (tops[3] < this.documentClientHeight - 60 && tops[3] > -60) {
+        if (tops[3] < this.documentClientHeight - 20 && tops[3] > -20) {
           animation(report[1], { 'bottom': '290px' }, 2000, 'easeBothStrong')
           animation(report[2], { 'bottom': '165px' }, 2000, 'easeBothStrong')
         } else {
@@ -239,10 +239,11 @@ export default class Main extends ViewBase {
           animation(report[2], { 'bottom': '400px' }, 2000, 'easeBothStrong')
         }
       }
-      if (top < this.documentClientHeight - 60 && top > -60) {
+      if (top < this.documentClientHeight - 20 && top > - 20) {
         animation(it, { 'opacity': '1', 'margin-bottom': '40px' }, 1000, 'easeBothStrong')
       } else {
-        animation(it, { 'opacity': '1', 'margin-bottom': '0' }, 1000, 'easeBothStrong')
+        console.log(1)
+        animation(it, { 'opacity': '.6', 'margin-bottom': '0' }, 1000, 'easeBothStrong')
       }
     })
     if (this.getTop('prentes') < this.documentClientHeight + 10) {
@@ -373,7 +374,7 @@ export default class Main extends ViewBase {
     height: 200px;
     div {
       margin-right: 30px;
-      width: 200px;
+      width: 20%;
       background: rgba(239, 239, 239, 1);
       &:last-child {
         margin-right: 0;
