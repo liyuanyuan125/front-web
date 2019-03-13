@@ -110,15 +110,15 @@
                   </Input>
                 </FormItem>
                 <FormItem label="公司名称" prop="password">
-                  <Input type="text" v-model="form.companyName" placeholder="" :maxlength="16">
+                  <Input type="text" v-model="form.companyName" placeholder="" >
                   </Input>
                 </FormItem>
                 <FormItem label="公司所在地" prop="password">
-                  <Input type="text" v-model="form.adress" placeholder="" :maxlength="16">
+                  <Input type="text" v-model="form.adress" placeholder="" >
                   </Input>
                 </FormItem>
                 <FormItem label="手机号码" prop="password">
-                  <Input type="text" v-model="form.phone" placeholder="" :maxlength="16">
+                  <Input type="text" v-model="form.phone" placeholder="" >
                   </Input>
                 </FormItem>
                 <Button class="detail-button" type="primary" html-type="submit" long >立即提交</Button>
@@ -176,7 +176,8 @@ export default class Main extends ViewBase {
 
   mounted() {
     this.resetDocumentClientHeight()
-    window.addEventListener('scroll', this.debounce(this.handleScroll, 500))
+    this.handleScroll()
+    window.addEventListener('scroll', this.debounce(this.handleScroll, 100))
   }
 
   debounce(func: any, delay: any) {
@@ -204,7 +205,7 @@ export default class Main extends ViewBase {
       const tops: any = []
       tops[index] = parseInt((data[index].getBoundingClientRect().top))
       if (index == 0) {
-        if (tops[0] < this.documentClientHeight - 20 && tops[0] > -20) {
+        if (tops[0] < this.documentClientHeight - 20 && tops[0] > -60) {
           animation(robot[1], { 'bottom': '340px' }, 2000, 'easeBothStrong')
           animation(robot[2], { 'bottom': '320px' }, 2000, 'easeBothStrong')
         } else {
@@ -242,7 +243,6 @@ export default class Main extends ViewBase {
       if (top < this.documentClientHeight - 20 && top > - 20) {
         animation(it, { 'opacity': '1', 'margin-bottom': '40px' }, 1000, 'easeBothStrong')
       } else {
-        console.log(1)
         animation(it, { 'opacity': '.6', 'margin-bottom': '0' }, 1000, 'easeBothStrong')
       }
     })
@@ -251,7 +251,8 @@ export default class Main extends ViewBase {
     } else {
       animation(this.$refs.prentes, { 'opacity': '.3'}, 1000, 'easeBothStrong')
     }
-    if (this.getTop('platform') < this.documentClientHeight - 20 && this.getTop('prentes') > -20) {
+    console.log(this.getTop('prentes'))
+    if (this.getTop('platform') < this.documentClientHeight + 20 && this.getTop('prentes') > -20) {
       animation(this.$refs.platform, { 'opacity': '1'}, 1000, 'easeBothStrong')
     } else {
       animation(this.$refs.platform, { 'opacity': '.3'}, 1000, 'easeBothStrong')
@@ -374,7 +375,7 @@ export default class Main extends ViewBase {
     height: 200px;
     div {
       margin-right: 30px;
-      width: 20%;
+      flex: 1;
       background: rgba(239, 239, 239, 1);
       &:last-child {
         margin-right: 0;
@@ -467,7 +468,7 @@ export default class Main extends ViewBase {
   img:nth-child(3) {
     position: absolute;
     left: 230px;
-    bottom: 440px;
+    bottom: 400px;
     z-index: 9;
   }
 }

@@ -63,9 +63,9 @@ export function animation(obj: any, json: any, d: number, type?: any, callback?:
   } else {
     type = type || 'linear'
   }
+  window.cancelAnimationFrame(timer)
   const initT: any = new Date(); // 获取开始时间
   (function rQAF() {
-    window.cancelAnimationFrame(timer)
     let t = new Date() as any - initT// 获取当前时间与开始时间的差值--动画执行时长
     if (t >= d) {// 判断动画执行时长是否大于预设目标
       t = d// 让动画执行时长等于预设目标
