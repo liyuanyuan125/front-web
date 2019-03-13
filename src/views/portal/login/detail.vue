@@ -240,22 +240,22 @@ export default class Main extends ViewBase {
           animation(report[2], { 'bottom': '400px' }, 2000, 'easeBothStrong')
         }
       }
-      if (top < this.documentClientHeight - 20 && top > - 20) {
-        animation(it, { 'opacity': '1', 'margin-bottom': '40px' }, 1000, 'easeBothStrong')
-      } else {
-        animation(it, { 'opacity': '.6', 'margin-bottom': '0' }, 1000, 'easeBothStrong')
-      }
+      // if (top < this.documentClientHeight - 20 && top > - 20) {
+      //   animation(it, { 'opacity': '1', 'margin-bottom': '40px' }, 1000, 'easeBothStrong')
+      // } else {
+      //   animation(it, { 'opacity': '.6', 'margin-bottom': '0' }, 1000, 'easeBothStrong')
+      // }
     })
-    if (this.getTop('prentes') < this.documentClientHeight + 10) {
-      animation(this.$refs.prentes, { 'opacity': '1'}, 1000, 'easeBothStrong')
-    } else {
-      animation(this.$refs.prentes, { 'opacity': '.3'}, 1000, 'easeBothStrong')
-    }
-    if (this.getTop('platform') < this.documentClientHeight + 20 && this.getTop('platform') > -20) {
-      animation(this.$refs.platform, { 'opacity': '1'}, 1000, 'easeBothStrong')
-    } else {
-      animation(this.$refs.platform, { 'opacity': '.3'}, 1000, 'easeBothStrong')
-    }
+    // if (this.getTop('prentes') < this.documentClientHeight + 10) {
+    //   animation(this.$refs.prentes, { 'opacity': '1'}, 1000, 'easeBothStrong')
+    // } else {
+    //   animation(this.$refs.prentes, { 'opacity': '.3'}, 1000, 'easeBothStrong')
+    // }
+    // if (this.getTop('platform') < this.documentClientHeight + 20 && this.getTop('platform') > -20) {
+    //   animation(this.$refs.platform, { 'opacity': '1'}, 1000, 'easeBothStrong')
+    // } else {
+    //   animation(this.$refs.platform, { 'opacity': '.3'}, 1000, 'easeBothStrong')
+    // }
     /* tslint:disable */
   }
 
@@ -298,7 +298,6 @@ export default class Main extends ViewBase {
       h3 {
         color: @h-color;
         font-size: 40px;
-        margin-top: 40px;
       }
       p {
         color: @p-color;
@@ -399,11 +398,11 @@ export default class Main extends ViewBase {
   }
 }
 .platform {
-  opacity: 0.1;
+  opacity: 1;
 }
 .title {
-  opacity: 0.3;
-  margin-bottom: 80px;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 .detail-p {
   margin-bottom: 20px;
@@ -450,7 +449,7 @@ export default class Main extends ViewBase {
   }
   img:nth-child(3) {
     position: absolute;
-    left: 14px;
+    left: 30px;
     bottom: 400px;
     z-index: 9;
   }
@@ -461,7 +460,7 @@ export default class Main extends ViewBase {
   }
   img:nth-child(2) {
     position: absolute;
-    left: 211px;
+    left: 220px;
     bottom: 350px;
   }
   img:nth-child(3) {
@@ -472,6 +471,6 @@ export default class Main extends ViewBase {
   }
 }
 .foot-box {
-  opacity: 0.3;
+  opacity: 1;
 }
 </style>
