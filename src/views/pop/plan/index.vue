@@ -725,7 +725,7 @@ export default class Main extends ViewBase {
       addObject = {
         ...addObject,
         id: this.$route.params.id,
-        status: this.form.throwInAreaType == 0 ? this.item.status : this.throwInStats
+        status: this.item.status
       }
     }
     const index: any = 'pop_plan_edit_' + Math.floor(Math.random() * 1000 + 1)

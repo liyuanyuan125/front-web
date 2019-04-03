@@ -604,9 +604,15 @@ export default class Main extends ViewBase {
         if (this.cinemaIdArray.length == 0) {
           info('请至少选择一部影片')
           return
+        } else {
+          this.cinemaIdArray = this.cinemaIdArray.map((it: any) => it.id)
         }
       }
       this.dataFrom.throwInAreaType = this.list.throwInAreaType[0].key
+      if (this.dataFrom.type == 1) {
+        // this.cinemaIdArray = this.tuifilms
+        this.cinemaIdArray = this.tuifilms.map((it: any) => it.id)
+      }
       this.dataFrom.deliveryMovies = this.cinemaIdArray.map((it: any) => it.id)
       if (this.list.deliveryGroups[0].text.length != 0) {
         const one = (this.list.deliveryGroups[0].text || []).map((it: any) => {
