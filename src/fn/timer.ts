@@ -8,7 +8,7 @@ type CountDownCallback = (seconds: number) => any
  * @return {Promise} 时间到 resolve，从不 reject
  */
 export function delay(ms: number) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     setTimeout(resolve, ms)
   })
 }
