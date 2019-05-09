@@ -1,11 +1,11 @@
 <template>
   <div class="login-home">
     <header>
-      <div class="nav flex-mid wid-auto">
+      <div class="nav flex-mid">
         <div class="logo">
           <img src="~@/assets/site/logo.png" alt="alias" height="50">
         </div>
-        <div class="navTitle">
+        <div class="nav-title">
           <router-link tag="span" to>概览</router-link>
           <router-link tag="span" to>平台介绍</router-link>
           <router-link tag="span" to>联系咨询</router-link>
@@ -13,8 +13,9 @@
         </div>
       </div>
     </header>
+
     <content class="content">
-      <div class="main-wrap wid-auto">
+      <div class="main-wrap">
         <div>
           <img src="./assets/bannerlogo.png" alt="alias" height="115px">
           <br>
@@ -69,6 +70,7 @@
         </div>
       </div>
     </content>
+
     <detail />
   </div>
 </template>
@@ -179,8 +181,14 @@ export default class Main extends ViewBase {
 
 <style lang='less' scoped>
 @import '~@/site/lib.less';
-@import '~@/site/login.less';
+// @import '~@/site/login.less';
 @import '~@/assets/iconFont/iconfont.css';
+
+.nav,
+.main-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+}
 
 .adv-ative-text {
   padding-top: 23px;
@@ -232,12 +240,12 @@ export default class Main extends ViewBase {
 
       height: 110px;
       font-size: 14px;
-      color: @text-color;
+      color: @c-text;
       cursor: pointer;
       .logo {
         flex: 1;
       }
-      .navTitle {
+      .nav-title {
         flex: 2;
         text-align: right;
         span {
@@ -254,10 +262,9 @@ export default class Main extends ViewBase {
     background: url(//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bhj7kl98jlg00080873g.jpg) no-repeat center;
     background-size: cover;
     .main-wrap {
-      cursor: pointer;
-      display: -webkit-flex;
-      display: flex;
       position: relative;
+      display: flex;
+      cursor: pointer;
       & > div:nth-child(1) {
         padding: 80px 0 0 50px;
       }

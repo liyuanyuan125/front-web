@@ -1,6 +1,6 @@
 <template>
   <div class="detal-box">
-  
+
     <Row :style="{height: documentClientHeight+'px'}">
       <Row class="detal-msg" :style="{marginTop: (documentClientHeight - 500)/2 + 'px'}">
         <Col :span="10" offset="3">
@@ -20,7 +20,7 @@
               <p>我们将您把商业信息精准推荐给真正有需要的人，</p>
               <p>以减少广告浪费。</p>
             </div>
-            <Button :to="{name: 'register'}" class="detail-button" type="primary" html-type="submit" >立即注册</Button>
+            <Button type="primary" :to="{name: 'register'}" class="detail-button flex-mid">立即注册</Button>
           </div>
         </Col>
       </Row>
@@ -38,7 +38,7 @@
               <p>通过算法预测投放结果，</p>
               <p>为品牌与产品触达最优人群。</p>
             </div>
-            <Button :to="{name: 'register'}" class="detail-button1" type="primary" html-type="submit" >立即注册</Button>
+            <Button :to="{name: 'register'}" class="detail-button1 flex-mid" type="primary">立即注册</Button>
           </div>
         </Col>
         <Col :span="10">
@@ -69,7 +69,7 @@
               <p>全面监控广告投放，</p>
               <p>广告效果清晰可见。</p>
             </div>
-            <Button :to="{name: 'register'}" class="detail-button" type="primary" html-type="submit" >立即注册</Button>
+            <Button :to="{name: 'register'}" class="detail-button flex-mid" type="primary" html-type="submit" >立即注册</Button>
           </div>
         </Col>
       </Row>
@@ -85,7 +85,7 @@
               <p>包括影院、影厅、场次、观影人次、人群画像等,</p>
               <p>打造一站式服务。</p>
             </div>
-            <Button :to="{name: 'register'}" class="detail-button1" type="primary" html-type="submit" >立即注册</Button>
+            <Button :to="{name: 'register'}" class="detail-button1 flex-mid" type="primary">立即注册</Button>
           </div>
         </Col>
         <Col :span="10">
@@ -285,6 +285,8 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import '~@/site/lib.less';
+
 @h-color: #222;
 @p-color: #444;
 
@@ -315,8 +317,7 @@ export default class Main extends ViewBase {
         width: 200px;
         line-height: 40px;
         height: 50px;
-        background: rgba(59, 152, 255, 1);
-        border: 1px solid #3b98ff;
+        .button-style(#fff, #3b98ff);
       }
     }
   }
@@ -354,10 +355,8 @@ export default class Main extends ViewBase {
     }
   }
   .detail-button {
-    color: rgba(34, 91, 239, 1);
     height: 48px;
-    border: 1px solid #fff;
-    background: #fff;
+    .button-style(#225bef, #fff);
   }
 }
 .detail-footer {

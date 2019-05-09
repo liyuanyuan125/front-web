@@ -63,3 +63,44 @@
   text-overflow: ellipsis;
   .nowrap;
 }
+
+// 以下 button 变量、函数，从 node_modules/iview/src/styles/mixins/button.less 中提取
+
+@btn-disable-color      : #c5c8ce;
+@btn-disable-bg         : #f7f7f7;
+@btn-disable-border     : #dcdee2;
+
+// 设置按钮的颜色
+.button-color(@color; @background; @border) {
+  color: @color;
+  background-color: @background;
+  border-color: @border;
+}
+
+// 设置按钮的样式
+.button-style(@color; @background; @border: @background) {
+  .button-color(@color; @background; @border);
+
+  &:hover,
+  &:focus
+  {
+    .button-color(tint(@color, 20%); tint(@background, 20%); tint(@border, 20%));
+  }
+
+  &:active,
+  &.active {
+    .button-color(shade(@color, 5%); shade(@background, 5%); shade(@background, 5%));
+  }
+
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      .button-color(@btn-disable-color; @btn-disable-bg; @btn-disable-border);
+    }
+  }
+}
