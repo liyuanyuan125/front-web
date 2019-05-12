@@ -572,12 +572,12 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
 
   // 资源方 - 效果报表 - 成效报表
-   {
-    path: '/reseport/info',
-    name: 'resreport-info',
-    component: () => import('./views/resReport/info/index.vue'),
-    meta: emptyAuth,
-  },
+  //  {
+  //   path: '/reseport/info',
+  //   name: 'resreport-info',
+  //   component: () => import('./views/resReport/info/index.vue'),
+  //   meta: emptyAuth,
+  // },
 
   // TODO: 下面的两个先不做了
 
