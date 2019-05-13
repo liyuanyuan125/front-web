@@ -66,6 +66,7 @@
             <a :href="it.fileUrl" target="_blank"><img class="down-img" src="./assets/down-dcp.png"  width="14"/>下载DCP包</a>
           </Col>
       </Row>
+      
      <h3 class="layout-title more-list">下载链接更新日志</h3>
       <div class="text-rows log-list">
         <p v-if="item.attachments" v-for="(ite, index) in item.attachments" :key="index">

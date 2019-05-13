@@ -96,11 +96,14 @@
                 <Col span='12' class='img-order'><span v-for="item in tabPane" v-if="item.key == it.status">{{item.text}}</span></Col>
                 <Col span='12' class='img-order'>
                  <div v-if="it.status == 1" class="btn-sure-cancel">
-                   <p><Button type="primary" class="operation-btn button-ok ">确定接单</Button></p>
-                   <p><Button type="primary" class="operation-btn button-ok ">拒绝接单</Button></p>
+                   <p><Button type="primary" @click="editReject(it.id, it.id, it.cinemaCount)" class="operation-btn button-ok ">确定接单</Button></p>
+                   <p><Button type="primary" @click="editRefuse(it)" class="operation-btn button-ok ">拒绝接单</Button></p>
                  </div>
-                 <div v-else class="btn-query-default">
-                   <Button type="primary"  class="operation-btn button-ok ">查看详情</Button>
+                 <div  class="btn-query-default">
+                  <router-link
+                    :to="{ name: 'order-execute-xq', params: { id: it.planId } }"
+                    tag="span"
+                  >查看详情</router-link>
                  </div>
                 </Col>
               </Row>
