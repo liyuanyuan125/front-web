@@ -82,9 +82,6 @@ export default class DlgEditCinema extends ViewBase {
     }
   ]
 
-  created() {
-    // this.init(31)
-  }
 
   init(id: any, type: any, data?: any) {
     this.id = id
@@ -145,9 +142,6 @@ export default class DlgEditCinema extends ViewBase {
     this.target = false
   }
 
-  open() {
-
-  }
 
   forMat() {
     const index = this.dataForm.pageIndex - 1
