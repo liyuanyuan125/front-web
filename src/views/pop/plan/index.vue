@@ -40,8 +40,28 @@ export default class App extends ViewBase {
   step = 0
   currentTab: any = Promotion
 
+  created() {
+    this.init()
+  }
+
+  init() {
+    const step = this.$route.params
+    if (!step.id) {
+      this.$router.push({
+        name: 'pop-planlist-add',
+        params: { id: '0' }
+      })
+    } else {
+      this.step = Number(step.id)
+    }
+  }
+
   @Watch('step')
   watchStep(val: number) {
+    this.$router.push({
+        name: 'pop-planlist-add',
+        params: { id: val + '' }
+    })
     switch (this.step) {
       case 0: this.currentTab = Promotion
         break

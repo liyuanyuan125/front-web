@@ -1,4 +1,5 @@
 import { mockGet, tid, title20, dateRange } from './mock'
+import { get , post , put } from '@/fn/ajax'
 
 /**
  * @param
@@ -38,4 +39,16 @@ export async function orienteering(query: any) {
     }],
   })
 
+}
+
+// 查询广告片列表(含分页)
+export async function advertising(query: any) {
+  const data = await get('/xadvert/videos', query)
+  return data
+}
+
+// 影片
+export async function cinemaList(query: any) {
+  const data = await get('/xadvert/plans/movie', query)
+  return data
 }

@@ -1,10 +1,6 @@
 <template>
   <div class="page home-bg">
-    <p>恭喜，广告计划创建成功</p>
-    <div>
-      平台审核中，请注意查收最终的投放方案
-    </div>
-    <div>您还可以： 【导出推广方案】或【联系商务：（QQ：123456789）（电话：13146015795）（邮箱：zhiping.zhao@aiads.com）】</div>
+  
   </div>
 </template>
 
@@ -28,4 +24,3 @@ export default class App extends ViewBase {
   color: #2481d7;
 }
 </style>
-

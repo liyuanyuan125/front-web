@@ -1,7 +1,6 @@
 <template>
   <div class="page home-bg">
     <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
-      
       <h3 class="layout-title">覆盖范围设置</h3>
       <FormItem label="覆盖城市" class="item-top form-item-type">
         <Tags v-model="cityType" :tagMess = 'areaList' />
@@ -62,7 +61,7 @@
       <FormItem label="选择模式" class="item-top form-item-type">
         <Tags v-model="movieType" :tagMess = 'movieList' />
       </FormItem>
-      <div class="item-top" v-if="movieType == 1">
+      <div class="item-top" v-show="movieType == 1">
         <FormItem label="推荐影片" class="form-item-type-sort">
           <ul class="film-list" v-if="cinemaDetail.length > 0">
             <li v-for="(it, index) in cinemaDetail" :key="it.id"
@@ -80,7 +79,7 @@
           </ul>
         </FormItem>
       </div>
-      <div class="item-top" v-else>
+      <div class="item-top" v-show="movieType != 1">
         <Film />
       </div>
 
@@ -134,7 +133,7 @@ export default class App extends ViewBase {
   rule: any = {
   }
   cityType: number = 1
-  movieType: number = 1
+  movieType: number = 2
   cinemaType: number = 1
   areaList = [{
     label: 1,
@@ -191,7 +190,7 @@ export default class App extends ViewBase {
   }
 
   async next(dataform: any) {
-    this.$emit('input', 1)
+    this.$emit('input', 2)
     try {
       const volid = await (this.$refs[dataform] as any).validate()
       if (volid) {
@@ -278,7 +277,7 @@ export default class App extends ViewBase {
 }
 .default-but {
   border: 1px solid #dcdee2;
-  .button-style(#515a6e, #d0d3d4);
+  .button-style(#515a6e, rgba(236, 245, 255, 1));
 }
 .cinema-wrap {
   position: relative;
