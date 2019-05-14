@@ -338,18 +338,18 @@ const mainLayoutRoutes = [
         }
     },
     // 广告主 - 推广管理 - 广告计划 - 生成广告方案
-    {
-        path: '/pop/plan/scheme/:id/:key',
-        name: 'pop-plan-scheme',
-        component: () => import('./views/pop/pages/index.vue'),
-        meta: {
-            authKey: 'promotion.ad-plan',
-            authAction(route) {
-                const id = parseInt(route.params.id, 10) || 0;
-                return id > 0 ? 'edit' : 'create';
-            }
-        }
-    },
+    // {
+    //     path: '/pop/plan/scheme/:id/:key',
+    //     name: 'pop-plan-scheme',
+    //     component: () => import('./views/pop/pages/index.vue'),
+    //     meta: {
+    //         authKey: 'promotion.ad-plan',
+    //         authAction(route) {
+    //             const id = parseInt(route.params.id, 10) || 0;
+    //             return id > 0 ? 'edit' : 'create';
+    //         }
+    //     }
+    // },
     // 广告主 - 推广管理 - 广告片 - 列表
     {
         path: '/pop/film',

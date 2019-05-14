@@ -8,7 +8,7 @@
     </div>
     <div class='body'>
       <Row class='row-ul'>
-       <Col span='6'> &nbsp;</Col>
+       <Col span='6'> <WeekDatePicker v-model="weekDate"/></Col>
         <Col :span="14">
           <Col style='margin-left: 12px;' span="8">
             <Select v-model='query.id' clearable  filterable  @on-change="seachs">
@@ -64,11 +64,12 @@
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
+import { Component , Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { queryList  } from '@/api/lastissue'
 import { formatTimestamp } from '@/util/validateRules'
+import WeekDatePicker from '@/components/weekDatePicker'
 
 
 const timeFormat = 'YYYY-MM-DD'
@@ -76,14 +77,19 @@ const timeFormat = 'YYYY-MM-DD'
 
 @Component({
   components: {
+    WeekDatePicker
   }
 })
 export default class Main extends ViewBase {
-
+  startTime: any = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000
+  endTime: any = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1
+  datanum: any = 24 * 60 * 60 * 1000 * 7 // 一周的时间戳
+  weekDate = [new Date(this.startTime), new Date(this.endTime)]
 
   query: any = {
     id: 2,
   }
+
 
 
   typeList: any = [
@@ -93,10 +99,6 @@ export default class Main extends ViewBase {
   ]
 
   itemlist: any = []
-
-  startTime: any = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000
-  endTime: any = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1
-  datanum: any = 24 * 60 * 60 * 1000 * 7 // 一周的时间戳
 
   mounted() {
     this.seach()
@@ -118,27 +120,19 @@ export default class Main extends ViewBase {
     /***参数都是以周一为基准的***/
     this.startTime = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000  // 本周的开始时间
     this.endTime = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1 // 本周的结束时间
-      // console.log(new Date(this.startTime))
-      // console.log(new Date(this.endTime))
-    // //上周的开始时间
-    // console.log(this.getTime(7));
-    // //上周的结束时间
-    // console.log(this.getTime(1));
-    // //本周的开始时间
-    // console.log(this.getTime(0));
-    // //本周的结束时间
-    // console.log(this.getTime(-6));
+    // console.log(new Date(this.startTime))
+    // console.log(new Date(this.endTime))
   }
   // 上周
   seachchgup() {
-      // console.log(new Date(this.startTime -= this.datanum))
-      // console.log(new Date(this.endTime -= this.datanum))
+    // console.log(new Date(this.startTime -= this.datanum))
+    // console.log(new Date(this.endTime -= this.datanum))
   }
 
   // 下周
   seachchgdown() {
-      // console.log(new Date(this.startTime += this.datanum))
-      // console.log(new Date(this.endTime += this.datanum))
+    // console.log(new Date(this.startTime += this.datanum))
+    // console.log(new Date(this.endTime += this.datanum))
   }
 
   getTime(n: any) {
@@ -188,13 +182,6 @@ export default class Main extends ViewBase {
   // 修改状态
   async change(id: number , it: any) {
     try {
-      // if (it.status == 1) {
-      //   this.stats = '禁用'
-      // } else if (row.status == 2) {
-      //   this.stats = '启用'
-      // } else if (row.status == 3) {
-      //   this.stats = '激活'
-      // }
 
       await confirm('您确定修改当前状态信息吗？')
       // await setList ({
@@ -211,7 +198,7 @@ export default class Main extends ViewBase {
 
   async seach() {
     try {
-      const datalist = await queryList(this.query)
+      const datalist = await queryList({ id : this.weekDate[0]})
       this.itemlist = datalist.data.items
       // console.log(this.itemlist)
       // this.typeList = datalist.data.statusList
@@ -228,6 +215,16 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     } finally {
     }
+  }
+
+  @Watch('query', {deep: true})
+  watchQuery() {
+    this.seach()
+  }
+
+  @Watch('weekDate', {deep: true})
+  watchWeekDate() {
+    this.seach()
   }
 
 }
