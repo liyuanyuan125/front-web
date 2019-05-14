@@ -338,18 +338,18 @@ const mainLayoutRoutes = [
         }
     },
     // 广告主 - 推广管理 - 广告计划 - 生成广告方案
-    {
-        path: '/pop/plan/scheme/:id/:key',
-        name: 'pop-plan-scheme',
-        component: () => import('./views/pop/pages/index.vue'),
-        meta: {
-            authKey: 'promotion.ad-plan',
-            authAction(route) {
-                const id = parseInt(route.params.id, 10) || 0;
-                return id > 0 ? 'edit' : 'create';
-            }
-        }
-    },
+    // {
+    //     path: '/pop/plan/scheme/:id/:key',
+    //     name: 'pop-plan-scheme',
+    //     component: () => import('./views/pop/pages/index.vue'),
+    //     meta: {
+    //         authKey: 'promotion.ad-plan',
+    //         authAction(route) {
+    //             const id = parseInt(route.params.id, 10) || 0;
+    //             return id > 0 ? 'edit' : 'create';
+    //         }
+    //     }
+    // },
     // 广告主 - 推广管理 - 广告片 - 列表
     {
         path: '/pop/film',
@@ -394,6 +394,13 @@ const mainLayoutRoutes = [
             authAction: 'view',
             authIsMenu: true,
         }
+    },
+    //资源方 - 广告单 - 详情页
+    {
+        path: '/order/dispatch/details/:id',
+        name: 'order-dispatch-details',
+        component: () => import('./views/order/dispatch/details.vue'),
+        meta: emptyAuth,
     },
     // TODO: 下面的两个页面应该合并
     // 广告主 - 广告单管理 - 执行单列表

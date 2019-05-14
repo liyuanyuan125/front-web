@@ -7,19 +7,6 @@
     <div class="order-content">
       <Form :model="form" :label-width="90" class=" edit-input order-form">
         <Row>
-          <!-- <Col :span="5">
-            <FormItem label="广告单时间">
-              <Select v-model='form.advTime'  clearable placeholder="请输入广告时间" 
-               @on-change="" >
-                  <Option
-                    v-for="item in adverListTime"
-                    :key="item.key"
-                    :value="item.key"
-                  >{{item.text}}</Option>
-                </Select>
-            </FormItem>
-          </Col> -->
-
           <Col :span="7">
             <FormItem label="投放日期">
               <DatePicker type="daterange"  v-model='putDate'  @on-change="handleChange" 
@@ -72,7 +59,7 @@
               </div>
               <div class="flex-box col-order">
                 <p><label>广告片规格：</label><em>{{it.specification}}s</em></p>
-                <p><label>目标影院：</label><em>{{it.targetCinema || '暂无'}}</em></p>
+                <p><label>目标影厅：</label><em>{{it.targetCinema || '暂无'}}</em></p>
               </div>
               <div class="flex-box col-order">
                 <p><label>投放周期：</label><em>{{it.cycle}}天</em></p>

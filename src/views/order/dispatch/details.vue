@@ -1,7 +1,7 @@
 <template>
   <div class="page home-bg">
     <div class="layout-nav-title">
-       <router-link :to="{name: 'account-user'}" >广告单</router-link> > 
+       <router-link :to="{name: 'order-dispatch'}" >广告单</router-link> > 
        <span>广告单详情</span>
     </div>
 

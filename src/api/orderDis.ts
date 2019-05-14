@@ -17,7 +17,7 @@ export async function querylist(query: any) {
  * @param data
  */
 export async function queryOrderList(data: any) {
-  const res = await get('/orders', data)
+  const res = await get('/xadvert/orders', data)
 }
 
 
