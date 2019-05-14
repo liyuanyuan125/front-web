@@ -1,5 +1,5 @@
 <template>
-  <div class="page home-bg">
+  <div ref="page" class="page home-bg">
     <div class="layout-nav-title">
       <router-link :to="{name: 'pop-film'}" >广告计划</router-link> > 
         <span> 新建广告计划</span>
@@ -13,7 +13,7 @@
       </Steps>
     </div>
     <div>
-      <keep-alive>
+      <keep-alive include="Promotion,Orienteering">
         <component v-bind:is="currentTab" v-model="step"></component>
       </keep-alive>
     </div>
@@ -58,6 +58,7 @@ export default class App extends ViewBase {
 
   @Watch('step')
   watchStep(val: number) {
+    (this.$refs.page as HTMLDivElement).scrollTop = 0
     this.$router.push({
         name: 'pop-planlist-add',
         params: { id: val + '' }

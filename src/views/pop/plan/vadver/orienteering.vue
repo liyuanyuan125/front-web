@@ -120,7 +120,7 @@ const timeFormat = 'YYYY-MM-DD'
     Film
   }
 })
-export default class App extends ViewBase {
+export default class Orienteering extends ViewBase {
   @Prop() value!: number
 
   form: any = {
@@ -371,4 +371,3 @@ export default class App extends ViewBase {
   }
 }
 </style>
-

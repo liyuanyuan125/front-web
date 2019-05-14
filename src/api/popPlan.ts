@@ -35,10 +35,32 @@ export async function orienteering(query: any) {
       name: title20,
       mainPicUrl: 'https://p.ssl.qhimg.com/dmfd/400_300_/t0120b2f23b554b8402.jpg',
       openTime: dateRange(),
-      type: ['科幻', '悬疑', '惊悚']
+      type: ['科幻', '悬疑', '惊悚'],
+      sex: '男',
+      age: 25,
+      viewNumber: 1234567,
+      matching: 99.6,
+      week: '2019/6/1~2019/6/7'
     }],
   })
+}
 
+// 影片分页
+export async function cinemaFilm(query: any) {
+  return await mockGet(query, {
+    'items|6': [{
+      id: tid,
+      name: title20,
+      mainPicUrl: 'https://p.ssl.qhimg.com/dmfd/400_300_/t0120b2f23b554b8402.jpg',
+      openTime: dateRange(),
+      type: ['科幻', '悬疑', '惊悚'],
+      sex: '男',
+      start: '1星',
+      viewNumber: 1234567,
+      matching: 99.6,
+      week: '2019/6/1~2019/6/7'
+    }],
+  })
 }
 
 // 查询广告片列表(含分页)
@@ -50,5 +72,32 @@ export async function advertising(query: any) {
 // 影片
 export async function cinemaList(query: any) {
   const data = await get('/xadvert/plans/movie', query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 创建广告计划-推广设置
+ */
+export async function createdDraft(query: any) {
+  const data = await post('/xadvert/plans/create/draft', query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 创建广告计划-定向设置
+ */
+export async function createdDirection(query: any) {
+  const data = await post('/xadvert/plans/create/direction', query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 创建广告计划-定向设置
+ */
+export async function createdScheme(query: any) {
+  const data = await post('/xadvert/plans/create/scheme', query)
   return data
 }
