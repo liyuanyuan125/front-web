@@ -21,6 +21,12 @@ declare module 'vue-plyr' {
   export const VuePlyr: any // tslint:disable-line
 }
 
+declare module 'js-calendar' {
+  export class Generator {
+    public constructor(options: { onlyDays: boolean, weekStart: number })
+  }
+}
+
 interface VarType {
   env: string
   baseUrl: string

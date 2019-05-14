@@ -4,7 +4,7 @@
       <p @click="value.visible = false" class="viewer-tip">轻点关闭</p>
       <div class="player-wrap">
         <vue-plyr>
-          <video :src="value.url" width="500" ></video>
+          <video :src="value.url" width="500" height="500" ></video>
         </vue-plyr>
       </div>
       <div slot="footer"></div>

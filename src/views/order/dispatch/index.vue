@@ -1,175 +1,105 @@
 <template>
-  <div class="page">
-    <div class='t-title'>广告单</div>
-    <Row class="body">
-      <Row>
-        <Col :span="24">
-          <div class="fince-list">
-            <div class='fince-list-big'>
-              <!-- <div class="fince-list-acc"><img src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.waiting></numAdd></span></div> -->
-              <div class="fince-list-acc"><img style='width: 6%;' src="./assets/待接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.waiting}}</span></div>
-              <p class="fince-list-sm">待接单数</p>
-            </div>
-            <div class='fince-list-big'>
-              <!-- <div class="fince-list-acc"><img src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'><numAdd :addNum=nums.received></numAdd></span></div> -->
-              <div class="fince-list-acc"><img style='width: 7%;' src="./assets/已接单icon.png" alt="" >&nbsp;&nbsp;<span class='accs-big'>{{nums.received}}</span></div>
-              <p class="fince-list-sm">已接单数</p>
-            </div>
-            <div class='fince-list-big' style='background: #fff; border-top: 10px solid #fff;position: absolute;top: -6%;'>
-              <!-- <div class='fin-bigs'><img src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.refuse></numAdd></span><span class='smas2'>已拒绝单数</span></div>
-              <div class='fin-bigs' style='margin-top: 10px;'><img src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'><numAdd :addNum=nums.faliure></numAdd></span><span class='smas2'>已失效单数</span></div> -->
-              <div class='fin-bigs'><img style='width: 7%;' src="./assets/已拒绝单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.refuse}}</span><span class='smas2'>已拒绝单数</span></div>
-              <div class='fin-bigs' style='margin-top: 10px;'><img style='width: 7%;' src="./assets/已失效单数.png" alt="" >&nbsp;&nbsp;<span class='accs-sma'>{{nums.faliure}}</span><span class='smas2'>已失效单数</span></div>
-            </div>
-          </div>
-        </Col>
-      </Row>
-      <Row class='row-ul'>
-        <Col :span="12">
-          <div class='guanggao'>广告单状态</div>
-          <RadioGroup v-model="query.status" type="button" @on-change='seachs'>
-            <Radio v-for='it in statusList' :key='it.key' :value='it.key' v-if='it.key!=0' :label='it.key'>{{it.text}}</Radio>
-          </RadioGroup>
-        </Col>
-        <Col :span="12">
-          <div class='guanggao'>广告单类型</div>
-          <Col style='margin-left: 12px;' span="7">
-            <Select v-model='query.planType'  clearable placeholder="广告单类型" @on-change="seachs">
-              <Option
-                v-for="item in planTypeList"
-                :key="item.key"
-                :value="item.key"
-                v-if='item.key!=0'
-              >{{item.text}}</Option>
-            </Select>
+  <div class="page home-bg">
+    <h2 class="layout-nav-title">广告单</h2>
+    <div class="order-list-title">以下广告单已经过平台审核，接单后需要按照广告单中要求投放的影片在您的影院进行排播；结算方式[CPM（按曝光人次计费）]
+您当前影院为 <span v-if="cinemaList.length == 1">{{cinemaList.text}}</span><span>您当前共有 {{cinemaList.length}} 家影院的广告代理权</span>
+     </div>
+    <div class="order-content">
+      <Form :model="form" :label-width="90" class=" edit-input order-form">
+        <Row>
+          <Col :span="7">
+            <FormItem label="投放日期">
+              <DatePicker type="daterange"  v-model='putDate'  @on-change="handleChange" 
+              placeholder="开始日期和结束日期" ></DatePicker>
+            </FormItem>
           </Col>
-        </Col>
-      </Row>
 
-      <Row class='row-ul'>
-        <Col :span="12">
-          <div class='guanggao'>广告单时间</div>
-          <Col style='margin-left: 12px;' span="5">
-            <Select v-model='query.type'  clearable placeholder="广告单时间" @on-change="nulldata">
-              <Option
-                v-for="item in typeList"
-                :key="item.key"
-                :value="item.key"
-                v-if='item.key!=0'
-              >{{item.text}}</Option>
-            </Select>
+           <Col :span="6" v-if="cinemaList.length > 1">
+            <FormItem label="影院名称">
+              <Select v-model='form.CinemaId' filterable  clearable placeholder="影院名称" @on-change="() => pageIndex = 1">
+                  <Option
+                    v-for="item in cinemaList"
+                    :key="item.key"
+                    :value="item.key"
+                  >{{item.text}}</Option>
+                </Select>
+            </FormItem>
           </Col>
-          <Col style='margin-left: 26px;' span="10">
-            <DatePicker type="daterange" style="width: 250px" v-model='showTime' @on-change="handleChange"
-        placement="bottom-start" placeholder="请选择开始日期和结束日期" ></DatePicker>
+          
+          <Col :span="6">
+            <FormItem label="广告片名称">
+              <Select v-model='form.videoId' filterable  clearable placeholder="广告片名称" >
+                  <Option
+                    v-for="item in advlistName"
+                    :key="item.key"
+                    :value="item.key"
+                  >{{item.text}}</Option>
+                </Select>
+            </FormItem>
           </Col>
-        </Col>
-        <Col :span="8">
-          <!-- <div class='guanggao'>广告单类型</div> -->
-          <Col style='margin-left: 12px;' span="20">
-            <Input v-model='query.videoName' search enter-button placeholder="请输入广告片名称进行搜索" @on-change="seachs"/>
-          </Col>
-        </Col>
-      </Row>
+        </Row>
+      </Form>
+
+      <Tabs @on-click="handleTabs">
+        <TabPane v-for="tab in tabPane" :key="tab.key" :label="tab.text + '('+tab.key+')'"></TabPane>
+      </Tabs>
+
       <ul class='itemul' v-auth="'adordermanage.order#view'">
         <li v-for='(it,index) in itemlist' :key='index'>
-          <Row class='li-title'>
-            <Col span='8'>下单时间      {{it.createTime}}</Col>
-            <Col span='10'>预估最大收益/￥ <span class='ora'>{{it.estimateRevenue}}</span></Col>
-            <Col span='6'>
-              <span v-show='it.status == 1' v-auth="'adordermanage.order#confirm'"  @click="editReject(it.id, it.id, it.cinemaCount)" class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>确认接单</span>
-              <span v-show='it.status == 1' v-auth="'adordermanage.order#refuse'"  @click="editRefuse(it)" class='button' style='background: rgba(249,249,249,1); color: #3B98FF;cursor: pointer;'>拒绝接单</span>
-              <!-- <span v-if='it.status == 2' class='button' style='background: #3B98FF; color: #fff;cursor: pointer;'>查看执行单</span> -->
-              <router-link
-              v-auth="'adordermanage.execute#view'"
-              v-if='it.status == 2'
-              :to="{ name: 'order-execute-xq', params: { id: it.planMessageId } }"
-              tag="span"
-              class='button'
-              style='background: #3B98FF; color: #fff;cursor: pointer;'
-            >查看执行单</router-link>
-            </Col>
-          </Row>
-          <Row class='li-item'>
-            <Col span='18'>
-              <Row class='row-list'>
-                <Col span='3' class='row-list-hui'>广告片名称</Col>
-                <Col span='9' class='row-list-huis'>{{it.videoName}}</Col>
-                <Col v-if='it.status != 2' span='3' class='row-list-hui'>目标影院</Col>
-                <Col v-if='it.status == 2' span='3' class='row-list-hui'>接单影院</Col>
-                <Col span='9' class='row-list-huis'>{{it.cinemaCount}}家   
-                  <span v-if="it.status == 2" @click="edittarget(it.executeOrderId, 2)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span>
-                  <span v-else @click="edittarget(it.id, 1)" style='color: rgba(59,152,255,1); cursor: pointer;'>查看</span>
-                </Col>
-              </Row>
-              <Row class='row-list'>
-                <Col span='3' class='row-list-hui'>广告片规格</Col>
-                <Col span='9' class='row-list-huis'>{{it.specification}}s</Col>
-                <Col v-if='it.status != 2' span='3' class='row-list-hui'>目标影厅</Col>
-                <Col v-if='it.status == 2' span='3' class='row-list-hui'>接单影厅</Col>
-                <Col span='9' class='row-list-huis'>所有影厅</Col>
-              </Row>
-              <Row class='row-list'>
-                <Col span='3' class='row-list-hui'>投放时间</Col>
-                <Col span='9' class='row-list-huis'>{{it.beginDate}} ~ {{it.endDate}}</Col>
-                <Col v-if='it.status != 2' span='3' class='row-list-hui'>目标场次</Col>
-                <Col v-if='it.status == 2' span='3' class='row-list-hui'>接单场次</Col>
-                <Col span='9' class='row-list-huis'>所有场次</Col>
-              </Row>
-              <Row class='row-list'>
-                <Col span='3' class='row-list-hui'>投放周期</Col>
-                <Col span='9' class='row-list-huis'>{{it.cycle}}天</Col>
-                <Col span='3' class='row-list-hui'>投放类型</Col>
-                <Col span='9' class='row-list-huis'>{{it.directionType == 1 ? '标准投放' : '单片投放'}}</Col>
-              </Row>
-              <Row class='row-list' style='margin-top:15px;'>
-                <Col span='3' class='row-list-hui'>目标影片</Col>
-                <Col span='21' class='row-list-huis'><span  v-if='it.movieList.length > 0' v-for='item in it.movieList'>《{{item.name}}》   </span><span v-if='it.movieList.length == 0'>暂无    </span></Col>
-              </Row>
-            </Col>
-            <Col span='6'>
-              <Row>
-                <Col v-if='it.status == 1' span='12' class='img-order'><img src="./assets/待接单.png" alt=""><span>待接单</span></Col>
-                <Col v-if='it.status == 2' span='12' class='img-order'><img src="./assets/已接单.png" alt=""><span>已接单</span></Col>
-                <Col v-if='it.status == 3' span='12' class='img-order'><img src="./assets/已拒绝.png" alt=""><span>已拒绝</span></Col>
-                <Col v-if='it.status == 4' span='12' class='img-order'><img src="./assets/已失效.png" alt=""><span>已失效</span></Col>
-                <Col v-if='(it.status == 1 || it.status == 2) && it.planType == 1' span='12' class='img-order'><img src="./assets/标准单.png" alt=""><span>标准单</span></Col>
-                <Col v-if='(it.status == 1 || it.status == 2) && it.planType == 2' span='12' class='img-order'><img src="./assets/加速单.png" alt=""><span>加速单</span></Col>
-                <Col v-if='(it.status == 1 || it.status == 2) && it.planType == 3' span='12' class='img-order'><img src="./assets/优享单.png" alt=""><span>优享单</span></Col>
-                <Col v-if='(it.status == 3 || it.status == 4) && it.planType == 1' span='12' class='img-order'><img src="./assets/标准单-灰.png" alt=""><span>标准单</span></Col>
-                <Col v-if='(it.status == 3 || it.status == 4) && it.planType == 2' span='12' class='img-order'><img src="./assets/加速单-灰.png" alt=""><span>加速单</span></Col>
-                <Col v-if='(it.status == 3 || it.status == 4) && it.planType == 3' span='12' class='img-order'><img src="./assets/优享单-灰.png" alt=""><span>优享单</span></Col>
-              </Row>
-            </Col>
+          <div class="table-header-title flex-box">
+            <p><label>投放排期：</label><em>{{it.beginDate}} ~ {{it.endDate}}</em></p>
+            <p><label>预估最大收益/(元)：</label><em>{{it.estimateRevenue}}</em></p>
+          </div>
+          <Row class="table-content-list" type="flex" justify="center" align="middle">
+            <Col span="14">
+              <div class="flex-box col-order">
+                <p><label>广告片名称：</label><em>{{it.videoName}}</em></p>
+                <p v-if="it.cinemaCount > 1"><label>目标影院：</label><em>{{it.cinemaCount}}</em> <span class="query-status"  @click="edittarget(it.executeOrderId, 1)" >查看</span></p>
+                <p v-else><label>目标影院：</label><em>影厅名字</em></p>
+              </div>
+              <div class="flex-box col-order">
+                <p><label>广告片规格：</label><em>{{it.specification}}s</em></p>
+                <p><label>目标影厅：</label><em>{{it.targetCinema || '暂无'}}</em></p>
+              </div>
+              <div class="flex-box col-order">
+                <p><label>投放周期：</label><em>{{it.cycle}}天</em></p>
+                <p><label>目标场次：</label><em>{{it.targetSession || '暂无'}}</em></p>
+              </div>
+              <div><p><label>目标影片：</label><span  v-if='it.movieList.length > 0' v-for='item in it.movieList'>《{{item.name}}》</span><span v-if='it.movieList.length == 0'>暂无    </span></p></div>
+            </col>
+            <Col span="5"><div v-for="item in tabPane" v-if="item.key == it.status">{{item.text}}</div></col>
+            <Col span="5">
+               <div v-if="it.status == 1" class="btn-sure-cancel">
+                  <p><Button type="primary" @click="editReject(it.id, it.id, it.cinemaCount)" class="operation-btn button-ok ">确定接单</Button></p>
+                  <p><Button type="primary" @click="editRefuse(it)" class="operation-btn button-ok ">拒绝接单</Button></p>
+                </div>
+                <div>
+                   <Button  class="operation-btn button-ok " :to="{ name: 'order-dispatch-details', params: { id: 1 } }" >查看详情</Button>
+                </div>
+            </col>
           </Row>
         </li>
       </ul>
-      <ul class='itemul' style='padding-left: 28px;text-align: center;' v-if='itemlist.length == 0'> 暂无订单</ul>
-      <Page
-      :total="totalCount"
-      v-if="totalCount>0"
-      class="btnCenter plan-pages"
-      :current="query.pageIndex"
-      :page-size="query.pageSize"
-      show-total
-      show-elevator
-      @on-change="handlepageChange"
-      @on-page-size-change="handlePageSize"
-    />
-    </Row>
-    <dlgRejec ref="reject" v-if="rejectShow" @rejReload="rejload"/>
+      <ul class='itemul no-order-list' v-if='itemlist.length == 0'> 暂无订单数据</ul>
+    </div>
+
+     <Page :total="totalCount"  v-if="totalCount>0" class="btnCenter" :current="pageIndex"
+      :page-size="pageSize"  show-total  show-elevator 
+       @on-change="handlepageChange"  @on-page-size-change="handlepageChange" />
+
+    <dlgRejec ref="reject" v-if="rejectShow" @rejReload="seach"/>
     <targetDlg ref="target" v-if="targetShow" />
-    <refuseDlg ref="refuse" v-if="refuseShow"  @refReload="refload" />
+    <refuseDlg ref="refuse" v-if="refuseShow"  @refReload="seach" />
   </div>
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { nums , querylist } from '@/api/orderDis'
+import { nums , querylist, queryOrderList } from '@/api/orderDis'
 import { formatTimestamp } from '@/util/validateRules'
-import numAdd from './number.vue'
+// import numAdd from './number.vue'
 import dlgRejec from './dlgReject.vue'
 import targetDlg from './targetDlg.vue'
 import refuseDlg from './refuseDlg.vue'
@@ -178,26 +108,59 @@ const timeFormat = 'YYYY-MM-DD'
 
 @Component({
   components: {
-    numAdd,
+    // numAdd,
     dlgRejec,
     targetDlg,
     refuseDlg
   }
 })
 export default class Main extends ViewBase {
-  query: any = {
-    planType: null,
-    videoName: '',
+  totalCount = 0
+  pageIndex = 1 // 页码
+  pageSize = 1 // 页数
+
+  form: any = {
     beginDate: null,
     endDate: null,
+    CinemaId: null,
+    videoId: null, // 广告片id
     status: 1,
-    type: 1,
-    pageIndex: 1,
-    pageSize: 4,
   }
-  // 统计数据
-  nums: any = []
-  // 数据列表
+
+  putDate = []
+
+  // 影院名称
+  cinemaList = [
+    { key: 0, text: '影院1'},
+    { key: 1, text: 'ad2'},
+    { key: 2, text: 'mxmx3'},
+    { key: 3, text: 'addd4'},
+  ]
+
+  // 广告单时间
+  // adverListTime = [
+  //   { key: 0, text: '下单时间'},
+  //   { key: 1, text: '投放开始时间'},
+  //   { key: 2, text: '投放结束时间'},
+  // ]
+
+  // 广告片名称
+  advlistName = [
+    { key: 0, text: '广告1'},
+    { key: 1, text: '广告2'},
+    { key: 2, text: '广告3'},
+  ]
+
+  // tabs
+  tabPane = [
+    {key: 1, text: '待接单', total: null},
+    {key: 2, text: '已接单', total: null},
+    {key: 3, text: '已拒绝', total: null},
+    {key: 4, text: '已失效', total: null},
+    {key: 5, text: '待结算', total: null},
+    {key: 6, text: '已完成', total: null},
+  ]
+
   statusList: any = []
   planTypeList: any = []
   typeList: any = []
@@ -206,40 +169,38 @@ export default class Main extends ViewBase {
   rejectShow = false
   targetShow = false
   refuseShow = false
-  totalCount = 0
 
   showTime = []
 
-
   mounted() {
     this.seach()
+    // this.orderList()
   }
 
-  rejload() {
-    // console.log(12313213)
-    this.seach()
-    // history.go(0)
+  async orderList() {
+    try {
+      const dataList = await queryOrderList({
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize,
+        ...this.form
+      })
+    } catch (ex) {
+       this.handleError(ex)
+    }
   }
 
-  refload() {
-    // console.log(456465465)
-    this.seach()
-    // history.go(0)
-  }
-
-  seachs() {
-    this.query.pageIndex = 1
-    this.seach()
+  handleTabs(id: number) {
+    this.form.status = id + 1
   }
 
   async seach() {
-    // this.loading = true
     try {
-      // 数据统计
-      const data = await nums()
-      this.nums = data.data
-      // 数据列表
-      const datalist = await querylist(this.query)
+
+      const datalist = await querylist({
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize,
+        ...this.form
+      })
       this.statusList = datalist.data.statusList
       this.planTypeList = datalist.data.planTypeList
       this.typeList = datalist.data.typeList
@@ -280,145 +241,89 @@ export default class Main extends ViewBase {
     })
   }
 
-
-  nulldata() {
-    this.showTime = []
-  }
-
   handleChange(data: any) {
-     this.showTime = data
-     this.query.beginDate = Number(formatTimestamp(this.showTime[0])) - 8 * 60 * 60 * 1000
-     this.query.endDate = Number(formatTimestamp(this.showTime[1])) + 16 * 60 * 60 * 1000 - 1
-     this.seachs()
+     this.pageIndex = 1
+     const a = Number(formatTimestamp(data[0])) - 8 * 60 * 60 * 1000
+     const b =  Number(formatTimestamp(data[1])) + 16 * 60 * 60 * 1000 - 1
+     !!data[0] ? this.form.beginDate = a : this.form.beginDate = null
+     !!data[0] ? this.form.endDate = b : this.form.endDate = null
    }
 
   handlepageChange(size: any) {
-    this.query.pageIndex = size
+    this.pageIndex = size
     this.seach()
   }
-  handlePageSize(size: any) {
-    this.query.pageIndex = size
+
+  @Watch('form', {deep: true})
+  watchQuery() {
+    this.pageIndex = 1
     this.seach()
   }
 }
 </script>
 
 <style lang="less" scoped>
-.t-title {
-  width: 100%;
-  height: 50px;
-  background: rgba(249, 249, 249, 1);
-  border-radius: 2px 2px 0 0;
-  line-height: 50px;
-  font-size: 14px;
-  font-weight: 400;
-  color: rgba(36, 129, 215, 1);
-  padding-left: 30px;
+.btnCenter {
+  margin-bottom: 30px;
 }
-.body {
+.order-list-title {
+  padding: 15px 20px;
+  line-height: 23px;
   background: #fff;
-  padding: 16px 0 40px;
+  margin-bottom: 15px;
 }
-.fince-list {
-  .fince-list-big {
-    width: 32%;
-    display: inline-block;
-    height: 130px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 2px;
-    margin-left: 1%;
-    margin-bottom: 12px;
-    border-top: 10px solid #f2f2f2;
-    .fince-list-acc {
+.order-form {
+  .ivu-form-item {
+    margin-right: 20px;
+  }
+  /deep/ .ivu-date-picker {
+    width: 100%;
+    .ivu-input-wrapper {
       width: 100%;
-      font-size: 22px;
-      font-weight: 400;
-      color: #222;
-      line-height: 22px;
-      text-align: center;
-      padding-top: 37px;
-      .accs-big {
-        font-size: 36px;
-      }
-    }
-    .fince-list-sm {
-      width: 100%;
-      height: 14px;
-      font-size: 14px;
-      font-weight: 400;
-      color: rgba(136, 136, 136, 1);
-      line-height: 14px;
-      text-align: center;
-      margin-top: 20px;
-    }
-    .fin-bigs {
-      height: 49%;
-      background: rgba(242, 242, 242, 1);
-      border-radius: 2px;
-      text-align: center;
-      line-height: 77px;
-      .accs-sma {
-        font-size: 30px;
-      }
-      .smas2 {
-        height: 12px;
-        font-size: 12px;
-        font-weight: 400;
-        color: rgba(136, 136, 136, 1);
-        line-height: 14px;
-        margin-left: 5px;
-      }
     }
   }
+  /deep/ .ivu-select-selection {
+    width: auto;
+  }
 }
-.row-ul {
-  padding: 16px 16px 0 16px;
-  .guanggao {
-    width: 15%;
+.order-content {
+  background: #fff;
+  padding: 20px 20px 40px;
+  .no-order-list {
+    text-align: center;
+  }
+  .operation-btn {
+    padding: 0;
+    width: 80px;
     height: 30px;
     line-height: 30px;
     font-size: 14px;
-    text-align: center;
-    float: left;
-  }
-  .uls {
-    width: 85%;
-    float: left;
-    li {
-      width: 12%;
-      height: 30px;
-      border: 1px solid #ccc;
-      text-align: center;
-      float: left;
-      line-height: 30px;
-      margin-left: 12px;
-    }
+    margin-bottom: 10px;
   }
 }
+.query-status {
+  color: #0f4d96;
+  cursor: pointer;
+  padding-left: 10px;
+}
 .itemul {
-  padding: 16px;
   li {
     border: 1px solid rgba(211, 231, 248, 1);
     margin-top: 15px;
-    .li-title {
-      padding: 0 10px 0 10px;
-      height: 50px;
+    .table-header-title {
+      padding: 16px 20px;
       background: #f2f2f2;
-      line-height: 50px;
-      .ora {
-        font-size: 20px;
-        color: rgba(254, 129, 53, 1);
+      p {
+        margin-right: 50px;
       }
-      .button {
-        display: block;
-        float: right;
-        border: 1px solid rgba(59, 152, 255, 1);
-        width: 100px;
-        height: 40px;
-        margin-top: 5px;
-        margin-left: 10px;
-        text-align: center;
-        line-height: 40px;
+    }
+    .table-content-list {
+      padding: 20px 20px 30px;
+      .col-order {
+        margin-bottom: 15px;
+        p {
+          width: 49%;
+        }
       }
     }
     .li-item {
@@ -433,16 +338,16 @@ export default class Main extends ViewBase {
         }
       }
     }
-    .img-order {
-      img {
-        width: 10%;
-      }
-      line-height: 150px;
-      span {
-        margin-left: 10px;
-        font-size: 14px;
-      }
-    }
+  }
+}
+/deep/ .ivu-tabs-nav {
+  width: 93%;
+  padding: 0;
+  .ivu-tabs-tab {
+    margin-right: 16px;
+    width: 16.66%;
+    text-align: center;
+    padding: 10px 0;
   }
 }
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
