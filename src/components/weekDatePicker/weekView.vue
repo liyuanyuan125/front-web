@@ -119,6 +119,8 @@ export default class WeekView extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import '~@/site/lib.less';
+
 .week-view {
   position: absolute;
   left: 0;
@@ -147,8 +149,12 @@ export default class WeekView extends ViewBase {
 
 .week-row-on,
 .week-row:hover {
-  background-color: lighten(#2d8cf0, 38%);
+  background-color: lighten(@c-button, 36%);
   border-radius: 38px;
+
+  .theme-resource & {
+    background-color: lighten(@c-button-resource, 33%);
+  }
 }
 
 .week-row-on {
@@ -157,7 +163,11 @@ export default class WeekView extends ViewBase {
     &:last-child {
       border-radius: 50%;
       color: #fff;
-      background-color: #2d8cf0;
+      background-color: @c-button;
+
+      .theme-resource & {
+        background-color: @c-button-resource;
+      }
     }
   }
 }
@@ -180,7 +190,12 @@ export default class WeekView extends ViewBase {
 }
 
 .week-cell-today {
-  box-shadow: inset 0 0 0 1px #2d8cf0;
+  box-shadow: inset 0 0 0 1px @c-button;
+
+  .theme-resource & {
+    box-shadow: inset 0 0 0 1px @c-button-resource;
+  }
+
   &::after {
     content: '';
     position: absolute;
@@ -189,7 +204,11 @@ export default class WeekView extends ViewBase {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #2d8cf0;
+    background-color: @c-button;
+
+    .theme-resource & {
+      background-color: @c-button-resource;
+    }
   }
 }
 </style>

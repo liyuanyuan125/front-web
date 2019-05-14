@@ -114,6 +114,8 @@ export default class WeekDatePicker extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import '~@/site/lib.less';
+
 .week-date-picker {
   position: relative;
   display: inline-block;
@@ -137,12 +139,27 @@ export default class WeekDatePicker extends ViewBase {
 .week-date-handle {
   display: inline-block;
   line-height: 28px;
+  color: @c-button;
+
+  &:hover {
+    color: shade(@c-button, 10%);
+  }
+
   i, label {
     display: inline-block;
     vertical-align: middle;
+    cursor: pointer;
   }
   label {
     margin-left: 4px;
+  }
+
+  .theme-resource & {
+    color: @c-button-resource;
+
+    &:hover {
+      color: shade(@c-button-resource, 10%);
+    }
   }
 }
 </style>
