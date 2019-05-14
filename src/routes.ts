@@ -437,19 +437,19 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 广告主 - 推广管理 - 广告计划 - 生成广告方案
-  {
-    path: '/pop/plan/scheme/:id/:key',
-    name: 'pop-plan-scheme',
-    component: () => import('./views/pop/pages/index.vue'),
-    meta: {
-      authKey: 'promotion.ad-plan',
-      authAction(route) {
-        const id = parseInt(route.params.id, 10) || 0
-        return id > 0 ? 'edit' : 'create'
-      }
-    }
-  },
+  // // 广告主 - 推广管理 - 广告计划 - 生成广告方案
+  // {
+  //   path: '/pop/plan/scheme/:id/:key',
+  //   name: 'pop-plan-scheme',
+  //   component: () => import('./views/pop/pages/index.vue'),
+  //   meta: {
+  //     authKey: 'promotion.ad-plan',
+  //     authAction(route) {
+  //       const id = parseInt(route.params.id, 10) || 0
+  //       return id > 0 ? 'edit' : 'create'
+  //     }
+  //   }
+  // },
 
   // 广告主 - 推广管理 - 广告片 - 列表
   {
@@ -495,6 +495,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/order/dispatch/index.vue'),
     meta: {
       authKey: 'adOrderManage.order',
+      authAction: 'view',
+      authIsMenu: true,
+    }
+  },
+  // 资源方-广告单-广告详情
+  {
+    path: '/order/dispatch-details/:id',
+    name: 'order-dispatch-details',
+    component: () => import('./views/order/dispatch/details.vue'),
+    meta: {
+      authKey: '',
       authAction: 'view',
       authIsMenu: true,
     }
@@ -587,15 +598,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // // 资源方 - 效果报表 - 成效报表
-  //  {
-  //   path: '/reseport/info',
-  //   name: 'resreport-info',
-  //   component: () => import('./views/resReport/info/index.vue'),
-  //   meta: emptyAuth,
-  // },
-
-
+  // 资源方 - 效果报表 - 成效报表
+   {
+    path: '/reseport/info',
+    name: 'resreport-info',
+    component: () => import('./views/resReport/info/index.vue'),
+    meta: emptyAuth,
+  },
   // TODO: 下面的两个先不做了
 
   // 资源方 - 财务管理 - 收益账单
