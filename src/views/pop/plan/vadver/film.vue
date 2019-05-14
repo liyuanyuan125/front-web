@@ -1,10 +1,20 @@
 <template>
   <div class="component">
-    <Table :columns="columns" :data="inValue" border disabled-hover size="small"/>
+    <Table :columns="columns" :data="inValue" border disabled-hover size="small">
+      <template slot-scope="{ row }" slot="name">
+        <div class="img-wrap">
+          <Img :url="row.mainPicUrl" />
+          <span>{{row.name}}</span>
+        </div>
+      </template>
+      <template slot-scope="{ row }" slot="opentime">
+        <span>{{formatDate(row.openTime)}}</span>
+      </template>
+    </Table> 
     <div class="act-bar">
       <a @click="onAdd" v-if="!type">添加关联影片</a>
     </div>
-    <!-- <AddCFilmModel ref="addCinemaModel" :cinemaend = "incinematype" :addData="inValue" @done="columndata" /> -->
+    <AddCFilmModel ref="addCinemaModel" :cinemaend = "incinematype" :addData="inValue" @done="columndata" />
   </div>
 </template>
 
@@ -12,12 +22,15 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import jsxReactToVue from '@/util/jsxReactToVue'
-import { toMap } from '@/fn/array'
-const makeMap = (list: any[]) => toMap(list, 'id', 'name')
+import AddCFilmModel from './addfilm.vue'
+import Img from '@/components/imagePreviewer/ImagePreviewer.vue'
+import moment from 'moment'
 
+const timeFormat = 'YYYY-MM-DD'
 @Component ({
   components: {
-    // AddCFilmModel
+    AddCFilmModel,
+    Img
   }
 })
 export default class ComponentMain extends ViewBase {
@@ -45,29 +58,18 @@ export default class ComponentMain extends ViewBase {
       {
         title: '影片',
         align: 'center',
-        key: 'shortName',
-        render: (hh: any, { row: { cinemaName } }: any) => {
-          /* tslint:disable */
-          const h = jsxReactToVue(hh)
-          return <a>{cinemaName}</a>
-          /* tslint:enable */
-        }
+        key: 'name',
+        slot: 'name',
       },
       {
-        title: '影片',
+        title: '上映日期',
         align: 'center',
-        key: 'shortName',
-        render: (hh: any, { row: { cinemaName } }: any) => {
-          /* tslint:disable */
-          const h = jsxReactToVue(hh)
-          return <a>{cinemaName}</a>
-          /* tslint:enable */
-        }
+        slot: 'opentime'
       },
       {
-        title: '影片',
+        title: '投放周期',
         align: 'center',
-        key: 'shortName',
+        key: 'openTime',
         render: (hh: any, { row: { cinemaName } }: any) => {
           /* tslint:disable */
           const h = jsxReactToVue(hh)
@@ -76,7 +78,7 @@ export default class ComponentMain extends ViewBase {
         }
       },
       {
-        title: '影片',
+        title: '操作',
         align: 'center',
         key: 'shortName',
         render: (hh: any, { row: { id } }: any) => {
@@ -88,6 +90,10 @@ export default class ComponentMain extends ViewBase {
       }
     ]
     return column
+  }
+
+  formatDate(data: any) {
+    return data ? moment(data).format(timeFormat) : '暂无'
   }
 
   onAdd() {
@@ -127,5 +133,17 @@ export default class ComponentMain extends ViewBase {
   padding: 9px 8px 2px 8px;
   background-color: #eee;
   border-radius: 4px;
+  .img-wrap {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    margin-left: 10%;
+    /deep/ .image-previewer, /deep/ .image-previewer img {
+      height: 100px;
+    }
+    span {
+      margin-left: 10px;
+    }
+  }
 }
 </style>

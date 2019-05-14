@@ -499,6 +499,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authIsMenu: true,
     }
   },
+  // 资源方-广告单-广告详情
+  {
+    path: '/order/dispatch-details/:id',
+    name: 'order-dispatch-details',
+    component: () => import('./views/order/dispatch/details.vue'),
+    meta: {
+      authKey: '',
+      authAction: 'view',
+      authIsMenu: true,
+    }
+  },
 
   // TODO: 下面的两个页面应该合并
 
