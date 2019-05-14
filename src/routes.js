@@ -395,6 +395,13 @@ const mainLayoutRoutes = [
             authIsMenu: true,
         }
     },
+    //资源方 - 广告单 - 详情页
+    {
+        path: '/order/dispatch/details/:id',
+        name: 'order-dispatch-details',
+        component: () => import('./views/order/dispatch/details.vue'),
+        meta: emptyAuth,
+    },
     // TODO: 下面的两个页面应该合并
     // 广告主 - 广告单管理 - 执行单列表
     {

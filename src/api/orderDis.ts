@@ -10,6 +10,14 @@ export async function nums() {
 export async function querylist(query: any) {
     const res = await get('/xadvert/dispatchs' , query)
     return res
-  }
+}
+
+/**
+ * 广告单列表接口
+ * @param data
+ */
+export async function queryOrderList(data: any) {
+  const res = await get('/xadvert/orders', data)
+}
 
 
