@@ -1,27 +1,23 @@
 <template>
   <div class="page">
-    <div class="player-wrap">
-      <Button v-auth="'ads.account-manage.infochange'">bbb😆</Button>
-      <Button v-auth="'xxx'">哈哈😆</Button>
-      <!-- <vue-plyr>
-        <video src="http://www.runoob.com/try/demo_source/mov_bbb.mp4"></video>
-      </vue-plyr> -->
-    </div>
+    <WeekDatePicker v-model="weekDate"/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { VuePlyr } from 'vue-plyr'
-import 'vue-plyr/dist/vue-plyr.css'
+import WeekDatePicker from '@/components/weekDatePicker'
 
 @Component({
   components: {
-    VuePlyr
+    WeekDatePicker
   }
 })
 export default class Main extends ViewBase {
+  // weekDate = [null, null]
+  weekDate = [new Date(2019, 4, 9), new Date(2019, 4, 15)]
+
   async mounted() {
 
   }
@@ -29,7 +25,4 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-.player-wrap {
-  width: 600px;
-}
 </style>
