@@ -29,7 +29,7 @@
 
            <Col :span="6" v-if="cinemaList.length > 1">
             <FormItem label="影院名称">
-              <Select v-model='form.cinema' filterable  clearable placeholder="影院名称" @on-change="() => pageIndex = 1">
+              <Select v-model='form.CinemaId' filterable  clearable placeholder="影院名称" @on-change="() => pageIndex = 1">
                   <Option
                     v-for="item in cinemaList"
                     :key="item.key"
@@ -41,7 +41,7 @@
           
           <Col :span="6">
             <FormItem label="广告片名称">
-              <Select v-model='form.advFilmName' filterable  clearable placeholder="广告片名称" @on-change="() => pageIndex = 1">
+              <Select v-model='form.videoId' filterable  clearable placeholder="广告片名称" >
                   <Option
                     v-for="item in advlistName"
                     :key="item.key"
@@ -110,9 +110,9 @@
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { nums , querylist } from '@/api/orderDis'
+import { nums , querylist, queryOrderList } from '@/api/orderDis'
 import { formatTimestamp } from '@/util/validateRules'
-import numAdd from './number.vue'
+// import numAdd from './number.vue'
 import dlgRejec from './dlgReject.vue'
 import targetDlg from './targetDlg.vue'
 import refuseDlg from './refuseDlg.vue'
@@ -121,7 +121,7 @@ const timeFormat = 'YYYY-MM-DD'
 
 @Component({
   components: {
-    numAdd,
+    // numAdd,
     dlgRejec,
     targetDlg,
     refuseDlg
@@ -129,19 +129,17 @@ const timeFormat = 'YYYY-MM-DD'
 })
 export default class Main extends ViewBase {
   totalCount = 0
-  pageIndex = 1
-  pageSize = 1
+  pageIndex = 1 // 页码
+  pageSize = 1 // 页数
 
   form: any = {
-    // advTime: 0,
     beginDate: null,
     endDate: null,
-    cinemaName: null,
-    advFilmName: null,
+    CinemaId: null,
+    videoId: null, // 广告片id
     status: 1,
-    type: 1,
   }
-  oldQuery: any = {}
+
   putDate = []
 
   // 影院名称
@@ -189,19 +187,28 @@ export default class Main extends ViewBase {
 
   mounted() {
     this.seach()
+    // this.orderList()
   }
-  // search (){
-  //   this.pageIndex = 1
-  // }
-  handleTabs(name: number) {
+
+  async orderList() {
+    try {
+      const dataList = await queryOrderList({
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize,
+        ...this.form
+      })
+    } catch (ex) {
+       this.handleError(ex)
+    }
+  }
+
+  handleTabs(id: number) {
+    this.form.status = id + 1
   }
 
   async seach() {
     try {
-      this.oldQuery = {
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize,
-      }
+
       const datalist = await querylist({
         pageIndex: this.pageIndex,
         pageSize: this.pageSize,
@@ -262,6 +269,7 @@ export default class Main extends ViewBase {
 
   @Watch('form', {deep: true})
   watchQuery() {
+    this.pageIndex = 1
     this.seach()
   }
 }
