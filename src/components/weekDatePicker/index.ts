@@ -1,3 +1,3 @@
-import WeekDatePicker from './WeekDatePicker.vue'
+import WeekDatePicker from './weekDatePicker.vue'
 
 export default WeekDatePicker
