@@ -524,6 +524,22 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  // 资源方 - 广告单管理 - 上刊管理
+   {
+    path: '/order/lastissue',
+    name: 'order-lastissue',
+    component: () => import('./views/order/lastissue/index.vue'),
+    meta: emptyAuth,
+  },
+
+  // 资源方 - 广告单管理 - 监播管理
+   {
+    path: '/order/supervision',
+    name: 'order-supervision',
+    component: () => import('./views/order/supervision/index.vue'),
+    meta: emptyAuth,
+  },
+
   // 广告主 - 广告单管理 - DCP包列表
   {
     path: '/order/dcp',
@@ -571,13 +587,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 资源方 - 效果报表 - 成效报表
-   {
-    path: '/reseport/info',
-    name: 'resreport-info',
-    component: () => import('./views/resReport/info/index.vue'),
-    meta: emptyAuth,
-  },
+  // // 资源方 - 效果报表 - 成效报表
+  //  {
+  //   path: '/reseport/info',
+  //   name: 'resreport-info',
+  //   component: () => import('./views/resReport/info/index.vue'),
+  //   meta: emptyAuth,
+  // },
+
 
   // TODO: 下面的两个先不做了
 
