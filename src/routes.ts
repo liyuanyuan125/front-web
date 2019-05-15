@@ -668,6 +668,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import(/* webpackChunkName: "about" */'./views/about.vue'),
     meta: emptyAuth,
   },
+
+  // kol - koll列表
+  {
+    path: '/kol/kollist',
+    name: 'kol-kollist',
+    component: () => import('./views/kol/kollist/index.vue'),
+    meta: emptyAuth
+  },
 ] // end of mainLayoutRoutes
 
 const errorRoutes: RouteConfigEnhance[] = [
