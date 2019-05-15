@@ -600,7 +600,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 资源方 - 效果报表 - 成效报表
    {
-    path: '/reseport/info',
+    path: '/resreport/info',
     name: 'resreport-info',
     component: () => import('./views/resReport/info/index.vue'),
     meta: emptyAuth,
@@ -667,6 +667,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'about',
     component: () => import(/* webpackChunkName: "about" */'./views/about.vue'),
     meta: emptyAuth,
+  },
+
+  // kol - koll列表
+  {
+    path: '/kol/kollist',
+    name: 'kol-kollist',
+    component: () => import('./views/kol/kollist/index.vue'),
+    meta: emptyAuth
   },
 ] // end of mainLayoutRoutes
 

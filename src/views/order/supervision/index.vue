@@ -7,7 +7,7 @@
     </div>
     <div class='body'>
       <Row class='row-ul'>
-       <Col span='6'> &nbsp;</Col>
+       <Col span='6'><WeekDatePicker v-model="weekDate"/></Col>
         <Col :span="14">
           <Col style='margin-left: 12px;' span="8">
             <Select v-model='query.id' clearable  filterable  @on-change="seachs">
@@ -72,6 +72,7 @@ import moment from 'moment'
 import { querylist  } from '@/api/supervision'
 import { formatTimestamp } from '@/util/validateRules'
 import UploadButton, { SuccessEvent } from '@/components/UploadButton.vue'
+import WeekDatePicker from '@/components/weekDatePicker'
 
 
 const timeFormat = 'YYYY-MM-DD'
@@ -79,9 +80,17 @@ const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
     UploadButton,
+    WeekDatePicker
   }
 })
 export default class Main extends ViewBase {
+
+  startTime: any = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000
+  endTime: any = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1
+  datanum: any = 24 * 60 * 60 * 1000 * 7 // 一周的时间戳
+  weekDate = [new Date(this.startTime), new Date(this.endTime)]
+
+
   query: any = {
     id: 2,
   }
@@ -95,9 +104,6 @@ export default class Main extends ViewBase {
 
   itemlist: any = []
 
-  startTime: any = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000 // 本周的开始时间
-  endTime: any = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1 // 本周的结束时间
-  datanum: any = 24 * 60 * 60 * 1000 * 7 // 一周的时间戳
 
 
   mounted() {
@@ -136,16 +142,9 @@ export default class Main extends ViewBase {
     /***参数都是以周一为基准的***/
     this.startTime = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000  // 本周的开始时间
     this.endTime = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1 // 本周的结束时间
-      // console.log(new Date(this.startTime))
-      // console.log(new Date(this.endTime))
-    // //上周的开始时间
-    // console.log(this.getTime(7));
-    // //上周的结束时间
-    // console.log(this.getTime(1));
-    // //本周的开始时间
-    // console.log(this.getTime(0));
-    // //本周的结束时间
-    // console.log(this.getTime(-6));
+
+    // console.log(new Date(this.startTime))
+    // console.log(new Date(this.endTime))
   }
 
   // 上周

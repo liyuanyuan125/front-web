@@ -1,10 +1,10 @@
 <template>
   <div class="page home-bg">
-    <p>恭喜，广告计划创建成功</p>
-    <div>
+    <h3 class="title">恭喜，广告计划创建成功</h3>
+    <div class="audit">
       平台审核中，请注意查收最终的投放方案
     </div>
-    <div>您还可以： 【导出推广方案】或【联系商务：（QQ：123456789）（电话：13146015795）（邮箱：zhiping.zhao@aiads.com）】</div>
+    <div class="audit-btn">您还可以： 【导出推广方案】或【联系商务：（QQ：123456789）（电话：13146015795）（邮箱：zhiping.zhao@aiads.com）】</div>
   </div>
 </template>
 
@@ -19,13 +19,18 @@ export default class App extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-.setp-wrap {
-  height: 104px;
-  padding: 33px 30px 33px;
-  font-size: 14px;
-  font-weight: 500;
-  border-bottom: solid 10px #f2f2f2;
-  color: #2481d7;
+.title {
+  text-align: center;
+  font-size: 26px;
+  margin-top: 40px;
+}
+.audit {
+  text-align: center;
+  height: 300px;
+  line-height: 300px;
+}
+.audit-btn {
+  text-align: center;
 }
 </style>
 
