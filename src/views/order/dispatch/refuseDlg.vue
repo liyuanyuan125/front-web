@@ -58,7 +58,8 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { queryList, leafletList, carryRefuse } from '@/api/leafletDlg'
+// import { queryList, leafletList, carryRefuse } from '@/api/leafletDlg'
+// import { refuse } from '@/api/orderDis'
 import { formatCurrency } from '@/fn/string'
 import { toast, warning } from '@/ui/modal.ts'
 
@@ -72,28 +73,22 @@ export default class DlgEditCinema extends ViewBase {
     this.showDlg = true
   }
 
-  seach() {
-
-  }
-
-  format(money: any) {
-    formatCurrency(money)
-  }
+  // format(money: any) {
+  //   formatCurrency(money)
+  // }
 
   cancel() {
     this.showDlg = false
   }
 
-  async open() {
-    try {
-      await carryRefuse(this.data.id)
-      this.cancel()
-      this.$emit('refReload')
-      toast('操作成功')
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
+  // async open() {
+  //   try {
+  //     await refuse(this.data.id)
+  //     this.$emit('refReload')
+  //   } catch (ex) {
+  //     this.handleError(ex)
+  //   }
+  // }
 }
 </script>
 

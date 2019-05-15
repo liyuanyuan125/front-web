@@ -13,9 +13,9 @@
       <p>当前共有目标影院 <span>{{total}}个</span></p>
     </div>
     <Table   stripe :columns="columns" :data="id == 0 ? countData : tableDate">
-      <template slot-scope="{ row }" slot="citys">
+      <!-- <template slot-scope="{ row }" slot="citys">
         {{row.citys}}
-      </template>
+      </template> -->
 
       <template slot-scope="{ row }" slot="code">
         {{row.code}}
@@ -43,8 +43,9 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { findcarry, leafletList, sureLeaflet, findCinema } from '@/api/leafletDlg'
-import targetDlg from './targetDlg.vue'
+import { findcarry } from '@/api/leafletDlg'
+import { queryDetail } from '@/api/orderDis'
+// import targetDlg from './targetDlg.vue'
 
 @Component
 export default class DlgEditCinema extends ViewBase {
@@ -55,7 +56,7 @@ export default class DlgEditCinema extends ViewBase {
   total = 0
   dataForm: any = {
     pageIndex: 1,
-    pageSize: 6,
+    pageSize: 20,
   }
 
   countData: any = []
@@ -63,16 +64,15 @@ export default class DlgEditCinema extends ViewBase {
 
   tableDate: any = []
   columns: any = [
-    {
-      title: '区/县/市',
-      width: 190,
-      slot: 'citys',
-      align: 'center'
-    },
+    // {
+    //   title: '区/县/市',
+    //   width: 190,
+    //   slot: 'citys',
+    //   align: 'center'
+    // },
     {
       title: '转资编码',
       slot: 'code',
-      width: 160,
       align: 'center'
     },
     {
@@ -99,8 +99,8 @@ export default class DlgEditCinema extends ViewBase {
   async seach() {
     try {
       let res: any = null
-      if (this.type == 1) {
-        res = await findCinema(this.id, {...this.dataForm})
+      if (this.type == 1) { // id查看 暂时关闭
+        // res = await queryDetail(this.id, {...this.dataForm})
       } else {
         res = await findcarry(this.id, {...this.dataForm})
       }

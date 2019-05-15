@@ -54,7 +54,7 @@
             <Col span="14">
               <div class="flex-box col-order">
                 <p><label>广告片名称：</label><em>{{it.videoName}}</em></p>
-                <p v-if="it.cinemaCount > 1"><label>目标影院：</label><em>{{it.cinemaCount}}</em> <span class="query-status"  @click="edittarget(it.executeOrderId, 1)" >查看</span></p>
+                <p v-if="it.cinemaCount"><label>目标影院：</label><em>{{it.cinemaCount}}</em> <span class="query-status"  @click="edittarget(it.id, 1)" >查看</span></p>
                 <p v-else><label>目标影院：</label><em>影厅名字</em></p>
               </div>
               <div class="flex-box col-order">
@@ -70,7 +70,7 @@
             <Col span="5"><div v-for="item in tabPane" v-if="item.key == it.status">{{item.text}}</div></col>
             <Col span="5">
                <div v-if="it.status == 1" class="btn-sure-cancel">
-                  <p><Button type="primary" @click="editReject(it.id, it.id, it.cinemaCount)" class="operation-btn button-ok ">确定接单</Button></p>
+                  <p><Button type="primary" @click="editReject(it.id)" class="operation-btn button-ok ">确定接单</Button></p>
                   <p><Button type="primary" @click="editRefuse(it)" class="operation-btn button-ok ">拒绝接单</Button></p>
                 </div>
                 <div>
@@ -87,7 +87,7 @@
       :page-size="pageSize"  show-total  show-elevator 
        @on-change="handlepageChange"  @on-page-size-change="handlepageChange" />
 
-    <dlgRejec ref="reject" v-if="rejectShow" @rejReload="seach"/>
+    <dlgRejec ref="reject" v-model="rejectVisible" v-if="rejectVisible.visible" @rejReload="seach"/>
     <targetDlg ref="target" v-if="targetShow" />
     <refuseDlg ref="refuse" v-if="refuseShow"  @refReload="seach" />
   </div>
@@ -97,7 +97,7 @@
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { nums , querylist, queryOrderList } from '@/api/orderDis'
+import { querylist, queryOrderList } from '@/api/orderDis'
 import { formatTimestamp } from '@/util/validateRules'
 // import numAdd from './number.vue'
 import dlgRejec from './dlgReject.vue'
@@ -166,9 +166,14 @@ export default class Main extends ViewBase {
   typeList: any = []
   itemlist: any = []
   // loading: false
-  rejectShow = false
+
+  // rejectShow = false
   targetShow = false
   refuseShow = false
+
+  rejectVisible: any = {
+    visible: false
+  }
 
   showTime = []
 
@@ -177,17 +182,17 @@ export default class Main extends ViewBase {
     // this.orderList()
   }
 
-  async orderList() {
-    try {
-      const dataList = await queryOrderList({
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize,
-        ...this.form
-      })
-    } catch (ex) {
-       this.handleError(ex)
-    }
-  }
+  // async orderList() {
+  //   try {
+  //     const dataList = await queryOrderList({
+  //       pageIndex: this.pageIndex,
+  //       pageSize: this.pageSize,
+  //       ...this.form
+  //     })
+  //   } catch (ex) {
+  //      this.handleError(ex)
+  //   }
+  // }
 
   handleTabs(id: number) {
     this.form.status = id + 1
@@ -219,12 +224,15 @@ export default class Main extends ViewBase {
       // this.loading = false
     }
   }
-
-  editReject(id: any, planId: any, length: any) {
-    this.rejectShow = true
-    this.$nextTick(() => {
-      (this.$refs.reject as any).init(id, planId, length, 1)
-    })
+  // 确定接单
+  editReject(id: any) {
+    this.rejectVisible = {
+      visible: true,
+      id
+    }
+    // this.$nextTick(() => {
+    //   (this.$refs.reject as any).init(id)
+    // })
   }
 
   editRefuse(id: any) {
