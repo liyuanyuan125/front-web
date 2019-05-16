@@ -1,9 +1,11 @@
 <template>
-  <div class="week-date-picker" ref="box">
+  <div class="week-date-picker">
     <DatePicker
       v-model="pickerModel"
       :open="pickerOpen"
-      @on-clickoutside="pickerOpen = false">
+      @on-clickoutside="pickerOpen = false"
+      transfer
+      ref="picker">
       <a @click="pickerOpen = !pickerOpen" class="week-date-handle">
         <Icon type="ios-calendar-outline"/>
         <label>{{displayValue}}</label>
@@ -17,7 +19,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Vue from 'vue'
 import WeekView from './weekView.vue'
-import { toRange } from './util'
+import { toRange, findChildren } from './util'
 
 @Component
 export default class WeekDatePicker extends ViewBase {
@@ -56,10 +58,10 @@ export default class WeekDatePicker extends ViewBase {
   // 硬插入 weekVue 实例
   // TODO: 黑魔法，注意升级 iview 后的影响
   insertWeekView() {
-    const box = this.$refs.box as HTMLDivElement
-    const cells = box.querySelector('.ivu-date-picker-cells') as HTMLDivElement
+    const cells = findChildren(this.$refs.picker as Vue, 'ivu-date-picker-cells')
+    const cellsEl = cells!.$el
     const viewBox = document.createElement('div')
-    cells.after ? cells.after(viewBox) : cells.parentElement!.appendChild(viewBox)
+    cellsEl.after ? cellsEl.after(viewBox) : cellsEl.parentElement!.appendChild(viewBox)
 
     this.weekView = new WeekView({
       propsData: {
@@ -76,9 +78,10 @@ export default class WeekDatePicker extends ViewBase {
   // 利用 vue 未文档化的 api，监听内部组件状态的改变
   // TODO: 黑魔法，注意升级 iview 后的影响
   watchDatePane() {
-    const box = this.$refs.box as HTMLDivElement
-    const panel = box.querySelector('.ivu-picker-panel-body-wrapper')
-    const panelVue = (panel as any).__vue__ as Vue
+    const panelVue = findChildren(this.$refs.picker as Vue, 'ivu-picker-panel-body-wrapper') as Vue
+    // 添加一个又臭又长的类名，以便可以在 transfer 模式下样式化
+    panelVue!.$el.classList.add('week-date-picker-panel-body-wrapper')
+
     const watchHandler = () => {
       const view = (panelVue as any).pickerTable as string
       const date = (panelVue as any).panelDate as Date
@@ -113,6 +116,25 @@ export default class WeekDatePicker extends ViewBase {
 }
 </script>
 
+<style lang="less">
+.week-date-picker-panel-body-wrapper {
+  .ivu-picker-panel-content {
+    position: relative;
+  }
+  .ivu-date-picker-cells {
+    position: relative;
+    visibility: hidden;
+    z-index: 900;
+    background-color: #fff;
+  }
+  .ivu-date-picker-cells-month,
+  .ivu-date-picker-cells-year {
+    visibility: visible;
+    z-index: 980;
+  }
+}
+</style>
+
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 
@@ -120,20 +142,6 @@ export default class WeekDatePicker extends ViewBase {
   position: relative;
   display: inline-block;
   user-select: none;
-  /deep/ .ivu-picker-panel-content {
-    position: relative;
-  }
-  /deep/ .ivu-date-picker-cells {
-    position: relative;
-    visibility: hidden;
-    z-index: 900;
-    background-color: #fff;
-  }
-  /deep/ .ivu-date-picker-cells-month,
-  /deep/ .ivu-date-picker-cells-year {
-    visibility: visible;
-    z-index: 980;
-  }
 }
 
 .week-date-handle {
