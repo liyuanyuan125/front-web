@@ -2,7 +2,8 @@
   <div class="page home-bg">
     <h2 class="layout-nav-title">广告单</h2>
     <div class="order-list-title">以下广告单已经过平台审核，接单后需要按照广告单中要求投放的影片在您的影院进行排播；结算方式[CPM（按曝光人次计费）]
-您当前影院为 <span v-if="cinemaList.length == 1">{{cinemaList.text}}</span><span>您当前共有 {{cinemaList.length}} 家影院的广告代理权</span>
+<span v-if="cinemaList.length == 1">您当前影院为 {{cinemaList[0].shortName}}</span>
+<span v-else>您当前共有 {{cinemaTotalCount}} 家影院的广告代理权</span>
      </div>
     <div class="order-content">
       <Form :model="form" :label-width="90" class=" edit-input order-form">
@@ -14,26 +15,26 @@
             </FormItem>
           </Col>
 
-           <Col :span="6" v-if="cinemaList.length > 1">
+           <Col :span="7">
             <FormItem label="影院名称">
-              <Select v-model='form.CinemaId' filterable  clearable placeholder="影院名称" @on-change="() => pageIndex = 1">
+              <Select v-model='form.CinemaId' filterable clearable placeholder="影院名称">
                   <Option
                     v-for="item in cinemaList"
-                    :key="item.key"
-                    :value="item.key"
-                  >{{item.text}}</Option>
+                    :key="item.id"
+                    :value="item.id"
+                  >{{item.shortName}}</Option>
                 </Select>
             </FormItem>
           </Col>
           
-          <Col :span="6">
+          <Col :span="7">
             <FormItem label="广告片名称">
               <Select v-model='form.videoId' filterable  clearable placeholder="广告片名称" >
                   <Option
                     v-for="item in advlistName"
-                    :key="item.key"
-                    :value="item.key"
-                  >{{item.text}}</Option>
+                    :key="item.videoId"
+                    :value="item.videoId"
+                  >{{item.videoName}}</Option>
                 </Select>
             </FormItem>
           </Col>
@@ -41,40 +42,45 @@
       </Form>
 
       <Tabs @on-click="handleTabs">
-        <TabPane v-for="tab in tabPane" :key="tab.key" :label="tab.text + '('+tab.key+')'"></TabPane>
+        <TabPane v-for="tab in statusList" :key="tab.key" v-if="tab.key != 0 && tab.key != 8" 
+        :label="handleJoin(tab)"></TabPane>
       </Tabs>
 
       <ul class='itemul' v-auth="'adordermanage.order#view'">
         <li v-for='(it,index) in itemlist' :key='index'>
           <div class="table-header-title flex-box">
-            <p><label>投放排期：</label><em>{{it.beginDate}} ~ {{it.endDate}}</em></p>
+            <p><label>投放排期：</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
             <p><label>预估最大收益/(元)：</label><em>{{it.estimateRevenue}}</em></p>
           </div>
           <Row class="table-content-list" type="flex" justify="center" align="middle">
             <Col span="14">
               <div class="flex-box col-order">
                 <p><label>广告片名称：</label><em>{{it.videoName}}</em></p>
-                <p v-if="it.cinemaCount"><label>目标影院：</label><em>{{it.cinemaCount}}</em> <span class="query-status"  @click="edittarget(it.id, 1)" >查看</span></p>
-                <p v-else><label>目标影院：</label><em>影厅名字</em></p>
+                <p v-if="it.targetCinemas.length">
+                  <label>目标影院：</label>
+                  <em>{{it.targetCinemas.length}}家</em> 
+                  <span class="query-status"  @click="edittarget(it.id, 1)" >查看</span></p>
+                <p v-else><label>目标影院：</label><em>{{it.cinemaName}}</em></p>
               </div>
               <div class="flex-box col-order">
-                <p><label>广告片规格：</label><em>{{it.specification}}s</em></p>
-                <p><label>目标影厅：</label><em>{{it.targetCinema || '暂无'}}</em></p>
+                <p><label>广告片规格：</label><em>{{it.specification || 0}}s</em></p>
+                <p><label>目标影厅：</label><em>{{it.hallsCount || '暂无'}}</em></p>
               </div>
               <div class="flex-box col-order">
-                <p><label>投放周期：</label><em>{{it.cycle}}天</em></p>
+                <p><label>投放周期：</label><em>{{it.cycle || 0}}天</em></p>
                 <p><label>目标场次：</label><em>{{it.targetSession || '暂无'}}</em></p>
               </div>
-              <div><p><label>目标影片：</label><span  v-if='it.movieList.length > 0' v-for='item in it.movieList'>《{{item.name}}》</span><span v-if='it.movieList.length == 0'>暂无    </span></p></div>
+              <div><p><label>目标影片：</label><span  v-if='it.targetMovies.length > 0' 
+                v-for='item in it.targetMovies'>《{{item.movieName}}》</span><span v-if='it.targetMovies.length == 0'>暂无    </span></p></div>
             </col>
-            <Col span="5"><div v-for="item in tabPane" v-if="item.key == it.status">{{item.text}}</div></col>
+            <Col span="5"><div v-for="item in statusList" v-if="item.key == it.status">{{item.text}}</div></col>
             <Col span="5">
-               <div v-if="it.status == 1" class="btn-sure-cancel">
+               <div  class="btn-sure-cancel">
                   <p><Button type="primary" @click="editReject(it.id)" class="operation-btn button-ok ">确定接单</Button></p>
                   <p><Button type="primary" @click="editRefuse(it)" class="operation-btn button-ok ">拒绝接单</Button></p>
                 </div>
-                <div>
-                   <Button  class="operation-btn button-ok " :to="{ name: 'order-dispatch-details', params: { id: 1 } }" >查看详情</Button>
+                <div >
+                   <Button type="primary" class="operation-btn button-ok " :to="{ name: 'order-dispatch-details', params: { id: it.id } }" >查看详情</Button>
                 </div>
             </col>
           </Row>
@@ -87,24 +93,23 @@
       :page-size="pageSize"  show-total  show-elevator 
        @on-change="handlepageChange"  @on-page-size-change="handlepageChange" />
 
-    <dlgRejec ref="reject" v-model="rejectVisible" v-if="rejectVisible.visible" @rejReload="seach"/>
+    <dlgRejec ref="reject" v-model="rejectVisible" v-if="rejectVisible.visible" @rejReload="orderList"/>
     <targetDlg ref="target" v-if="targetShow" />
-    <refuseDlg ref="refuse" v-if="refuseShow"  @refReload="seach" />
+    <refuseDlg ref="refuse" v-if="refuseShow"  @refReload="orderList" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import moment from 'moment'
-import { querylist, queryOrderList } from '@/api/orderDis'
-import { formatTimestamp } from '@/util/validateRules'
-// import numAdd from './number.vue'
+import { queryOrderList, queryCinemaList, queryVideoName } from '@/api/norderDis'
+import { formatConversion } from '@/util/validateRules.ts'
+import { getUser } from '@/store'
 import dlgRejec from './dlgReject.vue'
 import targetDlg from './targetDlg.vue'
 import refuseDlg from './refuseDlg.vue'
 
-const timeFormat = 'YYYY-MM-DD'
+// const timeFormat = 'YYYY-MM-DD'
 
 @Component({
   components: {
@@ -117,7 +122,8 @@ const timeFormat = 'YYYY-MM-DD'
 export default class Main extends ViewBase {
   totalCount = 0
   pageIndex = 1 // 页码
-  pageSize = 1 // 页数
+  pageSize = 20 // 页数
+  putDate = []
 
   form: any = {
     beginDate: null,
@@ -127,47 +133,19 @@ export default class Main extends ViewBase {
     status: 1,
   }
 
-  putDate = []
-
-  // 影院名称
-  cinemaList = [
-    { key: 0, text: '影院1'},
-    { key: 1, text: 'ad2'},
-    { key: 2, text: 'mxmx3'},
-    { key: 3, text: 'addd4'},
-  ]
-
-  // 广告单时间
-  // adverListTime = [
-  //   { key: 0, text: '下单时间'},
-  //   { key: 1, text: '投放开始时间'},
-  //   { key: 2, text: '投放结束时间'},
-  // ]
+  // 影院名称list
+  cinemaList = []
+  cinemaTotalCount = null
 
   // 广告片名称
-  advlistName = [
-    { key: 0, text: '广告1'},
-    { key: 1, text: '广告2'},
-    { key: 2, text: '广告3'},
-  ]
+  advlistName = []
 
-  // tabs
-  tabPane = [
-    {key: 1, text: '待接单', total: null},
-    {key: 2, text: '已接单', total: null},
-    {key: 3, text: '已拒绝', total: null},
-    {key: 4, text: '已失效', total: null},
-    {key: 5, text: '待结算', total: null},
-    {key: 6, text: '已完成', total: null},
-  ]
-
+  // 状态列表
   statusList: any = []
   planTypeList: any = []
   typeList: any = []
   itemlist: any = []
-  // loading: false
 
-  // rejectShow = false
   targetShow = false
   refuseShow = false
 
@@ -175,66 +153,97 @@ export default class Main extends ViewBase {
     visible: false
   }
 
-  showTime = []
-
-  mounted() {
-    this.seach()
-    // this.orderList()
+  get formatConversion() {
+    return formatConversion
   }
 
-  // async orderList() {
-  //   try {
-  //     const dataList = await queryOrderList({
-  //       pageIndex: this.pageIndex,
-  //       pageSize: this.pageSize,
-  //       ...this.form
-  //     })
-  //   } catch (ex) {
-  //      this.handleError(ex)
-  //   }
-  // }
+  mounted() {
+    this.queryCinemaList()
+    // this.queryVideoName()
+    this.orderList()
+  }
+
+  handleJoin(tab: any) {
+    if ('num' in tab) {
+      return `${tab.text}(${tab.num})`
+    } else {
+      return tab.text
+    }
+  }
+  async queryCinemaList() {
+    try {
+      const companyId = getUser() && getUser()!.companyId
+      const {
+        data: {items, totalCount}
+      } = await queryCinemaList({
+        pageIndex: 1,
+        pageSize: 5,
+        companyId
+      })
+      this.cinemaList = items || []
+      this.cinemaTotalCount = totalCount
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async queryVideoName() {
+    try {
+      const {
+        data: {items} } = await queryVideoName({})
+      this.advlistName = items || []
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async orderList() {
+    try {
+      const dataList = await queryOrderList({
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize,
+        ...this.form
+      })
+      this.totalCount = dataList.data.totalCount
+      // 处理空数组null转化为[]
+      this.itemlist = (dataList.data.items || []).map( (item: any) => {
+        return {
+          ...item,
+          targetCinemas: item.targetCinemas || [],
+          targetMovies: item.targetMovies || []
+        }
+      })
+      // 处理订单统计
+      const orderCount = dataList.data.orderCount
+      dataList.data.statusList.map( (item: any) => {
+        if (item.text == '待接单') {
+          item.num = orderCount.waiting
+        } else if (item.text == '待执行') {
+          item.num = orderCount.unexecute
+        } else if (item.text == '执行中') {
+          item.num = orderCount.beexecute
+        } else if (item.text == '待结算') {
+          item.num = orderCount.besettlement
+        }
+      })
+      this.statusList = dataList.data.statusList
+    } catch (ex) {
+       this.handleError(ex)
+    }
+  }
 
   handleTabs(id: number) {
     this.form.status = id + 1
   }
 
-  async seach() {
-    try {
-
-      const datalist = await querylist({
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize,
-        ...this.form
-      })
-      this.statusList = datalist.data.statusList
-      this.planTypeList = datalist.data.planTypeList
-      this.typeList = datalist.data.typeList
-      this.totalCount = datalist.data.totalCount
-      this.itemlist = (datalist.data.items || []).map((it: any) => {
-        return {
-          ...it,
-          createTime: moment(it.createTime).format(timeFormat),
-          beginDate: moment(it.beginDate).format(timeFormat),
-          endDate: moment(it.endDate).format(timeFormat)
-        }
-      })
-    } catch (ex) {
-      this.handleError(ex)
-    } finally {
-      // this.loading = false
-    }
-  }
   // 确定接单
   editReject(id: any) {
     this.rejectVisible = {
       visible: true,
       id
     }
-    // this.$nextTick(() => {
-    //   (this.$refs.reject as any).init(id)
-    // })
   }
-
+  // 拒绝接单
   editRefuse(id: any) {
     this.refuseShow = true
     this.$nextTick(() => {
@@ -251,21 +260,19 @@ export default class Main extends ViewBase {
 
   handleChange(data: any) {
      this.pageIndex = 1
-     const a = Number(formatTimestamp(data[0])) - 8 * 60 * 60 * 1000
-     const b =  Number(formatTimestamp(data[1])) + 16 * 60 * 60 * 1000 - 1
-     !!data[0] ? this.form.beginDate = a : this.form.beginDate = null
-     !!data[0] ? this.form.endDate = b : this.form.endDate = null
+     this.form.beginDate = !!data[0] ? formatConversion(data[0], 2) : null
+     this.form.endDate = !!data[1] ?  formatConversion(data[1], 2) : null
    }
 
   handlepageChange(size: any) {
     this.pageIndex = size
-    this.seach()
+    this.orderList()
   }
 
   @Watch('form', {deep: true})
   watchQuery() {
     this.pageIndex = 1
-    this.seach()
+    this.orderList()
   }
 }
 </script>
@@ -298,6 +305,7 @@ export default class Main extends ViewBase {
   background: #fff;
   padding: 20px 20px 40px;
   .no-order-list {
+    margin-top: 40px;
     text-align: center;
   }
   .operation-btn {
@@ -353,7 +361,7 @@ export default class Main extends ViewBase {
   padding: 0;
   .ivu-tabs-tab {
     margin-right: 16px;
-    width: 16.66%;
+    width: 14.2%;
     text-align: center;
     padding: 10px 0;
   }

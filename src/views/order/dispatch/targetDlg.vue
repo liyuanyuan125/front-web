@@ -29,9 +29,7 @@
     <Page :total="total" v-if="total>0" class="btnCenter"
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
-      :page-size-opts="[6, 12, 18, 24]"
       show-total
-      show-sizer
       show-elevator
       @on-change="sizeChangeHandle"
       @on-page-size-change="currentChangeHandle"/>
@@ -44,7 +42,7 @@
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { findcarry } from '@/api/leafletDlg'
-import { queryDetail } from '@/api/orderDis'
+import { queryDetail } from '@/api/norderDis'
 // import targetDlg from './targetDlg.vue'
 
 @Component
@@ -100,9 +98,9 @@ export default class DlgEditCinema extends ViewBase {
     try {
       let res: any = null
       if (this.type == 1) { // id查看 暂时关闭
-        // res = await queryDetail(this.id, {...this.dataForm})
+        res = await queryDetail(this.id, {...this.dataForm})
       } else {
-        res = await findcarry(this.id, {...this.dataForm})
+       // res = await findcarry(this.id, {...this.dataForm})
       }
       this.total = res.data.totalCount
       if (res.data.items && res.data.items.length > 0) {
@@ -207,7 +205,7 @@ export default class DlgEditCinema extends ViewBase {
   color: rgba(152, 152, 152, 1);
 }
 .btnCenter {
-  margin-bottom: 30px;
+  margin: 40px 0 40px;
 }
 .targer-cinema {
   min-height: 300px;

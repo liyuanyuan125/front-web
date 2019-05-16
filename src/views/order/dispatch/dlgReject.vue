@@ -14,9 +14,6 @@
           <Icon type="ios-search" size="22"/>
         </span>
       </div>
-      <!-- <div class="detail">
-      <p>查看全部已关联影院 <span>{{checktotal}}个</span></p>
-      </div> -->
       <Table  stripe @on-selection-change="check" :columns="columns" :data="tableDate">
         <template slot-scope="{ row }" slot="citys">
           {{row.citys}}
@@ -40,28 +37,24 @@
         @on-page-size-change="currentChangeHandle"/>
     </div>
     <div slot="footer" class="foot">
-      <!-- <div v-if="type == 1">
-        <Button class="foot-cancel-button" type="info" @click="cancel">取消计划</Button>
-        <Button class="foot-button" type="primary" @click="open">开启投放</Button>
-      </div> -->
       <div>
         <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
-        <Button class="foot-button" type="primary" @click="open">确定</Button>
+        <Button class="foot-button" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </div>
-    <!-- <targetDlg ref="target" /> -->
   </Modal>
 </template>
 
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { leafletList, sureLeaflet} from '@/api/leafletDlg'
+import { queryDetail, reciveOrder} from '@/api/norderDis'
 // import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 // import targetDlg from './targetDlg.vue'
 import { toast, warning } from '@/ui/modal.ts'
 import AreaSelect from '@/components/areaSelect'
+import { isNullOrEmpty } from '@/fn/string'
 
 @Component({
   components: {
@@ -73,12 +66,12 @@ export default class DlgEditCinema extends ViewBase {
   @Prop({ type: Object }) value!: any
   total = 0
   dataForm: any = {
-    query: '',
+    query: null,
     pageIndex: 1,
     pageSize: 20,
   }
 
-  page: any = []
+  // page: any = []
   reject: any = {}
   name: any = []
   data: any = []
@@ -156,7 +149,7 @@ export default class DlgEditCinema extends ViewBase {
           items,
           totalCount
         }
-      } = await leafletList(this.value.id, {
+      } = await queryDetail(this.value.id, {
         ...this.dataForm,
         ...this.reject
       })
@@ -183,30 +176,29 @@ export default class DlgEditCinema extends ViewBase {
 
   cancel() {
     this.value.visible = false
-    this.page = []
+    // this.page = []
     this.checkId = []
     this.checkObj = []
   }
 
-  async open() {
+  async handleSubmit() {
     if (this.checkId.length == 0) {
       warning('请选择目标影院')
       return
     }
     try {
-      await sureLeaflet({
+      const data = await reciveOrder({
         id: this.value.id,
-        cinemas: this.checkId
+        receiveCinemas: this.checkId
       })
       this.$emit('rejReload')
-      toast('操作成功')
       this.cancel()
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
-  @Watch ('name', { deep: true })
+  @Watch('name', { deep: true })
   watchArea(val: number[]) {
     this.reject.areaCode = val[0] == 0 ? '' : val[0]
     this.reject.provinceId = val[1] == 0 ? '' : val[1]

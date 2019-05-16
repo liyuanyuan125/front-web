@@ -9,8 +9,8 @@ export async function querylist(query) {
     const res = await get('/xadvert/dispatchs', query);
     return res;
 }
-export async function queryOrderList(data) {
-    const res = await get('/xadvert/orders', data)
-    return res
-}
+// export async function queryOrderList(data) {
+//     const res = await get('/xadvert/orders', data)
+//     return res
+// }
 //# sourceMappingURL=orderDis.js.map

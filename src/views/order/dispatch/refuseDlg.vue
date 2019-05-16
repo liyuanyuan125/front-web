@@ -6,42 +6,42 @@
   :styles="{top: '30px'}"
   @on-cancel="cancel()">
     <h3 class="refuse">是否拒绝该执行单?</h3>
-    <Row v-if="data.videoName" class="refuse-body" style="margin-top: 20px">
+    <Row v-if="data" class="refuse-body" style="margin-top: 20px">
       <Row>
         <Col :span="4">广告片名称</Col>
-        <Col :span="7"><span>{{data.videoName}}</span></Col>
+        <Col :span="15"><span>{{data.videoName}}</span></Col>
       </Row>
       <Row>
         <Col :span="4">广告片规格</Col>
-        <Col :span="7"><span>{{data.specification}}</span></Col>
+        <Col :span="7"><span>{{data.specification || 0}}s</span></Col>
       </Row>
       <Row>
         <Col :span="4">投放时间</Col>
-        <Col :span="7"><span>{{data.beginDate}} ~ {{data.endDate}}</span></Col>
+        <Col :span="7"><span>{{formatConversion(data.beginDate)}} ~ {{formatConversion(data.endDate)}}</span></Col>
       </Row>
       <Row>
-        <Col :span="4">投放天数</Col>
+        <Col :span="4">投放周期</Col>
         <Col :span="7"><span>{{data.cycle}}天</span></Col>
       </Row>
       <Row style="margin-top: 24px">
         <Col :span="4">目标影院</Col>
-        <Col :span="7"><span>{{data.cinemaCount}}家</span></Col>
+        <Col :span="7"><span>{{data.targetCinemas.length || 0}}家</span></Col>
       </Row>
       <Row>
         <Col :span="4">目标影厅</Col>
-        <Col :span="7"><span>所有影厅</span></Col>
+        <Col :span="7"><span>{{data.hallsCount}}</span></Col>
       </Row>
       <Row>
         <Col :span="4">目标场次</Col>
-        <Col :span="7"><span>所有场次</span></Col>
+        <Col :span="7"><span>{{data.sceneCount}}</span></Col>
       </Row>
       <Row>
-        <Col :span="4">投放影片</Col>
+        <Col :span="4">投放类型</Col>
         <Col :span="7"><span>{{data.directionType == 1 ? '标准投放' : '单片投放'}}</span></Col>
       </Row>
       <Row style="margin-top: 24px">
         <Col :span="4">目标影片</Col>
-        <Col :span="18"><span  v-if='data.movieList.length > 0' v-for='item in data.movieList'>《{{item.name}}》 </span><span v-if='data.movieList.length == 0'>暂无  </span></Col>
+        <Col :span="18"><span  v-if='data.targetMovies.length > 0' v-for='item in data.targetMovies'>《{{item.movieName}}》 </span><span v-if='data.targetMovies.length == 0'>暂无  </span></Col>
       </Row>
       <Row>
         <Col :span="4" style="padding-top: 10px"><span>预估最大收益/¥</span></Col>
@@ -50,7 +50,7 @@
     </Row>
     <div slot="footer" class="foot">
       <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
-      <Button class="foot-button" type="primary" @click="open">拒绝执行</Button>
+      <Button class="foot-button" type="primary" @click="refuseSubmit">拒绝执行</Button>
     </div>
   </Modal>
 </template>
@@ -58,8 +58,8 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-// import { queryList, leafletList, carryRefuse } from '@/api/leafletDlg'
-// import { refuse } from '@/api/orderDis'
+import { formatConversion } from '@/util/validateRules.ts'
+import { refuse } from '@/api/norderDis'
 import { formatCurrency } from '@/fn/string'
 import { toast, warning } from '@/ui/modal.ts'
 
@@ -73,22 +73,22 @@ export default class DlgEditCinema extends ViewBase {
     this.showDlg = true
   }
 
-  // format(money: any) {
-  //   formatCurrency(money)
-  // }
+  get formatConversion() {
+    return formatConversion
+  }
 
   cancel() {
     this.showDlg = false
   }
 
-  // async open() {
-  //   try {
-  //     await refuse(this.data.id)
-  //     this.$emit('refReload')
-  //   } catch (ex) {
-  //     this.handleError(ex)
-  //   }
-  // }
+  async refuseSubmit() {
+    try {
+      const data = await refuse(this.data.id)
+      this.$emit('refReload')
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
 }
 </script>
 
