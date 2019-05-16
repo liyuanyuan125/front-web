@@ -565,7 +565,14 @@ const mainLayoutRoutes = [
         name: 'kol-draft',
         component: () => import('./views/kol/order/draft.vue'),
         meta: emptyAuth
-    }
+    },
+    // KOL - KOL详情更多页 - 平台运营
+    {
+        path: '/kol/detailMoreInfo/platformInfoData',
+        name: 'kol-detailMoreInfo-platformInfoData',
+        component: () => import('./views/kol/detailMoreInfo/platformInfoData.vue'),
+        meta: emptyAuth
+    },
 ]; // end of mainLayoutRoutes
 const errorRoutes = [
     {
