@@ -1,5 +1,6 @@
 import moment, { Moment } from 'moment'
 import 'moment/locale/zh-cn'
+import Vue from 'vue'
 
 // 算法来自 iview 源码
 export function clearHours(time: number | string | Date ) {
@@ -87,4 +88,22 @@ export function toRange(start: Date | null, end: Date | null) {
   const startPart = moment(start).format(dateFormat)
   const endPart = moment(end).format(dateFormat)
   return [startPart, endPart].join(' ~ ')
+}
+
+export function findChildren(vue: Vue, className: string) {
+  if (vue.$children == null) {
+    return undefined
+  }
+
+  let item = vue.$children.find(child => child.$el.classList.contains(className))
+  if (item != null) {
+    return item
+  }
+
+  vue.$children.some(child => {
+    item = findChildren(child, className)
+    return item != null
+  })
+
+  return item
 }
