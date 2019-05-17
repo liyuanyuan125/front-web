@@ -1,10 +1,62 @@
 import { get } from '@/fn/ajax'
+import { groupBy } from 'lodash'
+
+/**
+ * 区域项
+ */
+export interface AreaItem {
+  /** ID */
+  id: number
+
+  /** 父级 ID */
+  parentId: number
+
+  /** 大区 code */
+  areaCode: string
+
+  /** 大区 name */
+  areaName: string
+
+  /** 子级区域个数 */
+  childCount: number
+
+  /** ?? */
+  grade: string
+
+  /** 名称 */
+  name: string
+
+  /** 中文名称 */
+  nameCn: string
+
+  /** 英文名称 */
+  nameEn: string
+
+  /** 拼音 */
+  pinyin: string
+
+  /** 拼音简拼 */
+  pinyinShort: string
+
+  /** 排序 */
+  sort: number
+
+  /** 字符串 Id ？ */
+  stringId: string
+}
+
+/**
+ * 带子列表的 AreaItem
+ */
+export interface AreaItemSubList extends AreaItem {
+  subList: AreaItem[]
+}
 
 /**
  * 获取子区域列表，并按照 orderNum 进行排序
- * @param pid 父区域ID
+ * @param pid 父区域ID或以 , 号分割的父区域 ids
  */
-export async function getSubList(pid: number = 0) {
+export async function getSubList(pid: number | string = 0) {
   const { data } = await get('/basis/districts', { parentIds: pid, pageSize: 888888 })
 
   const tlist: any[] = (data.items || []).map((it: any) => {
@@ -22,7 +74,7 @@ export async function getSubList(pid: number = 0) {
     return sortA - sortB
   })
 
-  return list
+  return list as AreaItem[]
 }
 
 const isAllZero = (list: number[] | null) => (list || []).every(it => it === 0)
@@ -72,4 +124,41 @@ export interface Region {
 export async function getRegionList() {
   const { data } = await get('/basis/areas')
   return (data || []) as Region[]
+}
+
+/**
+ * 获取所有省份，带城市（地级市，不包括区县、县级市）列表信息
+ */
+export async function getProvinceCity() {
+  // 先查所有省份
+  const provinceList = await getSubList(0)
+  // 一次性查询出所有省辖市
+  const provinceIds = provinceList.map(it => it.id).join(',')
+  const cityList = await getSubList(provinceIds)
+  const group = groupBy(cityList, 'parentId')
+  const result = provinceList.map(it => ({
+    ...it,
+    subList: group[it.id]
+  }) as AreaItemSubList)
+  return result
+}
+
+export interface RegionSubList extends Region {
+  subList: AreaItemSubList[]
+}
+
+/**
+ * 获取大区、省份、城市树形列表（地级市，不包括区县、县级市），树以 subList 为 key
+ */
+export async function getGegionProvinceCity() {
+  const [regionList, provinceList] = await Promise.all([
+    getRegionList(),
+    getProvinceCity()
+  ])
+  const group = groupBy(provinceList, 'areaCode')
+  const result = regionList.map(it => ({
+    ...it,
+    subList: group[it.code]
+  }) as RegionSubList)
+  return result
 }

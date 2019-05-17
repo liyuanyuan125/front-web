@@ -551,7 +551,28 @@ const mainLayoutRoutes = [
         name: 'kol-kollist',
         component: () => import('./views/kol/kollist/index.vue'),
         meta: emptyAuth
-    }
+    },
+    // KOL - KOl 订单
+    {
+        path: '/kol/orderlist',
+        name: 'kol-orderlist',
+        component: () => import('./views/kol/order/index.vue'),
+        meta: emptyAuth
+    },
+    // KOL - KOL 草稿
+    {
+        path: '/kol/draft',
+        name: 'kol-draft',
+        component: () => import('./views/kol/order/draft.vue'),
+        meta: emptyAuth
+    },
+    // KOL - KOL详情更多页 - 平台运营
+    {
+        path: '/kol/detailMoreInfo/platformInfoData',
+        name: 'kol-detailMoreInfo-platformInfoData',
+        component: () => import('./views/kol/detailMoreInfo/platformInfoData.vue'),
+        meta: emptyAuth
+    },
 ]; // end of mainLayoutRoutes
 const errorRoutes = [
     {
