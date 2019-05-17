@@ -552,6 +552,13 @@ const mainLayoutRoutes = [
         component: () => import('./views/kol/kollist/index.vue'),
         meta: emptyAuth
     },
+    // kol - 购物车
+    {
+        path: '/kol/shopping',
+        name: 'kol-shopping',
+        component: () => import('./views/kol/shopping/index.vue'),
+        meta: emptyAuth
+    },
     // KOL - KOl 订单
     {
         path: '/kol/orderlist',

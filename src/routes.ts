@@ -677,6 +677,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
 
+  // kol - koll列表
+  {
+    path: '/kol/shopping',
+    name: 'kol-shopping',
+    component: () => import('./views/kol/shopping/index.vue'),
+    meta: emptyAuth
+  },
+
   // kol - KOL详情更多页 - 平台运营
   {
     path: '/kol/detailMoreInfo/platformInfoData',
