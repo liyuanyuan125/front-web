@@ -82,9 +82,9 @@
                   <!-- 待审核 -->
                     <p v-if="item.status == 1 || item.status == 9  "><span @click="handleCancel(item.id)">取消</span></p>
                     <p v-if="item.status == 9 || item.status == 10 "><span @click="handlePayment(item)">支付</span></p>
-                    <p v-if="item.status == 5 || item.status == 10 || item.status == 6"><span>任务监测</span></p>
+                    <p v-if="item.status == 5 || item.status == 10 || item.status == 6"><span @click="$router.push({name: 'order-order-taskDetection', params: {id: item.id}})">任务监测</span></p>
                     <p v-if="item.status == 5"><span @click="taskFulfiling">确定完成任务</span></p>
-                    <p><span>详情</span></p>
+                    <p><span @click="$router.push({name: 'kol-order-detail', params: {id: item.id}})">详情</span></p>
                   </Col>
                 </Row>
               </li>
