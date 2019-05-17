@@ -10,13 +10,12 @@
        <Col span='6'><WeekDatePicker v-model="weekDate"/></Col>
         <Col :span="14">
           <Col style='margin-left: 12px;' span="8">
-            <Select v-model='query.id' clearable  filterable  @on-change="seachs">
+            <Select v-model='query.cinemaId'  filterable  @on-change="seachs">
               <Option
-                v-for="item in typeList"
-                :key="item.key"
-                :value="item.key"
-                v-if='item.key!=0'
-              >{{item.name}}（“未上传监播+监播文件审核未通过”）</Option>
+                v-for="item in movieList"
+                :key="item.id"
+                :value="item.id"
+              >{{item.name}}</Option>
             </Select>
           </Col>
         </Col>
@@ -40,23 +39,23 @@
         <ul class='itemul'>
         	<li class='li-item' v-for='(it,index) in itemlist' :key='index'>
         		<row>
-        			<Col span='3'>{{it.name}}</Col>
-        			<Col span='2' style='text-align: center;'>{{it.time}}</Col>
+        			<Col span='3'>{{it.movieName}}</Col>
+        			<Col span='2' style='text-align: center;'>{{it.videoTotalLength}}</Col>
         			<Col span='16'>
         				<row>
-                  <Col style='color: blue;cursor: pointer;' :span='6' v-for='(item,index) in it.list' :key='index'>
-                    <Tooltip v-if='item.name.length > 7' :content="item.name">
-                    <router-link :to="{path:'/order/dispatch' , params: {}}">{{item.name.slice(0,7)}}...</router-link>
+                  <Col style='color: blue;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
+                    <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
+                    <router-link :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,7)}}...</router-link>
                   </Tooltip>
-                <router-link tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.name.length <= 7'>{{item.name}}</router-link>
-                  ({{item.time}})
+                <router-link tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
+                  ({{item.videoLength}})
                   </Col>
                 </row>
         			</Col>
-        			<Col span='3' style='text-align: center;cursor: pointer;' v-if='it.video.key == 1' ><UploadButton @success="onUploadSuccess($event, 12)">上传</UploadButton></Col>
-              <Col span='3' v-if='it.video.key == 2'>{{it.video.name}}&nbsp;&nbsp;<div class='imgs1'></div> </Col>
-              <Col span='3' v-if='it.video.key == 3'>{{it.video.name}}&nbsp;&nbsp;<div v-if='it.video.key == 3' class='imgs2'></div>&nbsp;&nbsp;&nbsp;<span>删除</span></Col>
-              <Col span='3' v-if='it.video.key == 4'>{{it.video.name}}&nbsp;&nbsp;<div v-if='it.video.key == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<span>删除</span></Col>
+        			<Col span='3' style='text-align: center;cursor: pointer;' v-if='it.status == 1' ><UploadButton @success="onUploadSuccess($event, it.movieId)">上传</UploadButton></Col>
+              <Col span='3' v-if='it.status == 2'>{{it.fileName}}&nbsp;&nbsp;<div class='imgs1'></div> </Col>
+              <Col span='3' v-if='it.status == 3'>{{it.fileName}}&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div>&nbsp;&nbsp;&nbsp;<span @click='dels(it)'>删除</span></Col>
+              <Col span='3' v-if='it.status == 4'>{{it.fileName}}&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<span>删除</span></Col>
         		</row>
         	</li>
         </ul>
@@ -69,7 +68,7 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { querylist  } from '@/api/supervision'
+import { querylist ,  getcinid , addvideo , delvideo , movielist } from '@/api/supervision'
 import { formatTimestamp } from '@/util/validateRules'
 import UploadButton, { SuccessEvent } from '@/components/UploadButton.vue'
 import WeekDatePicker from '@/components/weekDatePicker'
@@ -88,18 +87,22 @@ export default class Main extends ViewBase {
   startTime: any = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000
   endTime: any = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1
   datanum: any = 24 * 60 * 60 * 1000 * 7 // 一周的时间戳
+
   weekDate = [new Date(this.startTime), new Date(this.endTime)]
 
+  sd = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+  ed = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
 
   query: any = {
-    id: 2,
+    // cinemaId: 0,
+    // beginDate: this.sd[0] + this.sd[1] + this.sd[2],
+    // endDate: this.ed[0] + this.ed[1] + this.ed[2],
+    cinemaId: 11,
+    beginDate: 20190523,
+    endDate: 20190529,
   }
 
-  typeList: any = [
-    { key: 1, name: '123', time: '50s' },
-    { key: 2, name: '123', time: '50s' },
-    { key: 3, name: '123', time: '50s' },
-  ]
+  movieList: any = []
 
 
   itemlist: any = []
@@ -108,7 +111,6 @@ export default class Main extends ViewBase {
 
   mounted() {
     this.seach()
-    this.seachchg()
   }
 
 
@@ -122,14 +124,34 @@ export default class Main extends ViewBase {
   }
 
   // 上传文件
-  async onUploadSuccess({ files }: SuccessEvent, key: number) {
+  async onUploadSuccess({ files }: SuccessEvent, id: number) {
     // console.log(files)
       try {
-        // await addvideo (this.$route.params.id , {
-        //                                         name: files[0].clientName,
-        //                                         fileId: files[0].fileId,
-        //                                         typeCode: key
-        //                                       })
+        await addvideo ({
+                        fileName: files[0].clientName,
+                        fileId: files[0].fileId,
+                        beginDate: this.sd[0] + this.sd[1] + this.sd[2],
+                        endDate: this.ed[0] + this.ed[1] + this.ed[2],
+                        cinemaId: this.query.cinemaId,
+                        movieId: id
+                      })
+        // toast('操作成功')
+        this.seach()
+      } catch (ex) {
+        this.handleError(ex)
+      }
+  }
+
+  async dels(it: any) {
+    try {
+        await delvideo ({
+                        fileName: it.fileName,
+                        fileId: it.fileId,
+                        beginDate: this.weekDate[0].getTime(),
+                        endDate: this.weekDate[1].getTime(),
+                        cinemaId: this.query.cinemaId,
+                        movieId: it.movieId
+                      })
         // toast('操作成功')
         this.seach()
       } catch (ex) {
@@ -142,21 +164,32 @@ export default class Main extends ViewBase {
     /***参数都是以周一为基准的***/
     this.startTime = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000  // 本周的开始时间
     this.endTime = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1 // 本周的结束时间
-
-    // console.log(new Date(this.startTime))
-    // console.log(new Date(this.endTime))
+    this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
+    const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
+    const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
+    this.query.beginDate = a[0] + a[1] + a[2]
+    this.query.endDate = b[0] + b[1] + b[2]
   }
-
   // 上周
   seachchgup() {
-      // console.log(new Date(this.startTime -= this.datanum))
-      // console.log(new Date(this.endTime -= this.datanum))
+    this.weekDate = [new Date(this.startTime -= this.datanum), new Date(this.endTime -= this.datanum)]
+    const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+    const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+    this.query.beginDate = a[0] + a[1] + a[2]
+    this.query.endDate = b[0] + b[1] + b[2]
+    // this.query.beginDate = new Date(this.startTime -= this.datanum).getTime()
+    // this.query.endDate = new Date(this.endTime -= this.datanum).getTime()
   }
 
   // 下周
   seachchgdown() {
-      // console.log(new Date(this.startTime += this.datanum))
-      // console.log(new Date(this.endTime += this.datanum))
+    this.weekDate = [new Date(this.startTime += this.datanum), new Date(this.endTime += this.datanum)]
+    const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+    const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+    this.query.beginDate = a[0] + a[1] + a[2]
+    this.query.endDate = b[0] + b[1] + b[2]
+    // this.query.beginDate = this.weekDate[0].getTime(),
+    // this.query.endDate = this.weekDate[1].getTime()
   }
 
   getTime(n: any) {
@@ -192,19 +225,22 @@ export default class Main extends ViewBase {
 
   async seach() {
     try {
+
+      // 影院列表
+      const movieList = await movielist()
+      this.movieList = movieList.data.items
+      // 获取默认影院id
+      // const cinid = await getcinid()
+      // if (cinid.data.cinemaId == 0) {
+      //   this.query.cinemaId = movieList.data.items[0].id
+      // } else {
+      //   this.query.cinemaId = cinid.data.cinemaId
+      // }
+
+
       const datalist = await querylist(this.query)
       this.itemlist = datalist.data.items
-      // console.log(this.itemlist)
-      // this.typeList = datalist.data.statusList
-      // this.planTypeList = datalist.data.planTypeList
-      // this.itemlist = (datalist.data.items || []).map((it: any) => {
-      //   return {
-      //     ...it,
-      //     createTime: moment(it.createTime).format(timeFormat),
-      //     beginDate: moment(it.beginDate).format(timeFormat),
-      //     endDate: moment(it.endDate).format(timeFormat)
-      //   }
-      // })
+
     } catch (ex) {
       this.handleError(ex)
     } finally {

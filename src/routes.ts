@@ -600,11 +600,12 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 资源方 - 效果报表 - 成效报表
    {
-    path: '/resreport/info',
+    path: '/reseport/info',
     name: 'resreport-info',
     component: () => import('./views/resReport/info/index.vue'),
     meta: emptyAuth,
   },
+
   // TODO: 下面的两个先不做了
 
   // 资源方 - 财务管理 - 收益账单
@@ -661,6 +662,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+
   // 示例，没有实际用处
   {
     path: '/about',
@@ -676,6 +678,31 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/kollist/index.vue'),
     meta: emptyAuth
   },
+
+  // kol - KOL详情更多页 - 平台运营
+  {
+    path: '/kol/detailMoreInfo/platformInfoData',
+    name: 'kol-detailMoreInfo-platformInfoData',
+    component: () => import('./views/kol/detailMoreInfo/platformInfoData.vue'),
+    meta: emptyAuth
+  },
+
+  // kol - 详情
+  {
+    path: '/kol/order/detail/:id',
+    name: 'kol-order-detail',
+    component: () => import('./views/kol/order/detail.vue'),
+    meta: emptyAuth,
+  },
+
+  // kol - 检测
+  {
+    path: '/kol/order/taskDetection/:id',
+    name: 'order-order-taskDetection',
+    component: () => import('./views/kol/order/taskDetection.vue'),
+    meta: emptyAuth,
+  },
+
 ] // end of mainLayoutRoutes
 
 const errorRoutes: RouteConfigEnhance[] = [
