@@ -600,11 +600,12 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 资源方 - 效果报表 - 成效报表
    {
-    path: '/resreport/info',
+    path: '/reseport/info',
     name: 'resreport-info',
     component: () => import('./views/resReport/info/index.vue'),
     meta: emptyAuth,
   },
+
   // TODO: 下面的两个先不做了
 
   // 资源方 - 财务管理 - 收益账单
@@ -661,6 +662,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+
   // 示例，没有实际用处
   {
     path: '/about',
@@ -675,6 +677,21 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'kol-kollist',
     component: () => import('./views/kol/kollist/index.vue'),
     meta: emptyAuth
+  },
+   // KOL - KOl 订单
+   {
+    path: '/kol/orderlist',
+    name: 'kol-orderlist',
+    component: () => import('./views/kol/order/index.vue'),
+    meta: emptyAuth
+  },
+
+  // KOL - KOL 草稿
+  {
+      path: '/kol/draft',
+      name: 'kol-draft',
+      component: () => import('./views/kol/order/draft.vue'),
+      meta: emptyAuth
   },
 
   // kol - koll列表
@@ -691,6 +708,22 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'kol-detailMoreInfo-platformInfoData',
     component: () => import('./views/kol/detailMoreInfo/platformInfoData.vue'),
     meta: emptyAuth
+  },
+
+  // kol - 详情
+  {
+    path: '/kol/order/detail/:id',
+    name: 'kol-order-detail',
+    component: () => import('./views/kol/order/detail.vue'),
+    meta: emptyAuth,
+  },
+
+  // kol - 检测
+  {
+    path: '/kol/order/taskDetection/:id',
+    name: 'order-order-taskDetection',
+    component: () => import('./views/kol/order/taskDetection.vue'),
+    meta: emptyAuth,
   },
 
 ] // end of mainLayoutRoutes

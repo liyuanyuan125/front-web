@@ -52,55 +52,55 @@
       <div style='background:#ffffff'>
         <Row>
           <Col span="24">
-            <Form label-position="left"
-                  :label-width="100"
-                  class="edit-input">
-              <Card class="my-card">
-                <div slot="title">
-                  <Row type="flex"
-                      justify="space-between">
-                    <Col :span="24">
-                    <FormItem label="统计周期">
+          <Form label-position="left"
+                :label-width="100"
+                class="edit-input">
+            <Card class="my-card">
+              <div slot="title">
+                <Row type="flex"
+                     justify="space-between">
+                  <Col :span="24">
+                  <DetailNavBar titleText='统计周期'>
+                    <div slot='item'>
                       <RadioGroup style='margin-right:15px'
                                   @on-change="handleChange"
                                   v-model="form.statisticTimeId"
                                   size="large"
                                   type="button">
                         <Radio v-for="(item) in dict.statisticTime"
-                              :key="item.id"
-                              :disabled="item.disabled"
-                              :label="item.id">{{item.name}}</Radio>
+                               :key="item.id"
+                               :disabled="item.disabled"
+                               :label="item.id">{{item.name}}</Radio>
                       </RadioGroup>
                       <DatePicker type="daterange"
                                   v-model="form.beginDate"
                                   @on-change="handleChange"
                                   placement="bottom-end"
                                   placeholder="自定义时间段"></DatePicker>
-                    </FormItem>
-                    </Col>
-                  </Row>
-                </div>
-                <div class="content-bar">
-                  <FormItem label="平台">
-                    <Select v-model="form.platformId"
-                            style="width: 400px"
-                            clearable
-                            @on-change="handleChange">
-                      <Option v-for="(item) in dict.platform"
-                              :key="item.id"
-                              :value="item.id">{{item.name}}</Option>
-                    </Select>
-                  </FormItem>
-                  <chartsGroup 
-                    :initDone="initDone" 
-                    :typeList="typeDict" 
-                    :dataList="dataList"
-                    :currentTypeIndex="currentTypeIndex"
-                    @typeChange='typeChangeHandler'
-                  />
-                </div>
-              </Card>
-            </Form>
+                    </div>
+                  </DetailNavBar>
+                  </Col>
+                </Row>
+              </div>
+              <div class="content-bar">
+                <FormItem label="平台">
+                  <Select v-model="form.platformId"
+                          style="width: 400px"
+                          clearable
+                          @on-change="handleChange">
+                    <Option v-for="(item) in dict.platform"
+                            :key="item.id"
+                            :value="item.id">{{item.name}}</Option>
+                  </Select>
+                </FormItem>
+                <chartsGroup :initDone="initDone"
+                             :typeList="typeDict"
+                             :dataList="dataList"
+                             :currentTypeIndex="currentTypeIndex"
+                             @typeChange='typeChangeHandler' />
+              </div>
+            </Card>
+          </Form>
           </Col>
         </Row>
       </div>
@@ -118,9 +118,11 @@ import {
 import { platformData1, platformData2 } from '@/api/kolDetailMoreInfo'
 import numAdd from '../number.vue'
 import chartsGroup, { IcurrentType } from '@/components/chartsGroup/line/'
+import DetailNavBar from './components/detailNavBar.vue'
 @Component({
   components: {
-    chartsGroup
+    chartsGroup,
+    DetailNavBar
   }
 })
 export default class Temporary extends ViewBase {
@@ -194,13 +196,13 @@ export default class Temporary extends ViewBase {
   currentTypeIndex: number = 0
   initDone: boolean = false
   dataList: any[] = []
-  async typeChangeHandler( index: number = 0 ) {
-    if ( this.dataList[index].list.length < 1 ) {
+  async typeChangeHandler(index: number = 0) {
+    if (this.dataList[index].list.length < 1) {
       await this.getChartsData(0, index)
     }
     this.currentTypeIndex = index
   }
-  async getChartsData(chartIndex: number = 0, typeIndex: number = 0 ) {
+  async getChartsData(chartIndex: number = 0, typeIndex: number = 0) {
     const that: any = this
     const mockObj = {
       beginDate: formatTimestamp(new Date(2019, 3, 9)),
