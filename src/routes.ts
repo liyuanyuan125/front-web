@@ -662,20 +662,6 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // kol - 详情
-   {
-      path: '/order/lastissue/detail',
-      name: 'order-lastissue-detail',
-      component: () => import('./views/order/lastissue/detail.vue'),
-      meta: emptyAuth,
-    },
-
-    {
-      path: '/order/lastissue/taskDetection',
-      name: 'order-lastissue-taskDetection',
-      component: () => import('./views/order/lastissue/taskDetection.vue'),
-      meta: emptyAuth,
-    },
 
   // 示例，没有实际用处
   {
@@ -699,6 +685,22 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'kol-detailMoreInfo-platformInfoData',
     component: () => import('./views/kol/detailMoreInfo/platformInfoData.vue'),
     meta: emptyAuth
+  },
+
+  // kol - 详情
+  {
+    path: '/kol/order/detail/:id',
+    name: 'kol-order-detail',
+    component: () => import('./views/kol/order/detail.vue'),
+    meta: emptyAuth,
+  },
+
+  // kol - 检测
+  {
+    path: '/kol/order/taskDetection/:id',
+    name: 'order-order-taskDetection',
+    component: () => import('./views/kol/order/taskDetection.vue'),
+    meta: emptyAuth,
   },
 
 ] // end of mainLayoutRoutes
