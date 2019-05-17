@@ -599,12 +599,12 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
 
   // 资源方 - 效果报表 - 成效报表
-   {
-    path: '/reseport/info',
-    name: 'resreport-info',
-    component: () => import('./views/resReport/info/index.vue'),
-    meta: emptyAuth,
-  },
+  //  {
+  //   path: '/reseport/info',
+  //   name: 'resreport-info',
+  //   component: () => import('./views/resReport/info/index.vue'),
+  //   meta: emptyAuth,
+  // },
   // TODO: 下面的两个先不做了
 
   // 资源方 - 财务管理 - 收益账单
@@ -660,6 +660,21 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: 'view',
     }
   },
+
+  // kol - 详情
+   {
+      path: '/order/lastissue/detail',
+      name: 'order-lastissue-detail',
+      component: () => import('./views/order/lastissue/detail.vue'),
+      meta: emptyAuth,
+    },
+
+    {
+      path: '/order/lastissue/taskDetection',
+      name: 'order-lastissue-taskDetection',
+      component: () => import('./views/order/lastissue/taskDetection.vue'),
+      meta: emptyAuth,
+    },
 
   // 示例，没有实际用处
   {
