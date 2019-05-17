@@ -116,7 +116,7 @@ export default class Main extends ViewBase {
     } else if (new Date().getDay() == 1 || 2 || 3 ) {
       return
     }
-    // this.seach()
+    this.seach()
   }
 
 

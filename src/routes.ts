@@ -599,12 +599,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
 
   // 资源方 - 效果报表 - 成效报表
-  //  {
-  //   path: '/reseport/info',
-  //   name: 'resreport-info',
-  //   component: () => import('./views/resReport/info/index.vue'),
-  //   meta: emptyAuth,
-  // },
+   {
+    path: '/reseport/info',
+    name: 'resreport-info',
+    component: () => import('./views/resReport/info/index.vue'),
+    meta: emptyAuth,
+  },
+
   // TODO: 下面的两个先不做了
 
   // 资源方 - 财务管理 - 收益账单
@@ -683,6 +684,23 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import(/* webpackChunkName: "about" */'./views/about.vue'),
     meta: emptyAuth,
   },
+
+  // kol - koll列表
+  {
+    path: '/kol/kollist',
+    name: 'kol-kollist',
+    component: () => import('./views/kol/kollist/index.vue'),
+    meta: emptyAuth
+  },
+
+  // kol - KOL详情更多页 - 平台运营
+  {
+    path: '/kol/detailMoreInfo/platformInfoData',
+    name: 'kol-detailMoreInfo-platformInfoData',
+    component: () => import('./views/kol/detailMoreInfo/platformInfoData.vue'),
+    meta: emptyAuth
+  },
+
 ] // end of mainLayoutRoutes
 
 const errorRoutes: RouteConfigEnhance[] = [

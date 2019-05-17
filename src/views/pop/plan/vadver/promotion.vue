@@ -41,7 +41,7 @@ import ViewBase from '@/util/ViewBase'
 import { advertising } from '@/api/popPlan.ts'
 
 @Component
-export default class App extends ViewBase {
+export default class Promotion extends ViewBase {
   @Prop() value!: number
 
   form: any = {

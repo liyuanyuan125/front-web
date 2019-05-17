@@ -1,23 +1,20 @@
 <template>
-  <Modal v-model='showDlg'
-  :title="type == 1 ? '确认接单影院' : '编辑接单影院'"
+  <Modal v-model='value.visible'
+  title='确认接单影院'
   :transfer='false'
-  :width='770'
+  :width='700'
   :mask-closable='false'
   :styles="{top: '10px'}"
   @on-cancel="cancel()">
     <div class="reject-cinema">
       <div class="flex-box search-input">
-        <AreaSelect class="name-input" show-region v-model="name" />
-        <Input class="name-input" style="margin-right: 0px" v-model="dataForm.name"  placeholder="请输入影院专资编码／影院名称进行搜索" />
+        <AreaSelect class="name-input" show-region :max-level="2" v-model="name" />
+        <Input class="name-input" style="margin-right: 0px" v-model="dataForm.query"  placeholder="请输入影院专资编码／影院名称进行搜索" />
         <span @click="seach">
           <Icon type="ios-search" size="22"/>
         </span>
       </div>
-      <div class="detail" @click="edit">
-      <p>查看全部已关联影院 <span>{{checktotal}}个</span></p>
-      </div>
-      <Table :loading="loading"  stripe @on-selection-change="check" :columns="columns" :data="tableDate">
+      <Table  stripe @on-selection-change="check" :columns="columns" :data="tableDate">
         <template slot-scope="{ row }" slot="citys">
           {{row.citys}}
         </template>
@@ -34,62 +31,53 @@
       <Page :total="total" v-if="total>0" class="btnCenter"
         :current="dataForm.pageIndex"
         :page-size="dataForm.pageSize"
-        :page-size-opts="[6, 20, 50, 100]"
         show-total
-        show-sizer
         show-elevator
         @on-change="sizeChangeHandle"
         @on-page-size-change="currentChangeHandle"/>
     </div>
     <div slot="footer" class="foot">
-      <div v-if="type == 1">
-        <Button class="foot-cancel-button" type="info" @click="cancel">取消计划</Button>
-        <Button class="foot-button" type="primary" @click="open">开启投放</Button>
-      </div>
-      <div v-else>
+      <div>
         <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
-        <Button class="foot-button" type="primary" @click="open">确定</Button>
+        <Button class="foot-button" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </div>
-    <targetDlg ref="target" />
   </Modal>
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { queryList, findCinema, carryList, leafletList, sureLeaflet, carrySet } from '@/api/leafletDlg'
-import { clean } from '@/fn/object'
+import { queryDetail, reciveOrder} from '@/api/norderDis'
+// import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
-import targetDlg from './targetDlg.vue'
+// import targetDlg from './targetDlg.vue'
 import { toast, warning } from '@/ui/modal.ts'
 import AreaSelect from '@/components/areaSelect'
+import { isNullOrEmpty } from '@/fn/string'
 
 @Component({
   components: {
-    targetDlg,
+    // targetDlg,
     AreaSelect
   }
 })
 export default class DlgEditCinema extends ViewBase {
-  showDlg = false
-  type = 1
+  @Prop({ type: Object }) value!: any
   total = 0
   dataForm: any = {
-    name: '',
+    query: null,
     pageIndex: 1,
-    pageSize: 6,
+    pageSize: 20,
   }
-  page: any = []
-  planId: any = ''
+
+  // page: any = []
   reject: any = {}
   name: any = []
-  checktotal: any = 0
-  loading = false
-  id: any = ''
   data: any = []
   checkId: any = []
   checkObj: any = []
+
   columns: any = [
     {
       type: 'selection',
@@ -114,10 +102,6 @@ export default class DlgEditCinema extends ViewBase {
       align: 'center'
     }
   ]
-
-  // created() {
-  //   this.init(32)
-  // }
 
   get tableDate() {
     if (this.data && this.data.length > 0) {
@@ -154,14 +138,7 @@ export default class DlgEditCinema extends ViewBase {
     this.checkObj = this.checkObj.filter((it: any) => !filterId.includes(it.id))
   }
 
-  async init(id: any, planId: any, length: any, type: any) {
-    this.id = id
-    this.planId = planId
-    this.type = type
-    this.loading = true
-    this.showDlg = true
-    const res: any = null
-    this.checktotal = length
+  mounted() {
     this.seach()
   }
 
@@ -172,26 +149,13 @@ export default class DlgEditCinema extends ViewBase {
           items,
           totalCount
         }
-      } = this.type == 1 ? await leafletList(this.id, clean({
+      } = await queryDetail(this.value.id, {
         ...this.dataForm,
         ...this.reject
-      })) : await carryList(this.id, clean({
-        ...this.dataForm,
-        ...this.reject
-      }))
+      })
+
       this.total = totalCount
       this.data = items || []
-      this.loading = false
-      if (this.type != 1) {
-        if (!this.page.includes(this.dataForm.pageIndex)) {
-          items.forEach((it: any) => {
-            if (it.defautChecked && !this.checkId.includes(it.id)) {
-              this.checkId.push(it.id)
-            }
-          })
-          this.page.push(this.dataForm.pageIndex)
-        }
-      }
       this.$emit('ref')
     } catch (ex) {
       this.handleError(ex)
@@ -210,33 +174,24 @@ export default class DlgEditCinema extends ViewBase {
     this.seach()
   }
 
-  edit() {
-    this.$nextTick(() => {
-      (this.$refs.target as any).init(this.planId, this.type)
-    })
-  }
-
   cancel() {
-    this.showDlg = false
-    this.page = []
+    this.value.visible = false
+    // this.page = []
     this.checkId = []
     this.checkObj = []
   }
 
-  async open() {
+  async handleSubmit() {
     if (this.checkId.length == 0) {
       warning('请选择目标影院')
       return
     }
     try {
-      this.type == 1 ? await sureLeaflet({
-        id: this.id,
-        cinemas: this.checkId
-      }) : await carrySet(this.id, {
-        cinemas: this.checkId
+      const data = await reciveOrder({
+        id: this.value.id,
+        receiveCinemas: this.checkId
       })
       this.$emit('rejReload')
-      toast('操作成功')
       this.cancel()
     } catch (ex) {
       this.handleError(ex)
@@ -248,6 +203,7 @@ export default class DlgEditCinema extends ViewBase {
     this.reject.areaCode = val[0] == 0 ? '' : val[0]
     this.reject.provinceId = val[1] == 0 ? '' : val[1]
     this.reject.cityId = val[2] == 0 ? '' : val[2]
+    this.seach()
   }
 }
 </script>

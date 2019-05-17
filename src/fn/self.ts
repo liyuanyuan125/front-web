@@ -64,8 +64,8 @@ export function animation(obj: any, json: any, d: number, type?: any, callback?:
     type = type || 'linear'
   }
   window.cancelAnimationFrame(timer)
-  const initT: any = new Date(); // 获取开始时间
-  (function rQAF() {
+  const initT: any = new Date() // 获取开始时间
+  const rQAF = () => {
     let t = new Date() as any - initT// 获取当前时间与开始时间的差值--动画执行时长
     if (t >= d) {// 判断动画执行时长是否大于预设目标
       t = d// 让动画执行时长等于预设目标
@@ -93,6 +93,7 @@ export function animation(obj: any, json: any, d: number, type?: any, callback?:
       }
       (obj.style as any)[attr] = styleV// 设置样式
     }
-    t == d ? callback && callback.call(obj) : ''// 根据动画时长是否等于了预设目标，true执行回调函数，并绑定this
-  })()
+    t == d ? callback && callback() : ''// 根据动画时长是否等于了预设目标，true执行回调函数，并绑定this
+  }
+  window.requestAnimationFrame(rQAF)
 }

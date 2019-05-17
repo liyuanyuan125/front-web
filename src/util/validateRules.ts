@@ -121,3 +121,16 @@ export function formatNumber(num: number) {
     return num.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
   }
 }
+
+/**
+ * 日期转换格式
+ * type = 2 格式转化去除 -
+ */
+type strFor = string | number
+export function formatConversion(str: strFor, type?: number) {
+  str = str + ''
+  if (type == 2) {
+    return str.replace(/-/g, '')
+  }
+  return str.replace(/^(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')
+}
