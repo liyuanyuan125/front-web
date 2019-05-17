@@ -211,6 +211,9 @@ export default class Orienteering extends ViewBase {
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.cinema = newValue
     })
+    if (value.length == 0) {
+      this.form.cinema = [0]
+    }
   }
 
   @Watch('form.sex', { deep: true })
@@ -219,6 +222,9 @@ export default class Orienteering extends ViewBase {
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.sex = newValue
     })
+    if (value.length == 0) {
+      this.form.sex = [0]
+    }
   }
 
   @Watch('form.type', { deep: true })
@@ -227,6 +233,9 @@ export default class Orienteering extends ViewBase {
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.type = newValue
     })
+    if (value.length == 0) {
+      this.form.type = [0]
+    }
   }
 
   @Watch('form.age', { deep: true })
@@ -235,6 +244,9 @@ export default class Orienteering extends ViewBase {
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.age = newValue
     })
+    if (value.length == 0) {
+      this.form.age = [0]
+    }
   }
 }
 </script>
