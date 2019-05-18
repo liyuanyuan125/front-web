@@ -725,6 +725,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/detailMoreInfo/platformInfoData.vue'),
     meta: emptyAuth
   },
+  // KOL - KOL详情更多页 - 口碑评论
+    {
+      path: '/kol/detailMoreInfo/comment',
+      name: 'kol-detailMoreInfo-comment',
+      component: () => import('./views/kol/detailMoreInfo/comment.vue'),
+      meta: emptyAuth
+  },
 
   // kol - 详情
   {
