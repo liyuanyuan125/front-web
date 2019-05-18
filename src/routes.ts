@@ -694,6 +694,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       meta: emptyAuth
   },
 
+<<<<<<< HEAD
   // kol - KOL详情更多页 - 合作品牌
   {
     path: '/kol/detailMoreInfo/colbrand',
@@ -707,6 +708,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/detailMoreInfo/masterwork',
     name: 'kol-detailMoreInfo-masterwork',
     component: () => import('./views/kol/detailMoreInfo/masterWork.vue'),
+=======
+  // kol - koll列表
+  {
+    path: '/kol/shopping',
+    name: 'kol-shopping',
+    component: () => import('./views/kol/shopping/index.vue'),
+>>>>>>> 9ad57d6cde09f62009f779922d6dded6391c37a5
     meta: emptyAuth
   },
 
