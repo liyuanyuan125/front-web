@@ -694,6 +694,22 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       meta: emptyAuth
   },
 
+  // kol - KOL详情更多页 - 合作品牌
+  {
+    path: '/kol/detailMoreInfo/colbrand',
+    name: 'kol-detailMoreInfo-colbrand',
+    component: () => import('./views/kol/detailMoreInfo/collaborateBrand.vue'),
+    meta: emptyAuth
+  },
+
+  // kol - KOL详情更多页 - 主要作品
+  {
+    path: '/kol/detailMoreInfo/masterwork',
+    name: 'kol-detailMoreInfo-masterwork',
+    component: () => import('./views/kol/detailMoreInfo/masterWork.vue'),
+    meta: emptyAuth
+  },
+
   // kol - KOL详情更多页 - 平台运营
   {
     path: '/kol/detailMoreInfo/platformInfoData',
