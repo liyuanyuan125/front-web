@@ -222,9 +222,9 @@ export default class Main extends ViewBase {
       await allover({
         ids: this.deArray
       })
-      this.$Message.success({
-        content: `修改成功`,
-      })
+      // this.$Message.success({
+      //   content: `修改成功`,
+      // })
       this.reloadSearch()
     } catch (ex) {
       this.handleError(ex)
@@ -237,16 +237,16 @@ export default class Main extends ViewBase {
       if (status == 1) {
         await confirm('您确定修改当前状态信息吗？')
         await oneover ({id})
-        this.$Message.success({
-          content: `更改成功`,
-        })
+        // this.$Message.success({
+        //   content: `更改成功`,
+        // })
         this.reloadSearch()
       } else if (status == 2) {
         await confirm('您确定修改当前状态信息吗？')
         await oneout ({id})
-        this.$Message.success({
-          content: `更改成功`,
-        })
+        // this.$Message.success({
+        //   content: `更改成功`,
+        // })
         this.reloadSearch()
       }
     } catch (ex) {

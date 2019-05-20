@@ -3,7 +3,7 @@
     <WeekDatePicker v-model="weekDate"/>
 
     <div>
-      <a @click="openCitySelectDialog">打开</a>
+      <a @click="visible = true">打开</a>
     </div>
 
     <CitySelectDialog
@@ -35,10 +35,6 @@ export default class AboutPage extends ViewBase {
   topCityIds = [349, 430, 170, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428]
 
   visible = false
-
-  openCitySelectDialog() {
-    this.visible = true
-  }
 
   async mounted() {
     // const xx = list.filter(it => it.subList != null)

@@ -756,6 +756,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth,
   },
 
+  // kol - 订单填写
+  {
+    path: '/kol/orderfill/:id',
+    name: 'order-orderfill',
+    component: () => import('./views/kol/orderfill/index.vue'),
+    meta: emptyAuth,
+  },
   // 影片（film）- 影人更多详情 - 合作品牌
   {
     path: '/film/filmmakerdetail/cobrand',
