@@ -758,6 +758,14 @@
   resolved "http://registry.npm.taobao.org/@types/qs/download/@types/qs-6.5.1.tgz#a38f69c62528d56ba7bd1f91335a8004988d72f7"
   integrity sha1-o49pxiUo1WunvR+RM1qABJiNcvc=
 
+"@types/quill@^2.0.2":
+  version "2.0.2"
+  resolved "https://nexus.aiads.com/repository/npm-public/@types/quill/-/quill-2.0.2.tgz#38c8b03157ec95d83f557890039ecd650548d1a7"
+  integrity sha1-OMiwMVfsldg/VXiQA57NZQVI0ac=
+  dependencies:
+    parchment "^1.1.2"
+    quill-delta "^4.0.1"
+
 "@types/unist@*", "@types/unist@^2.0.0":
   version "2.0.2"
   resolved "http://registry.npm.taobao.org/@types/unist/download/@types/unist-2.0.2.tgz#5dc0a7f76809b7518c0df58689cd16a19bd751c6"
@@ -3377,6 +3385,11 @@ fast-diff@1.1.2:
   version "1.1.2"
   resolved "https://nexus.aiads.com/repository/npm-public/fast-diff/-/fast-diff-1.1.2.tgz#4b62c42b8e03de3f848460b639079920695d0154"
   integrity sha1-S2LEK44D3j+EhGC2OQeZIGldAVQ=
+
+fast-diff@1.2.0:
+  version "1.2.0"
+  resolved "https://nexus.aiads.com/repository/npm-public/fast-diff/-/fast-diff-1.2.0.tgz#73ee11982d86caaf7959828d519cfe927fac5f03"
+  integrity sha1-c+4RmC2Gyq95WYKNUZz+kn+sXwM=
 
 fast-glob@^2.0.2, fast-glob@^2.2.6:
   version "2.2.6"
@@ -6005,7 +6018,7 @@ param-case@2.1.x:
   dependencies:
     no-case "^2.2.0"
 
-parchment@^1.1.4:
+parchment@^1.1.2, parchment@^1.1.4:
   version "1.1.4"
   resolved "https://nexus.aiads.com/repository/npm-public/parchment/-/parchment-1.1.4.tgz#aeded7ab938fe921d4c34bc339ce1168bc2ffde5"
   integrity sha1-rt7Xq5OP6SHUw0vDOc4RaLwv/eU=
@@ -6770,7 +6783,25 @@ quill-delta@^3.6.2:
     extend "^3.0.2"
     fast-diff "1.1.2"
 
-quill@^1.3.4:
+quill-delta@^4.0.1:
+  version "4.2.1"
+  resolved "https://nexus.aiads.com/repository/npm-public/quill-delta/-/quill-delta-4.2.1.tgz#ad4f191cdf3be5079c5dc3991b9603a5cc0db69a"
+  integrity sha1-rU8ZHN875QecXcOZG5YDpcwNtpo=
+  dependencies:
+    deep-equal "^1.0.1"
+    extend "^3.0.2"
+    fast-diff "1.2.0"
+
+quill-image-resize-module@^3.0.0:
+  version "3.0.0"
+  resolved "https://nexus.aiads.com/repository/npm-public/quill-image-resize-module/-/quill-image-resize-module-3.0.0.tgz#0fd93746a837336d95b2f536140416a623c71771"
+  integrity sha1-D9k3Rqg3M22VsvU2FAQWpiPHF3E=
+  dependencies:
+    lodash "^4.17.4"
+    quill "^1.2.2"
+    raw-loader "^0.5.1"
+
+quill@^1.2.2, quill@^1.3.4, quill@^1.3.6:
   version "1.3.6"
   resolved "https://nexus.aiads.com/repository/npm-public/quill/-/quill-1.3.6.tgz#99f4de1fee85925a0d7d4163b6d8328f23317a4d"
   integrity sha1-mfTeH+6FkloNfUFjttgyjyMxek0=
@@ -6821,6 +6852,11 @@ raw-body@2.3.3:
     http-errors "1.6.3"
     iconv-lite "0.4.23"
     unpipe "1.0.0"
+
+raw-loader@^0.5.1:
+  version "0.5.1"
+  resolved "https://nexus.aiads.com/repository/npm-public/raw-loader/-/raw-loader-0.5.1.tgz#0c3d0beaed8a01c966d9787bf778281252a979aa"
+  integrity sha1-DD0L6u2KAclm2Xh793goElKpeao=
 
 rc@^1.2.7:
   version "1.2.8"

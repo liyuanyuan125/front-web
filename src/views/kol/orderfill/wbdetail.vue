@@ -29,7 +29,7 @@
         </FormItem>
 
         <FormItem label="正文内容" prop="name">
-          <Froala />
+          <Froala v-model="form.content" />
         </FormItem>
 
         <FormItem label="发布时间" prop="name">
@@ -71,7 +71,8 @@ export default class DlgEditCinema extends ViewBase {
     img: [],
     value: '',
     name: '',
-    title: ''
+    title: '',
+    content: ''
   }
 
   rule: any = {}

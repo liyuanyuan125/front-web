@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack');
 
 const resolve = dir => path.join(__dirname, 'src', dir)
 
@@ -32,6 +33,12 @@ module.exports = {
   },
 
   chainWebpack: config => {
+    config
+    .plugin('provide')
+    .use(webpack.ProvidePlugin, [{
+      'window.Quill': 'quill/dist/quill.js',
+      'Quill': 'quill/dist/quill.js'
+    }])
     const isDev = process.env.NODE_ENV === 'development'
     // 开发|测试|仿真|生产：aiads-dev|qas|stg|prd
     ; [
