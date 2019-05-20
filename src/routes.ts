@@ -726,11 +726,18 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
   // KOL - KOL详情更多页 - 口碑评论
-    {
-      path: '/kol/detailMoreInfo/comment',
-      name: 'kol-detailMoreInfo-comment',
-      component: () => import('./views/kol/detailMoreInfo/comment.vue'),
-      meta: emptyAuth
+  {
+    path: '/kol/detailMoreInfo/comment',
+    name: 'kol-detailMoreInfo-comment',
+    component: () => import('./views/kol/detailMoreInfo/comment.vue'),
+    meta: emptyAuth
+  },
+  // KOL - KOL详情更多页 - 受众匹配
+  {
+    path: '/kol/detailMoreInfo/matching',
+    name: 'kol-detailMoreInfo-matching',
+    component: () => import('./views/kol/detailMoreInfo/matching.vue'),
+    meta: emptyAuth
   },
 
   // kol - 详情
