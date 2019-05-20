@@ -36,22 +36,26 @@
         </div>
       </template>
       <template style="marin-top: 100px" slot-scope="{ row }" slot="action">
-        {{row.fansNumber}}
+        <p>取消</p>
+        <p>收藏</p>
       </template>
     </Table>
 
-    <div class="checkAll">
+    <div class="checkAll" style="padding-right: 0px">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
       </span>
       <div class="check-span">
         <ul>
-          <li>已选账号 1 个  </li>
-          <li>应付金额（不含撰稿费用）</li>
+          <li>已选账号 <b class="">{{sum}}</b> 个  </li>
+          <li>应付金额（不含撰稿费用）<b class="">{{sumcount}}</b></li>
         </ul>
       </div>
-      <Button @click="sure">立即预定</Button>
+      <div>
+        <Button v-if="sum > 0" @click="reserve">立即预定</Button>
+      </div>
     </div>
+    <Detail ref="detail" />
   </div>
 </template>
 
@@ -60,12 +64,15 @@ import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { fileList, queryList } from '@/api/shopping'
 import Header from './header.vue'
+import Detail from './detail.vue'
 import { formatCurrency } from '@/fn/string'
 import { uniqBy } from 'lodash'
+import { toast, warning } from '@/ui/modal.ts'
 
 @Component({
   components: {
-    Header
+    Header,
+    Detail
   }
 })
 export default class DlgEditCinema extends ViewBase {
@@ -80,7 +87,7 @@ export default class DlgEditCinema extends ViewBase {
   sumList: any = []
   checkId: any = []
   sum = 0
-  sumcount = 0
+  sumcount = '0.00'
 
   get tableDates() {
     if (this.tableDate && this.tableDate.length > 0) {
@@ -145,6 +152,12 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
+  reserve() {
+    this.$nextTick(() => {
+      (this.$refs.detail as any).init(this.filmCheck)
+    })
+  }
+
   handleSelectAll() {
     const selection = this.$refs.selection as any
     selection.selectAll(!this.checkboxAll)
@@ -162,12 +175,19 @@ export default class DlgEditCinema extends ViewBase {
     const filterId = ids.filter((it: any) => !dataId.includes(it))
     this.checkId = this.checkId.filter((it: any) => !filterId.includes(it))
     this.sumList = this.sumList.filter((it: any) => !filterId.includes(it.id))
+    this.sum = this.checkId.length
+    let sum = 0
+    this.sumList.forEach((it: any) => {
+      sum += it.fansNumber
+    })
+    this.sumcount = formatCurrency(sum)
     this.checkboxAll = select.length == this.tableDate.length ? true : false
   }
 
   sure() {
     this.filename = this.filmList.filter((it: any) => it.key == this.filmCheck)[0].text
     this.checkFilm()
+    this.init()
   }
 
   checkFilm() {
@@ -198,10 +218,6 @@ export default class DlgEditCinema extends ViewBase {
     this.showDlg = false
   }
 
-  @Watch('filmCheck')
-  watchFilmCheck(val: number) {
-    this.init()
-  }
 }
 </script>
 

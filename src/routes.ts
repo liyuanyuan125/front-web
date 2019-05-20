@@ -725,6 +725,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/detailMoreInfo/platformInfoData.vue'),
     meta: emptyAuth
   },
+  // KOL - KOL详情更多页 - 口碑评论
+    {
+      path: '/kol/detailMoreInfo/comment',
+      name: 'kol-detailMoreInfo-comment',
+      component: () => import('./views/kol/detailMoreInfo/comment.vue'),
+      meta: emptyAuth
+  },
 
   // kol - 详情
   {
@@ -742,6 +749,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth,
   },
 
+  // kol - 订单填写
+  {
+    path: '/kol/orderfill/:id',
+    name: 'order-orderfill',
+    component: () => import('./views/kol/orderfill/index.vue'),
+    meta: emptyAuth,
+  },
   // 影片（film）- 影人更多详情 - 合作品牌
   {
     path: '/film/filmmakerdetail/cobrand',
