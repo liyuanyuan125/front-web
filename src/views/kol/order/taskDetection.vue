@@ -43,6 +43,17 @@
         </ul>
       </div>
     </div>
+    <Page
+      :total="totalCount"
+      v-if="totalCount>0"
+      class="btnCenter plan-pages"
+      :current="query.pageIndex"
+      :page-size="query.pageSize"
+      show-total
+      show-elevator
+      @on-change="handlepageChange"
+      @on-page-size-change="handlePageSize"
+    />
   </div>
 </template>
 
@@ -64,12 +75,17 @@ const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 })
 export default class Main extends ViewBase {
 
-
+  query: any = {
+    pageIndex: 1,
+    pageSize: 20,
+  }
 
   movieList: any = []
 
 
   itemlist: any = []
+
+  totalCount = 0
 
   mounted() {
     this.seach()
@@ -93,6 +109,15 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     } finally {
     }
+  }
+
+  handlepageChange(size: any) {
+    this.query.pageIndex = size
+    this.seach()
+  }
+  handlePageSize(size: any) {
+    this.query.pageIndex = size
+    this.seach()
   }
 
 }

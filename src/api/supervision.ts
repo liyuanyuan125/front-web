@@ -56,25 +56,25 @@ export async function querylist(query: any) {
 
 // 获取影院列表
 export async function movielist() {
-  const res = await get('/customer/cinemas' , {pageIndex: 1 , pageSize: 88888})
+  const res = await get(`/customer/cinemas` , {pageIndex: 1 , pageSize: 88888})
   return res
 }
 
 // 获取默认影院id
 export async function getcinid() {
-  const res = await get('/xadvert/v1/play-monitors/default-cinema')
+  const res = await get(`/xadvert/v1/play-monitors/default-cinema`)
   return res
 }
 
 
 // 上传视频
-export async function addvideo(id: any) {
-  const res = await put('/xadvert/v1/play-monitors/upload')
+export async function addvideo(id: any , query: any) {
+  const res = await put(`/xadvert/v1/play-monitors/${id}/upload` , query)
   return res
 }
 
 // 删除视频
 export async function delvideo(id: any) {
-  const res = await put('/xadvert/v1/play-monitors/delete')
+  const res = await put(`/xadvert/v1/play-monitors/${id}/delete`)
   return res
 }

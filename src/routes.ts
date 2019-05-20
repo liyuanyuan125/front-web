@@ -726,11 +726,18 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
   // KOL - KOL详情更多页 - 口碑评论
-    {
-      path: '/kol/detailMoreInfo/comment',
-      name: 'kol-detailMoreInfo-comment',
-      component: () => import('./views/kol/detailMoreInfo/comment.vue'),
-      meta: emptyAuth
+  {
+    path: '/kol/detailMoreInfo/comment',
+    name: 'kol-detailMoreInfo-comment',
+    component: () => import('./views/kol/detailMoreInfo/comment.vue'),
+    meta: emptyAuth
+  },
+  // KOL - KOL详情更多页 - 受众匹配
+  {
+    path: '/kol/detailMoreInfo/matching',
+    name: 'kol-detailMoreInfo-matching',
+    component: () => import('./views/kol/detailMoreInfo/matching.vue'),
+    meta: emptyAuth
   },
 
   // kol - 详情
@@ -746,6 +753,35 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/order/taskDetection/:id',
     name: 'order-order-taskDetection',
     component: () => import('./views/kol/order/taskDetection.vue'),
+    meta: emptyAuth,
+  },
+
+  // 影片详情 - 主创阵容
+  {
+    path: '/film/mainLineup/:id',
+    name: 'film-mainLineup',
+    component: () => import('./views/film/mainLineup.vue'),
+    meta: emptyAuth,
+  },
+  // 影片详情 - 详细资料
+  {
+    path: '/film/detailInfo/:id',
+    name: 'film-detailInfo',
+    component: () => import('./views/film/detailInfo.vue'),
+    meta: emptyAuth,
+  },
+  // 影片 - 影片合作订单列表
+  {
+    path: '/film/movielist',
+    name: 'film-movielist',
+    component: () => import('./views/film/movielist.vue'),
+    meta: emptyAuth,
+  },
+  // 影片 - 影片合作订单列表添加
+  {
+    path: '/film/addmovielist',
+    name: 'film-addmovielist',
+    component: () => import('./views/film/addmovielist.vue'),
     meta: emptyAuth,
   },
 
