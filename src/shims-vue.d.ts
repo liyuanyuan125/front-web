@@ -33,4 +33,9 @@ interface VarType {
   ajaxBaseUrl: string
 }
 
+declare module 'vue-quill-editor' {
+  export const VueFroala: any // tslint:disable-line
+  export const quillEditor: any   // tslint:disable-line
+}
+
 declare const VAR: VarType
