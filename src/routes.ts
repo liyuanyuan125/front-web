@@ -694,6 +694,22 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       meta: emptyAuth
   },
 
+  // kol - KOL详情更多页 - 合作品牌
+  {
+    path: '/kol/detailMoreInfo/colbrand',
+    name: 'kol-detailMoreInfo-colbrand',
+    component: () => import('./views/kol/detailMoreInfo/collaborateBrand.vue'),
+    meta: emptyAuth
+  },
+
+  // kol - KOL详情更多页 - 主要作品
+  {
+    path: '/kol/detailMoreInfo/masterwork',
+    name: 'kol-detailMoreInfo-masterwork',
+    component: () => import('./views/kol/detailMoreInfo/masterWork.vue'),
+    meta: emptyAuth
+  },
+
   // kol - koll列表
   {
     path: '/kol/shopping',
@@ -708,6 +724,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'kol-detailMoreInfo-platformInfoData',
     component: () => import('./views/kol/detailMoreInfo/platformInfoData.vue'),
     meta: emptyAuth
+  },
+  // KOL - KOL详情更多页 - 口碑评论
+    {
+      path: '/kol/detailMoreInfo/comment',
+      name: 'kol-detailMoreInfo-comment',
+      component: () => import('./views/kol/detailMoreInfo/comment.vue'),
+      meta: emptyAuth
   },
 
   // kol - 详情
@@ -733,6 +756,27 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/orderfill/index.vue'),
     meta: emptyAuth,
   },
+  // 影片（film）- 影人更多详情 - 合作品牌
+  {
+    path: '/film/filmmakerdetail/cobrand',
+    name: 'film-filmmakerdetail-cobrand',
+    component: () => import('./views/film/filmmakerDetails/coBrand.vue'),
+    meta: emptyAuth
+  },
+  // 影片 - 影人更多详情 - 主要作品
+  {
+    path: '/film/filmmakerdetail/masterwork',
+    name: 'film-filmmakerdetail-masterwork',
+    component: () => import('./views/film/filmmakerDetails/masterWork.vue'),
+    meta: emptyAuth
+  },
+  // 影片 - 影人更多详情 - 更多资料
+  {
+    path: '/film/filmmakerdetail/moreinformation',
+    name: 'film-filmmakerdetail-moreinformation',
+    component: () => import('./views/film/filmmakerDetails/moreInformation.vue'),
+    meta: emptyAuth
+  }
 ] // end of mainLayoutRoutes
 
 const errorRoutes: RouteConfigEnhance[] = [

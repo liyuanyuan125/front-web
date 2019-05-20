@@ -27,12 +27,16 @@
 }
 </style>
 <style lang='less'>
+/* 公用 */
 .my-card {
   .ivu-card-head {
     background: #f6f6f6;
   }
-  .content-bar {
-    padding: 15px;
+  .ivu-card-body {
+    padding: 0;
+  }
+  .content {
+    padding: 15px 0;
   }
 }
 </style>
@@ -82,7 +86,7 @@
                   </Col>
                 </Row>
               </div>
-              <div class="content-bar">
+              <div class="content">
                 <FormItem label="平台">
                   <Select v-model="form.platformId"
                           style="width: 400px"
@@ -115,7 +119,7 @@ import {
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
-import { platformData1, platformData2 } from '@/api/kolDetailMoreInfo'
+import { platformData1 } from '@/api/kolDetailMoreInfo'
 import numAdd from '../number.vue'
 import chartsGroup, { IcurrentType } from '@/components/chartsGroup/line/'
 import DetailNavBar from './components/detailNavBar.vue'

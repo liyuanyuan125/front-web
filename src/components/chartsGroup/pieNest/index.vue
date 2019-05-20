@@ -1,19 +1,25 @@
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+h1 {
+  text-align: left;
+  font-size: 14px
+}
 </style>
 <template>
-  <div style='background: linear-gradient(red, blue);'>
+  <div>
     <div style='text-align:center; padding-top:50px'>
+      <h1 v-if="title !==''">{{title}}</h1>
       <RadioGroup size="small"
+                  v-if="dict1.length > 0"
                   @on-change='currentTypeChange'
                   v-model="currentIndex"
                   type="button">
-        <Radio v-for="(item,index) in typeList"
+        <Radio v-for="(item,index) in dict1"
               :key="item.key"
               :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <div id="summaryLint" ref="summaryLint" v-if="initDone" style="width: 100%; height: 400px"></div>
+    <div ref="pieNestChart" v-if="initDone" style="width: 100%; height: 400px"></div>
     <div v-else style="width: 100%; height: 400px" >      
       <TinyLoading />
     </div>
@@ -30,71 +36,76 @@ import echarts from 'echarts'
     TinyLoading
   }
 })
-export default class LineChartGroup extends ViewBase {
+// 嵌套环形图
+export default class PieNest extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
+  @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
-  @Prop({ type: Array, default: [] }) typeList!: any[]
+  @Prop({ type: Array, default: [] }) dict1!: any[]
+  @Prop({ type: Array, default: [] }) dict2!: any[]
   @Prop({ type: Array, default: [] }) dataList!: any[]
-  xaxisList: any = []
-  yAxList: any = []
-  thisdown: boolean = false
   chartOptions: IchartOptions = {
-    name: this.typeList[this.currentTypeIndex].name,
-    type: 'line',
-    stack: '总量',
-    color: ['#FE8135']
+    name: '',
+    type: 'pieNest',
+    color: ['#ca7273', '#f3d872', '#57b4c9']
   }
   currentIndex: number = this.currentTypeIndex
-  currentTypeKey: string = this.typeList[this.currentTypeIndex].key
   currentTypeChange(index: number) {
     this.currentIndex = index
     this.$emit('typeChange', index)
   }
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
-    this.currentTypeKey = this.typeList[this.currentTypeIndex].key
-    this.chartOptions.name = this.typeList[this.currentTypeIndex].name
+    if (this.dict1.length > 0) {
+      this.chartOptions.name = this.dict1[this.currentTypeIndex].name
+    } else {
+      this.chartOptions.name = 'default'
+    }
   }
   updateCharts() {
     if (!this.dataList[this.currentIndex].list || this.dataList[this.currentIndex].list.length < 1) { return }
     const chartData = this.dataList[this.currentIndex].list
-    const myChart = echarts.init(this.$refs.summaryLint as any)
-    this.xaxisList = chartData.map((item: any) => item.date)
-    this.yAxList = chartData.map((item: any) => item.data)
+    const myChart = echarts.init(this.$refs.pieNestChart as any)
+    const chartSeries: any[] = []
+    chartData.forEach((item: any, index: number) => {
+      chartSeries.push({
+        value: item.data,
+        name: this.dict2[item.key].text
+      })
+    })
     let option: any = {}
-    if ( this.chartOptions.type === 'line' ) {
+    if ( this.chartOptions.type === 'pieNest' ) {
       option = Object.assign({
         tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-            label: {
-              backgroundColor: this.chartOptions.color
-            }
-          }
+          trigger: 'item',
+          formatter: '{b}: {c} ({d}%)'
         },
-        legend: {
-          data: ['曝光分布0']
+        grid: {
+          left: '2%',
+          right: '2%',
+          bottom: '10%',
+          containLabel: true
         },
-        color: this.chartOptions.color,
-        xAxis: [
-          {
-            type: 'category',
-            boundaryGap: false,
-            data: this.xaxisList
-          }
-        ],
-        yAxis: [
-          {
-            boundaryGap: false,
-            type: 'value'
-          }
-        ],
         series: [
           {
-            name: this.chartOptions.name,
-            type: this.chartOptions.type,
-            data: this.yAxList
+            name: ' ',
+            type: 'pie',
+            radius: ['40%', '55%'],
+            color: this.chartOptions.color,
+            label: {
+              normal: {
+                formatter: '{b|{b}}\n{d}%  ',
+                borderWidth: 1,
+                borderRadius: 4,
+                rich: {
+                  b: {
+                    fontSize: 16,
+                    lineHeight: 33
+                  }
+                }
+              }
+            },
+            data: chartSeries
           }
         ]
       }, option)

@@ -23,9 +23,11 @@ export default class TinyLoading extends ViewBase {
 .loading-box {
   display: inline-block;
 }
+
 .loading {
   animation: ring 1s linear infinite;
 }
+
 @keyframes ring {
   from {
     transform: rotate(0deg);
