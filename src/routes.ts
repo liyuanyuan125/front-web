@@ -703,6 +703,35 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth,
   },
 
+  // 影片详情 - 主创阵容
+  {
+    path: '/film/mainLineup/:id',
+    name: 'film-mainLineup',
+    component: () => import('./views/film/mainLineup.vue'),
+    meta: emptyAuth,
+  },
+  // 影片详情 - 详细资料
+  {
+    path: '/film/detailInfo/:id',
+    name: 'film-detailInfo',
+    component: () => import('./views/film/detailInfo.vue'),
+    meta: emptyAuth,
+  },
+  // 影片 - 影片合作订单列表
+  {
+    path: '/film/movielist',
+    name: 'film-movielist',
+    component: () => import('./views/film/movielist.vue'),
+    meta: emptyAuth,
+  },
+  // 影片 - 影片合作订单列表添加
+  {
+    path: '/film/addmovielist',
+    name: 'film-addmovielist',
+    component: () => import('./views/film/addmovielist.vue'),
+    meta: emptyAuth,
+  },
+
 ] // end of mainLayoutRoutes
 
 const errorRoutes: RouteConfigEnhance[] = [

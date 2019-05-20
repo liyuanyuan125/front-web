@@ -33,31 +33,32 @@
       	<Row class='li-title'>
           <Col span='3'>影片名称</Col>
           <Col span='2' style='text-align: center;'>总投放时长</Col>
-          <Col span='16'>广告列表</Col>
-          <Col span='3' style='text-align: center;'>监播视频</Col>
+          <Col span='14'>广告列表</Col>
+          <Col span='5' style='text-align: center;'>监播视频</Col>
         </Row>
         <ul class='itemul'>
         	<li class='li-item' v-for='(it,index) in itemlist' :key='index'>
         		<row>
         			<Col span='3'>{{it.movieName}}</Col>
-        			<Col span='2' style='text-align: center;'>{{it.videoTotalLength}}</Col>
-        			<Col span='16'>
+        			<Col span='2' style='text-align: center;'>{{it.videoTotalLength}}s</Col>
+        			<Col span='14'>
         				<row>
                   <Col style='color: blue;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
                     <router-link :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,7)}}...</router-link>
                   </Tooltip>
                 <router-link tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
-                  ({{item.videoLength}})
+                  ({{item.videoLength}}s)
                   </Col>
                 </row>
         			</Col>
-        			<Col span='3' style='text-align: center;cursor: pointer;' v-if='it.status == 1' ><UploadButton @success="onUploadSuccess($event, it.movieId)">上传</UploadButton></Col>
-              <Col span='3' v-if='it.status == 2'>{{it.fileName}}&nbsp;&nbsp;<div class='imgs1'></div> </Col>
-              <Col span='3' v-if='it.status == 3'>{{it.fileName}}&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div>&nbsp;&nbsp;&nbsp;<span @click='dels(it)'>删除</span></Col>
-              <Col span='3' v-if='it.status == 4'>{{it.fileName}}&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<span>删除</span></Col>
+        			<Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' ><UploadButton @success="onUploadSuccess($event, it.id)">上传</UploadButton></Col>
+              <Col span='5' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a @click='dels(it.id)'>删除</a> </Col>
+              <Col span='5' v-if='it.status == 3' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div></Col>
+              <Col span='5' v-if='it.status == 4' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a @click='dels(it.id)'>删除</a> </Col>
         		</row>
         	</li>
+          <li class='li-item' v-if='itemlist.length == 0' style='text-align: center;'>暂无数据</li>
         </ul>
       </div>
     </div>
@@ -72,6 +73,7 @@ import { querylist ,  getcinid , addvideo , delvideo , movielist } from '@/api/s
 import { formatTimestamp } from '@/util/validateRules'
 import UploadButton, { SuccessEvent } from '@/components/UploadButton.vue'
 import WeekDatePicker from '@/components/weekDatePicker'
+import { confirm , toast } from '@/ui/modal'
 
 
 const timeFormat = 'YYYY-MM-DD'
@@ -94,12 +96,9 @@ export default class Main extends ViewBase {
   ed = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
 
   query: any = {
-    // cinemaId: 0,
-    // beginDate: this.sd[0] + this.sd[1] + this.sd[2],
-    // endDate: this.ed[0] + this.ed[1] + this.ed[2],
     cinemaId: 11,
-    beginDate: 20190523,
-    endDate: 20190529,
+    beginDate: this.sd[0] + this.sd[1] + this.sd[2],
+    endDate: this.ed[0] + this.ed[1] + this.ed[2],
   }
 
   movieList: any = []
@@ -110,6 +109,17 @@ export default class Main extends ViewBase {
 
 
   mounted() {
+    if (new Date().getDay() == 5 || 6 || 0) {
+      this.weekDate = [
+      new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
+      new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+      return
+    }
     this.seach()
   }
 
@@ -127,33 +137,26 @@ export default class Main extends ViewBase {
   async onUploadSuccess({ files }: SuccessEvent, id: number) {
     // console.log(files)
       try {
-        await addvideo ({
+        await addvideo (id , {
                         fileName: files[0].clientName,
-                        fileId: files[0].fileId,
-                        beginDate: this.sd[0] + this.sd[1] + this.sd[2],
-                        endDate: this.ed[0] + this.ed[1] + this.ed[2],
-                        cinemaId: this.query.cinemaId,
-                        movieId: id
+                        fileId: files[0].fileId
                       })
-        // toast('操作成功')
-        this.seach()
+        this.$Message.success({
+          content: `更改成功`,
+        })
+        this.reloadSearch()
       } catch (ex) {
         this.handleError(ex)
       }
   }
 
-  async dels(it: any) {
+  async dels(id: any) {
     try {
-        await delvideo ({
-                        fileName: it.fileName,
-                        fileId: it.fileId,
-                        beginDate: this.weekDate[0].getTime(),
-                        endDate: this.weekDate[1].getTime(),
-                        cinemaId: this.query.cinemaId,
-                        movieId: it.movieId
-                      })
-        // toast('操作成功')
-        this.seach()
+        await delvideo (id)
+        this.$Message.success({
+          content: `删除视频成功`,
+        })
+        this.reloadSearch()
       } catch (ex) {
         this.handleError(ex)
       }
@@ -164,32 +167,73 @@ export default class Main extends ViewBase {
     /***参数都是以周一为基准的***/
     this.startTime = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000  // 本周的开始时间
     this.endTime = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1 // 本周的结束时间
-    this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
-    const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
-    const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
-    this.query.beginDate = a[0] + a[1] + a[2]
-    this.query.endDate = b[0] + b[1] + b[2]
+
+    if (new Date().getDay() == 5 || 6 || 0) {
+      this.weekDate = [
+      new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
+      new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.seach()
+    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+      this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
+      const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
+      const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.seach()
+    }
   }
   // 上周
   seachchgup() {
-    this.weekDate = [new Date(this.startTime -= this.datanum), new Date(this.endTime -= this.datanum)]
-    const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-    const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-    this.query.beginDate = a[0] + a[1] + a[2]
-    this.query.endDate = b[0] + b[1] + b[2]
-    // this.query.beginDate = new Date(this.startTime -= this.datanum).getTime()
-    // this.query.endDate = new Date(this.endTime -= this.datanum).getTime()
+    if (new Date().getDay() == 5 || 6 || 0) {
+      let ss = this.startTime + (24 * 60 * 60 * 1000 * 7)
+      let ee = this.endTime + (24 * 60 * 60 * 1000 * 7)
+      this.weekDate = [
+      new Date(ss -= this.datanum ) ,
+      new Date(ee -= this.datanum)]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.startTime -= this.datanum
+      this.endTime -= this.datanum
+      this.seach()
+    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+      this.weekDate = [new Date(this.startTime -= this.datanum), new Date(this.endTime -= this.datanum)]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.seach()
+    }
   }
 
   // 下周
   seachchgdown() {
-    this.weekDate = [new Date(this.startTime += this.datanum), new Date(this.endTime += this.datanum)]
-    const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-    const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-    this.query.beginDate = a[0] + a[1] + a[2]
-    this.query.endDate = b[0] + b[1] + b[2]
-    // this.query.beginDate = this.weekDate[0].getTime(),
-    // this.query.endDate = this.weekDate[1].getTime()
+    if (new Date().getDay() == 5 || 6 || 0) {
+      let ss = this.startTime + (24 * 60 * 60 * 1000 * 7)
+      let ee = this.endTime + (24 * 60 * 60 * 1000 * 7)
+      this.weekDate = [
+      new Date(ss += this.datanum ) ,
+      new Date(ee += this.datanum)]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.startTime += this.datanum
+      this.endTime += this.datanum
+      this.seach()
+    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+      this.weekDate = [new Date(this.startTime += this.datanum), new Date(this.endTime += this.datanum)]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.seach()
+     }
   }
 
   getTime(n: any) {
@@ -230,12 +274,12 @@ export default class Main extends ViewBase {
       const movieList = await movielist()
       this.movieList = movieList.data.items
       // 获取默认影院id
-      // const cinid = await getcinid()
-      // if (cinid.data.cinemaId == 0) {
-      //   this.query.cinemaId = movieList.data.items[0].id
-      // } else {
-      //   this.query.cinemaId = cinid.data.cinemaId
-      // }
+      const cinid = await getcinid()
+      if (cinid.data.cinemaId == 0) {
+        this.query.cinemaId = movieList.data.items[0].id
+      } else {
+        this.query.cinemaId = cinid.data.cinemaId
+      }
 
 
       const datalist = await querylist(this.query)
@@ -307,6 +351,7 @@ export default class Main extends ViewBase {
     line-height: 32px;
     font-size: 14px;
     background: rgba(249, 249, 249, 1);
+    cursor: pointer;
   }
 }
 .li-title {
