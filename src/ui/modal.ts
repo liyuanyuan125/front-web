@@ -60,7 +60,7 @@ export interface ModalConfig {
   // onOk?: () => any
 
   /**
-   * 点击取消的回调，只在Modal.confirm()下有效
+   * 点击取消的回调，只在 Modal.confirm()下有效
    */
   onCancel?: () => any
 }

@@ -20,8 +20,11 @@ export interface AreaItem {
   /** 子级区域个数 */
   childCount: number
 
-  /** ?? */
+  /** 城市分级 */
   grade: string
+
+  /** 城市分级名称 */
+  gradeName: string
 
   /** 名称 */
   name: string

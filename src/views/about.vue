@@ -1,7 +1,16 @@
 <template>
   <div class="page">
     <WeekDatePicker v-model="weekDate"/>
-    <CitySelectPane/>
+
+    <div>
+      <a @click="visible = true">打开</a>
+    </div>
+
+    <CitySelectDialog
+      v-model="visible"
+      :cityIds.sync="cityIds"
+      :topCityIds="topCityIds"
+    />
   </div>
 </template>
 
@@ -9,17 +18,23 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import WeekDatePicker from '@/components/weekDatePicker'
-import CitySelectPane from '@/components/citySelectPane'
+import CitySelectDialog from '@/components/citySelectDialog'
 
 @Component({
   components: {
     WeekDatePicker,
-    CitySelectPane
+    CitySelectDialog
   }
 })
-export default class Main extends ViewBase {
+export default class AboutPage extends ViewBase {
   // weekDate = [null, null]
   weekDate = [new Date(2019, 4, 9), new Date(2019, 4, 15)]
+
+  cityIds = [349, 170, 353]
+
+  topCityIds = [349, 430, 170, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428]
+
+  visible = false
 
   async mounted() {
     // const xx = list.filter(it => it.subList != null)
