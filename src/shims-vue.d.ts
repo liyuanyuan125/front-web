@@ -34,8 +34,12 @@ interface VarType {
 }
 
 declare module 'vue-quill-editor' {
-  export const VueFroala: any // tslint:disable-line
-  export const quillEditor: any   // tslint:disable-line
+  export const quillEditor: any // tslint:disable-line
+  export const Quill: any // tslint:disable-line
+}
+
+declare module 'quill-image-resize-module' {
+  export const ImageResize: any // tslint:disable-line
 }
 
 declare const VAR: VarType

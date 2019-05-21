@@ -21,10 +21,6 @@
           </Col>
         </Col>
         <Col span='4' class='chb'>
-        	<!-- <RadioGroup v-model='chgkey.status' type="button" @on-change='seachchg'>
-            	<Radio v-for='(it,index) in timechg' :key='it.key' :value='it.key' :label='it.key'>{{it.name}}</Radio>
-          	</RadioGroup> -->
-            <!-- <span v-for='(it,index) in timechg' :key='index'>{{it.name}}</span> -->
             <span @click='seachchgup'><&nbsp;上周</span>
             <span @click='seachchg'>本周</span>
             <span @click='seachchgdown'>下周&nbsp;></span>
@@ -46,13 +42,13 @@
         				<row>
         					<Col style='color: blue;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
                   
-                  <div v-if='item.status == 1' @click="change(item.status, item.id)" class='imgs1'></div>
-                  <div v-if='item.status == 2' @click="change(item.status, item.id)" class='imgs2'></div>
+                  <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
+                  <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
         					  <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
 						        <router-link :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,10)}}...</router-link>
 						      </Tooltip>
 							  <router-link tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
-						      ({{item.videoLength}}s){{item.status}}
+						      ({{item.videoLength}}s)
         					</Col>
         				</row>
         			</Col>
@@ -73,7 +69,7 @@ import { queryList ,   getcinid , oneover , oneout , allover , movielist } from 
 import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
 import WeekDatePicker from '@/components/weekDatePicker'
-import { confirm } from '@/ui/modal'
+import { confirm , toast } from '@/ui/modal'
 
 
 const timeFormat = 'YYYY-MM-DD'
@@ -113,6 +109,10 @@ export default class Main extends ViewBase {
       this.weekDate = [
       new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
       new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
     } else if (new Date().getDay() == 1 || 2 || 3 ) {
       return
     }
@@ -129,37 +129,78 @@ export default class Main extends ViewBase {
     this.seachchg()
   }
 
-  // 本周
+ // 本周
   seachchg() {
     /***参数都是以周一为基准的***/
     this.startTime = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000  // 本周的开始时间
     this.endTime = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1 // 本周的结束时间
-    this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
-    const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
-    const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
-    this.query.beginDate = a[0] + a[1] + a[2]
-    this.query.endDate = b[0] + b[1] + b[2]
+
+    if (new Date().getDay() == 5 || 6 || 0) {
+      this.weekDate = [
+      new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
+      new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.seach()
+    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+      this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
+      const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
+      const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.seach()
+    }
   }
   // 上周
   seachchgup() {
-    this.weekDate = [new Date(this.startTime -= this.datanum), new Date(this.endTime -= this.datanum)]
-    const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-    const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-    this.query.beginDate = a[0] + a[1] + a[2]
-    this.query.endDate = b[0] + b[1] + b[2]
-    // this.query.beginDate = new Date(this.startTime -= this.datanum).getTime()
-    // this.query.endDate = new Date(this.endTime -= this.datanum).getTime()
+    if (new Date().getDay() == 5 || 6 || 0) {
+      let ss = this.startTime + (24 * 60 * 60 * 1000 * 7)
+      let ee = this.endTime + (24 * 60 * 60 * 1000 * 7)
+      this.weekDate = [
+      new Date(ss -= this.datanum ) ,
+      new Date(ee -= this.datanum)]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.startTime -= this.datanum
+      this.endTime -= this.datanum
+      this.seach()
+    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+      this.weekDate = [new Date(this.startTime -= this.datanum), new Date(this.endTime -= this.datanum)]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.seach()
+    }
   }
 
   // 下周
   seachchgdown() {
-    this.weekDate = [new Date(this.startTime += this.datanum), new Date(this.endTime += this.datanum)]
-    const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-    const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-    this.query.beginDate = a[0] + a[1] + a[2]
-    this.query.endDate = b[0] + b[1] + b[2]
-    // this.query.beginDate = this.weekDate[0].getTime(),
-    // this.query.endDate = this.weekDate[1].getTime()
+    if (new Date().getDay() == 5 || 6 || 0) {
+      let ss = this.startTime + (24 * 60 * 60 * 1000 * 7)
+      let ee = this.endTime + (24 * 60 * 60 * 1000 * 7)
+      this.weekDate = [
+      new Date(ss += this.datanum ) ,
+      new Date(ee += this.datanum)]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.startTime += this.datanum
+      this.endTime += this.datanum
+      this.seach()
+    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+      this.weekDate = [new Date(this.startTime += this.datanum), new Date(this.endTime += this.datanum)]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.seach()
+     }
   }
 
   getTime(n: any) {
@@ -195,14 +236,19 @@ export default class Main extends ViewBase {
 
   async allover(id: any) {
     this.objArray = ((await queryList(this.query)).data.items || []).map((it: any , index: any) => {
-        return it.details
+        return {
+          id: it.id,
+          con: (it.details || []).map((item: any) => {
+            return item.orderId
+          })
+        }
     })
     this.deArray = []
     for (const key in  this.objArray) {
       if (1 == 1) {
-        for (const j in  this.objArray[key]) {
+        for (const j in  this.objArray[key].con) {
           if (1 == 1) {
-            this.deArray.push(this.objArray[key][j])
+            this.deArray.push({id : this.objArray[key].id , orderId : this.objArray[key].con[j]})
           }
         }
       }
@@ -213,18 +259,16 @@ export default class Main extends ViewBase {
     //     this.deArray.push(this.objArray[i][j])
     //   }
     // }
-    this.deArray = (this.deArray || []).map((it: any) => {
-      return it.videoId
-    })
+    // this.deArray = (this.deArray || []).map((it: any) => {
+    //   return it.videoId
+    // })
 
     try {
       await  confirm('是否确认将该影院所有广告状态设为已排？')
-      await allover({
-        ids: this.deArray
+      await allover(this.deArray)
+      this.$Message.success({
+        content: `修改成功`,
       })
-      // this.$Message.success({
-      //   content: `修改成功`,
-      // })
       this.reloadSearch()
     } catch (ex) {
       this.handleError(ex)
@@ -232,21 +276,21 @@ export default class Main extends ViewBase {
   }
 
   // 修改状态
-  async change(status: number , id: any) {
+  async change(id: any , status: number , orderid: any) {
     try {
       if (status == 1) {
         await confirm('您确定修改当前状态信息吗？')
-        await oneover ({id})
-        // this.$Message.success({
-        //   content: `更改成功`,
-        // })
+        await oneover (id, {orderId : orderid})
+        this.$Message.success({
+          content: `更改成功`,
+        })
         this.reloadSearch()
       } else if (status == 2) {
         await confirm('您确定修改当前状态信息吗？')
-        await oneout ({id})
-        // this.$Message.success({
-        //   content: `更改成功`,
-        // })
+        await oneout (id, {orderId : orderid})
+        this.$Message.success({
+          content: `更改成功`,
+        })
         this.reloadSearch()
       }
     } catch (ex) {
@@ -260,12 +304,12 @@ export default class Main extends ViewBase {
       this.movieList = movieList.data.items
 
       // 获取默认影院id
-      // const cinid = await getcinid()
-      // if (cinid.data.cinemaId == 0) {
-      //   this.query.cinemaId = movieList.data.items[0].id
-      // } else {
-      //   this.query.cinemaId = cinid.data.cinemaId
-      // }
+      const cinid = await getcinid()
+      if (cinid.data.cinemaId == 0) {
+        this.query.cinemaId = movieList.data.items[0].id
+      } else {
+        this.query.cinemaId = cinid.data.cinemaId
+      }
 
       // 获取上刊列表
       const datalist = await queryList(this.query)

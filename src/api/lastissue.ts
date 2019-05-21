@@ -66,14 +66,14 @@ export async function getcinid() {
 
 
 // 单个设置上刊状态
-export async function oneover(id: any) {
-  const res = await put('/xadvert/v1/upper-shelfs/${id}/setup')
+export async function oneover(id: any , query: any) {
+  const res = await put( `/xadvert/v1/upper-shelfs/${id}/setup` , query)
   return res
 }
 
 // 单个设置下刊状态
-export async function oneout(id: any) {
-  const res = await put('/xadvert/v1/upper-shelfs/${id}/cannel')
+export async function oneout(id: any , query: any) {
+  const res = await put(`/xadvert/v1/upper-shelfs/${id}/cannel` , query)
   return res
 }
 
