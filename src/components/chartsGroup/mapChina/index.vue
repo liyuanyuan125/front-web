@@ -30,7 +30,7 @@ import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import { IchartOptions } from './types'
 import echarts from 'echarts'
-import china from './china.js'
+import china from './china'
 
 @Component({
   components: {
