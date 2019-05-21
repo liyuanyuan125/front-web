@@ -10,23 +10,16 @@ h1 {
     <div style='text-align:center'>
       <h1 v-if="title !==''">{{title}}</h1>
       <RadioGroup size="small"
-                  v-if="dict1.length > 0"
+                  v-if="dict2.length > 0"
                   @on-change='currentTypeChange'
                   v-model="currentIndex"
                   type="button">
-        <Radio v-for="(item,index) in dict1"
+        <Radio v-for="(item,index) in dict2"
               :key="item.key"
               :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <Row type="flex" justify="space-between">
-      <Col :span="12">
-        <div ref="barChart0" v-if="initDone" style="width: 100%; height: 400px"></div>
-      </Col>
-      <Col :span="12">
-        <div ref="barChart1" v-if="initDone" style="width: 100%; height: 400px"></div>
-      </Col>
-    </Row>
+    <div ref="barChart" v-if="initDone" style="width: 100%; height: 400px"></div>
   </div>
 </template>
 <script lang="ts">
@@ -40,8 +33,8 @@ import echarts from 'echarts'
     TinyLoading
   }
 })
-// 柱状y轴分类(双)
-export default class BarYCategoryDouble extends ViewBase {
+// 柱状y轴分类
+export default class BarYCategory extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
@@ -70,8 +63,7 @@ export default class BarYCategoryDouble extends ViewBase {
   updateCharts() {
     if (!this.dataList[this.currentIndex].list || this.dataList[this.currentIndex].list.length < 1) { return }
     const chartData = this.dataList[this.currentIndex].list
-    const myChart0 = echarts.init(this.$refs.barChart0 as any)
-    const myChart1 = echarts.init(this.$refs.barChart1 as any)
+    const myChart = echarts.init(this.$refs.barChart as any)
 
     let seriesData: any = []
     this.dict2.forEach((item, index) => {
@@ -88,7 +80,8 @@ export default class BarYCategoryDouble extends ViewBase {
       seriesData[item.key].data.push(item.data)
       seriesData[item.key].itemNames.push(item.itemName)
     })
-    const option0: any = {
+
+    const option: any = {
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -111,7 +104,7 @@ export default class BarYCategoryDouble extends ViewBase {
         splitArea : {show : false},
         show: true,
         type: 'category',
-        data: seriesData[0].itemNames
+        data: seriesData[this.currentIndex].itemNames
       },
       xAxis: [
         {
@@ -128,63 +121,14 @@ export default class BarYCategoryDouble extends ViewBase {
       ],
       series: [
         {
-          name: seriesData[0].text,
+          name: seriesData[this.currentIndex].text,
           type: 'bar',
-          data: seriesData[0].data
+          data: seriesData[this.currentIndex].data
         }
       ],
       color: ['#ff9933'],
     }
-
-    const option1: any = {
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross'
-        }
-      },
-      legend: {
-        y: 'bottom'
-      },
-      grid: {
-        left: '2%',
-        right: '2%',
-        bottom: '10%',
-        containLabel: true,
-        show: false,
-        borderWidth: 0
-      },
-      yAxis: {
-        splitLine: {show: false},
-        splitArea : {show : false},
-        show: true,
-        type: 'category',
-        data: seriesData[1].itemNames
-      },
-      xAxis: [
-        {
-        splitLine: {show: false},
-        splitArea : {show : false},
-        type: 'value',
-        axisLabel: {
-            show: true,
-            interval: 'auto',
-            formatter: '{value} %'
-          },
-        show: false
-        }
-      ],
-      series: [
-        {
-          name: seriesData[1].text,
-          type: 'bar',
-          data: seriesData[1].data
-        }
-      ],
-      color: ['#169bd5'],
-    }
-    myChart0.setOption(option0)
-    myChart1.setOption(option1)
+    myChart.setOption(option)
   }
   @Watch('initDone')
   watchInitDone(val: boolean) {

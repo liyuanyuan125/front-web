@@ -36,7 +36,7 @@ import echarts from 'echarts'
     TinyLoading
   }
 })
-// bar-category-stack
+// 柱状堆叠
 export default class BarCategoryStack extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string

@@ -36,8 +36,8 @@ import echarts from 'echarts'
     TinyLoading
   }
 })
-// 柱状x轴分类
-export default class BarXCategory extends ViewBase {
+// 简单饼图
+export default class PieSimple extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
@@ -76,58 +76,40 @@ export default class BarXCategory extends ViewBase {
       this.xaxisList.push(item.text)
       chartSeries.push({
         name: item.text,
-        type: 'bar',
-        data: []
+        value: 0
       })
     })
     chartData.forEach((item: any, index: number ) => {
-      chartSeries[item.key].data.push(item.data)
+      chartSeries[item.key].value = item.data
     })
 
     this.seriesList = chartSeries.map(item => item)
 
     let option: any = {}
     if ( this.chartOptions.type === 'bar' ) {
-
-
       option = Object.assign({
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          }
+        tooltip : {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
-        legend: {
-          data: this.dict2.map((item: any) => {
-            return item.text
-          }),
-          y: 'bottom'
-        },
-        grid: {
-          left: '2%',
-          right: '2%',
-          bottom: '10%',
-          containLabel: true
-        },
-        xAxis: {
-          type: 'category',
-          data: this.xaxisList
-        },
-        yAxis: [
+        series : [
           {
-            type: 'value',
-            axisLabel: {
-              show: true,
-              interval: 'auto',
-              formatter: '{value} %'
-            },
-            show: true
+            name: this.title,
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data: this.seriesList,
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
           }
         ],
-        series: this.seriesList,
         color: this.chartOptions.color,
       }, option)
-
     }
     myChart.setOption(option)
   }

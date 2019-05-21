@@ -739,6 +739,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/detailMoreInfo/matching.vue'),
     meta: emptyAuth
   },
+  // KOL - KOL详情更多页 - 粉丝画像
+  {
+    path: '/kol/detailMoreInfo/fans',
+    name: 'kol-detailMoreInfo-fans',
+    component: () => import('./views/kol/detailMoreInfo/fans.vue'),
+    meta: emptyAuth
+  },
 
   // kol - 详情
   {
