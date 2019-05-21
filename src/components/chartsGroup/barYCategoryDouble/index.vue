@@ -22,9 +22,15 @@ h1 {
     <Row type="flex" justify="space-between">
       <Col :span="12">
         <div ref="barChart0" v-if="initDone" style="width: 100%; height: 400px"></div>
+        <div v-else style="width: 100%; height: 400px" >      
+          <TinyLoading />
+        </div>
       </Col>
       <Col :span="12">
         <div ref="barChart1" v-if="initDone" style="width: 100%; height: 400px"></div>
+        <div v-else style="width: 100%; height: 400px" >      
+          <TinyLoading />
+        </div>
       </Col>
     </Row>
   </div>

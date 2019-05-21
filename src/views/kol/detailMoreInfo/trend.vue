@@ -1,160 +1,77 @@
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-.layout-panel {
-  padding-top: 30px;
-  border-radius: 10px;
-}
-.ivu-form-item {
-  padding-left: 30px;
-  color: @c-text;
-  margin-bottom: 0;
-}
-/deep/ .ivu-input-icon {
-  line-height: 40px;
-  height: 40px;
-}
-.radio-item-type {
-  font-size: 14px;
-  margin-top: 4px;
-  .ivu-radio-wrapper {
-    font-size: 14px;
-    margin-right: 35px;
-  }
-}
-/deep/ .ivu-select-input {
-  height: 40px;
-  line-height: 40px;
-}
-</style>
-<style lang='less'>
-/* 公用 */
-.my-card {
-  .ivu-card-head {
-    background: #f6f6f6;
-  }
-  .title-right {
-    flex: 1;
-    width: 100%;
-    text-align: right;
-  }
-  .ivu-card-body {
-    padding: 0;
-  }
-  .content {
-    padding: 15px 0;
-    .chart-wp {
-      border-radius: 5px;
-      background: #fff;
-      min-height: 520px;
-      position: relative;
-      .total-tips {
-        position: absolute;
-        right: 0;
-        top: 15px;
-        border: 2px solid #999;
-        background: #fff;
-        border-radius: 80px;
-        padding: 15px;
-        width: 90px;
-        height: 90px;
-        text-align: center;
-        display: flex;
-        flex-flow: row;
-        justify-content: center;
-        align-items: center;
-        z-index: 9;
-      }
-    }
-  }
-  .selectedBox {
-    text-align: left;
-  }
-}
+@import '~@/site/detailmore.less';
 </style>
 <template>
-  <div style='display:flex; background:blue'>
-    <div style='width:300px; text-align:center; color:#ffffff'>
-      <h3>吴京</h3>
-      <h5>演员/导演/制片人</h5>
-      <ul>
-        <li>概览</li>
-        <li>作品列表</li>
-        <li>全网热度</li>
-        <li>平台运营</li>
-      </ul>
-    </div>
-    <div style='flex:1; background:#ffffff'>
-      <div style='background:#ffffff'>
-        <Row>
-          <Col span="24">
-            <Form label-position="left"
-                  :label-width="100"
-                  class="edit-input">
-              <Card class="my-card">
-                <div slot="title">
-                  <Row type="flex"
-                      justify="space-between">
-                    <Col :span="24">
-                      <DetailNavBar titleText='统计周期'>
-                        <div slot='item'>
-                          <RadioGroup style='margin-right:15px'
-                                      @on-change="handleChange"
-                                      v-model="form.statisticTimeId"
-                                      size="large"
-                                      type="button">
-                            <Radio v-for="(item) in dict.statisticTime"
-                                  :key="item.id"
-                                  :disabled="item.disabled"
-                                  :label="item.id">{{item.name}}</Radio>
-                          </RadioGroup>
-                          <DatePicker type="daterange"
-                                      v-model="form.beginDate"
-                                      @on-change="handleChange"
-                                      placement="bottom-end"
-                                      placeholder="自定义时间段"></DatePicker>
-                        </div>
-                      </DetailNavBar>
-                    </Col>
-                  </Row>
+  <div>
+    <Row>
+      <Col span="24">
+      <Form label-position="left"
+            :label-width="100"
+            class="edit-input">
+        <Card class="detailmore-card">
+          <div slot="title">
+            <Row type="flex"
+                 justify="space-between">
+              <Col :span="24">
+              <DetailNavBar titleText='统计周期'>
+                <div slot='item'>
+                  <RadioGroup style='margin-right:15px'
+                              @on-change="handleChange"
+                              v-model="form.statisticTimeId"
+                              size="large"
+                              type="button">
+                    <Radio v-for="(item) in dict.statisticTime"
+                           :key="item.id"
+                           :disabled="item.disabled"
+                           :label="item.id">{{item.name}}</Radio>
+                  </RadioGroup>
+                  <DatePicker type="daterange"
+                              v-model="form.beginDate"
+                              @on-change="handleChange"
+                              placement="bottom-end"
+                              placeholder="自定义时间段"></DatePicker>
                 </div>
-                <div class="content">
-                  <Row type="flex"
-                      justify="space-between">
-                    <Col :span="24">
-                      <div class='chart-wp'>
-                          <AreaBasic :initDone="chart1.initDone"
-                                    :title='chart1.title'
-                                    :dict1="chart1.dict1"
-                                    :dict2="chart1.dict2"
-                                    :color="chart1.color"
-                                    :dataList="chart1.dataList"
-                                    :currentTypeIndex="chart1.currentTypeIndex"
-                                    @typeChange='typeChangeHander1' />
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row type="flex"
-                      justify="space-between">
-                    <Col :span="24">
-                      <div class='chart-wp'>
-                          <AreaBasic :initDone="chart2.initDone"
-                                    :title='chart2.title'
-                                    :dict1="chart2.dict1"
-                                    :dict2="chart2.dict2"
-                                    :color="chart2.color"
-                                    :dataList="chart2.dataList"
-                                    :currentTypeIndex="chart2.currentTypeIndex"
-                                    @typeChange='typeChangeHander2' />
-                      </div>
-                    </Col>
-                  </Row>
-                </div>
-              </Card>
-            </Form>
-          </Col>
-        </Row>
-      </div>
-    </div>
+              </DetailNavBar>
+              </Col>
+            </Row>
+          </div>
+          <div class="content">
+            <Row type="flex"
+                 justify="space-between">
+              <Col :span="24">
+              <div class='chart-wp'>
+                <AreaBasic :initDone="chart1.initDone"
+                           :title='chart1.title'
+                           :dict1="chart1.dict1"
+                           :dict2="chart1.dict2"
+                           :color="chart1.color"
+                           :dataList="chart1.dataList"
+                           :currentTypeIndex="chart1.currentTypeIndex"
+                           @typeChange='typeChangeHander1' />
+              </div>
+              </Col>
+            </Row>
+            <Row type="flex"
+                 justify="space-between">
+              <Col :span="24">
+              <div class='chart-wp'>
+                <AreaBasic :initDone="chart2.initDone"
+                           :title='chart2.title'
+                           :dict1="chart2.dict1"
+                           :dict2="chart2.dict2"
+                           :color="chart2.color"
+                           :dataList="chart2.dataList"
+                           :currentTypeIndex="chart2.currentTypeIndex"
+                           @typeChange='typeChangeHander2' />
+              </div>
+              </Col>
+            </Row>
+          </div>
+        </Card>
+      </Form>
+      </Col>
+    </Row>
   </div>
 </template>
 <script lang="ts">
@@ -224,8 +141,7 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['#ff0000', '#3fb23f', '#0099cc', '#cc6600']
   }
-  async typeChangeHander1(index: number = 0) {
-  }
+  async typeChangeHander1(index: number = 0) {}
   async typeChangeHander2(index: number = 0) {
     if (this.chart2.dataList[index].list.length < 1) {
       await this.getChartsData('chart2', index)
@@ -243,15 +159,17 @@ export default class Temporary extends ViewBase {
     }
     try {
       const { data } = await trend({ ...mockObj })
-      if ( data.chart1.effectTypeList.length > 0 ) {
-        this.chart1.dataList = data.chart1.effectTypeList.map((item: any, index: number) => {
-          return {
-            list: {
-              data: [],
-              date: []
+      if (data.chart1.effectTypeList.length > 0) {
+        this.chart1.dataList = data.chart1.effectTypeList.map(
+          (item: any, index: number) => {
+            return {
+              list: {
+                data: [],
+                date: []
+              }
             }
           }
-        })
+        )
       } else {
         this.chart1.dataList.push({
           list: {
@@ -266,15 +184,17 @@ export default class Temporary extends ViewBase {
         this.chart1.dataList[item.key].list.date.push(item.date)
       })
       this.chart1.initDone = true
-      if ( data.chart2.effectTypeList.length > 0 ) {
-        this.chart2.dataList = data.chart2.effectTypeList.map((item: any, index: number) => {
-          return {
-            list: {
-              data: [],
-              date: []
+      if (data.chart2.effectTypeList.length > 0) {
+        this.chart2.dataList = data.chart2.effectTypeList.map(
+          (item: any, index: number) => {
+            return {
+              list: {
+                data: [],
+                date: []
+              }
             }
           }
-        })
+        )
       } else {
         this.chart2.dataList.push({
           list: {

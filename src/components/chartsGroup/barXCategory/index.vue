@@ -43,6 +43,8 @@ export default class BarXCategory extends ViewBase {
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
   @Prop({ type: Array, default: [] }) dict1!: any[]
   @Prop({ type: Array, default: [] }) dict2!: any[]
+  @Prop({ type: Array, default: [] }) dict3!: any[]
+  @Prop({ type: Array, default: [] }) color!: any[]
   @Prop({ type: Array, default: [] }) dataList!: any[]
   xaxisList: any = []
   seriesList: any[] = []
@@ -58,11 +60,6 @@ export default class BarXCategory extends ViewBase {
   }
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
-    if (this.dict1.length > 0) {
-      this.chartOptions.name = this.dict1[this.currentTypeIndex].name
-    } else {
-      this.chartOptions.name = 'default'
-    }
     this.seriesList = []
     this.xaxisList = []
   }
@@ -73,62 +70,62 @@ export default class BarXCategory extends ViewBase {
 
     const chartSeries: any[] = []
     this.dict2.forEach((item, index) => {
-      this.xaxisList.push(item.text)
       chartSeries.push({
-        name: item.text,
+        name: '',
         type: 'bar',
         data: []
       })
     })
-    chartData.forEach((item: any, index: number ) => {
-      chartSeries[item.key].data.push(item.data)
+    this.xaxisList = this.dict3.map((item: any) => {
+      return item.text
     })
-
+    // 数据处理等接口设计结束后调整。nxd
+    chartData.forEach((item: any, index: number ) => {
+      chartSeries[item.key].name = this.dict2[item.key].text
+      chartSeries[item.key].data.push({
+        value: item.data,
+        key2: item.key2
+      })
+    })
     this.seriesList = chartSeries.map(item => item)
 
     let option: any = {}
-    if ( this.chartOptions.type === 'bar' ) {
-
-
-      option = Object.assign({
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          }
+    option = Object.assign({
+      color: this.color,
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: this.xaxisList
+      },
+      yAxis: {
+        type: 'value',
+        boundaryGap: [0, 0.01]
+      },
+      // series: this.seriesList,
+      series: [
+        {
+          name: 'Papi酱',
+          type: 'bar',
+          data: [230230, 330230, 630230, 230230, 630230]
         },
-        legend: {
-          data: this.dict2.map((item: any) => {
-            return item.text
-          }),
-          y: 'bottom'
-        },
-        grid: {
-          left: '2%',
-          right: '2%',
-          bottom: '10%',
-          containLabel: true
-        },
-        xAxis: {
-          type: 'category',
-          data: this.xaxisList
-        },
-        yAxis: [
-          {
-            type: 'value',
-            axisLabel: {
-              show: true,
-              interval: 'auto',
-              formatter: '{value} %'
-            },
-            show: true
-          }
-        ],
-        series: this.seriesList,
-        color: this.chartOptions.color,
-      }, option)
-
-    }
+        {
+          name: '奔驰',
+          type: 'bar',
+          data: [134141, 681807, 630230, 630230, 630230]
+        }
+      ]
+    }, option)
     myChart.setOption(option)
   }
   @Watch('initDone')

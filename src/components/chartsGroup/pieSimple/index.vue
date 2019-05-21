@@ -16,10 +16,10 @@ h1 {
                   type="button">
         <Radio v-for="(item,index) in dict1"
               :key="item.key"
-              :label="index">{{item.name}}</Radio>
+              :label="index">{{item.text}}</Radio>
       </RadioGroup>
     </div>
-    <div ref="barChart" v-if="initDone" style="width: 100%; height: 400px"></div>
+    <div ref="refChart" v-if="initDone" style="width: 100%; height: 400px"></div>
     <div v-else style="width: 100%; height: 400px" >      
       <TinyLoading />
     </div>
@@ -43,9 +43,8 @@ export default class PieSimple extends ViewBase {
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
   @Prop({ type: Array, default: [] }) dict1!: any[]
   @Prop({ type: Array, default: [] }) dict2!: any[]
+  @Prop({ type: Array, default: [] }) color!: any[]
   @Prop({ type: Array, default: [] }) dataList!: any[]
-  xaxisList: any = []
-  seriesList: any[] = []
   chartOptions: IchartOptions = {
     name: '',
     type: 'bar',
@@ -58,22 +57,14 @@ export default class PieSimple extends ViewBase {
   }
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
-    if (this.dict1.length > 0) {
-      this.chartOptions.name = this.dict1[this.currentTypeIndex].name
-    } else {
-      this.chartOptions.name = 'default'
-    }
-    this.seriesList = []
-    this.xaxisList = []
   }
   updateCharts() {
     if (!this.dataList[this.currentIndex].list || this.dataList[this.currentIndex].list.length < 1) { return }
     const chartData = this.dataList[this.currentIndex].list
-    const myChart = echarts.init(this.$refs.barChart as any)
+    const myChart = echarts.init(this.$refs.refChart as any)
 
     const chartSeries: any[] = []
     this.dict2.forEach((item, index) => {
-      this.xaxisList.push(item.text)
       chartSeries.push({
         name: item.text,
         value: 0
@@ -82,34 +73,28 @@ export default class PieSimple extends ViewBase {
     chartData.forEach((item: any, index: number ) => {
       chartSeries[item.key].value = item.data
     })
-
-    this.seriesList = chartSeries.map(item => item)
-
-    let option: any = {}
-    if ( this.chartOptions.type === 'bar' ) {
-      option = Object.assign({
-        tooltip : {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
-        },
-        series : [
-          {
-            name: this.title,
-            type: 'pie',
-            radius : '55%',
-            center: ['50%', '60%'],
-            data: this.seriesList,
-            itemStyle: {
-              emphasis: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
+    const option: any = {
+      tooltip : {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)'
+      },
+      series : [
+        {
+          name: this.title,
+          type: 'pie',
+          radius : '55%',
+          center: ['50%', '60%'],
+          data: chartSeries,
+          itemStyle: {
+            emphasis: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
             }
           }
-        ],
-        color: this.chartOptions.color,
-      }, option)
+        }
+      ],
+      color: this.color,
     }
     myChart.setOption(option)
   }

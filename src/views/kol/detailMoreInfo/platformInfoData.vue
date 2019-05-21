@@ -1,114 +1,65 @@
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-.layout-panel {
-  padding-top: 30px;
-  border-radius: 10px;
-}
-.ivu-form-item {
-  padding-left: 30px;
-  color: @c-text;
-  margin-bottom: 0;
-}
-/deep/ .ivu-input-icon {
-  line-height: 40px;
-  height: 40px;
-}
-.radio-item-type {
-  font-size: 14px;
-  margin-top: 4px;
-  .ivu-radio-wrapper {
-    font-size: 14px;
-    margin-right: 35px;
-  }
-}
-/deep/ .ivu-select-input {
-  height: 40px;
-  line-height: 40px;
-}
-</style>
-<style lang='less'>
-/* 公用 */
-.my-card {
-  .ivu-card-head {
-    background: #f6f6f6;
-  }
-  .ivu-card-body {
-    padding: 0;
-  }
-  .content {
-    padding: 15px 0;
-  }
-}
+@import '~@/site/detailmore.less';
 </style>
 <template>
-  <div style='display:flex; background:blue'>
-    <div style='width:300px; text-align:center; color:#ffffff'>
-      <h3>吴京</h3>
-      <h5>演员/导演/制片人</h5>
-      <ul>
-        <li>概览</li>
-        <li>作品列表</li>
-        <li>全网热度</li>
-        <li>平台运营</li>
-      </ul>
-    </div>
-    <div style='flex:1; background:#ffffff'>
-      <div style='background:#ffffff'>
-        <Row>
-          <Col span="24">
-          <Form label-position="left"
-                :label-width="100"
-                class="edit-input">
-            <Card class="my-card">
-              <div slot="title">
-                <Row type="flex"
-                     justify="space-between">
-                  <Col :span="24">
-                  <DetailNavBar titleText='统计周期'>
-                    <div slot='item'>
-                      <RadioGroup style='margin-right:15px'
-                                  @on-change="handleChange"
-                                  v-model="form.statisticTimeId"
-                                  size="large"
-                                  type="button">
-                        <Radio v-for="(item) in dict.statisticTime"
-                               :key="item.id"
-                               :disabled="item.disabled"
-                               :label="item.id">{{item.name}}</Radio>
-                      </RadioGroup>
-                      <DatePicker type="daterange"
-                                  v-model="form.beginDate"
-                                  @on-change="handleChange"
-                                  placement="bottom-end"
-                                  placeholder="自定义时间段"></DatePicker>
-                    </div>
-                  </DetailNavBar>
-                  </Col>
-                </Row>
-              </div>
-              <div class="content">
-                <FormItem label="平台">
-                  <Select v-model="form.platformId"
-                          style="width: 400px"
-                          clearable
-                          @on-change="handleChange">
-                    <Option v-for="(item) in dict.platform"
-                            :key="item.id"
-                            :value="item.id">{{item.name}}</Option>
-                  </Select>
-                </FormItem>
-                <chartsGroup :initDone="initDone"
-                             :typeList="typeDict"
-                             :dataList="dataList"
-                             :currentTypeIndex="currentTypeIndex"
-                             @typeChange='typeChangeHandler' />
-              </div>
-            </Card>
-          </Form>
-          </Col>
-        </Row>
-      </div>
-    </div>
+  <div>
+    <Row>
+      <Col span="24">
+      <Form label-position="left"
+            :label-width="100"
+            class="edit-input">
+        <Card class="detailmore-card">
+          <div slot="title">
+            <Row type="flex"
+                 justify="space-between">
+              <Col :span="24">
+              <DetailNavBar titleText='统计周期'>
+                <div slot='item'>
+                  <RadioGroup style='margin-right:15px'
+                              @on-change="handleChange"
+                              v-model="form.statisticTimeId"
+                              size="large"
+                              type="button">
+                    <Radio v-for="(item) in dict.statisticTime"
+                           :key="item.id"
+                           :disabled="item.disabled"
+                           :label="item.id">{{item.name}}</Radio>
+                  </RadioGroup>
+                  <DatePicker type="daterange"
+                              v-model="form.beginDate"
+                              @on-change="handleChange"
+                              placement="bottom-end"
+                              placeholder="自定义时间段"></DatePicker>
+                </div>
+              </DetailNavBar>
+              </Col>
+            </Row>
+          </div>
+          <div class="content">
+            <FormItem label="平台">
+              <Select v-model="form.platformId"
+                      style="width: 400px"
+                      clearable
+                      @on-change="handleChange">
+                <Option v-for="(item) in dict.platform"
+                        :key="item.id"
+                        :value="item.id">{{item.name}}</Option>
+              </Select>
+            </FormItem>
+            <chartsGroup :initDone="chart1.initDone"
+                           :title='chart1.title'
+                           :dict1="chart1.dict1"
+                           :dict2="chart1.dict2"
+                           :color="chart1.color"
+                           :dataList="chart1.dataList"
+                           :currentTypeIndex="chart1.currentTypeIndex"
+                           @typeChange='typeChangeHander1' />
+          </div>
+        </Card>
+      </Form>
+      </Col>
+    </Row>
   </div>
 </template>
 <script lang="ts">
@@ -119,7 +70,7 @@ import {
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
-import { platformData1 } from '@/api/kolDetailMoreInfo'
+import { platformData } from '@/api/kolDetailMoreInfo'
 import numAdd from '../number.vue'
 import chartsGroup, { IcurrentType } from '@/components/chartsGroup/line/'
 import DetailNavBar from './components/detailNavBar.vue'
@@ -179,70 +130,71 @@ export default class Temporary extends ViewBase {
       }
     ]
   }
-  typeDict: IcurrentType[] = [
-    {
-      key: 'k0',
-      name: '活跃粉丝数'
-    },
-    {
-      key: 'k1',
-      name: '点赞数'
-    },
-    {
-      key: 'k2',
-      name: '评论数'
-    },
-    {
-      key: 'k3',
-      name: '播放数'
-    }
-  ]
-  currentTypeIndex: number = 0
-  initDone: boolean = false
-  dataList: any[] = []
-  async typeChangeHandler(index: number = 0) {
-    if (this.dataList[index].list.length < 1) {
-      await this.getChartsData(0, index)
-    }
-    this.currentTypeIndex = index
+  chart1: any = {
+    title: '',
+    dict1: [],
+    dict2: [],
+    currentTypeIndex: 0,
+    initDone: false,
+    dataList: [],
+    color: ['#0099cc']
   }
-  async getChartsData(chartIndex: number = 0, typeIndex: number = 0) {
-    const that: any = this
+  async typeChangeHander1(index: number = 0) {
+    if (this.chart1.dataList[index].list.length < 1) {
+      await this.getChartsData('chart2', index)
+    }
+    this.chart1.currentTypeIndex = index
+  }
+  /**
+   * 加载图表数据
+   * @param chart 图表名 (因为接口返回全部数据，暂时不用)
+   * @param typeIndex 当前类别下标
+   */
+  async getChartsData(chart: string = '', typeIndex: number = 0) {
     const mockObj = {
-      beginDate: formatTimestamp(new Date(2019, 3, 9)),
-      endDate: formatTimestamp(new Date(2019, 9, 11)),
-      accountType: 'ads',
       effectType: typeIndex
     }
     try {
-      const { data } = await platformData1({ ...mockObj })
-      this.dataList[typeIndex].list = data.dataList
-      this.initDone = true
+      const { data } = await platformData({ ...mockObj })
+      if (data.chart1.effectTypeList.length > 0) {
+        this.chart1.dataList = data.chart1.effectTypeList.map(
+          (item: any, index: number) => {
+            return {
+              list: {
+                data: [],
+                date: []
+              }
+            }
+          }
+        )
+      } else {
+        this.chart1.dataList.push({
+          list: {
+            data: [],
+            date: []
+          }
+        })
+      }
+      this.chart1.dict1 = data.chart1.effectTypeList
+      data.chart1.dataList.forEach((item: any, index: number) => {
+        this.chart1.dataList[item.key].list.data.push(item.data)
+        this.chart1.dataList[item.key].list.date.push(item.date)
+      })
+      this.chart1.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
   }
   async handleChange() {
-    this.initDone = false
+    this.chart1.initDone = false
     this.resetData()
-    await this.getChartsData(0, this.currentTypeIndex)
+    await this.getChartsData('', 0)
   }
   async mounted() {
-    this.initHandler()
-  }
-  async initHandler() {
-    this.typeDict.map((item: any, index: number) => {
-      this.dataList.push({
-        list: []
-      })
-    })
-    await this.getChartsData(0, 0)
+    await this.getChartsData('', 0)
   }
   resetData() {
-    this.dataList.forEach(item => {
-      item.list = []
-    })
-    // this.currentTypeIndex = 0
+    this.chart1.dataList = []
   }
 }
 </script>

@@ -20,6 +20,9 @@ h1 {
       </RadioGroup>
     </div>
     <div ref="barChart" v-if="initDone" style="width: 100%; height: 400px"></div>
+    <div v-else style="width: 100%; height: 400px" >      
+      <TinyLoading />
+    </div>
   </div>
 </template>
 <script lang="ts">

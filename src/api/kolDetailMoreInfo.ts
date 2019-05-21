@@ -5,42 +5,109 @@ import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
  * platformInfoData1
  * @param query
  */
-export async function platformData1(query: any) {
+export async function platformData(query: any) {
   // const res = await get('/xadvert/plans/effect' , query)
   // return res
   return await mockGet(query, {
-    dataList: [{
-      date: '2019-01-01',
-      data: Math.floor(Math.random() * 100 + 1)
-    }, {
-      date: '2019-01-02',
-      data: Math.floor(Math.random() * 100 + 1)
-    }, {
-      date: '2019-01-03',
-      data: Math.floor(Math.random() * 100 + 1)
-    }],
-    coverCinema: 8,
-    advertAmount: 1069.0,
-    coverPeople: 856,
-    coverScene: 92,
-    effectTypeList: [{
-      text: '未知',
-      key: 0
-    }, {
-      text: '广告花费',
-      key: 1
-    }, {
-      text: '覆盖人次',
-      key: 2
-    }, {
-      text: '覆盖影院',
-      key: 3
-    }, {
-      text: '覆盖场次',
-      key: 4
-    }]
+    chart1: {
+      dataList: [{
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-02',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-03',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-04',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-05',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        date: '2019-01-02',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        date: '2019-01-03',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        date: '2019-01-04',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        date: '2019-01-05',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 2
+      }, {
+        date: '2019-01-02',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 2
+      }, {
+        date: '2019-01-03',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 2
+      }, {
+        date: '2019-01-04',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 2
+      }, {
+        date: '2019-01-05',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 2
+      }, {
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 3
+      }, {
+        date: '2019-01-02',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 3
+      }, {
+        date: '2019-01-03',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 3
+      }, {
+        date: '2019-01-04',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 3
+      }, {
+        date: '2019-01-05',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 3
+      }],
+      effectTypeList: [{
+        text: '活跃粉丝数',
+        key: 0
+      }, {
+        text: '点赞数',
+        key: 1
+      }, {
+        text: '评论数',
+        key: 2
+      }, {
+        text: '播放数',
+        key: 3
+      }]
+    }
   })
 }
+
 /**
  * comment1
  * @param data
@@ -313,21 +380,32 @@ export async function matching(query: any) {
       dataList: [{
         date: '2019-01-01',
         data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
+        key: 0,
+        key2: 0
       }, {
         date: '2019-01-01',
         data: Math.floor(Math.random() * 100 + 1),
-        key: 1
+        key: 0,
+        key2: 1
       }, {
-        date: '2019-01-02',
+        date: '2019-01-01',
         data: Math.floor(Math.random() * 100 + 1),
+        key: 1,
+        key2: 0
+      }, {
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1,
+        key2: 1
+      }],
+      effectTypeList1: [{
+        text: 'Papi酱',
+        key: 0
+      }, {
+        text: '奔驰',
         key: 1
       }],
-      effectTypeList: [{
+      effectTypeList2: [{
         text: '男',
         key: 0
       }, {
@@ -338,84 +416,53 @@ export async function matching(query: any) {
     bar2: {
       dataList: [{
         data: Math.floor(Math.random() * 100 + 1),
-        key: 0
+        key: 0,
+        key2: 0,
       }, {
         data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
+        key: 0,
+        key2: 1,
       }, {
         data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
+        key: 0,
+        key2: 2,
       }, {
         data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
+        key: 0,
+        key2: 3,
       }, {
         data: Math.floor(Math.random() * 100 + 1),
-        key: 3
+        key: 0,
+        key2: 4,
       }, {
         data: Math.floor(Math.random() * 100 + 1),
-        key: 3
+        key: 1,
+        key2: 0,
       }, {
         data: Math.floor(Math.random() * 100 + 1),
-        key: 3
+        key: 1,
+        key2: 1,
       }, {
         data: Math.floor(Math.random() * 100 + 1),
-        key: 3
+        key: 1,
+        key2: 2,
       }, {
         data: Math.floor(Math.random() * 100 + 1),
-        key: 3
+        key: 1,
+        key2: 3,
       }, {
         data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 4
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 4
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 4
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 4
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 4
+        key: 1,
+        key2: 4,
       }],
-      effectTypeList: [{
+      effectTypeList1: [{
+        text: 'Papi酱',
+        key: 0
+      }, {
+        text: '奔驰',
+        key: 1
+      }],
+      effectTypeList2: [{
         text: '19岁及以下',
         key: 0
       }, {
@@ -536,76 +583,13 @@ export async function fans(query: any) {
         key: 0
       }, {
         data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
         key: 1
       }, {
         data: Math.floor(Math.random() * 100 + 1),
         key: 2
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      },  {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
       }, {
         data: Math.floor(Math.random() * 100 + 1),
         key: 3
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 4
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 4
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 4
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 4
       }, {
         data: Math.floor(Math.random() * 100 + 1),
         key: 4

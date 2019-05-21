@@ -19,9 +19,10 @@ h1 {
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <div ref="barChart"
-         v-if="initDone"
-         style="width: 100%; height: 400px"></div>
+    <div ref="barChart" v-if="initDone" style="width: 100%; height: 400px"></div>
+    <div v-else style="width: 100%; height: 400px" >      
+      <TinyLoading />
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -30,7 +31,7 @@ import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import { IchartOptions } from './types'
 import echarts from 'echarts'
-import china from './china.js'
+import china from './china'
 
 @Component({
   components: {

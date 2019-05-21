@@ -1,173 +1,95 @@
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-.layout-panel {
-  padding-top: 30px;
-  border-radius: 10px;
-}
-.ivu-form-item {
-  padding-left: 30px;
-  color: @c-text;
-  margin-bottom: 0;
-}
-/deep/ .ivu-input-icon {
-  line-height: 40px;
-  height: 40px;
-}
-.radio-item-type {
-  font-size: 14px;
-  margin-top: 4px;
-  .ivu-radio-wrapper {
-    font-size: 14px;
-    margin-right: 35px;
-  }
-}
-/deep/ .ivu-select-input {
-  height: 40px;
-  line-height: 40px;
-}
-</style>
-<style lang='less'>
-/* 公用 */
-.my-card {
-  .ivu-card-head {
-    background: #f6f6f6;
-  }
-  .title-right {
-    flex: 1;
-    width: 100%;
-    text-align: right;
-  }
-  .ivu-card-body {
-    padding: 0;
-  }
-  .content {
-    padding: 15px 0;
-    .chart-wp {
-      border-radius: 5px;
-      background: #fff;
-      min-height: 520px;
-      position: relative;
-      .total-tips {
-        position: absolute;
-        right: 0;
-        top: 15px;
-        border: 2px solid #999;
-        background: #fff;
-        border-radius: 80px;
-        padding: 15px;
-        width: 90px;
-        height: 90px;
-        text-align: center;
-        display: flex;
-        flex-flow: row;
-        justify-content: center;
-        align-items: center;
-        z-index: 9;
-      }
-    }
-  }
-  .selectedBox {
-    text-align: left;
-  }
-}
+@import '~@/site/detailmore.less';
 </style>
 <template>
-  <div style='display:flex; background:blue'>
-    <div style='width:300px; text-align:center; color:#ffffff'>
-      <h3>吴京</h3>
-      <h5>演员/导演/制片人</h5>
-      <ul>
-        <li>概览</li>
-        <li>作品列表</li>
-        <li>全网热度</li>
-        <li>平台运营</li>
-      </ul>
-    </div>
-    <div style='flex:1; background:#ffffff'>
-      <div style='background:#ffffff'>
-        <Row>
-          <Col span="24">
-          <Form label-position="left"
-                :label-width="100"
-                class="edit-input">
-            <Card class="my-card">
-              <div slot="title">
-                <Row type="flex"
-                     justify="space-between">
-                  <Col :span="24">
-                    <DetailNavBar titleText=''>
-                      <div class='title-right' slot='item'>
-                        <Select v-model="form.brandId"
-                        @on-change="handleChange"
-                        class='selectedBox' style='width:100px' >
-                            <Option v-for="item in dict.brandList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                        </Select>
-                      </div>
-                    </DetailNavBar>
-                  </Col>
-                </Row>
+  <div>
+    <Row>
+      <Col span="24">
+      <Form label-position="left"
+            :label-width="100"
+            class="edit-input">
+        <Card class="detailmore-card">
+          <div slot="title">
+            <Row type="flex"
+                 justify="space-between">
+              <Col :span="24">
+              <DetailNavBar titleText=''>
+                <div class='title-right'
+                     slot='item'>
+                  <Select v-model="form.brandId"
+                          @on-change="handleChange"
+                          class='selectedBox'
+                          style='width:100px'>
+                    <Option v-for="item in dict.brandList"
+                            :value="item.id"
+                            :key="item.id">{{ item.name }}</Option>
+                  </Select>
+                </div>
+              </DetailNavBar>
+              </Col>
+            </Row>
+          </div>
+          <div class="content">
+            <Row type="flex"
+                 justify="space-between">
+              <Col :span="12">
+              <div class='chart-wp'
+                   style='margin-right:10px'>
+                <Pie :initDone="chart1.initDone"
+                     :title='chart1.title'
+                     :dict1="chart1.dict1"
+                     :dict2="chart1.dict2"
+                     :color="chart1.color"
+                     :dataList="chart1.dataList"
+                     :currentTypeIndex="chart1.currentTypeIndex"
+                     @typeChange='typeChangeHander1' />
               </div>
-              <div class="content">
-                <Row type="flex"
-                     justify="space-between">
-                  <Col :span="12">
-                    <div class='chart-wp'
-                        style='margin-right:10px'>
-                        <Pie :initDone="chart1.initDone"
-                                    :title='chart1.title'
-                                    :dict1="chart1.dict1"
-                                    :dict2="chart1.dict2"
-                                    :dataList="chart1.dataList"
-                                    :currentTypeIndex="chart1.currentTypeIndex"
-                                    @typeChange='typeChangeHander1' />
-                    </div>
-                  </Col>
-                  <Col :span="12">
-                    <div class='chart-wp'>
-                      <BarXCategory :initDone="chart2.initDone"
-                                    :title='chart2.title'
-                                    :dict1="chart2.dict1"
-                                    :dict2="chart2.dict2"
-                                    :dataList="chart2.dataList"
-                                    :currentTypeIndex="chart2.currentTypeIndex"
-                                    @typeChange='typeChangeHander2' />
-                    </div>
-                  </Col>
-                </Row>
-                <Row type="flex"
-                     justify="space-between">
-                  <Col :span="12">
-                    <div class='chart-wp'
-                        style='margin-right:10px'>
-                        <MapChina :initDone="chart3.initDone"
-                                      :title="chart3.title"
-                                      :dict1="chart3.dict1"
-                                      :dict2="chart3.dict2"
-                                      :dataList="chart3.dataList"
-                                      :currentTypeIndex="chart3.currentTypeIndex"
-                                      @typeChange='typeChangeHander3' />
-                    </div>
-                  </Col>
-                  <Col :span="12">
-                    <div class='chart-wp'
-                          style='margin-right:10px'>
-                          <BarYCategory :initDone="chart4.initDone"
-                                      :title="chart4.title"
-                                      :dict1="chart4.dict1"
-                                      :dict2="chart4.dict2"
-                                      :dataList="chart4.dataList"
-                                      :currentTypeIndex="chart4.currentTypeIndex"
-                                      @typeChange='typeChangeHander4' />
-                      </div>
-                  </Col>
-                </Row>
+              </Col>
+              <Col :span="12">
+              <div class='chart-wp'>
+                <BarXCategory :initDone="chart2.initDone"
+                              :title='chart2.title'
+                              :dict1="chart2.dict1"
+                              :dict2="chart2.dict2"
+                              :dataList="chart2.dataList"
+                              :currentTypeIndex="chart2.currentTypeIndex"
+                              @typeChange='typeChangeHander2' />
               </div>
-            </Card>
-          </Form>
-          </Col>
-        </Row>
-      </div>
-    </div>
+              </Col>
+            </Row>
+            <Row type="flex"
+                 justify="space-between">
+              <Col :span="12">
+              <div class='chart-wp'
+                   style='margin-right:10px'>
+                <MapChina :initDone="chart3.initDone"
+                          :title="chart3.title"
+                          :dict1="chart3.dict1"
+                          :dict2="chart3.dict2"
+                          :dataList="chart3.dataList"
+                          :currentTypeIndex="chart3.currentTypeIndex"
+                          @typeChange='typeChangeHander3' />
+              </div>
+              </Col>
+              <Col :span="12">
+              <div class='chart-wp'
+                   style='margin-right:10px'>
+                <BarYCategory :initDone="chart4.initDone"
+                              :title="chart4.title"
+                              :dict1="chart4.dict1"
+                              :dict2="chart4.dict2"
+                              :dataList="chart4.dataList"
+                              :currentTypeIndex="chart4.currentTypeIndex"
+                              @typeChange='typeChangeHander4' />
+              </div>
+              </Col>
+            </Row>
+          </div>
+        </Card>
+      </Form>
+      </Col>
+    </Row>
   </div>
 </template>
 <script lang="ts">
@@ -223,7 +145,8 @@ export default class Temporary extends ViewBase {
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
-    dataList: []
+    dataList: [],
+    color: ['#ff9933', '#169bd5']
   }
   chart2: any = {
     title: '粉丝年龄分布',
@@ -264,10 +187,8 @@ export default class Temporary extends ViewBase {
     }
     this.chart1.currentTypeIndex = index
   }
-  async typeChangeHander2(index: number = 0) {
-  }
-  async typeChangeHander3(index: number = 0) {
-  }
+  async typeChangeHander2(index: number = 0) {}
+  async typeChangeHander3(index: number = 0) {}
   async typeChangeHander4(index: number = 0) {
     if (this.chart4.dataList[index].list.length < 1) {
       await this.getChartsData('chart4', index)

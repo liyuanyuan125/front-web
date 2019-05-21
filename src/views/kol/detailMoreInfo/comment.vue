@@ -1,154 +1,97 @@
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-.layout-panel {
-  padding-top: 30px;
-  border-radius: 10px;
-}
-.ivu-form-item {
-  padding-left: 30px;
-  color: @c-text;
-  margin-bottom: 0;
-}
-/deep/ .ivu-input-icon {
-  line-height: 40px;
-  height: 40px;
-}
-.radio-item-type {
-  font-size: 14px;
-  margin-top: 4px;
-  .ivu-radio-wrapper {
-    font-size: 14px;
-    margin-right: 35px;
-  }
-}
-/deep/ .ivu-select-input {
-  height: 40px;
-  line-height: 40px;
-}
-</style>
-<style lang='less'>
-/* 公用 */
-.my-card {
-  .ivu-card-head {
-    background: #f6f6f6;
-  }
-  .ivu-card-body {
-    padding: 0;
-  }
-  .content {
-    padding: 15px 0;
-    .chart-wp {
-      border-radius: 5px;
-      background: #fff;
-      min-height: 520px;
-    }
-  }
-}
+@import '~@/site/detailmore.less';
 </style>
 <template>
-  <div style='display:flex; background:blue'>
-    <div style='width:300px; text-align:center; color:#ffffff'>
-      <h3>吴京</h3>
-      <h5>演员/导演/制片人</h5>
-      <ul>
-        <li>概览</li>
-        <li>作品列表</li>
-        <li>全网热度</li>
-        <li>平台运营</li>
-      </ul>
-    </div>
-    <div style='flex:1; background:#ffffff'>
-      <div style='background:#ffffff'>
-        <Row>
-          <Col span="24">
-          <Form label-position="left"
-                :label-width="100"
-                class="edit-input">
-            <Card class="my-card">
-              <div slot="title">
-                <Row type="flex"
-                     justify="space-between">
-                  <Col :span="24">
-                  <DetailNavBar titleText='统计周期'>
-                    <div slot='item'>
-                      <RadioGroup style='margin-right:15px'
-                                  @on-change="handleChange"
-                                  v-model="form.statisticTimeId"
-                                  size="large"
-                                  type="button">
-                        <Radio v-for="(item) in dict.statisticTime"
-                               :key="item.id"
-                               :disabled="item.disabled"
-                               :label="item.id">{{item.name}}</Radio>
-                      </RadioGroup>
-                      <DatePicker type="daterange"
-                                  v-model="form.beginDate"
-                                  @on-change="handleChange"
-                                  placement="bottom-end"
-                                  placeholder="自定义时间段"></DatePicker>
-                    </div>
-                  </DetailNavBar>
-                  </Col>
-                </Row>
+  <div>
+    <Row>
+      <Col span="24">
+      <Form label-position="left"
+            :label-width="100"
+            class="edit-input">
+        <Card class="detailmore-card">
+          <div slot="title">
+            <Row type="flex"
+                 justify="space-between">
+              <Col :span="24">
+              <DetailNavBar titleText='统计周期'>
+                <div slot='item'>
+                  <RadioGroup style='margin-right:15px'
+                              @on-change="handleChange"
+                              v-model="form.statisticTimeId"
+                              size="large"
+                              type="button">
+                    <Radio v-for="(item) in dict.statisticTime"
+                           :key="item.id"
+                           :disabled="item.disabled"
+                           :label="item.id">{{item.name}}</Radio>
+                  </RadioGroup>
+                  <DatePicker type="daterange"
+                              v-model="form.beginDate"
+                              @on-change="handleChange"
+                              placement="bottom-end"
+                              placeholder="自定义时间段"></DatePicker>
+                </div>
+              </DetailNavBar>
+              </Col>
+            </Row>
+          </div>
+          <div class="content">
+            <Row type="flex"
+                 justify="space-between">
+              <Col :span="12">
+              <div class='chart-wp'
+                   style='margin-right:10px'>
+                <PieNest :initDone="pieNest.initDone"
+                         :title='pieNest.title'
+                         :dict1="pieNest.dict1"
+                         :dict2="pieNest.dict2"
+                         :dataList="pieNest.dataList"
+                         :currentTypeIndex="pieNest.currentTypeIndex"
+                         @typeChange='typeChangeHander1' />
               </div>
-              <div class="content">
-                <Row type="flex"
-                     justify="space-between">
-                  <Col :span="12">
-                  <div class='chart-wp'
-                       style='margin-right:10px'>
-                    <PieNest :initDone="pieNest.initDone"
-                             :title='pieNest.title'
-                             :dict1="pieNest.dict1"
-                             :dict2="pieNest.dict2"
-                             :dataList="pieNest.dataList"
-                             :currentTypeIndex="pieNest.currentTypeIndex"
-                             @typeChange='typeChangeHander1' />
-                  </div>
-                  </Col>
-                  <Col :span="12">
-                  <div class='chart-wp'>
-                    <BarCategoryStack :initDone="barStack.initDone"
-                                      :title='barStack.title'
-                                      :dict1="barStack.dict1"
-                                      :dict2="barStack.dict2"
-                                      :dataList="barStack.dataList"
-                                      :currentTypeIndex="barStack.currentTypeIndex"
-                                      @typeChange='typeChangeHander2' />
-                  </div>
-                  </Col>
-                </Row>
-                <Row type="flex"
-                     justify="space-between">
-                  <Col :span="12">
-                  <div class='chart-wp'
-                       style='margin-right:10px'>
-                    <WordCloud :initDone="wordCloud1.initDone"
-                               :title='wordCloud1.title'
-                               :dict1="wordCloud1.dict1"
-                               :dataList="wordCloud1.dataList"
-                               :currentTypeIndex="wordCloud1.currentTypeIndex"
-                               @typeChange='typeChangeHander3' />
-                  </div>
-                  </Col>
-                  <Col :span="12">
-                  <div class='chart-wp'>
-                    <WordCloud :initDone="wordCloud2.initDone"
-                               :title='wordCloud2.title'
-                               :dict1="wordCloud2.dict1"
-                               :dataList="wordCloud2.dataList"
-                               :currentTypeIndex="wordCloud2.currentTypeIndex"
-                               @typeChange='typeChangeHander4' />
-                  </div>
-                  </Col>
-                </Row>
+              </Col>
+              <Col :span="12">
+              <div class='chart-wp'>
+                <BarCategoryStack :initDone="barStack.initDone"
+                                  :title='barStack.title'
+                                  :dict1="barStack.dict1"
+                                  :dict2="barStack.dict2"
+                                  :dataList="barStack.dataList"
+                                  :currentTypeIndex="barStack.currentTypeIndex"
+                                  @typeChange='typeChangeHander2' />
               </div>
-            </Card>
-          </Form>
-          </Col>
-        </Row>
-      </div>
-    </div>
+              </Col>
+            </Row>
+            <Row type="flex"
+                 justify="space-between">
+              <Col :span="12">
+              <div class='chart-wp'
+                   style='margin-right:10px'>
+                <WordCloud :initDone="wordCloud1.initDone"
+                           :title='wordCloud1.title'
+                           :dict1="wordCloud1.dict1"
+                           :dataList="wordCloud1.dataList"
+                           :currentTypeIndex="wordCloud1.currentTypeIndex"
+                           @typeChange='typeChangeHander3' />
+              </div>
+              </Col>
+              <Col :span="12">
+              <div class='chart-wp'>
+                <WordCloud :initDone="wordCloud2.initDone"
+                           :title='wordCloud2.title'
+                           :dict1="wordCloud2.dict1"
+                           :dataList="wordCloud2.dataList"
+                           :currentTypeIndex="wordCloud2.currentTypeIndex"
+                           @typeChange='typeChangeHander4' />
+              </div>
+              </Col>
+            </Row>
+          </div>
+        </Card>
+      </Form>
+      </Col>
+    </Row>
   </div>
 </template>
 <script lang="ts">
@@ -159,7 +102,7 @@ import {
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
-import { platformData1, comment1 } from '@/api/kolDetailMoreInfo'
+import { platformData, comment1 } from '@/api/kolDetailMoreInfo'
 import numAdd from '../number.vue'
 import PieNest from '@/components/chartsGroup/pieNest/'
 import BarCategoryStack from '@/components/chartsGroup/barCategoryStack/'
