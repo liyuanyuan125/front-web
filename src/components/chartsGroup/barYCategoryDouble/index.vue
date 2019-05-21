@@ -157,7 +157,8 @@ export default class BarYCategoryDouble extends ViewBase {
       yAxis: {
         splitLine: {show: false},
         splitArea : {show : false},
-        show: true,
+        axistick: { show: false},
+        show: false,
         type: 'category',
         data: seriesData[1].itemNames
       },

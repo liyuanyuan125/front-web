@@ -746,6 +746,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/detailMoreInfo/fans.vue'),
     meta: emptyAuth
   },
+  // KOL - KOL详情更多页 - 热度趋势
+  {
+    path: '/kol/detailMoreInfo/trend',
+    name: 'kol-detailMoreInfo-trend',
+    component: () => import('./views/kol/detailMoreInfo/trend.vue'),
+    meta: emptyAuth
+  },
 
   // kol - 详情
   {

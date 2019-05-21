@@ -327,10 +327,6 @@ export async function matching(query: any) {
         data: Math.floor(Math.random() * 100 + 1),
         key: 1
       }],
-      coverCinema: 8,
-      advertAmount: 1069.0,
-      coverPeople: 856,
-      coverScene: 92,
       effectTypeList: [{
         text: '男',
         key: 0
@@ -462,10 +458,6 @@ export async function matching(query: any) {
         data: Math.floor(Math.random() * 100 + 1),
         key: 1
       }],
-      coverCinema: 8,
-      advertAmount: 1069.0,
-      coverPeople: 856,
-      coverScene: 92,
       effectTypeList: [{
         text: 'Papi酱',
         key: 0
@@ -500,10 +492,6 @@ export async function matching(query: any) {
         data: Math.floor(Math.random() * 100 + 1),
         key: 1
       }],
-      coverCinema: 8,
-      advertAmount: 1069.0,
-      coverPeople: 856,
-      coverScene: 92,
       effectTypeList: [{
         text: 'Papi酱',
         key: 0
@@ -665,10 +653,6 @@ export async function fans(query: any) {
         data: Math.floor(Math.random() * 100 + 1),
         key: 1
       }],
-      coverCinema: 8,
-      advertAmount: 1069.0,
-      coverPeople: 856,
-      coverScene: 92,
       effectTypeList: [{
         text: 'Papi酱',
         key: 0
@@ -703,10 +687,6 @@ export async function fans(query: any) {
         data: Math.floor(Math.random() * 100 + 1),
         key: 1
       }],
-      coverCinema: 8,
-      advertAmount: 1069.0,
-      coverPeople: 856,
-      coverScene: 92,
       effectTypeList: [{
         key: 0,
         name: '省份'
@@ -719,7 +699,136 @@ export async function fans(query: any) {
   })
 }
 
-
+/**
+ * trend
+ * @param data
+ */
+export async function trend(query: any) {
+  // const res = await get('/xadvert/plans/effectStatistics' , query)
+  // return res
+  return await mockGet(query, {
+    chart1: {
+      dataList: [{
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-02',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-03',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-04',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-05',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }],
+      effectTypeList: []
+    },
+    chart2: {
+      dataList: [{
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-02',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-03',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-04',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-05',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        date: '2019-01-02',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        date: '2019-01-03',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        date: '2019-01-04',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        date: '2019-01-05',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 2
+      }, {
+        date: '2019-01-02',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 2
+      }, {
+        date: '2019-01-03',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 2
+      }, {
+        date: '2019-01-04',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 2
+      }, {
+        date: '2019-01-05',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 2
+      }, {
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 3
+      }, {
+        date: '2019-01-02',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 3
+      }, {
+        date: '2019-01-03',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 3
+      }, {
+        date: '2019-01-04',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 3
+      }, {
+        date: '2019-01-05',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 3
+      } ],
+      effectTypeList: [{
+        text: '微博指数No.1',
+        key: 0
+      }, {
+        text: '微信指数No.2',
+        key: 1
+      }, {
+        text: '百度指数No.3',
+        key: 2
+      }, {
+        text: '头条指数No.1',
+        key: 3
+      }]
+    }
+  })
+}
 
 
 
