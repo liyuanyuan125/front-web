@@ -253,7 +253,7 @@ export default class MainLayout extends ViewBase {
 
 .site-layout {
   position: relative;
-  width: 1200px;
+  min-width: 1200px;
   max-width: 1600px;
   min-height: 100vh;
   margin: auto;
