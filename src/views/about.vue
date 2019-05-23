@@ -51,7 +51,7 @@ export default class AboutPage extends ViewBase {
 
 <style lang="less" scoped>
 .page {
-  background-color: #fff;
   padding: 15px;
+  height: 1800px;
 }
 </style>

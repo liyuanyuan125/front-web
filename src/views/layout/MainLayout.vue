@@ -1,12 +1,9 @@
 <template>
   <div class="site-layout">
-    <header class="site-header flex-box" ref="siteHeader">
-      <h1 class="logo">
-        <router-link :to="{ name: 'home' }" class="logo-link">
-          <img src="~@/assets/site/logo.png" alt="Aiads投放管理平台" class="logo-img">
-        </router-link>
-      </h1>
-
+    <header
+      class="site-header flex-box"
+      :style="{ backgroundImage: headerImage }"
+    >
       <Dropdown class="switcher" @on-click="onSwitcherClick">
         <a class="switcher-node"></a>
         <DropdownMenu slot="list">
@@ -25,23 +22,42 @@
       </div>
     </header>
 
-    <Layout ref="siteCenter" :style="{height: winHei, overflow: 'hidden'}" class="site-center">
-      <Sider collapsible hide-trigger v-model="isOff" class="site-sider" :width="180" ref="sider">
-        <Menu width="auto" theme="dark" :key="`menu-${system.code}`" class="sider-menu" :class="isOff && 'sider-menu-off'"
-          :active-name="siderActiveName" :open-names="siderOpenNames" v-if="siderMenuList.length > 0">
+    <Layout class="site-center">
+      <aside class="site-sider">
+        <h1 class="logo">
+          <router-link :to="{name: 'home'}" class="logo-link">
+            <img src="./assets/logo.png" alt="Aiads投放管理平台" class="logo-img">
+          </router-link>
+        </h1>
+
+        <ul
+          :key="`menu-${system.code}`"
+          class="sider-menu"
+          v-if="siderMenuList.length > 0"
+        >
           <template v-for="menu in siderMenuList">
-            <Submenu v-if="menu.subPages.length > 0" :name="menu.name" :class="`menu-node-${menu.name}`">
-              <template slot="title">{{menu.label}}</template>
-              <MenuItem v-for="sub in menu.subPages" :key="sub.name" :name="sub.name">
-                <router-link :to="{name: sub.route}">{{sub.label}}</router-link>
-              </MenuItem>
-            </Submenu>
-            <MenuItem v-else :name="menu.name" class="menu-item-lv1" :class="`menu-node-${menu.name}`">
-              <router-link :to="{name: menu.route}">{{menu.label}}</router-link>
-            </MenuItem>
+            <li
+              v-for="(sub, i) in [menu].concat(menu.subPages)"
+              :key="sub.name"
+              class="menu-item"
+              :class="{
+                [`menu-item-lv${i == 0 ? 1 : 2}`]: true,
+                'menu-item-on': siderActiveName == sub.name,
+                [`menu-item-${sub.name}`]: true,
+              }"
+            >
+              <router-link
+                :tag="sub.route ? 'a' : 'label'"
+                :to="sub.route ? { name: sub.route } : ''"
+                class="menu-item-in"
+              >
+                <i :class="`iconfont icon-${sub.icon}`" v-if="sub.icon"/>
+                <em>{{sub.label}}</em>
+              </router-link>
+            </li>
           </template>
-        </Menu>
-      </Sider>
+        </ul>
+      </aside>
 
       <Content class="site-content">
         <router-view :name="viewName"/>
@@ -60,6 +76,7 @@ import { cloneDeep } from 'lodash'
 import event from '@/fn/event'
 import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
 import { devInfo } from '@/util/dev'
+import { usePosition } from '@/util/scroll'
 
 let instance: any = null
 let viewName: string = 'default'
@@ -69,14 +86,13 @@ event.on('route-perm', ({ has, to, from }: any) => {
   instance && (instance.viewName = viewName)
 })
 
+const headerColor = 0x25668f
+
 @Component
 export default class MainLayout extends ViewBase {
   user = getUser()
 
   allSystemList = allSystemList
-
-  // winHei
-  winHei: any = '100%'
 
   get systemList() {
     if (this.user != null) {
@@ -94,7 +110,7 @@ export default class MainLayout extends ViewBase {
     return result
   }
 
-  isOff = false
+  // isOff = false
 
   viewName = 'default'
 
@@ -166,6 +182,17 @@ export default class MainLayout extends ViewBase {
     return this.siderActiveMap[name]
   }
 
+  headerOpacity = 0
+
+  get headerImage() {
+    const red = headerColor >> 0x10
+    const green = (headerColor & 0xff00) >> 0x08
+    const blue = headerColor & 0xff
+    const rgba = `rgba(${red}, ${green}, ${blue}, ${this.headerOpacity}%)`
+    const result = `linear-gradient(${rgba}, ${rgba})`
+    return result
+  }
+
   created() {
     // 初始化 viewName，设置全局 instance
     this.viewName = viewName
@@ -208,12 +235,9 @@ export default class MainLayout extends ViewBase {
   }
 
   mounted() {
-    this.$nextTick(() => {
-      const winHeight = document.documentElement.clientHeight || document.body.clientHeight
-      const headerHeight = (this.$refs.siteHeader as any).offsetHeight
-      this.winHei = winHeight - headerHeight + 'px'
-     //  console.log(headerHeight)
-      // (this.$refs.siteCenter as any).style = {height: '513px'}
+    usePosition().then((pos: number) => {
+      const opacity = Math.min(Math.floor(pos / 55 * 100), 100)
+      this.headerOpacity = opacity
     })
   }
 }
@@ -221,40 +245,32 @@ export default class MainLayout extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import './iconfont.less';
 
-@c-sider-bg: #0c3c6e;
+@c-sider-bg: #001f2c;
 @c-menu-open: #002d5b;
 @c-sider-text: #91a5bc;
 
 .site-layout {
-  min-width: 1200px;
-  max-width: 1600px;
+  position: relative;
+  width: 1200px;
+  // min-width: 1200px;
+  // max-width: 1600px;
+  min-height: 100%;
   margin: auto;
+  background: url(./assets/bg.jpg) no-repeat center top;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 .site-header {
-  position: relative;
-  height: 60px;
-  line-height: 60px;
-  background-color: #fff;
+  position: fixed;
+  width: inherit;
+  height: 55px;
+  line-height: 55px;
+  padding-left: 126px;
   z-index: 188;
-}
-
-.logo {
-  width: 155px;
-  font-weight: 400;
-  font-size: 18px;
-}
-.logo-link {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-}
-.logo-img {
-  height: 50px;
+  background: no-repeat 120px 0;
 }
 
 .switcher {
@@ -330,10 +346,12 @@ export default class MainLayout extends ViewBase {
   padding-left: 34px;
   background: url(./assets/person.png) no-repeat left center;
 }
+
 .user-name {
   color: @c-primary;
   margin-left: 30px;
 }
+
 .logout {
   position: relative;
   margin-left: 31px;
@@ -354,143 +372,82 @@ export default class MainLayout extends ViewBase {
 .site-center {
   position: relative;
   background-color: transparent;
+  padding-top: 55px;
 }
+
 .site-sider {
-  position: relative;
-  background-color: @c-sider-bg;
-  border-right: 1px solid #eee;
+  position: fixed;
+  top: 0;
+  width: 126px;
+  height: 100vh;
+  overflow-x: hidden;
   overflow-y: scroll;
-  min-height: 100%;
-  // min-height: calc(100vh - 60px);
+  z-index: 198;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  &::after {
+    content: '';
+    flex: 1;
+    background-color: @c-sider-bg;
+    min-height: 30vh;
+  }
 }
+
+.logo {
+  position: relative;
+  width: inherit;
+  height: 152px;
+  background-color: @c-sider-bg;
+}
+
+.logo-link {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-img {
+  width: 95px;
+  height: 70px;
+}
+
+.sider-menu {
+  width: inherit;
+}
+
+.menu-item {
+  line-height: 36px;
+  background-color: @c-sider-bg;
+}
+
+.menu-item-on {
+  background-color: transparent;
+  & > .menu-item-in {
+    opacity: 1;
+  }
+}
+
+.menu-item-in {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  padding-left: 38px;
+  color: #fff;
+  opacity: .7;
+}
+
+.iconfont {
+  position: absolute;
+  left: 16px;
+}
+
 .site-content {
   position: relative;
-  padding: 10px;
+  padding: 10px 10px 10px 136px;
   overflow: auto;
-}
-.ivu-menu {
-  z-index: 99;
-}
-.sider-menu {
-  padding-top: 9px;
-  margin-bottom: 10px;
-  background-color: @c-sider-bg;
-  &::after {
-    display: none;
-  }
-  /deep/ .ivu-menu-submenu {
-    padding-left: 0 !important;
-    background-color: @c-sider-bg;
-    .ivu-menu-submenu-title {
-      padding-left: 60px;
-      background: no-repeat 30px center;
-      line-height: 20px;
-      i {
-        margin-right: 0;
-      }
-    }
-    .ivu-menu-item {
-      font-size: 12px;
-      & > a {
-        padding: 12px 24px 12px 77px;
-      }
-    }
-    .ivu-menu-item-selected {
-      & > a {
-        color: @c-primary;
-      }
-    }
-    &.ivu-menu-opened {
-      background-color: @c-menu-open;
-    }
-  }
-  .ivu-menu-item {
-    padding: 0 !important;
-    & > a {
-      position: relative;
-      display: block;
-      padding: 10px 24px 10px 77px;
-      color: @c-sider-text;
-      background: @c-sider-bg no-repeat 30px center;
-    }
-  }
-  .menu-item-lv1 {
-    & > a {
-      padding-left: 59px;
-      line-height: 28px;
-      background-position: 30px 48.5%;
-      &::before {
-        display: none;
-      }
-    }
-  }
-  .ivu-menu-item-selected {
-    & > a {
-      color: @c-button !important;
-      &::before {
-        content: '';
-        position: absolute;
-        left: 57px;
-        top: 50%;
-        margin-top: -5px;
-        width: 10px;
-        height: 10px;
-        border: solid 1px #f65202;
-        border-radius: 50%;
-      }
-    }
-    &.menu-node-home > a::before {
-      content: '';
-      width: 0;
-      height: 0;
-      border: none;
-    }
-  }
-  .menu-node-home {
-    /deep/ & > .ivu-menu-submenu-title,
-    & > a {
-      background-image: url(./assets/home.png);
-    }
-  }
-  .menu-node-pop {
-    /deep/ & > .ivu-menu-submenu-title,
-    & > a {
-      background-image: url(./assets/pop.png);
-    }
-  }
-  .menu-node-report {
-    /deep/ & > .ivu-menu-submenu-title,
-    & > a {
-      background-image: url(./assets/report.png);
-    }
-  }
-
-  .menu-node-customer {
-    /deep/ & > .ivu-menu-submenu-title,
-    & > a {
-      background-image: url(./assets/customer.png);
-    }
-  }
-
-  .menu-node-order {
-    /deep/ & > .ivu-menu-submenu-title,
-    & > a {
-      background-image: url(./assets/order.png);
-    }
-  }
-  .menu-node-finance,
-  .menu-node-resfinance {
-    /deep/ & > .ivu-menu-submenu-title,
-    & > a {
-      background-image: url(./assets/finance.png);
-    }
-  }
-
-  .menu-node-account {
-    /deep/ & > .ivu-menu-submenu-title,
-    & > a {
-      background-image: url(./assets/account.png);
-    }
-  }
 }
 </style>

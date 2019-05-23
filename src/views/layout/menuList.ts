@@ -12,6 +12,8 @@ export interface SiderMenuItem {
   route?: string
   /** 子页面 */
   subPages?: SiderMenuItem[]
+  /** 图标 */
+  icon?: string
 }
 
 let menuRouteMapCache: MapType<RouteConfigEnhance> | null = null
@@ -60,6 +62,21 @@ const authKeyToMenuNameMap: MapType = {
 }
 
 /**
+ * 将菜单 name 映射到 icon
+ */
+const nameToIconMap: MapType = {
+  home: 'home',
+  pop: 'diamond',
+  report: 'home',
+  customer: 'user',
+  finance: 'finance',
+  account: 'star',
+
+  order: 'order',
+  resfinance: 'finance',
+}
+
+/**
  * 获取菜单项
  * @param permMenu 后端获取过来的菜单配置
  * @param systemCode 系统 code
@@ -81,6 +98,7 @@ export function getMenuList(permMenu: PermPage[], systemCode: SystemCode) {
         name,
         label: menu.name,
         route: routeName,
+        icon: nameToIconMap[name]
       }
       return item
     }

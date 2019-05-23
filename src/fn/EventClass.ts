@@ -17,9 +17,43 @@ interface EventMap {
   [key: string]: HandlerPriority[]
 }
 
+/** 事件选项 */
+export interface EventOptions {
+  /**
+   * 链式模式，在链式模式下，上一个 handler 返回的值，会被传入下一个 handler
+   */
+  chained?: boolean
+
+  /**
+   * handler 返回 false，是否中断接下来的 handler，默认中断
+   */
+  falseBreak?: boolean
+}
+
+interface ResolvedEventOptions extends EventOptions {
+  chained: boolean
+
+  falseBreak: boolean
+}
+
+const defaultOptions: ResolvedEventOptions = {
+  chained: false,
+
+  falseBreak: true
+}
+
 /** 事件类 */
 export default class EventClass {
   private _eventMap: EventMap = {}
+
+  private _options: ResolvedEventOptions = defaultOptions
+
+  constructor(options: EventOptions = {}) {
+    this._options = {
+      ...defaultOptions,
+      ...options
+    }
+  }
 
   /**
    * 监听事件
@@ -71,15 +105,20 @@ export default class EventClass {
   emit(name: string, ...args: any[]) {
     const list = this._eventMap[name] || []
 
-    // 先优先执行 priority 为 true 的事件处理函数
-    // 若某项事件处理函数，明确返回 false，则取消后续事件处理函数
-    const canceled = list.filter(it => it.priority)
-      .some(it => it.handler.apply(this, args) === false)
+    const { chained, falseBreak } = this._options
 
-    // 优先级 priority 为 false 的最后执行，但上面若有事件处理函数
-    // 明确返回 false，则此处的低优先级事件处理函数则不会被执行
-    canceled || list.filter(it => !it.priority)
-      .some(it => it.handler.apply(this, args) === false)
+    let lastArgs = args
+
+    // 先优先执行 priority 为 true 的事件处理函数
+    // 若 chained 为 true，则传给 handler 的参数，为上一个 handler 的返回值
+    // 若 falseBreak 为 true，且某 handler，明确返回 false，则取消后续事件处理函数
+    list.filter(it => it.priority)
+    .concat(list.filter(it => !it.priority))
+    .some(it => {
+      const ret = it.handler.apply(this, lastArgs)
+      chained && (lastArgs = [ret])
+      return falseBreak && ret === false
+    })
 
     return this
   }

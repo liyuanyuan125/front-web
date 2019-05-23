@@ -3,9 +3,34 @@
  * @author zhangpeng
  */
 
-html, body {
-  height: 100%;
+// 预防页面抖动，方法摘自 https://www.zhangxinxu.com/wordpress/2015/01/css-page-scrollbar-toggle-center-no-jumping/
+html {
+  overflow-y: scroll;
 }
+
+:root {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+:root body {
+  position: absolute;
+}
+
+body {
+  width: 100vw;
+  overflow: hidden;
+}
+
+// html::-webkit-scrollbar {
+//   width: 6px;
+//   height: 6px;
+// }
+
+// html::-webkit-scrollbar-thumb {
+//   border-radius: 6px;
+//   background-color: #00202d;
+// }
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
