@@ -254,9 +254,8 @@ export default class MainLayout extends ViewBase {
 .site-layout {
   position: relative;
   width: 1200px;
-  // min-width: 1200px;
-  // max-width: 1600px;
-  min-height: 100%;
+  max-width: 1600px;
+  min-height: 100vh;
   margin: auto;
   background: url(./assets/bg.jpg) no-repeat center top;
   background-size: cover;
@@ -265,7 +264,8 @@ export default class MainLayout extends ViewBase {
 
 .site-header {
   position: fixed;
-  width: inherit;
+  width: 100vw;
+  max-width: inherit;
   height: 55px;
   line-height: 55px;
   padding-left: 126px;
