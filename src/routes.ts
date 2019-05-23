@@ -774,28 +774,35 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   {
     path: '/film/mainLineup/:id',
     name: 'film-mainLineup',
-    component: () => import('./views/film/mainLineup.vue'),
+    component: () => import('./views/film/filmorder/mainLineup.vue'),
     meta: emptyAuth,
   },
   // 影片详情 - 详细资料
   {
     path: '/film/detailInfo/:id',
     name: 'film-detailInfo',
-    component: () => import('./views/film/detailInfo.vue'),
+    component: () => import('./views/film/filmorder/detailInfo.vue'),
     meta: emptyAuth,
   },
   // 影片 - 影片合作订单列表
   {
     path: '/film/movielist',
     name: 'film-movielist',
-    component: () => import('./views/film/movielist.vue'),
+    component: () => import('./views/film/filmorder/movielist.vue'),
     meta: emptyAuth,
   },
   // 影片 - 影片合作订单列表添加
   {
     path: '/film/addmovielist',
     name: 'film-addmovielist',
-    component: () => import('./views/film/addmovielist.vue'),
+    component: () => import('./views/film/filmorder/addmovielist.vue'),
+    meta: emptyAuth,
+  },
+  // 影片 - 影片合作订单详情
+  {
+    path: '/film/movielist/detail',
+    name: 'film-movielist-detail',
+    component: () => import('./views/film/filmorder/moviedetail.vue'),
     meta: emptyAuth,
   },
 
