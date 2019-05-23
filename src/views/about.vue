@@ -11,6 +11,8 @@
       :cityIds.sync="cityIds"
       :topCityIds="topCityIds"
     />
+
+    <ColorIcon url="@/assets/icon/add-adv-img.png"/>
   </div>
 </template>
 
@@ -19,11 +21,13 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import WeekDatePicker from '@/components/weekDatePicker'
 import CitySelectDialog from '@/components/citySelectDialog'
+import ColorIcon from '@/components/colorIcon'
 
 @Component({
   components: {
     WeekDatePicker,
-    CitySelectDialog
+    CitySelectDialog,
+    ColorIcon
   }
 })
 export default class AboutPage extends ViewBase {

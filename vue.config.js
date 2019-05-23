@@ -87,5 +87,16 @@ module.exports = {
     // 为了支持 iview theme
     config.module.rule('less').oneOf('normal').use('less-loader')
     .tap(args => ({ ...args, javascriptEnabled: true }))
+
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .loader('vue-loader')
+      .tap(options => {
+        options.transformAssetUrls = {
+          ColorIcon: ['url']
+        }
+        return options
+      })
   }
 }
