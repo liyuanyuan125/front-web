@@ -327,7 +327,7 @@ export default class App extends ViewBase {
       const y = e.clientY
       const end: any  = this.$refs.end
       const left = end.getBoundingClientRect().left || 588
-      const top = end.getBoundingClientRect().top || 320
+      const top = end.getBoundingClientRect().top || document.body.clientHeight - 50
       dom.style.cssText = `left: ${x }px; top: ${ y - 80}px; display: block`
       animation(dom, {
           left: `${left - 10}px`,

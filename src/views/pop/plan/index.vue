@@ -4,14 +4,11 @@
       <router-link :to="{name: 'pop-film'}" >广告计划</router-link> > 
         <span> 新建广告计划</span>
     </div>  
-    <div class="setp-wrap">
-      <Steps :current="step">
-        <Step content="推广设置"></Step>
-        <Step content="定向设置"></Step>
-        <Step content="推广方案"></Step>
-        <Step content="创建完成"></Step>
-      </Steps>
-    </div>
+    <Row>
+      <Col span="18" offset="3">
+        <StepTime v-model="step" />
+      </Col>
+    </Row>
     <div>
       <keep-alive include="Promotion,Orienteering">
         <component v-bind:is="currentTab" v-model="step"></component>
@@ -27,13 +24,15 @@ import Promotion from './vadver/promotion.vue'
 import Orienteering from './vadver/orienteering.vue'
 import Precept from './vadver/precept.vue'
 import Finish from './vadver/finish.vue'
+import StepTime from './vadver/stepTime.vue'
 
 @Component({
   components: {
     Promotion,
     Orienteering,
     Precept,
-    Finish
+    Finish,
+    StepTime
   }
 })
 export default class App extends ViewBase {
