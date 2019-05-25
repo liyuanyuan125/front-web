@@ -25,7 +25,7 @@
           </p>
         </div>
       </Col>
-      <Col span="5" class="item">
+      <Col span="5" class="item item-dl">
         <dl>
           <dd>计划名称</dd>
           <dt>猎鹰计划</dt>
@@ -39,7 +39,7 @@
           <dt>7天</dt>
         </dl>
       </Col>
-      <Col span="4" class="item">
+      <Col span="4" class="item item-dl">
         <dl>
           <dd>客户</dd>
           <dt>万达营业</dt>
@@ -81,30 +81,54 @@ export default class App extends ViewBase {
 .precept-box {
   margin-left: 30px;
   margin-right: 10px;
+  .precept {
+    padding: 0 30px;
+    height: 136px;
+    background: rgba(0, 32, 45, 1);
+    border-radius: 5px;
+    opacity: 0.9;
+  }
   .item {
-    padding: 20px 10px;
     color: #26344b;
     font-size: 14px;
+    .title {
+      margin-top: 30px;
+      font-weight: 400;
+      color: #fff;
+      opacity: .8;
+    }
   }
   .number {
-    text-align: center;
-    font-size: 26px;
-    margin-top: 30px;
+    font-size: 30px;
+    margin-top: 20px;
+    color: #fff;
     /deep/ span::after {
       content: "万";
     }
+    /deep/ span::before {
+      content: "≈";
+    }
+  }
+  .item-dl {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    height: 100%;
   }
   dl {
     display: flex;
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
+    width: 100%;
     dd {
       width: 60px;
+      color: #fff;
+      opacity: .8;
     }
     dt {
       margin-left: 10px;
+      color: #fff;
     }
   }
 }
-
 </style>

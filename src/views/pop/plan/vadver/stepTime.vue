@@ -1,9 +1,15 @@
 <template>
   <div class="app">
-    <dl v-for="item in step" :key="item.id">
-      <dd :class="(value + 1) >= item.id ? 'active' : ''">{{item.id}}</dd>
-      <dt>{{item.key}}</dt>
-    </dl>
+    <ul class="step">
+      <li v-for="(item, index) in step" :key="item.id" :class="(value) >= item.id ? 'active' : ''">
+        <span :class="(value) >= item.id ? 'actve-span' : ''" v-if="index!=3"></span>
+      </li>
+    </ul>
+    <ul class="step-text">
+      <li v-for="(item) in step" :key="item.id" :class="(value) >= item.id ? 'active' : ''">
+        {{item.key}}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -31,35 +37,67 @@ export default class App extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@keyframes animatedBackground {
+  from { background-size: 0; }
+  to { background-size: 100%; }
+}
 .app {
-  display: flex;
-  background: rgba(0, 32, 45, 0.3);
-  height: 50px;
-  border-radius: 25px;
-  dl {
-    cursor: default;
-    flex: 1;
-    line-height: 50px;
+  .step {
     display: flex;
-    dd {
-      width: 40px;
-      height: 40px;
-      align-self: center;
-      margin-left: 4px;
-      border-radius: 50%;
-      background: rgba(0, 32, 45, 0.6);
-      text-align: center;
-      line-height: 40px;
-      font-size: 24px;
-      color: rgba(0, 32, 45, 1);
-    }
-    dt {
-      margin-left: 10px;
-      font-size: 16px;
-      color: #f9d85e;
+    cursor: default;
+    height: 50px;
+    line-height: 50px;
+    li {
+      flex: 1;
+      position: relative;
+      transition: all .4s ease-in-out;
+      &::before {
+        content: "●";
+        display: block;
+        color: #00202d;
+        width: 40px;
+        height: 40px;
+        align-self: center;
+        margin-left: 4px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        font-size: 24px;
+        background: #fff;
+        box-shadow: 0 5px 9px 1px rgba(0, 0, 0, 0.33);
+      }
+      span {
+        position: absolute;
+        left: 44px;
+        top: 19px;
+        width: calc(100% - 44px);
+        height: 2px;
+        background: #fff;
+      }
+      .actve-span {
+        width: 100%;
+        background: #00202d no-repeat;
+        transition: all .4s ease-in-out;
+      }
     }
     .active {
-      background: rgba(249, 216, 94, 1);
+      &::before {
+        content: '\2713';
+        color: #fff;
+        background: rgba(0, 32, 45, 1);
+        box-shadow: 0 5px 9px 1px rgba(0, 0, 0, 0.33);
+      }
+    }
+  }
+  .step-text {
+    display: flex;
+    li {
+      flex: 1;
+      margin-bottom: 30px;
+      color: #fff;
+    }
+    .active {
+      color: rgba(0, 32, 45, 1);
     }
   }
 }
