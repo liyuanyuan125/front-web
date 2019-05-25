@@ -8,14 +8,36 @@ import registerSuccess from './views/portal/registerSuccess.vue'
 import MainLayout from './views/layout/MainLayout.vue'
 import Error from './views/error/index.vue'
 
-import { RouteConfig, Route } from 'vue-router'
+import { RouteConfig, Route, Location } from 'vue-router'
 import { devInfo, devError } from './util/dev'
+
+/**
+ * 面包屑
+ */
+export interface Breadcrumb {
+  label: string
+  route?: Location
+}
+
+/**
+ * 面包屑导航获取函数
+ */
+export type GetBreadcrumb = (route: Route) => Breadcrumb[]
 
 /**
  * meta 类型：基础类型，可以放一些别的成员
  */
 // tslint:disable-next-line:no-empty-interface
-interface RouteMetaBase {
+export interface RouteMetaBase {
+  /**
+   * 页面标题
+   */
+  title?: string | ((route: Route) => string)
+
+  /**
+   * 明确的面包屑导航，若不提供，则自动判断，若不需要，设置为 []
+   */
+  breadcrumbs?: Breadcrumb[] | GetBreadcrumb
 }
 
 /**
@@ -165,7 +187,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/home/overview',
     name: 'home-overview',
     component: () => import('./views/home/overview/index.vue'),
-    meta: emptyAuth,
+    meta: {
+      ...emptyAuth,
+      breadcrumbs: [{ label: '首页' }]
+    }
   },
 
   // 资源方 - 账户概览
@@ -173,7 +198,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/home/resoverview',
     name: 'home-resoverview',
     component: () => import('./views/home/resoverview/index.vue'),
-    meta: emptyAuth,
+    meta: {
+      ...emptyAuth,
+      breadcrumbs: [{ label: '首页' }]
+    }
   },
 
   // 广告主、资源方 - 账户管理 - 账号信息
@@ -433,6 +461,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction(route) {
         const id = parseInt(route.params.id, 10) || 0
         return id > 0 ? 'edit' : 'create'
+      },
+      title({ params }) {
+        return parseInt(params.id, 10) > 0 ? '编辑广告计划' : '新建广告计划'
       }
     }
   },
