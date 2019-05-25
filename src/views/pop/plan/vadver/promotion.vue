@@ -1,5 +1,5 @@
 <template>
-  <div class="page home-bg">
+  <div class="page">
     <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="">
       
       <Row>

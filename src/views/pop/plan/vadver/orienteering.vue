@@ -307,7 +307,6 @@ export default class Orienteering extends ViewBase {
       border-radius: 50%;
       text-align: center;
       line-height: 16px;
-      z-index: 999;
     }
   }
 }
