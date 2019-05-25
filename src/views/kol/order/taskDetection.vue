@@ -1,59 +1,72 @@
 <template>
   <div class="page">
-    <div class='t-title'>
-      <Row>
-        <Col :span='12'>项目名称：2019年新款奔驰</Col>
-        <Col :span='12'>检测平台：新浪微博</Col>
-      </Row>
-    </div>
+    <div class='box'>
+      
     
-    <div class='title-tip'>
-      <Row>
-       <Col :span='6'>检测到的发布数量<span>1</span></Col>
-       <Col :span='6'>总任务数<span>2</span></Col>
-       <Col :span='12'>预估完成度<span>50%</span></Col>
-      </Row>
-    </div>
-    <div class='body'>
-      <div style='margin-top: 15px;border-bottom: 0px'>
-        <Row class='li-title'>
-          <Col :span='5' class='li-ti-col'>任务账号</Col>
-          <Col :span='3' class='li-ti-col'>任务类型</Col>
-          <Col :span='4' class='li-ti-col'>期望执行时间</Col>
-          <Col :span='8' class='li-ti-col'>内容</Col>
-          <Col :span='4' class='li-ti-col'>发布时间</Col>
-        </Row>
-        <ul class='itemul'>
-          <li class='li-item' v-for='(it,index) in itemlist' :key='index'>
-            <row>
-              <Col :span='5' class='li-ti-col'>
-                  <div class="div-img">
-                    <img src="./assets/over.jpg" alt="">
-                  </div>
-                  <Tooltip v-if='it.name.length > 5' :content="it.name">
-                  <div>{{it.name.slice(0,5)}}...</div></Tooltip>
-                  <div v-if='it.name.length <= 5'>{{it.name}}</div>
-              </Col>
-              <Col :span='3' class='li-ti-col'>{{it.zhifa}}</Col>
-              <Col :span='4' class='li-ti-col'>{{it.createTimeTemp}}</Col>
-              <Col :span='8' class='li-ti-col'>{{it.con}}<br>{{it.con}}</Col>
-              <Col :span='4' class='li-ti-col'>{{it.createTimeTemp}}</Col>
-            </row>
-          </li>
-        </ul>
+        <div class='t-title'>
+          <Row>
+            <Col class='t-b'>项目名称：2019年新款奔驰</Col>
+          </Row>
+          <Row>
+            <Col class='t-s'>检测平台：新浪微博</Col>
+          </Row>
+        </div>
+        
+        <div class='title-tip'>
+          <Row>
+           <Col :span='8'>检测到的发布数量<span>1</span></Col>
+           <Col :span='8'>总任务数<span>2</span></Col>
+           <Col :span='8'>预估完成度<span>50%</span></Col>
+          </Row>
+        </div>
+        <div class='body'>
+          <div style='margin-top: 15px;border-bottom: 0px'>
+            <Row class='li-title'>
+              <Col :span='5' class='li-ti-col'>任务账号</Col>
+              <Col :span='3' class='li-ti-col'>任务类型</Col>
+              <Col :span='4' class='li-ti-col'>期望执行时间</Col>
+              <Col :span='8' class='li-ti-col'>内容</Col>
+              <Col :span='4' class='li-ti-col'>发布时间</Col>
+            </Row>
+            <ul class='itemul'>
+              <li class='li-item' v-for='(it,index) in itemlist' :key='index'>
+                <row>
+                  <Col :span='5' class='li-ti-col'>
+                   <Row>
+                      <Col :span='12'>
+                        <div class="div-img">
+                          <img src="./assets/over.jpg" alt="">
+                        </div>
+                      </Col>
+                      <Col :span='12' style='margin-left: -10px;font-size: 16px;font-weight: 500'>
+                          <Tooltip v-if='it.name.length > 5' :content="it.name">
+                          <div>{{it.name.slice(0,5)}}...</div></Tooltip>
+                          <div v-if='it.name.length <= 5'>{{it.name}}</div>
+                          <div>gaoxiao</div>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col :span='3' class='li-ti-col ss'>{{it.zhifa}}</Col>
+                  <Col :span='4' class='li-ti-col ss'>{{it.createTimeTemp}}</Col>
+                  <Col :span='8' class='li-ti-col'>{{it.con}}<span class='nums'>转发：1W+ 点赞：4W+ 评论：1W+</span></Col>
+                  <Col :span='4' class='li-ti-col ss'>{{it.createTimeTemp}}</Col>
+                </row>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <Page
+          :total="totalCount"
+          v-if="totalCount>0"
+          class="btnCenter plan-pages"
+          :current="query.pageIndex"
+          :page-size="query.pageSize"
+          show-total
+          show-elevator
+          @on-change="handlepageChange"
+          @on-page-size-change="handlePageSize"
+        />
       </div>
-    </div>
-    <Page
-      :total="totalCount"
-      v-if="totalCount>0"
-      class="btnCenter plan-pages"
-      :current="query.pageIndex"
-      :page-size="query.pageSize"
-      show-total
-      show-elevator
-      @on-change="handlepageChange"
-      @on-page-size-change="handlePageSize"
-    />
   </div>
 </template>
 
@@ -85,7 +98,7 @@ export default class Main extends ViewBase {
 
   itemlist: any = []
 
-  totalCount = 0
+  totalCount = 20
 
   mounted() {
     this.seach()
@@ -124,32 +137,43 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+.page {
+  padding: 0 40px 0 30px;
+}
+.box {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 1);
+}
 .t-title {
-  width: 100%;
-  height: 50px;
-  background: rgba(249, 249, 249, 1);
-  border-radius: 2px 2px 0 0;
-  line-height: 50px;
-  font-size: 14px;
-  font-weight: 400;
-  color: rgba(36, 129, 215, 1);
-  padding-left: 30px;
+  text-align: center;
+  .t-b {
+    font-size: 28px;
+    font-weight: 400;
+    color: rgba(0, 32, 45, 1);
+    margin-top: 40px;
+    line-height: 50px;
+  }
+  .t-s {
+    line-height: 50px;
+    font-size: 20px;
+    font-weight: 400;
+    color: #00202d;
+    margin-bottom: 20px;
+  }
 }
 .title-tip {
   margin-top: 20px;
   width: 100%;
-  height: 73px;
-  background: rgba(249, 249, 249, 1);
-  border-radius: 2px 2px 0 0;
   line-height: 20.5px;
-  font-size: 13px;
   font-weight: 400;
-  color: rgba(36, 129, 215, 1);
   padding: 20px 0 0 30px;
+  font-size: 16px;
+  text-align: center;
   span {
     margin-left: 15px;
-    font-weight: bold;
-    font-size: 26px;
+    font-weight: 500;
+    font-size: 38px;
   }
 }
 .body {
@@ -158,10 +182,12 @@ export default class Main extends ViewBase {
 }
 .li-title {
   padding: 0 10px 0 10px;
-  height: 40px;
-  background: rgba(249, 249, 249, 1);
-  line-height: 40px;
-  font-size: 13px;
+  line-height: 56px;
+  font-size: 14px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.6);
+  opacity: 0.9;
+  color: #6a8893;
   .li-ti-col {
     text-align: center;
   }
@@ -170,10 +196,14 @@ export default class Main extends ViewBase {
   padding: 10px 10px 0 10px;
   line-height: 40px;
   font-size: 14px;
-  border-bottom: 1px solid #ccc;
-  height: 140px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  height: 105px;
   .li-ti-col {
     text-align: center;
+  }
+  .ss {
+    margin-top: 25px;
+    font-size: 14px;
   }
   .div-img {
     width: 80px;
@@ -188,5 +218,9 @@ export default class Main extends ViewBase {
     }
   }
 }
-
+.nums {
+  position: absolute;
+  bottom: -123%;
+  left: 21%;
+}
 </style>
