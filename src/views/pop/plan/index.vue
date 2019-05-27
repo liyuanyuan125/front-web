@@ -1,11 +1,11 @@
 <template>
-  <div ref="page" class="page home-bg">
+  <div ref="page" class="">
     <div class="layout-nav-title">
       <router-link :to="{name: 'pop-film'}" >广告计划</router-link> > 
         <span> 新建广告计划</span>
     </div>  
-    <Row>
-      <Col span="18" offset="3">
+    <Row style="overflow:hidden">
+      <Col span="22" offset="3">
         <StepTime v-model="step" />
       </Col>
     </Row>

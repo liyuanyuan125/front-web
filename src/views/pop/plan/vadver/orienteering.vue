@@ -1,9 +1,9 @@
 <template>
-  <div class="page home-bg">
+  <div class="">
     <Row>
       <Col :span="22" :offset="1">
         <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="0" class="edit-input forms">
-          <h3 class="layout-title">覆盖范围设置</h3>
+          <h3 class="layout-titles">覆盖范围设置</h3>
           <Row>
             <Col :span="12">
               <Row>
@@ -34,7 +34,7 @@
             </Col>
           </Row>
           
-          <h3 class="layout-title">受众定向</h3>
+          <h3 class="layout-titles">受众定向</h3>
           <Row class="item-top item-three">
             <Col :span="12" class="flex">
               <Col :span="12" class="three-left">
@@ -77,11 +77,12 @@
             </Col>
           </Row>
 
-          <h3 class="layout-title">影片定向</h3>
-          <FormItem :labelWidth="0" class="item-top form-item-type">
-            <Tags v-model="movieType" :tagMess = 'movieList' />
-          </FormItem>
-          <div class="item-top" v-show="movieType == 1">
+          <h3 class="layout-titles">影片定向
+            <FormItem :labelWidth="0" class="item-top cinema-position form-item-type">
+              <Tags v-model="movieType" :tagMess = 'movieList' />
+            </FormItem>
+          </h3>
+          <div class="item-top" style="margin-top: 50px" v-show="movieType == 1">
             <FormItem :labelWidth="0" class="form-item-type-sort">
               <ul class="film-list" v-if="cinemaDetail.length > 0">
                 <li v-for="(it) in cinemaDetail" :key="it.id"
@@ -99,13 +100,13 @@
               </ul>
             </FormItem>
           </div>
-          <div class="item-top" v-show="movieType != 1">
+          <div class="item-top" style="margin-top: 50px" v-show="movieType != 1">
             <Film />
           </div>
 
           <div class="btn-center">
+            <Button type="default" class="button-ok last-button default-but" @click="back('dataform')"><img width="16px" src="./assets/next.png" />返回上一步</Button>
             <Button type="primary" class="button-ok next-button" @click="next('dataform')">下一步,进入推广方案</Button>
-            <Button type="default" class="button-ok last-button default-but" @click="back('dataform')">返回上一步</Button>
           </div>
         </Form> 
       </Col>
@@ -286,6 +287,13 @@ export default class Orienteering extends ViewBase {
 .item-top {
   margin-left: 30px;
 }
+.layout-titles {
+  font-size: 24px;
+  font-weight: 500;
+  color: rgba(0, 32, 46, 1);
+  margin-left: 30px;
+  margin-bottom: 43px;
+}
 .check-ra {
   /deep/ .ivu-checkbox {
     display: none;
@@ -307,7 +315,6 @@ export default class Orienteering extends ViewBase {
       border-radius: 50%;
       text-align: center;
       line-height: 16px;
-      z-index: 999;
     }
   }
 }
@@ -316,14 +323,15 @@ export default class Orienteering extends ViewBase {
   border-bottom: 1px solid #fff;
 }
 .item-three {
-  border-bottom: 1px solid #000;
+  margin-bottom: 80px;
+  border-bottom: 1px solid #fff;
   .flex {
     display: flex;
     flex-wrap: wrap;
   }
   .three-left {
     border-right: 2px solid;
-    border-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0) 100%) 10;
+    border-image: linear-gradient(to top, #fff 0%, rgba(0, 0, 0, 0) 80%) 10;
   }
 }
 .adv-left {
@@ -362,8 +370,13 @@ export default class Orienteering extends ViewBase {
   text-align: center;
 }
 .default-but {
-  border: 1px solid #dcdee2;
-  .button-style(#515a6e, rgba(236, 245, 255, 1));
+  width: 200px;
+  vertical-align: middle;
+  .button-style(#00202d, rgba(0, 0, 0, 0));
+  border-radius: 25px;
+  img {
+    vertical-align: middle;
+  }
 }
 .next-button {
   .button-style(#fff, #00202d);
@@ -395,8 +408,8 @@ export default class Orienteering extends ViewBase {
   position: relative;
   top: 3px;
   min-width: 100px;
-  height: 30px;
-  line-height: 30px;
+  height: 40px;
+  line-height: 40px;
   border-radius: 4px;
   text-align: center;
   margin-right: 15px;
@@ -439,6 +452,12 @@ export default class Orienteering extends ViewBase {
     background-size: 40px;
   }
 }
+.cinema-position {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: -66px;
+}
 .film-list {
   display: flex;
   flex-wrap: wrap;
@@ -446,7 +465,7 @@ export default class Orienteering extends ViewBase {
   margin-bottom: 40px;
   .film-item {
     width: calc(50% - 20px);
-    height: 160px;
+    height: 179px;
     padding-bottom: 5px;
     margin-bottom: 30px;
     background: rgba(255, 255, 255, 0.3);
@@ -467,6 +486,7 @@ export default class Orienteering extends ViewBase {
         height: 24px;
       }
       img {
+        margin-left: 20px;
         width: 89px;
         height: 125px;
       }

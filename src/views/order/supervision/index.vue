@@ -7,9 +7,9 @@
     </div>
     <div class='body'>
       <Row class='row-ul'>
-       <Col span='6'><WeekDatePicker v-model="weekDate"/></Col>
-        <Col :span="14">
-          <Col style='margin-left: 12px;' span="8">
+       <Col span='6' class='data'><WeekDatePicker class='data-s' v-model="weekDate"/></Col>
+        <Col :span="10">
+          <Col style='margin-left: 12px;' span="14">
             <Select v-model='query.cinemaId'  filterable  @on-change="seachs">
               <Option
                 v-for="item in movieList"
@@ -19,7 +19,7 @@
             </Select>
           </Col>
         </Col>
-        <Col span='4' class='chb'>
+        <Col span='8' class='chb'>
           <!-- <RadioGroup v-model='chgkey.status' type="button" @on-change='seachchg'>
               <Radio v-for='(it,index) in timechg' :key='it.key' :value='it.key' :label='it.key'>{{it.name}}</Radio>
             </RadioGroup> -->
@@ -29,11 +29,11 @@
             <span @click='seachchgdown'>下周&nbsp;></span>
         </Col>
       </Row>
-      <div style='border: 1px solid #ccc;margin-top: 15px;border-bottom: 0px'>
+      <div style=' margin-top: 15px; '>
       	<Row class='li-title'>
-          <Col span='3'>影片名称</Col>
-          <Col span='2' style='text-align: center;'>总投放时长</Col>
-          <Col span='14'>广告列表</Col>
+          <Col span='3' style='text-align: center;'>影片名称</Col>
+          <Col span='3' style='text-align: center;'>总投放时长</Col>
+          <Col span='13'>广告列表</Col>
           <Col span='5' style='text-align: center;'>监播视频</Col>
         </Row>
         <ul class='itemul'>
@@ -43,22 +43,22 @@
         			<Col span='2' style='text-align: center;'>{{it.videoTotalLength}}s</Col>
         			<Col span='14'>
         				<row>
-                  <Col style='color: blue;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
+                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                    <router-link :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,7)}}...</router-link>
+                    <router-link style='color: #00202D;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,7)}}...</router-link>
                   </Tooltip>
-                <router-link tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
+                <router-link style='color: #00202D;' tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
         			</Col>
         			<Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' ><UploadButton @success="onUploadSuccess($event, it.id)">上传</UploadButton></Col>
-              <Col span='5' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a @click='dels(it.id)'>删除</a> </Col>
+              <Col span='5' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
               <Col span='5' v-if='it.status == 3' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div></Col>
-              <Col span='5' v-if='it.status == 4' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a @click='dels(it.id)'>删除</a> </Col>
+              <Col span='5' v-if='it.status == 4' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
         		</row>
         	</li>
-          <li class='li-item' v-if='itemlist.length == 0' style='text-align: center;'>暂无数据</li>
+          <li v-if='itemlist.length == 0' style='text-align: center;line-height: 50px;'>暂无数据</li>
         </ul>
       </div>
     </div>
@@ -71,7 +71,7 @@ import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { querylist ,  getcinid , addvideo , delvideo , movielist } from '@/api/supervision'
 import { formatTimestamp } from '@/util/validateRules'
-import UploadButton, { SuccessEvent } from '@/components/UploadButton.vue'
+import UploadButton, { SuccessEvent } from '../components/UploadButton.vue'
 import WeekDatePicker from '@/components/weekDatePicker'
 import { confirm , toast } from '@/ui/modal'
 
@@ -274,12 +274,12 @@ export default class Main extends ViewBase {
       const movieList = await movielist()
       this.movieList = movieList.data.items
       // 获取默认影院id
-      const cinid = await getcinid()
-      if (cinid.data.cinemaId == 0) {
-        this.query.cinemaId = movieList.data.items[0].id
-      } else {
-        this.query.cinemaId = cinid.data.cinemaId
-      }
+      // const cinid = await getcinid()
+      // if (cinid.data.cinemaId == 0) {
+      //   this.query.cinemaId = movieList.data.items[0].id
+      // } else {
+      //   this.query.cinemaId = cinid.data.cinemaId
+      // }
 
 
       const datalist = await querylist(this.query)
@@ -295,46 +295,30 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+.page {
+  padding-left: 30px;
+  padding-right: 40px;
+}
 .t-title {
   width: 100%;
   height: 50px;
-  background: rgba(249, 249, 249, 1);
   border-radius: 2px 2px 0 0;
   line-height: 50px;
-  font-size: 14px;
+  font-size: 24px;
   font-weight: 400;
-  color: rgba(36, 129, 215, 1);
-  padding-left: 30px;
+  color: #fff;
 }
 .title-tip {
   margin-top: 20px;
   width: 100%;
-  height: 85px;
-  background: rgba(249, 249, 249, 1);
-  border-radius: 2px 2px 0 0;
-  line-height: 20.5px;
-  font-size: 12px;
+  background: rgba(0, 32, 45, 1);
+  line-height: 32px;
+  font-size: 16px;
   font-weight: 400;
-  color: rgba(36, 129, 215, 1);
-  padding: 20px 0 0 30px;
-  .img-w1 {
-    display: inline-block;
-    width: 20px;
-    height: 17px;
-    border: 1px solid #ccc;
-    background: url('./assets/wait.jpg');
-    background-size: cover;
-    margin-left: 2px;
-  }
-  .img-w2 {
-    display: inline-block;
-    width: 20px;
-    height: 17px;
-    border: 1px solid #ccc;
-    background: url('./assets/over.jpg');
-    background-size: cover;
-    margin-left: 2px;
-  }
+  color: #fff;
+  padding: 35px 0 35px 30px;
+  border-radius: 5px 0 0 0;
+  opacity: 0.9;
 }
 .body {
   width: 100%;
@@ -345,56 +329,77 @@ export default class Main extends ViewBase {
   span {
     display: inline-block;
     width: 30%;
-    height: 32px;
+    height: 40px;
     margin-right: 5px;
     text-align: center;
-    line-height: 32px;
+    line-height: 40px;
     font-size: 14px;
-    background: rgba(249, 249, 249, 1);
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 1);
     cursor: pointer;
+    color: #00202d;
   }
 }
 .li-title {
-  // margin-top: 10px;
+  color: #00202d;
   padding: 0 10px 0 10px;
   height: 40px;
-  background: #f2f2f2;
+  background: rgba(255, 255, 255, 0.3);
   line-height: 40px;
   font-size: 14px;
-  border-bottom: 1px solid #ccc;
 }
 .li-item {
+  color: #00202d;
   padding: 0 10px 0 10px;
   line-height: 40px;
   font-size: 14px;
-  border-bottom: 1px solid #ccc;
+  background: #abcbdd;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.26);
   .imgs1 {
     display: inline-block;
     width: 20px;
-    height: 17px;
+    height: 20px;
     border: 1px solid #ccc;
-    background: url('./assets/over.jpg');
+    background: url('./assets/dels.png');
     background-size: cover;
     margin-right: 2px;
+    position: absolute;
+    top: 10px;
   }
   .imgs2 {
     display: inline-block;
     width: 20px;
-    height: 17px;
+    height: 20px;
     border: 1px solid #ccc;
-    background: url('./assets/wait.jpg');
+    background: url('./assets/over.png');
     background-size: cover;
     margin-right: 2px;
+    position: absolute;
+    top: 10px;
   }
   .imgs3 {
     display: inline-block;
     width: 20px;
-    height: 17px;
+    height: 20px;
     border: 1px solid #ccc;
-    background: url('./assets/err.jpg');
+    background: url('./assets/wait.png');
     background-size: cover;
     margin-right: 2px;
+    position: absolute;
+    top: 10px;
   }
+}
+.data {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+.data-s {
+  margin-top: 4px;
+  margin-left: 15%;
+  font-size: 14px;
 }
 /deep/ .ivu-btn:hover {
   color: #000;
@@ -407,5 +412,14 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-btn:focus {
   box-shadow: 0;
+}
+/deep/ .ivu-select-selection {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+/deep/ .ivu-select-input {
+  margin-top: 3px;
 }
 </style>

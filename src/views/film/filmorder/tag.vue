@@ -1,8 +1,9 @@
 <template>
-  <div class="page">
-      <div @click="active(item.label)" :class="['tag', invalue == item.label ? 'activeClass' : '']" v-for="item in tagMess" :key="item.label">
-        {{item.name}}
+  <div class="pages">
+      <div @click="active(item.key)" :class="['tag', invalue == item.key ? 'activeClass' : '']" v-for="item in tagMess" :key="item.key">
+        {{item.text}}
       </div>
+      
   </div>
 </template>
 
@@ -14,8 +15,12 @@ import ViewBase from '@/util/ViewBase'
 export default class Main extends ViewBase {
     @Prop({default: 1}) value!: number
     @Prop({type: Array, default: () => []}) tagMess!: any[]
-    invalue = this.value
-
+    @Prop({type: Number, default: () => 1}) nus!: any[]
+    invalue = this.nus
+    content = ''
+    mounted() {
+      this.active(this.nus)
+    }
     active(id: any) {
       this.invalue = id
       this.$emit('input', this.invalue)
@@ -23,20 +28,20 @@ export default class Main extends ViewBase {
 
     @Watch('value')
     watchvalue(val: any) {
-      this.invalue = val
+      this.invalue = this.nus
     }
 }
 </script>
 
 <style lang="less" scoped>
-.page {
-  display: flex;
-  margin-top: 5px;
+.pages {
+  margin-bottom: 10px;
   .tag {
-    box-sizing: content-box;
+    width: 100px;
+    margin-bottom: 18px;
+    display: block;
     text-align: center;
     margin-right: 30px;
-    width: 180px;
     height: 40px;
     line-height: 40px;
     color: #00202d;

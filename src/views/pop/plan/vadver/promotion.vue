@@ -1,11 +1,11 @@
 <template>
-  <div class="page home-bg">
+  <div class="page">
     <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="">
       
       <Row>
         <Col span="14" offset="3" class="adver-name select-adv-type">
           <FormItem :labelWidth='0' prop="name">
-            <Input  v-model="form.name" placeholder="请输入广告计划名称"></Input>
+            <Input style="border-radius: 5px"  v-model="form.name" placeholder="请输入广告计划名称"></Input>
           </FormItem>
         </Col>
       </Row>
@@ -174,18 +174,18 @@ export default class Promotion extends ViewBase {
   }
 }
 .adver-name {
-  margin-top: 100px;
+  margin-top: 30px;
   /deep/ .ivu-form-item {
     border: none;
     background: #00202d;
     height: 57px;
+    border-radius: 5px;
     /deep/ .ivu-input-wrapper, .ivu-input {
       margin-left: 10px;
       background: #00202d;
       height: 47px;
       line-height: 60px;
       border: 0;
-      border-radius: 5px;
       font-size: 20px;
       color: #fff;
       width: 400px;
