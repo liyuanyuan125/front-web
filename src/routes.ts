@@ -801,6 +801,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth,
   },
 
+  // 影人
+  {
+    path: '/film/figure/:id',
+    name: 'film-figure',
+    component: () => import('./views/mainPage/figure.vue'),
+    meta: emptyAuth
+  },
+
   // 影片详情 - 主创阵容
   {
     path: '/film/mainLineup/:id',

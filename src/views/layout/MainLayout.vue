@@ -300,9 +300,8 @@ export default class MainLayout extends ViewBase {
   max-width: 1600px;
   min-height: 100vh;
   margin: auto;
-  background: url(./assets/bg.jpg) no-repeat center top;
+  background: url(~@/assets/site/bg.jpg) no-repeat center top fixed;
   background-size: cover;
-  background-attachment: fixed;
 }
 
 .site-header {
@@ -463,7 +462,7 @@ export default class MainLayout extends ViewBase {
 
 .logo-img {
   width: 95px;
-  height: 70px;
+  height: 64px;
 }
 
 .sider-menu {
