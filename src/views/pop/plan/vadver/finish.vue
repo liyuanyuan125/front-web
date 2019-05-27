@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="">
     <h3 class="title">计划创建完毕，等待资源确认</h3>
     <div class="audit">
       平台会由专业映前投放专家对您的广告计划进行调整,请耐心等待。

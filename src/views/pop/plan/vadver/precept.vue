@@ -1,152 +1,156 @@
 <template>
-  <div class="page home-bg">
-    <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
-      <PreceptHead />
-
-      <h3 class="layout-title">投放影片</h3>
-      <div class="item-top">
-        <span class="item-detail">优先投放 3 部</span>
-        <span class="custom">自定义投放电影</span>
-      </div>
-      <div class="item-top">
-        <ul class="film-list" v-if="filmList.length > 0">
-          <li v-for="(it) in filmList" :key="it.id"
-            :class="['film-item']">
-            <div class="film-top">
-              <img :src="it.mainPicUrl" class="film-cover">
-              <div style="position: relative">
-                <p class="film-title">{{it.name}}</p>
-                <p class="film-title" style="margin-bottom: 20px">{{it.name}}</p>
-                <p><span>上映时间：</span>{{formatDate(it.openTime)}}</p>
-                <p><span>影片类型：</span>{{it.type.join('/')}}</p>
-                <p><span>想看人数：</span>{{it.viewNumber}}</p>
-                <i-circle class="circle-per" :size="73" :percent="80">
-                  <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px">匹配度</p>
-                  <p class="demo-Circle-inner" style="font-size:22px">80%</p>
-                </i-circle>
-              </div>
-            </div>
-
-            <div class="film-center">
-              <p style="opacity: .7">受众性别</p>
-              <div class="file-sex-box">
-                <div>
-                  <div class="file-sex-man" :style="{width: `${it.matching * 0.8 + 30}px`, height: `${it.matching * 0.8 + 30}px`}">
-                    <img width="30px" height="30" src="./assets/man.png" alt="">
+  <div class="">
+    <Row>
+      <Col :span="22" :offset="1">
+        <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
+          <PreceptHead />
+          <h3 class="layout-titles">投放影片
+              <span class="item-detail">优先投放 3 部</span>
+              <span class="custom">自定义投放电影</span>
+          </h3>
+          <div class="item-top">
+            <ul class="film-list" v-if="filmList.length > 0">
+              <li v-for="(it) in filmList" :key="it.id"
+                :class="['film-item']">
+                <div class="film-top">
+                  <img :src="it.mainPicUrl" class="film-cover">
+                  <div style="position: relative">
+                    <p class="film-title">{{it.name}}</p>
+                    <p class="film-title" style="margin-bottom: 20px">{{it.name}}</p>
+                    <p><span>上映时间：</span>{{formatDate(it.openTime)}}</p>
+                    <p><span>影片类型：</span>{{it.type.join('/')}}</p>
+                    <p><span>想看人数：</span>{{it.viewNumber}}</p>
+                    <i-circle class="circle-per" :size="73" :percent="80">
+                      <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px">匹配度</p>
+                      <p class="demo-Circle-inner" style="font-size:22px">80%</p>
+                    </i-circle>
                   </div>
                 </div>
-                <span>男性：{{it.matching}}%</span>
-              </div>
-              <div class="file-sex-box">
-                <div>
-                  <div class="file-sex-woman" :style="{width: `${it.matching * 0.8 + 30}px`, height: `${it.matching * 0.8 + 30}px`}">
-                    <img width="30px" height="30" src="./assets/man.png" alt="">
+
+                <div class="film-center">
+                  <p style="opacity: .7">受众性别</p>
+                  <div class="file-sex-box">
+                    <div>
+                      <div class="file-sex-man" :style="{width: `${it.matching * 0.8 + 30}px`, height: `${it.matching * 0.8 + 30}px`}">
+                        <img width="30px" height="30" src="./assets/man.png" alt="">
+                      </div>
+                    </div>
+                    <span>男性：{{it.matching}}%</span>
+                  </div>
+                  <div class="file-sex-box">
+                    <div>
+                      <div class="file-sex-woman" :style="{width: `${it.matching * 0.8 + 30}px`, height: `${it.matching * 0.8 + 30}px`}">
+                        <img width="30px" height="30" src="./assets/man.png" alt="">
+                      </div>
+                    </div>
+                    <span>女性：{{it.matching}}%</span>
                   </div>
                 </div>
-                <span>女性：{{it.matching}}%</span>
-              </div>
-            </div>
 
-            <div class="film-buttom">
-              <dl style="margin-bottom: 15px">
-                <dd>受众年龄：</dd>
-                <dt>{{it.matching}}%</dt>
-              </dl>
-              <dl>
-                <dd>投放周期：</dd>
-                <dt>{{it.week}}</dt>
-              </dl>
-            </div>
-          </li>
-        </ul>
-        <div>效果不足时允许系统投放更多影片确保曝光效果</div>
-      </div>
+                <div class="film-buttom">
+                  <dl style="margin-bottom: 15px">
+                    <dd>受众年龄：</dd>
+                    <dt>{{it.matching}}%</dt>
+                  </dl>
+                  <dl>
+                    <dd>投放周期：</dd>
+                    <dt>{{it.week}}</dt>
+                  </dl>
+                </div>
+              </li>
+            </ul>
+            <div>效果不足时允许系统投放更多影片确保曝光效果</div>
+          </div>
 
-      <h3 class="layout-title">覆盖影院</h3>
-      <div class="item-top">
-        <span class="item-detail">影院总数</span>
-        <span class="custom">下载列表</span>
-        <span class="custom" style="margin-right: 160px">自定义投放影院</span>
-      </div>
-      <div class="item-top">
-        <div class="cinema-box">
-          <div class="cinema-right">
-            <div>
-              <dl @click="tags(1)" :class="tag=='1' ? 'dl-active' : ''">
-                <dd>1234</dd>
-                <dt>覆盖影院</dt>
-              </dl>
-              <dl @click="tags(2)" :class="tag=='2' ? 'dl-active' : ''">
-                <dd>234</dd>
-                <dt>覆盖影线</dt>
-              </dl>
-              <dl @click="tags(3)" :class="tag=='3' ? 'dl-active' : ''">
-                <dd>23</dd>
-                <dt>覆盖城市</dt>
-              </dl>
-              <dl @click="tags(4)" :class="tag=='4' ? 'dl-active' : ''">
-                <dd>3</dd>
-                <dt>覆盖省份</dt>
-              </dl>
-            </div>
+          <h3 class="layout-titles">覆盖影院
+            <span class="item-detail">影院总数</span>
+            <span class="custom">下载列表</span>
+            <span class="custom" style="margin-right: 160px">自定义投放影院</span>
+          </h3>
+          <div class="item-top">
+           
+          </div>
+          <div class="item-top">
+            <div class="cinema-box">
+              <div class="cinema-right">
+                <div>
+                  <dl @click="tags(1)" :class="tag=='1' ? 'dl-active' : ''">
+                    <dd>1234</dd>
+                    <dt>覆盖影院</dt>
+                  </dl>
+                  <dl @click="tags(2)" :class="tag=='2' ? 'dl-active' : ''">
+                    <dd>234</dd>
+                    <dt>覆盖影线</dt>
+                  </dl>
+                  <dl @click="tags(3)" :class="tag=='3' ? 'dl-active' : ''">
+                    <dd>23</dd>
+                    <dt>覆盖城市</dt>
+                  </dl>
+                  <dl @click="tags(4)" :class="tag=='4' ? 'dl-active' : ''">
+                    <dd>3</dd>
+                    <dt>覆盖省份</dt>
+                  </dl>
+                </div>
 
-            <div class="cinema-find">
-              <div style="position: relative">
-                <div :class="'border-top' + tag"></div>
-                <div :class="'border-bottom' + tag"></div>
-              </div>
-              <div class="cineme-input" v-if="tag == 1">
-                 <Input placeholder="影院名称" style="width: 275px">
-                    <Icon type="ios-search" slot="suffix" />
-                </Input>
-              </div>
-              <div class="cineme-input" v-if="tag == 2">
-                 <Input placeholder="院线名称" style="width: 275px">
-                    <Icon type="ios-search" slot="suffix" />
-                </Input>
-              </div>
-              <div class="cineme-input" v-if="tag == 3">
-                 <Input placeholder="城市名称" style="width: 275px">
-                    <Icon type="ios-search" slot="suffix" />
-                </Input>
-              </div>
-              <div class="cineme-input" v-if="tag == 4">
-                 <Input placeholder="省份名称" style="width: 275px">
-                    <Icon type="ios-search" slot="suffix" />
-                </Input>
-              </div>
-              <Table height="320" :loading="loading"  stripe :columns="columns" :data="tableDate">
-                <template slot-scope="{ row }" slot="citys">
-                  {{row.name}}
-                </template>
+                <div class="cinema-find">
+                  <div style="position: relative">
+                    <div :class="'border-top' + tag"></div>
+                    <div :class="'border-bottom' + tag"></div>
+                  </div>
+                  <div class="cineme-input" v-if="tag == 1">
+                    <Input placeholder="影院名称" style="width: 275px">
+                        <Icon type="ios-search" slot="suffix" />
+                    </Input>
+                  </div>
+                  <div class="cineme-input" v-if="tag == 2">
+                    <Input placeholder="院线名称" style="width: 275px">
+                        <Icon type="ios-search" slot="suffix" />
+                    </Input>
+                  </div>
+                  <div class="cineme-input" v-if="tag == 3">
+                    <Input placeholder="城市名称" style="width: 275px">
+                        <Icon type="ios-search" slot="suffix" />
+                    </Input>
+                  </div>
+                  <div class="cineme-input" v-if="tag == 4">
+                    <Input placeholder="省份名称" style="width: 275px">
+                        <Icon type="ios-search" slot="suffix" />
+                    </Input>
+                  </div>
+                  <Table height="320" :loading="loading"  stripe :columns="columns" :data="tableDate">
+                    <template slot-scope="{ row }" slot="citys">
+                      {{row.name}}
+                    </template>
 
-                <template slot-scope="{ row }" slot="code">
-                  {{row.start}}
-                </template>
-              </Table>
+                    <template slot-scope="{ row }" slot="code">
+                      {{row.start}}
+                    </template>
+                  </Table>
 
-              <Page :total="total" v-if="total>0" class="btnCenter"
-                :current="pageIndex"
-                :page-size="pageSize"
-                :page-size-opts="[6, 20, 50, 100]"
-                show-total
-                show-sizer
-                show-elevator
-                :transfer = "true"
-                @on-change="sizeChangeHandle"
-                @on-page-size-change="currentChangeHandle"/>
+                  <Page :total="total" v-if="total>0" class="btnCenter"
+                    :current="pageIndex"
+                    :page-size="pageSize"
+                    :page-size-opts="[6, 20, 50, 100]"
+                    show-total
+                    show-sizer
+                    show-elevator
+                    :transfer = "true"
+                    @on-change="sizeChangeHandle"
+                    @on-page-size-change="currentChangeHandle"/>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="btn-center">
-        <Button type="default" class="button-ok btn-next" @click="back('dataform')"><img width="16px" src="./assets/next.png" /> 返回上一步</Button>
-        <Button type="primary" class="button-ok btn-save" @click="next('dataform')">保存导出方案</Button>
-        <Button type="default" class="button-ok btn-export" @click="back('dataform')"><img width="16px" src="./assets/export.png" /> 导出投放方案</Button>
-        <Button type="default" class="button-ok btn-collect" @click="back('dataform')">联系商务</Button>
-      </div>
-    </Form>  
+          <div class="btn-center">
+            <Button type="default" class="button-ok btn-next" @click="back('dataform')"><img width="16px" src="./assets/next.png" /> 返回上一步</Button>
+            <Button type="primary" class="button-ok btn-save" @click="next('dataform')">保存导出方案</Button>
+            <Button type="default" class="button-ok btn-export" @click="back('dataform')"><img width="16px" src="./assets/export.png" /> 导出投放方案</Button>
+            <Button type="default" class="button-ok btn-collect" @click="back('dataform')">联系商务</Button>
+          </div>
+        </Form>  
+      </Col>
+    </Row>
   </div>
 </template>
 
@@ -254,17 +258,22 @@ export default class App extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-.item-top {
+.layout-titles {
+  font-size: 24px;
+  font-weight: 500;
+  color: rgba(0, 32, 46, 1);
   margin-left: 30px;
-  font-size: 14px;
-  color: #26344b;
+  margin-top: 46px;
   .item-detail {
     display: inline-block;
     width: 100px;
+    font-size: 14px;
+    margin-left: 20px;
   }
   .custom {
     position: absolute;
-    right: 60px;
+    font-size: 14px;
+    right: 20px;
     width: 152px;
     height: 37px;
     line-height: 37px;
@@ -273,6 +282,11 @@ export default class App extends ViewBase {
     border-radius: 19px;
     opacity: 0.6181;
   }
+}
+.item-top {
+  margin-left: 30px;
+  font-size: 14px;
+  color: #26344b;
 }
 .hint {
   position: absolute;
@@ -297,19 +311,22 @@ export default class App extends ViewBase {
 .film-list {
   display: flex;
   flex-wrap: wrap;
-  column-count: 3;
-  margin-top: -15px;
+  margin-top: 15px;
   margin-bottom: 10px;
   .film-item {
-    flex: 1;
+    width: 32%;
+    border-radius: 5px;
     position: relative;
-    margin: 25px 20px 0 0;
+    box-sizing: border-box;
     background: rgba(255, 255, 255, 0.3);
     padding: 28px;
+    &:not(:nth-child(3n)) {
+      margin-right: 1.5%;
+    }
     .film-top {
       display: flex;
       img {
-        width: 30%;
+        width: 104px;
         height: 146px;
       }
       div {
@@ -412,7 +429,6 @@ export default class App extends ViewBase {
   margin-right: 20px;
   overflow: auto;
   max-height: 498px;
-  background: #000;
   .cinema-right {
     display: flex;
     width: 100%;

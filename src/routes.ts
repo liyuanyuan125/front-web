@@ -421,7 +421,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   {
     path: '/pop/planlist/default/:id',
     name: 'pop-planlist-default',
-    component: () => import('./views/pop/plan/default/planDefault.vue'),
+    component: () => import('./views/pop/plan/default/index.vue'),
     meta: {
       authKey: 'promotion.ad-plan',
       authAction: 'view',
@@ -432,7 +432,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   {
     path: '/pop/planlist/defaultpayment/:id',
     name: 'pop-planlist-defaultpayment',
-    component: () => import('./views/pop/plan/default/defaultPayment.vue'),
+    component: () => import('./views/pop/plan/default/index.vue'),
     meta: {
       authKey: 'promotion.ad-plan',
       authAction: 'view',
