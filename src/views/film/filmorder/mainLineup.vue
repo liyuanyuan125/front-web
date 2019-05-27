@@ -142,17 +142,18 @@ export default class Main extends Vue {
     border-radius: 50%;
   }
   span {
-    width: 35px;
-    height: 20px;
+    width: 36px;
+    height: 30px;
     text-align: center;
-    background: red;
     font-size: 12px;
     font-weight: 500;
-    color: rgba(255, 255, 255, 1);
-    line-height: 20px;
+    color: #fff;
+    line-height: 35px;
     position: absolute;
-    bottom: 4%;
-    left: 37%;
+    bottom: 2%;
+    left: 39%;
+    background: url('./assets/hot.png');
+    background-size: cover;
   }
 }
 .de-ro {
