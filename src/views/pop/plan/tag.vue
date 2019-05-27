@@ -37,8 +37,8 @@ export default class Main extends ViewBase {
     text-align: center;
     margin-right: 30px;
     width: 180px;
-    height: 30px;
-    line-height: 30px;
+    height: 40px;
+    line-height: 40px;
     color: #00202d;
     font-size: 14px;
     border: 1px solid #fff;
