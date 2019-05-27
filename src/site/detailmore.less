@@ -1,7 +1,12 @@
 /* 详情更多，可通用于影片、影人、KOL订单详情更多页 */
 .detailmore-card {
+  background: none;
+  border: none;
+  color: #fff;
   .ivu-card-head {
-    background: #f6f6f6;
+    background: rgba(0,32,45,0.8);
+    border-radius: 5px 5px 0 0 ;
+    border: none;
   }
   .title-right {
     flex: 1;
@@ -9,31 +14,47 @@
     text-align: right;
   }
   .ivu-card-body {
-    padding: 0;
+    padding: 0 ;
+    margin-top: 10px;
   }
   .content {
-    padding: 15px 0;
+    padding: 0;
     .chart-wp {
-      border-radius: 5px;
-      background: #fff;
-      min-height: 520px;
+      background: rgba(0,32,45,0.8);
+      min-height: 200px;
       position: relative;
-      .total-tips {
-        position: absolute;
-        right: 0;
-        top: 15px;
-        border: 2px solid #999;
-        background: #fff;
-        border-radius: 80px;
-        padding: 15px;
-        width: 90px;
-        height: 90px;
-        text-align: center;
+      &.borderRadius {
+        border-radius: 0 0 5px 5px;
+      }
+      & .title-box {
+        font-size: 16px;
+        color: #fff;
+        text-align: left;
         display: flex;
         flex-flow: row;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
+        padding: 20px 0 0 20px;
+        & i {
+          position: relative;
+          top: -2px;
+          font-size: 20px;
+          color:rgba(111,133,143,0.85);
+          margin-left: 10px;
+        }
+      }
+      & .circle-box{
+        position: absolute;
         z-index: 9;
+        right: 15px;
+        top: 15px;
+        & h6 {
+          font-size: 20px;
+          font-weight: normal;
+        }
+        & p {
+          font-size: 12px;
+        }
       }
     }
   }

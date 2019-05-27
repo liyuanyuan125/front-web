@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less">
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
 </style>
@@ -56,7 +56,7 @@
                  justify="space-between">
               <Col :span="24">
               <div class='chart-wp'>
-                <AreaBasic :initDone="chart2.initDone"
+                <AreaBasicxtra :initDone="chart2.initDone"
                            :title='chart2.title'
                            :dict1="chart2.dict1"
                            :dict2="chart2.dict2"
@@ -84,11 +84,14 @@ import {
 } from '@/util/validateRules'
 import { trend } from '@/api/kolDetailMoreInfo'
 import AreaBasic from '@/components/chartsGroup/areaBasic/'
+import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
+
 import DetailNavBar from './components/detailNavBar.vue'
 
 @Component({
   components: {
     AreaBasic,
+    AreaBasicxtra,
     DetailNavBar
   }
 })
@@ -124,7 +127,7 @@ export default class Temporary extends ViewBase {
     ]
   }
   chart1: any = {
-    title: '',
+    title: '综合热度',
     dict1: [],
     dict2: [],
     currentTypeIndex: 0,
