@@ -52,12 +52,10 @@ export default class BarXCategory extends ViewBase {
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
   @Prop({ type: Array, default: [] }) dict1!: any[]
-  @Prop({ type: Array, default: [] }) dict2!: any[]
-  @Prop({ type: Array, default: [] }) dict3!: any[]
+  @Prop({ type: Array, default: () => [] }) dict2!: any[]
+  @Prop({ type: Array, default: () => [] }) dict3!: any[]
   @Prop({ type: Array, default: [] }) color!: any[]
   @Prop({ type: Array, default: [] }) dataList!: any[]
-  xaxisList: any = []
-  seriesList: any[] = []
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
     this.currentIndex = index
@@ -65,8 +63,6 @@ export default class BarXCategory extends ViewBase {
   }
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
-    this.seriesList = []
-    this.xaxisList = []
   }
   updateCharts() {
     if (
@@ -78,37 +74,35 @@ export default class BarXCategory extends ViewBase {
     const chartData = this.dataList[this.currentIndex].list
     const myChart = echarts.init(this.$refs.barChart as any)
 
-    const chartSeries: any[] = []
-    this.dict2.forEach((item, index) => {
-      chartSeries.push({
-        name: '',
-        type: 'bar',
-        data: []
-      })
-    })
-    this.xaxisList = this.dict3.map((item: any) => {
-      return item.text
-    })
-    // 数据处理等接口设计结束后调整。nxd
-    chartData.forEach((item: any, index: number) => {
-      chartSeries[item.key].name = this.dict2[item.key].text
-      chartSeries[item.key].data.push({
-        value: item.data,
-        key2: item.key2
-      })
-    })
-    this.seriesList = chartSeries.map(item => item)
+    // series数据处理等接口设计结束后调整。nxd fans 和 matching都有数据问题
+    // const chartSeries: any[] = []
+    // this.dict2.forEach((item, index) => {
+    //   chartSeries.push({
+    //     name: '',
+    //     type: 'bar',
+    //     data: []
+    //   })
+    // })
+    // chartData.forEach((item: any, index: number) => {
+    //   chartSeries[item.key].name = this.dict2[item.key].text
+    //   chartSeries[item.key].data.push({
+    //     value: item.data,
+    //     key2: item.key2
+    //   })
+    // })
+
     const option: any = {
       color: this.color,
       ...pubOption,
       xAxis: {
-        data: this.xaxisList,
-        ...xOption
+        ...xOption,
+        data: this.dict3.map((item: any) => {
+          return item.text
+        })
       },
       yAxis: {
-        boundaryGap: false,
         ...dottedLineStyle,
-        ...yOption
+        ...yOption,
       },
       series: [
         {

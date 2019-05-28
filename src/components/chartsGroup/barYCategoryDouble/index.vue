@@ -49,7 +49,7 @@ import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import { IchartOptions } from './types'
 import echarts from 'echarts'
-import { pubOption } from '../chartsOption'
+import { pubOption, seriesOption, dottedLineStyle, yOption, xOption, barThinStyle } from '../chartsOption'
 @Component({
   components: {
     TinyLoading
@@ -118,8 +118,8 @@ export default class BarYCategoryDouble extends ViewBase {
       },
       series: [
         {
+          ...barThinStyle,
           name: seriesData[0].text,
-          type: 'bar',
           data: seriesData[0].data
         }
       ],
@@ -144,8 +144,8 @@ export default class BarYCategoryDouble extends ViewBase {
       },
       series: [
         {
+          ...barThinStyle,
           name: seriesData[1].text,
-          type: 'bar',
           data: seriesData[1].data
         }
       ],

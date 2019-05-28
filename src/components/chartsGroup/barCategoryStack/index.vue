@@ -1,36 +1,45 @@
-<style lang="less" scoped>
-@import '~@/site/lib.less';
-h1 {
-  text-align: left;
-  font-size: 14px
-}
-</style>
+
 <template>
   <div>
-    <div style='text-align:center; padding-top:50px'>
-      <h1 v-if="title !==''">{{title}}</h1>
+    <div style='text-align:center'>
+      <div class='title-box'>
+        <span v-if=" title !=='' ">{{title}}</span>
+        <Tooltip max-width="200"
+                 v-if=" titleTips !=='' "
+                 :content="titleTips">
+          <Icon type="md-help-circle" />
+        </Tooltip>
+      </div>
       <RadioGroup size="small"
                   v-if="dict1.length > 0"
                   @on-change='currentTypeChange'
                   v-model="currentIndex"
                   type="button">
         <Radio v-for="(item,index) in dict1"
-              :key="item.key"
-              :label="index">{{item.name}}</Radio>
+               :key="item.key"
+               :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <div ref="barChart" v-if="initDone" style="width: 100%; height: 400px"></div>
-    <div v-else style="width: 100%; height: 400px" >      
-      <TinyLoading />
-    </div>
+    <Row type="flex"
+         justify="space-between">
+      <Col :span="24">
+      <div ref="barChart"
+           v-if="initDone"
+           style="width: 100%; height: 400px"></div>
+      <div v-else
+           style="width: 100%; height: 400px">
+        <TinyLoading />
+      </div>
+      </Col>
+    </Row>
   </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
-import { IchartOptions } from './types'
 import echarts from 'echarts'
+import { pubOption, seriesOption, dottedLineStyle, yOption, xOption, barThinStyle } from '../chartsOption'
 @Component({
   components: {
     TinyLoading
@@ -40,18 +49,13 @@ import echarts from 'echarts'
 export default class BarCategoryStack extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
+  @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
   @Prop({ type: Array, default: [] }) dict1!: any[]
   @Prop({ type: Array, default: [] }) dict2!: any[]
+  @Prop({ type: Array, default: [] }) color!: any[]
   @Prop({ type: Array, default: [] }) dataList!: any[]
   xaxisList: any = []
-  yAxList: any = {}
-  thisdown: boolean = false
-  chartOptions: IchartOptions = {
-    name: '',
-    type: 'bar',
-    color: ['#ca7273', '#f3d872', '#57b4c9']
-  }
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
     this.currentIndex = index
@@ -59,80 +63,55 @@ export default class BarCategoryStack extends ViewBase {
   }
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
-    if (this.dict1.length > 0) {
-      this.chartOptions.name = this.dict1[this.currentTypeIndex].name
-    } else {
-      this.chartOptions.name = 'default'
-    }
   }
   updateCharts() {
     if (!this.dataList[this.currentIndex].list || this.dataList[this.currentIndex].list.length < 1) { return }
-    const chartData = this.dataList[this.currentIndex].list
     const myChart = echarts.init(this.$refs.barChart as any)
 
     let chartSeries: any[] = []
-    this.dict2.forEach((item, index) => {
-      const _name = item.key
-      const obj: any = {}
-      obj[_name] = {}
-      chartSeries = Object.assign(obj, chartSeries)
-    })
     chartSeries = this.dict2.map((item: any) => {
       return {
         name: '',
         type: 'bar',
-        stack: 'total',
-        label: {
-          normal: {
-            show: true,
-            position: 'insideRight'
-          }
-        },
+        // stack: 'total',
+        // label: {
+        //   normal: {
+        //     show: true,
+        //     position: 'insideRight'
+        //   }
+        // },
         data: []
       }
     })
-    chartData.forEach((item: any, index: number ) => {
+    this.dataList[this.currentIndex].list.forEach((item: any, index: number ) => {
       chartSeries[item.key].data.push(item.data)
       chartSeries[item.key].name = this.dict2[item.key].text
       if (!this.xaxisList.includes(item.date)) {
         this.xaxisList.push(item.date)
       }
     })
-    this.yAxList = chartSeries.map(item => item)
-    let option: any = {}
-    if ( this.chartOptions.type === 'bar' ) {
-      option = Object.assign({
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-            label: {
-              backgroundColor: this.chartOptions.color
-            }
-          }
+    const option: any = {
+      color: this.color,
+      ...pubOption,
+      legend: {
+        data: this.dict2.map((item: any) => {
+          return item.text
+        }),
+        textStyle: {
+          color: '#fff'
         },
-        legend: {
-          data: this.dict2.map((item: any) => {
-            return item.text
-          }),
-          y: 'bottom'
-        },
-        grid: {
-          left: '2%',
-          right: '2%',
-          bottom: '10%',
-          containLabel: true
-        },
-        color: this.chartOptions.color,
-        xAxis:  {
-            type: 'category',
-            data: this.xaxisList
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: this.yAxList
-      }, option)
+        y: '25'
+      },
+      xAxis:  {
+        ...xOption,
+        type: 'category',
+        data: this.xaxisList
+      },
+      yAxis: {
+        ...dottedLineStyle,
+        ...yOption
+      },
+      series: chartSeries.map(item => item)
     }
     myChart.setOption(option)
   }

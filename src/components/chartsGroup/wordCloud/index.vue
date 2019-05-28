@@ -1,29 +1,40 @@
-<style lang="less" scoped>
-@import '~@/site/lib.less';
-h1 {
-  text-align: left;
-  font-size: 14px
-}
-</style>
+
 <template>
-  <div>
-    <div style='text-align:center; padding-top:50px'>
-      <h1 v-if="title !==''">{{title}}</h1>
-      <RadioGroup size="small"
-                  v-if="dict1.length > 0"
-                  @on-change='currentTypeChange'
-                  v-model="currentIndex"
-                  type="button">
-        <Radio v-for="(item,index) in dict1"
+<div>
+  <div style='text-align:center'>
+    <div class='title-box'>
+      <span v-if=" title !=='' ">{{title}}</span>
+      <Tooltip max-width="200"
+                v-if=" titleTips !=='' "
+                :content="titleTips">
+        <Icon type="md-help-circle" />
+      </Tooltip>
+    </div>
+    <RadioGroup size="small"
+                v-if="dict1.length > 0"
+                @on-change='currentTypeChange'
+                v-model="currentIndex"
+                type="button">
+      <Radio v-for="(item,index) in dict1"
               :key="item.key"
               :label="index">{{item.name}}</Radio>
-      </RadioGroup>
-    </div>
-    <div ref="wordCloudChart" id='wordCloudChart' v-if="initDone" style="width: 100%; height: 400px"></div>
-    <div v-else style="width: 100%; height: 400px" >      
-      <TinyLoading />
-    </div>
+    </RadioGroup>
   </div>
+  <Row type="flex"
+        justify="space-between">
+    <Col :span="24">
+      <div class="wordCloud-wp">
+        <div ref="wordCloudChart"
+              v-if="initDone"
+              style="width: 100%; height: 300px"></div>
+        <div v-else
+              style="width: 100%; height: 300px">
+          <TinyLoading />
+        </div>
+      </div>
+    </Col>
+  </Row>
+</div>
 </template>
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
@@ -40,8 +51,10 @@ import WordCloud from 'wordcloud'
 export default class WordCloudChart extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
+  @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
   @Prop({ type: Array, default: [] }) dict1!: any[]
+  @Prop({ type: Array, default: [] }) color!: any[]
   @Prop({ type: Array, default: [] }) dataList!: any[]
   currentIndex: number = this.currentTypeIndex
   myOption: any = {}
@@ -60,6 +73,7 @@ export default class WordCloudChart extends ViewBase {
       return [item.name, item.value]
     })
     const option: any = {
+      backgroundColor: 'rgba(0,32,45,0)',
       imageShape: 'cardioid',
       // tooltip: {
       //   show: false,
@@ -67,10 +81,11 @@ export default class WordCloudChart extends ViewBase {
       //     console.log(item)
       //   }
       // },
+      color: '#A3D5E6',
       minSize: true,
       list: mocklist,
       shape: 'square',
-      ellipticity: 1
+      ellipticity: 0.65
     }
     WordCloud( ele, option )
   }

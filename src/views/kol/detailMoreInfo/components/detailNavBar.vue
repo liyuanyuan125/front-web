@@ -9,6 +9,7 @@
     margin-right: 15px;
     font-size: 15px;
   }
+  span { padding-left: 15px; }
 }
 </style>
 <template>

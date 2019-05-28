@@ -7,8 +7,7 @@
     <Row>
       <Col span="24">
       <Form label-position="left"
-            :label-width="100"
-            class="edit-input">
+            :label-width="100">
         <Card class="detailmore-card">
           <div slot="title">
             <Row type="flex"
@@ -40,31 +39,31 @@
             <Row type="flex"
                  justify="space-between">
               <Col :span="24">
-              <div class='chart-wp'>
-                <AreaBasic :initDone="chart1.initDone"
-                           :title='chart1.title'
-                           :dict1="chart1.dict1"
-                           :dict2="chart1.dict2"
-                           :color="chart1.color"
-                           :dataList="chart1.dataList"
-                           :currentTypeIndex="chart1.currentTypeIndex"
-                           @typeChange='typeChangeHander1' />
-              </div>
+                <div class='chart-wp'>
+                  <AreaBasic :initDone="chart1.initDone"
+                            :title='chart1.title'
+                            :dict1="chart1.dict1"
+                            :dict2="chart1.dict2"
+                            :color="chart1.color"
+                            :dataList="chart1.dataList"
+                            :currentTypeIndex="chart1.currentTypeIndex"
+                            @typeChange='typeChangeHander1' />
+                </div>
               </Col>
             </Row>
             <Row type="flex"
                  justify="space-between">
               <Col :span="24">
-              <div class='chart-wp'>
-                <AreaBasicxtra :initDone="chart2.initDone"
-                           :title='chart2.title'
-                           :dict1="chart2.dict1"
-                           :dict2="chart2.dict2"
-                           :color="chart2.color"
-                           :dataList="chart2.dataList"
-                           :currentTypeIndex="chart2.currentTypeIndex"
-                           @typeChange='typeChangeHander2' />
-              </div>
+                <div class='chart-wp borderRadius'>
+                  <AreaBasicxtra :initDone="chart2.initDone"
+                            :title='chart2.title'
+                            :dict1="chart2.dict1"
+                            :dict2="chart2.dict2"
+                            :color="chart2.color"
+                            :dataList="chart2.dataList"
+                            :currentTypeIndex="chart2.currentTypeIndex"
+                            @typeChange='typeChangeHander2' />
+                </div>
               </Col>
             </Row>
           </div>

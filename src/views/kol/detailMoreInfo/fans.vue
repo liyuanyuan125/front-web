@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less">
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
 </style>
@@ -7,82 +7,88 @@
     <Row>
       <Col span="24">
       <Form label-position="left"
-            :label-width="100"
-            class="edit-input">
+            :label-width="100">
         <Card class="detailmore-card">
           <div slot="title">
-            <Row type="flex"
-                 justify="space-between">
-              <Col :span="24">
-              <DetailNavBar titleText=''>
-                <div class='title-right'
-                     slot='item'>
-                  <Select v-model="form.brandId"
-                          @on-change="handleChange"
-                          class='selectedBox'
-                          style='width:100px'>
-                    <Option v-for="item in dict.brandList"
-                            :value="item.id"
-                            :key="item.id">{{ item.name }}</Option>
-                  </Select>
-                </div>
-              </DetailNavBar>
+            <Row type="flex" justify="space-between" align="middle">
+              <Col :span="17">
+                <DetailNavBar titleText='平台'>
+                  <div slot='item'>
+                    <Select v-model="form.platformId"
+                            clearable
+                            @on-change="handleChange">
+                      <Option v-for="(item) in dict.platform"
+                              :key="item.id"
+                              :value="item.id">{{item.name}}</Option>
+                    </Select>
+                  </div>
+                </DetailNavBar>
+              </Col>
+              <Col :span="7" style="text-align:right" >
+                <Select v-model="pageQuery.brandId"
+                      placeholder="可选品牌"
+                      style="width:150px"
+                      class='selectedBox'>
+                  <Option v-for="item in dict.brandList"
+                      :value="item.id"
+                      :key="item.id">{{ item.name }}</Option>
+                </Select>
+                <router-link :to="{path: '/kol/detailMoreInfo/matching/'+pageQuery.brandId}"><Button :disabled="pageQuery.brandId === ''" size="small" type="primary" >查看匹配度</Button></router-link>
               </Col>
             </Row>
           </div>
           <div class="content">
-            <Row type="flex"
-                 justify="space-between">
+            <Row type="flex" justify="space-between">
               <Col :span="12">
-              <div class='chart-wp'
-                   style='margin-right:10px'>
-                <Pie :initDone="chart1.initDone"
-                     :title='chart1.title'
-                     :dict1="chart1.dict1"
-                     :dict2="chart1.dict2"
-                     :color="chart1.color"
-                     :dataList="chart1.dataList"
-                     :currentTypeIndex="chart1.currentTypeIndex"
-                     @typeChange='typeChangeHander1' />
-              </div>
+                <div class='chart-wp' style='margin-right:10px'>
+                  <Pie :initDone="chart1.initDone"
+                      :title='chart1.title'
+                      :dict1="chart1.dict1"
+                      :dict2="chart1.dict2"
+                      :color="chart1.color"
+                      :dataList="chart1.dataList"
+                      :currentTypeIndex="chart1.currentTypeIndex"
+                      @typeChange='typeChangeHander1' />
+                </div>
               </Col>
               <Col :span="12">
-              <div class='chart-wp'>
-                <BarXCategory :initDone="chart2.initDone"
+                <div class='chart-wp'>
+                  <BarXCategory :initDone="chart2.initDone"
                               :title='chart2.title'
                               :dict1="chart2.dict1"
                               :dict2="chart2.dict2"
+                              :dict3="chart2.dict3"
+                              :color="chart2.color"
                               :dataList="chart2.dataList"
                               :currentTypeIndex="chart2.currentTypeIndex"
                               @typeChange='typeChangeHander2' />
-              </div>
+                </div>
               </Col>
             </Row>
-            <Row type="flex"
-                 justify="space-between">
+            <Row type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="12">
-              <div class='chart-wp'
-                   style='margin-right:10px'>
-                <MapChina :initDone="chart3.initDone"
+                <div class='chart-wp borderRadius' style='margin-right:10px; height:460px'>
+                  <MapChina :initDone="chart3.initDone"
                           :title="chart3.title"
                           :dict1="chart3.dict1"
                           :dict2="chart3.dict2"
+                          :color="chart3.color"
                           :dataList="chart3.dataList"
                           :currentTypeIndex="chart3.currentTypeIndex"
                           @typeChange='typeChangeHander3' />
-              </div>
+                </div>
               </Col>
               <Col :span="12">
-              <div class='chart-wp'
-                   style='margin-right:10px'>
-                <BarYCategory :initDone="chart4.initDone"
+                <div class='chart-wp' style='height:460px'>
+                  <BarYCategory :initDone="chart4.initDone"
                               :title="chart4.title"
                               :dict1="chart4.dict1"
                               :dict2="chart4.dict2"
+                              :color="chart4.color"
                               :dataList="chart4.dataList"
                               :currentTypeIndex="chart4.currentTypeIndex"
                               @typeChange='typeChangeHander4' />
-              </div>
+                </div>
               </Col>
             </Row>
           </div>
@@ -118,7 +124,10 @@ import DetailNavBar from './components/detailNavBar.vue'
 })
 export default class Temporary extends ViewBase {
   form: any = {
-    brandId: 0
+    platformId: 0
+  }
+  pageQuery: any = {
+    brandId: ''
   }
   dict: any = {
     brandList: [
@@ -137,6 +146,24 @@ export default class Temporary extends ViewBase {
         name: '宝马',
         disabled: false
       }
+    ],
+    platform: [
+      {
+        id: 0,
+        name: '微信公众号'
+      },
+      {
+        id: 1,
+        name: '新浪微博'
+      },
+      {
+        id: 2,
+        name: '小红书'
+      },
+      {
+        id: 3,
+        name: '抖音'
+      }
     ]
   }
   chart1: any = {
@@ -152,17 +179,20 @@ export default class Temporary extends ViewBase {
     title: '粉丝年龄分布',
     dict1: [],
     dict2: [],
+    dict3: [],
     currentTypeIndex: 0,
     initDone: false,
-    dataList: []
+    dataList: [],
+    color: ['#ff9933', '#169bd5']
   }
   chart3: any = {
-    title: '粉丝量TOP10',
+    title: '省份分布',
     dict1: [],
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
-    dataList: []
+    dataList: [],
+    color: ['#ff9933', '#169bd5']
   }
   chart4: any = {
     title: '城市分粉丝量TOP10',
@@ -179,7 +209,8 @@ export default class Temporary extends ViewBase {
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
-    dataList: []
+    dataList: [],
+    color: ['#ff9933', '#169bd5']
   }
   async typeChangeHander1(index: number = 0) {
     if (this.chart1.dataList[index].list.length < 1) {
@@ -212,7 +243,7 @@ export default class Temporary extends ViewBase {
       that.chart1.dataList[0].list = data.chart1.dataList
       that.chart1.initDone = true
 
-      that.chart2.dict2 = data.chart2.effectTypeList
+      that.chart2.dict3 = data.chart2.effectTypeList
       that.chart2.dataList[0].list = data.chart2.dataList
       that.chart2.initDone = true
 

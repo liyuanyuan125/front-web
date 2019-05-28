@@ -64,7 +64,7 @@ export const pubOption = {
   grid: {
     left: '2%',
     right: '2%',
-    bottom: '10%',
+    bottom: '20%',
     containLabel: true,
     show: false,
     borderWidth: 0
@@ -135,5 +135,15 @@ export const xOption = {
   },
   axisTick: {
     show: false
+  }
+}
+/**
+ * 圆角边细柱条样式
+ */
+export const barThinStyle = {
+  type: 'bar',
+  barWidth: 10,
+  itemStyle: {
+    barBorderRadius: 5
   }
 }
