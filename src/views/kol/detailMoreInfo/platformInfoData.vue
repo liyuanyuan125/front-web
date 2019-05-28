@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less">
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
 </style>
@@ -7,16 +7,14 @@
     <Row>
       <Col span="24">
       <Form label-position="left"
-            :label-width="100"
-            class="edit-input">
+            :label-width="100">
         <Card class="detailmore-card">
           <div slot="title">
-            <Row type="flex"
-                 justify="space-between">
-              <Col :span="24">
-              <DetailNavBar titleText='统计周期'>
-                <div slot='item'>
-                  <RadioGroup style='margin-right:15px'
+            <Row type="flex" justify="space-between" align="middle">
+              <Col :span="17">
+                <DetailNavBar titleText='统计周期'>
+                  <div slot='item'>
+                    <RadioGroup style='margin-right:15px'
                               @on-change="handleChange"
                               v-model="form.statisticTimeId"
                               size="large"
@@ -31,30 +29,37 @@
                               @on-change="handleChange"
                               placement="bottom-end"
                               placeholder="自定义时间段"></DatePicker>
-                </div>
-              </DetailNavBar>
+                  </div>
+                </DetailNavBar>
+              </Col>
+              <Col :span="7" style="text-align:right" >
+                平台
+                <Select v-model="form.platformId"
+                        clearable
+                        @on-change="handleChange"
+                        style="width:150px; text-align:left">
+                  <Option v-for="(item) in dict.platform"
+                          :key="item.id"
+                          :value="item.id">{{item.name}}</Option>
+                </Select>
               </Col>
             </Row>
           </div>
           <div class="content">
-            <FormItem label="平台">
-              <Select v-model="form.platformId"
-                      style="width: 400px"
-                      clearable
-                      @on-change="handleChange">
-                <Option v-for="(item) in dict.platform"
-                        :key="item.id"
-                        :value="item.id">{{item.name}}</Option>
-              </Select>
-            </FormItem>
-            <chartsGroup :initDone="chart1.initDone"
-                           :title='chart1.title'
-                           :dict1="chart1.dict1"
-                           :dict2="chart1.dict2"
-                           :color="chart1.color"
-                           :dataList="chart1.dataList"
-                           :currentTypeIndex="chart1.currentTypeIndex"
-                           @typeChange='typeChangeHander1' />
+            <Row type="flex" justify="space-between">
+              <Col :span="24">
+                <div class='chart-wp borderRadius'>
+                  <AreaBasic :initDone="chart1.initDone"
+                            :title='chart1.title'
+                            :dict1="chart1.dict1"
+                            :dict2="chart1.dict2"
+                            :color="chart1.color"
+                            :dataList="chart1.dataList"
+                            :currentTypeIndex="chart1.currentTypeIndex"
+                            @typeChange='typeChangeHander1' />
+                </div>
+              </Col>
+            </Row>
           </div>
         </Card>
       </Form>
@@ -72,11 +77,11 @@ import {
 } from '@/util/validateRules'
 import { platformData } from '@/api/kolDetailMoreInfo'
 import numAdd from '../number.vue'
-import chartsGroup, { IcurrentType } from '@/components/chartsGroup/line/'
+import AreaBasic from '@/components/chartsGroup/areaBasic/'
 import DetailNavBar from './components/detailNavBar.vue'
 @Component({
   components: {
-    chartsGroup,
+    AreaBasic,
     DetailNavBar
   }
 })
@@ -137,7 +142,7 @@ export default class Temporary extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: ['#0099cc']
+    color: ['#0099cc', '#0099cc', '#0099cc', '#0099cc']
   }
   async typeChangeHander1(index: number = 0) {
     if (this.chart1.dataList[index].list.length < 1) {

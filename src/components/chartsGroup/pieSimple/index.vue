@@ -1,36 +1,43 @@
-<style lang="less" scoped>
-@import '~@/site/lib.less';
-h1 {
-  text-align: left;
-  font-size: 14px
-}
-</style>
 <template>
   <div>
     <div style='text-align:center'>
-      <h1 v-if="title !==''">{{title}}</h1>
+      <div class='title-box'>
+        <span v-if=" title !=='' ">{{title}}</span>
+        <Tooltip max-width="200"
+                 v-if=" titleTips !=='' "
+                 :content="titleTips">
+          <Icon type="md-help-circle" />
+        </Tooltip>
+      </div>
       <RadioGroup size="small"
                   v-if="dict1.length > 0"
                   @on-change='currentTypeChange'
                   v-model="currentIndex"
                   type="button">
         <Radio v-for="(item,index) in dict1"
-              :key="item.key"
-              :label="index">{{item.text}}</Radio>
+               :key="item.key"
+               :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <div ref="refChart" v-if="initDone" style="width: 100%; height: 400px"></div>
-    <div v-else style="width: 100%; height: 400px" >      
-      <TinyLoading />
-    </div>
+    <Row type="flex" justify="space-between">
+      <Col :span="24">
+      <div ref="refChart"
+           v-if="initDone"
+           style="width: 100%; height: 400px"></div>
+      <div v-else
+           style="width: 100%; height: 400px">
+        <TinyLoading />
+      </div>
+      </Col>
+    </Row>
   </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
-import { IchartOptions } from './types'
 import echarts from 'echarts'
+import { pubOption, seriesOption, dottedLineStyle, yOption, xOption } from '../chartsOption'
 @Component({
   components: {
     TinyLoading
@@ -40,16 +47,12 @@ import echarts from 'echarts'
 export default class PieSimple extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
+  @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
   @Prop({ type: Array, default: [] }) dict1!: any[]
   @Prop({ type: Array, default: [] }) dict2!: any[]
   @Prop({ type: Array, default: [] }) color!: any[]
   @Prop({ type: Array, default: [] }) dataList!: any[]
-  chartOptions: IchartOptions = {
-    name: '',
-    type: 'bar',
-    color: ['#ff9933', '#169bd5']
-  }
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
     this.currentIndex = index
@@ -74,16 +77,14 @@ export default class PieSimple extends ViewBase {
       chartSeries[item.key].value = item.data
     })
     const option: any = {
-      tooltip : {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)'
-      },
+      color: this.color,
+      ...pubOption,
       series : [
         {
           name: this.title,
           type: 'pie',
           radius : '55%',
-          center: ['50%', '60%'],
+          center: ['50%', '40%'],
           data: chartSeries,
           itemStyle: {
             emphasis: {
@@ -93,8 +94,7 @@ export default class PieSimple extends ViewBase {
             }
           }
         }
-      ],
-      color: this.color,
+      ]
     }
     myChart.setOption(option)
   }

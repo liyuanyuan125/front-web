@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less">
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
 </style>
@@ -7,112 +7,137 @@
     <Row>
       <Col span="24">
       <Form label-position="left"
-            :label-width="100"
-            class="edit-input">
+            :label-width="100">
         <Card class="detailmore-card">
           <div slot="title">
             <Row type="flex"
-                 justify="space-between">
-              <Col :span="24">
-              <DetailNavBar titleText='整体匹配度72%'>
-                <div class='title-right'
-                     slot='item'>
-                  <span>
-                    Papi酱 PK
-                  </span>
-                  <Select v-model="form.brandId"
-                          @on-change="handleChange"
-                          class='selectedBox'
-                          style='width:100px'>
-                    <Option v-for="item in dict.brandList"
-                            :value="item.id"
-                            :key="item.id">{{ item.name }}</Option>
-                  </Select>
-                </div>
-              </DetailNavBar>
+                 justify="space-between" align="middle">
+              <Col :span="17">
+                <DetailNavBar titleText='平台'>
+                  <div slot='item' type="flex" justify="space-between" align="left" >
+                    <Select v-model="form.platformId"
+                    style="width:150px" clearable @on-change="handleChange">
+                      <Option v-for="(item) in dict.platform"
+                              :key="item.id"
+                              :value="item.id">{{item.name}}</Option>
+                    </Select>
+                    <span>整体匹配度72%</span>
+                  </div>
+                </DetailNavBar>
+              </Col>
+              <Col :span="7" style="text-align:right" >
+                <span>
+                  Papi酱 PK
+                </span>
+                <Select v-model="form.brandId"
+                        @on-change="handleChange"
+                        class='selectedBox'
+                        style='width:100px'>
+                  <Option v-for="item in dict.brandList"
+                          :value="item.id"
+                          :key="item.id">{{ item.name }}</Option>
+                </Select>
               </Col>
             </Row>
           </div>
           <div class="content">
-            <Row type="flex"
-                 justify="space-between">
+            <Row type="flex" justify="space-between">
               <Col :span="12">
-              <div class='chart-wp'
-                   style='margin-right:10px'>
-                <div class='total-tips'>
-                  <div>
-                    <p>90%</p>
-                    <p>匹配度</p>
+                <div class='chart-wp' style='margin-right:10px'>
+                  <div class='circle-box'>
+                    <i-circle :percent="bar1.percent"
+                              :size="iCircleOption.size"
+                              :trail-color="iCircleOption.trailColor"
+                              :stroke-color="iCircleOption.strokeColor"
+                              :trail-width="iCircleOption.trailWidth"
+                              :stroke-width="iCircleOption.strokeWidth">
+                      <h6>{{bar1.percent}}%</h6>
+                      <p>匹配度</p>
+                    </i-circle>
                   </div>
+                  <BarXCategory :initDone="bar1.initDone"
+                                :title='bar1.title'
+                                :dict1="bar1.dict1"
+                                :dict2="bar1.dict2"
+                                :dict3="bar1.dict3"
+                                :color="bar1.color"
+                                :dataList="bar1.dataList"
+                                :currentTypeIndex="bar1.currentTypeIndex"
+                                @typeChange='typeChangeHander1' />
                 </div>
-                <BarXCategory :initDone="bar1.initDone"
-                              :title='bar1.title'
-                              :dict1="bar1.dict1"
-                              :dict2="bar1.dict2"
-                              :dict3="bar1.dict3"
-                              :color="bar1.color"
-                              :dataList="bar1.dataList"
-                              :currentTypeIndex="bar1.currentTypeIndex"
-                              @typeChange='typeChangeHander1' />
-              </div>
               </Col>
               <Col :span="12">
-              <div class='chart-wp'>
-                <div class='total-tips'>
-                  <div>
-                    <p>90%</p>
-                    <p>匹配度</p>
+                <div class='chart-wp'>
+                  <div class='circle-box'>
+                    <i-circle :percent="bar2.percent"
+                              :size="iCircleOption.size"
+                              :trail-color="iCircleOption.trailColor"
+                              :stroke-color="iCircleOption.strokeColor"
+                              :trail-width="iCircleOption.trailWidth"
+                              :stroke-width="iCircleOption.strokeWidth">
+                      <h6>{{bar2.percent}}%</h6>
+                      <p>匹配度</p>
+                    </i-circle>
                   </div>
+                  <BarXCategory :initDone="bar2.initDone"
+                                :title='bar2.title'
+                                :dict1="bar2.dict1"
+                                :dict2="bar2.dict2"
+                                :dict3="bar2.dict3"
+                                :color="bar2.color"
+                                :dataList="bar2.dataList"
+                                :currentTypeIndex="bar2.currentTypeIndex"
+                                @typeChange='typeChangeHander2' />
                 </div>
-                <BarXCategory :initDone="bar2.initDone"
-                              :title='bar2.title'
-                              :dict1="bar2.dict1"
-                              :dict2="bar2.dict2"
-                              :dict3="bar2.dict3"
-                              :color="bar2.color"
-                              :dataList="bar2.dataList"
-                              :currentTypeIndex="bar2.currentTypeIndex"
-                              @typeChange='typeChangeHander2' />
-              </div>
               </Col>
             </Row>
-            <Row type="flex"
-                 justify="space-between">
+            <Row type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="12">
-              <div class='chart-wp'
-                   style='margin-right:10px'>
-                <div class='total-tips'>
-                  <div>
-                    <p>90%</p>
-                    <p>匹配度</p>
+                <div class='chart-wp borderRadius' style='margin-right:10px'>
+                  <div class='circle-box'>
+                    <i-circle :percent="bar3.percent"
+                              :size="iCircleOption.size"
+                              :trail-color="iCircleOption.trailColor"
+                              :stroke-color="iCircleOption.strokeColor"
+                              :trail-width="iCircleOption.trailWidth"
+                              :stroke-width="iCircleOption.strokeWidth">
+                      <h6>{{bar3.percent}}%</h6>
+                      <p>匹配度</p>
+                    </i-circle>
                   </div>
+                  <BarYCategoryDouble :initDone="bar3.initDone"
+                                      :title="bar3.title"
+                                      :titleTips="bar3.titleTips"
+                                      :dict1="bar3.dict1"
+                                      :dict2="bar3.dict2"
+                                      :color="bar3.color"
+                                      :dataList="bar3.dataList"
+                                      :currentTypeIndex="bar3.currentTypeIndex"
+                                      @typeChange='typeChangeHander3' />
                 </div>
-                <BarYCategoryDouble :initDone="bar3.initDone"
-                                    :title="bar3.title"
-                                    :dict1="bar3.dict1"
-                                    :dict2="bar3.dict2"
-                                    :dataList="bar3.dataList"
-                                    :currentTypeIndex="bar3.currentTypeIndex"
-                                    @typeChange='typeChangeHander3' />
-              </div>
               </Col>
               <Col :span="12">
-              <div class='chart-wp'
-                   style='margin-right:10px'>
-                <div class='total-tips'>
-                  <div>
-                    <p>70%</p>
-                    <p>匹配度</p>
+                <div class='chart-wp borderRadius'>
+                  <div class='circle-box'>
+                    <i-circle :percent="bar4.percent"
+                              :size="iCircleOption.size"
+                              :trail-color="iCircleOption.trailColor"
+                              :stroke-color="iCircleOption.strokeColor"
+                              :trail-width="iCircleOption.trailWidth"
+                              :stroke-width="iCircleOption.strokeWidth">
+                      <h6>{{bar4.percent}}%</h6>
+                      <p>匹配度</p>
+                    </i-circle>
                   </div>
+                  <BarYCategoryDouble :initDone="bar4.initDone"
+                                      :title="bar4.title"
+                                      :dict1="bar4.dict1"
+                                      :dict2="bar4.dict2"
+                                      :color="bar4.color"
+                                      :dataList="bar4.dataList"
+                                      :currentTypeIndex="bar4.currentTypeIndex"
+                                      @typeChange='typeChangeHander4' />
                 </div>
-                <BarYCategoryDouble :initDone="bar4.initDone"
-                                    :title="bar4.title"
-                                    :dict1="bar4.dict1"
-                                    :dict2="bar4.dict2"
-                                    :dataList="bar4.dataList"
-                                    :currentTypeIndex="bar4.currentTypeIndex"
-                                    @typeChange='typeChangeHander4' />
-              </div>
               </Col>
             </Row>
           </div>
@@ -134,7 +159,6 @@ import { platformData, matching } from '@/api/kolDetailMoreInfo'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import BarYCategoryDouble from '@/components/chartsGroup/barYCategoryDouble/'
 import DetailNavBar from './components/detailNavBar.vue'
-
 @Component({
   components: {
     BarXCategory,
@@ -144,7 +168,8 @@ import DetailNavBar from './components/detailNavBar.vue'
 })
 export default class Temporary extends ViewBase {
   form: any = {
-    brandId: 0
+    brandId: 0,
+    platformId: 0
   }
   dict: any = {
     brandList: [
@@ -163,40 +188,73 @@ export default class Temporary extends ViewBase {
         name: '宝马',
         disabled: false
       }
+    ],
+    platform: [
+      {
+        id: 0,
+        name: '微信公众号'
+      },
+      {
+        id: 1,
+        name: '新浪微博'
+      },
+      {
+        id: 2,
+        name: '小红书'
+      },
+      {
+        id: 3,
+        name: '抖音'
+      }
     ]
   }
+  iCircleOption: any = {
+    size: 60,
+    trailColor: '#00202D',
+    strokeColor: '#BCE2F0',
+    trailWidth: 6,
+    strokeWidth: 3
+  }
   bar1: any = {
+    percent: 80,
     title: '男女分布',
     dict1: [],
     dict2: [],
     dict3: [],
-    color: ['#ff9933', '#169bd5'],
+    color: ['#DA6C70', '#00B6CC'],
     currentTypeIndex: 0,
     initDone: false,
     dataList: []
   }
   bar2: any = {
+    percent: 80,
     title: '年龄分布',
     dict1: [],
     dict2: [],
     dict3: [],
-    color: ['#ff9933', '#169bd5'],
+    color: ['#DA6C70', '#00B6CC'],
     currentTypeIndex: 0,
     initDone: false,
     dataList: []
   }
   bar3: any = {
+    percent: 80,
     title: '省份分布TOP10',
+    titleTips: '描述信息描述信息描述信息描述信息描述信息描述信息描述信息描述信息',
     dict1: [],
     dict2: [],
+    color: ['#DA6C70', '#00B6CC'],
     currentTypeIndex: 0,
     initDone: false,
     dataList: []
   }
   bar4: any = {
+    percent: 80,
     title: '城市分布TOP10',
+    titleTips: '描述信息描述信息描述信息描述信息描述信息描述信息描述信息描述信息',
     dict1: [],
     dict2: [],
+    color: ['#DA6C70', '#00B6CC'],
     currentTypeIndex: 0,
     initDone: false,
     dataList: []

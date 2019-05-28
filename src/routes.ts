@@ -763,7 +763,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
   // KOL - KOL详情更多页 - 受众匹配
   {
-    path: '/kol/detailMoreInfo/matching',
+    path: '/kol/detailMoreInfo/matching/:brandId',
     name: 'kol-detailMoreInfo-matching',
     component: () => import('./views/kol/detailMoreInfo/matching.vue'),
     meta: emptyAuth

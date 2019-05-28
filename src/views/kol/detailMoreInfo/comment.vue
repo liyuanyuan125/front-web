@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less">
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
 </style>
@@ -7,16 +7,14 @@
     <Row>
       <Col span="24">
       <Form label-position="left"
-            :label-width="100"
-            class="edit-input">
+            :label-width="100">
         <Card class="detailmore-card">
           <div slot="title">
-            <Row type="flex"
-                 justify="space-between">
-              <Col :span="24">
-              <DetailNavBar titleText='统计周期'>
-                <div slot='item'>
-                  <RadioGroup style='margin-right:15px'
+            <Row type="flex" justify="space-between" align="middle">
+              <Col :span="17">
+                <DetailNavBar titleText='统计周期'>
+                  <div slot='item'>
+                    <RadioGroup style='margin-right:15px'
                               @on-change="handleChange"
                               v-model="form.statisticTimeId"
                               size="large"
@@ -31,60 +29,71 @@
                               @on-change="handleChange"
                               placement="bottom-end"
                               placeholder="自定义时间段"></DatePicker>
-                </div>
-              </DetailNavBar>
+                  </div>
+                </DetailNavBar>
+              </Col>
+              <Col :span="7" style="text-align:right" >
+                平台
+                <Select v-model="form.platformId"
+                        clearable
+                        @on-change="handleChange"
+                        style="width:150px; text-align:left">
+                  <Option v-for="(item) in dict.platform"
+                          :key="item.id"
+                          :value="item.id">{{item.name}}</Option>
+                </Select>
               </Col>
             </Row>
           </div>
           <div class="content">
-            <Row type="flex"
-                 justify="space-between">
+            <Row type="flex" justify="space-between">
               <Col :span="12">
-              <div class='chart-wp'
-                   style='margin-right:10px'>
-                <PieNest :initDone="pieNest.initDone"
+                <div class='chart-wp' style='margin-right:10px'>
+                  <PieNest :initDone="pieNest.initDone"
                          :title='pieNest.title'
                          :dict1="pieNest.dict1"
                          :dict2="pieNest.dict2"
+                         :color="pieNest.color"
                          :dataList="pieNest.dataList"
                          :currentTypeIndex="pieNest.currentTypeIndex"
                          @typeChange='typeChangeHander1' />
-              </div>
+                </div>
               </Col>
               <Col :span="12">
-              <div class='chart-wp'>
-                <BarCategoryStack :initDone="barStack.initDone"
+                <div class='chart-wp'>
+                  <BarCategoryStack :initDone="barStack.initDone"
                                   :title='barStack.title'
                                   :dict1="barStack.dict1"
                                   :dict2="barStack.dict2"
+                                  :color="barStack.color"
                                   :dataList="barStack.dataList"
                                   :currentTypeIndex="barStack.currentTypeIndex"
                                   @typeChange='typeChangeHander2' />
-              </div>
+                </div>
               </Col>
             </Row>
-            <Row type="flex"
-                 justify="space-between">
+            <Row type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="12">
-              <div class='chart-wp'
-                   style='margin-right:10px'>
-                <WordCloud :initDone="wordCloud1.initDone"
+                <div class='chart-wp borderRadius' style='margin-right:10px'>
+                  <WordCloud :initDone="wordCloud1.initDone"
                            :title='wordCloud1.title'
                            :dict1="wordCloud1.dict1"
+                           :color="wordCloud1.color"
                            :dataList="wordCloud1.dataList"
                            :currentTypeIndex="wordCloud1.currentTypeIndex"
                            @typeChange='typeChangeHander3' />
-              </div>
+                </div>
               </Col>
               <Col :span="12">
-              <div class='chart-wp'>
-                <WordCloud :initDone="wordCloud2.initDone"
+                <div class='chart-wp borderRadius'>
+                  <WordCloud :initDone="wordCloud2.initDone"
                            :title='wordCloud2.title'
                            :dict1="wordCloud2.dict1"
+                           :color="wordCloud2.color"
                            :dataList="wordCloud2.dataList"
                            :currentTypeIndex="wordCloud2.currentTypeIndex"
                            @typeChange='typeChangeHander4' />
-              </div>
+                </div>
               </Col>
             </Row>
           </div>
@@ -108,7 +117,10 @@ import PieNest from '@/components/chartsGroup/pieNest/'
 import BarCategoryStack from '@/components/chartsGroup/barCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
 import DetailNavBar from './components/detailNavBar.vue'
-
+// #D0BF6B 中性
+// #AD686C 正面
+// #57B4C9 负面
+const colors: any[] = ['#D0BF6B', '#AD686C', '#57B4C9']
 @Component({
   components: {
     PieNest,
@@ -122,7 +134,8 @@ export default class Temporary extends ViewBase {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
-    statisticTimeId: 0
+    statisticTimeId: 0,
+    platformId: 0
   }
   dict: any = {
     statisticTime: [
@@ -146,6 +159,24 @@ export default class Temporary extends ViewBase {
         name: '最近90天',
         disabled: true
       }
+    ],
+    platform: [
+      {
+        id: 0,
+        name: '微信公众号'
+      },
+      {
+        id: 1,
+        name: '新浪微博'
+      },
+      {
+        id: 2,
+        name: '小红书'
+      },
+      {
+        id: 3,
+        name: '抖音'
+      }
     ]
   }
   barStack: any = {
@@ -163,7 +194,8 @@ export default class Temporary extends ViewBase {
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
-    dataList: []
+    dataList: [],
+    color: colors
   }
   pieNest: any = {
     title: '评论情绪分布',
@@ -180,21 +212,24 @@ export default class Temporary extends ViewBase {
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
-    dataList: []
+    dataList: [],
+    color: colors
   }
   wordCloud1: any = {
     title: '正面评论关键词',
     dict1: [],
     currentTypeIndex: 0,
     initDone: false,
-    dataList: []
+    dataList: [],
+    color: colors
   }
   wordCloud2: any = {
     title: '负面评论关键词',
     dict1: [],
     currentTypeIndex: 0,
     initDone: false,
-    dataList: []
+    dataList: [],
+    color: colors
   }
   async typeChangeHander1(index: number = 0) {
     if (this.pieNest.dataList[index].list.length < 1) {
