@@ -211,7 +211,7 @@ export default class App extends ViewBase {
     this.seach()
   }
 
-     // 每页数
+  // 每页数
   sizeChangeHandle(val: any) {
     this.pageIndex = val
     this.seach()

@@ -7,7 +7,7 @@
   :styles="{top: '30px'}">
     <div class="title">
       <h3>选择影片</h3>
-      <i></i>
+      <i @click="cancel"></i>
     </div>
     <div class="reject-cinema">
       <div class="flex-box search-input">
