@@ -37,8 +37,8 @@ export default class Main extends ViewBase {
     text-align: center;
     margin-right: 30px;
     width: 180px;
-    height: 40px;
-    line-height: 40px;
+    height: 38px;
+    line-height: 38px;
     color: #00202d;
     font-size: 14px;
     border: 1px solid #fff;
@@ -65,7 +65,6 @@ export default class Main extends ViewBase {
       border-radius: 50%;
       text-align: center;
       line-height: 16px;
-      z-index: 999;
     }
   }
 }

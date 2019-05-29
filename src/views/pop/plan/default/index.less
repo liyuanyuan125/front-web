@@ -1,0 +1,354 @@
+@h-color: #00202d;
+.tags {
+  position: absolute;
+  left: -1px;
+  background: #fff;
+  width: 1px;
+}
+.plan-box {
+  padding: 0 40px;
+  .plan-message {
+    height:212px;
+    background: rgba(0, 32, 45, .9);
+    text-align: center;
+    color: #f9d85e;
+    >span {
+      display: inline-block;
+      margin-top: 53px;
+      margin-bottom: 47px;
+      font-size:20px;
+    }
+    .btn-contact {
+      display: block;
+      margin: 0 auto;
+      .button-style(#00202d, #f9d85e);
+      height: 47px;
+      width:200px;
+      font-size: 20px;
+      border-radius: 24px;
+    }
+  }
+  .plan-title {
+    text-align: center;
+    color: @h-color;
+    font-size: 36px;
+    margin-top: 55px;
+    margin-bottom: 50px;
+  }
+  .result-top {
+    display: flex;
+    color: @h-color;
+    h3 {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+    span {
+      font-size: 16px;
+      line-height: 36px;
+    }
+    .custom {
+      position: absolute;
+      font-size: 14px;
+      right: 68px;
+      width: 152px;
+      height: 37px;
+      line-height: 37px;
+      text-align: center;
+      background: rgba(240, 245, 248, 1);
+      border-radius: 19px;
+      opacity: 0.6181;
+    }
+  }
+  .plan-result {
+    margin-bottom: 75px;
+    .precept {
+      padding: 0 30px;
+      height: 136px;
+      border: 1px solid #fff;
+      background: rgba(255, 255, 255, .3);
+      border-radius: 5px;
+      margin-top: 24px;
+    }
+    .item {
+      color: #26344b;
+      font-size: 14px;
+      .title {
+        margin-top: 30px;
+        font-weight: 400;
+        color: @h-color;
+        opacity: .7;
+      }
+    }
+    .number {
+      font-size: 30px;
+      margin-top: 20px;
+      color: @h-color;
+      /deep/ span::after {
+        content: "万";
+      }
+      /deep/ span::before {
+        content: "≈";
+      }
+    }
+  }
+  .plan-cinema {
+    .film-list {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 15px;
+      margin-bottom: 10px;
+      .film-item {
+        width: 32%;
+        border-radius: 5px;
+        position: relative;
+        box-sizing: border-box;
+        border: 1px solid #fff;
+        background: rgba(255, 255, 255, 0.3);
+        padding: 28px;
+        &:not(:nth-child(3n)) {
+          margin-right: 1.5%;
+        }
+        .film-top {
+          display: flex;
+          img {
+            width: 104px;
+            height: 146px;
+          }
+          div {
+            margin-left: 20px;
+            height: 30px;
+            line-height: 30px;
+            flex: 1;
+          }
+          p {
+            height: 24px;
+            color: #00202d;
+            span {
+              opacity: .8;
+            }
+          }
+          .film-title {
+            font-size: 18px;
+            width: 160px;
+            color: #00202d;
+            overflow: hidden;
+            height: 24px;
+            font-weight: 400;
+          }
+          .circle-per {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            z-index: 5;
+            background: #fff;
+            border-radius: 50%;
+          }
+        }
+        .film-center {
+          margin: 15px 0;
+          padding: 10px 0;
+          display: flex;
+          p {
+            height: 30px;
+            line-height: 30px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            span {
+              margin-left: 10px;
+            }
+          }
+          .file-sex-box {
+            margin-left: 10px;
+            width: 130px;
+            text-align: center;
+            span {
+              text-align: center;
+              color: rgba(87, 180, 201, 1);
+              font-size: 14px;
+            }
+            > div {
+              width: 110px;
+              height: 110px;
+              margin-left: 10px;
+              display: flex;
+              margin-bottom: 16px;
+              justify-content: center;
+              align-items: center;
+              .file-sex-man {
+                background: #00b6cc;
+                border: 1px solid #00b6cc;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+              .file-sex-woman {
+                background: #d96b6f;
+                color: #da6c70;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+            }
+          }
+        }
+        .film-buttom {
+          margin-top: 15px;
+          margin-bottom: 15px;
+          dl {
+            display: flex;
+            dd {
+              color: rgba(0, 32, 45);
+              opacity: .7;
+            }
+            dt {
+              margin-left: 10px;
+              color: rgba(0, 32, 45);
+            }
+          }
+        }
+      }
+    }
+  }
+  .plan-cinema-num {
+    margin-top: 78px;
+    .cinema-box {
+      display: flex;
+      margin-top: 28px;
+      margin-right: 20px;
+      overflow: auto;
+      max-height: 498px;
+      .cinema-right {
+        display: flex;
+        width: 100%;
+        dl {
+          width: 156px;
+          height: 118px;
+          margin-right: 10px;
+          background: rgba(255, 255, 255, 0.3);
+          border: 1px solid #fff;
+          position: relative;
+          &:not(:first-child) {
+            margin-top: 8px;
+          }
+          dd {
+            font-weight: 500;
+            font-size: 30px;
+            width: 100%;
+            text-align: center;
+            color: rgba(0, 32, 45, 1);
+            line-height: 30px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+          }
+          dt {
+            text-align: center;
+            font-size: 16px;
+            color: #00202d;
+          }
+        }
+        .dl-active {
+          border-right: 0;
+        }
+        .dl-active::after {
+          content: '';
+          display: block;
+          width: 10px;
+          height: 118px;
+          position: absolute;
+          border-top: 1px solid #fff;
+          border-bottom: 1px solid #fff;
+          background: rgba(255, 255, 255, 0.3);
+          right: -10px;
+          top: -1px;
+        }
+        .cinema-find {
+          flex: 1;
+          padding-right: 20px;
+          background: rgba(255, 255, 255, 0.3);
+          border: 1px solid #fff;
+          border-left: 0;
+          .cineme-input {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 26px;
+            margin-bottom: 37px;
+            /deep/ .ivu-input {
+              border-radius: 5px;
+              background: rgba(255, 255, 255, 0.3);
+              border: 1px solid #fff;
+              color: #fff;
+            }
+            /deep/ .ivu-input-suffix {
+              background: #00202d;
+              border-radius: 0 5px 5px 0;
+            }
+            /deep/ .ivu-icon-ios-search {
+              color: #fff;
+            }
+          }
+          .border-top1 {
+            display: none;
+          }
+          .border-bottom1 {
+            .tags;
+            top: 118px;
+            height: 376px;
+          }
+          .border-top2 {
+            .tags;
+            top: 0;
+            height: 126px;
+          }
+          .border-bottom2 {
+            .tags;
+            top: 243px;
+            height: 251px;
+          }
+          .border-top3 {
+            .tags;
+            top: 0;
+            height: 252px;
+          }
+          .border-bottom3 {
+            .tags;
+            top: 369px;
+            height: 126px;
+          }
+          .border-top4 {
+            .tags;
+            top: 0;
+            height: 378px;
+          }
+          .border-bottom4 {
+            display: none;
+          }
+          /deep/ .ivu-table-wrapper {
+            margin: 14px 0 20px 14px;
+          }
+        }
+      }
+    }
+  }
+  .plan-msg {
+    height:428px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 1);
+    margin-bottom: 77px;
+    padding: 28px 50px 0 48px;
+    /deep/ .ivu-col-span-2{
+      text-align: right;
+      color: @h-color;
+      opacity: .7;
+      span {
+        font-size: 16px;
+      }
+    }
+    /deep/ .ivu-col {
+      line-height: 56px;
+    }
+  }
+}

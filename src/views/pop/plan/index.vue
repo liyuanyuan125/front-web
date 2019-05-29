@@ -10,7 +10,7 @@
       </Col>
     </Row>
     <div>
-      <keep-alive include="Promotion,Orienteering">
+      <keep-alive>
         <component v-bind:is="currentTab" v-model="step"></component>
       </keep-alive>
     </div>
@@ -38,7 +38,6 @@ import StepTime from './vadver/stepTime.vue'
 export default class App extends ViewBase {
   step = 0
   currentTab: any = Promotion
-
   created() {
     this.init()
   }
@@ -73,6 +72,11 @@ export default class App extends ViewBase {
         break
     }
   }
+
+  // @Watch('this.$route')
+  // watch$route(val: any) {
+
+  // }
 }
 </script>
 

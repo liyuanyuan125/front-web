@@ -453,21 +453,19 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 推广管理 - 广告计划 - 创建广告计划
   {
-    path: '/pop/planlist/add/:id?',
+    path: '/pop/planlist/add/:id?/:setid?',
     name: 'pop-planlist-add',
     component: () => import('./views/pop/plan/index.vue'),
-    meta: {
-      authKey: 'promotion.ad-plan',
-      authAction(route) {
-        const id = parseInt(route.params.id, 10) || 0
-        return id > 0 ? 'edit' : 'create'
-      },
-      title({ params }) {
-        return parseInt(params.id, 10) > 0 ? '编辑广告计划' : '新建广告计划'
-      }
-    }
+    meta: emptyAuth
   },
 
+  // // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
+  // {
+  //   path: '/pop/planlist/set/:id?/:setid?',
+  //   name: 'pop-planlist-set',
+  //   component: () => import('./views/pop/plan/index.vue'),
+  //   meta: emptyAuth
+  // },
   // // 广告主 - 推广管理 - 广告计划 - 生成广告方案
   // {
   //   path: '/pop/plan/scheme/:id/:key',

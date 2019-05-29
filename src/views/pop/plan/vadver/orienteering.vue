@@ -5,7 +5,7 @@
         <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="0" class="edit-input forms">
           <h3 class="layout-titles">覆盖范围设置</h3>
           <Row>
-            <Col :span="12">
+            <Col :span="24">
               <Row>
                 <FormItem :labelWidth="0" class="item-top form-item-type">
                   <Tags v-model="cityType" :tagMess = 'areaList' />
@@ -13,12 +13,13 @@
                 <div class="item-top check-cinem" v-if="cityType == 1">
                   <FormItem :labelWidth="0">
                     <CheckboxGroup v-model="form.cinema" class="item-radio-top">
-                      <div style="width: 480px; margin-bottom: 30px">
+                      <div style="margin-bottom: 30px">
                         <Checkbox style="width: 180px" class="check-item form-item-first" :label="0">全国</Checkbox>
-                        <Checkbox style="width: 180px" class="check-item form-item-first" :label="-1">票仓城市Top20</Checkbox>
+                        <Checkbox style="margin-left: 18px;width: 180px" v-for="(it, index) in cityList" v-if="index == 0" :key="it.key" :label="it.key"
+                         class="check-item form-item-first">{{it.text}}</Checkbox>
+                        <Checkbox v-for="(it, index) in cityList" v-if="index > 0" :key="it.key" :label="it.key"
+                          class="check-item">{{it.text}}</Checkbox>
                       </div>
-                      <Checkbox  v-for="it in cityList" :key="it.key" :label="it.key"
-                        class="check-item">{{it.text}}</Checkbox>
                     </CheckboxGroup>
                   </FormItem>
                 </div>
@@ -27,22 +28,17 @@
                 </div>
               </Row>
             </Col>
-            <Col :span="12">
-              <Row>
-                <div><Chain /></div>
-              </Row>
-            </Col>
           </Row>
           
-          <h3 class="layout-titles">受众定向</h3>
+          <h3 class="layout-titles" style="margin-top: 45px">受众定向</h3>
           <Row class="item-top item-three">
-            <Col :span="12" class="flex">
-              <Col :span="12" class="three-left">
-                <div class="orient-title">受众年龄</div>
+            <Col :span="24" class="flex">
+              <Col :span="6" class="three-left">
+                <div class="orient-title">受众性别</div>
                 <FormItem class="item-top form-item-type">
                   <CheckboxGroup v-model="form.sex" class="item-radio-top">
                     <Checkbox style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
-                    <Checkbox style="width: 220px; height: 70px;"  v-for="it in sexList" :key="it.key" :label="it.key"
+                    <Checkbox  v-if="it.key != 'unknow'" style="width: 220px; height: 70px;"  v-for="it in sexList" :key="it.key" :label="it.key"
                       class="check-item check-icon">
                       <div v-if="it.text == '男'"><i class="check-man"></i></div>
                       <div v-else><i class="check-woman"></i></div>
@@ -52,8 +48,8 @@
                 </FormItem>
               </Col>
 
-              <Col :span="12" class="three-left">
-                <div class="orient-title">受众性别</div>
+              <Col :span="6" class="three-left">
+                <div class="orient-title">受众年龄</div>
                 <FormItem class="item-top form-item-type">
                   <CheckboxGroup v-model="form.age" class="item-radio-top">
                     <Checkbox style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
@@ -64,16 +60,18 @@
                   </CheckboxGroup>
                 </FormItem>
               </Col>
-              
-            </Col>
-            <Col :span="12">
-              <div class="orient-title">影片类型</div>
-              <FormItem :labelWidth="0" class="item-top form-item-type">
-                <CheckboxGroup v-model="form.type" class="item-radio-top">
-                  <Checkbox  v-for="it in typeList" :key="it.key" :label="it.key"
-                    class="check-item">{{it.text}}</Checkbox>
-                </CheckboxGroup>
-              </FormItem>
+
+              <Col :span="12">
+                <div ref="types">
+                  <div class="orient-title">影片类型</div>
+                  <FormItem :labelWidth="0" class="item-top form-item-type">
+                    <CheckboxGroup v-model="form.type" class="item-radio-top">
+                      <Checkbox  v-for="it in typeList" :key="it.key" :label="it.key"
+                        class="check-item">{{it.text}}</Checkbox>
+                    </CheckboxGroup>
+                  </FormItem>
+                </div>
+              </Col>
             </Col>
           </Row>
 
@@ -82,10 +80,10 @@
               <Tags v-model="movieType" :tagMess = 'movieList' />
             </FormItem>
           </h3>
-          <div class="item-top" style="margin-top: 50px" v-show="movieType == 1">
+          <!-- <div class="item-top" style="margin-top: 50px" v-show="movieType == 1">
             <FormItem :labelWidth="0" class="form-item-type-sort">
               <ul class="film-list" v-if="cinemaDetail.length > 0">
-                <li v-for="(it) in cinemaDetail" :key="it.id"
+                <li v-for="(it, index) in cinemaDetail" :key="index"
                   :class="['film-item']">
                   <div :class="['film-cover-box']">
                     <img :src="it.mainPicUrl" class="film-cover">
@@ -99,7 +97,7 @@
                 </li>
               </ul>
             </FormItem>
-          </div>
+          </div> -->
           <div class="item-top" style="margin-top: 50px" v-show="movieType != 1">
             <Film />
           </div>
@@ -118,16 +116,17 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Tags from '../tag.vue'
-import { orienteering } from '@/api/popPlan.ts'
+import { cinemaFind } from '@/api/popPlan.ts'
 import moment from 'moment'
 import Film from './film.vue'
 import Chain from '@/components/cityMap/CityMap.vue'
+import { getTwodetail, getRegionList } from '@/api/popPlan.ts'
 
 // 保持互斥
 const keepExclusion = <T>(
   value: T[],
   oldValue: T[],
-  aloneValue: T,
+  aloneValue: any,
   setter: (newValue: T[]) => any
 ) => {
   if (value.length > 1) {
@@ -202,12 +201,13 @@ export default class Orienteering extends ViewBase {
 
   async init() {
     try {
-      const { data } = await orienteering({})
-      this.cityList = data.cityList
+      const { data } = await getTwodetail()
+      await getRegionList()
+      this.cityList = data.deliveryCityTypeList
       this.cinemastatusList = data.cinemaList
-      this.sexList = data.sexList
-      this.ageList = data.ageList
-      this.typeList = data.typeList
+      this.sexList = data.tags[2].values || []
+      this.ageList = data.tags[1].values || []
+      this.typeList = data.tags[0].values || []
       this.cinemaDetail = data.items || []
     } catch (ex) {
       this.handleError(ex)
@@ -236,7 +236,7 @@ export default class Orienteering extends ViewBase {
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.cinema = newValue
     })
-    keepExclusion(value, oldValue, -1, newValue => {
+    keepExclusion(value, oldValue, 'top20', newValue => {
       this.form.cinema = newValue
     })
     if (value[value.length] == -1) {
@@ -300,8 +300,8 @@ export default class Orienteering extends ViewBase {
   }
   /deep/&.ivu-checkbox-wrapper-checked {
     color: #fff;
-    border-color: @c-button;
-    background-color: @c-button;
+    background-color: #00202d;
+    border: 1px solid #00202d;
     &::after {
       content: '\2713';
       color: #fff;
@@ -407,7 +407,7 @@ export default class Orienteering extends ViewBase {
 .check-item {
   position: relative;
   top: 3px;
-  min-width: 100px;
+  min-width: 99px;
   height: 40px;
   line-height: 40px;
   border-radius: 4px;
@@ -416,6 +416,7 @@ export default class Orienteering extends ViewBase {
   font-size: 14px;
   color: #00202d;
   border: 1px solid #fff;
+  margin-bottom: 20px;
   background: rgba(255, 255, 255, 0.3);
   user-select: none;
   .check-ra;
@@ -437,11 +438,9 @@ export default class Orienteering extends ViewBase {
   i {
     position: relative;
     display: inline-block;
-    left: -40px;
     top: 0;
+    width: 40px;
     height: 40px;
-    border-right: 40px solid transparent;
-    filter: drop-shadow(40px 0);
   }
   .check-man {
     background: url(./assets/checkman.png);
@@ -452,11 +451,28 @@ export default class Orienteering extends ViewBase {
     background-size: 40px;
   }
 }
+/deep/ .ivu-checkbox-wrapper-checked {
+  .check-man {
+    background: url(./assets/man.png);
+    background-size: 40px;
+  }
+  .check-woman {
+    background: url(./assets/woman.png);
+    background-size: 40px;
+  }
+}
 .cinema-position {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   margin-top: -66px;
+}
+.chain {
+  transform: scale(.75);
+  margin-top: -90px;
+  /deep/ .city-map {
+    background-color: #fff0;
+  }
 }
 .film-list {
   display: flex;

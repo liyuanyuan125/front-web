@@ -1,7 +1,7 @@
 <template>
-  <div class="city-map">
+  <div class="city-map" :style="`background-color: ${color}`">
     <Dot v-for="(it, i) in cityList" :key="i" class="city-dot"
-      :style="`top:${it.top}px;left:${it.left}px`"/>
+      :style="`top:${it.top*scale}px;left:${it.left*scale}px`"/>
   </div>
 </template>
 
@@ -19,6 +19,8 @@ import { cloneDeep } from 'lodash'
 })
 export default class CityMap extends ViewBase {
   @Prop({ type: Array, default: () => [] }) names!: string[]
+  @Prop({ type: String, default: '#fff' }) color!: string
+  @Prop( { type: Number, default: 1} ) scale!: number
 
   get cityList() {
     const nameJoin = (this.names || []).join('|')
@@ -37,7 +39,7 @@ export default class CityMap extends ViewBase {
   position: relative;
   width: 650px;
   height: 537px;
-  background: #fff url(./assets/map.png) no-repeat;
+  background: url(./assets/map.png) no-repeat;
 }
 
 .city-dot {
