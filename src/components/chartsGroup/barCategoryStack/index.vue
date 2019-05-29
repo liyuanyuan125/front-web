@@ -23,7 +23,7 @@
     <Row type="flex"
          justify="space-between">
       <Col :span="24">
-      <div ref="barChart"
+      <div ref="refChart"
            v-if="initDone"
            style="width: 100%; height: 400px"></div>
       <div v-else
@@ -39,7 +39,14 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
-import { pubOption, seriesOption, dottedLineStyle, yOption, xOption, barThinStyle } from '../chartsOption'
+import {
+  pubOption,
+  seriesOption,
+  dottedLineStyle,
+  yOption,
+  xOption,
+  barThinStyle
+} from '../chartsOption'
 @Component({
   components: {
     TinyLoading
@@ -51,10 +58,10 @@ export default class BarCategoryStack extends ViewBase {
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
-  @Prop({ type: Array, default: [] }) dict1!: any[]
-  @Prop({ type: Array, default: [] }) dict2!: any[]
-  @Prop({ type: Array, default: [] }) color!: any[]
-  @Prop({ type: Array, default: [] }) dataList!: any[]
+  @Prop({ type: Array, default: () => [] })  dict1!: any[]
+  @Prop({ type: Array, default: () => [] })  dict2!: any[]
+  @Prop({ type: Array, default: () => [] })  color!: any[]
+  @Prop({ type: Array, default: () => [] })  dataList!: any[]
   xaxisList: any = []
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
@@ -65,8 +72,13 @@ export default class BarCategoryStack extends ViewBase {
     this.currentIndex = this.currentTypeIndex
   }
   updateCharts() {
-    if (!this.dataList[this.currentIndex].list || this.dataList[this.currentIndex].list.length < 1) { return }
-    const myChart = echarts.init(this.$refs.barChart as any)
+    if (
+      !this.dataList[this.currentIndex] ||
+      this.dataList[this.currentIndex].length < 1
+    ) {
+      return
+    }
+    const myChart = echarts.init(this.$refs.refChart as any)
 
     let chartSeries: any[] = []
     chartSeries = this.dict2.map((item: any) => {
@@ -83,13 +95,15 @@ export default class BarCategoryStack extends ViewBase {
         data: []
       }
     })
-    this.dataList[this.currentIndex].list.forEach((item: any, index: number ) => {
-      chartSeries[item.key].data.push(item.data)
-      chartSeries[item.key].name = this.dict2[item.key].text
-      if (!this.xaxisList.includes(item.date)) {
-        this.xaxisList.push(item.date)
+    this.dataList[this.currentIndex].forEach(
+      (item: any, index: number) => {
+        chartSeries[item.key].data.push(item.data)
+        chartSeries[item.key].name = this.dict2[item.key].text
+        if (!this.xaxisList.includes(item.date)) {
+          this.xaxisList.push(item.date)
+        }
       }
-    })
+    )
     const option: any = {
       color: this.color,
       ...pubOption,
@@ -102,7 +116,7 @@ export default class BarCategoryStack extends ViewBase {
         },
         y: '25'
       },
-      xAxis:  {
+      xAxis: {
         ...xOption,
         type: 'category',
         data: this.xaxisList
@@ -117,8 +131,8 @@ export default class BarCategoryStack extends ViewBase {
   }
   @Watch('initDone')
   watchInitDone(val: boolean) {
-    if ( val ) {
-      this.$nextTick( () => {
+    if (val) {
+      this.$nextTick(() => {
         this.resetOptions()
         this.updateCharts()
       })
@@ -126,7 +140,7 @@ export default class BarCategoryStack extends ViewBase {
   }
   @Watch('currentTypeIndex')
   watchcurrentTypeIndex(newIndex: any, oldIndex: any) {
-    if ( newIndex !== oldIndex ) {
+    if (newIndex !== oldIndex) {
       this.resetOptions()
       this.updateCharts()
     }

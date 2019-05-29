@@ -1,20 +1,20 @@
 <style lang='less'>
 .areaExtra-type-selectbox {
-  .wp{
-    padding: 0 15px ;
+  .wp {
+    padding: 0 15px;
     .inner {
       padding: 15px;
-      background:rgba(0,32,45,0.6);
-      border-radius:6px;
+      background: rgba(0, 32, 45, 0.6);
+      border-radius: 6px;
       border-width: 2px;
       border-style: solid;
       .charts {
-        padding: 0 ;
-        margin: 0 ;
+        padding: 0;
+        margin: 0;
       }
     }
     .noBorder {
-      border-color: rgba(0,32,45,0.6) !important;
+      border-color: rgba(0, 32, 45, 0.6) !important;
     }
   }
 }
@@ -30,26 +30,31 @@
           <Icon type="md-help-circle" />
         </Tooltip>
       </div>
-      <Row type="flex" justify="space-between" 
-          v-if="dict1.length > 0"
-          class="areaExtra-type-selectbox">
+      <Row type="flex"
+           justify="space-between"
+           v-if="dict1.length > 0"
+           class="areaExtra-type-selectbox">
         <Col v-for="(item,index) in dict1"
-            span="6"
-            :key="item.key"
-            :label="index">
-            <div class="wp" @click="currentTypeChange(item.key)">
-              <div :class="['inner', currentIndex === item.key ? '' : 'noBorder']"
-              :style="{ 'border-color':color[item.key] }" >
-                <div class="content"><Icon type="md-help-circle" size="35" />{{item.text}}</div>
-                <div class="chart">
-                  <div :ref="'type-'+index" style="width: 100%; height: 100px"></div>
-                </div>
-              </div>
+             span="6"
+             :key="item.key"
+             :label="index">
+        <div class="wp"
+             @click="currentTypeChange(item.key)">
+          <div :class="['inner', currentIndex === item.key ? '' : 'noBorder']"
+               :style="{ 'border-color':color[item.key] }">
+            <div class="content">
+              <Icon type="md-help-circle"
+                    size="35" />{{item.text}}</div>
+            <div class="chart">
+              <div :ref="'type-'+index"
+                   style="width: 100%; height: 100px"></div>
+            </div>
           </div>
+        </div>
         </Col>
       </Row>
     </div>
-    <div ref="barChart"
+    <div ref="refChart"
          v-if="initDone"
          style="width: 100%; height: 400px"></div>
     <div v-else
@@ -68,7 +73,8 @@ import {
   seriesOption,
   dottedLineStyle,
   yOption,
-  xOption
+  xOption,
+  barThinStyle
 } from '../chartsOption'
 @Component({
   components: {
@@ -81,10 +87,10 @@ export default class AreaBasic extends ViewBase {
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
-  @Prop({ type: Array, default: [] }) dict1!: any[]
-  @Prop({ type: Array, default: [] }) dict2!: any[]
-  @Prop({ type: Array, default: [] }) color!: any[]
-  @Prop({ type: Array, default: [] }) dataList!: any[]
+  @Prop({ type: Array, default: () => [] })  dict1!: any[]
+  @Prop({ type: Array, default: () => [] })  dict2!: any[]
+  @Prop({ type: Array, default: () => [] })  color!: any[]
+  @Prop({ type: Array, default: () => [] })  dataList!: any[]
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
     this.currentIndex = index
@@ -96,14 +102,14 @@ export default class AreaBasic extends ViewBase {
   // 接口没调
   updateCharts() {
     if (
-      !this.dataList[this.currentIndex].list ||
-      this.dataList[this.currentIndex].list.length < 1
+      !this.dataList[this.currentIndex] ||
+      this.dataList[this.currentIndex].length < 1
     ) {
       return
     }
 
-    const chartData = this.dataList[this.currentIndex].list
-    const myChart = echarts.init(this.$refs.barChart as any)
+    const chartData = this.dataList[this.currentIndex]
+    const myChart = echarts.init(this.$refs.refChart as any)
     const option: any = {
       color: this.color[this.currentIndex],
       ...pubOption,
@@ -135,7 +141,6 @@ export default class AreaBasic extends ViewBase {
     option.tooltip.backgroundColor = this.color[this.currentIndex]
     myChart.setOption(option)
   }
-  // 接口没调
   updateTypeCharts() {
     const ref: any[] = []
     this.dict1.forEach((item, index) => {
@@ -153,7 +158,7 @@ export default class AreaBasic extends ViewBase {
     const series: any[] = []
     const count: number = 0
     const data: any[] = []
-    for ( let i = 0; i <= N_POINT; i++ ) {
+    for (let i = 0; i <= N_POINT; i++) {
       const x = i / N_POINT
       const y = quadraticIn(x)
       data.push([x, y])
@@ -195,8 +200,8 @@ export default class AreaBasic extends ViewBase {
       yAxis: yAxes,
       series
     }
-    this.dict1.forEach( (item: any, index: number) => {
-      option.color = [ this.color[index] ]
+    this.dict1.forEach((item: any, index: number) => {
+      option.color = [this.color[index]]
       echarts.init(ref[index]).setOption(option)
     })
   }

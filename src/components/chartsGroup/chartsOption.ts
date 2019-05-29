@@ -147,3 +147,16 @@ export const barThinStyle = {
     barBorderRadius: 5
   }
 }
+export const barItemStyleColor = {
+  itemStyle: {
+    normal: {
+      // 随机显示
+      // color(d: any) {return '#' + Math.floor(Math.random() * (256 * 256 * 256 - 1)).toString(16)}
+      // 定制显示（按顺序）
+      color: (params: any) => {
+        const colorList = [   '#08667A', '#00B6CC', '#FAD85E', '#DA6C70', ]
+        return colorList[params.dataIndex]
+      }
+    }
+  }
+}

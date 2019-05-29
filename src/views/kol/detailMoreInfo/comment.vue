@@ -49,25 +49,25 @@
             <Row type="flex" justify="space-between">
               <Col :span="12">
                 <div class='chart-wp' style='margin-right:10px'>
-                  <PieNest :initDone="pieNest.initDone"
-                         :title='pieNest.title'
-                         :dict1="pieNest.dict1"
-                         :dict2="pieNest.dict2"
-                         :color="pieNest.color"
-                         :dataList="pieNest.dataList"
-                         :currentTypeIndex="pieNest.currentTypeIndex"
+                  <PieNest :initDone="chart1.initDone"
+                         :title='chart1.title'
+                         :dict1="chart1.dict1"
+                         :dict2="chart1.dict2"
+                         :color="chart1.color"
+                         :dataList="chart1.dataList"
+                         :currentTypeIndex="chart1.currentTypeIndex"
                          @typeChange='typeChangeHander1' />
                 </div>
               </Col>
               <Col :span="12">
                 <div class='chart-wp'>
-                  <BarCategoryStack :initDone="barStack.initDone"
-                                  :title='barStack.title'
-                                  :dict1="barStack.dict1"
-                                  :dict2="barStack.dict2"
-                                  :color="barStack.color"
-                                  :dataList="barStack.dataList"
-                                  :currentTypeIndex="barStack.currentTypeIndex"
+                  <BarCategoryStack :initDone="chart2.initDone"
+                                  :title='chart2.title'
+                                  :dict1="chart2.dict1"
+                                  :dict2="chart2.dict2"
+                                  :color="chart2.color"
+                                  :dataList="chart2.dataList"
+                                  :currentTypeIndex="chart2.currentTypeIndex"
                                   @typeChange='typeChangeHander2' />
                 </div>
               </Col>
@@ -75,23 +75,23 @@
             <Row type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="12">
                 <div class='chart-wp borderRadius' style='margin-right:10px'>
-                  <WordCloud :initDone="wordCloud1.initDone"
-                           :title='wordCloud1.title'
-                           :dict1="wordCloud1.dict1"
-                           :color="wordCloud1.color"
-                           :dataList="wordCloud1.dataList"
-                           :currentTypeIndex="wordCloud1.currentTypeIndex"
+                  <WordCloud :initDone="chart3.initDone"
+                           :title='chart3.title'
+                           :dict1="chart3.dict1"
+                           :color="chart3.color"
+                           :dataList="chart3.dataList"
+                           :currentTypeIndex="chart3.currentTypeIndex"
                            @typeChange='typeChangeHander3' />
                 </div>
               </Col>
               <Col :span="12">
                 <div class='chart-wp borderRadius'>
-                  <WordCloud :initDone="wordCloud2.initDone"
-                           :title='wordCloud2.title'
-                           :dict1="wordCloud2.dict1"
-                           :color="wordCloud2.color"
-                           :dataList="wordCloud2.dataList"
-                           :currentTypeIndex="wordCloud2.currentTypeIndex"
+                  <WordCloud :initDone="chart4.initDone"
+                           :title='chart4.title'
+                           :dict1="chart4.dict1"
+                           :color="chart4.color"
+                           :dataList="chart4.dataList"
+                           :currentTypeIndex="chart4.currentTypeIndex"
                            @typeChange='typeChangeHander4' />
                 </div>
               </Col>
@@ -179,25 +179,7 @@ export default class Temporary extends ViewBase {
       }
     ]
   }
-  barStack: any = {
-    title: '',
-    dict1: [
-      {
-        key: 0,
-        name: '新增'
-      },
-      {
-        key: 1,
-        name: '累计'
-      }
-    ],
-    dict2: [],
-    currentTypeIndex: 0,
-    initDone: false,
-    dataList: [],
-    color: colors
-  }
-  pieNest: any = {
+  chart1: any = {
     title: '评论情绪分布',
     dict1: [
       // {
@@ -215,45 +197,63 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: colors
   }
-  wordCloud1: any = {
+  chart2: any = {
+    title: '',
+    dict1: [
+      {
+        key: 0,
+        name: '新增'
+      },
+      {
+        key: 1,
+        name: '累计'
+      }
+    ],
+    dict2: [],
+    currentTypeIndex: 0,
+    initDone: false,
+    dataList: [],
+    color: colors
+  }
+  chart3: any = {
     title: '正面评论关键词',
     dict1: [],
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: colors
+    color: ['rgba(0,32,45,0)']
   }
-  wordCloud2: any = {
+  chart4: any = {
     title: '负面评论关键词',
     dict1: [],
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: colors
+    color: ['rgba(0,32,45,0)']
   }
   async typeChangeHander1(index: number = 0) {
-    if (this.pieNest.dataList[index].list.length < 1) {
-      await this.getChartsData('pieNest', index)
+    if (this.chart1.dataList[index].length < 1) {
+      await this.getChartsData('chart1', index)
     }
-    this.pieNest.currentTypeIndex = index
+    this.chart1.currentTypeIndex = index
   }
   async typeChangeHander2(index: number = 0) {
-    if (this.barStack.dataList[index].list.length < 1) {
-      await this.getChartsData('barStack', index)
+    if (this.chart2.dataList[index].length < 1) {
+      await this.getChartsData('chart2', index)
     }
-    this.barStack.currentTypeIndex = index
+    this.chart2.currentTypeIndex = index
   }
   async typeChangeHander3(index: number = 0) {
-    if (this.wordCloud1.dataList[index].list.length < 1) {
-      await this.getChartsData('wordCloud1', index)
+    if (this.chart3.dataList[index].length < 1) {
+      await this.getChartsData('chart3', index)
     }
-    this.wordCloud1.currentTypeIndex = index
+    this.chart3.currentTypeIndex = index
   }
   async typeChangeHander4(index: number = 0) {
-    if (this.wordCloud1.dataList[index].list.length < 1) {
-      await this.getChartsData('wordCloud2', index)
+    if (this.chart3.dataList[index].length < 1) {
+      await this.getChartsData('chart4', index)
     }
-    this.wordCloud2.currentTypeIndex = index
+    this.chart4.currentTypeIndex = index
   }
   /**
    * 加载图表数据
@@ -270,26 +270,28 @@ export default class Temporary extends ViewBase {
     }
     try {
       const { data } = await comment1({ ...mockObj })
-      that.barStack.dict2 = data.barStack.effectTypeList
-      that.barStack.dataList[0].list = data.barStack.dataList
-      that.barStack.dataList[1].list = data.barStack.dataList
-      that.barStack.initDone = true
-      that.pieNest.dict2 = data.pieNest.effectTypeList
-      that.pieNest.dataList[0].list = data.pieNest.dataList
-      that.pieNest.initDone = true
-      that.wordCloud1.dataList[0].list = data.wordCloud1.dataList
-      that.wordCloud1.initDone = true
-      that.wordCloud2.dataList[0].list = data.wordCloud2.dataList
-      that.wordCloud2.initDone = true
+      that.chart1.dict2 = data.chart1.effectTypeList
+      that.chart1.dataList[0] = data.chart1.dataList
+      that.chart1.initDone = true
+
+      that.chart2.dict2 = data.chart2.effectTypeList
+      that.chart2.dataList[0] = data.chart2.dataList
+      that.chart2.dataList[1] = data.chart2.dataList
+      that.chart2.initDone = true
+
+      that.chart3.dataList[0] = data.chart3.dataList
+      that.chart3.initDone = true
+      that.chart4.dataList[0] = data.chart4.dataList
+      that.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
   }
   async handleChange() {
-    this.barStack.initDone = false
-    this.pieNest.initDone = false
-    this.wordCloud1.initDone = false
-    this.wordCloud2.initDone = false
+    this.chart2.initDone = false
+    this.chart1.initDone = false
+    this.chart3.initDone = false
+    this.chart4.initDone = false
     this.resetData()
     await this.getChartsData('', 0)
   }
@@ -297,64 +299,52 @@ export default class Temporary extends ViewBase {
     this.initHandler()
   }
   async initHandler() {
-    if (this.barStack.dict1.length > 0) {
-      this.barStack.dict1.map((item: any, index: number) => {
-        this.barStack.dataList.push({
-          list: []
-        })
+
+    if (this.chart1.dict1.length > 0) {
+      this.chart1.dict1.map((item: any, index: number) => {
+        this.chart1.dataList.push([])
       })
     } else {
-      this.barStack.dataList.push({
-        list: []
-      })
+      this.chart1.dataList.push([])
     }
-    if (this.pieNest.dict1.length > 0) {
-      this.pieNest.dict1.map((item: any, index: number) => {
-        this.pieNest.dataList.push({
-          list: []
-        })
+
+    if (this.chart2.dict1.length > 0) {
+      this.chart2.dict1.map((item: any, index: number) => {
+        this.chart2.dataList.push([])
       })
     } else {
-      this.pieNest.dataList.push({
-        list: []
-      })
+      this.chart2.dataList.push([])
     }
-    if (this.wordCloud1.dict1.length > 0) {
-      this.wordCloud1.dict1.map((item: any, index: number) => {
-        this.wordCloud1.dataList.push({
-          list: []
-        })
+
+    if (this.chart3.dict1.length > 0) {
+      this.chart3.dict1.map((item: any, index: number) => {
+        this.chart3.dataList.push([])
       })
     } else {
-      this.wordCloud1.dataList.push({
-        list: []
-      })
+      this.chart3.dataList.push([])
     }
-    if (this.wordCloud2.dict1.length > 0) {
-      this.wordCloud2.dict1.map((item: any, index: number) => {
-        this.wordCloud2.dataList.push({
-          list: []
-        })
+
+    if (this.chart4.dict1.length > 0) {
+      this.chart4.dict1.map((item: any, index: number) => {
+        this.chart4.dataList.push([])
       })
     } else {
-      this.wordCloud2.dataList.push({
-        list: []
-      })
+      this.chart4.dataList.push([])
     }
     await this.getChartsData('', 0)
   }
   resetData() {
-    this.pieNest.dataList.forEach((item: any) => {
-      item.list = []
+    this.chart1.dataList.forEach((item: any) => {
+      item = []
     })
-    this.barStack.dataList.forEach((item: any) => {
-      item.list = []
+    this.chart2.dataList.forEach((item: any) => {
+      item = []
     })
-    this.wordCloud1.dataList.forEach((item: any) => {
-      item.list = []
+    this.chart3.dataList.forEach((item: any) => {
+      item = []
     })
-    this.wordCloud2.dataList.forEach((item: any) => {
-      item.list = []
+    this.chart4.dataList.forEach((item: any) => {
+      item = []
     })
   }
 }
