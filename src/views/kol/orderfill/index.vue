@@ -1,13 +1,10 @@
 <template>
-  <div class="page home-bg">
-    <div class="layout-nav-title">
+  <div class="fill-box">
+    <div class="layout-fill-title">
       <span>KOL微博推广</span>
     </div>  
 
-    <Form :model="form" ref="dataform" :rules="rule" label-position="left" :label-width="100" class="edit-input forms">
-      <FormItem label="项目名称" class="item-top select-adv-type" prop="name">
-        <Input  v-model="form.name" placeholder='例如"2019奥迪Q3'></Input>
-      </FormItem>
+    <Form :model="form" ref="dataform" :rules="rule" label-position="left" :label-width="90" class="edit-input forms">
 
       <div class="item-top select-adv-type adv-left">
         <FormItem style="margin-left:0px" class="float-right pr30" label="推广品牌" prop="videoId">
@@ -17,13 +14,17 @@
         </FormItem>
       </div>
 
-      <FormItem label="推广内容" class="item-top select-adv-type" prop="name">
+      <FormItem label="项目名称" class="item-top select-adv-type" prop="name">
         <Input  v-model="form.name" placeholder='例如"2019奥迪Q3'></Input>
       </FormItem>
-    </Form>
 
+      <FormItem label="推广内容" class="item-top select-adv-type" prop="name">
+        <Input  v-model="form.name" placeholder='例如“奥迪Q3新款线上推广”'></Input>
+      </FormItem>
+    </Form>
+    <p class="create-title">创建内容</p>
     <div>
-      <Table stripe  :columns="columns" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
+      <Table :columns="columns" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
         <template style="marin-top: 100px" slot-scope="{ row }" slot="name">
           <div class="table-name">
             <img :src="row.mainPicUrl" alt=""> 
@@ -78,18 +79,18 @@
         </template>
       </Table>
 
-      <div class="check-all" style="background: #fff">
+      <div class="create">
         <span @click="handleSelectAll">
           <Checkbox v-model="checkboxAll"></Checkbox>全选
         </span>
-        <a>批量设置任务</a>
+        <p>批量设置任务</p>
       </div>
-      <div class="checkAll">
+      <div class="check-box">
         <p> 共 <b>1</b> 个账号    <b>{{}}</b> 个任务    粉丝合计 <b>892.93</b>万  </p>
         <p>订单金额（不含撰稿费用）：<b>¥167,200</b></p>
       </div>
     </div>
-    <component v-if="comloading" ref="detail" :id="$route.params.id" :is="detail"></component>
+    <component v-if="comloading" ref="detailbox" :id="$route.params.id" :is="detail"></component>
     <div class="btn-center">
       <Button type="primary" class="button-ok" @click="next('dataform')">提交订单</Button>
     </div>
@@ -129,7 +130,7 @@ export default class Main extends Vue {
   }
 
   columns: any = [
-    { type: 'selection', width: 50, align: 'center' },
+    { type: 'selection', width: 60, align: 'center' },
     {
       title: '账号',
       align: 'left',
@@ -189,8 +190,9 @@ export default class Main extends Vue {
 
   set(id: any, set: any) {
     this.comloading = true
+
     this.$nextTick(() => {
-      (this.$refs.detail as any).init(id, set)
+      (this.$refs.detailbox as any).init(id, set)
     })
   }
 
@@ -198,6 +200,8 @@ export default class Main extends Vue {
     return formatCurrency(num)
   }
 
+  async next(form: any) {
+  }
   formatDate(data: any) {
     return data ? moment(data).format(timeFormat) : '暂无'
   }
@@ -220,18 +224,86 @@ export default class Main extends Vue {
     }
   }
 }
-
 </script>
 <style lang='less' scoped>
 @import '~@/site/common.less';
-.item-top {
-  margin-left: 30px;
+/deep/ .ivu-checkbox {
+  /deep/ .ivu-checkbox-inner {
+    border-radius: 50%;
+    width: 23px;
+    height: 23px;
+    color: #00202d;
+    background: #fff;
+    border: 1px solid #fff;
+    &::after {
+      left: 7px;
+      top: 4px;
+      width: 8px;
+      height: 12px;
+      border: 2px solid #fff;
+      border-top: 0;
+      border-left: 0;
+    }
+  }
+}
+/deep/ .ivu-checkbox-checked {
+  /deep/ .ivu-checkbox-inner {
+    background: #ff5353;
+    border: 1px solid #ff5353;
+  }
+}
+.fill-box {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  border: 1px solid #fff;
+  margin: 20px 50px;
+  padding: 40px;
+  .layout-fill-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: rgba(0, 32, 45, 1);
+    line-height: 24px;
+    margin-bottom: 40px;
+  }
+  /deep/ .ivu-select,
+  /deep/ .ivu-select-selection,
+  /deep/ .ivu-input-wrapper,
+  /deep/ .ivu-form-item-content,
+  /deep/ .ivu-input,
+  /deep/ .ivu-select-input {
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  /deep/ .ivu-form-item-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #00202d;
+  }
 }
 /deep/ .ivu-table-wrapper {
+  margin: 20px 0;
+  border-radius: 5px;
   /deep/ .ivu-table-header th {
     height: 50px;
     line-height: 50px;
     span {
+      font-size: 14px;
+    }
+  }
+  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
+    background: rgba(213, 231, 242, 0.6);
+    color: rgba(0, 32, 45, 0.5);
+  }
+  /deep/ .ivu-table {
+    background: rgba(255, 255, 255, .3);
+  }
+  /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
+    background: rgba(0, 0, 0, 0);
+    border-bottom: 1px solid rgba(255, 255, 255, .5);
+    color: rgba(68, 68, 68, 1);
+    font-size: 14px;
+    span {
+      color: rgba(68, 68, 68, 1);
       font-size: 14px;
     }
   }
@@ -291,18 +363,47 @@ export default class Main extends Vue {
 }
 .check-all {
   cursor: pointer;
-  margin: 10px 20px 0;
   font-size: 14px;
   height: 50px;
   line-height: 50px;
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-  background: #f9f9f9;
-  padding: 0 30px 0 18px;
+  padding: 0 0 0 18px;
+  justify-content: space-between;
+  p {
+    color: rgba(0, 32, 45, 1);
+  }
 }
 .btn-center {
   margin: 40px 0 30px;
   text-align: center;
+}
+.create-title {
+  font-size: 16px;
+  color: rgba(0, 32, 45, 1);
+  line-height: 14px;
+  margin-top: 30px;
+}
+.create {
+  display: flex;
+  padding-left: 18px;
+  color: rgba(0, 32, 45, 1);
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+.check-box {
+  position: relative;
+  display: flex;
+  padding-left: 14px;
+  background: #fff;
+  align-items: center;
+  height: 80px;
+  border-radius: 5px;
+  span {
+    margin-left: 20px;
+    font-size: 14px;
+  }
 }
 </style>

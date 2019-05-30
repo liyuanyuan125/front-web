@@ -90,6 +90,15 @@ export async function getRegionList() {
 
 /**
  * @param  {any} query
+ * 广告计划详情
+ */
+export async function adverdetail(id: number) {
+  const data = await get(`/xadvert/v1/plans/${id}`)
+  return data
+}
+
+/**
+ * @param  {any} query
  * 创建广告计划-推广设置
  */
 export async function createdDraft(query: any) {

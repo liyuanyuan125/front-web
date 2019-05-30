@@ -1,5 +1,6 @@
 <template>
-  <div ref="page" class="">
+  <div ref="page" class="page">
+    <div class="pages" v-if="step == 0"></div>
     <div class="layout-nav-title">
       <router-link :to="{name: 'pop-film'}" >广告计划</router-link> > 
         <span> 新建广告计划</span>
@@ -88,5 +89,14 @@ export default class App extends ViewBase {
   font-weight: 500;
   border-bottom: solid 10px #f2f2f2;
   color: #2481d7;
+}
+.pages {
+  background: url(./vadver/assets/step1.jpg) no-repeat;
+  position: fixed;
+  left: 100px;
+  right: 0;
+  top: 0;
+  bottom: -20px;
+  background-size: cover;
 }
 </style>
