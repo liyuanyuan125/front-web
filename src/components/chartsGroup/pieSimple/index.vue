@@ -19,7 +19,8 @@
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <Row type="flex" justify="space-between">
+    <Row type="flex"
+         justify="space-between">
       <Col :span="24">
       <div ref="refChart"
            v-if="initDone"
@@ -37,7 +38,14 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
-import { pubOption, seriesOption, dottedLineStyle, yOption, xOption } from '../chartsOption'
+import {
+  pubOption,
+  seriesOption,
+  dottedLineStyle,
+  yOption,
+  xOption,
+  barThinStyle
+} from '../chartsOption'
 @Component({
   components: {
     TinyLoading
@@ -49,10 +57,10 @@ export default class PieSimple extends ViewBase {
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
-  @Prop({ type: Array, default: [] }) dict1!: any[]
-  @Prop({ type: Array, default: [] }) dict2!: any[]
-  @Prop({ type: Array, default: [] }) color!: any[]
-  @Prop({ type: Array, default: [] }) dataList!: any[]
+  @Prop({ type: Array, default: () => [] }) dict1!: any[]
+  @Prop({ type: Array, default: () => [] }) dict2!: any[]
+  @Prop({ type: Array, default: () => [] }) color!: any[]
+  @Prop({ type: Array, default: () => [] }) dataList!: any[]
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
     this.currentIndex = index
@@ -62,8 +70,13 @@ export default class PieSimple extends ViewBase {
     this.currentIndex = this.currentTypeIndex
   }
   updateCharts() {
-    if (!this.dataList[this.currentIndex].list || this.dataList[this.currentIndex].list.length < 1) { return }
-    const chartData = this.dataList[this.currentIndex].list
+    if (
+      !this.dataList[this.currentIndex] ||
+      this.dataList[this.currentIndex].length < 1
+    ) {
+      return
+    }
+    const chartData = this.dataList[this.currentIndex]
     const myChart = echarts.init(this.$refs.refChart as any)
 
     const chartSeries: any[] = []
@@ -73,17 +86,17 @@ export default class PieSimple extends ViewBase {
         value: 0
       })
     })
-    chartData.forEach((item: any, index: number ) => {
+    chartData.forEach((item: any, index: number) => {
       chartSeries[item.key].value = item.data
     })
     const option: any = {
       color: this.color,
       ...pubOption,
-      series : [
+      series: [
         {
           name: this.title,
           type: 'pie',
-          radius : '55%',
+          radius: '55%',
           center: ['50%', '40%'],
           data: chartSeries,
           itemStyle: {
@@ -100,8 +113,8 @@ export default class PieSimple extends ViewBase {
   }
   @Watch('initDone')
   watchInitDone(val: boolean) {
-    if ( val ) {
-      this.$nextTick( () => {
+    if (val) {
+      this.$nextTick(() => {
         this.resetOptions()
         this.updateCharts()
       })
@@ -109,7 +122,7 @@ export default class PieSimple extends ViewBase {
   }
   @Watch('currentTypeIndex')
   watchcurrentTypeIndex(newIndex: any, oldIndex: any) {
-    if ( newIndex !== oldIndex ) {
+    if (newIndex !== oldIndex) {
       this.resetOptions()
       this.updateCharts()
     }

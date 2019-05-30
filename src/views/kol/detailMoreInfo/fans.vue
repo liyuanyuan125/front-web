@@ -10,77 +10,85 @@
             :label-width="100">
         <Card class="detailmore-card">
           <div slot="title">
-            <Row type="flex" justify="space-between" align="middle">
+            <Row type="flex"
+                 justify="space-between"
+                 align="middle">
               <Col :span="17">
-                <DetailNavBar titleText='平台'>
-                  <div slot='item'>
-                    <Select v-model="form.platformId"
-                            clearable
-                            @on-change="handleChange">
-                      <Option v-for="(item) in dict.platform"
-                              :key="item.id"
-                              :value="item.id">{{item.name}}</Option>
-                    </Select>
-                  </div>
-                </DetailNavBar>
+              <DetailNavBar titleText='平台'>
+                <div slot='item'>
+                  <Select v-model="form.platformId"
+                          clearable
+                          @on-change="handleChange">
+                    <Option v-for="(item) in dict.platform"
+                            :key="item.id"
+                            :value="item.id">{{item.name}}</Option>
+                  </Select>
+                </div>
+              </DetailNavBar>
               </Col>
-              <Col :span="7" style="text-align:right" >
-                <Select v-model="pageQuery.brandId"
+              <Col :span="7"
+                   style="text-align:right">
+              <Select v-model="pageQuery.brandId"
                       placeholder="可选品牌"
-                      style="width:150px"
+                      style="width:150px; margin-right:10px;"
                       class='selectedBox'>
-                  <Option v-for="item in dict.brandList"
-                      :value="item.id"
-                      :key="item.id">{{ item.name }}</Option>
-                </Select>
-                <router-link :to="{path: '/kol/detailMoreInfo/matching/'+pageQuery.brandId}"><Button :disabled="pageQuery.brandId === ''" size="small" type="primary" >查看匹配度</Button></router-link>
+                <Option v-for="item in dict.brandList"
+                        :value="item.id"
+                        :key="item.id">{{ item.name }}</Option>
+              </Select>
+              <router-link :to="{path: '/kol/detailMoreInfo/matching/'+pageQuery.brandId}"><Button :disabled="pageQuery.brandId === ''"
+                        size="small"
+                        type="primary">查看匹配度</Button></router-link>
               </Col>
             </Row>
           </div>
           <div class="content">
-            <Row type="flex" justify="space-between">
+            <Row type="flex"
+                 justify="space-between">
               <Col :span="12">
-                <div class='chart-wp' style='margin-right:10px'>
-                  <Pie :initDone="chart1.initDone"
-                      :title='chart1.title'
-                      :dict1="chart1.dict1"
-                      :dict2="chart1.dict2"
-                      :color="chart1.color"
-                      :dataList="chart1.dataList"
-                      :currentTypeIndex="chart1.currentTypeIndex"
-                      @typeChange='typeChangeHander1' />
-                </div>
+              <div class='chart-wp'
+                   style='margin-right:10px'>
+                <Pie :initDone="chart1.initDone"
+                     :title='chart1.title'
+                     :dict1="chart1.dict1"
+                     :dict2="chart1.dict2"
+                     :color="chart1.color"
+                     :dataList="chart1.dataList"
+                     :currentTypeIndex="chart1.currentTypeIndex" />
+              </div>
               </Col>
               <Col :span="12">
-                <div class='chart-wp'>
-                  <BarXCategory :initDone="chart2.initDone"
+              <div class='chart-wp'>
+                <BarXCategory :initDone="chart2.initDone"
                               :title='chart2.title'
                               :dict1="chart2.dict1"
                               :dict2="chart2.dict2"
                               :dict3="chart2.dict3"
                               :color="chart2.color"
                               :dataList="chart2.dataList"
-                              :currentTypeIndex="chart2.currentTypeIndex"
-                              @typeChange='typeChangeHander2' />
-                </div>
+                              :currentTypeIndex="chart2.currentTypeIndex" />
+              </div>
               </Col>
             </Row>
-            <Row type="flex" justify="space-between" style='margin-top:10px'>
+            <Row type="flex"
+                 justify="space-between"
+                 style='margin-top:10px'>
               <Col :span="12">
-                <div class='chart-wp borderRadius' style='margin-right:10px; height:460px'>
-                  <MapChina :initDone="chart3.initDone"
+              <div class='chart-wp borderRadius'
+                   style='margin-right:10px; height:460px'>
+                <MapChina :initDone="chart3.initDone"
                           :title="chart3.title"
                           :dict1="chart3.dict1"
                           :dict2="chart3.dict2"
                           :color="chart3.color"
                           :dataList="chart3.dataList"
-                          :currentTypeIndex="chart3.currentTypeIndex"
-                          @typeChange='typeChangeHander3' />
-                </div>
+                          :currentTypeIndex="chart3.currentTypeIndex" />
+              </div>
               </Col>
               <Col :span="12">
-                <div class='chart-wp' style='height:460px'>
-                  <BarYCategory :initDone="chart4.initDone"
+              <div class='chart-wp'
+                   style='height:460px'>
+                <BarYCategory :initDone="chart4.initDone"
                               :title="chart4.title"
                               :dict1="chart4.dict1"
                               :dict2="chart4.dict2"
@@ -88,7 +96,7 @@
                               :dataList="chart4.dataList"
                               :currentTypeIndex="chart4.currentTypeIndex"
                               @typeChange='typeChangeHander4' />
-                </div>
+              </div>
               </Col>
             </Row>
           </div>
@@ -107,11 +115,11 @@ import {
   formatNumber
 } from '@/util/validateRules'
 import { fans } from '@/api/kolDetailMoreInfo'
+import DetailNavBar from './components/detailNavBar.vue'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import MapChina from '@/components/chartsGroup/mapChina/'
 import Pie from '@/components/chartsGroup/pieSimple/'
 import BarYCategory from '@/components/chartsGroup/barYCategory/'
-import DetailNavBar from './components/detailNavBar.vue'
 
 @Component({
   components: {
@@ -212,16 +220,8 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['#ff9933', '#169bd5']
   }
-  async typeChangeHander1(index: number = 0) {
-    if (this.chart1.dataList[index].list.length < 1) {
-      await this.getChartsData('chart1', index)
-    }
-    this.chart1.currentTypeIndex = index
-  }
-  async typeChangeHander2(index: number = 0) {}
-  async typeChangeHander3(index: number = 0) {}
   async typeChangeHander4(index: number = 0) {
-    if (this.chart4.dataList[index].list.length < 1) {
+    if (this.chart4.dataList[index].length < 1) {
       await this.getChartsData('chart4', index)
     }
     this.chart4.currentTypeIndex = index
@@ -234,25 +234,25 @@ export default class Temporary extends ViewBase {
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const that: any = this
     const mockObj = {
-      accountType: 'ads',
       effectType: typeIndex
     }
     try {
       const { data } = await fans({ ...mockObj })
+
       that.chart1.dict2 = data.chart1.effectTypeList
-      that.chart1.dataList[0].list = data.chart1.dataList
+      that.chart1.dataList[typeIndex] = data.chart1.dataList
       that.chart1.initDone = true
 
       that.chart2.dict3 = data.chart2.effectTypeList
-      that.chart2.dataList[0].list = data.chart2.dataList
+      that.chart2.dataList[typeIndex] = data.chart2.dataList
       that.chart2.initDone = true
 
       that.chart3.dict2 = data.chart3.effectTypeList
-      that.chart3.dataList[0].list = data.chart3.dataList
+      that.chart3.dataList[typeIndex] = data.chart3.dataList
       that.chart3.initDone = true
 
       that.chart4.dict2 = data.chart4.effectTypeList
-      that.chart4.dataList[typeIndex].list = data.chart4.dataList
+      that.chart4.dataList[typeIndex] = data.chart4.dataList
       that.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
@@ -272,64 +272,50 @@ export default class Temporary extends ViewBase {
   async initHandler() {
     if (this.chart1.dict1.length > 0) {
       this.chart1.dict1.map((item: any, index: number) => {
-        this.chart1.dataList.push({
-          list: []
-        })
+        this.chart1.dataList.push([])
       })
     } else {
-      this.chart1.dataList.push({
-        list: []
-      })
+      this.chart1.dataList.push([])
     }
+
     if (this.chart2.dict1.length > 0) {
       this.chart2.dict1.map((item: any, index: number) => {
-        this.chart2.dataList.push({
-          list: []
-        })
+        this.chart2.dataList.push([])
       })
     } else {
-      this.chart2.dataList.push({
-        list: []
-      })
+      this.chart2.dataList.push([])
     }
+
     if (this.chart3.dict1.length > 0) {
       this.chart3.dict1.map((item: any, index: number) => {
-        this.chart3.dataList.push({
-          list: []
-        })
+        this.chart3.dataList.push([])
       })
     } else {
-      this.chart3.dataList.push({
-        list: []
-      })
+      this.chart3.dataList.push([])
     }
+
     if (this.chart4.dict1.length > 0) {
       this.chart4.dict1.map((item: any, index: number) => {
-        this.chart4.dataList.push({
-          list: []
-        })
+        this.chart4.dataList.push([])
       })
     } else {
-      this.chart4.dataList.push({
-        list: []
-      })
+      this.chart4.dataList.push([])
     }
 
     await this.getChartsData('', 0)
   }
   resetData() {
-    // 重置有问题
     this.chart1.dataList.forEach((item: any) => {
-      item.list = []
+      item = []
     })
     this.chart2.dataList.forEach((item: any) => {
-      item.list = []
+      item = []
     })
     this.chart3.dataList.forEach((item: any) => {
-      item.list = []
+      item = []
     })
     this.chart4.dataList.forEach((item: any) => {
-      item.list = []
+      item = []
     })
   }
 }

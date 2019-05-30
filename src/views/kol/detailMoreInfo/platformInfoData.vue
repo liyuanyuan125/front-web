@@ -10,11 +10,13 @@
             :label-width="100">
         <Card class="detailmore-card">
           <div slot="title">
-            <Row type="flex" justify="space-between" align="middle">
+            <Row type="flex"
+                 justify="space-between"
+                 align="middle">
               <Col :span="17">
-                <DetailNavBar titleText='统计周期'>
-                  <div slot='item'>
-                    <RadioGroup style='margin-right:15px'
+              <DetailNavBar titleText='统计周期'>
+                <div slot='item'>
+                  <RadioGroup style='margin-right:15px'
                               @on-change="handleChange"
                               v-model="form.statisticTimeId"
                               size="large"
@@ -29,35 +31,37 @@
                               @on-change="handleChange"
                               placement="bottom-end"
                               placeholder="自定义时间段"></DatePicker>
-                  </div>
-                </DetailNavBar>
+                </div>
+              </DetailNavBar>
               </Col>
-              <Col :span="7" style="text-align:right" >
-                平台
-                <Select v-model="form.platformId"
-                        clearable
-                        @on-change="handleChange"
-                        style="width:150px; text-align:left">
-                  <Option v-for="(item) in dict.platform"
-                          :key="item.id"
-                          :value="item.id">{{item.name}}</Option>
-                </Select>
+              <Col :span="7"
+                   style="text-align:right">
+              平台
+              <Select v-model="form.platformId"
+                      clearable
+                      @on-change="handleChange"
+                      style="width:150px; text-align:left">
+                <Option v-for="(item) in dict.platform"
+                        :key="item.id"
+                        :value="item.id">{{item.name}}</Option>
+              </Select>
               </Col>
             </Row>
           </div>
           <div class="content">
-            <Row type="flex" justify="space-between">
+            <Row type="flex"
+                 justify="space-between">
               <Col :span="24">
-                <div class='chart-wp borderRadius'>
-                  <AreaBasic :initDone="chart1.initDone"
-                            :title='chart1.title'
-                            :dict1="chart1.dict1"
-                            :dict2="chart1.dict2"
-                            :color="chart1.color"
-                            :dataList="chart1.dataList"
-                            :currentTypeIndex="chart1.currentTypeIndex"
-                            @typeChange='typeChangeHander1' />
-                </div>
+              <div class='chart-wp borderRadius'>
+                <AreaBasic :initDone="chart1.initDone"
+                           :title='chart1.title'
+                           :dict1="chart1.dict1"
+                           :dict2="chart1.dict2"
+                           :color="chart1.color"
+                           :dataList="chart1.dataList"
+                           :currentTypeIndex="chart1.currentTypeIndex"
+                           @typeChange='typeChangeHander1' />
+              </div>
               </Col>
             </Row>
           </div>
@@ -75,10 +79,10 @@ import {
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
+import DetailNavBar from './components/detailNavBar.vue'
 import { platformData } from '@/api/kolDetailMoreInfo'
 import numAdd from '../number.vue'
 import AreaBasic from '@/components/chartsGroup/areaBasic/'
-import DetailNavBar from './components/detailNavBar.vue'
 @Component({
   components: {
     AreaBasic,
@@ -145,7 +149,7 @@ export default class Temporary extends ViewBase {
     color: ['#0099cc', '#0099cc', '#0099cc', '#0099cc']
   }
   async typeChangeHander1(index: number = 0) {
-    if (this.chart1.dataList[index].list.length < 1) {
+    if (this.chart1.dataList[index].length < 1) {
       await this.getChartsData('chart2', index)
     }
     this.chart1.currentTypeIndex = index
@@ -165,25 +169,21 @@ export default class Temporary extends ViewBase {
         this.chart1.dataList = data.chart1.effectTypeList.map(
           (item: any, index: number) => {
             return {
-              list: {
-                data: [],
-                date: []
-              }
+              data: [],
+              date: []
             }
           }
         )
       } else {
         this.chart1.dataList.push({
-          list: {
-            data: [],
-            date: []
-          }
+          data: [],
+          date: []
         })
       }
       this.chart1.dict1 = data.chart1.effectTypeList
       data.chart1.dataList.forEach((item: any, index: number) => {
-        this.chart1.dataList[item.key].list.data.push(item.data)
-        this.chart1.dataList[item.key].list.date.push(item.date)
+        this.chart1.dataList[item.key].data.push(item.data)
+        this.chart1.dataList[item.key].date.push(item.date)
       })
       this.chart1.initDone = true
     } catch (ex) {

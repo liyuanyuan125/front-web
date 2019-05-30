@@ -23,7 +23,7 @@
     <Row type="flex"
          justify="space-between">
       <Col :span="12">
-      <div ref="barChart0"
+      <div ref="refChart0"
            v-if="initDone"
            style="width: 100%; min-height: 300px"></div>
       <div v-else
@@ -32,7 +32,7 @@
       </div>
       </Col>
       <Col :span="12">
-      <div ref="barChart1"
+      <div ref="refChart1"
            v-if="initDone"
            style="width: 100%; min-height: 300px"></div>
       <div v-else
@@ -47,24 +47,31 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
-import { IchartOptions } from './types'
 import echarts from 'echarts'
-import { pubOption, seriesOption, dottedLineStyle, yOption, xOption, barThinStyle } from '../chartsOption'
+import {
+  pubOption,
+  seriesOption,
+  dottedLineStyle,
+  yOption,
+  xOption,
+  barThinStyle
+} from '../chartsOption'
 @Component({
   components: {
     TinyLoading
   }
 })
-// 柱状y轴分类(双)
-export default class BarYCategoryDouble extends ViewBase {
+// 简单饼图
+export default class PieSimple extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
-  @Prop({ type: Array, default: [] }) dict1!: any[]
-  @Prop({ type: Array, default: [] }) dict2!: any[]
-  @Prop({ type: Array, default: [] }) dataList!: any[]
-  @Prop({ type: Array, default: [] }) color!: any[]
+  @Prop({ type: Array, default: () => [] }) dict1!: any[]
+  @Prop({ type: Array, default: () => [] }) dict2!: any[]
+  @Prop({ type: Array, default: () => [] }) color!: any[]
+  @Prop({ type: Array, default: () => [] }) dataList!: any[]
+
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
     this.currentIndex = index
@@ -73,17 +80,16 @@ export default class BarYCategoryDouble extends ViewBase {
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
   }
-  // 接口没调
   updateCharts() {
     if (
-      !this.dataList[this.currentIndex].list ||
-      this.dataList[this.currentIndex].list.length < 1
+      !this.dataList[this.currentIndex] ||
+      this.dataList[this.currentIndex].length < 1
     ) {
       return
     }
-    const chartData = this.dataList[this.currentIndex].list
-    const myChart0 = echarts.init(this.$refs.barChart0 as any)
-    const myChart1 = echarts.init(this.$refs.barChart1 as any)
+    const chartData = this.dataList[this.currentIndex]
+    const myChart0 = echarts.init(this.$refs.refChart0 as any)
+    const myChart1 = echarts.init(this.$refs.refChart1 as any)
 
     let seriesData: any = []
     this.dict2.forEach((item, index) => {

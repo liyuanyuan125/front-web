@@ -20,16 +20,15 @@
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <Row type="flex"
-         justify="space-between">
+    <Row type="flex" justify="space-between">
       <Col :span="24">
-      <div ref="barChart"
-           v-if="initDone"
-           style="width: 100%; height: 400px"></div>
-      <div v-else
-           style="width: 100%; height: 400px">
-        <TinyLoading />
-      </div>
+        <div ref="refChart"
+            v-if="initDone"
+            style="width: 100%; height: 400px"></div>
+        <div v-else
+            style="width: 100%; height: 400px">
+          <TinyLoading />
+        </div>
       </Col>
     </Row>
   </div>
@@ -39,23 +38,30 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
-import { pubOption, seriesOption, dottedLineStyle, yOption, xOption } from '../chartsOption'
+import {
+  pubOption,
+  seriesOption,
+  dottedLineStyle,
+  yOption,
+  xOption,
+  barThinStyle
+} from '../chartsOption'
 @Component({
   components: {
     TinyLoading
   }
 })
-// 柱状x轴分类
-export default class BarXCategory extends ViewBase {
+// 简单饼图
+export default class PieSimple extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
-  @Prop({ type: Array, default: [] }) dict1!: any[]
+  @Prop({ type: Array, default: () => [] }) dict1!: any[]
   @Prop({ type: Array, default: () => [] }) dict2!: any[]
   @Prop({ type: Array, default: () => [] }) dict3!: any[]
-  @Prop({ type: Array, default: [] }) color!: any[]
-  @Prop({ type: Array, default: [] }) dataList!: any[]
+  @Prop({ type: Array, default: () => [] }) color!: any[]
+  @Prop({ type: Array, default: () => [] }) dataList!: any[]
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
     this.currentIndex = index
@@ -66,13 +72,13 @@ export default class BarXCategory extends ViewBase {
   }
   updateCharts() {
     if (
-      !this.dataList[this.currentIndex].list ||
-      this.dataList[this.currentIndex].list.length < 1
+      !this.dataList[this.currentIndex] ||
+      this.dataList[this.currentIndex].length < 1
     ) {
       return
     }
-    const chartData = this.dataList[this.currentIndex].list
-    const myChart = echarts.init(this.$refs.barChart as any)
+    const chartData = this.dataList[this.currentIndex]
+    const myChart = echarts.init(this.$refs.refChart as any)
 
     // series数据处理等接口设计结束后调整。nxd fans 和 matching都有数据问题
     // const chartSeries: any[] = []
@@ -102,7 +108,7 @@ export default class BarXCategory extends ViewBase {
       },
       yAxis: {
         ...dottedLineStyle,
-        ...yOption,
+        ...yOption
       },
       series: [
         {
