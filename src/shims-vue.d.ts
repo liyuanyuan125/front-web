@@ -7,9 +7,9 @@ declare module '*.vue' {
 declare module 'iview' {
   const iView: any
   export default iView
-  export const Modal: any   // tslint:disable-line
-  export const Message: any // tslint:disable-line
-  export const Input: any   // tslint:disable-line
+  export const Modal: any    // tslint:disable-line
+  export const Message: any  // tslint:disable-line
+  export const Input: any    // tslint:disable-line
 }
 
 declare module 'iview/dist/locale/zh-CN' {
@@ -18,7 +18,12 @@ declare module 'iview/dist/locale/zh-CN' {
 }
 
 declare module 'vue-plyr' {
-  export const VuePlyr: any // tslint:disable-line
+  export const VuePlyr: any  // tslint:disable-line
+}
+
+declare module 'vue-echarts' {
+  const ECharts: any        // tslint:disable-line
+  export default ECharts    // tslint:disable-line
 }
 
 declare module 'js-calendar' {

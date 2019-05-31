@@ -22,6 +22,8 @@ export default class BubbleText extends Vue {
   width: 685px;
   height: 100vw;
   z-index: 18;
+  pointer-events: none;
+  user-select: none;
 }
 
 @keyframes niuniu {
@@ -53,6 +55,7 @@ export default class BubbleText extends Vue {
   transition: transform 100ms;
   padding: 0 20px;
   font-size: 18px;
+  pointer-events: auto;
   &:hover {
     transform: scale(1.2);
   }
@@ -60,7 +63,7 @@ export default class BubbleText extends Vue {
 
 .bubble-text:nth-child(1) {
   top: 460px;
-  left: 530px;
+  left: 538px;
   animation-duration: 10s;
   .bubble-text-in {
     width: 124px;
@@ -71,7 +74,7 @@ export default class BubbleText extends Vue {
 
 .bubble-text:nth-child(2) {
   top: 251px;
-  left: 534px;
+  left: 542px;
   animation-duration: 12s;
   .bubble-text-in {
     width: 118px;
@@ -82,7 +85,7 @@ export default class BubbleText extends Vue {
 
 .bubble-text:nth-child(3) {
   top: 572px;
-  left: 526px;
+  left: 534px;
   .bubble-text-in {
     width: 100px;
     height: 100px;
@@ -94,7 +97,7 @@ export default class BubbleText extends Vue {
 
 .bubble-text:nth-child(4) {
   top: 158px;
-  left: 511px;
+  left: 519px;
   .bubble-text-in {
     width: 84px;
     height: 84px;
@@ -107,8 +110,8 @@ export default class BubbleText extends Vue {
 }
 
 .bubble-text:nth-child(5) {
-  top: 723px;
-  left: 419px;
+  top: 700px;
+  left: 427px;
   .bubble-text-in {
     width: 80px;
     height: 80px;
@@ -122,7 +125,7 @@ export default class BubbleText extends Vue {
 
 .bubble-text:nth-child(6) {
   top: 362px;
-  left: 612px;
+  left: 620px;
   .bubble-text-in {
     width: 72px;
     height: 72px;

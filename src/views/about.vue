@@ -12,7 +12,7 @@
       :topCityIds="topCityIds"
     />
 
-    <ColorIcon url="@/assets/icon/add-adv-img.png"/>
+    <ECharts :options="chartData" auto-resize class="chart"/>
   </div>
 </template>
 
@@ -21,13 +21,15 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import WeekDatePicker from '@/components/weekDatePicker'
 import CitySelectDialog from '@/components/citySelectDialog'
-import ColorIcon from '@/components/colorIcon'
+import ECharts from 'vue-echarts'
+import 'echarts/lib/chart/pie'
+import 'echarts/lib/component/tooltip'
 
 @Component({
   components: {
     WeekDatePicker,
     CitySelectDialog,
-    ColorIcon
+    ECharts
   }
 })
 export default class AboutPage extends ViewBase {
@@ -39,6 +41,32 @@ export default class AboutPage extends ViewBase {
   topCityIds = [349, 430, 170, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428]
 
   visible = false
+
+  chartData: any = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b} : {c} ({d}%)'
+    },
+    series: [
+      {
+        name: '近7日评论分析',
+        type: 'pie',
+        radius: [33, 49],
+        label: {
+          formatter: '{b}\n{d}%',
+          lineHeight: 156
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { name: '正面', value: 80, itemStyle: { color: '#ca7273' } },
+          { name: '中立', value: 30, itemStyle: { color: '#f3d872' } },
+          { name: '负面', value: 20, itemStyle: { color: '#57b4c9' } }
+        ]
+      }
+    ]
+  }
 
   async mounted() {
     // const xx = list.filter(it => it.subList != null)
