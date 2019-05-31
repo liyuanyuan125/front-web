@@ -43,7 +43,9 @@ export default class ActiveFansPane extends Vue {
 
     xAxis: {
       type: 'category',
-      data: ['5-16', '5-17', '5-18', '5-19', '5-20', '5-21', '5-22'],
+      boundaryGap: false,
+      // 两端加空串，是为了等宽分割
+      data: ['', '5-16', '5-17', '5-18', '5-19', '5-20', '5-21', '5-22', ''],
       axisLine: lineStyle,
       axisTick: false,
       axisLabel
@@ -54,7 +56,7 @@ export default class ActiveFansPane extends Vue {
       axisLine: false,
       splitLine: lineStyle,
       axisLabel,
-      splitNumber: 3,
+      splitNumber: 3
     },
 
     grid: {
@@ -62,18 +64,18 @@ export default class ActiveFansPane extends Vue {
       right: 42,
       top: 20,
       bottom: 20,
-      containLabel: true,
+      containLabel: true
     },
 
     series: [
       {
         name: '近7日活跃粉丝数',
         type: 'bar',
-        data: [855000, 200000, 150000, 808888, 123730, 11088, 888130],
+        data: [0, 855000, 200000, 150000, 808888, 123730, 11088, 888130, 0],
         barWidth: 9,
         itemStyle: {
           color: '#08b6ca',
-          barBorderRadius: [8, 8, 0, 0],
+          barBorderRadius: [8, 8, 0, 0]
         }
       }
     ]
@@ -86,6 +88,6 @@ export default class ActiveFansPane extends Vue {
 
 .chart {
   width: 100%;
-  height: 188px;
+  height: 182px;
 }
 </style>

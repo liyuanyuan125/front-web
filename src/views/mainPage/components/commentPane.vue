@@ -57,6 +57,6 @@ export default class CommentPane extends Vue {
 
 .chart {
   width: 100%;
-  height: 166px;
+  height: 170px;
 }
 </style>

@@ -79,7 +79,8 @@ export default class ActiveFansPane extends Vue {
       data: ['5-16', '5-17', '5-18', '5-19', '5-20', '5-21', '5-22'],
       axisLine: lineStyle,
       axisTick: false,
-      axisLabel
+      axisLabel,
+      boundaryGap: false,
     },
 
     yAxis: {
@@ -167,7 +168,7 @@ export default class ActiveFansPane extends Vue {
 
 .chart {
   width: 100%;
-  height: 178px;
+  height: 172px;
   // background-color: rgba(255, 255, 255, .1);
 }
 </style>
