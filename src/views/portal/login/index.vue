@@ -43,7 +43,7 @@
               </Input>
             </FormItem>
             <FormItem prop="password" :error="passwordError">
-              <Input type="password" v-model="form.password" placeholder="请输入密码" :maxlength="16">
+              <Input type="password" autocomplete="off" v-model="form.password" placeholder="请输入密码" :maxlength="16">
                  <i class="iconfont icon-mima" slot="prefix" size="20" />
               </Input>
             </FormItem>

@@ -38,7 +38,6 @@ export default class BubbleMin extends Vue {
   position: absolute;
   background-color: fade(#fff, 30);
   border-radius: 100%;
-  z-index: -1;
   animation: gulu 10s linear infinite both;
 }
 

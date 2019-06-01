@@ -16,8 +16,8 @@
             <Col span="24">
               <Row :gutter="24" class="adver-detail">
                 <Col span="17">
-                  <FormItem :labelWidth='100' label="广告片:" prop="videoId">
-                    <Select v-model="form.videoId" filterable clearable>
+                  <FormItem :labelWidth='100' label="广告片:" :prop="setadver ? '': 'videoId'">
+                    <Select v-model="form.videoId" :disabled="setadver" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }}</Option>
                     </Select>
                   </FormItem>
@@ -29,28 +29,28 @@
               <Row class="adver-detail" :gutter="10">
                 <Col :span="7">
                   <FormItem style="margin-left: 3px" label="广告片规格:" :labelWidth='100'>
-                    <Select :disabled="setadver" v-model="form.specification" filterable clearable>
+                    <Select :disabled="!setadver" v-model="form.specification" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.specification" :key="index">{{ item.length }}</Option>
                     </Select>
                   </FormItem>
                 </Col>
                 <Col :span="5">
                   <FormItem label="客户:" :labelWidth='50'>
-                    <Select :disabled="setadver" v-model="form.customerId" filterable clearable>
+                    <Select :disabled="!setadver" v-model="form.customerId" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.customerId" :key="index">{{ item.customerName }}</Option>
                     </Select>
                   </FormItem>
                 </Col>
                 <Col :span="6">
                   <FormItem label="品牌:" :labelWidth='60'>
-                    <Select :disabled="setadver" v-model="form.brandId" filterable clearable>
+                    <Select :disabled="!setadver" v-model="form.brandId" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.brandId" :key="index">{{ item.brandName }}</Option>
                     </Select>
                   </FormItem>
                 </Col>
                 <Col :span="6">
                   <FormItem label="产品:" :labelWidth='60'>
-                    <Select :disabled="setadver" v-model="form.productId" filterable clearable>
+                    <Select :disabled="!setadver" v-model="form.productId" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.productId" :key="index">{{ item.productName }}</Option>
                     </Select>
                   </FormItem>
@@ -59,7 +59,7 @@
             </Col>
             <Col span="12">
               <Row class="adver-detail">
-                <FormItem label="投放排期:" class="timer" :labelWidth='100' prop="advertime">
+                <FormItem label="投放排期:" class="timer" :labelWidth='100' prop="advertime" :show-message="form.advertime.length == 0">
                   <weekDatePicker v-model="form.advertime" style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker>
                 </FormItem>
               </Row>
@@ -124,6 +124,7 @@ export default class Promotion extends ViewBase {
   customerName = ''
   adverList: any = []
   nums: any = 0
+
   get rule() {
     const moneyvalidator = ( rules: any, value: any, callback: any) => {
       const msg: any = value + ''
@@ -229,10 +230,18 @@ export default class Promotion extends ViewBase {
 
   @Watch('form.budgetAmount')
   watchformBudgetAmount(val: any) {
-    if (val) {
+    const reg = /^(?!(0[0-9]{0,}$))[0-9]+(.[0-9]+)?$/
+    if (val && reg.test(val)) {
       this.getnums(val)
     } else {
       this.nums = 0
+    }
+  }
+
+  @Watch('setadver')
+  watchSetadver(val: any) {
+    if (val) {
+      this.form.videoId = 0
     }
   }
 }
@@ -447,8 +456,11 @@ export default class Promotion extends ViewBase {
   border-radius: 25px;
 }
 .btn-center {
+  position: absolute;
   margin: 40px 0 30px;
   text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
 }
 </style>
 

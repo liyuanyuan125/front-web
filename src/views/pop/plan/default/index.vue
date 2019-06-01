@@ -1,11 +1,11 @@
 <template>
   <div class="plan-box">
-    <div class="plan-message">
+    <div v-if="status != 1" class="plan-message">
       <span>当前计划已失效或已关闭，如有疑问，请点击下放"联系商务"</span>
       <Button type="default" class="btn-contact">联系商务</Button>
     </div>
-    <h3 class="plan-title">投放方案</h3>
-    <div class="plan-result">
+    <h3 v-if="status != 1" class="plan-title">投放方案</h3>
+    <div v-if="status != 1" class="plan-result">
       <div class="result-top">
         <h3>效果预估</h3>
         <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【500,000.00】时，您无需补缴任何款项</span>
@@ -37,7 +37,7 @@
         </Col>
       </Row>
     </div>
-    <div class="plan-cinema">
+    <div v-if="status != 1" class="plan-cinema">
       <div class="result-top">
         <h3>投放影片3部</h3>
         <span>效果不足时允许系统投放更多影片确保曝光效果</span>
@@ -94,7 +94,7 @@
       </ul>
     </div>
 
-    <div class="plan-cinema-num">
+    <div v-if="status != 1" class="plan-cinema-num">
       <div class="result-top">
         <h3>覆盖范围</h3>
         <span class="custom">下载列表</span>
@@ -175,20 +175,20 @@
       <Row>
         <Row :gutter="16">
           <Col :span="2"><span>计划名称:</span></Col>
-          <Col :span="10"><span>Wey新车车展购车节宣传</span></Col>
+          <Col :span="10"><span>{{item.name}}</span></Col>
           <Col :span="2"><span>广告片:</span></Col>
-          <Col :span="10"><span>“世界再大，不过一盘番茄炒蛋”</span></Col>
+          <Col :span="10"><span>{{item.videoName}}</span></Col>
         </Row>
         <Row :gutter="16">
           <Col :span="2"><span>投放排期:</span></Col>
-          <Col :span="10"><span>2019 - 02 - 01 至 201</span></Col>
+          <Col :span="10"><span>{{formatDate(item.beginDate)}} 至 {{formatDate(item.endDate)}}</span></Col>
           <Col :span="2"><span>客户:</span></Col>
-          <Col :span="10"><span>梅赛德斯奔驰</span></Col>
+          <Col :span="10"><span>{{item.customerName}}</span></Col>
         </Row>
         <Row :gutter="16">
           <Col :span="2"><span>预算:</span></Col>
           <Col :span="22">
-            <span>12,2</span>
+            <span>{{formatNums(item.budgetAmount)}}</span>
           </Col>
         </Row>
         <Row :gutter="16" style="height: 126px">
@@ -208,9 +208,12 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Number from '@/components/number.vue'
-import { orienteering, cinemaFilm } from '@/api/popPlan.ts'
+import { orienteering, cinemaFilm, adverdetail } from '@/api/popPlan.ts'
+import { toMap } from '@/fn/array.ts'
+import { formatCurrency } from '@/fn/string.ts'
 import moment from 'moment'
 
+const statusMap =  (list: any[]) => toMap(list, 'code', 'text')
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
@@ -225,6 +228,9 @@ export default class App extends ViewBase {
   total = 0
   tableDate: any = []
   loading = false
+  status = 0
+  item: any = {}
+  statusList: any = []
   columns = [
     {
       title: '影院名称',
@@ -251,13 +257,26 @@ export default class App extends ViewBase {
     return data ? moment(data).format(timeFormat) : '暂无'
   }
 
+  formatNums(data: any) {
+    return data ? formatCurrency(data) : '暂无'
+  }
+
   tags(id: any) {
     this.tag = id
   }
 
   async init() {
-    const { data } = await orienteering({})
-    this.filmList = data.items || []
+    // const { data } = await orienteering({})
+    try {
+      const { data } = await adverdetail(25)
+      this.status = data.item.status
+      this.statusList = data.statusList
+      this.item = data.item
+    } catch (ex) {
+      this.handleError(ex)
+    }
+    // this.status = statusMap(this.statusList)
+    // this.filmList = data.items || []
   }
 }
 </script>

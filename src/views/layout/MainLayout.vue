@@ -279,7 +279,7 @@ export default class MainLayout extends ViewBase {
 
   mounted() {
     usePosition().then((pos: number) => {
-      const opacity = Math.min(Math.floor(pos / 55 * 100), 100)
+      const opacity = Math.min(Math.floor(pos / 88 * 100), 96)
       this.headerOpacity = opacity
     })
   }
@@ -432,7 +432,7 @@ export default class MainLayout extends ViewBase {
   width: 120px;
   height: 100vh;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   z-index: 198;
   user-select: none;
   display: flex;
