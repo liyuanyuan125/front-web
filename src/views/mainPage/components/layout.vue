@@ -27,6 +27,6 @@ export default class MainPageLayout extends ViewBase {
 .page {
   position: relative;
   margin: -10px;
-  height: 1600px;
+  padding-bottom: 60px;
 }
 </style>
