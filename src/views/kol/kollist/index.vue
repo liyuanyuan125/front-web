@@ -6,38 +6,46 @@
       <Form :model="form" ref="dataform" label-position="left" :label-width="100" class="edit-input forms">
         <div class="check-detail">
           <FormItem label="账号类别"  class="form-item-type">
-            <CheckboxGroup v-model="form.account" class="item-radio-top">
-              <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
-              <Checkbox  v-for="it in accountList" :key="it.key" :label="it.key"
-                class="check-item">{{it.text}}</Checkbox>
-            </CheckboxGroup>
+            <RadioGroup  v-model="form.accountCategoryCode" class="item-radio-top">
+              <Radio class="check-item form-item-first" :label="0">不限</Radio>
+              <Radio  v-for="it in accountList" :key="it.key" :label="it.key"
+                class="check-item">{{it.text}}</Radio>
+            </RadioGroup>
           </FormItem>
           <FormItem label="粉丝数量"  class="form-item-type">
-            <CheckboxGroup v-model="form.fans" class="item-radio-top">
-              <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
-              <Checkbox  v-for="it in fansList" :key="it.key" :label="it.key"
-                class="check-item">{{it.text}}</Checkbox>
-            </CheckboxGroup>
+            <RadioGroup  v-model="form.fansRangCode" class="item-radio-top">
+              <Radio class="check-item form-item-first" :label="0">不限</Radio>
+              <Radio  v-for="it in fansList" :key="it.key" :label="it.key"
+                class="check-item">{{it.text}}</Radio>
+            </RadioGroup>
           </FormItem>
           <FormItem label="地域分布"  class="form-item-type">
-            <CheckboxGroup v-model="form.area" class="item-radio-top">
-              <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
-              <Checkbox class="check-item" :label='1'>指定区域</Checkbox>
-            </CheckboxGroup>
+            <RadioGroup  v-model="area" class="item-radio-top">
+              <Radio @click.native="areabox(false)" class="check-item form-item-first" :label="0">不限</Radio>
+              <Radio @click.native="areabox(true)" class="check-item" :label='1'>指定区域</Radio>
+            </RadioGroup>
           </FormItem>
+          <div v-if="areaShow" class="area-box">
+            <FormItem :label-width="0"  class="">
+              <CheckboxGroup v-model="areacode">
+                <Checkbox v-for="(it, index) in areaLists" :key="index" :label="it.id">{{it.nameCn}}</Checkbox>
+              </CheckboxGroup>
+            </FormItem>
+            <Button type="primary" class="button-ok" @click="sure()">确定</Button>
+          </div>
           <FormItem label="价格区间"  class="form-item-type">
-            <CheckboxGroup v-model="form.price" class="item-radio-top">
-              <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
-              <Checkbox  v-for="it in priceList" :key="it.key" :label="it.key"
-                class="check-item">{{it.text}}</Checkbox>
-            </CheckboxGroup>
+            <RadioGroup  v-model="form.priceRangCode" class="item-radio-top">
+              <Radio class="check-item form-item-first" :label="0">不限</Radio>
+              <Radio  v-for="it in priceList" :key="it.key" :label="it.key"
+                class="check-item">{{it.text}}</Radio>
+            </RadioGroup>
           </FormItem>
           <FormItem label="受众性别"  class="form-item-type">
-            <CheckboxGroup v-model="form.sex" class="item-radio-top">
-              <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
-              <Checkbox  v-for="it in sexList" :key="it.key" :label="it.key"
-                class="check-item">{{it.text}}</Checkbox>
-            </CheckboxGroup>
+            <RadioGroup  v-model="form.sex" class="item-radio-top">
+              <Radio class="check-item form-item-first" :label="-1">不限</Radio>
+              <Radio  v-for="it in sexList" :key="it.key" :label="it.key"
+                class="check-item">{{it.text}}</Radio>
+            </RadioGroup>
           </FormItem>
         </div>
         
@@ -141,7 +149,8 @@
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Header from './header.vue'
-import { queryList } from '@/api/kolList.ts'
+import { cloneDeep } from 'lodash'
+import { titleMsgList, areaList, kolmsglist } from '@/api/kolList.ts'
 import AreaModal from './areaModal.vue'
 import clickoutside from './directive'
 import Detail from './detail.vue'
@@ -162,16 +171,6 @@ const keepExclusion = <T extends any>(
     newHas && oldHas && setter(value.filter(it => it != aloneValue))
   }
 }
-const inform: any = {
-  account: [0],
-  fans: [0],
-  sex: [0],
-  price: [0],
-  area: [0],
-  name: '',
-  pageIndex: 1,
-  pageSize: 10
-}
 @Component({
   components: {
     Header,
@@ -190,16 +189,26 @@ export default class Main extends ViewBase {
   radiusUrl = ''
   loading: boolean = false
   form: any = {
-    ...inform
+    channelCode: 'weibo',
+    accountCategoryCode: 0,
+    fansRangCode: 0,
+    sex: -1,
+    priceRangCode: 0,
+    areaIds: [0],
+    // name: '',
+    pageIndex: 1,
+    pageSize: 10
   }
   acount = 1
   checkDetail = false
   checkCount = 0
   checkPeople = 0
+  area = [0]
   accountList: any = []
   fansList: any = []
   sexList: any = []
   priceList: any = []
+  areaLists: any = []
   kolType: any = 1
   detail = false
   handleShow = false
@@ -207,6 +216,8 @@ export default class Main extends ViewBase {
   nameList: any = ['微博名', '公众号名称', '账号名称', '账号名称', '账号名称']
   left: any = 0
   top: any = 0
+  areacode: any = []
+  areaShow = false
 
   get columns() {
     const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号']
@@ -284,8 +295,14 @@ export default class Main extends ViewBase {
     ]
   }
 
+  areabox(check: boolean) {
+    this.areaShow = check
+  }
+
   created() {
     this.init()
+    this.seach()
+    this.KolSeach()
   }
 
   viewArea(id: any) {
@@ -297,20 +314,53 @@ export default class Main extends ViewBase {
     this.areaId = 0
   }
 
-  async init() {
+  async seach() {
     try {
-      const { data } = await queryList({})
-      this.accountList = data.accountList
-      this.fansList = data.fansList
-      this.sexList = data.sexList
-      this.priceList = data.priceList
-      this.tabledata = data.items
-      this.total = 20
+      const { data: {
+        channelAccountCategoryList,
+        channelFansCountList,
+        sexList,
+        channelPriceList
+
+      } } = await titleMsgList('weibo')
+      const data: any = await areaList({
+        parentIds: 0,
+        pageIndex: 1,
+        pageSize: 10000
+      })
+      this.accountList = channelAccountCategoryList
+      this.fansList = channelFansCountList
+      this.sexList = sexList
+      this.areaLists = (data.data.items || []).map((it: any) => {
+        return {...it, id: Number(it.id)}
+      })
+      this.priceList = channelPriceList
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
+  async init() {
+    // try {
+    //   const { data } = await queryList({})
+    //   this.accountList = data.accountList
+    //   this.fansList = data.fansList
+    //   this.sexList = data.sexList
+    //   this.priceList = data.priceList
+    //   this.tabledata = data.items
+    //   this.total = 20
+    // } catch (ex) {
+    //   this.handleError(ex)
+    // }
+  }
+
+  sure() {
+    const areaId = cloneDeep(this.areacode)
+    this.form.areaIds = areaId.map((it: any) => {
+      return Number(it)
+    })
+    this.areaShow = false
+  }
   async sortTable(column: any) {
     if (column.order == 'desc') { // 降序
 
@@ -391,60 +441,51 @@ export default class Main extends ViewBase {
   checkDetailSet(val: any) {
   }
 
-  @Watch('form.account', { deep: true })
-  watchformAccount(value: number[], oldValue: number[]) {
-    // 不限与其他项互斥
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.form.account = newValue
-    })
-    if (value.length == 0) {
-      this.form.account = [0]
+  async KolSeach() {
+    const query = {
+      ...this.form,
+      accountCategoryCode: this.form.accountCategoryCode,
+      fansRangCode: this.form.fansRangCode,
+      sex: Number(this.form.sex),
+      priceRangCode: this.form.priceRangCode,
+      areaIds: this.form.areaIds.join(',')
+    }
+    try {
+      await kolmsglist(query)
+    } catch (ex) {
+
     }
   }
 
-  @Watch('form.sex', { deep: true })
-  watchformSex(value: number[], oldValue: number[]) {
+
+  @Watch('area', { deep: true })
+  watchArea(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
     keepExclusion(value, oldValue, 0, newValue => {
-      this.form.sex = newValue
+      this.area = newValue
     })
     if (value.length == 0) {
-      this.form.sex = [0]
+      this.area = [0]
     }
   }
 
-  @Watch('form.fans', { deep: true })
-  watchformFans(value: number[], oldValue: number[]) {
-    // 不限与其他项互斥
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.form.fans = newValue
-    })
-    if (value.length == 0) {
-      this.form.fans = [0]
-    }
+  @Watch('form', { deep: true })
+  watchForm(value: any) {
+    this.KolSeach()
   }
 
-  @Watch('form.price', { deep: true })
-  watchformAge(value: number[], oldValue: number[]) {
-    // 不限与其他项互斥
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.form.price = newValue
-    })
-    if (value.length == 0) {
-      this.form.price = [0]
-    }
-  }
-  @Watch('type')
-  watchType(value: number) {
-    this.form = {
-      ...inform
-    }
-  }
+  // @Watch('type')
+  // watchType(value: number) {
+  //   this.form = {
+  //     ...this.from
+  //   }
+  // }
 }
 </script>
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+
 .kol-page {
   padding: 0 40px;
 }
@@ -471,6 +512,7 @@ export default class Main extends ViewBase {
   }
   .form-item-type {
     margin-left: 30px;
+    margin-right: 30px;
     border-bottom: 1px solid rgba(255, 255, 255, .4);
     padding-bottom: 20px;
   }
@@ -489,6 +531,28 @@ export default class Main extends ViewBase {
 .list-box {
   background: #fff;
   border-radius: 5px;
+}
+.area-box {
+  margin: 0 24px;
+  margin-top: -20px;
+  padding: 20px 0;
+  background: rgba(255, 255, 255, .7);
+  min-height: 140px;
+  position: relative;
+  /deep/ .ivu-Radio-wrapper {
+    margin-left: 20px;
+    width: 144px;
+  }
+  .button-ok {
+    position: absolute;
+    right: 20px;
+    bottom: 10px;
+    width: 60px;
+    height: 34px;
+    font-size: 14px;
+    border-radius: 5px;
+    .button-style(#fff, #00202d);
+  }
 }
 .acount-box {
   display: flex;
@@ -541,10 +605,10 @@ export default class Main extends ViewBase {
   font-size: 14px;
   color: rgba(255, 255, 255, .6);
   user-select: none;
-  /deep/ .ivu-checkbox {
+  /deep/ .ivu-radio {
     display: none;
   }
-  /deep/&.ivu-checkbox-wrapper-checked {
+  /deep/&.ivu-radio-wrapper-checked {
     color: #000;
     font-weight: 500;
     border-color: #82d1e4;
