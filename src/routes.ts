@@ -493,11 +493,12 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/order/dispatch',
     name: 'order-dispatch',
     component: () => import('./views/order/dispatch/index.vue'),
-    meta: {
-      authKey: 'adOrderManage.order',
-      authAction: 'view',
-      authIsMenu: true,
-    }
+    meta: emptyAuth,
+    // meta: {
+    //   authKey: 'adOrderManage.order',
+    //   authAction: 'view',
+    //   authIsMenu: true,
+    // }
   },
   // 资源方-广告单-广告详情
   {
@@ -678,7 +679,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/kollist/index.vue'),
     meta: emptyAuth
   },
-   // KOL - KOl 订单
+   // KOL - KOl 订单（完成）
    {
     path: '/kol/orderlist',
     name: 'kol-orderlist',
@@ -686,7 +687,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
 
-  // KOL - KOL 草稿
+  // KOL - KOL 草稿 -（完成）
   {
       path: '/kol/draft',
       name: 'kol-draft',
@@ -694,7 +695,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       meta: emptyAuth
   },
 
-  // kol - KOL详情更多页 - 合作品牌
+  // kol - KOL详情更多页 - 合作品牌 -（完成）
   {
     path: '/kol/detailMoreInfo/colbrand',
     name: 'kol-detailMoreInfo-colbrand',
@@ -702,7 +703,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
 
-  // kol - KOL详情更多页 - 主要作品
+  // kol - KOL详情更多页 - 主要作品 -（完成）
   {
     path: '/kol/detailMoreInfo/masterwork',
     name: 'kol-detailMoreInfo-masterwork',
@@ -800,19 +801,19 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
   // 影片 - 影片合作订单详情
   {
-    path: '/film/movielist/detail',
+    path: '/film/movielist/detail ',
     name: 'film-movielist-detail',
     component: () => import('./views/film/filmorder/moviedetail.vue'),
     meta: emptyAuth,
   },
 
   // kol - 订单填写
-  {
-    path: '/kol/orderfill/:id',
-    name: 'order-orderfill',
-    component: () => import('./views/kol/orderfill/index.vue'),
-    meta: emptyAuth,
-  },
+  // {
+  //   path: '/kol/orderfill/:id',
+  //   name: 'order-orderfill',
+  //   component: () => import('./views/kol/orderfill/index.vue'),
+  //   meta: emptyAuth,
+  // },
   // 影片（film）- 影人更多详情 - 合作品牌
   {
     path: '/film/filmmakerdetail/cobrand',

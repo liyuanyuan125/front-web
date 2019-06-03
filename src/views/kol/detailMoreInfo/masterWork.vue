@@ -1,28 +1,34 @@
 <template>
-  <div class="home-bg brand-list">
-    <div class="select-brand">
+  <div class=" brand-list com-modal">
+    <div class="select-brand tab-list">
       <span>90日热门内容</span>
-      <Select v-model="plat" style="width:100px">
+      <Select v-model="plat" size="small" style="width:100px">
         <Option v-for="item in platformList" :value="item.key" :key="item.key" @click="platSelect">{{ item.text }}</Option>
-    </Select>
+      </Select>
     </div>
 
     <div class="query-select">
-      <span :class="{'active-tab': flag == it.key}" v-for="(it, index) in selectOption" @click="handleQuery(index)"
-       :key = 'index'>{{it.text}}</span>
+      <Tabs class="" v-model="tabKey" @on-click="handleChangeTab">
+        <TabPane v-for="item in selectOption" :key="item.key" :label="item.text"></TabPane>
+      </Tabs>
     </div>
 
     <div class="list-items">
       <div class="item" v-for="item in list" :key="item.id">
-        <div class="item-inner">
-          <a :href="item.videoUrl" target="_blank" ><img :src="item.imgUrl" alt="" class="img" /></a>
-          <p class="title" :title="item.title">{{item.title}}</p>
-          <p class="text-center">
-            <span><i class="iconfont icon-shipinbofang-" size="15" />{{item.videoNum}}万</span> 
-            <span><i class="iconfont icon-dianzan" size="15" />{{item.likesNum}}万</span> 
-            <span><i class="iconfont icon-pinglun" size="13" />{{item.remarkNum}}万</span> 
-          </p> 
-          <p class="text-center">{{item.time}}</p>
+        <div class="item-inner flex-box">
+          <a :href="item.videoUrl" target="_blank" class="video-url" >
+            <i></i>
+            <img :src="item.imgUrl" alt="" class="img" />
+          </a>
+          <div class="inner-right">
+            <p class="title" :title="item.title">{{handleSlice(item.title)}}</p>
+            <p class="icon-num">
+              <span><i class="iconfont icon-shipin" size="20" />{{item.videoNum}}万</span> 
+              <span><i class="iconfont icon-dianzan1" size="20" />{{item.likesNum}}万</span> 
+              <span><i class="iconfont icon-dianping" size="20" />{{item.remarkNum}}万</span> 
+            </p> 
+            <p class="times">{{item.time}}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -43,9 +49,7 @@ export default class Main extends ViewBase {
     {key: 3, text: '快手'},
     {key: 4, text: '小红书'},
   ]
-
-  // 数据筛选
-  flag = 0
+  tabKey = ''
   selectOption = [
     {key: 0, text: '点赞数'},
     {key: 1, text: '播放数'},
@@ -59,7 +63,7 @@ export default class Main extends ViewBase {
       imgUrl: 'http://i2.hdslb.com/bfs/archive/2132cfef0cf5762ce191171bf24f287e000009e8.jpg',
       videoUrl: this.videoUrl,
       time: '20120-12-12 30:00',
-      title: '我家的马桶香香的~（最后的',
+      title: '我家的马桶香香的~（最后的马桶香香的~（最后马桶香香的~（最后',
       videoNum: 10,
       likesNum: 10,
       remarkNum: 3,
@@ -115,9 +119,9 @@ export default class Main extends ViewBase {
       remarkNum: 3,
     },
   ]
-
-  handleQuery(ind: number) {
-    this.flag = ind
+  handleChangeTab() {}
+  handleSlice(text: string) {
+    return text.length > 15 ? text.substring(0, 15) + '.....' : text
   }
   platSelect(id: any) {
     this.plat = id
@@ -127,20 +131,32 @@ export default class Main extends ViewBase {
 </script>
 <style lang='less' scoped>
 @import '~@/site/lib.less';
-.text-center {
-  text-align: center;
+@import '~@/views/kol/less/common.less';
+.iconfont {
+  font-size: 20px;
+  color: #a3d5e6;
+  padding-right: 8px;
+}
+/deep/ .ivu-tabs {
+  color: #fff;
+  .ivu-tabs-tab {
+    line-height: 45px;
+  }
+  .ivu-tabs-tab-active {
+    color: #fff;
+    font-size: 14px;
+  }
 }
 .brand-list {
-  padding: 30px 20px 40px;
+  font-size: 14px;
   .select-brand {
-    font-size: 14px;
-    border-bottom: solid 1px #ededed;
-    padding-bottom: 15px;
+    padding-left: 30px;
     span {
-      padding-right: 15px;
+      padding-right: 20px;
     }
   }
   .query-select {
+    color: #fff;
     font-size: 14px;
     margin: 15px 0;
     span {
@@ -149,24 +165,58 @@ export default class Main extends ViewBase {
     }
   }
   .list-items {
-    margin-left: -5px;
-    margin-right: -5px;
+    padding: 0 30px 40px;
+    margin-left: -15px;
+    margin-right: -15px;
+    display: flex;
+    flex-wrap: wrap;
     .item {
-      width: 25%;
-      float: left;
-      padding: 0 5px;
-      margin-bottom: 15px;
+      width: 50%;
+      padding: 0 15px;
+      margin-bottom: 30px;
       .item-inner {
         overflow: hidden;
         position: relative;
+        background: rgba(0, 32, 45, .5);
+        border-radius: 8px;
+        height: 200px;
+        .video-url {
+          position: relative;
+          i {
+            display: block;
+            width: 50px;
+            height: 50px;
+            background: url('../assets/play.png') no-repeat;
+            background-size: 100%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+        .inner-right {
+          padding: 29px 20px 27px;
+          .icon-num {
+            font-size: 14px;
+            span {
+              padding-right: 20px;
+            }
+          }
+          .times {
+            font-size: 20px;
+            padding-top: 12px;
+          }
+        }
         .title {
-          font-size: 15px;
+          font-size: 18px;
           overflow: hidden;
+          height: 80px;
           line-height: 25px;
+          color: #a3d5e6;
         }
         .img {
-          width: 100%;
-          height: 170px;
+          width: 240px;
+          height: 200px;
           border-radius: 8px;
         }
       }
