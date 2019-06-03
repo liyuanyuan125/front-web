@@ -804,6 +804,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/figure/:id',
     name: 'film-figure',
     component: () => import('./views/mainPage/figure.vue'),
+    meta: emptyAuth,
+    props({ params: { id } }) {
+      return { id: +id }
+    }
+  },
+
+  // KOL
+  {
+    path: '/kol/figure/:id',
+    name: 'kol-figure',
+    component: () => import('./views/mainPage/kol.vue'),
     meta: emptyAuth
   },
 
