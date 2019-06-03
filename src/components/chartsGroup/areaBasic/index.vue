@@ -1,26 +1,30 @@
-<style lang="less" scoped>
-@import '~@/site/lib.less';
-h1 {
-  text-align: left;
-  font-size: 14px
-}
-</style>
+
 <template>
   <div>
     <div style='text-align:center'>
-      <h1 v-if="title !==''">{{title}}</h1>
+      <div class='title-box'>
+        <span v-if=" title !=='' ">{{title}}</span>
+        <Tooltip max-width="200"
+                 v-if=" titleTips !=='' "
+                 :content="titleTips">
+          <Icon type="md-help-circle" />
+        </Tooltip>
+      </div>
       <RadioGroup size="small"
                   v-if="dict1.length > 0"
                   @on-change='currentTypeChange'
                   v-model="currentIndex"
                   type="button">
         <Radio v-for="(item,index) in dict1"
-              :key="item.key"
-              :label="index">{{item.text}}</Radio>
+               :key="item.key"
+               :label="index">{{item.text}}</Radio>
       </RadioGroup>
     </div>
-    <div ref="barChart" v-if="initDone" style="width: 100%; height: 400px"></div>
-    <div v-else style="width: 100%; height: 400px" >      
+    <div ref="refChart"
+         v-if="initDone"
+         style="width: 100%; height: 400px"></div>
+    <div v-else
+         style="width: 100%; height: 400px">
       <TinyLoading />
     </div>
   </div>
@@ -30,6 +34,14 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
+import {
+  pubOption,
+  seriesOption,
+  dottedLineStyle,
+  yOption,
+  xOption,
+  barThinStyle
+} from '../chartsOption'
 @Component({
   components: {
     TinyLoading
@@ -39,11 +51,12 @@ import echarts from 'echarts'
 export default class AreaBasic extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
+  @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
-  @Prop({ type: Array, default: [] }) dict1!: any[]
-  @Prop({ type: Array, default: [] }) dict2!: any[]
-  @Prop({ type: Array, default: [] }) color!: any[]
-  @Prop({ type: Array, default: [] }) dataList!: any[]
+  @Prop({ type: Array, default: () => [] })  dict1!: any[]
+  @Prop({ type: Array, default: () => [] })  dict2!: any[]
+  @Prop({ type: Array, default: () => [] })  color!: any[]
+  @Prop({ type: Array, default: () => [] })  dataList!: any[]
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
     this.currentIndex = index
@@ -54,49 +67,50 @@ export default class AreaBasic extends ViewBase {
   }
   // 接口没调
   updateCharts() {
-    if (!this.dataList[this.currentIndex].list || this.dataList[this.currentIndex].list.length < 1) { return }
+    if (
+      !this.dataList[this.currentIndex] ||
+      this.dataList[this.currentIndex].length < 1
+    ) {
+      return
+    }
 
-    const chartData = this.dataList[this.currentIndex].list
-    const myChart = echarts.init(this.$refs.barChart as any)
+    const chartData = this.dataList[this.currentIndex]
+    const myChart = echarts.init(this.$refs.refChart as any)
     const option: any = {
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross'
-        }
-      },
-      legend: {
-        y: 'bottom'
-      },
-      grid: {
-        left: '2%',
-        right: '2%',
-        bottom: '10%',
-        containLabel: true,
-        show: false,
-        borderWidth: 0
-      },
+      color: this.color[this.currentIndex],
+      ...pubOption,
       xAxis: {
-        type: 'category',
+        ...xOption,
         boundaryGap: false,
         data: chartData.date
       },
       yAxis: {
-          type: 'value'
+        type: 'value',
+        ...dottedLineStyle,
+        ...yOption
       },
-      series: [{
+      series: [
+        {
           data: chartData.data,
           type: 'line',
-          areaStyle: {}
-      }],
-      color: this.color[this.currentIndex],
+          smooth: true,
+          ...seriesOption
+        }
+      ]
     }
+    option.tooltip.formatter = this.title + ` {c}`
+    let _title = ''
+    if (this.title === '') {
+      _title = this.dict1[this.currentTypeIndex].text
+      option.tooltip.formatter = _title + ` {c}`
+    }
+    option.tooltip.backgroundColor = this.color[this.currentIndex]
     myChart.setOption(option)
   }
   @Watch('initDone')
   watchInitDone(val: boolean) {
-    if ( val ) {
-      this.$nextTick( () => {
+    if (val) {
+      this.$nextTick(() => {
         this.resetOptions()
         this.updateCharts()
       })
@@ -104,7 +118,7 @@ export default class AreaBasic extends ViewBase {
   }
   @Watch('currentTypeIndex')
   watchcurrentTypeIndex(newIndex: any, oldIndex: any) {
-    if ( newIndex !== oldIndex ) {
+    if (newIndex !== oldIndex) {
       this.resetOptions()
       this.updateCharts()
     }

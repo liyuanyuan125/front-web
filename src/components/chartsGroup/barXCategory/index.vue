@@ -1,58 +1,67 @@
-<style lang="less" scoped>
-@import '~@/site/lib.less';
-h1 {
-  text-align: left;
-  font-size: 14px
-}
-</style>
+
 <template>
   <div>
     <div style='text-align:center'>
-      <h1 v-if="title !==''">{{title}}</h1>
+      <div class='title-box'>
+        <span v-if=" title !=='' ">{{title}}</span>
+        <Tooltip max-width="200"
+                 v-if=" titleTips !=='' "
+                 :content="titleTips">
+          <Icon type="md-help-circle" />
+        </Tooltip>
+      </div>
       <RadioGroup size="small"
                   v-if="dict1.length > 0"
                   @on-change='currentTypeChange'
                   v-model="currentIndex"
                   type="button">
         <Radio v-for="(item,index) in dict1"
-              :key="item.key"
-              :label="index">{{item.name}}</Radio>
+               :key="item.key"
+               :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <div ref="barChart" v-if="initDone" style="width: 100%; height: 400px"></div>
-    <div v-else style="width: 100%; height: 400px" >      
-      <TinyLoading />
-    </div>
+    <Row type="flex" justify="space-between">
+      <Col :span="24">
+        <div ref="refChart"
+            v-if="initDone"
+            style="width: 100%; height: 400px"></div>
+        <div v-else
+            style="width: 100%; height: 400px">
+          <TinyLoading />
+        </div>
+      </Col>
+    </Row>
   </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
-import { IchartOptions } from './types'
 import echarts from 'echarts'
+import {
+  pubOption,
+  seriesOption,
+  dottedLineStyle,
+  yOption,
+  xOption,
+  barThinStyle
+} from '../chartsOption'
 @Component({
   components: {
     TinyLoading
   }
 })
-// 柱状x轴分类
-export default class BarXCategory extends ViewBase {
+// 简单饼图
+export default class PieSimple extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
+  @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
-  @Prop({ type: Array, default: [] }) dict1!: any[]
-  @Prop({ type: Array, default: [] }) dict2!: any[]
-  @Prop({ type: Array, default: [] }) dict3!: any[]
-  @Prop({ type: Array, default: [] }) color!: any[]
-  @Prop({ type: Array, default: [] }) dataList!: any[]
-  xaxisList: any = []
-  seriesList: any[] = []
-  chartOptions: IchartOptions = {
-    name: '',
-    type: 'bar',
-    color: ['#ff9933', '#169bd5']
-  }
+  @Prop({ type: Array, default: () => [] }) dict1!: any[]
+  @Prop({ type: Array, default: () => [] }) dict2!: any[]
+  @Prop({ type: Array, default: () => [] }) dict3!: any[]
+  @Prop({ type: Array, default: () => [] }) color!: any[]
+  @Prop({ type: Array, default: () => [] }) dataList!: any[]
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
     this.currentIndex = index
@@ -60,59 +69,47 @@ export default class BarXCategory extends ViewBase {
   }
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
-    this.seriesList = []
-    this.xaxisList = []
   }
   updateCharts() {
-    if (!this.dataList[this.currentIndex].list || this.dataList[this.currentIndex].list.length < 1) { return }
-    const chartData = this.dataList[this.currentIndex].list
-    const myChart = echarts.init(this.$refs.barChart as any)
+    if (
+      !this.dataList[this.currentIndex] ||
+      this.dataList[this.currentIndex].length < 1
+    ) {
+      return
+    }
+    const chartData = this.dataList[this.currentIndex]
+    const myChart = echarts.init(this.$refs.refChart as any)
 
-    const chartSeries: any[] = []
-    this.dict2.forEach((item, index) => {
-      chartSeries.push({
-        name: '',
-        type: 'bar',
-        data: []
-      })
-    })
-    this.xaxisList = this.dict3.map((item: any) => {
-      return item.text
-    })
-    // 数据处理等接口设计结束后调整。nxd
-    chartData.forEach((item: any, index: number ) => {
-      chartSeries[item.key].name = this.dict2[item.key].text
-      chartSeries[item.key].data.push({
-        value: item.data,
-        key2: item.key2
-      })
-    })
-    this.seriesList = chartSeries.map(item => item)
+    // series数据处理等接口设计结束后调整。nxd fans 和 matching都有数据问题
+    // const chartSeries: any[] = []
+    // this.dict2.forEach((item, index) => {
+    //   chartSeries.push({
+    //     name: '',
+    //     type: 'bar',
+    //     data: []
+    //   })
+    // })
+    // chartData.forEach((item: any, index: number) => {
+    //   chartSeries[item.key].name = this.dict2[item.key].text
+    //   chartSeries[item.key].data.push({
+    //     value: item.data,
+    //     key2: item.key2
+    //   })
+    // })
 
-    let option: any = {}
-    option = Object.assign({
+    const option: any = {
       color: this.color,
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'shadow'
-        }
-      },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-      },
+      ...pubOption,
       xAxis: {
-        type: 'category',
-        data: this.xaxisList
+        ...xOption,
+        data: this.dict3.map((item: any) => {
+          return item.text
+        })
       },
       yAxis: {
-        type: 'value',
-        boundaryGap: [0, 0.01]
+        ...dottedLineStyle,
+        ...yOption
       },
-      // series: this.seriesList,
       series: [
         {
           name: 'Papi酱',
@@ -125,13 +122,13 @@ export default class BarXCategory extends ViewBase {
           data: [134141, 681807, 630230, 630230, 630230]
         }
       ]
-    }, option)
+    }
     myChart.setOption(option)
   }
   @Watch('initDone')
   watchInitDone(val: boolean) {
-    if ( val ) {
-      this.$nextTick( () => {
+    if (val) {
+      this.$nextTick(() => {
         this.resetOptions()
         this.updateCharts()
       })
@@ -139,7 +136,7 @@ export default class BarXCategory extends ViewBase {
   }
   @Watch('currentTypeIndex')
   watchcurrentTypeIndex(newIndex: any, oldIndex: any) {
-    if ( newIndex !== oldIndex ) {
+    if (newIndex !== oldIndex) {
       this.resetOptions()
       this.updateCharts()
     }

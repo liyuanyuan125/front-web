@@ -34,22 +34,25 @@ export default class App extends ViewBase {
 
 <style lang="less" scoped>
 @color: #3b98ff;
+.page {
+  background: rgba(0, 31, 44, .8);
+}
 .page ul {
-  border-bottom: 1px solid #ccc;
-  height: 50px;
+  height: 69px;
   display: flex;
   li {
     font-size: 18px;
-    line-height: 50px;
+    line-height: 69px;
     margin-left: 30px;
     text-align: center;
+    color: rgba(255, 255, 255, .6);
     cursor: pointer;
     &:hover {
-      color: @color;
+      color: #fff;
     }
   }
   .liactive {
-    color: @color;
+    color: #fff;
   }
 }
 .active {

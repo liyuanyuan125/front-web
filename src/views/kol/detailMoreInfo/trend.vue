@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less">
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
 </style>
@@ -7,8 +7,7 @@
     <Row>
       <Col span="24">
       <Form label-position="left"
-            :label-width="100"
-            class="edit-input">
+            :label-width="100">
         <Card class="detailmore-card">
           <div slot="title">
             <Row type="flex"
@@ -47,23 +46,22 @@
                            :dict2="chart1.dict2"
                            :color="chart1.color"
                            :dataList="chart1.dataList"
-                           :currentTypeIndex="chart1.currentTypeIndex"
-                           @typeChange='typeChangeHander1' />
+                           :currentTypeIndex="chart1.currentTypeIndex" />
               </div>
               </Col>
             </Row>
             <Row type="flex"
                  justify="space-between">
               <Col :span="24">
-              <div class='chart-wp'>
-                <AreaBasic :initDone="chart2.initDone"
-                           :title='chart2.title'
-                           :dict1="chart2.dict1"
-                           :dict2="chart2.dict2"
-                           :color="chart2.color"
-                           :dataList="chart2.dataList"
-                           :currentTypeIndex="chart2.currentTypeIndex"
-                           @typeChange='typeChangeHander2' />
+              <div class='chart-wp borderRadius'>
+                <AreaBasicxtra :initDone="chart2.initDone"
+                               :title='chart2.title'
+                               :dict1="chart2.dict1"
+                               :dict2="chart2.dict2"
+                               :color="chart2.color"
+                               :dataList="chart2.dataList"
+                               :currentTypeIndex="chart2.currentTypeIndex"
+                               @typeChange='typeChangeHander2' />
               </div>
               </Col>
             </Row>
@@ -82,13 +80,15 @@ import {
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
+import DetailNavBar from './components/detailNavBar.vue'
 import { trend } from '@/api/kolDetailMoreInfo'
 import AreaBasic from '@/components/chartsGroup/areaBasic/'
-import DetailNavBar from './components/detailNavBar.vue'
+import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
 
 @Component({
   components: {
     AreaBasic,
+    AreaBasicxtra,
     DetailNavBar
   }
 })
@@ -124,7 +124,7 @@ export default class Temporary extends ViewBase {
     ]
   }
   chart1: any = {
-    title: '',
+    title: '综合热度',
     dict1: [],
     dict2: [],
     currentTypeIndex: 0,
@@ -141,9 +141,8 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['#ff0000', '#3fb23f', '#0099cc', '#cc6600']
   }
-  async typeChangeHander1(index: number = 0) {}
   async typeChangeHander2(index: number = 0) {
-    if (this.chart2.dataList[index].list.length < 1) {
+    if (this.chart2.dataList[index].length < 1) {
       await this.getChartsData('chart2', index)
     }
     this.chart2.currentTypeIndex = index
@@ -163,50 +162,42 @@ export default class Temporary extends ViewBase {
         this.chart1.dataList = data.chart1.effectTypeList.map(
           (item: any, index: number) => {
             return {
-              list: {
-                data: [],
-                date: []
-              }
+              data: [],
+              date: []
             }
           }
         )
       } else {
         this.chart1.dataList.push({
-          list: {
-            data: [],
-            date: []
-          }
+          data: [],
+          date: []
         })
       }
       this.chart1.dict1 = data.chart1.effectTypeList
       data.chart1.dataList.forEach((item: any, index: number) => {
-        this.chart1.dataList[item.key].list.data.push(item.data)
-        this.chart1.dataList[item.key].list.date.push(item.date)
+        this.chart1.dataList[item.key].data.push(item.data)
+        this.chart1.dataList[item.key].date.push(item.date)
       })
       this.chart1.initDone = true
       if (data.chart2.effectTypeList.length > 0) {
         this.chart2.dataList = data.chart2.effectTypeList.map(
           (item: any, index: number) => {
             return {
-              list: {
-                data: [],
-                date: []
-              }
+              data: [],
+              date: []
             }
           }
         )
       } else {
         this.chart2.dataList.push({
-          list: {
-            data: [],
-            date: []
-          }
+          data: [],
+          date: []
         })
       }
       this.chart2.dict1 = data.chart2.effectTypeList
       data.chart2.dataList.forEach((item: any, index: number) => {
-        this.chart2.dataList[item.key].list.data.push(item.data)
-        this.chart2.dataList[item.key].list.date.push(item.date)
+        this.chart2.dataList[item.key].data.push(item.data)
+        this.chart2.dataList[item.key].date.push(item.date)
       })
       this.chart2.initDone = true
     } catch (ex) {

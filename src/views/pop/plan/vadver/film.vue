@@ -1,19 +1,24 @@
 <template>
   <div class="component">
-    <Table :columns="columns" :data="inValue" border disabled-hover size="small">
-      <template slot-scope="{ row }" slot="name">
-        <div class="img-wrap">
-          <Img :url="row.mainPicUrl" />
-          <span>{{row.name}}</span>
+    <ul class="film-list">
+      <li v-for="(it) in inValue" :key="it.id"
+        :class="['film-item']">
+        <div :class="['film-cover-box']">
+          <img :src="it.mainPicUrl" class="film-cover">
+          <div>
+            <div class="film-title">{{it.name}}</div>
+            <div class="film-title">{{it.name}}</div>
+            <div class="film-time" style="margin-top: 20px">上映时间：{{formatDate(it.openTime)}}</div>
+            <div class="film-time">投放排期: {{formatDate(it.openTime)}}</div>
+          </div>
         </div>
-      </template>
-      <template slot-scope="{ row }" slot="opentime">
-        <span>{{formatDate(row.openTime)}}</span>
-      </template>
-    </Table> 
-    <div class="act-bar">
-      <a @click="onAdd" v-if="!type">添加关联影片</a>
-    </div>
+      </li>
+      <li class="add-item">
+        <div @click="onAdd" v-if="!type">
+          <Icon type="md-add" /><span>添加影片</span>
+        </div>
+      </li>
+    </ul>
     <AddCFilmModel ref="addCinemaModel" :cinemaend = "incinematype" :addData="inValue" @done="columndata" />
   </div>
 </template>
@@ -129,21 +134,68 @@ export default class ComponentMain extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-.component {
-  padding: 9px 8px 2px 8px;
-  background-color: #eee;
-  border-radius: 4px;
-  .img-wrap {
-    height: 120px;
-    display: flex;
-    align-items: center;
-    margin-left: 10%;
-    /deep/ .image-previewer, /deep/ .image-previewer img {
-      height: 100px;
+.film-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: -15px;
+  margin-bottom: 40px;
+  .film-item {
+    width: calc(50% - 20px);
+    height: 160px;
+    padding-bottom: 5px;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 1);
+    .film-cover-box {
+      display: flex;
+      margin-top: 30px;
+      .film-title {
+        font-size: 18px;
+        color: #00202d;
+        height: 24px;
+        font-weight: 400;
+        margin-left: 20px;
+      }
+      .film-time {
+        margin-left: 20px;
+        height: 24px;
+      }
+      img {
+        width: 89px;
+        height: 125px;
+      }
     }
-    span {
-      margin-left: 10px;
+  }
+  .add-item {
+    width: 580px;
+    height: 160px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 1);
+    div {
+      text-align: center;
+      padding-top: 70px;
+      cursor: pointer;
+      i {
+        font-size: 27px;
+      }
+      span {
+        font-size: 18px;
+      }
     }
+  }
+  .film-item:nth-child(2n-1) {
+    margin-right: 40px;
+  }
+  .film-name,
+  .film-tags {
+    line-height: 22px;
+    text-align: center;
+    font-weight: normal;
+  }
+  .film-name {
+    margin-top: 10px;
   }
 }
 </style>

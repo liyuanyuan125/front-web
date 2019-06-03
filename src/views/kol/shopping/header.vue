@@ -1,105 +1,104 @@
 <template>
-  <div class="shop-box">
-    <h3>购物车</h3>
-    <div class="time-wrap">
-      <ul class="shop-type">
-        <li class="active"></li>
-        <li></li>
-        <li></li>
-      </ul>
-      <ul class="shop-step">
-        <li>提交预定</li>
-        <li>上传物料</li>
-        <li>支付订单</li>
-      </ul>
-    </div>
+  <div class="app">
+    <Row>
+      <Col :sapn="14" :offset="5">
+        <ul class="step">
+          <li v-for="(item, index) in step" :key="item.id" :class="(value) >= item.id ? 'active' : ''">
+            <span :class="(value) > item.id ? 'actve-span' : ''" v-if="index!=2"></span>
+          </li>
+        </ul>
+        <ul class="step-text">
+          <li v-for="(item) in step" :key="item.id" :class="(value) >= item.id ? 'active' : ''">
+            {{item.key}}
+          </li>
+        </ul>
+      </Col>
+    </Row>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Watch, Prop } from 'vue-property-decorator'
+import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinemaList } from '@/api/popPlan'
 
 @Component
-export default class DlgEditCinema extends ViewBase {
-  @Prop() id!: number
-  showDlg = true
-
-  created() {
-    this.init()
-  }
-
-  init() {
-  }
-
-  cancel() {
-    this.showDlg = false
-  }
+export default class App extends ViewBase {
+  @Prop({default: 1}) value!: number
+  step = [{
+    key: '提交预定',
+    id: 1
+  }, {
+    key: '上传物料',
+    id: 2
+  }, {
+    key: '支付订单',
+    id: 3
+  }]
 }
 </script>
 
 <style lang="less" scoped>
-@import '~@/site/lib.less';
-.shop-box {
-  margin: 20px 0 0 30px;
-  display: flex;
-  justify-content: space-between;
-  h3 {
-    font-size: 24px;
-  }
-  .time-wrap {
-    width: 600px;
-    margin-right: 30px;
-  }
-  .shop-type {
+@keyframes animatedBackground {
+  from { background-size: 0; }
+  to { background-size: 100%; }
+}
+.app {
+  .step {
     display: flex;
-    height: 20px;
+    cursor: default;
+    height: 50px;
+    line-height: 50px;
     li {
-      width: 290px;
-      display: flex;
-      align-items: center;
+      flex: 1;
+      position: relative;
+      transition: all .4s ease-in-out;
       &::before {
-        content: '';
-        width: 20px;
-        height: 20px;
-        background: #ccc;
+        content: "";
+        display: block;
+        width: 40px;
+        height: 40px;
+        align-self: center;
+        margin-left: 4px;
         border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        font-size: 24px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 5px 9px 1px rgba(0, 0, 0, 0.33);
       }
-      &:not(:last-child)::after {
-        content: '';
-        width: 270px;
+      span {
+        position: absolute;
+        left: 44px;
+        top: 19px;
+        width: calc(100% - 44px);
         height: 2px;
-        background: #ccc;
+        background: rgba(255, 255, 255, 0.5);
+      }
+      .actve-span {
+        width: 100%;
+        background: #fff no-repeat;
+        transition: all .4s ease-in-out;
       }
     }
     .active {
       &::before {
-        content: '';
-        width: 20px;
-        height: 20px;
-        background: red;
-        border-radius: 50%;
+        content: "●";
+        color: #00202d;
+        background: #fff;
+        border: 2px solid rgb(255, 255, 255);
+        box-shadow: 0 5px 9px 1px rgba(0, 0, 0, 0.33);
       }
-    }
-    .step {
-      &:not(:last-child)::after {
-        content: '';
-        width: 270px;
-        height: 2px;
-        background: red;
-      }
-    }
-    li:last-child {
-      width: 20px;
     }
   }
-  .shop-step {
+  .step-text {
     display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
     li {
-      color: #222;
+      flex: 1;
+      margin-bottom: 30px;
+      color: #fff;
+    }
+    .active {
+      color: rgba(0, 32, 45, 1);
     }
   }
 }

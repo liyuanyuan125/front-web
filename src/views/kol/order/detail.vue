@@ -3,7 +3,7 @@
     <div class='t-title'>订单状态： 派单中</div>
     
     <div class='title-tip'>
-      <Row style='margin-bottom: 10px;'>订单信息</Row>
+      <Row style='font-size: 24px;line-height: 50px;font-weight: 500'>订单信息</Row>
     	<Row>
        <Col :span='12'>项目名称：2019年度奔驰品牌推广</Col>
        <Col :span='12'>订单编号：234198515130105856</Col>
@@ -13,13 +13,16 @@
        <Col :span='12'>下单时间：2018-0-09 14：21</Col>
       </Row>
       <Row>
+       <Col :span='24'>推广产品：2019年度奔驰品牌推广</Col>
+      </Row>
+      <Row>
        <Col :span='24'>推广内容：2019年度奔驰品牌推广</Col>
       </Row>
     </div>
     <div class='body'>
       <Row class='row-ul'>
-        <Col :span='2'>任务清单</Col>
-        <Col :span="21"> 已接单 (1/2) </Col>
+        <Col :span='2' class='taskorder'>任务清单</Col>
+        <Col :span="5" class='taskok'> 已接单 (1/2) </Col>
       </Row>
       <div style='margin-top: 15px;border-bottom: 0px'>
       	<Row class='li-title'>
@@ -31,7 +34,7 @@
           <Col :span='4' class='li-ti-col'>任务内容</Col>
           <Col :span='3' class='li-ti-col'>接单状态</Col>
         </Row>
-        <ul class='itemul'>
+        <ul>
         	<li class='li-item' v-for='(it,index) in itemlist' :key='index'>
         		<row>
         			<Col :span='5' class='li-ti-col'>
@@ -41,7 +44,7 @@
                       <img src="./assets/over.jpg" alt="">
                     </div>
                   </Col>
-                  <Col :span='12' style='margin-left: -10px;'>
+                  <Col :span='12' style='margin-left: -10px;font-size: 16px;font-weight: 500'>
                     <Tooltip v-if='it.name.length > 5' :content="it.name">
                     <div>{{it.name.slice(0,5)}}...</div></Tooltip>
                     <div v-if='it.name.length <= 5'>{{it.name}}</div>
@@ -49,27 +52,31 @@
                   </Col>
                 </Row>
               </Col>
-              <Col :span='3' class='li-ti-col'>{{it.weibo}}</Col>
-              <Col :span='3' class='li-ti-col'>{{it.zhifa}}</Col>
-              <Col :span='3' class='li-ti-col'>￥{{it.price}}</Col>
-              <Col :span='3' class='li-ti-col'>{{it.createTimeTemp}}</Col>
-              <Col :span='4' class='li-ti-col'>{{it.con}}</Col>
-              <Col :span='3' class='li-ti-col'>√ 已接单</Col>
+              <Col :span='3' class='li-ti-col ss' style='padding-left: 40px;'><span class="s1"></span>{{it.weibo}}</Col>
+              <Col :span='3' class='li-ti-col ss'>{{it.zhifa}}</Col>
+              <Col :span='3' class='li-ti-col ss'>￥{{it.price}}</Col>
+              <Col :span='3' class='li-ti-col ss'>{{it.createTimeTemp}}</Col>
+              <Col :span='4' class='li-ti-col ss'>{{it.con}}</Col>
+              <Col :span='3' class='li-ti-col ss'> 已接单<span class="s2"></span></Col>
         		</row>
         	</li>
         </ul>
       </div>
     </div>
     <div class='body' style='padding-left: 30px;'>
-      <Row class='row-ul'>
-        订单跟踪
-      </Row>
+      <Row style='font-size: 24px;line-height: 50px;font-weight: 500'>订单跟踪</Row>
       <div style='margin-top: 15px;border-bottom: 0px'>
-        <ul class='itemul'>
+        <ul>
+          <li>
+            <row class='itemss itemss-w'>
+              <Col :span='3' class='ss-left'>ewqeqweqw<span></span></Col>
+              <Col :span='18' class='ss-right'>qweqweqweqw</Col>
+            </row>
+          </li>
           <li v-for='(it,index) in itemlist' :key='index'>
-            <row style='line-height: 30px;'>
-              <Col :span='3' class='li-ti-col'>{{it.createTimeTemp}}</Col>
-              <Col :span='20' class='li-ti-col'>{{it.con}}</Col>
+            <row class='itemss'>
+              <Col :span='3' class='ss-left'>{{it.createTimeTemp}}<span></span></Col>
+              <Col :span='18' class='ss-right'>{{it.con}}</Col>
             </row>
           </li>
         </ul>
@@ -131,39 +138,60 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-.t-title {
-  width: 100%;
-  height: 50px;
-  background: rgba(249, 249, 249, 1);
-  border-radius: 2px 2px 0 0;
-  line-height: 50px;
-  font-size: 14px;
-  font-weight: 400;
-  color: rgba(36, 129, 215, 1);
+.page {
   padding-left: 30px;
+  padding-right: 40px;
+  color: #00202d;
+}
+.t-title {
+  height: 98px;
+  background: rgba(0, 32, 45, 1);
+  border-radius: 5px;
+  opacity: 0.9;
+  font-size: 24px;
+  font-weight: 500;
+  color: rgba(249, 216, 94, 1);
+  line-height: 98px;
+  text-align: center;
 }
 .title-tip {
-  margin-top: 20px;
+  margin-top: 30px;
   width: 100%;
-  height: 130px;
-  background: rgba(249, 249, 249, 1);
-  border-radius: 2px 2px 0 0;
-  line-height: 20.5px;
-  font-size: 13px;
-  font-weight: 400;
-  color: rgba(36, 129, 215, 1);
-  padding: 20px 0 0 30px;
+  line-height: 35px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 20px 0 10px 30px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 1);
 }
 .body {
-  margin-top: 10px;
+  margin-top: 30px;
   padding-top: 10px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+.taskorder {
+  font-size: 24px;
+  line-height: 50px;
+  margin-left: 30px;
+  font-weight: bold;
+}
+.taskok {
+  font-weight: 500;
+  color: rgba(255, 83, 83, 1);
+  font-size: 20px;
+  line-height: 50px;
+  margin-left: 20px;
 }
 .li-title {
   padding: 0 10px 0 10px;
-  height: 40px;
-  background: rgba(249, 249, 249, 1);
-  line-height: 40px;
+  line-height: 65px;
   font-size: 13px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.6);
+  opacity: 0.9;
   .li-ti-col {
     text-align: center;
   }
@@ -172,10 +200,34 @@ export default class Main extends ViewBase {
   padding: 10px 10px 0 10px;
   line-height: 40px;
   font-size: 14px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
   height: 105px;
   .li-ti-col {
     text-align: center;
+  }
+  .ss {
+    margin-top: 25px;
+    font-size: 14px;
+    .s1 {
+      display: inline-block;
+      width: 25px;
+      height: 20px;
+      background: url('./assets/weibo.png');
+      background-size: cover;
+      position: absolute;
+      top: 7px;
+      left: 33%;
+    }
+    .s2 {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: url('./assets/reok.png');
+      background-size: cover;
+      position: absolute;
+      top: 10px;
+      left: 67%;
+    }
   }
   .div-img {
     width: 80px;
@@ -189,5 +241,42 @@ export default class Main extends ViewBase {
     }
   }
 }
-
+.itemss {
+  line-height: 50px;
+  font-size: 14px;
+  .ss-left {
+    border-right: 1px dashed rgba(179, 188, 192, 1);
+    span {
+      width: 11px;
+      height: 11px;
+      background: url('./assets/hui.png');
+      background-size: cover;
+      position: absolute;
+      top: 37%;
+      right: -4%;
+    }
+  }
+  .ss-right {
+    padding-left: 40px;
+  }
+}
+.itemss-w {
+  line-height: 50px;
+  font-size: 14px;
+  .ss-left {
+    border-right: 1px dashed rgba(179, 188, 192, 1);
+    span {
+      width: 17px;
+      height: 17px;
+      background: url('./assets/blok.png');
+      background-size: cover;
+      position: absolute;
+      top: 37%;
+      right: -6%;
+    }
+  }
+  .ss-right {
+    padding-left: 40px;
+  }
+}
 </style>

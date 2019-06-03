@@ -1,93 +1,114 @@
 <template>
-  <div class="page home-bg">
-    <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
-      <h3 class="layout-title">覆盖范围设置</h3>
-      <FormItem label="覆盖城市" class="item-top form-item-type">
-        <Tags v-model="cityType" :tagMess = 'areaList' />
-      </FormItem>
-      <div class="item-top" v-if="cityType == 1">
-        <FormItem>
-          <CheckboxGroup v-model="form.cinema" class="item-radio-top">
-            <Checkbox class="check-item form-item-first" :label="0">全国</Checkbox>
-            <Checkbox  v-for="it in cityList" :key="it.key" :label="it.key"
-              class="check-item">{{it.text}}</Checkbox>
-          </CheckboxGroup>
-        </FormItem>
-      </div>
-      <div class="item-top" v-else>
+  <div class="">
+    <Row>
+      <Col :span="22" :offset="1">
+        <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="0" class="edit-input forms">
+          <h3 class="layout-titles">覆盖范围设置</h3>
+          <Row>
+            <Col :span="24">
+              <Row>
+                <FormItem :labelWidth="0" class="item-top form-item-type">
+                  <Tags v-model="cityType" :tagMess = 'areaList' />
+                </FormItem>
+                <div class="item-top check-cinem" v-if="cityType == 1">
+                  <FormItem :labelWidth="0">
+                    <CheckboxGroup v-model="form.cinema" class="item-radio-top">
+                      <div style="margin-bottom: 30px">
+                        <Checkbox style="width: 180px" class="check-item form-item-first" :label="0">全国</Checkbox>
+                        <Checkbox style="margin-left: 18px;width: 180px" v-for="(it, index) in cityList" v-if="index == 0" :key="it.key" :label="it.key"
+                         class="check-item form-item-first">{{it.text}}</Checkbox>
+                        <Checkbox v-for="(it, index) in cityList" v-if="index > 0" :key="it.key" :label="it.key"
+                          class="check-item">{{it.text}}</Checkbox>
+                      </div>
+                    </CheckboxGroup>
+                  </FormItem>
+                </div>
+                <div class="item-top" v-else>
 
-      </div>
-      <div class="cinema-wrap">
-        <FormItem label="覆盖影院" class="item-top form-item-type">
-          <Tags v-model="cinemaType" :tagMess = 'cinemaList' />
-        </FormItem>
-        <FormItem v-if="cinemaType == 2" class="cinema-input" label-width='0'>
-          <Input style="width: 100px;height: 34px" v-model="cinemaType" placeholder="请输入" :tagMess = 'cinemaList' />
-          <span>家</span>
-        </FormItem>
-      </div>
-      <FormItem label="影院星级"  class="item-top form-item-type">
-        <CheckboxGroup v-model="form.sex" class="item-radio-top">
-          <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
-          <Checkbox  v-for="it in cinemastatusList" :key="it.key" :label="it.key"
-            class="check-item">{{it.text}}</Checkbox>
-        </CheckboxGroup>
-      </FormItem>
+                </div>
+              </Row>
+            </Col>
+          </Row>
+          
+          <h3 class="layout-titles" style="margin-top: 45px">受众定向</h3>
+          <Row class="item-top item-three">
+            <Col :span="24" class="flex">
+              <Col :span="6" class="three-left">
+                <div class="orient-title">受众性别</div>
+                <FormItem class="item-top form-item-type">
+                  <CheckboxGroup v-model="form.sex" class="item-radio-top">
+                    <Checkbox style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
+                    <Checkbox  v-if="it.key != 'unknow'" style="width: 220px; height: 70px;"  v-for="it in sexList" :key="it.key" :label="it.key"
+                      class="check-item check-icon">
+                      <div v-if="it.text == '男'"><i class="check-man"></i></div>
+                      <div v-else><i class="check-woman"></i></div>
+                      <span>{{it.text}}</span>
+                    </Checkbox>
+                  </CheckboxGroup>
+                </FormItem>
+              </Col>
 
-      <h3 class="layout-title">受众定向</h3>
-      <FormItem label="受众性别"  class="item-top form-item-type">
-        <CheckboxGroup v-model="form.sex" class="item-radio-top">
-          <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
-          <Checkbox  v-for="it in sexList" :key="it.key" :label="it.key"
-            class="check-item">{{it.text}}</Checkbox>
-        </CheckboxGroup>
-      </FormItem>
-      <FormItem label="受众年龄" class="item-top form-item-type">
-        <CheckboxGroup v-model="form.age" class="item-radio-top">
-          <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
-          <Checkbox  v-for="it in ageList" :key="it.key" :label="it.key"
-            class="check-item">{{it.text}}</Checkbox>
-        </CheckboxGroup>
-      </FormItem>
-      <FormItem label="影片类型" class="item-top form-item-type">
-        <CheckboxGroup v-model="form.type" class="item-radio-top">
-          <Checkbox class="check-item form-item-first" :label="0">不限</Checkbox>
-          <Checkbox  v-for="it in typeList" :key="it.key" :label="it.key"
-            class="check-item">{{it.text}}</Checkbox>
-        </CheckboxGroup>
-      </FormItem>
+              <Col :span="6" class="three-left">
+                <div class="orient-title">受众年龄</div>
+                <FormItem class="item-top form-item-type">
+                  <CheckboxGroup v-model="form.age" class="item-radio-top">
+                    <Checkbox style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
+                    <Checkbox style="100px"  v-for="it in ageList" :key="it.key" :label="it.key"
+                      class="check-item">
+                      <span>{{it.text}}</span>
+                    </Checkbox>
+                  </CheckboxGroup>
+                </FormItem>
+              </Col>
 
-      <h3 class="layout-title">影片定向</h3>
-      <FormItem label="选择模式" class="item-top form-item-type">
-        <Tags v-model="movieType" :tagMess = 'movieList' />
-      </FormItem>
-      <div class="item-top" v-show="movieType == 1">
-        <FormItem label="推荐影片" class="form-item-type-sort">
-          <ul class="film-list" v-if="cinemaDetail.length > 0">
-            <li v-for="(it, index) in cinemaDetail" :key="it.id"
-              :class="['film-item']">
-              <div :class="['film-cover-box']">
-                <b :class="`img-rank${index + 1}`"></b>
-                <img :src="it.mainPicUrl" class="film-cover">
-                <div class="film-date">上映时间：{{formatDate(it.openTime)}}</div>
-              </div>
-              <h4 class="film-name">{{it.name}}</h4>
-              <div class="film-tags"><p class="cinema-type">
-                <span>{{it.type.join('/')}}</span></p>
-              </div>
-            </li>
-          </ul>
-        </FormItem>
-      </div>
-      <div class="item-top" v-show="movieType != 1">
-        <Film />
-      </div>
+              <Col :span="12">
+                <div ref="types">
+                  <div class="orient-title">影片类型</div>
+                  <FormItem :labelWidth="0" class="item-top form-item-type">
+                    <CheckboxGroup v-model="form.type" class="item-radio-top">
+                      <Checkbox  v-for="it in typeList" :key="it.key" :label="it.key"
+                        class="check-item">{{it.text}}</Checkbox>
+                    </CheckboxGroup>
+                  </FormItem>
+                </div>
+              </Col>
+            </Col>
+          </Row>
 
-      <div class="btn-center">
-        <Button type="primary" class="button-ok" @click="next('dataform')">下一步,进入推广方案</Button>
-        <Button type="default" class="button-ok default-but" @click="back('dataform')">返回上一步</Button>
-      </div>
-    </Form>  
+          <h3 class="layout-titles">影片定向
+            <FormItem :labelWidth="0" class="item-top cinema-position form-item-type">
+              <Tags v-model="movieType" :tagMess = 'movieList' />
+            </FormItem>
+          </h3>
+          <!-- <div class="item-top" style="margin-top: 50px" v-show="movieType == 1">
+            <FormItem :labelWidth="0" class="form-item-type-sort">
+              <ul class="film-list" v-if="cinemaDetail.length > 0">
+                <li v-for="(it, index) in cinemaDetail" :key="index"
+                  :class="['film-item']">
+                  <div :class="['film-cover-box']">
+                    <img :src="it.mainPicUrl" class="film-cover">
+                    <div>
+                      <div class="film-title">{{it.name}}</div>
+                      <div class="film-title">{{it.name}}</div>
+                      <div class="film-time" style="margin-top: 20px">上映时间：{{formatDate(it.openTime)}}</div>
+                      <div class="film-time">投放排期: {{formatDate(it.openTime)}}</div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </FormItem>
+          </div> -->
+          <div class="item-top" style="margin-top: 50px" v-show="movieType != 1">
+            <Film />
+          </div>
+
+          <div class="btn-center">
+            <Button type="default" class="button-ok last-button default-but" @click="back('dataform')"><img width="16px" src="./assets/next.png" />返回上一步</Button>
+            <Button type="primary" class="button-ok next-button" @click="next('dataform')">下一步,进入推广方案</Button>
+          </div>
+        </Form> 
+      </Col>
+    </Row>
   </div>
 </template>
 
@@ -95,15 +116,17 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Tags from '../tag.vue'
-import { orienteering } from '@/api/popPlan.ts'
+import { cinemaFind } from '@/api/popPlan.ts'
 import moment from 'moment'
 import Film from './film.vue'
+import Chain from '@/components/cityMap/CityMap.vue'
+import { getTwodetail, getRegionList } from '@/api/popPlan.ts'
 
 // 保持互斥
 const keepExclusion = <T>(
   value: T[],
   oldValue: T[],
-  aloneValue: T,
+  aloneValue: any,
   setter: (newValue: T[]) => any
 ) => {
   if (value.length > 1) {
@@ -117,7 +140,8 @@ const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
     Tags,
-    Film
+    Film,
+    Chain
   }
 })
 export default class Orienteering extends ViewBase {
@@ -177,12 +201,13 @@ export default class Orienteering extends ViewBase {
 
   async init() {
     try {
-      const { data } = await orienteering({})
-      this.cityList = data.cityList
+      const { data } = await getTwodetail()
+      await getRegionList()
+      this.cityList = data.deliveryCityTypeList
       this.cinemastatusList = data.cinemaList
-      this.sexList = data.sexList
-      this.ageList = data.ageList
-      this.typeList = data.typeList
+      this.sexList = data.tags[2].values || []
+      this.ageList = data.tags[1].values || []
+      this.typeList = data.tags[0].values || []
       this.cinemaDetail = data.items || []
     } catch (ex) {
       this.handleError(ex)
@@ -211,6 +236,12 @@ export default class Orienteering extends ViewBase {
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.cinema = newValue
     })
+    keepExclusion(value, oldValue, 'top20', newValue => {
+      this.form.cinema = newValue
+    })
+    if (value[value.length] == -1) {
+      this.form.cinema = [-1]
+    }
     if (value.length == 0) {
       this.form.cinema = [0]
     }
@@ -233,7 +264,7 @@ export default class Orienteering extends ViewBase {
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.type = newValue
     })
-    if (value.length == 0) {
+    if (value.length == -1) {
       this.form.type = [0]
     }
   }
@@ -256,6 +287,53 @@ export default class Orienteering extends ViewBase {
 .item-top {
   margin-left: 30px;
 }
+.layout-titles {
+  font-size: 24px;
+  font-weight: 500;
+  color: rgba(0, 32, 46, 1);
+  margin-left: 30px;
+  margin-bottom: 43px;
+}
+.check-ra {
+  /deep/ .ivu-checkbox {
+    display: none;
+  }
+  /deep/&.ivu-checkbox-wrapper-checked {
+    color: #fff;
+    background-color: #00202d;
+    border: 1px solid #00202d;
+    &::after {
+      content: '\2713';
+      color: #fff;
+      position: absolute;
+      right: -8px;
+      top: -8px;
+      border: 1px solid #00202d;
+      background: #00202d;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 16px;
+    }
+  }
+}
+.check-cinem {
+  margin-top: 30px;
+  border-bottom: 1px solid #fff;
+}
+.item-three {
+  margin-bottom: 80px;
+  border-bottom: 1px solid #fff;
+  .flex {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .three-left {
+    border-right: 2px solid;
+    border-image: linear-gradient(to top, #fff 0%, rgba(0, 0, 0, 0) 80%) 10;
+  }
+}
 .adv-left {
   width: 500px;
   /deep/ .ivu-select-dropdown {
@@ -274,6 +352,10 @@ export default class Orienteering extends ViewBase {
     line-height: 40px;
   }
 }
+.orient-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
 .hint {
   position: absolute;
   left: 105px;
@@ -288,8 +370,17 @@ export default class Orienteering extends ViewBase {
   text-align: center;
 }
 .default-but {
-  border: 1px solid #dcdee2;
-  .button-style(#515a6e, rgba(236, 245, 255, 1));
+  width: 200px;
+  vertical-align: middle;
+  .button-style(#00202d, rgba(0, 0, 0, 0));
+  border-radius: 25px;
+  img {
+    vertical-align: middle;
+  }
+}
+.next-button {
+  .button-style(#fff, #00202d);
+  border-radius: 25px;
 }
 .cinema-wrap {
   position: relative;
@@ -316,61 +407,109 @@ export default class Orienteering extends ViewBase {
 .check-item {
   position: relative;
   top: 3px;
-  min-width: 80px;
-  height: 30px;
-  line-height: 30px;
-  border-radius: 2px;
+  min-width: 99px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 4px;
   text-align: center;
-  border: 1px solid #d2d2d2;
   margin-right: 15px;
   font-size: 14px;
+  color: #00202d;
+  border: 1px solid #fff;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.3);
   user-select: none;
-  /deep/ .ivu-checkbox {
-    display: none;
+  .check-ra;
+}
+.check-icon {
+  .check-ra;
+  height: 70px;
+  line-height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  div {
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    margin-right: 30px;
   }
-  /deep/&.ivu-checkbox-wrapper-checked {
-    color: #fff;
-    border-color: @c-button;
-    background-color: @c-button;
+  i {
+    position: relative;
+    display: inline-block;
+    top: 0;
+    width: 40px;
+    height: 40px;
+  }
+  .check-man {
+    background: url(./assets/checkman.png);
+    background-size: 40px;
+  }
+  .check-woman {
+    background: url(./assets/checkwoman.png);
+    background-size: 40px;
+  }
+}
+/deep/ .ivu-checkbox-wrapper-checked {
+  .check-man {
+    background: url(./assets/man.png);
+    background-size: 40px;
+  }
+  .check-woman {
+    background: url(./assets/woman.png);
+    background-size: 40px;
+  }
+}
+.cinema-position {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: -66px;
+}
+.chain {
+  transform: scale(.75);
+  margin-top: -90px;
+  /deep/ .city-map {
+    background-color: #fff0;
   }
 }
 .film-list {
   display: flex;
   flex-wrap: wrap;
-  column-count: 3;
   margin-top: -15px;
   margin-bottom: 40px;
   .film-item {
-    position: relative;
-    width: 270px;
-    margin: 25px 20px 0 0;
-    background: rgba(249, 249, 249, 1);
+    width: calc(50% - 20px);
+    height: 179px;
     padding-bottom: 5px;
-    img {
-      width: 100%;
-      height: 100%;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 1);
+    .film-cover-box {
+      display: flex;
+      margin-top: 30px;
+      .film-title {
+        font-size: 18px;
+        color: #00202d;
+        height: 24px;
+        font-weight: 400;
+        margin-left: 20px;
+      }
+      .film-time {
+        margin-left: 20px;
+        height: 24px;
+      }
+      img {
+        margin-left: 20px;
+        width: 89px;
+        height: 125px;
+      }
     }
   }
-  .film-cover-box {
-    position: relative;
-    width: 270px;
-    height: 405px;
-    img {
-      max-width: 100%;
-      max-height: 100%;
-    }
-  }
-  .film-date {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 50px;
-    line-height: 50px;
-    font-size: 14px;
-    text-align: center;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.8);
+  .film-item:nth-child(2n-1) {
+    margin-right: 40px;
   }
   .film-name,
   .film-tags {

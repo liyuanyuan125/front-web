@@ -1,5 +1,5 @@
 /**
- * 传递给line 图表组件的选项
+ * 传递给bar 图表组件的选项
  */
 export interface IchartOptions {
   /** 图表配置 */
@@ -12,7 +12,7 @@ export interface IcurrentType {
   key: string
   name: string
 }
-// export interface IlistItem {
-//   data?: number
-//   date?: string
-// }
+export interface IlistItem {
+  name: string
+  value: string
+}

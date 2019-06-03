@@ -1,17 +1,19 @@
 <template>
   <Modal v-model='showDlg'
-  title="添加关联影片"
   :transfer='false'
   :width='770'
+  :closable='false'
   :mask-closable='false'
-  :styles="{top: '10px'}"
-  @on-cancel="cancel()">
+  :styles="{top: '30px'}">
+    <div class="title">
+      <h3>选择影片</h3>
+      <i @click="cancel"></i>
+    </div>
     <div class="reject-cinema">
       <div class="flex-box search-input">
-        <Input class="name-input" style="margin-right: 0px" v-model="dataForm.name"  placeholder="请输入影片名称" />
-        <Button type="primary" class="bth-search" @click="seach">
-          <Icon type="ios-search" size="22"/>
-        </Button>
+        <Input class="name-input" style="width: 100%; margin-right: 0px" v-model="dataForm.name"  placeholder="请输入影片名称">
+          <Icon type="ios-search" slot="suffix" />
+        </Input>
       </div>
       <div class="detail">
       <p>已选择影片 <span>{{checkObj.length}}个</span></p>
@@ -170,18 +172,51 @@ export default class DlgEditCinema extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.title {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #00202d;
+  i {
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    display: block;
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid rgba(209, 216, 219, 1);
+    &::before {
+      content: "×";
+      font-size: 34px;
+      line-height: 36px;
+      text-align: center;
+    }
+  }
+}
 .search-input {
   margin-left: 20px;
   .name-input {
-    width: 300px;
-    margin-right: 20px;
     /deep/ .ivu-input {
+      padding-left: 20px;
+      border-radius: 20px;
       height: 40px;
       line-height: 40px;
+      &::placeholder {
+        color: #00202d;
+      }
     }
   }
   /deep/ .ivu-btn {
     height: 40px;
+  }
+  /deep/ .ivu-input-suffix i {
+    font-size: 20px;
+    line-height: 38px;
+    margin-right: 20px;
+    color: #00202d;
   }
 }
 @cancel-color: rgba(59, 152, 255, 1);

@@ -4,21 +4,50 @@
       class="site-header flex-box"
       :style="{ backgroundImage: headerImage }"
     >
-      <Dropdown class="switcher" @on-click="onSwitcherClick">
+      <ul class="site-breadcrumb">
+        <li v-for="(it, i) in breadcrumbs" :key="i" class="site-breadcrumb-item">
+          <router-link
+            :tag="i < breadcrumbs.length - 1 && it.route ? 'a' : 'label'"
+            :to="i < breadcrumbs.length - 1 && it.route ? it.route : ''"
+          >{{it.label}}</router-link>
+          <i class="iconfont icon-right" v-if="i < breadcrumbs.length - 1"/>
+        </li>
+      </ul>
+
+      <div class="flex-1"></div>
+
+      <form class="search-form flex-mid" @submit.prevent="search">
+        <input type="search" v-model="keyword" placeholder="搜索" class="search-input">
+        <Button html-type="submit" class="search-submit">
+          <i class="iconfont icon-search"/>
+        </Button>
+      </form>
+
+      <router-link :to="{}" class="cart-node">
+        <i class="iconfont icon-cart"/>
+        <span class="cart-count" v-if="cartCount > 0">{{cartCount}}</span>
+      </router-link>
+
+      <router-link :to="{}" class="notice-node">
+        <i class="iconfont icon-notice"/>
+        <span class="notice-count" v-if="hasNotice"></span>
+      </router-link>
+
+      <!-- <Dropdown class="switcher" @on-click="onSwitcherClick">
         <a class="switcher-node"></a>
         <DropdownMenu slot="list">
           <div class="switcher-arrow"></div>
           <DropdownItem v-for="it in systemList" :key="it.code" :name="it.code"
             :selected="user.systemCode == it.code">{{it.name}}系统</DropdownItem>
         </DropdownMenu>
-      </Dropdown>
+      </Dropdown> -->
 
-      <div class="flex-1"></div>
-
-      <div class="flex-box">
-        <span class="corp-name">{{system.name}}：{{user.companyName}}</span>
+      <div class="user-box flex-box">
+        <!-- <span class="corp-name">{{system.name}}：{{user.companyName}}</span> -->
         <span class="user-name">用户：{{user.email}}</span>
-        <a class="logout" title="退出" @click="logout"></a>
+        <a class="logout" title="退出" @click="logout">
+          <i class="iconfont icon-exit"/>
+        </a>
       </div>
     </header>
 
@@ -33,9 +62,9 @@
         <ul
           :key="`menu-${system.code}`"
           class="sider-menu"
-          v-if="siderMenuList.length > 0"
+          v-if="siderMenu.list.length > 0"
         >
-          <template v-for="menu in siderMenuList">
+          <template v-for="menu in siderMenu.list">
             <li
               v-for="(sub, i) in [menu].concat(menu.subPages)"
               :key="sub.name"
@@ -71,7 +100,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser, checkUser, logout, User, switchSystem, getCurrentPerms, switchTheme } from '@/store'
 import { systemList as allSystemList, SystemCode, PermPage } from '@/util/types'
-import { getMenuList, SiderMenuItem } from './menuList'
+import { getMenu, SiderMenuItem, getBreadcrumbsForRoute } from './menuList'
 import { cloneDeep } from 'lodash'
 import event from '@/fn/event'
 import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
@@ -116,21 +145,20 @@ export default class MainLayout extends ViewBase {
 
   permMenu: PermPage[] | null = null
 
-  get siderMenuList() {
+  get siderMenu() {
     const user = this.user
     if (user == null || this.permMenu == null) {
-      return []
+      return { list: [], map: {} }
     }
 
     const permMenu = this.permMenu
-    const list = getMenuList(permMenu, user.systemCode)
-
-    return list
+    const result = getMenu(permMenu, user.systemCode)
+    return result
   }
 
   get siderOpenNames() {
     const activeName = this.siderActiveName
-    const item = this.siderMenuList.find(it => {
+    const item = this.siderMenu.list.find(it => {
       const exists = (it.subPages! || [{ name: it.name }]).some(
         t => t.name === activeName
       )
@@ -141,7 +169,7 @@ export default class MainLayout extends ViewBase {
 
   // 获取导航中全部可点击的页面 name
   get siderMenuNameMap() {
-    const result = this.siderMenuList.reduce((map: any, it) => {
+    const result = this.siderMenu.list.reduce((map: any, it) => {
       const names = it.subPages && it.subPages.length > 0
         ? it.subPages.map(t => t.name)
         : [it.name]
@@ -193,6 +221,17 @@ export default class MainLayout extends ViewBase {
     return result
   }
 
+  get breadcrumbs() {
+    const list = getBreadcrumbsForRoute(this.$route, this.siderMenu.map)
+    return list
+  }
+
+  keyword = ''
+
+  cartCount = 8
+
+  hasNotice = true
+
   created() {
     // 初始化 viewName，设置全局 instance
     this.viewName = viewName
@@ -212,6 +251,10 @@ export default class MainLayout extends ViewBase {
       this.$router.push({ name: 'home' })
       switchTheme()
     }, false)
+  }
+
+  search() {
+    debugger
   }
 
   async changePerm() {
@@ -236,7 +279,7 @@ export default class MainLayout extends ViewBase {
 
   mounted() {
     usePosition().then((pos: number) => {
-      const opacity = Math.min(Math.floor(pos / 55 * 100), 100)
+      const opacity = Math.min(Math.floor(pos / 88 * 100), 96)
       this.headerOpacity = opacity
     })
   }
@@ -257,9 +300,8 @@ export default class MainLayout extends ViewBase {
   max-width: 1600px;
   min-height: 100vh;
   margin: auto;
-  background: url(./assets/bg.jpg) no-repeat center top;
+  background: url(~@/assets/site/bg.jpg) no-repeat center top fixed;
   background-size: cover;
-  background-attachment: fixed;
 }
 
 .site-header {
@@ -268,14 +310,13 @@ export default class MainLayout extends ViewBase {
   max-width: inherit;
   height: 55px;
   line-height: 55px;
-  padding-left: 126px;
+  padding-left: 120px;
   z-index: 188;
   background: no-repeat 120px 0;
 }
 
 .switcher {
   position: relative;
-  left: -17px;
   /deep/ .ivu-select-dropdown {
     margin-top: 10px;
     margin-left: -50px;
@@ -341,6 +382,26 @@ export default class MainLayout extends ViewBase {
   border-bottom-color: #fff;
 }
 
+.user-box {
+  position: relative;
+  margin-left: 25px;
+
+  &,
+  a {
+    color: #fff;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 15px;
+    width: 2px;
+    height: 24px;
+    background-color: #fff;
+  }
+}
+
 .corp-name {
   color: @c-sub-text;
   padding-left: 34px;
@@ -348,24 +409,14 @@ export default class MainLayout extends ViewBase {
 }
 
 .user-name {
-  color: @c-primary;
-  margin-left: 30px;
+  margin-left: 20px;
 }
 
 .logout {
   position: relative;
-  margin-left: 31px;
-  padding: 0 30px;
-  color: transparent;
-  background: url(./assets/exit.png) no-repeat center;
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 15px;
-    width: 1px;
-    height: 30px;
-    background-color: @c-border;
+  padding: 0 15px;
+  .iconfont {
+    font-size: 18px;
   }
 }
 
@@ -378,10 +429,10 @@ export default class MainLayout extends ViewBase {
 .site-sider {
   position: fixed;
   top: 0;
-  width: 126px;
+  width: 120px;
   height: 100vh;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   z-index: 198;
   user-select: none;
   display: flex;
@@ -411,7 +462,7 @@ export default class MainLayout extends ViewBase {
 
 .logo-img {
   width: 95px;
-  height: 70px;
+  height: 64px;
 }
 
 .sider-menu {
@@ -421,6 +472,10 @@ export default class MainLayout extends ViewBase {
 .menu-item {
   line-height: 36px;
   background-color: @c-sider-bg;
+  .iconfont {
+    position: absolute;
+    left: 10px;
+  }
 }
 
 .menu-item-on {
@@ -435,19 +490,121 @@ export default class MainLayout extends ViewBase {
   display: inline-block;
   width: 100%;
   height: 100%;
-  padding-left: 38px;
+  padding-left: 36px;
   color: #fff;
   opacity: .7;
 }
 
-.iconfont {
+.site-breadcrumb {
+  display: flex;
+  user-select: none;
+  margin-left: 4px;
+  font-size: 14px;
+  a,
+  label,
+  .iconfont {
+    display: inline-block;
+    color: #fff;
+    height: 100%;
+    vertical-align: top;
+    padding: 0 5px;
+  }
+  .iconfont {
+    padding: 0 1px;
+  }
+}
+
+.site-breadcrumb-item {
+  &:last-child {
+    font-size: 18px;
+    position: relative;
+    top: -1px;
+  }
+}
+
+.search-form {
+  position: relative;
+  display: inline-block;
+  .icon-search {
+    color: #fff;
+  }
+}
+
+.search-input {
+  width: 150px;
+  height: 30px;
+  line-height: 20px;
+  padding: 5px 35px 5px 15px;
+  border: 0;
+  outline: 0;
+  color: #fff;
+  background-color: rgba(99, 145, 177, .7);
+  border-radius: 88px;
+  transition: width ease-in-out .3s;
+  &::-webkit-input-placeholder {
+    color: #ccc;
+  }
+  &:focus {
+    width: 300px;
+    &::-webkit-input-placeholder {
+      color: transparent;
+    }
+  }
+}
+
+.search-submit {
   position: absolute;
-  left: 16px;
+  top: 50%;
+  right: 0;
+  height: 30px;
+  transform: translateY(-50%);
+  border: 0;
+  padding: 0 9px;
+  background-color: transparent;
+  margin-top: -1px;
+  border-radius: 0 88px 88px 0;
+  overflow: hidden;
+}
+
+.cart-node,
+.notice-node {
+  position: relative;
+  margin-left: 18px;
+  color: #fff;
+  padding: 0 5px;
+  .iconfont {
+    font-size: 18px;
+  }
+}
+
+.cart-count {
+  position: absolute;
+  top: 12px;
+  right: -2px;
+  min-width: 14px;
+  height: 14px;
+  line-height: 12px;
+  font-size: 9px;
+  color: #fdfeff;
+  background-color: #ca7273;
+  border-radius: 88px;
+  text-align: center;
+  padding: 0 3px;
+}
+
+.notice-count {
+  position: absolute;
+  top: 16px;
+  right: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 100%;
+  background-color: #ca7273;
 }
 
 .site-content {
   position: relative;
-  padding: 10px 10px 10px 136px;
+  padding: 10px 10px 10px 130px;
   overflow: auto;
 }
 </style>

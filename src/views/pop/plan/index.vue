@@ -1,19 +1,17 @@
 <template>
-  <div ref="page" class="page home-bg">
+  <div ref="page" class="page">
+    <div class="pages" v-if="step == 0"></div>
     <div class="layout-nav-title">
       <router-link :to="{name: 'pop-film'}" >广告计划</router-link> > 
         <span> 新建广告计划</span>
     </div>  
-    <div class="setp-wrap">
-      <Steps :current="step">
-        <Step content="推广设置"></Step>
-        <Step content="定向设置"></Step>
-        <Step content="推广方案"></Step>
-        <Step content="创建完成"></Step>
-      </Steps>
-    </div>
+    <Row style="overflow:hidden">
+      <Col span="22" offset="3">
+        <StepTime v-model="step" />
+      </Col>
+    </Row>
     <div>
-      <keep-alive include="Promotion,Orienteering">
+      <keep-alive>
         <component v-bind:is="currentTab" v-model="step"></component>
       </keep-alive>
     </div>
@@ -27,19 +25,20 @@ import Promotion from './vadver/promotion.vue'
 import Orienteering from './vadver/orienteering.vue'
 import Precept from './vadver/precept.vue'
 import Finish from './vadver/finish.vue'
+import StepTime from './vadver/stepTime.vue'
 
 @Component({
   components: {
     Promotion,
     Orienteering,
     Precept,
-    Finish
+    Finish,
+    StepTime
   }
 })
 export default class App extends ViewBase {
   step = 0
   currentTab: any = Promotion
-
   created() {
     this.init()
   }
@@ -74,6 +73,11 @@ export default class App extends ViewBase {
         break
     }
   }
+
+  // @Watch('this.$route')
+  // watch$route(val: any) {
+
+  // }
 }
 </script>
 
@@ -85,5 +89,14 @@ export default class App extends ViewBase {
   font-weight: 500;
   border-bottom: solid 10px #f2f2f2;
   color: #2481d7;
+}
+.pages {
+  background: url(./vadver/assets/step1.jpg) no-repeat;
+  position: fixed;
+  left: 100px;
+  right: 0;
+  top: 0;
+  bottom: -20px;
+  background-size: cover;
 }
 </style>

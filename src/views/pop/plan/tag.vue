@@ -36,19 +36,36 @@ export default class Main extends ViewBase {
     box-sizing: content-box;
     text-align: center;
     margin-right: 30px;
-    width: 120px;
-    height: 30px;
-    line-height: 30px;
-    color: #222;
+    width: 180px;
+    height: 38px;
+    line-height: 38px;
+    color: #00202d;
     font-size: 14px;
-    border-radius: 2px;
-    border: 1px solid rgba(210, 210, 210, 1);
+    border: 1px solid #fff;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
     cursor: pointer;
   }
   .activeClass {
     color: #fff;
-    background: rgba(254, 129, 53, 1);
-    border: 1px solid rgba(254, 129, 53, 1);
+    background: #00202d;
+    border-radius: 4px;
+    border: 1px solid #00202d;
+    position: relative;
+    &::after {
+      content: '\2713';
+      color: #fff;
+      position: absolute;
+      right: -8px;
+      top: -8px;
+      border: 1px solid #00202d;
+      background: #00202d;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 16px;
+    }
   }
 }
 </style>

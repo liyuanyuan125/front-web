@@ -116,7 +116,7 @@ export async function comment1(query: any) {
   // const res = await get('/xadvert/plans/effectStatistics' , query)
   // return res
   return await mockGet(query, {
-    pieNest: {
+    chart1: {
       dataList: [{
         data: Math.floor(Math.random() * 100 + 1),
         key: 0
@@ -142,7 +142,7 @@ export async function comment1(query: any) {
         key: 2
       }]
     },
-    barStack: {
+    chart2: {
       dataList: [{
         date: '2019-01-01',
         data: Math.floor(Math.random() * 100 + 1),
@@ -195,7 +195,7 @@ export async function comment1(query: any) {
         key: 2
       }]
     },
-    wordCloud1: {
+    chart3: {
       dataList: [
         {
           name: typeTitle(3, 10),
@@ -280,7 +280,7 @@ export async function comment1(query: any) {
         key: 2
       }]
     },
-    wordCloud2: {
+    chart4: {
       dataList: [
         {
           name: typeTitle(3, 10),
@@ -376,7 +376,7 @@ export async function matching(query: any) {
   // const res = await get('/xadvert/plans/effectStatistics' , query)
   // return res
   return await mockGet(query, {
-    bar1: {
+    chart1: {
       dataList: [{
         date: '2019-01-01',
         data: Math.floor(Math.random() * 100 + 1),
@@ -413,7 +413,7 @@ export async function matching(query: any) {
         key: 1
       }]
     },
-    bar2: {
+    chart2: {
       dataList: [{
         data: Math.floor(Math.random() * 100 + 1),
         key: 0,
@@ -479,7 +479,7 @@ export async function matching(query: any) {
         key: 4
       }]
     },
-    bar3: {
+    chart3: {
       dataList: [{
         itemName: '广东',
         data: Math.floor(Math.random() * 100 + 1),
@@ -513,7 +513,7 @@ export async function matching(query: any) {
         key: 1
       }]
     },
-    bar4: {
+    chart4: {
       dataList: [{
         itemName: '重庆',
         data: Math.floor(Math.random() * 100 + 1),

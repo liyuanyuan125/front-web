@@ -1,28 +1,39 @@
-<style lang="less" scoped>
-@import '~@/site/lib.less';
-h1 {
-  text-align: left;
-  font-size: 14px
-}
-</style>
+
 <template>
   <div>
-    <div style='text-align:center; padding-top:50px'>
-      <h1 v-if="title !==''">{{title}}</h1>
+    <div style='text-align:center'>
+      <div class='title-box'>
+        <span v-if=" title !=='' ">{{title}}</span>
+        <Tooltip max-width="200"
+                 v-if=" titleTips !=='' "
+                 :content="titleTips">
+          <Icon type="md-help-circle" />
+        </Tooltip>
+      </div>
       <RadioGroup size="small"
                   v-if="dict1.length > 0"
                   @on-change='currentTypeChange'
                   v-model="currentIndex"
                   type="button">
         <Radio v-for="(item,index) in dict1"
-              :key="item.key"
-              :label="index">{{item.name}}</Radio>
+               :key="item.key"
+               :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <div ref="wordCloudChart" id='wordCloudChart' v-if="initDone" style="width: 100%; height: 400px"></div>
-    <div v-else style="width: 100%; height: 400px" >      
-      <TinyLoading />
-    </div>
+    <Row type="flex"
+         justify="space-between">
+      <Col :span="24">
+      <div class="wordCloud-wp">
+        <div ref="refChart"
+             v-if="initDone"
+             style="width: 100%; height: 300px"></div>
+        <div v-else
+             style="width: 100%; height: 300px">
+          <TinyLoading />
+        </div>
+      </div>
+      </Col>
+    </Row>
   </div>
 </template>
 <script lang="ts">
@@ -30,6 +41,14 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import WordCloud from 'wordcloud'
+import {
+  pubOption,
+  seriesOption,
+  dottedLineStyle,
+  yOption,
+  xOption,
+  barThinStyle
+} from '../chartsOption'
 @Component({
   components: {
     TinyLoading
@@ -40,9 +59,11 @@ import WordCloud from 'wordcloud'
 export default class WordCloudChart extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
+  @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
-  @Prop({ type: Array, default: [] }) dict1!: any[]
-  @Prop({ type: Array, default: [] }) dataList!: any[]
+  @Prop({ type: Array, default: () => [] }) dict1!: any[]
+  @Prop({ type: Array, default: () => [] }) color!: any[]
+  @Prop({ type: Array, default: () => [] }) dataList!: any[]
   currentIndex: number = this.currentTypeIndex
   myOption: any = {}
   currentTypeChange(index: number) {
@@ -53,13 +74,21 @@ export default class WordCloudChart extends ViewBase {
     this.currentIndex = this.currentTypeIndex
   }
   updateCharts() {
-    if (!this.dataList[this.currentIndex].list || this.dataList[this.currentIndex].list.length < 1) { return }
-    const ele = this.$refs.wordCloudChart as any
+    if (
+      !this.dataList[this.currentIndex] ||
+      this.dataList[this.currentIndex].length < 1
+    ) {
+      return
+    }
+    const ele = this.$refs.refChart as any
     // [['foo', 12], ['bar', 6]]
-    const mocklist = this.dataList[this.currentIndex].list.map((item: any, index: number) => {
-      return [item.name, item.value]
-    })
+    const mocklist = this.dataList[this.currentIndex].map(
+      (item: any, index: number) => {
+        return [item.name, item.value]
+      }
+    )
     const option: any = {
+      backgroundColor: this.color,
       imageShape: 'cardioid',
       // tooltip: {
       //   show: false,
@@ -67,17 +96,18 @@ export default class WordCloudChart extends ViewBase {
       //     console.log(item)
       //   }
       // },
+      color: '#A3D5E6',
       minSize: true,
       list: mocklist,
       shape: 'square',
-      ellipticity: 1
+      ellipticity: 0.65
     }
-    WordCloud( ele, option )
+    WordCloud(ele, option)
   }
   @Watch('initDone')
   watchInitDone(val: boolean) {
-    if ( val ) {
-      this.$nextTick( () => {
+    if (val) {
+      this.$nextTick(() => {
         this.resetOptions()
         this.updateCharts()
       })
@@ -85,7 +115,7 @@ export default class WordCloudChart extends ViewBase {
   }
   @Watch('currentTypeIndex')
   watchcurrentTypeIndex(newIndex: any, oldIndex: any) {
-    if ( newIndex !== oldIndex ) {
+    if (newIndex !== oldIndex) {
       this.resetOptions()
       this.updateCharts()
     }
