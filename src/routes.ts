@@ -861,6 +861,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/orderfill/index.vue'),
     meta: emptyAuth,
   },
+  // kol - 我的收藏
+  {
+    path: '/kol/collect/:id',
+    name: 'kol-collect',
+    component: () => import('./views/kol/collect/index.vue'),
+    meta: emptyAuth,
+  },
   // 影片（film）- 影人更多详情 - 合作品牌
   {
     path: '/film/filmmakerdetail/cobrand',

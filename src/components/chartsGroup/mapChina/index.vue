@@ -134,7 +134,8 @@ export default class MapChina extends ViewBase {
           name: '启动次数', // 浮动框的标题
           type: 'map',
           geoIndex: 0,
-          data: [{ name: '广东', value: 1324 }] // 这里就是数据，即数组可以单独放在外面也可以直接写
+          data: [{ name: '广东', value: 1324 }, { name: '山东', value: 3324 }, { name: '北京', value: 11324 }]
+          // 这里就是数据，即数组可以单独放在外面也可以直接写
         }
       ]
     }
