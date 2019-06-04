@@ -27,17 +27,6 @@
                   </div>
                 </DetailNavBar>
               </Col>
-              <Col :span="7" style="text-align:right" >
-                平台
-                <Select v-model="form.channelCode"
-                        clearable
-                        @on-change="handleChange"
-                        style="width:150px; text-align:left">
-                  <Option v-for="(item) in dict.channelList"
-                          :key="item.key"
-                          :value="item.key">{{item.text}}</Option>
-                </Select>
-              </Col>
             </Row>
           </div>
           <div class="content">
@@ -107,7 +96,7 @@ import {
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
-import { comment } from '@/api/kolDetailMoreInfo'
+import { dayRanges, comment } from '@/api/personDetailMoreInfo'
 import PieNest from '@/components/chartsGroup/pieNest/'
 import BarCategoryStack from '@/components/chartsGroup/barCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
@@ -125,14 +114,12 @@ const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
     DetailNavBar
   }
 })
-
 export default class Temporary extends ViewBase {
   form: any = {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
-    dayRangesKey: 'sevenDay',
-    channelCode: 'weibo'
+    dayRangesKey: 'last_7_day',
   }
   dict: any = {
     dayRanges: [
@@ -142,17 +129,17 @@ export default class Temporary extends ViewBase {
         disabled: false
       },
       {
-        key: 'sevenDay',
+        key: 'last_7_day',
         text: '最近7天',
         disabled: false
       },
       {
-        key: 'thirtyDay',
+        key: 'last_30_day',
         text: '最近30天',
         disabled: false
       },
       {
-        key: 'ninetyDay',
+        key: 'last_90_day',
         text: '最近90天',
         disabled: false
       }
@@ -174,23 +161,7 @@ export default class Temporary extends ViewBase {
         name: 'neutral',
         text: '中性'
       }
-    ],
-    channelList: [{
-      text: '微博',
-      key: 'weibo'
-    }, {
-      text: '微信',
-      key: 'wechat'
-    }, {
-      text: '快手',
-      key: 'kuaishou'
-    }, {
-      text: '抖音',
-      key: 'douyin'
-    }, {
-      text: '小红书',
-      key: 'xiaohongshu'
-    }]
+    ]
   }
   chart1: any = {
     title: '评论情绪分布',
@@ -257,6 +228,19 @@ export default class Temporary extends ViewBase {
     this.chart4.currentTypeIndex = index
   }
   /**
+   * 加载日期区间描述字典
+   */
+  async dayRangesFetch() {
+    /* const query = {}
+    const id: number = 107028
+    try {
+      const { data } = await dayRanges({ ...query, id })
+      this.dict.dayRanges = data.dayRanges
+    } catch (ex) {
+      this.handleError(ex)
+    } */
+  }
+  /**
    * 加载图表数据
    * @param chart 图表名 (因为接口返回全部数据，暂时不用)
    * @param typeIndex 当前类别下标
@@ -266,21 +250,18 @@ export default class Temporary extends ViewBase {
     const mockObj = {
       beginDate: this.form.beginDate[0],
       endDate: this.form.beginDate[1],
-      channelCode: this.form.channelCode
     }
     // 107028 dev有数据
-    const id = parseInt(this.$route.params.id, 0) || 1
+    const id = parseInt(this.$route.params.id, 0)
     try {
       const {
         data,
         data: {
-          rate
-        },
-        data: {
-          items
-        },
-        data: {
-          commentKeyword
+          item: {
+            rate,
+            dates,
+            keywords
+          }
         }
       } = await comment({ ...mockObj }, id)
 
@@ -294,35 +275,34 @@ export default class Temporary extends ViewBase {
           })
         }
       }
-      // api文档缺少备注，待联调 nxd 20190604
-      // dates.forEach((item: any) => {
-      //   for ( let num = 0; num < 3; num++ ) {
-      //     that.chart2.dataList[0].push({
-      //       data: item[this.dict.emotion[num].name].trend,
-      //       date: item.date,
-      //       key: num
-      //     })
-      //     that.chart2.dataList[1].push({
-      //       data: item[this.dict.emotion[num].name].count,
-      //       date: item.date,
-      //       key: num
-      //     })
-      //   }
-      // })
-      commentKeyword[this.form.dayRangesKey].positive.forEach((item: any) => {
+      dates.forEach((item: any) => {
+        for ( let num = 0; num < 3; num++ ) {
+          that.chart2.dataList[0].push({
+            data: item[this.dict.emotion[num].name].trend,
+            date: item.date,
+            key: num
+          })
+          that.chart2.dataList[1].push({
+            data: item[this.dict.emotion[num].name].count,
+            date: item.date,
+            key: num
+          })
+        }
+      })
+      keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
         that.chart3.dataList[0].push({
           name: item,
           value: Math.floor(Math.random() * 100 + 1)
         })
       })
-      commentKeyword[this.form.dayRangesKey].passive.forEach((item: any) => {
+      keywords[this.form.dayRangesKey].passive.forEach((item: any) => {
         that.chart4.dataList[0].push({
           name: item,
           value: Math.floor(Math.random() * 100 + 1)
         })
       })
       that.chart1.initDone = true
-      // that.chart2.initDone = true
+      that.chart2.initDone = true
       that.chart3.initDone = true
       that.chart4.initDone = true
     } catch (ex) {
@@ -338,10 +318,10 @@ export default class Temporary extends ViewBase {
       case 'yesterday' :
         return moment(new Date()).add(-1, 'days').format(timeFormat)
         break
-      case 'thirtyDay' :
+      case 'last_30_day' :
         return moment(new Date()).add(-30, 'days').format(timeFormat)
         break
-      case 'ninetyDay' :
+      case 'last_90_day' :
         return moment(new Date()).add(-90, 'days').format(timeFormat)
         break
       default :

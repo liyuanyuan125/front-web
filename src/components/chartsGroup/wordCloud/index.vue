@@ -21,17 +21,16 @@
       </RadioGroup>
     </div>
     <Row type="flex"
-         justify="space-between">
+         justify="center" align="middle">
       <Col :span="24">
-      <div class="wordCloud-wp">
-        <div ref="refChart"
-             v-if="initDone"
-             style="width: 100%; height: 300px"></div>
-        <div v-else
-             style="width: 100%; height: 300px">
-          <TinyLoading />
+        <div class="wordCloud-wp">
+          <div ref="refChart"
+              v-if="initDone"
+              style="width: 100%; height: 300px"></div>        
+          <div v-else class='loading-wp' style="width: 100%; height: 300px">
+            <TinyLoading  />
+          </div>
         </div>
-      </div>
       </Col>
     </Row>
   </div>
@@ -67,6 +66,7 @@ export default class WordCloudChart extends ViewBase {
   currentIndex: number = this.currentTypeIndex
   myOption: any = {}
   currentTypeChange(index: number) {
+    if ( !this.initDone ) { return }
     this.currentIndex = index
     this.$emit('typeChange', index)
   }
