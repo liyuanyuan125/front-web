@@ -810,6 +810,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  // 影人 - 详情 - 更多页 - 评论
+  {
+    path: '/figure/detailMoreInfo/comment/:id',
+    name: 'film-figure',
+    component: () => import('./views/film/figure/detailMoreInfo/comment.vue'),
+    meta: emptyAuth
+  },
+
   // KOL
   {
     path: '/kol/figure/:id',

@@ -231,14 +231,14 @@ export default class Temporary extends ViewBase {
    * 加载日期区间描述字典
    */
   async dayRangesFetch() {
-    const query = {}
+    /* const query = {}
     const id: number = 107028
     try {
       const { data } = await dayRanges({ ...query, id })
       this.dict.dayRanges = data.dayRanges
     } catch (ex) {
       this.handleError(ex)
-    }
+    } */
   }
   /**
    * 加载图表数据
@@ -252,7 +252,7 @@ export default class Temporary extends ViewBase {
       endDate: this.form.beginDate[1],
     }
     // 107028 dev有数据
-    const id = parseInt(this.$route.params.id, 0) || 107028
+    const id = parseInt(this.$route.params.id, 0)
     try {
       const {
         data,
