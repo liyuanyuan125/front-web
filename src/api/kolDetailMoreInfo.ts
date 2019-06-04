@@ -109,263 +109,79 @@ export async function platformData(query: any) {
 }
 
 /**
- * comment1
- * @param data
+ * comment
+ * @param query 起止时间
+ * @param id id
+ * @description https://yapi.aiads-dev.com/project/146/interface/api/4533
+ * @deprecated 缺少数据，重置日期 http://fapi.aiads-dev.com/kol/accounts/1/comments?beginDate=20170112&endDate=20191212
  */
-export async function comment1(query: any) {
-  // const res = await get('/xadvert/plans/effectStatistics' , query)
-  // return res
+export async function comment(query: any, id: number = 0) {
+  // const res = await get(`/kol/accounts/${id}/comments`, query)
+  const res = await get(`/kol/accounts/${id}/comments`, {beginDate: 20170112, endDate: 20191212, channelCode: 'weibo'})
+  return res
   return await mockGet(query, {
-    chart1: {
-      dataList: [{
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }],
-      coverCinema: 8,
-      advertAmount: 1069.0,
-      coverPeople: 856,
-      coverScene: 92,
-      effectTypeList: [{
-        text: '中性',
-        key: 0
-      }, {
-        text: '正面',
-        key: 1
-      }, {
-        text: '负面',
-        key: 2
-      }]
+    rate: {
+      neutral: tid,
+      positive: tid,
+      passive: tid
     },
-    chart2: {
-      dataList: [{
-        date: '2019-01-01',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-03',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-01',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      },  {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      },  {
-        date: '2019-01-03',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        date: '2019-01-01',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      },  {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      },  {
-        date: '2019-01-03',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }],
-      coverCinema: 8,
-      advertAmount: 1069.0,
-      coverPeople: 856,
-      coverScene: 92,
-      effectTypeList: [{
-        text: '中性',
-        key: 0
-      }, {
-        text: '正面',
-        key: 1
-      }, {
-        text: '负面',
-        key: 2
-      }]
-    },
-    chart3: {
-      dataList: [
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
+    'items|10': [{
+        id: 0,
+        kolId: 1,
+        channelCode: 'weibo',
+        date: 20190600,
+        positive: {
+          count: tid,
+          trend: tid
         },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
+        passive: {
+          count: tid,
+          trend: tid
         },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
+        neutral: {
+          count: tid,
+          trend: tid
         },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        }, {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-      ],
-      coverCinema: 8,
-      advertAmount: 1069.0,
-      coverPeople: 856,
-      coverScene: 92,
-      effectTypeList: [{
-        text: '中性',
-        key: 0
-      }, {
-        text: '正面',
-        key: 1
-      }, {
-        text: '负面',
-        key: 2
-      }]
-    },
-    chart4: {
-      dataList: [
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        }, {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-        {
-          name: typeTitle(3, 10),
-          value: Math.floor(Math.random() * 100 + 1)
-        },
-
-      ],
-      coverCinema: 8,
-      advertAmount: 1069.0,
-      coverPeople: 856,
-      coverScene: 92,
-      effectTypeList: [{
-        text: '中性',
-        key: 0
-      }, {
-        text: '正面',
-        key: 1
-      }, {
-        text: '负面',
-        key: 2
-      }]
-    },
+        updateTime: null
+      }
+    ],
+    commentKeyword: {
+      kolId: 1,
+      channelCode: 'weibo',
+      yesterday: {
+        'positive|6': [
+          title20
+        ],
+        'passive|6': [
+          title20
+        ]
+      },
+      sevenDay: {
+        'positive|6': [
+          title20
+        ],
+        'passive|6': [
+          title20
+        ]
+      },
+      thirtyDay: {
+        'positive|6': [
+          title20
+        ],
+        'passive|6': [
+          title20
+        ]
+      },
+      ninetyDay: {
+        'positive|6': [
+          title20
+        ],
+        'passive|6': [
+          title20
+        ]
+      },
+      updateTime: dateRange()
+    }
   })
 }
 /**
