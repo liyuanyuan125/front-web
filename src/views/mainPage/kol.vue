@@ -1,16 +1,8 @@
 <template>
-  <Layout :bubbleList="bubbleList" :class="bigFigure ? 'layout-big-figure' : ''">
+  <Layout :bubbleList="bubbleList">
     <div class="main-content flex-box">
-      <div
-        class="big-figure"
-        :style="{
-          backgroundImage: `url(${bigFigure})`
-        }"
-        v-if="bigFigure"
-      ></div>
-
       <div class="basic-box">
-        <BasicPane :item="basic" :opusList="opusList" :brandList="brandList"/>
+        <BasicPane :opusList="opusList" :brandList="brandList"/>
       </div>
 
       <section class="board-pane">
@@ -18,11 +10,9 @@
           <FansPane class="fans-pane"/>
           <CommentPane class="comment-pane"/>
         </div>
-
         <div class="board-row">
           <ActiveFansPane class="active-fans-pane"/>
         </div>
-
         <div class="board-row">
           <HotPane class="hot-pane"/>
         </div>
@@ -32,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Layout from './components/layout.vue'
 import BasicPane from './components/basicPane.vue'
@@ -52,20 +42,6 @@ import HotPane from './components/hotPane.vue'
   }
 })
 export default class FigurePage extends ViewBase {
-  @Prop({ type: Number, default: 0 }) id!: number
-
-  basic = {
-    id: this.id,
-    name: '吴京',
-    subName: 'Wu Jing',
-    title: '演员 / 导演 / 制片人',
-    figure: 'https://picsum.photos/id/435/154/218',
-    rankNo: '92.02',
-    rankTitle: '中国男演员票房 : TOP1',
-  }
-
-  bigFigure = this.id == 1 ? '' : 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
-
   bubbleList = [
     '师兄李连杰',
     '流浪地球',
@@ -76,7 +52,7 @@ export default class FigurePage extends ViewBase {
   ]
 
   opusList = [
-    { title: '《流浪地球》演员是放松放松时发生地方', count: '46.8亿' },
+    { title: '流浪地球》演员是放松放松时发生地方', count: '46.8亿' },
     { title: '《流浪地球》演员', count: '6.8亿' },
     { title: '《流浪地球》演员是', count: '16.8亿' },
   ]
@@ -93,49 +69,22 @@ export default class FigurePage extends ViewBase {
 .main-content {
   position: relative;
   justify-content: space-between;
-  padding-right: 80px;
-}
-
-.layout-big-figure {
-  /deep/ .main-content {
-    padding-right: 56px;
+  padding-right: 56px;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png) no-repeat -5px 20px;
+    z-index: 88;
+    pointer-events: none;
   }
-
-  /deep/ .basic-box {
-    margin: 62px 0 0 180px;
-
-    .basic-pane {
-      min-width: 348px;
-    }
-
-    .basic-in {
-      margin-left: 128px;
-    }
-
-    .figure {
-      display: none;
-    }
-  }
-
-  /deep/ .bubble-text-list {
-    margin-left: 0;
-  }
-}
-
-.big-figure {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: no-repeat -5px 20px;
-  z-index: 88;
-  pointer-events: none;
 }
 
 .basic-box {
-  position: relative;
-  margin: 47px 0 0 102px;
+  margin: 62px 0 0 180px;
 }
 
 .board-pane {

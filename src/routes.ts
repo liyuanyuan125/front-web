@@ -804,6 +804,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/figure/:id',
     name: 'film-figure',
     component: () => import('./views/mainPage/figure.vue'),
+    meta: emptyAuth,
+    props({ params: { id } }) {
+      return { id: +id }
+    }
+  },
+
+  // KOL
+  {
+    path: '/kol/figure/:id',
+    name: 'kol-figure',
+    component: () => import('./views/mainPage/kol.vue'),
     meta: emptyAuth
   },
 
@@ -848,6 +859,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/orderfill/:id',
     name: 'order-orderfill',
     component: () => import('./views/kol/orderfill/index.vue'),
+    meta: emptyAuth,
+  },
+  // kol - 我的收藏
+  {
+    path: '/kol/collect/:id',
+    name: 'kol-collect',
+    component: () => import('./views/kol/collect/index.vue'),
     meta: emptyAuth,
   },
   // 影片（film）- 影人更多详情 - 合作品牌
