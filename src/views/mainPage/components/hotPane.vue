@@ -1,6 +1,6 @@
 <template>
   <Pane :title="title" :more="more" :tooltip="tooltip">
-    <ul class="legend-list">
+    <ul class="legend-list" v-if="legendList.length > 0">
       <li v-for="it in legendList" :key="it.name" class="legend-item">
         <label class="legend-name">{{it.name}}</label>
         <em class="legend-no">{{it.no}}</em>
@@ -113,7 +113,7 @@ export default class ActiveFansPane extends Vue {
       axisLine: false,
       splitLine: lineStyle,
       axisLabel,
-      splitNumber: 3,
+      splitNumber: 4,
     },
 
     grid: {
