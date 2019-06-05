@@ -1,6 +1,6 @@
 <template>
   <div class="kol-box">
-    <div v-if="tableDates > 0" class="section">
+    <div v-if="tableDates.length > 0" class="section">
       <Table  :columns="columns" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
         <!-- <template ref='title' slot="header">
           <div>
@@ -54,7 +54,7 @@
           </div>
         </div>
       </div>
-      <div class="abandon">
+      <!-- <div class="abandon">
         <div class="top">
           以下KOL账号已下架，无法进行预订
           <Button class="default-btn" @click="reserve">全部清空</Button>
@@ -71,14 +71,14 @@
             <p>收藏</p>
           </template>
         </Table>
-      </div>
+      </div> -->
     </div>
     <div v-else class="section-no">
       <img src="./assets/noshop.png" alt="">
       <h3>还没有添加KOL账号</h3>
       <Button class="default-btn" @click="reserve">前往挑选</Button>
     </div>
-    <Detail ref="detail" />
+    <!-- <Detail ref="detail" /> -->
   </div>
 </template>
 

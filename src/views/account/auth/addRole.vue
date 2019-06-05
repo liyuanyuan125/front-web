@@ -1,9 +1,9 @@
 <template>
-  <div class="page home-bg">
-    <h2 class="layout-nav-title">
-      <span @click="toAuth">权限管理</span> >
-      <span v-if="!$route.params.id">新建权限角色</span>
-      <span v-else>编辑权限角色</span>
+  <div class="page-name">
+    <h2 class="plan-title">
+      <span class="adver-tiele" @click="toAuth">权限管理</span>
+      <!-- <span v-if="!$route.params.id">新建权限角色</span>
+      <span v-else>编辑权限角色</span> -->
     </h2>
     <Form
       ref="form"
@@ -13,12 +13,20 @@
       :label-width="100"
       class="edit-input"
     >
-      <FormItem label="角色名称" class="item-top" prop="name">
-        <Input v-model="form.name" placeholder="请输入权限角色名称"></Input>
-      </FormItem>
-      <FormItem label="相关权限" :error="errorPerm" :class="{'item-sign': isSign}">
-        <PermTree v-model="permTreeModal" v-if="permTreeModal"/>
-      </FormItem>
+      <Row>
+        <Col :span="14" :offset="7">
+          <FormItem label="角色名称" class="item-top" prop="name">
+            <Input v-model="form.name" placeholder="请输入权限角色名称"></Input>
+          </FormItem>
+        </Col>
+        <Row class="auth-check">
+          <Col span="24" class="auth-box">
+            <FormItem label="相关权限" :error="errorPerm" :class="{'item-sign': isSign}">
+              <PermTree v-model="permTreeModal" v-if="permTreeModal"/>
+            </FormItem>
+          </Col>
+        </Row>
+      </Row>
     </Form>
     <div class="tableSubmit btnCenter">
       <Button type="primary" class="submitBtn button-ok" v-if="!$route.params.id" @click="handleInforma">确定增加</Button>
@@ -142,6 +150,21 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.page-name {
+  margin: 0 30px;
+}
+/deep/ .ivu-input-wrapper,
+/deep/ .ivu-input {
+  background: rgba(255, 255, 255, 0.4);
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  border-radius: 5px;
+  &::placeholder {
+    font-size: 14px;
+    color: #00202d;
+  }
+}
 /deep/ .ivu-form-item-required .ivu-form-item-label::before {
   content: '';
 }
@@ -151,11 +174,57 @@ export default class Main extends ViewBase {
     color: @c-text;
   }
 }
+.plan-title {
+  margin: 0 0 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #fff;
+  .adver-tiele {
+    color: #fff;
+    font-size: 24px;
+    font-weight: normal;
+  }
+  .btn-new {
+    width: 193px;
+    height: 48px;
+    border-radius: 24px;
+    line-height: 44px;
+    font-size: 18px;
+    padding: 0;
+    float: right;
+    .button-style(#00202d, #f9d85e);
+  }
+}
 .ivu-tree {
   min-height: 300px;
 }
+.auth-check {
+  margin: 0 20px;
+}
+.auth-box {
+  min-height: 270px;
+  padding: 30px;
+  background: rgba(0, 32, 45, 0.8);
+  border-radius: 8px;
+  /deep/ .title {
+    color: #fff;
+  }
+  /deep/ .ivu-icon {
+    color: #fff;
+  }
+  /deep/ .ivu-checkbox .ivu-checkbox-inner {
+    background: rgba(0, 32, 45, 0.8);
+  }
+  /deep/ .ivu-checkbox-checked .ivu-checkbox-inner, /deep/ .ivu-checkbox-indeterminate .ivu-checkbox-inner {
+    background: #fe8135;
+  }
+  /deep/ label {
+    color: #fff;
+  }
+}
 .submitBtn {
-  margin-bottom: 30px;
+  margin-top: 30px;
+  .button-style(#fff, #00202d);
+  border-radius: 25px;
 }
 // /deep/ .item-sign .ivu-form-item-label::before {
 //   content: '*';

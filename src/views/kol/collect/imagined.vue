@@ -219,11 +219,18 @@ export default class App extends ViewBase {
   .checkall {
     background: #00202d;
     &::after {
-      content: '\2713';
-      font-size: 14px;
-      color: #fff;
-      text-align: center;
-      margin-left: 7px;
+      content: '';
+      display: table;
+      position: absolute;
+      left: 7px;
+      top: 4px;
+      width: 8px;
+      height: 12px;
+      border: 2px solid #fff;
+      border-top: 0;
+      border-left: 0;
+      transform: rotate(45deg) scale(1);
+      transition: all 0.2s ease-in-out;
     }
   }
 }
@@ -238,12 +245,20 @@ export default class App extends ViewBase {
   }
   .checkall {
     background: #00202d;
+    position: relative;
     &::after {
-      content: '\2713';
-      font-size: 14px;
-      color: #fff;
-      text-align: center;
-      margin-left: 7px;
+      content: '';
+      display: table;
+      position: absolute;
+      left: 7px;
+      top: 4px;
+      width: 8px;
+      height: 12px;
+      border: 2px solid #fff;
+      border-top: 0;
+      border-left: 0;
+      transform: rotate(45deg) scale(1);
+      transition: all 0.2s ease-in-out;
     }
   }
   span {

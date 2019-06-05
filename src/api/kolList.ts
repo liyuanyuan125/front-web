@@ -9,10 +9,42 @@ export async function titleMsgList(channelCode: any) {
 }
 
 /**
+ * 加入购物车
+ */
+export async function addShopIng(query: any) {
+  const res = await post(`/kol/carts`, query)
+  return res
+}
+
+/**
+ * 加入收藏
+ */
+export async function addcollet(query: any) {
+  const res = await post(`/kol/channel-accounts/collect`, query)
+  return res
+}
+
+/**
+ * 取消收藏
+ */
+export async function cancelcollect(query: any) {
+  const res = await post(`/kol/channel-accounts/cancel-collect`, query)
+  return res
+}
+
+/**
  * KOL搜索表单
  */
 export async function queryList(channelCode: any) {
   const res = await get(`/kol/search-forms/${channelCode}`)
+  return res
+}
+
+/**
+ * KOL搜索表单
+ */
+export async function allcollect(query: any) {
+  const res = await get(`/kol/channel-accounts/collections`, query)
   return res
 }
 

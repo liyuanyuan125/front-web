@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <Stopshort v-model="step" />
+    <Stopshort v-model="stepType" />
     <div>
       <keep-alive>
         <component v-bind:is="currentTab" v-model="stepType"></component>

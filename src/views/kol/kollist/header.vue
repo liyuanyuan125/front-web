@@ -1,33 +1,45 @@
 <template>
   <div class="page">
     <ul class="">
-      <li @click="active(index)" :class="step == index? 'liactive' : ''" v-for="(it, index) in name" :key='index'>
+      <li @click="active(index, it.id)" :class="step == index ? 'liactive' : ''" v-for="(it, index) in name" :key='index'>
+        <img width="34px" :src="it.url" alt="">
         {{it.name}}
       </li>
     </ul>
-    <div :style="{transform: `translate3d(${66*step}px, 0px, 0px)`, width: step == 4 ? '54px' : '36px'}" class="active"></div>
+    <div :style="{transform: `translate3d(${106*step}px, 0px, 0px)`, width: step == 4 ? '88px' : '74px'}" class="active"></div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import weixin from './assets/weixin.png'
+import douyin from './assets/douyin.png'
+import kuaisou from './assets/kuaisou.png'
+import xiaohongshu from './assets/xiaohongshu.png'
+import xinlang from './assets/xinlang.png'
 
 @Component
 export default class App extends ViewBase {
-  @Prop() value!: number
+  @Prop() value!: any
+  @Prop() invalue!: any
   name: any = [
-    {name: '微博', id: 1},
-    {name: '微信', id: 2},
-    {name: '抖音', id: 3},
-    {name: '快手', id: 4},
-    {name: '小红书', id: 5},
+    {name: '微博', id: 'weibo', url: xinlang},
+    {name: '微信', id: 'weixin', url: weixin},
+    {name: '抖音', id: 'douyin', url: douyin},
+    {name: '快手', id: 'kuaishou', url: kuaisou},
+    {name: '小红书', id: 'xiaohonghsu', url: xiaohongshu},
   ]
   step = this.value
 
-  active(index: number) {
+  active(index: any, id: any) {
     this.step = index
     this.$emit('input', this.step)
+  }
+
+  @Watch('value')
+  watchValue(val: any) {
+    this.step = val
   }
 }
 </script>
@@ -50,16 +62,19 @@ export default class App extends ViewBase {
     &:hover {
       color: #fff;
     }
+    img {
+      vertical-align: middle;
+    }
   }
   .liactive {
     color: #fff;
   }
 }
 .active {
-  width: 36px;
+  width: 70px;
   height: 2px;
   background: @color;
-  margin-left: 30px;
+  margin-left: 40px;
   transition: transform 0.3s ease-in-out;
 }
 </style>

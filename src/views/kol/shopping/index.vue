@@ -4,7 +4,7 @@
     <div>
       <Step></Step>
     </div>
-    <div v-if="tableDates > 0" class="section">
+    <div v-if="tableDates.length > 0" class="section">
       <Table  :columns="columns" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
         <!-- <template ref='title' slot="header">
           <div>
