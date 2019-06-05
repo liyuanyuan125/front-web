@@ -30,13 +30,14 @@
                 <Col :span="7">
                   <FormItem style="margin-left: 3px" label="广告片规格:" :labelWidth='100'>
                     <Select :disabled="!setadver" v-model="form.specification" filterable clearable>
-                      <Option v-for="(item, index) in adverList" :value="item.specification" :key="index">{{ item.length }}</Option>
+                      <Option v-for="(item, index) in adverList" :value="item.specification" :key="index">{{ item.specification }}</Option>
                     </Select>
                   </FormItem>
                 </Col>
                 <Col :span="5">
                   <FormItem label="客户:" :labelWidth='50'>
                     <Select :disabled="!setadver" v-model="form.customerId" filterable clearable>
+                      {{adverList}}
                       <Option v-for="(item, index) in adverList" :value="item.customerId" :key="index">{{ item.customerName }}</Option>
                     </Select>
                   </FormItem>
@@ -193,6 +194,7 @@ export default class Promotion extends ViewBase {
         const data = await createdDraft(clean({
           ...this.form,
           advertime: '',
+          specification: this.form.specification ?  this.form.specification + '' : '',
           budgetAmount: Number(this.form.budgetAmount)}))
         this.$emit('input', 1)
       }

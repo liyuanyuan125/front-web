@@ -1,27 +1,23 @@
 <template>
-  <div class="page home-bg">
-    <h2 class="layout-nav-title"><span @click="toAuth">权限管理</span> > 查看权限管理</h2>
-    <div class="text-rows auth-col">
-      <Row>
-        <Col :span="12">
-          <p>
-            <label>权限角色</label>{{role.name}}
-          </p>
-        </Col>
-      </Row>
-    </div>
+  <div class="page-name">
+    <h2 class="plan-title"><span class="adver-tiele" @click="toAuth">权限管理</span></h2>
     <div class="text-rows">
       <Row>
-        <Col :span="18">
-          <p style="float:left">
-            <label>相关权限</label>
-          </p>
-          <PermTree class="tree" v-model="permTreeModal" readonly v-if="permTreeModal"/>
+        <Col>
+          <div class="auth-box">
+            <p style="color: #fff"><label>权限角色 </label> {{role.name}}</p>
+            <div class="tree">
+              <p style="float:left">
+                <label>相关权限</label>
+              </p>
+              <PermTree v-model="permTreeModal" readonly v-if="permTreeModal"/>
+            </div>
+          </div>
         </Col>
       </Row>
     </div>
     <div class="btnCenter">
-      <Button v-auth="'account-manage.roles#edit'" type="primary" @click="toAuth" class="button-ok">编辑</Button>
+      <Button v-auth="'account-manage.roles#edit'" type="primary" @click="toAuth" class="submitBtn button-ok">编辑</Button>
     </div>
   </div>
 </template>
@@ -108,12 +104,73 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+/deep/ .ivu-input-wrapper,
+/deep/ .ivu-input {
+  background: rgba(255, 255, 255, 0.4);
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  border-radius: 5px;
+  &::placeholder {
+    font-size: 14px;
+    color: #00202d;
+  }
+}
 .auth-col {
   padding-bottom: 0;
 }
 .tree {
-  float: left;
-  margin-top: -6px;
+  display: flex;
+}
+.plan-title {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #fff;
+  .adver-tiele {
+    color: #fff;
+    font-size: 24px;
+    font-weight: normal;
+  }
+  .btn-new {
+    width: 193px;
+    height: 48px;
+    border-radius: 24px;
+    line-height: 44px;
+    font-size: 18px;
+    padding: 0;
+    float: right;
+    .button-style(#00202d, #f9d85e);
+  }
+}
+.auth-check {
+  margin: 0 20px;
+}
+.auth-box {
+  min-height: 300px;
+  padding: 30px;
+  background: rgba(0, 32, 45, 0.8);
+  border-radius: 8px;
+  /deep/ .title {
+    color: #fff;
+  }
+  /deep/ .ivu-icon {
+    color: #fff;
+  }
+  /deep/ .ivu-checkbox .ivu-checkbox-inner {
+    background: rgba(0, 32, 45, 0.8);
+  }
+  /deep/ .ivu-checkbox-checked .ivu-checkbox-inner, /deep/ .ivu-checkbox-indeterminate .ivu-checkbox-inner {
+    background: #fe8135;
+  }
+  /deep/ label {
+    color: #fff;
+  }
+}
+.submitBtn {
+  margin-top: 30px;
+  .button-style(#fff, #00202d);
+  border-radius: 25px;
+}
+.page-name {
+  margin: 0 30px;
 }
 </style>

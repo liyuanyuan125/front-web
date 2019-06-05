@@ -1,7 +1,7 @@
 <template>
-  <div class="">
+  <div class="plan-box">
     <Row>
-      <Col :span="22" :offset="1">
+      <Col>
         <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="0" class="edit-input forms">
           <h3 class="layout-titles">覆盖范围设置</h3>
           <Row>
@@ -286,6 +286,9 @@ export default class Orienteering extends ViewBase {
 @import '~@/site/lib.less';
 .item-top {
   margin-left: 30px;
+}
+.plan-box {
+  margin: 0 40px;
 }
 .layout-titles {
   font-size: 24px;

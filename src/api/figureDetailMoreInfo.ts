@@ -36,8 +36,8 @@ export async function dayRanges(query: any = { beginDate: 20191212, endDate: 201
  */
 export async function comment(query: any, id: number = 0) {
   // const res = await get(`/person/${id}/comments`, query)
-  const res = await get(`/person/107028/comments`, {beginDate: 20170112, endDate: 20191212})
-  return res
+  // const res = await get(`/person/107028/comments`, { beginDate: 20170112, endDate: 20191212 })
+  // return res
   return await mockGet(query, {
     emotion: [
       {
@@ -178,7 +178,82 @@ export async function comment(query: any, id: number = 0) {
 export async function fans(id: number = 0) {
   // const res = await get(`/person/${id}/fans`)
   // return res
-  return await mockGet(query, {
+  return await mockGet({}, {
+    item: {
+      totalCount: 83724,
+      genders: [
+        {
+          gender: 1,
+          count: tid,
+        },
+        {
+          gender: 2,
+          count: tid,
+        }
+      ],
+      ages: [
+        {
+          v: tid,
+          k: '18岁以下'
+        },
+        {
+          v: tid,
+          k: '18-25岁'
+        },
+        {
+          v: tid,
+          k: '26-30岁'
+        },
+        {
+          v: tid,
+          k: '31-40岁'
+        },
+        {
+          v: tid,
+          k: '40岁以上'
+        }
+      ],
+      cities: [
+        {
+          v: tid,
+          k: '广州'
+        },
+        {
+          v: tid,
+          k: '北京'
+        }
+      ],
+      provinces: [
+        {
+          v: tid,
+          k: '广东'
+        },
+        {
+          v: tid,
+          k: '江苏'
+        },
+        {
+          v: tid,
+          k: '浙江'
+        }
+      ]
+    },
+    genders: [
+      {
+        key: 0,
+        text: '未知'
+      },
+      {
+        key: 1,
+        text: '男'
+      },
+      {
+        key: 2,
+        text: '女'
+      }
+    ]
+  })
+  return await mockGet({}, {
     chart1: {
       dataList: [{
         data: Math.floor(Math.random() * 100 + 1),
@@ -303,80 +378,18 @@ export async function fans(id: number = 0) {
       }]
     }
   })
-
-  return await mockGet({}, {
+}
+/**
+ * 品牌列表含分页
+ * @param query name pageIndex	pageSize
+ * @description http://yapi.aiads-dev.com/mock/152/brand/brands
+ */
+export async function brands(query: any) {
+  const res = await get(`/brand/brands`, query)
+  return res
+  return await mockGet(query, {
     item: {
       totalCount: 83724,
-      genders: [
-          {
-              gender: 1,
-              count: 33489
-          },
-          {
-              gender: 2,
-              count: 50234
-          }
-      ],
-      ages: [
-          {
-              v: '8372.4',
-              k: '18岁以下'
-          },
-          {
-              v: '8372.4',
-              k: '18-25岁'
-          },
-          {
-              v: '25117.2',
-              k: '26-30岁'
-          },
-          {
-              v: '16744.8',
-              k: '31-40岁'
-          },
-          {
-              v: '25117.2',
-              k: '40岁以上'
-          }
-      ],
-      cities: [
-          {
-              v: '33489.6',
-              k: '广州'
-          },
-          {
-              v: '50234.4',
-              k: '北京'
-          }
-      ],
-      provinces: [
-          {
-              v: '25117.2',
-              k: '广东'
-          },
-          {
-              v: '25117.2',
-              k: '江苏'
-          },
-          {
-              v: '33489.6',
-              k: '浙江'
-          }
-      ]
-  },
-    genders: [
-      {
-          key: 0,
-          text: '未知'
-      },
-      {
-          key: 1,
-          text: '男'
-      },
-      {
-          key: 2,
-          text: '女'
-      }
-  ]
+    }
   })
 }

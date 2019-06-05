@@ -96,7 +96,7 @@ import {
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
-import { dayRanges, comment } from '@/api/personDetailMoreInfo'
+import { dayRanges, comment } from '@/api/figureDetailMoreInfo'
 import PieNest from '@/components/chartsGroup/pieNest/'
 import BarCategoryStack from '@/components/chartsGroup/barCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
@@ -228,7 +228,7 @@ export default class Temporary extends ViewBase {
     this.chart4.currentTypeIndex = index
   }
   /**
-   * 加载日期区间描述字典
+   * 加载日期区间描述
    */
   async dayRangesFetch() {
     /* const query = {}
@@ -268,7 +268,7 @@ export default class Temporary extends ViewBase {
       for ( const k in rate ) {
         if ( rate[k] ) {
           this.chart1.dataList[0].push({
-            data: rate[k],
+            value: rate[k],
             key: this.dict.emotion.findIndex((item: any) => {
               return item.name === k
             })

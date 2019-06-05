@@ -18,17 +18,16 @@
                :key="item.key"
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
-    </div>
+    </div>    
     <Row type="flex"
-         justify="space-between">
+         justify="center" align="middle">
       <Col :span="24">
-      <div ref="refChart"
+        <div ref="refChart"
            v-if="initDone"
            style="width: 100%; height: 400px"></div>
-      <div v-else
-           style="width: 100%; height: 400px">
-        <TinyLoading />
-      </div>
+        <div v-else class='loading-wp' style="width: 100%; height: 400px">
+            <TinyLoading  />
+          </div>
       </Col>
     </Row>
   </div>
@@ -80,15 +79,15 @@ export default class PieSimple extends ViewBase {
     const myChart = echarts.init(this.$refs.refChart as any)
 
     const chartSeries: any[] = []
-    this.dict2.forEach((item, index) => {
-      chartSeries.push({
-        name: item.text,
-        value: 0
-      })
-    })
-    chartData.forEach((item: any, index: number) => {
-      chartSeries[item.key].value = item.data
-    })
+    // this.dict2.forEach((item, index) => {
+    //   chartSeries.push({
+    //     name: item.text,
+    //     value: 0
+    //   })
+    // })
+    // chartData.forEach((item: any, index: number) => {
+    //   chartSeries[item.key].value = item.data
+    // })
     const option: any = {
       color: this.color,
       ...pubOption,
@@ -98,7 +97,7 @@ export default class PieSimple extends ViewBase {
           type: 'pie',
           radius: '55%',
           center: ['50%', '40%'],
-          data: chartSeries,
+          data: chartData,
           itemStyle: {
             emphasis: {
               shadowBlur: 10,

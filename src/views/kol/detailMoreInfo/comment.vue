@@ -268,8 +268,8 @@ export default class Temporary extends ViewBase {
       endDate: this.form.beginDate[1],
       channelCode: this.form.channelCode
     }
-    // 107028 dev有数据
-    const id = parseInt(this.$route.params.id, 0) || 1
+    // 1 dev有数据
+    const id = parseInt(this.$route.params.id, 0)
     try {
       const {
         data,

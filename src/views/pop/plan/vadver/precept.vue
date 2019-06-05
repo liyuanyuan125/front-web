@@ -1,7 +1,7 @@
 <template>
-  <div class="">
+  <div class="plan-box">
     <Row>
-      <Col :span="22" :offset="1">
+      <Col >
         <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
           <PreceptHead />
           <h3 class="layout-titles">投放影片
@@ -258,6 +258,9 @@ export default class App extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.plan-box {
+  margin: 0 40px;
+}
 .layout-titles {
   font-size: 24px;
   font-weight: 500;

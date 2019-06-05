@@ -1,4 +1,5 @@
 import { get , post , put, del } from '@/fn/ajax'
+import { mockGet, tid, title20, dateRange } from './mock'
 
 /**
  * 推广管理 - 广告计划 - 列表
@@ -89,6 +90,40 @@ export async function planCancel(id: any) {
 export async function queryCinema(data: any) {
   const res = await post('/theater/cinemas/page-query', data)
   return res
+}
+
+/**
+ * @param
+ */
+export async function orienteering(query: any) {
+  return await mockGet(query, {
+    statusList: [
+      { key: 1, text: '草稿' },
+      { key: 2, text: '审核' },
+      { key: 3, text: '待执行' },
+      { key: 4, text: '以执行' },
+      { key: 5, text: '待支付' },
+      { key: 6, text: '已支付' },
+      { key: 7, text: '关联' },
+      { key: 8, text: '取消' },
+    ],
+    'items|59': [{
+      id: tid,
+      name: title20,
+      mainPicUrl: 'https://p.ssl.qhimg.com/dmfd/400_300_/t0120b2f23b554b8402.jpg',
+      benginDate: dateRange(),
+      endDate: dateRange(),
+      budgetAmount: 3000,
+      type: ['科幻', '悬疑', '惊悚'],
+      sex: '男',
+      age: 25,
+      'status| 1-8': 1,
+      viewNumber: 1234567,
+      matching: 99.6,
+      week: '2019/6/1~2019/6/7'
+    }],
+    totalCount: 50
+  })
 }
 
 /**

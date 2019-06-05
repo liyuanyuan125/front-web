@@ -117,8 +117,8 @@ export async function platformData(query: any) {
  */
 export async function comment(query: any, id: number = 0) {
   // const res = await get(`/kol/accounts/${id}/comments`, query)
-  const res = await get(`/kol/accounts/${id}/comments`, {beginDate: 20170112, endDate: 20191212, channelCode: 'weibo'})
-  return res
+  // const res = await get(`/kol/accounts/1/comments`, {beginDate: 20170112, endDate: 20191212, channelCode: 'weibo'})
+  // return res
   return await mockGet(query, {
     rate: {
       neutral: tid,
