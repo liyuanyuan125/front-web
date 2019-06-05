@@ -756,7 +756,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
   // KOL - KOL详情更多页 - 口碑评论
   {
-    path: '/kol/detailMoreInfo/comment',
+    path: '/kol/detailMoreInfo/comment/:id',
     name: 'kol-detailMoreInfo-comment',
     component: () => import('./views/kol/detailMoreInfo/comment.vue'),
     meta: emptyAuth
@@ -836,7 +836,43 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/figure/:id',
     name: 'film-figure',
     component: () => import('./views/mainPage/figure.vue'),
+    meta: emptyAuth,
+    props({ params: { id } }) {
+      return { id: +id }
+    }
+  },
+
+  // 影人 - 详情 - 更多页 - 评论
+  {
+    path: '/figure/detailMoreInfo/comment/:id',
+    name: 'figure-detailMoreInfo-comment',
+    component: () => import('./views/film/figure/detailMoreInfo/comment.vue'),
     meta: emptyAuth
+  },
+  // 影人 - 影人详情更多页 - 粉丝画像
+  {
+    path: '/figure/detailMoreInfo/fans/:id',
+    name: 'figure-detailMoreInfo-fans',
+    component: () => import('./views/film/figure/detailMoreInfo/fans.vue'),
+    meta: emptyAuth
+  },
+  // 影人 - 影人详情更多页 - 粉丝画像 受众匹配
+  {
+    path: '/figure/detailMoreInfo/matching/:id',
+    name: 'figure-detailMoreInfo-matching',
+    component: () => import('./views/film/figure/detailMoreInfo/matching.vue'),
+    meta: emptyAuth
+  },
+
+  // KOL
+  {
+    path: '/kol/figure/:id',
+    name: 'kol-figure',
+    component: () => import('./views/mainPage/kol.vue'),
+    meta: emptyAuth,
+    props({ params: { id } }) {
+      return { id: +id }
+    }
   },
 
   // 影片详情 - 主创阵容

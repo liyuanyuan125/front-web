@@ -20,15 +20,14 @@
       </RadioGroup>
     </div>
     <Row type="flex"
-         justify="space-between">
+         justify="center" align="middle">
       <Col :span="24">
-      <div ref="refChart"
+        <div ref="refChart"
            v-if="initDone"
            style="width: 100%; height: 400px"></div>
-      <div v-else
-           style="width: 100%; height: 400px">
-        <TinyLoading />
-      </div>
+        <div v-else class='loading-wp' style="width: 100%; height: 400px">
+            <TinyLoading  />
+          </div>
       </Col>
     </Row>
   </div>
@@ -58,12 +57,13 @@ export default class PieNest extends ViewBase {
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
-  @Prop({ type: Array, default: () => [] })  dict1!: any[]
-  @Prop({ type: Array, default: () => [] })  dict2!: any[]
-  @Prop({ type: Array, default: () => [] })  color!: any[]
-  @Prop({ type: Array, default: () => [] })  dataList!: any[]
+  @Prop({ type: Array, default: () => [] }) dict1!: any[]
+  @Prop({ type: Array, default: () => [] }) dict2!: any[]
+  @Prop({ type: Array, default: () => [] }) color!: any[]
+  @Prop({ type: Array, default: () => [] }) dataList!: any[]
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
+    if ( !this.initDone ) { return }
     this.currentIndex = index
     this.$emit('typeChange', index)
   }
@@ -79,13 +79,14 @@ export default class PieNest extends ViewBase {
     }
     const chartData = this.dataList[this.currentIndex]
     const myChart = echarts.init(this.$refs.refChart as any)
-    const chartSeries: any[] = []
-    chartData.forEach((item: any, index: number) => {
-      chartSeries.push({
-        value: item.data,
-        name: this.dict2[item.key].text
-      })
-    })
+    // 组件内组装
+    // const chartSeries: any[] = []
+    // chartData.forEach((item: any, index: number) => {
+    //   chartSeries.push({
+    //     value: item.data,
+    //     name: this.dict2[item.key].text
+    //   })
+    // })
     const option: any = {
       ...pubOption,
       series: [
@@ -107,7 +108,7 @@ export default class PieNest extends ViewBase {
               }
             }
           },
-          data: chartSeries
+          data: chartData
         }
       ]
     }

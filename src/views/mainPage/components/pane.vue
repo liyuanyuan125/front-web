@@ -6,7 +6,7 @@
         <Tooltip class="tip" :content="tooltip" max-width="200" v-if="tooltip">?</Tooltip>
       </em>
 
-      <router-link :to="more">更多 &gt;</router-link>
+      <router-link :to="more" v-if="more">更多 &gt;</router-link>
     </h4>
     <div class="pane-body">
       <slot></slot>
@@ -17,12 +17,13 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { RawLocation } from 'vue-router'
 
 @Component
 export default class Pane extends Vue {
   @Prop({ type: String, default: '' }) title!: string
 
-  @Prop({ type: Object, default: () => ({}) }) more!: string
+  @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
 
   @Prop({ type: String, default: '' }) tooltip!: string
 }

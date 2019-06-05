@@ -14,28 +14,33 @@
               <Col :span="17">
                 <DetailNavBar titleText='统计周期'>
                   <div slot='item'>
-                    <RadioGroup class='nav'
+                    <RadioGroup style='margin-right:15px'
                               @on-change="handleChange"
-                              v-model="form.dayRangesKey"
+                              v-model="form.statisticTimeId"
                               size="large"
                               type="button">
-                    <Radio v-for="(item) in dict.dayRanges"
-                           :key="item.key"
+                    <Radio v-for="(item) in dict.statisticTime"
+                           :key="item.id"
                            :disabled="item.disabled"
-                           :label="item.key">{{item.text}}</Radio>
+                           :label="item.id">{{item.name}}</Radio>
                   </RadioGroup>
+                  <DatePicker type="daterange"
+                              v-model="form.beginDate"
+                              @on-change="handleChange"
+                              placement="bottom-end"
+                              placeholder="自定义时间段"></DatePicker>
                   </div>
                 </DetailNavBar>
               </Col>
               <Col :span="7" style="text-align:right" >
                 平台
-                <Select v-model="form.channelCode"
+                <Select v-model="form.platformId"
                         clearable
                         @on-change="handleChange"
                         style="width:150px; text-align:left">
-                  <Option v-for="(item) in dict.channelList"
-                          :key="item.key"
-                          :value="item.key">{{item.text}}</Option>
+                  <Option v-for="(item) in dict.platform"
+                          :key="item.id"
+                          :value="item.id">{{item.name}}</Option>
                 </Select>
               </Col>
             </Row>
@@ -101,22 +106,21 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import moment from 'moment'
 import {
   formatTimestamp,
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
-import { comment } from '@/api/kolDetailMoreInfo'
+import { platformData, comment1 } from '@/api/kolDetailMoreInfo'
+import numAdd from '../number.vue'
 import PieNest from '@/components/chartsGroup/pieNest/'
 import BarCategoryStack from '@/components/chartsGroup/barCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
 import DetailNavBar from './components/detailNavBar.vue'
-const timeFormat = 'YYYYMMDD'
 // #D0BF6B 中性
 // #AD686C 正面
 // #57B4C9 负面
-const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
+const colors: any[] = ['#D0BF6B', '#AD686C', '#57B4C9']
 @Component({
   components: {
     PieNest,
@@ -125,77 +129,69 @@ const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
     DetailNavBar
   }
 })
-
 export default class Temporary extends ViewBase {
   form: any = {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
-    dayRangesKey: 'sevenDay',
-    channelCode: 'weibo'
+    statisticTimeId: 0,
+    platformId: 0
   }
   dict: any = {
-    dayRanges: [
+    statisticTime: [
       {
-        key: 'yesterday',
-        text: '昨日',
+        id: 0,
+        name: '昨天',
         disabled: false
       },
       {
-        key: 'sevenDay',
-        text: '最近7天',
+        id: 1,
+        name: '最近7天',
         disabled: false
       },
       {
-        key: 'thirtyDay',
-        text: '最近30天',
+        id: 2,
+        name: '最近30天',
         disabled: false
       },
       {
-        key: 'ninetyDay',
-        text: '最近90天',
-        disabled: false
+        id: 3,
+        name: '最近90天',
+        disabled: true
       }
     ],
-    // 情感分类
-    emotion: [
+    platform: [
       {
-        key: 0,
-        name: 'positive',
-        text: '正面'
+        id: 0,
+        name: '微信公众号'
       },
       {
-        key: 1,
-        name: 'passive',
-        text: '负面'
+        id: 1,
+        name: '新浪微博'
       },
       {
-        key: 2,
-        name: 'neutral',
-        text: '中性'
+        id: 2,
+        name: '小红书'
+      },
+      {
+        id: 3,
+        name: '抖音'
       }
-    ],
-    channelList: [{
-      text: '微博',
-      key: 'weibo'
-    }, {
-      text: '微信',
-      key: 'wechat'
-    }, {
-      text: '快手',
-      key: 'kuaishou'
-    }, {
-      text: '抖音',
-      key: 'douyin'
-    }, {
-      text: '小红书',
-      key: 'xiaohongshu'
-    }]
+    ]
   }
   chart1: any = {
     title: '评论情绪分布',
-    dict1: [],
-    dict2: this.dict.emotion,
+    dict1: [
+      // {
+      //   key: 0,
+      //   name: '新增'
+      // },
+      // {
+      //   key: 1,
+      //   name: '累计'
+      // }
+    ],
+    dict2: [],
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
@@ -205,15 +201,15 @@ export default class Temporary extends ViewBase {
     title: '',
     dict1: [
       {
-        key: 'trend',
+        key: 0,
         name: '新增'
       },
       {
-        key: 'count',
+        key: 1,
         name: '累计'
       }
     ],
-    dict2: this.dict.emotion,
+    dict2: [],
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
@@ -242,6 +238,9 @@ export default class Temporary extends ViewBase {
     this.chart1.currentTypeIndex = index
   }
   async typeChangeHander2(index: number = 0) {
+    if (this.chart2.dataList[index].length < 1) {
+      await this.getChartsData('chart2', index)
+    }
     this.chart2.currentTypeIndex = index
   }
   async typeChangeHander3(index: number = 0) {
@@ -264,96 +263,31 @@ export default class Temporary extends ViewBase {
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const that: any = this
     const mockObj = {
-      beginDate: this.form.beginDate[0],
-      endDate: this.form.beginDate[1],
-      channelCode: this.form.channelCode
+      beginDate: formatTimestamp(new Date(2019, 3, 9)),
+      endDate: formatTimestamp(new Date(2019, 9, 11)),
+      accountType: 'ads',
+      effectType: typeIndex
     }
-    // 1 dev有数据
-    const id = parseInt(this.$route.params.id, 0)
     try {
-      const {
-        data,
-        data: {
-          rate
-        },
-        data: {
-          items
-        },
-        data: {
-          commentKeyword
-        }
-      } = await comment({ ...mockObj }, id)
-
-      for ( const k in rate ) {
-        if ( rate[k] ) {
-          this.chart1.dataList[0].push({
-            data: rate[k],
-            key: this.dict.emotion.findIndex((item: any) => {
-              return item.name === k
-            })
-          })
-        }
-      }
-      // api文档缺少备注，待联调 nxd 20190604
-      // dates.forEach((item: any) => {
-      //   for ( let num = 0; num < 3; num++ ) {
-      //     that.chart2.dataList[0].push({
-      //       data: item[this.dict.emotion[num].name].trend,
-      //       date: item.date,
-      //       key: num
-      //     })
-      //     that.chart2.dataList[1].push({
-      //       data: item[this.dict.emotion[num].name].count,
-      //       date: item.date,
-      //       key: num
-      //     })
-      //   }
-      // })
-      commentKeyword[this.form.dayRangesKey].positive.forEach((item: any) => {
-        that.chart3.dataList[0].push({
-          name: item,
-          value: Math.floor(Math.random() * 100 + 1)
-        })
-      })
-      commentKeyword[this.form.dayRangesKey].passive.forEach((item: any) => {
-        that.chart4.dataList[0].push({
-          name: item,
-          value: Math.floor(Math.random() * 100 + 1)
-        })
-      })
+      const { data } = await comment1({ ...mockObj })
+      that.chart1.dict2 = data.chart1.effectTypeList
+      that.chart1.dataList[0] = data.chart1.dataList
       that.chart1.initDone = true
-      // that.chart2.initDone = true
+
+      that.chart2.dict2 = data.chart2.effectTypeList
+      that.chart2.dataList[0] = data.chart2.dataList
+      that.chart2.dataList[1] = data.chart2.dataList
+      that.chart2.initDone = true
+
+      that.chart3.dataList[0] = data.chart3.dataList
       that.chart3.initDone = true
+      that.chart4.dataList[0] = data.chart4.dataList
       that.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
   }
-  /**
-   * 根据筛选返回起始日期，影人、影片、kol字段名未统一
-   * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
-   */
-  beginDate(dayRangesKey: string) {
-    switch ( dayRangesKey ) {
-      case 'yesterday' :
-        return moment(new Date()).add(-1, 'days').format(timeFormat)
-        break
-      case 'thirtyDay' :
-        return moment(new Date()).add(-30, 'days').format(timeFormat)
-        break
-      case 'ninetyDay' :
-        return moment(new Date()).add(-90, 'days').format(timeFormat)
-        break
-      default :
-        return moment(new Date()).add(-7, 'days').format(timeFormat)
-    }
-  }
-  endDate() {
-    return moment(new Date()).format(timeFormat)
-  }
   async handleChange() {
-    this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
-    this.form.beginDate[1] = this.endDate()
     this.chart2.initDone = false
     this.chart1.initDone = false
     this.chart3.initDone = false
@@ -361,14 +295,11 @@ export default class Temporary extends ViewBase {
     this.resetData()
     await this.getChartsData('', 0)
   }
-  created() {
-    this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
-    this.form.beginDate[1] = this.endDate()
-    // this.dayRangesFetch() // 本地写死，暂时取消
+  async mounted() {
     this.initHandler()
   }
-  async mounted() {}
   async initHandler() {
+
     if (this.chart1.dict1.length > 0) {
       this.chart1.dict1.map((item: any, index: number) => {
         this.chart1.dataList.push([])
@@ -403,17 +334,17 @@ export default class Temporary extends ViewBase {
     await this.getChartsData('', 0)
   }
   resetData() {
-    this.chart1.dataList.forEach((item: any[]) => {
-      item.splice(0, item.length)
+    this.chart1.dataList.forEach((item: any) => {
+      item = []
     })
     this.chart2.dataList.forEach((item: any) => {
-      item.splice(0, item.length)
+      item = []
     })
     this.chart3.dataList.forEach((item: any) => {
-      item.splice(0, item.length)
+      item = []
     })
     this.chart4.dataList.forEach((item: any) => {
-      item.splice(0, item.length)
+      item = []
     })
   }
 }
