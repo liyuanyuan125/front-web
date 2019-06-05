@@ -24,7 +24,7 @@
         <div class="rank-title" v-if="item.rankTitle">{{item.rankTitle}}</div>
       </div>
 
-      <div class="zone opus-zone effect-lightning">
+      <div class="zone opus-zone effect-lightning" v-if="opusList && opusList.length > 0">
         <h4 class="zone-head flex-box">
           <em class="flex-1">主要作品：</em>
           <router-link :to="{}">更多 &gt;</router-link>
@@ -40,7 +40,7 @@
         </ul>
       </div>
 
-      <div class="zone brand-zone">
+      <div class="zone brand-zone" v-if="brandList && brandList.length > 0">
         <h4 class="brand-head flex-box">
           <em class="flex-1">合作过的品牌：</em>
           <router-link :to="{}">更多 &gt;</router-link>
@@ -55,15 +55,16 @@
         </ul>
       </div>
 
-      <router-link :to="{}" class="button-more">更多资料</router-link>
+      <router-link :to="more" class="button-more" v-if="more">更多资料</router-link>
     </div>
 
-    <img :src="item.figure" class="figure">
+    <img :src="item.figure" class="figure" v-if="item.figure">
   </section>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { RawLocation } from 'vue-router'
 
 export interface Opus {
   title: string
@@ -89,6 +90,8 @@ export default class BasicPane extends Vue {
   @Prop({ type: Object, default: () => ({}) }) item!: Item
 
   @Prop({ type: Boolean, default: false }) followed!: boolean
+
+  @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
 
   @Prop({ type: Array, default: () => [] }) opusList!: Opus[]
 

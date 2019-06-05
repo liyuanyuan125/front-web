@@ -1,11 +1,12 @@
 <template>
-  <Pane :title="title">
+  <Pane :title="title" :more="more">
     <ECharts :options="chartData" auto-resize class="chart"/>
   </Pane>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { RawLocation } from 'vue-router'
 import Pane from './pane.vue'
 import { tooltipStyles } from '@/util/echarts'
 
@@ -26,14 +27,23 @@ const axisLabel = {
   color: 'rgba(255, 255, 255, .8)'
 }
 
+export interface DataItem {
+  name: string
+  value: number
+}
+
 @Component({
   components: {
     Pane,
     ECharts
   }
 })
-export default class ActiveFansPane extends Vue {
-  @Prop({ type: String, default: '近7日活跃粉丝数' }) title!: string
+export default class BarPane extends Vue {
+  @Prop({ type: String, default: '' }) title!: string
+
+  @Prop({ type: Array, default: () => [] }) data!: DataItem[]
+
+  @Prop({ type: [Object, String], default: null }) more!: RawLocation
 
   chartData: any = {
     tooltip: tooltipStyles({
@@ -45,7 +55,7 @@ export default class ActiveFansPane extends Vue {
       type: 'category',
       boundaryGap: false,
       // 两端加空串，是为了等宽分割
-      data: ['', '5-16', '5-17', '5-18', '5-19', '5-20', '5-21', '5-22', ''],
+      data: ['', ...this.data.map(it => it.name), ''],
       axisLine: lineStyle,
       axisTick: false,
       axisLabel
@@ -69,13 +79,18 @@ export default class ActiveFansPane extends Vue {
 
     series: [
       {
-        name: '近7日活跃粉丝数',
         type: 'bar',
-        data: [0, 855000, 200000, 150000, 808888, 123730, 11088, 888130, 0],
+        name: this.title,
+        data: [0, ...this.data.map(it => it.value), 0],
         barWidth: 9,
         itemStyle: {
           color: '#08b6ca',
           barBorderRadius: [8, 8, 0, 0]
+        },
+        emphasis: {
+          itemStyle: {
+            color: '#ca7273'
+          }
         }
       }
     ]

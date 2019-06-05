@@ -837,7 +837,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/figure/:id',
     name: 'kol-figure',
     component: () => import('./views/mainPage/kol.vue'),
-    meta: emptyAuth
+    meta: emptyAuth,
+    props({ params: { id } }) {
+      return { id: +id }
+    }
   },
 
   // 影片详情 - 主创阵容
