@@ -79,13 +79,14 @@ export default class PieNest extends ViewBase {
     }
     const chartData = this.dataList[this.currentIndex]
     const myChart = echarts.init(this.$refs.refChart as any)
-    const chartSeries: any[] = []
-    chartData.forEach((item: any, index: number) => {
-      chartSeries.push({
-        value: item.data,
-        name: this.dict2[item.key].text
-      })
-    })
+    // 组件内组装
+    // const chartSeries: any[] = []
+    // chartData.forEach((item: any, index: number) => {
+    //   chartSeries.push({
+    //     value: item.data,
+    //     name: this.dict2[item.key].text
+    //   })
+    // })
     const option: any = {
       ...pubOption,
       series: [
@@ -107,7 +108,7 @@ export default class PieNest extends ViewBase {
               }
             }
           },
-          data: chartSeries
+          data: chartData
         }
       ]
     }

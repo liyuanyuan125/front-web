@@ -19,16 +19,17 @@
                :key="item.key"
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
-    </div>
-    <Row type="flex" justify="space-between">
+    </div>    
+    <Row type="flex"
+         justify="space-between">
       <Col :span="24">
-        <div ref="refChart"
-            v-if="initDone"
-            style="width: 100%; height: 400px"></div>
-        <div v-else
-            style="width: 100%; height: 400px">
-          <TinyLoading />
-        </div>
+      <div ref="refChart"
+           v-if="initDone"
+           style="width: 100%; height: 400px"></div>
+      <div v-else
+           style="width: 100%; height: 400px">
+        <TinyLoading />
+      </div>
       </Col>
     </Row>
   </div>
@@ -52,7 +53,7 @@ import {
   }
 })
 // 简单饼图
-export default class PieSimple extends ViewBase {
+export default class BarXCategory extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
@@ -80,23 +81,6 @@ export default class PieSimple extends ViewBase {
     const chartData = this.dataList[this.currentIndex]
     const myChart = echarts.init(this.$refs.refChart as any)
 
-    // series数据处理等接口设计结束后调整。nxd fans 和 matching都有数据问题
-    // const chartSeries: any[] = []
-    // this.dict2.forEach((item, index) => {
-    //   chartSeries.push({
-    //     name: '',
-    //     type: 'bar',
-    //     data: []
-    //   })
-    // })
-    // chartData.forEach((item: any, index: number) => {
-    //   chartSeries[item.key].name = this.dict2[item.key].text
-    //   chartSeries[item.key].data.push({
-    //     value: item.data,
-    //     key2: item.key2
-    //   })
-    // })
-
     const option: any = {
       color: this.color,
       ...pubOption,
@@ -110,18 +94,19 @@ export default class PieSimple extends ViewBase {
         ...dottedLineStyle,
         ...yOption
       },
-      series: [
-        {
-          name: 'Papi酱',
-          type: 'bar',
-          data: [230230, 330230, 630230, 230230, 630230]
-        },
-        {
-          name: '奔驰',
-          type: 'bar',
-          data: [134141, 681807, 630230, 630230, 630230]
-        }
-      ]
+      series: chartData
+      // series: [
+      //   {
+      //     name: 'Papi酱',
+      //     type: 'bar',
+      //     data: [230230, 330230, 630230, 230230, 630230]
+      //   },
+      //   {
+      //     name: '奔驰',
+      //     type: 'bar',
+      //     data: [134141, 681807, 630230, 630230, 630230]
+      //   }
+      // ]
     }
     myChart.setOption(option)
   }

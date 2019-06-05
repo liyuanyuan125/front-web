@@ -18,17 +18,16 @@
                :key="item.key"
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
-    </div>
+    </div>    
     <Row type="flex"
-         justify="space-between">
+         justify="center" align="middle">
       <Col :span="24">
-      <div ref="barChart"
+        <div ref="refChart"
            v-if="initDone"
            style="width: 100%; height: 400px"></div>
-      <div v-else
-           style="width: 100%; height: 400px">
-        <TinyLoading />
-      </div>
+        <div v-else class='loading-wp' style="width: 100%; height: 400px">
+            <TinyLoading  />
+          </div>
       </Col>
     </Row>
   </div>
@@ -59,7 +58,6 @@ export default class BarYCategory extends ViewBase {
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
   @Prop({ type: Array, default: () => [] }) dict1!: any[]
-  @Prop({ type: Array, default: () => [] }) dict2!: any[]
   @Prop({ type: Array, default: () => [] }) color!: any[]
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
   currentIndex: number = this.currentTypeIndex
@@ -70,7 +68,6 @@ export default class BarYCategory extends ViewBase {
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
   }
-  // 接口没调
   updateCharts() {
     if (
       !this.dataList[this.currentIndex] ||
@@ -78,24 +75,16 @@ export default class BarYCategory extends ViewBase {
     ) {
       return
     }
-    const chartData = this.dataList[this.currentIndex]
-    const myChart = echarts.init(this.$refs.barChart as any)
-    let seriesData: any = []
-    this.dict2.forEach((item, index) => {
-      const _name = item.key
-      const obj: any = {}
-      obj[_name] = {
-        data: [],
-        itemNames: [],
-        text: item.text
-      }
-      seriesData = Object.assign(obj, seriesData)
+    const chartData: any[] = this.dataList[this.currentIndex]
+    const myChart = echarts.init(this.$refs.refChart as any)
+    const seriesData: any = {
+      k: [],
+      v: []
+    }
+    chartData.forEach((item: any): void => {
+      seriesData.k.push(item.name)
+      seriesData.v.push(item.value)
     })
-    chartData.forEach((item: any, index: number) => {
-      seriesData[item.key].data.push(item.data)
-      seriesData[item.key].itemNames.push(item.itemName)
-    })
-
     const option: any = {
       color: this.color,
       ...pubOption,
@@ -105,7 +94,7 @@ export default class BarYCategory extends ViewBase {
         splitArea: { show: false },
         axisLine: { show: false },
         axisTick: { show: false },
-        data: seriesData[this.currentIndex].itemNames
+        data: seriesData.k
       },
       xAxis: {
         ...xOption,
@@ -118,8 +107,7 @@ export default class BarYCategory extends ViewBase {
         {
           ...barThinStyle,
           ...barItemStyleColor,
-          name: seriesData[this.currentIndex].text,
-          data: seriesData[this.currentIndex].data
+          data: seriesData.v
         }
       ]
     }
