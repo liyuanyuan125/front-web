@@ -3,28 +3,28 @@
     <div class="basic-in">
       <div class="zone name-zone effect-lightning">
         <h3 class="name">
-          <em>吴京</em>
+          <em>{{item.name}}</em>
           <Icon
-            :type="hasFollowIn ? 'md-heart' : 'md-heart-outline'"
+            :type="followedIn ? 'md-heart' : 'md-heart-outline'"
             class="heart"
             :class="{
-              'heart-on': hasFollowIn,
+              'heart-on': followedIn,
               'follow-effect': followEffect
             }"
             @click="follow"
           />
         </h3>
-        <sub class="en-name">Jing Wu</sub>
-        <div class="title">演员 / 导演 / 制片人</div>
+        <sub class="sub-name" v-if="item.subName">{{item.subName}}</sub>
+        <div class="title" v-if="item.title">{{item.title}}</div>
       </div>
 
       <div class="zone rank-zone effect-lightning">
         <div class="rank-label">鲸娱指数</div>
-        <div class="rank-no">92.02</div>
-        <div class="rank-title">中国男演员票房：TOP1</div>
+        <div class="rank-no" v-if="item.rankNo">{{item.rankNo}}</div>
+        <div class="rank-title" v-if="item.rankTitle">{{item.rankTitle}}</div>
       </div>
 
-      <div class="zone opus-zone effect-lightning">
+      <div class="zone opus-zone effect-lightning" v-if="opusList && opusList.length > 0">
         <h4 class="zone-head flex-box">
           <em class="flex-1">主要作品：</em>
           <router-link :to="{}">更多 &gt;</router-link>
@@ -40,7 +40,7 @@
         </ul>
       </div>
 
-      <div class="zone brand-zone">
+      <div class="zone brand-zone" v-if="brandList && brandList.length > 0">
         <h4 class="brand-head flex-box">
           <em class="flex-1">合作过的品牌：</em>
           <router-link :to="{}">更多 &gt;</router-link>
@@ -55,37 +55,54 @@
         </ul>
       </div>
 
-      <router-link :to="{}" class="button-more">更多资料</router-link>
+      <router-link :to="more" class="button-more" v-if="more">更多资料</router-link>
     </div>
+
+    <img :src="item.figure" class="figure" v-if="item.figure">
   </section>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { RawLocation } from 'vue-router'
 
-interface Opus {
+export interface Opus {
   title: string
   count: string
 }
 
-interface Brand {
+export interface Brand {
   logo: string
+}
+
+export interface Item {
+  id: number
+  name: string
+  subName: string
+  title: string
+  figure: string
+  rankNo: string
+  rankTitle: string
 }
 
 @Component
 export default class BasicPane extends Vue {
-  @Prop({ type: Boolean, default: false }) hasFollow!: boolean
+  @Prop({ type: Object, default: () => ({}) }) item!: Item
+
+  @Prop({ type: Boolean, default: false }) followed!: boolean
+
+  @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
 
   @Prop({ type: Array, default: () => [] }) opusList!: Opus[]
 
   @Prop({ type: Array, default: () => [] }) brandList!: Brand[]
 
-  hasFollowIn = this.hasFollow
+  followedIn = this.followed
 
   followEffect = false
 
   follow() {
-    this.hasFollowIn = !this.hasFollowIn
+    this.followedIn = !this.followedIn
     this.followEffect = true
     setTimeout(() => this.followEffect = false, 500)
   }
@@ -102,12 +119,11 @@ export default class BasicPane extends Vue {
 
 .basic-pane {
   position: relative;
-  min-width: 348px;
+  min-width: 295px;
   border-radius: 5px;
   color: #ddd;
-  overflow: hidden;
   user-select: none;
-  padding-bottom: 50px;
+  padding: 14px 0 50px;
   box-shadow: 0 -3px #53c5df;
   background-color: rgba(0, 31, 44, .6);
 
@@ -121,12 +137,21 @@ export default class BasicPane extends Vue {
 
 .basic-in {
   width: 195px;
-  margin: 15px 0 0 128px;
+  margin-left: 34px;
   line-height: 28px;
 }
 
+.figure {
+  position: absolute;
+  top: 34px;
+  right: -91px;
+  border: 1px solid #53c5df;
+  box-shadow: -8px 8px 8px rgba(0, 0, 0, .38);
+  border-radius: 2px;
+}
+
 .zone {
-  padding: 12px 0 12px 4px;
+  padding: 12px 9px 14px 4px;
 }
 
 .name-zone {
@@ -173,32 +198,33 @@ export default class BasicPane extends Vue {
   animation: dongdong 300ms ease-in-out;
 }
 
-.en-name {
+.sub-name {
   display: block;
   color: #fff;
   line-height: 28px;
-  margin-top: -6px;
+  margin-top: -4px;
 }
 
 .title {
   font-size: 14px;
-  margin-top: 5px;
+  margin-top: 7px;
 }
 
 .rank-label {
   font-size: 14px;
+  margin-top: 1px;
 }
 
 .rank-no {
   color: #f3d872;
-  font-size: 30px;
-  margin-top: 5px;
+  font-size: 34px;
+  margin-top: 8px;
 }
 
 .rank-title {
   color: #f3d872;
   font-size: 14px;
-  margin-top: 5px;
+  margin-top: 8px;
 }
 
 .opus-item {

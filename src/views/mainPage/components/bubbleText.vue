@@ -24,6 +24,7 @@ export default class BubbleText extends Vue {
   z-index: 18;
   pointer-events: none;
   user-select: none;
+  margin-left: -42px;
 }
 
 @keyframes niuniu {
