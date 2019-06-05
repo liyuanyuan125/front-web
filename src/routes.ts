@@ -799,6 +799,38 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth,
   },
 
+  // KOL - 申请发票列表
+   {
+    path: '/kol/applyTicket',
+    name: 'kol-applyTicket',
+    component: () => import('./views/kol/applyTicket/index.vue'),
+    meta: emptyAuth
+  },
+
+  // KOL - 申请发票填写
+   {
+    path: '/kol/applyTicket/addticket/:edit/:key',
+    name: 'kol-applyTicket-addticket',
+    component: () => import('./views/kol/applyTicket/addticket.vue'),
+    meta: emptyAuth
+  },
+
+  // KOL - 查看开票历史
+   {
+    path: '/kol/applyTicket/ticketHis',
+    name: 'kol-applyTicket-ticketHis',
+    component: () => import('./views/kol/applyTicket/ticketHis.vue'),
+    meta: emptyAuth
+  },
+
+  // KOL - 查看开票详情
+   {
+    path: '/kol/applyTicket/detail/:id',
+    name: 'kol-applyTicket-detail',
+    component: () => import('./views/kol/applyTicket/detail.vue'),
+    meta: emptyAuth
+  },
+
   // 影人
   {
     path: '/film/figure/:id',

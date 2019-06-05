@@ -13,18 +13,32 @@
         <BasicPane
           :item="basic"
           :more="{ name: 'home' }"
-          :opusList="opusList"
+          :platformList="platformList"
           :brandList="brandList"
         />
       </div>
 
       <section class="board-pane">
+        <nav class="flatform-nav">
+          <a
+            v-for="it in platformNavList"
+            :key="it.icon"
+            class="flatform-nav-item"
+            :class="{'flatform-nav-on': it.icon == platformNav}"
+            @click="platformNav = it.icon"
+          >
+            <i :class="`platform-icon-${it.icon}`"></i>
+            <span class="platform-name">{{it.name}}</span>
+          </a>
+        </nav>
+
         <div class="board-row flex-box">
           <FansPane
             title="粉丝画像"
             :man="fansMan"
             :woman="fansWoman"
             :more="{ name: 'home' }"
+            tip="与奔驰用户匹配度：72%"
             class="fans-pane"
           />
           <PiePane
@@ -36,21 +50,11 @@
         </div>
 
         <div class="board-row">
-          <BarPane
-            title="近7日活跃粉丝数"
-            :data="activeFansData"
-            :more="{ name: 'home' }"
-            class="active-fans-pane"
-          />
-        </div>
-
-        <div class="board-row">
           <HotPane
-            title="近30日全网热度"
+            title="近30日微博指数"
             :data="hotData"
             :more="{ name: 'home' }"
             tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
-            :legendList="legendList"
             :formatter="hotFormatter"
             class="hot-pane"
           />
@@ -85,12 +89,12 @@ export default class FigurePage extends ViewBase {
 
   basic = {
     id: this.id,
-    name: '吴京',
-    subName: 'Wu Jing',
-    title: '演员 / 导演 / 制片人',
+    name: 'Papi酱',
+    subName: '',
+    title: '搞笑视频自媒体',
     figure: 'https://picsum.photos/id/435/154/218',
-    rankNo: '92.02',
-    rankTitle: '中国男演员票房 : TOP1',
+    rankNo: '86.5',
+    rankTitle: '全网排名：100<br>搞笑类：1',
   }
 
   bigFigure = this.id == 1 ? '' : 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
@@ -108,10 +112,22 @@ export default class FigurePage extends ViewBase {
     '少林寺',
   ]
 
-  opusList = [
-    { title: '《流浪地球》演员是放松放松时发生地方', count: '46.8亿' },
-    { title: '《流浪地球》演员', count: '6.8亿' },
-    { title: '《流浪地球》演员是', count: '16.8亿' },
+  platformList = [
+    { icon: 'douyin', name: '抖音', percent: 100, count: '3288万' },
+    { icon: 'weibo', name: '微博', percent: 80, count: '2288万' },
+    { icon: 'wechat', name: '微信', percent: 60, count: '1888万' },
+    { icon: 'kuaishou', name: '快手', percent: 50, count: '1288万' },
+    { icon: 'xiaohongshu', name: '小红书', percent: 30, count: '888万' },
+  ]
+
+  platformNav = 'weibo'
+
+  platformNavList = [
+    { icon: 'weibo', name: '微博' },
+    { icon: 'wechat', name: '微信' },
+    { icon: 'douyin', name: '抖音' },
+    { icon: 'kuaishou', name: '快手' },
+    { icon: 'xiaohongshu', name: '小红书' },
   ]
 
   brandList = [
@@ -161,10 +177,15 @@ export default class FigurePage extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import './style.less';
+
 .main-content {
   position: relative;
   justify-content: space-between;
   padding-right: 80px;
+  /deep/ .brand-list {
+    padding-right: 42px;
+  }
 }
 
 .layout-big-figure {
@@ -206,7 +227,17 @@ export default class FigurePage extends ViewBase {
 
 .basic-box {
   position: relative;
-  margin: 47px 0 0 102px;
+  margin: 22px 0 0 102px;
+  /deep/ .basic-in {
+    width: 246px;
+    margin-left: 30px;
+  }
+  /deep/ .figure {
+    top: 42px;
+    width: 162px;
+    height: 162px;
+    border-radius: 6px;
+  }
 }
 
 .board-pane {
@@ -214,17 +245,51 @@ export default class FigurePage extends ViewBase {
   margin-top: 14px;
 }
 
+.flatform-nav {
+  display: flex;
+  line-height: 68px;
+  background-color: rgba(0, 31, 44, 0.85);
+  border-radius: 5px 5px 0 0;
+  user-select: none;
+}
+
+.flatform-nav-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  color: #fff;
+  font-size: 14px;
+  padding: 0 2px;
+  margin: 0 22px;
+  opacity: .6;
+  cursor: pointer;
+
+  .platform-icon-xiaohongshu {
+    margin: 0 5px;
+  }
+}
+
+.flatform-nav-item:hover,
+.flatform-nav-on {
+  opacity: 1;
+}
+
+.flatform-nav-on {
+  &::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    bottom: 10px;
+    width: calc(100% - 2px);
+    height: 4px;
+    background-color: #fff;
+    border-radius: 8px;
+  }
+}
+
 .board-row {
   justify-content: space-between;
   margin-top: 6px;
-}
-
-.fans-pane {
-  border-radius: 5px 0 0 0;
-}
-
-.comment-pane {
-  border-radius: 0 5px 0 0;
 }
 
 .active-fans-pane {
@@ -232,7 +297,10 @@ export default class FigurePage extends ViewBase {
 }
 
 .hot-pane {
-  height: 314px;
+  height: 295px;
   border-radius: 0 0 5px 5px;
+  /deep/ .chart {
+    height: 218px;
+  }
 }
 </style>

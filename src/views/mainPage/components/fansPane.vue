@@ -1,5 +1,9 @@
 <template>
-  <Pane :title="title" :more="more">
+  <Pane
+    :title="title"
+    :more="more"
+    :class="{'fans-pane-has-tip': tip != ''}"
+  >
     <div class="fans-content flex-box">
       <div class="fans-man">
         <div class="fans-type">男</div>
@@ -11,7 +15,7 @@
       </div>
     </div>
     <template slot="footer">
-      <div class="fans-info" v-if="info">{{info}}</div>
+      <div class="fans-tip" v-if="tip">{{tip}}</div>
     </template>
   </Pane>
 </template>
@@ -35,7 +39,7 @@ export default class FansPane extends Vue {
 
   @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
 
-  @Prop({ type: String, default: '' }) info!: string
+  @Prop({ type: String, default: '' }) tip!: string
 }
 </script>
 
@@ -83,5 +87,18 @@ export default class FansPane extends Vue {
 .fans-rate {
   font-size: 22px;
   margin-top: 26px;
+}
+
+.fans-tip {
+  text-align: center;
+}
+
+.fans-pane-has-tip {
+  .fans-content {
+    padding: 0 6px;
+  }
+  .fans-rate {
+    margin-top: 10px;
+  }
 }
 </style>
