@@ -857,6 +857,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/film/filmorder/detailInfo.vue'),
     meta: emptyAuth,
   },
+  // 影片（film）- 影片合作 - 列表
+  {
+    path: '/film/cooperation/list',
+    name: 'film-cooperation-list',
+    component: () => import('./views/film/cooperation/list.vue'),
+    meta: emptyAuth
+  },
   // 影片 - 影片合作订单列表
   {
     path: '/film/filmorder/movielist',
