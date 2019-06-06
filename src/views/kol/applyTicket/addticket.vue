@@ -58,7 +58,7 @@
           <Row style='margin-top: 15px;'>
            <Col :span='4' style='margin-top: 5px;'><span class='hui'>电话</span></Col>
            <Col :span='20'>
-            <Input  v-model="query.telphone" placeholder=''></Input>
+            <InputNumber  v-model="query.telphone" placeholder=''></InputNumber >
            </Col>
           </Row>
           <Row style='margin-top: 15px;'>
@@ -70,7 +70,7 @@
           <Row style='margin-top: 15px;'>
            <Col :span='4' style='margin-top: 5px;'><span class='hui'>开户账号</span></Col>
            <Col :span='20'>
-            <Input  v-model="query.accountNumber" placeholder=''></Input>
+            <InputNumber v-model="query.accountNumber" placeholder=''></InputNumber>
            </Col>
           </Row>
           <Row style='margin-top: 15px;'>
@@ -109,7 +109,7 @@
           <Row style='margin-top: 15px;'>
            <Col :span='4' style='margin-top: 5px;'>联系电话<span class='bx'>*</span></Col>
            <Col :span='20'>
-            <Input  v-model="query.contactTelphone" placeholder='请输入能正常联系的电话'></Input>
+            <InputNumber v-model="query.contactTelphone" placeholder='请输入能正常联系的电话'></InputNumber>
            </Col>
           </Row>
           <Row style='margin-top: 15px;'>
@@ -405,5 +405,18 @@ export default class Main extends ViewBase {
   height: 35px;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 1);
+}
+/deep/ .ivu-input-number {
+  border-radius: 5px;
+  height: 35px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 1);
+  width: 100%;
+}
+/deep/ .ivu-input-number-input {
+  border-radius: 5px;
+  height: 35px;
+  background: rgba(255, 255, 255, 0.2);
+  width: 100%;
 }
 </style>
