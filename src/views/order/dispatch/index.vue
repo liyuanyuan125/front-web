@@ -1,97 +1,76 @@
 <template>
-  <div class="page home-bg">
-    <h2 class="layout-nav-title">广告单</h2>
-    <div class="order-list-title">以下广告单已经过平台审核，接单后需要按照广告单中要求投放的影片在您的影院进行排播；结算方式[CPM（按曝光人次计费）]
-<span v-if="cinemaList.length == 1">您当前影院为 {{cinemaList[0].shortName}}</span>
-<span v-else>您当前共有 {{cinemaTotalCount}} 家影院的广告代理权</span>
-     </div>
+  <div class="page order-home">
+    <h2 class="order-nav">广告单</h2>
+    <div class="order-list-title">
+      <p>以下广告单已经过平台审核，接单后需要按照广告单中要求投放的影片在您的影院进行排播；结算方式 [CPM（按曝光人次计费）]</p>
+      <p  v-if="cinemaList.length == 1">您当前影院为 {{cinemaList[0].shortName}}</p>
+      <p  v-else>您当前共有 {{cinemaTotalCount}} 家影院的广告代理权</p>
+    </div>
     <div class="order-content">
-      <Form :model="form" :label-width="90" class=" edit-input order-form">
-        <Row>
-          <Col :span="7">
-            <FormItem label="投放日期">
-              <DatePicker type="daterange"  v-model='putDate'  @on-change="handleChange" 
-              placeholder="开始日期和结束日期" ></DatePicker>
-            </FormItem>
-          </Col>
-
-           <Col :span="7">
-            <FormItem label="影院名称">
-              <Select v-model='form.CinemaId' filterable clearable placeholder="影院名称">
-                  <Option
-                    v-for="item in cinemaList"
-                    :key="item.id"
-                    :value="item.id"
-                  >{{item.shortName}}</Option>
-                </Select>
-            </FormItem>
-          </Col>
-          
-          <Col :span="7">
-            <FormItem label="广告片名称">
-              <Select v-model='form.videoId' filterable  clearable placeholder="广告片名称" >
-                  <Option
-                    v-for="item in advlistName"
-                    :key="item.videoId"
-                    :value="item.videoId"
-                  >{{item.videoName}}</Option>
-                </Select>
-            </FormItem>
-          </Col>
-        </Row>
-      </Form>
+      <div class="order-form flex-box">
+         <DatePicker type="daterange" class="item-list-sel" style="width: 250px"  v-model='putDate'  @on-change="handleChange"  placeholder="开始日期和结束日期" ></DatePicker>
+         <Select v-model='form.CinemaId' class="item-list-sel" style="width: 250px" filterable clearable placeholder="影院名称" >
+            <Option v-for="item in cinemaList" :key="item.id" :value="item.id" >{{item.shortName}}</Option>
+         </Select>
+         <Input v-model="videoName" placeholder="广告片名称" style="width: 250px" />
+         <Button type="primary" @click="searchList" class="select-btn">搜索广告单</Button>
+      </div>
 
       <Tabs @on-click="handleTabs">
         <TabPane v-for="tab in statusList" :key="tab.key" v-if="tab.key != 0 && tab.key != 8" 
         :label="handleJoin(tab)"></TabPane>
       </Tabs>
-
-      <ul class='itemul' v-auth="'adordermanage.order#view'">
+      <!-- v-auth="'adordermanage.order#view'" -->
+      <ul class='itemul' >
         <li v-for='(it,index) in itemlist' :key='index'>
-          <div class="table-header-title flex-box">
-            <p><label>投放排期：</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
-            <p><label>预估最大收益/(元)：</label><em>{{it.estimateRevenue}}</em></p>
+          <div class="table-header-title  flex-box">
+            <p><label>投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
+            <p><label>预估最大收益/(元)</label><em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em></p>
           </div>
           <Row class="table-content-list" type="flex" justify="center" align="middle">
             <Col span="14">
               <div class="flex-box col-order">
-                <p><label>广告片名称：</label><em>{{it.videoName}}</em></p>
-                <p v-if="it.targetCinemas.length">
-                  <label>目标影院：</label>
+                <p ><label>广告片名称</label><em>{{it.videoName}}</em></p>
+                <p  v-if="it.targetCinemas.length">
+                  <label>目标影院</label>
                   <em>{{it.targetCinemas.length}}家</em> 
                   <span class="query-status"  @click="edittarget(it.id, 1)" >查看</span></p>
-                <p v-else><label>目标影院：</label><em>{{it.cinemaName}}</em></p>
+                <p v-else><label>目标影院</label><em>{{it.cinemaName}}</em></p>
               </div>
               <div class="flex-box col-order">
-                <p><label>广告片规格：</label><em>{{it.specification || 0}}s</em></p>
-                <p><label>目标影厅：</label><em>{{it.hallsCount || '暂无'}}</em></p>
+                <p><label>广告片规格</label><em>{{it.specification || 0}}s</em></p>
+                <p><label>目标影厅</label><em>{{it.hallsCount || '暂无'}}</em></p>
               </div>
               <div class="flex-box col-order">
-                <p><label>投放周期：</label><em>{{it.cycle || 0}}天</em></p>
-                <p><label>目标场次：</label><em>{{it.targetSession || '暂无'}}</em></p>
+                <p><label>投放周期</label><em>{{it.cycle || 0}}天</em></p>
+                <p><label>目标场次</label><em>{{it.targetSession || '暂无'}}</em></p>
               </div>
-              <div><p><label>目标影片：</label><span  v-if='it.targetMovies.length > 0' 
+              <div class="col-order target-cinema"><p><label>目标影片</label><span  v-if='it.targetMovies.length > 0' 
                 v-for='item in it.targetMovies'>《{{item.movieName}}》</span><span v-if='it.targetMovies.length == 0'>暂无    </span></p></div>
             </col>
-            <Col span="5"><div v-for="item in statusList" v-if="item.key == it.status">{{item.text}}</div></col>
             <Col span="5">
-               <div  class="btn-sure-cancel">
-                  <p><Button type="primary" @click="editReject(it.id)" class="operation-btn button-ok ">确定接单</Button></p>
-                  <p><Button type="primary" @click="editRefuse(it)" class="operation-btn button-ok ">拒绝接单</Button></p>
+                 <div v-for="item in statusList" :key="item.key" v-if="item.key == it.status" class="statu-col" 
+                 :class="{'statu-col-error': item.key == 4 || item.key == 5}">{{item.text}}</div>
+            </col>
+            <Col span="5" class="text-center">
+               <div class="btn-sure-cancel">
+                  <p><Button type="primary" @click="editReject(it.id)" class="operation-btn">确定接单</Button></p>
+                  <p><Button  @click="editRefuse(it)" class="operation-btn result-btn">拒绝接单</Button></p>
                 </div>
                 <div >
-                   <Button type="primary" class="operation-btn button-ok " :to="{ name: 'order-dispatch-details', params: { id: it.id } }" >查看详情</Button>
+                   <Button class=" operation-btn  query-detail-btn " :to="{ name: 'order-dispatch-details', params: { id: it.id } }" >查看详情</Button>
                 </div>
             </col>
           </Row>
         </li>
       </ul>
-      <ul class='itemul no-order-list' v-if='itemlist.length == 0'> 暂无订单数据</ul>
-    </div>
-
-     <Page :total="totalCount"  v-if="totalCount>0" class="btnCenter" :current="pageIndex"
+      <ul class='no-order-list' v-if='itemlist.length == 0'> 暂无订单数据</ul>
+      <Page :total="totalCount"  v-if="totalCount>0" class="order-page-list" :current="pageIndex"
       :page-size="pageSize"  show-total  show-elevator 
        @on-change="handlepageChange"  @on-page-size-change="handlepageChange" />
+    </div>
+
+     
 
     <dlgRejec ref="reject" v-model="rejectVisible" v-if="rejectVisible.visible" @rejReload="orderList"/>
     <targetDlg ref="target" v-if="targetShow" />
@@ -102,9 +81,10 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { queryOrderList, queryCinemaList, queryVideoName } from '@/api/norderDis'
-import { formatConversion } from '@/util/validateRules.ts'
+import { queryOrderList, queryCinemaList } from '@/api/norderDis'
+import { formatConversion, formatNumber } from '@/util/validateRules.ts'
 import { getUser } from '@/store'
+import { slice, clean, except } from '@/fn/object'
 import dlgRejec from './dlgReject.vue'
 import targetDlg from './targetDlg.vue'
 import refuseDlg from './refuseDlg.vue'
@@ -129,16 +109,19 @@ export default class Main extends ViewBase {
     beginDate: null,
     endDate: null,
     CinemaId: null,
-    videoId: null, // 广告片id
+    // videoName: null,
     status: 1,
   }
+  videoName = null
+  // 广告片名称模糊查询
+  searchLoading = false
 
   // 影院名称list
   cinemaList = []
   cinemaTotalCount = null
 
   // 广告片名称
-  advlistName = []
+  // advlistName = []
 
   // 状态列表
   statusList: any = []
@@ -157,9 +140,12 @@ export default class Main extends ViewBase {
     return formatConversion
   }
 
+  get formatNumber() {
+    return formatNumber
+  }
+
   mounted() {
     this.queryCinemaList()
-    // this.queryVideoName()
     this.orderList()
   }
 
@@ -170,6 +156,7 @@ export default class Main extends ViewBase {
       return tab.text
     }
   }
+
   async queryCinemaList() {
     try {
       const companyId = getUser() && getUser()!.companyId
@@ -187,26 +174,24 @@ export default class Main extends ViewBase {
     }
   }
 
-  async queryVideoName() {
-    try {
-      const {
-        data: {items} } = await queryVideoName({})
-      this.advlistName = items || []
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
-
   async orderList() {
     try {
-      const dataList = await queryOrderList({
+      const {
+        data: {
+          totalCount,
+          statusList,
+          orderCount,
+          items
+        }
+      } = await queryOrderList({
         pageIndex: this.pageIndex,
         pageSize: this.pageSize,
-        ...this.form
+        ...this.form,
+        videoName: this.videoName
       })
-      this.totalCount = dataList.data.totalCount
+      this.totalCount = totalCount
       // 处理空数组null转化为[]
-      this.itemlist = (dataList.data.items || []).map( (item: any) => {
+      this.itemlist = (items || []).map( (item: any) => {
         return {
           ...item,
           targetCinemas: item.targetCinemas || [],
@@ -214,19 +199,19 @@ export default class Main extends ViewBase {
         }
       })
       // 处理订单统计
-      const orderCount = dataList.data.orderCount
-      dataList.data.statusList.map( (item: any) => {
+      const order = orderCount
+      statusList.map( (item: any) => {
         if (item.text == '待接单') {
-          item.num = orderCount.waiting
+          item.num = order.waiting
         } else if (item.text == '待执行') {
-          item.num = orderCount.unexecute
+          item.num = order.unexecute
         } else if (item.text == '执行中') {
-          item.num = orderCount.beexecute
+          item.num = order.beexecute
         } else if (item.text == '待结算') {
-          item.num = orderCount.besettlement
+          item.num = order.besettlement
         }
       })
-      this.statusList = dataList.data.statusList
+      this.statusList = statusList
     } catch (ex) {
        this.handleError(ex)
     }
@@ -269,6 +254,11 @@ export default class Main extends ViewBase {
     this.orderList()
   }
 
+  searchList() {
+    this.pageIndex = 1
+    this.orderList()
+  }
+
   @Watch('form', {deep: true})
   watchQuery() {
     this.pageIndex = 1
@@ -278,67 +268,104 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-.btnCenter {
-  margin-bottom: 30px;
+@import '~@/views/kol/less/common.less';
+
+.item-list-sel {
+  width: 288px;
+  margin-right: 20px;
 }
-.order-list-title {
-  padding: 15px 20px;
-  line-height: 23px;
-  background: #fff;
-  margin-bottom: 15px;
-}
-.order-form {
-  .ivu-form-item {
-    margin-right: 20px;
-  }
-  /deep/ .ivu-date-picker {
-    width: 100%;
-    .ivu-input-wrapper {
-      width: 100%;
+.order-home {
+  padding: 30px 50px 50px;
+  .order-list-title {
+    background: #00202d;
+    padding: 35px 30px 25px;
+    color: #fff;
+    font-size: 15px;
+    border-radius: 8px 8px 0 0;
+    p {
+      padding-bottom: 8px;
     }
-  }
-  /deep/ .ivu-select-selection {
-    width: auto;
   }
 }
 .order-content {
-  background: #fff;
-  padding: 20px 20px 40px;
+  .order-form {
+    margin: 30px auto 30px;
+  }
   .no-order-list {
     margin-top: 40px;
     text-align: center;
   }
   .operation-btn {
-    padding: 0;
-    width: 80px;
-    height: 30px;
-    line-height: 30px;
+    width: 105px;
+    height: 28px;
+    line-height: 16px;
+    text-align: center;
+    color: #fff;
     font-size: 14px;
-    margin-bottom: 10px;
+    background: #00202d;
+    border-radius: 14px;
+    border: 0;
+    margin-bottom: 20px;
+  }
+  .result-btn {
+    background: #fff;
+    border: solid 1px #00202d;
+    color: #00202d;
+  }
+  .query-detail-btn {
+    background: none;
+    border: 0;
+    font-size: 14px;
+    color: #00202d;
+  }
+  /deep/ .ivu-tabs {
+    height: 56px;
+    line-height: 56px;
+    background: rgba(0, 32, 45, .9);
+    color: #fff;
+    .ivu-tabs-tab-active {
+      font-size: 14px;
+      color: #4fa6bb;
+    }
   }
 }
 .query-status {
-  color: #0f4d96;
+  color: #4fa6bb;
   cursor: pointer;
   padding-left: 10px;
 }
 .itemul {
+  font-size: 14px;
+  background: rgba(255, 255, 255, .7);
   li {
-    border: 1px solid rgba(211, 231, 248, 1);
-    margin-top: 15px;
     .table-header-title {
-      padding: 16px 20px;
-      background: #f2f2f2;
+      padding: 25px 30px;
       p {
-        margin-right: 50px;
+        margin-right: 30px;
+        label {
+          padding-right: 20px;
+        }
+      }
+      .max-earning {
+        color: #da6c70;
       }
     }
     .table-content-list {
-      padding: 20px 20px 30px;
+      background: #fff;
+      padding: 30px 0 40px 30px;
+      .target-cinema {
+        padding-top: 35px;
+      }
       .col-order {
-        margin-bottom: 15px;
+        margin-bottom: 12px;
         p {
           width: 49%;
+          display: flex;
+          label {
+            display: inline-block;
+            width: 80px;
+            color: rgba(0, 32, 45, .7);
+          }
         }
       }
     }
@@ -356,43 +383,56 @@ export default class Main extends ViewBase {
     }
   }
 }
-/deep/ .ivu-tabs-nav {
-  width: 93%;
-  padding: 0;
-  .ivu-tabs-tab {
-    margin-right: 16px;
-    width: 14.2%;
-    text-align: center;
-    padding: 10px 0;
-  }
+.order-page-list {
+  text-align: center;
+  background: rgba(255, 255, 255, .7);
+  padding: 35px 0 40px;
 }
-/deep/ .ivu-radio-group-button .ivu-radio-wrapper {
-  margin-left: 12px;
-  transition: all 0s !important;
+.select-btn {
+  background: rgba(0, 32, 35, 1);
+  font-size: 14px;
+  border: 0;
+  margin-left: 30px;
 }
-/deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
-  color: #fff;
-  background: #3b98ff;
-  border-color: #3b98ff;
+.statu-col {
+  color: #5f961f;
 }
-/deep/ .ivu-input-search {
-  background: #3b98ff !important;
-  border-color: #3b98ff !important;
+.statu-col-error {
+  color: #e86267;
 }
-/deep/ .ivu-radio-group-button .ivu-radio-wrapper:last-child {
-  border-radius: 0;
-}
-/deep/ .ivu-radio-group-button .ivu-radio-wrapper:first-child {
-  border-radius: 0;
-}
-/deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
-  border-color: #dcdee2;
-}
-/deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked::before {
-  background: #3b98ff;
-  opacity: 1;
-}
-/deep/ .ivu-radio-group-button .ivu-radio-wrapper::before, .ivu-radio-group-button .ivu-radio-wrapper::after {
-  transition: all 0s !important;
-}
+// /deep/ .ivu-tabs-nav {
+//   padding: 0;
+//   .ivu-tabs-tab {
+//     text-align: center;
+//   }
+// }
+// /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+//   margin-left: 12px;
+//   transition: all 0s !important;
+// }
+// /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+//   color: #fff;
+//   background: #3b98ff;
+//   border-color: #3b98ff;
+// }
+// /deep/ .ivu-input-search {
+//   background: #3b98ff !important;
+//   border-color: #3b98ff !important;
+// }
+// /deep/ .ivu-radio-group-button .ivu-radio-wrapper:last-child {
+//   border-radius: 0;
+// }
+// /deep/ .ivu-radio-group-button .ivu-radio-wrapper:first-child {
+//   border-radius: 0;
+// }
+// /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+//   border-color: #dcdee2;
+// }
+// /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked::before {
+//   background: #3b98ff;
+//   opacity: 1;
+// }
+// /deep/ .ivu-radio-group-button .ivu-radio-wrapper::before, .ivu-radio-group-button .ivu-radio-wrapper::after {
+//   transition: all 0s !important;
+// }
 </style>

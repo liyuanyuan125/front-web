@@ -489,6 +489,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'promotion.ad-video',
       authAction: 'viewList',
       authIsMenu: true,
+      title: ''
     }
   },
 
@@ -499,6 +500,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/pop/film/edit.vue'),
     meta: {
       authKey: 'promotion.ad-video',
+      title({params}) {
+        return params.id as any > 0 ? '编辑' : '新建'
+      },
       authAction(route) {
         const id = parseInt(route.params.id, 10) || 0
         return id > 0 ? 'edit' : 'create'
@@ -514,6 +518,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'promotion.ad-video',
       authAction: 'view',
+      title: '查看'
     }
   },
 
@@ -889,6 +894,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/film/filmorder/detailInfo.vue'),
     meta: emptyAuth,
   },
+  // 影片（film）- 影片合作 - 列表
+  {
+    path: '/film/cooperation/list',
+    name: 'film-cooperation-list',
+    component: () => import('./views/film/cooperation/list.vue'),
+    meta: emptyAuth
+  },
   // 影片 - 影片合作订单列表
   {
     path: '/film/filmorder/movielist',
@@ -945,7 +957,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'film-filmmakerdetail-moreinformation',
     component: () => import('./views/film/filmmakerDetails/moreInformation.vue'),
     meta: emptyAuth
-  }
+  },
 ] // end of mainLayoutRoutes
 
 const errorRoutes: RouteConfigEnhance[] = [
