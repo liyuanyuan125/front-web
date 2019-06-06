@@ -55,7 +55,7 @@ export interface Legend {
     ECharts
   }
 })
-export default class ActiveFansPane extends Vue {
+export default class HotPane extends Vue {
   @Prop({ type: String, default: '' }) title!: string
 
   @Prop({ type: Array, default: () => [] }) data!: DataItem[]
