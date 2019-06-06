@@ -1,10 +1,5 @@
 <template>
   <div ref="page" class="page">
-    <div class="pages" v-if="step == 0"></div>
-    <div class="layout-nav-title">
-      <router-link :to="{name: 'pop-film'}" >广告计划</router-link> > 
-        <span> 新建广告计划</span>
-    </div>  
     <Row style="overflow:hidden">
       <Col span="22" offset="3">
         <StepTime v-model="step" />

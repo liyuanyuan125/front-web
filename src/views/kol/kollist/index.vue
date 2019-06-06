@@ -1,49 +1,49 @@
 <template>
   <div class="kol-page">
     <h3 class="kol-title">KOL列表</h3>
-    <Header v-model="type"/>
+    <Header v-model="type" :invalue="acount" />
     <div>
       <Form :model="form" ref="dataform" label-position="left" :label-width="100" class="edit-input forms">
         <div class="check-detail">
           <FormItem label="账号类别"  class="form-item-type">
             <RadioGroup  v-model="form.accountCategoryCode" class="item-radio-top">
-              <Radio class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio  v-for="it in accountList" :key="it.key" :label="it.key"
+              <Radio :disabled="acount==2" class="check-item form-item-first" :label="0">不限</Radio>
+              <Radio :disabled="acount==2" v-for="it in accountList" :key="it.key" :label="it.key"
                 class="check-item">{{it.text}}</Radio>
             </RadioGroup>
           </FormItem>
           <FormItem label="粉丝数量"  class="form-item-type">
             <RadioGroup  v-model="form.fansRangCode" class="item-radio-top">
-              <Radio class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio  v-for="it in fansList" :key="it.key" :label="it.key"
+              <Radio :disabled="acount==2" class="check-item form-item-first" :label="0">不限</Radio>
+              <Radio :disabled="acount==2" v-for="it in fansList" :key="it.key" :label="it.key"
                 class="check-item">{{it.text}}</Radio>
             </RadioGroup>
           </FormItem>
           <FormItem label="地域分布"  class="form-item-type">
             <RadioGroup  v-model="area" class="item-radio-top">
-              <Radio @click.native="areabox(false)" class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio @click.native="areabox(true)" class="check-item" :label='1'>指定区域</Radio>
+              <Radio :disabled="acount==2" @click.native="areabox(false)" class="check-item form-item-first" :label="0">不限</Radio>
+              <Radio :disabled="acount==2" @click.native="areabox(true)" class="check-item" :label='1'>指定区域</Radio>
             </RadioGroup>
           </FormItem>
           <div v-if="areaShow" class="area-box">
             <FormItem :label-width="0"  class="">
               <CheckboxGroup v-model="areacode">
-                <Checkbox v-for="(it, index) in areaLists" :key="index" :label="it.id">{{it.nameCn}}</Checkbox>
+                <Checkbox :disabled="acount==2" v-for="(it, index) in areaLists" :key="index" :label="it.id">{{it.nameCn}}</Checkbox>
               </CheckboxGroup>
             </FormItem>
             <Button type="primary" class="button-ok" @click="sure()">确定</Button>
           </div>
           <FormItem label="价格区间"  class="form-item-type">
             <RadioGroup  v-model="form.priceRangCode" class="item-radio-top">
-              <Radio class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio  v-for="it in priceList" :key="it.key" :label="it.key"
+              <Radio :disabled="acount==2" class="check-item form-item-first" :label="0">不限</Radio>
+              <Radio :disabled="acount==2" v-for="it in priceList" :key="it.key" :label="it.key"
                 class="check-item">{{it.text}}</Radio>
             </RadioGroup>
           </FormItem>
           <FormItem label="受众性别"  class="form-item-type">
             <RadioGroup  v-model="form.sex" class="item-radio-top">
-              <Radio class="check-item form-item-first" :label="-1">不限</Radio>
-              <Radio  v-for="it in sexList" :key="it.key" :label="it.key"
+              <Radio :disabled="acount==2" class="check-item form-item-first" :label="-1">不限</Radio>
+              <Radio :disabled="acount==2" v-for="it in sexList" :key="it.key" :label="it.key"
                 class="check-item">{{it.text}}</Radio>
             </RadioGroup>
           </FormItem>
@@ -51,64 +51,93 @@
         
         <div class="acount-box">
           <div class="acount">
-            <span :class="acount == 1 ? 'active' : ''">全部账号</span>
-            <span :class="acount == 2 ? 'active' : ''">全部收藏</span>
+            <span @click="allcollects(1)" :class="acount == 1 ? 'active' : ''">
+              全部账号
+            </span>
+            <span @click="allcollects(2)" :class="acount == 2 ? 'active' : ''">我的收藏</span>
           </div>
           <span class="content-set">平均数量以近90天的内容计算</span>
           <span class="content-set">数据更新日期2019-04-28</span>
           <FormItem  class="form-name">
-            <Input style="width: 300px" v-model="form.name" suffix="ios-search" :placeholder="nameList[type]" />
+            <Input :disabled="acount == 2" style="width: 300px" v-model="form.name" suffix="ios-search" :placeholder="nameList[type]" />
           </FormItem>
         </div>
       </Form>
 
     <div class="list-box">
       <div class="list-table">
-        <Table :loading="loading" @on-sort-change="sortTable" :columns="columns" :data="tabledata">
+        <Table width="1130px" :loading="loading" @on-sort-change="sortTable" :columns="columns" :data="tabledata">
           <template slot-scope="{ row }" slot="name">
             <div class="table-name">
-              <img :src="row.mainPicUrl" alt=""> 
+              <img :src="row.image" alt=""> 
               <span>{{row.name}}</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="type">
-            {{row.type.join('/')}}
+            {{row.typeName}}
           </template>
           <template slot-scope="{ row }" slot="read">
-            {{row.read}}w+
+            <div style="text-align:center">
+              <span>{{formatNum(row.avgReadCount)}}w+</span>
+            </div>
           </template>
           <template slot-scope="{ row }" slot="flansNumber">
-            {{row.fansNumber}}
+            {{formatNum(row.followersCount)}}
           </template>
           <template slot-scope="{ row }" slot="flansFace">
-            <div v-show="row.fansList.length > 0">
-              <p v-for="it in row.fansList" :key="it.sex" class="flans-box">
-                <span style="margin-left: 10px">{{it.sex}}</span>  <span>{{it.percent}}</span>
+            <div>
+              <p class="flans-box">
+                <span>男性：</span>  <span>{{row.maleFans}}%</span>
+              </p>
+              <p class="flans-box">
+                <span>女性：</span>  <span>{{row.femaleFans}}%</span>
               </p>
               <div>
-                <a @click="viewArea(row.id)" >查看地域</a>
-                <AreaModal v-show="handleShow" v-clickoutside="handleClose" v-if="row.id == areaId" class="flans-modeal" :id="row.id" />
+                <a @click="viewArea(row.areaId, row.id)" >查看地域</a>
+                <AreaModal v-show="handleShow" v-clickoutside="handleClose" v-if="row.id == areaIdshow" class="flans-modeal" :id="row.id" />
               </div>
             </div>
           </template>
           <template slot-scope="{ row }" slot="discuss">
-            {{row.discuss}}
+            <div style="text-align:center">
+              <span>{{formatNum(row.avgCommentsCount)}}</span>
+            </div>
           </template>
           <template slot-scope="{ row }" slot="like">
-            {{row.like}}
+            <div style="text-align:center">
+              <span>{{formatNum(row.avgAttitudesCount)}}w+</span>
+            </div>
           </template>
           <template slot-scope="{ row }" slot="transmit">
-            {{row.transmit}}
+            <div style="text-align:center">
+              <span>{{formatNum(row.avgRepostsCount)}}w+</span>
+            </div>
           </template>
           <template slot-scope="{ row }" slot="price">
-            {{row.price}}
+            <div v-if="row.prices">
+              <p v-for="it in row.prices" :key="it" style="margin-top: 5px">
+                {{it}}
+              </p>
+            </div>
           </template>
           <template slot-scope="{ row }" slot="action">
             <div class="table-action">
-              <p v-if="row.putStatus == 1" @click="debounce(row, $event, 1000)">加入投放</p>
-              <p v-else>取消投放</p>
-              <p v-if="row.likeStatus == 1" @click="debounce(row, $event, 1000)">收藏</p>
-              <p v-else>取消收藏</p>
+              <p v-if="row.putStatus == 1" @click="debounce(row, $event, 1000)">
+                <Icon type="md-add-circle" style="margin-top: 5px; font-size: 17px; color: #CA7273" />
+                加入投放
+              </p>
+              <p v-else @click="cancelShop(row)">
+                <Icon type="md-add-circle" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
+                取消投放
+              </p>
+              <p v-if="!row.collected" @click="collects(row.id)">
+                <Icon type="md-heart" style="margin-top: 5px;font-size: 17px; color: #CA7273" />
+                收藏
+              </p>
+              <p v-else @click="cancelcollects(row.id)">
+                <Icon type="md-heart" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
+                取消收藏
+              </p>
               <div v-if="row.putStatus == 1" :ref="'small' + row.id" class="radiu-url">
                 <img src="http://seopic.699pic.com/photo/50035/0520.jpg_wh1200.jpg" />
               </div>
@@ -116,12 +145,11 @@
           </template>
         </Table>
       </div>
-      
 
       <Page :total="total" v-if="total>0" class="btnCenter"
         :current="form.pageIndex"
         :page-size="form.pageSize"
-        :page-size-opts="[6, 20, 50, 100]"
+        :page-size-opts="[10, 20, 50, 100]"
         show-total
         show-sizer
         show-elevator
@@ -150,12 +178,14 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Header from './header.vue'
 import { cloneDeep } from 'lodash'
-import { titleMsgList, areaList, kolmsglist } from '@/api/kolList.ts'
+import { titleMsgList, areaList, kolmsglist, addcollet, cancelcollect, allcollect, addShopIng } from '@/api/kolList.ts'
 import AreaModal from './areaModal.vue'
 import clickoutside from './directive'
+import { formatCurrency } from '@/fn/string'
 import Detail from './detail.vue'
 import { animation } from '@/fn/self.ts'
 import jsxReactToVue from '@/util/jsxReactToVue'
+import { clean } from '@/fn/object.ts'
 
 // 保持互斥
 const keepExclusion = <T extends any>(
@@ -171,6 +201,17 @@ const keepExclusion = <T extends any>(
     newHas && oldHas && setter(value.filter(it => it != aloneValue))
   }
 }
+const defaultForm: any = {
+  channelCode: 'weibo',
+  accountCategoryCode: 0,
+  fansRangCode: 0,
+  sex: -1,
+  priceRangCode: 0,
+  areaIds: [0],
+  name: '',
+  pageIndex: 1,
+  pageSize: 10
+}
 @Component({
   components: {
     Header,
@@ -183,27 +224,20 @@ const keepExclusion = <T extends any>(
 })
 export default class Main extends ViewBase {
   time = 0
-  type: number = 0
+  type: any = 0
   total = 0
   areaId = 0
+  areaIdshow = -1
   radiusUrl = ''
   loading: boolean = false
   form: any = {
-    channelCode: 'weibo',
-    accountCategoryCode: 0,
-    fansRangCode: 0,
-    sex: -1,
-    priceRangCode: 0,
-    areaIds: [0],
-    // name: '',
-    pageIndex: 1,
-    pageSize: 10
+    ...defaultForm
   }
   acount = 1
   checkDetail = false
   checkCount = 0
   checkPeople = 0
-  area = [0]
+  area = 0
   accountList: any = []
   fansList: any = []
   sexList: any = []
@@ -213,18 +247,19 @@ export default class Main extends ViewBase {
   detail = false
   handleShow = false
   tabledata: any = []
-  nameList: any = ['微博名', '公众号名称', '账号名称', '账号名称', '账号名称']
+  nameList: any = ['微博名', '公众号名称', '账号名称', '账号名称', '账号名称', '账号名称', '账号名称']
   left: any = 0
   top: any = 0
   areacode: any = []
   areaShow = false
+  title: any = ['weibo', 'wechat', 'douyin', 'xiaohonghsu']
 
   get columns() {
-    const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号']
+    const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号', '全部账号', '全部账号']
     return [
       {
         title: title[this.type],
-        width: 150,
+        minWidth: 110,
         slot: 'name',
       },
       {
@@ -237,11 +272,13 @@ export default class Main extends ViewBase {
         title: '粉丝数',
         align: 'left',
         minWidth: 40,
-        slot: 'flansNumber'
+        key: 'followersCount',
+        slot: 'flansNumber',
+        sortable: 'custom'
       },
       {
         title: '粉丝画像',
-        align: 'left',
+        align: 'center',
         minWidth: 40,
         slot: 'flansFace'
       },
@@ -249,46 +286,51 @@ export default class Main extends ViewBase {
         title: '平均阅读数',
         minWidth: 51,
         align: 'left',
-        slot: 'read'
+        key: 'avgReadCount',
+        slot: 'read',
+        sortable: 'custom'
       },
       {
         title: '平均评论数',
         minWidth: 51,
         align: 'left',
         slot: 'discuss',
-        sortable: 'custom'
+        key: 'avgCommentsCount',
+        sortable: 'custom',
       },
       {
         title: '平均点赞数',
         minWidth: 51,
         align: 'left',
         slot: 'like',
+        key: 'avgAttitudesCount',
         sortable: 'custom'
       },
       {
         title: '平均转发数',
         align: 'left',
         minWidth: 51,
+        key: 'avgRepostsCount',
         slot: 'transmit',
         sortable: 'custom'
       },
       {
         title: '投放价格',
         align: 'left',
-        minWidth: 40,
+        minWidth: 70,
         slot: 'price',
         renderHeader: (hh: any, { row }: any) => {
           /* tslint:disable */
           const h = jsxReactToVue(hh)
           return <div class='row-acts'>
-            <div></div>
+            <div>投放价格</div>
           </div>
           /* tslint:enable */
         }
       },
       {
         title: '操作',
-        width: 70,
+        width: 90,
         align: 'left',
         slot: 'action'
       }
@@ -299,19 +341,23 @@ export default class Main extends ViewBase {
     this.areaShow = check
   }
 
+  formatNum(data: any) {
+    return data ? formatCurrency(data, 0) : 0
+  }
+
   created() {
     this.init()
     this.seach()
     this.KolSeach()
   }
 
-  viewArea(id: any) {
+  viewArea(areaId: any, id: any) {
     this.handleShow = true
-    this.areaId = id
+    this.areaIdshow = id
   }
 
   handleClose(e: any) {
-    this.areaId = 0
+    this.areaIdshow = -1
   }
 
   async seach() {
@@ -321,8 +367,7 @@ export default class Main extends ViewBase {
         channelFansCountList,
         sexList,
         channelPriceList
-
-      } } = await titleMsgList('weibo')
+      } } = await titleMsgList(this.title[this.type])
       const data: any = await areaList({
         parentIds: 0,
         pageIndex: 1,
@@ -361,11 +406,12 @@ export default class Main extends ViewBase {
     })
     this.areaShow = false
   }
+
   async sortTable(column: any) {
     if (column.order == 'desc') { // 降序
-
+        this.KolSeach(column.key, 'desc')
     } else {
-
+      this.KolSeach(column.key, '')
     }
   }
 
@@ -398,35 +444,67 @@ export default class Main extends ViewBase {
 
   async put(row: any, e: any) {
     try {
-      const dom: any   = this.$refs[`small${row.id}`]
-      const id = row.id
-      const x = e.clientX
-      const y = e.clientY
-      const end: any  = this.$refs.end
-      this.checkDetail = true
-      const left = end.getBoundingClientRect().left || window.screen.width / 3 + 100
-      const top = end.getBoundingClientRect().top || window.screen.availHeight - 120
-      dom.style.cssText = `left: ${x }px; top: ${ y - 80}px; display: block`
-      animation(dom, {
-          left: `${left - 10}px`,
-          top: `${top }px`,
-          height: '30px',
-          width: '30px'
-        },
-        1000,
-        'easeBoth',
-        async () => {
-          this.tabledata = this.tabledata.map((it: any) => {
-            return {
-              ...it,
-              putStatus: it.id == id ? 0 : 1
-            }
-          })
-          this.checkCount ++
-          this.checkPeople += row.fansNumber
-          dom.style.cssText = `display: block`
-        }
-      )
+      this.$nextTick(() => {
+        const dom: any   = this.$refs[`small${row.id}`]
+        const id = row.id
+        const x = e.clientX
+        const y = e.clientY
+        const end: any  = this.$refs.end
+        this.checkDetail = true
+        const left = end.getBoundingClientRect().left || window.screen.width / 3 + 100
+        const top = end.getBoundingClientRect().top || window.screen.availHeight - 120
+        dom.style.cssText = `left: ${x }px; top: ${ y - 80}px; display: block`
+        animation(dom, {
+            left: `${left - 10}px`,
+            top: `${top }px`,
+            height: '30px',
+            width: '30px'
+          },
+          1000,
+          'easeBoth',
+          async () => {
+            // await addShopIng({
+            //   kolId: row.id,
+            //   channelCode: row.
+            // })
+            this.tabledata = this.tabledata.map((it: any) => {
+              return {
+                ...it,
+                putStatus: it.id == id ? 0 : 1
+              }
+            })
+            this.checkCount ++
+            this.checkPeople += row.fansNumber
+            dom.style.cssText = `display: block`
+          }
+        )
+      })
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  // 加入收藏
+  async collects(id: any) {
+    try {
+      await addcollet({
+        channelCode: this.title[this.type],
+        channelDataId: id
+      })
+      this.KolSeach()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  // 取消收藏
+  async cancelcollects(id: any) {
+    try {
+      await cancelcollect({
+        channelCode: this.title[this.type],
+        channelDataId: id
+      })
+      this.KolSeach()
     } catch (ex) {
       this.handleError(ex)
     }
@@ -441,53 +519,93 @@ export default class Main extends ViewBase {
   checkDetailSet(val: any) {
   }
 
-  async KolSeach() {
-    const query = {
+  async KolSeach(key?: any, order?: any) {
+    this.loading = true
+    const query = clean({
       ...this.form,
-      accountCategoryCode: this.form.accountCategoryCode,
-      fansRangCode: this.form.fansRangCode,
-      sex: Number(this.form.sex),
-      priceRangCode: this.form.priceRangCode,
-      areaIds: this.form.areaIds.join(',')
-    }
-    try {
-      await kolmsglist(query)
-    } catch (ex) {
-
-    }
-  }
-
-
-  @Watch('area', { deep: true })
-  watchArea(value: number[], oldValue: number[]) {
-    // 不限与其他项互斥
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.area = newValue
+      accountCategoryCode: this.form.accountCategoryCode == 0 ? '' : this.form.accountCategoryCode,
+      fansRangCode: this.form.fansRangCode == 0 ? '' : this.form.fansRangCode,
+      sex: this.form.sex == -1 ? '' : this.form.sex,
+      priceRangCode: this.form.priceRangCode == 0 ? '' : this.form.priceRangCode,
+      areaIds: this.area == 0 && this.form.areaIds.join(',') == 0 ? '' : this.form.areaIds.join(','),
+      sortBy: key,
+      order
     })
-    if (value.length == 0) {
-      this.area = [0]
+    try {
+      const { data: {
+        items,
+        totalCount
+      }} = await kolmsglist(query)
+      this.tabledata = items || []
+      this.total = totalCount
+      this.loading = false
+    } catch (ex) {
+      this.handleError(ex)
     }
   }
+
+  async allcollects(count: any) {
+    this.acount = count
+    if (this.acount == 1) {
+      this.KolSeach()
+    } else {
+      try {
+        await allcollect({
+          channelCode: this.title[this.type],
+          pageIndex: this.form.pageIndex,
+          pageSize: this.form.pageSize
+        })
+
+      } catch (ex) {
+        this.handleError(ex)
+      }
+    }
+  }
+
+  // @Watch('area', { deep: true })
+  // watchArea(value: number[], oldValue: number[]) {
+  //   // 不限与其他项互斥
+  //   keepExclusion(value, oldValue, 0, newValue => {
+  //     this.area = newValue
+  //   })
+  //   if (value.length == 0) {
+  //     this.area = [0]
+  //   }
+  // }
 
   @Watch('form', { deep: true })
   watchForm(value: any) {
     this.KolSeach()
   }
 
-  // @Watch('type')
-  // watchType(value: number) {
-  //   this.form = {
-  //     ...this.from
-  //   }
-  // }
+  @Watch('area')
+  watchArea(value: any) {
+    if (value == 0) {
+      this.form.areaIds = []
+    }
+  }
+  @Watch('type')
+  watchType(value: number) {
+    if (this.acount == 1) {
+      this.form = {
+        ...defaultForm,
+        channelCode: this.title[value]
+      }
+      this.seach()
+    } else {
+      this.allcollects(2)
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+/deep/ .ivu-checkbox-wrapper {
+  width: 150px;
+}
 .kol-page {
-  padding: 0 40px;
+  padding: 0 30px;
 }
 .kol-title {
   text-align: center;
@@ -529,13 +647,18 @@ export default class Main extends ViewBase {
   text-align: center;
 }
 .list-box {
-  background: #fff;
+  position: absolute;
+  margin-bottom: 40px;
+  left: 160px;
+  right: 40px;
+  overflow: auto;
+  background: rgba(255, 255, 255, .9);
   border-radius: 5px;
 }
 .area-box {
   margin: 0 24px;
   margin-top: -20px;
-  padding: 20px 0;
+  padding: 20px 30px;
   background: rgba(255, 255, 255, .7);
   min-height: 140px;
   position: relative;
@@ -560,6 +683,7 @@ export default class Main extends ViewBase {
   margin-bottom: 30px;
   position: relative;
   .acount {
+    cursor: pointer;
     border-right: 2px solid #fff;
     span {
       font-weight: bold;
@@ -636,35 +760,56 @@ export default class Main extends ViewBase {
   border-radius: 5px;
 }
 .list-table {
-  background: #fff;
+  position: relative;
   border-radius: 5px;
+  width: 1146px;
   padding-left: 20px;
   padding-right: 20px;
   &::before {
     content: '';
     position: absolute;
-    left: 170px;
-    right: 50px;
+    left: 0;
+    right: 0;
     height: 61px;
+    border-radius: 5px 5px 0 0;
     background: #f8f8f9;
   }
   /deep/ .ivu-table-header {
     position: relative;
   }
   /deep/ .ivu-table-row {
-    border-bottom: 2px solid #f8f8f9;
+    border-bottom: 2px solid rgba(255, 255, 255, .4);
   }
 }
 /deep/ .ivu-table-wrapper {
-  width: calc(100%);
+  width: calc(100% - 19);
   margin: 0;
-  position: initial !important;
+  min-height: 240px;
+  overflow: auto;
   /deep/ .ivu-table-header th {
     height: 60px;
     line-height: 60px;
     span {
       font-size: 14px;
     }
+  }
+  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-row {
+    background: rgba(255, 255, 255, 0);
+    /deep/ td {
+      background: rgba(0, 0, 0, 0);
+    }
+  }
+  /deep/ .ivu-table-tbody {
+    color: #001f2c;
+  }
+  /deep/ .ivu-table-tip td {
+    margin-top: 50px;
   }
   /deep/ .ivu-table-cell {
     padding-right: 10px;

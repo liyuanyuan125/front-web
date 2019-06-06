@@ -10,21 +10,50 @@
       ></div>
 
       <div class="basic-box">
-        <BasicPane :item="basic" :opusList="opusList" :brandList="brandList"/>
+        <BasicPane
+          :item="basic"
+          :more="{ name: 'home' }"
+          :opusList="opusList"
+          :brandList="brandList"
+        />
       </div>
 
       <section class="board-pane">
         <div class="board-row flex-box">
-          <FansPane class="fans-pane"/>
-          <CommentPane class="comment-pane"/>
+          <FansPane
+            title="粉丝画像"
+            :man="fansMan"
+            :woman="fansWoman"
+            :more="{ name: 'home' }"
+            class="fans-pane"
+          />
+          <PiePane
+            title="近7日评论分析"
+            :more="{ name: 'home' }"
+            :data="commentData"
+            class="comment-pane"
+          />
         </div>
 
         <div class="board-row">
-          <ActiveFansPane class="active-fans-pane"/>
+          <BarPane
+            title="近7日活跃粉丝数"
+            :data="activeFansData"
+            :more="{ name: 'home' }"
+            class="active-fans-pane"
+          />
         </div>
 
         <div class="board-row">
-          <HotPane class="hot-pane"/>
+          <HotPane
+            title="近30日全网热度"
+            :data="hotData"
+            :more="{ name: 'home' }"
+            tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
+            :legendList="legendList"
+            :formatter="hotFormatter"
+            class="hot-pane"
+          />
         </div>
       </section>
     </div>
@@ -37,8 +66,8 @@ import ViewBase from '@/util/ViewBase'
 import Layout from './components/layout.vue'
 import BasicPane from './components/basicPane.vue'
 import FansPane from './components/fansPane.vue'
-import CommentPane from './components/commentPane.vue'
-import ActiveFansPane from './components/activeFansPane.vue'
+import PiePane from './components/piePane.vue'
+import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
 
 @Component({
@@ -46,8 +75,8 @@ import HotPane from './components/hotPane.vue'
     Layout,
     BasicPane,
     FansPane,
-    CommentPane,
-    ActiveFansPane,
+    PiePane,
+    BarPane,
     HotPane
   }
 })
@@ -65,6 +94,10 @@ export default class FigurePage extends ViewBase {
   }
 
   bigFigure = this.id == 1 ? '' : 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
+
+  fansMan = 66
+
+  fansWoman = 34
 
   bubbleList = [
     '师兄李连杰',
@@ -86,6 +119,44 @@ export default class FigurePage extends ViewBase {
     { logo: 'https://dummyimage.com/60x60/fff/000' },
     { logo: 'https://dummyimage.com/60x60/e2e/fff' },
   ]
+
+  commentData = [
+    { name: '正面', value: 80, color: '#ca7273' },
+    { name: '中立', value: 30, color: '#f3d872' },
+    { name: '负面', value: 20, color: '#57b4c9' },
+  ]
+
+  activeFansData = [
+    { name: '5-16', value: 855000 },
+    { name: '5-17', value: 800000 },
+    { name: '5-18', value: 808000 },
+    { name: '5-19', value: 860000 },
+    { name: '5-20', value: 600000 },
+    { name: '5-21', value: 755000 },
+    { name: '5-22', value: 555000 },
+  ]
+
+  legendList = [
+    { name: '新浪', no: 'No.3', inc: 0 },
+    { name: '微信', no: 'No.2', inc: -2 },
+    { name: '百度', no: 'No.4', inc: 8 },
+    { name: '头条', no: 'No.1', inc: 3 },
+  ]
+
+  hotData = [
+    { name: '5-16', value: 855000, rank: 1 },
+    { name: '5-17', value: 100000, rank: 2 },
+    { name: '5-18', value: 808000, rank: 8 },
+    { name: '5-19', value: 260000, rank: 6 },
+    { name: '5-20', value: 600000, rank: 5 },
+    { name: '5-21', value: 755000, rank: 3 },
+    { name: '5-22', value: 555000, rank: 2 },
+  ]
+
+  hotFormatter([{ dataIndex }]: any) {
+    const { value, rank } = this.hotData[dataIndex]
+    return `综合热度：${value}<br>男演员排名：${rank}`
+  }
 }
 </script>
 

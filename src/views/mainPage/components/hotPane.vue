@@ -1,6 +1,6 @@
 <template>
-  <Pane :title="title" tooltip="史蒂夫·乔布斯（Steve Jobs），1955年2月24日生于美国加利福尼亚州旧金山，美国发明家、企业家、美国苹果公司联合创办人。">
-    <ul class="legend-list">
+  <Pane :title="title" :more="more" :tooltip="tooltip">
+    <ul class="legend-list" v-if="legendList.length > 0">
       <li v-for="it in legendList" :key="it.name" class="legend-item">
         <label class="legend-name">{{it.name}}</label>
         <em class="legend-no">{{it.no}}</em>
@@ -19,6 +19,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { RawLocation } from 'vue-router'
 import Pane from './pane.vue'
 import { tooltipStyles } from '@/util/echarts'
 
@@ -36,6 +37,18 @@ const axisLabel = {
   color: 'rgba(255, 255, 255, .8)'
 }
 
+export interface DataItem {
+  name: string
+  value: number
+  rank: number
+}
+
+export interface Legend {
+  name: string
+  no: string
+  inc: number
+}
+
 @Component({
   components: {
     Pane,
@@ -43,12 +56,24 @@ const axisLabel = {
   }
 })
 export default class ActiveFansPane extends Vue {
-  @Prop({ type: String, default: '近30日全网热度' }) title!: string
+  @Prop({ type: String, default: '' }) title!: string
+
+  @Prop({ type: Array, default: () => [] }) data!: DataItem[]
+
+  @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
+
+  @Prop({ type: String, default: '' }) tooltip!: string
+
+  @Prop({ type: Array, default: () => [] }) legendList!: Legend[]
+
+  // https://www.echartsjs.com/option.html#tooltip.formatter
+  @Prop({ type: [ String, Function ], default: '{a} <br>{b} : {c}' })
+  formatter!: string | ((data: any) => string)
 
   chartData: any = {
     tooltip: tooltipStyles({
       trigger: 'axis',
-      formatter: '综合热度：{c}<br>男演员排名：',
+      formatter: this.formatter,
       axisPointer: {
         type: 'line',
         lineStyle: {
@@ -76,7 +101,7 @@ export default class ActiveFansPane extends Vue {
 
     xAxis: {
       type: 'category',
-      data: ['5-16', '5-17', '5-18', '5-19', '5-20', '5-21', '5-22'],
+      data: this.data.map(it => it.name),
       axisLine: lineStyle,
       axisTick: false,
       axisLabel,
@@ -88,7 +113,7 @@ export default class ActiveFansPane extends Vue {
       axisLine: false,
       splitLine: lineStyle,
       axisLabel,
-      splitNumber: 3,
+      splitNumber: 4,
     },
 
     grid: {
@@ -101,10 +126,10 @@ export default class ActiveFansPane extends Vue {
 
     series: [
       {
-        name: '近30日全网热度',
+        name: this.title,
         type: 'line',
         smooth: true,
-        data: [855000, 200000, 1508800, 80888, 2000000, 188088, 888130],
+        data: this.data.map(it => it.value),
         itemStyle: {
           color: '#57b4c9'
         },
@@ -113,13 +138,6 @@ export default class ActiveFansPane extends Vue {
       }
     ]
   }
-
-  legendList: any[] = [
-    { name: '新浪', no: 'No.3', inc: 0 },
-    { name: '微信', no: 'No.2', inc: -1 },
-    { name: '百度', no: 'No.4', inc: 2 },
-    { name: '头条', no: 'No.1', inc: 1 },
-  ]
 }
 </script>
 

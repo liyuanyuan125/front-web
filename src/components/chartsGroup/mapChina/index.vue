@@ -20,15 +20,14 @@
       </RadioGroup>
     </div>
     <Row type="flex"
-         justify="space-between">
+         justify="center" align="middle">
       <Col :span="24">
-      <div ref="barChart"
+        <div ref="refChart"
            v-if="initDone"
            style="width: 100%; height: 400px"></div>
-      <div v-else
-           style="width: 100%; height: 400px">
-        <TinyLoading />
-      </div>
+        <div v-else class='loading-wp' style="width: 100%; height: 400px">
+            <TinyLoading  />
+          </div>
       </Col>
     </Row>
   </div>
@@ -58,6 +57,7 @@ export default class MapChina extends ViewBase {
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
+  @Prop({ type: Number, default: 0 }) max!: number
   @Prop({ type: Array, default: () => [] }) dict1!: any[]
   @Prop({ type: Array, default: () => [] }) dict2!: any[]
   @Prop({ type: Array, default: () => [] }) color!: any[]
@@ -78,7 +78,7 @@ export default class MapChina extends ViewBase {
       return
     }
     const chartData = this.dataList[this.currentIndex]
-    const myChart = echarts.init(this.$refs.barChart as any)
+    const myChart = echarts.init(this.$refs.refChart as any)
 
     echarts.registerMap('china', china as any)
     const option: any = {
@@ -86,7 +86,7 @@ export default class MapChina extends ViewBase {
       visualMap: {
         type: 'continuous',
         min: 0,
-        max: 15000,
+        max: this.max,
         right: '5%',
         bottom: '10%',
         text: ['高', '低'],
@@ -134,7 +134,8 @@ export default class MapChina extends ViewBase {
           name: '启动次数', // 浮动框的标题
           type: 'map',
           geoIndex: 0,
-          data: [{ name: '广东', value: 1324 }, { name: '山东', value: 3324 }, { name: '北京', value: 11324 }]
+          data: chartData
+          // data: [{ name: '广东', value: 1324 }, { name: '山东', value: 3324 }, { name: '北京', value: 11324 }]
           // 这里就是数据，即数组可以单独放在外面也可以直接写
         }
       ]
