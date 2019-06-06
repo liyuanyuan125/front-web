@@ -1,6 +1,6 @@
 <template>
   <div class=" brand-list com-modal">
-    <div class="select-brand tab-list">
+    <div class="select-brand com-modal-title ">
       <span>90日热门内容</span>
       <Select v-model="plat" size="small" style="width:100px">
         <Option v-for="item in platformList" :value="item.key" :key="item.key" @click="platSelect">{{ item.text }}</Option>
@@ -148,6 +148,7 @@ export default class Main extends ViewBase {
   }
 }
 .brand-list {
+  margin: 30px 36px 50px;
   font-size: 14px;
   .select-brand {
     padding-left: 30px;

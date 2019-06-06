@@ -8,14 +8,36 @@ import registerSuccess from './views/portal/registerSuccess.vue'
 import MainLayout from './views/layout/MainLayout.vue'
 import Error from './views/error/index.vue'
 
-import { RouteConfig, Route } from 'vue-router'
+import { RouteConfig, Route, Location } from 'vue-router'
 import { devInfo, devError } from './util/dev'
+
+/**
+ * 面包屑
+ */
+export interface Breadcrumb {
+  label: string
+  route?: Location
+}
+
+/**
+ * 面包屑导航获取函数
+ */
+export type GetBreadcrumb = (route: Route) => Breadcrumb[]
 
 /**
  * meta 类型：基础类型，可以放一些别的成员
  */
 // tslint:disable-next-line:no-empty-interface
-interface RouteMetaBase {
+export interface RouteMetaBase {
+  /**
+   * 页面标题
+   */
+  title?: string | ((route: Route) => string)
+
+  /**
+   * 明确的面包屑导航，若不提供，则自动判断，若不需要，设置为 []
+   */
+  breadcrumbs?: Breadcrumb[] | GetBreadcrumb
 }
 
 /**
@@ -165,7 +187,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/home/overview',
     name: 'home-overview',
     component: () => import('./views/home/overview/index.vue'),
-    meta: emptyAuth,
+    meta: {
+      ...emptyAuth,
+      breadcrumbs: [{ label: '首页' }]
+    }
   },
 
   // 资源方 - 账户概览
@@ -173,7 +198,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/home/resoverview',
     name: 'home-resoverview',
     component: () => import('./views/home/resoverview/index.vue'),
-    meta: emptyAuth,
+    meta: {
+      ...emptyAuth,
+      breadcrumbs: [{ label: '首页' }]
+    }
   },
 
   // 广告主、资源方 - 账户管理 - 账号信息
@@ -393,7 +421,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   {
     path: '/pop/planlist/default/:id',
     name: 'pop-planlist-default',
-    component: () => import('./views/pop/plan/default/planDefault.vue'),
+    component: () => import('./views/pop/plan/default/index.vue'),
     meta: {
       authKey: 'promotion.ad-plan',
       authAction: 'view',
@@ -404,7 +432,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   {
     path: '/pop/planlist/defaultpayment/:id',
     name: 'pop-planlist-defaultpayment',
-    component: () => import('./views/pop/plan/default/defaultPayment.vue'),
+    component: () => import('./views/pop/plan/default/index.vue'),
     meta: {
       authKey: 'promotion.ad-plan',
       authAction: 'view',
@@ -425,18 +453,19 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 推广管理 - 广告计划 - 创建广告计划
   {
-    path: '/pop/planlist/add/:id?',
+    path: '/pop/planlist/add/:id?/:setid?',
     name: 'pop-planlist-add',
     component: () => import('./views/pop/plan/index.vue'),
-    meta: {
-      authKey: 'promotion.ad-plan',
-      authAction(route) {
-        const id = parseInt(route.params.id, 10) || 0
-        return id > 0 ? 'edit' : 'create'
-      }
-    }
+    meta: emptyAuth
   },
 
+  // // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
+  // {
+  //   path: '/pop/planlist/set/:id?/:setid?',
+  //   name: 'pop-planlist-set',
+  //   component: () => import('./views/pop/plan/index.vue'),
+  //   meta: emptyAuth
+  // },
   // // 广告主 - 推广管理 - 广告计划 - 生成广告方案
   // {
   //   path: '/pop/plan/scheme/:id/:key',
@@ -460,6 +489,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'promotion.ad-video',
       authAction: 'viewList',
       authIsMenu: true,
+      title: ''
     }
   },
 
@@ -470,6 +500,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/pop/film/edit.vue'),
     meta: {
       authKey: 'promotion.ad-video',
+      title({params}) {
+        return params.id as any > 0 ? '编辑' : '新建'
+      },
       authAction(route) {
         const id = parseInt(route.params.id, 10) || 0
         return id > 0 ? 'edit' : 'create'
@@ -485,6 +518,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'promotion.ad-video',
       authAction: 'view',
+      title: '查看'
     }
   },
 
@@ -493,12 +527,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/order/dispatch',
     name: 'order-dispatch',
     component: () => import('./views/order/dispatch/index.vue'),
-    meta: emptyAuth,
-    // meta: {
-    //   authKey: 'adOrderManage.order',
-    //   authAction: 'view',
-    //   authIsMenu: true,
-    // }
+    meta: {
+      authKey: 'adOrderManage.order',
+      authAction: 'view',
+      authIsMenu: true,
+    }
   },
   // 资源方-广告单-广告详情
   {
@@ -679,7 +712,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/kollist/index.vue'),
     meta: emptyAuth
   },
-   // KOL - KOl 订单（完成）
+   // KOL - KOl 订单
    {
     path: '/kol/orderlist',
     name: 'kol-orderlist',
@@ -687,7 +720,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
 
-  // KOL - KOL 草稿 -（完成）
+  // KOL - KOL 草稿
   {
       path: '/kol/draft',
       name: 'kol-draft',
@@ -695,7 +728,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       meta: emptyAuth
   },
 
-  // kol - KOL详情更多页 - 合作品牌 -（完成）
+  // kol - KOL详情更多页 - 合作品牌
   {
     path: '/kol/detailMoreInfo/colbrand',
     name: 'kol-detailMoreInfo-colbrand',
@@ -703,7 +736,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
 
-  // kol - KOL详情更多页 - 主要作品 -（完成）
+  // kol - KOL详情更多页 - 主要作品
   {
     path: '/kol/detailMoreInfo/masterwork',
     name: 'kol-detailMoreInfo-masterwork',
@@ -735,7 +768,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
   // KOL - KOL详情更多页 - 受众匹配
   {
-    path: '/kol/detailMoreInfo/matching',
+    path: '/kol/detailMoreInfo/matching/:brandId',
     name: 'kol-detailMoreInfo-matching',
     component: () => import('./views/kol/detailMoreInfo/matching.vue'),
     meta: emptyAuth
@@ -771,49 +804,75 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth,
   },
 
+  // 影人
+  {
+    path: '/film/figure/:id',
+    name: 'film-figure',
+    component: () => import('./views/mainPage/figure.vue'),
+    meta: emptyAuth,
+    props({ params: { id } }) {
+      return { id: +id }
+    }
+  },
+
+  // KOL
+  {
+    path: '/kol/figure/:id',
+    name: 'kol-figure',
+    component: () => import('./views/mainPage/kol.vue'),
+    meta: emptyAuth
+  },
+
   // 影片详情 - 主创阵容
   {
-    path: '/film/mainLineup/:id',
-    name: 'film-mainLineup',
+    path: '/film/filmorder/mainLineup/:id',
+    name: 'film-filmorder-mainLineup',
     component: () => import('./views/film/filmorder/mainLineup.vue'),
     meta: emptyAuth,
   },
   // 影片详情 - 详细资料
   {
-    path: '/film/detailInfo/:id',
-    name: 'film-detailInfo',
+    path: '/film/filmorder/detailInfo/:id',
+    name: 'film-filmorder-detailInfo',
     component: () => import('./views/film/filmorder/detailInfo.vue'),
     meta: emptyAuth,
   },
   // 影片 - 影片合作订单列表
   {
-    path: '/film/movielist',
-    name: 'film-movielist',
+    path: '/film/filmorder/movielist',
+    name: 'film-filmorder-movielist',
     component: () => import('./views/film/filmorder/movielist.vue'),
     meta: emptyAuth,
   },
   // 影片 - 影片合作订单列表添加
   {
-    path: '/film/addmovielist',
-    name: 'film-addmovielist',
+    path: '/film/filmorder/addmovielist',
+    name: 'film-filmorder-addmovielist',
     component: () => import('./views/film/filmorder/addmovielist.vue'),
     meta: emptyAuth,
   },
   // 影片 - 影片合作订单详情
   {
-    path: '/film/movielist/detail ',
-    name: 'film-movielist-detail',
+    path: '/film/filmorder/movielist/detail',
+    name: 'film-filmorder-movielist-detail',
     component: () => import('./views/film/filmorder/moviedetail.vue'),
     meta: emptyAuth,
   },
 
   // kol - 订单填写
-  // {
-  //   path: '/kol/orderfill/:id',
-  //   name: 'order-orderfill',
-  //   component: () => import('./views/kol/orderfill/index.vue'),
-  //   meta: emptyAuth,
-  // },
+  {
+    path: '/kol/orderfill/:id',
+    name: 'order-orderfill',
+    component: () => import('./views/kol/orderfill/index.vue'),
+    meta: emptyAuth,
+  },
+  // kol - 我的收藏
+  {
+    path: '/kol/collect/:id',
+    name: 'kol-collect',
+    component: () => import('./views/kol/collect/index.vue'),
+    meta: emptyAuth,
+  },
   // 影片（film）- 影人更多详情 - 合作品牌
   {
     path: '/film/filmmakerdetail/cobrand',
@@ -834,7 +893,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'film-filmmakerdetail-moreinformation',
     component: () => import('./views/film/filmmakerDetails/moreInformation.vue'),
     meta: emptyAuth
-  }
+  },
 ] // end of mainLayoutRoutes
 
 const errorRoutes: RouteConfigEnhance[] = [
@@ -882,7 +941,5 @@ const routes: RouteConfig[] = [
   },
   ...errorRoutes,
 ]
-
-
 
 export default routes
