@@ -71,6 +71,25 @@
       </div>
 
       <div
+        class="zone movie-zone effect-lightning"
+        v-if="movie != null && movie.preview && movieList.length > 0"
+      >
+        <VideoPreviewer
+          :url="movie.preview"
+          v-if="movie.preview"
+        >
+          <span class="movie-preview">预告片播放</span>
+        </VideoPreviewer>
+        <ul class="movie-list">
+          <li
+            v-for="(it, i) in movieList"
+            :key="i"
+            class="movie-item"
+          >{{it.name}}：{{it.value}}</li>
+        </ul>
+      </div>
+
+      <div
         class="zone brand-zone"
         v-if="brandList && brandList.length > 0"
       >
@@ -99,6 +118,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { RawLocation } from 'vue-router'
+import VideoPreviewer from '@/components/videoPreviewer'
 
 export interface Opus {
   title: string
@@ -116,6 +136,14 @@ export interface Platform {
   count: string
 }
 
+export interface Movie {
+  preview?: string
+  director?: string
+  type?: string
+  date?: string
+  address?: string
+}
+
 export interface Item {
   id: number
   name: string
@@ -126,7 +154,11 @@ export interface Item {
   rankTitle: string
 }
 
-@Component
+@Component({
+  components: {
+    VideoPreviewer
+  }
+})
 export default class BasicPane extends Vue {
   @Prop({ type: Object, default: () => ({}) }) item!: Item
 
@@ -140,9 +172,22 @@ export default class BasicPane extends Vue {
 
   @Prop({ type: Array, default: () => [] }) platformList!: Platform[]
 
+  @Prop({ type: Object, default: null }) movie!: Movie
+
   followedIn = this.followed
 
   followEffect = false
+
+  get movieList() {
+    const movie = this.movie || {}
+    const list = [
+      { name: '导演', value: movie.director },
+      { name: '类型', value: movie.type },
+      { name: '上映日期', value: movie.date },
+      { name: '制片地', value: movie.address },
+    ]
+    return list.filter(it => !!it.value)
+  }
 
   follow() {
     this.followedIn = !this.followedIn
@@ -335,5 +380,19 @@ export default class BasicPane extends Vue {
   flex: 1;
   white-space: nowrap;
   text-align: right;
+}
+
+.movie-preview {
+  display: block;
+  padding: 4px 0 4px 26px;
+  color: #fff;
+  background: url(../assets/preview.png) no-repeat left center;
+  &:hover {
+    opacity: .88;
+  }
+}
+
+.movie-list {
+  margin-top: 2px;
 }
 </style>

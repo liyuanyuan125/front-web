@@ -12,6 +12,7 @@
       <div class="basic-box">
         <BasicPane
           :item="basic"
+          :movie="movie"
           :more="{ name: 'home' }"
         />
       </div>
@@ -107,6 +108,14 @@ export default class FigurePage extends ViewBase {
     '导演',
     '少林寺',
   ]
+
+  movie = {
+    preview: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
+    director: '林德路',
+    type: '动作/犯罪',
+    date: '2019-04-03',
+    address: '香港',
+  }
 
   platformList = [
     { icon: 'douyin', name: '抖音', percent: 100, count: '3288万' },
