@@ -847,6 +847,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  // 影片
+  {
+    path: '/film/movie/:id',
+    name: 'film-movie',
+    component: () => import('./views/mainPage/movie.vue'),
+    meta: emptyAuth,
+    props({ params: { id } }) {
+      return { id: +id }
+    }
+  },
+
   // 影人 - 详情 - 更多页 - 评论
   {
     path: '/figure/detailMoreInfo/comment/:id',
@@ -854,6 +865,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/film/figure/detailMoreInfo/comment.vue'),
     meta: emptyAuth
   },
+
   // 影人 - 影人详情更多页 - 粉丝画像
   {
     path: '/figure/detailMoreInfo/fans/:id',

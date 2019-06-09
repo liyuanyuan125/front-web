@@ -13,40 +13,38 @@
         <BasicPane
           :item="basic"
           :more="{ name: 'home' }"
-          :opusList="opusList"
-          :brandList="brandList"
         />
       </div>
 
       <section class="board-pane">
         <div class="board-row flex-box">
           <FansPane
-            title="粉丝画像"
+            title="想看用户画像"
             :man="fansMan"
             :woman="fansWoman"
             :more="{ name: 'home' }"
+            tip="与奔驰用户匹配度：72%"
             class="fans-pane"
           />
-          <PiePane
-            title="近7日评论分析"
-            :more="{ name: 'home' }"
-            :data="commentData"
-            class="comment-pane"
-          />
+          <div class="pane-group">
+
+          </div>
         </div>
 
         <div class="board-row">
-          <BarPane
-            title="近7日活跃粉丝数"
-            :data="activeFansData"
+          <HotPane
+            title="近30日微博指数"
+            :data="hotData"
             :more="{ name: 'home' }"
-            class="active-fans-pane"
+            tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
+            :formatter="hotFormatter"
+            class="hot-pane"
           />
         </div>
 
         <div class="board-row">
           <HotPane
-            title="近30日全网热度"
+            title="全网热度"
             :data="hotData"
             :more="{ name: 'home' }"
             tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
@@ -67,8 +65,9 @@ import Layout from './components/layout.vue'
 import BasicPane from './components/basicPane.vue'
 import FansPane from './components/fansPane.vue'
 import PiePane from './components/piePane.vue'
-import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
+import OpusPane from './components/opusPane.vue'
+import OfferPane from './components/offerPane.vue'
 
 @Component({
   components: {
@@ -76,8 +75,9 @@ import HotPane from './components/hotPane.vue'
     BasicPane,
     FansPane,
     PiePane,
-    BarPane,
-    HotPane
+    HotPane,
+    OpusPane,
+    OfferPane
   }
 })
 export default class FigurePage extends ViewBase {
@@ -85,12 +85,12 @@ export default class FigurePage extends ViewBase {
 
   basic = {
     id: this.id,
-    name: '吴京',
-    subName: 'Wu Jing',
-    title: '演员 / 导演 / 制片人',
-    figure: 'https://picsum.photos/id/435/154/218',
-    rankNo: '92.02',
-    rankTitle: '中国男演员票房 : TOP1',
+    name: '流浪地球',
+    subName: 'The Wandering Earth',
+    title: '',
+    figure: 'https://picsum.photos/id/435/154/154',
+    rankNo: '86.5',
+    rankTitle: '同档期：第2',
   }
 
   bigFigure = this.id == 1 ? '' : 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
@@ -108,10 +108,12 @@ export default class FigurePage extends ViewBase {
     '少林寺',
   ]
 
-  opusList = [
-    { title: '《流浪地球》演员是放松放松时发生地方', count: '46.8亿' },
-    { title: '《流浪地球》演员', count: '6.8亿' },
-    { title: '《流浪地球》演员是', count: '16.8亿' },
+  platformList = [
+    { icon: 'douyin', name: '抖音', percent: 100, count: '3288万' },
+    { icon: 'weibo', name: '微博', percent: 80, count: '2288万' },
+    { icon: 'wechat', name: '微信', percent: 60, count: '1888万' },
+    { icon: 'kuaishou', name: '快手', percent: 50, count: '1288万' },
+    { icon: 'xiaohongshu', name: '小红书', percent: 30, count: '888万' },
   ]
 
   brandList = [
@@ -153,6 +155,40 @@ export default class FigurePage extends ViewBase {
     { name: '5-22', value: 555000, rank: 2 },
   ]
 
+  opusData = [
+    {
+      id: 1,
+      cover: 'https://picsum.photos/id/520/150/150',
+      title: '《外挂的代价》快快快快快快快扩扩扩扩所付撒付付所付多所时发生地方撒旦法撒旦法方式是否所发生的撒旦法是放松放松第三方撒旦法是非得失双方都',
+      praise: '150万',
+      comment: '1万',
+    },
+
+    {
+      id: 2,
+      cover: 'https://picsum.photos/id/437/150/150',
+      title: '《外挂的代价》',
+      praise: '150万',
+      comment: '8888',
+    },
+
+    {
+      id: 3,
+      cover: 'https://picsum.photos/id/439/150/150',
+      title: '《外挂的代价》快快快快快快快扩扩扩扩所付胜多负少',
+      praise: '150万',
+      comment: '19999',
+    },
+
+    {
+      id: 4,
+      cover: 'https://picsum.photos/id/436/150/150',
+      title: '《外挂的代价》',
+      praise: '150万',
+      comment: '1万',
+    },
+  ]
+
   hotFormatter([{ dataIndex }]: any) {
     const { value, rank } = this.hotData[dataIndex]
     return `综合热度：${value}<br>男演员排名：${rank}`
@@ -161,10 +197,15 @@ export default class FigurePage extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import './style.less';
+
 .main-content {
   position: relative;
   justify-content: space-between;
   padding-right: 80px;
+  /deep/ .brand-list {
+    padding-right: 42px;
+  }
 }
 
 .layout-big-figure {
@@ -206,12 +247,67 @@ export default class FigurePage extends ViewBase {
 
 .basic-box {
   position: relative;
-  margin: 47px 0 0 102px;
+  margin: 22px 0 0 102px;
+  /deep/ .basic-in {
+    width: 246px;
+    margin-left: 30px;
+  }
+  /deep/ .name-zone {
+    padding-bottom: 24px;
+  }
+  /deep/ .figure {
+    top: 42px;
+    width: 162px;
+    height: 162px;
+    border-radius: 6px;
+  }
 }
 
 .board-pane {
   min-width: 580px;
-  margin-top: 14px;
+  margin-top: 19px;
+}
+
+.flatform-nav {
+  display: flex;
+  line-height: 68px;
+  background-color: rgba(0, 31, 44, 0.85);
+  border-radius: 5px 5px 0 0;
+  user-select: none;
+}
+
+.flatform-nav-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  color: #fff;
+  font-size: 14px;
+  padding: 0 2px;
+  margin: 0 22px;
+  opacity: .6;
+  cursor: pointer;
+
+  .platform-icon-xiaohongshu {
+    margin: 0 5px;
+  }
+}
+
+.flatform-nav-item:hover,
+.flatform-nav-on {
+  opacity: 1;
+}
+
+.flatform-nav-on {
+  &::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    bottom: 10px;
+    width: calc(100% - 2px);
+    height: 4px;
+    background-color: #fff;
+    border-radius: 8px;
+  }
 }
 
 .board-row {
@@ -226,15 +322,11 @@ export default class FigurePage extends ViewBase {
   border-radius: 5px 0 0 0;
 }
 
-.comment-pane {
-  border-radius: 0 5px 0 0;
-}
-
-.active-fans-pane {
-  height: 260px;
-}
-
 .hot-pane {
   height: 314px;
+}
+
+.offer-pane {
+  border-radius: 0 0 5px 5px;
 }
 </style>
