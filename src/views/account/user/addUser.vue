@@ -8,7 +8,7 @@
     <Form
       ref="forms"
       :model="form"
-      :rules="rules"
+      : ="rules"
       label-position="left"
       class="edit-input"
       :label-width="100"
