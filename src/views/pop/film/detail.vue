@@ -1,65 +1,41 @@
 <template>
-  <div class="page home-bg">
-     <div class="layout-nav-title">
-       <router-link :to="{name: 'pop-film'}" >广告片</router-link> > 
-        <span > 查看广告片</span>
-     </div>
-    <payDefault :status="status" v-if="status == 1 || status == 2 || status == 3 || status == 4"></payDefault>
-    <statusCode :statuCode="status" :refuseReason="refuseReason" v-else-if="status == 5 || status == 6"></statusCode>
-    <h3 class="layout-title">概览</h3>
-    <div class="text-rows">
-      <Row>
-        <Col :span="12">
-          <p>
-            <label>广告片ID</label>
-            {{item.id}}
-          </p>
-          <p>
-            <label>客户名称</label>
-            {{item.customerName}}
-          </p>
-          <p>
-            <label>广告片规格</label>
-            {{item.specification}}s
-          </p>
-          <p>
-            <label>数字专制费用/¥</label>
-            {{item.transFee}}
-          </p>
-        </Col>
-        <Col :span="12">
-          <p>
-            <label>广告片名称</label>
-            {{item.name}}
-          </p>
-          <p>
-            <label>创建时间</label>
-            {{formatTimes(item.applyTime)}}
-          </p>
-          <p>
-            <label>广告片时长</label>
-            {{item.length}}s
-          </p>
-        </Col>
-      </Row>
+  <div class="pagehome">
+    <div class="create-title-text">
+      <p>平台映前广告计费标准最小时长单位为15s，为节省您的广告投放成本，建议广告片时长为15s的整倍数，例如（15s、30s、45s、60s等）
+广告片通过审核后，平台会统一为您进行转码为影院可播放的格式；转码费用标准为【3,000.00元/15s】</p>
+      <div v-if="status == 1" class="status-title">待审核，您上传的广告片正在审核中</div>
+      <div v-if="status == 5" class="status-title">已拒绝，拒绝原因：{{refuseReason}}</div>
+      <div v-if="status == 2" class="status-title">待支付，数字转制费{{item.transFee}}元</div>
+      <div v-if="status == 3" class="status-title">转码中，您已支付{{item.transFee}}的数字转制费</div>
     </div>
-    <h3 class="layout-title">广告片浏览</h3>
-    <Row class="text-rows">
-      <Col :span="12">
-        <p class="flex-box">
-          <label>广告片</label>
-          <em class="video-play">
-            <VuePlyr>
-               <video :src="item.srcFileUrl"  ></video>
-            </VuePlyr>
-          </em>
-        </p>
-      </Col>
-    </Row>
+
+    <!-- dcp下载 v-if="status == 4" -->
+    <dl  class="form dcp-download">
+      <dt class="dl-title flex-box"><span>格式</span><em>下载链接</em></dt>
+      <dd v-if="item.attachments" v-for="it in item.attachments" :key="it.id" class="dcp-dd-list flex-box">
+        <span  v-for="(ind, index) in typeList" :key="index" v-if="ind.key == it.id ">{{ind.text}}</span>
+        <a target="_blank" :href="it.fileUrl">{{it.fileUrl}}</a>
+      </dd>
+    </dl>
+
+    <div class="form detail-inner">
+      <p><label>名称：</label><em>{{item.name}}</em></p>
+      <p><label>客户：</label><em>{{item.customerName}}</em></p>
+      <p><label>品牌：</label><em>{{item.brandName}}</em></p>
+      <p><label>产品：</label><em>{{item.productName}}</em></p>
+      <p><label>广告片时长规格：</label><em>{{item.specification}}s</em></p>
+      <p><label>广告片下载地址：</label><em>{{item.srcFileUrl}}</em></p>
+
+      <div class="create-submit-btn">
+         <Button v-if="status != 4" v-auth="'promotion.ad-video#edit'" type="primary" 
+         class="btn" @click="$router.push({name: 'pop-film-edit', params: {id: item.id}})">编辑</Button>
+         <Button v-if="status == 2" v-auth="'promotion.ad-video#pay'" type="primary"  class="btn" @click="handlePayment">支付</Button>
+         <Button class="cancel-btn" @click="$router.push({name: 'pop-film'})">返回</Button>
+      </div>
+    </div>
 
     <!-- dcp下载 -->
-    <div v-if="status == 4">
-      <h3 class="layout-title">DCP包下载</h3>
+    <!-- <div v-if="status == 4">
       <Row type="flex" justify="space-between" class="code-row-bg">
           <Col span="11" v-if="item.attachments" v-for="it in item.attachments" :key="it.id" class="down-load-dcp flex-box">
             <span>{{queryTypeList(it.typeCode)}}</span>
@@ -74,19 +50,7 @@
           <em>{{queryTypeList(ite.typeCode)}}Flat 格式DCP包下载链接已更新</em>
         </p>
       </div>
-    </div>
-
-    <div class="btnCenter btn-footer" v-if="status == 1">
-      <Button v-auth="'promotion.ad-video#cancel'" class="button-cancel" @click="cancelPlan" >取消广告片</Button>
-      <Button v-auth="'promotion.ad-video#edit'" type="primary" class="button-ok" @click="toEdit">编辑</Button>
-    </div>
-    <div class="btnCenter btn-footer" v-else-if="status == 2">
-      <Button v-auth="'promotion.ad-video#cancel'" class="button-cancel" @click="cancelPlan" >取消广告片</Button>
-      <Button v-auth="'promotion.ad-video#pay'" type="primary" class="button-ok" @click="handlePayment">支付</Button>
-    </div>
-    <div class="btnCenter btn-footer" v-else-if="status == 5">
-      <Button v-auth="'promotion.ad-video#edit'" type="primary" class="button-ok" @click="toEdit">编辑</Button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -95,7 +59,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
 import { formatTimes } from '@/util/validateRules'
-import { detailPop, popCancel, popPayment } from '@/api/popFilm'
+import { detailPop, popPayment } from '@/api/popFilm'
 import payDefault from './payDefault.vue'
 import statusCode from './status.vue'
 import { VuePlyr } from 'vue-plyr'
@@ -119,9 +83,9 @@ export default class Main extends ViewBase {
   typeList = []
   statusList = []
 
-  get formatTimes() {
-    return formatTimes
-  }
+  // get formatTimes() {
+  //   return formatTimes
+  // }
   mounted() {
     this.list()
   }
@@ -134,23 +98,23 @@ export default class Main extends ViewBase {
       this.typeList = typeList
       this.statusList = statusList
       this.status = item.status
-      this.refuseReason = item.refuseReason || ''
+      this.refuseReason = item.refuseReason || '' // 拒绝原因
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
-  async cancelPlan() {
-    const name = this.item.name
-    const id = this.item.id
-    await confirm(`是否取消广告片：${name}`, {title: '取消广告片'})
-    try {
-      await popCancel(id)
-      this.$router.push({name: 'pop-film'})
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
+  // async cancelPlan() {
+  //   const name = this.item.name
+  //   const id = this.item.id
+  //   await confirm(`是否取消广告片：${name}`, {title: '取消广告片'})
+  //   try {
+  //     await popCancel(id)
+  //     this.$router.push({name: 'pop-film'})
+  //   } catch (ex) {
+  //     this.handleError(ex)
+  //   }
+  // }
 
   async handlePayment() {
     await confirm(`是否要支付数字转制费用 ${this.item.transFee} 元`, {
@@ -165,22 +129,59 @@ export default class Main extends ViewBase {
     }
   }
 
-  queryTypeList(id: any) {
-    let list: any = []
-    list = this.typeList.filter((item: any) => item.key == id)
-    return list[0].text || null
-  }
+  // queryTypeList(id: any) {
+  //   let list: any = []
+  //   list = this.typeList.filter((item: any) => item.key == id)
+  //   return list[0].text || null
+  // }
 
-  toEdit() {
-    const id = this.item.id
-    this.$router.push({name: 'pop-film-edit', params: {id}})
-  }
+  // toEdit() {
+  //   const id = this.item.id
+  //   this.$router.push()
+  // }
 }
 </script>
 
 <style lang="less" scoped>
-.video-play {
-  width: 300px;
+@import './com.less';
+.dcp-download {
+  .dl-title {
+    font-size: 24px;
+    font-weight: 400px;
+    text-align: center;
+    background: rgba(255, 255, 255, .3);
+    span {
+      flex: 1;
+    }
+    em {
+      flex: 2;
+    }
+  }
+  .dcp-dd-list {
+    border-bottom: solid 1px rgba(255, 255, 255, .8);
+    height: 55px;
+    line-height: 55px;
+    text-align: center;
+    span {
+      flex: 1;
+    }
+    a {
+      flex: 2;
+    }
+  }
+}
+.detail-inner {
+  padding: 39px 30px 40px;
+  p {
+    font-size: 14px;
+    padding-bottom: 18px;
+    label {
+      padding-right: 6px;
+    }
+    em {
+      font-size: 16px;
+    }
+  }
 }
 .btn-footer {
   margin: 10px 0 40px;

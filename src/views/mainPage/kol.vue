@@ -59,6 +59,23 @@
             class="hot-pane"
           />
         </div>
+
+        <div class="board-row">
+          <OpusPane
+            title="热门作品"
+            :data="opusData"
+            :more="{ name: 'home' }"
+            class="opus-pane"
+          />
+        </div>
+
+        <div class="board-row">
+          <OfferPane
+            title="投放报价"
+            price="视频：¥123,000 起"
+            class="offer-pane"
+          />
+        </div>
       </section>
     </div>
   </Layout>
@@ -71,8 +88,9 @@ import Layout from './components/layout.vue'
 import BasicPane from './components/basicPane.vue'
 import FansPane from './components/fansPane.vue'
 import PiePane from './components/piePane.vue'
-import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
+import OpusPane from './components/opusPane.vue'
+import OfferPane from './components/offerPane.vue'
 
 @Component({
   components: {
@@ -80,8 +98,9 @@ import HotPane from './components/hotPane.vue'
     BasicPane,
     FansPane,
     PiePane,
-    BarPane,
-    HotPane
+    HotPane,
+    OpusPane,
+    OfferPane
   }
 })
 export default class FigurePage extends ViewBase {
@@ -92,7 +111,7 @@ export default class FigurePage extends ViewBase {
     name: 'Papi酱',
     subName: '',
     title: '搞笑视频自媒体',
-    figure: 'https://picsum.photos/id/435/154/218',
+    figure: 'https://picsum.photos/id/435/154/154',
     rankNo: '86.5',
     rankTitle: '全网排名：100<br>搞笑类：1',
   }
@@ -152,13 +171,6 @@ export default class FigurePage extends ViewBase {
     { name: '5-22', value: 555000 },
   ]
 
-  legendList = [
-    { name: '新浪', no: 'No.3', inc: 0 },
-    { name: '微信', no: 'No.2', inc: -2 },
-    { name: '百度', no: 'No.4', inc: 8 },
-    { name: '头条', no: 'No.1', inc: 3 },
-  ]
-
   hotData = [
     { name: '5-16', value: 855000, rank: 1 },
     { name: '5-17', value: 100000, rank: 2 },
@@ -167,6 +179,40 @@ export default class FigurePage extends ViewBase {
     { name: '5-20', value: 600000, rank: 5 },
     { name: '5-21', value: 755000, rank: 3 },
     { name: '5-22', value: 555000, rank: 2 },
+  ]
+
+  opusData = [
+    {
+      id: 1,
+      cover: 'https://picsum.photos/id/520/150/150',
+      title: '《外挂的代价》快快快快快快快扩扩扩扩所付撒付付所付多所时发生地方撒旦法撒旦法方式是否所发生的撒旦法是放松放松第三方撒旦法是非得失双方都',
+      praise: '150万',
+      comment: '1万',
+    },
+
+    {
+      id: 2,
+      cover: 'https://picsum.photos/id/437/150/150',
+      title: '《外挂的代价》',
+      praise: '150万',
+      comment: '8888',
+    },
+
+    {
+      id: 3,
+      cover: 'https://picsum.photos/id/439/150/150',
+      title: '《外挂的代价》快快快快快快快扩扩扩扩所付胜多负少',
+      praise: '150万',
+      comment: '19999',
+    },
+
+    {
+      id: 4,
+      cover: 'https://picsum.photos/id/436/150/150',
+      title: '《外挂的代价》',
+      praise: '150万',
+      comment: '1万',
+    },
   ]
 
   hotFormatter([{ dataIndex }]: any) {
@@ -242,7 +288,7 @@ export default class FigurePage extends ViewBase {
 
 .board-pane {
   min-width: 580px;
-  margin-top: 14px;
+  margin-top: 19px;
 }
 
 .flatform-nav {
@@ -298,9 +344,12 @@ export default class FigurePage extends ViewBase {
 
 .hot-pane {
   height: 295px;
-  border-radius: 0 0 5px 5px;
   /deep/ .chart {
-    height: 218px;
+    height: 202px;
   }
+}
+
+.offer-pane {
+  border-radius: 0 0 5px 5px;
 }
 </style>

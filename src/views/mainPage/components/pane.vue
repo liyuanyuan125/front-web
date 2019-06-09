@@ -6,7 +6,7 @@
         <Tooltip class="tip" :content="tooltip" max-width="200" v-if="tooltip">?</Tooltip>
       </em>
 
-      <router-link :to="more" v-if="more">更多 &gt;</router-link>
+      <router-link :to="more" class="more-link" v-if="more">更多 &gt;</router-link>
     </h4>
     <div class="pane-body">
       <slot></slot>
@@ -39,13 +39,13 @@ export default class Pane extends Vue {
   background-color: rgba(0, 31, 44, .85);
   font-size: 14px;
   user-select: none;
+}
 
-  a {
-    color: #fff;
-    opacity: 0.6;
-    &:hover {
-      color: #f3d872;
-    }
+.more-link {
+  color: #fff;
+  opacity: 0.6;
+  &:hover {
+    color: #f3d872;
   }
 }
 

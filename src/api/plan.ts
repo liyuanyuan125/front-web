@@ -6,7 +6,7 @@ import { mockGet, tid, title20, dateRange } from './mock'
  * @param data
  */
 export async function planList(data: any) {
-  const res = await get('xadvert/plans', data)
+  const res = await get('/xadvert/v1/plans', data)
   return res
 }
 
