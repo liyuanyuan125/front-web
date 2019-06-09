@@ -712,6 +712,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import(/* webpackChunkName: "about" */'./views/about.vue'),
     meta: emptyAuth,
   },
+  // KOL - KOL 对比
+  {
+    path: '/kol/compare',
+    name: 'kol-compare',
+    component: () => import('./views/kol/compare/index.vue'),
+    meta: emptyAuth
+  },
 
   // kol - koll列表
   {

@@ -1,0 +1,138 @@
+/* 详情更多，可通用于影片、影人、KOL订单详情更多页 */
+.detailmore-card {
+  background: none;
+  border: none;
+  color: #fff;
+  .ivu-radio-group {
+    .ivu-radio-wrapper {
+      background: none;
+      border: none;
+      box-shadow: none !important;
+      color: #CDD0D3;
+      border-radius: 0;
+      padding: 0;
+      margin-right: 30px;
+      &::before, &::after {
+        display: none;
+      }
+    }
+    .ivu-radio-wrapper-checked {
+      color: #fff;
+      border-bottom: 2px solid #fff;
+      .ivu-radio-inner {
+        display: none;
+      }
+      &::before, &::after {
+        display: none;
+      }
+    }
+  }
+  .title-text {
+    font-size: 20px;
+    padding: 0 45px;
+  }
+  .nav {
+    .ivu-radio-wrapper {
+      height: 60px;
+      line-height: 60px;
+    }
+    .ivu-radio-wrapper-checked {
+      color: #fff;
+      border-bottom: 2px solid #fff;
+    }
+  }
+  .ivu-card-head {
+    min-height: 60px;
+    line-height: 60px;
+    background:rgba(0,32,45,0.8);
+    border-radius: 5px 5px 0 0 ;
+    border: none;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .ivu-card-body {
+    padding: 0 ;
+  }
+  .content {
+    padding: 0;
+    .chart-wp {
+      min-height: 200px;
+      position: relative;
+      background:rgba(0,32,45,0.6);
+      .loading-wp {
+        min-width: 100%; 
+        min-height: 300px; 
+        // text-align:center;
+        display: flex;
+        flex-flow:row;
+        justify-content: center;
+        align-items: center
+      }
+      .wordCloud-wp {
+        padding: 20px 40px 40px 40px;
+      }
+      &.borderRadius {
+        border-radius: 0 0 5px 5px;
+      }
+      & .title-box {
+        font-size: 16px;
+        color: #fff;
+        text-align: left;
+        display: flex;
+        flex-flow: row;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 20px 0 0 20px;
+        & i {
+          position: relative;
+          top: -2px;
+          font-size: 20px;
+          color:rgba(111,133,143,0.85);
+          margin-left: 10px;
+        }
+      }
+      & .circle-box{
+        position: absolute;
+        z-index: 9;
+        right: 15px;
+        top: 15px;
+        & h6 {
+          font-size: 20px;
+          font-weight: normal;
+        }
+        & p {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  .selectedBox {
+    text-align: left;
+  }
+}
+
+// .layout-panel {
+//   padding-top: 30px;
+//   border-radius: 10px;
+// }
+// .ivu-form-item {
+//   padding-left: 30px;
+//   color: @c-text;
+//   margin-bottom: 0;
+// }
+// /deep/ .ivu-input-icon {
+//   line-height: 40px;
+//   height: 40px;
+// }
+// .radio-item-type {
+//   font-size: 14px;
+//   margin-top: 4px;
+//   .ivu-radio-wrapper {
+//     font-size: 14px;
+//     margin-right: 35px;
+//   }
+// }
+// /deep/ .ivu-select-input {
+//   height: 40px;
+//   line-height: 40px;
+// }
