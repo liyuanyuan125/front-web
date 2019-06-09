@@ -103,7 +103,6 @@
             </FormItem>
           </div> -->
           <div class="item-top" style="margin-top: 50px" v-show="movieCustom != 0">
-            {{numsList}}
             <Film v-model="numsList" />
           </div>
 

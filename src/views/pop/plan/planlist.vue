@@ -13,7 +13,7 @@
       <Row :gutter="20">
         <Col class="flex-box" :span="6" :offset="3">
           <div class="flex-box search-border-left" style="width: 100%">
-            <Input v-model="form.query"  placeholder="请输入ID/名称进行搜索"/>
+            <Input v-model="form.name"  placeholder="请输入ID/名称进行搜索"/>
             <Button type="primary" class="bth-search" @click="searchList">
               <Icon type="ios-search" size="22"/>
             </Button>
@@ -58,8 +58,8 @@
               <div>
                 <h3>{{row.name}}</h3>
                 <span>{{row.videoName}}&nbsp;&nbsp;{{row.customerName}}&nbsp;&nbsp;{{row.specification||0 }}s</span>
-                <p v-if="!row.videoId">关联广告片</p>
-                <p v-if="row.videoId" @click="relevanceAdv(row, 1)">修改广告片</p>
+                <p v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</p>
+                <p v-if="row.videoId" @click="relevanceAdv(row, 2)">修改广告片</p>
               </div>
             </div>
           </div>
@@ -80,9 +80,21 @@
         </template>
 
         <template slot="operation" slot-scope="{row}">
-          <div  class="operation-btn">
-            <span @click="sure(row.id)">确认方案</span>
-            <span @click="pay(row.id)">立即缴费</span>
+          <div class="operation-btn">
+            <div v-if="row.status == 1 || row.status == 2">
+              <p @click="plandetail(row.id)">详情</p>
+              <p @click="plandEdit(row.id)">编辑</p>
+              <p @click="plandel(row.id)">删除</p>
+            </div>
+            <div v-if="row.status == 3 || row.status == 3">
+              <span v-if="row.status == 3" @click="sure(row.id)">确认方案</span>
+              <span v-if="row.status == 4" @click="pay(row.id)">立即缴费</span>
+              <div>
+                <p @click="plandetail(row.id)">详情</p>
+                <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p>
+                <p @click="plandel(row.id)">删除</p>
+              </div>
+            </div>
           </div>
         </template>
       </Table>
@@ -105,7 +117,7 @@ import Sure from './planlistmodel/sure.vue'
 import Pay from './planlistmodel/pay.vue'
 import moment from 'moment'
 import relevanceDlg from './planlistmodel/relevance.vue'
-
+import { clean } from '@/fn/object'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
@@ -117,11 +129,10 @@ const timeFormat = 'YYYY-MM-DD'
   }
 })
 export default class Plan extends ViewBase {
-  form = {
+  form: any = {
     status: '',
     settlementStatus: '',
-    level: '',
-    query: ''
+    name: ''
   }
   checkId: any = []
   pageList = {
@@ -166,7 +177,10 @@ export default class Plan extends ViewBase {
   }
 
   async tableList() {
-    const { data } = await planList({ })
+    const { data } = await planList(clean({
+      ...this.form,
+      ...this.pageList
+    }))
     this.data = data
     // for (const item of data.items) {
     //   if (item.status == 1 || item.status == 9 || item.status == 10) {
@@ -247,18 +261,38 @@ export default class Plan extends ViewBase {
     }
   }
 
+  plandetail(id: any) {
+    this.$router.push({
+      name: 'pop-planlist-default',
+      params: {id}
+    })
+  }
+
+  plandEdit(id: any) {
+    this.$router.push({
+      name: 'pop-planlist-edit',
+      params: {id}
+    })
+  }
+
+  plandel(id: any) {
+
+  }
+
   async relevanceAdv(val: any, id: any) {
     if (id == 1) {
       this.relevanVis = {
         visible: true,
         title: '关联广告片',
-        item: '',
+        item: {
+          videoId: ''
+        },
         id: val.id
       }
     } else {
       this.relevanVis = {
         visible: true,
-        title: '编辑广告片',
+        title: '修改广告片',
         item: val,
         id: val.id
       }
@@ -306,6 +340,11 @@ export default class Plan extends ViewBase {
 
   uplist(size: any) {
     this.pageList.pageIndex = size
+    this.tableList()
+  }
+
+  @Watch('form', {deep: true})
+  watchForm(val: any) {
     this.tableList()
   }
 
@@ -557,6 +596,10 @@ export default class Plan extends ViewBase {
     cursor: pointer;
     display: inline-block;
     line-height: 22px;
+  }
+  p {
+    cursor: pointer;
+    line-height: 24px;
   }
 }
 </style>

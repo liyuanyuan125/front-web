@@ -29,6 +29,15 @@ export async function relevanceVideo(data: any) {
 }
 
 /**
+ * 推广管理 - 广告计划 - 修改广告片
+ * @param data
+ */
+export async function setVideo(id: any, query: any) {
+  const res = await post(`/xadvert/v1/plans/${id}/video`, query)
+  return res
+}
+
+/**
  * 推广管理 - 广告计划 - 关联广告片list
  * @param data
  */
