@@ -1,5 +1,5 @@
 <template>
-  <div ref="page" class="page">
+  <div ref="page" class="">
     <Row style="overflow:hidden">
       <Col span="22" offset="3">
         <StepTime v-model="step" />

@@ -1,12 +1,13 @@
 <template>
   <Modal v-model='showDlg'
   :transfer='false'
-  :width='400'
+  :width='460'
   :closable='false'
   :mask-closable='false'>
     <div class="title">
-      <h3>交纳保证金</h3>
       <i @click="cancel"></i>
+      <img width="115px" height="115px" src="../assets/fanan.png" />
+      <p>是否确认方案？</p>
     </div>
     <div slot="footer" class="foot">
         <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
@@ -55,26 +56,34 @@ export default class DlgEditCinema extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+/deep/ .ivu-modal-body {
+  padding: 0;
+}
 .title {
+  border-radius: 5px 5px 0 0;
   text-align: center;
-  font-size: 16px;
+  margin-bottom: 10px;
+  font-size: 30px;
   font-weight: 500;
+  background: #eee;
+  padding: 20px;
   color: #00202d;
   i {
     position: absolute;
-    right: -20px;
-    top: -20px;
+    right: -12px;
+    top: -12px;
     display: block;
-    width: 40px;
-    height: 40px;
+    width: 27px;
+    height: 27px;
     background: #fff;
     border-radius: 50%;
     cursor: pointer;
     border: 2px solid rgba(209, 216, 219, 1);
     &::before {
+      display: block;
       content: "×";
-      font-size: 34px;
-      line-height: 36px;
+      font-size: 26px;
+      line-height: 24px;
       text-align: center;
     }
   }

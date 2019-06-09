@@ -1,68 +1,62 @@
 <template>
-  <div class="page home-bg">
-    <h3 class="userTitle">
-      <span class="nav-top-title">广告片</span>
-
+  <div class="film-page">
+    <div class="page-title">
+      <span>广告片</span>
        <Button type="primary" :to="{name: 'pop-film-edit'}" class="btn-new"
         v-auth="'promotion.ad-video#create'">
         <Icon type="ios-add" size="27"/>新建广告片
       </Button>
-    </h3>
-    <Form :model="form" class="formInline edit-input">
-      <div class="flex-box">
-         <FormItem label="广告片状态" :label-width="100" class="film-status">
-            <Select v-model="form.status" clearable placeholder="广告片状态" >
-               <Option v-for="item in statusList" :key="item.key" :value="item.key">{{item.text}}</Option>
-            </Select>
-         </FormItem>
-        <div class="flex-box film-search">
-            <Input v-model="form.query" placeholder="请输入广告ID/名称进行搜索"/>
-            <Button type="primary" class="bth-search" @click="searchList">
-              <Icon type="ios-search" size="22"/>
-            </Button>
-        </div>
+    </div>
+    <Form :model="form" class="jydate-form flex-box">
+      <Select v-model="form.status" clearable placeholder="广告片状态" class="select-wid" >
+          <Option v-for="item in statusList" v-if="item.key != 6" :key="item.key" :value="item.key">{{item.text}}</Option>
+      </Select>
+      <customerList v-model="form.customerld" />
+      <brandList v-model="form.brandld" />
+      <productList v-if="form.brandld" :brandld="form.brandld" v-model="form.productld" />
+      <div class="flex-box film-search">
+          <Input v-model="form.query" placeholder="请输入广告ID/名称进行搜索"/>
+          <Button type="primary" class="bth-search" @click="searchList">
+            <Icon type="ios-search" size="22"/>
+          </Button>
       </div>
     </Form>
 
-    <Table stripe  :columns="columns"  :data="tableDate"  ref="selection"
-     @on-selection-change="singleSelect" @on-select-all="selectAll" >
-    <template slot="name" slot-scope="{row, index}">
-      <span @click="queryFileUrl(row.srcFileUrl)" class="video-name-link">{{row.name}}</span>
-      <!-- <video  autoplay controls :src="row.srcFileUrl" width="100" /> -->
-    </template>
-    <template slot="specification" slot-scope="{row, index}">
-      <span>{{row.specification}}s</span>
-    </template>
-    <template slot="length" slot-scope="{row, index}">
-      <span>{{row.length}}s</span>
-    </template>
-    <template slot="status" slot-scope="{row, index}">
-      <span v-if="row.status == 2" class="status-over">{{queryStatus(row.status)}}</span>
-      <span v-else>{{queryStatus(row.status)}}</span>
-    </template>
-    <template slot="applyTime" slot-scope="{row, index}">
-      <span>{{formatTimes(row.applyTime)}}</span>
-    </template>
-    <template slot="operation" slot-scope="{row, index}">
-      <!-- 待审核 -->
-      <span>
-        <p>
-          <a  v-auth="'promotion.ad-video#view'"  class="table-action-btn" @click="popDetail(row.id)">查看</a>
-          <a v-if="row.status == 1 || row.status == 5" v-auth="'promotion.ad-video#edit'" class="table-action-btn" @click="popEdit(row.id)">编辑</a>
-          <a v-if="row.status == 1 || row.status == 2" v-auth="'promotion.ad-video#cancel'" class="table-action-btn" @click="planCancel(row.name, row.id)">取消</a>
-          <a v-if="row.status == 2" v-auth="'promotion.ad-video#pay'" class="table-action-btn" @click="handlePayment(row)">支付</a>
-        </p>
-      </span>
-    </template>
-    </Table>
-    <div class="checkAll" v-auth="'promotion.ad-video#delete'">
-      <span @click="handleSelectAll">
-        <Checkbox v-model="checkboxAll"></Checkbox>全选
-      </span>
-      <span @click="deleteList">批量删除广告片</span>
+    <div class="com-modal">
+      <div class="com-modal-title check-title">
+        <span>全部文件（{{totalCount}}）</span>
+        <span class="checkbox-all"><Checkbox @on-change="checkall" v-model="checkboxAll">全选</Checkbox></span>
+        <span class="del-btn" @click="deleteList">删除</span>
+      </div>
+      <ul class="ul-list">
+        <li v-for="item in tableDate " :key="item.id">
+          <div class="flex-box inner">
+            <div class="left-item"  @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">
+              <img :src="item.logo" class="img" :onerror="defaultImg" />
+            </div>
+            
+            <div class="right-item">
+              <p class="name">{{item.name}}</p>
+              <p class="brand-name">{{item.brandName || item.productName}}</p>
+              <div class="item-icon">
+                <span>{{transformSpecif(item.specification)}}</span>
+                <div class="icon-img">
+                  <img v-if="item.status == 1" title="审核中" src="../assets/audit-icon.png" class="img-wid" />
+                  <img v-if="item.status == 5" title="审核拒绝" src="../assets/reject-icon.png" class="img-wid" />
+                  <img v-if="item.status == 2" title="支付" src="../assets/pay-icon.png" class="img-wid" />
+                  <img v-if="item.status == 3" title="转码中" src="../assets/transing-icon.png" class="img-wid" />
+                  <img v-if="item.status == 1 || item.status == 5" title="点击编辑" src="../assets/edit-icon.png" 
+                  @click="$router.push({name: 'pop-film-edit', params: {id: item.id}})" class="img-wid" />
+                  <img src="../assets/del-icon.png"  @click="deleteList(item.id)" class="img-wid" title="点击删除" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+       <div class="noList" v-if="tableDate.length == 0">暂无数据</div>
+       <pagination v-model="pageList" :total="totalCount" @uplist="uplist"></pagination>
     </div>
-    <pagination v-model="pageList" :total="totalCount" @uplist="uplist"></pagination>
-    <updataVideo v-model="updataVideo" v-if="updataVideo.visible"></updataVideo>
   </div>
 </template>
 
@@ -70,53 +64,41 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
-import { dataList, delList, popCancel, popPayment } from '@/api/popFilm'
+import { dataList, delList, popCancel, popPayment, popPartners } from '@/api/popFilm'
 import { formatTimes, formatYell, formatNumber} from '@/util/validateRules'
-import updataVideo from '@/components/videoDlg.vue'
+// import updataVideo from '@/components/videoDlg.vue'
 import pagination from '@/components/page.vue'
 
+import customerList from '@/components/selectList/customerList.vue'
+import brandList from '@/components/selectList/brandList.vue'
+import productList from '@/components/selectList/productList.vue'
 @Component({
   components: {
-    updataVideo,
-    pagination
+    // updataVideo,
+    pagination,
+    customerList,
+    brandList,
+    productList
   }
 })
 export default class Main extends ViewBase {
-  form: any = {
-    status: null,
-    query: null
-  }
+  form: any = {}
   pageList = {
     pageIndex: 1,
-    pageSize: 10
+    pageSize: 20
   }
   totalCount = 0
 
   statusList: any = []
-  selectIds = []
+  selectIds: any[] = []
   checkboxAll = false
 
-  updataVideo = {
-    visible: false,
-    url: ''
-  }
-
-  columns = [
-    { type: 'selection', width: 50, align: 'center' },
-    { title: '广告片ID', key: 'id', minWidth: 100 },
-    { title: '广告片名称', slot: 'name', minWidth: 170 },
-    { title: '广告片规格', slot: 'specification', minWidth: 100 },
-    { title: '广告片时长', slot: 'length', minWidth: 100 },
-    { title: '数字转制费用(元）', key: 'transFee', minWidth: 140 },
-    { title: '广告片状态', slot: 'status', minWidth: 100 },
-    { title: '创建时间', slot: 'applyTime', minWidth: 150 },
-    { title: '操作', slot: 'operation', minWidth: 150},
-  ]
   tableDate = []
 
-  get formatTimes() {
-    return formatTimes
+  get defaultImg() {
+    return 'this.src="' + require('../assets/error.png') + '"'
   }
+
   mounted() {
     this.tableList()
   }
@@ -128,16 +110,6 @@ export default class Main extends ViewBase {
         ...this.form,
         ...this.pageList
       })
-      // 待审核 待支付  已取消 已拒绝 可批量删除
-      if (items) {
-        for (const it of items) {
-          if (it.status == 1 || it.status == 2 || it.status == 6 || it.status == 4 ) {
-            it._checked = false
-          } else {
-            it._disabled = true
-          }
-        }
-      }
       this.tableDate = items || []
       this.statusList = statusList || []
       this.totalCount = totalCount || 0
@@ -146,103 +118,159 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     }
   }
-  async planCancel(val: any, id: any) {
-    await confirm(`是否取消广告片：${val}`, {title: '取消广告片'})
-    try {
-      await popCancel(id)
-      this.tableList()
-    } catch (ex) {
-      this.handleError(ex)
-    }
+
+  transformSpecif(val: any) {
+    const num = val % 60 == 0 ? '00' : val % 60
+    return val < 60 ? `00:${val}` : `${Math.floor(val / 60)} : ${num}`
   }
-  async handlePayment(item: any) {
-    await confirm(`是否要支付数字转制费用 ${item.transFee} 元`, {
-      title: '支付广告片'
-    })
-    try {
-      const id = item.id
-      await popPayment(id)
-       this.tableList()
-    } catch (ex) {
-      this.handleError(ex)
-    }
+
+  checkall() {
+    this.selectIds = this.checkboxAll ? this.tableDate : []
   }
-  popDetail(id: any) {
-    this.$router.push({name: 'pop-film-detail', params: {id}})
-  }
-  queryStatus(id: any) {
-     const items = this.statusList ? this.statusList.filter( (item: any) => item.key == id) : []
-     if (items.length > 0) {
-       return items[0].text
-     }
-  }
+
   searchList() {
     this.pageList.pageIndex = 1
     this.tableList()
   }
-   // 单选
-  singleSelect(select: any) {
-    this.checkboxAll = select.length == this.tableDate.length ? true : false
-    this.selectIds = select
-  }
-  // 全选
-  selectAll(select: any) {
-    this.checkboxAll = true
-    this.selectIds = select
-  }
-  handleSelectAll() {
-    const selection = this.$refs.selection as any
-    selection.selectAll(!this.checkboxAll)
-  }
-  async deleteList() {
-    if (this.selectIds.length) {
-      const ids = this.selectIds.map((item: any) => item.id) || []
+
+  async deleteList(id?: number) {
+    let ids: any[] = []
+    if (id) {
+      ids.push(id)
       await confirm('您确定要删除当前信息吗？')
-      try {
+      await delList({ ids })
+      this.tableList()
+    } else {
+      if (this.selectIds.length) {
+        ids = this.selectIds.map((item: any) => item.id) || []
+        await confirm('您确定要删除当前信息吗？')
         await delList({ ids })
         this.tableList()
-      } catch (ex) {
-        this.handleError(ex)
+      } else {
+        this.showWaring('请选择你要删除的元素')
       }
-    } else {
-      this.showWaring('请选择你要删除的元素')
     }
   }
   uplist(size: any) {
     this.pageList.pageIndex = size
     this.tableList()
   }
-  popEdit(id: any) {
-    this.$router.push({name: 'pop-film-edit', params: { id }})
-  }
-  queryFileUrl(url: any) {
-    this.updataVideo = {
-      visible: true,
-      url
-    }
-  }
 }
 </script>
 
 <style lang="less" scoped>
-@import '~@/site/common.less';
-.video-name-link {
-  color: #2481d7;
-  cursor: pointer;
+@import '~@/views/kol/less/common.less';
+.noList {
+  text-align: center;
+  padding: 30px 0 40px;
+  font-size: 14px;
 }
-.status-over {
-  color: @c-fail;
+.film-page {
+  padding: 20px 40px 40px;
 }
-.film-status {
-  /deep/ .ivu-select-selection {
-    width: 300px;
-    margin-right: 40px;
+.page-title {
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+  span {
+    font-size: 24px;
+  }
+  .btn-new {
+    padding: 0 15px;
+    height: 40px;
+    line-height: 40px;
+    background: rgba(0, 32, 45, 1);
+    border-radius: 20px;
+    font-size: 14px;
+    text-align: center;
+    border: none;
+  }
+}
+.bth-search {
+  position: relative;
+  left: -4px;
+}
+.ul-list {
+  padding: 0 38px 40px;
+  margin-left: -15px;
+  margin-right: -15px;
+  display: flex;
+  flex-wrap: wrap;
+  li {
+    width: 33.3%;
+    padding: 0 15px;
+    margin-top: 30px;
+    .inner {
+      background: rgba(0, 32, 45, .5);
+      border-radius: 5px;
+      padding: 20px 20px 15px;
+      cursor: pointer;
+      position: relative;
+      .left-item {
+        .img {
+          width: 120px;
+          height: 120px;
+        }
+      }
+      .right-item {
+        padding-left: 15px;
+        font-size: 14px;
+        width: 100%;
+        .name {
+          font-size: 18px;
+          color: #a3d5e6;
+          height: 76px;
+        }
+        .img-wid {
+          width: 17px;
+          margin-left: 10px;
+        }
+        .brand-name {
+          // word-break: break-all;
+          padding-bottom: 7px;
+          max-width: 150px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .item-icon {
+          width: 100%;
+          .icon-img {
+            position: absolute;
+            right: 10px;
+            bottom: 12px;
+            width: 100px;
+            text-align: right;
+          }
+        }
+      }
+    }
   }
 }
 .film-search {
-  width: 417px;
-  .ivu-input-wrapper input {
-    width: 350px;
+  width: 280px;
+}
+.check-title {
+  font-size: 14px;
+  padding-left: 10px;
+  .checkbox-all {
+    margin-left: 10px;
+    margin-right: 10px;
+    border-right: solid 1px #fff;
+    font-size: 14px;
+  }
+  .del-btn {
+    cursor: pointer;
+    display: inline-block;
+    width: 60px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    background: rgba(208, 233, 246, .9);
+    border-radius: 5px;
+    color: #222;
+  }
+  /deep/ .ivu-checkbox-wrapper {
+    font-size: 14px;
   }
 }
 

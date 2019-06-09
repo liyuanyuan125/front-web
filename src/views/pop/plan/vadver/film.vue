@@ -1,17 +1,18 @@
 <template>
   <div class="component">
     <ul class="film-list">
-      <li v-for="(it) in inValue" :key="it.id"
-        :class="['film-item']">
-        <div :class="['film-cover-box']">
-          <img :src="it.mainPicUrl" class="film-cover">
-          <div>
-            <div class="film-title">{{it.name}}</div>
-            <div class="film-title">{{it.name}}</div>
-            <div class="film-time" style="margin-top: 20px">上映时间：{{formatDate(it.openTime)}}</div>
-            <div class="film-time">投放排期: {{formatDate(it.openTime)}}</div>
+      <li v-for="(it, index) in inValue" :key="index"
+            :class="['film-item']">
+          <div :class="['film-cover-box']">
+            <img :src="it.image" class="film-cover">
+            <div>
+              <div class="film-title">{{it.nameCn}}</div>
+              <div class="film-time" style="margin-top: 10px">上映时间：{{formatDate(it.releaseDate)}}</div>
+              <div class="film-time">{{it.type.join(' / ')}}</div>
+              <div class="film-time">导演: {{it.director.join(' / ')}}</div>
+              <div class="film-time">主演: {{it.actor.join(' / ')}}</div>
+            </div>
           </div>
-        </div>
       </li>
       <li class="add-item">
         <div @click="onAdd" v-if="!type">
@@ -141,7 +142,7 @@ export default class ComponentMain extends ViewBase {
   margin-bottom: 40px;
   .film-item {
     width: calc(50% - 20px);
-    height: 160px;
+    height: 200px;
     padding-bottom: 5px;
     margin-bottom: 30px;
     background: rgba(255, 255, 255, 0.3);
@@ -164,12 +165,13 @@ export default class ComponentMain extends ViewBase {
       img {
         width: 89px;
         height: 125px;
+        margin-left: 20px;
       }
     }
   }
   .add-item {
-    width: 580px;
-    height: 160px;
+    width: calc(50% - 20px);
+    height: 200px;
     background: rgba(255, 255, 255, 0.3);
     border-radius: 5px;
     border: 1px solid rgba(255, 255, 255, 1);

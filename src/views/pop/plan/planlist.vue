@@ -57,15 +57,16 @@
               <img :src="row.mainPicUrl" width="90px" height="90px" />
               <div>
                 <h3>{{row.name}}</h3>
-                <span>未关联广告片</span>
-                <p>关联广告片</p>
+                <span>{{row.videoName}}&nbsp;&nbsp;{{row.customerName}}&nbsp;&nbsp;{{row.specification||0 }}s</span>
+                <p v-if="!row.videoId">关联广告片</p>
+                <p v-if="row.videoId" @click="relevanceAdv(row, 1)">修改广告片</p>
               </div>
             </div>
           </div>
         </template>
         <template slot="date" slot-scope="{row}">
-          <p><span>{{formatDate(row.benginDate)}}</span>至<span>{{formatDate(row.endDate)}}</span></p>
-          <p style="margin-top: 10px">7天</p>
+          <p><span>{{formatDate(row.beginDate)}}</span>至<span>{{formatDate(row.endDate)}}</span></p>
+          <p style="margin-top: 10px">{{days(row.beginDate, row.endDate)}}天</p>
         </template>
 
         <template slot="settlementStatus" slot-scope="{row}">
@@ -73,7 +74,9 @@
         </template>
 
         <template slot="status" slot-scope="{row}">
-          <p class="red" style="margin-top: 10px">待执行</p>
+          <p class="red" style="margin-top: 10px">
+            {{data.statusList.filter((it) => it.key == row.status)[0].text}}
+          </p>
         </template>
 
         <template slot="operation" slot-scope="{row}">
@@ -88,6 +91,7 @@
     </div>
     <Sure ref="Sure" />
     <Pay ref="Pay" />
+    <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible" @submitRelevance="submitRelevance"></relevanceDlg>
   </div>
 </template>
 <script lang="ts">
@@ -100,13 +104,16 @@ import pagination from '@/components/page.vue'
 import Sure from './planlistmodel/sure.vue'
 import Pay from './planlistmodel/pay.vue'
 import moment from 'moment'
+import relevanceDlg from './planlistmodel/relevance.vue'
+
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
     Sure,
     Pay,
-    pagination
+    pagination,
+    relevanceDlg
   }
 })
 export default class Plan extends ViewBase {
@@ -121,7 +128,6 @@ export default class Plan extends ViewBase {
     pageIndex: 1,
     pageSize: 10
   }
-
   relevanVis: any = {
     visible: false,
     title: '',
@@ -160,15 +166,15 @@ export default class Plan extends ViewBase {
   }
 
   async tableList() {
-    const { data } = await orienteering({ ...this.form, ...this.pageList })
+    const { data } = await planList({ })
     this.data = data
-    for (const item of data.items) {
-      if (item.status == 1 || item.status == 9 || item.status == 10) {
-        item._checked = false
-      } else {
-        item._disabled = true
-      }
-    }
+    // for (const item of data.items) {
+    //   if (item.status == 1 || item.status == 9 || item.status == 10) {
+    //     item._checked = false
+    //   } else {
+    //     item._disabled = true
+    //   }
+    // }
     this.tableDate = data.items
     this.totalCount = data.totalCount
   }
@@ -177,8 +183,13 @@ export default class Plan extends ViewBase {
     this.tableList()
   }
 
+  days(begin: any, end: any) {
+    const time = new Date(this.formatDate(end)).getTime() - new Date(this.formatDate(begin)).getTime()
+    return time / (3600 * 24 * 1000) + 1
+  }
+
   formatDate(data: any) {
-    return data ? moment(data).format(timeFormat) : '暂无'
+    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(3, 2)}-${(data + '').substr(5, 2)}` : '暂无'
   }
 
   async handlePayment(item: any) {
@@ -308,7 +319,7 @@ export default class Plan extends ViewBase {
       }
     }
     this.checkId.forEach((it: any) => {
-      id = id.filter((item: any) => item == it)
+      id = id.filter((item: any) => item != it)
     })
     this.checkboxall = id.length > 0 ? false : true
   }
@@ -404,6 +415,7 @@ export default class Plan extends ViewBase {
         line-height: 28px;
         background: rgba(0, 32, 45, 1);
         border-radius: 14px;
+        cursor: pointer;
         .button-style(#fff, #00202d);
       }
     }

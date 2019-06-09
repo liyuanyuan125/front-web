@@ -9,28 +9,36 @@
         <dd>覆盖影院</dd>
         <dt>111</dt>
         <dt>
-          <img src="./assets/cinema.png" width="73" height="66px"/>
+          <img src="./assets/yingyuanb.png" width="73" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>投放影片</dd>
         <dt>1111</dt>
-        <dt></dt>
+        <dt>
+          <img src="./assets/dianyingpiao.png" width="73" height="66px"/>
+        </dt>
       </dl>
       <dl>
         <dd>曝光人次预估</dd>
         <dt>1111</dt>
-        <dt></dt>
+        <dt>
+          <img src="./assets/renqun.png" width="73" height="66px"/>
+        </dt>
       </dl>
       <dl>
         <dd>投放场次数预估</dd>
         <dt>1111</dt>
-        <dt></dt>
+        <dt>
+          <img src="./assets/toufangfangan.png" width="73" height="66px"/>
+        </dt>
       </dl>
       <dl>
         <dd>预估花费</dd>
         <dt>1111</dt>
-        <dt></dt>
+        <dt>
+          <img src="./assets/qian-2.png" width="73" height="66px"/>
+        </dt>
       </dl>
     </div>
     <div class="btn-center">
@@ -89,7 +97,7 @@ export default class App extends ViewBase {
   }
 }
 .finish-detail {
-  height: 206px;
+  height: 212px;
   background: rgba(0, 32, 45, .9);
   border-radius: 5px 0 0 5px;
   display: flex;

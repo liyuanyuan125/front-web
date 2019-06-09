@@ -1,7 +1,6 @@
 <template>
-  <div class="page">
-    <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="">
-      
+  <div class="">
+    <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="form">
       <Row>
         <Col span="14" offset="3" class="adver-name select-adv-type">
           <FormItem :label-width="210" label="请输入广告计划名称:" prop="name">
@@ -9,7 +8,6 @@
           </FormItem>
         </Col>
       </Row>
-      
       <Row>
         <Col span="14" offset="3">
           <Row>
@@ -99,7 +97,9 @@ import { advertising, estimate, createdDraft } from '@/api/popPlan.ts'
 import { formatCurrency } from '@/fn/string.ts'
 import { clean } from '@/fn/object.ts'
 import weekDatePicker from '@/components/weekDatePicker/weekDatePicker.vue'
+import moment from 'moment'
 
+const timeFormat = 'YYYYMMDD'
 @Component({
   components: {
     weekDatePicker
@@ -225,8 +225,8 @@ export default class Promotion extends ViewBase {
   @Watch('form.advertime', {deep: true})
   watchformAdvertime(val: any) {
     if (val.length > 0) {
-      this.form.beginDate = new Date(val[0]).getTime()
-      this.form.endDate = new Date(val[1]).getTime() + 86400000
+      this.form.beginDate = moment(val[0]).format(timeFormat)
+      this.form.endDate = moment(val[1]).format(timeFormat)
     }
   }
 
@@ -253,6 +253,9 @@ export default class Promotion extends ViewBase {
 @import '~@/site/lib.less';
 .item-top {
   margin-left: 30px;
+}
+.form {
+  height: 570px;
 }
 .input-height {
   height: 58px;

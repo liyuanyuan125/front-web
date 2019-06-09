@@ -217,6 +217,9 @@ export default class FigurePage extends ViewBase {
 .board-row {
   justify-content: space-between;
   margin-top: 6px;
+  &:last-child .pane-item {
+    border-radius: 0 0 5px 5px;
+  }
 }
 
 .fans-pane {
@@ -233,6 +236,5 @@ export default class FigurePage extends ViewBase {
 
 .hot-pane {
   height: 314px;
-  border-radius: 0 0 5px 5px;
 }
 </style>
