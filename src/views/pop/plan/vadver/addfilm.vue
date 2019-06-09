@@ -35,9 +35,10 @@
           </li>
         </ul>
        </div>
-       <div>
+       <div class="check-films">
          <span @click="checkAll">
-          <Checkbox v-model="checkboxall">全选</Checkbox>
+          <Checkbox :disabled="data.length > 0 ? false : true" v-model="checkboxall">全选</Checkbox>
+          已选择 {{checkObj.length}} 个
          </span>
        </div>
         <Page :total="total" v-if="total>0" class="btnCenter"
@@ -51,8 +52,8 @@
           @on-page-size-change="currentChangeHandle"/>
     </div>
     <div slot="footer" class="foot">
-        <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
-        <Button class="foot-button" type="primary" @click="open">确定</Button>
+        <Button class="foot-cancel-button default-btn" type="info" @click="cancel">取消</Button>
+        <Button class="foot-button open-button" type="primary" @click="open">确定</Button>
     </div>
   </Modal>
 </template>
@@ -65,7 +66,7 @@ import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
 import moment from 'moment'
-import { uniq } from 'lodash'
+import { uniq, uniqBy } from 'lodash'
 const timeFormat = 'YYYY-MM-DD'
 const keepExclusion = <T>(
   value: T[],
@@ -107,9 +108,22 @@ export default class DlgEditCinema extends ViewBase {
     (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
     this.loading = true
     this.showDlg = true
-    this.checkObj = [...type]
-    this.checkId = this.checkObj.map((it: any) => it.id)
-    this.seach()
+    this.checks = {}
+    if (type.length > 0) {
+      this.checkObj = [...type]
+      this.checkId = this.checkObj.map((it: any) => it.id)
+      this.checkId.forEach((it: any) => {
+        this.checks[it] = true
+      })
+      this.seach()
+    } else {
+      this.checkObj = []
+      this.checkId = []
+      this.checkId.forEach((it: any) => {
+        this.checks[it] = true
+      })
+      this.seach()
+    }
   }
 
   async seach() {
@@ -162,6 +176,8 @@ export default class DlgEditCinema extends ViewBase {
 
   async open() {
     try {
+      this.checkId = uniq(this.checkId)
+      this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
       this.$emit('done', [...this.checkObj])
       toast('操作成功')
       this.cancel()
@@ -203,11 +219,15 @@ export default class DlgEditCinema extends ViewBase {
       return this.checkId.includes(it.id + '')
     })
     this.checkObj.push(...nums)
-    this.checkObj = uniq(this.checkObj).filter((it: any) => this.checkId.includes(it.id + ''))
+    this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
     this.checkId.forEach((it: any) => {
       ids = ids.filter((item: any) => item != it)
     })
-    this.checkboxall = ids.length > 0 ? false : true
+    if (this.data.length > 0) {
+      this.checkboxall = ids.length > 0 ? false : true
+    } else {
+      this.checkboxall = false
+    }
   }
 
   @Watch('checks', {deep: true})
@@ -226,8 +246,12 @@ export default class DlgEditCinema extends ViewBase {
       return this.checkId.includes(it.id + '')
     })
     this.checkObj.push(...nums)
-    this.checkObj = uniq(this.checkObj).filter((it: any) => this.checkId.includes(it.id + ''))
-    this.checkboxall = id.length > 0 ? false : true
+    this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
+    if (this.data.length > 0) {
+      this.checkboxall = id.length > 0 ? false : true
+    } else {
+      this.checkboxall = false
+    }
   }
 
   @Watch('form.types', { deep: true })
@@ -314,13 +338,6 @@ export default class DlgEditCinema extends ViewBase {
   height: 60px;
   .foot-button {
     .foot-button-box;
-  }
-  .foot-cancel-button {
-    .foot-button-box;
-    background: rgba(236, 245, 255, 1);
-    border-radius: 2px;
-    color: @cancel-color;
-    border: 1px solid @cancel-color;
   }
 }
 /deep/ .ivu-table-wrapper {
@@ -422,5 +439,22 @@ export default class DlgEditCinema extends ViewBase {
     background-color: #00202d;
     border: 1px solid #00202d;
   }
+}
+.check-films {
+  margin-left: 10px;
+  margin-bottom: 20px;
+}
+.default-btn {
+  width: 100px;
+  vertical-align: middle;
+  .button-style(#00202d, rgba(0, 0, 0, 0));
+  border-radius: 25px;
+  img {
+    vertical-align: middle;
+  }
+}
+.open-button {
+  .button-style(#fff, #00202d);
+  border-radius: 25px;
 }
 </style>

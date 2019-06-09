@@ -459,6 +459,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
 
+  // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
+  {
+    path: '/pop/planlist/edit/:id',
+    name: 'pop-planlist-edit',
+    component: () => import('./views/pop/plan/index.vue'),
+    meta: emptyAuth
+  },
+
   // // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
   // {
   //   path: '/pop/planlist/set/:id?/:setid?',
