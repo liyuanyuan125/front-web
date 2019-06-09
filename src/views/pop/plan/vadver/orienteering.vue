@@ -8,9 +8,9 @@
             <Col :span="24">
               <Row>
                 <FormItem :labelWidth="0" class="item-top form-item-type">
-                  <Tags v-model="cityType" :tagMess = 'areaList' />
+                  <Tags v-model="cityCustom" :tagMess = 'areaList' />
                 </FormItem>
-                <div class="item-top check-cinem" v-if="cityType == 1">
+                <div class="item-top check-cinem" v-if="cityCustom == 0">
                   <FormItem :labelWidth="0">
                     <CheckboxGroup v-model="form.cinema" class="item-radio-top">
                       <div style="margin-bottom: 30px">
@@ -24,7 +24,11 @@
                   </FormItem>
                 </div>
                 <div class="item-top" v-else>
-
+                  <div @click="visible = true" class="set-city">共{{citysId.length}}个城市 <span>设置</span></div>
+                  <City v-model="visible"
+                    :cityIds.sync = 'citysId'
+                    :topCityIds = "topCitysId"
+                  ></City>
                 </div>
               </Row>
             </Col>
@@ -77,10 +81,10 @@
 
           <h3 class="layout-titles">影片定向
             <FormItem :labelWidth="0" class="item-top cinema-position form-item-type">
-              <Tags v-model="movieType" :tagMess = 'movieList' />
+              <Tags v-model="movieCustom" :tagMess = 'movieList' />
             </FormItem>
           </h3>
-          <!-- <div class="item-top" style="margin-top: 50px" v-show="movieType == 1">
+          <!-- <div class="item-top" style="margin-top: 50px" v-show="movieCustom == 1">
             <FormItem :labelWidth="0" class="form-item-type-sort">
               <ul class="film-list" v-if="cinemaDetail.length > 0">
                 <li v-for="(it, index) in cinemaDetail" :key="index"
@@ -98,8 +102,9 @@
               </ul>
             </FormItem>
           </div> -->
-          <div class="item-top" style="margin-top: 50px" v-show="movieType != 1">
-            <Film />
+          <div class="item-top" style="margin-top: 50px" v-show="movieCustom != 0">
+            {{numsList}}
+            <Film v-model="numsList" />
           </div>
 
           <div class="btn-center">
@@ -120,8 +125,9 @@ import { cinemaFind } from '@/api/popPlan.ts'
 import moment from 'moment'
 import Film from './film.vue'
 import Chain from '@/components/cityMap/CityMap.vue'
-import { getTwodetail, getRegionList } from '@/api/popPlan.ts'
-
+import { getTwodetail, getRegionList, direction, searchcinema } from '@/api/popPlan.ts'
+import { clean } from '@/fn/object.ts'
+import City from '@/components/citySelectDialog'
 // 保持互斥
 const keepExclusion = <T>(
   value: T[],
@@ -141,12 +147,15 @@ const timeFormat = 'YYYY-MM-DD'
   components: {
     Tags,
     Film,
-    Chain
+    Chain,
+    City
   }
 })
 export default class Orienteering extends ViewBase {
   @Prop() value!: number
-
+  visible = false
+  citysId = []
+  topCitysId = []
   form: any = {
     name: '',
     cinema: [0],
@@ -156,22 +165,23 @@ export default class Orienteering extends ViewBase {
   }
   rule: any = {
   }
-  cityType: number = 1
-  movieType: number = 2
+  numsList: any = []
+  cityCustom: number = 0
+  movieCustom: number = 1
   cinemaType: number = 1
   areaList = [{
-    label: 1,
+    label: 0,
     name: '快速选择'
   }, {
-    label: 2,
+    label: 1,
     name: '自定义城市列表'
   }]
   movieList = [
     {
-      label: 1,
+      label: 0,
       name: '系统智能匹配'
     }, {
-      label: 2,
+      label: 1,
       name: '自定义影片'
     }
   ]
@@ -214,13 +224,40 @@ export default class Orienteering extends ViewBase {
     }
   }
 
+
   async next(dataform: any) {
-    this.$emit('input', 2)
     try {
-      const volid = await (this.$refs[dataform] as any).validate()
-      if (volid) {
-        this.$emit('input', 1)
-      }
+      await direction (clean({
+        planId: 38,
+        cityCustom: this.cityCustom,
+        allNation: this.form.cinema[0] == 0 ? 1 : '',
+        deliveryCityTypes: this.form.cinema[0] == 0 ? '' : this.form.cinema,
+        deliveryGroups: [
+          {
+            tagTypeCode: 'MOVIE_TYPE',
+            text: this.form.type[0]
+          },
+          {
+            tagTypeCode: 'PLAN_GROUP_AGE',
+            text: this.form.age
+          },
+          {
+            tagTypeCode: 'PLAN_GROUP_SEX',
+            text: this.form.sex
+          }
+        ].filter((it: any) => {
+          return it.text != 0
+        }),
+        movieCustom: this.movieCustom,
+        deliveryMovies: this.numsList.map((it: any) => {
+          return {
+            movieId: it.id,
+            beginDate: 20171212,
+            endDate: 20181212
+          }
+        })
+      }))
+      this.$emit('input', 2)
     } catch (ex) {
       this.handleError(ex)
     }
@@ -296,6 +333,19 @@ export default class Orienteering extends ViewBase {
   color: rgba(0, 32, 46, 1);
   margin-left: 30px;
   margin-bottom: 43px;
+}
+.set-city {
+  font-size: 18px;
+  span {
+    .button-style(#fff, #00202d);
+    display: inline-block;
+    width: 74px;
+    height: 31px;
+    text-align: center;
+    line-height: 31px;
+    border-radius: 16px;
+    margin-left: 10px;
+  }
 }
 .check-ra {
   /deep/ .ivu-checkbox {

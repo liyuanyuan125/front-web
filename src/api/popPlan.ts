@@ -126,6 +126,24 @@ export async function createdScheme(query: any) {
 
 /**
  * @param  {any} query
+ * 创建广告计划-定向设置
+ */
+export async function direction(query: any) {
+  const data = await post('/xadvert/v1/plans/create/direction', query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 电影搜索接口
+ */
+export async function searchcinema(query: any) {
+  const data = await get('/xadvert/v1/plans/search-movie', query)
+  return data
+}
+
+/**
+ * @param  {any} query
  * 创建广告计划-预估曝光人次
  */
 export async function estimate(query: any) {
