@@ -13,8 +13,8 @@
     <dl  class="form dcp-download">
       <dt class="dl-title flex-box"><span>格式</span><em>下载链接</em></dt>
       <dd v-if="item.attachments" v-for="it in item.attachments" :key="it.id" class="dcp-dd-list flex-box">
-        <span  v-for="(ind, index) in typeList" :key="index" v-if="ind.key == it.id ">{{ind.text}}</span>
-        <a target="_blank" :href="it.fileUrl">{{it.fileUrl}}</a>
+        <span  v-for="(ind, index) in typeList" :key="index" v-if="ind.key == it.typeCode ">{{ind.text}}</span>
+        <a target="_blank" :href="it.fileUrl">{{it.fileUrl || '-'}}</a>
       </dd>
     </dl>
 
@@ -150,8 +150,11 @@ export default class Main extends ViewBase {
     font-weight: 400px;
     text-align: center;
     background: rgba(255, 255, 255, .3);
+    height: 50px;
+    line-height: 50px;
     span {
       flex: 1;
+      border-right: solid 1px #fff;
     }
     em {
       flex: 2;
@@ -162,8 +165,10 @@ export default class Main extends ViewBase {
     height: 55px;
     line-height: 55px;
     text-align: center;
+    font-size: 16px;
     span {
       flex: 1;
+      border-right: solid 1px #fff;
     }
     a {
       flex: 2;
