@@ -38,6 +38,11 @@ export interface RouteMetaBase {
    * 明确的面包屑导航，若不提供，则自动判断，若不需要，设置为 []
    */
   breadcrumbs?: Breadcrumb[] | GetBreadcrumb
+
+  /**
+   * 是否使用沉浸式 header，默认为 false，只能设置为 true 或不设置
+   */
+  immersionHeader?: true
 }
 
 /**
@@ -735,22 +740,6 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       meta: emptyAuth
   },
 
-  // kol - KOL详情更多页 - 合作品牌
-  {
-    path: '/kol/detailMoreInfo/colbrand',
-    name: 'kol-detailMoreInfo-colbrand',
-    component: () => import('./views/kol/detailMoreInfo/collaborateBrand.vue'),
-    meta: emptyAuth
-  },
-
-  // kol - KOL详情更多页 - 主要作品
-  {
-    path: '/kol/detailMoreInfo/masterwork',
-    name: 'kol-detailMoreInfo-masterwork',
-    component: () => import('./views/kol/detailMoreInfo/masterWork.vue'),
-    meta: emptyAuth
-  },
-
   // kol - koll列表
   {
     path: '/kol/shopping',
@@ -759,40 +748,97 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
 
-  // kol - KOL详情更多页 - 平台运营
+  // KOL - 概览
   {
-    path: '/kol/detailMoreInfo/platformInfoData',
-    name: 'kol-detailMoreInfo-platformInfoData',
-    component: () => import('./views/kol/detailMoreInfo/platformInfoData.vue'),
-    meta: emptyAuth
+    path: '/kol/figure/:id',
+    name: 'kol-figure',
+    component: () => import('./views/mainPage/kol.vue'),
+    meta: {
+      ...emptyAuth,
+      immersionHeader: true
+    },
+    props({ params: { id } }) {
+      return { id: +id }
+    }
   },
-  // KOL - KOL详情更多页 - 口碑评论
+
+  // KOL - 更多详情
   {
-    path: '/kol/detailMoreInfo/comment/:id',
-    name: 'kol-detailMoreInfo-comment',
-    component: () => import('./views/kol/detailMoreInfo/comment.vue'),
-    meta: emptyAuth
-  },
-  // KOL - KOL详情更多页 - 受众匹配
-  {
-    path: '/kol/detailMoreInfo/matching/:brandId',
-    name: 'kol-detailMoreInfo-matching',
-    component: () => import('./views/kol/detailMoreInfo/matching.vue'),
-    meta: emptyAuth
-  },
-  // KOL - KOL详情更多页 - 粉丝画像
-  {
-    path: '/kol/detailMoreInfo/fans',
-    name: 'kol-detailMoreInfo-fans',
-    component: () => import('./views/kol/detailMoreInfo/fans.vue'),
-    meta: emptyAuth
-  },
-  // KOL - KOL详情更多页 - 热度趋势
-  {
-    path: '/kol/detailMoreInfo/trend',
-    name: 'kol-detailMoreInfo-trend',
-    component: () => import('./views/kol/detailMoreInfo/trend.vue'),
-    meta: emptyAuth
+    path: '/kol/detail/:id',
+    name: 'kol-detail-layout',
+    component: () => import('./views/kol/detailMoreInfo/layout.vue'),
+    meta: emptyAuth,
+    props({ params: { id } }) {
+      return { id: +id }
+    },
+    children: [
+      // kol - KOL详情更多页 - 平台运营
+      {
+        path: '/kol/detailMoreInfo/platformInfoData',
+        name: 'kol-detailMoreInfo-platformInfoData',
+        component: () => import('./views/kol/detailMoreInfo/platformInfoData.vue'),
+        meta: emptyAuth
+      },
+
+      // KOL - KOL详情更多页 - 热度趋势
+      {
+        path: 'trend',
+        name: 'kol-detailMoreInfo-trend',
+        component: () => import('./views/kol/detailMoreInfo/trend.vue'),
+        meta: emptyAuth,
+        props({ params: { id } }) {
+          return { id: +id }
+        },
+      },
+
+      // KOL - KOL详情更多页 - 投放价格
+      {
+        path: '/kol/detailMoreInfo/price',
+        name: 'kol-detailMoreInfo-price',
+        component: () => import('./views/kol/detailMoreInfo/price.vue'),
+        meta: emptyAuth
+      },
+
+      // KOL - KOL详情更多页 - 粉丝画像
+      {
+        path: '/kol/detailMoreInfo/fans',
+        name: 'kol-detailMoreInfo-fans',
+        component: () => import('./views/kol/detailMoreInfo/fans.vue'),
+        meta: emptyAuth
+      },
+
+      // KOL - KOL详情更多页 - 粉丝画像 - 受众匹配
+      {
+        path: '/kol/detailMoreInfo/matching/:brandId',
+        name: 'kol-detailMoreInfo-matching',
+        component: () => import('./views/kol/detailMoreInfo/matching.vue'),
+        meta: emptyAuth
+      },
+
+      // KOL - KOL详情更多页 - 口碑评论
+      {
+        path: '/kol/detailMoreInfo/comment/:id',
+        name: 'kol-detailMoreInfo-comment',
+        component: () => import('./views/kol/detailMoreInfo/comment.vue'),
+        meta: emptyAuth
+      },
+
+      // kol - KOL详情更多页 - 主要作品
+      {
+        path: '/kol/detailMoreInfo/masterwork',
+        name: 'kol-detailMoreInfo-masterwork',
+        component: () => import('./views/kol/detailMoreInfo/masterWork.vue'),
+        meta: emptyAuth
+      },
+
+      // kol - KOL详情更多页 - 合作品牌
+      {
+        path: '/kol/detailMoreInfo/colbrand',
+        name: 'kol-detailMoreInfo-colbrand',
+        component: () => import('./views/kol/detailMoreInfo/collaborateBrand.vue'),
+        meta: emptyAuth
+      },
+    ]
   },
 
   // kol - 详情
@@ -848,7 +894,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/figure/:id',
     name: 'film-figure',
     component: () => import('./views/mainPage/figure.vue'),
-    meta: emptyAuth,
+    meta: {
+      ...emptyAuth,
+      immersionHeader: true
+    },
     props({ params: { id } }) {
       return { id: +id }
     }
@@ -859,7 +908,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/movie/:id',
     name: 'film-movie',
     component: () => import('./views/mainPage/movie.vue'),
-    meta: emptyAuth,
+    meta: {
+      ...emptyAuth,
+      immersionHeader: true
+    },
     props({ params: { id } }) {
       return { id: +id }
     }
@@ -886,17 +938,6 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'figure-detailMoreInfo-matching',
     component: () => import('./views/film/figure/detailMoreInfo/matching.vue'),
     meta: emptyAuth
-  },
-
-  // KOL
-  {
-    path: '/kol/figure/:id',
-    name: 'kol-figure',
-    component: () => import('./views/mainPage/kol.vue'),
-    meta: emptyAuth,
-    props({ params: { id } }) {
-      return { id: +id }
-    }
   },
 
   // 影片详情 - 主创阵容

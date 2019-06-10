@@ -72,8 +72,9 @@
     </Row>
   </div>
 </template>
+
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import {
   formatTimestamp,
@@ -93,6 +94,8 @@ import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
   }
 })
 export default class Temporary extends ViewBase {
+  @Prop({ type: Number, default: 0 }) id!: number
+
   form: any = {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
