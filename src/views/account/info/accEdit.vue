@@ -1,6 +1,7 @@
 <template>
-  <div class="page home-bg">
+  <div class="page home-bg as">
     <Form :model="form"  :rules="rule"  ref="dataform" label-position="left" :label-width="100" class="edit-input">
+      <div class='bs'>
       <h3 class="layout-title">登录信息</h3>
       <FormItem label="登录邮箱" class="item-top">
         <Input v-model="form.email" placeholder="请输入登录邮箱"></Input>
@@ -8,8 +9,10 @@
       </FormItem>
       <FormItem label="邮箱验证码" v-if="isEmailCode">
         <Input v-model="form.emailCaptcha" :maxlength="6" class="email-code" placeholder="请输入邮箱验证码"></Input>
-        <Button class="btn-code" :disabled="displayCode" @click="getEmailCode">{{emailMes}}</Button>
+        <Button class="btn-code sok" :disabled="displayCode" @click="getEmailCode">{{emailMes}}</Button>
       </FormItem>
+      </div>
+      <div class='bs'>
       <h3 class="layout-title">公司信息</h3>
       <FormItem label="公司所在地" class="item-top">
         <AreaSelect v-model="form.area" :max-level="2" no-self/>
@@ -23,12 +26,13 @@
       <FormItem label="个人邮箱" prop="companyEmail">
         <Input v-model="form.companyEmail" placeholder="请输入个人邮箱"></Input>
       </FormItem>
+    </div>
     </Form>
     <div class="btnCenter">
       <Button
         type="primary"
         :disabled="submitDisabled"
-        class="button-ok edit-submit"
+        class="button-ok edit-submit bok"
         @click="editAccount('dataform')"
       >提交申请</Button>
     </div>
@@ -131,7 +135,52 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+.bok {
+  width: 200px;
+  height: 50px;
+  background: rgba(0, 32, 45, 1);
+  border-radius: 25px;
+  color: #fff;
+}
+.sok {
+  width: 190px;
+  height: 40px;
+  background: rgba(0, 32, 45, 1);
+  border-radius: 5px;
+  border: 1px solid rgba(0, 32, 45, 1);
+}
+/deep/ .ivu-select-selection {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+/deep/ .ivu-select-input {
+  margin-top: 3px;
+}
+/deep/ .ivu-input {
+  border-radius: 5px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+.layout-title {
+  background: rgba(255, 255, 255, 0);
+  font-size: 24px;
+  font-weight: 500;
+  color: rgba(0, 32, 45, 1);
+  margin-top: 10px;
+}
+.bs {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 30px;
+  background: rgba(255, 255, 255, 0.3);
+}
+.as {
+  background: rgba(255, 255, 255, 0);
+  padding: 20px 30px 0 30px;
+}
 @c-bg: #fff;
 .page {
   .ivu-form-item {
@@ -141,7 +190,6 @@ export default class Main extends ViewBase {
   .modifyCode {
     cursor: pointer;
     font-size: 13px;
-    color: @c-button;
     margin-left: 20px;
   }
   .item-top {

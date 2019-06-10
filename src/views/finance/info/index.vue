@@ -1,25 +1,25 @@
 <template>
-  <div class="page home-bg">
+  <div class="page home-bg as">
     
-    <div class="userTitle">
+    <!-- <div class="userTitle">
       <span class="nav-top-title">财务信息</span>
-    </div>
+    </div> -->
     <div class="fince"  v-auth="'financial-manage.info#viewsummary'">
       <h3 class="userTitle">
         <span style="color:#222222;" class="nav-top-title">账户总览</span>
       </h3>
       <div class="fince-list">
         <div class="fince-list-big">
+          <p class="fince-list-sm">账户余额 / 元</p>
           <div class="fince-list-acc count-to-count-text count-style">{{balance}}</div>
-          <p class="fince-list-sm">账户余额/元</p>
         </div>
         <div class="fince-list-big">
+          <p class="fince-list-sm">可用金额 / 元</p>
           <div class="fince-list-acc">{{availableAmount}}</div>
-          <p class="fince-list-sm">可用金额/元</p>
         </div>
         <div class="fince-list-big">
+          <p class="fince-list-sm">冻结金额 / 元</p>
           <div class="fince-list-accd">{{freezeAmount}}</div>
-          <p class="fince-list-sm">冻结金额/元</p>
         </div>
       </div>
     </div>
@@ -33,7 +33,6 @@
     </div>
     <Table
       ref="selection"
-      stripe
       class="tables"
       v-auth="'financial-manage.info#viewlist'"
       :loading="tableLoading"
@@ -42,10 +41,10 @@
     ></Table>
 
     <div class="finceadd">
-      <h3 class="userTitle">
-        <span style="color:#222222;" class="nav-top-title">账户充值</span>
+      <h3 class="userTitle zhc">
+        <span >账户充值</span>
       </h3>
-      <div class="fince-list">
+      <div class="fince-list-item">
         <Form
           :model="dataForm"
           :label-width="88"
@@ -77,6 +76,7 @@
             <Col span="12">
               <FormItem label="汇款底单" prop="receipts">
                 <Upload v-model="dataForm.receipts" multiple :maxCount="1" accept="image/*"/>
+                <span class='is'>格式为jpg/jpeg/png，大小不超过5M的图片</span>
               </FormItem>
             </Col>
           </Row>
@@ -138,7 +138,7 @@
           </Row>
         </Form>
         <div class='btnq' style="text-align: center">
-          <Button  v-auth="'financial-manage.info#submit'" type="primary" @click="dataFormSubmit('dataForm')">提交充值申请</Button>
+          <Button class='but'  v-auth="'financial-manage.info#submit'" type="primary" @click="dataFormSubmit('dataForm')">提交充值申请</Button>
         </div>
       </div>
     </div>
@@ -162,7 +162,7 @@ import {
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { toMap } from '@/fn/array'
 import moment from 'moment'
-import Upload from '@/components/upload/Upload.vue'
+import Upload from '../upload/Upload.vue'
 import { slice, clean } from '@/fn/object'
 import { warning , success, toast } from '@/ui/modal'
 
@@ -581,20 +581,10 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
-.colBg {
-  font-size: 14px;
-  height: 50px;
-  line-height: 50px;
-  padding: 0 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  background: @c-head-bg;
+.as {
+  background: rgba(255, 255, 255, 0);
 }
 .page {
-  background: #fff;
   height: 100%;
   font-size: 14px;
   .ivu-select {
@@ -624,36 +614,44 @@ export default class Main extends ViewBase {
     div {
       display: inline-block;
     }
-    background: rgba(249, 249, 249, 1);
-    border-radius: 2px 2px 0 0;
-    height: 50px;
+    background: rgba(32, 67, 80, 1);
+    height: 60px;
     text-align: center;
-    line-height: 50px;
+    line-height: 60px;
     font-size: 14px;
+    width: 98%;
+    margin-left: 1%;
+    border-radius: 5px 5px 0 0;
   }
   .table-left-title {
     float: left;
     padding-left: 1.2%;
-    color: #222;
+    color: #fff;
+    height: 60px;
+    line-height: 60px;
   }
   .table-right-title {
     float: right;
     padding-right: 1.2%;
-    color: #2481d7;
+    color: #fff;
     cursor: pointer;
   }
   .userTitle {
-    .colBg;
-    .addUser {
-      width: 140px;
-      height: 40px;
-      line-height: 40px;
-      display: block;
-      text-align: center;
-      color: #fff;
-      cursor: pointer;
-      background: @c-button;
-    }
+    font-size: 24px;
+    font-weight: 500;
+    color: rgba(0, 32, 45, 1);
+    height: 60px;
+    line-height: 60px;
+    padding-left: 1%;
+  }
+  .zhc {
+    background: rgba(5, 38, 51, 1);
+    border-radius: 5px 5px 0 0;
+    margin: 10px 1% 0 1%;
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    color: #fff;
   }
   .tableTotal {
     padding: 0 30px 20px;
@@ -662,7 +660,8 @@ export default class Main extends ViewBase {
     color: #989898;
   }
   .tables {
-    margin: 20px;
+    margin-left: 1%;
+    margin-right: 1%;
     /deep/ .status-3 {
       color: red;
     }
@@ -681,12 +680,17 @@ export default class Main extends ViewBase {
       }
     }
   }
+  .fince-list-item {
+    background: rgba(19, 63, 78, 1);
+    margin: 0 1% 0 1%;
+    padding-top: 2%;
+  }
   .fince-list {
     .fince-list-big {
       width: 32%;
       display: inline-block;
       height: 160px;
-      background: rgba(255, 248, 242, 1);
+      background: rgba(6, 46, 65, 1);
       border-radius: 2px;
       margin-left: 1%;
       margin-bottom: 12px;
@@ -694,19 +698,19 @@ export default class Main extends ViewBase {
         width: 100%;
         font-size: 36px;
         font-weight: 400;
-        color: rgba(254, 129, 53, 1);
+        color: rgba(255, 110, 110, 1);
         line-height: 36px;
         text-align: center;
-        margin-top: 50px;
+        margin-top: 35px;
       }
       .fince-list-accd {
         width: 100%;
         font-size: 36px;
         font-weight: 400;
-        color: #222;
+        color: rgba(255, 255, 255, 1);
         line-height: 36px;
         text-align: center;
-        margin-top: 50px;
+        margin-top: 35px;
       }
       .fince-list-sm {
         width: 100%;
@@ -716,7 +720,7 @@ export default class Main extends ViewBase {
         color: rgba(136, 136, 136, 1);
         line-height: 14px;
         text-align: center;
-        margin-top: 20px;
+        margin-top: 40px;
       }
     }
   }
@@ -726,18 +730,12 @@ export default class Main extends ViewBase {
   }
   .inp-style {
     width: 97%;
-    // border-radius: 2px;
-    // border: 1px solid rgba(210, 210, 210, 1);
   }
   .inp-style-center {
     width: 105%;
-    // border-radius: 2px;
-    // border: 1px solid rgba(210, 210, 210, 1);
   }
   .inp-style-tex {
     width: 98.5%;
-    // border-radius: 2px;
-    // border: 1px solid rgba(210, 210, 210, 1);
   }
   .hui-div {
     width: 83%;
@@ -813,11 +811,127 @@ export default class Main extends ViewBase {
     height: 100px;
   }
   .btnq {
-    margin-top: 60px;
-    margin-bottom: 40px;
+    margin-top: 35px;
+    padding-bottom: 50px;
   }
+}
+.but {
+  width: 200px;
+  height: 50px;
+  background: rgba(249, 216, 94, 1);
+  border-radius: 25px;
+  border: 0;
+  color: rgba(0, 32, 45, 1);
+  font-size: 18px;
+}
+.is {
+  color: rgba(179, 188, 192, 1);
+  position: absolute;
+  top: 80%;
+  left: 18%;
 }
 /deep/ .ivu-form .ivu-form-item-label {
   font-size: 14px !important;
+  color: rgba(179, 188, 192, 1);
+}
+/deep/ .ivu-table th, /deep/ .ivu-table-header {
+  background: rgba(0, 32, 45, 0.8);
+  height: 40px;
+  line-height: 40px;
+  color: rgba(179, 188, 192, 1);
+  font-size: 14px;
+  font-weight: 400;
+}
+/deep/ .ivu-table td {
+  background: rgba(32, 67, 80, 1);
+  transition: background-color 0.2s ease-in-out;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  height: 50px;
+  line-height: 50px;
+}
+/deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-table-body {
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-table-tip {
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-select-selection {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+/deep/ .ivu-select-input {
+  margin-top: 3px;
+}
+/deep/ .ivu-input {
+  border-radius: 5px 5px  5px 5px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+/deep/ .upload-box {
+  width: 400px;
+  height: 225px;
+  border-radius: 2px;
+  border: 1px solid rgba(204, 204, 204, 1);
+}
+/deep/ .upload-add {
+  position: relative;
+  user-select: none;
+  margin-top: 100px;
+  margin-left: 155px;
+}
+/deep/ .ivu-table-wrapper {
+  margin: 0;
+  border: none;
+}
+/deep/ .btnCenter {
+  text-align: center;
+  height: 100px;
+  background: rgba(32, 67, 80, 1);
+  margin: 0 20px 0 20px;
+  line-height: 100px;
+  color: #fff;
+}
+/deep/ .ivu-page-prev {
+  border: 0;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-page-next {
+  border: 0;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-page-item-active {
+  border-color: #eee;
+  background: #eee !important;
+  border-radius: 50%;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+}
+/deep/ .ivu-page-item {
+  border: 0;
+  display: inline-block;
+  vertical-align: middle;
+  background: rgba(32, 67, 80, 1);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 4px;
+  text-align: center;
+  list-style: none;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 </style>
