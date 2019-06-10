@@ -3,11 +3,12 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 
 @Component
-export default class PricePage extends ViewBase {
+export default class Price extends ViewBase {
+  @Prop({ type: Number, default: 0 }) id!: number
 }
 </script>
 

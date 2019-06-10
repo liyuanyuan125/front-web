@@ -1,30 +1,31 @@
 <template>
-  <div class="layout">
-    <aside class="side">
-      <div class="side-in">
-        <h2 class="figure-name">{{name}}</h2>
-        <ul class="route-list">
-          <li class="route-item">
-            <router-link :to="{ name: 'kol-figure' }">概览</router-link>
-          </li>
-          <li class="route-item">
-            <router-link :to="{ name: 'kol-figure' }">运营情况</router-link>
-          </li>
-        </ul>
-      </div>
-    </aside>
-    <main class="main">
-      <router-view></router-view>
-    </main>
-  </div>
+  <DetailLayout :routeList="routeList">
+
+  </DetailLayout>
 </template>
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import DetailLayout, { RouteItem } from '@/components/detailLayout'
 
-@Component
-export default class DetailLayout extends ViewBase {
+@Component({
+  components: {
+    DetailLayout
+  }
+})
+export default class Layout extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
+
+  routeList: RouteItem[] = [
+    { title: '概览', route: 'kol-figure' },
+    { title: '运营情况', route: 'kol-detail-platform' },
+    { title: '热度趋势', route: 'kol-detail-trend' },
+    { title: '投放价格', route: 'kol-detail-price' },
+    { title: '粉丝画像', route: 'kol-detail-fans' },
+    { title: '口碑评论', route: 'kol-detail-comment' },
+    { title: '主要作品', route: 'kol-detail-opus' },
+    { title: '合作过的品牌', route: 'kol-detail-brand' },
+  ]
 
   name = 'Papi酱'
 
