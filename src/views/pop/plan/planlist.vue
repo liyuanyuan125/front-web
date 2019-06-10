@@ -13,7 +13,7 @@
       <Row :gutter="20">
         <Col class="flex-box" :span="6" :offset="3">
           <div class="flex-box search-border-left" style="width: 100%">
-            <Input v-model="form.query"  placeholder="请输入ID/名称进行搜索"/>
+            <Input v-model="form.name"  placeholder="请输入ID/名称进行搜索"/>
             <Button type="primary" class="bth-search" @click="searchList">
               <Icon type="ios-search" size="22"/>
             </Button>
@@ -57,15 +57,16 @@
               <img :src="row.mainPicUrl" width="90px" height="90px" />
               <div>
                 <h3>{{row.name}}</h3>
-                <span>未关联广告片</span>
-                <p>关联广告片</p>
+                <span>{{row.videoName}}&nbsp;&nbsp;{{row.customerName}}&nbsp;&nbsp;{{row.specification||0 }}s</span>
+                <p v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</p>
+                <p v-if="row.videoId" @click="relevanceAdv(row, 2)">修改广告片</p>
               </div>
             </div>
           </div>
         </template>
         <template slot="date" slot-scope="{row}">
-          <p><span>{{formatDate(row.benginDate)}}</span>至<span>{{formatDate(row.endDate)}}</span></p>
-          <p style="margin-top: 10px">7天</p>
+          <p><span>{{formatDate(row.beginDate)}}</span>至<span>{{formatDate(row.endDate)}}</span></p>
+          <p style="margin-top: 10px">{{days(row.beginDate, row.endDate)}}天</p>
         </template>
 
         <template slot="settlementStatus" slot-scope="{row}">
@@ -73,13 +74,27 @@
         </template>
 
         <template slot="status" slot-scope="{row}">
-          <p class="red" style="margin-top: 10px">待执行</p>
+          <p class="red" style="margin-top: 10px">
+            {{data.statusList.filter((it) => it.key == row.status)[0].text}}
+          </p>
         </template>
 
         <template slot="operation" slot-scope="{row}">
-          <div  class="operation-btn">
-            <span @click="sure(row.id)">确认方案</span>
-            <span @click="pay(row.id)">立即缴费</span>
+          <div class="operation-btn">
+            <div v-if="row.status == 1 || row.status == 2">
+              <p @click="plandetail(row.id)">详情</p>
+              <p @click="plandEdit(row.id)">编辑</p>
+              <p @click="plandel(row.id)">删除</p>
+            </div>
+            <div v-if="row.status == 3 || row.status == 3">
+              <span v-if="row.status == 3" @click="sure(row.id)">确认方案</span>
+              <span v-if="row.status == 4" @click="pay(row.id)">立即缴费</span>
+              <div>
+                <p @click="plandetail(row.id)">详情</p>
+                <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p>
+                <p @click="plandel(row.id)">删除</p>
+              </div>
+            </div>
           </div>
         </template>
       </Table>
@@ -88,6 +103,7 @@
     </div>
     <Sure ref="Sure" />
     <Pay ref="Pay" />
+    <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible" @submitRelevance="submitRelevance"></relevanceDlg>
   </div>
 </template>
 <script lang="ts">
@@ -100,28 +116,29 @@ import pagination from '@/components/page.vue'
 import Sure from './planlistmodel/sure.vue'
 import Pay from './planlistmodel/pay.vue'
 import moment from 'moment'
+import relevanceDlg from './planlistmodel/relevance.vue'
+import { clean } from '@/fn/object'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
     Sure,
     Pay,
-    pagination
+    pagination,
+    relevanceDlg
   }
 })
 export default class Plan extends ViewBase {
-  form = {
+  form: any = {
     status: '',
     settlementStatus: '',
-    level: '',
-    query: ''
+    name: ''
   }
   checkId: any = []
   pageList = {
     pageIndex: 1,
     pageSize: 10
   }
-
   relevanVis: any = {
     visible: false,
     title: '',
@@ -160,15 +177,18 @@ export default class Plan extends ViewBase {
   }
 
   async tableList() {
-    const { data } = await orienteering({ ...this.form, ...this.pageList })
+    const { data } = await planList(clean({
+      ...this.form,
+      ...this.pageList
+    }))
     this.data = data
-    for (const item of data.items) {
-      if (item.status == 1 || item.status == 9 || item.status == 10) {
-        item._checked = false
-      } else {
-        item._disabled = true
-      }
-    }
+    // for (const item of data.items) {
+    //   if (item.status == 1 || item.status == 9 || item.status == 10) {
+    //     item._checked = false
+    //   } else {
+    //     item._disabled = true
+    //   }
+    // }
     this.tableDate = data.items
     this.totalCount = data.totalCount
   }
@@ -177,8 +197,13 @@ export default class Plan extends ViewBase {
     this.tableList()
   }
 
+  days(begin: any, end: any) {
+    const time = new Date(this.formatDate(end)).getTime() - new Date(this.formatDate(begin)).getTime()
+    return time / (3600 * 24 * 1000) + 1
+  }
+
   formatDate(data: any) {
-    return data ? moment(data).format(timeFormat) : '暂无'
+    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(3, 2)}-${(data + '').substr(5, 2)}` : '暂无'
   }
 
   async handlePayment(item: any) {
@@ -236,18 +261,38 @@ export default class Plan extends ViewBase {
     }
   }
 
+  plandetail(id: any) {
+    this.$router.push({
+      name: 'pop-planlist-default',
+      params: {id}
+    })
+  }
+
+  plandEdit(id: any) {
+    this.$router.push({
+      name: 'pop-planlist-edit',
+      params: {id}
+    })
+  }
+
+  plandel(id: any) {
+
+  }
+
   async relevanceAdv(val: any, id: any) {
     if (id == 1) {
       this.relevanVis = {
         visible: true,
         title: '关联广告片',
-        item: '',
+        item: {
+          videoId: ''
+        },
         id: val.id
       }
     } else {
       this.relevanVis = {
         visible: true,
-        title: '编辑广告片',
+        title: '修改广告片',
         item: val,
         id: val.id
       }
@@ -298,6 +343,11 @@ export default class Plan extends ViewBase {
     this.tableList()
   }
 
+  @Watch('form', {deep: true})
+  watchForm(val: any) {
+    this.tableList()
+  }
+
   @Watch('checks', {deep: true})
   watchChecks(val: any) {
     this.checkId = []
@@ -308,7 +358,7 @@ export default class Plan extends ViewBase {
       }
     }
     this.checkId.forEach((it: any) => {
-      id = id.filter((item: any) => item == it)
+      id = id.filter((item: any) => item != it)
     })
     this.checkboxall = id.length > 0 ? false : true
   }
@@ -404,6 +454,7 @@ export default class Plan extends ViewBase {
         line-height: 28px;
         background: rgba(0, 32, 45, 1);
         border-radius: 14px;
+        cursor: pointer;
         .button-style(#fff, #00202d);
       }
     }
@@ -545,6 +596,10 @@ export default class Plan extends ViewBase {
     cursor: pointer;
     display: inline-block;
     line-height: 22px;
+  }
+  p {
+    cursor: pointer;
+    line-height: 24px;
   }
 }
 </style>

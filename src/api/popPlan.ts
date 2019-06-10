@@ -92,7 +92,7 @@ export async function getRegionList() {
  * @param  {any} query
  * 广告计划详情
  */
-export async function adverdetail(id: number) {
+export async function adverdetail(id: any) {
   const data = await get(`/xadvert/v1/plans/${id}`)
   return data
 }
@@ -121,6 +121,24 @@ export async function createdDirection(query: any) {
  */
 export async function createdScheme(query: any) {
   const data = await post('/xadvert/plans/create/scheme', query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 创建广告计划-定向设置
+ */
+export async function direction(query: any) {
+  const data = await post('/xadvert/v1/plans/create/direction', query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 电影搜索接口
+ */
+export async function searchcinema(query: any) {
+  const data = await get('/xadvert/v1/plans/search-movie', query)
   return data
 }
 

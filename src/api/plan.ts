@@ -6,7 +6,7 @@ import { mockGet, tid, title20, dateRange } from './mock'
  * @param data
  */
 export async function planList(data: any) {
-  const res = await get('xadvert/plans', data)
+  const res = await get('/xadvert/v1/plans', data)
   return res
 }
 
@@ -25,6 +25,15 @@ export async function delCheckPlanList(query: any) {
  */
 export async function relevanceVideo(data: any) {
   const res = await put('xadvert/plans/relevance-video', data)
+  return res
+}
+
+/**
+ * 推广管理 - 广告计划 - 修改广告片
+ * @param data
+ */
+export async function setVideo(id: any, query: any) {
+  const res = await post(`/xadvert/v1/plans/${id}/video`, query)
   return res
 }
 

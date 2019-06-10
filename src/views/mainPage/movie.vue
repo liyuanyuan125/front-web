@@ -13,40 +13,22 @@
         <BasicPane
           :item="basic"
           :more="{ name: 'home' }"
-          :platformList="platformList"
-          :brandList="brandList"
         />
       </div>
 
       <section class="board-pane">
-        <nav class="flatform-nav">
-          <a
-            v-for="it in platformNavList"
-            :key="it.icon"
-            class="flatform-nav-item"
-            :class="{'flatform-nav-on': it.icon == platformNav}"
-            @click="platformNav = it.icon"
-          >
-            <i :class="`platform-icon-${it.icon}`"></i>
-            <span class="platform-name">{{it.name}}</span>
-          </a>
-        </nav>
-
         <div class="board-row flex-box">
           <FansPane
-            title="粉丝画像"
+            title="想看用户画像"
             :man="fansMan"
             :woman="fansWoman"
             :more="{ name: 'home' }"
             tip="与奔驰用户匹配度：72%"
             class="fans-pane"
           />
-          <PiePane
-            title="近7日评论分析"
-            :more="{ name: 'home' }"
-            :data="commentData"
-            class="comment-pane"
-          />
+          <div class="pane-group">
+
+          </div>
         </div>
 
         <div class="board-row">
@@ -61,19 +43,14 @@
         </div>
 
         <div class="board-row">
-          <OpusPane
-            title="热门作品"
-            :data="opusData"
+          <HotPane
+            title="全网热度"
+            :data="hotData"
             :more="{ name: 'home' }"
-            class="opus-pane"
-          />
-        </div>
-
-        <div class="board-row">
-          <OfferPane
-            title="投放报价"
-            price="视频：¥123,000 起"
-            class="offer-pane"
+            tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
+            :legendList="legendList"
+            :formatter="hotFormatter"
+            class="hot-pane"
           />
         </div>
       </section>
@@ -108,12 +85,12 @@ export default class FigurePage extends ViewBase {
 
   basic = {
     id: this.id,
-    name: 'Papi酱',
-    subName: '',
-    title: '搞笑视频自媒体',
+    name: '流浪地球',
+    subName: 'The Wandering Earth',
+    title: '',
     figure: 'https://picsum.photos/id/435/154/154',
     rankNo: '86.5',
-    rankTitle: '全网排名：100<br>搞笑类：1',
+    rankTitle: '同档期：第2',
   }
 
   bigFigure = this.id == 1 ? '' : 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
@@ -139,16 +116,6 @@ export default class FigurePage extends ViewBase {
     { icon: 'xiaohongshu', name: '小红书', percent: 30, count: '888万' },
   ]
 
-  platformNav = 'weibo'
-
-  platformNavList = [
-    { icon: 'weibo', name: '微博' },
-    { icon: 'wechat', name: '微信' },
-    { icon: 'douyin', name: '抖音' },
-    { icon: 'kuaishou', name: '快手' },
-    { icon: 'xiaohongshu', name: '小红书' },
-  ]
-
   brandList = [
     { logo: 'https://dummyimage.com/60x60/000/fff' },
     { logo: 'https://dummyimage.com/60x60/fff/000' },
@@ -169,6 +136,13 @@ export default class FigurePage extends ViewBase {
     { name: '5-20', value: 600000 },
     { name: '5-21', value: 755000 },
     { name: '5-22', value: 555000 },
+  ]
+
+  legendList = [
+    { name: '新浪', no: 'No.3', inc: 0 },
+    { name: '微信', no: 'No.2', inc: -2 },
+    { name: '百度', no: 'No.4', inc: 8 },
+    { name: '头条', no: 'No.1', inc: 3 },
   ]
 
   hotData = [
@@ -278,6 +252,9 @@ export default class FigurePage extends ViewBase {
     width: 246px;
     margin-left: 30px;
   }
+  /deep/ .name-zone {
+    padding-bottom: 24px;
+  }
   /deep/ .figure {
     top: 42px;
     width: 162px;
@@ -336,17 +313,17 @@ export default class FigurePage extends ViewBase {
 .board-row {
   justify-content: space-between;
   margin-top: 6px;
+  &:last-child .pane-item {
+    border-radius: 0 0 5px 5px;
+  }
 }
 
-.active-fans-pane {
-  height: 260px;
+.fans-pane {
+  border-radius: 5px 0 0 0;
 }
 
 .hot-pane {
-  height: 295px;
-  /deep/ .chart {
-    height: 202px;
-  }
+  height: 314px;
 }
 
 .offer-pane {

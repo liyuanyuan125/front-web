@@ -459,6 +459,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
 
+  // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
+  {
+    path: '/pop/planlist/edit/:id',
+    name: 'pop-planlist-edit',
+    component: () => import('./views/pop/plan/index.vue'),
+    meta: emptyAuth
+  },
+
   // // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
   // {
   //   path: '/pop/planlist/set/:id?/:setid?',
@@ -704,6 +712,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import(/* webpackChunkName: "about" */'./views/about.vue'),
     meta: emptyAuth,
   },
+  // KOL - KOL 对比
+  {
+    path: '/kol/compare',
+    name: 'kol-compare',
+    component: () => import('./views/kol/compare/index.vue'),
+    meta: emptyAuth
+  },
 
   // kol - koll列表
   {
@@ -847,6 +862,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  // 影片
+  {
+    path: '/film/movie/:id',
+    name: 'film-movie',
+    component: () => import('./views/mainPage/movie.vue'),
+    meta: emptyAuth,
+    props({ params: { id } }) {
+      return { id: +id }
+    }
+  },
+
   // 影人 - 详情 - 更多页 - 评论
   {
     path: '/figure/detailMoreInfo/comment/:id',
@@ -854,6 +880,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/film/figure/detailMoreInfo/comment.vue'),
     meta: emptyAuth
   },
+
   // 影人 - 影人详情更多页 - 粉丝画像
   {
     path: '/figure/detailMoreInfo/fans/:id',

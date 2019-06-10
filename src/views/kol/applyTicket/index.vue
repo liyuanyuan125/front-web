@@ -47,17 +47,6 @@
           <Col :span="3"> <p class='down' @click='down()'>下一步</p> </Col>
         </div>
       </div>
-      <Page
-      :total="totalCount"
-      v-if="totalCount>0"
-      class="btnCenter plan-pages"
-      :current="query.pageIndex"
-      :page-size="query.pageSize"
-      show-total
-      show-elevator
-      @on-change="handlepageChange"
-      @on-page-size-change="handlePageSize"
-    />
     <div class='di'></div>
   </div>
 </template>
@@ -86,8 +75,7 @@ const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 export default class Main extends ViewBase {
   totalCount = 0
   query = {
-    pageIndex: 1,
-    pageSize: 10
+
   }
 
 
@@ -106,7 +94,6 @@ export default class Main extends ViewBase {
   }
 
   seachs() {
-    this.query.pageIndex = 1
     this.seach()
   }
 
@@ -183,21 +170,6 @@ export default class Main extends ViewBase {
   }
 
 
-  handlepageChange(size: any) {
-    this.query.pageIndex = size
-    this.seach()
-  }
-  handlePageSize(size: any) {
-    this.query.pageIndex = size
-    this.seach()
-  }
-
-
-
-  @Watch('query', {deep: true})
-  watchQuery() {
-    this.seach()
-  }
 
   @Watch('orderids', {deep: true})
   watchMoneyList() {
