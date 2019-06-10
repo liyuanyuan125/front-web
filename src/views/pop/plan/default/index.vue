@@ -188,7 +188,7 @@
         <Row :gutter="16">
           <Col :span="2"><span>预算:</span></Col>
           <Col :span="22">
-            <span>{{formatNums(item.budgetAmount)}}</span>
+            <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount)}}</span>
           </Col>
         </Row>
         <Row :gutter="16" style="height: 126px">
@@ -268,7 +268,7 @@ export default class App extends ViewBase {
   async init() {
     // const { data } = await orienteering({})
     try {
-      const { data } = await adverdetail(25)
+      const { data } = await adverdetail(this.$route.params.id)
       this.status = data.item.status
       this.statusList = data.statusList
       this.item = data.item

@@ -2,14 +2,14 @@
   <div>
     <Modal v-model="value.visible"
       :transfer='false'
-      :width='560'
+      :width='660'
       :closable='false'
       :mask-closable='false'>
       <div class="title">
         <i @click="value.visible = false"></i>
-        <p>关联广告片</p>
+        <p>{{!!value.item.videoId ? '修改广告片' : '关联广告片'}}</p>
         <Form ref="forms" :model="form" style="margin-top: 30px" :rules="rules" :label-width="100">
-          <FormItem label="已关联广告片" class="item-top" v-if="value.item.videoId">
+          <!-- <FormItem label="已关联广告片" class="item-top">
             <div class="relvanMess">
               <p>
                 <span>广告片ID</span>
@@ -20,14 +20,21 @@
                 <em>{{value.item.videoName}}</em>
               </p>
             </div>
-          </FormItem>
-          <FormItem label="关联广告片" prop="voidID">
-            <Select v-model="form.voidID" clearable filterable style="width:400px">
-              <Option v-for="item in releList" :value="item.id" :key="item.id">{{ item.customerName }}</Option>
-            </Select>
+          </FormItem> -->
+          <FormItem :labelWidth="0">
+            <Input v-model="form.name" clearable style="width:500px" ></Input>
           </FormItem>
         </Form>
       </div>
+      <div class="adver-box">
+        <div @click="adverSelcet(item.id)" v-for="item in releList"
+          :class="['img-box', (value.item.videoId == item.id ) ? 'img-active' : '']"
+          :key="item.id" >
+          <img :src="item.logo" width="120px" height="120px" alt="" />
+          <p class="title-p">名称：{{item.name}}</p>
+        </div>
+      </div>
+      <pagination v-model="pageList" :total="totalCount" @uplist="uplist"></pagination>
       <div slot="footer" class="foot btnCenter footer-btn">
         <Button class="button-cancel foot-cancel-button" @click="value.visible = false">取消</Button>
         <Button type="primary" class="button-ok foot-button" @click="handleSumbit">确认</Button>
@@ -38,19 +45,32 @@
 <script lang="ts">
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { queryRelevanceList, relevanceVideo } from '@/api/plan'
+import { queryRelevanceList, relevanceVideo, setVideo } from '@/api/plan'
 import { advertising } from '@/api/popPlan.ts'
+import pagination from '@/components/page.vue'
 
-@Component
+@Component({
+  components: {
+    pagination
+  }
+})
 export default class Relevan extends ViewBase {
   @Prop({ type: Object }) value: any
-
   releList = []
   form = {
-    voidID: null
+    name: '',
+    videoId: null
   }
+
+  pageList = {
+    pageIndex: 1,
+    pageSize: 10
+  }
+
+  totalCount = 0
+
   rules = {
-    voidID: [
+    videoId: [
       {
         require: true,
         trigger: 'blur',
@@ -64,11 +84,11 @@ export default class Relevan extends ViewBase {
   async init() {
     try {
        const { data } = await advertising( {
-        pageIndex: 1,
-        pageSize: 200000,
+        ...this.pageList,
         status: 4
       } )
       this.releList = data.items || []
+      this.totalCount = data.totalCount
     } catch (ex) {
       this.handleError(ex)
     }
@@ -77,21 +97,26 @@ export default class Relevan extends ViewBase {
   mounted() {
     // 编辑
     if (this.value.item) {
-      this.form.voidID = this.value.item.videoId
+      this.value.item.videoId = this.value.item.videoId
     }
     this.init()
   }
-  async handleSumbit() {
-    const volid = await (this.$refs.forms as any).validate()
-    if (!volid) {
-      return
-    }
 
+  adverSelcet(id: any) {
+    this.value.item.videoId = id
+  }
+
+  async handleSumbit() {
+    if (!this.value.item.videoId) {
+      this.value.visible = false
+    }
     try {
-      await relevanceVideo({
-        id: this.value.id,
-        videoId: this.form.voidID
-      })
+      await setVideo(
+        this.value.id,
+        {
+          videoId: this.value.item.videoId
+        }
+      )
       this.value.visible = false
       this.$emit('submitRelevance')
     } catch (ex) {
@@ -99,14 +124,18 @@ export default class Relevan extends ViewBase {
     }
   }
 
+  uplist(size: any) {
+    this.pageList.pageIndex = size
+    this.queryReleList()
+  }
+
   async queryReleList() {
     try {
       const {
-        data: { items }
+        data: { items, totalCount }
       } = await queryRelevanceList({
         status: 4,
-        pageIndex: 1,
-        pageSize: 99999
+        ...this.pageList
       })
       this.releList = items
     } catch (ex) {
@@ -120,9 +149,8 @@ export default class Relevan extends ViewBase {
 /deep/ .ivu-modal-body {
   padding: 0;
 }
-/deep/ .ivu-select-selection,
-/deep/ .ivu-select,
-/deep/ .ivu-select-input {
+/deep/ .ivu-input-wrapper,
+/deep/ .ivu-input {
   background: rgba(255, 255, 255, 0.4);
   height: 40px;
   line-height: 40px;
@@ -136,7 +164,6 @@ export default class Relevan extends ViewBase {
 .title {
   border-radius: 5px 5px 0 0;
   text-align: center;
-  margin-bottom: 30px;
   font-size: 30px;
   font-weight: 500;
   padding: 20px;
@@ -190,6 +217,46 @@ export default class Relevan extends ViewBase {
     padding: 0;
     margin-right: 20px;
     .button-style(#00202d, rgba(255, 255, 255, 0.6));
+  }
+}
+.adver-box {
+  padding: 0 50px;
+  margin-bottom: 10px;
+  .img-box {
+    position: relative;
+    width: 120px;
+    cursor: pointer;
+    margin-right: 20px;
+    .title-p {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.6);
+      line-height: 30px;
+      padding-left: 10px;
+      overflow: hidden;
+      white-space: nowrap;
+      color: #00202d;
+      text-overflow: ellipsis;
+    }
+  }
+  .img-active {
+    &::after {
+      content: '\2713';
+      color: #fff;
+      position: absolute;
+      right: -8px;
+      top: -8px;
+      border: 1px solid #00202d;
+      background: #00202d;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 16px;
+    }
   }
 }
 </style>

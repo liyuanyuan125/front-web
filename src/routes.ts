@@ -464,6 +464,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
 
+  // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
+  {
+    path: '/pop/planlist/edit/:id',
+    name: 'pop-planlist-edit',
+    component: () => import('./views/pop/plan/index.vue'),
+    meta: emptyAuth
+  },
+
   // // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
   // {
   //   path: '/pop/planlist/set/:id?/:setid?',
@@ -1018,6 +1026,77 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/film/filmmakerDetails/moreInformation.vue'),
     meta: emptyAuth
   },
+
+  // [直客] 品牌管理（详情页）登录判断
+  {
+    path: '/brand/list',
+    name: 'brand-list',
+    component: () => import('./views/brand/list.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '品牌管理',
+    }
+  },
+  // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
+  {
+    path: '/brand/moredetail',
+    name: 'brand-moredetail',
+    redirect: '/brand/moredetail/base',
+    component: () => import('./views/brand/moreDetail.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '品牌管理详情页',
+    },
+    children: [
+      // 品牌详情 - 基础信息
+      {
+        path: 'base',
+        name: 'brand-moredetail-base',
+        component: () => import('./views/brand/details/base.vue'),
+        meta: {
+          authKey: '',
+          authAction: '',
+          title: '基础信息',
+        }
+      },
+      // 品牌详情 - 门店
+      {
+        path: 'shop',
+        name: 'brand-moredetail-shop',
+        component: () => import('./views/brand/details/shop.vue'),
+        meta: {
+          authKey: '',
+          authAction: '',
+          title: '门店',
+        }
+      },
+      // 品牌详情 - 媒体平台
+      {
+        path: 'media',
+        name: 'brand-moredetail-media',
+        component: () => import('./views/brand/details/media.vue'),
+        meta: {
+          authKey: '',
+          authAction: '',
+          title: '媒体平台',
+        }
+      },
+      // 品牌详情 - 产品信息
+      {
+        path: 'product',
+        name: 'brand-moredetail-product',
+        component: () => import('./views/brand/details/product.vue'),
+        meta: {
+          authKey: '',
+          authAction: '',
+          title: '产品信息',
+        }
+      },
+    ]
+  },
+
 ] // end of mainLayoutRoutes
 
 const errorRoutes: RouteConfigEnhance[] = [
