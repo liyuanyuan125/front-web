@@ -1,9 +1,9 @@
 <template>
-  <div class="page home-bg">
-     <h2 class="layout-nav-title">财务信息 > 充值记录</h2>
+  <div class="page home-bg as">
+     <!-- <h2 class="layout-nav-title">财务信息 > 充值记录</h2> -->
     <div class="flex-box">
       <form class="form item-top" @submit.prevent="seach">
-        充值状态
+        <em style='color: #fff;display: inline-block;'>充值状态</em>
         <Select v-model="dataForm.status" placeholder="所有状态" clearable @on-change="seach">
           <Option v-for="it in approvalStatusList" :key="it.key" :value="it.key"
             :label="it.text">{{it.text}}</Option>
@@ -15,7 +15,7 @@
       当前共有记录<span style='color:#222'>&nbsp;&nbsp;{{total}}条</span>
       <span style='float: right; margin-right: 2.5%;'>当前结果共项&nbsp;&nbsp;第{{currentsize}}页/共{{dataForm.pageSize}}页</span>
     </div> -->
-    <Table ref="selection" stripe class="tables" :loading="tableLoading" :columns="columns4" :data="tableData"></Table>
+    <Table ref="selection"  class="tables" :loading="tableLoading" :columns="columns4" :data="tableData"></Table>
     <!-- <Page v-if="total>0" class="btnCenter"
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
@@ -271,6 +271,9 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.as {
+  background: rgba(255, 255, 255, 0);
+}
 .tiao {
   width: 100%;
   line-height: 31px;
@@ -290,7 +293,6 @@ export default class Main extends ViewBase {
   background: @c-head-bg;
 }
 .page {
-  background: #fff;
   height: 100%;
   font-size: 14px;
   .ivu-select {
@@ -469,5 +471,87 @@ export default class Main extends ViewBase {
     font-size: 14px;
     height: 40px;
   }
+}
+/deep/ .ivu-select-selection {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+/deep/ .ivu-select-input {
+  margin-top: 3px;
+}
+/deep/ .ivu-table th, /deep/ .ivu-table-header {
+  background: rgba(0, 32, 45, 0.8);
+  height: 40px;
+  line-height: 40px;
+  color: rgba(179, 188, 192, 1);
+  font-size: 14px;
+  font-weight: 400;
+}
+/deep/ .ivu-table td {
+  background: rgba(32, 67, 80, 1);
+  transition: background-color 0.2s ease-in-out;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  height: 50px;
+  line-height: 50px;
+}
+/deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-table-body {
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-table-wrapper {
+  margin: 0;
+  border: none;
+}
+/deep/ .ivu-table-tip {
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .btnCenter {
+  text-align: center;
+  height: 100px;
+  background: rgba(32, 67, 80, 1);
+  margin: 0 20px 0 20px;
+  line-height: 100px;
+  color: #fff;
+}
+/deep/ .ivu-page-prev {
+  border: 0;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-page-next {
+  border: 0;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-page-item-active {
+  border-color: #eee;
+  background: #eee !important;
+  border-radius: 50%;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+}
+/deep/ .ivu-page-item {
+  border: 0;
+  display: inline-block;
+  vertical-align: middle;
+  background: rgba(32, 67, 80, 1);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 4px;
+  text-align: center;
+  list-style: none;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 </style>

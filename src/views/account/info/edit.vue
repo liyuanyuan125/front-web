@@ -1,6 +1,7 @@
 <template>
-  <div class="page home-bg">
+  <div class="page home-bg as">
     <Form :model="form"  :rules="rule"  ref="dataform" label-position="left" class="edit-input" :label-width="100">
+      <div class='bs'>
       <h3 class="layout-title">登录信息</h3>
       <FormItem label="账号类型" class="item-top">
         <CheckboxGroup v-model="form.accountType" >
@@ -13,8 +14,10 @@
       </FormItem>
       <FormItem label="邮箱验证码" v-if="isEmailCode">
         <Input v-model="form.emailCaptcha" :maxlength="6" class="email-code" placeholder="请输入邮箱验证码"></Input>
-        <Button class="btn-code" :disabled="displayCode" @click="getEmailCode">{{emailMes}}</Button>
+        <Button class="btn-code  sok" :disabled="displayCode" @click="getEmailCode">{{emailMes}}</Button>
       </FormItem>
+      </div>
+      <div class='bs'>
       <h3 class="layout-title">公司名称</h3>
       <FormItem label="公司名称" class="item-top" prop="companyName">
         <Input v-model="form.companyName" placeholder="请输入公司名称"></Input>
@@ -31,6 +34,8 @@
       <FormItem label="邮箱" prop="companyEmail">
         <Input v-model="form.companyEmail" placeholder="请输入个人邮箱"></Input>
       </FormItem>
+      </div>
+      <div class='bs'>
       <h3 class="layout-title">开户资质</h3>
       <FormItem label="资质类型" class="item-top">
         <Select v-model="form.qualificationType" clearable style="width:400px">
@@ -50,9 +55,10 @@
           <div class="upload-tip">支持1或3张，格式为jpg/jpeg/png，大小不超过5M的图片</div>
         </div>
       </FormItem>
+      </div>
     </Form>
     <div class="btnCenter">
-      <Button v-auth="'account-manage.info#change'" type="primary" class="button-ok edit-submit"
+      <Button v-auth="'account-manage.info#change'" type="primary" class="button-ok edit-submit bok"
        @click="updateAccount('dataform')">更新账号</Button>
     </div>
   </div>
@@ -192,7 +198,52 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+.bok {
+  width: 200px;
+  height: 50px;
+  background: rgba(0, 32, 45, 1);
+  border-radius: 25px;
+  color: #fff;
+}
+.sok {
+  width: 190px;
+  height: 40px;
+  background: rgba(0, 32, 45, 1);
+  border-radius: 5px;
+  border: 1px solid rgba(0, 32, 45, 1);
+}
+/deep/ .ivu-select-selection {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+/deep/ .ivu-select-input {
+  margin-top: 3px;
+}
+/deep/ .ivu-input {
+  border-radius: 5px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+.bs {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 30px;
+  background: rgba(255, 255, 255, 0.3);
+}
+.as {
+  background: rgba(255, 255, 255, 0);
+  padding: 20px 30px 0 30px;
+}
+.layout-title {
+  background: rgba(255, 255, 255, 0);
+  font-size: 24px;
+  font-weight: 500;
+  color: rgba(0, 32, 45, 1);
+  margin-top: 10px;
+}
 @c-bg: #fff;
 .page {
   .upload-wrap {
@@ -215,7 +266,6 @@ export default class Main extends ViewBase {
   .modifyCode {
     cursor: pointer;
     font-size: 13px;
-    color: @c-button;
     margin-left: 20px;
   }
   .btn-code {
