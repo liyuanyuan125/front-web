@@ -12,6 +12,8 @@
       <div class="basic-box">
         <BasicPane
           :item="basic"
+          :movie="movie"
+          :actorData="actorData"
           :more="{ name: 'home' }"
         />
       </div>
@@ -27,18 +29,28 @@
             class="fans-pane"
           />
           <div class="pane-group">
-
+            <TextPane
+              title="今日实时票房"
+              :more="{ name: 'home' }"
+              :main="boxOfficeToday.main"
+              :sub="boxOfficeToday.sub"
+              class="box-office-today"
+            />
+            <TextPane
+              title="累计票房"
+              :more="{ name: 'home' }"
+              :main="boxOfficeTotal.main"
+              class="box-office-total"
+            />
           </div>
         </div>
 
         <div class="board-row">
-          <HotPane
-            title="近30日微博指数"
-            :data="hotData"
+          <BarPane
+            title="近7日新增想看人数"
+            :data="activeFansData"
             :more="{ name: 'home' }"
-            tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
-            :formatter="hotFormatter"
-            class="hot-pane"
+            class="active-fans-pane"
           />
         </div>
 
@@ -64,20 +76,18 @@ import ViewBase from '@/util/ViewBase'
 import Layout from './components/layout.vue'
 import BasicPane from './components/basicPane.vue'
 import FansPane from './components/fansPane.vue'
-import PiePane from './components/piePane.vue'
+import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
-import OpusPane from './components/opusPane.vue'
-import OfferPane from './components/offerPane.vue'
+import TextPane from './components/textPane.vue'
 
 @Component({
   components: {
     Layout,
     BasicPane,
     FansPane,
-    PiePane,
+    BarPane,
     HotPane,
-    OpusPane,
-    OfferPane
+    TextPane
   }
 })
 export default class FigurePage extends ViewBase {
@@ -88,12 +98,21 @@ export default class FigurePage extends ViewBase {
     name: '流浪地球',
     subName: 'The Wandering Earth',
     title: '',
-    figure: 'https://picsum.photos/id/435/154/154',
+    figure: 'https://picsum.photos/id/428/154/218',
     rankNo: '86.5',
     rankTitle: '同档期：第2',
   }
 
   bigFigure = this.id == 1 ? '' : 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
+
+  boxOfficeToday = {
+    main: '116.3 万',
+    sub: '同档期第一',
+  }
+
+  boxOfficeTotal = {
+    main: '3.8 亿',
+  }
 
   fansMan = 66
 
@@ -108,25 +127,22 @@ export default class FigurePage extends ViewBase {
     '少林寺',
   ]
 
-  platformList = [
-    { icon: 'douyin', name: '抖音', percent: 100, count: '3288万' },
-    { icon: 'weibo', name: '微博', percent: 80, count: '2288万' },
-    { icon: 'wechat', name: '微信', percent: 60, count: '1888万' },
-    { icon: 'kuaishou', name: '快手', percent: 50, count: '1288万' },
-    { icon: 'xiaohongshu', name: '小红书', percent: 30, count: '888万' },
-  ]
+  movie = {
+    preview: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
+    director: '林德路',
+    type: '动作/犯罪',
+    date: '2019-04-03',
+    address: '香港',
+  }
 
-  brandList = [
-    { logo: 'https://dummyimage.com/60x60/000/fff' },
-    { logo: 'https://dummyimage.com/60x60/fff/000' },
-    { logo: 'https://dummyimage.com/60x60/e2e/fff' },
-  ]
-
-  commentData = [
-    { name: '正面', value: 80, color: '#ca7273' },
-    { name: '中立', value: 30, color: '#f3d872' },
-    { name: '负面', value: 20, color: '#57b4c9' },
-  ]
+  actorData = {
+    star: 2,
+    list: [
+      { id: 1, name: '吴京', avatar: 'https://dummyimage.com/80x80/000/fff' },
+      { id: 2, name: '阿娇', avatar: 'https://dummyimage.com/80x80/fff/000' },
+      { id: 3, name: '吴奇隆', avatar: 'https://dummyimage.com/80x80/e2e/fff' },
+    ]
+  }
 
   activeFansData = [
     { name: '5-16', value: 855000 },
@@ -153,40 +169,6 @@ export default class FigurePage extends ViewBase {
     { name: '5-20', value: 600000, rank: 5 },
     { name: '5-21', value: 755000, rank: 3 },
     { name: '5-22', value: 555000, rank: 2 },
-  ]
-
-  opusData = [
-    {
-      id: 1,
-      cover: 'https://picsum.photos/id/520/150/150',
-      title: '《外挂的代价》快快快快快快快扩扩扩扩所付撒付付所付多所时发生地方撒旦法撒旦法方式是否所发生的撒旦法是放松放松第三方撒旦法是非得失双方都',
-      praise: '150万',
-      comment: '1万',
-    },
-
-    {
-      id: 2,
-      cover: 'https://picsum.photos/id/437/150/150',
-      title: '《外挂的代价》',
-      praise: '150万',
-      comment: '8888',
-    },
-
-    {
-      id: 3,
-      cover: 'https://picsum.photos/id/439/150/150',
-      title: '《外挂的代价》快快快快快快快扩扩扩扩所付胜多负少',
-      praise: '150万',
-      comment: '19999',
-    },
-
-    {
-      id: 4,
-      cover: 'https://picsum.photos/id/436/150/150',
-      title: '《外挂的代价》',
-      praise: '150万',
-      comment: '1万',
-    },
   ]
 
   hotFormatter([{ dataIndex }]: any) {
@@ -257,9 +239,9 @@ export default class FigurePage extends ViewBase {
   }
   /deep/ .figure {
     top: 42px;
-    width: 162px;
-    height: 162px;
-    border-radius: 6px;
+    width: 154px;
+    height: 218px;
+    border-radius: 4px;
   }
 }
 
@@ -328,5 +310,13 @@ export default class FigurePage extends ViewBase {
 
 .offer-pane {
   border-radius: 0 0 5px 5px;
+}
+
+.box-office-today {
+  border-radius: 0 5px 0 0;
+}
+
+.box-office-total {
+  margin-top: 6px;
 }
 </style>

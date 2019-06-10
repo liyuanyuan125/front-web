@@ -4,6 +4,7 @@
       <li v-for="(it, index) in inValue" :key="index"
             :class="['film-item']">
           <div :class="['film-cover-box']">
+            <span @click="del" class="del">×</span>
             <img :src="it.image" class="film-cover">
             <div>
               <div class="film-title">{{it.nameCn}}</div>
@@ -59,44 +60,6 @@ export default class ComponentMain extends ViewBase {
 
   inValue: any[] = this.value
   addShow =  false
-  get columns() {
-    const column = [
-      {
-        title: '影片',
-        align: 'center',
-        key: 'name',
-        slot: 'name',
-      },
-      {
-        title: '上映日期',
-        align: 'center',
-        slot: 'opentime'
-      },
-      {
-        title: '投放周期',
-        align: 'center',
-        key: 'openTime',
-        render: (hh: any, { row: { cinemaName } }: any) => {
-          /* tslint:disable */
-          const h = jsxReactToVue(hh)
-          return <a>{cinemaName}</a>
-          /* tslint:enable */
-        }
-      },
-      {
-        title: '操作',
-        align: 'center',
-        key: 'shortName',
-        render: (hh: any, { row: { id } }: any) => {
-          /* tslint:disable */
-          const h = jsxReactToVue(hh)
-          return <a on-click={this.onDel.bind(this, id)}>删除</a>
-          /* tslint:enable */
-        }
-      }
-    ]
-    return column
-  }
 
   formatDate(data: any) {
     return data ? moment(data).format(timeFormat) : '暂无'
@@ -116,8 +79,7 @@ export default class ComponentMain extends ViewBase {
   onSet(id: number) {
   }
 
-  async onDel(id: number) {
-    await confirm('确定要删除该项吗？')
+  async del(id: number) {
     const index = this.inValue.findIndex(it => it.id == id)
     this.inValue.splice(index, 1)
   }
@@ -149,6 +111,7 @@ export default class ComponentMain extends ViewBase {
     border-radius: 5px;
     border: 1px solid rgba(255, 255, 255, 1);
     .film-cover-box {
+      position: relative;
       display: flex;
       margin-top: 30px;
       .film-title {
@@ -166,6 +129,23 @@ export default class ComponentMain extends ViewBase {
         width: 89px;
         height: 125px;
         margin-left: 20px;
+      }
+      .del {
+        display: block;
+        content: '\2716';
+        cursor: pointer;
+        color: #fff;
+        font-size: 18px;
+        position: absolute;
+        right: -8px;
+        top: -38px;
+        border: 1px solid #00202d;
+        background: #00202d;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 16px;
       }
     }
   }

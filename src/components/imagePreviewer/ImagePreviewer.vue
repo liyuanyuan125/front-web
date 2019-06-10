@@ -25,7 +25,7 @@ import loadImage from '@/fn/loadImage'
     TinyLoading
   }
 })
-export default class Upload extends ViewBase {
+export default class ImagePreviewer extends ViewBase {
   /**
    * 正常图片的地址
    */

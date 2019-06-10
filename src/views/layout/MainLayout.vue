@@ -2,7 +2,7 @@
   <div class="site-layout">
     <header
       class="site-header flex-box"
-      :style="{ backgroundImage: headerImage }"
+      :style="headerStyle"
     >
       <ul class="site-breadcrumb">
         <li v-for="(it, i) in breadcrumbs" :key="i" class="site-breadcrumb-item">
@@ -210,15 +210,25 @@ export default class MainLayout extends ViewBase {
     return this.siderActiveMap[name]
   }
 
+  // 沉浸式 header
+  immersionHeader = false
+
   headerOpacity = 0
 
-  get headerImage() {
-    const red = headerColor >> 0x10
-    const green = (headerColor & 0xff00) >> 0x08
-    const blue = headerColor & 0xff
-    const rgba = `rgba(${red}, ${green}, ${blue}, ${this.headerOpacity}%)`
-    const result = `linear-gradient(${rgba}, ${rgba})`
-    return result
+  get headerStyle() {
+    if (this.immersionHeader) {
+      const red = headerColor >> 0x10
+      const green = (headerColor & 0xff00) >> 0x08
+      const blue = headerColor & 0xff
+      const rgba = `rgba(${red}, ${green}, ${blue}, ${this.headerOpacity}%)`
+      const image = `linear-gradient(${rgba}, ${rgba})`
+      return {
+        backgroundImage: image
+      }
+    }
+    return {
+      backgroundColor: 'rgba(0, 31, 44, .2)'
+    }
   }
 
   get breadcrumbs() {
@@ -251,6 +261,16 @@ export default class MainLayout extends ViewBase {
       this.$router.push({ name: 'home' })
       switchTheme()
     }, false)
+
+    const immersionHeader = !!(this.$route.meta || {}).immersionHeader
+    this.immersionHeader = immersionHeader
+  }
+
+  mounted() {
+    this.immersionHeader && usePosition().then((pos: number) => {
+      const opacity = Math.min(Math.floor(pos / 88 * 100), 96)
+      this.headerOpacity = opacity
+    })
   }
 
   search() {
@@ -275,13 +295,6 @@ export default class MainLayout extends ViewBase {
   logout() {
     logout()
     this.$router.push({ name: 'login' })
-  }
-
-  mounted() {
-    usePosition().then((pos: number) => {
-      const opacity = Math.min(Math.floor(pos / 88 * 100), 96)
-      this.headerOpacity = opacity
-    })
   }
 }
 </script>

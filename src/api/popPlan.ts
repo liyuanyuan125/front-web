@@ -92,7 +92,7 @@ export async function getRegionList() {
  * @param  {any} query
  * 广告计划详情
  */
-export async function adverdetail(id: number) {
+export async function adverdetail(id: any) {
   const data = await get(`/xadvert/v1/plans/${id}`)
   return data
 }
