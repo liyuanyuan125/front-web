@@ -334,19 +334,19 @@ export default class Temporary extends ViewBase {
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
    */
   beginDate(dayRangesKey: string) {
-    switch ( dayRangesKey ) {
-      case 'yesterday' :
-        return moment(new Date()).add(-1, 'days').format(timeFormat)
-        break
-      case 'thirtyDay' :
-        return moment(new Date()).add(-30, 'days').format(timeFormat)
-        break
-      case 'ninetyDay' :
-        return moment(new Date()).add(-90, 'days').format(timeFormat)
-        break
-      default :
-        return moment(new Date()).add(-7, 'days').format(timeFormat)
-    }
+    // switch ( dayRangesKey ) {
+    //   case 'yesterday' :
+    //     return moment(new Date()).add(-1, 'days').format(timeFormat)
+    //     break;
+    //   case 'thirtyDay' :
+    //     return moment(new Date()).add(-30, 'days').format(timeFormat)
+    //     break;
+    //   case 'ninetyDay' :
+    //     return moment(new Date()).add(-90, 'days').format(timeFormat)
+    //     break;
+    //   default :
+    //     return moment(new Date()).add(-7, 'days').format(timeFormat)
+    // }
   }
   endDate() {
     return moment(new Date()).format(timeFormat)
