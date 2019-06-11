@@ -51,7 +51,7 @@
 
     <Tabs :value="chartNav" class="chart-tabs">
       <TabPane name="yesterday" label="昨天">
-        昨天
+        <ChartPane :data="chartYesterday"/>
       </TabPane>
 
       <TabPane name="7days" label="最近7天">
@@ -59,7 +59,7 @@
       </TabPane>
 
       <TabPane name="30days" label="最近30天">
-        最近30天
+        <ChartPane :data="chart30Days"/>
       </TabPane>
     </Tabs>
   </div>
@@ -103,6 +103,70 @@ export default class Overview extends ViewBase {
 
   chartNav = '7days'
 
+  chartYesterday = {
+    legends: [
+      { name: '广告花费／¥', value: '600.00' },
+      { name: '覆盖人次', value: '600' },
+      { name: '覆盖影院数', value: '600' },
+      { name: '覆盖场次数', value: '576' },
+    ],
+
+    charts: [
+      {
+        title: '广告花费',
+        yAxisName: '金额 ¥',
+        list: [
+          { name: '2019-05-16', value: 32000 },
+          { name: '2019-05-17', value: 20000 },
+          { name: '2019-05-18', value: 22800 },
+          { name: '2019-05-19', value: 89000 },
+          { name: '2019-05-20', value: 86000 },
+          { name: '2019-05-21', value: 38000 },
+          { name: '2019-05-22', value: 39900 },
+        ]
+      },
+
+      {
+        title: '覆盖人次',
+        list: [
+          { name: '2019-05-16', value: 22000 },
+          { name: '2019-05-17', value: 20000 },
+          { name: '2019-05-18', value: 32800 },
+          { name: '2019-05-19', value: 59000 },
+          { name: '2019-05-20', value: 26000 },
+          { name: '2019-05-21', value: 38000 },
+          { name: '2019-05-22', value: 89900 },
+        ]
+      },
+
+      {
+        title: '覆盖影院',
+        list: [
+          { name: '2019-05-16', value: 2000 },
+          { name: '2019-05-17', value: 8000 },
+          { name: '2019-05-18', value: 2800 },
+          { name: '2019-05-19', value: 9000 },
+          { name: '2019-05-20', value: 6000 },
+          { name: '2019-05-21', value: 2300 },
+          { name: '2019-05-22', value: 9900 },
+        ]
+      },
+
+      {
+        title: '覆盖场次',
+        list: [
+          { name: '2019-05-16', value: 12000 },
+          { name: '2019-05-17', value: 20000 },
+          { name: '2019-05-18', value: 22800 },
+          { name: '2019-05-19', value: 59000 },
+          { name: '2019-05-20', value: 86000 },
+          { name: '2019-05-21', value: 18000 },
+          { name: '2019-05-22', value: 69900 },
+        ]
+      }
+    ]
+  }
+
   chart7Days = {
     legends: [
       { name: '广告花费／¥', value: '8,000.00' },
@@ -123,6 +187,70 @@ export default class Overview extends ViewBase {
           { name: '2019-05-20', value: 16000 },
           { name: '2019-05-21', value: 38000 },
           { name: '2019-05-22', value: 39900 },
+        ]
+      },
+
+      {
+        title: '覆盖人次',
+        list: [
+          { name: '2019-05-16', value: 22000 },
+          { name: '2019-05-17', value: 20000 },
+          { name: '2019-05-18', value: 32800 },
+          { name: '2019-05-19', value: 59000 },
+          { name: '2019-05-20', value: 26000 },
+          { name: '2019-05-21', value: 38000 },
+          { name: '2019-05-22', value: 89900 },
+        ]
+      },
+
+      {
+        title: '覆盖影院',
+        list: [
+          { name: '2019-05-16', value: 2000 },
+          { name: '2019-05-17', value: 8000 },
+          { name: '2019-05-18', value: 2800 },
+          { name: '2019-05-19', value: 9000 },
+          { name: '2019-05-20', value: 6000 },
+          { name: '2019-05-21', value: 2300 },
+          { name: '2019-05-22', value: 9900 },
+        ]
+      },
+
+      {
+        title: '覆盖场次',
+        list: [
+          { name: '2019-05-16', value: 12000 },
+          { name: '2019-05-17', value: 20000 },
+          { name: '2019-05-18', value: 22800 },
+          { name: '2019-05-19', value: 59000 },
+          { name: '2019-05-20', value: 86000 },
+          { name: '2019-05-21', value: 18000 },
+          { name: '2019-05-22', value: 69900 },
+        ]
+      }
+    ]
+  }
+
+  chart30Days = {
+    legends: [
+      { name: '广告花费／¥', value: '99,000.00' },
+      { name: '覆盖人次', value: '99,000' },
+      { name: '覆盖影院数', value: '900' },
+      { name: '覆盖场次数', value: '9,000' },
+    ],
+
+    charts: [
+      {
+        title: '广告花费',
+        yAxisName: '金额 ¥',
+        list: [
+          { name: '2019-05-16', value: 48000 },
+          { name: '2019-05-17', value: 80000 },
+          { name: '2019-05-18', value: 32800 },
+          { name: '2019-05-19', value: 69000 },
+          { name: '2019-05-20', value: 26000 },
+          { name: '2019-05-21', value: 18000 },
+          { name: '2019-05-22', value: 89900 },
         ]
       },
 
