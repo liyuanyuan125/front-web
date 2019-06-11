@@ -2,7 +2,7 @@
   <div class="site-layout">
     <header
       class="site-header flex-box"
-      :style="{ backgroundImage: headerImage }"
+      :style="headerStyle"
     >
       <ul class="site-breadcrumb">
         <li v-for="(it, i) in breadcrumbs" :key="i" class="site-breadcrumb-item">
@@ -33,18 +33,15 @@
         <span class="notice-count" v-if="hasNotice"></span>
       </router-link>
 
-      <!-- <Dropdown class="switcher" @on-click="onSwitcherClick">
-        <a class="switcher-node"></a>
-        <DropdownMenu slot="list">
-          <div class="switcher-arrow"></div>
-          <DropdownItem v-for="it in systemList" :key="it.code" :name="it.code"
-            :selected="user.systemCode == it.code">{{it.name}}系统</DropdownItem>
-        </DropdownMenu>
-      </Dropdown> -->
-
       <div class="user-box flex-box">
-        <!-- <span class="corp-name">{{system.name}}：{{user.companyName}}</span> -->
-        <span class="user-name">用户：{{user.email}}</span>
+        <Dropdown placement="bottom-end" class="switcher" @on-click="onSwitcherClick">
+          <span class="user-name">{{system.name}}：{{user.email}}</span>
+          <DropdownMenu slot="list">
+            <div class="switcher-arrow"></div>
+            <DropdownItem v-for="it in systemList" :key="it.code" :name="it.code"
+              :selected="user.systemCode == it.code">{{it.name}}</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
         <a class="logout" title="退出" @click="logout">
           <i class="iconfont icon-exit"/>
         </a>
@@ -210,15 +207,25 @@ export default class MainLayout extends ViewBase {
     return this.siderActiveMap[name]
   }
 
+  // 沉浸式 header
+  immersionHeader = false
+
   headerOpacity = 0
 
-  get headerImage() {
-    const red = headerColor >> 0x10
-    const green = (headerColor & 0xff00) >> 0x08
-    const blue = headerColor & 0xff
-    const rgba = `rgba(${red}, ${green}, ${blue}, ${this.headerOpacity}%)`
-    const result = `linear-gradient(${rgba}, ${rgba})`
-    return result
+  get headerStyle() {
+    if (this.immersionHeader) {
+      const red = headerColor >> 0x10
+      const green = (headerColor & 0xff00) >> 0x08
+      const blue = headerColor & 0xff
+      const rgba = `rgba(${red}, ${green}, ${blue}, ${this.headerOpacity}%)`
+      const image = `linear-gradient(${rgba}, ${rgba})`
+      return {
+        backgroundImage: image
+      }
+    }
+    return {
+      backgroundColor: 'rgba(0, 31, 44, .2)'
+    }
   }
 
   get breadcrumbs() {
@@ -251,6 +258,16 @@ export default class MainLayout extends ViewBase {
       this.$router.push({ name: 'home' })
       switchTheme()
     }, false)
+
+    const immersionHeader = !!(this.$route.meta || {}).immersionHeader
+    this.immersionHeader = immersionHeader
+  }
+
+  mounted() {
+    this.immersionHeader && usePosition().then((pos: number) => {
+      const opacity = Math.min(Math.floor(pos / 88 * 100), 96)
+      this.headerOpacity = opacity
+    })
   }
 
   search() {
@@ -275,13 +292,6 @@ export default class MainLayout extends ViewBase {
   logout() {
     logout()
     this.$router.push({ name: 'login' })
-  }
-
-  mounted() {
-    usePosition().then((pos: number) => {
-      const opacity = Math.min(Math.floor(pos / 88 * 100), 96)
-      this.headerOpacity = opacity
-    })
   }
 }
 </script>
@@ -318,46 +328,43 @@ export default class MainLayout extends ViewBase {
 .switcher {
   position: relative;
   /deep/ .ivu-select-dropdown {
-    margin-top: 10px;
+    margin-top: 0;
     margin-left: -50px;
-    padding: 22px 0;
+    padding: 8px 0;
   }
   /deep/ .ivu-dropdown-menu {
     position: relative;
   }
   /deep/ .ivu-dropdown-item {
     position: relative;
-    padding: 6px 32px;
+    padding: 6px 42px;
     font-size: 14px !important;
-    text-indent: 10px;
 
     &:hover {
       background-color: fade(@c-button, 10%);
+    }
+
+    &::before {
+      content: '';
+      position: relative;
+      top: 2px;
+      margin-right: 6px;
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid @c-button;
+      border-radius: 100%;
+      background-color: transparent;
+      visibility: hidden;
     }
   }
   /deep/ .ivu-dropdown-item-selected {
     color: @c-button;
     background-color: transparent;
-
     &::before {
-      content: '';
-      position: absolute;
-      left: 20px;
-      top: 50%;
-      width: 14px;
-      height: 14px;
-      margin-top: -7px;
-      border: 2px solid @c-button;
-      border-radius: 100%;
-      background-color: transparent;
+      visibility: visible;
     }
   }
-}
-.switcher-node {
-  display: block;
-  width: 80px;
-  height: 60px;
-  background: url(./assets/downTriangle.png) no-repeat 15% 65%;
 }
 
 .switcher-arrow,
@@ -368,7 +375,7 @@ export default class MainLayout extends ViewBase {
   border: solid transparent;
 }
 .switcher-arrow {
-  top: -33px;
+  top: -18px;
   left: 50%;
   margin-left: -10px;
   border-width: 0 10px 10px;
@@ -409,7 +416,13 @@ export default class MainLayout extends ViewBase {
 }
 
 .user-name {
+  display: inline-block;
   margin-left: 20px;
+  padding-right: 20px;
+  background: url(./assets/down.png) no-repeat right center;
+  background-size: 16px;
+  user-select: none;
+  cursor: pointer;
 }
 
 .logout {

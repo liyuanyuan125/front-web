@@ -4,8 +4,10 @@
       <img :src="statusList[statuCode].img" width="64px" alt="alias">
     </div>
     <div class="textMes">
-      <h6>{{statusList[statuCode].title}}</h6>
-      <p>{{statusList[statuCode].message}}</p>
+      <h6 style='font-size:24px;
+font-weight:500;
+color:rgba(0,32,45,1);'>{{statusList[statuCode].title}}</h6>
+      <p style='color: rgba(0, 32, 45, 0.7)'>{{statusList[statuCode].message}}</p>
     </div>
   </div>
 </template>
