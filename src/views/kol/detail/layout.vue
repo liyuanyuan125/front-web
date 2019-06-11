@@ -1,6 +1,9 @@
 <template>
   <DetailLayout :routeList="routeList">
-
+    <div slot="beforeSide">
+      <h2 class="figure-name">{{name}}</h2>
+      <img :src="figure" class="figure-img">
+    </div>
   </DetailLayout>
 </template>
 <script lang="ts">
@@ -36,35 +39,26 @@ export default class Layout extends ViewBase {
 <style lang="less">
 @import '~@/site/lib.less';
 
-.layout {
-  position: relative;
-  display: flex;
-  margin-right: 20px;
-  padding-top: 88px;
+.detail-layout {
+  padding-top: 78px;
 }
 
-.side {
-  flex: 1;
-  min-width: 128px;
-  display: flex;
-  justify-content: center;
-}
-
-.side-in {
-  width: 122px;
-  height: 100%;
-  background-color: rgba(0, 32, 45, .45);
+.detail-side-in {
+  border-radius: 6px 6px 0 0;
 }
 
 .figure-name {
   position: absolute;
-  top: 20px;
+  top: 16px;
   color: #00202e;
   font-size: 24px;
   font-weight: normal;
 }
 
-.main {
-  width: 1080px;
+.figure-img {
+  width: 122px;
+  height: 122px;
+  border: 1px solid #53c5df;
+  border-radius: 6px;
 }
 </style>

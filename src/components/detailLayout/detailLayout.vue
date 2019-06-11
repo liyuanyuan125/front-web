@@ -65,6 +65,10 @@ export default class DetailLayout extends ViewBase {
   background-color: rgba(0, 32, 45, .45);
 }
 
+.detail-route-list {
+  padding: 15px 0;
+}
+
 .detail-route-item-on {
   .detail-route-item-in {
     color: #fff;
@@ -81,13 +85,6 @@ export default class DetailLayout extends ViewBase {
 
 .detail-main {
   width: 1080px;
+  margin-left: 10px;
 }
-
-// .figure-name {
-//   position: absolute;
-//   top: 20px;
-//   color: #00202e;
-//   font-size: 24px;
-//   font-weight: normal;
-// }
 </style>
