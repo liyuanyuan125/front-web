@@ -2,27 +2,26 @@
   <div :class="['upload-box',
     readonly ? 'upload-box-readonly' : '',
     canAdd ? '' : 'upload-box-cannot-add']">
-    <form class="upload-add" ref="form" v-if="!readonly">
-      <img src="./assets/brand-logo.png" width="160" height="160" class="img" />
+    <form  ref="form" v-if="isEdit">
+      <!-- v-if="canAdd" -->
       <label class="upload-add-in">
         <img src='./assets/add-icon.png' width="20" class="edit-btn" />
-        <input type="file" :accept="accept" @change="onChange" v-if="canAdd"/>
+        <input type="file" :accept="accept" @change="onChange" />
       </label>
     </form>
-    <transition-group name="list" tag="ul" class="upload-list">
+    <ul name="list" tag="ul" class="upload-list">
       <li v-for="(it, i) in inValue" :key="it.uqid" class="upload-item">
         <img :src="it.url" v-if="it.url">
-        <div class="action-cover" v-if="it.status == 'done'">
-          <a @click="onDel(i)" class="action-del"></a>
-        </div>
-        <div class="loading-cover" v-else-if="it.status == 'loading'">
+        <!-- <div class="action-cover" v-if="it.status == 'done'">
+        </div> -->
+        <div class="loading-cover" v-if="it.status == 'loading'">
           <TinyLoading/>
         </div>
         <div class="progress-cover" v-else-if="it.status == 'uploading'">
           <Progress :percent="it.percent" status="success" hide-info/>
         </div>
       </li>
-    </transition-group>
+    </ul>
     <Modal v-model="viewerShow" title="查看图片" width="888">
       <img :src="viewerImage" class="viewer-image">
     </Modal>
@@ -116,6 +115,11 @@ export default class Upload extends ViewBase {
    */
   @Prop({ type: String, default: '确定删除这张图片？' }) delConfirmMsg!: string
 
+  /**
+   * 是否可以编辑（显示编辑图标） 默认不可以编辑
+   */
+  @Prop({ type: Boolean, default: false}) isEdit?: boolean
+
   inValue: UploadItem[] = []
 
   viewerShow = false
@@ -137,6 +141,7 @@ export default class Upload extends ViewBase {
         uqid: genUqid(),
         ...it
       } as UploadItem))
+      // console.log(this.inValue)
     }
   }
 
@@ -153,15 +158,15 @@ export default class Upload extends ViewBase {
     if (files == null || files.length === 0) {
       return
     }
-
-    const remain = this.maxCount - this.inValue.length
-    if (files.length > remain) {
-      return alert(`最多添加 ${this.maxCount} 个，还剩 ${remain} 个`)
-    }
+    // const remain = this.maxCount - this.inValue.length
+    // if (files.length > remain) {
+    //   return alert(`最多添加 ${this.maxCount} 个，还剩 ${remain} 个`)
+    // }
 
     [].slice.call(files).forEach((file: File) => {
       const uqid = genUqid()
       // 快速响应原则：只要选择，直接添加
+      this.inValue = []
       this.inValue.push({
         url: '',
         fileId: '',
@@ -173,6 +178,7 @@ export default class Upload extends ViewBase {
         uqid,
         error: '',
       })
+
       const uploader = new Uploader()
       uploader.on(this.uploadHandlers(uqid)).upload(file)
     })
@@ -210,6 +216,9 @@ export default class Upload extends ViewBase {
     item.url = url
     item.fileId = fileId
     item.status = 'done'
+
+    const file = this.inValue[0].fileId
+    localStorage.setItem('fileId', file)
   }
 
   onUploadFail(uqid: string, ex: any) {
@@ -235,10 +244,10 @@ export default class Upload extends ViewBase {
     this.viewerShow = true
   }
 
-  async onDel(i: number) {
-    this.confirmOnDel && await confirm(this.delConfirmMsg)
-    this.inValue.splice(i, 1)
-  }
+  // async onDel(i: number) {
+  //   this.confirmOnDel && await confirm(this.delConfirmMsg)
+  //   this.inValue.splice(i, 1)
+  // }
 
   doDel(i: number) {
     this.inValue.splice(i, 1)
@@ -263,12 +272,9 @@ export default class Upload extends ViewBase {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 150px;
-  height: 150px;
-  border: 1px solid @c-border;
+  width: 160px;
+  height: 160px;
   background-color: #fff;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-  margin-left: 15px;
   vertical-align: top;
   &:first-child {
     margin-left: 0;
@@ -308,58 +314,14 @@ export default class Upload extends ViewBase {
   transform: translateY(50px);
 }
 
-.action-del {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 28px;
-  height: 28px;
-  border-radius: 100%;
-  background: url(~./assets/del.png) no-repeat;
-  background-size: contain;
-}
-
-.upload-add {
-  position: relative;
-  user-select: none;
-  width: 160px;
-  height: 160px;
-  display: inline-block;
-}
 .upload-add-in {
-  .edit-btn {
-    position: absolute;
-    right: 10px;
-    top: 130px;
-    z-index: 3;
-    cursor: pointer;
-  }
-  // font-size: 14px;
-  // color: @c-button;
-  // cursor: pointer;
-  // // 扩大选取范围
-  // display: inline-block;
-  // padding-right: 8px;
-
-  // &::before {
-  //   content: '';
-  //   position: relative;
-  //   display: inline-block;
-  //   top: 2px;
-  //   width: 13px;
-  //   height: 13px;
-  //   background: url(./assets/add.png) no-repeat left center;
-  //   margin-right: 10px;
-  // }
+  position: absolute;
+  right: 19px;
+  top: 120px;
+  z-index: 3;
+  cursor: pointer;
   input[type=file] {
     display: none;
-  }
-}
-.upload-box-cannot-add {
-  .upload-add-in {
-    color: @c-sub-text;
-    filter: grayscale(100%);
-    cursor: not-allowed;
   }
 }
 .viewer-image {

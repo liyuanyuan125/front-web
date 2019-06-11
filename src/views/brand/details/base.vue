@@ -6,43 +6,47 @@
       </h2>
       <Form ref="form" :model="form" :rules="rule" :label-width="110" class="edit-input base-form">
         <FormItem label="简体中文名称" prop="name">
-          <span v-if="readonly" class="item-only">{{form.name}}</span>
+          <span v-if="!readonly" class="item-only">{{baseList.name}}</span>
           <Input v-else v-model="form.name"  />
         </FormItem>
         <FormItem label="英文名" >
-          <span v-if="readonly" class="item-only">{{form.enName}}</span>
+          <span v-if="!readonly" class="item-only">{{baseList.enName}}</span>
           <Input v-else v-model="form.enName"  />
         </FormItem>
-        <FormItem label="创立时间" prop="createTime">
-          <span v-if="readonly" class="item-only">{{form.createTime}}年</span>
-          <Input v-else v-model="form.createTime" >年</Input>
+        <FormItem label="创立时间" prop="foundDate">
+          <span v-if="!readonly" class="item-only" >{{baseList.foundDate}}年</span>
+          <Input v-else v-model="form.foundDate" >年</Input>
         </FormItem>
-        <FormItem label="国别" prop="nationality">
-          <span v-if="readonly" class="item-only">{{form.nationality}}</span>
-          <Select v-else v-model="form.nationality" filterable >
-              <Option value="1">1</Option>
+        <FormItem label="国别" prop="countryCode">
+          <div v-if="!readonly">
+            <span class="item-only"  v-for="item in countryCodeList" :key="item.key" v-if="item.key == baseList.countryCode">{{item.text}}</span>
+          </div>
+          <Select v-else v-model="form.countryCode" filterable >
+              <Option v-for="item in countryCodeList" :key="item.key" :value="item.key">{{item.text}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="所属行业" prop="type">
-          <span v-if="readonly" class="item-only">{{form.type}}</span>
-          <Select v-else v-model="form.type" filterable >
-              <Option value="1">1</Option>
+        <FormItem label="所属行业" prop="tradeCode">
+          <div v-if="!readonly">
+             <span class="item-only" v-for="item in tradeCodeList" :key="item.key" v-if="item.key == baseList.tradeCode" >{{item.text}}</span>
+          </div>
+          <Select v-else v-model="form.tradeCode" filterable >
+              <Option v-for="item in tradeCodeList" :key="item.key" :value="item.key">{{item.text}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="创始人" prop="author">
-          <span v-if="readonly" class="item-only">{{form.author}}</span>
-          <Input v-else v-model="form.author" />
+        <FormItem label="创始人" prop="founder">
+          <span v-if="!readonly" class="item-only">{{baseList.founder}}</span>
+          <Input v-else v-model="form.founder" />
         </FormItem>
-        <FormItem label="公司口号" prop="slogan">
-          <span v-if="readonly" class="item-only">{{form.slogan}}</span>
-          <Input v-else v-model="form.slogan" style="width: 100%" />
+        <FormItem label="公司口号" prop="companySlogan">
+          <span v-if="!readonly" class="item-only">{{baseList.companySlogan}}</span>
+          <Input v-else v-model="form.companySlogan" style="width: 100%" />
         </FormItem>
-        <FormItem label="公司简介" prop="introdution">
-          <span v-if="readonly" class="item-only">{{form.introdution}}</span>
-          <Input v-else v-model="form.introdution" type="textarea" style="width: 100%" :rows="4"  />
+        <FormItem label="公司简介" prop="description">
+          <span v-if="!readonly" class="item-only">{{baseList.description}}</span>
+          <Input v-else v-model="form.description" type="textarea" style="width: 100%" :rows="4"  />
         </FormItem>
       </Form>
-      <div class="footer-btn" v-if="!readonly">
+      <div class="footer-btn" v-if="readonly">
           <Button class="btn-cancel" @click="handleCancel">取消</Button>
           <Button type="primary" class="btn-add" @click="baseSubmit">提交审核</Button>
       </div>
@@ -53,23 +57,18 @@
 import {Component} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import eventDate from '../eventBus'
+import { baseList, editBase } from '@/api/brandList'
 
 
 @Component
 export default class Main extends ViewBase {
   form = {}
+  id: any = ''
 
-  readonly = true
-  baseList = {
-    name: '园园',
-    enName: 'yuanyuan.li',
-    createTime: '8---00',
-    nationality: 'china',
-    type: 'qiche',
-    author: 'yuanyuan',
-    slogan: '心所想',
-    introdution: '奔驰，德国百年汽车品牌，汽车文明的先驱者与引领者，'
-  }
+  readonly = false // 默认不编辑
+  baseList: any = {}
+  countryCodeList = []
+  tradeCodeList = []
 
   get rule() {
     return {
@@ -84,35 +83,71 @@ export default class Main extends ViewBase {
   }
 
   mounted() {
-    const {name, enName, createTime, nationality, type, author, slogan, introdution} = this.baseList
-    this.form = {
-      name,
-      enName,
-      createTime,
-      nationality,
-      type,
-      author,
-      slogan,
-      introdution
+    this.id = this.$route.params.id
+    this.queryList()
+  }
+
+  async queryList() {
+    try {
+      const { data: {item, tradeCodeList, countryCodeList} } = await baseList(this.id)
+      this.baseList = item
+      this.countryCodeList = countryCodeList || []
+      this.tradeCodeList = tradeCodeList || []
+
+      // 编辑头像
+    const imgList: any = [
+      {
+        url: item.logoUrl,
+        fileId: item.logo
+      }
+    ]
+
+    localStorage.setItem('brandImg', JSON.stringify(imgList))
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+  async baseSubmit() {
+    // const volid = await (this.$refs.form as any).validate()
+    // if (!volid) { return }
+    const fileId = localStorage.getItem('fileId') || ''
+    try {
+      const { data } = await editBase({
+        ...this.form,
+        logo: fileId,
+        id: this.id,
+      })
+      this.readonly = false
+      eventDate.$emit('uploadImg', false)
+      this.queryList()
+    } catch (ex) {
+      this.handleError(ex)
     }
   }
 
-  async baseSubmit() {
-    const volid = await (this.$refs.form as any).validate()
-    if (!volid) { return }
-  }
-
   toEdit() {
-    this.readonly = false
-    eventDate.$emit('uploadImg', this.readonly)
+    this.readonly = true
+    const { name, enName, foundDate, countryCode, tradeCode, founder,
+            companySlogan, description, logoUrl, logo} = this.baseList
+    this.form = {
+      name,
+      enName,
+      foundDate,
+      countryCode,
+      tradeCode,
+      founder,
+      companySlogan,
+      description
+    }
+    eventDate.$emit('uploadImg', true)
   }
   handleCancel() {
-    this.readonly = true
-    eventDate.$emit('uploadImg', this.readonly)
+    this.readonly = false
+    eventDate.$emit('uploadImg', false)
   }
 
   destroyed() {
-    eventDate.$emit('uploadImg', true)
+    eventDate.$emit('uploadImg', false)
   }
 }
 </script>

@@ -1044,9 +1044,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
   // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
   {
-    path: '/brand/moredetail',
+    path: '/brand/moredetail/:id/:brandId',
     name: 'brand-moredetail',
-    redirect: '/brand/moredetail/base',
+    redirect: '/brand/moredetail/:id/:brandId/base',
     component: () => import('./views/brand/moreDetail.vue'),
     meta: {
       authKey: '',
