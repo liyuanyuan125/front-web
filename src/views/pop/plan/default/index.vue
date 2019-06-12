@@ -1,9 +1,6 @@
 <template>
-  <div class="plan-box">
-    <div v-if="status != 1" class="plan-message">
-      <span>当前计划已失效或已关闭，如有疑问，请点击下放"联系商务"</span>
-      <Button type="default" class="btn-contact">联系商务</Button>
-    </div>
+  <div class="plan-box" v-if="loadding">
+    <Header v-model="headerValue" />
     <h3 v-if="status != 1" class="plan-title">投放方案</h3>
     <div v-if="status != 1" class="plan-result">
       <div class="result-top">
@@ -15,7 +12,7 @@
           <div>
             <p class="title">曝光人次预估</p>
             <p class="number">
-              <Number :addNum="1234" />
+              <Number :addNum="item.estimatePersonCount" />
             </p>
           </div>
         </Col>
@@ -23,7 +20,7 @@
           <div>
             <p class="title">投放场次数预估</p>
             <p class="number">
-              <Number :addNum="1234" />
+              <Number :addNum="item.estimateShowCount" />
             </p>
           </div>
         </Col>
@@ -31,7 +28,7 @@
           <div>
             <p class="title">预估花费</p>
             <p class="number">
-              <Number :addNum="1234" />
+              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount" />
             </p>
           </div>
         </Col>
@@ -212,12 +209,14 @@ import { orienteering, cinemaFilm, adverdetail } from '@/api/popPlan.ts'
 import { toMap } from '@/fn/array.ts'
 import { formatCurrency } from '@/fn/string.ts'
 import moment from 'moment'
+import Header from './header.vue'
 
 const statusMap =  (list: any[]) => toMap(list, 'code', 'text')
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
-    Number
+    Number,
+    Header
   }
 })
 export default class App extends ViewBase {
@@ -228,9 +227,11 @@ export default class App extends ViewBase {
   total = 0
   tableDate: any = []
   loading = false
-  status = 0
+  loadding = false
   item: any = {}
   statusList: any = []
+  headerValue: any = {}
+
   columns = [
     {
       title: '影院名称',
@@ -250,6 +251,7 @@ export default class App extends ViewBase {
   ]
 
   created() {
+    (this.$Spin as any).show()
     this.init()
   }
 
@@ -269,12 +271,19 @@ export default class App extends ViewBase {
     // const { data } = await orienteering({})
     try {
       const { data } = await adverdetail(this.$route.params.id)
-      this.status = data.item.status
+      this.headerValue = {
+        status: data.item.status,
+        freezeAmount: data.item.freezeAmount || 0,
+        endDate: data.item.endDate || 0
+      }
       this.statusList = data.statusList
       this.item = data.item
+      (this.$Spin as any).hide()
     } catch (ex) {
+      (this.$Spin as any).hide()
       this.handleError(ex)
     }
+    this.loadding = true
     // this.status = statusMap(this.statusList)
     // this.filmList = data.items || []
   }

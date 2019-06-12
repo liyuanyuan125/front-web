@@ -1,8 +1,8 @@
 <template>
   <div class="model-home list">
     <div class="list-left">
-      <img src="./assets/brand-logo.png" width="160" />
-      <Upload v-model="imageList" :max-count="1" v-if="!flagImg" accept="images/*" confirm-on-del></Upload>
+      <!-- <img src="./assets/brand-logo.png" width="160" /> -->
+      <Upload v-model="imageList" :max-count="1" accept="images/*" :isEdit="flagImg" confirm-on-del></Upload>
       <!-- <img src="./assets/add-icon.png" v-if="!flagImg" class="base-upload-img"/> -->
       <p class="title">Mercedes－Benz</p>
       <p class="types">汽车类</p>
@@ -32,9 +32,9 @@ import Upload from '@/components/uploadOnly'
 })
 export default class Main extends ViewBase {
   tabActive: any = ''
-  flagImg = true
+  flagImg = false
 
-  imageList = []
+  imageList: any = []
   tabs = [
     { name: '基础信息', key: 1, route: 'brand-moredetail-base'},
     { name: '门店', key: 2, route: 'brand-moredetail-shop'},
@@ -47,6 +47,8 @@ export default class Main extends ViewBase {
     eventBus.$on('uploadImg', (flag: any) => {
       this.flagImg = flag
     })
+    const fileds: any = localStorage.getItem('brandImg')
+    this.imageList = JSON.parse(fileds)
   }
 
   handleTabs(item: any) {

@@ -5,7 +5,7 @@
         <div>
           <p class="title">曝光人次预估</p>
           <p class="number">
-            <Number :addNum="1234" />
+            <Number :addNum="data.estimatePersonCount" />
           </p>
         </div>
       </Col>
@@ -13,7 +13,7 @@
         <div>
           <p class="title">投放场次数预估</p>
           <p class="number">
-            <Number :addNum="1234" />
+            <Number :addNum="data.estimateShowCount" />
           </p>
         </div>
       </Col>
@@ -21,36 +21,36 @@
         <div>
           <p class="title">预估花费</p>
           <p class="number">
-            <Number :addNum="1234" />
+            <Number :addNum="data.estimateCostAmount" />
           </p>
         </div>
       </Col>
-      <Col span="5" class="item item-dl">
+      <Col span="6" class="item item-dl">
         <dl>
           <dd>计划名称</dd>
-          <dt>猎鹰计划</dt>
+          <dt>{{data.name}}</dt>
         </dl>
         <dl>
           <dd>广告片</dd>
-          <dt>还有谁</dt>
+          <dt>{{data.videoName}}</dt>
         </dl>
         <dl>
           <dd>投放排期</dd>
-          <dt>7天</dt>
+          <dt>{{formatDate(data.beginDate)}}至{{formatDate(data.endDate)}}</dt>
         </dl>
       </Col>
-      <Col span="4" class="item item-dl">
+      <Col span="3" class="item item-dl">
         <dl>
           <dd>客户</dd>
-          <dt>万达营业</dt>
+          <dt>{{data.customerName}}</dt>
         </dl>
         <dl>
           <dd>广告规格</dd>
-          <dt>6s</dt>
+          <dt>{{data.specification}}s</dt>
         </dl>
         <dl>
           <dd>投放周期</dd>
-          <dt>14天</dt>
+          <dt>{{days(data.beginDate, data.endDate)}}天</dt>
         </dl>
       </Col>
     </Row>
@@ -58,10 +58,11 @@
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
+import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Number from '@/components/number.vue'
 import moment from 'moment'
+import { adverdetail } from '@/api/popPlan.ts'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
@@ -70,10 +71,36 @@ const timeFormat = 'YYYY-MM-DD'
   }
 })
 export default class App extends ViewBase {
+  @Prop() value: any
+
+  data: any = {}
+
+  created() {
+    this.findId()
+  }
+
+  async findId() {
+    try {
+      const { data } = await adverdetail(this.$route.params.setid)
+      this.data = data.item
+      this.$emit('input', this.data)
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  days(begin: any, end: any) {
+    const time = new Date(this.formatDate(end)).getTime() - new Date(this.formatDate(begin)).getTime()
+    return time / (3600 * 24 * 1000) + 1
+  }
 
   formatDate(data: any) {
-    return data ? moment(data).format(timeFormat) : '暂无'
+    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
+
+  // formatDate(data: any) {
+  //   return data ? moment(data).format(timeFormat) : '暂无'
+  // }
 }
 </script>
 

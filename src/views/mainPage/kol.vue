@@ -12,7 +12,7 @@
       <div class="basic-box">
         <BasicPane
           :item="basic"
-          :more="{ name: 'home' }"
+          :more="{ name: 'kol-detail-platform', params: { id } }"
           :platformList="platformList"
           :brandList="brandList"
         />

@@ -15,7 +15,7 @@ export async function planList(data: any) {
  * @param data
  */
 export async function delCheckPlanList(query: any) {
-  const res = await del('xadvert/plans', query)
+  const res = await del(`/xadvert/v1/plans?ids=${query.ids}`)
   return res
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class=" brand-list com-modal">
+  <div class="brand-list com-modal">
     <div class="select-brand com-modal-title ">
       <span>90日热门内容</span>
       <Select v-model="plat" size="small" style="width:100px">
@@ -23,10 +23,10 @@
           <div class="inner-right">
             <p class="title" :title="item.title">{{handleSlice(item.title)}}</p>
             <p class="icon-num">
-              <span><i class="iconfont icon-shipin" size="20" />{{item.videoNum}}万</span> 
-              <span><i class="iconfont icon-dianzan1" size="20" />{{item.likesNum}}万</span> 
-              <span><i class="iconfont icon-dianping" size="20" />{{item.remarkNum}}万</span> 
-            </p> 
+              <span><i class="iconfont icon-shipin" size="20" />{{item.videoNum}}万</span>
+              <span><i class="iconfont icon-dianzan1" size="20" />{{item.likesNum}}万</span>
+              <span><i class="iconfont icon-dianping" size="20" />{{item.remarkNum}}万</span>
+            </p>
             <p class="times">{{item.time}}</p>
           </div>
         </div>
@@ -36,12 +36,16 @@
 </template>
 
 <script lang='ts'>
-import {Component} from 'vue-property-decorator'
+import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+
 @Component
-export default class Main extends ViewBase {
+export default class Opus extends ViewBase {
+  @Prop({ type: Number, default: 0 }) id!: number
+
   // 选择平台
   plat = 0
+
   platformList = [
     {key: 0, text: '微博'},
     {key: 1, text: '微信'},
@@ -49,14 +53,18 @@ export default class Main extends ViewBase {
     {key: 3, text: '快手'},
     {key: 4, text: '小红书'},
   ]
+
   tabKey = ''
+
   selectOption = [
     {key: 0, text: '点赞数'},
     {key: 1, text: '播放数'},
     {key: 2, text: '评论数'},
     {key: 3, text: '最新'},
   ]
+
   videoUrl = 'https://www.mihui.com/api/video/search/redirect/?real_url=https%3A//www.bilibili.com/video/av52387972/'
+
   list = [
     {
       id: 0,
@@ -119,19 +127,23 @@ export default class Main extends ViewBase {
       remarkNum: 3,
     },
   ]
+
   handleChangeTab() {}
+
   handleSlice(text: string) {
     return text.length > 15 ? text.substring(0, 15) + '.....' : text
   }
+
   platSelect(id: any) {
     this.plat = id
   }
 }
-
 </script>
+
 <style lang='less' scoped>
 @import '~@/site/lib.less';
 @import '~@/views/kol/less/common.less';
+
 .iconfont {
   font-size: 20px;
   color: #a3d5e6;

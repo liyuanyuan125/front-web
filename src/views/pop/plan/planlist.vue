@@ -45,7 +45,7 @@
                 </span>
                 <span class="query-all" @click="deleteList">批量删除</span>
               </div>
-              <span @click="deleteList">批量删除</span>
+              <span>共{{totalCount}}条</span>
             </div>
           </div>
         </template>
@@ -203,7 +203,7 @@ export default class Plan extends ViewBase {
   }
 
   formatDate(data: any) {
-    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(3, 2)}-${(data + '').substr(5, 2)}` : '暂无'
+    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
 
   async handlePayment(item: any) {
@@ -271,12 +271,19 @@ export default class Plan extends ViewBase {
   plandEdit(id: any) {
     this.$router.push({
       name: 'pop-planlist-edit',
-      params: {id}
+      params: {id: '0', setid: id}
     })
   }
 
-  plandel(id: any) {
-
+  async plandel(id: any) {
+    try {
+      await delCheckPlanList({
+        ids: id
+      })
+      this.tableList()
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   async relevanceAdv(val: any, id: any) {
@@ -300,17 +307,17 @@ export default class Plan extends ViewBase {
   }
 
   async deleteList() {
-    if (this.selectIds.length) {
+    if (this.checkId.length) {
       const ids: any = this.selectIds.map((item: any) => item.id) || []
       await confirm('您确定要删除当前信息吗？')
       try {
-        await delCheckPlanList({ ids })
+        await delCheckPlanList(this.checkId.join(','))
         this.tableList()
       } catch (ex) {
         this.handleError(ex)
       }
     } else {
-      this.showWaring('请选择你要删除的信息')
+      this.showWaring('请选择你要删除的信息?')
     }
   }
 

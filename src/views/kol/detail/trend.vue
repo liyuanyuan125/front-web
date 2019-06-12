@@ -1,75 +1,73 @@
-<style lang="less">
-@import '~@/site/lib.less';
-@import '~@/site/detailmore.less';
-</style>
 <template>
   <div>
-    <Row>
-      <Col span="24">
-      <Form label-position="left"
-            :label-width="100">
-        <Card class="detailmore-card">
-          <div slot="title">
-            <Row type="flex"
-                 justify="space-between">
-              <Col :span="24">
-              <DetailNavBar titleText='统计周期'>
-                <div slot='item'>
-                  <RadioGroup style='margin-right:15px'
-                              @on-change="handleChange"
-                              v-model="form.statisticTimeId"
-                              size="large"
-                              type="button">
-                    <Radio v-for="(item) in dict.statisticTime"
-                           :key="item.id"
-                           :disabled="item.disabled"
-                           :label="item.id">{{item.name}}</Radio>
+    <Form label-position="left" :label-width="100">
+      <Card class="detailmore-card">
+        <div slot="title">
+          <Row type="flex" justify="space-between">
+            <Col :span="24">
+              <DetailNavBar titleText="统计周期">
+                <div slot="item">
+                  <RadioGroup
+                    style="margin-right:15px"
+                    @on-change="handleChange"
+                    v-model="form.statisticTimeId"
+                    size="large"
+                    type="button"
+                  >
+                    <Radio
+                      v-for="(item) in dict.statisticTime"
+                      :key="item.id"
+                      :disabled="item.disabled"
+                      :label="item.id"
+                    >{{item.name}}</Radio>
                   </RadioGroup>
-                  <DatePicker type="daterange"
-                              v-model="form.beginDate"
-                              @on-change="handleChange"
-                              placement="bottom-end"
-                              placeholder="自定义时间段"></DatePicker>
+                  <DatePicker
+                    type="daterange"
+                    v-model="form.beginDate"
+                    @on-change="handleChange"
+                    placement="bottom-end"
+                    placeholder="自定义时间段"
+                  ></DatePicker>
                 </div>
               </DetailNavBar>
-              </Col>
-            </Row>
-          </div>
-          <div class="content">
-            <Row type="flex"
-                 justify="space-between">
-              <Col :span="24">
-              <div class='chart-wp'>
-                <AreaBasic :initDone="chart1.initDone"
-                           :title='chart1.title'
-                           :dict1="chart1.dict1"
-                           :dict2="chart1.dict2"
-                           :color="chart1.color"
-                           :dataList="chart1.dataList"
-                           :currentTypeIndex="chart1.currentTypeIndex" />
+            </Col>
+          </Row>
+        </div>
+        <div class="content">
+          <Row type="flex" justify="space-between">
+            <Col :span="24">
+              <div class="chart-wp">
+                <AreaBasic
+                  :initDone="chart1.initDone"
+                  :title="chart1.title"
+                  :dict1="chart1.dict1"
+                  :dict2="chart1.dict2"
+                  :color="chart1.color"
+                  :dataList="chart1.dataList"
+                  :currentTypeIndex="chart1.currentTypeIndex"
+                />
               </div>
-              </Col>
-            </Row>
-            <Row type="flex"
-                 justify="space-between">
-              <Col :span="24">
-              <div class='chart-wp borderRadius'>
-                <AreaBasicxtra :initDone="chart2.initDone"
-                               :title='chart2.title'
-                               :dict1="chart2.dict1"
-                               :dict2="chart2.dict2"
-                               :color="chart2.color"
-                               :dataList="chart2.dataList"
-                               :currentTypeIndex="chart2.currentTypeIndex"
-                               @typeChange='typeChangeHander2' />
+            </Col>
+          </Row>
+          <Row type="flex" justify="space-between">
+            <Col :span="24">
+              <div class="chart-wp borderRadius">
+                <AreaBasicxtra
+                  :initDone="chart2.initDone"
+                  :title="chart2.title"
+                  :dict1="chart2.dict1"
+                  :dict2="chart2.dict2"
+                  :color="chart2.color"
+                  :dataList="chart2.dataList"
+                  :currentTypeIndex="chart2.currentTypeIndex"
+                  @typeChange="typeChangeHander2"
+                />
               </div>
-              </Col>
-            </Row>
-          </div>
-        </Card>
-      </Form>
-      </Col>
-    </Row>
+            </Col>
+          </Row>
+        </div>
+      </Card>
+    </Form>
   </div>
 </template>
 
@@ -93,7 +91,7 @@ import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
     DetailNavBar
   }
 })
-export default class Temporary extends ViewBase {
+export default class Trend extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
   form: any = {
@@ -102,6 +100,7 @@ export default class Temporary extends ViewBase {
     ],
     statisticTimeId: 0
   }
+
   dict: any = {
     statisticTime: [
       {
@@ -126,6 +125,7 @@ export default class Temporary extends ViewBase {
       }
     ]
   }
+
   chart1: any = {
     title: '综合热度',
     dict1: [],
@@ -135,6 +135,7 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['#0099cc']
   }
+
   chart2: any = {
     title: '',
     dict1: [],
@@ -144,12 +145,14 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['#ff0000', '#3fb23f', '#0099cc', '#cc6600']
   }
+
   async typeChangeHander2(index: number = 0) {
     if (this.chart2.dataList[index].length < 1) {
       await this.getChartsData('chart2', index)
     }
     this.chart2.currentTypeIndex = index
   }
+
   /**
    * 加载图表数据
    * @param chart 图表名 (因为接口返回全部数据，暂时不用)
@@ -207,18 +210,26 @@ export default class Temporary extends ViewBase {
       this.handleError(ex)
     }
   }
+
   async handleChange() {
     this.chart1.initDone = false
     this.chart2.initDone = false
     this.resetData()
     await this.getChartsData('', 0)
   }
+
   async mounted() {
     await this.getChartsData('', 0)
   }
+
   resetData() {
     this.chart1.dataList = []
     this.chart2.dataList = []
   }
 }
 </script>
+
+<style lang="less">
+@import '~@/site/lib.less';
+@import '~@/site/detailmore.less';
+</style>

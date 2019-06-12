@@ -53,10 +53,10 @@ export default class App extends ViewBase {
   @Watch('step')
   watchStep(val: number) {
     (this.$refs.page as HTMLDivElement).scrollTop = 0
-    this.$router.push({
-        name: 'pop-planlist-add',
-        params: { id: val + '' }
-    })
+    // this.$router.push({
+    //     name: 'pop-planlist-add',
+    //     params: { id: val + '' }
+    // })
     switch (this.step) {
       case 0: this.currentTab = Promotion
         break
