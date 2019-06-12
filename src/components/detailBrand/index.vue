@@ -1,12 +1,14 @@
 <template>
   <div class="detail-brand com-modal" v-if="list">
-      <Tabs class="tab-list" v-model="tabKey" @on-click="handleChangeTab">
-        <TabPane v-for="item in list.tab" :key="item.key" :label="handleTab(item)"></TabPane>
-      </Tabs>
+      <div class="com-modal-title brand-list">
+        <span>合作品牌</span>
+      </div>
       <div class="video-list">
           <div class="list-col" v-for="item in list.items" :key ="item.id">
               <h3><em>{{item.tag}}</em><span>{{item.title}}</span></h3>
-              <a :href="item.videoUrl" class="video-img" target="_blank"><img :src="item.imgUrl" class="top-img"/><i class="video-long">2:01</i></a>
+              <a :href="item.videoUrl" class="video-img" target="_blank"><img :src="item.imgUrl" class="top-img"/>
+              <!-- <i class="video-long">2:01</i> -->
+              </a>
               <h4 :title="item.description">{{item.description}}</h4> 
           </div>
       </div>
@@ -17,10 +19,12 @@
 import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { AjaxResult } from './type'
+import { brandList } from '@/api/kolDetails'
+
 @Component
 export default class Main extends ViewBase {
-  // 请求接口 加载列表的请求函数
-    @Prop({ type: Function, required: true }) fetch!: (query?: any) => Promise<AjaxResult>
+    // 请求接口 加载列表的请求函数
+    @Prop({ type: Object }) value?: any
 
     list = {
       title: '合作品牌',
@@ -61,18 +65,22 @@ export default class Main extends ViewBase {
       ],
       total: 10
     }
-    // tab key
-    tabKey: number = 0
+
+    async mounted() {
+      const {items, brandCategoryList} = this.value
+    }
 
     handleTab(item: any) {
       return item.num ? `${item.text} ${item.num}` : item.text
     }
-    handleChangeTab() {}
 }
 
 </script>
 <style lang='less' scoped>
 @import '~@/views/kol/less/common.less';
+.brand-list {
+  padding-left: 30px;
+}
 .video-list {
   display: flex;
   flex-wrap: wrap;

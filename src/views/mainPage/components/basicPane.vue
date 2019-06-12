@@ -114,7 +114,7 @@
       >
         <h4 class="brand-head flex-box">
           <em class="flex-1">合作过的品牌</em>
-          <router-link :to="{}">更多 &gt;</router-link>
+          <router-link :to="brand" v-if="brand">更多 &gt;</router-link>
         </h4>
         <ul class="brand-list">
           <li
@@ -197,6 +197,8 @@ export default class BasicPane extends Vue {
   @Prop({ type: Boolean, default: false }) followed!: boolean
 
   @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
+
+  @Prop({ type: [ Object, String ], default: null }) brand!: RawLocation
 
   @Prop({ type: Array, default: () => [] }) opusList!: Opus[]
 
