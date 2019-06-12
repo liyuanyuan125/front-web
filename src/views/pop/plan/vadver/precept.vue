@@ -3,7 +3,7 @@
     <Row>
       <Col >
         <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
-          <PreceptHead />
+          <PreceptHead v-model="dataitem"/>
           <h3 class="layout-titles">投放影片
               <span class="item-detail">优先投放 3 部</span>
               <span class="custom">自定义投放电影</span>
@@ -31,7 +31,7 @@
                   <p style="opacity: .7">受众性别</p>
                   <div class="file-sex-box">
                     <div>
-                      <div class="file-sex-man" :style="{width: `${it.matching * 0.8 + 30}px`, height: `${it.matching * 0.8 + 30}px`}">
+                      <div class="file-sex-man" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.7 + 20}px`}">
                         <img width="30px" height="30" src="./assets/man.png" alt="">
                       </div>
                     </div>
@@ -39,7 +39,7 @@
                   </div>
                   <div class="file-sex-box">
                     <div>
-                      <div class="file-sex-woman" :style="{width: `${it.matching * 0.8 + 30}px`, height: `${it.matching * 0.8 + 30}px`}">
+                      <div class="file-sex-woman" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.7 + 20}px`}">
                         <img width="30px" height="30" src="./assets/man.png" alt="">
                       </div>
                     </div>
@@ -59,7 +59,9 @@
                 </div>
               </li>
             </ul>
-            <div>效果不足时允许系统投放更多影片确保曝光效果</div>
+            <div>
+              <Checkbox v-model="single">效果不足时允许系统投放更多影片确保曝光效果</Checkbox>
+            </div>
           </div>
 
           <h3 class="layout-titles">覆盖影院
@@ -130,7 +132,7 @@
                   <Page :total="total" v-if="total>0" class="btnCenter"
                     :current="pageIndex"
                     :page-size="pageSize"
-                    :page-size-opts="[6, 20, 50, 100]"
+                    :page-size-opts="[5, 10, 20, 50]"
                     show-total
                     show-sizer
                     show-elevator
@@ -159,7 +161,7 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import PreceptHead from './precepthead.vue'
 import PrecepFilm from './preceptfile.vue'
-import { orienteering, cinemaFilm } from '@/api/popPlan.ts'
+import { orienteering, cinemaFilm, adverdetail, getRecommend, getCheme } from '@/api/popPlan.ts'
 import moment from 'moment'
 
 const timeFormat = 'YYYY-MM-DD'
@@ -173,13 +175,17 @@ export default class App extends ViewBase {
   form: any = {
     name: ''
   }
+  dataitem: any = null
   tag = 1
   pageIndex = 1
-  pageSize = 6
+  pageSize = 5
   tableDate: any = []
   total = 0
+  data: any = {}
   filmList: any = []
+  commendData: any = []
   loading = false
+  single = false
   columns = [
     {
       title: '影院名称',
@@ -235,12 +241,27 @@ export default class App extends ViewBase {
   }
 
   async next(dataform: any) {
-    this.$emit('input', 3)
     try {
-      const volid = await (this.$refs[dataform] as any).validate()
-      if (volid) {
-        this.$emit('input', 1)
-      }
+      await getCheme({
+        planId: this.$route.params.setid,
+        allowAutoDelivery: this.single ? 1 : 0,
+        planRecommed: { ...this.commendData }
+      })
+      this.$emit('input', 3)
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async cinemaFind() {
+    try {
+      const { data } = await getRecommend({
+        budgetAmount: 100000,
+        specification: 15,
+        beginDate: 20190701,
+        endDate: 20190702
+      })
+      this.commendData = data
     } catch (ex) {
       this.handleError(ex)
     }
@@ -253,13 +274,18 @@ export default class App extends ViewBase {
   back(dataform: any) {
     this.$emit('input', 1)
   }
+
+  @Watch('dataitem', { deep: true })
+  watchDataitem(val: any) {
+    this.cinemaFind()
+  }
 }
 </script>
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 .plan-box {
-  margin: 0 40px;
+  margin: 0 20px;
 }
 .layout-titles {
   font-size: 24px;
@@ -430,7 +456,7 @@ export default class App extends ViewBase {
 .cinema-box {
   display: flex;
   margin-right: 20px;
-  overflow: auto;
+  overflow: hidden;
   max-height: 498px;
   .cinema-right {
     display: flex;

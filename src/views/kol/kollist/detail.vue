@@ -1,52 +1,75 @@
 <template>
-  <div class="detail-fix" v-if="showDlg" @click.self="flag">
-    <div class="table-action">
-      <a @class.stop="flag">清空购物车</a>
+  <div class="detail-fix" v-if="showDlg" @click="flags">
+    <div class="table-action" @click.stop="flag">
+      <a>清空购物车</a>
     </div>
     <div class="detail-modeal">
       <Table height="300" :loading="loading" :columns="columns" :data="tabledata">
         <template slot-scope="{ row }" slot="name">
-          <div class="table-name">
-            <img :src="row.mainPicUrl" alt=""> 
-            <span>{{row.name}}</span>
-          </div>
-        </template>
-
-        <template slot-scope="{ row }" slot="type">
-          {{row.type.join('/')}}
-        </template>
-        <template slot-scope="{ row }" slot="read">
-          {{row.read}}w+
-        </template>
-        <template slot-scope="{ row }" slot="flansNumber">
-          {{row.fansNumber}}
-        </template>
-        <template slot-scope="{ row }" slot="flansFace">
-          <div v-if="row.fansList.length > 0">
-            <p v-for="it in row.fansList" :key="it.sex" class="flans-box">
-              <span style="margin-left: 10px">{{it.sex}}</span>  <span>{{it.percent}}</span>
-            </p>
-          </div>
-        </template>
-        <template slot-scope="{ row }" slot="discuss">
-          {{row.discuss}}
-        </template>
-        <template slot-scope="{ row }" slot="like">
-          {{row.like}}
-        </template>
-        <template slot-scope="{ row }" slot="transmit">
-          {{row.transmit}}
-        </template>
-        <template slot-scope="{ row }" slot="price">
-          {{row.price}}
-        </template>
-        <template slot-scope="{ row }" slot="action">
-          <div class="active">
-            <p v-if="row.likeStatus == 1">收藏</p>
-            <p v-else>取消收藏</p>
-            <p @click="del(row.id)">删除</p>
-          </div>
-        </template>
+            <div class="table-name">
+              <img :src="row.accountImageUrl" width="70px" height="70px" alt=""> 
+              <span>{{row.accountName}}</span>
+            </div>
+          </template>
+          <template slot-scope="{ row }" slot="type">
+            {{accountCategoryList.filter((it) => it.key == row.accountTypeCode)[0].text}}
+          </template>
+          <template slot-scope="{ row }" slot="read">
+            <div style="text-align:center">
+              <span>{{formatNum(row.avgReadCount)}}w+</span>
+            </div>
+          </template>
+          <template slot-scope="{ row }" slot="flansNumber">
+            {{formatNum(row.fans)}}
+          </template>
+          <template slot-scope="{ row }" slot="flansFace">
+            <div>
+              <p class="flans-box">
+                <span>男性：</span>  <span>{{row.femalePercent}}%</span>
+              </p>
+              <p class="flans-box">
+                <span>女性：</span>  <span>{{row.malePercent}}%</span>
+              </p>
+            </div>
+          </template>
+          <template slot-scope="{ row }" slot="discuss">
+            <div style="text-align:center">
+              <span>{{formatNum(row.averageComment)}}</span>
+            </div>
+          </template>
+          <template slot-scope="{ row }" slot="like">
+            <div style="text-align:center">
+              <span>{{formatNum(row.averageLike)}}w+</span>
+            </div>
+          </template>
+          <template slot-scope="{ row }" slot="transmit">
+            <div style="text-align:center">
+              <span>{{formatNum(row.averageShare)}}w+</span>
+            </div>
+          </template>
+          <template slot-scope="{ row }" slot="price">
+            <div v-if="row.prices">
+              <p v-for="it in row.prices" :key="it" style="margin-top: 5px">
+                {{it}}
+              </p>
+            </div>
+          </template>
+          <template slot-scope="{ row }" slot="action">
+            <div class="action">
+              <p v-if="!row.collected" @click="collects(row.id)">
+                <Icon type="md-heart" style="font-size: 17px; color: #CA7273" />
+                收藏
+              </p>
+              <p v-else @click="cancelcollects(row.id)">
+                <Icon type="md-heart" style="font-size: 17px; color: #001F2C; opacity: .3" />
+                取消收藏
+              </p>
+              <p @click="cancelShop(row.channelDataId)">
+                <Icon type="ios-close-circle-outline" style="font-size: 17px;  color: #001F2C; opacity: .3" />
+                删除
+              </p>
+            </div>
+          </template>
       </Table>
 
       <!-- <Page :total="total" v-if="total>0" class="btnCenter"
@@ -62,15 +85,18 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="tsx">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinemaList } from '@/api/popPlan'
+import { addcollet, cancelcollect, delShopping,
+  allcollect, addShopIng, kolShoppingCar, delall } from '@/api/kolList.ts'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
+import { formatCurrency } from '@/fn/string'
 import { toast, warning } from '@/ui/modal.ts'
 import moment from 'moment'
 import { queryList } from '@/api/kolList.ts'
+import jsxReactToVue from '@/util/jsxReactToVue'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component
@@ -80,6 +106,9 @@ export default class DlgEditCinema extends ViewBase {
   type = this.value
   loading = false
   tabledata = []
+  title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号']
+  accountCategoryList: any = []
+  titles: any = ['weibo', 'wechat', 'douyin', 'xiaohonghsu']
 
   get columns() {
     const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号']
@@ -140,30 +169,98 @@ export default class DlgEditCinema extends ViewBase {
       },
       {
         title: '',
-        minWidth: 40,
+        minWidth: 60,
         align: 'left',
-        slot: 'action'
+        slot: 'action',
+        renderHeader: (hh: any, { row }: any) => {
+          /* tslint:disable */
+          const h = jsxReactToVue(hh)
+          return <div class='row-acts'>
+            <div></div>
+          </div>
+          /* tslint:enable */
+        }
       }
     ]
   }
 
-  flag() {
-    this.showDlg = false
-  }
-
-  async del(id: number) {
+  async cancelShop(id: any) {
     try {
-      this.tabledata = this.tabledata.filter((it: any) => it.id !== id)
+      await delShopping({
+        channelCode: this.titles[this.type],
+        channelDataId: id
+      })
+      this.search()
     } catch (ex) {
-
+      this.handleError(ex)
     }
   }
 
-  async init() {
-    this.showDlg = true
+  formatNum(data: any) {
+    return data ? formatCurrency(data, 0) : 0
+  }
+
+  // 加入收藏
+  async collects(id: any) {
     try {
-      const { data } = await queryList({})
-      this.tabledata = data.items
+      await addcollet({
+        channelCode: this.titles[this.type],
+        channelDataId: id
+      })
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  // 取消收藏
+  async cancelcollects(id: any) {
+    try {
+      await cancelcollect({
+        channelCode: this.titles[this.type],
+        channelDataId: id
+      })
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async flag() {
+    try {
+      await delall(this.titles[this.type])
+      this.$emit('done', [])
+      this.flags()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  flags() {
+    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
+    this.showDlg = false
+  }
+
+  init(data: any) {
+    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
+    this.showDlg = true
+    this.search()
+  }
+
+  async search() {
+    try {
+      const { data } = await kolShoppingCar()
+      switch (this.type) {
+        case 0: this.tabledata = data.weiboList
+          break
+        case 1: this.tabledata = data.weixinList
+          break
+        case 2: this.tabledata = data.douyinList
+          break
+        case 3: this.tabledata = data.kuaishouList
+          break
+        case 4: this.tabledata = data.xiaohongshuList
+          break
+      }
+      this.accountCategoryList = data.accountCategoryList
     } catch (ex) {
       this.handleError(ex)
     }
@@ -187,9 +284,9 @@ export default class DlgEditCinema extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 .detail-fix {
-  position: absolute;
+  position: fixed;
   top: 0;
-  left: 0;
+  left: 120px;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, .6);
@@ -253,6 +350,12 @@ export default class DlgEditCinema extends ViewBase {
       z-index: 999;
       margin-top: -130px;
     }
+  }
+}
+.action {
+  p {
+    cursor: pointer;
+    line-height: 24px;
   }
 }
 </style>

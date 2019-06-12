@@ -470,7 +470,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
   {
-    path: '/pop/planlist/edit/:id',
+    path: '/pop/planlist/edit/:id/:setid',
     name: 'pop-planlist-edit',
     component: () => import('./views/pop/plan/index.vue'),
     meta: emptyAuth
@@ -871,9 +871,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // kol - 检测
   {
-    path: '/kol/order/taskDetection/:id',
+    path: '/kol/order/taskDetection',
     name: 'order-order-taskDetection',
     component: () => import('./views/kol/order/taskDetection.vue'),
+    meta: emptyAuth,
+  },
+
+  // kol - 检测详情
+  {
+    path: '/kol/order/taskDetection/detail/:id',
+    name: 'order-order-taskDetection-detail',
+    component: () => import('./views/kol/order/taskdet.vue'),
     meta: emptyAuth,
   },
 

@@ -8,10 +8,13 @@
             <img :src="it.image" class="film-cover">
             <div>
               <div class="film-title">{{it.nameCn}}</div>
-              <div class="film-time" style="margin-top: 10px">上映时间：{{formatDate(it.releaseDate)}}</div>
-              <div class="film-time">{{it.type.join(' / ')}}</div>
-              <div class="film-time">导演: {{it.director.join(' / ')}}</div>
-              <div class="film-time">主演: {{it.actor.join(' / ')}}</div>
+              <div class="film-time" style="margin-top: 10px"><span class="time-right">上映时间：</span>{{formatDate(it.releaseDate)}}</div>
+              <div class="film-time timer">
+                <span class="time-right">投放排期</span>
+                <weekDatePicker 
+                  v-model="form[it.id]"
+                  style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker>
+              </div>
             </div>
           </div>
       </li>
@@ -32,12 +35,13 @@ import jsxReactToVue from '@/util/jsxReactToVue'
 import AddCFilmModel from './addfilm.vue'
 import Img from '@/components/imagePreviewer/ImagePreviewer.vue'
 import moment from 'moment'
+import weekDatePicker from '@/components/weekDatePicker/weekDatePicker.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component ({
   components: {
     AddCFilmModel,
-    Img
+    weekDatePicker
   }
 })
 export default class ComponentMain extends ViewBase {
@@ -60,6 +64,8 @@ export default class ComponentMain extends ViewBase {
 
   inValue: any[] = this.value
   addShow =  false
+
+  form: any = {}
 
   formatDate(data: any) {
     return data ? moment(data).format(timeFormat) : '暂无'
@@ -89,8 +95,20 @@ export default class ComponentMain extends ViewBase {
     this.inValue = val
   }
 
+  @Watch('form', {deep: true})
+  watchForm(val: any) {
+    this.$emit('donefilm', val)
+  }
+
   @Watch('inValue', { deep: true })
   watchInValue(val: any[]) {
+    val.forEach((it: any) => {
+      if (!!this.form[it.id] && this.form[it.id].length > 0) {
+
+      } else {
+        this.$set(this.form, it.id, [] )
+      }
+    })
     this.$emit('input', val)
   }
 }
@@ -178,6 +196,27 @@ export default class ComponentMain extends ViewBase {
   }
   .film-name {
     margin-top: 10px;
+  }
+}
+.time-right {
+  margin-right: 10px;
+  opacity: .7;
+}
+.timer {
+  margin-left: 8px;
+  /deep/ .week-date-picker {
+    background: rgba(255, 255, 255, 0.4);
+    outline: none;
+    font-size: 14px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 5px;
+    width: 230px;
+    label {
+      color: #00202d;
+      font-size: 14px;
+      width: 185px;
+    }
   }
 }
 </style>

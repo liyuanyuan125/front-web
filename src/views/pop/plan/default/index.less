@@ -8,24 +8,38 @@
 .plan-box {
   padding: 0 40px;
   .plan-message {
-    height:212px;
+    min-height:212px;
     background: rgba(0, 32, 45, .9);
     text-align: center;
+    border-radius: 5px;
     color: #f9d85e;
     >span {
-      display: inline-block;
-      margin-top: 53px;
-      margin-bottom: 47px;
+      display: block;
+      line-height: 33px;
       font-size:20px;
     }
-    .btn-contact {
-      display: block;
-      margin: 0 auto;
-      .button-style(#00202d, #f9d85e);
-      height: 47px;
-      width:200px;
-      font-size: 20px;
-      border-radius: 24px;
+    > p {
+      font-size: 18px;
+      color: #fff;
+      &:nth-child(1) {
+        padding-top: 30px;
+      }
+    }
+    .btn-box {
+      .btn-contact {
+        display: inline-block;
+        margin: 0 auto;
+        .button-style(#00202d, #f9d85e);
+        height: 47px;
+        width:200px;
+        font-size: 20px;
+        border-radius: 24px;
+        margin-bottom: 30px;
+        margin-left: 10px;
+      }
+      .wirte {
+        .button-style(#00202d, #fff);
+      }
     }
   }
   .plan-title {
