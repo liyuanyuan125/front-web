@@ -859,9 +859,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // kol - 检测
   {
-    path: '/kol/order/taskDetection/:id',
+    path: '/kol/order/taskDetection',
     name: 'order-order-taskDetection',
     component: () => import('./views/kol/order/taskDetection.vue'),
+    meta: emptyAuth,
+  },
+
+  // kol - 检测详情
+  {
+    path: '/kol/order/taskDetection/detail/:id',
+    name: 'order-order-taskDetection-detail',
+    component: () => import('./views/kol/order/taskdet.vue'),
     meta: emptyAuth,
   },
 
