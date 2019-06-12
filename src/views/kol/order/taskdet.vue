@@ -50,28 +50,40 @@
         <div ref="containerc" style='height: 400px;'></div>
       </Col>
       <Col :span='11' style='float: right;border-radius: 5px;height: 400px;padding: 0 30px 30px 30px;background: rgba(13, 53, 72, 1);'>
-      <Row class='recis'>评论热词</Row>
+      <!-- <Row class='recis'>评论热词</Row>
       <Row class='cis'>
         <span v-for='(it,index) in con' :key='index' class='fon' :style="{ color:'#A3D5E6', fontSize: fontSize() + 'px',top:top()+'px', transformOrigin: 'center center', webkitTransform : 'rotate('+Math.round(Math.random()*180) +'deg)'}">{{it + ' '}}</span>
-      </Row>
+      </Row> -->
+      <!-- {{con}} -->
+        <div class="chart-wp borderRadius">
+          <WordCloud
+            :initDone="true"
+            :title="'评论热词'"
+            :color="['rgba(0,32,45,0)']"
+            :dataList="cons"
+            :currentTypeIndex="10"
+          />
+        </div>
       </Col>
     </Row>
   </div>
 </template>
 
 <script lang="ts">
-import { Component , Watch} from 'vue-property-decorator'
+import { Component , Prop , Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { itemlist  } from '@/api/lastissue'
 import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
+import WordCloud from './wordCloud/index.vue'
 import echarts from 'echarts'
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 
 
 @Component({
   components: {
+    WordCloud
   }
 })
 export default class Main extends ViewBase {
@@ -92,6 +104,21 @@ export default class Main extends ViewBase {
     {
       key : 3,
       text: '点赞数'
+    }
+  ]
+
+  cons: any = [
+    {
+      value : Math.floor(Math.random() * 100 + 1),
+      name: '转发数'
+    },
+    {
+      value : Math.floor(Math.random() * 100 + 1),
+      name: '评论数'
+    },
+    {
+      value : Math.floor(Math.random() * 100 + 1),
+      name: '点赞数'
     }
   ]
 
@@ -131,12 +158,6 @@ export default class Main extends ViewBase {
     try {
       // 获取列表
       const datalist = await itemlist({id: 2})
-      // this.itemlist = (datalist.data.items || []).map((it: any) => {
-      //   return {
-      //     ...it,
-      //     createTimeTemp: moment(it.createTimeTemp).format(timeFormat),
-      //   }
-      // })
       if (this.key == 1) {
         // alert(1)
       } else if (this.key == 2) {
@@ -276,6 +297,8 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import '~@/site/lib.less';
+@import '~@/site/detailmore.less';
 .page {
   padding-left: 30px;
   padding-right: 40px;
