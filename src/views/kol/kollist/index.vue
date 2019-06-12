@@ -122,11 +122,11 @@
           </template>
           <template slot-scope="{ row }" slot="action">
             <div class="table-action">
-              <p v-if="row.putStatus == 1" @click="debounce(row, $event, 1000)">
+              <p v-if="!yudingListId.includes(row.kolId)" @click="debounce(row, $event, 1000)">
                 <Icon type="md-add-circle" style="margin-top: 5px; font-size: 17px; color: #CA7273" />
                 加入投放
               </p>
-              <p v-else @click="cancelShop(row)">
+              <p v-else @click="cancelShop(row.id)">
                 <Icon type="md-add-circle" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
                 取消投放
               </p>
@@ -138,7 +138,7 @@
                 <Icon type="md-heart" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
                 取消收藏
               </p>
-              <div v-if="row.putStatus == 1" :ref="'small' + row.id" class="radiu-url">
+              <div :ref="'small' + row.id" class="radiu-url">
                 <img src="http://seopic.699pic.com/photo/50035/0520.jpg_wh1200.jpg" />
               </div>
             </div>
@@ -158,15 +158,14 @@
       </div>
       <Detail ref='detailbox' v-model="type" @done="checkDetailSet" />
     </div>
-    
     <div>
-      <div v-show="checkDetail || checkCount > 0" class="check-box">
+      <div v-show="yudingList.length > 0" class="check-box">
       <div></div>
-        <div class="check-title">已选择<span ref="end"> {{checkCount}} </span>个，总粉丝数：{{checkPeople}}万+
+        <div class="check-title">已选择<span ref="end"> {{yudingList.length}} </span>个，总粉丝数：{{fansNums(yudingList)}}万+
           <Icon @click="detailShow" type="ios-arrow-up" class="ios-type" />
         </div>
         <div>
-          <Button type="primary" class="button-ok" @click="next()">立即绑定</Button>
+          <Button type="primary" class="button-ok" @click="next">立即绑定</Button>
         </div>
       </div>
     </div>
@@ -178,7 +177,8 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Header from './header.vue'
 import { cloneDeep } from 'lodash'
-import { titleMsgList, areaList, kolmsglist, addcollet, cancelcollect, allcollect, addShopIng } from '@/api/kolList.ts'
+import { titleMsgList, areaList, kolmsglist, addcollet, cancelcollect, delShopping,
+  allcollect, addShopIng, kolShoppingCar, delall } from '@/api/kolList.ts'
 import AreaModal from './areaModal.vue'
 import clickoutside from './directive'
 import { formatCurrency } from '@/fn/string'
@@ -253,7 +253,8 @@ export default class Main extends ViewBase {
   areacode: any = []
   areaShow = false
   title: any = ['weibo', 'wechat', 'douyin', 'xiaohonghsu']
-
+  yudingList: any = []
+  yudingListId: any = []
   get columns() {
     const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号', '全部账号', '全部账号']
     return [
@@ -386,17 +387,24 @@ export default class Main extends ViewBase {
   }
 
   async init() {
-    // try {
-    //   const { data } = await queryList({})
-    //   this.accountList = data.accountList
-    //   this.fansList = data.fansList
-    //   this.sexList = data.sexList
-    //   this.priceList = data.priceList
-    //   this.tabledata = data.items
-    //   this.total = 20
-    // } catch (ex) {
-    //   this.handleError(ex)
-    // }
+    try {
+      const { data } = await kolShoppingCar()
+      switch (this.type) {
+        case 0: this.yudingList = data.weiboList
+          break
+        case 1: this.yudingList = data.weixinList
+          break
+        case 2: this.yudingList = data.douyinList
+          break
+        case 3: this.yudingList = data.kuaishouList
+          break
+        case 4: this.yudingList = data.xiaohongshuList
+          break
+      }
+      this.yudingListId = this.yudingList.map((it: any) => it.kolId)
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   sure() {
@@ -463,18 +471,24 @@ export default class Main extends ViewBase {
           1000,
           'easeBoth',
           async () => {
-            // await addShopIng({
-            //   kolId: row.id,
-            //   channelCode: row.
-            // })
-            this.tabledata = this.tabledata.map((it: any) => {
-              return {
-                ...it,
-                putStatus: it.id == id ? 0 : 1
-              }
-            })
-            this.checkCount ++
-            this.checkPeople += row.fansNumber
+            try {
+              await addShopIng({
+                kolId: row.kolId,
+                channelCode: this.title[this.type],
+                channelDataId: row.id,
+                accountImageUrl: row.image,
+                accountType: row.typeCode,
+                averageRead: row.avgReadCount,
+                averageComment: row.avgCommentsCount,
+                averageLike: row.avgAttitudesCount,
+                averageShare: row.avgRepostsCount,
+                collected: row.collected ? 1 : 0
+              })
+              await kolShoppingCar()
+            } catch (ex) {
+              this.handleError(ex)
+            }
+            this.init()
             dom.style.cssText = `display: block`
           }
         )
@@ -510,13 +524,40 @@ export default class Main extends ViewBase {
     }
   }
 
+  async cancelShop(id: any) {
+    try {
+      await delShopping({
+        channelCode: this.title[this.type],
+        channelDataId: id
+      })
+      this.KolSeach()
+      this.init()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  next() {
+
+  }
+
   detailShow() {
     this.$nextTick(() => {
-      (this.$refs.detailbox as any).init()
+      (this.$refs.detailbox as any).init(this.yudingList)
     })
   }
 
   checkDetailSet(val: any) {
+    this.yudingList = val
+  }
+
+  fansNums(row: any) {
+    let num = 0
+
+    row.forEach((it: any) => {
+      num += Number(it.fans)
+    })
+    return num
   }
 
   async KolSeach(key?: any, order?: any) {
@@ -561,17 +602,6 @@ export default class Main extends ViewBase {
       }
     }
   }
-
-  // @Watch('area', { deep: true })
-  // watchArea(value: number[], oldValue: number[]) {
-  //   // 不限与其他项互斥
-  //   keepExclusion(value, oldValue, 0, newValue => {
-  //     this.area = newValue
-  //   })
-  //   if (value.length == 0) {
-  //     this.area = [0]
-  //   }
-  // }
 
   @Watch('form', { deep: true })
   watchForm(value: any) {
@@ -647,9 +677,9 @@ export default class Main extends ViewBase {
   text-align: center;
 }
 .list-box {
-  position: absolute;
+  position: relative;
   margin-bottom: 40px;
-  left: 160px;
+  left: 0;
   right: 40px;
   overflow: auto;
   background: rgba(255, 255, 255, .9);
@@ -760,7 +790,6 @@ export default class Main extends ViewBase {
   border-radius: 5px;
 }
 .list-table {
-  position: relative;
   border-radius: 5px;
   width: 1146px;
   padding-left: 20px;
@@ -785,7 +814,7 @@ export default class Main extends ViewBase {
   width: calc(100% - 19);
   margin: 0;
   min-height: 240px;
-  overflow: auto;
+  position: initial !important;
   /deep/ .ivu-table-header th {
     height: 60px;
     line-height: 60px;
