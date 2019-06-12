@@ -69,7 +69,7 @@
         <Table width="1130px" :loading="loading" @on-sort-change="sortTable" :columns="columns" :data="tabledata">
           <template slot-scope="{ row }" slot="name">
             <div class="table-name">
-              <div class="to-detail" @click="$router.push({name: 'kol-detail-layout', params: {id: row.id}})">
+              <div class="to-detail" @click="$router.push({name: 'kol-figure', params: {id: row.kolId}})">
                 <img :src="row.image" alt=""> 
                  <span>{{row.name}}</span>
               </div>

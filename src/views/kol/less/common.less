@@ -7,39 +7,49 @@ h1, h2, h3 ,h4, h5 {
 }
 // 背景轮廓
 .com-modal {
-    background:rgba(0,32,45,0.8);
-    overflow: hidden;
-    height: 100%;
-    border-radius: 5px;
-    color: #fff;
+  background: rgba(0, 32, 45, .8);
+  border-radius: 5px;
+  overflow: hidden;
+  height: 100%;
 }
 // 背景 - title
 .com-modal-title {
-    background:rgba(0,32,45,0.8);
-    padding: 21px 0;
-    color: #fff;
+  height: 60px;
+  line-height: 60px;
+  background: rgba(0, 32, 45, .8);
+  color: #fff;
+  font-weight: normal;
+  font-size: 15px;
 }
-/deep/ .ivu-tabs-bar {
-    border-bottom: none;
-  }
-/deep/ .ivu-tabs-nav {
-  margin-left: 30px;
-  .ivu-tabs-tab {
-    padding: 0 5px;
-    text-align: center;
-    line-height: 60px;
-    &:hover {
-      color: inherit;
+
+// kol-主要作品
+.query-select {
+  /deep/ .ivu-tabs {
+    color: #fff;
+    .ivu-tabs-nav {
+      margin-left: 30px;
+    }
+    .ivu-tabs-tab {
+      line-height: 45px;
+      text-align: center;
+      padding: 0 10px;
+      &:hover {
+        color: inherit;
+      }
+    }
+    .ivu-tabs-tab-active {
+      color: #fff;
+      font-size: 14px;
+    }
+    .ivu-tabs-bar {
+      border-bottom: none;
+    }
+    .ivu-tabs-ink-bar {
+      background-color: #fff;
     }
   }
-  .ivu-tabs-tab-active {
-    font-size: 16px;
-  }
-  .ivu-tabs-ink-bar {
-    background-color: #fff;
-  }
 }
-// 标题
+
 .order-nav {
   font-size: 24px;
   color: #fff;
@@ -51,46 +61,49 @@ h1, h2, h3 ,h4, h5 {
 
 
 // select input 
-/deep/ .ivu-select {
-  height: 40px;
-  border-radius: 5px;
-  margin-right: 20px;
-  .ivu-select-selection {
+.jyd-form {
+  /deep/ .ivu-select {
     height: 40px;
+    border-radius: 5px;
+    margin-right: 20px;
+    .ivu-select-selection {
+      height: 40px;
+      border-radius: 5px;
+      border: none;
+    }
+    .ivu-select-placeholder {
+      height: 40px;
+      line-height: 40px;
+      font-size: 14px;
+    }
+    .ivu-select-selected-value {
+      height: 40px;
+      line-height: 40px;
+      font-size: 14px;
+    }
+  }
+  /deep/ .ivu-select-input {
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+  }
+  /deep/ .ivu-date-picker {
+    .ivu-input-suffix {
+      height: 40px;
+      i {
+        height: 40px;
+        line-height: 40px;
+      }
+    }
+  }
+  /deep/ .ivu-input {
+    height: 40px;
+    font-size: 14px;
     border-radius: 5px;
     border: none;
   }
-  .ivu-select-placeholder {
-    height: 40px;
-    line-height: 40px;
-    font-size: 14px;
-  }
-  .ivu-select-selected-value {
-    height: 40px;
-    line-height: 40px;
-    font-size: 14px;
-  }
 }
-/deep/ .ivu-select-input {
-  height: 40px;
-  line-height: 40px;
-  font-size: 14px;
-}
-/deep/ .ivu-date-picker {
-  .ivu-input-suffix {
-    height: 40px;
-    i {
-      height: 40px;
-      line-height: 40px;
-    }
-  }
-}
-/deep/ .ivu-input {
-  height: 40px;
-  font-size: 14px;
-  border-radius: 5px;
-  border: none;
-}
+
 
 // btn
 .order-form {
@@ -105,12 +118,5 @@ h1, h2, h3 ,h4, h5 {
 /deep/ .ivu-btn {
   height: 40px;
 }
-// 广告片
-.jydate-form {
-  padding: 40px 0 44px;
-  .select-wid {
-    width: 160px;
-    margin-right: 20px;
-  }
-}
+
 
