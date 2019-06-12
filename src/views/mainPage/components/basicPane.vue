@@ -90,6 +90,25 @@
       </div>
 
       <div
+        class="zone actor-zone"
+        v-if="actorData"
+      >
+        <h4 class="zone-head flex-box">
+          <em class="flex-1">演员阵容：<Star :value="actorData.star" readonly/></em>
+          <router-link :to="{}">更多 &gt;</router-link>
+        </h4>
+        <ul class="actor-list">
+          <li
+            v-for="(it, i) in actorData.list"
+            :key="i"
+            class="actor-item flex-mid"
+          >
+            <img :src="it.avatar" class="actor-img" :title="it.name">
+          </li>
+        </ul>
+      </div>
+
+      <div
         class="zone brand-zone"
         v-if="brandList && brandList.length > 0"
       >
@@ -119,6 +138,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { RawLocation } from 'vue-router'
 import VideoPreviewer from '@/components/videoPreviewer'
+import Star from '@/components/star'
 
 export interface Opus {
   title: string
@@ -144,6 +164,17 @@ export interface Movie {
   address?: string
 }
 
+export interface Actor {
+  id?: number
+  name?: string
+  avatar?: string
+}
+
+export interface ActorData {
+  star?: number
+  list?: Actor[]
+}
+
 export interface Item {
   id: number
   name: string
@@ -156,7 +187,8 @@ export interface Item {
 
 @Component({
   components: {
-    VideoPreviewer
+    VideoPreviewer,
+    Star
   }
 })
 export default class BasicPane extends Vue {
@@ -173,6 +205,8 @@ export default class BasicPane extends Vue {
   @Prop({ type: Array, default: () => [] }) platformList!: Platform[]
 
   @Prop({ type: Object, default: null }) movie!: Movie
+
+  @Prop({ type: Object, default: null }) actorData!: ActorData
 
   followedIn = this.followed
 
@@ -394,5 +428,28 @@ export default class BasicPane extends Vue {
 
 .movie-list {
   margin-top: 2px;
+}
+
+.actor-zone {
+  padding-top: 16px;
+  /deep/ .star-list {
+    position: relative;
+    top: 2px;
+  }
+}
+
+.actor-list {
+  display: flex;
+  margin-top: 10px;
+}
+
+.actor-item {
+  margin-right: 13px;
+}
+
+.actor-img {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
 }
 </style>

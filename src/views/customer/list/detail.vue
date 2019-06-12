@@ -1,8 +1,8 @@
 <template>
-  <div class="page home-bg">
-    <h2 class="layout-nav-title"><span @click="goBack">客户管理</span> > 查看客户</h2>
-    <h3 class="layout-title">概览</h3>
-    <div class="text-rows">
+  <div class="page home-bg as">
+    <!-- <h2 class="layout-nav-title"><span @click="goBack">客户管理</span> > 查看客户</h2> -->
+    <h3 class="layout-title nav">概览</h3>
+    <div class="text-rows bgs">
       <Row>
         <Col :span="12">
           <p>
@@ -38,7 +38,7 @@
         </Col>
       </Row>
     </div>
-    <h3 class="layout-title">已关联子账号</h3>
+    <h3 class="layout-title nav" style='margin-top: 10px;height: 50px;line-height: 50px;background: rgba(32, 67, 80, 1);'>已关联子账号</h3>
     <div class="">
       <Row>
         <Table
@@ -149,7 +149,21 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+.as {
+  background: rgba(255, 255, 255, 0);
+}
+.nav {
+  height: 60px;
+  background: rgba(0, 32, 45, 0.8);
+  border-radius: 5px 5px 0 0;
+  color: #fff;
+  line-height: 60px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.bgs {
+  background: rgba(32, 67, 80, 1);
+}
 .submitBtn {
   margin-bottom: 30px;
 }
@@ -172,6 +186,86 @@ export default class Main extends ViewBase {
     margin-right: 30px;
   }
 }
+/deep/ .text-rows p label {
+  color: #b3bcc0;
+}
+/deep/ .text-rows p span {
+  color: #fff;
+}
+/deep/ .ivu-table th, /deep/ .ivu-table-header {
+  background: rgba(0, 32, 45, 0.8);
+  height: 40px;
+  line-height: 40px;
+  color: rgba(179, 188, 192, 1);
+  font-size: 15px;
+  font-weight: 400;
+}
+/deep/ .ivu-table td {
+  background: rgba(32, 67, 80, 1);
+  transition: background-color 0.2s ease-in-out;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  height: 50px;
+  line-height: 50px;
+}
+/deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-table-body {
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-table-tip {
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-table-wrapper {
+  margin: 0;
+  border: none;
+}
+/deep/ .btnCenter {
+  text-align: center;
+  height: 100px;
+  background: rgba(32, 67, 80, 1);
+  margin: 0 20px 0 20px;
+  line-height: 100px;
+  color: #fff;
+}
+/deep/ .ivu-page-prev {
+  border: 0;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-page-next {
+  border: 0;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-page-item-active {
+  border-color: #eee;
+  background: #eee !important;
+  border-radius: 50%;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+}
+/deep/ .ivu-page-item {
+  border: 0;
+  display: inline-block;
+  vertical-align: middle;
+  background: rgba(32, 67, 80, 1);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 4px;
+  text-align: center;
+  list-style: none;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
+}
 </style>
+
 
 

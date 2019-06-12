@@ -55,7 +55,7 @@
         </li>
       </ul>
        <div class="noList" v-if="tableDate.length == 0">暂无数据</div>
-       <pagination v-model="pageList" :total="totalCount" @uplist="uplist"></pagination>
+       <pagination :pageList="pageList" :total="totalCount" @uplist="uplist"></pagination>
     </div>
   </div>
 </template>
