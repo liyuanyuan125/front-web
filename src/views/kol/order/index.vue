@@ -9,9 +9,9 @@
         <!-- 订单 -->
         <div v-if="orderTab == 0" class="tab-order-pane">
           <div class="flex-box select-order">
-              <Select v-model='form.platform'  clearable placeholder="全部推广平台">
+              <Select v-model='form.channelCode'  clearable placeholder="全部推广平台">
                 <Option
-                  v-for="item in allPlatform"
+                  v-for="item in channelCodeList"
                   :key="item.key"
                   :value="item.key"
                 >{{item.text}}</Option>
@@ -43,7 +43,7 @@
                         <DropdownItem v-for="item in statusRest" :key="item.key">{{item.text}}</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
-                <!-- <Button type="primary" class="apply-btn">申请发票</Button> -->
+                <Button type="primary" @click="$router.push({name: 'kol-applyTicket'})" class="apply-btn">申请发票</Button>
             </div>
             <div class="table-list">
                 <ul>
@@ -113,7 +113,6 @@
               </li>
             </ul>
         </div>
-
       </div>
   </div>
 </template>
@@ -123,6 +122,8 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, info } from '@/ui/modal'
 import { formatNumber } from '@/util/validateRules.ts'
+import { orderList } from '@/api/kolOrderList'
+import { querySelectList } from '@/api/brandList'
 
 @Component
 export default class Main extends ViewBase {
@@ -143,14 +144,7 @@ export default class Main extends ViewBase {
   // 订单状态
   statusTab = 0
   // 全部推广平台
-  allPlatform = [
-    {key: 0, text: '全部推广平台'},
-    {key: 1, text: '微博'},
-    {key: 2, text: '微信'},
-    {key: 3, text: '抖音'},
-    {key: 4, text: '快手'},
-    {key: 5, text: '小红书'},
-  ]
+  channelCodeList = []
   // 全部项目
   allProjectSelect = []
   // 全部品牌
@@ -211,8 +205,29 @@ export default class Main extends ViewBase {
   // 定义数字格式
   formatNumber = formatNumber
 
+  mounted() {
+    this.tablist()
+    this.querySelectList()
+  }
+  async tablist() {
+    try {
+      const { data } = await orderList({
+        ...this.page
+      })
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
 
-
+  // 获取推广平台
+  async querySelectList() {
+    try {
+      const { data: {channelCodeList} } = await querySelectList()
+      this.channelCodeList = channelCodeList
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
   handleStatusList() {}
   search() {}
   remoteMethod(query: any) {
@@ -358,16 +373,17 @@ export default class Main extends ViewBase {
 .status-content {
   position: relative;
   background: rgba(0, 32, 45, .8);
-  height: 56px;
-  line-height: 56px;
+  height: 50px;
+  line-height: 50px;
   color: #fff;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
-  padding-left: 37px;
+  padding-left: 24px;
   /deep/ .ivu-tabs-nav {
     .ivu-tabs-tab {
-      padding: 5px 15px;
-      margin-top: 12px;
+      padding: 0 16px;
+      height: 51px;
+      line-height: 51px;
       color: #fff;
     }
     .ivu-tabs-ink-bar {
@@ -389,16 +405,16 @@ export default class Main extends ViewBase {
   font-size: 14px;
 }
 .apply-btn {
-  width: 140px;
+  width: 120px;
   height: 40px;
-  border-radius: 2px;
+  border-radius: 5px;
   color: #585858;
   background: #fff;
   border: solid 1px #ededed;
   font-size: 13px;
   position: absolute;
-  right: 0;
-  top: 40px;
+  right: 10px;
+  top: 5px;
 }
 .order-status-tab {
   /deep/ .ivu-tabs-bar {
@@ -427,6 +443,10 @@ export default class Main extends ViewBase {
   }
 }
 /deep/ .ivu-select-input {
+  height: 40px;
+  line-height: 40px;
+}
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
   height: 40px;
   line-height: 40px;
 }

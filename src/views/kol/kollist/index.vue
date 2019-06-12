@@ -69,8 +69,10 @@
         <Table width="1130px" :loading="loading" @on-sort-change="sortTable" :columns="columns" :data="tabledata">
           <template slot-scope="{ row }" slot="name">
             <div class="table-name">
-              <img :src="row.image" alt=""> 
-              <span>{{row.name}}</span>
+              <div class="to-detail" @click="$router.push({name: 'kol-detail-layout', params: {id: row.id}})">
+                <img :src="row.image" alt=""> 
+                 <span>{{row.name}}</span>
+              </div>
             </div>
           </template>
           <template slot-scope="{ row }" slot="type">
@@ -601,6 +603,9 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.to-detail {
+  cursor: pointer;
+}
 /deep/ .ivu-checkbox-wrapper {
   width: 150px;
 }

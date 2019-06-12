@@ -736,12 +736,16 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/kollist/index.vue'),
     meta: emptyAuth
   },
-   // KOL - KOl 订单
+   // KOL - KOl 订单管理
    {
     path: '/kol/orderlist',
     name: 'kol-orderlist',
     component: () => import('./views/kol/order/index.vue'),
-    meta: emptyAuth
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: 'kol推广订单'
+    }
   },
 
   // KOL - KOL 草稿
