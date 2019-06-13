@@ -723,7 +723,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
   // KOL - KOL 对比
   {
-    path: '/kol/compare',
+    path: '/kol/compare/:id/:ids',
     name: 'kol-compare',
     component: () => import('./views/kol/compare/index.vue'),
     meta: emptyAuth
