@@ -487,11 +487,11 @@ export default class Main extends ViewBase {
                 collected: row.collected ? 1 : 0
               })
               await kolShoppingCar()
+              dom.style.cssText = `display: block`
+            this.init()
             } catch (ex) {
               this.handleError(ex)
             }
-            this.init()
-            dom.style.cssText = `display: block`
           }
         )
       })
@@ -540,7 +540,12 @@ export default class Main extends ViewBase {
   }
 
   next() {
-
+    this.$router.push({
+      name: 'kol-shopping',
+      params: {
+        id: this.type
+      }
+    })
   }
 
   detailShow() {
@@ -551,6 +556,8 @@ export default class Main extends ViewBase {
 
   checkDetailSet(val: any) {
     this.yudingList = val
+    this.yudingListId = this.yudingList.map((it: any) => it.kolId)
+    this.KolSeach()
   }
 
   fansNums(row: any) {
@@ -564,6 +571,7 @@ export default class Main extends ViewBase {
 
   async KolSeach(key?: any, order?: any) {
     this.loading = true
+    // await delall('weibo')
     const query = clean({
       ...this.form,
       accountCategoryCode: this.form.accountCategoryCode == 0 ? '' : this.form.accountCategoryCode,

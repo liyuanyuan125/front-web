@@ -115,6 +115,7 @@
         width: 32%;
         border-radius: 5px;
         position: relative;
+        margin-bottom: 20px;
         box-sizing: border-box;
         border: 1px solid #fff;
         background: rgba(255, 255, 255, 0.3);
@@ -143,9 +144,11 @@
           }
           .film-title {
             font-size: 18px;
-            width: 160px;
+            width: 130px;
             color: #00202d;
             overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
             height: 24px;
             font-weight: 400;
           }
@@ -174,7 +177,7 @@
           }
           .file-sex-box {
             margin-left: 10px;
-            width: 130px;
+            width: 110px;
             text-align: center;
             span {
               text-align: center;
@@ -293,7 +296,10 @@
               border-radius: 5px;
               background: rgba(255, 255, 255, 0.3);
               border: 1px solid #fff;
-              color: #fff;
+              color: #00202d;
+              &::placeholder {
+                color: #00202d;
+              }
             }
             /deep/ .ivu-input-suffix {
               background: #00202d;
@@ -366,6 +372,60 @@
     }
     span {
       font-size: 16px;
+    }
+  }
+}
+/deep/ .ivu-table-wrapper {
+  border-radius: 5px;
+  min-height: 280px;
+  position: relative;
+  /deep/ .ivu-table-header th {
+    height: 60px;
+    background: rgba(255, 255, 255, 0.3);
+    color: #00202d;
+    line-height: 60px;
+    span {
+      font-size: 14px;
+    }
+  }
+  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-row {
+    background: rgba(255, 255, 255, 0);
+    /deep/ td {
+      color: #00202d;
+      background: rgba(0, 0, 0, 0);
+      a {
+        color: #4fa6bb;
+      }
+    }
+    border-bottom: 2px solid rgba(255, 255, 255, .5);
+  }
+  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
+    span {
+      color: #00202d;
+      font-size: 14px;
+    }
+  }
+
+  /deep/ .ivu-table-tip {
+    line-height: 200px;
+    /deep/ td {
+      color: #00202d;
+      background: rgba(255, 255, 255, 0);
     }
   }
 }

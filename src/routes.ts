@@ -758,7 +758,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // kol - koll列表
   {
-    path: '/kol/shopping',
+    path: '/kol/shopping/:id?',
     name: 'kol-shopping',
     component: () => import('./views/kol/shopping/index.vue'),
     meta: emptyAuth

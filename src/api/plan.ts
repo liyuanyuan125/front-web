@@ -142,3 +142,11 @@ export async function dateMockList(data: any) {
   const res = await get('xadvert/plans/alldata', data)
   return res
 }
+
+/**
+ * 确认方案
+ */
+export async function sureEdit(id: any) {
+  const res = await get(`/xadvert/v1/plans/${id}/confirm`)
+  return res
+}

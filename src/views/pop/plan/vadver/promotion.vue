@@ -223,7 +223,7 @@ export default class Promotion extends ViewBase {
       if (volid) {
         const data = await createdDraft(clean({
           ...this.form,
-          planId: this.$route.params.setid ? this.$route.params.setid : '',
+          id: this.$route.params.setid ? this.$route.params.setid : '',
           advertime: '',
           specification: this.form.specification ?  this.form.specification + '' : '',
           budgetAmount: Number(this.form.budgetAmount)}))
@@ -234,7 +234,7 @@ export default class Promotion extends ViewBase {
           })
         } else {
           this.$router.push({
-            name: 'pop-planlist-set',
+            name: 'pop-planlist-edit',
             params: { id: '1', setid: data.data  }
           })
         }

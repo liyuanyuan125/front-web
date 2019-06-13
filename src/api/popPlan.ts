@@ -192,3 +192,39 @@ export async function getConfim(id: any) {
   const data = await get(`/xadvert/v1/plans/${id}/confirm`)
   return data
 }
+
+/**
+ * @param  {any} query
+ * 查询广告计划关联影院
+ */
+export async function getcinemas(id: any, query: any) {
+  const data = await get(`/xadvert/v1/plans/${id}/cinemas`, query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 查询广告计划关联院线
+ */
+export async function getchains(id: any, query: any) {
+  const data = await get(`/xadvert/v1/plans/${id}/chains`, query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 创建广告计划-推广方案
+ */
+export async function getcities(id: any, query: any) {
+  const data = await get(`/xadvert/v1/plans/${id}/cities`, query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 创建广告计划-推广方案
+ */
+export async function getprovinces(id: any, query: any) {
+  const data = await get(`/xadvert/v1/plans/${id}/provinces`, query)
+  return data
+}
