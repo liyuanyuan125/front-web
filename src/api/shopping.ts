@@ -1,4 +1,5 @@
 import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
+import { get , post , put, del } from '@/fn/ajax'
 
 /**
  * @param
@@ -40,4 +41,24 @@ return await mockGet(query, {
       likeStatus: 1
       }],
   })
+}
+
+/**
+ * @param
+ * 推广品牌
+ */
+
+export async function productsList(data: any) {
+  const res = await get('/brand/products', data)
+  return res
+}
+
+/**
+ * @param
+ * 推广产品
+ */
+
+export async function brandsList(data: any) {
+  const res = await get('/brand/brands', data)
+  return res
 }
