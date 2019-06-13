@@ -68,6 +68,12 @@ export async function cinemaList(query: any) {
   return data
 }
 
+// 查看区域
+export async function fansList(query: any) {
+  const data = await get('/kol/channel-accounts/fans-province-top20', query)
+  return data
+}
+
 // 查询广告片列表(含分页)
 export async function advertising(query: any) {
   const data = await get('/xadvert/v1/videos', query)
@@ -157,5 +163,68 @@ export async function estimate(query: any) {
  */
 export async function getTwodetail() {
   const data = await get('/xadvert/v1/plans/create/before')
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 广告方案推荐
+ */
+export async function getRecommend(query: any) {
+  const data = await post('/xadvert/v1/plans/recommend', query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 创建广告计划-推广方案
+ */
+export async function getCheme(query: any) {
+  const data = await post('/xadvert/v1/plans/create/scheme', query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 创建广告计划-推广方案
+ */
+export async function getConfim(id: any) {
+  const data = await get(`/xadvert/v1/plans/${id}/confirm`)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 查询广告计划关联影院
+ */
+export async function getcinemas(id: any, query: any) {
+  const data = await get(`/xadvert/v1/plans/${id}/cinemas`, query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 查询广告计划关联院线
+ */
+export async function getchains(id: any, query: any) {
+  const data = await get(`/xadvert/v1/plans/${id}/chains`, query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 创建广告计划-推广方案
+ */
+export async function getcities(id: any, query: any) {
+  const data = await get(`/xadvert/v1/plans/${id}/cities`, query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 创建广告计划-推广方案
+ */
+export async function getprovinces(id: any, query: any) {
+  const data = await get(`/xadvert/v1/plans/${id}/provinces`, query)
   return data
 }

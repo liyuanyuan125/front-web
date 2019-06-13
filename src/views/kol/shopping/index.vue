@@ -2,9 +2,9 @@
   <div class="kol-box">
     <Header />
     <div>
-      <Step></Step>
+      <Step v-model="$route.params.id"></Step>
     </div>
-    <div v-if="tableDates.length > 0" class="section">
+    <div v-if="tableDate" class="section">
       <Table  :columns="columns" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
         <!-- <template ref='title' slot="header">
           <div>
@@ -32,10 +32,19 @@
         </template> -->
         <template style="marin-top: 100px" slot-scope="{ row }" slot="type">
           <div class="table-name">
-            <img :src="row.mainPicUrl" alt=""> 
-            <span>{{row.name}}</span>
+            <img :src="row.accountImageUrl" alt=""> 
+            <span>{{row.accountName}}</span>
           </div>
         </template>
+
+        <template style="marin-top: 100px" slot-scope="{ row }" slot="pintai">
+          <div class="table-name">
+            <span v-if="accountCategoryList && accountCategoryList.length>0">
+              {{accountCategoryList.filter((it) => it.key == row.accountTypeCode)[0].text}}
+            </span>
+          </div>
+        </template>
+
         <template style="marin-top: 100px" slot-scope="{ row }" slot="action">
           <p>取消</p>
           <p>收藏</p>
@@ -63,11 +72,18 @@
           以下KOL账号已下架，无法进行预订
           <Button class="default-btn" @click="reserve">全部清空</Button>
         </div>
-        <Table :show-header="false" :columns="columnsNum" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
+        <Table :show-header="false" :columns="columnsNum" :data="tableDate" >
           <template style="marin-top: 100px" slot-scope="{ row }" slot="type">
             <div class="table-name">
-              <img :src="row.mainPicUrl" alt=""> 
-              <span>{{row.name}}</span>
+              <img :src="row.accountImageUrl" alt=""> 
+              <span>{{row.accountName}}</span>
+            </div>
+          </template>
+          <template style="marin-top: 100px" slot-scope="{ row }" slot="pintai">
+            <div class="table-name">
+              <span v-if="accountCategoryList && accountCategoryList.length>0">
+                {{accountCategoryList.filter((it) => it.key == row.accountTypeCode)[0].text}}
+              </span>
             </div>
           </template>
           <template style="marin-top: 100px" slot-scope="{ row }" slot="action">
@@ -89,7 +105,7 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { fileList, queryList } from '@/api/shopping'
+import { kolShoppingCar } from '@/api/kolList.ts'
 import Header from './header.vue'
 import Detail from './detail.vue'
 import { formatCurrency } from '@/fn/string'
@@ -117,6 +133,7 @@ export default class DlgEditCinema extends ViewBase {
   checkId: any = []
   sum = 0
   sumcount = '0.00'
+  accountCategoryList: any = []
 
   get tableDates() {
     if (this.tableDate && this.tableDate.length > 0) {
@@ -152,7 +169,8 @@ export default class DlgEditCinema extends ViewBase {
         {
           title: '平台',
           align: 'left',
-          key: 'platform'
+          key: 'platform',
+          slot: 'pintai'
         },
         {
           title: '投放方式',
@@ -184,7 +202,8 @@ export default class DlgEditCinema extends ViewBase {
         {
           title: '平台',
           align: 'left',
-          key: 'platform'
+          key: 'platform',
+          slot: 'pintai'
         },
         {
           title: '投放方式',
@@ -201,21 +220,42 @@ export default class DlgEditCinema extends ViewBase {
     return columns
   }
 
-
-  created() {
-    this.filmFind()
-    this.init()
-  }
-
-  async filmFind() {
+  async init() {
     try {
-      const { data } = await fileList({})
-      this.filmList = data.items || []
-      this.filename = this.filmList.filter((it: any) => it.key == this.filmCheck)[0].text
+      const type: any = this.$route.params.id ? Number(this.$route.params.id) : 0
+      const { data } = await kolShoppingCar()
+      this.accountCategoryList = data.accountCategoryList
+      switch (type) {
+        case 0: this.tableDate = data.weiboList
+          break
+        case 1: this.tableDate = data.weixinList
+          break
+        case 2: this.tableDate = data.douyinList
+          break
+        case 3: this.tableDate = data.kuaishouList
+          break
+        case 4: this.tableDate = data.xiaohongshuList
+          break
+      }
     } catch (ex) {
       this.handleError(ex)
     }
   }
+
+  created() {
+    // this.filmFind()
+    this.init()
+  }
+
+  // async filmFind() {
+  //   try {
+  //     const { data } = await fileList({})
+  //     this.filmList = data.items || []
+  //     this.filename = this.filmList.filter((it: any) => it.key == this.filmCheck)[0].text
+  //   } catch (ex) {
+  //     this.handleError(ex)
+  //   }
+  // }
 
   reserve() {
     this.$nextTick(() => {
@@ -266,14 +306,14 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
-  async init() {
-    try {
-      const { data } = await queryList({})
-      this.tableDate = data.items
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
+  // async init() {
+  //   try {
+  //     const { data } = await queryList({})
+  //     this.tableDate = data.items
+  //   } catch (ex) {
+  //     this.handleError(ex)
+  //   }
+  // }
 
   selectAll() {
 

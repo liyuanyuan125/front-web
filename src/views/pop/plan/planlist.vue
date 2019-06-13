@@ -45,7 +45,7 @@
                 </span>
                 <span class="query-all" @click="deleteList">批量删除</span>
               </div>
-              <span @click="deleteList">批量删除</span>
+              <span>共{{totalCount}}条</span>
             </div>
           </div>
         </template>
@@ -89,7 +89,7 @@
             <div v-if="row.status == 3 || row.status == 3">
               <span v-if="row.status == 3" @click="sure(row.id)">确认方案</span>
               <span v-if="row.status == 4" @click="pay(row.id)">立即缴费</span>
-              <div>
+              <div class="adver-edit">
                 <p @click="plandetail(row.id)">详情</p>
                 <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p>
                 <p @click="plandel(row.id)">删除</p>
@@ -99,7 +99,7 @@
         </template>
       </Table>
 
-     <pagination v-model="pageList" :total="totalCount" @uplist="uplist"></pagination>
+     <pagination :pageList="pageList" :total="totalCount" @uplist="uplist"></pagination>
     </div>
     <Sure ref="Sure" />
     <Pay ref="Pay" />
@@ -203,7 +203,7 @@ export default class Plan extends ViewBase {
   }
 
   formatDate(data: any) {
-    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(3, 2)}-${(data + '').substr(5, 2)}` : '暂无'
+    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
 
   async handlePayment(item: any) {
@@ -271,12 +271,19 @@ export default class Plan extends ViewBase {
   plandEdit(id: any) {
     this.$router.push({
       name: 'pop-planlist-edit',
-      params: {id}
+      params: {id: '0', setid: id}
     })
   }
 
-  plandel(id: any) {
-
+  async plandel(id: any) {
+    try {
+      await delCheckPlanList({
+        ids: id
+      })
+      this.tableList()
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   async relevanceAdv(val: any, id: any) {
@@ -300,17 +307,17 @@ export default class Plan extends ViewBase {
   }
 
   async deleteList() {
-    if (this.selectIds.length) {
+    if (this.checkId.length) {
       const ids: any = this.selectIds.map((item: any) => item.id) || []
       await confirm('您确定要删除当前信息吗？')
       try {
-        await delCheckPlanList({ ids })
+        await delCheckPlanList(this.checkId.join(','))
         this.tableList()
       } catch (ex) {
         this.handleError(ex)
       }
     } else {
-      this.showWaring('请选择你要删除的信息')
+      this.showWaring('请选择你要删除的信息?')
     }
   }
 
@@ -493,6 +500,7 @@ export default class Plan extends ViewBase {
     background: rgba(255, 255, 255, .8);
     /deep/ td {
       height: 200px;
+      color: #00202d;
       background: rgba(0, 0, 0, 0);
     }
   }
@@ -592,6 +600,8 @@ export default class Plan extends ViewBase {
   }
 }
 .operation-btn {
+  text-align: center;
+  color: #00202d;
   span {
     cursor: pointer;
     display: inline-block;
@@ -600,6 +610,14 @@ export default class Plan extends ViewBase {
   p {
     cursor: pointer;
     line-height: 24px;
+  }
+  .adver-edit {
+    p {
+      display: inline-block;
+      margin-right: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
   }
 }
 </style>

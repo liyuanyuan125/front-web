@@ -4,10 +4,8 @@
       粉丝占比top10省份
     </h3>
     <ul class="area-box">
-      <li><span>1 广东 :</span><span>8.08%</span></li>
-      <li><span>1 广东 :</span><span>8.08%</span></li>
-      <li><span>1 广东 :</span><span>8.08%</span></li>
-      <li><span>1 广东 :</span><span>8.08%</span></li>
+      <li v-for="(it, index) in data" :key="index"><span>{{data.id}} {{data.name}}:</span><span>{{data.percent}}%</span></li>
+      
     </ul>
   </div>
 </template>
@@ -15,18 +13,28 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinemaList } from '@/api/popPlan'
+import { fansList } from '@/api/popPlan'
 
 @Component
 export default class DlgEditCinema extends ViewBase {
   @Prop() id!: number
   showDlg = true
+  data: any = []
 
   created() {
     this.init()
   }
 
-  init() {
+  async init() {
+    try {
+      const data = await fansList({
+        channelCode: 'weibo',
+        channelDataId: 12314
+      })
+      this.data = data.data.items || []
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   cancel() {
@@ -44,7 +52,7 @@ export default class DlgEditCinema extends ViewBase {
   padding: 0 20px;
   box-shadow: 0 0 10px rgba(51, 51, 51, .25);
   width: 400px;
-  height: 230px;
+  height: 240px;
   h3 {
     height: 50px;
     line-height: 50px;
@@ -54,6 +62,8 @@ export default class DlgEditCinema extends ViewBase {
   .area-box {
     display: flex;
     flex-wrap: wrap;
+    overflow: auto;
+    height: 200px;
     li {
       width: 50%;
       padding-left: 10px;

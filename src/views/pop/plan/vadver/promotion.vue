@@ -93,11 +93,11 @@
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { advertising, estimate, createdDraft } from '@/api/popPlan.ts'
+import { advertising, estimate, createdDraft, adverdetail } from '@/api/popPlan.ts'
 import { formatCurrency } from '@/fn/string.ts'
 import { clean } from '@/fn/object.ts'
 import weekDatePicker from '@/components/weekDatePicker/weekDatePicker.vue'
-import moment from 'moment'
+import moment, { relativeTimeRounding } from 'moment'
 
 const timeFormat = 'YYYYMMDD'
 @Component({
@@ -175,6 +175,7 @@ export default class Promotion extends ViewBase {
   }
 
   async init() {
+    (this.$Spin as any).show()
     try {
       const { data } = await advertising( {
         pageIndex: 1,
@@ -182,9 +183,38 @@ export default class Promotion extends ViewBase {
         status: 4
       } )
       this.adverList = data.items || []
+      this.seach()
     } catch (ex) {
       this.handleError(ex)
     }
+  }
+
+  async seach() {
+    if (!this.$route.params.setid) {
+      (this.$Spin as any).hide()
+      return
+    }
+    try {
+      const { data } = await adverdetail(this.$route.params.setid)
+      this.form.name = data.item.name
+      this.form.specification = data.item.specification
+      this.form.budgetAmount = data.item.budgetAmount
+      this.form.customerId = data.item.customerId
+      if (!data.item.videoId) {
+        this.setadver = true
+      } else {
+        this.form.videoId = data.item.videoId
+      }
+      this.form.advertime = [new Date(this.formatDate(data.item.beginDate)),
+        new Date(this.formatDate(data.item.endDate))]
+    } catch (ex) {
+      this.handleError(ex)
+    }
+    (this.$Spin as any).hide()
+  }
+
+  formatDate(data: any) {
+    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
 
   async next(dataform: any) {
@@ -193,9 +223,21 @@ export default class Promotion extends ViewBase {
       if (volid) {
         const data = await createdDraft(clean({
           ...this.form,
+          id: this.$route.params.setid ? this.$route.params.setid : '',
           advertime: '',
           specification: this.form.specification ?  this.form.specification + '' : '',
           budgetAmount: Number(this.form.budgetAmount)}))
+        if (!this.$route.params.setid) {
+          this.$router.push({
+            name: 'pop-planlist-add',
+            params: { id: '1', setid: data.data  }
+          })
+        } else {
+          this.$router.push({
+            name: 'pop-planlist-edit',
+            params: { id: '1', setid: data.data  }
+          })
+        }
         this.$emit('input', 1)
       }
     } catch (ex) {

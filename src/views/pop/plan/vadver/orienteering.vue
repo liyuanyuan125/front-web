@@ -103,7 +103,7 @@
             </FormItem>
           </div> -->
           <div class="item-top" style="margin-top: 50px" v-show="movieCustom != 0">
-            <Film v-model="numsList" />
+            <Film v-model="numsList" @donefilm="timerfilm" />
           </div>
 
           <div class="btn-center">
@@ -121,6 +121,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Tags from '../tag.vue'
 import { cinemaFind } from '@/api/popPlan.ts'
+import { confirm, toast } from '@/ui/modal'
 import moment from 'moment'
 import Film from './film.vue'
 import Chain from '@/components/cityMap/CityMap.vue'
@@ -142,6 +143,7 @@ const keepExclusion = <T>(
   }
 }
 const timeFormat = 'YYYY-MM-DD'
+const timeFormats = 'YYYYMMDD'
 @Component({
   components: {
     Tags,
@@ -164,6 +166,7 @@ export default class Orienteering extends ViewBase {
   }
   rule: any = {
   }
+  timers: any = {}
   numsList: any = []
   cityCustom: number = 0
   movieCustom: number = 1
@@ -223,11 +226,21 @@ export default class Orienteering extends ViewBase {
     }
   }
 
+  timerfilm(val: any) {
+    this.timers = val
+  }
 
   async next(dataform: any) {
+    const timers = Object.keys(this.timers)
+    this.numsList.forEach( async (it: any) => {
+      if (timers.includes(it.id + '') && this.timers[it.id].length == 0) {
+        this.showWaring('请选择投放排期')
+        return
+      }
+    })
     try {
       await direction (clean({
-        planId: 38,
+        planId: 49,
         cityCustom: this.cityCustom,
         allNation: this.form.cinema[0] == 0 ? 1 : '',
         deliveryCityTypes: this.form.cinema[0] == 0 ? '' : this.form.cinema,
@@ -251,8 +264,8 @@ export default class Orienteering extends ViewBase {
         deliveryMovies: this.numsList.map((it: any) => {
           return {
             movieId: it.id,
-            beginDate: 20171212,
-            endDate: 20181212
+            beginDate: moment(this.timers[it.id][0]).format(timeFormats),
+            endDate: moment(this.timers[it.id][1]).format(timeFormats)
           }
         })
       }))

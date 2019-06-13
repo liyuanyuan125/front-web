@@ -1,4 +1,4 @@
-import { get , post , put } from '@/fn/ajax'
+import { get , post , put, del } from '@/fn/ajax'
 
 /**
  * KOL搜索表单
@@ -60,5 +60,29 @@ export async function areaList(query: any) {
  */
 export async function kolmsglist(query: any) {
   const res = await get('/kol/search', query)
+  return res
+}
+
+/**
+ * 查询某公司账号下的购物车
+ */
+export async function kolShoppingCar() {
+  const res = await get('/kol/carts')
+  return res
+}
+
+/**
+ * 删除购物车平台下的kol
+ */
+export async function delShopping(query: any) {
+  const res = await del('/kol/carts', query)
+  return res
+}
+
+/**
+ * 清空购物车
+ */
+export async function delall(id: any) {
+  const res = await del(`/kol/carts/clean/${id}`)
   return res
 }

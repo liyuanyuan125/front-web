@@ -3,7 +3,7 @@
     <Row>
       <Col >
         <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
-          <PreceptHead />
+          <PreceptHead v-model="dataitem"/>
           <h3 class="layout-titles">投放影片
               <span class="item-detail">优先投放 3 部</span>
               <span class="custom">自定义投放电影</span>
@@ -31,7 +31,7 @@
                   <p style="opacity: .7">受众性别</p>
                   <div class="file-sex-box">
                     <div>
-                      <div class="file-sex-man" :style="{width: `${it.matching * 0.8 + 30}px`, height: `${it.matching * 0.8 + 30}px`}">
+                      <div class="file-sex-man" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.7 + 20}px`}">
                         <img width="30px" height="30" src="./assets/man.png" alt="">
                       </div>
                     </div>
@@ -39,7 +39,7 @@
                   </div>
                   <div class="file-sex-box">
                     <div>
-                      <div class="file-sex-woman" :style="{width: `${it.matching * 0.8 + 30}px`, height: `${it.matching * 0.8 + 30}px`}">
+                      <div class="file-sex-woman" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.7 + 20}px`}">
                         <img width="30px" height="30" src="./assets/man.png" alt="">
                       </div>
                     </div>
@@ -59,12 +59,14 @@
                 </div>
               </li>
             </ul>
-            <div>效果不足时允许系统投放更多影片确保曝光效果</div>
+            <div>
+              <Checkbox v-model="single">效果不足时允许系统投放更多影片确保曝光效果</Checkbox>
+            </div>
           </div>
 
           <h3 class="layout-titles">覆盖影院
             <span class="item-detail">影院总数</span>
-            <span class="custom">下载列表</span>
+            <span class="custom" @click="exportData">下载列表</span>
             <span class="custom" style="margin-right: 160px">自定义投放影院</span>
           </h3>
           <div class="item-top">
@@ -98,39 +100,58 @@
                     <div :class="'border-bottom' + tag"></div>
                   </div>
                   <div class="cineme-input" v-if="tag == 1">
-                    <Input placeholder="影院名称" style="width: 275px">
-                        <Icon type="ios-search" slot="suffix" />
+                    <Input placeholder="影院名称" v-model="form.name" style="width: 275px">
+                        <Icon @click="seach" type="ios-search" slot="suffix" />
                     </Input>
                   </div>
                   <div class="cineme-input" v-if="tag == 2">
-                    <Input placeholder="院线名称" style="width: 275px">
-                        <Icon type="ios-search" slot="suffix" />
+                    <Input v-model="form.name" placeholder="院线名称" style="width: 275px">
+                        <Icon @click="seach" type="ios-search" slot="suffix" />
                     </Input>
                   </div>
                   <div class="cineme-input" v-if="tag == 3">
-                    <Input placeholder="城市名称" style="width: 275px">
-                        <Icon type="ios-search" slot="suffix" />
+                    <Input v-model="form.name" placeholder="城市名称" style="width: 275px">
+                        <Icon @click="seach" type="ios-search" slot="suffix" />
                     </Input>
                   </div>
                   <div class="cineme-input" v-if="tag == 4">
-                    <Input placeholder="省份名称" style="width: 275px">
-                        <Icon type="ios-search" slot="suffix" />
+                    <Input v-model="form.name" placeholder="省份名称" style="width: 275px">
+                        <Icon @click="seach" type="ios-search" slot="suffix" />
                     </Input>
                   </div>
+
                   <Table height="320" :loading="loading"  stripe :columns="columns" :data="tableDate">
-                    <template slot-scope="{ row }" slot="citys">
-                      {{row.name}}
+                    <template v-if="tag == 1" slot-scope="{ row }" slot="citys">
+                      {{row.provinceName}} {{row.cityName}} {{row.countyName}}
                     </template>
 
-                    <template slot-scope="{ row }" slot="code">
-                      {{row.start}}
+                    <template slot-scope="{ row }" slot="estimateShowCount">
+                      {{formatNums(row.estimateShowCount)}}
+                    </template>
+
+                    <template slot-scope="{ row }" slot="estimatePersonCount">
+                      {{formatNums(row.estimatePersonCount)}}
+                    </template>
+                  </Table>
+
+                  <Table height="320" style="display: none" ref="table" :loading="loading"  stripe :columns="columns" :data="tableDate1">
+                    <template v-if="tag == 1" slot-scope="{ row }" slot="citys">
+                      {{row.provinceName}} {{row.cityName}} {{row.countyName}}
+                    </template>
+
+                    <template slot-scope="{ row }" slot="estimateShowCount">
+                      {{formatNums(row.estimateShowCount)}}
+                    </template>
+
+                    <template slot-scope="{ row }" slot="estimatePersonCount">
+                      {{formatNums(row.estimatePersonCount)}}
                     </template>
                   </Table>
 
                   <Page :total="total" v-if="total>0" class="btnCenter"
                     :current="pageIndex"
                     :page-size="pageSize"
-                    :page-size-opts="[6, 20, 50, 100]"
+                    :page-size-opts="[6, 12, 20, 50]"
                     show-total
                     show-sizer
                     show-elevator
@@ -159,8 +180,10 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import PreceptHead from './precepthead.vue'
 import PrecepFilm from './preceptfile.vue'
-import { orienteering, cinemaFilm } from '@/api/popPlan.ts'
+import { orienteering, cinemaFilm, adverdetail, getRecommend, getCheme,
+  getcinemas, getchains, getcities, getprovinces } from '@/api/popPlan.ts'
 import moment from 'moment'
+import { formatCurrency } from '@/fn/string.ts'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
@@ -173,30 +196,96 @@ export default class App extends ViewBase {
   form: any = {
     name: ''
   }
+  dataitem: any = null
   tag = 1
   pageIndex = 1
   pageSize = 6
   tableDate: any = []
   total = 0
+  data: any = {}
   filmList: any = []
+  commendData: any = []
   loading = false
-  columns = [
-    {
-      title: '影院名称',
-      slot: 'citys',
+  single = false
+  tableDate1: any = []
+
+  get columns() {
+    const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
+    const key = ['cinemaName', 'chainName', 'cityName', 'provinceName' ]
+    const one = [{
+      title: tag[this.tag - 1],
+      key: key[this.tag - 1],
       align: 'center'
-    },
-    {
-      title: '转资编号',
-      slot: 'code',
-      align: 'center'
-    },
-    {
-      title: '影院星级',
-      slot: 'code',
-      align: 'center'
+    }]
+    const two = [
+      {
+        title: '包含城市',
+        slot: 'citys',
+        align: 'center'
+      }
+    ]
+    const therr = [
+      {
+        title: '包含影院',
+        key: 'containCinemas',
+        align: 'center'
+      }
+    ]
+    const four = [
+      {
+        title: '所在地',
+        slot: 'citys',
+        align: 'center'
+      }
+    ]
+    const five = [
+      {
+        title: '预估投放场次',
+        key: 'estimateShowCount',
+        slot: 'estimateShowCount',
+        align: 'center'
+      },
+      {
+        title: '预估曝光人次',
+        key: 'estimatePersonCount',
+        slot: 'estimatePersonCount',
+        align: 'center'
+      }
+    ]
+    if (this.tag == 1) {
+      return [
+        ...one,
+        {
+          title: '所属院线',
+          key: 'chainName',
+          align: 'center'
+        },
+        ...four,
+        ...five
+      ]
+    } else if (this.tag == 2 || this.tag == 3) {
+      return [
+        ...one,
+        ...therr,
+        ...five
+      ]
+    } else {
+      return [
+        ...one,
+        {
+          title: '包含城市',
+          key: 'containCities',
+          align: 'center'
+        },
+        {
+          title: '包含影院',
+          key: 'containCinemas',
+          align: 'center'
+        },
+        ...five
+      ]
     }
-  ]
+  }
 
   get rule() {
     return {}
@@ -204,6 +293,10 @@ export default class App extends ViewBase {
 
   formatDate(data: any) {
     return data ? moment(data).format(timeFormat) : '暂无'
+  }
+
+  formatNums(data: any) {
+    return data ? formatCurrency(data) : '暂无'
   }
 
   created() {
@@ -228,19 +321,106 @@ export default class App extends ViewBase {
     this.filmList = data.items || []
   }
 
-  async seach() {
-    const { data: { items }} = await cinemaFilm({})
-    this.tableDate = items || []
-    this.total = this.tableDate.length
+  seach() {
+    if (this.tag == 1) {
+      this.cinemfind()
+    } else if (this.tag == 2) {
+      this.chainsfind()
+    } else if (this.tag == 3) {
+      this.cityfind()
+    } else {
+      this.provienfind()
+    }
+  }
+
+  async cinemfind() {
+    try {
+      const { data } = await getcinemas(22, {
+        name: this.form.name,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
+      })
+      this.tableDate = data.items || []
+      this.total = data.totalCount
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async provienfind() {
+    try {
+      const { data } = await getprovinces(22, {
+        name: this.form.name,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
+      })
+      this.tableDate = data.items || []
+      this.total = data.totalCount
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async cityfind() {
+    try {
+      const { data } = await getcities(22, {
+        name: this.form.name,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
+      })
+      this.tableDate = data.items || []
+      this.total = data.totalCount
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async chainsfind() {
+    try {
+      const { data } = await getchains(22, {
+        name: this.form.name,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
+      })
+      this.tableDate = data.items || []
+      this.total = data.totalCount
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   async next(dataform: any) {
-    this.$emit('input', 3)
     try {
-      const volid = await (this.$refs[dataform] as any).validate()
-      if (volid) {
-        this.$emit('input', 1)
-      }
+      await getCheme({
+        planId: this.$route.params.setid,
+        allowAutoDelivery: this.single ? 1 : 0,
+        planRecommed: { ...this.commendData }
+      })
+      this.$emit('input', 3)
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  exportData() {
+    (this.$refs.table as any).exportCsv({
+        filename: '你好',
+        original: false,
+        data: [{
+          name: '小明'
+        }]
+    })
+  }
+
+  async cinemaFind() {
+    try {
+      const { data } = await getRecommend({
+        budgetAmount: 100000,
+        specification: 15,
+        beginDate: 20190701,
+        endDate: 20190702
+      })
+      this.commendData = data
     } catch (ex) {
       this.handleError(ex)
     }
@@ -248,10 +428,19 @@ export default class App extends ViewBase {
 
   tags(id: any) {
     this.tag = id
+    this.form.name = ''
+    this.pageIndex = 1
+    this.pageSize = 6
+    this.seach()
   }
 
   back(dataform: any) {
     this.$emit('input', 1)
+  }
+
+  @Watch('dataitem', { deep: true })
+  watchDataitem(val: any) {
+    this.cinemaFind()
   }
 }
 </script>
@@ -259,7 +448,7 @@ export default class App extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 .plan-box {
-  margin: 0 40px;
+  margin: 0 20px;
 }
 .layout-titles {
   font-size: 24px;
@@ -376,7 +565,7 @@ export default class App extends ViewBase {
       }
       .file-sex-box {
         margin-left: 10px;
-        width: 130px;
+        width: 110px;
         text-align: center;
         span {
           text-align: center;
@@ -430,7 +619,7 @@ export default class App extends ViewBase {
 .cinema-box {
   display: flex;
   margin-right: 20px;
-  overflow: auto;
+  overflow: hidden;
   max-height: 498px;
   .cinema-right {
     display: flex;
@@ -442,6 +631,7 @@ export default class App extends ViewBase {
       background: rgba(255, 255, 255, 0.3);
       border: 1px solid #fff;
       position: relative;
+      cursor: pointer;
       &:not(:first-child) {
         margin-top: 8px;
       }
@@ -491,7 +681,10 @@ export default class App extends ViewBase {
           border-radius: 5px;
           background: rgba(255, 255, 255, 0.3);
           border: 1px solid #fff;
-          color: #fff;
+          color: #00202d;
+          &::placeholder {
+            color: #00202d;
+          }
         }
         /deep/ .ivu-input-suffix {
           background: #00202d;
@@ -575,6 +768,60 @@ export default class App extends ViewBase {
   left: -1px;
   background: #fff;
   width: 1px;
+}
+/deep/ .ivu-table-wrapper {
+  border-radius: 5px;
+  min-height: 280px;
+  position: relative;
+  /deep/ .ivu-table-header th {
+    height: 60px;
+    background: rgba(255, 255, 255, 0.3);
+    color: #00202d;
+    line-height: 60px;
+    span {
+      font-size: 14px;
+    }
+  }
+  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-row {
+    background: rgba(255, 255, 255, 0);
+    /deep/ td {
+      color: #00202d;
+      background: rgba(0, 0, 0, 0);
+      a {
+        color: #4fa6bb;
+      }
+    }
+    border-bottom: 2px solid rgba(255, 255, 255, .5);
+  }
+  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
+    span {
+      color: #00202d;
+      font-size: 14px;
+    }
+  }
+
+  /deep/ .ivu-table-tip {
+    line-height: 200px;
+    /deep/ td {
+      color: #00202d;
+      background: rgba(255, 255, 255, 0);
+    }
+  }
 }
 </style>
 
