@@ -179,7 +179,7 @@ export default class FigurePage extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-@import './style.less';
+@import '~@/style/platform/index.less';
 
 .main-content {
   position: relative;

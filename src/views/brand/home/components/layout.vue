@@ -12,7 +12,7 @@
           <em class="hot-value">{{hot.value}}</em>
           <i :class="`hot-${hot.inc > 0 ? 'inc' : 'dec'}`" v-if="hot.inc != 0">{{hot.inc}}</i>
         </div>
-        <div class="hot-chart"></div>
+        <TrendChart :value="hot.list" class="hot-chart"/>
       </div>
 
       <div class="summary-count">
@@ -107,19 +107,20 @@
               :key="it.id"
               class="kol-item"
               :class="{
-                [`kol-item-${it.type}`]: true,
-                'kol-item-recommended': it.recommended
+                'item-recommended': it.recommended
               }"
             >
               <figure class="kol-figure">
                 <img :src="it.avatar" class="kol-img">
               </figure>
               <a class="kol-add">加入投放</a>
-              <div class="kol-name">{{it.name}}</div>
-              <div class="kol-title" v-if="it.title">{{it.title}}</div>
-              <div class="kol-fans" v-if="it.fans">
-                关注数：
-                <em>{{it.fans}}</em>
+              <div class="kol-name text-omit">
+                <i :class="`platform-icon-${it.type}`"></i>
+                <span>{{it.name}}</span>
+              </div>
+              <div class="kol-title text-omit" v-if="it.title">{{it.title}}</div>
+              <div class="kol-fans text-omit" v-if="it.fans">
+                关注数：<em>{{it.fans}}</em>
               </div>
             </li>
           </ul>
@@ -135,17 +136,16 @@
             <router-link :to="{}">去申请 &gt;</router-link>
           </div>
 
-          <div class="film-recommend">
+          <div class="film-recommend item-recommended">
             <figure class="film-figure">
               <img :src="film.recommend.cover" class="film-img">
             </figure>
             <div class="film-main">
-              <div class="film-name">{{film.name}}</div>
-              <div class="film-date">{{film.date}}</div>
-              <div class="film-type">{{film.type}}</div>
+              <div class="film-name text-omit">{{film.recommend.name}}</div>
+              <div class="film-date">{{film.recommend.date}}</div>
+              <div class="film-type text-omit">{{film.recommend.type}}</div>
               <div class="film-rate">
-                用户匹配度：
-                <em>{{film.rate}}</em>
+                用户匹配度：<em>{{film.recommend.rate}}</em>
               </div>
             </div>
           </div>
@@ -163,13 +163,15 @@
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Pane from './pane.vue'
+import TrendChart from '@/components/trendChart'
 import BScroll from '@better-scroll/core'
 
 type Type = 'brand' | 'item'
 
 @Component({
   components: {
-    Pane
+    Pane,
+    TrendChart
   }
 })
 export default class BrandHomeLayout extends ViewBase {
@@ -252,15 +254,15 @@ export default class BrandHomeLayout extends ViewBase {
   }
 
   film = {
-    pendCount: 2,
-    runningCount: 2,
+    pendCount: 0,
+    runningCount: 0,
     recommend: {
       id: 1,
       name: '莫言清风不识字',
       cover: 'https://picsum.photos/id/268/320/480',
       date: '2019-09-30上映',
       type: '剧情/冒险',
-      rate: '88.88%'
+      rate: '88%'
     }
   }
 
@@ -278,7 +280,7 @@ export default class BrandHomeLayout extends ViewBase {
         momentum: false,
       })
       this.$nextTick(() => {
-        this.bscrollOn = this.bscroll.hasHorizontalScroll
+        this.bscrollOn = this.bscroll!.hasHorizontalScroll
       })
     }
   }
@@ -308,8 +310,20 @@ export default class BrandHomeLayout extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/style/platform/index.less';
 
 @color-bar: fade(#35c4de, 50);
+
+.button-style(@fontSize: 12px) {
+  font-size: @fontSize;
+  color: #fff;
+  border-radius: 88px;
+  background-color: #008ed7;
+  text-align: center;
+  &:hover {
+    opacity: .88;
+  }
+}
 
 .pane-like {
   border: 1px solid rgba(68, 216, 254, 0.6);
@@ -417,7 +431,6 @@ export default class BrandHomeLayout extends ViewBase {
   width: 96px;
   height: 42px;
   margin: 20px 0 0 11px;
-  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .pop-count {
@@ -601,5 +614,142 @@ export default class BrandHomeLayout extends ViewBase {
 
 .content-right {
   width: 270px;
+}
+
+.count-stats {
+  line-height: 46px;
+  font-size: 16px;
+  background-color: fade(#11333a, 80);
+  text-align: center;
+  > label,
+  > a {
+    margin: 0 18px;
+  }
+}
+
+.kol-list {
+  display: flex;
+  padding: 20px 10px 14px;
+  color: rgba(255, 255, 255, .9);
+  line-height: 24px;
+}
+
+.kol-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}
+
+.item-recommended {
+  position: relative;
+  &::before {
+    content: '推荐';
+    position: absolute;
+    top: -6px;
+    left: 2px;
+    width: 48px;
+    height: 22px;
+    line-height: 22px;
+    font-size: 14px;
+    color: fade(#000, 90);
+    background-color: #ff6d6d;
+    text-align: center;
+  }
+}
+
+.kol-figure {
+  width: 74px;
+  height: 74px;
+  border: 1px solid @color-bar;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.kol-add {
+  display: block;
+  width: 84px;
+  height: 24px;
+  line-height: 24px;
+  margin-top: -5px;
+  .button-style;
+}
+
+.kol-name,
+.kol-title,
+.kol-fans {
+  max-width: 120px;
+}
+
+.kol-name {
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+  [class^=platform-icon] {
+    transform: scale(.7);
+  }
+  .platform-icon-wechat {
+    width: 22px;
+  }
+}
+
+.kol-img {
+  width: 100%;
+  height: 100%;
+}
+
+.film-pane {
+  margin-top: 10px;
+  padding-bottom: 20px;
+}
+
+.film-recommend {
+  display: flex;
+  margin: 44px 0 0 11px;
+  &::before {
+    top: -28px;
+  }
+}
+
+.film-figure {
+  width: 110px;
+  height: 158px;
+}
+
+.film-img {
+  width: 100%;
+  height: 100%;
+}
+
+.film-main {
+  width: 120px;
+  margin: -8px 0 0 8px;
+  font-size: 12px;
+  line-height: 2;
+}
+
+.film-name {
+  font-size: 20px;
+}
+
+.film-rate {
+  color: #ff6d6d;
+  margin-top: 18px;
+  em {
+    font-size: 16px;
+  }
+}
+
+.film-acts {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.film-apply {
+  width: 108px;
+  height: 30px;
+  padding: 0;
+  .button-style(14px);
 }
 </style>
