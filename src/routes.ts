@@ -1040,7 +1040,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/filmmakerdetail/moreinformation',
     name: 'film-filmmakerdetail-moreinformation',
     component: () => import('./views/film/filmmakerDetails/moreInformation.vue'),
-    meta: emptyAuth
+    meta: emptyAuth,
+    props: idProps,
   },
 
   // [直客] 品牌管理（详情页）登录判断
