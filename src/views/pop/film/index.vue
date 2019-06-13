@@ -7,7 +7,7 @@
         <Icon type="ios-add" size="27"/>新建广告片
       </Button>
     </div>
-    <Form :model="form" class="jydate-form flex-box">
+    <Form :model="form" class="jydate-form flex-box jyd-form">
       <Select v-model="form.status" clearable placeholder="广告片状态" class="select-wid" >
           <Option v-for="item in statusList" v-if="item.key != 6" :key="item.key" :value="item.key">{{item.text}}</Option>
       </Select>
@@ -273,5 +273,11 @@ export default class Main extends ViewBase {
     font-size: 14px;
   }
 }
-
+.jydate-form {
+  padding: 40px 0 44px;
+  .select-wid {
+    width: 160px;
+    margin-right: 20px;
+  }
+}
 </style>

@@ -871,9 +871,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // kol - 检测
   {
-    path: '/kol/order/taskDetection/:id',
+    path: '/kol/order/taskDetection',
     name: 'order-order-taskDetection',
     component: () => import('./views/kol/order/taskDetection.vue'),
+    meta: emptyAuth,
+  },
+
+  // kol - 检测详情
+  {
+    path: '/kol/order/taskDetection/detail/:id',
+    name: 'order-order-taskDetection-detail',
+    component: () => import('./views/kol/order/taskdet.vue'),
     meta: emptyAuth,
   },
 
@@ -1032,7 +1040,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/filmmakerdetail/moreinformation',
     name: 'film-filmmakerdetail-moreinformation',
     component: () => import('./views/film/filmmakerDetails/moreInformation.vue'),
-    meta: emptyAuth
+    meta: emptyAuth,
+    props: idProps,
   },
 
   // [直客] 品牌管理（详情页）登录判断
@@ -1046,6 +1055,40 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       title: '品牌管理',
     }
   },
+
+  // 品牌 - 首页
+  {
+    path: '/brand/:id',
+    name: 'brand-home',
+    component: () => import('./views/brand/home/index.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '品牌',
+    },
+    props: idProps,
+  },
+
+  // 品牌 - 产品 - 首页
+  {
+    // brandId 为品牌 id，id 为产品 id
+    // TODO: brandId 可能是多余的，若 id 能唯一确认，就将 brandId 去掉
+    path: '/brand/:brandId/item/:id',
+    name: 'brand-item',
+    component: () => import('./views/brand/home/item.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '产品',
+    },
+    props({ params: { brandId, id } }: Route) {
+      return {
+        id: +id,
+        brandId: +brandId,
+      }
+    }
+  },
+
   // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
   {
     path: '/brand/moredetail/:id/:brandId',

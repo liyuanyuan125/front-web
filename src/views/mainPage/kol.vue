@@ -13,6 +13,7 @@
         <BasicPane
           :item="basic"
           :more="{ name: 'kol-detail-platform', params: { id } }"
+          :brand="{name: 'kol-detail-brand', params: { id }}"
           :platformList="platformList"
           :brandList="brandList"
         />
@@ -64,7 +65,7 @@
           <OpusPane
             title="热门作品"
             :data="opusData"
-            :more="{ name: 'home' }"
+            :more="{ name: 'kol-detail-opus', params: { id }}"
             class="opus-pane"
           />
         </div>

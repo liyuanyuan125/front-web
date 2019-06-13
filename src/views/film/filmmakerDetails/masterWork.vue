@@ -72,6 +72,8 @@
 <script lang='ts'>
 import {Component} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import {personMovies } from '@/api/filmPersonDetail'
+
 @Component
 export default class Master extends ViewBase {
   // 时间排序0，评分排序1
@@ -306,7 +308,18 @@ export default class Master extends ViewBase {
 
   mounted() {
     this.tableList = this.filmList
+    this.list()
   }
+
+  async list() {
+    const id = 107028
+    try {
+      const { data } = await personMovies(id)
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
   handlePro(id: any) {
     this.timeSort = id
     this.tableList = this.timeSort == 0 ? this.filmList : this.gradeList

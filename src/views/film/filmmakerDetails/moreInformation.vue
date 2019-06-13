@@ -2,31 +2,29 @@
   <div class="personal-information">
     <h2 class="nav-title">人物简介</h2>
     <ul class="personal-mes">
-      <li><span>出生日期：</span><span>90-90-90</span></li>
-      <li> <span>身高: 1766cm</span> </li>
-      <li><span>出生地：</span><span>中国，北京</span></li>
-      <li><span>体重: 65kg</span></li>
+      <li><span>出生日期：</span><span>{{item.birthday}}</span></li>
+      <li> <span>身高: {{item.height}}</span> </li>
+      <li><span>出生地：</span><span>{{item.country}},{{item.province}},{{item.city}}</span></li>
+      <li><span>体重: {{item.weight}}</span></li>
     </ul>
-    <div class="personal-text">
-      吴京，被誉为“功夫小子”，从1995年就开始接拍电视剧和电影，其引路人便是《少林寺》以及《少林武王》的导演张鑫炎，而吴京的武术教练也就是李连杰的教练吴彬。当年还在武术队里奋斗的吴京被张鑫炎看中，
-      于是和师兄李连杰一样，顺利地加入了娱乐圈。两人的经历惊人地相似。2005年后吴京搬
-    </div>
+    <div class="personal-text">{{item.introduction}}</div>
     <h2 class="nav-title">人物关系</h2>
     <ul class="personal-relation">
       <li v-for="item in personalList" :key="item.id">
         <p class="per-title font_16">{{item.title}}</p>
         <p class="head-img"><img :src="item.headImg" /></p>
         <p class="per-name font_18">{{item.name}}</p>
-        <p class="per-englist font_18">{{item.englist}}</p>
-        <p><span v-for="(it, index) in item.idtentity" :key="index">{{it}}<em v-if="item.idtentity.length-1 != index"> / </em></span></p>
+        <p class="per-englist font_18">{{item.nameEn || '暂无'}}</p>
+        <p><span v-for="(it, index) in (item.professions || [])" :key="index">{{it}}<em v-if="item.idtentity.length-1 != index"> / </em></span></p>
         <p>代表作品</p>
-        <p><span v-for="(na, index) in item.production" :key="index"><a href="" target="_blank">《{{na.text}}》</a></span></p>
+        <p><span v-for="it in item.movies" :key="it.id">《{{it.name}}》</span></p>
       </li>
     </ul>
-    <h2 class="nav-title">图片（{{imgUrl.length}}）</h2>
-    <transition-group name="list" tag="ul" class="loading-img">
-      <li v-for="img in imgList" :key="img.key"><img :src="img.img"/></li>
-    </transition-group>
+    <h2 class="nav-title">图片（{{imgList.length}}）</h2>
+    <ul name="list" v-if="imgList.length" tag="ul" class="loading-img">
+      <li v-for="(img, index) in imgList" :key="index"><img :src="img" alt=""/></li>
+    </ul>
+
     <div class="show-all" v-if="imgUrl.length > 5">
       <span @click="handleToggle">{{tabShowTitle}}<Icon :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}" type="ios-arrow-down" size="25" /></span>
     </div>
@@ -34,93 +32,52 @@
 </template>
 
 <script lang='ts'>
-import {Component} from 'vue-property-decorator'
+import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { personIntro } from '@/api/filmPersonDetail'
 // import { swiper, swiperSlide } from 'vue-awesome-swiper'
 // import 'swiper/dist/css/swiper.css'
 
 @Component
 export default class Information extends ViewBase {
+  @Prop({ type: Number, default: 0 }) id!: number
+
   tabShowTitle = '展示全部'
   arrowFlag = 0
 
-  imgUrl = [
-    { key: 1, img: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg'},
-    { key: 2, img: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg'},
-    { key: 3, img: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg'},
-    { key: 4, img: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg'},
-    { key: 5, img: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg'},
-    { key: 6, img: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg'},
-  ]
+  item = {}
+  imgUrl = []
   imgList: any = []
-  personalList = [
-    {
-      title: '合作最多的导演',
-      id: 1,
-      headImg: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg',
-      name: '选和平',
-      englist: 'yuanyuan.li',
-      idtentity: ['导演'],
-      production: [
-        { key: 1, text: '舞动1', url: ''},
-        { key: 2, text: '舞动2', url: ''},
-        { key: 3, text: '舞动3', url: ''},
-        { key: 4, text: '舞动4', url: ''},
-        { key: 5, text: '舞动5', url: ''},
-        { key: 6, text: '舞动3xxxxxx', url: ''},
-        { key: 7, text: '舞动4xxxx', url: ''},
-        { key: 8, text: '舞动5', url: ''},
-      ]
-    },
-    {
-      title: '合作最多的导演',
-      id: 2,
-      headImg: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg',
-      name: '选和平',
-      englist: 'yuanyuan.li',
-      idtentity: ['导演', '制作人'],
-      production: [
-        { key: 1, text: '舞动1', url: ''},
-        { key: 2, text: '舞动2', url: ''},
-        { key: 3, text: '舞动3', url: ''},
-        { key: 4, text: '舞动4', url: ''},
-        { key: 5, text: '舞动5', url: ''},
-      ]
-    },
-    {
-      title: '合作最多的导演',
-      id: 3,
-      headImg: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg',
-      name: '选和平',
-      englist: 'yuanyuan.li',
-      idtentity: ['导演', '制作人'],
-      production: [
-        { key: 1, text: '舞动1', url: ''},
-        { key: 2, text: '舞动2', url: ''},
-        { key: 3, text: '舞动3', url: ''},
-        { key: 4, text: '舞动4', url: ''},
-        { key: 5, text: '舞动5', url: ''},
-      ]
-    },
-    {
-      title: '合作最多的导演',
-      id: 4,
-      headImg: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg',
-      name: '选和平',
-      englist: 'yuanyuan.li',
-      idtentity: ['导演', '制作人'],
-      production: [
-        { key: 1, text: '舞动1', url: ''},
-        { key: 2, text: '舞动2', url: ''},
-        { key: 3, text: '舞动3', url: ''},
-        { key: 4, text: '舞动4', url: ''},
-        { key: 5, text: '舞动5', url: ''},
-      ]
-    },
-  ]
+  personalList: any = []
   mounted() {
-    this.imgList = this.imgUrl.slice(0, 5)
+    this.tableList()
+    // this.imgList = this.imgUrl.slice(0, 5)
   }
+
+  async tableList() {
+    const id = 107028 // this.id
+    try {
+      const { data: { item, professions} } = await personIntro(id)
+      this.item = item || {}
+      this.imgList = item.images || []
+      // 合并数据
+      item.directorPartner ?  this.personalList.push({
+          title: '合作过最多的导演',
+          ...item.directorPartner
+        }) : null
+      item.malePartner ? this.personalList.push({
+          title: '合作过最多的男演员',
+          ...item.malePartner
+        }) : null
+      item.femalePartner ? this.personalList.push({
+          title: '合作过最多的女演员',
+          ...item.malePartner
+        }) : null
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
   handleToggle() {
     if (!this.arrowFlag) {
       this.arrowFlag = 1

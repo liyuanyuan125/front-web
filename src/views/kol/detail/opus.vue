@@ -1,141 +1,134 @@
 <template>
   <div class="brand-list com-modal">
-    <div class="select-brand com-modal-title ">
+    <div class="select-brand com-modal-title">
       <span>90日热门内容</span>
-      <Select v-model="plat" size="small" style="width:100px">
-        <Option v-for="item in platformList" :value="item.key" :key="item.key" @click="platSelect">{{ item.text }}</Option>
+      <Select v-model="form.channelCode" style="width:100px">
+        <Option v-for="item in platformList" :value="item.key" :key="item.key">{{ item.text }}</Option>
       </Select>
     </div>
 
     <div class="query-select">
-      <Tabs class="" v-model="tabKey" @on-click="handleChangeTab">
+      <Tabs class="" v-model="form.sortBy">
         <TabPane v-for="item in selectOption" :key="item.key" :label="item.text"></TabPane>
       </Tabs>
     </div>
 
-    <div class="list-items">
+    <div class="list-items"> 
       <div class="item" v-for="item in list" :key="item.id">
         <div class="item-inner flex-box">
-          <a :href="item.videoUrl" target="_blank" class="video-url" >
+          <a :href="item.url" target="_blank" class="video-url" >
             <i></i>
-            <img :src="item.imgUrl" alt="" class="img" />
+            <img :src="item.coverPic" :onerror="defaultImg" alt="" class="img" />
           </a>
           <div class="inner-right">
             <p class="title" :title="item.title">{{handleSlice(item.title)}}</p>
             <p class="icon-num">
-              <span><i class="iconfont icon-shipin" size="20" />{{item.videoNum}}万</span>
-              <span><i class="iconfont icon-dianzan1" size="20" />{{item.likesNum}}万</span>
-              <span><i class="iconfont icon-dianping" size="20" />{{item.remarkNum}}万</span>
+              <span><i class="iconfont icon-shipin"  /><em>{{item.playCout}}万</em></span>
+              <span><i class="iconfont icon-dianzan"  /><em>{{item.likeCount}}万</em></span>
+              <span><i class="iconfont icon-dianping"  /><em>{{item.commentCount}}万</em></span>
             </p>
-            <p class="times">{{item.time}}</p>
+            <p class="times">{{item.publishTime}}</p>
           </div>
         </div>
       </div>
     </div>
+    <div v-if="list.length == 0" class="no-data-list"> 暂无数据</div>
+    <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
   </div>
 </template>
 
 <script lang='ts'>
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { opusList } from '@/api/kolDetails'
+import { querySelectList } from '@/api/brandList'
+import defaultImg from '../assets/error.png'
+import pagination from '@/components/page.vue'
 
-@Component
+@Component({
+  components: {
+    pagination
+  }
+})
 export default class Opus extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
+  total = 0
+  pageList = {
+    pageIndex: 1,
+    pageSize: 20
+  }
+
+  form = {
+    channelCode: '',
+    sortBy: 0
+  }
   // 选择平台
-  plat = 0
+  platformList = []
 
-  platformList = [
-    {key: 0, text: '微博'},
-    {key: 1, text: '微信'},
-    {key: 2, text: '抖音'},
-    {key: 3, text: '快手'},
-    {key: 4, text: '小红书'},
-  ]
-
-  tabKey = ''
-
-  selectOption = [
-    {key: 0, text: '点赞数'},
-    {key: 1, text: '播放数'},
-    {key: 2, text: '评论数'},
-    {key: 3, text: '最新'},
-  ]
-
-  videoUrl = 'https://www.mihui.com/api/video/search/redirect/?real_url=https%3A//www.bilibili.com/video/av52387972/'
+  // 排序
+  selectOption = []
 
   list = [
-    {
+     {
       id: 0,
-      imgUrl: 'http://i2.hdslb.com/bfs/archive/2132cfef0cf5762ce191171bf24f287e000009e8.jpg',
-      videoUrl: this.videoUrl,
+      imgUrl: '',
+      videoUrl: '',
       time: '20120-12-12 30:00',
       title: '我家的马桶香香的~（最后的马桶香香的~（最后马桶香香的~（最后',
       videoNum: 10,
       likesNum: 10,
       remarkNum: 3,
     },
-    {
-      id: 1,
-      imgUrl: 'http://i2.hdslb.com/bfs/archive/2132cfef0cf5762ce191171bf24f287e000009e8.jpg',
-      videoUrl: this.videoUrl,
-      time: '20120-12-12 30:00',
-      title: '我家的马桶香香的~（最后的',
-      videoNum: 10,
-      likesNum: 10,
-      remarkNum: 3,
-    },
-    {
-      id: 2,
-      imgUrl: 'http://i2.hdslb.com/bfs/archive/2132cfef0cf5762ce191171bf24f287e000009e8.jpg',
-      videoUrl: this.videoUrl,
-      time: '20120-12-12 30:00',
-      title: '我家的马桶香香的~（最后的',
-      videoNum: 10,
-      likesNum: 10,
-      remarkNum: 3,
-    },
-    {
-      id: 3,
-      imgUrl: 'http://i2.hdslb.com/bfs/archive/2132cfef0cf5762ce191171bf24f287e000009e8.jpg',
-      videoUrl: this.videoUrl,
-      time: '20120-12-12 30:00',
-      title: '我家的马桶香香的~（最后的',
-      videoNum: 10,
-      likesNum: 10,
-      remarkNum: 3,
-    },
-    {
-      id: 4,
-      imgUrl: 'http://i2.hdslb.com/bfs/archive/2132cfef0cf5762ce191171bf24f287e000009e8.jpg',
-      videoUrl: this.videoUrl,
-      time: '20120-12-12 30:00',
-      title: '我家的马桶香香的~（最后的',
-      videoNum: 10,
-      likesNum: 10,
-      remarkNum: 3,
-    },
-    {
-      id: 5,
-      imgUrl: 'http://i2.hdslb.com/bfs/archive/2132cfef0cf5762ce191171bf24f287e000009e8.jpg',
-      videoUrl: this.videoUrl,
-      time: '20120-12-12 30:00',
-      title: '我家的马桶香香的~（最后的',
-      videoNum: 10,
-      likesNum: 10,
-      remarkNum: 3,
-    },
   ]
 
-  handleChangeTab() {}
+  get defaultImg() {
+    return `this.src = '${defaultImg}'`
+  }
+
+  mounted() {
+    this.tableList()
+    this.querySelectList()
+  }
+
+  async tableList() {
+    try {
+      const {data: { items, totalCount, sortByList}} = await opusList({
+        ...this.form,
+        ...this.pageList,
+        sortBy: this.form.sortBy + 1,
+        id: this.id,
+      })
+      this.list = items || []
+      this.total = totalCount
+      this.selectOption = sortByList
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  // 获取推广平台
+  async querySelectList() {
+    try {
+      const { data: {channelCodeList} } = await querySelectList()
+      this.platformList = channelCodeList
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
 
   handleSlice(text: string) {
     return text.length > 15 ? text.substring(0, 15) + '.....' : text
   }
 
-  platSelect(id: any) {
-    this.plat = id
+  uplist(size: any) {
+    this.pageList.pageIndex = size
+    this.tableList()
+  }
+
+  @Watch('form', {deep: true})
+  watchForm() {
+    this.tableList()
   }
 }
 </script>
@@ -143,24 +136,22 @@ export default class Opus extends ViewBase {
 <style lang='less' scoped>
 @import '~@/site/lib.less';
 @import '~@/views/kol/less/common.less';
-
-.iconfont {
-  font-size: 20px;
-  color: #a3d5e6;
-  padding-right: 8px;
-}
-/deep/ .ivu-tabs {
+// @import '~@/views/brand/less/common.less';
+.no-data-list {
+  text-align: center;
   color: #fff;
-  .ivu-tabs-tab {
-    line-height: 45px;
-  }
-  .ivu-tabs-tab-active {
-    color: #fff;
-    font-size: 14px;
-  }
+  font-size: 15px;
 }
+.iconfont {
+  font-size: 19px;
+  color: #a3d5e6;
+  padding-right: 5px;
+  position: relative;
+  top: 2px;
+}
+
 .brand-list {
-  margin: 30px 36px 50px;
+  margin: 0 20px 30px;
   font-size: 14px;
   .select-brand {
     padding-left: 30px;
@@ -178,7 +169,7 @@ export default class Opus extends ViewBase {
     }
   }
   .list-items {
-    padding: 0 30px 40px;
+    padding: 0 30px 20px;
     margin-left: -15px;
     margin-right: -15px;
     display: flex;
@@ -195,6 +186,9 @@ export default class Opus extends ViewBase {
         height: 200px;
         .video-url {
           position: relative;
+          display: block;
+          width: 220px;
+          height: 200px;
           i {
             display: block;
             width: 50px;
@@ -208,35 +202,33 @@ export default class Opus extends ViewBase {
           }
         }
         .inner-right {
-          padding: 29px 20px 27px;
+          padding: 25px 15px 25px;
+          color: #fff;
           .icon-num {
             font-size: 14px;
             span {
-              padding-right: 20px;
+              padding-right: 10px;
             }
           }
           .times {
-            font-size: 20px;
+            font-size: 14px;
             padding-top: 12px;
           }
         }
         .title {
-          font-size: 18px;
+          font-size: 17px;
           overflow: hidden;
           height: 80px;
-          line-height: 25px;
+          text-align: justify;
           color: #a3d5e6;
         }
         .img {
-          width: 240px;
+          width: 220px;
           height: 200px;
           border-radius: 8px;
         }
       }
     }
   }
-}
-.active-tab {
-  color: @c-res-btn;
 }
 </style>

@@ -260,6 +260,9 @@ export default class Main extends Vue {
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 1);
 }
+/deep/ .ivu-input-placeholder {
+  color: #00202d;
+}
 .mu-li {
   height: 50px;
   background: rgba(0, 32, 45, 1);
@@ -294,5 +297,46 @@ export default class Main extends Vue {
   border-radius: 12px;
   font-weight: 400;
   color: rgba(255, 255, 255, 1);
+}
+/deep/ .btnCenter {
+  text-align: center;
+  height: 100px;
+  background: rgba(32, 67, 80, 1);
+  margin: 0 20px 0 20px;
+  line-height: 100px;
+  color: #fff;
+}
+/deep/ .ivu-page-prev {
+  border: 0;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-page-next {
+  border: 0;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-page-item-active {
+  border-color: #eee;
+  background: #eee !important;
+  border-radius: 50%;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+}
+/deep/ .ivu-page-item {
+  border: 0;
+  display: inline-block;
+  vertical-align: middle;
+  background: rgba(32, 67, 80, 1);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 4px;
+  text-align: center;
+  list-style: none;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 </style>
