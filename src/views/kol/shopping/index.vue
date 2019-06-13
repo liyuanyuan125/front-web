@@ -346,12 +346,12 @@ export default class DlgEditCinema extends ViewBase {
       })
     })
     sessionStorage.setItem('shopList', JSON.stringify(this.sumList))
-    // this.$router.push({
-    //   name: 'order-orderfill',
-    //   params: {
-    //     id: this.$route.params.id || 'weibo'
-    //   }
-    // })
+    this.$router.push({
+      name: 'order-orderfill',
+      params: {
+        code: this.$route.params.id || 'weibo'
+      }
+    })
   }
 
   handleSelectAll() {

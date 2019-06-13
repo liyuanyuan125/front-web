@@ -98,7 +98,7 @@
         <p>订单金额（不含撰稿费用）：<b>¥167,200</b></p>
       </div>
     </div>
-    <component v-if="comloading" ref="detailbox" :id="$route.params.id" :is="detail"></component>
+    <component v-if="comloading" ref="detailbox" :id="$route.params.code" :is="detail"></component>
     <div class="btn-center">
       <Button type="primary" class="button-ok" @click="next('dataform')">提交订单</Button>
     </div>
@@ -152,7 +152,7 @@ export default class Main extends ViewBase {
   }
 
   get koltitle() {
-    const index = this.title.findIndex((it: any) => it == this.$route.params.id)
+    const index = this.title.findIndex((it: any) => it == this.$route.params.code)
     return this.titles[index]
   }
 
@@ -227,7 +227,7 @@ export default class Main extends ViewBase {
 
   async init() {
     try {
-      if (this.$route.params.type) {
+      if (this.$route.params.code) {
         // const { data } = await queryList({})
       } else {
         this.tableDate = JSON.parse(sessionStorage.getItem('shopList') as any)
@@ -286,9 +286,9 @@ export default class Main extends ViewBase {
 
   @Watch('$route.params', {immediate: true})
   watch$routeParams(val: any) {
-    if (val.id == 'weibo') {
+    if (val.code == 'weibo') {
       this.detail = webo
-    } else if (val.id == 'weixin') {
+    } else if (val.code == 'weixin') {
       this.detail = wbDtail
     } else {
       this.detail = otherdetail

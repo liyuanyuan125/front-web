@@ -71,7 +71,7 @@ export default class DlgEditCinema extends ViewBase {
   form: any = {
     img: [],
     summary: '',
-    publishTime: [],
+    publishTime: '',
     publishCategoryCode: '',
     url: '',
 
@@ -81,7 +81,7 @@ export default class DlgEditCinema extends ViewBase {
 
   startDate: any = {
     disabledDate: (date: any) => {
-      return date && date.valueOf() < Date.now()
+      return date && date.valueOf() < Date.now() + 3600 * 1000 * 24
     }
   }
 
@@ -91,6 +91,7 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   open() {
+
   }
 
   drop(name: any) {
