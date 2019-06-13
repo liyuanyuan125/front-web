@@ -30,17 +30,19 @@ export default class Pane extends Vue {
   color: #fff;
   font-size: 14px;
   user-select: none;
-  border: 1px solid rgba(68, 216, 254, .5);
+  border: 1px solid rgba(68, 216, 254, .6);
   background-color: rgba(0, 20, 33, .5);
 }
 
 .pane-head {
-  padding: 24px 30px;
+  padding: 12px 18px;
   justify-content: space-between;
   font-weight: 400;
 }
 
 .more-link {
+  position: relative;
+  top: 1px;
   color: #fff;
   opacity: 0.6;
   font-size: 12px;

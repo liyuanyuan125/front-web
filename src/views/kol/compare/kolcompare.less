@@ -1,9 +1,333 @@
-/* 详情更多，可通用于影片、影人、KOL订单详情更多页 */
-.detailmore-card {
+.paneStyle {
+  background:rgba(0,32,45,0.6);
+  border-radius:5px;
+  margin-bottom: 15px;
+}
+.paneStyle3 {
+  background:rgba(0,32,45,1);
+  border-radius:5px;
+  margin-bottom: 15px;
+}
+.dot {
+  display: inline-block;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.title-text3 {
+  font-size:16px;
+  font-weight:500;
+  color:rgba(255,255,255,1);
+  line-height:24px;
+}
+.compare-wp {
+  .title-text {
+    font-size: 20px;
+    padding: 29px 45px 0 45px;
+    color: #fff;
+  }
+}
+.compare-card {
+  background:rgba(0,32,45,0.6);
+  border-radius: 5px;
+  margin-bottom: 15px;
+  .compare-list-item {
+    display: inline-block;
+    text-align: center;
+    .avatar-wp {
+      width: 100px;
+      position: relative;
+      display: inline-block;
+      .remove-link {
+        position: absolute;
+        right: -6px;
+        top: 0;
+        & :hover {
+          opacity: 0.7;
+        }
+      }
+      img {
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+      }
+    }
+    .nickName-wp {
+      font-size:18px;
+      font-weight:400;
+      display: flex;
+      flex-flow: row;
+      justify-content: center;
+      align-items: center;
+      i {
+        width: 15px;
+        height: 15px;
+        .dot
+      }
+      span {
+        .cut-text;
+        color: #fff;
+      }
+    }
+  }
+  & .inner-box {
+    padding: 40px;
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  ul {
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    li {
+      width: 25%;
+      text-align: center;
+    }
+  }
+  & .central {
+    position: relative;
+    padding:0px 7% 0 5%;
+    margin-right: 7%;
+    &::after {
+      position: absolute;
+      top: 10px;
+      right: 0;
+      content: '';
+      height: 120px;
+      border-right: 1px solid rgba(255,255,255,0.25);
+      display: inline-block;
+    }
+    & .remove-link {
+      display: none;
+    }
+  }
+}
+.fans-card {
+  .paneStyle;
+  padding-bottom: 42px;
+}
+.brand-card {
+  .paneStyle;
+  padding-bottom: 42px;
+  .wp {
+    padding-top: 20px;
+  }
+}
+.total-pane {
+  padding: 0px 50px;
+  position: relative;
+  .wp {    
+    .paneStyle3;
+    .in {
+      border-radius:5px;
+      padding: 26px 40px;
+      display: flex;
+      flex-flow: row;
+      justify-content: center;
+      align-items: center;
+      .t {
+        .title-text3;
+        width: 10%;
+      }
+      .l {
+        flex:1;
+        ul {
+          display: flex;
+          flex-flow: row;
+          justify-content: space-between;
+          align-items: center;
+          li {
+            margin-right: 50px;
+            &::last-child {
+              margin-right: 0;
+            }
+            span {
+              font-size:16px;
+              font-weight:400;
+              color:rgba(255,255,255,1);
+              padding-right: 8px;
+            }
+            em {
+              font-size:16px;
+              font-weight:500;
+              color:rgba(0,182,204,1);
+            }
+          }
+        }
+      }
+    }
+  }
+  i.arrow-up {
+    position: absolute;
+    top: -30px;
+    width:0; 
+    height:0; 
+    border-left:30px solid transparent;
+    border-right:30px solid transparent;
+    border-bottom:30px solid rgba(0,32,45,1);
+    &.a0 {
+      left: 13%;
+    }
+    &.a1 {
+      left: 31.5%;
+    }    
+    &.a2 {
+      right: 46.5%;
+    }    
+    &.a3 {
+      right: 28%;
+    }
+    &.a4 {
+      right: 9.5%;
+    }
+  }
+}
+.sex-age-pane {
+  margin-bottom: 15px;
+  .wp {
+    padding: 0px 50px;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    & .cell {
+      width: 49.5%;
+    }
+  }
+  .in {
+    background:rgba(0,32,45,1);
+    border-radius:5px;
+    padding: 26px 40px;
+    min-height: 427px;
+    width: 100%;    
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    .t {
+      .title-text3;
+    }
+  }
+}
+.info-panel {
+  .wp {
+    padding: 0px 50px;
+  }
+  .in {
+    background:rgba(0,32,45,1);
+    border-radius:5px;
+    padding: 26px 40px;
+    .t {
+      .title-text3;
+      .other {
+        font-size:14px;
+        font-weight:400;
+        color:rgba(255,255,255,1);
+        line-height:24px;
+        i {
+          width: 12px;
+          height: 12px;
+          .dot
+        }
+      }
+    }
+    .c {
+      .name-box {
+        font-size: 16px;
+        font-weight: 400;
+        color:rgba(255,255,255,1);
+        line-height: 24px;
+        padding-bottom: 15px;
+        display: block;
+      }
+    }
+  }
+  .container {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    height: 100%;
+  }
+  .container .row,
+  .container .cell {
+    display: flex;
+    margin: 0;    
+    width: 100%;
+    height: 100%;
+  }
+  .cell .padding {
+    margin: 0;
+    width: 100%;
+  }
+  & .padding {
+    position: relative;
+    ul {
+      display: flex;
+      flex-flow: column;
+      justify-content: space-around;
+      align-items: center;
+      flex: 1;
+      height: 180px;
+      li {
+        width: 100%;
+        text-align: center;
+        & .city-item {
+          font-size: 12px;
+          font-weight: 400;
+          color: #b3bcc0;
+          .line {
+            height:5px;
+            border-radius: 5px;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+  & .padding.central {
+    position: relative;
+    padding: 14px 7% 0 4%;
+    margin-right: 7%;
+    ul {
+      height: 396px;
+      &::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        content: '';
+        height: 100%;
+        border-right: 1px solid rgba(255,255,255,0.25);
+        display: inline-block;
+      }
+    }
+    & .city-item {
+      font-size:14px;
+      .line {
+        height:10px;
+      }
+    }
+    .name-box {
+      font-size: 16px;
+      font-weight: 400;
+      color:rgba(255,255,255,1);
+      line-height: 24px;
+      display: block;
+    }
+  }
+}
+.work-card {
   background: none;
   border: none;
   color: #fff;
-  .ivu-radio-group {
+  .title-text {
+    font-size: 20px;
+    padding: 0 45px 0 30px;
+  }
+  /deep/.ivu-radio-group {
     .ivu-radio-wrapper {
       background: none;
       border: none;
@@ -27,10 +351,6 @@
       }
     }
   }
-  .title-text {
-    font-size: 20px;
-    padding: 0 45px;
-  }
   .nav {
     .ivu-radio-wrapper {
       height: 60px;
@@ -41,7 +361,7 @@
       border-bottom: 2px solid #fff;
     }
   }
-  .ivu-card-head {
+  /deep/.ivu-card-head {
     min-height: 60px;
     line-height: 60px;
     background:rgba(0,32,45,0.8);
@@ -50,7 +370,7 @@
     padding-top: 0;
     padding-bottom: 0;
   }
-  .ivu-card-body {
+  /deep/.ivu-card-body {
     padding: 0 ;
   }
   .content {
