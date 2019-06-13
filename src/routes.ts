@@ -1009,7 +1009,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // kol - 订单填写
   {
-    path: '/kol/orderfill/:id',
+    path: '/kol/orderfill/:code?/:id?',
     name: 'order-orderfill',
     component: () => import('./views/kol/orderfill/index.vue'),
     meta: emptyAuth,

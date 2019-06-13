@@ -1,25 +1,33 @@
 <template>
   <div class="fill-box">
     <div class="layout-fill-title">
-      <span>KOL微博推广</span>
+      <span>KOL{{koltitle}}推广</span>
     </div>  
 
     <Form :model="form" ref="dataform" :rules="rule" label-position="left" :label-width="90" class="edit-input forms">
 
       <div class="item-top select-adv-type adv-left">
-        <FormItem style="margin-left:0px" class="float-right pr30" label="推广品牌" prop="videoId">
-          <Select v-model="form.videoId" filterable clearable>
-            <Option v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }} ({{item.length}}s) {{ item.customerName }}</Option>
+        <FormItem style="margin-left:0px" class="float-right pr30" label="推广品牌" prop="brandid">
+          <Select v-model="form.brandid" filterable clearable>
+            <Option v-for="(item, index) in brach" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
         </FormItem>
       </div>
 
-      <FormItem label="项目名称" class="item-top select-adv-type" prop="name">
-        <Input  v-model="form.name" placeholder='例如"2019奥迪Q3'></Input>
+      <div class="item-top select-adv-type adv-left" v-if="product.length > 0">
+        <FormItem style="margin-left:0px" class="float-right pr30" label="推广产品" prop="productId">
+          <Select v-model="form.productId" filterable clearable>
+            <Option v-for="(item, index) in product" :value="item.id" :key="index">{{ item.name }} </Option>
+          </Select>
+        </FormItem>
+      </div>
+
+      <FormItem label="项目名称" class="item-top select-adv-type" prop="projectName">
+        <Input  v-model="form.projectName" placeholder='例如"2019奥迪Q3'></Input>
       </FormItem>
 
-      <FormItem label="推广内容" class="item-top select-adv-type" prop="name">
-        <Input  v-model="form.name" placeholder='例如“奥迪Q3新款线上推广”'></Input>
+      <FormItem label="推广内容" class="item-top select-adv-type" prop="content">
+        <Input  v-model="form.content" placeholder='例如“奥迪Q3新款线上推广”'></Input>
       </FormItem>
     </Form>
     <p class="create-title">创建内容</p>
@@ -83,14 +91,14 @@
         <span @click="handleSelectAll">
           <Checkbox v-model="checkboxAll"></Checkbox>全选
         </span>
-        <p>批量设置任务</p>
+        <p @click="set(1,1)">批量设置任务</p>
       </div>
       <div class="check-box">
         <p> 共 <b>1</b> 个账号    <b>{{}}</b> 个任务    粉丝合计 <b>892.93</b>万  </p>
         <p>订单金额（不含撰稿费用）：<b>¥167,200</b></p>
       </div>
     </div>
-    <component v-if="comloading" ref="detailbox" :id="$route.params.id" :is="detail"></component>
+    <component v-if="comloading" ref="detailbox" :id="$route.params.code" :is="detail"></component>
     <div class="btn-center">
       <Button type="primary" class="button-ok" @click="next('dataform')">提交订单</Button>
     </div>
@@ -99,23 +107,28 @@
 
 <script lang='ts'>
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import { queryList } from '@/api/shopping'
+import { queryList, productsList, brandsList } from '@/api/shopping'
+import ViewBase from '@/util/ViewBase'
 import { formatCurrency } from '@/fn/string'
 import moment from 'moment'
 import wbDtail from './wbdetail.vue'
 import otherdetail from './otherdetail.vue'
+import webo from './webo.vue'
 
 const timeFormat = 'YYYY-MM-DD SS:DD'
 @Component({
   components: {
     wbDtail,
-    otherdetail
+    otherdetail,
+    webo
   }
 })
-export default class Main extends Vue {
+export default class Main extends ViewBase {
   form: any = {
-    name: '',
-    videoId: 0,
+    brandid: null,
+    productId: 0,
+    projectName: '',
+    content: ''
   }
   comloading = false
   detail: any = null
@@ -123,10 +136,24 @@ export default class Main extends Vue {
   tableDate: any = []
   checkId: any = []
   sumList: any = []
+  title: any = ['weibo', 'wechat', 'douyin', 'kuaishou', 'xiaohonghsu']
+  titles: any = ['微博', '微信', '抖音', '快手', '小红书']
   sum = 0
+  product: any = []
+  brach: any = []
   checkboxAll = false
   rule: any = {
+    projectName: [
+      { required: true, message: '请输入项目名称', trigger: 'change' }
+    ],
+    brandid: [
+      { required: true, message: '请选择推广品牌', type: 'number', trigger: 'change' }
+    ]
+  }
 
+  get koltitle() {
+    const index = this.title.findIndex((it: any) => it == this.$route.params.code)
+    return this.titles[index]
   }
 
   columns: any = [
@@ -161,15 +188,52 @@ export default class Main extends Vue {
   ]
 
   created() {
+    this.seach()
+  }
+
+  mounted() {
     this.init()
+  }
+  async seach() {
+    try {
+      const { data: {
+        items
+      }} = await brandsList({
+        pageIndex: 1,
+        pageSize: 400
+      })
+      this.brach = items
+      // this.tableDate = data.items
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async seachList() {
+    try {
+      const { data: {
+        items
+      }} = await productsList({
+        brandId: this.form.brandid,
+        pageIndex: 1,
+        pageSize: 400
+      })
+      this.product = items
+      // this.tableDate = data.items
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   async init() {
     try {
-      const { data } = await queryList({})
-      this.tableDate = data.items
+      if (this.$route.params.code) {
+        // const { data } = await queryList({})
+      } else {
+        this.tableDate = JSON.parse(sessionStorage.getItem('shopList') as any)
+      }
     } catch (ex) {
-
+      this.handleError(ex)
     }
   }
 
@@ -201,6 +265,11 @@ export default class Main extends Vue {
   }
 
   async next(form: any) {
+    try {
+      const volid = await (this.$refs[form] as any).validate()
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
   formatDate(data: any) {
     return data ? moment(data).format(timeFormat) : '暂无'
@@ -217,10 +286,19 @@ export default class Main extends Vue {
 
   @Watch('$route.params', {immediate: true})
   watch$routeParams(val: any) {
-    if (val.id == 1) {
+    if (val.code == 'weibo') {
+      this.detail = webo
+    } else if (val.code == 'weixin') {
       this.detail = wbDtail
     } else {
       this.detail = otherdetail
+    }
+  }
+
+  @Watch('form.brandid', {immediate: true})
+  watchFormBrandid(val: any) {
+    if (val) {
+      this.seachList()
     }
   }
 }

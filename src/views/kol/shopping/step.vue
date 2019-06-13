@@ -23,6 +23,7 @@ export default class App extends ViewBase {
     {name: '快手', id: 3},
     {name: '小红书', id: 4},
   ]
+  titles: any = ['weibo', 'wechat', 'douyin', 'kuaishou', 'xiaohonghsu']
   width: any = ''
   step = this.value
 
@@ -34,7 +35,7 @@ export default class App extends ViewBase {
     this.$router.push({
       name: 'kol-shopping',
       params: {
-        id: this.step + ''
+        id: this.titles[this.step]
       }
     })
   }
