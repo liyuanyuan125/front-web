@@ -7,23 +7,23 @@
   :mask-closable='false'
   @on-cancel="cancel()">
     <div class="detail-box">
-      <Form :model="form" ref="dataform" :rules="rule" label-position="left" :label-width="120" class="edit-input">
-        <FormItem label="任务类型" prop="name">
-          <RadioGroup v-model="form.name">
+      <Form :model="form" ref="dataform" :rules="rule" label-position="right" :label-width="130" class="edit-input">
+        <FormItem label="任务类型" prop="publishCategoryCode">
+          <RadioGroup v-model="form.publishCategoryCode">
             <Radio label="视频" ></Radio>
             <Radio label="图文"></Radio>
           </RadioGroup>
         </FormItem>
 
-        <FormItem label="是否提供产品：" prop="name">
-          <RadioGroup v-model="form.name">
+        <FormItem label="是否提供产品：" prop="provideProduct">
+          <RadioGroup v-model="form.provideProduct">
             <Radio label="是" ></Radio>
             <Radio label="否"></Radio>
           </RadioGroup>
         </FormItem>
 
         <FormItem label="执行时间" prop="name">
-          <DatePicker format="yyyy-MM-dd HH:mm:ss" :options="startDate" type="datetime" placeholder="请选择" style="width: 200px"></DatePicker>
+          <DatePicker format="yyyy-MM-dd HH:mm:ss" :options="startDate" type="datetime" placeholder="请选择" style="width: 300px"></DatePicker>
         </FormItem>
 
         <div class="hint">
@@ -34,7 +34,7 @@
           <Input v-model="form.value" type="textarea" :autosize="{minRows: 4,maxRows: 5}" placeholder="请输入" />
         </FormItem>
 
-        <FormItem label="封面图" v-if="id == 2" prop="name">
+        <FormItem label="封面图" v-if="$route.params.id == 'xiaohongshu'" prop="name">
           <Upload v-model="form.img" :maxCount="9" multiple accept="image/*" />
         </FormItem>
 
@@ -73,8 +73,8 @@ export default class DlgEditCinema extends ViewBase {
     img: [],
     type: 0,
     value: '',
-    name: '',
-    title: ''
+    publishCategoryCode: '',
+    provideProduct: ''
   }
 
   rule: any = {}

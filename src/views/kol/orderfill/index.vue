@@ -91,7 +91,7 @@
         <span @click="handleSelectAll">
           <Checkbox v-model="checkboxAll"></Checkbox>全选
         </span>
-        <p>批量设置任务</p>
+        <p @click="set(1,1)">批量设置任务</p>
       </div>
       <div class="check-box">
         <p> 共 <b>1</b> 个账号    <b>{{}}</b> 个任务    粉丝合计 <b>892.93</b>万  </p>
