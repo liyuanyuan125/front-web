@@ -1,7 +1,7 @@
 <template>
   <div class="page">
       <div class="kol-order">
-        <Tabs class="tab-order" v-model="orderTab" @on-click=" (id) => orderTab = id">
+        <Tabs class="tab-order" v-model="orderTab" @on-click="(id) => orderTab = id">
             <TabPane label="订单" name="0"></TabPane>
             <TabPane label="草稿箱" name="1"></TabPane>
         </Tabs>
@@ -16,31 +16,25 @@
                   :value="item.key"
                 >{{item.text}}</Option>
               </Select>
-              <Select v-model='form.project' filterable clearable remote :remote-method="remoteMethod" :loading="loadingSearch"
-               placeholder="输入项目名称模糊查询">
-                <Option
-                  v-for="item in allProjectSelect"
-                  :key="item.key"
-                  :value="item.key"
-                >{{item.text}}</Option>
-              </Select>
+              <Input v-model='form.project' placeholder="输入项目名称模糊查询" />
               <Select v-model='form.brand' filterable clearable placeholder="全部品牌">
                 <Option
                   v-for="item in allBrandSelect"
-                  :key="item.key"
-                  :value="item.key"
-                >{{item.text}}</Option>
+                  :key="item.brandId"
+                  :value="item.brandId"
+                >{{item.brandName}}</Option>
               </Select>
-              <Button type="primary" class="search">查询</Button>
+              <Button type="primary" class="search" @click="searchList">查询</Button>
           </div>
             <div class="flex-box status-content">
-                <Tabs v-model="statusTab" @on-click="handleStatusList" class="order-status-tab">
-                  <TabPane :label="item.text" v-for="item in statusList" v-if="item.key < 6" :key="item.key"></TabPane>
+                <Tabs v-model="status" class="order-status-tab">
+                  <TabPane label="全部订单" key="0" ></TabPane>
+                  <TabPane :label="item.text" v-for="item in statusList" v-if="item.key < 9 && item.key != 1" :key="item.key"></TabPane>
                 </Tabs>
-                <Dropdown class="drop-down">
+                <Dropdown class="drop-down" @on-click="dropdown">
                     <span href="javascript:void(0)">其他<Icon type="ios-arrow-down"></Icon></span>
                     <DropdownMenu slot="list">
-                        <DropdownItem v-for="item in statusRest" :key="item.key">{{item.text}}</DropdownItem>
+                        <DropdownItem v-for="item in statusRest" :name="item.key" :key="item.key">{{item.text}}</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
                 <Button type="primary" @click="$router.push({name: 'kol-applyTicket'})" class="apply-btn">申请发票</Button>
@@ -49,70 +43,92 @@
                 <ul>
                   <li class="list-li" v-for="item in list" :key = "item.id">
                     <Row>
-                      <Col :span="5"><span>订单号 {{item.order}}</span></Col>
-                      <Col :span="7"><span>下单时间 {{item.times}}</span></Col>
+                      <Col :span="5"><span>订单号 {{item.orderNo}}</span></Col>
+                      <Col :span="7"><span>下单时间 {{item.createTime}}</span></Col>
                     </Row>
                     <Row class="li-col" type="flex" justify="center" align="middle">
                       <Col :span="5">
-                        <div>{{item.title}}</div>
-                        <p class="brand-mark col_00202d">{{item.brand}}</p>
+                        <div class="order-title">{{item.projectName}}</div>
+                        <p class="brand-mark col_00202d flex-box" v-for="it in channelCodeList" v-if="it.key == item.channelCode">
+                          <img src="~@/views/brand/assets/microblog.png" v-if="item.channelCode == 'weibo'" width="20" height="20" alt="alias" />
+                          <img src="~@/views/brand/assets/quick.png" v-if="item.channelCode == 'kuaishou'" width="20" height="20" alt="alias" />
+                          <img src="~@/views/brand/assets/vibrato.png" v-if="item.channelCode == 'douyin'" width="20" height="20" alt="alias" />
+                          <img src="~@/views/brand/assets/wechat.png" v-if="item.channelCode == 'wechat'" width="20" height="20" alt="alias" />
+                          <em>{{it.text}}</em>
+                        </p>
                       </Col>
                       <Col :span="7" class="flex-box">
                         <img :src="item" v-for="(item, index) in item.imgList" :key = 'index' alt="" class="li-img"/>
                         <span class="img-num">等10个账号</span>
                       </Col>
                       <Col :span="6">
-                        <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(99999999)}}</em></p>
-                        <p class="col_00202d rest-order">部分支付 ¥50,000</p>
+                        <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(item.totalFee)}}</em></p>
+                        <p v-if="[5,6,7,8].includes(item.status)" class="col_00202d rest-order">部分支付 {{item.advanceFee}}</p>
                       </Col>
                       <Col :span="2" class="li-item-status">
-                        <span v-for="it in statusList" :key ="it.key" v-if="it.key == item.status">{{it.text}}</span>
+                        <span v-for="it in intStatusList" :key ="it.key" v-if="it.key == item.status">{{it.text}}</span>
                       </Col>
                       <Col :span="4" class="status-btn">
-                      <!-- 待审核 -->
-                        <p v-if="item.status == 1 || item.status == 9  "><span @click="handleCancel(item.id)">取消</span></p>
-                        <p v-if="item.status == 9 || item.status == 10 "><span @click="handlePayment(item)" class="operate-btn-add">立即支付</span></p>
-                        <p v-if="item.status == 5 || item.status == 10 || item.status == 6"><span @click="$router.push({name: 'order-order-taskDetection', params: {id: item.id}})">任务监测</span></p>
-                        <p v-if="item.status == 5"><span @click="taskFulfiling" class="operate-btn-add">确定完成任务</span></p>
-                        <p><span @click="$router.push({name: 'kol-order-detail', params: {id: item.id}})">详情</span></p>
+                      <!-- 状态 -->
+                        <p v-if="[2,3,4].includes(item.status)"><span @click="handleCancel(item.id)">取消订单</span></p>
+                        <p v-if="[4, 8].includes(item.status)"><span @click="handlePayment(item)" class="operate-btn-add">立即支付</span></p>
+                        <p v-if="[7, 8, 9].includes(item.status)"><span @click="$router.push({name: 'order-order-taskDetection', params: {id: item.id}})">任务监测</span></p>
+                        <p v-if="[7].includes(item.status)"><span @click="taskFulfiling(item.id)" class="operate-btn-add">确定完成任务</span></p>
+                        <p v-if="[1].includes(item.status)"><span @click="handleDel(item.id)">删除</span></p>
+                        <p v-if="[1].includes(item.status)"><span @click="$router.push({name: 'order-orderfill', params: {id: item.id, code: item.channelCode}})">编辑</span></p>
+                        <p v-if="item.status != 1"><span @click="$router.push({name: 'kol-order-detail', params: {id: item.id}})">详情</span></p>
                       </Col>
                     </Row>
                   </li>
                 </ul>
-                <Page :total="totalCount"  v-if="totalCount>0" class="page-order" :current="page.pageIndex"
-              :page-size="page.pageSize"  show-total  show-elevator 
-              @on-change="(ind) => page.pageIndex = ind "  @on-page-size-change="(ind) => page.pageIndex = ind" />
+                <ul v-if ="list.length == 0" class="no-list-data">暂无数据</ul>
+                <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
             </div>
         </div>
 
         <!-- 草稿 -->
         <div v-else>
           <ul class="table-list">
-              <li class="list-li" v-for="item in list" :key = "item.id">
+              <li class="list-li" v-for="item in draftList" :key = "item.id">
                 <Row>
-                  <Col :span="5"><span>订单号 {{item.order}}</span></Col>
-                  <Col :span="7"><span>下单时间 {{item.times}}</span></Col>
+                  <Col :span="5"><span>订单号 {{item.orderNo}}</span></Col>
+                  <Col :span="7"><span>下单时间 {{item.createTime}}</span></Col>
                 </Row>
                 <Row class="li-col" type="flex" justify="center" align="middle">
-                      <Col :span="5">
-                        <div>{{item.title}}</div>
-                        <p class="brand-mark col_00202d">{{item.brand}}</p>
-                      </Col>
-                      <Col :span="8" class="flex-box">
-                        <img :src="item" v-for="(item, index) in item.imgList" :key = 'index' alt="" class="li-img"/>
-                        <span class="img-num">等10个账号</span>
-                      </Col>
-                      <Col :span="7">
-                        <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(99999999)}}</em></p>
-                      </Col>
-                      <Col :span="4" class="status-btn">
-                         <p><span @click="handleDel(item.id)">删除</span></p>
-                         <p><span @click="$router.push({name: 'order-orderfill', params: {id: item.id}})">编辑</span></p>
-                      </Col>
-                    </Row>
+                  <Col :span="5">
+                    <div class="order-title">{{item.projectName}}</div>
+                    <p class="brand-mark col_00202d flex-box" v-for="it in channelCodeList" v-if="it.key == item.channelCode">
+                      <img src="~@/views/brand/assets/microblog.png" v-if="item.channelCode == 'weibo'" width="20" height="20" alt="alias" />
+                      <img src="~@/views/brand/assets/quick.png" v-if="item.channelCode == 'kuaishou'" width="20" height="20" alt="alias" />
+                      <img src="~@/views/brand/assets/vibrato.png" v-if="item.channelCode == 'douyin'" width="20" height="20" alt="alias" />
+                      <img src="~@/views/brand/assets/wechat.png" v-if="item.channelCode == 'wechat'" width="20" height="20" alt="alias" />
+                      <em>{{it.text}}</em>
+                    </p>
+                  </Col>
+                  <Col :span="7" class="flex-box">
+                    <img :src="item" v-for="(item, index) in item.imgList" :key = 'index' alt="" class="li-img"/>
+                    <span class="img-num">等10个账号</span>
+                  </Col>
+                  <Col :span="6">
+                    <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(item.totalFee)}}</em></p>
+                    <p v-if="[5,6,7,8].includes(item.status)" class="col_00202d rest-order">部分支付 {{item.advanceFee}}</p>
+                  </Col>
+                  <Col :span="2" class="li-item-status">
+                    <span v-for="it in intStatusList" :key ="it.key" v-if="it.key == item.status">{{it.text}}</span>
+                  </Col>
+                  <Col :span="4" class="status-btn">
+                  <!-- 状态 -->
+                   
+                    <p v-if="[1].includes(item.status)"><span @click="handleDel(item.id)">删除</span></p>
+                    <p v-if="[1].includes(item.status)"><span @click="$router.push({name: 'order-orderfill', params: {id: item.id, code: item.channelCode}})">编辑</span></p>
+                   
+                  </Col>
+                </Row>
               </li>
             </ul>
+            <ul v-if ="draftList.length == 0" class="no-list-data">暂无数据</ul>
         </div>
+
       </div>
   </div>
 </template>
@@ -122,103 +138,116 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, info } from '@/ui/modal'
 import { formatNumber } from '@/util/validateRules.ts'
-import { orderList } from '@/api/kolOrderList'
 import { querySelectList } from '@/api/brandList'
+import { getUser } from '@/store'
+import pagination from '@/components/page.vue'
+import {
+  orderList,
+  orderBrand,
+  cancelOrder,
+  firstPaymentList,
+  restPaymentList,
+  delOrderList,
+  confirmFinish
+} from '@/api/kolOrderList'
 
-@Component
+
+@Component({
+  components: {
+    pagination
+  }
+})
 export default class Main extends ViewBase {
-  totalCount = 10
-  loadingSearch = false
-  page = {
+  total = 0
+  pageList = {
     pageIndex: 1,
-    pageSize: 10
+    pageSize: 5
   }
 
-  form = {
-    platform: 0, // 推广平台
-    project: 0, // 项目
-    brand: 0 // 品牌
-  }
+  form = {}
   // 订单和草稿 默认0订单 1草稿
   orderTab = 0
   // 订单状态
-  statusTab = 0
+  status = 0
   // 全部推广平台
   channelCodeList = []
-  // 全部项目
-  allProjectSelect = []
   // 全部品牌
   allBrandSelect = []
-  statusList = [
-    {key: 0, text: '全部订单'},
-    {key: 1, text: '待审核', num: 2},
-    {key: 2, text: '待支付', num: 2},
-    {key: 3, text: '派单中', num: 2},
-    {key: 4, text: '待执行', num: 2},
-    {key: 5, text: '执行中', num: 2},
-    {key: 6, text: '已完成'},
-    {key: 7, text: '已取消'},
-    {key: 8, text: '派单失败'},
-    {key: 9, text: '待支付首款'},
-    {key: 10, text: '待支付尾款'},
-  ]
+  // 保留初始数据
+  intStatusList = []
+  // 变更后数据
+  statusList = []
+  // 其他
+  statusRest = []
 
-  statusRest = [
-    {key: 7, text: '已完成'},
-    {key: 8, text: '已取消'},
-    {key: 9, text: '派单失败'},
-  ]
+  list = []
+  draftList = []
 
-  list = [
-    { id: 1, order: 'xxxxxx', times: 'xxxxxxxx',  title: '奔驰新款2019推广', brand: '抖音推广', orderAmount: '99999', status: 1,
-      imgList: [ require('./asset/timg.jpg'), require('./asset/timg.jpg'), require('./asset/timg.jpg')],
-    },
-    { id: 2, order: 'xxxxxx', times: 'xxxxxxxx',  title: '奔驰新款2019推广', brand: '抖音推广', orderAmount: '99999', status: 2,
-      imgList: [ require('./asset/timg.jpg'), require('./asset/timg.jpg'), require('./asset/timg.jpg')],
-    },
-    { id: 3, order: 'xxxxxx', times: 'xxxxxxxx',  title: '奔驰新款2019推广', brand: '抖音推广', orderAmount: '99999', status: 3,
-      imgList: [ require('./asset/timg.jpg'), require('./asset/timg.jpg'), require('./asset/timg.jpg')],
-    },
-    { id: 4, order: 'xxxxxx', times: 'xxxxxxxx',  title: '奔驰新款2019推广', brand: '抖音推广', orderAmount: '99999', status: 4,
-      imgList: [ require('./asset/timg.jpg'), require('./asset/timg.jpg'), require('./asset/timg.jpg')],
-    },
-    { id: 5, order: 'xxxxxx', times: 'xxxxxxxx',  title: '奔驰新款2019推广', brand: '抖音推广', orderAmount: '99999', status: 5,
-      imgList: [ require('./asset/timg.jpg'), require('./asset/timg.jpg'), require('./asset/timg.jpg')],
-    },
-    { id: 6, order: 'xxxxxx', times: 'xxxxxxxx',  title: '奔驰新款2019推广', brand: '抖音推广', orderAmount: '99999', status: 6,
-      imgList: [ require('./asset/timg.jpg'), require('./asset/timg.jpg'), require('./asset/timg.jpg')],
-    },
-    { id: 7, order: 'xxxxxx', times: 'xxxxxxxx',  title: '奔驰新款2019推广', brand: '抖音推广', orderAmount: '99999', status: 7,
-      imgList: [ require('./asset/timg.jpg'), require('./asset/timg.jpg'), require('./asset/timg.jpg')],
-    },
-    { id: 8, order: 'xxxxxx', times: 'xxxxxxxx',  title: '奔驰新款2019推广', brand: '抖音推广', orderAmount: '99999', status: 8,
-      imgList: [ require('./asset/timg.jpg'), require('./asset/timg.jpg'), require('./asset/timg.jpg')],
-    },
-    { id: 9, order: 'xxxxxx', times: 'xxxxxxxx',  title: '奔驰新款2019推广', brand: '抖音推广', orderAmount: '99999', status: 9,
-      imgList: [ require('./asset/timg.jpg'), require('./asset/timg.jpg'), require('./asset/timg.jpg')],
-    },
-    { id: 10, order: 'xxxxxx', times: 'xxxxxxxx',  title: '奔驰新款2019推广', brand: '抖音推广', orderAmount: '99999', status: 10,
-      imgList: [ require('./asset/timg.jpg'), require('./asset/timg.jpg'), require('./asset/timg.jpg')],
-    },
-
-  ]
   // 定义数字格式
   formatNumber = formatNumber
 
   mounted() {
-    this.tablist()
+    this.tableList()
     this.querySelectList()
+    this.orderBrand()
   }
-  async tablist() {
+  dropdown(statu: any) {
+    this.status = statu
+    this.tableList()
+  }
+
+  async tableList() {
+    let status = this.status == 2 ? '2,3' : this.status
+        status = this.status == 4 ? '4,8' : this.status
     try {
-      const { data } = await orderList({
-        ...this.page
+      const { data: {totalCount, items, statusList} } = await orderList({
+        ...this.pageList,
+        ...this.form,
+        status
       })
+      this.list = items || []
+      this.total = totalCount
+      this.intStatusList = statusList
+
+      // 收集草稿list
+      this.draftList = items.filter( (item: any) => item.status == 1)
+      // 深层拷贝数据
+      const aryList = JSON.parse(JSON.stringify(statusList))
+      const newList = aryList.map( (item: any, index: number, object: any) => {
+        if (item.key == 2 || item.key == 3) {
+          item.key = 2 // '2,3'
+          item.text = '待审核'
+        }
+        if (item.key == 4 || item.key == 8) {
+          item.key = 4 // '4,8'
+          item.text = '待支付'
+        }
+        return item
+      })
+      // 处理数组对象重复
+      const obj: any = {}
+      const newStatusList = aryList.reduce((item: any, next: any) => {
+         obj[next.key] ? '' : obj[next.key] = true && item.push(next)
+         return item
+      }, [])
+      this.statusList = newStatusList
+      this.statusRest = this.statusList.slice(this.statusList.length - 3)
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
+
+  // 获取订单品牌接口
+  async orderBrand() {
+    const user: any = getUser()
+    try {
+      const { data } = await orderBrand(user.id)
+      this.allBrandSelect = data
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
   // 获取推广平台
   async querySelectList() {
     try {
@@ -228,60 +257,111 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     }
   }
-  handleStatusList() {}
-  search() {}
-  remoteMethod(query: any) {
-    if (query == '') {
-      return
-    }
+  searchList() {
+    this.pageList.pageIndex = 1
+    this.tableList()
   }
-  // 删除
+  // 删除订单
   async handleDel(id: any) {
     await confirm('删除后将无法恢复，是否确定删除', {
       title: '删除',
       okText: '确定删除',
       cancelText: '不, 谢谢'
     })
+    try {
+      await delOrderList(id)
+      this.tableList()
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
-  // 取消
+  // 取消订单
   async handleCancel(id: number) {
     await confirm('取消后将无法恢复，是否确认取消', {
       title: '取消',
       okText: '确定取消',
       cancelText: '不，谢谢'
     })
+    try {
+      await cancelOrder(id)
+      this.tableList()
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   // 支付
-  async handlePayment(it: any) {
+  async handlePayment(item: any) {
+    // item.status = 4 待支付首款8待支付尾款
     // 若余额不足则提示”账号余额不足XXXX元“，请充值后再支付
-    true ? await info('若余额不足则提示”账号余额不足XXXX元“，请充值后再支付') :
-     await confirm(`整单金额分为两次支付<br />①首付款：订单金额的30%，支付后派单 ②尾款：待任务完成后支付剩余金额, <br />是否支付冻结金额2500元`, {
-       title: '支付KOL推广费用'
-    })
+    // true ? await info('若余额不足则提示”账号余额不足XXXX元“，请充值后再支付') :
+    // 整单金额分为两次支付<br />①首付款：订单金额的30%，支付后派单 ②尾款：待任务完成后支付剩余金额, <br />
+    // 待支付首款
+    if (item.status == 4) {
+    const firstPayment = (item.advanceFee * 0.3).toFixed(2)
+      await confirm(`是否支付首款金额${firstPayment}元`, {
+        title: '支付KOL推广费用'
+      })
+      try {
+        const { data } = await firstPaymentList({
+          advanceFee: firstPayment,
+          orderId: item.id
+        })
+        this.tableList()
+      } catch (ex) {
+        this.handleError(ex)
+      }
+    } else if (item.status == 8) {
+      // 尾款金额 = 订单金额 - 首付款（部分付款
+      const restPayment = item.totalFee - item.advanceFee
+      await confirm(`是否支付尾款金额${restPayment}元`)
+      try {
+        await restPaymentList({
+          restFee: restPayment,
+          orderId: item.id
+        })
+        this.tableList()
+      } catch (ex) {
+        this.handleError(ex)
+      }
+    }
   }
   // 确定完成
-  async taskFulfiling() {
-    confirm('是否确认任务全部完成', {
+  async taskFulfiling(id: any) {
+    await confirm('是否确认任务全部完成', {
       title: '确定完成'
     })
+    try {
+      await confirmFinish(id)
+      this.tableList()
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
+  uplist(size: any) {
+    this.pageList.pageIndex = size
+    this.tableList()
+  }
+  @Watch('status')
+  watchStatus() {
+    this.tableList()
+  }
+  // @Watch('form', {deep: true})
+  // watchForm() {
+  //   this.pageList.pageIndex = 1
+  //   this.search()
+  // }
 
-  @Watch('form', {deep: true})
-  watchForm() {
-    this.page.pageIndex = 1
-    this.search()
-  }
-
-  @Watch('page', {deep: true})
-  watchPage() {
-    this.search()
-  }
+  // @Watch('pageList', {deep: true})
+  // watchPage() {
+  //   this.search()
+  // }
 }
 
 </script>
 <style lang='less' scoped>
-@import '~@/site/common.less';
+// @import '~@/site/common.less';
+@import './order.less';
 .order-monery {
   font-size: 20px;
   color: #000;
@@ -300,7 +380,7 @@ export default class Main extends ViewBase {
   padding-left: 70px;
 }
 .col_00202d {
-  color: #00202d;
+  color: rgba(0, 32, 45, .5);
 }
 .table-list {
   background: rgba(255, 255, 255, .7);
@@ -313,8 +393,11 @@ export default class Main extends ViewBase {
   .li-col {
     padding-top: 28px;
     .brand-mark {
-      font-size: 12px;
+      font-size: 14px;
       padding-top: 7px;
+      em {
+        padding-left: 10px;
+      }
     }
     .li-img {
       width: 30px;
@@ -427,20 +510,9 @@ export default class Main extends ViewBase {
     font-size: 14px;
   }
 }
-/deep/ .ivu-select {
-  height: 40px;
-  border-radius: 5px;
-  width: 200px;
-  margin-right: 20px;
-  .ivu-select-selection {
-    height: 40px;
-    border-radius: 5px;
-  }
-  .ivu-select-selected-value {
-    height: 40px;
-    line-height: 40px;
-    font-size: 14px;
-  }
+
+.order-title {
+  font-size: 15px;
 }
 /deep/ .ivu-select-input {
   height: 40px;

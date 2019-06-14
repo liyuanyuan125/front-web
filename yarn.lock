@@ -666,6 +666,18 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@better-scroll/core@^2.0.0-alpha.14":
+  version "2.0.0-alpha.14"
+  resolved "https://registry.npm.taobao.org/@better-scroll/core/download/@better-scroll/core-2.0.0-alpha.14.tgz#8728377afbb4ef7a2b03a01fe6263ec3dcbff0ab"
+  integrity sha1-hyg3evu073orA6Af5iY+w9y/8Ks=
+  dependencies:
+    "@better-scroll/shared-utils" "^2.0.0-alpha.14"
+
+"@better-scroll/shared-utils@^2.0.0-alpha.14":
+  version "2.0.0-alpha.14"
+  resolved "https://registry.npm.taobao.org/@better-scroll/shared-utils/download/@better-scroll/shared-utils-2.0.0-alpha.14.tgz#d0343463c65219de022cf4f378205f97974b7544"
+  integrity sha1-0DQ0Y8ZSGd4CLPTzeCBfl5dLdUQ=
+
 "@iamstarkov/listr-update-renderer@0.4.1":
   version "0.4.1"
   resolved "http://registry.npm.taobao.org/@iamstarkov/listr-update-renderer/download/@iamstarkov/listr-update-renderer-0.4.1.tgz#d7c48092a2dcf90fd672b6c8b458649cb350c77e"

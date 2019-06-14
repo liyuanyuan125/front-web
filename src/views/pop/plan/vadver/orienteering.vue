@@ -240,7 +240,7 @@ export default class Orienteering extends ViewBase {
     })
     try {
       await direction (clean({
-        planId: 38,
+        planId: 49,
         cityCustom: this.cityCustom,
         allNation: this.form.cinema[0] == 0 ? 1 : '',
         deliveryCityTypes: this.form.cinema[0] == 0 ? '' : this.form.cinema,

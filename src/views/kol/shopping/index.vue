@@ -2,9 +2,9 @@
   <div class="kol-box">
     <Header />
     <div>
-      <Step></Step>
+      <Step v-model="$route.params.id"></Step>
     </div>
-    <div v-if="tableDates.length > 0" class="section">
+    <div v-if="tableDate.length > 0" class="section">
       <Table  :columns="columns" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
         <!-- <template ref='title' slot="header">
           <div>
@@ -32,22 +32,50 @@
         </template> -->
         <template style="marin-top: 100px" slot-scope="{ row }" slot="type">
           <div class="table-name">
-            <img :src="row.mainPicUrl" alt=""> 
-            <span>{{row.name}}</span>
+            <img :src="row.accountImageUrl" alt=""> 
+            <span>{{row.accountName}}</span>
           </div>
         </template>
+
+        <template style="marin-top: 100px" slot-scope="{ row }" slot="pintai">
+          <div class="table-name">
+            <span v-if="accountCategoryList && accountCategoryList.length>0">
+              {{accountCategoryList.filter((it) => it.key == row.accountTypeCode)[0].text}}
+            </span>
+          </div>
+        </template>
+
+        <template slot-scope="{ row }" slot="genre">
+          <div>
+            <p v-for="(it, index) in row.priceList" :key="index" style="margin-top: 5px">
+                {{statusLists(it)}}
+            </p>
+          </div>
+        </template>
+    
         <template style="marin-top: 100px" slot-scope="{ row }" slot="action">
-          <p>取消</p>
-          <p>收藏</p>
+          <div class="table-action">
+            <p v-if="!row.collected" @click="collects(row.id)">
+              <img width="14px" src="./assets/collect.png" />
+              收藏
+            </p>
+            <p v-else @click="cancelcollects(row.id)">
+              <img width="14px" src="./assets/collectcheck.png" />
+              取消收藏
+            </p>
+            <p @click="cancelShop(row.channelDataId)" style="margin-top: 7px">
+              <img width="14px" src="./assets/cancel.png" />
+              删除
+            </p>
+          </div>
         </template>
       </Table>
-
-      <div class="check-box" style="padding-right: 0px">
+      <div class="check-box" v-if="tableDate.length > 0" style="padding-right: 0px">
         <span @click="handleSelectAll">
           <Checkbox v-model="checkboxAll"></Checkbox>全选
         </span>
-        <span>删除</span>
-        <span>收藏</span>
+        <span class="point" @click="alldel">删除</span>
+        <span class="point" @click="allcollect">收藏</span>
         <div class="check-span">
           <ul>
             <li>已选账号 <b class="">{{sum}}</b> 个  </li>
@@ -58,21 +86,47 @@
           </div>
         </div>
       </div>
-      <div class="abandon">
+      <div class="abandon" v-if="tableDate1.length > 0">
         <div class="top">
           以下KOL账号已下架，无法进行预订
           <Button class="default-btn" @click="reserve">全部清空</Button>
         </div>
-        <Table :show-header="false" :columns="columnsNum" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
+        <Table :show-header="false" :columns="columnsNum" :data="tableDate1" >
           <template style="marin-top: 100px" slot-scope="{ row }" slot="type">
             <div class="table-name">
-              <img :src="row.mainPicUrl" alt=""> 
-              <span>{{row.name}}</span>
+              <img :src="row.accountImageUrl" alt=""> 
+              <span>{{row.accountName}}</span>
+            </div>
+          </template>
+          <template style="marin-top: 100px" slot-scope="{ row }" slot="pintai">
+            <div class="table-name">
+              <span v-if="accountCategoryList && accountCategoryList.length>0">
+                {{accountCategoryList.filter((it) => it.key == row.accountTypeCode)[0].text}}
+              </span>
+            </div>
+          </template>
+          <template slot-scope="{ row }" slot="genre">
+            <div>
+              <p v-for="(it, index) in row.priceList" :key="index" style="margin-top: 5px">
+                {{statusLists(it)}}
+              </p>
             </div>
           </template>
           <template style="marin-top: 100px" slot-scope="{ row }" slot="action">
-            <p>取消</p>
-            <p>收藏</p>
+            <div class="table-action">
+              <p v-if="!row.collected" @click="collects(row.id)">
+                <img width="14px" src="./assets/collect.png" />
+                收藏
+              </p>
+              <p v-else @click="cancelcollects(row.id)">
+                <img width="14px" src="./assets/collectcheck.png" />
+                取消收藏
+              </p>
+              <p @click="cancelShop(row.channelDataId)" style="margin-top: 7px">
+                <img width="14px" src="./assets/cancel.png" />
+                删除
+              </p>
+            </div>
           </template>
         </Table>
       </div>
@@ -80,7 +134,7 @@
     <div v-else class="section-no">
       <img src="./assets/noshop.png" alt="">
       <h3>还没有添加KOL账号</h3>
-      <Button class="default-btn" @click="reserve">前往挑选</Button>
+      <Button class="default-btn" @click="checkKol">前往挑选</Button>
     </div>
     <Detail ref="detail" />
   </div>
@@ -89,7 +143,7 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { fileList, queryList } from '@/api/shopping'
+import { kolShoppingCar, delShopping } from '@/api/kolList.ts'
 import Header from './header.vue'
 import Detail from './detail.vue'
 import { formatCurrency } from '@/fn/string'
@@ -116,7 +170,11 @@ export default class DlgEditCinema extends ViewBase {
   sumList: any = []
   checkId: any = []
   sum = 0
+  titles: any = ['weibo', 'wechat', 'douyin', 'kuaishou', 'xiaohonghsu']
   sumcount = '0.00'
+  accountCategoryList: any = []
+  statusList: any = []
+  tableDate1: any = []
 
   get tableDates() {
     if (this.tableDate && this.tableDate.length > 0) {
@@ -152,12 +210,14 @@ export default class DlgEditCinema extends ViewBase {
         {
           title: '平台',
           align: 'left',
-          key: 'platform'
+          key: 'platform',
+          slot: 'pintai'
         },
         {
           title: '投放方式',
           align: 'left',
-          key: 'type'
+          key: 'type',
+          slot: 'genre'
         },
         {
           title: '操作',
@@ -184,12 +244,14 @@ export default class DlgEditCinema extends ViewBase {
         {
           title: '平台',
           align: 'left',
-          key: 'platform'
+          key: 'platform',
+          slot: 'pintai'
         },
         {
           title: '投放方式',
           align: 'left',
-          key: 'type'
+          key: 'type',
+          slot: 'genre'
         },
         {
           title: '操作',
@@ -201,25 +263,94 @@ export default class DlgEditCinema extends ViewBase {
     return columns
   }
 
-
-  created() {
-    this.filmFind()
-    this.init()
-  }
-
-  async filmFind() {
+  // 删除购物车
+  async cancelShop(id: any) {
     try {
-      const { data } = await fileList({})
-      this.filmList = data.items || []
-      this.filename = this.filmList.filter((it: any) => it.key == this.filmCheck)[0].text
+      await delShopping({
+        channelCode: this.titles[this.$route.params.id ? Number(this.$route.params.id) : 0],
+        channelDataId: id
+      })
+      this.init()
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
+  async init() {
+    try {
+      const type: any = this.$route.params.id ? this.titles.findIndex((it: any) => it == this.$route.params.id) : 0
+      const { data } = await kolShoppingCar()
+      this.accountCategoryList = data.accountCategoryList
+      switch (type) {
+        case 0: this.tableDate = data.weiboList.filter((it: any) => it.controlStatus == 1)
+                this.tableDate1 = data.weiboList.filter((it: any) => it.controlStatus == 2)
+                this.statusList = data.weiboPublishCategoryList
+          break
+        case 1: this.tableDate = data.weixinList.filter((it: any) => it.controlStatus == 1)
+                this.tableDate1 = data.weixinList.filter((it: any) => it.controlStatus == 2)
+                this.statusList = data.weixinPublishCategoryList
+          break
+        case 2: this.tableDate = data.douyinList.filter((it: any) => it.controlStatus == 1)
+                this.tableDate1 = data.douyinList.filter((it: any) => it.controlStatus == 2)
+                this.statusList = data.douyinPublishCategoryList
+          break
+        case 3: this.tableDate = data.kuaishouList.filter((it: any) => it.controlStatus == 1)
+                this.tableDate1 = data.kuaishouList.filter((it: any) => it.controlStatus == 2)
+                this.statusList = data.kuaishouPublishCategoryList
+          break
+        case 4: this.tableDate = data.xiaohongshuList.filter((it: any) => it.controlStatus == 1)
+                this.tableDate1 = data.xiaohongshuList.filter((it: any) => it.controlStatus == 2)
+                this.statusList = data.xiaohongshuPublishCategoryList
+          break
+      }
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  statusLists(it: any) {
+    const msg = (this.statusList.filter((its: any) => its.key == it.categoryCode)[0] as any).text
+    return `${msg}`
+  }
+
+  created() {
+    // this.filmFind()
+    this.init()
+  }
+
+  mounted() {
+    // this.sumList = JSON.parse(sessionStorage.getItem('shopList') as any)
+  }
+
+  // async filmFind() {
+  //   try {
+  //     const { data } = await fileList({})
+  //     this.filmList = data.items || []
+  //     this.filename = this.filmList.filter((it: any) => it.key == this.filmCheck)[0].text
+  //   } catch (ex) {
+  //     this.handleError(ex)
+  //   }
+  // }
+
   reserve() {
-    this.$nextTick(() => {
-      (this.$refs.detail as any).init(this.filmCheck)
+    // this.$nextTick(() => {
+    //   (this.$refs.detail as any).init(this.filmCheck)
+    // })
+    const sumList = this.sumList((it: any) => {
+      it.priceList.map((item: any) => {
+        const msg = (this.statusList.filter((its: any) => its.key == item.categoryCode)[0] as any).text
+        return {
+          text: msg,
+
+        }
+      })
+    })
+    sessionStorage.setItem('shopList', JSON.stringify(this.sumList))
+    this.$router.push({
+      name: 'order-orderfill',
+      params: {
+        code: this.$route.params.id || 'weibo'
+      }
     })
   }
 
@@ -243,7 +374,7 @@ export default class DlgEditCinema extends ViewBase {
     this.sum = this.checkId.length
     let sum = 0
     this.sumList.forEach((it: any) => {
-      sum += it.fansNumber
+      sum += (Number(it.fans))
     })
     this.sumcount = formatCurrency(sum)
     this.checkboxAll = select.length == this.tableDate.length ? true : false
@@ -266,23 +397,54 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
-  async init() {
+  // async init() {
+  //   try {
+  //     const { data } = await queryList({})
+  //     this.tableDate = data.items
+  //   } catch (ex) {
+  //     this.handleError(ex)
+  //   }
+  // }
+
+  selectAll() {
+
+  }
+
+  async alldel() {
     try {
-      const { data } = await queryList({})
-      this.tableDate = data.items
+
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
-  selectAll() {
+  async allcollect() {
+    try {
 
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  checkKol() {
+    this.$router.push({
+      name: 'kol-kollist'
+    })
   }
 
   cancel() {
     this.showDlg = false
   }
 
+  @Watch('$route.params', {deep: true})
+  watch$routeParams(val: any) {
+    this.init()
+    this.checkboxAll = false
+    this.checkId = []
+    this.sumList = []
+    this.sum = 0
+    this.sumcount = '0.00'
+  }
 }
 </script>
 
@@ -310,6 +472,9 @@ export default class DlgEditCinema extends ViewBase {
     border-left: 0;
   }
 }
+.point {
+  cursor: pointer;
+}
 /deep/ .ivu-table-wrapper {
   border-radius: 5px;
   /deep/ .ivu-table-header th {
@@ -326,6 +491,7 @@ export default class DlgEditCinema extends ViewBase {
   }
   /deep/ .ivu-table {
     background: rgba(255, 255, 255, .3);
+    color: #00202d;
   }
   /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
     background: rgba(0, 0, 0, 0);
@@ -381,6 +547,7 @@ export default class DlgEditCinema extends ViewBase {
     display: flex;
     padding: 20px 0;
     align-items: center;
+    color: #00202d;
     img {
       height: 60px;
       width: 60px;
@@ -402,6 +569,11 @@ export default class DlgEditCinema extends ViewBase {
   span {
     margin-left: 20px;
     font-size: 14px;
+  }
+}
+.table-action {
+  p {
+    cursor: pointer;
   }
 }
 .section {

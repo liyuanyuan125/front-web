@@ -235,8 +235,7 @@ export default class BasicPane extends Vue {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
-@import '../style.less';
+@import '~@/style/platform/index.less';
 
 .effect-lightning {
   background: linear-gradient(to right, rgba(149, 198, 227, 1), rgba(149, 198, 227, 0)) no-repeat left bottom;

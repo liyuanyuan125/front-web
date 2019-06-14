@@ -128,7 +128,7 @@
                 <Icon type="md-add-circle" style="margin-top: 5px; font-size: 17px; color: #CA7273" />
                 加入投放
               </p>
-              <p v-else @click="cancelShop(row.id)">
+              <p  v-else @click="cancelShop(row.id)">
                 <Icon type="md-add-circle" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
                 取消投放
               </p>
@@ -254,7 +254,7 @@ export default class Main extends ViewBase {
   top: any = 0
   areacode: any = []
   areaShow = false
-  title: any = ['weibo', 'wechat', 'douyin', 'xiaohonghsu']
+  title: any = ['weibo', 'wechat', 'douyin', 'kuaishou', 'xiaohonghsu']
   yudingList: any = []
   yudingListId: any = []
   get columns() {
@@ -487,11 +487,12 @@ export default class Main extends ViewBase {
                 collected: row.collected ? 1 : 0
               })
               await kolShoppingCar()
+              dom.style.cssText = `display: none`
+            this.init()
             } catch (ex) {
+              dom.style.cssText = `display: none`
               this.handleError(ex)
             }
-            this.init()
-            dom.style.cssText = `display: block`
           }
         )
       })
@@ -540,7 +541,12 @@ export default class Main extends ViewBase {
   }
 
   next() {
-
+    this.$router.push({
+      name: 'kol-shopping',
+      params: {
+        id: this.title[this.type]
+      }
+    })
   }
 
   detailShow() {
@@ -551,6 +557,8 @@ export default class Main extends ViewBase {
 
   checkDetailSet(val: any) {
     this.yudingList = val
+    this.yudingListId = this.yudingList.map((it: any) => it.kolId)
+    this.KolSeach()
   }
 
   fansNums(row: any) {
@@ -564,6 +572,7 @@ export default class Main extends ViewBase {
 
   async KolSeach(key?: any, order?: any) {
     this.loading = true
+    // await delall('weibo')
     const query = clean({
       ...this.form,
       accountCategoryCode: this.form.accountCategoryCode == 0 ? '' : this.form.accountCategoryCode,
@@ -618,12 +627,15 @@ export default class Main extends ViewBase {
   }
   @Watch('type')
   watchType(value: number) {
+    this.yudingList = []
+    this.yudingListId = []
     if (this.acount == 1) {
       this.form = {
         ...defaultForm,
         channelCode: this.title[value]
       }
       this.seach()
+      this.init()
     } else {
       this.allcollects(2)
     }

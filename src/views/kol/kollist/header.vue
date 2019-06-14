@@ -14,10 +14,11 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import weixin from './assets/weixin.png'
-import douyin from './assets/douyin.png'
+import douyin from './assets/touyin.png'
 import kuaisou from './assets/kuaisou.png'
 import xiaohongshu from './assets/xiaohongshu.png'
 import xinlang from './assets/xinlang.png'
+import { querySelectList } from '@/api/brandList'
 
 @Component
 export default class App extends ViewBase {
@@ -31,6 +32,18 @@ export default class App extends ViewBase {
     {name: '小红书', id: 'xiaohonghsu', url: xiaohongshu},
   ]
   step = this.value
+
+  created() {
+    this.init()
+  }
+
+  async init() {
+    try {
+      await querySelectList()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
 
   active(index: any, id: any) {
     this.step = index

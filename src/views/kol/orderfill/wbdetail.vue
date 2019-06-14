@@ -8,36 +8,36 @@
   @on-cancel="cancel()">
     <div class="detail-box">
       <Form :model="form" ref="dataform" :rules="rule" label-position="left" :label-width="100" class="edit-input">
-        <FormItem label="广告位" prop="name">
-          <RadioGroup v-model="form.name">
+        <FormItem label="广告位" prop="publishCategoryCode">
+          <RadioGroup v-model="form.publishCategoryCode">
             <Radio label="单图文" ></Radio>
             <Radio label="图文"></Radio>
             <Radio label="多图文"></Radio>
           </RadioGroup>
         </FormItem>
 
-        <FormItem label="文章标题" prop="name">
+        <FormItem label="文章标题" prop="title">
           <Input  v-model="form.title" placeholder='例如"2019奥迪Q3'></Input>
         </FormItem>
 
-        <FormItem label="封面图" prop="name">
-          <Upload v-model="form.img" :maxCount="1" accept="image/*" />
+        <FormItem label="封面图" prop="pictureFileIds">
+          <Upload v-model="form.pictureFileIds" :maxCount="1" accept="image/*" />
         </FormItem>
 
-        <FormItem label="摘要" prop="name">
-          <Input v-model="form.value" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入" />
+        <FormItem label="摘要" prop="summary">
+          <Input v-model="form.summary" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入" />
         </FormItem>
 
-        <FormItem label="正文内容" prop="name">
+        <FormItem label="正文内容" prop="content">
           <Froala v-model="form.content" />
         </FormItem>
 
-        <FormItem label="发布时间" prop="name">
-          <DatePicker format="yyyy-MM-dd HH:mm" :options="startDate" type="datetime" placeholder="Select date" style="width: 200px"></DatePicker>
+        <FormItem label="发布时间" prop="publishTime">
+          <DatePicker format="yyyy-MM-dd HH:mm" v-model="form.publishTime" :options="startDate" type="datetime" placeholder="Select date" style="width: 200px"></DatePicker>
         </FormItem>
 
-        <FormItem label="原文链接" prop="name">
-          <Input  v-model="form.name" placeholder='例如"2019奥迪Q3'></Input>
+        <FormItem label="原文链接" prop="url">
+          <Input  v-model="form.url" placeholder='例如"2019奥迪Q3'></Input>
         </FormItem>
       </Form>
     </div>
@@ -68,11 +68,14 @@ export default class DlgEditCinema extends ViewBase {
   data: any = []
   dataName = ''
   form: any = {
-    img: [],
+    pictureFileIds: [],
     value: '',
-    name: '',
+    publishCategoryCode: '',
     title: '',
-    content: ''
+    summary: '',
+    content: '',
+    publishTime: [],
+    url: ''
   }
 
   rule: any = {}

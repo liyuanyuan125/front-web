@@ -116,7 +116,8 @@
                :key="index"
                class="res-col">
           <div>
-            <div class="poster"><img :src='item.images' /></div>
+            <div class="poster" @click="$router.push({name: 'film-movie', params: {id: 1}})">
+              <img :src='item.images' /></div>
             <router-link :to='{id:item.id}'
                          class="movtitle cut-text">{{item.title}}</router-link>
             <p class="movscore">{{item.score}}</p>

@@ -9,6 +9,7 @@ import {Component} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import ColBrand from '@/components/detailBrand/index.vue'
 
+
 @Component({
   components: {
     ColBrand

@@ -25,8 +25,8 @@
       <Col :span="24">
           <div ref="refChart"
             v-if="initDone"
-            style="width: 100%; height: 400px"></div>      
-          <div v-else class='loading-wp' style="width: 100%; height: 400px">
+            :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`" ></div>      
+          <div v-else class='loading-wp' :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
             <TinyLoading  />
           </div>
       </Col>
@@ -61,6 +61,8 @@ export default class BarCategoryStack extends ViewBase {
   @Prop({ type: Array, default: () => [] })  dict2!: any[]
   @Prop({ type: Array, default: () => [] })  color!: any[]
   @Prop({ type: Array, default: () => [] })  dataList!: any[]
+  @Prop({ type: Function, default: () => {} }) fn?: any
+  @Prop({ type: Number, default: 0 }) height?: number
   xaxisList: any = []
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
@@ -85,13 +87,7 @@ export default class BarCategoryStack extends ViewBase {
       return {
         name: '',
         type: 'bar',
-        // stack: 'total',
-        // label: {
-        //   normal: {
-        //     show: true,
-        //     position: 'insideRight'
-        //   }
-        // },
+        barMaxWidth: 15,
         data: []
       }
     })
@@ -127,7 +123,11 @@ export default class BarCategoryStack extends ViewBase {
       },
       series: chartSeries.map(item => item)
     }
+    // debugger
     myChart.setOption(option)
+    if ( this.fn !== null ) {
+      myChart.on('click', this.fn)
+    }
   }
   @Watch('initDone')
   watchInitDone(val: boolean) {

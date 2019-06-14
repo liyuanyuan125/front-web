@@ -1,8 +1,10 @@
 <template>
   <div>
-    <div v-if="value.status == 1" class="plan-message">
-      <span>当前计划已失效或已关闭，如有疑问，请点击下放"联系商务"</span>
-      <Button type="default" class="btn-contact">联系商务</Button>
+    <div v-if="value.status == 12" class="plan-message">
+      <span style="padding-top: 40px">当前计划已失效或已关闭，如有疑问，请点击下放"联系商务"</span>
+      <div class="btn-box" style="margin-top: 40px">
+        <Button  type="default" class="btn-contact">联系商务</Button>
+      </div>
     </div>
     <div v-if="value.status == 3" class="plan-message">
       <p>以下为平台专业投放人员为您提供的投放方案，确认后您只需缴纳您的预算 
@@ -28,7 +30,7 @@ export default class App extends ViewBase {
   @Prop() value: any
 
   formatNums(data: any) {
-    return data ? formatCurrency(data) : '暂无'
+    return data ? formatCurrency(data) : '0'
   }
 
 }

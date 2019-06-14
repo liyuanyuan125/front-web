@@ -723,7 +723,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
   // KOL - KOL 对比
   {
-    path: '/kol/compare',
+    path: '/kol/compare/:id/:ids',
     name: 'kol-compare',
     component: () => import('./views/kol/compare/index.vue'),
     meta: emptyAuth
@@ -758,7 +758,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // kol - koll列表
   {
-    path: '/kol/shopping',
+    path: '/kol/shopping/:id?',
     name: 'kol-shopping',
     component: () => import('./views/kol/shopping/index.vue'),
     meta: emptyAuth
@@ -1009,7 +1009,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // kol - 订单填写
   {
-    path: '/kol/orderfill/:id',
+    path: '/kol/orderfill/:code?/:id?',
     name: 'order-orderfill',
     component: () => import('./views/kol/orderfill/index.vue'),
     meta: emptyAuth,
@@ -1040,7 +1040,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/filmmakerdetail/moreinformation',
     name: 'film-filmmakerdetail-moreinformation',
     component: () => import('./views/film/filmmakerDetails/moreInformation.vue'),
-    meta: emptyAuth
+    meta: emptyAuth,
+    props: idProps,
   },
 
   // [直客] 品牌管理（详情页）登录判断
