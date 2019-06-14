@@ -20,27 +20,17 @@
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <Row type="flex"
-         justify="space-between">
+    <Row type="flex" justify="space-between" v-if="initDone">  
       <Col :span="12">
-      <div ref="refChart0"
-           v-if="initDone"
-           style="width: 100%; min-height: 300px"></div>
-      <div v-else
-           style="width: 100%; ">
-        <TinyLoading />
-      </div>
+        <div ref="refChart0" style="width: 100%; min-height: 300px"></div>
       </Col>
       <Col :span="12">
-      <div ref="refChart1"
-           v-if="initDone"
-           style="width: 100%; min-height: 300px"></div>
-      <div v-else
-           style="width: 100%; ">
-        <TinyLoading />
-      </div>
-      </Col>
+        <div ref="refChart1" style="width: 100%; min-height: 300px"></div>
+      </Col>  
     </Row>
+    <div v-else class='loading-wp' style="width: 100%; height: 400px">
+        <TinyLoading />
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -56,13 +46,18 @@ import {
   xOption,
   barThinStyle
 } from '../chartsOption'
+import { tooltipStyles } from '@/util/echarts'
+const tooltipsDefault = tooltipStyles({
+    trigger:  'item',
+    formatter:  '{b} <br/> {c}'
+})
 @Component({
   components: {
     TinyLoading
   }
 })
 // 简单饼图
-export default class PieSimple extends ViewBase {
+export default class BarYCategoryDouble extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
@@ -71,6 +66,7 @@ export default class PieSimple extends ViewBase {
   @Prop({ type: Array, default: () => [] }) dict2!: any[]
   @Prop({ type: Array, default: () => [] }) color!: any[]
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
+  @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
 
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
@@ -108,6 +104,7 @@ export default class PieSimple extends ViewBase {
     })
     const option0: any = {
       ...pubOption,
+      tooltip : this.toolTip,
       yAxis: {
         splitLine: { show: false },
         splitArea: { show: false },
@@ -134,6 +131,7 @@ export default class PieSimple extends ViewBase {
 
     const option1: any = {
       ...pubOption,
+      tooltip : this.toolTip,
       yAxis: {
         splitLine: { show: false },
         splitArea: { show: false },

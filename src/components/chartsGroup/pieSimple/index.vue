@@ -43,8 +43,9 @@ import {
   dottedLineStyle,
   yOption,
   xOption,
-  barThinStyle
+  barThinStyle,
 } from '../chartsOption'
+import { tooltipStyles } from '@/util/echarts'
 @Component({
   components: {
     TinyLoading
@@ -91,6 +92,10 @@ export default class PieSimple extends ViewBase {
     const option: any = {
       color: this.color,
       ...pubOption,
+      tooltip : tooltipStyles({
+        trigger: 'item',
+        formatter: '{b} : {c}'
+      }),
       series: [
         {
           name: this.title,

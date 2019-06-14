@@ -1,7 +1,3 @@
-<style lang="less">
-@import '~@/site/lib.less';
-@import '~@/site/detailmore.less';
-</style>
 <template>
   <div>
     <Row>
@@ -15,19 +11,13 @@
               <Col :span="17">
                 <DetailNavBar titleText=''>
                   <div slot='item' type="flex" justify="space-between" align="left" >
-                    <!-- <Select v-model="form.platformId"
-                    style="width:150px" clearable @on-change="handleChange">
-                      <Option v-for="(item) in dict.platform"
-                              :key="item.id"
-                              :value="item.id">{{item.name}}</Option>
-                    </Select> -->
                     <span>整体匹配度72%</span>
                   </div>
                 </DetailNavBar>
               </Col>
-              <Col :span="7" style="text-align:right" >
-                <span>
-                  Papi酱 PK
+              <Col :span="7" class-name="select-box" align="middle" >
+                <span class='one-v-one'>
+                  <i style="background-color: #DA6C70"></i>Papi酱<span>PK</span><i style="background-color: #00B6CC"></i>
                 </span>
                 <Select v-model="form.brandId"
                         @on-change="handleChange"
@@ -60,6 +50,7 @@
                                 :dict1="chart1.dict1"
                                 :dict2="chart1.dict2"
                                 :dict3="chart1.dict3"
+                                :toolTip="tooltipStyles({trigger:  'item', formatter:'{a}<br/>{b}:{c}'})"
                                 :color="chart1.color"
                                 :dataList="chart1.dataList"
                                 :currentTypeIndex="chart1.currentTypeIndex"  />
@@ -83,6 +74,7 @@
                                 :dict1="chart2.dict1"
                                 :dict2="chart2.dict2"
                                 :dict3="chart2.dict3"
+                                :toolTip="tooltipStyles({trigger:  'item', formatter:'{a}<br/>{b}:{c}'})"
                                 :color="chart2.color"
                                 :dataList="chart2.dataList"
                                 :currentTypeIndex="chart2.currentTypeIndex" />
@@ -108,6 +100,7 @@
                                       :titleTips="chart3.titleTips"
                                       :dict1="chart3.dict1"
                                       :dict2="chart3.dict2"
+                                      :toolTip="tooltipStyles({trigger:  'item', formatter:'{a}<br/>{b}:{c}'})"
                                       :color="chart3.color"
                                       :dataList="chart3.dataList"
                                       :currentTypeIndex="chart3.currentTypeIndex"  />
@@ -130,6 +123,7 @@
                                       :title="chart4.title"
                                       :dict1="chart4.dict1"
                                       :dict2="chart4.dict2"
+                                      :toolTip="tooltipStyles({trigger:  'item', formatter:'{a}<br/>{b}:{c}'})"
                                       :color="chart4.color"
                                       :dataList="chart4.dataList"
                                       :currentTypeIndex="chart4.currentTypeIndex" />
@@ -151,10 +145,11 @@ import {
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
-import { platformData, matching } from '@/api/kolDetailMoreInfo'
+import { matching } from '@/api/figureDetailMoreInfo'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import BarYCategoryDouble from '@/components/chartsGroup/barYCategoryDouble/'
 import DetailNavBar from './components/detailNavBar.vue'
+import { tooltipStyles } from '@/util/echarts'
 @Component({
   components: {
     BarXCategory,
@@ -163,9 +158,9 @@ import DetailNavBar from './components/detailNavBar.vue'
   }
 })
 export default class Temporary extends ViewBase {
+  tooltipStyles = tooltipStyles
   form: any = {
-    brandId: 0,
-    // platformId: 0
+    brandId: 0
   }
   dict: any = {
     brandList: [
@@ -184,24 +179,6 @@ export default class Temporary extends ViewBase {
         name: '宝马',
         disabled: false
       }
-    ],
-    platform: [
-      // {
-      //   id: 0,
-      //   name: '微信公众号'
-      // },
-      // {
-      //   id: 1,
-      //   name: '新浪微博'
-      // },
-      // {
-      //   id: 2,
-      //   name: '小红书'
-      // },
-      // {
-      //   id: 3,
-      //   name: '抖音'
-      // }
     ]
   }
   iCircleOption: any = {
@@ -270,12 +247,50 @@ export default class Temporary extends ViewBase {
       const { data } = await matching({ ...mockObj })
       that.chart1.dict2 = data.chart1.effectTypeList1
       that.chart1.dict3 = data.chart1.effectTypeList2
-      that.chart1.dataList[typeIndex] = data.chart1.dataList
+      that.chart1.dataList[typeIndex] = [
+        {
+          name: 'Papi酱',
+          barMaxWidth: '20',
+          type: 'bar',
+          data: [230230, 330230, 630230, 230230, 630230]
+        },
+        {
+          name: '奔驰',
+          barMaxWidth: '20',
+          type: 'bar',
+          data: [134141, 681807, 630230, 630230, 630230]
+        }
+      ]
       that.chart1.initDone = true
 
       that.chart2.dict2 = data.chart2.effectTypeList1
       that.chart2.dict3 = data.chart2.effectTypeList2
-      that.chart2.dataList[typeIndex] = data.chart2.dataList
+      that.chart2.dataList[typeIndex] = [
+          {
+              name: 'Papi酱',
+              type: 'bar',
+              barMaxWidth: '20',
+              data: [
+                  230230,
+                  330230,
+                  630230,
+                  230230,
+                  630230
+              ]
+          },
+          {
+              name: '奔驰',
+              type: 'bar',
+              barMaxWidth: '20',
+              data: [
+                  134141,
+                  681807,
+                  630230,
+                  630230,
+                  630230
+              ]
+          }
+      ]
       that.chart2.initDone = true
 
       that.chart3.dict2 = data.chart3.effectTypeList
@@ -337,17 +352,21 @@ export default class Temporary extends ViewBase {
   }
   resetData() {
     this.chart1.dataList.forEach((item: any) => {
-      item = []
+      item.splice(0, item.length)
     })
     this.chart2.dataList.forEach((item: any) => {
-      item = []
+      item.splice(0, item.length)
     })
     this.chart3.dataList.forEach((item: any) => {
-      item = []
+      item.splice(0, item.length)
     })
     this.chart4.dataList.forEach((item: any) => {
-      item = []
+      item.splice(0, item.length)
     })
   }
 }
 </script>
+<style lang="less" scoped>
+@import '~@/site/lib.less';
+@import '~@/site/detailmore.less';
+</style>

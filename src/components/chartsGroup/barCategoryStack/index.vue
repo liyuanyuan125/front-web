@@ -46,6 +46,11 @@ import {
   xOption,
   barThinStyle
 } from '../chartsOption'
+import { tooltipStyles } from '@/util/echarts'
+const tooltipsDefault = tooltipStyles({
+    trigger:  'item',
+    formatter:  '{b} <br/> {c}'
+})
 @Component({
   components: {
     TinyLoading
@@ -63,6 +68,8 @@ export default class BarCategoryStack extends ViewBase {
   @Prop({ type: Array, default: () => [] })  dataList!: any[]
   @Prop({ type: Function, default: () => {} }) fn?: any
   @Prop({ type: Number, default: 0 }) height?: number
+  @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
+
   xaxisList: any = []
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
@@ -103,6 +110,7 @@ export default class BarCategoryStack extends ViewBase {
     const option: any = {
       color: this.color,
       ...pubOption,
+      tooltip : this.toolTip,
       legend: {
         data: this.dict2.map((item: any) => {
           return item.text

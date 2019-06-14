@@ -34,10 +34,10 @@ export async function dayRanges(query: any = { beginDate: 20191212, endDate: 201
  * @description https://yapi.aiads-dev.com/project/146/interface/api/4533
  * @deprecated 缺少数据，重置日期 http://fapi.aiads-dev.com/person/107028/comments?beginDate=20170112&endDate=20191212
  */
-export async function comment(query: any, id: number = 0) {
+export async function comment(query: any, id: string = '') {
   // const res = await get(`/person/${id}/comments`, query)
-  // const res = await get(`/person/107028/comments`, { beginDate: 20170112, endDate: 20191212 })
-  // return res
+  const res = await get(`/person/107028/comments`, { beginDate: 20170112, endDate: 20191212 })
+  return res
   return await mockGet(query, {
     emotion: [
       {
@@ -175,9 +175,9 @@ export async function comment(query: any, id: number = 0) {
  * @param id id
  * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
  */
-export async function fans(id: number = 0) {
-  // const res = await get(`/person/${id}/fans`)
-  // return res
+export async function fans(id: string = '') {
+  const res = await get(`/person/${id}/fans`)
+  return res
   return await mockGet({}, {
     item: {
       totalCount: 83724,
@@ -379,6 +379,189 @@ export async function fans(id: number = 0) {
     }
   })
 }
+
+/**
+ * matching 影人受众匹配
+ * @param query
+ * @description 在那屋
+ */
+export async function matching(query: any) {
+  return await mockGet(query, {
+    chart1: {
+      dataList: [{
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0,
+        key2: 0
+      }, {
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0,
+        key2: 1
+      }, {
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1,
+        key2: 0
+      }, {
+        date: '2019-01-01',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1,
+        key2: 1
+      }],
+      effectTypeList1: [{
+        text: 'Papi酱',
+        key: 0
+      }, {
+        text: '奔驰',
+        key: 1
+      }],
+      effectTypeList2: [{
+        text: '男',
+        key: 0
+      }, {
+        text: '女',
+        key: 1
+      }]
+    },
+    chart2: {
+      dataList: [{
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0,
+        key2: 0,
+      }, {
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0,
+        key2: 1,
+      }, {
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0,
+        key2: 2,
+      }, {
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0,
+        key2: 3,
+      }, {
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0,
+        key2: 4,
+      }, {
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1,
+        key2: 0,
+      }, {
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1,
+        key2: 1,
+      }, {
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1,
+        key2: 2,
+      }, {
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1,
+        key2: 3,
+      }, {
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1,
+        key2: 4,
+      }],
+      effectTypeList1: [{
+        text: 'Papi酱',
+        key: 0
+      }, {
+        text: '奔驰',
+        key: 1
+      }],
+      effectTypeList2: [{
+        text: '19岁及以下',
+        key: 0
+      }, {
+        text: '20-29岁',
+        key: 1
+      }, {
+        text: '30-29岁',
+        key: 2
+      }, {
+        text: '40-49岁',
+        key: 3
+      }, {
+        text: '50岁及以上',
+        key: 4
+      }]
+    },
+    chart3: {
+      dataList: [{
+        itemName: '广东',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        itemName: '北京',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        itemName: '江苏',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        itemName: '广东',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        itemName: '江苏省',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        itemName: '浙江省',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }],
+      effectTypeList: [{
+        text: 'Papi酱',
+        key: 0
+      }, {
+        text: '奔驰',
+        key: 1
+      }]
+    },
+    chart4: {
+      dataList: [{
+        itemName: '重庆',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        itemName: '上海',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        itemName: '天津',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 0
+      }, {
+        itemName: '广东',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        itemName: '厦门',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }, {
+        itemName: '浙江省',
+        data: Math.floor(Math.random() * 100 + 1),
+        key: 1
+      }],
+      effectTypeList: [{
+        text: 'Papi酱',
+        key: 0
+      }, {
+        text: '奔驰',
+        key: 1
+      }]
+    }
+  })
+}
+
+
 /**
  * 品牌列表含分页
  * @param query name pageIndex	pageSize

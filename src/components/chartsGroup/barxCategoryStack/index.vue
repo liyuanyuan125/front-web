@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <div style='text-align:center'>
@@ -22,12 +23,12 @@
     <Row type="flex"
          justify="center" align="middle">
       <Col :span="24">
-        <div ref="refChart"
-           v-if="initDone"
-           style="width: 100%; height: 400px"></div>
-        <div v-else class='loading-wp' style="width: 100%; height: 400px">
+          <div ref="refChart"
+            v-if="initDone"
+            :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`" ></div>      
+          <div v-else class='loading-wp' :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
             <TinyLoading  />
-        </div>
+          </div>
       </Col>
     </Row>
   </div>
@@ -55,17 +56,21 @@ const tooltipsDefault = tooltipStyles({
     TinyLoading
   }
 })
-// 嵌套环形图
-export default class PieNest extends ViewBase {
+// x轴堆叠条形图
+export default class BarXCategoryStack extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
-  @Prop({ type: Array, default: () => [] }) dict1!: any[]
-  @Prop({ type: Array, default: () => [] }) dict2!: any[]
-  @Prop({ type: Array, default: () => [] }) color!: any[]
-  @Prop({ type: Array, default: () => [] }) dataList!: any[]
+  @Prop({ type: Array, default: () => [] })  dict1!: any[]
+  @Prop({ type: Array, default: () => [] })  dict2!: any[]
+  @Prop({ type: Array, default: () => [] })  xAxis!: any[]
+  @Prop({ type: Array, default: () => [] })  color!: any[]
+  @Prop({ type: Array, default: () => [] })  dataList!: any[]
+  @Prop({ type: Function, default: () => {} }) fn?: any
+  @Prop({ type: Number, default: 0 }) height?: number
   @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
+
 
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
@@ -83,43 +88,38 @@ export default class PieNest extends ViewBase {
     ) {
       return
     }
-    const chartData = this.dataList[this.currentIndex]
     const myChart = echarts.init(this.$refs.refChart as any)
-    // 组件内组装
-    // const chartSeries: any[] = []
-    // chartData.forEach((item: any, index: number) => {
-    //   chartSeries.push({
-    //     value: item.data,
-    //     name: this.dict2[item.key].text
-    //   })
-    // })
+
     const option: any = {
+      color: this.color,
       ...pubOption,
       tooltip : this.toolTip,
-      series: [
-        {
-          name: ' ',
-          type: 'pie',
-          radius: ['40%', '55%'],
-          color: this.color,
-          label: {
-            normal: {
-              formatter: '{b|{b}}\n{d}%  ',
-              borderWidth: 1,
-              borderRadius: 4,
-              rich: {
-                b: {
-                  fontSize: 16,
-                  lineHeight: 33
-                }
-              }
-            }
-          },
-          data: chartData
-        }
-      ]
+      legend: {
+        data: this.dict2.map((item: any) => {
+          return item.text
+        }),
+        textStyle: {
+          color: '#fff'
+        },
+        y: '25'
+      },
+      xAxis: {
+        ...xOption,
+        type: 'category',
+        data: this.xAxis
+      },
+      yAxis: {
+        ...dottedLineStyle,
+        ...yOption,
+        type: 'value'
+      },
+      series: this.dataList[this.currentIndex]
     }
+    // console.save(option, `${new Date()}.json`)
     myChart.setOption(option)
+    if ( this.fn !== null ) {
+      myChart.on('click', this.fn)
+    }
   }
   @Watch('initDone')
   watchInitDone(val: boolean) {
