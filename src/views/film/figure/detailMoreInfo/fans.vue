@@ -1,7 +1,3 @@
-<style lang="less">
-@import '~@/site/lib.less';
-@import '~@/site/detailmore.less';
-</style>
 <template>
   <div>
     <Row>
@@ -13,21 +9,7 @@
             <Row type="flex"
                  justify="space-between"
                  align="middle">
-              <Col :span="17">
-              <DetailNavBar titleText='平台'>
-                <div slot='item'>
-                  <Select v-model="form.platformId"
-                          clearable
-                          @on-change="handleChange">
-                    <Option v-for="(item) in dict.platform"
-                            :key="item.id"
-                            :value="item.id">{{item.name}}</Option>
-                  </Select>
-                </div>
-              </DetailNavBar>
-              </Col>
-              <Col :span="7"
-                   style="text-align:right">
+              <Col :span="24" style="text-align:right">
               <Select v-model="pageQuery.brandId"
                       placeholder="可选品牌"
                       filterable
@@ -35,7 +17,7 @@
                       clearable
                       :remote-method="remoteBrands"
                       :loading="brandsLoading"
-                      style="width:150px; margin-right:10px;"
+                      style="max-width:150px; margin-right:10px;"
                       class='selectedBox'>
                 <Option v-for="(option, index) in brands"
                         :value="option.value"
@@ -51,22 +33,23 @@
             <Row type="flex"
                  justify="space-between">
               <Col :span="12">
-              <div class='chart-wp'
-                   style='margin-right:10px'>
-                <Pie :initDone="chart1.initDone"
-                     :title='chart1.title'
-                     :dict1="chart1.dict1"
-                     :dict2="chart1.dict2"
-                     :color="chart1.color"
-                     :dataList="chart1.dataList"
-                     :currentTypeIndex="chart1.currentTypeIndex" />
-              </div>
+                <div class='chart-wp'
+                    style='margin-right:10px'>
+                  <Pie :initDone="chart1.initDone"
+                      :title='chart1.title'
+                      :dict1="chart1.dict1"
+                      :dict2="chart1.dict2"
+                      :color="chart1.color"
+                      :dataList="chart1.dataList"
+                      :currentTypeIndex="chart1.currentTypeIndex" />
+                </div>
               </Col>
               <Col :span="12">
               <div class='chart-wp'>
                 <BarXCategory :initDone="chart2.initDone"
                               :title='chart2.title'
                               :dict1="chart2.dict1"
+                              :dict3="chart2.dict3"
                               :color="chart2.color"
                               :dataList="chart2.dataList"
                               :currentTypeIndex="chart2.currentTypeIndex" />
@@ -113,12 +96,6 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import moment from 'moment'
-import {
-  formatTimestamp,
-  formatTimes,
-  formatNumber
-} from '@/util/validateRules'
 import { fans, brands } from '@/api/figureDetailMoreInfo'
 import DetailNavBar from './components/detailNavBar.vue'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
@@ -137,31 +114,12 @@ import BarYCategory from '@/components/chartsGroup/barYCategory/'
 })
 export default class Temporary extends ViewBase {
   form: any = {
-    platformId: 0
   }
   pageQuery: any = {
     brandId: ''
   }
   dict: any = {
     brandList: [],
-    platform: [
-      {
-        id: 0,
-        name: '微信公众号'
-      },
-      {
-        id: 1,
-        name: '新浪微博'
-      },
-      {
-        id: 2,
-        name: '小红书'
-      },
-      {
-        id: 3,
-        name: '抖音'
-      }
-    ],
     genders: [
       // {
       //     "key": 0,
@@ -184,7 +142,7 @@ export default class Temporary extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: ['#ff9933', '#169bd5']
+    color: ['#00B6CC', '#DA6C70']
   }
   chart2: any = {
     title: '粉丝年龄分布',
@@ -194,7 +152,7 @@ export default class Temporary extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: ['#ff9933', '#169bd5']
+    color: ['#00B6CC']
   }
   chart3: any = {
     title: '省份分布',
@@ -239,9 +197,10 @@ export default class Temporary extends ViewBase {
    * @param typeIndex 当前类别下标
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
+
     const that: any = this
-    // 107028 dev有数据
-    const id = parseInt(this.$route.params.id, 0)
+    const id: string = this.$route.params.id || ''
+
     try {
       const {
         data,
@@ -249,7 +208,7 @@ export default class Temporary extends ViewBase {
           item: { genders, ages, cities, provinces }
         }
       } = await fans(id)
-      if (genders.length > 0) {
+      if (genders && genders.length > 0) {
         this.chart1.dataList[
           this.chart1.currentTypeIndex
         ] = this.dict.genders.map(({ key, text }: any) => ({
@@ -262,7 +221,7 @@ export default class Temporary extends ViewBase {
         }))
         this.chart1.initDone = true
       }
-      if (ages.length > 0) {
+      if (ages && ages.length > 0) {
         this.chart2.dataList[this.chart2.currentTypeIndex] = {
           type: 'bar',
           data: []
@@ -273,20 +232,22 @@ export default class Temporary extends ViewBase {
           })
           this.chart2.dataList[this.chart2.currentTypeIndex].data.push(v)
         })
+        // console.log(this.chart2.dict3)
         this.chart2.initDone = true
       }
-      if (provinces.length > 0) {
+      if (provinces && provinces.length > 0) {
         let [min, max] = [0, 0]
         provinces.forEach(({ v, k }: any) => {
-          max = max < v ? v : max
-          min = min > v ? v : min
+          v = parseInt(v, 0)
+          max = (max < v) ? v : max
+          min = (min > v) ? v : min
           this.chart3.dataList[this.chart3.currentTypeIndex].push({
             name: k,
-            value: typeof v === 'number' ? v : parseInt(v, 0)
+            value: v
           })
           this.chart4.dataList[0].push({
             name: k,
-            value: typeof v === 'number' ? v : parseInt(v, 0)
+            value: v
           })
         })
         this.chart3.min = min
@@ -294,7 +255,7 @@ export default class Temporary extends ViewBase {
         this.chart3.initDone = true
         this.chart4.initDone = true
       }
-      if (cities.length > 0) {
+      if (cities && cities.length > 0) {
         cities.forEach(({ v, k }: any) => {
           this.chart4.dataList[1].push({
             name: k,
@@ -354,15 +315,7 @@ export default class Temporary extends ViewBase {
       this.handleError(ex)
     }
   }
-  async handleChange() {
-    this.chart1.initDone = false
-    this.chart2.initDone = false
-    this.chart3.initDone = false
-    this.chart4.initDone = false
-    this.resetData()
-    await this.getChartsData('', 0)
-  }
-  async mounted() {
+  mounted() {
     this.initHandler()
   }
   async initHandler() {
@@ -397,7 +350,6 @@ export default class Temporary extends ViewBase {
     } else {
       this.chart4.dataList.push([])
     }
-
     await this.getChartsData('', 0)
   }
   resetData() {
@@ -417,3 +369,7 @@ export default class Temporary extends ViewBase {
   }
 }
 </script>
+<style lang="less" scoped>
+@import '~@/site/lib.less';
+@import '~@/site/detailmore.less';
+</style>

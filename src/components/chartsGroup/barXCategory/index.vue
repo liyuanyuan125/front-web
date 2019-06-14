@@ -19,17 +19,19 @@
                :key="item.key"
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
-    </div>    
+    </div>
     <Row type="flex"
-         justify="space-between">
+         justify="center"
+         align="middle">
       <Col :span="24">
-      <div ref="refChart"
-           v-if="initDone"
-           style="width: 100%; height: 400px"></div>
-      <div v-else
-           style="width: 100%; height: 400px">
-        <TinyLoading />
-      </div>
+        <div ref="refChart"
+            v-if="initDone"
+            style="width: 100%; height: 400px"></div>
+        <div v-else
+            class='loading-wp'
+            style="width: 100%; height: 400px">
+          <TinyLoading />
+        </div>
       </Col>
     </Row>
   </div>
@@ -39,6 +41,11 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
+import { tooltipStyles } from '@/util/echarts'
+const tooltipsDefault = tooltipStyles({
+    trigger:  'item',
+    formatter:  '{b} <br/> {c}'
+})
 import {
   pubOption,
   seriesOption,
@@ -47,12 +54,12 @@ import {
   xOption,
   barThinStyle
 } from '../chartsOption'
+
 @Component({
   components: {
     TinyLoading
   }
 })
-// 简单饼图
 export default class BarXCategory extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
@@ -63,6 +70,8 @@ export default class BarXCategory extends ViewBase {
   @Prop({ type: Array, default: () => [] }) dict3!: any[]
   @Prop({ type: Array, default: () => [] }) color!: any[]
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
+  @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
+
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
     this.currentIndex = index
@@ -84,6 +93,7 @@ export default class BarXCategory extends ViewBase {
     const option: any = {
       color: this.color,
       ...pubOption,
+      tooltip : this.toolTip,
       xAxis: {
         ...xOption,
         data: this.dict3.map((item: any) => {
@@ -95,19 +105,8 @@ export default class BarXCategory extends ViewBase {
         ...yOption
       },
       series: chartData
-      // series: [
-      //   {
-      //     name: 'Papi酱',
-      //     type: 'bar',
-      //     data: [230230, 330230, 630230, 230230, 630230]
-      //   },
-      //   {
-      //     name: '奔驰',
-      //     type: 'bar',
-      //     data: [134141, 681807, 630230, 630230, 630230]
-      //   }
-      // ]
     }
+    // console.save(option, `${new Date()}.json`)
     myChart.setOption(option)
   }
   @Watch('initDone')
