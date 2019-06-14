@@ -109,6 +109,10 @@ export default class Main extends Vue {
 
 </script>
 <style lang='less' scoped>
+.page {
+  background: rgba(0, 32, 45, 0.8);
+  border-radius: 5px;
+}
 .director {
   width: 100%;
   padding: 15px;
@@ -117,7 +121,7 @@ export default class Main extends Vue {
 }
 .title {
   font-weight: 500;
-  color: rgba(0, 32, 46, 1);
+  color: #fff;
   line-height: 50px;
   font-size: 24px;
 }
@@ -161,14 +165,14 @@ export default class Main extends Vue {
   line-height: 20px;
   font-size: 18px;
   font-weight: 500;
-  color: rgba(0, 32, 45, 1);
+  color: #fff;
 }
 .de-ro-two {
   text-align: center;
   line-height: 40px;
   font-size: 14px;
   font-weight: 400;
-  color: rgba(0, 32, 45, 1);
+  color: #fff;
 }
 .de-ro-thr {
   text-align: center;
@@ -176,13 +180,13 @@ export default class Main extends Vue {
   height: 14px;
   font-size: 14px;
   font-weight: 400;
-  color: rgba(0, 31, 44, 0.4);
+  color: #57b4c9;
 }
 .mores {
   text-align: center;
   font-size: 14px;
   font-weight: 400;
-  color: rgba(0, 32, 45, 1);
+  color: #fff;
   line-height: 70px;
   position: relative;
   span {

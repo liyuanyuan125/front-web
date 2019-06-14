@@ -1,19 +1,19 @@
 <template>
   <div class="page">
-    <div class='t-title'>订单状态： 派单中</div>
+    <div class='t-title'>订单状态：<span v-for='(item,index) in itemlist.statusList' :key='index' v-if='itemlist.status == item.key' >{{item.text}}</span></div>
     <div class='box'>
       <Row style='margin-bottom: 10px;' class='tits'>订单信息</Row>
       <div class='title-tip'>
       	<Row>
-         <Col :span='12'><span>项目名称：</span>2019年度奔驰品牌推广</Col>
-         <Col :span='12'><span>订单编号：</span>234198515130105856</Col>
+         <Col :span='12'><span>项目名称：</span>{{itemlist.projectName}}</Col>
+         <Col :span='12'><span>订单编号：</span>{{itemlist.id}}</Col>
         </Row>
         <Row>
-         <Col :span='12'><span>推广品牌：</span>奔驰</Col>
-         <Col :span='12'><span>下单时间：</span>2018-0-09 14：21</Col>
+         <Col :span='12'><span>推广品牌：</span>{{itemlist.brandName}}</Col>
+         <Col :span='12'><span>下单时间：</span>{{fonttime}}</Col>
         </Row>
         <Row>
-         <Col :span='24'><span>推广内容：</span>2019年度奔驰品牌推广</Col>
+         <Col :span='24'><span>推广内容：</span>{{itemlist.projectDescription}}</Col>
         </Row>
       </div>
       <div class='body'>
@@ -22,17 +22,19 @@
           <Row style='padding: 20px;height:200px;background:rgba(255,255,255,0.3);border-radius:5px;'>
             <Col span='3'>
               <div class='div-img'>
-                <img src="./assets/wait.jpg" alt="">
+                <img :src='itemlist.movieMainPic' alt="">
               </div>
             </Col>
             <Col span='9' class='row-x'>
-              <Row style='font-size: 20px;margin-top: 15px;'>攀登者</Row>
-              <Row>剧情/冒险 (中国大陆)</Row>
-              <Row>2018-05-05 上映</Row>
+              <Row style='font-size: 20px;margin-top: 15px;'>{{itemlist.movieName}}</Row>
+              <Row><!-- <span v-for='(its,index) in type' :key='index'>
+                      <em v-for='(items,index) in it.movieTypes' v-if='items == its.key'>{{its.text}}</em>
+                    </span>{{type}} -->{{it.movieTypes}}</Row>
+              <Row>{{itemlist.movieReleaseDate}} 上映</Row>
             </Col>
             <Col :span='10'>
-              <Row class='bus' style='margin-top: 18px;'> 电影海报   <br><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span> <span class='okbut'>立即下载</span></Row>
-              <Row class='bus' > 电影票券  &nbsp;  100张   <br><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span> <span class='okbut'>立即下载</span></Row>
+              <Row class='bus' style='margin-top: 18px;'> 电影海报   <br><span class='hui'>后台配置的使用说明，暂无使用说明</span> <a class='okbut' :download='itemlist.id'>立即下载</a></Row>
+              <Row class='bus' > 电影票券  &nbsp;  {{itemlist.movieResource.coupon.count}}张   <br><span class='hui'>后台配置的使用说明，暂无使用说明</span> <a class='okbut' :download='itemlist.id'>立即下载</a></Row>
               <Row></Row>
             </Col>
           </Row>
@@ -41,16 +43,22 @@
       <Row class='tits' style='margin-top: 20px;'>品牌方提供资源</Row>
       <div class='body' style='margin-top: 20px;height:120px;background:rgba(255,255,255,0.3);border-radius:5px;'>
         <Row class='row-ul'>
-          <span class='hui'>品牌方提供资源：</span>123 ， 123
+          <span class='hui'>品牌方提供资源：</span><span v-for='(it,index) in itemlist.channelCodeList'>
+            <em v-for='(its,index) in itemlist.brandResource.onlines' :key='index' v-if='it.key == its.channelCode'>{{it.text}}</em>
+          </span>
+          <span v-if='itemlist.brandResource.onlines == null'>暂无资源</span>
         </Row>
         <Row class='row-ul'>
-          <span class='hui'>线下门店资源：</span>易拉宝，外卖盒
+          <span class='hui'>线下门店资源：</span><span v-for='(it,index) in itemlist.offlineResourceTypeList'>
+            <em v-for='(its,index) in itemlist.brandResource.offlines' :key='index' v-if='it.key == its.channelCode'>{{it.text}}</em>
+          </span>
+          <span v-if='itemlist.brandResource.offlines == null'>暂无资源</span>
         </Row>
       </div>
       <div class='body'>
         <Row class='tits'>留言</Row>
         <Row class='liuyan'>
-          46546545656
+          {{itemlist.message}}
         </Row>
       </div>
       <div class='body'>
@@ -58,6 +66,9 @@
         <div style='margin-top: 15px;background:rgba(255,255,255,0.3);border-radius:5px;padding : 30px;'>
           <ul>
             <li>
+              <row class='itemss itemss-w'>暂无订单跟踪信息</row>
+            </li>
+            <!-- <li>
               <row class='itemss itemss-w'>
                 <Col :span='3' class='ss-left'>ewqeqweqw<span></span></Col>
                 <Col :span='18' class='ss-right'>qweqweqweqw</Col>
@@ -68,7 +79,7 @@
                 <Col :span='3' class='ss-left'>   qeqeqw<span></span></Col>
                 <Col :span='18' class='ss-right'>qweqweqwe</Col>
               </row>
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>
@@ -80,11 +91,10 @@
 import { Component , Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { itemlist  } from '@/api/lastissue'
+import { itemlist  } from '@/api/filmorder'
 import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
-
-
+import { confirm , toast } from '@/ui/modal'
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 
 
@@ -99,7 +109,10 @@ export default class Main extends ViewBase {
   movieList: any = []
 
 
-  itemlist: any = []
+  itemlist: any = {}
+  fonttime: any = ''
+
+  type: any = []
 
   mounted() {
     this.seach()
@@ -109,16 +122,37 @@ export default class Main extends ViewBase {
 
 
   async seach() {
+    this.itemlist = []
     try {
       // 获取列表
-      // const datalist = await itemlist({id: 2})
-      // console.log(datalist)
-      // this.itemlist = (datalist.data.items || []).map((it: any) => {
-      //   return {
-      //     ...it,
-      //     createTimeTemp: moment(it.createTimeTemp).format(timeFormat),
-      //   }
-      // })
+      const datalist = await itemlist(this.$route.params.id)
+      this.itemlist = datalist.data
+      this.type = [
+        {controlStatus: 1, text: '儿童', key: 'Kids'},
+        {controlStatus: 1, text: '历史', key: 'History'},
+        {controlStatus: 1, text: '纪录片', key: 'Documentary'},
+        {controlStatus: 1, text: '战争', key: 'War'},
+        {controlStatus: 1, text: '戏曲', key: 'Opera'},
+        {controlStatus: 1, text: '音乐', key: 'Music'},
+        {controlStatus: 1, text: '歌舞', key: 'Musical'},
+        {controlStatus: 1, text: '犯罪', key: 'Crime'},
+        {controlStatus: 1, text: '传记', key: 'Biography'},
+        {controlStatus: 1, text: '青春', key: 'Youth'},
+        {controlStatus: 1, text: '奇幻', key: 'Fantasy'},
+        {controlStatus: 1, text: '短片', key: 'Short'},
+        {controlStatus: 1, text: '惊悚', key: 'Thriller'},
+        {controlStatus: 1, text: '冒险', key: 'Adventure'},
+        {controlStatus: 1, text: '科幻', key: 'Sci-Fi'},
+        {controlStatus: 1, text: '动作', key: 'Action'},
+        {controlStatus: 1, text: '家庭', key: 'Family'},
+        {controlStatus: 1, text: '动画', key: 'Animation'},
+        {controlStatus: 1, text: '励志', key: 'Encouragement'},
+        {controlStatus: 1, text: '喜剧', key: 'Comedy'},
+        {controlStatus: 1, text: '悬疑', key: 'Mystery'},
+        {controlStatus: 1, text: '爱情', key: 'Romance'},
+        {controlStatus: 1, text: '剧情', key: 'Drama'}
+      ]
+      this.fonttime = moment(this.itemlist.frontCreateTime).format(timeFormat)
     } catch (ex) {
       this.handleError(ex)
     } finally {

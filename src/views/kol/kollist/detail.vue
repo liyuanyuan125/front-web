@@ -48,9 +48,9 @@
             </div>
           </template>
           <template slot-scope="{ row }" slot="price">
-            <div v-if="row.prices">
-              <p v-for="it in row.prices" :key="it" style="margin-top: 5px">
-                {{it}}
+            <div v-if="row.priceList">
+              <p v-for="(it, index) in row.priceList" :key="index" style="margin-top: 5px">
+                {{statusLists(it)}}
               </p>
             </div>
           </template>
@@ -109,6 +109,7 @@ export default class DlgEditCinema extends ViewBase {
   title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号']
   accountCategoryList: any = []
   titles: any = ['weibo', 'wechat', 'douyin', 'xiaohonghsu']
+  statusList = []
 
   get columns() {
     const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号']
@@ -224,6 +225,11 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
+  statusLists(it: any) {
+    const msg = (this.statusList.filter((its: any) => its.key == it.categoryCode)[0] as any).text
+    return `${msg}: ${it.salePrice}w+`
+  }
+
   async flag() {
     try {
       await delall(this.titles[this.type])
@@ -250,17 +256,22 @@ export default class DlgEditCinema extends ViewBase {
       const { data } = await kolShoppingCar()
       switch (this.type) {
         case 0: this.tabledata = data.weiboList
+                this.statusList = data.weiboPublishCategoryList
           break
         case 1: this.tabledata = data.weixinList
+                this.statusList = data.weixinPublishCategoryList
           break
         case 2: this.tabledata = data.douyinList
+                this.statusList = data.douyinPublishCategoryList
           break
         case 3: this.tabledata = data.kuaishouList
+                this.statusList = data.kuaishouPublishCategoryList
           break
         case 4: this.tabledata = data.xiaohongshuList
+                this.statusList = data.xiaohongshuPublishCategoryList
           break
       }
-      this.accountCategoryList = data.accountCategoryList
+      this.accountCategoryList = data.xiaohongshuPublishCategoryList
     } catch (ex) {
       this.handleError(ex)
     }

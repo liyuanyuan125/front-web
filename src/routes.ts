@@ -871,7 +871,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // kol - 检测
   {
-    path: '/kol/order/taskDetection',
+    path: '/kol/order/taskDetection/:id',
     name: 'order-order-taskDetection',
     component: () => import('./views/kol/order/taskDetection.vue'),
     meta: emptyAuth,
@@ -994,14 +994,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
   // 影片 - 影片合作订单列表添加
   {
-    path: '/film/filmorder/addmovielist',
+    path: '/film/filmorder/addmovielist/:id',
     name: 'film-filmorder-addmovielist',
     component: () => import('./views/film/filmorder/addmovielist.vue'),
     meta: emptyAuth,
   },
   // 影片 - 影片合作订单详情
   {
-    path: '/film/filmorder/movielist/detail',
+    path: '/film/filmorder/movielist/detail/:id',
     name: 'film-filmorder-movielist-detail',
     component: () => import('./views/film/filmorder/moviedetail.vue'),
     meta: emptyAuth,
@@ -1009,7 +1009,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // kol - 订单填写
   {
-    path: '/kol/orderfill/:id',
+    path: '/kol/orderfill/:code?/:id?',
     name: 'order-orderfill',
     component: () => import('./views/kol/orderfill/index.vue'),
     meta: emptyAuth,
