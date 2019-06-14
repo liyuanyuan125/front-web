@@ -40,7 +40,6 @@ export default class DlgEditCinema extends ViewBase {
       this.handleError(ex)
     }
   }
-
   async seach() {
     try {
     } catch (ex) {
@@ -102,7 +101,7 @@ export default class DlgEditCinema extends ViewBase {
   .foot-button {
     width: 103px;
     height: 38px;
-    border-radius: 5px;
+    border-radius: 19px;
     line-height: 34px;
     font-size: 14px;
     padding: 0;

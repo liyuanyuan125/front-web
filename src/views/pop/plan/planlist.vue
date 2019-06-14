@@ -45,7 +45,7 @@
                 </span>
                 <span class="query-all" @click="deleteList">批量删除</span>
               </div>
-              <span>共{{totalCount}}条</span>
+              <span>当前共有广告计划{{totalCount}}条</span>
             </div>
           </div>
         </template>
@@ -86,13 +86,24 @@
               <p @click="plandEdit(row.id)">编辑</p>
               <p @click="plandel(row.id)">删除</p>
             </div>
-            <div v-if="row.status == 3 || row.status == 3">
-              <span v-if="row.status == 3" @click="sure(row.id)">确认方案</span>
-              <span v-if="row.status == 4" @click="pay(row.id)">立即缴费</span>
+            <div v-if="row.status == 3 || row.status == 4">
+              <span class="edit-btn" v-if="row.status == 3" @click="sure(row.id)">确认方案</span>
+              <span class="edit-btn" v-if="row.status == 4" @click="pay(row.id)">立即缴费</span>
               <div class="adver-edit">
                 <p @click="plandetail(row.id)">详情</p>
                 <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p>
                 <p @click="plandel(row.id)">删除</p>
+              </div>
+            </div>
+            <div v-if="(row.status > 4 && row.status < 8) || row.status < 12 " >
+              <div class="adver-edit">
+                <p @click="plandetail(row.id)">详情</p>
+              </div>
+            </div>
+            <div v-if="row.status >= 8 && row.status < 12 ">
+              <span class="edit-btn" @click="findId(row.id)">查看效果报表</span>
+              <div class="adver-edit">
+                <p @click="plandetail(row.id)">详情</p>
               </div>
             </div>
           </div>
@@ -101,8 +112,8 @@
 
      <pagination :pageList="pageList" :total="totalCount" @uplist="uplist"></pagination>
     </div>
-    <Sure ref="Sure" />
-    <Pay ref="Pay" />
+    <Sure ref="Sure" @uplist="uplist" />
+    <Pay ref="Pay" @uplist="uplist" />
     <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible" @submitRelevance="submitRelevance"></relevanceDlg>
   </div>
 </template>
@@ -277,9 +288,7 @@ export default class Plan extends ViewBase {
 
   async plandel(id: any) {
     try {
-      await delCheckPlanList({
-        ids: id
-      })
+      await delCheckPlanList(id)
       this.tableList()
     } catch (ex) {
       this.handleError(ex)
@@ -518,6 +527,11 @@ export default class Plan extends ViewBase {
       color: #444;
       font-size: 14px;
     }
+    .edit-btn {
+      border-radius: 5px;
+      padding: 6px 12px;
+      .button-style(#fff, #00202d);
+    }
   }
   .ivu-table-title {
     position: absolute;
@@ -614,7 +628,8 @@ export default class Plan extends ViewBase {
   .adver-edit {
     p {
       display: inline-block;
-      margin-right: 10px;
+      margin-left: 5px;
+      margin-right: 5px;
       cursor: pointer;
       margin-top: 10px;
     }

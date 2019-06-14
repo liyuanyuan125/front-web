@@ -74,7 +74,7 @@ export default class DlgEditCinema extends ViewBase {
     title: '',
     summary: '',
     content: '',
-    publishTime: [],
+    publishTime: '',
     url: ''
   }
 
@@ -91,7 +91,7 @@ export default class DlgEditCinema extends ViewBase {
     this.showDlg = true
   }
 
-  open() {
+  async open() {
   }
 
   drop(name: any) {
