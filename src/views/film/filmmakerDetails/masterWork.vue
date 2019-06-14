@@ -70,12 +70,14 @@
 </template>
 
 <script lang='ts'>
-import {Component} from 'vue-property-decorator'
+import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import {personMovies } from '@/api/filmPersonDetail'
+import {personMovies, topList } from '@/api/filmPersonDetail'
+
 
 @Component
 export default class Master extends ViewBase {
+  @Prop({ type: Number, default: 0 }) id!: number
   // 时间排序0，评分排序1
   timeSort = 0
   tableList: any = []
@@ -308,11 +310,21 @@ export default class Master extends ViewBase {
 
   mounted() {
     this.tableList = this.filmList
+    this.topCountList()
     this.list()
   }
 
+  async topCountList() {
+    const id = 107028 // this.id
+    try {
+      const { data } = await topList(id, 5)
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
   async list() {
-    const id = 107028
+    const id = 107028 // this.id
     try {
       const { data } = await personMovies(id)
     } catch (ex) {

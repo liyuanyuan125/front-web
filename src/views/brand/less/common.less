@@ -163,3 +163,67 @@
       }
     }
   }
+
+// table-list
+.table-jydata {
+    margin: 0;
+    .table {
+      /deep/ .ivu-table-cell > span:only-child:empty {
+        &::before {
+          content: '-';
+        }
+      }
+    }
+    /deep/ .ivu-select-selection {
+      height: 40px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 5px;
+      border: 1px solid rgba(255, 255, 255, 1);
+    }
+    /deep/ .ivu-select-input {
+      margin-top: 3px;
+    }
+    /deep/ .ivu-input {
+      border-radius: 5px 0  0 5px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 1);
+    }
+    /deep/ .ivu-table th, /deep/ .ivu-table-header {
+      background: rgba(0, 32, 45, 0.8);
+      height: 60px;
+      line-height: 60px;
+      color: rgba(179, 188, 192, 1);
+      font-size: 14px;
+      font-weight: 400;
+    }
+    /deep/ .ivu-table td {
+      background: rgba(32, 67, 80, 0.8);
+      transition: background-color 0.2s ease-in-out;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 1);
+      height: 50px;
+      line-height: 50px;
+    }
+    /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+      background: rgba(32, 67, 80, 1);
+    }
+    /deep/ .ivu-table-body {
+      background: rgba(32, 67, 80, 1);
+    }
+    /deep/ .ivu-table-tip {
+      overflow-x: auto;
+      overflow-y: hidden;
+      background: rgba(32, 67, 80, 1);
+    }
+}
+// table search-icon-btn
+.search-icon-btn {
+    width: 60px;
+    height: 40px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    position: relative;
+    left: -2px;
+}

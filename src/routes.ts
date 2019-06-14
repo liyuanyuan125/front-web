@@ -1026,21 +1026,33 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/filmmakerdetail/cobrand',
     name: 'film-filmmakerdetail-cobrand',
     component: () => import('./views/film/filmmakerDetails/coBrand.vue'),
-    meta: emptyAuth
+    meta: {
+      title: '合作品牌',
+      authKey: '',
+      authAction: '',
+    }
   },
   // 影片 - 影人更多详情 - 主要作品
   {
     path: '/film/filmmakerdetail/masterwork',
     name: 'film-filmmakerdetail-masterwork',
     component: () => import('./views/film/filmmakerDetails/masterWork.vue'),
-    meta: emptyAuth
+    meta: {
+      title: '主要作品',
+      authKey: '',
+      authAction: '',
+    }
   },
   // 影片 - 影人更多详情 - 更多资料
   {
     path: '/film/filmmakerdetail/moreinformation',
     name: 'film-filmmakerdetail-moreinformation',
     component: () => import('./views/film/filmmakerDetails/moreInformation.vue'),
-    meta: emptyAuth,
+    meta: {
+      title: '更多资料',
+      authKey: '',
+      authAction: '',
+    },
     props: idProps,
   },
 

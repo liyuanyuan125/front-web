@@ -51,7 +51,6 @@ export default class Information extends ViewBase {
   personalList: any = []
   mounted() {
     this.tableList()
-    // this.imgList = this.imgUrl.slice(0, 5)
   }
 
   async tableList() {
