@@ -15,7 +15,7 @@ export async function planList(data: any) {
  * @param data
  */
 export async function delCheckPlanList(query: any) {
-  const res = await del(`/xadvert/v1/plans?ids=${query.ids}`)
+  const res = await del(`/xadvert/v1/plans?ids=${query}`)
   return res
 }
 
@@ -147,6 +147,6 @@ export async function dateMockList(data: any) {
  * 确认方案
  */
 export async function sureEdit(id: any) {
-  const res = await get(`/xadvert/v1/plans/${id}/confirm`)
+  const res = await post(`/xadvert/v1/plans/${id}/confirm`)
   return res
 }

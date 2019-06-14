@@ -1,12 +1,12 @@
 <template>
   <div class="app">
     <ul class="step">
-      <li v-for="(item, index) in step" :key="item.id" :class="(value) >= item.id ? 'active' : ''">
-        <span :class="(value) >= item.id ? 'actve-span' : ''" v-if="index!=3"></span>
+      <li v-for="(item, index) in step" :key="item.id" :class="(value.id) >= item.id ? 'active' : ''">
+        <span :class="(value.id) >= item.id ? 'actve-span' : ''" v-if="index!=3"></span>
       </li>
     </ul>
     <ul class="step-text">
-      <li v-for="(item) in step" :key="item.id" :class="(value) >= item.id ? 'active' : ''">
+      <li v-for="(item) in step" :key="item.id" :class="(value.id) >= item.id ? 'active' : ''">
         {{item.key}}
       </li>
     </ul>
@@ -19,7 +19,7 @@ import ViewBase from '@/util/ViewBase'
 
 @Component
 export default class App extends ViewBase {
-  @Prop() value!: number
+  @Prop() value!: any
   step = [{
     key: '推广设置',
     id: 1

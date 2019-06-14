@@ -3,44 +3,45 @@
     <Row class='title-box'>
       <Col :span='6'>
         <div class='img-box'>
-          <img src="./assets/over.jpg" alt="">
+          <video :src="itemlist.url" width='100%' height='100%' controls="controls">
+            </video>
         </div>
       </Col>
       <Col :span='8'  >
         <div class='tops'>
-          硬朗有型的外观设计，宽敞灵活的全新7座格局，在#2019上海车展#梅赛德斯-奔驰GLB概念车昭示着新生代家族的最新成员即将到来。这不仅是…
+          {{itemlist.content}}
         </div>
         <div class='bottoms'>
-          <div class='t-im'><img src="./assets/over.jpg" alt=""></div>
-          <div class='t-in'>papi酱</div>
-          <div class='t-it'> 发布时间： 2019-05-25 18：00 </div>
+          <div class='t-im'><img :src='itemlist.accountPhotoFileUrl' alt=""></div>
+          <div class='t-in'>{{itemlist.accountName}}</div>
+          <div class='t-it'> 发布时间： {{kolPublishTime}} </div>
         </div>
       </Col>
       <Col :span='9' style='margin-left: 1%;'>
         <div class='xnu'>
           <p class='small'>点赞</p>
-          <p class='nus'>1.32万</p>
+          <p class='nus'>{{itemlist.likeNum}}</p>
         </div>
         <div class='xnu'>
           <p class='small'>评论</p>
-          <p class='nus'>1.32万</p>
+          <p class='nus'>{{itemlist.commentNum}}</p>
         </div>
         <div class='xnu'>
           <p class='small'>转发</p>
-          <p class='nus'>1.32万</p>
+          <p class='nus'>{{itemlist.shareNum}}</p>
         </div>
       </Col>
     </Row>
     <div style='margin-top: 10px;'>
       <Row class='time'>
-        <Col :span='8'>数据更新时间 ： 2019-02-02 25：20</Col>
+        <Col :span='8'>数据更新时间 ： {{createTime}}</Col>
       </Row>
       <Row class='cas' style='height: 500px;background: rgba(13, 53, 72, 1);color: #fff;'>
-        <Row style='text-align: center;color: #fff; line-height: 60px; font-size: 16px; height: 60px;cursor: pointer;'>
-          <Col :span='24'><span v-for='(it,index) in clicklist' :key='index' @click='change(it.key)'>{{it.text}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></Col>
-          <div class='ti1' v-if='key == 1'></div>
+        <Row style='text-align: center;color: #fff; line-height: 55px; font-size: 16px; height: 60px;cursor: pointer;'>
+          <Col :span='24'><span class='' v-for='(it,index) in clicklist' :key='index' :class="['clcs', key == it.key ? 'activeClass' : '']" @click='change(it.key)'>{{it.text}}</span></Col>
+          <!-- <div class='ti1' v-if='key == 1'></div>
           <div class='ti2' v-if='key == 2'></div>
-          <div class='ti3' v-if='key == 3'></div>
+          <div class='ti3' v-if='key == 3'></div> -->
         </Row>
         <div ref="container" style='height: 400px;'></div>
       </Row>
@@ -54,13 +55,13 @@
       <Row class='cis'>
         <span v-for='(it,index) in con' :key='index' class='fon' :style="{ color:'#A3D5E6', fontSize: fontSize() + 'px',top:top()+'px', transformOrigin: 'center center', webkitTransform : 'rotate('+Math.round(Math.random()*180) +'deg)'}">{{it + ' '}}</span>
       </Row> -->
-      <!-- {{con}} -->
         <div class="chart-wp borderRadius">
           <WordCloud
+            v-if='hhh'
             :initDone="true"
             :title="'评论热词'"
             :color="['rgba(0,32,45,0)']"
-            :dataList="cons"
+            :dataList="words"
             :currentTypeIndex="10"
           />
         </div>
@@ -73,12 +74,12 @@
 import { Component , Prop , Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { itemlist  } from '@/api/lastissue'
+import { itemlist  } from '@/api/task'
 import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
 import WordCloud from './wordCloud/index.vue'
 import echarts from 'echarts'
-const timeFormat = 'YYYY-MM-DD HH:mm:ss'
+const timeFormat = 'YYYY-MM-DD'
 
 
 @Component({
@@ -91,7 +92,7 @@ export default class Main extends ViewBase {
   option: any = null
   optionc: any = null
   key: any = 1
-
+  itemlist: any = {}
   clicklist: any = [
     {
       key : 1,
@@ -106,40 +107,32 @@ export default class Main extends ViewBase {
       text: '点赞数'
     }
   ]
+  kolPublishTime: any = ''
+  createTime: any = ''
 
-  cons: any = [
-    {
-      value : Math.floor(Math.random() * 100 + 1),
-      name: '转发数'
-    },
-    {
-      value : Math.floor(Math.random() * 100 + 1),
-      name: '评论数'
-    },
-    {
-      value : Math.floor(Math.random() * 100 + 1),
-      name: '点赞数'
-    }
-  ]
+  hhh: any = false
+  words: any = []
+  xz: any = []
+  yz: any = []
+  shareList: any = []
+  commentList: any = []
+  likeList: any = []
 
-  con: any = ['哈哈哈', '12132', '阿升大三', '大声地撒', 'dadasd', 'wqqw请我' ]
+  // activeColor() {
+  //   const r = Math.floor(Math.random() * 256)
+  //   const g = Math.floor(Math.random() * 256)
+  //   const b = Math.floor(Math.random() * 256)
+  //   const color = '#' + r.toString(16) + g.toString(16) + b.toString(16)
+  //   return color
+  // }
 
-
-  activeColor() {
-    const r = Math.floor(Math.random() * 256)
-    const g = Math.floor(Math.random() * 256)
-    const b = Math.floor(Math.random() * 256)
-    const color = '#' + r.toString(16) + g.toString(16) + b.toString(16)
-    return color
-  }
-
-  fontSize() {
-      return 16 + Math.random() * 10
-  }
-  // 高频词汇动态文字位置
-  top() {
-    return Math.random() * 25
-  }
+  // fontSize() {
+  //     return 16 + Math.random() * 10
+  // }
+  // // 高频词汇动态文字位置
+  // top() {
+  //   return Math.random() * 25
+  // }
 
 
   mounted() {
@@ -151,19 +144,44 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
-
-
-
   async seach() {
     try {
       // 获取列表
-      const datalist = await itemlist({id: 2})
+      const datalist = await itemlist(this.$route.params.id)
+      this.itemlist = datalist.data
+      this.words = (datalist.data.words || []).map((it: any) => {
+        return {
+          value: Math.floor(Math.random() * 100 + 1),
+          name: it
+        }
+      })
+      this.hhh = true
+      this.kolPublishTime = moment(this.itemlist.kolPublishTime).format(timeFormat)
+      this.createTime = moment(this.itemlist.createTime).format(timeFormat)
+      this.shareList = datalist.data.shareList == null ? [] : datalist.data.shareList
+      this.commentList = datalist.data.commentList == null ? [] : datalist.data.commentList
+      this.likeList = datalist.data.likeList == null ? [] : datalist.data.likeList
       if (this.key == 1) {
-        // alert(1)
+        this.xz = (this.shareList || []).map((it: any) => {
+          return it.key.split('T')[0]
+        })
+        this.yz = (this.shareList || []).map((it: any) => {
+          return it.text
+        })
       } else if (this.key == 2) {
-        // alert(2)
+        this.xz = (this.commentList || []).map((it: any) => {
+          return it.key.split('T')[0]
+        })
+        this.yz = (this.commentList || []).map((it: any) => {
+          return it.text
+        })
       } else if (this.key == 3) {
-        // alert(3)
+        this.xz = (this.likeList || []).map((it: any) => {
+          return it.key.split('T')[0]
+        })
+        this.yz = (this.likeList || []).map((it: any) => {
+          return it.text
+        })
       }
       this.option = {
         tooltip: {
@@ -203,16 +221,16 @@ export default class Main extends ViewBase {
             type: 'solid',
             color: '#DA6C70' // 折线的颜色
         },
-        toolbox: {
-          feature: {
-            saveAsImage: {},
-          }
-        },
+        // toolbox: {
+        //   feature: {
+        //     saveAsImage: {},
+        //   }
+        // },
         xAxis: [
             {
               type : 'category',
               boundaryGap : false,
-              data: [ 1 , 2 , 3],
+              data: this.xz,
               axisLine: {
               lineStyle: {
                   color: 'white',
@@ -236,7 +254,7 @@ export default class Main extends ViewBase {
                 type: 'line',
                 stack: '总量',
                 areaStyle: {},
-                data: [ 1 , 2 , 3],
+                data: this.yz,
             }
         ]
       }
@@ -253,11 +271,11 @@ export default class Main extends ViewBase {
             color: '#fff'
           },
         },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
+        // toolbox: {
+        //   feature: {
+        //     saveAsImage: {}
+        //   }
+        // },
         color: ['#FF8B92' , '#F5D44E' , '#29CFE4'],
         tooltip : {
             trigger: 'item',
@@ -270,9 +288,9 @@ export default class Main extends ViewBase {
                 radius: ['30%', '40%'],
                 center: ['50%', '50%'],
                 data: [
-                    {value: 335, name: '正面'},
-                    {value: 310, name: '中性'},
-                    {value: 234, name: '负面'}
+                    {value: datalist.data.positive, name: '正面'},
+                    {value: datalist.data.neutral, name: '中性'},
+                    {value: datalist.data.passive, name: '负面'}
                 ],
                 itemStyle: {
                     emphasis: {
@@ -324,6 +342,7 @@ export default class Main extends ViewBase {
     color: #fff;
     line-height: 30px;
     height: 116px;
+    padding-top: 10px;
   }
   .bottoms {
     .t-im {
@@ -361,11 +380,13 @@ export default class Main extends ViewBase {
     .nus {
       font-size: 30px;
       line-height: 90px;
+      text-align: left;
+      padding-left: 20%;
     }
     .small {
       font-size: 14px;
       padding-left: 20%;
-      margin-top: 37px;
+      margin-top: 25px;
       text-align: left;
     }
   }
@@ -378,6 +399,14 @@ export default class Main extends ViewBase {
   background: rgba(4, 39, 54, 1);
   border-radius: 5px 5px 0 0;
   padding-left: 30px;
+}
+.clcs {
+  display: inline-block;
+  text-align: center;
+  margin-left: 16px;
+}
+.activeClass {
+  border-bottom: 2px solid #fff;
 }
 .fon {
   display: block;

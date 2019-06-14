@@ -87,7 +87,9 @@
           </div>
         </nav>
 
-        <Pane title="映前广告投放" class="putting-pane"></Pane>
+        <Pane title="映前广告投放" :more="{}" class="putting-pane">
+
+        </Pane>
       </div>
 
       <div class="content-right">
@@ -126,7 +128,7 @@
           </ul>
         </Pane>
 
-        <Pane title="映前广告投放" :more="{}" class="film-pane">
+        <Pane title="影片合作" :more="{}" class="film-pane">
           <div class="count-stats" v-if="film.pendCount > 0 || film.runningCount > 0">
             <label>{{film.pendCount}}个待处理</label>
             <label>{{film.runningCount}}个执行中</label>

@@ -103,7 +103,7 @@
             </FormItem>
           </div> -->
           <div class="item-top" style="margin-top: 50px" v-show="movieCustom != 0">
-            <Film v-model="numsList" @donefilm="timerfilm" />
+            <Film v-model="numsList" :begin="beginDate" :end="endDate" @donefilm="timerfilm" />
           </div>
 
           <div class="btn-center">
@@ -125,7 +125,7 @@ import { confirm, toast } from '@/ui/modal'
 import moment from 'moment'
 import Film from './film.vue'
 import Chain from '@/components/cityMap/CityMap.vue'
-import { getTwodetail, getRegionList, direction, searchcinema } from '@/api/popPlan.ts'
+import { getTwodetail, getRegionList, direction, searchcinema, adverdetail, getRecommend } from '@/api/popPlan.ts'
 import { clean } from '@/fn/object.ts'
 import City from '@/components/citySelectDialog'
 // 保持互斥
@@ -153,10 +153,12 @@ const timeFormats = 'YYYYMMDD'
   }
 })
 export default class Orienteering extends ViewBase {
-  @Prop() value!: number
+  @Prop() value!: any
   visible = false
   citysId = []
   topCitysId = []
+  beginDate = ''
+  endDate = ''
   form: any = {
     name: '',
     cinema: [0],
@@ -169,7 +171,7 @@ export default class Orienteering extends ViewBase {
   timers: any = {}
   numsList: any = []
   cityCustom: number = 0
-  movieCustom: number = 1
+  movieCustom: number = 0
   cinemaType: number = 1
   areaList = [{
     label: 0,
@@ -196,6 +198,7 @@ export default class Orienteering extends ViewBase {
       name: '指定数量'
     }
   ]
+  recommend: any = false
   cityList: any = []
   cinemastatusList: any = []
   sexList: any = []
@@ -211,10 +214,23 @@ export default class Orienteering extends ViewBase {
     return data ? moment(data).format(timeFormat) : '暂无'
   }
 
+  // async mounted() {
+  //   const { data: {
+  //       item
+  //     } } = await adverdetail(this.value.setid)
+  //   this.beginDate = item.beginDate
+  //   this.endDate = item.endDate
+  // }
+
   async init() {
     try {
       const { data } = await getTwodetail()
       await getRegionList()
+      const { data: {
+          item
+        } } = await adverdetail(this.value.setid)
+      this.beginDate = item.beginDate
+      this.endDate = item.endDate
       this.cityList = data.deliveryCityTypeList
       this.cinemastatusList = data.cinemaList
       this.sexList = data.tags[2].values || []
@@ -232,17 +248,11 @@ export default class Orienteering extends ViewBase {
 
   async next(dataform: any) {
     const timers = Object.keys(this.timers)
-    this.numsList.forEach( async (it: any) => {
-      if (timers.includes(it.id + '') && this.timers[it.id].length == 0) {
-        this.showWaring('请选择投放排期')
-        return
-      }
-    })
     try {
       await direction (clean({
-        planId: 49,
+        planId: this.$route.params.setid,
         cityCustom: this.cityCustom,
-        allNation: this.form.cinema[0] == 0 ? 1 : '',
+        allNation: this.form.cinema[0] == 0 ? 1 : 0,
         deliveryCityTypes: this.form.cinema[0] == 0 ? '' : this.form.cinema,
         deliveryGroups: [
           {
@@ -251,11 +261,11 @@ export default class Orienteering extends ViewBase {
           },
           {
             tagTypeCode: 'PLAN_GROUP_AGE',
-            text: this.form.age
+            text: this.form.age.join(';')
           },
           {
             tagTypeCode: 'PLAN_GROUP_SEX',
-            text: this.form.sex
+            text: this.form.sex.join(';')
           }
         ].filter((it: any) => {
           return it.text != 0
@@ -264,19 +274,61 @@ export default class Orienteering extends ViewBase {
         deliveryMovies: this.numsList.map((it: any) => {
           return {
             movieId: it.id,
-            beginDate: moment(this.timers[it.id][0]).format(timeFormats),
-            endDate: moment(this.timers[it.id][1]).format(timeFormats)
+            beginDate: this.beginDate,
+            endDate: this.endDate
           }
         })
       }))
-      this.$emit('input', 2)
+      let time: any = null
+      time = setInterval(() => {
+        if (this.recommend) {
+          clearInterval(time)
+          this.$emit('input', {
+            id: 2,
+            setid: this.$route.params.setid
+          })
+        } else {
+          this.loddding()
+        }
+      }, 3000)
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
+  // async cinemaFind() {
+  //   try {
+  //     const { data } = await getRecommend({
+  //       budgetAmount: 100000,
+  //       specification: 15,
+  //       beginDate: 20190701,
+  //       endDate: 20190702
+  //     })
+  //     console.log(data)
+  //   } catch (ex) {
+  //     this.handleError(ex)
+  //   }
+  // }
+
+  async loddding() {
+    try {
+      const { data: {
+          item
+        } } = await adverdetail(this.value.setid)
+        this.recommend = item.recommend
+      // this.$emit('input', {
+      //   id: 2,
+      //   setid: this.$route.params.setid
+      // })
+    } catch (ex) {
+    }
+  }
+
   back(dataform: any) {
-    this.$emit('input', 0)
+    this.$emit('input', {
+      id: 0,
+      setid: this.$route.params.setid
+    })
   }
 
   @Watch('form.cinema', { deep: true })

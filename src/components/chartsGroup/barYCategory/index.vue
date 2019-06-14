@@ -131,3 +131,7 @@ export default class BarYCategory extends ViewBase {
   }
 }
 </script>
+<style lang="less" scoped>
+@import '~@/site/lib.less';
+@import '~@/site/detailmore.less';
+</style>

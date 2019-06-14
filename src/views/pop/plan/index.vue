@@ -6,9 +6,7 @@
       </Col>
     </Row>
     <div>
-      <keep-alive>
-        <component v-bind:is="currentTab" v-model="step"></component>
-      </keep-alive>
+      <component v-bind:is="currentTab" v-model="step"></component>
     </div>
   </div>
 </template>
@@ -32,32 +30,32 @@ import StepTime from './vadver/stepTime.vue'
   }
 })
 export default class App extends ViewBase {
-  step = 0
+  step = {
+    id: 0,
+    setid: ''
+  }
   currentTab: any = Promotion
   created() {
     this.init()
   }
 
   init() {
-    const step = this.$route.params
+    const step: any = this.$route.params
     if (!step.id) {
       this.$router.push({
         name: 'pop-planlist-add',
         params: { id: '0' }
       })
     } else {
-      this.step = Number(step.id)
+      this.step = step
     }
   }
 
-  @Watch('step')
-  watchStep(val: number) {
+  @Watch('step', { deep: true })
+  watchStep(val: any) {
     (this.$refs.page as HTMLDivElement).scrollTop = 0
-    // this.$router.push({
-    //     name: 'pop-planlist-add',
-    //     params: { id: val + '' }
-    // })
-    switch (this.step) {
+    const id = Number(this.step.id)
+    switch (id) {
       case 0: this.currentTab = Promotion
         break
       case 1: this.currentTab = Orienteering
@@ -69,10 +67,10 @@ export default class App extends ViewBase {
     }
   }
 
-  // @Watch('this.$route')
-  // watch$route(val: any) {
-
-  // }
+  @Watch('$route', { deep: true })
+  watch$route(val: any) {
+    this.step = val.params
+  }
 }
 </script>
 

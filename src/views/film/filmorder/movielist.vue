@@ -3,12 +3,12 @@
      <Row style='padding-left: 30px;'>
        <Col :span="7">
           <Col style='margin-left: 12px;' span="18">
-            <Input v-model='query.filmName' enter-button placeholder="合作影片" @on-change="seachs"/>
+            <Input v-model='query.name' enter-button placeholder="项目名称" @on-change="seachs"/>
           </Col>
         </Col>
         <Col :span="7">
           <Col style='margin-left: 12px;' span="18">
-            <Select v-model='query.status'  clearable placeholder="计划状态" @on-change="seachs">
+            <Select v-model='query.brandId'  clearable placeholder="全部品牌" @on-change="seachs">
               <Option
                 v-for="item in []"
                 :key="item.key"
@@ -20,7 +20,14 @@
         </Col>
         <Col :span="7">
           <Col style='margin-left: 12px;' span="18">
-            <Input v-model='query.videoName' enter-button placeholder="订单编号" @on-change="seachs"/>
+            <Select v-model='query.status'  clearable placeholder="全部订单" @on-change="seachs">
+              <Option
+                v-for="item in statusList"
+                :key="item.key"
+                :value="item.key"
+                v-if='item.key!=0'
+              >{{item.text}}</Option>
+            </Select>
           </Col>
         </Col>
         <Col :span="3">
@@ -31,122 +38,55 @@
      <ul class='itemul'>
       <Row class='mu-li'>
         <Col :span='7'>合作影片</Col>
-        <Col :span='8'>资源</Col>
+        <Col :span='8' style='text-align: left;'>资源</Col>
         <Col :span='4'>计划状态</Col>
         <Col :span='5'>操作</Col>
       </Row>
-          <li>
+          <li v-for='(it,index) in itemlist'>
             <Row class='li-title'>
-              <Col span='19'>订单号:20151654165165</Col>
-              <Col span='5'><span class='hui'>下单时间:</span> 2019-02-02 08: 00</Col>
+              <Col span='19'>订单号:{{it.id}}</Col>
+              <Col span='5'><span class='hui'>下单时间:</span> {{it.frontCreateTime}}</Col>
             </Row>
             <Row class='li-item'>
               <Col span='7'>
                 <Row>
                   <Col span='8'>
                     <div class='div-img'>
-                      <img src="./assets/wait.jpg" alt="">
+                      <img :src='it.movieMainPic' alt="">
                     </div>
                   </Col>
                   <Col span='14' class='row-x'>
-                    <Row style='font-size: 16px;font-weight: 500;line-height: 25px;'>攀登者</Row>
-                    <Row>剧情/冒险 (中国大陆)</Row>
-                    <Row>2018-05-05 上映</Row>
+                    <Row style='font-size: 16px;font-weight: 500;line-height: 25px;'>{{it.movieName}}</Row>
+                    <Row> <!-- <span v-for='(its,index) in type' :key='index'>
+                      <em v-for='(items,index) in it.movieTypes' v-if='items == its.key'>{{its.text}}</em>
+                    </span> -->{{it.movieTypes}}</Row>
+                    <div>{{it.movieReleaseDate}} 上映</div>
                   </Col>
                 </Row>
               </Col>
-              <Col span='8' style='line-height: 25px'>
-                <Row><span class='hui'>申请资源:</span>海报授权</Row>
+              <Col v-if='it.status != 6 || it.status != 7' span='8' style='line-height: 38px'>
+                <Row><span class='hui'>申请资源:</span><em v-if='it.movieResource.material.need == true'>海报授权</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.coupon.material == false '>暂无资源</em></Row>
+                <Row><span class='hui'>提供资源:</span>&nbsp;&nbsp;<em v-if='it.brandResource.onlines == null'>暂无资源</em></Row>
+              </Col>
+              <Col v-if='it.status == 6 || it.status == 7' span='8' style='line-height: 25px'>
+                <Row><span class='hui'>申请资源:</span><em v-if='it.movieResource.material.need == true'>海报授权</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.coupon.material == false '>暂无资源</em></Row>
                 <Row>
                   <Col span='10' style='color: #00B6CC;margin-left: 53px;'>《攀登者》首款海报</Col>
-                  <Col span='8'><span class='okbut'>立即下载</span></Col>
+                  <Col span='8'><a class='okbut' :download='it.id'>立即下载</a></Col>
                 </Row>
-                <Row><span class='hui'>提供资源:</span>微信官方宣传</Row>
+                <Row><span class='hui'>提供资源:</span> &nbsp;&nbsp;<em v-if='it.brandResource.onlines == null'>暂无资源</em></Row>
               </Col>
-              <Col span='4' style='text-align: center;font-weight: 500;margin-top: 29px'>待片方上传资源</Col>
-              <Col span='5' style='text-align: center; line-height: 25px'>
-                <Row>查看上传图片</Row>
-                <Row>取消</Row>
-                <Row><UploadButton @success="onUploadSuccess($event, )">上传推广图片</UploadButton></Row>
-                <Row>详情</Row>
+
+              <Col span='4' style='text-align: center;font-weight: 500;margin-top: 29px'><span v-for='(item,index) in statusList' :key='index' v-if='it.status == item.key'>{{item.text}}</span></Col>
+              <Col span='5' style='text-align: center; line-height: 25px;cursor: pointer;padding-top: 15px;'>
+                <div v-if='it.status == 7' @click='onView(it.movieMainPic)'>查看上传图片</div>
+                <Row v-if='it.status == 1 || it.status == 5'>取消</Row>
+                <Row v-if='it.status == 6 || it.status == 7'><UploadButton @success="onUploadSuccess($event, it.id)">上传推广图片</UploadButton></Row>
+                <div @click='view(it.id)' >详情</div>
               </Col>
             </Row>
           </li>
-          <li>
-            <Row class='li-title'>
-              <Col span='19'>订单号:20151654165165</Col>
-              <Col span='5'><span class='hui'>下单时间:</span> 2019-02-02 08: 00</Col>
-            </Row>
-            <Row class='li-item'>
-              <Col span='7'>
-                <Row>
-                  <Col span='8'>
-                    <div class='div-img'>
-                      <img src="./assets/wait.jpg" alt="">
-                    </div>
-                  </Col>
-                  <Col span='14' class='row-x'>
-                    <Row style='font-size: 16px;font-weight: 500;line-height: 25px;'>攀登者</Row>
-                    <Row>剧情/冒险 (中国大陆)</Row>
-                    <Row>2018-05-05 上映</Row>
-                  </Col>
-                </Row>
-              </Col>
-              <Col span='8' style='line-height: 25px'>
-                <Row><span class='hui'>申请资源:</span>海报授权</Row>
-                <Row>
-                  <Col span='10' style='color: #00B6CC;margin-left: 53px;'>《攀登者》首款海报</Col>
-                  <Col span='8'><span class='okbut'>立即下载</span></Col>
-                </Row>
-                <Row><span class='hui'>提供资源:</span>微信官方宣传</Row>
-              </Col>
-              <Col span='4' style='text-align: center;font-weight: 500;margin-top: 29px'>待片方上传资源</Col>
-              <Col span='5' style='text-align: center; line-height: 25px'>
-                <Row>查看上传图片</Row>
-                <Row>取消</Row>
-                <Row><UploadButton @success="onUploadSuccess($event, )">上传推广图片</UploadButton></Row>
-                <Row>详情</Row>
-              </Col>
-            </Row>
-          </li>
-          <li>
-            <Row class='li-title'>
-              <Col span='19'>订单号:20151654165165</Col>
-              <Col span='5'><span class='hui'>下单时间:</span> 2019-02-02 08: 00</Col>
-            </Row>
-            <Row class='li-item'>
-              <Col span='7'>
-                <Row>
-                  <Col span='8'>
-                    <div class='div-img'>
-                      <img src="./assets/wait.jpg" alt="">
-                    </div>
-                  </Col>
-                  <Col span='14' class='row-x'>
-                    <Row style='font-size: 16px;font-weight: 500;line-height: 25px;'>攀登者</Row>
-                    <Row>剧情/冒险 (中国大陆)</Row>
-                    <Row>2018-05-05 上映</Row>
-                  </Col>
-                </Row>
-              </Col>
-              <Col span='8' style='line-height: 25px'>
-                <Row><span class='hui'>申请资源:</span>海报授权</Row>
-                <Row>
-                  <Col span='10' style='color: #00B6CC;margin-left: 53px;'>《攀登者》首款海报</Col>
-                  <Col span='8'><span class='okbut'>立即下载</span></Col>
-                </Row>
-                <Row><span class='hui'>提供资源:</span>微信官方宣传</Row>
-              </Col>
-              <Col span='4' style='text-align: center;font-weight: 500;margin-top: 29px'>待片方上传资源</Col>
-              <Col span='5' style='text-align: center; line-height: 25px'>
-                <Row>查看上传图片</Row>
-                <Row>取消</Row>
-                <Row><UploadButton @success="onUploadSuccess($event, )">上传推广图片</UploadButton></Row>
-                <Row>详情</Row>
-              </Col>
-            </Row>
-          </li>
-          <!-- <li class='li-item' v-if='itemlist.length == 0' style='text-align: center;'>暂无数据</li> -->
+          <li v-if='itemlist.length == 0' style='height:50px;text-align: center;line-height: 50px;'>暂无数据</li>
         </ul>
         <Page
       :total="totalCount"
@@ -155,31 +95,81 @@
       :current="query.pageIndex"
       :page-size="query.pageSize"
       show-total
-      show-elevator
       @on-change="handlepageChange"
-      @on-page-size-change="handlePageSize"
-    />
-  </div>
+      @on-page-size-change="handlePageSize"/>
+    
+    <Modal v-model="viewerShow" title="查看图片" width="500" height="500">
+      <img style="width: 100%;" :src="viewerImage" alt sizes srcset>
+    </Modal>  </div>
 </template>
 
 <script lang='ts'>
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Watch} from 'vue-property-decorator'
 import UploadButton, { SuccessEvent } from '@/views/order/components/UploadButton.vue'
+import ViewBase from '@/util/ViewBase'
+import moment from 'moment'
+import { queryList , imgs } from '@/api/filmorder'
+import { toMap } from '@/fn/array'
+import { formatTimestamp } from '@/util/validateRules'
+import WeekDatePicker from '@/components/weekDatePicker'
+import { confirm , toast } from '@/ui/modal'
+const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 @Component({
   components: {
     UploadButton,
   }
 })
-export default class Main extends Vue {
+export default class Main extends ViewBase {
   value1 = 0
   query: any = {
-    filmName: '',
-    status: 1,
+    name: '',
+    brandId: null,
+    status: null,
     pageIndex: 1,
-    pageSize: 4,
+    pageSize: 10,
   }
 
   totalCount = 0
+
+  itemlist: any = []
+  statusList: any = []
+  typeList: any = []
+  offlineResourceTypeList: any = []
+  channelCodeList: any = []
+
+  type: any = [
+    {controlStatus: 1, text: '儿童', key: 'Kids'},
+    {controlStatus: 1, text: '历史', key: 'History'},
+    {controlStatus: 1, text: '纪录片', key: 'Documentary'},
+    {controlStatus: 1, text: '战争', key: 'War'},
+    {controlStatus: 1, text: '戏曲', key: 'Opera'},
+    {controlStatus: 1, text: '音乐', key: 'Music'},
+    {controlStatus: 1, text: '歌舞', key: 'Musical'},
+    {controlStatus: 1, text: '犯罪', key: 'Crime'},
+    {controlStatus: 1, text: '传记', key: 'Biography'},
+    {controlStatus: 1, text: '青春', key: 'Youth'},
+    {controlStatus: 1, text: '奇幻', key: 'Fantasy'},
+    {controlStatus: 1, text: '短片', key: 'Short'},
+    {controlStatus: 1, text: '惊悚', key: 'Thriller'},
+    {controlStatus: 1, text: '冒险', key: 'Adventure'},
+    {controlStatus: 1, text: '科幻', key: 'Sci-Fi'},
+    {controlStatus: 1, text: '动作', key: 'Action'},
+    {controlStatus: 1, text: '家庭', key: 'Family'},
+    {controlStatus: 1, text: '动画', key: 'Animation'},
+    {controlStatus: 1, text: '励志', key: 'Encouragement'},
+    {controlStatus: 1, text: '喜剧', key: 'Comedy'},
+    {controlStatus: 1, text: '悬疑', key: 'Mystery'},
+    {controlStatus: 1, text: '爱情', key: 'Romance'},
+    {controlStatus: 1, text: '剧情', key: 'Drama'}
+  ]
+
+  // 查看图片
+  viewerShow = false
+  viewerImage = ''
+
+  mounted() {
+    this.seach()
+  }
 
   seachs() {
     this.query.pageIndex = 1
@@ -187,7 +177,35 @@ export default class Main extends Vue {
   }
 
   async seach() {
+    try {
+      const { data } = await queryList(this.query)
+      this.totalCount = data.totalCount
+      this.itemlist = (data.items || []).map((it: any) => {
+        return {
+          ...it,
+          frontCreateTime : moment(it.frontCreateTime).format(timeFormat)
+        }
+      })
+      this.statusList = data.statusList
+      this.typeList = data.typeList
+      this.offlineResourceTypeList = data.offlineResourceTypeList
+      this.channelCodeList = data.channelCodeList
+    } catch (ex) {
+    }
+  }
 
+  async onUploadSuccess({ files }: SuccessEvent, id: number) {
+      try {
+        await imgs ( id ,  {reportImages: [files[0].fileId]}  )
+        toast('操作成功')
+        this.seach()
+      } catch (ex) {
+        this.handleError(ex)
+      }
+  }
+
+  view(id: any) {
+    this.$router.push({ path : '/film/filmorder/movielist/detail/' + id})
   }
 
   handlepageChange(size: any) {
@@ -196,6 +214,17 @@ export default class Main extends Vue {
   }
   handlePageSize(size: any) {
     this.query.pageIndex = size
+    this.seach()
+  }
+
+  // 查看图片
+  onView(url: string) {
+    this.viewerImage = url
+    this.viewerShow = true
+  }
+
+  @Watch('query', {deep: true})
+  watchQuery() {
     this.seach()
   }
 
@@ -229,6 +258,7 @@ export default class Main extends Vue {
 }
 .row-x {
   line-height: 30px;
+  margin-top: 10px;
 }
 .searchs {
   display: inline-block;
@@ -301,18 +331,18 @@ export default class Main extends Vue {
 /deep/ .btnCenter {
   text-align: center;
   height: 100px;
-  background: rgba(32, 67, 80, 1);
+  // background: rgba(32, 67, 80, 1);
   margin: 0 20px 0 20px;
   line-height: 100px;
   color: #fff;
 }
 /deep/ .ivu-page-prev {
   border: 0;
-  background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
 }
 /deep/ .ivu-page-next {
   border: 0;
-  background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
 }
 /deep/ .ivu-page-item-active {
   border-color: #eee;
@@ -326,7 +356,7 @@ export default class Main extends Vue {
   border: 0;
   display: inline-block;
   vertical-align: middle;
-  background: rgba(32, 67, 80, 1);
+  // background: rgba(32, 67, 80, 1);
   border-radius: 50%;
   width: 30px;
   height: 30px;
