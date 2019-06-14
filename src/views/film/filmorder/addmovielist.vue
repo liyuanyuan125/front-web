@@ -12,15 +12,15 @@
         <div style='padding: 20px;font-size: 14px;'>
           <Row>
             <Col span="12">
-              <FormItem label="项目名称" prop="accountNumber">
-                <Input v-model="dataForm.accountNumber" class="inp-style" placeholder="请输入汇款银行账号"/>
+              <FormItem label="项目名称" prop="projectName">
+                <Input v-model="dataForm.projectName" class="inp-style" placeholder="请输入项目名称"/>
               </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="推广品牌" prop="accountName">
-                <Select v-model='dataForm.accountName'  clearable placeholder="推广品牌">
+              <FormItem label="推广品牌" prop="brandId">
+                <Select v-model='dataForm.brandId'  clearable placeholder="推广品牌">
               <Option
                 v-for="item in []"
                 :key="item.key"
@@ -33,11 +33,25 @@
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="推广内容(选填)" prop="accountNumber">
-                <Input v-model="dataForm.accountNumber" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广’"/>
+              <FormItem label="推广产品" prop="productId">
+                <Select v-model='dataForm.productId'  clearable placeholder="推广产品">
+              <Option
+                v-for="item in []"
+                :key="item.key"
+                :value="item.key"
+                v-if='item.key!=0'
+              >{{item.text}}</Option>
+            </Select>
               </FormItem>
             </Col>
-            <Col style='line-height: 40px;'>&nbsp;&nbsp;(选填)</Col>
+          </Row>
+          <Row>
+            <Col span="12">
+              <FormItem label="推广内容(选填)" prop="projectDescription">
+                <Input v-model="dataForm.projectDescription" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广’"/>
+              </FormItem>
+            </Col>
+            <Col span="12" style='line-height: 40px;'>&nbsp;&nbsp;(选填)</Col>
           </Row>
           <Row class='add-line'>希望获得片方的资源</Row>
          <Row class='box' style='height: 200px ;padding: 20px;'>
@@ -58,8 +72,13 @@
               <Col :span='12'>
                 <!-- <Row class='bus' > <span class='tag'>电影海报</span><br><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span> </Row>
                 <Row class='bus' > <span class='tag'>电影票券</span>  &nbsp;  100张   <br><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span></Row> -->
-                <Row class='bus' v-for="item in lineqqq" :key='item.key'> <span @click="active(item.key)" class='tag' :class="['tag', moval == item.key ? 'activeClass' : '']">{{item.text}}</span><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span> </Row>
-                <Col span='16' class="inps" ><Input @on-focus='chgindex(2)' v-model="dataForm.accountNumber"  placeholder="可选填，例如‘奥迪Q3新款上线推广’"/></Col>
+                <!-- <Row class='bus' v-for="item in lineqqq" :key='item.key'> 
+                  <span @click="active(item.key)" class='tag' :class="['tag', moval == item.key ? 'activeClass' : '']">{{item.text}}</span><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span> 
+                </Row> -->
+                <CheckboxGroup v-model="dataForm.haibao" class='bus'> 
+                  <Checkbox   v-for="item in lineqqq" :key='item.key' :value='item.id' :label="item.key" class="check-item tag" style='margin-bottom: 40px;'>{{item.text}}</Checkbox> <span class='hui aaa'>后台配置的使用说明，暂无使用说明</span>  <span class='hui sss'>后台配置的使用说明，暂无使用说明</span>
+                </CheckboxGroup>
+                <Col span='16' class="inps" ><InputNumber @on-focus='chgindex(2)' v-model="dataForm.count"  placeholder="可选填，例如‘奥迪Q3新款上线推广’"/></InputNumber></Col>
               </Col>
             </Row>
           <Row class='add-line' style='margin-top: 40;'>品牌方可提供资源</Row>
@@ -69,7 +88,7 @@
                 <Col :span='6' class='sxsd'>自有线上推广资源</Col>
                 <Col :span='3'>
                   <!-- <Tag v-mode='dataForm.lines' :tagMess = 'line' :nus = '2'/> -->
-                  <div style='margin-bottom: 18px;' @click="active2(item.key)" :class="['tag', val == item.key ? 'activeClass' : '']" v-for="item in line" :key="item.key">
+                  <div style='margin-bottom: 18px;' @click="active2(item.key)" :class="['tag', val == item.key ? 'activeClass' : '']" v-for="item in online" :key="item.key">
                     {{item.text}}
                   </div>
                 </Col>
@@ -78,13 +97,13 @@
                     <Col :span='24' :key='index'><Input @on-focus='chgindex2(item.key)' v-model="dataForm.s + item.key" class="inp-style" :key='key' :placeholder='item.text'/></Col>
                   </Row> -->
                   <Row class='add-row'>
-                    <Col :span='24'><Input @on-focus='chgindex2(1)' v-model="dataForm.accountNumber" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广’"/></Col>
+                    <Col :span='24'><Input @on-focus='chgindex2(1)' v-model="dataForm.wechat" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广’"/></Col>
                   </Row>
                   <Row class='add-row'>
-                    <Col :span='24'><Input @on-focus='chgindex2(2)' v-model="dataForm.accountNumber" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广’"/></Col>
+                    <Col :span='24'><Input @on-focus='chgindex2(2)' v-model="dataForm.weibo" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广’"/></Col>
                   </Row>
                   <Row class='add-row'>
-                    <Col :span='24'><Input @on-focus='chgindex2(3)' v-model="dataForm.accountNumber" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广’"/></Col>
+                    <Col :span='24'><Input @on-focus='chgindex2(3)' v-model="dataForm.guang" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广’"/></Col>
                   </Row>
                 </Col>
                 
@@ -94,7 +113,7 @@
               <Col :span="24">
                 <div class='sxsd'>线下门店资源</div>
                 <CheckboxGroup v-model="dataForm.lines">
-                  <Checkbox  v-for="it in line" :key="it.key" :label="it.key"
+                  <Checkbox  v-for="it in offlineResourceTypeList" :key="it.key" :label="it.key" :value='it.key'
                     class="check-item">{{it.text}}</Checkbox>
                 </CheckboxGroup>
               </Col>
@@ -103,9 +122,9 @@
           
           <Row class="add-row">
             <Col span="24">
-              <FormItem label="留言" prop="remark">
+              <FormItem label="留言" prop="message">
                 <Input
-                  v-model="dataForm.remark"
+                  v-model="dataForm.message"
                   class="inp-style-tex"
                   type="textarea"
                 />
@@ -115,71 +134,109 @@
         </div>
         </Form>
         <div class='btnq' style="text-align: center">
-          <Button type="primary" @click="dataFormSubmit('dataForm')">提交意向</Button>
+          <Button class='ok' type="primary" @click="dataFormSubmit()">提交意向</Button>
         </div> 
     </div>
   </div>
 </template>
 
 <script lang='ts'>
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Watch} from 'vue-property-decorator'
+import ViewBase from '@/util/ViewBase'
+import moment from 'moment'
+import { queryList , addlist , filmlist  } from '@/api/filmorder'
+import { toMap } from '@/fn/array'
+import { formatTimestamp } from '@/util/validateRules'
+import WeekDatePicker from '@/components/weekDatePicker'
+import { confirm , toast } from '@/ui/modal'
 import Tag from './tag.vue'
 
-const dataForm = {
-  accountNumber: '',
-  accountName: '',
-  amount: null,
-  remittanceDate: null,
-  contactPhone: '',
-  remark: '',
-  receipts: [],
-  receipt: '',
-  lines: [0],
-  s1 : '1',
-  s2 : '2',
-  s3 : '3',
-}
+// const dataForm: any = {
+// }
 @Component({
   components: {
     Tag,
   }
 })
-export default class Main extends Vue {
+export default class Main extends ViewBase {
   value1 = 0
-  query: any = {
-    filmName: '',
-    status: 1,
-    pageIndex: 1,
-    pageSize: 4,
+  dataForm: any = {
+    movieId: this.$route.params.id,
+    projectName: '',
+    projectDescription: '',
+    brandId: 20,
+    productId: null,
+    companyId: null,
+    message: null,
+    count: null,
+    wechat: '',
+    weibo: '',
+    guang: '',
+    movieResource: {
+      material: {
+        need: 1,
+      },
+      coupon: {
+        need: 1,
+        count: 2,
+      }
+    },
+    brandResource: {
+      online: [
+          {
+            channelCode: 'weibo',
+            channelDataId: 'id'
+          }
+      ],
+      offline: [
+          {
+            channelCode: 'yilabao'
+          },
+          {
+            channelCode: 'screen'
+          }
+      ]
+    },
+    lines: [],
+    haibao: [],
+    s1 : '1',
+    s2 : '2',
+    s3 : '3',
   }
 
   moval = 1
   val = 1
 
-  line: any = [
-    {key: 1, text: '易拉宝'},
-    {key: 2, text: '外卖盒'},
-    {key: 3, text: '线下大屏'},
-    {key: 4, text: '餐桌贴纸'},
-    {key: 5, text: '宣传单'}
+  itemlist: any = []
+  statusList: any = []
+  typeList: any = []
+  offlineResourceTypeList: any = []
+  channelCodeList: any = []
+
+  query: any = {}
+
+  online: any = [
+    {key: 1, id: 'wechat' , text: '微信公众号'},
+    {key: 2, id: 'weibo' , text: '微博'},
+    {key: 3, id: 'official-website' , text: '官网'},
   ]
 
   lineqqq: any = [
-    {key: 1, text: '海报授权'},
-    {key: 2, text: '电影票券'}
+    {key: 1,  text: '海报授权'},
+    {key: 2,  text: '电影票券'}
   ]
 
+  asd: any = []
+  hai: any = false
+  dian: any = false
 
 
   totalCount = 0
-  dataForm: any = { ...dataForm }
+
 
   mounted() {
     this.dataForm.s1 = '456'
-    // this.dataForm = {
-    //   ...dataForm,
-    //   s = ''
-    // }
+    this.seach()
   }
   seachs() {
     this.query.pageIndex = 1
@@ -201,7 +258,76 @@ export default class Main extends Vue {
   }
 
   async seach() {
+    this.asd = []
+    try {
+      const { data } = await queryList({})
+      this.itemlist = data.items
+      this.statusList = data.statusList
+      this.typeList = data.typeList
+      this.offlineResourceTypeList = data.offlineResourceTypeList
+      this.channelCodeList = data.channelCodeList
+    } catch (ex) {
+    }
+  }
 
+  async dataFormSubmit() {
+    for ( const i in this.dataForm.lines) {
+      if ( 1 == 1 ) {
+        this.asd.push({channelCode : this.dataForm.lines[i]})
+      }
+    }
+    if (this.dataForm.haibao.indexOf(1) == -1) {
+      this.hai = false
+    } else {
+      this.hai = true
+    }
+
+    if (this.dataForm.haibao.indexOf(2) == -1) {
+      this.dian = false
+    } else {
+      this.dian = true
+    }
+
+    this.query = {
+      movieId: this.dataForm.movieId,
+      projectName: this.dataForm.projectName,
+      projectDescription: this.dataForm.projectDescription,
+      brandId: this.dataForm.brandId,
+      productId: this.dataForm.productId,
+      companyId: this.dataForm.companyId,
+      message: this.dataForm.message,
+      movieResource: {
+        material: {
+          need: this.hai,
+        },
+        coupon: {
+          need: this.dian,
+          count: this.dataForm.count,
+        }
+      },
+      brandResource: {
+        onlines: [
+            {
+              channelCode: 'wechat',
+              channelDataId: this.dataForm.wechat
+            },
+            {
+              channelCode: 'weibo',
+              channelDataId: this.dataForm.weibo
+            },
+            {
+              channelCode: 'official-website',
+              channelDataId: this.dataForm.guang
+            }
+        ],
+        offlines: this.asd
+      }
+    }
+    try {
+      const { data } = await addlist(this.query)
+      this.$router.push({ path : '/film/filmorder/movielist'})
+    } catch (ex) {
+    }
   }
 
   handlepageChange(size: any) {
@@ -260,7 +386,7 @@ export default class Main extends Vue {
   }
 }
 .bus {
-  margin-bottom: 20px;
+  margin-top: 10px;
 }
 .tag {
   margin-bottom: 10px;
@@ -298,6 +424,13 @@ export default class Main extends Vue {
     line-height: 16px;
     z-index: 999;
   }
+}
+.ok {
+  width: 200px;
+  height: 50px;
+  background: rgba(0, 32, 45, 1);
+  border-radius: 25px;
+  margin-bottom: 45px;
 }
 .box {
   height: 200px;
@@ -346,11 +479,21 @@ export default class Main extends Vue {
 }
 .inps {
   position: absolute;
-  top: 50%;
+  top: 54.5%;
   left: 24%;
 }
 .hui {
   color: rgba(0, 32, 45, 0.5);
+}
+.sss {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+.aaa {
+  position: absolute;
+  left: 0;
+  bottom: 52%;
 }
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper:last-child {
   border-radius: 0;
@@ -416,5 +559,18 @@ export default class Main extends Vue {
     text-align: center;
     line-height: 16px;
   }
+}
+/deep/ .ivu-input-number {
+  border-radius: 5px;
+  height: 35px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 1);
+  width: 100%;
+}
+/deep/ .ivu-input-number-input {
+  border-radius: 5px;
+  height: 35px;
+  background: rgba(255, 255, 255, 0.2);
+  width: 100%;
 }
 </style>
