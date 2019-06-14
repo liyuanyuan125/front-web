@@ -8,7 +8,7 @@
         </template>
       </Table>
       <div slot="footer" class="btnCenter footer-bottom">
-        <Button type="primary" class="button-cancel" @click="value.visible = false">关闭</Button>
+        <Button type="primary" class="button-cancel ok" @click="value.visible = false">关闭</Button>
       </div>
     </Modal>
   </div>
@@ -41,7 +41,7 @@ export default class Change extends ViewBase {
 /deep/ .ivu-modal-header {
   border-bottom: 0;
   padding: 10px 13px;
-  background: #f9f9f9;
+  text-align: center;
   font-weight: none;
 }
 /deep/ .ivu-table {
@@ -50,6 +50,17 @@ export default class Change extends ViewBase {
 }
 .footer-bottom {
   margin: 10px 0 10px;
+}
+.ok {
+  width: 200px;
+  height: 50px;
+  background: rgba(0, 32, 45, 1);
+  border-radius: 25px;
+}
+/deep/ .theme-resource .ivu-btn-primary:hover {
+  color: #fff;
+  background-color: rgba(0, 32, 45, 1);
+  border-color: rgba(0, 32, 45, 1);
 }
 </style>
 

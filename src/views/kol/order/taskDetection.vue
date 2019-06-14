@@ -3,20 +3,20 @@
     <div class='box'>
         <Row class='title'>
           <Col :span='8'>项目名称 ：<span style='font-weight: 500'>{{itemlist.projectName == null ? '暂无项目名称' : itemlist.projectName}}</span></Col>
-          <Col :span='8'>检测平台 ：{{itemlist.channelCode == null ? '暂无检测项目' : itemlist.channelCode}}</Col>
+          <Col :span='8'> 检测平台 ：<span v-for='(its,index) in itemlist.channelList' :key='index' v-if='itemlist.channelCode == its.key'>{{its.text}}</span></Col>
         </Row>
         
         <div class='title-tip'>
           <Row class='as' style='height: 107px;line-height: 106px;border-bottom: 1px solid #fff'>
            <Col :span='8' style='position: relative;'>检测到的发布数量<span style='left: 66%'>{{itemlist.publishCount == null ? '0' : itemlist.publishCount}}</span></Col>
            <Col :span='8' style='position: relative;'>总任务数<span style='left: 60%'>{{itemlist.totalTaskCount == null ? '0' : itemlist.totalTaskCount}}</span></Col>
-           <Col :span='8' style='position: relative;padding-left: 6%;text-align: left;'>预估完成度<span style='left: 40%'>{{itemlist.completePercent == null ? '0' : itemlist.completePercent}}%</span></Col>
+           <Col :span='8' style='position: relative;padding-left: 6%;text-align: left;'>预估完成度<span style='left: 40%'>{{itemlist.completePercent == null ? '0' : itemlist.completePercent * 100}}%</span></Col>
           </Row>
           <Row class='bs' style='height: 107px;line-height: 107px;'>
             <div style='float: left;width: 30%;'>检测周期 : {{itemlist.monitorStartTime == null ? '--' : monitorStartTime}} 至 {{itemlist.monitorEndTime == null ? '--' : monitorEndTime}}</div>
-            <div class='num'>总点赞 <em>{{itemlist.totalLikeNum == null ? '0' : itemlist.totalLikeNum}}万</em></div>
-            <div class='num'>总评论 <em>{{itemlist.totalCommentNum == null ? '0' : itemlist.totalCommentNum}}万</em></div>
-            <div class='num'>总转发 <em>{{itemlist.totalShareNum == null ? '0' : itemlist.totalShareNum}}万</em></div>
+            <div class='num'>总点赞 <em>{{itemlist.totalLikeNum == null ? '0' : itemlist.totalLikeNum}}</em></div>
+            <div class='num'>总评论 <em>{{itemlist.totalCommentNum == null ? '0' : itemlist.totalCommentNum}}</em></div>
+            <div class='num'>总转发 <em>{{itemlist.totalShareNum == null ? '0' : itemlist.totalShareNum}}</em></div>
           </Row>
         </div>
         <div class='body' >
@@ -33,7 +33,7 @@
               <li v-if='item.length == 0' style='line-height: 50px;text-align: center;font-size: 16px;'>暂无任务</li>
               <li v-else class='li-item' v-for='(it,index) in item' :key='index'>
                 <row>
-                  <Col :span='5' class='li-ti-col'>
+                  <Col :span='5' class='li-ti-col' style='margin-top: 16px;'>
                    <Row>
                       <Col :span='12'>
                         <div class="div-img">
@@ -41,15 +41,21 @@
                         </div>
                       </Col>
                       <Col :span='12' style='line-height: 83px;font-size: 16px;font-weight: 500'>
-                          <Tooltip v-if='it.field_14.length > 5' :content="it.field_14">
-                          <div>{{it.field_14.slice(0,5)}}...</div></Tooltip>
-                          <div v-if='it.field_14.length <= 5'>{{it.field_14}}</div>
+                          <Tooltip v-if='it.accountName.length > 5' :content="it.accountName">
+                          <div>{{it.accountName.slice(0,5)}}...</div></Tooltip>
+                          <div v-if='it.accountName.length <= 5'>{{it.accountName}}</div>
                       </Col>
                     </Row>
                   </Col>
-                  <Col :span='2' class='li-ti-col ss'>{{it.publishCategoryCode}}</Col>
+                  <Col :span='2' class='li-ti-col ss'><span v-for='(its,index) in itemlist.publishCategoryList' :key='index' v-if='it.publishCategoryCode == its.key'>{{its.text}}</span></Col>
                   <Col :span='3' class='li-ti-col ss'>{{it.publishTime}}</Col>
-                  <Col :span='8' class='li-ti-col'>{{it.con}}<span class='nums'>转发：{{it.shareNum}}+ 点赞：{{it.likeNum}}+ 评论：{{it.commentNum}}+</span></Col>
+                  <Col :span='8' class='li-ti-col'>
+                    <div class='nums'>
+                      <div class='i1'><video :src="it.url" width='100%' height='100%' controls="controls"></video></div>
+                      <div class='i2'>{{it.content == null ? '暂无发布内容' : it.content}}</div>
+                    </div>
+                    <span>转发：{{it.shareNum}} 点赞：{{it.likeNum}} 评论：{{it.commentNum}}</span>
+                  </Col>
                   <Col :span='3' class='li-ti-col ss'>{{it.kolPublishTime}}</Col>
                   <Col :span='3' class='li-ti-col ss'><router-link class='jump' :to="{ name: 'order-order-taskDetection-detail', params: { id : it.id } }"
           >详情</router-link></Col>
@@ -82,7 +88,7 @@ import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
 
 
-const timeFormat = 'YYYY-MM-DD HH:mm:ss'
+const timeFormat = 'YYYY-MM-DD'
 
 
 @Component({
@@ -103,6 +109,7 @@ export default class Main extends ViewBase {
   item: any = []
   monitorStartTime: any = ''
   monitorEndTime: any = ''
+  channelList: any = []
 
   totalCount = 0
 
@@ -120,15 +127,13 @@ export default class Main extends ViewBase {
       this.itemlist = datalist.data
       const a = String(datalist.data.monitorStartTime)
       const b = String(datalist.data.monitorEndTime)
-      this.monitorStartTime = a.slice(0, 4) + '-' + a.slice(4, 6) + '-' + a.slice(6, 8)
-      this.monitorEndTime = b.slice(0, 4) + '-' + b.slice(4, 6) + '-' + b.slice(6, 8)
+      this.monitorStartTime = moment(datalist.data.monitorStartTime).format(timeFormat)
+      this.monitorEndTime = moment(datalist.data.monitorEndTime).format(timeFormat)
       this.item = datalist.data.items == null ? [] : (datalist.data.items || []).map((it: any) => {
         return {
           ...it,
-          publishTime: it.publishTime == null ? '暂无日期' : String(it.publishTime).slice(0, 4)
-          + '-' + String(it.publishTime).slice(4, 6) + '-' + String(it.publishTime).slice(6, 8),
-          kolPublishTime: it.kolPublishTime == null ? '暂无日期' : String(it.kolPublishTime).slice(0, 4)
-          + '-' + String(it.kolPublishTime).slice(4, 6) + '-' + String(it.kolPublishTime).slice(6, 8),
+          publishTime: it.publishTime == null ? '暂无日期' : moment(it.publishTime).format(timeFormat),
+          kolPublishTime: it.kolPublishTime == null ? '暂无日期' : moment(it.kolPublishTime).format(timeFormat),
         }
       })
     } catch (ex) {
@@ -219,12 +224,12 @@ export default class Main extends ViewBase {
   line-height: 40px;
   font-size: 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  height: 105px;
+  height: 143px;
   .li-ti-col {
     text-align: center;
   }
   .ss {
-    margin-top: 25px;
+    margin-top: 40px;
     font-size: 14px;
   }
   .div-img {
@@ -242,9 +247,26 @@ export default class Main extends ViewBase {
   }
 }
 .nums {
-  position: absolute;
-  bottom: -123%;
-  left: 21%;
+  height: 89px;
+  .i1 {
+    float: left;
+    width: 115px;
+    height: 74px;
+    margin-left: 20%;
+    margin-top: 8px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .i2 {
+    display: block;
+    float: left;
+    height: 74px;
+    margin-left: 2%;
+    width: 40%;
+    text-align: left;
+  }
 }
 .jump {
   display: block;

@@ -81,7 +81,7 @@
               <Col span='5' style='text-align: center; line-height: 25px;cursor: pointer;padding-top: 15px;'>
                 <div v-if='it.status == 7' @click='onView(it.movieMainPic)'>查看上传图片</div>
                 <Row v-if='it.status == 1 || it.status == 5'>取消</Row>
-                <Row v-if='it.status == 6 || it.status == 7'><UploadButton @success="onUploadSuccess($event, it.id)">上传推广图片</UploadButton></Row><UploadButton @success="onUploadSuccess($event, it.id)">上传推广图片</UploadButton>
+                <Row v-if='it.status == 6 || it.status == 7'><UploadButton @success="onUploadSuccess($event, it.id)">上传推广图片</UploadButton></Row>
                 <div @click='view(it.id)' >详情</div>
               </Col>
             </Row>
