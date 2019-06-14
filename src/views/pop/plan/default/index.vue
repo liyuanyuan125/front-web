@@ -194,7 +194,22 @@
         </Row>
         <Row :gutter="16" style="height: 126px">
           <Col :span="2"><span>定向设置:</span></Col>
-          <Col :span="22"></Col>
+          <Col :span="22">
+            <Row>
+              <Col :span="2">覆盖城市</Col>
+              <Col :span="10"></Col>
+              <Col :span="2">广告片</Col>
+              <Col :span="10"></Col>
+            </Row>
+            <Row>
+              <Col :span="2">受众性别</Col>
+              <Col :span="6"></Col>
+              <Col :span="2">广告片</Col>
+              <Col :span="6"></Col>
+              <Col :span="2">影片类型</Col>
+              <Col :span="6"></Col>
+            </Row>
+          </Col>
         </Row>
         <Row :gutter="16">
           <Col :span="2"><span>影片定向:</span></Col>
@@ -245,6 +260,7 @@ export default class App extends ViewBase {
     provinceCount: '',
     cityCount: ''
   }
+  deliveryCityTypeList: any = []
 
   get columns() {
     const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
@@ -363,6 +379,7 @@ export default class App extends ViewBase {
       this.headerValue = {
         ...data.item
       }
+      (this.$Spin as any).hide()
       this.count.cinemaCount = data.cinemaCount
       this.count.chainCount = data.chainCount
       this.count.provinceCount = data.provinceCount
@@ -370,8 +387,8 @@ export default class App extends ViewBase {
       this.statusList = data.statusList || []
       this.item = data.item || {}
       this.status = data.item.status
-      this.planMovies = data.planMovies
-      (this.$Spin as any).hide()
+      this.deliveryCityTypeList = data.deliveryCityTypeList
+      this.planMovies = data.planMovies || []
     } catch (ex) {
       (this.$Spin as any).hide()
       this.handleError(ex)

@@ -11,15 +11,13 @@
               <div class="film-time" style="margin-top: 10px"><span class="time-right">上映时间：</span>{{formatDate(it.releaseDate)}}</div>
               <div class="film-time timer">
                 <span class="time-right">投放排期</span>
-                <weekDatePicker 
-                  v-model="form[it.id]"
-                  style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker>
+                <span>{{formatDate(begin)}}至{{formatDate(end)}}</span>
               </div>
             </div>
           </div>
       </li>
-      <li class="add-item">
-        <div @click="onAdd" v-if="!type">
+      <li class="add-item" @click="onAdd" v-if="!type">
+        <div>
           <Icon type="md-add" /><span>添加影片</span>
         </div>
       </li>
@@ -48,28 +46,21 @@ export default class ComponentMain extends ViewBase {
   /**
    * 值本身，可以使用 v-model 进行双向绑定
    */
+
   @Prop({ type: Array, default: () => [] }) value!: any[]
 
-  // 判断新增和添加
   @Prop() type: any
 
-  /**
-   * 分润单位列表
-   */
+  @Prop() begin: any
 
-  /**
-   * 是否为影院
-   */
+  @Prop() end: any
+
   @Prop() incinematype: any
 
   inValue: any[] = this.value
   addShow =  false
 
   form: any = {}
-
-  formatDate(data: any) {
-    return data ? moment(data).format(timeFormat) : '暂无'
-  }
 
   onAdd() {
     this.addShow = true
@@ -83,6 +74,10 @@ export default class ComponentMain extends ViewBase {
   }
 
   onSet(id: number) {
+  }
+
+  formatDate(data: any) {
+    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
 
   async del(id: number) {

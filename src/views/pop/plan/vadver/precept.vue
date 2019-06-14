@@ -6,23 +6,23 @@
           <PreceptHead v-model="dataitem"/>
           <h3 class="layout-titles">投放影片
               <span class="item-detail">优先投放 3 部</span>
-              <span class="custom">自定义投放电影</span>
+              <!-- <span class="custom">自定义投放电影</span> -->
           </h3>
           <div class="item-top">
             <ul class="film-list" v-if="filmList.length > 0">
               <li v-for="(it) in filmList" :key="it.id"
                 :class="['film-item']">
                 <div class="film-top">
-                  <img :src="it.mainPicUrl" class="film-cover">
+                  <img :src="it.image" class="film-cover">
                   <div style="position: relative">
-                    <p class="film-title">{{it.name}}</p>
-                    <p class="film-title" style="margin-bottom: 20px">{{it.name}}</p>
-                    <p><span>上映时间：</span>{{formatDate(it.openTime)}}</p>
-                    <p><span>影片类型：</span>{{it.type.join('/')}}</p>
-                    <p><span>想看人数：</span>{{it.viewNumber}}</p>
-                    <i-circle class="circle-per" :size="73" :percent="80">
-                      <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px">匹配度</p>
-                      <p class="demo-Circle-inner" style="font-size:22px">80%</p>
+                    <p class="film-title" :title="it.movieName">{{it.movieName}}</p>
+                    <p class="film-title" style="margin-bottom: 20px">{{it.movieName}}</p>
+                    <p><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
+                    <p><span>影片类型：</span>{{it.movieType}}</p>
+                    <p><span>想看人数：</span>{{it.wantSeeNum}}</p>
+                    <i-circle trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
+                      <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
+                      <p class="demo-Circle-inner" style="font-size:20px;color:#DA6C70">{{it.matchPercent}}%</p>
                     </i-circle>
                   </div>
                 </div>
@@ -35,15 +35,15 @@
                         <img width="30px" height="30" src="./assets/man.png" alt="">
                       </div>
                     </div>
-                    <span>男性：{{it.matching}}%</span>
+                    <span style="color: #57B4C9">男性：{{it.matching}}%</span>
                   </div>
                   <div class="file-sex-box">
                     <div>
                       <div class="file-sex-woman" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.7 + 20}px`}">
-                        <img width="30px" height="30" src="./assets/man.png" alt="">
+                        <img width="30px" height="30" src="./assets/woman.png" alt="">
                       </div>
                     </div>
-                    <span>女性：{{it.matching}}%</span>
+                    <span style="color: #CA7273">女性：{{it.matching}}%</span>
                   </div>
                 </div>
 
@@ -54,7 +54,7 @@
                   </dl>
                   <dl>
                     <dd>投放周期：</dd>
-                    <dt>{{it.week}}</dt>
+                    <dt>{{formatDate(it.beginDate)}} 至 {{formatDate(it.endDate)}}</dt>
                   </dl>
                 </div>
               </li>
@@ -292,7 +292,7 @@ export default class App extends ViewBase {
   }
 
   formatDate(data: any) {
-    return data ? moment(data).format(timeFormat) : '暂无'
+    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
 
   formatNums(data: any) {
@@ -302,6 +302,16 @@ export default class App extends ViewBase {
   created() {
     this.init()
     this.seach()
+    this.detail()
+  }
+
+  async detail() {
+    try {
+      const { data } = await adverdetail(this.$route.params.setid)
+      this.filmList = data.planMovies || []
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   // 每页数
@@ -435,7 +445,10 @@ export default class App extends ViewBase {
   }
 
   back(dataform: any) {
-    this.$emit('input', 1)
+    this.$emit('input', {
+      id: 1,
+      setid: this.$route.params.setid
+    })
   }
 
   @Watch('dataitem', { deep: true })

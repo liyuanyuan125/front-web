@@ -106,7 +106,7 @@ const timeFormat = 'YYYYMMDD'
   }
 })
 export default class Promotion extends ViewBase {
-  @Prop() value!: number
+  @Prop() value!: any
   setadver: any = false
   form: any = {
     name: '',
@@ -238,7 +238,10 @@ export default class Promotion extends ViewBase {
             params: { id: '1', setid: data.data  }
           })
         }
-        this.$emit('input', 1)
+        this.$emit('input', {
+          id: 1,
+          setid: data.data
+        })
       }
     } catch (ex) {
       this.handleError(ex)

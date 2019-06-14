@@ -37,6 +37,7 @@
                          :title='chart1.title'
                          :dict1="chart1.dict1"
                          :dict2="chart1.dict2"
+                        :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})"
                          :color="chart1.color"
                          :dataList="chart1.dataList"
                          :currentTypeIndex="chart1.currentTypeIndex"
@@ -45,10 +46,12 @@
               </Col>
               <Col :span="12">
                 <div class='chart-wp'>
-                  <BarCategoryStack :initDone="chart2.initDone"
+                  <BarxCategoryStack :initDone="chart2.initDone"
                                   :title='chart2.title'
                                   :dict1="chart2.dict1"
                                   :dict2="chart2.dict2"
+                                  :xAxis="chart2.xAxis"
+                                  :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})"
                                   :color="chart2.color"
                                   :dataList="chart2.dataList"
                                   :currentTypeIndex="chart2.currentTypeIndex"
@@ -90,17 +93,15 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { findIndex } from 'lodash'
 import moment from 'moment'
-import {
-  formatTimestamp,
-  formatTimes,
-  formatNumber
-} from '@/util/validateRules'
 import { dayRanges, comment } from '@/api/figureDetailMoreInfo'
 import PieNest from '@/components/chartsGroup/pieNest/'
 import BarCategoryStack from '@/components/chartsGroup/barCategoryStack/'
+import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
 import DetailNavBar from './components/detailNavBar.vue'
+import { tooltipStyles } from '@/util/echarts'
 const timeFormat = 'YYYYMMDD'
 // #D0BF6B 中性
 // #AD686C 正面
@@ -110,11 +111,13 @@ const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
   components: {
     PieNest,
     BarCategoryStack,
+    BarxCategoryStack,
     WordCloud,
     DetailNavBar
   }
 })
 export default class Temporary extends ViewBase {
+  tooltipStyles = tooltipStyles
   form: any = {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
@@ -144,7 +147,7 @@ export default class Temporary extends ViewBase {
         disabled: false
       }
     ],
-    // 情感分类
+    // 情感分类 写死适配多模块
     emotion: [
       {
         key: 0,
@@ -185,9 +188,90 @@ export default class Temporary extends ViewBase {
       }
     ],
     dict2: this.dict.emotion,
+    xAxis: [],
     currentTypeIndex: 0,
     initDone: false,
-    dataList: [],
+    dataList: [
+      [
+        {
+            name: '中性',
+            type: 'bar',
+            stack: 'totalCount',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'insideRight'
+                }
+            },
+            barMaxWidth: '20',
+            data: []
+        },
+        {
+            name: '正面',
+            type: 'bar',
+            stack: 'totalCount',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'insideRight'
+                }
+            },
+            barMaxWidth: '20',
+            data: []
+        },
+        {
+            name: '负面',
+            type: 'bar',
+            stack: 'totalCount',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'insideRight'
+                }
+            },
+            barMaxWidth: '20',
+            data: []
+        }
+      ],
+      [
+        {
+            name: '中性',
+            type: 'bar',
+            stack: 'totalCount',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'insideRight'
+                }
+            },
+            data: []
+        },
+        {
+            name: '正面',
+            type: 'bar',
+            stack: 'totalCount',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'insideRight'
+                }
+            },
+            data: []
+        },
+        {
+            name: '负面',
+            type: 'bar',
+            stack: 'totalCount',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'insideRight'
+                }
+            },
+            data: []
+        }
+      ]
+    ],
     color: colors
   }
   chart3: any = {
@@ -252,7 +336,7 @@ export default class Temporary extends ViewBase {
       endDate: this.form.beginDate[1],
     }
     // 107028 dev有数据
-    const id = parseInt(this.$route.params.id, 0)
+    const id = this.$route.params.id || ''
     try {
       const {
         data,
@@ -264,31 +348,71 @@ export default class Temporary extends ViewBase {
           }
         }
       } = await comment({ ...mockObj }, id)
-
       for ( const k in rate ) {
         if ( rate[k] ) {
+          const index = findIndex(this.dict.emotion, (it: any) => {
+            return it.name == k
+          })
           this.chart1.dataList[0].push({
             value: rate[k],
-            key: this.dict.emotion.findIndex((item: any) => {
-              return item.name === k
-            })
+            name: this.dict.emotion[index].text
           })
         }
       }
-      dates.forEach((item: any) => {
-        for ( let num = 0; num < 3; num++ ) {
-          that.chart2.dataList[0].push({
-            data: item[this.dict.emotion[num].name].trend,
-            date: item.date,
-            key: num
-          })
-          that.chart2.dataList[1].push({
-            data: item[this.dict.emotion[num].name].count,
-            date: item.date,
-            key: num
-          })
-        }
+
+      dates.forEach((item: any, index: number) => {
+        //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
+        // trend 新增 index:0 | count 累计 index:1
+        const { date, neutral, passive, positive } = item
+        that.chart2.xAxis.push( date )
+        that.chart2.dataList[0][0].data.push(item.positive.trend)
+        that.chart2.dataList[0][1].data.push(item.passive.trend)
+        that.chart2.dataList[0][2].data.push(item.neutral.trend)
+        that.chart2.dataList[1][0].data.push(item.positive.count)
+        that.chart2.dataList[1][1].data.push(item.passive.count)
+        that.chart2.dataList[1][2].data.push(item.neutral.count)
       })
+
+      // that.chart2.xAxis = ['02.20', '02.21', '02.22']
+      // that.chart2.dataList[0] = [
+          // {
+          //     name: '中性',
+          //     type: 'bar',
+          //     stack: 'totalCount',
+          //     label: {
+          //         normal: {
+          //             show: true,
+          //             position: 'insideRight'
+          //         }
+          //     },
+          //     data: [111, 222, 333]
+          // },
+          // {
+          //     name: '正面',
+          //     type: 'bar',
+          //     stack: 'totalCount',
+          //     label: {
+          //         normal: {
+          //             show: true,
+          //             position: 'insideRight'
+          //         }
+          //     },
+          //     data: [444, 333, 111 ]
+          // },
+          // {
+          //     name: '负面',
+          //     type: 'bar',
+          //     stack: 'totalCount',
+          //     label: {
+          //         normal: {
+          //             show: true,
+          //             position: 'insideRight'
+          //         }
+          //     },
+          //     data: [222, 333, 111 ]
+          // }
+      // ]
+
       keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
         that.chart3.dataList[0].push({
           name: item,

@@ -70,7 +70,7 @@ export default class DlgEditCinema extends ViewBase {
   dataName = ''
   numId = 0
   form: any = {
-    accountPhotoFileId: [],
+    accountPhotoFileId: '',
     type: 0,
     summary: '',
     publishTime: [],

@@ -19,7 +19,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinemaList } from '@/api/popPlan'
+import { sureEdit } from '@/api/plan'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
@@ -29,19 +29,18 @@ const timeFormat = 'YYYY-MM-DD'
 @Component
 export default class DlgEditCinema extends ViewBase {
   showDlg = false
+  id: any = ''
 
   async init(type: any) {
     this.showDlg = true
+    this.id = type
   }
 
   async open() {
     try {
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
-  async seach() {
-    try {
+      await sureEdit(this.id)
+      this.cancel()
+      this.$emit('uplist')
     } catch (ex) {
       this.handleError(ex)
     }
@@ -101,7 +100,7 @@ export default class DlgEditCinema extends ViewBase {
   .foot-button {
     width: 103px;
     height: 38px;
-    border-radius: 19px;
+    border-radius: 5px;
     line-height: 34px;
     font-size: 14px;
     padding: 0;
