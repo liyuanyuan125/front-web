@@ -15,14 +15,15 @@ import ViewBase from '@/util/ViewBase'
 
 @Component
 export default class App extends ViewBase {
-  @Prop({ default: 1}) value!: number
+  @Prop({ default: 0}) value!: number
   name: any = [
-    {name: '微博', id: 1},
-    {name: '微信', id: 2},
-    {name: '抖音', id: 3},
-    {name: '快手', id: 4},
-    {name: '小红书', id: 5},
+    {name: '微博', id: 0},
+    {name: '微信', id: 1},
+    {name: '抖音', id: 2},
+    {name: '快手', id: 3},
+    {name: '小红书', id: 4},
   ]
+  titles: any = ['weibo', 'wechat', 'douyin', 'kuaishou', 'xiaohonghsu']
   width: any = ''
   step = this.value
 
@@ -31,7 +32,12 @@ export default class App extends ViewBase {
   }
   active(index: number) {
     this.step = index
-    this.$emit('input', this.step)
+    this.$router.push({
+      name: 'kol-shopping',
+      params: {
+        id: this.titles[this.step]
+      }
+    })
   }
 }
 </script>

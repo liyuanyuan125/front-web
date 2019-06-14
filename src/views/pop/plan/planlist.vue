@@ -89,7 +89,7 @@
             <div v-if="row.status == 3 || row.status == 3">
               <span v-if="row.status == 3" @click="sure(row.id)">确认方案</span>
               <span v-if="row.status == 4" @click="pay(row.id)">立即缴费</span>
-              <div>
+              <div class="adver-edit">
                 <p @click="plandetail(row.id)">详情</p>
                 <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p>
                 <p @click="plandel(row.id)">删除</p>
@@ -99,7 +99,7 @@
         </template>
       </Table>
 
-     <pagination v-model="pageList" :total="totalCount" @uplist="uplist"></pagination>
+     <pagination :pageList="pageList" :total="totalCount" @uplist="uplist"></pagination>
     </div>
     <Sure ref="Sure" />
     <Pay ref="Pay" />
@@ -500,6 +500,7 @@ export default class Plan extends ViewBase {
     background: rgba(255, 255, 255, .8);
     /deep/ td {
       height: 200px;
+      color: #00202d;
       background: rgba(0, 0, 0, 0);
     }
   }
@@ -599,6 +600,8 @@ export default class Plan extends ViewBase {
   }
 }
 .operation-btn {
+  text-align: center;
+  color: #00202d;
   span {
     cursor: pointer;
     display: inline-block;
@@ -607,6 +610,14 @@ export default class Plan extends ViewBase {
   p {
     cursor: pointer;
     line-height: 24px;
+  }
+  .adver-edit {
+    p {
+      display: inline-block;
+      margin-right: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
   }
 }
 </style>

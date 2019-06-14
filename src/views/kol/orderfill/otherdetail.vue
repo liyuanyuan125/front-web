@@ -7,35 +7,35 @@
   :mask-closable='false'
   @on-cancel="cancel()">
     <div class="detail-box">
-      <Form :model="form" ref="dataform" :rules="rule" label-position="left" :label-width="120" class="edit-input">
-        <FormItem label="任务类型" prop="name">
-          <RadioGroup v-model="form.name">
+      <Form :model="form" ref="dataform" :rules="rule" label-position="right" :label-width="130" class="edit-input">
+        <FormItem label="任务类型" prop="publishCategoryCode">
+          <RadioGroup v-model="form.publishCategoryCode">
             <Radio label="视频" ></Radio>
             <Radio label="图文"></Radio>
           </RadioGroup>
         </FormItem>
 
-        <FormItem label="是否提供产品：" prop="name">
-          <RadioGroup v-model="form.name">
+        <FormItem label="是否提供产品：" prop="provideProduct">
+          <RadioGroup v-model="form.provideProduct">
             <Radio label="是" ></Radio>
             <Radio label="否"></Radio>
           </RadioGroup>
         </FormItem>
 
-        <FormItem label="执行时间" prop="name">
-          <DatePicker format="yyyy-MM-dd HH:mm:ss" :options="startDate" type="datetime" placeholder="请选择" style="width: 200px"></DatePicker>
+        <FormItem label="执行时间" prop="publishTime">
+          <DatePicker format="yyyy-MM-dd HH:mm" v-model="form.publishTime" :options="startDate" type="datetime" placeholder="请选择" style="width: 300px"></DatePicker>
         </FormItem>
 
         <div class="hint">
            如果您需要邮寄产品，博主的发布时间会受到邮寄时间的约束， 建议您邮寄时间和发布时间距离7天
         </div>
 
-        <FormItem label="产品介绍" prop="name">
-          <Input v-model="form.value" type="textarea" :autosize="{minRows: 4,maxRows: 5}" placeholder="请输入" />
+        <FormItem label="产品介绍" prop="summary">
+          <Input v-model="form.summary" type="textarea" :autosize="{minRows: 4,maxRows: 5}" placeholder="请输入" />
         </FormItem>
 
-        <FormItem label="封面图" v-if="id == 2" prop="name">
-          <Upload v-model="form.img" :maxCount="9" multiple accept="image/*" />
+        <FormItem label="产品图片" v-if="$route.params.code == 'xiaohongshu'" prop="accountPhotoFileId">
+          <Upload v-model="form.accountPhotoFileId" :maxCount="9" multiple accept="image/*" />
         </FormItem>
 
         <FormItem label="推广链接" prop="name">
@@ -70,14 +70,19 @@ export default class DlgEditCinema extends ViewBase {
   dataName = ''
   numId = 0
   form: any = {
-    img: [],
+    accountPhotoFileId: [],
     type: 0,
-    value: '',
-    name: '',
-    title: ''
+    summary: '',
+    publishTime: [],
+    publishCategoryCode: '',
+    provideProduct: ''
   }
 
-  rule: any = {}
+  rule: any = {
+    publishTime: [
+
+    ]
+  }
 
   startDate: any = {
     disabledDate: (date: any) => {

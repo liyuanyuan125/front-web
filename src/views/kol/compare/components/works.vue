@@ -1,13 +1,9 @@
-<style lang="less">
-@import '~@/site/lib.less';
-@import './kolcompare.less';
-</style>
 <template>
   <div>
     <Row>
       <Col span="24">
         <Form label-position="left" :label-width="100">
-          <Card class="detailmore-card">
+          <Card class="work-card">
             <div slot="title">
               <Row type="flex" justify="space-between" align="middle">
                 <Col :span="14">
@@ -45,7 +41,7 @@
               <Row type="flex" justify="space-between">
                 <Col :span="24">
                   <div class='chart-wp'>
-                    charts
+                    <ECharts :options="chartData" auto-resize class="chart"/>
                   </div>
                 </Col>
               </Row>
@@ -59,23 +55,26 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import moment from 'moment'
+import ECharts from 'vue-echarts'
+import 'echarts/lib/chart/line'
+import 'echarts/lib/component/tooltip'
 import {
   formatTimestamp,
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
 import { fans, brands } from '@/api/kolCompare'
-import DetailNavBar from './components/detailNavBar.vue'
+import DetailNavBar from './detailNavBar.vue'
 @Component({
   components: {
-    DetailNavBar
+    DetailNavBar,
+    ECharts
   }
 })
 export default class Temporary extends ViewBase {
   @Prop({ type: Array, default: () => [] }) filterList!: any[]
   @Prop({ type: Array, default: () => [] }) channelList!: any[]
-  @Prop({ type: Object, default: () => {} }) chartData!: any
+  @Prop({ type: Object, default: () => {} }) productData!: any
   form: any = {
     channelCode: 0,
     filterKey: 'key1',
@@ -83,7 +82,128 @@ export default class Temporary extends ViewBase {
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
   }
-
+  chartData: any = {
+    tooltip: {
+        borderWidth: 1,
+        borderColor: 'rgba(87, 180, 201, .8)',
+        backgroundColor: 'rgba(0, 39, 52, .8)',
+        padding: [
+            7,
+            10
+        ],
+        textStyle: {
+            color: '#fff',
+            fontSize: 12,
+            lineHeight: 22
+        },
+        trigger: 'axis',
+        axisPointer: {
+            type: 'line',
+            lineStyle: {
+                width: 22,
+                color: {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 0,
+                    y2: 1,
+                    colorStops: [
+                        {
+                            offset: 0,
+                            color: 'rgba(87, 180, 201, .01)'
+                        },
+                        {
+                            offset: 1,
+                            color: 'rgba(87, 180, 201, .9)'
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    xAxis: {
+        type: 'category',
+        data: [
+           '5-16',
+           '5-17',
+           '5-18',
+           '5-19',
+           '5-20',
+           '5-21',
+           '5-22'
+        ],
+        axisLine: {
+            lineStyle: {
+                color: 'rgba(129, 180, 230, .6)'
+            }
+        },
+        axisTick: false,
+        axisLabel: {
+            color: 'rgba(255, 255, 255, .8)'
+        },
+        boundaryGap: false
+    },
+    yAxis: {
+        type: 'value',
+        axisLine: false,
+        splitLine: {
+            lineStyle: {
+                color: 'rgba(129, 180, 230, .6)'
+            }
+        },
+        axisLabel: {
+            color: 'rgba(255, 255, 255, .8)'
+        },
+        splitNumber: 4
+    },
+    grid: {
+        left: 42,
+        right: 42,
+        top: 20,
+        bottom: 20,
+        containLabel: true
+    },
+    series: [
+        {
+            name: '全网热度',
+            type: 'line',
+            smooth: true,
+            data: [
+                855000,
+                100000,
+                808000,
+                260000,
+                600000,
+                755000,
+                555000
+            ],
+            itemStyle: {
+                color: 'red'
+            },
+            symbol: 'circle',
+            showSymbol: false
+        },
+        {
+            name: '全网热度',
+            type: 'line',
+            smooth: true,
+            data: [
+                123000,
+                300000,
+                408000,
+                660000,
+                300000,
+                855000,
+                955000
+            ],
+            itemStyle: {
+                color: '#57b4c9'
+            },
+            symbol: 'circle',
+            showSymbol: false
+        }
+    ]
+  }
   /**
    * 加载图表数据
    * @param chart 图表名 (因为接口返回全部数据，暂时不用)
@@ -119,3 +239,11 @@ export default class Temporary extends ViewBase {
   }
 }
 </script>
+<style lang="less" scoped>
+@import '~@/site/lib.less';
+@import '../kolcompare.less';
+.chart {
+  width: 100%;
+  height: 300px;
+}
+</style>
