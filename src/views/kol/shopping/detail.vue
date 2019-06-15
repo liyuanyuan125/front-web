@@ -1,15 +1,17 @@
 <template>
-  <Modal v-model='showDlg'
-  title="订单确认"
-  :transfer='false'
-  :width='770'
-  :mask-closable='false'
-  :styles="{top: '10px'}"
-  @on-cancel="cancel()">
+  <Modal
+    v-model="showDlg"
+    title="订单确认"
+    :transfer="false"
+    :width="770"
+    :mask-closable="false"
+    :styles="{top: '10px'}"
+    @on-cancel="cancel()"
+  >
     <div class="detail-box">
       <Row>
         <Row>
-          <Col style="margin-top: 20px" span='5'>希望推广的影片</Col>
+          <Col style="margin-top: 20px" span="5">希望推广的影片</Col>
           <Col style="margin-top: 20px" :span="10">
             <Dropdown @on-click="drop" trigger="click">
               <a href="javascript:void(0)">
@@ -23,17 +25,15 @@
           </Col>
         </Row>
         <Row>
-          <Col span='4'>投放资源数量</Col>
+          <Col span="4">投放资源数量</Col>
         </Row>
       </Row>
       <div>
-        <ul>
-
-        </ul>
+        <ul></ul>
       </div>
       <Row>
-        <Col span='3'>期望发布时间</Col>
-        <Col span='3'>合计费用</Col>
+        <Col span="3">期望发布时间</Col>
+        <Col span="3">合计费用</Col>
       </Row>
     </div>
     <div slot="footer" class="foot">
@@ -72,17 +72,13 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
-  open() {
+  open() {}
 
-  }
-
-  drop(name: any) {
-  }
+  drop(name: any) {}
 
   cancel() {
     this.showDlg = false
   }
-
 }
 </script>
 

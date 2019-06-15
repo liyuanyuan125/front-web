@@ -1,10 +1,14 @@
 <template>
-  <div class="">
+  <div class>
     <h3 class="plan-title">
       <span class="adver-tiele">广告计划</span>
 
-      <Button type="primary" :to="{name: 'pop-planlist-add'}" class="btn-new"
-        v-auth="'promotion.ad-plan#create'">
+      <Button
+        type="primary"
+        :to="{name: 'pop-planlist-add'}"
+        class="btn-new"
+        v-auth="'promotion.ad-plan#create'"
+      >
         <Icon type="ios-add" size="27"/>新建广告计划
       </Button>
     </h3>
@@ -13,7 +17,7 @@
       <Row :gutter="20">
         <Col class="flex-box" :span="6" :offset="3">
           <div class="flex-box search-border-left" style="width: 100%">
-            <Input v-model="form.name"  placeholder="请输入ID/名称进行搜索"/>
+            <Input v-model="form.name" placeholder="请输入ID/名称进行搜索"/>
             <Button type="primary" class="bth-search" @click="searchList">
               <Icon type="ios-search" size="22"/>
             </Button>
@@ -22,21 +26,31 @@
 
         <Col :span="5">
           <Select v-model="form.status" clearable placeholder="请选择广告计划状态">
-            <Option v-for="item in data.statusList" v-if="item.key != 0" :key="item.key" :value="item.key">{{item.text}}</Option>
+            <Option
+              v-for="item in data.statusList"
+              v-if="item.key != 0"
+              :key="item.key"
+              :value="item.key"
+            >{{item.text}}</Option>
           </Select>
         </Col>
 
         <Col :span="5">
           <Select v-model="form.settlementStatus" clearable placeholder="请选择结算状态">
-            <Option v-for="item in data.settlementStatusList"  v-if="item.key != 0"   :key="item.key"  :value="item.key" >{{item.text}}</Option>
+            <Option
+              v-for="item in data.settlementStatusList"
+              v-if="item.key != 0"
+              :key="item.key"
+              :value="item.key"
+            >{{item.text}}</Option>
           </Select>
         </Col>
       </Row>
     </Form>
 
     <div>
-      <Table stripe :columns="columns" :data="tableDate" ref="selection"  >
-        <template ref='title' slot="header">
+      <Table stripe :columns="columns" :data="tableDate" ref="selection">
+        <template ref="title" slot="header">
           <div v-auth="'promotion.ad-plan#delete'">
             <div class="top">
               <div>
@@ -52,9 +66,12 @@
 
         <template slot="msg" slot-scope="{row, index}">
           <div class="msg-box">
-            <p><Checkbox v-model="checks[row.id]" :key="index"></Checkbox>ID: {{row.id}}</p>
+            <p>
+              <Checkbox v-model="checks[row.id]" :key="index"></Checkbox>
+              ID: {{row.id}}
+            </p>
             <div>
-              <img :src="row.mainPicUrl" width="90px" height="90px" />
+              <img :src="row.mainPicUrl" width="90px" height="90px">
               <div>
                 <h3>{{row.name}}</h3>
                 <span>{{row.videoName}}&nbsp;&nbsp;{{row.customerName}}&nbsp;&nbsp;{{row.specification||0 }}s</span>
@@ -65,7 +82,10 @@
           </div>
         </template>
         <template slot="date" slot-scope="{row}">
-          <p><span>{{formatDate(row.beginDate)}}</span>至<span>{{formatDate(row.endDate)}}</span></p>
+          <p>
+            <span>{{formatDate(row.beginDate)}}</span>至
+            <span>{{formatDate(row.endDate)}}</span>
+          </p>
           <p style="margin-top: 10px">{{days(row.beginDate, row.endDate)}}天</p>
         </template>
 
@@ -76,9 +96,10 @@
         </template>
 
         <template slot="status" slot-scope="{row}">
-          <p class="red" style="margin-top: 10px">
-            {{data.statusList.filter((it) => it.key == row.status)[0].text}}
-          </p>
+          <p
+            class="red"
+            style="margin-top: 10px"
+          >{{data.statusList.filter((it) => it.key == row.status)[0].text}}</p>
         </template>
 
         <template slot="operation" slot-scope="{row}">
@@ -97,7 +118,7 @@
                 <p @click="plandel(row.id)">删除</p>
               </div>
             </div>
-            <div v-if="(row.status > 4 && row.status < 8) || row.status == 12 " >
+            <div v-if="(row.status > 4 && row.status < 8) || row.status == 12 ">
               <div class="adver-edit">
                 <p @click="plandetail(row.id)">详情</p>
               </div>
@@ -112,10 +133,10 @@
         </template>
       </Table>
 
-     <pagination :pageList="pageList" :total="totalCount" @uplist="uplist"></pagination>
+      <pagination :pageList="pageList" :total="totalCount" @uplist="uplist"></pagination>
     </div>
-    <Sure ref="Sure" @uplist="uplist" />
-    <Pay ref="Pay" @uplist="uplist" />
+    <Sure ref="Sure" @uplist="uplist"/>
+    <Pay ref="Pay" @uplist="uplist"/>
     <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible" @submitRelevance="submitRelevance"></relevanceDlg>
   </div>
 </template>
@@ -123,8 +144,14 @@
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
-import { formatTimes, formatYell, formatNumber} from '@/util/validateRules'
-import { planList, delCheckPlanList, planCancel, planPayment, orienteering } from '@/api/plan'
+import { formatTimes, formatYell, formatNumber } from '@/util/validateRules'
+import {
+  planList,
+  delCheckPlanList,
+  planCancel,
+  planPayment,
+  orienteering
+} from '@/api/plan'
 import pagination from '@/components/page.vue'
 import Sure from './planlistmodel/sure.vue'
 import Pay from './planlistmodel/pay.vue'
@@ -190,10 +217,12 @@ export default class Plan extends ViewBase {
   }
 
   async tableList() {
-    const { data } = await planList(clean({
-      ...this.form,
-      ...this.pageList
-    }))
+    const { data } = await planList(
+      clean({
+        ...this.form,
+        ...this.pageList
+      })
+    )
     this.data = data
     // for (const item of data.items) {
     //   if (item.status == 1 || item.status == 9 || item.status == 10) {
@@ -211,12 +240,18 @@ export default class Plan extends ViewBase {
   }
 
   days(begin: any, end: any) {
-    const time = new Date(this.formatDate(end)).getTime() - new Date(this.formatDate(begin)).getTime()
+    const time =
+      new Date(this.formatDate(end)).getTime() -
+      new Date(this.formatDate(begin)).getTime()
     return time / (3600 * 24 * 1000) + 1
   }
 
   formatDate(data: any) {
-    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
+    return data
+      ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(
+          data + ''
+        ).substr(6, 2)}`
+      : '暂无'
   }
 
   async handlePayment(item: any) {
@@ -226,7 +261,7 @@ export default class Plan extends ViewBase {
     try {
       const id = item.id
       await planPayment(id)
-       this.tableList()
+      this.tableList()
     } catch (ex) {
       this.handleError(ex)
     }
@@ -234,14 +269,14 @@ export default class Plan extends ViewBase {
 
   planDefault(id: any, status: any) {
     if (status == '1' || status == '3' || status == '9' || status == '10') {
-      this.$router.push({ name: 'pop-planlist-default', params: {id}})
+      this.$router.push({ name: 'pop-planlist-default', params: { id } })
     } else {
-      this.$router.push({ name: 'pop-planlist-defaultpayment', params: {id}})
+      this.$router.push({ name: 'pop-planlist-defaultpayment', params: { id } })
     }
   }
 
   planEdit(id: any) {
-    this.$router.push({name: 'pop-planlist-add', params: {id}})
+    this.$router.push({ name: 'pop-planlist-add', params: { id } })
   }
 
   checkAll() {
@@ -265,7 +300,7 @@ export default class Plan extends ViewBase {
   }
 
   async planCancel(val: any, id: any) {
-    await confirm(`是否取消广告计划：${val}`, {title: '取消广告计划'})
+    await confirm(`是否取消广告计划：${val}`, { title: '取消广告计划' })
     try {
       await planCancel(id)
       this.tableList()
@@ -277,14 +312,14 @@ export default class Plan extends ViewBase {
   plandetail(id: any) {
     this.$router.push({
       name: 'pop-planlist-default',
-      params: {id}
+      params: { id }
     })
   }
 
   plandEdit(id: any) {
     this.$router.push({
       name: 'pop-planlist-edit',
-      params: {id: '0', setid: id}
+      params: { id: '0', setid: id }
     })
   }
 
@@ -333,10 +368,12 @@ export default class Plan extends ViewBase {
   }
 
   queryStatus(id: any) {
-     const items = this.data.statusList ? this.data.statusList.filter( (item: any) => item.key == id) : null
-     if (items) {
-       return items[0].text
-     }
+    const items = this.data.statusList
+      ? this.data.statusList.filter((item: any) => item.key == id)
+      : null
+    if (items) {
+      return items[0].text
+    }
   }
 
   pay(id: any) {
@@ -361,12 +398,12 @@ export default class Plan extends ViewBase {
     this.tableList()
   }
 
-  @Watch('form', {deep: true})
+  @Watch('form', { deep: true })
   watchForm(val: any) {
     this.tableList()
   }
 
-  @Watch('checks', {deep: true})
+  @Watch('checks', { deep: true })
   watchChecks(val: any) {
     this.checkId = []
     let id = this.tableDate.map((it: any) => it.id)
@@ -427,12 +464,14 @@ export default class Plan extends ViewBase {
       padding-right: 5px;
     }
   }
-  /deep/ .ivu-select-placeholder, /deep/ .ivu-select-selected-value {
+  /deep/ .ivu-select-placeholder,
+  /deep/ .ivu-select-selected-value {
     font-size: 14px;
     color: #00202d;
     line-height: 40px;
   }
-  /deep/ .ivu-input, /deep/ .ivu-select-input {
+  /deep/ .ivu-input,
+  /deep/ .ivu-select-input {
     color: #00202d;
     line-height: 40px;
     height: 40px;
@@ -501,14 +540,15 @@ export default class Plan extends ViewBase {
       font-size: 14px;
     }
   }
-  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
+  /deep/ .ivu-table-column-center,
+  /deep/ .ivu-table-column-left {
     background: rgba(255, 255, 255, 0);
   }
   /deep/ .ivu-table {
     background: rgba(255, 255, 255, 0);
   }
   /deep/ .ivu-table-row {
-    background: rgba(255, 255, 255, .8);
+    background: rgba(255, 255, 255, 0.8);
     /deep/ td {
       height: 200px;
       color: #00202d;
@@ -519,12 +559,13 @@ export default class Plan extends ViewBase {
     background: rgba(255, 255, 255, 0);
   }
   /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
-    background: rgba(255, 255, 255, .5);
+    background: rgba(255, 255, 255, 0.5);
   }
   /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
     background: rgba(255, 255, 255, 0);
   }
-  /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
+  /deep/ .ivu-table-body .ivu-table-column-center,
+  /deep/ .ivu-table-body .ivu-table-column-left {
     span {
       color: #444;
       font-size: 14px;
@@ -542,7 +583,7 @@ export default class Plan extends ViewBase {
     left: 0;
     right: 1px;
     border: none;
-    background: rgba(255, 255, 255, .7);
+    background: rgba(255, 255, 255, 0.7);
     .top {
       display: flex;
       justify-content: space-between;
