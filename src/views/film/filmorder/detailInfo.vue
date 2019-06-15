@@ -3,40 +3,35 @@
     <!-- 剧情简介 -->
    <Row class='de-info' >
       <Row class='title' >剧情简介</Row>
-      <Row style='margin-top: 20px;line-height:30px; color: #B3BCC0;'>&nbsp;&nbsp;1960年，中国登山队向珠峰发起冲刺，完成了世界首次北坡登顶这一项不可能完成的任务，15年后，房屋周和去松林在气象学家徐寅的帮助下，带领李国良，阳光等年轻队员再次挑战世界之巅，迎接他们的将是更加残酷的现实，也是生于斯的挑战...<span v-if='info'>123...</span></Row>
-      <div class='mores' style='text-align: right;margin-right: 30px;'@click='detailinfo' >展开全部<span></span></div>
+      <Row style='margin-top: 20px;line-height:30px; color: #B3BCC0;'>&nbsp;&nbsp;{{summary}}<span v-if='info'>123...</span></Row>
+      <!-- <div class='mores' style='text-align: right;margin-right: 30px;'@click='detailinfo' >展开全部<span></span></div> -->
+      <div class="show-all" v-if="itemlist.summary.length > 200">
+        <span @click="sumToggle">{{sumTitle}}<Icon :class="{'sumDown': sumFlag == 0, 'sumUp': sumFlag == 1}" type="ios-arrow-down" size="25" /></span>
+      </div>
    </Row>
    <!-- 更多资料 -->
    <div class="more">
      <Row class='title'>更多资料</Row>
      <Row class='row-bo'>
        <Col span='3' class='fo-bo'>对白语言</Col>
-       <Col span='20' class='fo-bos'>汉语普通话</Col>
+       <Col span='20' class='fo-bos'>{{itemlist.languages == null ? '暂无' : itemlist.languages}}</Col>
      </Row>
      <Row class='row-bo'>
        <Col span='3' class='fo-bo'>国家 / 地区</Col>
-       <Col span='20' class='fo-bos'>中国&nbsp;China</Col>
+       <Col span='20' class='fo-bos'>{{itemlist.languages == null ? '暂无' : itemlist.languages}}</Col>
      </Row>
      <Row class='row-bo'>
        <Col span='3' class='fo-bo'>上映 / 发行日期</Col>
-       <Col span='20' class='fo-bos'>2019年9月30日</Col>
+       <Col span='20' class='fo-bos'>{{itemlist.releaseDate == null ? '暂无' : releaseDate}}</Col>
      </Row>
      <Row class='row-bo'>
        <Col span='3' class='fo-bo'>制作 / 发行</Col>
-       <Col span='20' class='fo-bos'>上影股份影视发行公司 ()</Col>
+       <Col span='20' class='fo-bos'>{{itemlist.languages == null ? '暂无' : itemlist.languages}}</Col>
      </Row>
    </div>
    <!-- 图片 -->
    <div style='padding: 20px;'>
-     <Row class='title' style='margin-bottom: 20px;'>图片(共16张)</Row>
-      <!-- <div class="demo-carousel">
-        <div style='margin-left: 0%;'><img src="./assets/wait.jpg" alt=""></div>
-        <div><img src="./assets/wait.jpg" alt=""></div>
-        <div><img src="./assets/wait.jpg" alt=""></div>
-        <div><img src="./assets/wait.jpg" alt=""></div>
-        <div><img src="./assets/wait.jpg" alt=""></div>
-      </div>
-      <div class='mores'>展开全部<span></span></div> -->
+     <Row class='title' style='margin-bottom: 20px;'>图片(共{{imgUrl.length}}张)</Row>
       <transition-group name="list" tag="ul" class="loading-img">
         <li v-for="img in imgList" :key="img.key"><img :src="img.img"/></li>
       </transition-group>
@@ -48,28 +43,35 @@
 </template>
 
 <script lang='ts'>
-import { Component , Watch} from 'vue-property-decorator'
+import {Component, Watch} from 'vue-property-decorator'
+import UploadButton, { SuccessEvent } from '@/views/order/components/UploadButton.vue'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
+import { queryList , mains } from '@/api/filmorder'
+import { toMap } from '@/fn/array'
+import { formatTimestamp } from '@/util/validateRules'
+import WeekDatePicker from '@/components/weekDatePicker'
+import { confirm , toast } from '@/ui/modal'
+const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 @Component
 export default class Main extends ViewBase {
   value1 = 0
   info = false
   tabShowTitle = '展示全部'
   arrowFlag = 0
-
-  imgUrl = [
-    { key: 1, img: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg'},
-    { key: 2, img: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg'},
-    { key: 3, img: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg'},
-    { key: 4, img: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg'},
-    { key: 5, img: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg'},
-    { key: 6, img: 'http://img31.mtime.cn/pi/2015/02/21/170436.12695801_220X220.jpg'},
-  ]
+  imgUrl = []
   imgList: any = []
+  sumTitle = '展示全部'
+  sumFlag = 0
+  summary: any = ''
+
+
+
+  itemlist: any = {}
+  releaseDate: any = ''
 
   mounted() {
-    this.imgList = this.imgUrl.slice(0, 5)
+    this.search()
   }
 
   detailinfo() {
@@ -85,6 +87,37 @@ export default class Main extends ViewBase {
       this.arrowFlag = 0
       this.tabShowTitle = '展示全部'
       this.imgList = this.imgUrl.slice(0, 5)
+    }
+  }
+  sumToggle() {
+    if (!this.sumFlag) {
+      this.sumFlag = 1
+      this.sumTitle = '向上隐藏'
+      this.summary = this.itemlist.summary
+    } else {
+      this.sumFlag = 0
+      this.sumTitle = '展示全部'
+      this.summary = this.itemlist.summary.slice(0, 200)
+    }
+  }
+  async search() {
+    try {
+      const { data } =  await mains(this.$route.params.id)
+      this.itemlist = data
+      this.releaseDate = data.releaseDate.slice(0, 4) + '-' +
+      data.releaseDate.slice(4, 6) + '-' + data.releaseDate.slice(6, 8)
+      this.imgUrl = (data.plotPics || []).map((it: any, index: any) => {
+        return {
+          key: index,
+          img: it,
+        }
+      })
+      this.imgList = this.imgUrl.slice(0, 5)
+      this.summary = this.itemlist.summary.slice(0, 200)
+    } catch {
+
+    } finally {
+
     }
   }
 
@@ -198,6 +231,28 @@ export default class Main extends ViewBase {
   animation: arrowUp .5s both;
 }
 @keyframes arrowUp {
+  0% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+.sumDown {
+  animation: sumDown .5s both;
+}
+@keyframes sumDown {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+.sumUp {
+  animation: sumUp .5s both;
+}
+@keyframes sumUp {
   0% {
     transform: rotate(180deg);
   }
