@@ -88,7 +88,7 @@
         </nav>
 
         <Pane title="映前广告投放" :more="{}" class="putting-pane">
-
+          <ThrowPane :data="putting"/>
         </Pane>
       </div>
 
@@ -167,13 +167,15 @@ import ViewBase from '@/util/ViewBase'
 import Pane from './pane.vue'
 import TrendChart from '@/components/trendChart'
 import BScroll from '@better-scroll/core'
+import ThrowPane from './throwPane.vue'
 
 type Type = 'brand' | 'item'
 
 @Component({
   components: {
     Pane,
-    TrendChart
+    TrendChart,
+    ThrowPane
   }
 })
 export default class BrandHomeLayout extends ViewBase {
