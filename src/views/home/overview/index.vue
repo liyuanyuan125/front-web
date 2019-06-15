@@ -49,27 +49,25 @@
 
     <h3 class="page-title page-title-chart">映前广告成效</h3>
 
-    <Tabs :value="chartNav" class="chart-tabs">
-      <TabPane name="yesterday" label="昨天">
-        <ChartPane :data="chartYesterday"/>
-      </TabPane>
-
-      <TabPane name="7days" label="最近7天">
-        <ChartPane :data="chart7Days"/>
-      </TabPane>
-
-      <TabPane name="30days" label="最近30天">
-        <ChartPane :data="chart30Days"/>
+    <Tabs v-model="chartNav" class="chart-tabs">
+      <TabPane v-for="it in chartList" :key="it.key" :name="it.key" :label="it.label">
+        <ChartPane :data="it.data" v-if="it.data"/>
       </TabPane>
     </Tabs>
   </div>
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import numAdd from '../number.vue'
 import ChartPane from './chartPane.vue'
+import { getStats, queryReport, getBrandList } from './api'
+import moment from 'moment'
+import { capitalize } from 'lodash'
+import { MapType } from '@/util/types'
+
+const offsetDay = (offset = 0) => moment().add(offset, 'day').format('YYYYMMDD')
 
 @Component({
   components: {
@@ -78,221 +76,80 @@ import ChartPane from './chartPane.vue'
   }
 })
 export default class Overview extends ViewBase {
-  balance = 88000.88
+  balance = 0
 
-  planList = [
-    { title: '映前广告', pend: 9, done: 24 },
-    { title: 'KOL推广', pend: 9, done: 24 },
-    { title: '影片合作', pend: 9, done: 24 },
-  ]
+  planList: any[] = []
 
-  filmSummary = {
-    pend: 9,
-    unpay: 9,
-    transcoding: 9,
-    transcoded: 88,
-  }
+  filmSummary = {}
 
-  brandList = [
-    { logo: 'https://picsum.photos/id/435/154/154' },
-    { logo: 'https://picsum.photos/id/436/154/154' },
-    { logo: 'https://picsum.photos/id/437/154/154' },
-    { logo: 'https://picsum.photos/id/432/154/154' },
-    { logo: 'https://picsum.photos/id/433/154/154' },
-  ]
+  brandList: any[] = []
 
   chartNav = '7days'
 
-  chartYesterday = {
-    legends: [
-      { name: '广告花费／¥', value: '600.00' },
-      { name: '覆盖人次', value: '600' },
-      { name: '覆盖影院数', value: '600' },
-      { name: '覆盖场次数', value: '576' },
-    ],
+  chartList: any[] = [
+    {
+      key: 'yesterday',
+      label: '昨天',
+      data: null,
+      dateRange: [
+        offsetDay(-1),
+        offsetDay(-1),
+      ]
+    },
 
-    charts: [
-      {
-        title: '广告花费',
-        yAxisName: '金额 ¥',
-        list: [
-          { name: '2019-05-16', value: 32000 },
-          { name: '2019-05-17', value: 20000 },
-          { name: '2019-05-18', value: 22800 },
-          { name: '2019-05-19', value: 89000 },
-          { name: '2019-05-20', value: 86000 },
-          { name: '2019-05-21', value: 38000 },
-          { name: '2019-05-22', value: 39900 },
-        ]
-      },
+    {
+      key: '7days',
+      label: '最近7天',
+      data: null,
+      dateRange: [
+        offsetDay(-7),
+        offsetDay(0),
+      ]
+    },
 
-      {
-        title: '覆盖人次',
-        list: [
-          { name: '2019-05-16', value: 22000 },
-          { name: '2019-05-17', value: 20000 },
-          { name: '2019-05-18', value: 32800 },
-          { name: '2019-05-19', value: 59000 },
-          { name: '2019-05-20', value: 26000 },
-          { name: '2019-05-21', value: 38000 },
-          { name: '2019-05-22', value: 89900 },
-        ]
-      },
+    {
+      key: '30days',
+      label: '最近30天',
+      data: null,
+      dateRange: [
+        offsetDay(-30),
+        offsetDay(0),
+      ]
+    }
+  ]
 
-      {
-        title: '覆盖影院',
-        list: [
-          { name: '2019-05-16', value: 2000 },
-          { name: '2019-05-17', value: 8000 },
-          { name: '2019-05-18', value: 2800 },
-          { name: '2019-05-19', value: 9000 },
-          { name: '2019-05-20', value: 6000 },
-          { name: '2019-05-21', value: 2300 },
-          { name: '2019-05-22', value: 9900 },
-        ]
-      },
-
-      {
-        title: '覆盖场次',
-        list: [
-          { name: '2019-05-16', value: 12000 },
-          { name: '2019-05-17', value: 20000 },
-          { name: '2019-05-18', value: 22800 },
-          { name: '2019-05-19', value: 59000 },
-          { name: '2019-05-20', value: 86000 },
-          { name: '2019-05-21', value: 18000 },
-          { name: '2019-05-22', value: 69900 },
-        ]
-      }
-    ]
+  async created() {
+    this.initStats()
+    this.queryReport()
+    this.initBrandList()
   }
 
-  chart7Days = {
-    legends: [
-      { name: '广告花费／¥', value: '8,000.00' },
-      { name: '覆盖人次', value: '88,000' },
-      { name: '覆盖影院数', value: '800' },
-      { name: '覆盖场次数', value: '8,000' },
-    ],
-
-    charts: [
-      {
-        title: '广告花费',
-        yAxisName: '金额 ¥',
-        list: [
-          { name: '2019-05-16', value: 42000 },
-          { name: '2019-05-17', value: 70000 },
-          { name: '2019-05-18', value: 22800 },
-          { name: '2019-05-19', value: 79000 },
-          { name: '2019-05-20', value: 16000 },
-          { name: '2019-05-21', value: 38000 },
-          { name: '2019-05-22', value: 39900 },
-        ]
-      },
-
-      {
-        title: '覆盖人次',
-        list: [
-          { name: '2019-05-16', value: 22000 },
-          { name: '2019-05-17', value: 20000 },
-          { name: '2019-05-18', value: 32800 },
-          { name: '2019-05-19', value: 59000 },
-          { name: '2019-05-20', value: 26000 },
-          { name: '2019-05-21', value: 38000 },
-          { name: '2019-05-22', value: 89900 },
-        ]
-      },
-
-      {
-        title: '覆盖影院',
-        list: [
-          { name: '2019-05-16', value: 2000 },
-          { name: '2019-05-17', value: 8000 },
-          { name: '2019-05-18', value: 2800 },
-          { name: '2019-05-19', value: 9000 },
-          { name: '2019-05-20', value: 6000 },
-          { name: '2019-05-21', value: 2300 },
-          { name: '2019-05-22', value: 9900 },
-        ]
-      },
-
-      {
-        title: '覆盖场次',
-        list: [
-          { name: '2019-05-16', value: 12000 },
-          { name: '2019-05-17', value: 20000 },
-          { name: '2019-05-18', value: 22800 },
-          { name: '2019-05-19', value: 59000 },
-          { name: '2019-05-20', value: 86000 },
-          { name: '2019-05-21', value: 18000 },
-          { name: '2019-05-22', value: 69900 },
-        ]
-      }
-    ]
+  async initStats() {
+    const { balance, planList, filmSummary } = await getStats()
+    this.balance = balance
+    this.planList = planList
+    this.filmSummary = filmSummary
   }
 
-  chart30Days = {
-    legends: [
-      { name: '广告花费／¥', value: '99,000.00' },
-      { name: '覆盖人次', value: '99,000' },
-      { name: '覆盖影院数', value: '900' },
-      { name: '覆盖场次数', value: '9,000' },
-    ],
+  async initBrandList() {
+    const list = await getBrandList()
+    this.brandList = list
+  }
 
-    charts: [
-      {
-        title: '广告花费',
-        yAxisName: '金额 ¥',
-        list: [
-          { name: '2019-05-16', value: 48000 },
-          { name: '2019-05-17', value: 80000 },
-          { name: '2019-05-18', value: 32800 },
-          { name: '2019-05-19', value: 69000 },
-          { name: '2019-05-20', value: 26000 },
-          { name: '2019-05-21', value: 18000 },
-          { name: '2019-05-22', value: 89900 },
-        ]
-      },
+  async queryReport() {
+    const key = this.chartNav
+    const chart = this.chartList.find(it => it.key == key)!
+    if (chart.data != null) {
+      return
+    }
+    const [beginDate, endDate] = chart.dateRange
+    const data = await queryReport({ beginDate, endDate })
+    chart.data = data
+  }
 
-      {
-        title: '覆盖人次',
-        list: [
-          { name: '2019-05-16', value: 22000 },
-          { name: '2019-05-17', value: 20000 },
-          { name: '2019-05-18', value: 32800 },
-          { name: '2019-05-19', value: 59000 },
-          { name: '2019-05-20', value: 26000 },
-          { name: '2019-05-21', value: 38000 },
-          { name: '2019-05-22', value: 89900 },
-        ]
-      },
-
-      {
-        title: '覆盖影院',
-        list: [
-          { name: '2019-05-16', value: 2000 },
-          { name: '2019-05-17', value: 8000 },
-          { name: '2019-05-18', value: 2800 },
-          { name: '2019-05-19', value: 9000 },
-          { name: '2019-05-20', value: 6000 },
-          { name: '2019-05-21', value: 2300 },
-          { name: '2019-05-22', value: 9900 },
-        ]
-      },
-
-      {
-        title: '覆盖场次',
-        list: [
-          { name: '2019-05-16', value: 12000 },
-          { name: '2019-05-17', value: 20000 },
-          { name: '2019-05-18', value: 22800 },
-          { name: '2019-05-19', value: 59000 },
-          { name: '2019-05-20', value: 86000 },
-          { name: '2019-05-21', value: 18000 },
-          { name: '2019-05-22', value: 69900 },
-        ]
-      }
-    ]
+  @Watch('chartNav')
+  watchChartNav() {
+    this.queryReport()
   }
 }
 </script>
@@ -303,7 +160,7 @@ export default class Overview extends ViewBase {
 }
 
 .page-title {
-  color: #00202d;
+  color: #fff;
   font-size: 24px;
   font-weight: 500;
   user-select: none;

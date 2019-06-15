@@ -1,8 +1,8 @@
 <template>
-  <div ref="page" class="">
+  <div ref="page" class>
     <Row style="overflow:hidden">
       <Col span="22" offset="3">
-        <StepTime v-model="step" />
+        <StepTime v-model="step"/>
       </Col>
     </Row>
     <div>
@@ -56,13 +56,17 @@ export default class App extends ViewBase {
     (this.$refs.page as HTMLDivElement).scrollTop = 0
     const id = Number(this.step.id)
     switch (id) {
-      case 0: this.currentTab = Promotion
+      case 0:
+        this.currentTab = Promotion
         break
-      case 1: this.currentTab = Orienteering
+      case 1:
+        this.currentTab = Orienteering
         break
-      case 2: this.currentTab = Precept
+      case 2:
+        this.currentTab = Precept
         break
-      case 3: this.currentTab = Finish
+      case 3:
+        this.currentTab = Finish
         break
     }
   }

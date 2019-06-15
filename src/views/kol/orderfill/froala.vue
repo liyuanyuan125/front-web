@@ -1,13 +1,9 @@
 <template>
   <div class="file-box">
-      <div v-show="false">
-        <input ref="inputUpdate" id="upload" type="file" accept="image/*" @change="onChange"/>
-      </div>
-      <quillEditor
-        v-model="content"
-        ref="myQuillEditor"
-        :options="editorOption"
-      />
+    <div v-show="false">
+      <input ref="inputUpdate" id="upload" type="file" accept="image/*" @change="onChange">
+    </div>
+    <quillEditor v-model="content" ref="myQuillEditor" :options="editorOption"/>
   </div>
 </template>
 
@@ -41,20 +37,20 @@ export default class DlgEditCinema extends ViewBase {
           border: 'none',
           color: 'white'
         },
-        modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
+        modules: ['Resize', 'DisplaySize', 'Toolbar']
       },
       toolbar: {
         container: [
           ['bold', 'italic', 'underline', 'strike'],
-          [{size: ['small', false, 'large', 'hug'] } ],
-          [{color: [] }, {background: [] }],
+          [{ size: ['small', false, 'large', 'hug'] }],
+          [{ color: [] }, { background: [] }],
           ['clean'],
           ['image', 'video']
         ],
         handlers: {
           image: (value: any) => {
             if (value) {
-            // 触发input框选择图片文件
+              // 触发input框选择图片文件
               (document.querySelector('#upload') as any)!.click()
             } else {
               // this.quill.format('image', false)
@@ -83,14 +79,13 @@ export default class DlgEditCinema extends ViewBase {
       begin: this.onUploadBegin.bind(this),
       done: this.onUploadDone.bind(this),
       fail: this.onUploadFail.bind(this),
-      end: this.onUploadEnd.bind(this),
+      end: this.onUploadEnd.bind(this)
     }
   }
 
-  onUploadBegin() {
-  }
+  onUploadBegin() {}
 
-  onUploadDone( { url, fileId }: any) {
+  onUploadDone({ url, fileId }: any) {
     const quill = (this.$refs.myQuillEditor as any).quill
     const length = quill.getSelection().inde
     quill.insertEmbed(length, 'image', url)
@@ -101,10 +96,9 @@ export default class DlgEditCinema extends ViewBase {
     (this.$refs.inputUpdate as any).value = ''
   }
 
-  onUploadFail() {
-  }
+  onUploadFail() {}
 
-  @Watch('content', {deep: true})
+  @Watch('content', { deep: true })
   watchContent(val: any) {
     this.$emit('input', val)
   }

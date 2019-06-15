@@ -1,43 +1,64 @@
 <template>
-  <Modal v-model='showDlg'
-  title="设置投放任务"
-  :transfer='false'
-  :width='700'
-  :styles="{top: '20px'}"
-  :mask-closable='false'
-  @on-cancel="cancel()">
+  <Modal
+    v-model="showDlg"
+    title="设置投放任务"
+    :transfer="false"
+    :width="700"
+    :styles="{top: '20px'}"
+    :mask-closable="false"
+    @on-cancel="cancel()"
+  >
     <div class="detail-box">
-      <Form :model="form" ref="dataform" :rules="rule" label-position="left" :label-width="100" class="edit-input">
+      <Form
+        :model="form"
+        ref="dataform"
+        :rules="rule"
+        label-position="left"
+        :label-width="100"
+        class="edit-input"
+      >
         <FormItem label="广告位" prop="publishCategoryCode">
           <RadioGroup v-model="form.publishCategoryCode">
-            <Radio label="单图文" ></Radio>
+            <Radio label="单图文"></Radio>
             <Radio label="图文"></Radio>
             <Radio label="多图文"></Radio>
           </RadioGroup>
         </FormItem>
 
         <FormItem label="文章标题" prop="title">
-          <Input  v-model="form.title" placeholder='例如"2019奥迪Q3'></Input>
+          <Input v-model="form.title" placeholder="例如2019奥迪Q3"></Input>
         </FormItem>
 
         <FormItem label="封面图" prop="pictureFileIds">
-          <Upload v-model="form.pictureFileIds" :maxCount="1" accept="image/*" />
+          <Upload v-model="form.pictureFileIds" :maxCount="1" accept="image/*"/>
         </FormItem>
 
         <FormItem label="摘要" prop="summary">
-          <Input v-model="form.summary" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入" />
+          <Input
+            v-model="form.summary"
+            type="textarea"
+            :autosize="{minRows: 2,maxRows: 5}"
+            placeholder="请输入"
+          />
         </FormItem>
 
         <FormItem label="正文内容" prop="content">
-          <Froala v-model="form.content" />
+          <Froala v-model="form.content"/>
         </FormItem>
 
         <FormItem label="发布时间" prop="publishTime">
-          <DatePicker format="yyyy-MM-dd HH:mm" v-model="form.publishTime" :options="startDate" type="datetime" placeholder="Select date" style="width: 200px"></DatePicker>
+          <DatePicker
+            format="yyyy-MM-dd HH:mm"
+            v-model="form.publishTime"
+            :options="startDate"
+            type="datetime"
+            placeholder="Select date"
+            style="width: 200px"
+          ></DatePicker>
         </FormItem>
 
         <FormItem label="原文链接" prop="url">
-          <Input  v-model="form.url" placeholder='例如"2019奥迪Q3'></Input>
+          <Input v-model="form.url" placeholder="例如2019奥迪Q3"></Input>
         </FormItem>
       </Form>
     </div>
@@ -91,16 +112,13 @@ export default class DlgEditCinema extends ViewBase {
     this.showDlg = true
   }
 
-  async open() {
-  }
+  async open() {}
 
-  drop(name: any) {
-  }
+  drop(name: any) {}
 
   cancel() {
     this.showDlg = false
   }
-
 }
 </script>
 

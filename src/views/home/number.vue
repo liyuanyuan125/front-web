@@ -3,16 +3,18 @@
 </template>
 
 <script lang="ts">
-import { Component , Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 
 @Component
-export default class ComponentMain extends ViewBase {
+export default class Number extends ViewBase {
   @Prop({ type: Number }) addNum: any
+
   numbers: any = 0
   count = 0
   end3: any = 0
   newend: any = ''
+
   addNumber(number: any) {
     this.newend = ''
     this.count = 0
@@ -41,29 +43,37 @@ export default class ComponentMain extends ViewBase {
       return number
     }
   }
+
   mounted() {
-    if (this.addNum < '15' ) {
+    this.startAnimation()
+  }
+
+  startAnimation() {
+    if (this.addNum < '15') {
       this.numbers = this.addNumber(String(this.addNum))
     } else {
       this.increment(2000)
     }
   }
+
   increment(d: number) {
     const initT: any = new Date() // 获取开始时间
     let timer: any
 
     const rQAF = () => {
-      let t = new Date() as any - initT // 获取当前时间与开始时间的差值--动画执行时长
-      if (t >= d) { // 判断动画执行时长是否大于预设目标
+      let t = (new Date() as any) - initT // 获取当前时间与开始时间的差值--动画执行时长
+      if (t >= d) {
+        // 判断动画执行时长是否大于预设目标
         t = d // 让动画执行时长等于预设目标
         this.addNumber(String(this.addNum))
         window.cancelAnimationFrame(timer)
       } else {
-        timer = window.requestAnimationFrame(rQAF)// 调用rQAF函数一次
+        timer = window.requestAnimationFrame(rQAF) // 调用rQAF函数一次
       }
-      const nums = this.addNum / d * t
+      const nums = (this.addNum / d) * t
       this.numbers = this.addNumber(String(nums))
     }
+
     rQAF()
     // const numbers = setInterval(() => {
     //     if (Number(this.end3) < Number(this.addNum)) {
@@ -77,6 +87,11 @@ export default class ComponentMain extends ViewBase {
     //     clearInterval(numbers)
     //     this.numbers = this.addNumber(String(this.addNum))
     //   }, 1000)
+  }
+
+  @Watch('addNum')
+  watchAddNum(value: number) {
+    this.startAnimation()
   }
 }
 </script>
