@@ -2,7 +2,7 @@
   <div class="plan-box">
     <Row>
       <Col>
-        <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="0" class="edit-input forms">
+        <Form :model="form" ref="dataform" label-position="left" :label-width="0" class="edit-input forms">
           <h3 class="layout-titles">覆盖范围设置</h3>
           <Row>
             <Col :span="24">
@@ -84,24 +84,6 @@
               <Tags v-model="movieCustom" :tagMess = 'movieList' />
             </FormItem>
           </h3>
-          <!-- <div class="item-top" style="margin-top: 50px" v-show="movieCustom == 1">
-            <FormItem :labelWidth="0" class="form-item-type-sort">
-              <ul class="film-list" v-if="cinemaDetail.length > 0">
-                <li v-for="(it, index) in cinemaDetail" :key="index"
-                  :class="['film-item']">
-                  <div :class="['film-cover-box']">
-                    <img :src="it.mainPicUrl" class="film-cover">
-                    <div>
-                      <div class="film-title">{{it.name}}</div>
-                      <div class="film-title">{{it.name}}</div>
-                      <div class="film-time" style="margin-top: 20px">上映时间：{{formatDate(it.openTime)}}</div>
-                      <div class="film-time">投放排期: {{formatDate(it.openTime)}}</div>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-            </FormItem>
-          </div> -->
           <div class="item-top" style="margin-top: 50px" v-show="movieCustom != 0">
             <Film v-model="numsList" :begin="beginDate" :end="endDate" @donefilm="timerfilm" />
           </div>
@@ -128,6 +110,7 @@ import Chain from '@/components/cityMap/CityMap.vue'
 import { getTwodetail, getRegionList, direction, searchcinema, adverdetail, getRecommend } from '@/api/popPlan.ts'
 import { clean } from '@/fn/object.ts'
 import City from '@/components/citySelectDialog'
+import { info } from '@/ui/modal'
 // 保持互斥
 const keepExclusion = <T>(
   value: T[],
@@ -159,6 +142,7 @@ export default class Orienteering extends ViewBase {
   topCitysId = []
   beginDate = ''
   endDate = ''
+  planMovies: any = null
   form: any = {
     name: '',
     cinema: [0],
@@ -166,13 +150,19 @@ export default class Orienteering extends ViewBase {
     age: [0],
     type: [0]
   }
-  rule: any = {
-  }
+
+  movies: any = []
   timers: any = {}
   numsList: any = []
   cityCustom: number = 0
   movieCustom: number = 0
-  cinemaType: number = 1
+  cinemaType: number = 0
+
+  deliveryCityTypeList: any = []
+  tags: any = []
+  item: any = null
+
+
   areaList = [{
     label: 0,
     name: '快速选择'
@@ -198,6 +188,7 @@ export default class Orienteering extends ViewBase {
       name: '指定数量'
     }
   ]
+
   recommend: any = false
   cityList: any = []
   cinemastatusList: any = []
@@ -214,23 +205,26 @@ export default class Orienteering extends ViewBase {
     return data ? moment(data).format(timeFormat) : '暂无'
   }
 
-  // async mounted() {
-  //   const { data: {
-  //       item
-  //     } } = await adverdetail(this.value.setid)
-  //   this.beginDate = item.beginDate
-  //   this.endDate = item.endDate
-  // }
-
   async init() {
     try {
       const { data } = await getTwodetail()
       await getRegionList()
       const { data: {
-          item
+          item,
+          deliveryCityTypeList,
+          tags,
+          movies
         } } = await adverdetail(this.value.setid)
       this.beginDate = item.beginDate
       this.endDate = item.endDate
+      this.tags = tags
+      if (this.$route.name == 'pop-planlist-edit') {
+        this.deliveryCityTypeList = deliveryCityTypeList
+        this.item = item
+        this.movies = movies
+        this.renders(item)
+      }
+
       this.cityList = data.deliveryCityTypeList
       this.cinemastatusList = data.cinemaList
       this.sexList = data.tags[2].values || []
@@ -246,8 +240,83 @@ export default class Orienteering extends ViewBase {
     this.timers = val
   }
 
+  renders(val: any) {
+    this.citys(val.deliveryCityTypes)
+    this.sexs()
+    this.ages()
+    this.types()
+    this.movieCustoms()
+  }
+
+  movieCustoms() {
+    if (this.item.movieCustom == 1) {
+      this.movieCustom = 1
+      this.numsList = (this.movies || []).map((it: any) => {
+        return {
+          id: it.id,
+          nameCn: it.name,
+          releaseDate: it.releaseDate,
+          image: it.mainPic
+        }
+      })
+    }
+  }
+
+  citys(val: any) {
+    if (this.item.allNation != 1) {
+      const message = val.map((it: any) => {
+      const msg = this.deliveryCityTypeList.filter((item: any) => it == item.key)[0].key
+        return msg
+      })
+      this.form.cinema = message
+    } else {
+      this.form.cinema = [0]
+    }
+  }
+
+  sexs() {
+    const msg = (this.item.deliveryGroups || []).filter((item: any) => item.tagTypeCode == 'PLAN_GROUP_SEX')
+    if (msg.length > 0) {
+      const message = msg.map((it: any) => {
+        const value = this.tags[2].values.filter((item: any) => it.text == item.key)[0].key
+        return value
+      })
+      this.form.sex = message
+    } else {
+    }
+  }
+
+  ages() {
+    const msg = (this.item.deliveryGroups || []).filter((item: any) => item.tagTypeCode == 'PLAN_GROUP_AGE')
+
+    if (msg.length > 0) {
+        const message = msg.map((it: any) => {
+        const value = this.tags[1].values.filter((item: any) => it.text == item.key)[0].key
+        return value
+      })
+      this.form.age = message
+    } else {
+    }
+  }
+
+  types() {
+    const msg = (this.item.deliveryGroups || []).filter((item: any) => item.tagTypeCode == 'MOVIE_TYPE')
+    if (msg.length > 0) {
+      const message = msg.map((it: any) => {
+        const value = this.tags[0].values.filter((item: any) => it.text == item.key)[0].key
+        return value
+      })
+       this.form.type = message
+    } else {
+    }
+  }
+
   async next(dataform: any) {
     const timers = Object.keys(this.timers)
+    if (this.movieCustom != 0 && this.numsList.length == 0) {
+      confirm('请选择影片')
+      return
+    }
     try {
       await direction (clean({
         planId: this.$route.params.setid,
@@ -271,7 +340,8 @@ export default class Orienteering extends ViewBase {
           return it.text != 0
         }),
         movieCustom: this.movieCustom,
-        deliveryMovies: this.numsList.map((it: any) => {
+        customDeliveryCities: this.cityCustom == 0 ? '' : this.citysId,
+        deliveryMovies: this.movieCustom == 0 ? '' : this.numsList.map((it: any) => {
           return {
             movieId: it.id,
             beginDate: this.beginDate,
@@ -282,12 +352,18 @@ export default class Orienteering extends ViewBase {
       let time: any = null
       time = setInterval(() => {
         if (this.recommend) {
+          (this.$Spin as any).hide()
           clearInterval(time)
-          this.$emit('input', {
-            id: 2,
-            setid: this.$route.params.setid
-          })
+          if (this.planMovies && this.planMovies.length > 0) {
+            this.$emit('input', {
+              id: 2,
+              setid: this.$route.params.setid
+            })
+          } else {
+            info('为找到匹配项')
+          }
         } else {
+          (this.$Spin as any).show()
           this.loddding()
         }
       }, 3000)
@@ -313,9 +389,11 @@ export default class Orienteering extends ViewBase {
   async loddding() {
     try {
       const { data: {
-          item
+          item,
+          planMovies
         } } = await adverdetail(this.value.setid)
         this.recommend = item.recommend
+        this.planMovies = planMovies
       // this.$emit('input', {
       //   id: 2,
       //   setid: this.$route.params.setid

@@ -43,6 +43,10 @@ export default class CitySelectDialog extends ViewBase {
     this.$emit('input', value)
   }
 
+  toplist(val: any) {
+
+  }
+
   @Watch('cityIdsModel')
   watchCityIdsModel(value: number[]) {
     this.$emit('update:cityIds', value)

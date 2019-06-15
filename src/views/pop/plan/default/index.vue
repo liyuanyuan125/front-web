@@ -1,6 +1,6 @@
 <template>
   <div class="plan-box" v-if="loadding">
-    <Header v-model="headerValue" />
+    <Header @done="uplist" v-model="headerValue" />
     <h3 v-if="status != 1" class="plan-title">投放方案</h3>
     <div v-if="status != 1" class="plan-result">
       <div class="result-top">
@@ -12,7 +12,7 @@
           <div>
             <p class="title">曝光人次预估</p>
             <p class="number">
-              <Number :addNum="item.estimatePersonCount" />
+              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount" />
             </p>
           </div>
         </Col>
@@ -20,7 +20,7 @@
           <div>
             <p class="title">投放场次数预估</p>
             <p class="number">
-              <Number :addNum="item.estimateShowCount" />
+              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount" />
             </p>
           </div>
         </Col>
@@ -91,7 +91,7 @@
       </ul>
     </div> -->
 
-    <div class="plan-cinema-num">
+    <div v-if="status != 1" class="plan-cinema-num">
       <div class="result-top">
         <h3>覆盖范围</h3>
         <span class="custom">下载列表</span>
@@ -99,19 +99,19 @@
       <div class="cinema-box">
         <div class="cinema-right">
           <div>
-            <dl @click="tags(1)" :class="tag=='1' ? 'dl-active' : ''">
+            <dl @click="tages(1)" :class="tag=='1' ? 'dl-active' : ''">
               <dd>{{count.cinemaCount}}</dd>
               <dt>覆盖影院</dt>
             </dl>
-            <dl @click="tags(2)" :class="tag=='2' ? 'dl-active' : ''">
+            <dl @click="tages(2)" :class="tag=='2' ? 'dl-active' : ''">
               <dd>{{count.chainCount}}</dd>
               <dt>覆盖影线</dt>
             </dl>
-            <dl @click="tags(3)" :class="tag=='3' ? 'dl-active' : ''">
+            <dl @click="tages(3)" :class="tag=='3' ? 'dl-active' : ''">
               <dd>{{count.cityCount}}</dd>
               <dt>覆盖城市</dt>
             </dl>
-            <dl @click="tags(4)" :class="tag=='4' ? 'dl-active' : ''">
+            <dl @click="tages(4)" :class="tag=='4' ? 'dl-active' : ''">
               <dd>{{count.provinceCount}}</dd>
               <dt>覆盖省份</dt>
             </dl>
@@ -171,7 +171,9 @@
       </div>
     </div>
 
-    <h3 class="plan-title">计划信息</h3>
+    <h3 class="plan-title">计划信息
+      <span v-if="headerValue.status > 0 && headerValue.status < 4" @click="edit" class="custom">编辑广告计划</span>
+    </h3>
     <div class="plan-msg">
       <Row>
         <Row :gutter="16">
@@ -195,25 +197,44 @@
         <Row :gutter="16" style="height: 126px">
           <Col :span="2"><span>定向设置:</span></Col>
           <Col :span="22">
-            <Row>
-              <Col :span="2">覆盖城市</Col>
-              <Col :span="10"></Col>
-              <Col :span="2">广告片</Col>
-              <Col :span="10"></Col>
+            <Row :gutter="16">
+              <Col :span="2"><span>覆盖城市</span></Col>
+              <Col :span="10">
+                <div v-if="headerValue.cityCustom">
+
+                </div>
+                <div v-else>
+                  <span v-if="headerValue.allNation">全国</span>
+                  <p v-else>
+                    <span>
+                      {{citys(headerValue.deliveryCityTypes)}}
+                    </span>
+                  </p>
+                </div>
+              </Col>
             </Row>
-            <Row>
-              <Col :span="2">受众性别</Col>
-              <Col :span="6"></Col>
-              <Col :span="2">广告片</Col>
-              <Col :span="6"></Col>
-              <Col :span="2">影片类型</Col>
-              <Col :span="6"></Col>
+            <Row :gutter="16">
+              <Col :span="2"><span>受众性别</span></Col>
+              <Col :span="6">
+                <span>{{sexs(headerValue)}}</span>
+              </Col>
+              <Col :span="2"><span>受众年龄</span></Col>
+              <Col :span="6"><span>{{ages(headerValue)}}</span></Col>
+              <Col :span="2"><span>影片类型</span></Col>
+              <Col :span="6"><span>{{types(headerValue)}}</span></Col>
             </Row>
           </Col>
         </Row>
         <Row :gutter="16">
           <Col :span="2"><span>影片定向:</span></Col>
-          <Col :span="10"></Col>
+          <Col :span="10">
+            <span v-if="item.movieCustom == 1">
+              系统智能匹配
+            </span>
+            <span v-else>
+              自定义影片
+            </span>
+          </Col>
         </Row>
       </Row>
     </div>
@@ -260,6 +281,7 @@ export default class App extends ViewBase {
     provinceCount: '',
     cityCount: ''
   }
+  tags: any = []
   deliveryCityTypeList: any = []
 
   get columns() {
@@ -355,10 +377,14 @@ export default class App extends ViewBase {
     return data ? formatCurrency(data) : '暂无'
   }
 
-  tags(id: any) {
+  tages(id: any) {
     this.tag = id
     this.name = ''
     this.seach()
+  }
+
+  uplist() {
+    this.init()
   }
 
   seach() {
@@ -375,17 +401,18 @@ export default class App extends ViewBase {
 
   async init() {
     try {
+      (this.$Spin as any).hide()
       const { data } = await adverdetail(this.$route.params.id)
       this.headerValue = {
         ...data.item
       }
-      (this.$Spin as any).hide()
       this.count.cinemaCount = data.cinemaCount
       this.count.chainCount = data.chainCount
       this.count.provinceCount = data.provinceCount
       this.count.cityCount = data.cityCount
       this.statusList = data.statusList || []
       this.item = data.item || {}
+      this.tags = data.tags
       this.status = data.item.status
       this.deliveryCityTypeList = data.deliveryCityTypeList
       this.planMovies = data.planMovies || []
@@ -404,6 +431,57 @@ export default class App extends ViewBase {
   // 当前页
   currentChangeHandle(val: any) {
     this.pageSize = val
+  }
+
+  citys(val: any) {
+    if (val) {
+      const message = val.map((it: any) => {
+        const msg = this.deliveryCityTypeList.filter((item: any) => it == item.key)[0].text
+        return msg
+      })
+      return message.join(' / ')
+    }
+    return '不限'
+  }
+
+  sexs(val: any) {
+    const msg = (this.item.deliveryGroups || []).filter((item: any) => item.tagTypeCode == 'PLAN_GROUP_SEX')
+    if (msg.length > 0) {
+      const message = msg.map((it: any) => {
+        const value = this.tags[2].values.filter((item: any) => it.text == item.key)[0].text
+        return value
+      })
+      return message.join(' / ')
+    } else {
+      return '不限'
+    }
+  }
+
+  ages(val: any) {
+    const msg = (this.item.deliveryGroups || []).filter((item: any) => item.tagTypeCode == 'PLAN_GROUP_AGE')
+
+    if (msg.length > 0) {
+        const message = msg.map((it: any) => {
+        const value = this.tags[1].values.filter((item: any) => it.text == item.key)[0].text
+        return value
+      })
+      return message.join(' / ')
+    } else {
+      return '不限'
+    }
+  }
+
+  types(val: any) {
+    const msg = (this.item.deliveryGroups || []).filter((item: any) => item.tagTypeCode == 'MOVIE_TYPE')
+    if (msg.length > 0) {
+      const message = msg.map((it: any) => {
+        const value = this.tags[0].values.filter((item: any) => it.text == item.key)[0].text
+        return value
+      })
+      return message.join(' / ')
+    } else {
+      return '不限'
+    }
   }
 
   async cinemfind() {
@@ -452,6 +530,13 @@ export default class App extends ViewBase {
     } catch (ex) {
       this.handleError(ex)
     }
+  }
+
+  edit() {
+    this.$router.push({
+      name: 'pop-planlist-edit',
+      params: {id: '0', setid: this.headerValue.id}
+    })
   }
 }
 </script>

@@ -7,35 +7,35 @@
     <div class="finish-detail">
       <dl>
         <dd>覆盖影院</dd>
-        <dt>111</dt>
+        <dt><Number :addNum="!!cinemaCount ? cinemaCount : 0" /></dt>
         <dt>
           <img src="./assets/yingyuanb.png" width="73" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>投放影片</dd>
-        <dt>1111</dt>
+        <dt><Number :addNum="!!item.cinemaCount ? item.cinemaCount : 0" /></dt>
         <dt>
           <img src="./assets/dianyingpiao.png" width="73" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>曝光人次预估</dd>
-        <dt>1111</dt>
+        <dt><Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount : 0" /></dt>
         <dt>
           <img src="./assets/renqun.png" width="73" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>投放场次数预估</dd>
-        <dt>1111</dt>
+        <dt><Number :addNum="!!item.estimateShowCount ? item.estimateShowCount : 0" /></dt>
         <dt>
           <img src="./assets/toufangfangan.png" width="73" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>预估花费</dd>
-        <dt>1111</dt>
+        <dt><Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount : 0" /></dt>
         <dt>
           <img src="./assets/qian-2.png" width="73" height="66px"/>
         </dt>
@@ -51,13 +51,34 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { adverdetail } from '@/api/popPlan.ts'
+import Number from '@/components/number.vue'
 
-@Component
-export default class App extends ViewBase {
+@Component({
+  components: {
+    Number
+  }
+})
+export default class Apps extends ViewBase {
   step = 0
+  item: any = null
+  cinemaCount = 0
 
-  back(id: any) {
+  created() {
+    this.lodding()
+  }
 
+  async lodding() {
+    try {
+      const { data: {
+          item,
+          cinemaCount,
+
+        } } = await adverdetail(this.$route.params.setid)
+        this.item = item
+        this.cinemaCount = cinemaCount
+    } catch (ex) {
+    }
   }
 }
 </script>

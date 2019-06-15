@@ -70,7 +70,9 @@
         </template>
 
         <template slot="settlementStatus" slot-scope="{row}">
-          <p></p>
+          <p v-if="row.freezeAmount">冻结金额：{{row.freezeAmount}}</p>
+          <p v-if="row.settlementStatus">广告花费：{{row.settlementAmount}}</p>
+          <p v-if="row.refundAmount">退款金额：{{row.refundAmount}}</p>
         </template>
 
         <template slot="status" slot-scope="{row}">
@@ -166,7 +168,7 @@ export default class Plan extends ViewBase {
     { title: '投放周期', slot: 'date' },
     { title: '款项清算', slot: 'settlementStatus' },
     { title: '计划状态', slot: 'status' },
-    { title: '操作', slot: 'operation', width: 140, align: 'left' }
+    { title: '操作', slot: 'operation', width: 150, align: 'left' }
   ]
   tableDate = []
   single = false
