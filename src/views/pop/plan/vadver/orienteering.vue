@@ -2,38 +2,59 @@
   <div class="plan-box">
     <Row>
       <Col>
-        <Form :model="form" ref="dataform" label-position="left" :label-width="0" class="edit-input forms">
+        <Form
+          :model="form"
+          ref="dataform"
+          label-position="left"
+          :label-width="0"
+          class="edit-input forms"
+        >
           <h3 class="layout-titles">覆盖范围设置</h3>
           <Row>
             <Col :span="24">
               <Row>
                 <FormItem :labelWidth="0" class="item-top form-item-type">
-                  <Tags v-model="cityCustom" :tagMess = 'areaList' />
+                  <Tags v-model="cityCustom" :tagMess="areaList"/>
                 </FormItem>
                 <div class="item-top check-cinem" v-if="cityCustom == 0">
                   <FormItem :labelWidth="0">
                     <CheckboxGroup v-model="form.cinema" class="item-radio-top">
                       <div style="margin-bottom: 30px">
-                        <Checkbox style="width: 180px" class="check-item form-item-first" :label="0">全国</Checkbox>
-                        <Checkbox style="margin-left: 18px;width: 180px" v-for="(it, index) in cityList" v-if="index == 0" :key="it.key" :label="it.key"
-                         class="check-item form-item-first">{{it.text}}</Checkbox>
-                        <Checkbox v-for="(it, index) in cityList" v-if="index > 0" :key="it.key" :label="it.key"
-                          class="check-item">{{it.text}}</Checkbox>
+                        <Checkbox
+                          style="width: 180px"
+                          class="check-item form-item-first"
+                          :label="0"
+                        >全国</Checkbox>
+                        <Checkbox
+                          style="margin-left: 18px;width: 180px"
+                          v-for="(it, index) in cityList"
+                          v-if="index == 0"
+                          :key="it.key"
+                          :label="it.key"
+                          class="check-item form-item-first"
+                        >{{it.text}}</Checkbox>
+                        <Checkbox
+                          v-for="(it, index) in cityList"
+                          v-if="index > 0"
+                          :key="it.key"
+                          :label="it.key"
+                          class="check-item"
+                        >{{it.text}}</Checkbox>
                       </div>
                     </CheckboxGroup>
                   </FormItem>
                 </div>
                 <div class="item-top" v-else>
-                  <div @click="visible = true" class="set-city">共{{citysId.length}}个城市 <span>设置</span></div>
-                  <City v-model="visible"
-                    :cityIds.sync = 'citysId'
-                    :topCityIds = "topCitysId"
-                  ></City>
+                  <div @click="visible = true" class="set-city">
+                    共{{citysId.length}}个城市
+                    <span>设置</span>
+                  </div>
+                  <City v-model="visible" :cityIds.sync="citysId" :topCityIds="topCitysId"></City>
                 </div>
               </Row>
             </Col>
           </Row>
-          
+
           <h3 class="layout-titles" style="margin-top: 45px">受众定向</h3>
           <Row class="item-top item-three">
             <Col :span="24" class="flex">
@@ -42,10 +63,20 @@
                 <FormItem class="item-top form-item-type">
                   <CheckboxGroup v-model="form.sex" class="item-radio-top">
                     <Checkbox style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
-                    <Checkbox  v-if="it.key != 'unknow'" style="width: 220px; height: 70px;"  v-for="it in sexList" :key="it.key" :label="it.key"
-                      class="check-item check-icon">
-                      <div v-if="it.text == '男'"><i class="check-man"></i></div>
-                      <div v-else><i class="check-woman"></i></div>
+                    <Checkbox
+                      v-if="it.key != 'unknow'"
+                      style="width: 220px; height: 70px;"
+                      v-for="it in sexList"
+                      :key="it.key"
+                      :label="it.key"
+                      class="check-item check-icon"
+                    >
+                      <div v-if="it.text == '男'">
+                        <i class="check-man"></i>
+                      </div>
+                      <div v-else>
+                        <i class="check-woman"></i>
+                      </div>
                       <span>{{it.text}}</span>
                     </Checkbox>
                   </CheckboxGroup>
@@ -57,8 +88,13 @@
                 <FormItem class="item-top form-item-type">
                   <CheckboxGroup v-model="form.age" class="item-radio-top">
                     <Checkbox style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
-                    <Checkbox style="100px"  v-for="it in ageList" :key="it.key" :label="it.key"
-                      class="check-item">
+                    <Checkbox
+                      style="100px"
+                      v-for="it in ageList"
+                      :key="it.key"
+                      :label="it.key"
+                      class="check-item"
+                    >
                       <span>{{it.text}}</span>
                     </Checkbox>
                   </CheckboxGroup>
@@ -70,8 +106,12 @@
                   <div class="orient-title">影片类型</div>
                   <FormItem :labelWidth="0" class="item-top form-item-type">
                     <CheckboxGroup v-model="form.type" class="item-radio-top">
-                      <Checkbox  v-for="it in typeList" :key="it.key" :label="it.key"
-                        class="check-item">{{it.text}}</Checkbox>
+                      <Checkbox
+                        v-for="it in typeList"
+                        :key="it.key"
+                        :label="it.key"
+                        class="check-item"
+                      >{{it.text}}</Checkbox>
                     </CheckboxGroup>
                   </FormItem>
                 </div>
@@ -79,20 +119,31 @@
             </Col>
           </Row>
 
-          <h3 class="layout-titles">影片定向
+          <h3 class="layout-titles">
+            影片定向
             <FormItem :labelWidth="0" class="item-top cinema-position form-item-type">
-              <Tags v-model="movieCustom" :tagMess = 'movieList' />
+              <Tags v-model="movieCustom" :tagMess="movieList"/>
             </FormItem>
           </h3>
           <div class="item-top" style="margin-top: 50px" v-show="movieCustom != 0">
-            <Film v-model="numsList" :begin="beginDate" :end="endDate" @donefilm="timerfilm" />
+            <Film v-model="numsList" :begin="beginDate" :end="endDate" @donefilm="timerfilm"/>
           </div>
 
           <div class="btn-center">
-            <Button type="default" class="button-ok last-button default-but" @click="back('dataform')"><img width="16px" src="./assets/next.png" />返回上一步</Button>
-            <Button type="primary" class="button-ok next-button" @click="next('dataform')">下一步,进入推广方案</Button>
+            <Button
+              type="default"
+              class="button-ok last-button default-but"
+              @click="back('dataform')"
+            >
+              <img width="16px" src="./assets/next.png">返回上一步
+            </Button>
+            <Button
+              type="primary"
+              class="button-ok next-button"
+              @click="next('dataform')"
+            >下一步,进入推广方案</Button>
           </div>
-        </Form> 
+        </Form>
       </Col>
     </Row>
   </div>
@@ -107,7 +158,14 @@ import { confirm, toast } from '@/ui/modal'
 import moment from 'moment'
 import Film from './film.vue'
 import Chain from '@/components/cityMap/CityMap.vue'
-import { getTwodetail, getRegionList, direction, searchcinema, adverdetail, getRecommend } from '@/api/popPlan.ts'
+import {
+  getTwodetail,
+  getRegionList,
+  direction,
+  searchcinema,
+  adverdetail,
+  getRecommend
+} from '@/api/popPlan.ts'
 import { clean } from '@/fn/object.ts'
 import City from '@/components/citySelectDialog'
 import { info } from '@/ui/modal'
@@ -162,19 +220,22 @@ export default class Orienteering extends ViewBase {
   tags: any = []
   item: any = null
 
-
-  areaList = [{
-    label: 0,
-    name: '快速选择'
-  }, {
-    label: 1,
-    name: '自定义城市列表'
-  }]
+  areaList = [
+    {
+      label: 0,
+      name: '快速选择'
+    },
+    {
+      label: 1,
+      name: '自定义城市列表'
+    }
+  ]
   movieList = [
     {
       label: 0,
       name: '系统智能匹配'
-    }, {
+    },
+    {
       label: 1,
       name: '自定义影片'
     }
@@ -183,7 +244,8 @@ export default class Orienteering extends ViewBase {
     {
       label: 1,
       name: '数量不限'
-    }, {
+    },
+    {
       label: 2,
       name: '指定数量'
     }
@@ -209,12 +271,9 @@ export default class Orienteering extends ViewBase {
     try {
       const { data } = await getTwodetail()
       await getRegionList()
-      const { data: {
-          item,
-          deliveryCityTypeList,
-          tags,
-          movies
-        } } = await adverdetail(this.value.setid)
+      const {
+        data: { item, deliveryCityTypeList, tags, movies }
+      } = await adverdetail(this.value.setid)
       this.beginDate = item.beginDate
       this.endDate = item.endDate
       this.tags = tags
@@ -265,7 +324,9 @@ export default class Orienteering extends ViewBase {
   citys(val: any) {
     if (this.item.allNation != 1) {
       const message = val.map((it: any) => {
-      const msg = this.deliveryCityTypeList.filter((item: any) => it == item.key)[0].key
+        const msg = this.deliveryCityTypeList.filter(
+          (item: any) => it == item.key
+        )[0].key
         return msg
       })
       this.form.cinema = message
@@ -275,10 +336,14 @@ export default class Orienteering extends ViewBase {
   }
 
   sexs() {
-    const msg = (this.item.deliveryGroups || []).filter((item: any) => item.tagTypeCode == 'PLAN_GROUP_SEX')
+    const msg = (this.item.deliveryGroups || []).filter(
+      (item: any) => item.tagTypeCode == 'PLAN_GROUP_SEX'
+    )
     if (msg.length > 0) {
       const message = msg.map((it: any) => {
-        const value = this.tags[2].values.filter((item: any) => it.text == item.key)[0].key
+        const value = this.tags[2].values.filter(
+          (item: any) => it.text == item.key
+        )[0].key
         return value
       })
       this.form.sex = message
@@ -287,11 +352,15 @@ export default class Orienteering extends ViewBase {
   }
 
   ages() {
-    const msg = (this.item.deliveryGroups || []).filter((item: any) => item.tagTypeCode == 'PLAN_GROUP_AGE')
+    const msg = (this.item.deliveryGroups || []).filter(
+      (item: any) => item.tagTypeCode == 'PLAN_GROUP_AGE'
+    )
 
     if (msg.length > 0) {
-        const message = msg.map((it: any) => {
-        const value = this.tags[1].values.filter((item: any) => it.text == item.key)[0].key
+      const message = msg.map((it: any) => {
+        const value = this.tags[1].values.filter(
+          (item: any) => it.text == item.key
+        )[0].key
         return value
       })
       this.form.age = message
@@ -300,13 +369,17 @@ export default class Orienteering extends ViewBase {
   }
 
   types() {
-    const msg = (this.item.deliveryGroups || []).filter((item: any) => item.tagTypeCode == 'MOVIE_TYPE')
+    const msg = (this.item.deliveryGroups || []).filter(
+      (item: any) => item.tagTypeCode == 'MOVIE_TYPE'
+    )
     if (msg.length > 0) {
       const message = msg.map((it: any) => {
-        const value = this.tags[0].values.filter((item: any) => it.text == item.key)[0].key
+        const value = this.tags[0].values.filter(
+          (item: any) => it.text == item.key
+        )[0].key
         return value
       })
-       this.form.type = message
+      this.form.type = message
     } else {
     }
   }
@@ -318,37 +391,42 @@ export default class Orienteering extends ViewBase {
       return
     }
     try {
-      await direction (clean({
-        planId: this.$route.params.setid,
-        cityCustom: this.cityCustom,
-        allNation: this.form.cinema[0] == 0 ? 1 : 0,
-        deliveryCityTypes: this.form.cinema[0] == 0 ? '' : this.form.cinema,
-        deliveryGroups: [
-          {
-            tagTypeCode: 'MOVIE_TYPE',
-            text: this.form.type[0]
-          },
-          {
-            tagTypeCode: 'PLAN_GROUP_AGE',
-            text: this.form.age.join(';')
-          },
-          {
-            tagTypeCode: 'PLAN_GROUP_SEX',
-            text: this.form.sex.join(';')
-          }
-        ].filter((it: any) => {
-          return it.text != 0
-        }),
-        movieCustom: this.movieCustom,
-        customDeliveryCities: this.cityCustom == 0 ? '' : this.citysId,
-        deliveryMovies: this.movieCustom == 0 ? '' : this.numsList.map((it: any) => {
-          return {
-            movieId: it.id,
-            beginDate: this.beginDate,
-            endDate: this.endDate
-          }
+      await direction(
+        clean({
+          planId: this.$route.params.setid,
+          cityCustom: this.cityCustom,
+          allNation: this.form.cinema[0] == 0 ? 1 : 0,
+          deliveryCityTypes: this.form.cinema[0] == 0 ? '' : this.form.cinema,
+          deliveryGroups: [
+            {
+              tagTypeCode: 'MOVIE_TYPE',
+              text: this.form.type[0]
+            },
+            {
+              tagTypeCode: 'PLAN_GROUP_AGE',
+              text: this.form.age.join(';')
+            },
+            {
+              tagTypeCode: 'PLAN_GROUP_SEX',
+              text: this.form.sex.join(';')
+            }
+          ].filter((it: any) => {
+            return it.text != 0
+          }),
+          movieCustom: this.movieCustom,
+          customDeliveryCities: this.cityCustom == 0 ? '' : this.citysId,
+          deliveryMovies:
+            this.movieCustom == 0
+              ? ''
+              : this.numsList.map((it: any) => {
+                  return {
+                    movieId: it.id,
+                    beginDate: this.beginDate,
+                    endDate: this.endDate
+                  }
+                })
         })
-      }))
+      )
       let time: any = null
       time = setInterval(() => {
         if (this.recommend) {
@@ -388,18 +466,16 @@ export default class Orienteering extends ViewBase {
 
   async loddding() {
     try {
-      const { data: {
-          item,
-          planMovies
-        } } = await adverdetail(this.value.setid)
-        this.recommend = item.recommend
-        this.planMovies = planMovies
+      const {
+        data: { item, planMovies }
+      } = await adverdetail(this.value.setid)
+      this.recommend = item.recommend
+      this.planMovies = planMovies
       // this.$emit('input', {
       //   id: 2,
       //   setid: this.$route.params.setid
       // })
-    } catch (ex) {
-    }
+    } catch (ex) {}
   }
 
   back(dataform: any) {
@@ -532,7 +608,8 @@ export default class Orienteering extends ViewBase {
 .adv-left {
   width: 500px;
   /deep/ .ivu-select-dropdown {
-    /deep/ li, /deep/ .ivu-select-loading {
+    /deep/ li,
+    /deep/ .ivu-select-loading {
       line-height: 30px;
       height: 30px;
     }
@@ -663,7 +740,7 @@ export default class Orienteering extends ViewBase {
   margin-top: -66px;
 }
 .chain {
-  transform: scale(.75);
+  transform: scale(0.75);
   margin-top: -90px;
   /deep/ .city-map {
     background-color: #fff0;

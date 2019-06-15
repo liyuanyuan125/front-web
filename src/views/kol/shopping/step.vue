@@ -1,9 +1,12 @@
 <template>
   <div class="page">
-    <ul class="" ref="uls">
-      <li @click="active(index)" :class="step == index? 'liactive' : ''" v-for="(it, index) in name" :key='index'>
-        {{it.name}}
-      </li>
+    <ul class ref="uls">
+      <li
+        @click="active(index)"
+        :class="step == index? 'liactive' : ''"
+        v-for="(it, index) in name"
+        :key="index"
+      >{{it.name}}</li>
     </ul>
     <div :style="{transform: `translate3d(${width/5 * (step )}px, -2px, 0px)`}" class="active"></div>
   </div>
@@ -15,13 +18,13 @@ import ViewBase from '@/util/ViewBase'
 
 @Component
 export default class App extends ViewBase {
-  @Prop({ default: 0}) value!: number
+  @Prop({ default: 0 }) value!: number
   name: any = [
-    {name: '微博', id: 0},
-    {name: '微信', id: 1},
-    {name: '抖音', id: 2},
-    {name: '快手', id: 3},
-    {name: '小红书', id: 4},
+    { name: '微博', id: 0 },
+    { name: '微信', id: 1 },
+    { name: '抖音', id: 2 },
+    { name: '快手', id: 3 },
+    { name: '小红书', id: 4 }
   ]
   titles: any = ['weibo', 'wechat', 'douyin', 'kuaishou', 'xiaohonghsu']
   width: any = ''
@@ -55,9 +58,9 @@ export default class App extends ViewBase {
     font-size: 18px;
     line-height: 69px;
     text-align: center;
-    color: rgba(255, 255, 255, .6);
+    color: rgba(255, 255, 255, 0.6);
     cursor: pointer;
-    border-bottom: 2px solid rgba(255, 255, 255, .6);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.6);
     &:hover {
       color: #fff;
     }
