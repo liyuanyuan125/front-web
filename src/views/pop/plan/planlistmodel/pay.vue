@@ -7,7 +7,7 @@
     <div class="title">
       <i @click="cancel"></i>
       <img width="115px" height="115px" src="../assets/fanan.png" />
-      <p>是否确认方案？</p>
+      <p>余额不足，前去缴费</p>
     </div>
     <div slot="footer" class="foot">
         <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>

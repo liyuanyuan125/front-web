@@ -1,11 +1,17 @@
 <template>
   <div class="kol-box">
-    <Header />
+    <Header/>
     <div>
       <Step v-model="$route.params.id"></Step>
     </div>
-    <div v-if="tableDate.length > 0" class="section">
-      <Table  :columns="columns" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
+    <div v-if="tableDate.length > 0 || tableDate1.length > 0" class="section">
+      <Table
+        :columns="columns"
+        :data="tableDate"
+        ref="selection"
+        @on-selection-change="singleSelect"
+        @on-select-all="selectAll"
+      >
         <!-- <template ref='title' slot="header">
           <div>
             <div class="top">
@@ -29,42 +35,44 @@
               </div>
             </div>
           </div>
-        </template> -->
+        </template>-->
         <template style="marin-top: 100px" slot-scope="{ row }" slot="type">
           <div class="table-name">
-            <img :src="row.accountImageUrl" alt=""> 
+            <img :src="row.accountImageUrl" alt>
             <span>{{row.accountName}}</span>
           </div>
         </template>
 
         <template style="marin-top: 100px" slot-scope="{ row }" slot="pintai">
           <div class="table-name">
-            <span v-if="accountCategoryList && accountCategoryList.length>0">
-              {{accountCategoryList.filter((it) => it.key == row.accountTypeCode)[0].text}}
-            </span>
+            <span
+              v-if="accountCategoryList && accountCategoryList.length>0"
+            >{{accountCategoryList.filter((it) => it.key == row.accountTypeCode)[0].text}}</span>
           </div>
         </template>
 
         <template slot-scope="{ row }" slot="genre">
           <div>
-            <p v-for="(it, index) in row.priceList" :key="index" style="margin-top: 5px">
-                {{statusLists(it)}}
-            </p>
+            <p
+              v-for="(it, index) in row.priceList"
+              :key="index"
+              style="margin-top: 5px"
+            >{{statusLists(it)}}</p>
           </div>
         </template>
-    
+
         <template style="marin-top: 100px" slot-scope="{ row }" slot="action">
           <div class="table-action">
             <p v-if="!row.collected" @click="collects(row.id)">
-              <img width="14px" src="./assets/collect.png" />
+              <img width="14px" src="./assets/collect.png">
               收藏
             </p>
             <p v-else @click="cancelcollects(row.id)">
-              <img width="14px" src="./assets/collectcheck.png" />
+              <img width="14px" src="./assets/collectcheck.png">
               取消收藏
             </p>
             <p @click="cancelShop(row.channelDataId)" style="margin-top: 7px">
-              <img width="14px" src="./assets/cancel.png" />
+              <img width="14px" src="./assets/cancel.png">
               删除
             </p>
           </div>
@@ -78,8 +86,14 @@
         <span class="point" @click="allcollect">收藏</span>
         <div class="check-span">
           <ul>
-            <li>已选账号 <b class="">{{sum}}</b> 个  </li>
-            <li>合计粉丝数<b class="red">￥{{sumcount}}</b></li>
+            <li>
+              已选账号
+              <b class>{{sum}}</b> 个
+            </li>
+            <li>
+              合计粉丝数
+              <b class="red">￥{{sumcount}}</b>
+            </li>
           </ul>
           <div>
             <Button class="default-btn" v-if="sum > 0" @click="reserve">立即预定</Button>
@@ -91,39 +105,41 @@
           以下KOL账号已下架，无法进行预订
           <Button class="default-btn" @click="reserve">全部清空</Button>
         </div>
-        <Table :show-header="false" :columns="columnsNum" :data="tableDate1" >
+        <Table :show-header="false" :columns="columnsNum" :data="tableDate1">
           <template style="marin-top: 100px" slot-scope="{ row }" slot="type">
             <div class="table-name">
-              <img :src="row.accountImageUrl" alt=""> 
+              <img :src="row.accountImageUrl" alt>
               <span>{{row.accountName}}</span>
             </div>
           </template>
           <template style="marin-top: 100px" slot-scope="{ row }" slot="pintai">
             <div class="table-name">
-              <span v-if="accountCategoryList && accountCategoryList.length>0">
-                {{accountCategoryList.filter((it) => it.key == row.accountTypeCode)[0].text}}
-              </span>
+              <span
+                v-if="accountCategoryList && accountCategoryList.length>0"
+              >{{accountCategoryList.filter((it) => it.key == row.accountTypeCode)[0].text}}</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="genre">
             <div>
-              <p v-for="(it, index) in row.priceList" :key="index" style="margin-top: 5px">
-                {{statusLists(it)}}
-              </p>
+              <p
+                v-for="(it, index) in row.priceList"
+                :key="index"
+                style="margin-top: 5px"
+              >{{statusLists(it)}}</p>
             </div>
           </template>
           <template style="marin-top: 100px" slot-scope="{ row }" slot="action">
             <div class="table-action">
               <p v-if="!row.collected" @click="collects(row.id)">
-                <img width="14px" src="./assets/collect.png" />
+                <img width="14px" src="./assets/collect.png">
                 收藏
               </p>
               <p v-else @click="cancelcollects(row.id)">
-                <img width="14px" src="./assets/collectcheck.png" />
+                <img width="14px" src="./assets/collectcheck.png">
                 取消收藏
               </p>
               <p @click="cancelShop(row.channelDataId)" style="margin-top: 7px">
-                <img width="14px" src="./assets/cancel.png" />
+                <img width="14px" src="./assets/cancel.png">
                 删除
               </p>
             </div>
@@ -132,11 +148,11 @@
       </div>
     </div>
     <div v-else class="section-no">
-      <img src="./assets/noshop.png" alt="">
+      <img src="./assets/noshop.png" alt>
       <h3>还没有添加KOL账号</h3>
       <Button class="default-btn" @click="checkKol">前往挑选</Button>
     </div>
-    <Detail ref="detail" />
+    <Detail ref="detail"/>
   </div>
 </template>
 
@@ -186,7 +202,7 @@ export default class DlgEditCinema extends ViewBase {
           }
         } else {
           return {
-            ...it,
+            ...it
           }
         }
       })
@@ -197,69 +213,69 @@ export default class DlgEditCinema extends ViewBase {
 
   get columnsNum() {
     const columns: any = [
-        {
-          title: '全选',
-          align: 'left',
-          width: 190,
-        },
-        {
-          title: '账号分类',
-          align: 'left',
-          slot: 'type'
-        },
-        {
-          title: '平台',
-          align: 'left',
-          key: 'platform',
-          slot: 'pintai'
-        },
-        {
-          title: '投放方式',
-          align: 'left',
-          key: 'type',
-          slot: 'genre'
-        },
-        {
-          title: '操作',
-          align: 'center',
-          width: 160,
-          slot: 'action'
-        }
-      ]
+      {
+        title: '全选',
+        align: 'left',
+        width: 190
+      },
+      {
+        title: '账号分类',
+        align: 'left',
+        slot: 'type'
+      },
+      {
+        title: '平台',
+        align: 'left',
+        key: 'platform',
+        slot: 'pintai'
+      },
+      {
+        title: '投放方式',
+        align: 'left',
+        key: 'type',
+        slot: 'genre'
+      },
+      {
+        title: '操作',
+        align: 'center',
+        width: 160,
+        slot: 'action'
+      }
+    ]
     return columns
   }
   get columns() {
     const columns: any = [
-        { type: 'selection', width: 70, align: 'center' },
-        {
-          title: '全选',
-          align: 'left',
-          width: 120,
-        },
-        {
-          title: '账号分类',
-          align: 'left',
-          slot: 'type'
-        },
-        {
-          title: '平台',
-          align: 'left',
-          key: 'platform',
-          slot: 'pintai'
-        },
-        {
-          title: '投放方式',
-          align: 'left',
-          key: 'type',
-          slot: 'genre'
-        },
-        {
-          title: '操作',
-          align: 'center',
-          width: 160,
-          slot: 'action'
-        }
-      ]
+      { type: 'selection', width: 70, align: 'center' },
+      {
+        title: '全选',
+        align: 'left',
+        width: 120
+      },
+      {
+        title: '账号分类',
+        align: 'left',
+        slot: 'type'
+      },
+      {
+        title: '平台',
+        align: 'left',
+        key: 'platform',
+        slot: 'pintai'
+      },
+      {
+        title: '投放方式',
+        align: 'left',
+        key: 'type',
+        slot: 'genre'
+      },
+      {
+        title: '操作',
+        align: 'center',
+        width: 160,
+        slot: 'action'
+      }
+    ]
     return columns
   }
 
@@ -267,7 +283,9 @@ export default class DlgEditCinema extends ViewBase {
   async cancelShop(id: any) {
     try {
       await delShopping({
-        channelCode: this.titles[this.$route.params.id ? Number(this.$route.params.id) : 0],
+        channelCode: this.titles[
+          this.$route.params.id ? Number(this.$route.params.id) : 0
+        ],
         channelDataId: id
       })
       this.init()
@@ -278,29 +296,56 @@ export default class DlgEditCinema extends ViewBase {
 
   async init() {
     try {
-      const type: any = this.$route.params.id ? this.titles.findIndex((it: any) => it == this.$route.params.id) : 0
+      const type: any = this.$route.params.id
+        ? this.titles.findIndex((it: any) => it == this.$route.params.id)
+        : 0
       const { data } = await kolShoppingCar()
       this.accountCategoryList = data.accountCategoryList
       switch (type) {
-        case 0: this.tableDate = data.weiboList.filter((it: any) => it.controlStatus == 1)
-                this.tableDate1 = data.weiboList.filter((it: any) => it.controlStatus == 2)
-                this.statusList = data.weiboPublishCategoryList
+        case 0:
+          this.tableDate = data.weiboList.filter(
+            (it: any) => it.controlStatus == 1
+          )
+          this.tableDate1 = data.weiboList.filter(
+            (it: any) => it.controlStatus == 2
+          )
+          this.statusList = data.weiboPublishCategoryList
           break
-        case 1: this.tableDate = data.weixinList.filter((it: any) => it.controlStatus == 1)
-                this.tableDate1 = data.weixinList.filter((it: any) => it.controlStatus == 2)
-                this.statusList = data.weixinPublishCategoryList
+        case 1:
+          this.tableDate = data.weixinList.filter(
+            (it: any) => it.controlStatus == 1
+          )
+          this.tableDate1 = data.weixinList.filter(
+            (it: any) => it.controlStatus == 2
+          )
+          this.statusList = data.weixinPublishCategoryList
           break
-        case 2: this.tableDate = data.douyinList.filter((it: any) => it.controlStatus == 1)
-                this.tableDate1 = data.douyinList.filter((it: any) => it.controlStatus == 2)
-                this.statusList = data.douyinPublishCategoryList
+        case 2:
+          this.tableDate = data.douyinList.filter(
+            (it: any) => it.controlStatus == 1
+          )
+          this.tableDate1 = data.douyinList.filter(
+            (it: any) => it.controlStatus == 2
+          )
+          this.statusList = data.douyinPublishCategoryList
           break
-        case 3: this.tableDate = data.kuaishouList.filter((it: any) => it.controlStatus == 1)
-                this.tableDate1 = data.kuaishouList.filter((it: any) => it.controlStatus == 2)
-                this.statusList = data.kuaishouPublishCategoryList
+        case 3:
+          this.tableDate = data.kuaishouList.filter(
+            (it: any) => it.controlStatus == 1
+          )
+          this.tableDate1 = data.kuaishouList.filter(
+            (it: any) => it.controlStatus == 2
+          )
+          this.statusList = data.kuaishouPublishCategoryList
           break
-        case 4: this.tableDate = data.xiaohongshuList.filter((it: any) => it.controlStatus == 1)
-                this.tableDate1 = data.xiaohongshuList.filter((it: any) => it.controlStatus == 2)
-                this.statusList = data.xiaohongshuPublishCategoryList
+        case 4:
+          this.tableDate = data.xiaohongshuList.filter(
+            (it: any) => it.controlStatus == 1
+          )
+          this.tableDate1 = data.xiaohongshuList.filter(
+            (it: any) => it.controlStatus == 2
+          )
+          this.statusList = data.xiaohongshuPublishCategoryList
           break
       }
     } catch (ex) {
@@ -309,7 +354,9 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   statusLists(it: any) {
-    const msg = (this.statusList.filter((its: any) => its.key == it.categoryCode)[0] as any).text
+    const msg = (this.statusList.filter(
+      (its: any) => its.key == it.categoryCode
+    )[0] as any).text
     return `${msg}`
   }
 
@@ -336,12 +383,13 @@ export default class DlgEditCinema extends ViewBase {
     // this.$nextTick(() => {
     //   (this.$refs.detail as any).init(this.filmCheck)
     // })
-    const sumList = this.sumList((it: any) => {
+    const sumList = this.sumList.map((it: any) => {
       it.priceList.map((item: any) => {
-        const msg = (this.statusList.filter((its: any) => its.key == item.categoryCode)[0] as any).text
+        const msg = (this.statusList.filter(
+          (its: any) => its.key == item.categoryCode
+        )[0] as any).text
         return {
-          text: msg,
-
+          text: msg
         }
       })
     })
@@ -374,14 +422,16 @@ export default class DlgEditCinema extends ViewBase {
     this.sum = this.checkId.length
     let sum = 0
     this.sumList.forEach((it: any) => {
-      sum += (Number(it.fans))
+      sum += Number(it.fans)
     })
     this.sumcount = formatCurrency(sum)
     this.checkboxAll = select.length == this.tableDate.length ? true : false
   }
 
   sure() {
-    this.filename = this.filmList.filter((it: any) => it.key == this.filmCheck)[0].text
+    this.filename = this.filmList.filter(
+      (it: any) => it.key == this.filmCheck
+    )[0].text
     this.checkFilm()
     this.init()
   }
@@ -406,13 +456,10 @@ export default class DlgEditCinema extends ViewBase {
   //   }
   // }
 
-  selectAll() {
-
-  }
+  selectAll() {}
 
   async alldel() {
     try {
-
     } catch (ex) {
       this.handleError(ex)
     }
@@ -420,7 +467,6 @@ export default class DlgEditCinema extends ViewBase {
 
   async allcollect() {
     try {
-
     } catch (ex) {
       this.handleError(ex)
     }
@@ -436,7 +482,7 @@ export default class DlgEditCinema extends ViewBase {
     this.showDlg = false
   }
 
-  @Watch('$route.params', {deep: true})
+  @Watch('$route.params', { deep: true })
   watch$routeParams(val: any) {
     this.init()
     this.checkboxAll = false
@@ -486,16 +532,26 @@ export default class DlgEditCinema extends ViewBase {
       font-size: 14px;
     }
   }
-  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
+  /deep/ .ivu-table-tip {
+    height: 70px;
+    background: #fff;
+    span {
+      margin-top: 20px;
+      line-height: 60px;
+    }
+  }
+  /deep/ .ivu-table-column-center,
+  /deep/ .ivu-table-column-left {
     background: #00202d;
   }
   /deep/ .ivu-table {
-    background: rgba(255, 255, 255, .3);
+    background: rgba(255, 255, 255, 0.3);
     color: #00202d;
   }
-  /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
+  /deep/ .ivu-table-body .ivu-table-column-center,
+  /deep/ .ivu-table-body .ivu-table-column-left {
     background: rgba(0, 0, 0, 0);
-    border-bottom: 1px solid rgba(255, 255, 255, .5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     span {
       color: #444;
       font-size: 14px;

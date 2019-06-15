@@ -167,7 +167,7 @@
             <Button type="default" class="button-ok btn-next" @click="back('dataform')"><img width="16px" src="./assets/next.png" /> 返回上一步</Button>
             <Button type="primary" class="button-ok btn-save" @click="next('dataform')">保存导出方案</Button>
             <Button type="default" class="button-ok btn-export" @click="back('dataform')"><img width="16px" src="./assets/export.png" /> 导出投放方案</Button>
-            <Button type="default" class="button-ok btn-collect" @click="back('dataform')">联系商务</Button>
+            <!-- <Button type="default" class="button-ok btn-collect" @click="back('dataform')">联系商务</Button> -->
           </div>
         </Form>  
       </Col>

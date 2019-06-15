@@ -3,14 +3,20 @@
     <Row>
       <Col :sapn="14" :offset="5">
         <ul class="step">
-          <li v-for="(item, index) in step" :key="item.id" :class="(value) >= item.id ? 'active' : ''">
+          <li
+            v-for="(item, index) in step"
+            :key="item.id"
+            :class="(value) >= item.id ? 'active' : ''"
+          >
             <span :class="(value) > item.id ? 'actve-span' : ''" v-if="index!=2"></span>
           </li>
         </ul>
         <ul class="step-text">
-          <li v-for="(item) in step" :key="item.id" :class="(value) >= item.id ? 'active' : ''">
-            {{item.key}}
-          </li>
+          <li
+            v-for="(item) in step"
+            :key="item.id"
+            :class="(value) >= item.id ? 'active' : ''"
+          >{{item.key}}</li>
         </ul>
       </Col>
     </Row>
@@ -23,24 +29,32 @@ import ViewBase from '@/util/ViewBase'
 
 @Component
 export default class App extends ViewBase {
-  @Prop({default: 1}) value!: number
-  step = [{
-    key: '提交预定',
-    id: 1
-  }, {
-    key: '上传物料',
-    id: 2
-  }, {
-    key: '支付订单',
-    id: 3
-  }]
+  @Prop({ default: 1 }) value!: number
+  step = [
+    {
+      key: '提交预定',
+      id: 1
+    },
+    {
+      key: '上传物料',
+      id: 2
+    },
+    {
+      key: '支付订单',
+      id: 3
+    }
+  ]
 }
 </script>
 
 <style lang="less" scoped>
 @keyframes animatedBackground {
-  from { background-size: 0; }
-  to { background-size: 100%; }
+  from {
+    background-size: 0;
+  }
+  to {
+    background-size: 100%;
+  }
 }
 .app {
   .step {
@@ -51,9 +65,9 @@ export default class App extends ViewBase {
     li {
       flex: 1;
       position: relative;
-      transition: all .4s ease-in-out;
+      transition: all 0.4s ease-in-out;
       &::before {
-        content: "";
+        content: '';
         display: block;
         width: 40px;
         height: 40px;
@@ -77,12 +91,12 @@ export default class App extends ViewBase {
       .actve-span {
         width: 100%;
         background: #fff no-repeat;
-        transition: all .4s ease-in-out;
+        transition: all 0.4s ease-in-out;
       }
     }
     .active {
       &::before {
-        content: "●";
+        content: '●';
         color: #00202d;
         background: #fff;
         border: 2px solid rgb(255, 255, 255);
