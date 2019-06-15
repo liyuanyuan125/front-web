@@ -5,10 +5,13 @@
       <ul>
         <li v-for="item in topList" :key="item.id">
           <img v-if="item.hot" src="../assets/hotShow.png" class="hot"/>
-          <p><img :src="item.img" class="img-top" /><span></span></p>
-          <p class="title-year">{{item.title}}({{item.year}})</p>
-          <p><span v-for="(it, index) in item.type">{{it}}<em v-if="item.type.length-1 != index">/</em></span></p>
-          <p class="top-money"><span>{{item.monery}}亿</span></p>
+          <p class="item-list">
+             <img :src="item.poster" class="img-top" />
+             <span v-if="item.boxOfficeRanking">影史票房NO.{{item.boxOfficeRanking}}</span>
+          </p>
+          <p class="title-year">{{item.name}}({{item.release}})</p>
+          <p><span v-for="(it, index) in item.types">{{handleMoive(it)}}<em v-if="item.types.length-1 != index">/</em></span></p>
+          <p class="top-money"><span>{{item.boxOffice}}</span></p>
         </li>
       </ul>
     </div>
@@ -83,58 +86,8 @@ export default class Master extends ViewBase {
   tableList: any = []
 
   // top-5
-  topList = [
-    {
-      id: 1,
-      title: '战狼2',
-      img: 'http://img5.mtime.cn/mt/2019/01/30/152305.14999287_96X128.jpg',
-      year: '2016',
-      hot: 0,
-      ranking: 1,
-      type: ['动作', '战争'],
-      monery: '122.33'
-    },
-    {
-      id: 2,
-      title: '战狼2',
-      img: 'http://img5.mtime.cn/mt/2019/01/30/152305.14999287_96X128.jpg',
-      year: '2016',
-      hot: 0,
-      ranking: 1,
-      type: ['动作', '战争'],
-      monery: '122.33'
-    },
-    {
-      id: 3,
-      title: '战狼2',
-      img: 'http://img5.mtime.cn/mt/2019/01/30/152305.14999287_96X128.jpg',
-      year: '2016',
-      hot: 0,
-      ranking: 1,
-      type: ['动作', '战争'],
-      monery: '122.33'
-    },
-    {
-      id: 4,
-      title: '战狼2',
-      img: 'http://img5.mtime.cn/mt/2019/01/30/152305.14999287_96X128.jpg',
-      year: '2016',
-      hot: 0,
-      ranking: 1,
-      type: ['动作', '战争'],
-      monery: '122.33'
-    },
-    {
-      id: 5,
-      title: '战狼2',
-      img: 'http://img5.mtime.cn/mt/2019/01/30/152305.14999287_96X128.jpg',
-      year: '2016',
-      hot: 1,
-      ranking: 1,
-      type: ['动作', '战争'],
-      monery: '122.33'
-    },
-  ]
+  topList = []
+  movieTypes = []
   productionList = [
     {text: '全部', num: 10},
     {text: '演员', num: 10},
@@ -315,16 +268,18 @@ export default class Master extends ViewBase {
   }
 
   async topCountList() {
-    const id = 107028 // this.id
+    const id = 370093 // this.id
     try {
-      const { data } = await topList(id, 5)
+      const { data: {items, movieTypes} } = await topList(id, 5)
+      this.topList = items
+      this.movieTypes = movieTypes
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
   async list() {
-    const id = 107028 // this.id
+    const id = 370093 // this.id
     try {
       const { data } = await personMovies(id)
     } catch (ex) {
@@ -332,6 +287,14 @@ export default class Master extends ViewBase {
     }
   }
 
+  handleMoive(it: any) {
+    let item: any = null
+    for (item of this.movieTypes) {
+      if (item.key == it) {
+        return item.text
+      }
+    }
+  }
   handlePro(id: any) {
     this.timeSort = id
     this.tableList = this.timeSort == 0 ? this.filmList : this.gradeList
@@ -371,6 +334,20 @@ h2, h3, h4 {
         top: 0;
         left: 20px;
         width: 48px;
+      }
+      .item-list {
+        position: relative;
+        span {
+          position: absolute;
+          bottom: 5px;
+          left: 0;
+          height: 40px;
+          line-height: 40px;
+          color: #fff;
+          text-align: center;
+          background: #4fa6bb;
+          width: 100%;
+        }
       }
       .img-top {
         width: 100%;
