@@ -81,7 +81,7 @@ const nameToIconMap: MapType = {
   pop: 'diamond',
   kol: 'diamond',
   'film-cooperation': 'diamond',
-  brand: 'diamond',
+  'brand-list': 'diamond',
   report: 'home',
   customer: 'user',
   finance: 'finance',
