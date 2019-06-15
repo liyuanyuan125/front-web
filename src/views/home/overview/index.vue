@@ -33,14 +33,19 @@
     </ul>
 
     <ul class="action-list">
-      <li class="action-node">映前广告投放</li>
-      <li class="action-node">KOL推广</li>
-      <li class="action-node">影片合作</li>
+      <li class="action-node" @click="gotoRoute('pop-planlist')">映前广告投放</li>
+      <li class="action-node" @click="gotoRoute('kol-kollist')">KOL推广</li>
+      <li class="action-node" @click="gotoRoute('film-cooperation-list')">影片合作</li>
       <li class="brand-pane">
         <h4 class="brand-title">品牌管理</h4>
-        <router-link :to="{}" class="brand-more">更多</router-link>
+        <router-link :to="{ name: 'brand-list' }" class="brand-more">更多</router-link>
         <ul class="brand-list">
-          <li v-for="(it, i) in brandList" :key="i" class="brand-item">
+          <li
+            v-for="(it, i) in brandList"
+            :key="i"
+            class="brand-item"
+            @click="gotoRoute({ name: 'brand-home', params: { id: it.id } })"
+          >
             <img :src="it.logo" class="brand-img">
           </li>
         </ul>
@@ -66,6 +71,7 @@ import { getStats, queryReport, getBrandList } from './data'
 import moment from 'moment'
 import { capitalize } from 'lodash'
 import { MapType } from '@/util/types'
+import { RawLocation } from 'vue-router'
 
 const offsetDay = (offset = 0) => moment().add(offset, 'day').format('YYYYMMDD')
 
@@ -117,6 +123,11 @@ export default class Overview extends ViewBase {
       ]
     }
   ]
+
+  gotoRoute(route: RawLocation) {
+    const to = typeof route == 'string' ? { name: route } : route
+    this.$router.push(to)
+  }
 
   async created() {
     this.initStats()
@@ -352,6 +363,7 @@ export default class Overview extends ViewBase {
 
 .brand-item {
   margin: 0 2.97%;
+  cursor: pointer;
 }
 
 .brand-img {
