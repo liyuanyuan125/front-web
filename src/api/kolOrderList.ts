@@ -43,7 +43,12 @@ export async function confirmFinish(id: any) {
 }
 
 // 草稿接口
-export async function draftList(id: any) {
-  const res = await get(`/kol/orders/draft/${id}`)
+export async function draftList(data: any) {
+  const res = await get('/kol/orders/draft', data)
+  return res
+}
+// 订单详情页
+export async function orderDetail(orderId: any) {
+  const res = await get(`/kol/orders/details/${orderId}`)
   return res
 }

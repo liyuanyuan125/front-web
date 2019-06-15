@@ -28,13 +28,22 @@
           </div>
             <div class="flex-box status-content">
                 <Tabs v-model="status" class="order-status-tab">
+                  <TabPane label="全部订单" key="0" name="" ></TabPane>
+                  <TabPane :label="auditStatu" key="2" name="2,3" ></TabPane>
+                  <TabPane :label="paymentStatu" key="4" name="4,8"></TabPane>
+                  <TabPane :label="sendOrderStatu" key="5" name="5" ></TabPane>
+                  <TabPane :label="carryOutStatu" key="6" name="6" ></TabPane>
+                  <TabPane :label="runningStatu" key="7" name="7" ></TabPane>
                   <!-- <TabPane label="全部订单" key="0" ></TabPane> -->
-                  <TabPane :label="item.text" v-for="item in statusList" v-if="item.key < 9 && item.key != 1" :key="item.key"></TabPane>
+                  <!-- <TabPane :label="item.text" v-for="item in statusList" v-if="item.key < 9 && item.key != 1" :key="item.key"></TabPane> -->
                 </Tabs>
-                <Dropdown class="drop-down" @on-click="dropdown">
+                <Dropdown class="drop-down" @on-click="(id) => status=id">
                     <span href="javascript:void(0)">其他<Icon type="ios-arrow-down"></Icon></span>
                     <DropdownMenu slot="list">
-                        <DropdownItem v-for="item in statusRest" :name="item.key" :key="item.key">{{item.text}}</DropdownItem>
+                        <DropdownItem name="9" >已完成<i v-if="finishStatu">({{finishStatu}})</i></DropdownItem>
+                        <DropdownItem name="10" >已取消<i v-if="cancelStatu">({{cancelStatu}})</i></DropdownItem>
+                        <DropdownItem name="11" >派单失败<i v-if="failStatu">({{failStatu}})</i></DropdownItem>
+                        <!-- <DropdownItem v-for="item in statusRest" :name="item.key" :key="item.key">{{item.text}}</DropdownItem> -->
                     </DropdownMenu>
                 </Dropdown>
                 <Button type="primary" @click="$router.push({name: 'kol-applyTicket'})" class="apply-btn">申请发票</Button>
@@ -58,7 +67,7 @@
                         </p>
                       </Col>
                       <Col :span="7" class="flex-box">
-                        <img :src="item" v-for="(item, index) in item.imgList" :key = 'index' alt="" class="li-img"/>
+                        <img v-for="(item, index) in item.orderItemList" :src="item.accountPhotoUrl" v-if="index < 5" :key="index" alt="" class="li-img"/>
                         <span class="img-num">等10个账号</span>
                       </Col>
                       <Col :span="6">
@@ -89,7 +98,7 @@
         <!-- 草稿 -->
         <div v-else>
           <ul class="table-list">
-              <li class="list-li" v-for="item in draftList" :key = "item.id">
+              <li class="list-li" v-for="item in list" :key = "item.id">
                 <Row>
                   <Col :span="5"><span>订单号 {{item.orderNo}}</span></Col>
                   <Col :span="7"><span>下单时间 {{item.createTime}}</span></Col>
@@ -106,27 +115,25 @@
                     </p>
                   </Col>
                   <Col :span="7" class="flex-box">
-                    <img :src="item" v-for="(item, index) in item.imgList" :key = 'index' alt="" class="li-img"/>
+                    <img v-for="(item, index) in item.orderItemList" :src="item.accountPhotoUrl" v-if="index < 5" :key="index" alt="" class="li-img"/>
                     <span class="img-num">等10个账号</span>
                   </Col>
-                  <Col :span="6">
+                  <Col :span="8">
                     <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(item.totalFee)}}</em></p>
-                    <p v-if="[5,6,7,8].includes(item.status)" class="col_00202d rest-order">部分支付 {{item.advanceFee}}</p>
+                    <!-- <p v-if="[5,6,7,8].includes(item.status)" class="col_00202d rest-order">部分支付 {{item.advanceFee}}</p> -->
                   </Col>
-                  <Col :span="2" class="li-item-status">
+                  <!-- <Col :span="2" class="li-item-status">
                     <span v-for="it in intStatusList" :key ="it.key" v-if="it.key == item.status">{{it.text}}</span>
-                  </Col>
+                  </Col> -->
                   <Col :span="4" class="status-btn">
                   <!-- 状态 -->
-                   
                     <p v-if="[1].includes(item.status)"><span @click="handleDel(item.id)">删除</span></p>
-                    <p v-if="[1].includes(item.status)"><span @click="$router.push({name: 'order-orderfill', params: {id: item.id, code: item.channelCode}})">编辑</span></p>
-                   
+                    <p v-if="[1].includes(item.status)"><span @click="$router.push({name: 'order-orderfill', params: {id: item.id, code: item.channelCode}})">编辑</span></p>   
                   </Col>
                 </Row>
               </li>
             </ul>
-            <ul v-if ="draftList.length == 0" class="no-list-data">暂无数据</ul>
+            <ul v-if ="list.length == 0" class="no-list-data">暂无数据</ul>
         </div>
 
       </div>
@@ -148,7 +155,8 @@ import {
   firstPaymentList,
   restPaymentList,
   delOrderList,
-  confirmFinish
+  confirmFinish,
+  orderDetail
 } from '@/api/kolOrderList'
 
 
@@ -161,10 +169,10 @@ export default class Main extends ViewBase {
   total = 0
   pageList = {
     pageIndex: 1,
-    pageSize: 5
+    pageSize: 10
   }
-
   form = {}
+
   // 订单和草稿 默认0订单 1草稿
   orderTab = 0
   // 订单状态
@@ -179,10 +187,21 @@ export default class Main extends ViewBase {
   // 变更后数据
   statusList = []
   // 其他
-  statusRest = []
+  // statusRest = []
 
   list = []
-  draftList = []
+  countData: any = {}
+  // draftList = []
+
+  // 状态数量展示
+  auditStatu = ''
+  paymentStatu = ''
+  sendOrderStatu = ''
+  carryOutStatu = ''
+  runningStatu = ''
+  finishStatu = ''
+  cancelStatu = ''
+  failStatu = ''
 
   // 定义数字格式
   formatNumber = formatNumber
@@ -192,70 +211,32 @@ export default class Main extends ViewBase {
     this.querySelectList()
     this.orderBrand()
   }
-  dropdown(statu: any) {
-    this.status = statu
-  }
   async tableList() {
-    switch (this.status) {
-      case 0:
-       this.cloneStatus = null
-       break
-      case null:
-       this.cloneStatus = null
-       break
-      case 1:
-       this.cloneStatus = '2,3'
-       break
-      case 2:
-       this.cloneStatus = '4,8'
-       break
-      case 3:
-       this.cloneStatus = 5
-       break
-      case 4:
-       this.cloneStatus = 6
-       break
-      case 5:
-       this.cloneStatus = 7
-       break
-       default:
-       this.cloneStatus = this.status
-    }
     try {
-      const { data: {totalCount, items, statusList} } = await orderList({
+      if (this.status == 1) {
+        this.pageList.pageSize = 300
+      } else {
+        this.pageList.pageSize = 10
+      }
+      const { data } = await orderList({
         ...this.pageList,
         ...this.form,
-        orderStatus: this.cloneStatus
+        orderStatus: this.status
       })
-      this.list = items || []
-      this.total = totalCount
-      this.intStatusList = statusList
+      this.countData = data
+      this.list = data.items || []
+      this.total = data.totalCount || 0
+      this.intStatusList = data.statusList
 
-      // 收集草稿list
-      this.draftList = items.filter( (item: any) => item.status == 1)
-      // 深层拷贝数据
-      const aryList = JSON.parse(JSON.stringify(statusList))
-      const newList = aryList.map( (item: any, index: number, object: any) => {
-        if (item.key == 2 || item.key == 3) {
-          item.key = 2 // '2,3'
-          item.text = '待审核'
-        }
-        if (item.key == 4 || item.key == 8) {
-          item.key = 4 // '4,8'
-          item.text = '待支付'
-        }
-        return item
-      })
-      // 处理数组对象重复
-      const obj: any = {}
-      const newStatusList = aryList.reduce((item: any, next: any) => {
-         obj[next.key] ? '' : obj[next.key] = true && item.push(next)
-         return item
-      }, [])
-      // 添加全部数据枚举
-      newStatusList.unshift({key: 0, text: '全部订单'})
-      this.statusList = newStatusList
-      this.statusRest = this.statusList.slice(this.statusList.length - 3)
+      // 数量展示
+      this.auditStatu = data.approvalSize ? `待审核(${ data.approvalSize})` : '待审核'
+      this.paymentStatu = data.approvalSize ? `待支付(${ data.waitPaySize})` : '待支付'
+      this.sendOrderStatu = data.distributorSize ? `派单中(${ data.distributorSize})` : '派单中'
+      this.carryOutStatu = data.waitExecuteSize ? `待执行(${ data.waitExecuteSize})` : '待执行'
+      this.runningStatu = data.execuTingSize ? `执行中(${ data.execuTingSize})` : '执行中'
+      this.finishStatu = data.finishSize
+      this.cancelStatu = data.cancelSize
+      this.failStatu = data.failSize
     } catch (ex) {
       this.handleError(ex)
     }
@@ -318,8 +299,6 @@ export default class Main extends ViewBase {
   async handlePayment(item: any) {
     // item.status = 4 待支付首款8待支付尾款
     // 若余额不足则提示”账号余额不足XXXX元“，请充值后再支付
-    // true ? await info('若余额不足则提示”账号余额不足XXXX元“，请充值后再支付') :
-    // 整单金额分为两次支付<br />①首付款：订单金额的30%，支付后派单 ②尾款：待任务完成后支付剩余金额, <br />
     // 待支付首款
     if (item.status == 4) {
     const firstPayment = (item.advanceFee * 0.3).toFixed(2)
@@ -370,16 +349,11 @@ export default class Main extends ViewBase {
   watchStatus(val: number) {
     this.tableList()
   }
-  // @Watch('form', {deep: true})
-  // watchForm() {
-  //   this.pageList.pageIndex = 1
-  //   this.search()
-  // }
-
-  // @Watch('pageList', {deep: true})
-  // watchPage() {
-  //   this.search()
-  // }
+  @Watch('orderTab')
+  watchOrderTab() {
+    this.list = []
+    this.status = this.orderTab == 0 ? null : 1
+  }
 }
 
 </script>
@@ -408,7 +382,6 @@ export default class Main extends ViewBase {
 }
 .table-list {
   background: rgba(255, 255, 255, .7);
-  padding-bottom: 50px;
   color: #222;
 }
 .list-li {

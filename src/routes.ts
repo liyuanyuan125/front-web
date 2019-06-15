@@ -885,6 +885,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'kol-order-detail',
     component: () => import('./views/kol/order/detail.vue'),
     meta: emptyAuth,
+    props: idProps,
   },
 
   // kol - 检测
@@ -982,14 +983,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
 
-  // 影片详情 - 主创阵容
+  // 影片详情 - 影片详情更多页 - 主创阵容
   {
     path: '/film/filmorder/mainLineup/:id',
     name: 'film-filmorder-mainLineup',
     component: () => import('./views/film/filmorder/mainLineup.vue'),
     meta: emptyAuth,
   },
-  // 影片详情 - 详细资料
+  // 影片详情- 影片详情更多页  - 详细资料
   {
     path: '/film/filmorder/detailInfo/:id',
     name: 'film-filmorder-detailInfo',

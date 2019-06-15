@@ -33,4 +33,10 @@ export async function imgs(id: any , query: any) {
   return res
 }
 
+// img
+export async function mains(id: any ) {
+  const res = await get(`/movie/${id}` )
+  return res
+}
+
 

@@ -1,28 +1,27 @@
 <template>
   <div class="page">
-    <div class='t-title'>订单状态： 派单中</div>
+    <div class='t-title'>订单状态： <span v-for="it in statusList" v-if="it.key == item.status">{{it.text}}</span></div>
     
     <div class='title-tip'>
       <Row style='font-size: 24px;line-height: 50px;font-weight: 500'>订单信息</Row>
     	<Row>
-       <Col :span='12'>项目名称：2019年度奔驰品牌推广</Col>
-       <Col :span='12'>订单编号：234198515130105856</Col>
+       <Col :span='12'>项目名称：{{item.projectName}}</Col>
+       <Col :span='12'>订单编号：{{item.orderNo}}</Col>
       </Row>
       <Row>
-       <Col :span='12'>推广品牌：奔驰</Col>
-       <Col :span='12'>下单时间：2018-0-09 14：21</Col>
+       <Col :span='12'>推广品牌：{{item.brandName}}</Col>
+       <Col :span='12'>下单时间：{{item.createTime}}</Col>
       </Row>
       <Row>
-       <Col :span='24'>推广产品：2019年度奔驰品牌推广</Col>
+       <Col :span='24'>推广产品：{{item.productName}}</Col>
       </Row>
       <Row>
-       <Col :span='24'>推广内容：2019年度奔驰品牌推广</Col>
+       <Col :span='24'>推广内容：{{item.content}}</Col>
       </Row>
     </div>
     <div class='body'>
       <Row class='row-ul'>
         <Col :span='2' class='taskorder'>任务清单</Col>
-        <Col :span="5" class='taskok'> 已接单 (1/2) </Col>
       </Row>
       <div style='margin-top: 15px;border-bottom: 0px'>
       	<Row class='li-title'>
@@ -35,48 +34,61 @@
           <Col :span='3' class='li-ti-col'>接单状态</Col>
         </Row>
         <ul>
-        	<li class='li-item' v-for='(it,index) in itemlist' :key='index'>
+        	<li class='li-item' v-for='(it,index) in taskItemList' :key='index'>
         		<row>
         			<Col :span='5' class='li-ti-col'>
                 <Row>
                   <Col :span='12'>
                     <div class="div-img">
-                      <img src="./assets/over.jpg" alt="">
+                      <img :src="it.accountPhotoUrl  == null ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2431454871,3087430277&fm=27&gp=0.jpg' : it.accountPhotoUrl" alt="">
                     </div>
                   </Col>
-                  <Col :span='12' style='margin-left: -10px;font-size: 16px;font-weight: 500'>
-                    <Tooltip v-if='it.name.length > 5' :content="it.name">
-                    <div>{{it.name.slice(0,5)}}...</div></Tooltip>
-                    <div v-if='it.name.length <= 5'>{{it.name}}</div>
-                    <div>{{it.type}}</div>
+                  <Col :span='7' class='name'>
+                    <Tooltip v-if='it.accountName.length > 5' :content="it.name">
+                    <div>{{it.accountName.slice(0,5)}}...</div></Tooltip>
+                    <div v-if='it.accountName.length <= 5'>{{it.accountName}}</div>
+                    <div v-for="code in accountCategoryList" v-if="code.key == it.accountTypeCode">{{code.text}}</div>
                   </Col>
                 </Row>
               </Col>
-              <Col :span='3' class='li-ti-col ss' style='padding-left: 40px;'><span class="s1"></span>{{it.weibo}}</Col>
-              <Col :span='3' class='li-ti-col ss'>{{it.zhifa}}</Col>
-              <Col :span='3' class='li-ti-col ss'>￥{{it.price}}</Col>
-              <Col :span='3' class='li-ti-col ss'>{{it.createTimeTemp}}</Col>
-              <Col :span='4' class='li-ti-col ss'>{{it.con}}</Col>
-              <Col :span='3' class='li-ti-col ss'> 已接单<span class="s2"></span></Col>
+              <Col :span='3' class='li-ti-col ss' style='padding-left: 40px;'>
+                 <div class="flex-box-items">
+                 <img src="~@/views/brand/assets/microblog.png" v-if="it.channelCode == 'weibo'" width="20" height="20" alt="alias" />
+                 <img src="~@/views/brand/assets/quick.png" v-if="it.channelCode == 'kuaishou'" width="20" height="20" alt="alias" />
+                 <img src="~@/views/brand/assets/vibrato.png" v-if="it.channelCode == 'douyin'" width="20" height="20" alt="alias" />
+                 <img src="~@/views/brand/assets/wechat.png" v-if="it.channelCode == 'wechat'" width="20" height="20" alt="alias" />
+                 <em style='margin-left: 5px;' v-for="item in channelCodeList" v-if="item.key == it.channelCode">{{item.text}}</em>
+                 </div>
+              </Col>
+              <Col :span='3' class='li-ti-col ss'>{{it.publishCategoryCode}}</Col>
+              <Col :span='3' class='li-ti-col ss'>￥{{it.salePrice}}</Col>
+              <Col :span='3' class='li-ti-col ss'>{{it.publishTime}}</Col>
+              <Col :span='4' class='li-ti-col ss'>{{it.content}}</Col>
+              <Col :span='3' class='li-ti-col ss'>
+              <i v-for="item in subStatusList" :key="item.key" v-if="item.key == it.status">{{item.text}}</i>
+              </Col>
         		</row>
         	</li>
         </ul>
       </div>
     </div>
     <div class='body' style='padding-left: 30px;'>
-      <Row style='font-size: 24px;line-height: 50px;font-weight: 500'>订单跟踪</Row>
+      <Row style='font-size: 24px;line-height: 50px;font-weight: 500'>订单日志</Row>
       <div style='margin-top: 15px;border-bottom: 0px'>
         <ul>
           <li>
-            <row class='itemss itemss-w'>
+            <!-- <row class='itemss itemss-w'>
               <Col :span='3' class='ss-left'>ewqeqweqw<span></span></Col>
               <Col :span='18' class='ss-right'>qweqweqweqw</Col>
-            </row>
+            </row> -->
           </li>
-          <li v-for='(it,index) in itemlist' :key='index'>
+          <li v-for='item in orderLogList' :key='item.orderId'>
             <row class='itemss'>
-              <Col :span='3' class='ss-left'>{{it.createTimeTemp}}<span></span></Col>
-              <Col :span='18' class='ss-right'>{{it.con}}</Col>
+              <Col :span='3' class='ss-left'>{{item.createTime}}<span></span></Col>
+              <Col :span='18' class='ss-right'>
+                  <p v-for="it in statusList" v-if="it.key == item.status">{{it.text}}</p>
+                  <p>{{item.remark}}</p>
+              </Col>
             </row>
           </li>
         </ul>
@@ -86,13 +98,14 @@
 </template>
 
 <script lang="ts">
-import { Component , Watch} from 'vue-property-decorator'
+import { Component, Watch, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { itemlist  } from '@/api/lastissue'
 import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
-
+import { orderDetail } from '@/api/kolOrderList'
+import { querySelectList } from '@/api/brandList'
 
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 
@@ -102,35 +115,70 @@ const timeFormat = 'YYYY-MM-DD HH:mm:ss'
   }
 })
 export default class Main extends ViewBase {
-
-
-
+  @Prop({type: Number, default: 0}) id?: number
   movieList: any = []
+  item: any = []
+  itemlist: any[] = []
+  statusList = []
 
-
-  itemlist: any = []
+  // 任务清单
+  taskItemList = []
+  // 账号类型
+  accountCategoryList = []
+  // 全部推广平台
+  channelCodeList = []
+  // 子订单任务状态
+  subStatusList = []
+  // 订单日志
+  orderLogList = []
 
   mounted() {
     this.seach()
+    this.querySelectList()
   }
-
-
-
 
   async seach() {
     try {
-      // 获取列表
-      const datalist = await itemlist({id: 2})
-      // console.log(datalist)
-      this.itemlist = (datalist.data.items || []).map((it: any) => {
-        return {
-          ...it,
-          createTimeTemp: moment(it.createTimeTemp).format(timeFormat),
-        }
-      })
+      const { data: {
+        item,
+        statusList,
+        publishCategoryList,
+        orderLogList,
+        accountCategoryList,
+        taskItemList,
+        subStatusList
+        } } = await orderDetail(this.id)
+        this.item = item || {}
+        this.statusList = statusList || []
+        this.accountCategoryList = accountCategoryList || []
+        this.taskItemList = taskItemList
+        this.subStatusList = subStatusList
+        this.orderLogList = orderLogList
     } catch (ex) {
       this.handleError(ex)
-    } finally {
+    }
+    // try {
+    //   // 获取列表
+    //   const datalist = await itemlist({id: 2})
+    //   // console.log(datalist)
+    //   this.item = (datalist.data.items || []).map((it: any) => {
+    //     return {
+    //       ...it,
+    //       createTimeTemp: moment(it.createTimeTemp).format(timeFormat),
+    //     }
+    //   })
+    // } catch (ex) {
+    //   this.handleError(ex)
+    // } finally {
+    // }
+  }
+  // 获取推广平台
+  async querySelectList() {
+    try {
+      const { data: {channelCodeList} } = await querySelectList()
+      this.channelCodeList = channelCodeList
+    } catch (ex) {
+      this.handleError(ex)
     }
   }
 
@@ -138,6 +186,10 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+.flex-box-items {
+  display: flex;
+  align-items: center;
+}
 .page {
   padding-left: 30px;
   padding-right: 40px;
@@ -165,6 +217,13 @@ export default class Main extends ViewBase {
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 1);
 }
+.name {
+  margin-left: -10px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 33px;
+  margin-top: 10px;
+}
 .body {
   margin-top: 30px;
   padding-top: 10px;
@@ -173,10 +232,9 @@ export default class Main extends ViewBase {
   border: 1px solid rgba(255, 255, 255, 1);
 }
 .taskorder {
-  font-size: 24px;
+  font-size: 20px;
   line-height: 50px;
   margin-left: 30px;
-  font-weight: bold;
 }
 .taskok {
   font-weight: 500;
