@@ -79,6 +79,9 @@ const authKeyToMenuNameMap: MapType = {
 const nameToIconMap: MapType = {
   home: 'home',
   pop: 'diamond',
+  kol: 'diamond',
+  'film-cooperation': 'diamond',
+  brand: 'diamond',
   report: 'home',
   customer: 'user',
   finance: 'finance',

@@ -28,7 +28,7 @@
           </div>
             <div class="flex-box status-content">
                 <Tabs v-model="status" class="order-status-tab">
-                  <TabPane label="全部订单" key="0" ></TabPane>
+                  <!-- <TabPane label="全部订单" key="0" ></TabPane> -->
                   <TabPane :label="item.text" v-for="item in statusList" v-if="item.key < 9 && item.key != 1" :key="item.key"></TabPane>
                 </Tabs>
                 <Dropdown class="drop-down" @on-click="dropdown">
@@ -168,7 +168,8 @@ export default class Main extends ViewBase {
   // 订单和草稿 默认0订单 1草稿
   orderTab = 0
   // 订单状态
-  status = 0
+  status: any = null
+  cloneStatus: any = null
   // 全部推广平台
   channelCodeList = []
   // 全部品牌
@@ -193,17 +194,38 @@ export default class Main extends ViewBase {
   }
   dropdown(statu: any) {
     this.status = statu
-    this.tableList()
   }
-
   async tableList() {
-    let status = this.status == 2 ? '2,3' : this.status
-        status = this.status == 4 ? '4,8' : this.status
+    switch (this.status) {
+      case 0:
+       this.cloneStatus = null
+       break
+      case null:
+       this.cloneStatus = null
+       break
+      case 1:
+       this.cloneStatus = '2,3'
+       break
+      case 2:
+       this.cloneStatus = '4,8'
+       break
+      case 3:
+       this.cloneStatus = 5
+       break
+      case 4:
+       this.cloneStatus = 6
+       break
+      case 5:
+       this.cloneStatus = 7
+       break
+       default:
+       this.cloneStatus = this.status
+    }
     try {
       const { data: {totalCount, items, statusList} } = await orderList({
         ...this.pageList,
         ...this.form,
-        status
+        orderStatus: this.cloneStatus
       })
       this.list = items || []
       this.total = totalCount
@@ -230,6 +252,8 @@ export default class Main extends ViewBase {
          obj[next.key] ? '' : obj[next.key] = true && item.push(next)
          return item
       }, [])
+      // 添加全部数据枚举
+      newStatusList.unshift({key: 0, text: '全部订单'})
       this.statusList = newStatusList
       this.statusRest = this.statusList.slice(this.statusList.length - 3)
     } catch (ex) {
@@ -343,7 +367,7 @@ export default class Main extends ViewBase {
     this.tableList()
   }
   @Watch('status')
-  watchStatus() {
+  watchStatus(val: number) {
     this.tableList()
   }
   // @Watch('form', {deep: true})

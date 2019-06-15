@@ -1,53 +1,31 @@
 <template>
-  <div class="page home-bg">
-    <h3 class="userTitle">
-      <span class="nav-top-title">用户管理</span>
-      <Button type="primary" @click="addUser" class="btn-new"
-        v-auth="'account-manage.users#create'">
-        <Icon type="ios-add" size="27"/>新增子用户
+  <div class="page">
+    <div class="user-add">
+      <Button type="primary" @click="addUser" class="btn-add"
+          v-auth="'account-manage.users#create'">
+          <Icon type="ios-add" size="27"/>新增子用户
       </Button>
-    </h3>
+    </div>
+  
+    <Form :model="form" class="jyd-form flex-box search-list">
+      <Select v-model="form.roleId" clearable style="width: 200px">
+        <Option :value="item.id" :key="item.id" v-for="item in rolelist">{{item.name}}</Option>
+      </Select>
 
-    <Form :model="form" class="form">
-      <Row type="flex" justify="space-between">
-        <Col :span="6">
-          <FormItem label="权限角色" :label-width="90">
-            <Select v-model="form.roleId" clearable style="width: 200px">
-              <Option :value="item.id" :key="item.id" v-for="item in rolelist">{{item.name}}</Option>
-            </Select>
-          </FormItem>
-        </Col>
-        <Col :span="5">
-          <FormItem label="账号状态" :label-width="90">
-            <Select v-model="form.status" style="width: 100px" clearable>
-              <Option :value="item.key" :key="item.id" v-for="item in statusList">{{item.text}}</Option>
-            </Select>
-          </FormItem>
-        </Col>
-        <Col :span="10">
-          <FormItem>
-            <div class="flex-box">
-              <Input v-model="form.searchKey" placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
-              <Button type="primary" @click="searchTableList" class="bth-search">
-                <Icon type="ios-search" size="22"/>
-              </Button>
-              <!-- <span @click="searchTableList">
-                <Icon type="ios-search" size="22"/>
-              </span> -->
-            </div>
-          </FormItem>
-        </Col>
-      </Row>
+      <Select v-model="form.status" style="width: 200px" clearable>
+        <Option :value="item.key" :key="item.id" v-for="item in statusList">{{item.text}}</Option>
+      </Select>
+
+      <div class="flex-box">
+        <Input v-model="form.searchKey" style="width: 260px" placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
+        <Button type="primary" @click="searchTableList" class="search-icon-btn">
+          <Icon type="ios-search" size="22"/>
+        </Button>
+      </div>
     </Form>
 
-    <Table
-      ref="selection"
-      stripe
-      :columns="columns"
-      :data="data"
-      @on-selection-change="singleSelect"
-      @on-select-all="selectAll"
-    >
+    <Table ref="selection" class="table-jydata"  :columns="columns" :data="data"  @on-selection-change="singleSelect"  @on-select-all="selectAll"
+>
       <template slot-scope="{row, index}" slot="roleId">
         <span>{{roleList(row.roleId)}}</span>
       </template>
@@ -286,6 +264,19 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/common.less';
+@import '~@/views/brand/less/common.less';
+@import '~@/views/kol/less/common.less';
+
+.page {
+  padding: 0 20px 30px;
+}
+.search-list {
+  margin-bottom: 30px;
+}
+.user-add {
+  padding: 20px 0;
+  text-align: right;
+}
 .action-btn {
   margin-right: 10px;
 }
@@ -298,64 +289,48 @@ export default class Main extends ViewBase {
 .warting {
   color: @c-done;
 }
-
-.page {
-  font-size: 14px;
-
-  .tableTotal {
-    padding: 0 30px 0;
-    display: flex;
-    justify-content: space-between;
-    color: #989898;
-  }
-  .flex-box {
-    span {
-      display: block;
-      height: 40px;
-      width: 80px;
-      color: #fff;
-      text-align: center;
-      padding-top: 4px;
-      cursor: pointer;
-      position: relative;
-      left: -1px;
-      background: @c-button;
-    }
-  }
-  .form {
-    padding: 0 30px;
-    .ivu-form-item {
-      /deep/ .ivu-form-item-label {
-        font-size: 14px;
-        padding: 14px 12px 14px 0;
-        text-align: left;
-      }
-      /deep/ .ivu-form-item-content {
-        .ivu-select-selection {
-          height: 40px;
-          .ivu-select-selected-value {
-            height: 40px;
-            line-height: 40px;
-            font-size: 14px;
-          }
-          .ivu-select-placeholder {
-            height: 40px;
-            line-height: 40px;
-            font-size: 14px;
-          }
-        }
-        .ivu-input-wrapper {
-          input {
-            height: 40px;
-            line-height: 40px;
-            font-size: 14px;
-          }
-        }
-      }
-    }
-  }
-}
 .page-bottom {
   padding: 40px 0 100px;
+}
+
+/deep/ .ivu-page-prev {
+  border: 0;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-page-next {
+  border: 0;
+  background: rgba(32, 67, 80, 1);
+}
+/deep/ .ivu-page-item-active {
+  border-color: #eee;
+  background: #eee !important;
+  border-radius: 50%;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+}
+/deep/ .ivu-page-item {
+  border: 0;
+  display: inline-block;
+  vertical-align: middle;
+  background: rgba(32, 67, 80, 1);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 4px;
+  text-align: center;
+  list-style: none;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+/deep/ .btnCenter {
+  text-align: center;
+  height: 100px;
+  background: rgba(32, 67, 80, 1);
+  line-height: 100px;
+  color: #fff;
 }
 </style>

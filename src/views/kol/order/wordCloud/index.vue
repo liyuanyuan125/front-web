@@ -66,7 +66,7 @@ export default class WordCloudChart extends ViewBase {
     const ele = this.$refs.refChart as any
     const mocklist = this.dataList.map(
       (item: any, index: number) => {
-        return [item.name, item.value]
+        return [item.name, Math.floor(Math.random() * 100 + 1)]
       }
     )
     const option: any = {

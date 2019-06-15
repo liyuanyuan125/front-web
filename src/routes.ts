@@ -591,7 +591,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/order/lastissue',
     name: 'order-lastissue',
     component: () => import('./views/order/lastissue/index.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: 'adOrderManage.issue',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+    },
   },
 
   // 资源方 - 广告单管理 - 监播管理
@@ -599,7 +603,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/order/supervision',
     name: 'order-supervision',
     component: () => import('./views/order/supervision/index.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: 'adOrderManage.supervision',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+    },
   },
 
   // 广告主 - 广告单管理 - DCP包列表
@@ -626,16 +634,16 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
 
   // 广告主 - 数据报表 - 投放成效报告
-  {
-    path: '/report/plan/:id?',
-    name: 'report-plan',
-    component: () => import('./views/report/plan/index.vue'),
-    meta: {
-      authKey: 'data-report',
-      authAction: 'view',
-      authIsMenu: true,
-    }
-  },
+  // {
+  //   path: '/report/plan/:id?',
+  //   name: 'report-plan',
+  //   component: () => import('./views/report/plan/index.vue'),
+  //   meta: {
+  //     authKey: 'data-report',
+  //     authAction: 'view',
+  //     authIsMenu: true,
+  //   }
+  // },
 
   // 资源方 - 财务管理 - 财务信息
   {
@@ -654,7 +662,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/reseport/info',
     name: 'resreport-info',
     component: () => import('./views/resReport/info/index.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: 'data-report',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+    },
   },
 
   // TODO: 下面的两个先不做了
@@ -734,16 +746,22 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/kollist',
     name: 'kol-kollist',
     component: () => import('./views/kol/kollist/index.vue'),
-    meta: emptyAuth
+    meta: {
+      authKey: 'kol.list',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+    }
   },
+
    // KOL - KOl 订单管理
    {
     path: '/kol/orderlist',
     name: 'kol-orderlist',
     component: () => import('./views/kol/order/index.vue'),
     meta: {
-      authKey: '',
-      authAction: '',
+      authKey: 'kol.order',
+      authAction: 'EMPTY',
+      authIsMenu: true,
       title: 'kol推广订单'
     }
   },
@@ -978,19 +996,29 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/film/filmorder/detailInfo.vue'),
     meta: emptyAuth,
   },
+
   // 影片（film）- 影片合作 - 列表
   {
     path: '/film/cooperation/list',
     name: 'film-cooperation-list',
     component: () => import('./views/film/cooperation/list.vue'),
-    meta: emptyAuth
+    meta: {
+      authKey: 'film-cooperation.list',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+    }
   },
+
   // 影片 - 影片合作订单列表
   {
     path: '/film/filmorder/movielist',
     name: 'film-filmorder-movielist',
     component: () => import('./views/film/filmorder/movielist.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: 'film-cooperation.order',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+    },
   },
   // 影片 - 影片合作订单列表添加
   {
@@ -1026,21 +1054,33 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/filmmakerdetail/cobrand',
     name: 'film-filmmakerdetail-cobrand',
     component: () => import('./views/film/filmmakerDetails/coBrand.vue'),
-    meta: emptyAuth
+    meta: {
+      title: '合作品牌',
+      authKey: '',
+      authAction: '',
+    }
   },
   // 影片 - 影人更多详情 - 主要作品
   {
     path: '/film/filmmakerdetail/masterwork',
     name: 'film-filmmakerdetail-masterwork',
     component: () => import('./views/film/filmmakerDetails/masterWork.vue'),
-    meta: emptyAuth
+    meta: {
+      title: '主要作品',
+      authKey: '',
+      authAction: '',
+    }
   },
   // 影片 - 影人更多详情 - 更多资料
   {
     path: '/film/filmmakerdetail/moreinformation',
     name: 'film-filmmakerdetail-moreinformation',
     component: () => import('./views/film/filmmakerDetails/moreInformation.vue'),
-    meta: emptyAuth,
+    meta: {
+      title: '更多资料',
+      authKey: '',
+      authAction: '',
+    },
     props: idProps,
   },
 
@@ -1050,8 +1090,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'brand-list',
     component: () => import('./views/brand/list.vue'),
     meta: {
-      authKey: '',
-      authAction: '',
+      authKey: 'brand',
+      authAction: 'EMPTY',
+      authIsMenu: true,
       title: '品牌管理',
     }
   },

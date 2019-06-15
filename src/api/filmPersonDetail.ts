@@ -17,3 +17,8 @@ export async function personMovies(id: any) {
     const res = await get(`/person/${id}/movies`)
     return res
 }
+// 影片 - 影人详情 - TOP作品
+export async function topList(id: any, count: any) {
+    const res = await get(`/person/${id}/movies/top/${count}`)
+    return res
+}
