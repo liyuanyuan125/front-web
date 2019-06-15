@@ -40,10 +40,10 @@
                 <Row>
                   <Col :span='12'>
                     <div class="div-img">
-                      <img :src="it.accountPhotoUrl" alt="">
+                      <img :src="it.accountPhotoUrl  == null ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2431454871,3087430277&fm=27&gp=0.jpg' : it.accountPhotoUrl" alt="">
                     </div>
                   </Col>
-                  <Col :span='12' style='margin-left: -10px;font-size: 16px;font-weight: 500'>
+                  <Col :span='7' class='name'>
                     <Tooltip v-if='it.accountName.length > 5' :content="it.name">
                     <div>{{it.accountName.slice(0,5)}}...</div></Tooltip>
                     <div v-if='it.accountName.length <= 5'>{{it.accountName}}</div>
@@ -57,7 +57,7 @@
                  <img src="~@/views/brand/assets/quick.png" v-if="it.channelCode == 'kuaishou'" width="20" height="20" alt="alias" />
                  <img src="~@/views/brand/assets/vibrato.png" v-if="it.channelCode == 'douyin'" width="20" height="20" alt="alias" />
                  <img src="~@/views/brand/assets/wechat.png" v-if="it.channelCode == 'wechat'" width="20" height="20" alt="alias" />
-                 <em v-for="item in channelCodeList" v-if="item.key == it.channelCode">{{item.text}}</em>
+                 <em style='margin-left: 5px;' v-for="item in channelCodeList" v-if="item.key == it.channelCode">{{item.text}}</em>
                  </div>
               </Col>
               <Col :span='3' class='li-ti-col ss'>{{it.publishCategoryCode}}</Col>
@@ -216,6 +216,13 @@ export default class Main extends ViewBase {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 1);
+}
+.name {
+  margin-left: -10px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 33px;
+  margin-top: 10px;
 }
 .body {
   margin-top: 30px;
