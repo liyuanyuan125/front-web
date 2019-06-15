@@ -72,8 +72,7 @@ import moment from 'moment'
 import { capitalize } from 'lodash'
 import { MapType } from '@/util/types'
 import { RawLocation } from 'vue-router'
-
-const offsetDay = (offset = 0) => moment().add(offset, 'day').format('YYYYMMDD')
+import { dayOffsetRange } from '@/util/date'
 
 @Component({
   components: {
@@ -97,30 +96,21 @@ export default class Overview extends ViewBase {
       key: 'yesterday',
       label: '昨天',
       data: null,
-      dateRange: [
-        offsetDay(-1),
-        offsetDay(-1),
-      ]
+      dateRange: dayOffsetRange(-1, -1),
     },
 
     {
       key: '7days',
       label: '最近7天',
       data: null,
-      dateRange: [
-        offsetDay(-7),
-        offsetDay(0),
-      ]
+      dateRange: dayOffsetRange(-7),
     },
 
     {
       key: '30days',
       label: '最近30天',
       data: null,
-      dateRange: [
-        offsetDay(-30),
-        offsetDay(0),
-      ]
+      dateRange: dayOffsetRange(-30),
     }
   ]
 
