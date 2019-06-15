@@ -13,7 +13,10 @@
       </h2>
       <ul class="ul-lists">
         <li v-for="item in list" :key="item.id">
-          <router-link :to="{ name: 'brand-home', params: { id: item.id } }" class="col-first span-first">
+          <router-link
+            :to="{ name: 'brand-home', params: { id: item.id } }"
+            class="col-first span-first"
+          >
             <img :src="item.logo" class="logo">
             <em>{{item.brandName}}</em>
           </router-link>
@@ -126,9 +129,7 @@ export default class Main extends ViewBase {
           require: true,
           trigger: 'change',
           validator(rule: any, value: string[], callback: any) {
-            value.length == 0
-              ? callback(new Error('请选择上传图片'))
-              : callback()
+            value.length == 0 ? callback(new Error('请选择上传图片')) : callback()
           }
         }
       ]
