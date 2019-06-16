@@ -101,6 +101,7 @@ export default class BarXCategoryStack extends ViewBase {
         textStyle: {
           color: '#fff'
         },
+        icon: 'circle',
         y: '25'
       },
       xAxis: {
