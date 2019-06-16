@@ -44,63 +44,55 @@
         </div>
         <div class="content">
           <Row type="flex" justify="space-between">
-            <Col :span="12">
-              <div class="chart-wp" style="margin-right:10px">
-                <PieNest
-                  :initDone="chart1.initDone"
-                  :title="chart1.title"
-                  :dict1="chart1.dict1"
-                  :dict2="chart1.dict2"
-                  :color="chart1.color"
-                  :dataList="chart1.dataList"
-                  :currentTypeIndex="chart1.currentTypeIndex"
-                  @typeChange="typeChangeHander1"
-                />
-              </div>
-            </Col>
-            <Col :span="12">
-              <div class="chart-wp">
-                <BarCategoryStack
-                  :initDone="chart2.initDone"
-                  :title="chart2.title"
-                  :dict1="chart2.dict1"
-                  :dict2="chart2.dict2"
-                  :color="chart2.color"
-                  :dataList="chart2.dataList"
-                  :currentTypeIndex="chart2.currentTypeIndex"
-                  @typeChange="typeChangeHander2"
-                />
-              </div>
-            </Col>
-          </Row>
-          <Row type="flex" justify="space-between" style="margin-top:10px">
-            <Col :span="12">
-              <div class="chart-wp borderRadius" style="margin-right:10px">
-                <WordCloud
-                  :initDone="chart3.initDone"
-                  :title="chart3.title"
-                  :dict1="chart3.dict1"
-                  :color="chart3.color"
-                  :dataList="chart3.dataList"
-                  :currentTypeIndex="chart3.currentTypeIndex"
-                  @typeChange="typeChangeHander3"
-                />
-              </div>
-            </Col>
-            <Col :span="12">
-              <div class="chart-wp borderRadius">
-                <WordCloud
-                  :initDone="chart4.initDone"
-                  :title="chart4.title"
-                  :dict1="chart4.dict1"
-                  :color="chart4.color"
-                  :dataList="chart4.dataList"
-                  :currentTypeIndex="chart4.currentTypeIndex"
-                  @typeChange="typeChangeHander4"
-                />
-              </div>
-            </Col>
-          </Row>
+              <Col :span="12">
+                <div class='chart-wp' style='margin-right:10px'>
+                  <PieNest :initDone="chart1.initDone"
+                         :title='chart1.title'
+                         :dict1="chart1.dict1"
+                         :dict2="chart1.dict2"
+                        :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})"
+                         :color="chart1.color"
+                         :dataList="chart1.dataList"
+                         :currentTypeIndex="chart1.currentTypeIndex" />
+                </div>
+              </Col>
+              <Col :span="12">
+                <div class='chart-wp'>
+                  <BarxCategoryStack :initDone="chart2.initDone"
+                                  :title='chart2.title'
+                                  :dict1="chart2.dict1"
+                                  :dict2="chart2.dict2"
+                                  :xAxis="chart2.xAxis"
+                                  :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})"
+                                  :color="chart2.color"
+                                  :dataList="chart2.dataList"
+                                  :currentTypeIndex="chart2.currentTypeIndex"
+                                  @typeChange='typeChangeHander' />
+                </div>
+              </Col>
+            </Row>
+            <Row type="flex" justify="space-between" style='margin-top:10px'>
+              <Col :span="12">
+                <div class='chart-wp borderRadius' style='margin-right:10px'>
+                  <WordCloud :initDone="chart3.initDone"
+                           :title='chart3.title'
+                           :dict1="chart3.dict1"
+                           :color="chart3.color"
+                           :dataList="chart3.dataList"
+                           :currentTypeIndex="chart3.currentTypeIndex" />
+                </div>
+              </Col>
+              <Col :span="12">
+                <div class='chart-wp borderRadius'>
+                  <WordCloud :initDone="chart4.initDone"
+                           :title='chart4.title'
+                           :dict1="chart4.dict1"
+                           :color="chart4.color"
+                           :dataList="chart4.dataList"
+                           :currentTypeIndex="chart4.currentTypeIndex" />
+                </div>
+              </Col>
+            </Row>
         </div>
       </Card>
     </Form>
@@ -110,33 +102,30 @@
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { findIndex } from 'lodash'
 import moment from 'moment'
-import {
-  formatTimestamp,
-  formatTimes,
-  formatNumber
-} from '@/util/validateRules'
 import { comment } from '@/api/kolDetailMoreInfo'
 import PieNest from '@/components/chartsGroup/pieNest/'
-import BarCategoryStack from '@/components/chartsGroup/barCategoryStack/'
+import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
 import DetailNavBar from './components/detailNavBar.vue'
+import { tooltipStyles } from '@/util/echarts'
 const timeFormat = 'YYYYMMDD'
 // #D0BF6B 中性
 // #AD686C 正面
 // #57B4C9 负面
 const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
-
 @Component({
   components: {
     PieNest,
-    BarCategoryStack,
+    BarxCategoryStack,
     WordCloud,
     DetailNavBar
   }
 })
 export default class Temporary extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
+  tooltipStyles = tooltipStyles
 
   form: any = {
     beginDate: [
@@ -220,7 +209,6 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: colors
   }
-
   chart2: any = {
     title: '',
     dict1: [
@@ -234,12 +222,56 @@ export default class Temporary extends ViewBase {
       }
     ],
     dict2: this.dict.emotion,
+    xAxis: [],
     currentTypeIndex: 0,
     initDone: false,
-    dataList: [],
+    dataList: [
+      [
+        {
+          name: '中性',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
+        },
+        {
+          name: '正面',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
+        },
+        {
+          name: '负面',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
+        }
+      ],
+      [
+        {
+          name: '中性',
+          type: 'bar',
+          stack: 'totalCount',
+          data: []
+        },
+        {
+          name: '正面',
+          type: 'bar',
+          stack: 'totalCount',
+          data: []
+        },
+        {
+          name: '负面',
+          type: 'bar',
+          stack: 'totalCount',
+          data: []
+        }
+      ]
+    ],
     color: colors
   }
-
   chart3: any = {
     title: '正面评论关键词',
     dict1: [],
@@ -248,7 +280,6 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['rgba(0,32,45,0)']
   }
-
   chart4: any = {
     title: '负面评论关键词',
     dict1: [],
@@ -257,32 +288,23 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['rgba(0,32,45,0)']
   }
-
-  async typeChangeHander1(index: number = 0) {
-    if (this.chart1.dataList[index].length < 1) {
-      await this.getChartsData('chart1', index)
-    }
-    this.chart1.currentTypeIndex = index
-  }
-
-  async typeChangeHander2(index: number = 0) {
+  async typeChangeHander(index: number = 0) {
     this.chart2.currentTypeIndex = index
   }
 
-  async typeChangeHander3(index: number = 0) {
-    if (this.chart3.dataList[index].length < 1) {
-      await this.getChartsData('chart3', index)
-    }
-    this.chart3.currentTypeIndex = index
+  /**
+   * 加载日期区间描述
+   */
+  async dayRangesFetch() {
+    /* const query = {}
+    const id: number = 107028
+    try {
+      const { data } = await dayRanges({ ...query, id })
+      this.dict.dayRanges = data.dayRanges
+    } catch (ex) {
+      this.handleError(ex)
+    } */
   }
-
-  async typeChangeHander4(index: number = 0) {
-    if (this.chart3.dataList[index].length < 1) {
-      await this.getChartsData('chart4', index)
-    }
-    this.chart4.currentTypeIndex = index
-  }
-
   /**
    * 加载图表数据
    * @param chart 图表名 (因为接口返回全部数据，暂时不用)
@@ -293,88 +315,87 @@ export default class Temporary extends ViewBase {
     const mockObj = {
       beginDate: this.form.beginDate[0],
       endDate: this.form.beginDate[1],
-      channelCode: this.form.channelCode
     }
-    // 1 dev有数据
-    const id = parseInt(this.$route.params.id, 0)
+    // 107028 dev有数据
+    const id = this.$route.params.id || ''
     try {
       const {
         data,
-        data: { rate },
-        data: { items },
-        data: { commentKeyword }
+        data: {
+          item: {
+            rate,
+            dates,
+            keywords
+          }
+        }
       } = await comment({ ...mockObj }, id)
-
-      for (const k in rate) {
-        if (rate[k]) {
+      for ( const k in rate ) {
+        if ( rate[k] ) {
+          const index = findIndex(this.dict.emotion, (it: any) => {
+            return it.name == k
+          })
           this.chart1.dataList[0].push({
-            data: rate[k],
-            key: this.dict.emotion.findIndex((item: any) => {
-              return item.name === k
-            })
+            value: rate[k],
+            name: this.dict.emotion[index].text
           })
         }
       }
-      // api文档缺少备注，待联调 nxd 20190604
-      // dates.forEach((item: any) => {
-      //   for ( let num = 0; num < 3; num++ ) {
-      //     that.chart2.dataList[0].push({
-      //       data: item[this.dict.emotion[num].name].trend,
-      //       date: item.date,
-      //       key: num
-      //     })
-      //     that.chart2.dataList[1].push({
-      //       data: item[this.dict.emotion[num].name].count,
-      //       date: item.date,
-      //       key: num
-      //     })
-      //   }
-      // })
-      commentKeyword[this.form.dayRangesKey].positive.forEach((item: any) => {
+
+      dates.forEach((item: any, index: number) => {
+        //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
+        // trend 新增 index:0 | count 累计 index:1
+        const { date, neutral, passive, positive } = item
+        that.chart2.xAxis.push( date )
+        that.chart2.dataList[0][0].data.push(item.positive.trend)
+        that.chart2.dataList[0][1].data.push(item.passive.trend)
+        that.chart2.dataList[0][2].data.push(item.neutral.trend)
+        that.chart2.dataList[1][0].data.push(item.positive.count)
+        that.chart2.dataList[1][1].data.push(item.passive.count)
+        that.chart2.dataList[1][2].data.push(item.neutral.count)
+      })
+
+      keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
         that.chart3.dataList[0].push({
           name: item,
           value: Math.floor(Math.random() * 100 + 1)
         })
       })
-      commentKeyword[this.form.dayRangesKey].passive.forEach((item: any) => {
+      keywords[this.form.dayRangesKey].passive.forEach((item: any) => {
         that.chart4.dataList[0].push({
           name: item,
           value: Math.floor(Math.random() * 100 + 1)
         })
       })
       that.chart1.initDone = true
-      // that.chart2.initDone = true
+      that.chart2.initDone = true
       that.chart3.initDone = true
       that.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
   }
-
   /**
    * 根据筛选返回起始日期，影人、影片、kol字段名未统一
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
    */
   beginDate(dayRangesKey: string) {
-    // switch ( dayRangesKey ) {
-    //   case 'yesterday' :
-    //     return moment(new Date()).add(-1, 'days').format(timeFormat)
-    //     break;
-    //   case 'thirtyDay' :
-    //     return moment(new Date()).add(-30, 'days').format(timeFormat)
-    //     break;
-    //   case 'ninetyDay' :
-    //     return moment(new Date()).add(-90, 'days').format(timeFormat)
-    //     break;
-    //   default :
-    //     return moment(new Date()).add(-7, 'days').format(timeFormat)
-    // }
+    switch ( dayRangesKey ) {
+      case 'yesterday' :
+        return moment(new Date()).add(-1, 'days').format(timeFormat)
+        break
+      case 'thirtyDay' :
+        return moment(new Date()).add(-30, 'days').format(timeFormat)
+        break
+      case 'ninetyDay' :
+        return moment(new Date()).add(-90, 'days').format(timeFormat)
+        break
+      default :
+        return moment(new Date()).add(-7, 'days').format(timeFormat)
+    }
   }
-
   endDate() {
     return moment(new Date()).format(timeFormat)
   }
-
   async handleChange() {
     this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
     this.form.beginDate[1] = this.endDate()
@@ -385,16 +406,12 @@ export default class Temporary extends ViewBase {
     this.resetData()
     await this.getChartsData('', 0)
   }
-
   created() {
     this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
     this.form.beginDate[1] = this.endDate()
     // this.dayRangesFetch() // 本地写死，暂时取消
     this.initHandler()
   }
-
-  async mounted() {}
-
   async initHandler() {
     if (this.chart1.dict1.length > 0) {
       this.chart1.dict1.map((item: any, index: number) => {
@@ -403,15 +420,6 @@ export default class Temporary extends ViewBase {
     } else {
       this.chart1.dataList.push([])
     }
-
-    if (this.chart2.dict1.length > 0) {
-      this.chart2.dict1.map((item: any, index: number) => {
-        this.chart2.dataList.push([])
-      })
-    } else {
-      this.chart2.dataList.push([])
-    }
-
     if (this.chart3.dict1.length > 0) {
       this.chart3.dict1.map((item: any, index: number) => {
         this.chart3.dataList.push([])
@@ -429,13 +437,15 @@ export default class Temporary extends ViewBase {
     }
     await this.getChartsData('', 0)
   }
-
   resetData() {
     this.chart1.dataList.forEach((item: any[]) => {
       item.splice(0, item.length)
     })
+    this.chart2.xAxis.splice(0, this.chart2.xAxis.length)
     this.chart2.dataList.forEach((item: any) => {
-      item.splice(0, item.length)
+      item.forEach((it: any) => {
+        it.data.splice(0, it.data.length)
+      })
     })
     this.chart3.dataList.forEach((item: any) => {
       item.splice(0, item.length)
@@ -446,8 +456,7 @@ export default class Temporary extends ViewBase {
   }
 }
 </script>
-
-<style lang="less">
+<style lang="less" scoped>
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
 </style>
