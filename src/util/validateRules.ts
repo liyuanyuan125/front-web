@@ -134,3 +134,15 @@ export function formatConversion(str: strFor, type?: number) {
   }
   return str.replace(/^(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')
 }
+
+/**
+ * 获取当前日期
+ * 格式 = 20190616
+ */
+export function getTodayDate() {
+  const todayDate = new Date().toLocaleDateString().split('/')
+  const year = todayDate[0]
+  const mouth = todayDate[1].length == 1 ? '0' + todayDate[1] :  todayDate[1]
+  const date = todayDate[2].length == 1 ? '0' + todayDate[2] :  todayDate[2]
+  return `${year}${mouth}${date}`
+}
