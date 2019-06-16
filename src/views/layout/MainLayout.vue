@@ -271,7 +271,11 @@ export default class MainLayout extends ViewBase {
   }
 
   search() {
-    debugger
+    const keyword = this.keyword.trim()
+    if (keyword == '') {
+      return
+    }
+    this.$router.push({ name: 'search', params: { keyword } })
   }
 
   async changePerm() {

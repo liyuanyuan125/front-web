@@ -6,13 +6,19 @@
         <li class="icon-1">
           <div>
             <p>1</p>
-            <p>品牌申请<br /> 影片合作</p>
+            <p>
+              品牌申请
+              <br>影片合作
+            </p>
           </div>
         </li>
         <li class="icon-2">
           <div>
             <p>2</p>
-            <p>片方审核通过<br />开放资源</p>
+            <p>
+              片方审核通过
+              <br>开放资源
+            </p>
           </div>
         </li>
         <li class="icon-3">
@@ -24,7 +30,10 @@
         <li class="icon-4">
           <div>
             <p>4</p>
-            <p>品牌上传资源<br />使用照片</p>
+            <p>
+              品牌上传资源
+              <br>使用照片
+            </p>
           </div>
         </li>
         <li class="icon-5">
@@ -36,119 +45,123 @@
       </ul>
     </div>
     <div class="filter-box">
-      <Form :model="form"
-            label-position="left"
-            class="edit-input"
-            :label-width="100">
-        <Row type="flex"
-             class="filtertop"
-             justify="space-between">
-          <Col :span='24'>
-          <FormItem label="上映时间:">
-            <RadioGroup class='nav'
-                        @on-change="handleChange"
-                        v-model="form.time"
-                        size="large"
-                        type="button">
-              <Radio v-for="(item) in dict.timeSelected"
-                     :key="item.key"
-                     :disabled="item.disabled"
-                     :label="item.key">{{item.text}}</Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="影片类型:">
-            <RadioGroup class='nav'
-                        @on-change="handleChange"
-                        v-model="form.filmType"
-                        size="large"
-                        type="button">
-              <Radio v-for="(item) in dict.filmTypes"
-                     :key="item.key"
-                     :disabled="item.disabled"
-                     :label="item.key">{{item.text}}</Radio>
-              <Radio :key="-1"
-                     :label="-1"
-                     class='showMore'><span @click="showMoreHandle">{{filterShowMoreText}}
-                  <Icon :type="filterShowMoreIcon" /></span></Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="影片量级:">
-            <RadioGroup class='test'
-                        @on-change="handleChange"
-                        v-model="form.filmWeight"
-                        size="large"
-                        type="button">
-              <Radio v-for="(item) in dict.filmWeights"
-                     :key="item.key"
-                     :disabled="item.disabled"
-                     :label="item.key">{{item.text}}</Radio>
-            </RadioGroup>
-          </FormItem>
+      <Form :model="form" label-position="left" class="edit-input" :label-width="100">
+        <Row type="flex" class="filtertop" justify="space-between">
+          <Col :span="24">
+            <FormItem label="上映时间:">
+              <RadioGroup
+                class="nav"
+                @on-change="handleChange"
+                v-model="form.time"
+                size="large"
+                type="button"
+              >
+                <Radio
+                  v-for="(item) in dict.timeSelected"
+                  :key="item.key"
+                  :disabled="item.disabled"
+                  :label="item.key"
+                >{{item.text}}</Radio>
+              </RadioGroup>
+            </FormItem>
+            <FormItem label="影片类型:">
+              <RadioGroup
+                class="nav"
+                @on-change="handleChange"
+                v-model="form.filmType"
+                size="large"
+                type="button"
+              >
+                <Radio
+                  v-for="(item) in dict.filmTypes"
+                  :key="item.key"
+                  :disabled="item.disabled"
+                  :label="item.key"
+                >{{item.text}}</Radio>
+                <Radio :key="-1" :label="-1" class="showMore">
+                  <span @click="showMoreHandle">
+                    {{filterShowMoreText}}
+                    <Icon :type="filterShowMoreIcon"/>
+                  </span>
+                </Radio>
+              </RadioGroup>
+            </FormItem>
+            <FormItem label="影片量级:">
+              <RadioGroup
+                class="test"
+                @on-change="handleChange"
+                v-model="form.filmWeight"
+                size="large"
+                type="button"
+              >
+                <Radio
+                  v-for="(item) in dict.filmWeights"
+                  :key="item.key"
+                  :disabled="item.disabled"
+                  :label="item.key"
+                >{{item.text}}</Radio>
+              </RadioGroup>
+            </FormItem>
           </Col>
         </Row>
-        <Row type="flex"
-             justify="space-between"
-             class="filterbottom">
-          <Col :span='24'>
-          <FormItem label="排序方式:">
-            <RadioGroup class='nav'
-                        @on-change="handleChange"
-                        v-model="form.rank"
-                        size="large"
-                        type="button">
-              <Radio v-for="(item) in dict.rankSelected"
-                     :key="item.key"
-                     :disabled="item.disabled"
-                     :label="item.key">{{item.text}}</Radio>
-            </RadioGroup>
-          </FormItem>
+        <Row type="flex" justify="space-between" class="filterbottom">
+          <Col :span="24">
+            <FormItem label="排序方式:">
+              <RadioGroup
+                class="nav"
+                @on-change="handleChange"
+                v-model="form.rank"
+                size="large"
+                type="button"
+              >
+                <Radio
+                  v-for="(item) in dict.rankSelected"
+                  :key="item.key"
+                  :disabled="item.disabled"
+                  :label="item.key"
+                >{{item.text}}</Radio>
+              </RadioGroup>
+            </FormItem>
           </Col>
         </Row>
       </Form>
     </div>
     <div class="res-box">
       <div class="res-list">
-        <Row :gutter="10"
-             v-if="done"
-             class="res-row">
-          <Col span="4"
-               v-for="(item,index) in dataList"
-               :key="index"
-               class="res-col">
-          <div>
-            <div class="poster" @click="$router.push({name: 'film-movie', params: {id: 1}})">
-              <img :src='item.images' /></div>
-            <router-link :to='{id:item.id}'
-                         class="movtitle cut-text">{{item.title}}</router-link>
-            <p class="movscore">{{item.score}}</p>
-          </div>
+        <Row :gutter="10" v-if="done" class="res-row">
+          <Col span="4" v-for="(item, index) in dataList" :key="index" class="res-col">
+            <div class="res-item">
+              <div class="poster" @click="$router.push({name: 'film-movie', params: {id: item.id}})">
+                <img :src="item.images">
+              </div>
+              <router-link :to="{id:item.id}" class="movtitle cut-text">{{item.title}}</router-link>
+              <p class="movscore">{{item.score}}</p>
+            </div>
           </Col>
         </Row>
-        <div v-else
-             style="width: 100%; height: 400px">
-          <TinyLoading />
+        <div v-else style="width: 100%; height: 400px">
+          <TinyLoading/>
         </div>
       </div>
-      <Page class="info-page"
-            :total="form.total"
-            :current="form.pageIndex"
-            :page-size="form.pageSize"
-            show-total
-            show-elevator
-            @on-change="handlepageChange"
-            @on-page-size-change="handlePageSize"></Page>
+      <Page
+        class="info-page"
+        :total="form.total"
+        :current="form.pageIndex"
+        :page-size="form.pageSize"
+        show-total
+        show-elevator
+        @on-change="handlepageChange"
+        @on-page-size-change="handlePageSize"
+      ></Page>
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import {
-  formatTimestamp,
-  formatTimes,
-  formatNumber
-} from '@/util/validateRules'
+import { formatTimestamp, formatTimes, formatNumber } from '@/util/validateRules'
 import { fetchList } from '@/api/filmCooperation'
 import numAdd from '../number.vue'
 import PieNest from '@/components/chartsGroup/pieNest/'
@@ -429,6 +442,7 @@ export default class Temporary extends ViewBase {
   }
 }
 </script>
+
 <style lang="less">
 @import '~@/site/lib.less';
 .film-cooperation-wp {
@@ -652,5 +666,9 @@ export default class Temporary extends ViewBase {
       }
     }
   }
+}
+
+.res-item {
+  cursor: pointer;
 }
 </style>
