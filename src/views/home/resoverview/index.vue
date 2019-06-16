@@ -50,6 +50,8 @@ import echarts from 'echarts'
 import numAdd from '../number.vue'
 import { capitalize } from 'lodash'
 import { MapType } from '@/util/types'
+import { RawLocation } from 'vue-router'
+import { dayOffsetRange } from '@/util/date'
 import ChartPane from './chartPane.vue'
 
 const offsetDay = (offset = 0) => moment().add(offset, 'day').format('YYYYMMDD')
@@ -80,30 +82,21 @@ export default class Overview extends ViewBase {
       key: 'yesterday',
       label: '昨天',
       data: null,
-      dateRange: [
-        offsetDay(-1),
-        offsetDay(-1),
-      ]
+      dateRange: dayOffsetRange(-1, -1),
     },
 
     {
       key: '7days',
       label: '最近7天',
       data: null,
-      dateRange: [
-        offsetDay(-7),
-        offsetDay(0),
-      ]
+      dateRange: dayOffsetRange(-7),
     },
 
     {
       key: '30days',
       label: '最近30天',
       data: null,
-      dateRange: [
-        offsetDay(-30),
-        offsetDay(0),
-      ]
+      dateRange: dayOffsetRange(-30),
     }
   ]
 
@@ -144,7 +137,13 @@ export default class Overview extends ViewBase {
       return
     }
     const [beginDate, endDate] = chart.dateRange
-    const data = await queryReport({ beginDate, endDate })
+    // console.log(beginDate, endDate)
+    const start = new Date (String(beginDate).slice(0, 4) + '-' + String(beginDate).slice(4, 6)
+      + '-' + String(beginDate).slice(6, 8)).getTime() - (8 * 60 * 60 * 1000)
+    const end = new Date (String(endDate).slice(0, 4) + '-' + String(endDate).slice(4, 6)
+      + '-' + String(endDate).slice(6, 8)).getTime() + (16 * 60 * 60 * 1000 - 1)
+    // console.log(a , b)
+    const data = await queryReport({ beginDate: start, endDate: end, effectType: 1, accountType: 'resource', })
     chart.data = data
   }
 
