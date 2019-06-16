@@ -213,6 +213,16 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  {
+    path: '/search/:keyword/:type?',
+    name: 'search',
+    component: () => import('./views/search/index.vue'),
+    meta: {
+      ...emptyAuth,
+    },
+    props: true,
+  },
+
   // 广告主、资源方 - 账户管理 - 账号信息
   {
     path: '/account/info',
