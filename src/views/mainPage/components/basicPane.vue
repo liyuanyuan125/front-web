@@ -131,6 +131,8 @@
     </div>
 
     <img :src="item.figure" class="figure" v-if="item.figure">
+
+    <slot></slot>
   </section>
 </template>
 
