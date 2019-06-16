@@ -69,7 +69,7 @@ export async function queryReport({
         playVideo,
         executeCinema,
         advertRevenue,
-        planResults,
+        dataList,
     }
   } = await get('/xadvert/plans/effectStatistics', {
     accountType: 'resource',
@@ -89,22 +89,22 @@ export async function queryReport({
       {
         title: '广告收益',
         // yAxisName: '金额 ¥',
-        list: makeReportList(planResults, 'executeScene')
+        list: makeReportList(dataList, 'executeScene')
       },
 
       {
         title: '播放广告片数',
-        list: makeReportList(planResults, 'playVideo')
+        list: makeReportList(dataList, 'playVideo')
       },
 
       {
         title: '执行影院数',
-        list: makeReportList(planResults, it => (it.cinemas || []).length)
+        list: makeReportList(dataList, it => (it.cinemas || []).length)
       },
 
       {
         title: '执行场次数',
-        list: makeReportList(planResults, 'advertRevenue')
+        list: makeReportList(dataList, 'advertRevenue')
       },
     ]
   }

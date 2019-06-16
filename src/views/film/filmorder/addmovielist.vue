@@ -161,7 +161,7 @@ import Tag from './tag.vue'
 export default class Main extends ViewBase {
   value1 = 0
   dataForm: any = {
-    movieId: this.$route.params.id,
+    movieId: null,
     projectName: '',
     projectDescription: '',
     brandId: 20,
@@ -236,6 +236,7 @@ export default class Main extends ViewBase {
 
   mounted() {
     this.dataForm.s1 = '456'
+    this.dataForm.movieId = this.$route.params.id
     this.seach()
   }
   seachs() {
