@@ -113,6 +113,8 @@ export async function platformData(query: any) {
  * @param query
  */
 export async function fetchList(query: any) {
+  const res = await get('/movie/cooperation/' , query)
+  return res
   return await mockGet(query, {
     'items|12': [
       {

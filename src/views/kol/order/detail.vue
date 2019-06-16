@@ -10,7 +10,7 @@
       </Row>
       <Row>
        <Col :span='12'>推广品牌：{{item.brandName}}</Col>
-       <Col :span='12'>下单时间：{{item.createTime}}</Col>
+       <Col :span='12'>下单时间：{{item.createTime == null ? '暂无时间' : createTime}}</Col>
       </Row>
       <Row>
        <Col :span='24'>推广产品：{{item.productName}}</Col>
@@ -40,10 +40,10 @@
                 <Row>
                   <Col :span='12'>
                     <div class="div-img">
-                      <img :src="it.accountPhotoUrl" alt="">
+                      <img :src="it.accountPhotoUrl  == null ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2431454871,3087430277&fm=27&gp=0.jpg' : it.accountPhotoUrl" alt="">
                     </div>
                   </Col>
-                  <Col :span='12' style='margin-left: -10px;font-size: 16px;font-weight: 500'>
+                  <Col :span='7' class='name'>
                     <Tooltip v-if='it.accountName.length > 5' :content="it.name">
                     <div>{{it.accountName.slice(0,5)}}...</div></Tooltip>
                     <div v-if='it.accountName.length <= 5'>{{it.accountName}}</div>
@@ -57,7 +57,7 @@
                  <img src="~@/views/brand/assets/quick.png" v-if="it.channelCode == 'kuaishou'" width="20" height="20" alt="alias" />
                  <img src="~@/views/brand/assets/vibrato.png" v-if="it.channelCode == 'douyin'" width="20" height="20" alt="alias" />
                  <img src="~@/views/brand/assets/wechat.png" v-if="it.channelCode == 'wechat'" width="20" height="20" alt="alias" />
-                 <em v-for="item in channelCodeList" v-if="item.key == it.channelCode">{{item.text}}</em>
+                 <em style='margin-left: 5px;' v-for="item in channelCodeList" v-if="item.key == it.channelCode">{{item.text}}</em>
                  </div>
               </Col>
               <Col :span='3' class='li-ti-col ss'>{{it.publishCategoryCode}}</Col>
@@ -120,6 +120,8 @@ export default class Main extends ViewBase {
   item: any = []
   itemlist: any[] = []
   statusList = []
+  createTime: any = ''
+  publishTime: any = ''
 
   // 任务清单
   taskItemList = []
@@ -151,9 +153,17 @@ export default class Main extends ViewBase {
         this.item = item || {}
         this.statusList = statusList || []
         this.accountCategoryList = accountCategoryList || []
-        this.taskItemList = taskItemList
+        // this.taskItemList = taskItemList
+        this.taskItemList = (taskItemList || []).map((it: any) => {
+          return {
+            ...it,
+            publishTime: String(it.publishTime).slice(0, 4) + '-' + String(it.publishTime).slice(4, 6)
+            + '-' + String(it.publishTime).slice(6, 8)
+          }
+        })
         this.subStatusList = subStatusList
         this.orderLogList = orderLogList
+        this.createTime = moment(this.item.createTime).format(timeFormat)
     } catch (ex) {
       this.handleError(ex)
     }
@@ -217,6 +227,13 @@ export default class Main extends ViewBase {
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 1);
 }
+.name {
+  margin-left: -10px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 33px;
+  margin-top: 10px;
+}
 .body {
   margin-top: 30px;
   padding-top: 10px;
@@ -253,6 +270,7 @@ export default class Main extends ViewBase {
   font-size: 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
   height: 105px;
+  background: rgba(255, 255, 255, 0.7);
   .li-ti-col {
     text-align: center;
   }
@@ -290,6 +308,9 @@ export default class Main extends ViewBase {
       border-radius: 50%;
       margin-left: 30px;
     }
+  }
+  &:nth-child(2n) {
+    background: rgba(255, 255, 255, .5);
   }
 }
 .itemss {

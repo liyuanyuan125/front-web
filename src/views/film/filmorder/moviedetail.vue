@@ -13,7 +13,7 @@
          <Col :span='12'><span>下单时间：</span>{{fonttime}}</Col>
         </Row>
         <Row>
-         <Col :span='24'><span>推广内容：</span>{{itemlist.projectDescription}}</Col>
+         <Col :span='24'><span>推广内容：</span>{{itemlist.projectDescription == null ? '暂无' : itemlist.projectDescription}}</Col>
         </Row>
       </div>
       <div class='body'>
@@ -27,13 +27,13 @@
             </Col>
             <Col span='9' class='row-x'>
               <Row style='font-size: 20px;margin-top: 15px;'>{{itemlist.movieName}}</Row>
-              <Row><!-- <span v-for='(its,index) in type' :key='index'>
-                      <em v-for='(items,index) in it.movieTypes' v-if='items == its.key'>{{its.text}}</em>
-                    </span>{{type}} -->{{it.movieTypes}}</Row>
+              <Row><span v-for='(its,index) in type' :key='index'>
+                      <em v-for='(items,index) in itemlist.movieTypes' v-if='items == its.key'>{{its.text + ' '}}</em>
+                    </span><!-- {{itemlist.movieTypes}} --></Row>
               <Row>{{itemlist.movieReleaseDate}} 上映</Row>
             </Col>
             <Col :span='10'>
-              <Row class='bus' style='margin-top: 18px;'> 电影海报   <br><span class='hui'>后台配置的使用说明，暂无使用说明</span> <a class='okbut' :download='itemlist.id'>立即下载</a></Row>
+              <Row class='bus' style='margin-top: 18px;'> 电影海报   <br><span class='hui'>后台配置的使用说明，暂无使用说明</span> <a class='okbut' :href="itemlist.movieMainPic" :download='itemlist.movieMainPic'>立即下载</a></Row>
               <Row class='bus' > 电影票券  &nbsp;  {{itemlist.movieResource.coupon.count}}张   <br><span class='hui'>后台配置的使用说明，暂无使用说明</span> <a class='okbut' :download='itemlist.id'>立即下载</a></Row>
               <Row></Row>
             </Col>
@@ -44,13 +44,13 @@
       <div class='body' style='margin-top: 20px;height:120px;background:rgba(255,255,255,0.3);border-radius:5px;'>
         <Row class='row-ul'>
           <span class='hui'>品牌方提供资源：</span><span v-for='(it,index) in itemlist.channelCodeList'>
-            <em v-for='(its,index) in itemlist.brandResource.onlines' :key='index' v-if='it.key == its.channelCode'>{{it.text}}</em>
+            <em v-for='(its,index) in itemlist.brandResource.onlines' :key='index' v-if='it.key == its.channelCode'>{{it.text + ' '}}</em>
           </span>
           <span v-if='itemlist.brandResource.onlines == null'>暂无资源</span>
         </Row>
         <Row class='row-ul'>
           <span class='hui'>线下门店资源：</span><span v-for='(it,index) in itemlist.offlineResourceTypeList'>
-            <em v-for='(its,index) in itemlist.brandResource.offlines' :key='index' v-if='it.key == its.channelCode'>{{it.text}}</em>
+            <em v-for='(its,index) in itemlist.brandResource.offlines' :key='index' v-if='it.key == its.channelCode'>{{it.text + ' '}}</em>
           </span>
           <span v-if='itemlist.brandResource.offlines == null'>暂无资源</span>
         </Row>
@@ -58,7 +58,7 @@
       <div class='body'>
         <Row class='tits'>留言</Row>
         <Row class='liuyan'>
-          {{itemlist.message}}
+          {{itemlist.message == '' ? '暂无留言' : itemlist.message}}
         </Row>
       </div>
       <div class='body'>

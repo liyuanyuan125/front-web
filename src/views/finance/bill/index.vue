@@ -249,7 +249,7 @@
   overflow-y: hidden;
   background: rgba(32, 67, 80, 1);
 }
-/deep/ .ivu-form .ivu-form-item-label {
+/deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
   color: #fff;
 }
 /deep/ .ivu-table-wrapper {
@@ -276,9 +276,9 @@
   border-color: #eee;
   background: #eee !important;
   border-radius: 50%;
-  color: #fff;
   width: 30px;
   height: 30px;
+  color: rgb(32, 67, 80, 1);
 }
 /deep/ .ivu-page-item {
   border: 0;
@@ -296,6 +296,9 @@
   cursor: pointer;
   font-weight: 500;
   transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
+  a {
+    color: #fff;
+  }
 }
 </style>
 

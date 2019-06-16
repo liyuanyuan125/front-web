@@ -9,7 +9,7 @@ export async function queryList(query: any) {
   return res
 }
 
-// 根绝id查询/movie/{id}
+// 根绝id查询列表详情
 export async function itemlist(id: any) {
   const res = await get(`/movie/cooperation/${id}`)
   return res
@@ -30,6 +30,12 @@ export async function filmlist(id: any) {
 // img
 export async function imgs(id: any , query: any) {
   const res = await put(`/movie/cooperation/${id}`, query)
+  return res
+}
+
+// img
+export async function mains(id: any ) {
+  const res = await get(`/movie/${id}` )
   return res
 }
 

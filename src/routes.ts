@@ -213,6 +213,16 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  {
+    path: '/search/:keyword/:type?',
+    name: 'search',
+    component: () => import('./views/search/index.vue'),
+    meta: {
+      ...emptyAuth,
+    },
+    props: true,
+  },
+
   // 广告主、资源方 - 账户管理 - 账号信息
   {
     path: '/account/info',
@@ -669,6 +679,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     },
   },
 
+  // 广告主 - 效果报表
+  {
+    path: '/reseport/effect-report',
+    name: 'effect-report',
+    component: () => import('./views/resReport/effectReport/index.vue'),
+    meta: unauth,
+  },
+
   // TODO: 下面的两个先不做了
 
   // 资源方 - 财务管理 - 收益账单
@@ -983,14 +1001,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth
   },
 
-  // 影片详情 - 主创阵容
+  // 影片详情 - 影片详情更多页 - 主创阵容
   {
     path: '/film/filmorder/mainLineup/:id',
     name: 'film-filmorder-mainLineup',
     component: () => import('./views/film/filmorder/mainLineup.vue'),
     meta: emptyAuth,
   },
-  // 影片详情 - 详细资料
+  // 影片详情- 影片详情更多页  - 详细资料
   {
     path: '/film/filmorder/detailInfo/:id',
     name: 'film-filmorder-detailInfo',
