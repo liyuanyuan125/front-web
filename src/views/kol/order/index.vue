@@ -148,6 +148,8 @@ import { formatNumber } from '@/util/validateRules.ts'
 import { querySelectList } from '@/api/brandList'
 import { getUser } from '@/store'
 import pagination from '@/components/page.vue'
+import moment from 'moment'
+import { toMap } from '@/fn/array'
 import {
   orderList,
   orderBrand,
@@ -158,7 +160,7 @@ import {
   confirmFinish,
   orderDetail
 } from '@/api/kolOrderList'
-
+const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 
 @Component({
   components: {
@@ -224,7 +226,12 @@ export default class Main extends ViewBase {
         orderStatus: this.status
       })
       this.countData = data
-      this.list = data.items || []
+      this.list = (data.items || []).map((it: any) => {
+        return {
+          ...it,
+          createTime : moment(it.createTime).format(timeFormat)
+        }
+      })
       this.total = data.totalCount || 0
       this.intStatusList = data.statusList
 

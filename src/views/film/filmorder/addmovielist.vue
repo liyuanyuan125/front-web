@@ -555,11 +555,11 @@ export default class Main extends ViewBase {
 /deep/ .ivu-radio-group-button .ivu-radio-wrapper::before, .ivu-radio-group-button .ivu-radio-wrapper::after {
   transition: all 0s !important;
 }
-/deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder, .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
-  margin-top: 3px;
-  // color: #00202d;
-  font-size: 14px;
-}
+// /deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder, .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+//   margin-top: 3px;
+//   // color: #00202d;
+//   font-size: 14px;
+// }
 /deep/ .ivu-input {
   height: 40px;
   background: rgba(255, 255, 255, 0.8);
@@ -616,5 +616,29 @@ export default class Main extends ViewBase {
   height: 35px;
   background: rgba(255, 255, 255, 0.2);
   width: 100%;
+}
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 24px;
+  color: #00202d;
+}
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 24px;
+  color: #00202d;
 }
 </style>

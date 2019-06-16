@@ -10,7 +10,7 @@
       </Row>
       <Row>
        <Col :span='12'>推广品牌：{{item.brandName}}</Col>
-       <Col :span='12'>下单时间：{{item.createTime}}</Col>
+       <Col :span='12'>下单时间：{{item.createTime == null ? '暂无时间' : createTime}}</Col>
       </Row>
       <Row>
        <Col :span='24'>推广产品：{{item.productName}}</Col>
@@ -120,6 +120,8 @@ export default class Main extends ViewBase {
   item: any = []
   itemlist: any[] = []
   statusList = []
+  createTime: any = ''
+  publishTime: any = ''
 
   // 任务清单
   taskItemList = []
@@ -151,9 +153,17 @@ export default class Main extends ViewBase {
         this.item = item || {}
         this.statusList = statusList || []
         this.accountCategoryList = accountCategoryList || []
-        this.taskItemList = taskItemList
+        // this.taskItemList = taskItemList
+        this.taskItemList = (taskItemList || []).map((it: any) => {
+          return {
+            ...it,
+            publishTime: String(it.publishTime).slice(0, 4) + '-' + String(it.publishTime).slice(4, 6)
+            + '-' + String(it.publishTime).slice(6, 8)
+          }
+        })
         this.subStatusList = subStatusList
         this.orderLogList = orderLogList
+        this.createTime = moment(this.item.createTime).format(timeFormat)
     } catch (ex) {
       this.handleError(ex)
     }
@@ -260,6 +270,7 @@ export default class Main extends ViewBase {
   font-size: 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
   height: 105px;
+  background: rgba(255, 255, 255, 0.7);
   .li-ti-col {
     text-align: center;
   }
@@ -297,6 +308,9 @@ export default class Main extends ViewBase {
       border-radius: 50%;
       margin-left: 30px;
     }
+  }
+  &:nth-child(2n) {
+    background: rgba(255, 255, 255, .5);
   }
 }
 .itemss {
