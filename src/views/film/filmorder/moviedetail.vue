@@ -27,9 +27,9 @@
             </Col>
             <Col span='9' class='row-x'>
               <Row style='font-size: 20px;margin-top: 15px;'>{{itemlist.movieName}}</Row>
-              <Row><!-- <span v-for='(its,index) in type' :key='index'>
-                      <em v-for='(items,index) in it.movieTypes' v-if='items == its.key'>{{its.text}}</em>
-                    </span>{{type}} -->{{itemlist.movieTypes}}</Row>
+              <Row><span v-for='(its,index) in type' :key='index'>
+                      <em v-for='(items,index) in itemlist.movieTypes' v-if='items == its.key'>{{its.text + ' '}}</em>
+                    </span><!-- {{itemlist.movieTypes}} --></Row>
               <Row>{{itemlist.movieReleaseDate}} 上映</Row>
             </Col>
             <Col :span='10'>
@@ -44,13 +44,13 @@
       <div class='body' style='margin-top: 20px;height:120px;background:rgba(255,255,255,0.3);border-radius:5px;'>
         <Row class='row-ul'>
           <span class='hui'>品牌方提供资源：</span><span v-for='(it,index) in itemlist.channelCodeList'>
-            <em v-for='(its,index) in itemlist.brandResource.onlines' :key='index' v-if='it.key == its.channelCode'>{{it.text}}</em>
+            <em v-for='(its,index) in itemlist.brandResource.onlines' :key='index' v-if='it.key == its.channelCode'>{{it.text + ' '}}</em>
           </span>
           <span v-if='itemlist.brandResource.onlines == null'>暂无资源</span>
         </Row>
         <Row class='row-ul'>
           <span class='hui'>线下门店资源：</span><span v-for='(it,index) in itemlist.offlineResourceTypeList'>
-            <em v-for='(its,index) in itemlist.brandResource.offlines' :key='index' v-if='it.key == its.channelCode'>{{it.text}}</em>
+            <em v-for='(its,index) in itemlist.brandResource.offlines' :key='index' v-if='it.key == its.channelCode'>{{it.text + ' '}}</em>
           </span>
           <span v-if='itemlist.brandResource.offlines == null'>暂无资源</span>
         </Row>
@@ -58,7 +58,7 @@
       <div class='body'>
         <Row class='tits'>留言</Row>
         <Row class='liuyan'>
-          {{itemlist.message}}
+          {{itemlist.message == '' ? '暂无留言' : itemlist.message}}
         </Row>
       </div>
       <div class='body'>

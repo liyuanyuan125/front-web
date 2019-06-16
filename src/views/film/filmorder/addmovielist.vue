@@ -20,13 +20,12 @@
           <Row>
             <Col span="12">
               <FormItem label="推广品牌" prop="brandId">
-                <Select v-model='dataForm.brandId'  clearable placeholder="推广品牌">
+                <Select v-model='dataForm.brandId'  clearable placeholder="推广品牌" @on-change='brandsearch'>
               <Option
-                v-for="item in []"
-                :key="item.key"
-                :value="item.key"
-                v-if='item.key!=0'
-              >{{item.text}}</Option>
+                v-for="item in brandList"
+                :key="item.id"
+                :value="item.id"
+              >{{item.name}}</Option>
             </Select>
               </FormItem>
             </Col>
@@ -36,11 +35,10 @@
               <FormItem label="推广产品" prop="productId">
                 <Select v-model='dataForm.productId'  clearable placeholder="推广产品">
               <Option
-                v-for="item in []"
-                :key="item.key"
-                :value="item.key"
-                v-if='item.key!=0'
-              >{{item.text}}</Option>
+                v-for="item in productList"
+                :key="item.id"
+                :value="item.id"
+              >{{item.name}}</Option>
             </Select>
               </FormItem>
             </Col>
@@ -59,13 +57,16 @@
                 <Row>
                   <Col span='8'>
                     <div class='div-img'>
-                      <img src="./assets/wait.jpg" alt="">
+                      <img :src="filmdata.mainPic == null ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2431454871,3087430277&fm=27&gp=0.jpg' : filmdata.mainPic" alt="">
                     </div>
                   </Col>
                   <Col span='14' class='row-x'>
-                    <Row style='font-size: 20px;font-weight: 500;margin-top: 6px;'>攀登者</Row>
-                    <Row>剧情/冒险 (中国大陆)</Row>
-                    <Row>2018-05-05 上映</Row>
+                    <Row style='font-size: 20px;font-weight: 500;margin-top: 6px;'>{{filmdata.name}}</Row>
+                    <Row>
+                      <span v-for='(it,index) in filmdata.typeList' :key='index'>
+                        <em v-for='(its,index) in filmdata.types' :key='index' v-if='it.key == its'>{{it.text}}</em>
+                      </span> (中国大陆)</Row>
+                    <Row>{{filmdata.releaseDate ==null ? '暂无' : releaseDate}} 上映</Row>
                   </Col>
                 </Row>
               </Col>
@@ -145,6 +146,7 @@ import {Component, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { queryList , addlist , filmlist  } from '@/api/filmorder'
+import { brandsList , productsList  } from '@/api/shopping'
 import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
 import WeekDatePicker from '@/components/weekDatePicker'
@@ -164,7 +166,7 @@ export default class Main extends ViewBase {
     movieId: null,
     projectName: '',
     projectDescription: '',
-    brandId: 20,
+    brandId: null,
     productId: null,
     companyId: null,
     message: null,
@@ -212,6 +214,7 @@ export default class Main extends ViewBase {
   typeList: any = []
   offlineResourceTypeList: any = []
   channelCodeList: any = []
+  releaseDate: any = ''
 
   query: any = {}
 
@@ -230,8 +233,14 @@ export default class Main extends ViewBase {
   hai: any = false
   dian: any = false
 
+  brandList: any = []
+  productList: any = []
+  filmdata: any = {}
+  bid: any = []
+
 
   totalCount = 0
+  onlineslist: any = []
 
 
   mounted() {
@@ -259,6 +268,14 @@ export default class Main extends ViewBase {
   }
 
   async seach() {
+    const brand = await brandsList({})
+    this.brandList = brand.data.items
+    const bid = (this.brandList || []).map((it: any) => {
+      return it.id
+    })[0]
+    this.dataForm.brandId = bid
+    const product = await productsList({brandId: bid})
+    this.productList = product.data.items
     this.asd = []
     try {
       const { data } = await queryList({})
@@ -267,6 +284,11 @@ export default class Main extends ViewBase {
       this.typeList = data.typeList
       this.offlineResourceTypeList = data.offlineResourceTypeList
       this.channelCodeList = data.channelCodeList
+      const film = await filmlist(this.$route.params.id)
+      this.filmdata = film.data
+      this.releaseDate = String(film.data.releaseDate).slice(0, 4) + '-' +
+      String(film.data.releaseDate).slice(4, 6) + '-' +
+      String(film.data.releaseDate).slice(6, 8)
     } catch (ex) {
     }
   }
@@ -289,6 +311,24 @@ export default class Main extends ViewBase {
       this.dian = true
     }
 
+    if (this.dataForm.wechat != '') {
+      this.onlineslist.push({
+              channelCode: 'wechat',
+              channelDataId: this.dataForm.wechat
+            })
+    }
+    if (this.dataForm.weibo != '') {
+      this.onlineslist.push({
+              channelCode: 'weibo',
+              channelDataId: this.dataForm.weibo
+            })
+    }
+    if (this.dataForm.guang != '') {
+      this.onlineslist.push({
+              channelCode: 'official-website',
+              channelDataId: this.dataForm.guang
+            })
+    }
     this.query = {
       movieId: this.dataForm.movieId,
       projectName: this.dataForm.projectName,
@@ -307,20 +347,7 @@ export default class Main extends ViewBase {
         }
       },
       brandResource: {
-        onlines: [
-            {
-              channelCode: 'wechat',
-              channelDataId: this.dataForm.wechat
-            },
-            {
-              channelCode: 'weibo',
-              channelDataId: this.dataForm.weibo
-            },
-            {
-              channelCode: 'official-website',
-              channelDataId: this.dataForm.guang
-            }
-        ],
+        onlines: this.onlineslist,
         offlines: this.asd
       }
     }
@@ -331,6 +358,14 @@ export default class Main extends ViewBase {
     }
   }
 
+  async brandsearch(value: any) {
+    const product = await productsList({brandId: this.dataForm.brandId})
+    this.productList = product.data.items
+    this.dataForm.productId = (this.productList || []).map((it: any) => {
+      return it.id
+    })[0]
+  }
+
   handlepageChange(size: any) {
     this.query.pageIndex = size
     this.seach()
@@ -339,6 +374,14 @@ export default class Main extends ViewBase {
     this.query.pageIndex = size
     this.seach()
   }
+
+  // @Watch('dataForm', {deep: true})
+  // watchDataForm() {
+  //   this.brandsearch()
+  //   this.dataForm.productId = (this.productList || []).map((it: any) => {
+  //     return it.id
+  //   })[0]
+  // }
 
 }
 

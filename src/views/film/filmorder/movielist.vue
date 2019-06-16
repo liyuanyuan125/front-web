@@ -57,27 +57,27 @@
                   </Col>
                   <Col span='14' class='row-x'>
                     <Row style='font-size: 16px;font-weight: 500;line-height: 25px;'>{{it.movieName}}</Row>
-                    <Row> <!-- <span v-for='(its,index) in type' :key='index'>
-                      <em v-for='(items,index) in it.movieTypes' v-if='items == its.key'>{{its.text}}</em>
-                    </span> -->{{it.movieTypes}}</Row>
+                    <Row> <span v-for='(its,index) in type' :key='index'>
+                      <em v-for='(items,index) in it.movieTypes' v-if='items == its.key'>{{its.text + '  '}}</em>
+                    </span><!-- {{it.movieTypes}} --></Row>
                     <div>{{it.movieReleaseDate}} 上映</div>
                   </Col>
                 </Row>
               </Col>
               <Col v-if='it.status != 6 || it.status != 7' span='8' style='line-height: 38px'>
-                <Row style='margin-top: 13px;'><span class='hui'>申请资源:</span><em v-if='it.movieResource.material.need == true'>海报授权</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.coupon.material == false '>暂无资源</em></Row>
+                <Row style='margin-top: 13px;'><span class='hui'>申请资源:&nbsp;&nbsp;</span><em v-if='it.movieResource.material.need == true'>海报授权</em> <em style='margin-left: 2px;' v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.coupon.material == false '>暂无资源</em></Row>
                 <Row><span class='hui'>提供资源:</span>&nbsp;&nbsp;<em v-if='it.brandResource.onlines == null'>暂无资源</em><em v-else v-for='(its,index) in channelCodeList' :key='index'>
-                  <i v-for='(items,index) in it.brandResource.onlines' :key='index' v-if='its.key == items.channelCode'>{{its.text}}宣传</i>
+                  <i v-for='(items,index) in it.brandResource.onlines' :key='index' v-if='its.key == items.channelCode'>{{its.text}}宣传&nbsp;</i>
                 </em></Row>
               </Col>
               <Col v-if='it.status == 6 || it.status == 7' span='8' style='line-height: 25px'>
-                <Row><span class='hui'>申请资源:</span><em v-if='it.movieResource.material.need == true'>海报授权</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.coupon.material == false '>暂无资源</em></Row>
+                <Row><span class='hui'>申请资源:&nbsp;&nbsp;</span><em v-if='it.movieResource.material.need == true'>海报授权</em> <em  style='margin-left: 2px;' v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.coupon.material == false '>暂无资源</em></Row>
                 <Row>
                   <Col span='10' style='color: #00B6CC;margin-left: 53px;'>《攀登者》首款海报</Col>
                   <Col span='8'><a class='okbut' :href="it.movieMainPic" :download='it.movieMainPic'>立即下载</a></Col>
                 </Row>
                 <Row><span class='hui'>提供资源:</span> &nbsp;&nbsp;<em v-if='it.brandResource.onlines == null'>暂无资源</em><em v-else v-for='(its,index) in channelCodeList' :key='index'>
-                  <i v-for='(items,index) in it.brandResource.onlines' :key='index' v-if='its.key == items.channelCode'>{{its.text}}宣传</i>
+                  <i v-for='(items,index) in it.brandResource.onlines' :key='index' v-if='its.key == items.channelCode'>{{its.text}}宣传&nbsp;</i>
                 </em></Row>
               </Col>
 
