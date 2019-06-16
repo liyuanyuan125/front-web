@@ -113,6 +113,7 @@ import UploadButton, { SuccessEvent } from '@/views/order/components/UploadButto
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { queryList , imgs } from '@/api/filmorder'
+import { brandsList } from '@/api/shopping'
 import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
 import WeekDatePicker from '@/components/weekDatePicker'
@@ -134,6 +135,7 @@ export default class Main extends ViewBase {
   }
 
   totalCount = 0
+  brandList: any = []
 
   itemlist: any = []
   statusList: any = []
@@ -194,6 +196,9 @@ export default class Main extends ViewBase {
       this.typeList = data.typeList
       this.offlineResourceTypeList = data.offlineResourceTypeList
       this.channelCodeList = data.channelCodeList
+      // 品牌列表
+      const brand = await brandsList({})
+      this.brandList = brand.data.items
     } catch (ex) {
     }
   }
