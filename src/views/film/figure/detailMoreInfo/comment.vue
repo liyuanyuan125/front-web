@@ -1,7 +1,4 @@
-<style lang="less">
-@import '~@/site/lib.less';
-@import '~@/site/detailmore.less';
-</style>
+
 <template>
   <div>
     <Row>
@@ -40,8 +37,7 @@
                         :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})"
                          :color="chart1.color"
                          :dataList="chart1.dataList"
-                         :currentTypeIndex="chart1.currentTypeIndex"
-                         @typeChange='typeChangeHander1' />
+                         :currentTypeIndex="chart1.currentTypeIndex" />
                 </div>
               </Col>
               <Col :span="12">
@@ -55,7 +51,7 @@
                                   :color="chart2.color"
                                   :dataList="chart2.dataList"
                                   :currentTypeIndex="chart2.currentTypeIndex"
-                                  @typeChange='typeChangeHander2' />
+                                  @typeChange='typeChangeHander' />
                 </div>
               </Col>
             </Row>
@@ -67,8 +63,7 @@
                            :dict1="chart3.dict1"
                            :color="chart3.color"
                            :dataList="chart3.dataList"
-                           :currentTypeIndex="chart3.currentTypeIndex"
-                           @typeChange='typeChangeHander3' />
+                           :currentTypeIndex="chart3.currentTypeIndex" />
                 </div>
               </Col>
               <Col :span="12">
@@ -78,8 +73,7 @@
                            :dict1="chart4.dict1"
                            :color="chart4.color"
                            :dataList="chart4.dataList"
-                           :currentTypeIndex="chart4.currentTypeIndex"
-                           @typeChange='typeChangeHander4' />
+                           :currentTypeIndex="chart4.currentTypeIndex" />
                 </div>
               </Col>
             </Row>
@@ -97,7 +91,6 @@ import { findIndex } from 'lodash'
 import moment from 'moment'
 import { dayRanges, comment } from '@/api/figureDetailMoreInfo'
 import PieNest from '@/components/chartsGroup/pieNest/'
-import BarCategoryStack from '@/components/chartsGroup/barCategoryStack/'
 import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
 import DetailNavBar from './components/detailNavBar.vue'
@@ -110,7 +103,6 @@ const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
 @Component({
   components: {
     PieNest,
-    BarCategoryStack,
     BarxCategoryStack,
     WordCloud,
     DetailNavBar
@@ -194,81 +186,45 @@ export default class Temporary extends ViewBase {
     dataList: [
       [
         {
-            name: '中性',
-            type: 'bar',
-            stack: 'totalCount',
-            label: {
-                normal: {
-                    show: true,
-                    position: 'insideRight'
-                }
-            },
-            barMaxWidth: '20',
-            data: []
+          name: '中性',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
         },
         {
-            name: '正面',
-            type: 'bar',
-            stack: 'totalCount',
-            label: {
-                normal: {
-                    show: true,
-                    position: 'insideRight'
-                }
-            },
-            barMaxWidth: '20',
-            data: []
+          name: '正面',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
         },
         {
-            name: '负面',
-            type: 'bar',
-            stack: 'totalCount',
-            label: {
-                normal: {
-                    show: true,
-                    position: 'insideRight'
-                }
-            },
-            barMaxWidth: '20',
-            data: []
+          name: '负面',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
         }
       ],
       [
         {
-            name: '中性',
-            type: 'bar',
-            stack: 'totalCount',
-            label: {
-                normal: {
-                    show: true,
-                    position: 'insideRight'
-                }
-            },
-            data: []
+          name: '中性',
+          type: 'bar',
+          stack: 'totalCount',
+          data: []
         },
         {
-            name: '正面',
-            type: 'bar',
-            stack: 'totalCount',
-            label: {
-                normal: {
-                    show: true,
-                    position: 'insideRight'
-                }
-            },
-            data: []
+          name: '正面',
+          type: 'bar',
+          stack: 'totalCount',
+          data: []
         },
         {
-            name: '负面',
-            type: 'bar',
-            stack: 'totalCount',
-            label: {
-                normal: {
-                    show: true,
-                    position: 'insideRight'
-                }
-            },
-            data: []
+          name: '负面',
+          type: 'bar',
+          stack: 'totalCount',
+          data: []
         }
       ]
     ],
@@ -290,26 +246,8 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['rgba(0,32,45,0)']
   }
-  async typeChangeHander1(index: number = 0) {
-    if (this.chart1.dataList[index].length < 1) {
-      await this.getChartsData('chart1', index)
-    }
-    this.chart1.currentTypeIndex = index
-  }
-  async typeChangeHander2(index: number = 0) {
+  async typeChangeHander(index: number = 0) {
     this.chart2.currentTypeIndex = index
-  }
-  async typeChangeHander3(index: number = 0) {
-    if (this.chart3.dataList[index].length < 1) {
-      await this.getChartsData('chart3', index)
-    }
-    this.chart3.currentTypeIndex = index
-  }
-  async typeChangeHander4(index: number = 0) {
-    if (this.chart3.dataList[index].length < 1) {
-      await this.getChartsData('chart4', index)
-    }
-    this.chart4.currentTypeIndex = index
   }
   /**
    * 加载日期区间描述
@@ -373,46 +311,6 @@ export default class Temporary extends ViewBase {
         that.chart2.dataList[1][2].data.push(item.neutral.count)
       })
 
-      // that.chart2.xAxis = ['02.20', '02.21', '02.22']
-      // that.chart2.dataList[0] = [
-          // {
-          //     name: '中性',
-          //     type: 'bar',
-          //     stack: 'totalCount',
-          //     label: {
-          //         normal: {
-          //             show: true,
-          //             position: 'insideRight'
-          //         }
-          //     },
-          //     data: [111, 222, 333]
-          // },
-          // {
-          //     name: '正面',
-          //     type: 'bar',
-          //     stack: 'totalCount',
-          //     label: {
-          //         normal: {
-          //             show: true,
-          //             position: 'insideRight'
-          //         }
-          //     },
-          //     data: [444, 333, 111 ]
-          // },
-          // {
-          //     name: '负面',
-          //     type: 'bar',
-          //     stack: 'totalCount',
-          //     label: {
-          //         normal: {
-          //             show: true,
-          //             position: 'insideRight'
-          //         }
-          //     },
-          //     data: [222, 333, 111 ]
-          // }
-      // ]
-
       keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
         that.chart3.dataList[0].push({
           name: item,
@@ -471,7 +369,6 @@ export default class Temporary extends ViewBase {
     // this.dayRangesFetch() // 本地写死，暂时取消
     this.initHandler()
   }
-  async mounted() {}
   async initHandler() {
     if (this.chart1.dict1.length > 0) {
       this.chart1.dict1.map((item: any, index: number) => {
@@ -479,14 +376,6 @@ export default class Temporary extends ViewBase {
       })
     } else {
       this.chart1.dataList.push([])
-    }
-
-    if (this.chart2.dict1.length > 0) {
-      this.chart2.dict1.map((item: any, index: number) => {
-        this.chart2.dataList.push([])
-      })
-    } else {
-      this.chart2.dataList.push([])
     }
 
     if (this.chart3.dict1.length > 0) {
@@ -510,8 +399,11 @@ export default class Temporary extends ViewBase {
     this.chart1.dataList.forEach((item: any[]) => {
       item.splice(0, item.length)
     })
+    this.chart2.xAxis.splice(0, this.chart2.xAxis.length)
     this.chart2.dataList.forEach((item: any) => {
-      item.splice(0, item.length)
+      item.forEach((it: any) => {
+        it.data.splice(0, it.data.length)
+      })
     })
     this.chart3.dataList.forEach((item: any) => {
       item.splice(0, item.length)
@@ -522,3 +414,7 @@ export default class Temporary extends ViewBase {
   }
 }
 </script>
+<style lang="less" scoped>
+@import '~@/site/lib.less';
+@import '~@/site/detailmore.less';
+</style>

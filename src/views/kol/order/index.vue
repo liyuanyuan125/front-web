@@ -148,6 +148,8 @@ import { formatNumber } from '@/util/validateRules.ts'
 import { querySelectList } from '@/api/brandList'
 import { getUser } from '@/store'
 import pagination from '@/components/page.vue'
+import moment from 'moment'
+import { toMap } from '@/fn/array'
 import {
   orderList,
   orderBrand,
@@ -158,7 +160,7 @@ import {
   confirmFinish,
   orderDetail
 } from '@/api/kolOrderList'
-
+const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 
 @Component({
   components: {
@@ -224,7 +226,12 @@ export default class Main extends ViewBase {
         orderStatus: this.status
       })
       this.countData = data
-      this.list = data.items || []
+      this.list = (data.items || []).map((it: any) => {
+        return {
+          ...it,
+          createTime : moment(it.createTime).format(timeFormat)
+        }
+      })
       this.total = data.totalCount || 0
       this.intStatusList = data.statusList
 
@@ -301,7 +308,7 @@ export default class Main extends ViewBase {
     // 若余额不足则提示”账号余额不足XXXX元“，请充值后再支付
     // 待支付首款
     if (item.status == 4) {
-    const firstPayment = (item.advanceFee * 0.3).toFixed(2)
+    const firstPayment = (item.totalFee * 0.3).toFixed(2)
       await confirm(`是否支付首款金额${firstPayment}元`, {
         title: '支付KOL推广费用'
       })

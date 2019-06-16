@@ -10,12 +10,15 @@
       ></div>
 
       <div class="basic-box">
-        <BasicPane
-          :item="basic"
-          :movie="movie"
-          :actorData="actorData"
-          :more="{ name: 'home' }"
-        />
+        <BasicPane :item="basic" :movie="movie" :actorData="actorData" :more="{ name: 'home' }">
+          <router-link
+            :to="{
+              name: 'film-filmorder-addmovielist',
+              params: { id: id }
+            }"
+            class="button-apply"
+          >立即申请</router-link>
+        </BasicPane>
       </div>
 
       <section class="board-pane">
@@ -100,39 +103,35 @@ export default class FigurePage extends ViewBase {
     title: '',
     figure: 'https://picsum.photos/id/428/154/218',
     rankNo: '86.5',
-    rankTitle: '同档期：第2',
+    rankTitle: '同档期：第2'
   }
 
-  bigFigure = this.id == 1 ? '' : 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
+  bigFigure =
+    this.id == 1
+      ? ''
+      : 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
 
   boxOfficeToday = {
     main: '116.3 万',
-    sub: '同档期第一',
+    sub: '同档期第一'
   }
 
   boxOfficeTotal = {
-    main: '3.8 亿',
+    main: '3.8 亿'
   }
 
   fansMan = 66
 
   fansWoman = 34
 
-  bubbleList = [
-    '师兄李连杰',
-    '流浪地球',
-    '教练吴彬',
-    '功夫小子',
-    '导演',
-    '少林寺',
-  ]
+  bubbleList = ['师兄李连杰', '流浪地球', '教练吴彬', '功夫小子', '导演', '少林寺']
 
   movie = {
     preview: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
     director: '林德路',
     type: '动作/犯罪',
     date: '2019-04-03',
-    address: '香港',
+    address: '香港'
   }
 
   actorData = {
@@ -140,7 +139,7 @@ export default class FigurePage extends ViewBase {
     list: [
       { id: 1, name: '吴京', avatar: 'https://dummyimage.com/80x80/000/fff' },
       { id: 2, name: '阿娇', avatar: 'https://dummyimage.com/80x80/fff/000' },
-      { id: 3, name: '吴奇隆', avatar: 'https://dummyimage.com/80x80/e2e/fff' },
+      { id: 3, name: '吴奇隆', avatar: 'https://dummyimage.com/80x80/e2e/fff' }
     ]
   }
 
@@ -151,14 +150,14 @@ export default class FigurePage extends ViewBase {
     { name: '5-19', value: 860000 },
     { name: '5-20', value: 600000 },
     { name: '5-21', value: 755000 },
-    { name: '5-22', value: 555000 },
+    { name: '5-22', value: 555000 }
   ]
 
   legendList = [
     { name: '新浪', no: 'No.3', inc: 0 },
     { name: '微信', no: 'No.2', inc: -2 },
     { name: '百度', no: 'No.4', inc: 8 },
-    { name: '头条', no: 'No.1', inc: 3 },
+    { name: '头条', no: 'No.1', inc: 3 }
   ]
 
   hotData = [
@@ -168,7 +167,7 @@ export default class FigurePage extends ViewBase {
     { name: '5-19', value: 260000, rank: 6 },
     { name: '5-20', value: 600000, rank: 5 },
     { name: '5-21', value: 755000, rank: 3 },
-    { name: '5-22', value: 555000, rank: 2 },
+    { name: '5-22', value: 555000, rank: 2 }
   ]
 
   hotFormatter([{ dataIndex }]: any) {
@@ -266,7 +265,7 @@ export default class FigurePage extends ViewBase {
   font-size: 14px;
   padding: 0 2px;
   margin: 0 22px;
-  opacity: .6;
+  opacity: 0.6;
   cursor: pointer;
 
   .platform-icon-xiaohongshu {
@@ -318,5 +317,22 @@ export default class FigurePage extends ViewBase {
 
 .box-office-total {
   margin-top: 6px;
+}
+
+.button-apply {
+  position: absolute;
+  top: 218px;
+  right: -91px;
+  width: 154px;
+  line-height: 42px;
+  color: #d3615b !important;
+  border-radius: 0 0 4px 4px;
+  background-color: #fbd76c;
+  font-size: 18px;
+  text-align: center;
+  opacity: .88;
+  &:hover {
+    opacity: 1;
+  }
 }
 </style>

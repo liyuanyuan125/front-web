@@ -10,11 +10,10 @@
           <Col style='margin-left: 12px;' span="18">
             <Select v-model='query.brandId'  clearable placeholder="全部品牌" @on-change="seachs">
               <Option
-                v-for="item in []"
-                :key="item.key"
-                :value="item.key"
-                v-if='item.key!=0'
-              >{{item.text}}</Option>
+                v-for="item in brandList"
+                :key="item.id"
+                :value="item.id"
+              >{{item.name}}</Option>
             </Select>
           </Col>
         </Col>
@@ -42,7 +41,7 @@
         <Col :span='4'>计划状态</Col>
         <Col :span='5'>操作</Col>
       </Row>
-          <li v-for='(it,index) in itemlist'>
+          <li class='lis' v-for='(it,index) in itemlist'>
             <Row class='li-title'>
               <Col span='19'>订单号:{{it.id}}</Col>
               <Col span='5'><span class='hui'>下单时间:</span> {{it.frontCreateTime}}</Col>
@@ -57,27 +56,27 @@
                   </Col>
                   <Col span='14' class='row-x'>
                     <Row style='font-size: 16px;font-weight: 500;line-height: 25px;'>{{it.movieName}}</Row>
-                    <Row> <!-- <span v-for='(its,index) in type' :key='index'>
-                      <em v-for='(items,index) in it.movieTypes' v-if='items == its.key'>{{its.text}}</em>
-                    </span> -->{{it.movieTypes}}</Row>
+                    <Row> <span v-for='(its,index) in type' :key='index'>
+                      <em v-for='(items,index) in it.movieTypes' v-if='items == its.key'>{{its.text + '  '}}</em>
+                    </span><!-- {{it.movieTypes}} --></Row>
                     <div>{{it.movieReleaseDate}} 上映</div>
                   </Col>
                 </Row>
               </Col>
               <Col v-if='it.status != 6 || it.status != 7' span='8' style='line-height: 38px'>
-                <Row style='margin-top: 13px;'><span class='hui'>申请资源:</span><em v-if='it.movieResource.material.need == true'>海报授权</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.coupon.material == false '>暂无资源</em></Row>
+                <Row style='margin-top: 13px;'><span class='hui'>申请资源:&nbsp;&nbsp;</span><em v-if='it.movieResource.material.need == true'>海报授权</em> <em style='margin-left: 2px;' v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.coupon.material == false '>暂无资源</em></Row>
                 <Row><span class='hui'>提供资源:</span>&nbsp;&nbsp;<em v-if='it.brandResource.onlines == null'>暂无资源</em><em v-else v-for='(its,index) in channelCodeList' :key='index'>
-                  <i v-for='(items,index) in it.brandResource.onlines' :key='index' v-if='its.key == items.channelCode'>{{its.text}}宣传</i>
+                  <i v-for='(items,index) in it.brandResource.onlines' :key='index' v-if='its.key == items.channelCode'>{{its.text}}宣传&nbsp;</i>
                 </em></Row>
               </Col>
               <Col v-if='it.status == 6 || it.status == 7' span='8' style='line-height: 25px'>
-                <Row><span class='hui'>申请资源:</span><em v-if='it.movieResource.material.need == true'>海报授权</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.coupon.material == false '>暂无资源</em></Row>
+                <Row><span class='hui'>申请资源:&nbsp;&nbsp;</span><em v-if='it.movieResource.material.need == true'>海报授权</em> <em  style='margin-left: 2px;' v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.coupon.material == false '>暂无资源</em></Row>
                 <Row>
                   <Col span='10' style='color: #00B6CC;margin-left: 53px;'>《攀登者》首款海报</Col>
                   <Col span='8'><a class='okbut' :href="it.movieMainPic" :download='it.movieMainPic'>立即下载</a></Col>
                 </Row>
                 <Row><span class='hui'>提供资源:</span> &nbsp;&nbsp;<em v-if='it.brandResource.onlines == null'>暂无资源</em><em v-else v-for='(its,index) in channelCodeList' :key='index'>
-                  <i v-for='(items,index) in it.brandResource.onlines' :key='index' v-if='its.key == items.channelCode'>{{its.text}}宣传</i>
+                  <i v-for='(items,index) in it.brandResource.onlines' :key='index' v-if='its.key == items.channelCode'>{{its.text}}宣传&nbsp;</i>
                 </em></Row>
               </Col>
 
@@ -113,6 +112,7 @@ import UploadButton, { SuccessEvent } from '@/views/order/components/UploadButto
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { queryList , imgs } from '@/api/filmorder'
+import { brandsList } from '@/api/shopping'
 import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
 import WeekDatePicker from '@/components/weekDatePicker'
@@ -134,6 +134,7 @@ export default class Main extends ViewBase {
   }
 
   totalCount = 0
+  brandList: any = []
 
   itemlist: any = []
   statusList: any = []
@@ -194,6 +195,9 @@ export default class Main extends ViewBase {
       this.typeList = data.typeList
       this.offlineResourceTypeList = data.offlineResourceTypeList
       this.channelCodeList = data.channelCodeList
+      // 品牌列表
+      const brand = await brandsList({})
+      this.brandList = brand.data.items
     } catch (ex) {
     }
   }
@@ -241,7 +245,7 @@ export default class Main extends ViewBase {
   font-size: 14px;
   li {
     height: 210px;
-    background: rgba(245, 249, 252, 0.6);
+    background: rgba(255, 255, 255, 0.7);
     .li-title {
       padding: 0 30px 0 30px;
       height: 60px;
@@ -250,6 +254,11 @@ export default class Main extends ViewBase {
     .li-item {
       padding: 0 0 0 30px;
     }
+  }
+}
+.lis {
+  &:nth-child(2n) {
+    background: rgba(255, 255, 255, .5);
   }
 }
 .sta {
@@ -289,18 +298,11 @@ export default class Main extends ViewBase {
   margin-top: 3px;
   color: #00202d;
 }
-/deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder, .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
-  margin-top: 3px;
-  color: #00202d;
-}
 /deep/ .ivu-input {
   height: 40px;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 1);
-}
-/deep/ .ivu-input-placeholder {
-  color: #00202d;
 }
 .mu-li {
   height: 50px;
@@ -377,5 +379,29 @@ export default class Main extends ViewBase {
   cursor: pointer;
   font-weight: 500;
   transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 24px;
+  color: #00202d;
+}
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 24px;
+  color: #00202d;
 }
 </style>

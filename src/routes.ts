@@ -213,6 +213,16 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  {
+    path: '/search/:keyword/:type?',
+    name: 'search',
+    component: () => import('./views/search/index.vue'),
+    meta: {
+      ...emptyAuth,
+    },
+    props: true,
+  },
+
   // 广告主、资源方 - 账户管理 - 账号信息
   {
     path: '/account/info',
@@ -667,6 +677,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: 'EMPTY',
       authIsMenu: true,
     },
+  },
+
+  // 广告主 - 效果报表
+  {
+    path: '/reseport/effect-report',
+    name: 'effect-report',
+    component: () => import('./views/resReport/effectReport/index.vue'),
+    meta: unauth,
   },
 
   // TODO: 下面的两个先不做了

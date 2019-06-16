@@ -24,8 +24,8 @@
       <Col :span="24">
         <div ref="refChart"
            v-if="initDone"
-           style="width: 100%; height: 400px"></div>
-        <div v-else class='loading-wp' style="width: 100%; height: 400px">
+           :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
+        <div v-else class='loading-wp' :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
             <TinyLoading  />
         </div>
       </Col>
@@ -58,13 +58,14 @@ const tooltipsDefault = tooltipStyles({
 // 嵌套环形图
 export default class PieNest extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
-  @Prop({ type: String, default: '' }) title!: string
+  @Prop({ type: String, default: '' }) title?: string
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
   @Prop({ type: Array, default: () => [] }) dict1!: any[]
   @Prop({ type: Array, default: () => [] }) dict2!: any[]
   @Prop({ type: Array, default: () => [] }) color!: any[]
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
+  @Prop({ type: Number, default: 0 }) height?: number
   @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
 
   currentIndex: number = this.currentTypeIndex
