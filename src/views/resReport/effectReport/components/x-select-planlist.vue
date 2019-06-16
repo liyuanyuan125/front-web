@@ -26,7 +26,7 @@ export default class Main extends ViewBase {
         pageSize: 99999,
         pageIndex: 1
       })
-      this.customerList = items
+      this.data = items
     } catch (ex) {
       this.handleError(ex)
     }
