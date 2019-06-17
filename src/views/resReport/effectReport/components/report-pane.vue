@@ -30,10 +30,10 @@ export default class ReportPane extends Vue {
 @import '~@/site/lib.less';
 .report-pane-wp {
   min-width: 287px;
-  min-height: 254px;
   color: #fff;
   font-size: 14px;
   user-select: none;
+  margin-bottom: 20px;
   .pane-head {
     padding: 24px 30px;
     justify-content: space-between;

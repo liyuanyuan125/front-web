@@ -1,347 +1,378 @@
 <template>
-  <div class="page home-bg">
-    <h3 class="layout-title">效果报表</h3>
-    <div class="layout-panel">
-      <Form label-position="left" :label-width="100" class="edit-input">
-        <Row type="flex" justify="space-between">
-          <Col :span="8">
-            <FormItem label="投放时间" >
-              <DatePicker type="daterange" v-model="form.beginDate" @on-change="handleChange" 
-              placement="bottom-end" placeholder="请选择开始日期和结束日期" ></DatePicker>
-            </FormItem>
-          </Col>
-          <Col :span="13">
-            <FormItem label="广告片">
-              <Select @on-change="handleChange" filterable>
-                  <Option v-for="item in filmList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-            </FormItem>
-          </Col>
-        </Row>
-      </Form>
-      <div class="ivu-form-item collection-wp">
-        <Row style="background: #fff" :gutter="16">
-            <Col :span="8">
-                <div class='data-list one'>
-                  <div class='data-one'>总播放场次</div>
-                  <div class='data-two'><numAdd  v-if='collectionData.param1' :addNum="collectionData.param1"></numAdd>场</div>
-                </div>
-            </Col>
-            <Col :span="8">
-                <div class='data-list two'>
-                  <div class='data-one'>总覆盖人次</div>
-                  <div class='data-two'><numAdd  v-if='collectionData.param2' :addNum="collectionData.param2"></numAdd>人</div>
-                </div>
-            </Col>
-            <Col :span="8">
-                <div class='data-list three'>
-                  <div class='data-one'>总收益</div>
-                  <div class='data-two'><numAdd  v-if='collectionData.param3' :addNum="collectionData.param3"></numAdd>元</div>
-                </div>
-            </Col>
-        </Row>
-      </div>
+  <div class="effect-report-wp">
+    <BannerCard></BannerCard>
+    <div class="search-pane">
+      <SelectXadvertOrders :fetch="xadvertOrders" v-model="form.xadvertOrderId"></SelectXadvertOrders>
     </div>
-    <h3 class="layout-title">广告趋势分析</h3>
-    <div class="layout-panel">
-      <div style='text-align:center'>
-        <RadioGroup size="large" @on-change="radioChangeHandler0" v-model="chartData0.chartsTypeKey" type="button">
-          <Radio v-for="(item,index) in chartsType" :key="index" :label="item.key">{{item.name}}</Radio>
-        </RadioGroup>
+    <TotalCard :data="totalData"></TotalCard>
+    <ReportPane title="广告趋势分析">
+      <div class="echarts-box">
+        <AreaBasic :initDone="chart1.initDone"
+                   :title="chart1.title"
+                   :dict1="chart1.dict1"
+                   :dict2="chart1.dict2"
+                   :toolTip="chart1.toolTip"
+                   :color="chart1.color"
+                   :dataList="chart1.dataList"
+                   :currentTypeIndex="chart1.currentTypeIndex"
+                   @typeChange="typeChangeHander1" />
       </div>
-      <summany :data="chartData0" v-if="reportDataInitDone" />
-      <div class="loading-cover" v-else>
-        <TinyLoading/>
+    </ReportPane>
+    <ReportPane title="影片贡献度分析">
+      <div class="echarts-box">
+        <BarXCategory :initDone="chart2.initDone"
+                   :title="chart2.title"
+                   :dict1="chart2.dict1"
+                   :dict2="chart2.dict2"
+                   :dict3="chart2.dict3"
+                   :toolTip="chart2.toolTip"
+                   :color="chart2.color"
+                   :dataList="chart2.dataList"
+                   :currentTypeIndex="chart2.currentTypeIndex"
+                   @typeChange="typeChangeHander2" />
       </div>
-    </div>
-    <div v-if="reportDataInitDone">
-      <h3 class="layout-title">影片贡献度分析</h3>
-      <div class="layout-panel">
-        <div style='text-align:center'>
-          <RadioGroup size="large" @on-change='radioChangeHandler1' v-model="chartData1.chartsTypeKey" type="button">
-            <Radio v-for="(item,index) in chartsType" :key="index" :label="item.key">{{item.name}}</Radio>
-          </RadioGroup>
-        </div>
-        <summany :data="chartData1" v-if="reportDataInitDone" />
-        <div class="loading-cover" v-else>
-          <TinyLoading/>
-        </div>
+    </ReportPane>
+    <ReportPane title="影院贡献度分析">
+      <div class="echarts-box">
+        <BarXCategory :initDone="chart3.initDone"
+                   :title="chart3.title"
+                   :dict1="chart3.dict1"
+                   :dict2="chart3.dict2"
+                   :dict3="chart3.dict3"
+                   :toolTip="chart3.toolTip"
+                   :color="chart3.color"
+                   :dataList="chart3.dataList"
+                   :currentTypeIndex="chart3.currentTypeIndex"
+                   @typeChange="typeChangeHander3" />
       </div>
-      <h3 class="layout-title">影院贡献度分析</h3>
-      <div class="layout-panel">
-        <div style='text-align:center'>
-          <RadioGroup size="large" @on-change='radioChangeHandler2' v-model="chartData2.chartsTypeKey" type="button">
-            <Radio v-for="(item,index) in chartsType" :key="index" :label="item.key">{{item.name}}</Radio>
-          </RadioGroup>
-        </div>
-        <summany :data="chartData2" v-if="reportDataInitDone" />
-        <div class="loading-cover" v-else>
-          <TinyLoading/>
-        </div>
-      </div>
-    </div>
+    </ReportPane>
   </div>
 </template>
 <script lang="ts">
- import { Component, Watch } from 'vue-property-decorator'
- import ViewBase from '@/util/ViewBase'
- import { formatTimestamp, formatTimes, formatNumber } from '@/util/validateRules'
-import { effect, effectStatistics } from '@/api/resReport'
-import TinyLoading from '@/components/TinyLoading.vue'
-import numAdd from '../number.vue'
-import summany from '../summary.vue'
+import { Component, Watch } from 'vue-property-decorator'
+import ViewBase from '@/util/ViewBase'
+import { formatTimestamp, formatTimes, formatNumber } from '@/util/validateRules'
+import ReportPane from './components/report-pane.vue'
+import BannerCard from './components/banner-card.vue'
+import TotalCard from './components/total-card.vue'
+import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
+import BarXCategory from '@/components/chartsGroup/barXCategory/'
+import { trend, xadvertOrders } from '@/api/resReport'
+import SelectXadvertOrders from './components/x-select-xadvertOrders.vue'
+const toolTip: any = {
+  borderWidth: 1,
+  borderColor: 'rgba(0, 0, 0, .8)',
+  backgroundColor: 'rgba(0, 0, 0, .8)',
+  padding: [7, 10],
+  textStyle: {
+    color: '#fff',
+    fontSize: 12,
+    lineHeight: 22
+  },
+  trigger: 'axis',
+  axisPointer: {
+    type: 'line',
+    lineStyle: {
+      width: 22,
+      color: {
+        type: 'linear',
+        x: 0,
+        y: 0,
+        x2: 0,
+        y2: 1,
+        colorStops: [
+          {
+            offset: 0,
+            color: 'rgba(255, 255, 255, .01)'
+          },
+          {
+            offset: 1,
+            color: 'rgba(255, 255, 255, .5)'
+          }
+        ]
+      }
+    }
+  }
+}
+
 @Component({
   components: {
-    numAdd,
-    summany,
-    TinyLoading
+    BannerCard,
+    TotalCard,
+    ReportPane,
+    AreaBasic,
+    BarXCategory,
+    SelectXadvertOrders
   }
 })
 export default class Index extends ViewBase {
-  // local dict
-  chartsType: any[] = [{
-      key: 'revenue',
-      name: '收益'
-    },
-    {
-      key: 'scene',
-      name: '场次'
-    },
-    {
-      key: 'people',
-      name: '人次'
-    }
-  ]
-  collectionData: any = {
-    param1: 1092,
-    param2: 1092091,
-    param3: 1012345343436,
-  }
-  filmList: any[] = [
-    {
-      value: 'item1',
-      label: 'item1'
-    },
-    {
-      value: 'item2',
-      label: 'item2'
-    },
-    {
-      value: 'item3',
-      label: 'item3'
-    }
-  ]
-  reportDataInitDone: boolean = false
+
   form: any = {
-    beginDate : [
-      new Date(2019, 3, 9),
-      new Date(2019, 4, 11)
-    ]
+    xadvertOrderId: 111
   }
-  chartData0: any = {
-    time: new Date(),
-    name: this.chartsType[0].name,
-    type: 'line',
-    stack: '总量',
-    color: ['#FE8135'],
-    chartsTypeKey: this.chartsType[0].key,
-    dataList: {}
+
+  xadvertOrders = xadvertOrders
+
+  loading: boolean = false
+
+  totalData: any = {
+    showCountSum: 0,
+    personCountSum: 0,
+    profitAmountSum: 0
   }
-  chartData1: any = {
-    time: new Date(),
-    name: this.chartsType[0].name,
-    type: 'bar',
-    stack: '总量',
-    color: ['#FE8135'],
-    chartsTypeKey: this.chartsType[0].key,
-    dataList: {}
+
+  chart1: any = {
+    title: '',
+    dict1: [
+      {
+        name: 'profitAmount',
+        text: '收益',
+        key: 0
+      },
+      {
+        name: 'showCount',
+        text: '场次',
+        key: 1
+      },
+      {
+        name: 'personCount',
+        text: '人次',
+        key: 2
+      }
+    ],
+    dict2: [],
+    currentTypeIndex: 0,
+    initDone: false,
+    dataList: [
+      {
+        data: [],
+        date: []
+      },
+      {
+        data: [],
+        date: []
+      },
+      {
+        data: [],
+        date: []
+      }
+    ],
+    color: ['#CA7273'],
+    toolTip
   }
-  chartData2: any = {
-    time: new Date(),
-    name: this.chartsType[0].name,
-    type: 'bar',
-    stack: '总量',
-    color: ['#FE8135'],
-    chartsTypeKey: this.chartsType[0].key,
-    dataList: {}
+
+  chart2: any = {
+    title: '',
+    dict1: [
+      {
+        text: 'movieProfits',
+        name: '收益',
+        key: 0
+      },
+      {
+        text: 'movieShows',
+        name: '场次',
+        key: 1
+      },
+      {
+        text: 'moviePersons',
+        name: '人次',
+        key: 2
+      }
+    ],
+    dict2: [],
+    dict3: [],
+    currentTypeIndex: 0,
+    initDone: false,
+    dataList: [
+      {type: 'bar', data: [], barMaxWidth: '20'},
+      {type: 'bar', data: [], barMaxWidth: '20'},
+      {type: 'bar', data: [], barMaxWidth: '20'}
+    ],
+    color: ['#f3d872'],
+    toolTip
   }
-  handleChange() {
-    if (this.reportDataInitDone) {
-      this.resetChartsData()
+
+  chart3: any = {
+    title: '',
+    dict1: [
+      {
+        text: 'movieProfits',
+        name: '收益',
+        key: 0
+      },
+      {
+        text: 'movieShows',
+        name: '场次',
+        key: 1
+      },
+      {
+        text: 'moviePersons',
+        name: '人次',
+        key: 2
+      }
+    ],
+    dict2: [],
+    dict3: [],
+    currentTypeIndex: 0,
+    initDone: false,
+    dataList: [
+      {type: 'bar', data: [], barMaxWidth: '20'},
+      {type: 'bar', data: [], barMaxWidth: '20'},
+      {type: 'bar', data: [], barMaxWidth: '20'}
+    ],
+    color: ['#57B4C9'],
+    toolTip
+  }
+
+  async typeChangeHander1(index: number = 0) {
+    if (this.chart1.dataList[index].length < 1) {
+      await this.getChartsData('chart1', index)
     }
-    this.reportDataInitDone = false
-    this.handleQueue()
+    this.chart1.currentTypeIndex = index
   }
+
+  async typeChangeHander2(index: number = 0) {
+    if (this.chart2.dataList[index].length < 1) {
+      await this.getChartsData('chart2', index)
+    }
+    this.chart2.currentTypeIndex = index
+  }
+
+  async typeChangeHander3(index: number = 0) {
+    if (this.chart3.dataList[index].length < 1) {
+      await this.getChartsData('chart3', index)
+    }
+    this.chart3.currentTypeIndex = index
+  }
+
+  /**
+   * 加载图表数据
+   * @param chart 图表名 (因为接口返回全部数据，暂时不用)
+   * @param typeIndex 当前类别下标
+   */
+  async getChartsData(chart: string = '', typeIndex: number = 0) {
+    if ( this.form.xadvertOrderId && this.form.xadvertOrderId !== '') {
+      const mockObj = {
+        effectType: this.form.xadvertOrderId
+      }
+      try {
+        const {
+          data,
+          data: {
+            item: {
+              showCountSum,
+              personCountSum,
+              profitAmountSum,
+              orderReports,
+              movieProfits,
+              movieShows,
+              moviePersons,
+              cinemaProfits,
+              cinemaShows,
+              cinemaPersons
+            }
+          }
+        } = await trend({ ...mockObj })
+        this.totalData.showCountSum = showCountSum
+        this.totalData.personCountSum = personCountSum
+        this.totalData.profitAmountSum = profitAmountSum
+
+        if ( orderReports && orderReports.length > 0 ) {
+          orderReports.forEach((item: any, index: number) => {
+            this.chart1.dataList[0].date.push(item.date)
+            this.chart1.dataList[1].date.push(item.date)
+            this.chart1.dataList[2].date.push(item.date)
+            this.chart1.dataList[0].data.push(item.profitAmount)
+            this.chart1.dataList[1].data.push(item.showCount)
+            this.chart1.dataList[2].data.push(item.personCount)
+          })
+        }
+
+        if ( movieProfits && movieProfits.length > 0 ) {
+          movieProfits.forEach((item: any) => {
+            this.chart2.dict3.push({
+              text: item.name
+            })
+            this.chart2.dataList[0].data.push( item.showCount )
+          })
+        }
+
+        if ( movieShows && movieShows.length > 0 ) {
+          movieShows.forEach((item: any) => {
+            this.chart2.dataList[1].data.push( item.showCount )
+          })
+        }
+
+        if ( moviePersons && moviePersons.length > 0 ) {
+          moviePersons.forEach((item: any) => {
+            this.chart2.dataList[2].data.push( item.showCount )
+          })
+        }
+
+        if ( cinemaProfits && cinemaProfits.length > 0 ) {
+          cinemaProfits.forEach((item: any) => {
+            this.chart3.dict3.push({
+              text: item.name
+            })
+            this.chart3.dataList[0].data.push( item.profitAmount )
+          })
+        }
+
+        if ( cinemaShows && cinemaShows.length > 0 ) {
+          cinemaShows.forEach((item: any) => {
+            this.chart3.dataList[1].data.push( item.showCount )
+          })
+        }
+
+        if ( cinemaPersons && cinemaPersons.length > 0 ) {
+          cinemaPersons.forEach((item: any) => {
+            this.chart3.dataList[2].data.push( item.personCount )
+          })
+        }
+        this.loading = false
+        this.chart1.initDone = true
+        this.chart2.initDone = true
+        this.chart3.initDone = true
+      } catch (ex) {
+        this.handleError(ex)
+      }
+    } else {
+      this.loading = false
+    }
+  }
+
+  async handleChange() {
+    this.loading = true
+    this.chart1.initDone = false
+    this.chart2.initDone = false
+    this.chart3.initDone = false
+    this.resetData()
+    await this.getChartsData('', 0)
+  }
+
   async mounted() {
-    this.handleQueue()
+    await this.getChartsData('', 0)
   }
-  async handleQueue() {
-    await this.getCollectionData()
-    await this.getChartsData(0, 0)
-    await this.getChartsData(1, 0)
-    await this.getChartsData(2, 0)
-    this.reportDataInitDone = true
+
+  resetData() {
+    this.chart1.dataList = []
   }
-  resetChartsData() {
-    const that: any = this
-    const list: any[] = [0, 1, 2]
-    list.forEach((item: any, index: number) => {
-      that[`chartData${index}`].chartsTypeKey = this.chartsType[0].key
-      that[`chartData${index}`].name = this.chartsType[0].name
-      that[`chartData${index}`].dataList = {}
-    })
-  }
-  async getChartsData(chartIndex: number = 0, typeNumber: number = 0 ) {
-    const that: any = this
-    const mockObj = {
-      beginDate: formatTimestamp(that.form.beginDate[0]),
-      endDate: formatTimestamp(that.form.beginDate[1]),
-      accountType: 'ads',
-      effectType: typeNumber
-    }
-    try {
-      const { data } = await effect({ ...mockObj })
-      const _chartName = 'chartData' + chartIndex
-      that[_chartName].dataList[that.chartsType[typeNumber].key] = data.dataList
-      that[_chartName].time = new Date()
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
-  async getCollectionData() {
-    const query = {
-      beginDate: 1557590400001,
-      endDate: 1557676799999,
-      effectType: 1,
-      accountType: 'ads'
-    }
-    try {
-      const { data } = await effectStatistics({ ...query })
-      this.collectionData = {
-        param1: data.advertAmount,
-        param2: data.coverPeople,
-        param3: 1012345343436,
-      }
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
-  radioChangeHandler0(val: string) {
-    const i: number = this.key2Index(this.chartsType, val)
-    this.chartData0.name = this.chartsType[i].name
-    if ( !this.chartData0.dataList[val] || this.chartData0.dataList[val].length < 1 ) {
-      this.getChartsData(0, i)
-    }
-  }
-  radioChangeHandler1(val: string) {
-    const i: number = this.key2Index(this.chartsType, val)
-    this.chartData1.name = this.chartsType[i].name
-    if ( !this.chartData1.dataList[val] || this.chartData1.dataList[val].length < 1 ) {
-      this.getChartsData(1, i)
-    }
-  }
-  radioChangeHandler2(val: string) {
-    const i: number = this.key2Index(this.chartsType, val)
-    this.chartData2.name = this.chartsType[i].name
-    if ( !this.chartData2.dataList[val] || this.chartData2.dataList[val].length < 1 ) {
-      this.getChartsData(2, i)
-    }
-  }
-  key2Index( obj: any, val: string ): number {
-    let i: any = null
-    obj.forEach((item: any, index: number) => {
-      if (item.key === val) {
-        i = index
-      }
-    })
-    return i
+
+  @Watch('xadvertOrderId')
+  watchId(value: number|string) {
+    this.getChartsData('', 0)
   }
 }
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-.layout-panel {
-  padding-top: 30px;
+.search-pane {
+  margin: 20px 0;
+  width: 40%;
 }
-.ivu-form-item {
-  padding-left: 30px;
-  color: @c-text;
-}
-/deep/ .ivu-input-icon {
-  line-height: 40px;
-  height: 40px;
-}
-.search {
-  width: 140px;
-  height: 40px;
-  border-radius: 2px;
-  color: #fff;
-  margin-left: 30px;
-  background: @c-button;
-}
-.radio-item-type {
-  font-size: 14px;
-  margin-top: 4px;
-  .ivu-radio-wrapper {
-    font-size: 14px;
-    margin-right: 35px;
-  }
-}
-/deep/ .ivu-select-input {
-  height: 40px;
-  line-height: 40px;
-}
-
-.data-list {
-  background: #fff;
-  box-sizing: border-box;
-  .data-one {
-    height: 35px;
-    line-height: 35px;
-    color: #fff;
-    padding-left: 10px;
-    font-size: 13px;
-  }
-  .data-two {
-    height: 65px;
-    line-height: 65px;
-    padding-left: 10px;
-    font-size: 25px;
-  }
-}
-.one {
-  border: 2px solid #9a9bfc;
-  .data-one {
-    background: #9a9bfc;
-  }
-  .data-two {
-    color: #9a9bfc;
-  }
-}
-.two {
-  border: 2px solid #64caff;
-  .data-one {
-    background: #64caff;
-  }
-  .data-two {
-    color: #64caff;
-  }
-}
-.three {
-  border: 2px solid #41d9c1;
-  .data-one {
-    background: #41d9c1;
-  }
-  .data-two {
-    color: #41d9c1;
-  }
-}
-.loading-cover {
-  padding: 50px;
-  text-align: center;
-}
-.collection-wp {
-  padding-right: 20px;
+.echarts-box {
+  margin-bottom: 20px;
 }
 </style>
 

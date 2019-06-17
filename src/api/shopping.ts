@@ -62,3 +62,53 @@ export async function brandsList(data: any) {
   const res = await get('/brand/brands', data)
   return res
 }
+
+/**
+ * @param
+ * 草稿状态
+ */
+
+export async function ordersdradt(orderId: any) {
+  const res = await get(`/kol/orders/draft/${orderId}`)
+  return res
+}
+
+/**
+ * @param
+ * 编辑草稿状态
+ */
+
+export async function putadver(query: any) {
+  const res = await put(`/kol/orders`, query)
+  return res
+}
+
+/**
+ * @param
+ * 获取kol的销售价格(根据不同任务类型)
+ */
+
+export async function kolprice(query: any) {
+  const res = await get(`/kol/orders/getKolPrice`, query)
+  return res
+}
+
+/**
+ * @param
+ * 创建产品
+ */
+
+export async function addBrand(query: any) {
+  const res = await post(`/brand/products`, query)
+  return res
+}
+
+/**
+ * @param
+ * 创建订单
+ */
+
+export async function addorders(query: any) {
+  const res = await post(`/kol/orders`, query)
+  return res
+}

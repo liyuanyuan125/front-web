@@ -48,7 +48,7 @@
             </RadioGroup>
           </FormItem>
         </div>
-        
+
         <div class="acount-box">
           <div class="acount">
             <span @click="allcollects(1)" :class="acount == 1 ? 'active' : ''">
@@ -69,8 +69,8 @@
         <Table width="1130px" :loading="loading" @on-sort-change="sortTable" :columns="columns" :data="tabledata">
           <template slot-scope="{ row }" slot="name">
             <div class="table-name">
-              <div class="to-detail" @click="$router.push({name: 'kol-figure', params: {id: row.kolId}})">
-                <img :src="row.image" alt=""> 
+              <div class="to-detail" @click="$router.push({ name: 'kol-figure', params: { id: row.kolId, channel: row.channelCode }})">
+                <img :src="row.image" alt="">
                  <span>{{row.name}}</span>
               </div>
             </div>

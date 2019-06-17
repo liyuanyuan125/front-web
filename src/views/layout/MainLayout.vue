@@ -624,4 +624,9 @@ export default class MainLayout extends ViewBase {
   padding: 10px 10px 10px 130px;
   overflow: auto;
 }
+
+// TODO: 临时隐藏
+.menu-item-report {
+  display: none;
+}
 </style>

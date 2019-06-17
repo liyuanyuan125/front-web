@@ -92,6 +92,7 @@ import PiePane from './components/piePane.vue'
 import HotPane from './components/hotPane.vue'
 import OpusPane from './components/opusPane.vue'
 import OfferPane from './components/offerPane.vue'
+import { getKol } from './data'
 
 @Component({
   components: {
@@ -219,6 +220,19 @@ export default class FigurePage extends ViewBase {
   hotFormatter([{ dataIndex }]: any) {
     const { value, rank } = this.hotData[dataIndex]
     return `综合热度：${value}<br>男演员排名：${rank}`
+  }
+
+  created() {
+    this.init()
+  }
+
+  init() {
+    this.initBasic()
+  }
+
+  async initBasic() {
+    const data = await getKol(this.id)
+    debugger
   }
 }
 </script>

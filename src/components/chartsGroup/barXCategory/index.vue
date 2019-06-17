@@ -11,7 +11,8 @@
         </Tooltip>
       </div>
       <RadioGroup size="small"
-                  v-if="dict1.length > 0"
+                  class="nav"
+                  v-if="dict1.length > 0 && initDone"
                   @on-change='currentTypeChange'
                   v-model="currentIndex"
                   type="button">
@@ -24,12 +25,14 @@
          justify="center"
          align="middle">
       <Col :span="24">
-        <div ref="refChart"
+      <div ref="refChart"
            v-if="initDone"
            :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
-        <div v-else class='loading-wp' :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
-            <TinyLoading  />
-        </div>
+      <div v-else
+           class='loading-wp'
+           :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
+        <TinyLoading />
+      </div>
       </Col>
     </Row>
   </div>
@@ -41,8 +44,8 @@ import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
 import { tooltipStyles } from '@/util/echarts'
 const tooltipsDefault = tooltipStyles({
-    trigger:  'item',
-    formatter:  '{b} <br/> {c}'
+  trigger: 'item',
+  formatter: '{b} <br/> {c}'
 })
 import {
   pubOption,
@@ -92,15 +95,21 @@ export default class BarXCategory extends ViewBase {
     const option: any = {
       color: this.color,
       ...pubOption,
-      tooltip : this.toolTip,
+      tooltip: this.toolTip,
       xAxis: {
-        ...xOption,
+        axisLine: {
+          lineStyle: {
+            color: '#fff'
+          }
+        },
+        axisTick: {
+          show: false
+        },
         data: this.dict3.map((item: any) => {
           return item.text
         })
       },
       yAxis: {
-        ...dottedLineStyle,
         ...yOption
       },
       series: chartData
@@ -126,3 +135,49 @@ export default class BarXCategory extends ViewBase {
   }
 }
 </script>
+
+<style lang="less" scoped>
+@import '~@/site/lib.less';
+/deep/ .ivu-radio-group {
+  .ivu-radio-wrapper {
+    background: none;
+    border: none;
+    box-shadow: none !important;
+    color: #cdd0d3;
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+  /deep/ .ivu-radio-wrapper-checked {
+    color: #fff;
+    border-bottom: 2px solid #fff;
+    .ivu-radio-inner {
+      display: none;
+    }
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+}
+.nav {
+  .ivu-radio-wrapper {
+    height: 60px;
+    padding: 0;
+    line-height: 60px;
+    margin: 0 10px;
+    border-radius: 0 !important;
+  }
+  .ivu-radio-wrapper-checked {
+    color: #fff;
+    border-bottom: 2px solid #fff;
+  }
+}
+.loading-wp {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+}
+</style>

@@ -29,7 +29,7 @@ export default class App extends ViewBase {
     {name: '微信', id: 'weixin', url: weixin},
     {name: '抖音', id: 'douyin', url: douyin},
     {name: '快手', id: 'kuaishou', url: kuaisou},
-    {name: '小红书', id: 'xiaohonghsu', url: xiaohongshu},
+    // {name: '小红书', id: 'xiaohonghsu', url: xiaohongshu},
   ]
   step = this.value
 

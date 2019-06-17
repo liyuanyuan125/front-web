@@ -62,7 +62,7 @@ export default class SearchPage extends ViewBase {
 
   list: any[] = []
 
-  suggest = '影视剧《阿拉丁》'
+  suggest = ''
 
   async fetch() {
     if (this.loading) {

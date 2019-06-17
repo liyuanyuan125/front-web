@@ -17,7 +17,7 @@
         <li>
           <h6>支出金额</h6>
           <p>
-            <numAdd :addNum="data.item2"></numAdd>
+            ¥ <numAdd :addNum="data.item2"></numAdd>
           </p>
         </li>
       </ul>
