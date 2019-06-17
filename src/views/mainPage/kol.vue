@@ -38,13 +38,13 @@
             title="粉丝画像"
             :man="fansMan"
             :woman="fansWoman"
-            :more="{ name: 'home' }"
+            :more="{ name: 'kol-detail-fans', params: {id} }"
             tip="与奔驰用户匹配度：72%"
             class="fans-pane"
           />
           <PiePane
             title="近7日评论分析"
-            :more="{ name: 'home' }"
+            :more="{ name: 'kol-detail-comment', params: {id} }"
             :data="commentData"
             class="comment-pane"
           />
@@ -54,7 +54,7 @@
           <HotPane
             title="近30日微博指数"
             :data="hotData"
-            :more="{ name: 'home' }"
+            :more="{ name: 'kol-detail-platform', params: {id} }"
             tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
             :formatter="hotFormatter"
             class="hot-pane"

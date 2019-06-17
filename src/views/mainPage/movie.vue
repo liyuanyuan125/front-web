@@ -10,7 +10,11 @@
       ></div>
 
       <div class="basic-box">
-        <BasicPane :item="basic" :movie="movie" :actorData="actorData" :more="{ name: 'home' }">
+        <BasicPane :item="basic" :movie="movie" :actorData="actorData" 
+        :more="{ name: 'home' }"
+        :moviePerson="{name: 'film-figure', params: {id}}"
+        :movieInfor="{name: 'film-detail-information', params: {id}}"
+        >
           <router-link
             :to="{
               name: 'film-filmorder-addmovielist',
@@ -20,28 +24,25 @@
           >立即申请</router-link>
         </BasicPane>
       </div>
-
       <section class="board-pane">
         <div class="board-row flex-box">
           <FansPane
             title="想看用户画像"
             :man="fansMan"
             :woman="fansWoman"
-            :more="{ name: 'home' }"
+            :more="{ name: 'film-detail-fans', params: {id} }"
             tip="与奔驰用户匹配度：72%"
             class="fans-pane"
           />
           <div class="pane-group">
             <TextPane
               title="今日实时票房"
-              :more="{ name: 'home' }"
               :main="boxOfficeToday.main"
               :sub="boxOfficeToday.sub"
               class="box-office-today"
             />
             <TextPane
               title="累计票房"
-              :more="{ name: 'home' }"
               :main="boxOfficeTotal.main"
               class="box-office-total"
             />
@@ -52,7 +53,7 @@
           <BarPane
             title="近7日新增想看人数"
             :data="activeFansData"
-            :more="{ name: 'home' }"
+            :more="{ name: 'film-detail-trend', params: {id} }"
             class="active-fans-pane"
           />
         </div>
@@ -61,7 +62,7 @@
           <HotPane
             title="全网热度"
             :data="hotData"
-            :more="{ name: 'home' }"
+            :more="{ name: 'film-detail-hot', params: {id} }"
             tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
             :legendList="legendList"
             :formatter="hotFormatter"
