@@ -95,7 +95,7 @@
       >
         <h4 class="zone-head flex-box">
           <em class="flex-1">演员阵容：<Star :value="actorData.star" readonly/></em>
-          <router-link :to="moviePerson">更多 &gt;</router-link>
+          <router-link :to="actorData.more">更多 &gt;</router-link>
         </h4>
         <ul class="actor-list">
           <li
@@ -106,20 +106,19 @@
             <img :src="it.avatar" class="actor-img" :title="it.name">
           </li>
         </ul>
-        <router-link :to="movieInfor" class="button-more" v-if="movieInfor">更多资料</router-link>
       </div>
 
       <div
         class="zone brand-zone"
-        v-if="brandList && brandList.length > 0"
+        v-if="brandData"
       >
         <h4 class="brand-head flex-box">
           <em class="flex-1">合作过的品牌</em>
-          <router-link :to="brand" v-if="brand">更多 &gt;</router-link>
+          <router-link :to="brandData.more" v-if="brandData.more">更多 &gt;</router-link>
         </h4>
         <ul class="brand-list">
           <li
-            v-for="(it, i) in brandList"
+            v-for="(it, i) in brandData.list"
             :key="i"
             class="brand-item"
           >
@@ -128,7 +127,7 @@
         </ul>
       </div>
 
-      <!-- <router-link :to="more" class="button-more" v-if="more">更多资料</router-link> -->
+      <router-link :to="more" class="button-more" v-if="more">更多资料</router-link>
     </div>
 
     <img :src="item.figure" class="figure" v-if="item.figure">
@@ -176,6 +175,12 @@ export interface Actor {
 export interface ActorData {
   star?: number
   list?: Actor[]
+  more?: RawLocation
+}
+
+export interface BrandData {
+  list?: Brand[]
+  more?: RawLocation
 }
 
 export interface Item {
@@ -201,15 +206,9 @@ export default class BasicPane extends Vue {
 
   @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
 
-  @Prop({ type: [ Object, String ], default: null }) brand!: RawLocation
-
-  @Prop({ type: [ Object, String ], default: null }) moviePerson!: RawLocation
-
-  @Prop({ type: [ Object, String ], default: null }) movieInfor!: RawLocation
-
   @Prop({ type: Array, default: () => [] }) opusList!: Opus[]
 
-  @Prop({ type: Array, default: () => [] }) brandList!: Brand[]
+  @Prop({ type: Object, default: null }) brandData!: BrandData
 
   @Prop({ type: Array, default: () => [] }) platformList!: Platform[]
 

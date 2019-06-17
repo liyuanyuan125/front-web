@@ -13,9 +13,8 @@
         <BasicPane
           :item="basic"
           :more="{ name: 'kol-detail-platform', params: { id } }"
-          :brand="{name: 'kol-detail-brand', params: { id }}"
+          :brandData="brandData"
           :platformList="platformList"
-          :brandList="brandList"
         />
       </div>
 
@@ -155,11 +154,17 @@ export default class FigurePage extends ViewBase {
     { icon: 'xiaohongshu', name: '小红书' },
   ]
 
-  brandList = [
-    { logo: 'https://dummyimage.com/60x60/000/fff' },
-    { logo: 'https://dummyimage.com/60x60/fff/000' },
-    { logo: 'https://dummyimage.com/60x60/e2e/fff' },
-  ]
+  brandData = {
+    list: [
+      { logo: 'https://dummyimage.com/60x60/000/fff' },
+      { logo: 'https://dummyimage.com/60x60/fff/000' },
+      { logo: 'https://dummyimage.com/60x60/e2e/fff' },
+    ],
+    more: {
+      name: 'kol-detail-brand',
+      params: { id: this.id }
+    }
+  }
 
   commentData = [
     { name: '正面', value: 80, color: '#ca7273' },
@@ -239,7 +244,6 @@ export default class FigurePage extends ViewBase {
       id: this.id,
       channel: this.platformNav
     })
-    debugger
   }
 }
 </script>
