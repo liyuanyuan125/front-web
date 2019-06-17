@@ -95,7 +95,7 @@
       >
         <h4 class="zone-head flex-box">
           <em class="flex-1">演员阵容：<Star :value="actorData.star" readonly/></em>
-          <router-link :to="moviePerson">更多 &gt;</router-link>
+          <router-link :to="{}">更多 &gt;</router-link>
         </h4>
         <ul class="actor-list">
           <li
@@ -106,7 +106,7 @@
             <img :src="it.avatar" class="actor-img" :title="it.name">
           </li>
         </ul>
-        <router-link :to="movieInfor" class="button-more" v-if="movieInfor">更多资料</router-link>
+        <router-link :to="more" class="button-more" v-if="more">更多资料xxx'</router-link>
       </div>
 
       <div
@@ -202,10 +202,6 @@ export default class BasicPane extends Vue {
   @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
 
   @Prop({ type: [ Object, String ], default: null }) brand!: RawLocation
-
-  @Prop({ type: [ Object, String ], default: null }) moviePerson!: RawLocation
-
-  @Prop({ type: [ Object, String ], default: null }) movieInfor!: RawLocation
 
   @Prop({ type: Array, default: () => [] }) opusList!: Opus[]
 

@@ -1110,65 +1110,154 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       ...emptyAuth,
     },
     props: idProps,
-    children: []
+    children: [
+      // 影人详情页 - 作品列表
+      {
+        path: 'works',
+        name: 'film-figure-detail-works',
+        component: () => import('./views/film/figure/detail/works.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '作品列表'
+        },
+        props: idProps,
+      },
+      // 影人详情 - 合作品牌
+      {
+        path: 'brand',
+        name: 'film-figure-detail-brand',
+        component: () => import('./views/film/figure/detail/brand.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '合作品牌'
+        },
+        props: idProps,
+      },
+      // 影人详情 - 更多资料
+      {
+        path: 'information',
+        name: 'film-figure-detail-information',
+        component: () => import('./views/film/figure/detail/information.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '更多资料'
+        },
+        props: idProps,
+      },
+      // 影人详情 - 粉丝画像
+      {
+        path: 'fans',
+        name: 'film-figure-detail-fans',
+        component: () => import('./views/film/figure/detail/fans.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '粉丝画像'
+        },
+        props: idProps,
+      },
+      // 影人详情 - 粉丝画像 - 受众匹配
+      {
+        path: 'matching/:id',
+        name: 'film-figure-detail-matching',
+        component: () => import('./views/film/figure/detail/matching.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '粉丝画像'
+        },
+        props: idProps,
+      },
+      // 影人详情 - 口碑评论
+      {
+        path: 'comment',
+        name: 'film-figure-detail-comment',
+        component: () => import('./views/film/figure/detail/comment.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '口碑评论'
+        },
+        props: idProps,
+      },
+      // 影人详情 - 全网热度
+      {
+        path: 'hot',
+        name: 'film-figure-detail-hot',
+        component: () => import('./views/film/figure/detail/hot.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '全网热度'
+        },
+        props: idProps,
+      },
+      // 影人详情 -  平台运营
+      {
+        path: 'platform',
+        name: 'film-figure-detail-platform',
+        component: () => import('./views/film/figure/detail/platform.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '平台运营'
+        },
+        props: idProps,
+      },
+    ]
   },
 
   // 影人 - 详情 - 更多页 - 评论
-  {
-    path: '/figure/detailMoreInfo/comment/:id',
-    name: 'figure-detailMoreInfo-comment',
-    component: () => import('./views/film/figure/detailMoreInfo/comment.vue'),
-    meta: emptyAuth
-  },
+  // {
+  //   path: '/figure/detailMoreInfo/comment/:id',
+  //   name: 'figure-detailMoreInfo-comment',
+  //   component: () => import('./views/film/figure/detailMoreInfo/comment.vue'),
+  //   meta: emptyAuth
+  // },
 
   // 影人 - 影人详情更多页 - 粉丝画像
-  {
-    path: '/figure/detailMoreInfo/fans/:id',
-    name: 'figure-detailMoreInfo-fans',
-    component: () => import('./views/film/figure/detailMoreInfo/fans.vue'),
-    meta: emptyAuth
-  },
+  // {
+  //   path: '/figure/detailMoreInfo/fans/:id',
+  //   name: 'figure-detailMoreInfo-fans',
+  //   component: () => import('./views/film/figure/detailMoreInfo/fans.vue'),
+  //   meta: emptyAuth
+  // },
   // 影人 - 影人详情更多页 - 粉丝画像 受众匹配
-  {
-    path: '/figure/detailMoreInfo/matching/:id',
-    name: 'figure-detailMoreInfo-matching',
-    component: () => import('./views/film/figure/detailMoreInfo/matching.vue'),
-    meta: emptyAuth
-  },
+  // {
+  //   path: '/figure/detailMoreInfo/matching/:id',
+  //   name: 'figure-detailMoreInfo-matching',
+  //   component: () => import('./views/film/figure/detailMoreInfo/matching.vue'),
+  //   meta: emptyAuth
+  // },
   // 影人（film）- 影人更多详情 - 合作品牌
-  {
-    path: '/film/filmmakerdetail/cobrand',
-    name: 'film-filmmakerdetail-cobrand',
-    component: () => import('./views/film/filmmakerDetails/coBrand.vue'),
-    meta: {
-      title: '合作品牌',
-      authKey: '',
-      authAction: '',
-    }
-  },
+  // {
+  //   path: '/film/filmmakerdetail/cobrand',
+  //   name: 'film-filmmakerdetail-cobrand',
+  //   component: () => import('./views/film/filmmakerDetails/coBrand.vue'),
+  //   meta: {
+  //     title: '合作品牌',
+  //     authKey: '',
+  //     authAction: '',
+  //   }
+  // },
   // 影人 - 影人更多详情 - 主要作品
-  {
-    path: '/film/filmmakerdetail/masterwork',
-    name: 'film-filmmakerdetail-masterwork',
-    component: () => import('./views/film/filmmakerDetails/masterWork.vue'),
-    meta: {
-      title: '主要作品',
-      authKey: '',
-      authAction: '',
-    }
-  },
+  // {
+  //   path: '/film/filmmakerdetail/masterwork',
+  //   name: 'film-filmmakerdetail-masterwork',
+  //   component: () => import('./views/film/filmmakerDetails/masterWork.vue'),
+  //   meta: {
+  //     title: '主要作品',
+  //     authKey: '',
+  //     authAction: '',
+  //   }
+  // },
   // 影人 - 影人更多详情 - 更多资料
-  {
-    path: '/film/filmmakerdetail/moreinformation',
-    name: 'film-filmmakerdetail-moreinformation',
-    component: () => import('./views/film/filmmakerDetails/moreInformation.vue'),
-    meta: {
-      title: '更多资料',
-      authKey: '',
-      authAction: '',
-    },
-    props: idProps,
-  },
+  // {
+  //   path: '/film/filmmakerdetail/moreinformation',
+  //   name: 'film-filmmakerdetail-moreinformation',
+  //   component: () => import('./views/film/filmmakerDetails/moreInformation.vue'),
+  //   meta: {
+  //     title: '更多资料',
+  //     authKey: '',
+  //     authAction: '',
+  //   },
+  //   props: idProps,
+  // },
 
   // 影片详情 - 影片详情更多页 - 主创阵容
   // {

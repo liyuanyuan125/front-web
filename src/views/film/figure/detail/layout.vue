@@ -20,14 +20,14 @@ export default class Layout extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
   routeList: RouteItem[] = [
-    { title: '概况', route: 'film-movie' },
-    { title: '作品列表', route: 'film-detail-creator' },
-    { title: '合作品牌', route: 'film-detail-information' },
-    { title: '更多资料', route: 'film-detail-fans' },
-    { title: '粉丝画像', route: 'film-detail-trend' },
-    { title: '口碑评论', route: 'film-detail-hot' },
-    { title: '全网热度', route: 'film-detail-hot' },
-    { title: '平台运营', route: 'film-detail-hot' },
+    { title: '概况', route: 'film-figure' },
+    { title: '作品列表', route: 'film-figure-detail-works' },
+    { title: '合作品牌', route: 'film-figure-detail-brand' },
+    { title: '更多资料', route: 'film-figure-detail-information' },
+    { title: '粉丝画像', route: 'film-figure-detail-fans' },
+    { title: '口碑评论', route: 'film-figure-detail-comment' },
+    { title: '全网热度', route: 'film-figure-detail-hot' },
+    { title: '平台运营', route: 'film-figure-detail-platform' },
   ]
 
   name = 'Papi酱'
