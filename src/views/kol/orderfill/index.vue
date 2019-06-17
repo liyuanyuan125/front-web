@@ -98,7 +98,7 @@
         </template>
         <template style="marin-top: 100px" slot-scope="{ row }" slot="content">
           <div v-if="row.orderItemList">
-            <p>{{row.orderItemList.summary}}</p>
+            <p>{{row.orderItemList.content}}</p>
           </div>
           <div v-else>
             <span>待设置</span>
@@ -123,7 +123,7 @@
 
       <div class="create">
         <span>
-          <Checkbox :disabled="tableDate.length > 0" @click="handleSelectAll" v-model="checkboxAll">全选</Checkbox>
+          <Checkbox :disabled="tableDate.length == 0" @click.native="handleSelectAll" v-model="checkboxAll">全选</Checkbox>
           <span v-if="tableDate.length > 0" style="cursor: pointer" @click="setall">批量设置任务</span>
         </span>
       </div>
@@ -151,7 +151,13 @@
 
 <script lang='ts'>
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { queryList, productsList, brandsList, ordersdradt, addBrand, addorders } from '@/api/shopping'
+import { queryList,
+  productsList,
+  brandsList,
+  ordersdradt,
+  addBrand,
+  addorders,
+  putadver } from '@/api/shopping'
 import { kolShoppingCar } from '@/api/kolList.ts'
 import ViewBase from '@/util/ViewBase'
 import { formatCurrency } from '@/fn/string'
@@ -162,7 +168,7 @@ import webo from './webo.vue'
 import { clean } from '@/fn/object.ts'
 import { uniqBy } from 'lodash'
 
-const timeFormat = 'YYYY-MM-DD SS:DD'
+const timeFormat = 'YYYY-MM-DD HH:mm'
 @Component({
   components: {
     wbDtail,
@@ -250,7 +256,9 @@ export default class Main extends ViewBase {
   get mongysum() {
     let money = 0
     this.tableDate.forEach((it: any) => {
-      money += Number(it.orderItemList ? it.totalFee : 0)
+      if (this.checkId.includes(it.index)) {
+        money += Number(it.orderItemList ? it.totalFee : 0)
+      }
     })
     return money
   }
@@ -321,10 +329,53 @@ export default class Main extends ViewBase {
       })
       this.products = items
       this.product = items
-      // this.tableDate = data.items
     } catch (ex) {
       this.handleError(ex)
     }
+  }
+
+  formatmsg(items: any) {
+    const type: any = this.$route.params.id
+        ? this.titles.findIndex((it: any) => it == this.$route.params.code)
+        : 0
+    switch (type) {
+      case 0:
+        this.tableDate = items.weiboList
+        break
+      case 1:
+        this.tableDate = items.weixinList
+        break
+      case 2:
+        this.tableDate = items.douyinList
+        break
+      case 3:
+        this.tableDate = items.kuaishouList
+        break
+      case 4:
+        this.tableDate = items.xiaohongshuList
+        break
+    }
+    this.tableDate = this.tableDate.map((it: any, index: number) => {
+      const orderItemList: any = it.publishCategoryCode ?  {
+          publishCategoryCode: it.publishCategoryCode ? it.publishCategoryCode : '',
+          pictureFileIds: it.pictureFileIds ? it.pictureFileIds : '',
+          publishTime: it.publishTime ? new Date(it.publishTime) : '',
+          content: it.content ? it.content : '',
+          title: it.title ? it.title : '',
+          provideProduct: it.provideProduct ? it.provideProduct : '',
+          summary: it.summary ? it.summary : '',
+          url: it.url ? it.url : '',
+      } : ''
+      const money = it.priceList.filter((item: any) => item.categoryCode == orderItemList.publishCategoryCode)[0].value
+      return clean({
+        ...it,
+        orderItemList,
+        totalFee: money,
+        _checked: true,
+        index
+      })
+    })
+    this.singleSelect(this.tableDate.filter((it: any) => it._checked))
   }
 
   remoteMethod() {
@@ -363,8 +414,8 @@ export default class Main extends ViewBase {
 
   async inits() {
     try {
-      const type: any = this.$route.params.id
-        ? this.title.findIndex((it: any) => it == this.$route.params.id)
+      const type: any = this.$route.params.code
+        ? this.titles.findIndex((it: any) => it == this.$route.params.code)
         : 0
       const { data } = await kolShoppingCar()
       switch (type) {
@@ -398,6 +449,11 @@ export default class Main extends ViewBase {
       if (this.$route.params.id) {
         const { data } = await ordersdradt(this.$route.params.id)
         this.loaddings = true
+        this.form.brandid = data.brandId
+        this.form.productId = data.productId
+        this.form.content = data.content
+        this.form.projectName = data.projectName
+        this.formatmsg(data)
       } else {
         this.tableDate = JSON.parse(sessionStorage.getItem('shopList') as any).map((it: any, index: any) => {
           return {
@@ -449,7 +505,6 @@ export default class Main extends ViewBase {
   }
 
   statusLists(it: any, id?: any) {
-    // console.log(it)
     if (it) {
       const msg: any = (this.statusList.filter(
         (its: any) => its.key == it.categoryCode
@@ -492,7 +547,7 @@ export default class Main extends ViewBase {
           const item = it.orderItemList
           const message = clean({
             ...item,
-            pictureFileIds: item.pictureFileIds.join(','),
+            pictureFileIds: item.pictureFileIds,
             publishTime: new Date(item.publishTime).getTime()
           })
           return {
@@ -514,14 +569,24 @@ export default class Main extends ViewBase {
         //   productId: this.prodId,
         //   orderItemList: msg
         // }))
-        await addorders({
+        const query = {
           ...this.form,
-          draft: 1,
+          draft: id ? id : '',
           channelCode: this.$route.params.code,
           totalFee: this.mongysum,
           productId: this.prodId,
           orderItemList: msg
-        })
+        }
+        if (this.$route.params.id) {
+          await putadver({
+            ...query,
+            orderId: this.$route.params.id
+          })
+        } else {
+          await addorders({
+            ...query
+          })
+        }
         this.$router.push({ name: 'kol-orderlist' })
       }
     } catch (ex) {
@@ -553,7 +618,7 @@ export default class Main extends ViewBase {
 
   @Watch('form.brandid', { immediate: true })
   watchFormBrandid(val: any) {
-    if (val) {
+    if (val || val == 0) {
       this.seachList()
     }
   }

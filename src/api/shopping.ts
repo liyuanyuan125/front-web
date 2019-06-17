@@ -75,6 +75,16 @@ export async function ordersdradt(orderId: any) {
 
 /**
  * @param
+ * 编辑草稿状态
+ */
+
+export async function putadver(query: any) {
+  const res = await put(`/kol/orders`, query)
+  return res
+}
+
+/**
+ * @param
  * 获取kol的销售价格(根据不同任务类型)
  */
 

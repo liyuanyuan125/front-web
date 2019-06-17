@@ -33,9 +33,9 @@
           </RadioGroup>
         </FormItem>
 
-        <FormItem label="原发内容" prop="summary">
+        <FormItem label="原发内容" prop="content">
           <Input
-            v-model="form.summary"
+            v-model="form.content"
             type="textarea"
             :autosize="{minRows: 4,maxRows: 10}"
             placeholder="请输入"
@@ -56,7 +56,7 @@
 
           <!-- <FormItem label="转发语" prop="name">
             <Input
-              v-model="form.summary"
+              v-model="form.content"
               type="textarea"
               :autosize="{minRows: 4,maxRows: 10}"
               placeholder="请输入"
@@ -93,7 +93,7 @@ export default class DlgEditCinema extends ViewBase {
   dataName = ''
   form: any = {
     pictureFileIds: [],
-    summary: '',
+    content: '',
     publishTime: '',
     publishCategoryCode: null,
     url: ''
@@ -121,7 +121,7 @@ export default class DlgEditCinema extends ViewBase {
       publishCategoryCode: [
         { required: true, message: '请选择投放类型', type: 'number', trigger: 'change' },
       ],
-      summary: [
+      content: [
         { required: true, message: '请输入原发内容', trigger: 'change' },
       ]
     }
@@ -139,7 +139,11 @@ export default class DlgEditCinema extends ViewBase {
     this.kolid = kolid
     this.showDlg = true
     if (orderItemList) {
-      this.form = {...orderItemList}
+      this.form.publishCategoryCode = Number(orderItemList.publishCategoryCode)
+      this.form.content = orderItemList.content || ''
+      this.form.pictureFileIds = orderItemList.pictureFileIds || []
+      this.form.publishTime = orderItemList.publishTime || ''
+      this.form.url = orderItemList.url
     }
   }
 
