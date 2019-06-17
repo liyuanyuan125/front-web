@@ -93,7 +93,7 @@ export default class Main extends ViewBase {
     } else {
       this.sumFlag = 0
       this.sumTitle = '展示全部'
-      this.actors = this.person.Actor.slice(0, 0)
+      this.actors = this.person.Actor.slice(0, 4)
     }
   }
 
@@ -102,7 +102,7 @@ export default class Main extends ViewBase {
       const { data } =  await mains(this.$route.params.id)
       this.itemlist = data
       this.person = data.personMap
-      this.actors = this.person.Actor.slice(0, 0)
+      this.actors = this.person.Actor.slice(0, 4)
       this.produced = this.person['Produced by']
     } catch {
 
