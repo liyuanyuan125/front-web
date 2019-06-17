@@ -1,27 +1,5 @@
 <template>
-  <div class="page">
-    <header class="search-header">
-      <h2 class="search-title">搜索 “{{query.keyword}}” 共找到 {{totalCount}} 个资源</h2>
-
-      <p class="search-suggest" v-if="suggest">
-        系统猜测您想找
-        <router-link
-          :to="{
-            name: 'search',
-            params: {
-              keyword: suggest,
-              type: typeOn
-            }
-          }"
-        >{{suggest}}</router-link>
-      </p>
-
-      <Tabs v-model="typeOn" class="search-type">
-        <TabPane v-for="it in typeList" :key="it.name" :name="it.name" :label="it.label"></TabPane>
-      </Tabs>
-    </header>
-
-    <main class="search-body"></main>
+  <div class="search-pane">
   </div>
 </template>
 
@@ -29,24 +7,11 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 
-// 搜索类型，分别为：影人、影片、kol
-type Type = 'figure' | 'film' | 'kol'
-
 @Component({
   components: {}
 })
-export default class SearchPage extends ViewBase {
+export default class FigurePane extends ViewBase {
   @Prop({ type: String, default: '' }) keyword!: string
-
-  @Prop({ type: String, default: 'figure' }) type!: Type
-
-  typeOn = this.type
-
-  typeList = [
-    { name: 'figure', label: '影人' },
-    { name: 'film', label: '影片' },
-    { name: 'kol', label: 'KOL' }
-  ]
 
   query = {
     keyword: this.keyword,
@@ -61,8 +26,6 @@ export default class SearchPage extends ViewBase {
   loading = true
 
   list: any[] = []
-
-  suggest = ''
 
   async fetch() {
     if (this.loading) {

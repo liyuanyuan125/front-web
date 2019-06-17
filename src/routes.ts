@@ -203,16 +203,29 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
 
   // 资源方 - 账户概览
+  // {
+  //   path: '/home/resoverview',
+  //   name: 'home-resoverview',
+  //   component: () => import('./views/home/resoverview/index.vue'),
+  //   meta: {
+  //     ...emptyAuth,
+  //     breadcrumbs: [{ label: '首页' }]
+  //   }
+  // },
+
+  // TODO: 临时解决方案
   {
     path: '/home/resoverview',
     name: 'home-resoverview',
-    component: () => import('./views/home/resoverview/index.vue'),
+    component: () => import('./views/resReport/info/index.vue'),
     meta: {
-      ...emptyAuth,
+      authKey: 'data-report',
+      authAction: 'EMPTY',
       breadcrumbs: [{ label: '首页' }]
     }
   },
 
+  // 搜索
   {
     path: '/search/:keyword/:type?',
     name: 'search',
@@ -668,8 +681,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
 
   // 资源方 - 效果报表 - 成效报表
-   {
-    path: '/reseport/info',
+  {
+    path: '/resreport/info',
     name: 'resreport-info',
     component: () => import('./views/resReport/info/index.vue'),
     meta: {

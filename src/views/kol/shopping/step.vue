@@ -8,7 +8,7 @@
         :key="index"
       >{{it.name}}</li>
     </ul>
-    <div :style="{transform: `translate3d(${width/5 * (step )}px, -2px, 0px)`}" class="active"></div>
+    <div :style="{transform: `translate3d(${width/4 * (step )}px, -2px, 0px)`}" class="active"></div>
   </div>
 </template>
 
@@ -23,8 +23,7 @@ export default class App extends ViewBase {
     { name: '微博', id: 0 },
     { name: '微信', id: 1 },
     { name: '抖音', id: 2 },
-    { name: '快手', id: 3 },
-    { name: '小红书', id: 4 }
+    { name: '快手', id: 3 }
   ]
   titles: any = ['weibo', 'wechat', 'douyin', 'kuaishou', 'xiaohonghsu']
   width: any = ''

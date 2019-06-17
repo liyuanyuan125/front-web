@@ -107,8 +107,8 @@ const serieData = ({
 })
 export default class ChartPane extends Vue {
   @Prop({ type: Array, default: () => [] }) data!: Array<{
-    name: string
-    cost: number
+    date: string
+    expend: number
     exposure: number
   }>
 
@@ -123,7 +123,7 @@ export default class ChartPane extends Vue {
 
       xAxis: {
         type: 'category',
-        data: (this.data || []).map(it => it.name),
+        data: (this.data || []).map(it => it.date),
         boundaryGap: false,
         axisLine: {
           lineStyle: {
@@ -181,7 +181,7 @@ export default class ChartPane extends Vue {
 
       series: [
         serieData({
-          data: (this.data || []).map(it => it.cost),
+          data: (this.data || []).map(it => it.expend),
           color1: 'rgba(0, 217, 251, 1)',
           color2: 'rgba(0, 217, 251, 0)',
           symbolSize: 0

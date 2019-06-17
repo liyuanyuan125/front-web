@@ -3,21 +3,24 @@
     <section class="summary-bar pane-like">
       <div class="summary-name">
         <h3 class="summary-title">{{item.name}}</h3>
-        <Button type="primary" :to="{}" class="button-manage">品牌管理</Button>
+        <Button type="primary" :to="{ name: 'brand-list' }" class="button-manage">品牌管理</Button>
       </div>
 
       <div class="summary-hot">
         <h3 class="summary-title">昨日综合热度</h3>
         <div class="hot-node">
-          <em class="hot-value">{{hot.value}}</em>
-          <i :class="`hot-${hot.inc > 0 ? 'inc' : 'dec'}`" v-if="hot.inc != 0">{{hot.inc}}</i>
+          <em class="hot-value">{{item.jyIndex}}</em>
+          <i
+            :class="`hot-${item.jyTrend > 0 ? 'inc' : 'dec'}`"
+            v-if="item.jyTrend != 0"
+          >{{item.jyTrend}}</i>
         </div>
-        <TrendChart :value="hot.list" class="hot-chart"/>
+        <TrendChart :value="trendList" class="hot-chart"/>
       </div>
 
       <div class="summary-count">
         <h3 class="summary-title">进行的推广计划</h3>
-        <div class="pop-count">{{popCount}}</div>
+        <div class="pop-count">{{item.planOnExecuteCount}}</div>
       </div>
     </section>
 
@@ -26,10 +29,10 @@
         <Pane title="百度搜索用户画像" :more="{}" class="baidu-pane">
           <ul class="baidu-list">
             <li class="baidu-item">
-              <em>{{baidu.man}}</em>%
+              <em>{{item.malePercent}}</em>%
             </li>
             <li class="baidu-item">
-              <em>{{baidu.woman}}</em>%
+              <em>{{item.femalePercent}}</em>%
             </li>
           </ul>
         </Pane>
@@ -37,18 +40,18 @@
         <Pane title="评论分析" :more="{}" class="analyze-pane">
           <div
             class="analyze-summary"
-            v-if="baidu.negativeInc != 0"
-          >负面占比{{baidu.negativeInc > 0 ? '上升' : '下降'}} {{Math.abs(baidu.negativeInc)}}%</div>
+            v-if="analyze.negativeTrend != 0"
+          >负面占比{{analyze.negativeTrend > 0 ? '上升' : '下降'}} {{Math.abs(analyze.negativeTrend)}}%</div>
 
           <ul class="analyze-list">
             <li class="analyze-item flex-mid">
-              <em>{{baidu.positive}}%</em>正面
+              <em>{{analyze.positive}}%</em>正面
             </li>
             <li class="analyze-item flex-mid">
-              <em>{{baidu.negative}}%</em>负面
+              <em>{{analyze.negative}}%</em>负面
             </li>
             <li class="analyze-item flex-mid">
-              <em>{{baidu.neutral}}%</em>中立
+              <em>{{analyze.neutral}}%</em>中立
             </li>
           </ul>
         </Pane>
@@ -56,11 +59,11 @@
 
       <div class="content-main">
         <figure class="item-figure flex-mid">
-          <img :src="item.figure || item.logo" class="item-img">
+          <img :src="item.figure || item.logoUrl" class="item-img">
         </figure>
 
         <nav class="sub-bar pane-like" v-if="type == 'brand'">
-          <label class="sub-name">{{subData.name}}</label>
+          <label class="sub-name">产　品</label>
           <div class="sub-main">
             <a
               class="sub-prev"
@@ -69,7 +72,7 @@
             >&lt;</a>
             <div class="sub-wrap" ref="subWrap">
               <ul class="sub-list">
-                <li v-for="it in subData.list" :key="it.id" class="sub-item">
+                <li v-for="it in subList" :key="it.id" class="sub-item">
                   <router-link
                     :to="{
                       name: 'brand-item',
@@ -162,14 +165,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Pane from './pane.vue'
 import TrendChart from '@/components/trendChart'
 import BScroll from '@better-scroll/core'
 import ThrowPane from './throwPane.vue'
 
-type Type = 'brand' | 'item'
+import { dayOffsetRange } from '@/util/date'
+import FetchData from './fetchData'
+import { Type } from './types'
 
 @Component({
   components: {
@@ -183,54 +188,28 @@ export default class BrandHomeLayout extends ViewBase {
 
   @Prop({ type: Number, default: 0 }) id!: number
 
-  item = {
-    name: '奥迪Q3',
-    logo: 'https://picsum.photos/id/259/350/220',
-    figure: 'https://picsum.photos/id/435/1920/1080'
-    // figure: 'https://picsum.photos/id/260/640/480',
-    // figure: 'https://picsum.photos/id/261/320/220',
-    // figure: 'https://picsum.photos/id/235/1080/1920',
-    // figure: 'https://picsum.photos/id/268/320/640',
+  get isBrand() {
+    return this.type == 'brand'
   }
+
+  get isItem() {
+    return this.type == 'item'
+  }
+
+  fetchData = new FetchData(this.type, this.id)
+
+  item = {}
 
   // 综合热度
-  hot = {
-    value: '6,789',
-    inc: -158,
-    list: [10, 18, 28, 16, 19, 32, 38]
-  }
+  trendList = []
 
-  // 进行的推广计划
-  popCount = 1
-
-  baidu = {
-    man: 58,
-    woman: 42,
-    negativeInc: 1.1,
-    positive: 66.6,
-    negative: 30,
-    neutral: 20
-  }
+  analyze = {}
 
   // 产品数据
-  subData = {
-    name: '车　型',
-    list: new Array(15).fill(1).map((it, i) => ({
-      id: i + 1,
-      name: `奥迪Audi X${i + 1}`
-    }))
-  }
+  subList = []
 
   // 广告投放数据
-  putting = [
-    { name: '1月', cost: 200000, exposure: 300000 },
-    { name: '2月', cost: 300000, exposure: 380000 },
-    { name: '4月', cost: 180000, exposure: 420000 },
-    { name: '5月', cost: 280000, exposure: 320000 },
-    { name: '8月', cost: 100000, exposure: 520000 },
-    { name: '10月', cost: 380000, exposure: 260000 },
-    { name: '12月', cost: 680000, exposure: 880000 }
-  ]
+  putting = []
 
   kol = {
     pendCount: 2,
@@ -274,6 +253,38 @@ export default class BrandHomeLayout extends ViewBase {
 
   bscrollOn = false
 
+  created() {
+    this.init()
+  }
+
+  init() {
+    this.initHome()
+    this.initTrend()
+    this.isBrand && this.initSub()
+    this.initPutting()
+  }
+
+  async initHome() {
+    const { item, analyze } = await this.fetchData.getHome()
+    this.item = item
+    this.analyze = analyze
+  }
+
+  async initTrend() {
+    const list = await this.fetchData.lastDaysIndex()
+    this.trendList = list
+  }
+
+  async initSub() {
+    const list = await this.fetchData.getSubList()
+    this.subList = list
+  }
+
+  async initPutting() {
+    const list = await this.fetchData.getTrack()
+    this.putting = list
+  }
+
   mounted() {
     const subWrap = this.$refs.subWrap as HTMLElement
     if (subWrap != null) {
@@ -281,7 +292,7 @@ export default class BrandHomeLayout extends ViewBase {
         scrollX: true,
         scrollY: false,
         click: true,
-        momentum: false,
+        momentum: false
       })
       this.$nextTick(() => {
         this.bscrollOn = this.bscroll!.hasHorizontalScroll
@@ -308,6 +319,13 @@ export default class BrandHomeLayout extends ViewBase {
     const xx = Math.min(Math.max(bs.x + dx, bs.maxScrollX), 0)
     const toX = xx + (isNext ? -58 : 58)
     bs.scrollTo(toX, 0, 300)
+  }
+
+  @Watch('type')
+  @Watch('id')
+  watchTypeAndId() {
+    this.fetchData = new FetchData(this.type, this.id)
+    this.init()
   }
 }
 </script>

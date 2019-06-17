@@ -69,6 +69,7 @@ const authKeyToMenuNameMap: MapType = {
   // 资源方
   'resource.index': 'home',
   'resource.adordermanage': 'order',
+  'resource.data-report': 'report',
   'resource.financemanage': 'resfinance',
   'resource.account-manage': 'account',
 }
