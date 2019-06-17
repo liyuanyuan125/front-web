@@ -2,23 +2,22 @@
   <div class="app">
      <div class="item-top" style="margin-top: 50px">
         <ul class="film-list" v-if="cinemaDetail.length > 0">
-          <li @click="checknum(it.id)" v-for="(it, index) in cinemaDetail" :key="index"
+          <li @click="checknum(it.personId)" v-for="(it, index) in cinemaDetail" :key="index"
             :class="['film-item']">
-            <div :class="!singleId(it.id) ? 'check' : 'check checkall'"></div>
+            <div :class="!singleId(it.personId) ? 'check' : 'check checkall'"></div>
             <div :class="['film-cover-box']">
-              <img :src="it.mainPicUrl" class="film-cover">
+              <img :src="it.logoUrl" class="film-cover">
               <div>
-                <div class="film-title">{{it.name}}</div>
+                <div class="film-title">{{it.name}} <span>{{it.jyIndex}}</span></div>
                 <div class="film-time" style="margin-top: 20px"><span>{{it.name}}</span></div>
-                <div class="film-time"><span>{{it.name}}</span></div>
-                <div class="film-time">上映时间：<span>{{formatDate(it.openTime)}}</span></div>
-                <div class="film-time">投放排期: <span>{{formatDate(it.openTime)}}</span></div>
+                <div class="film-time"><span>{{it.professions.join(' / ')}}</span></div>
+                <div class="film-time">代表作：<span>{{it.movieList.join(' / ')}}</span></div>
               </div>
             </div>
           </li>
         </ul>
     </div>
-    <Page :total="total" v-if="total>0" class="btnCenter"
+    <!-- <Page :total="total" v-if="total>0" class="btnCenter"
         :current="pageIndex"
         :page-size="pageSize"
         :page-size-opts="[6, 20, 50, 100]"
@@ -26,11 +25,11 @@
         show-sizer
         show-elevator
         @on-change="sizeChangeHandle"
-        @on-page-size-change="currentChangeHandle"/>
+        @on-page-size-change="currentChangeHandle"/> -->
     <div class="audit">
       <span @click='checkAll' :class="!single ? 'check' : 'check checkall'"></span>
       <span style="color: #444">全选</span>
-      <span style="color: #00202D; cursor: pointer;">取消收藏</span>
+      <span @click="del" style="color: #00202D; cursor: pointer;">取消收藏</span>
     </div>
   </div>
 </template>
@@ -40,6 +39,8 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getTwodetail, cinemaFilm } from '@/api/popPlan.ts'
 import moment from 'moment'
+import { getpersons, delcollect } from '@/api/mycollect.ts'
+import { info } from '@/ui/modal'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component
@@ -65,7 +66,7 @@ export default class App extends ViewBase {
   }
 
   check(data: any) {
-    const ids = this.cinemaDetail.map((it: any) => it.id)
+    const ids = this.cinemaDetail.map((it: any) => it.personId)
     const dataId = data.map((it: any) => it)
     const checkSingle: any = []
     data.forEach((item: any) => {
@@ -88,14 +89,32 @@ export default class App extends ViewBase {
   }
 
   checkAll() {
-    const ids = this.cinemaDetail.map((it: any) => it.id)
+    const ids = this.cinemaDetail.map((it: any) => it.personId)
     this.single = !this.single
     if (this.single) {
       this.check(ids)
+    } else {
+      this.check([])
     }
   }
 
-   // 每页数
+  async del() {
+    try {
+      if (this.checkId.length == 0) {
+        info('至少选择一个影片')
+      }
+      await delcollect({
+        channelType: 2,
+        dataIdList: this.checkId
+      })
+      this.init()
+      this.check([])
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  // 每页数
   sizeChangeHandle(val: any) {
     this.pageIndex = val
     this.init()
@@ -118,7 +137,7 @@ export default class App extends ViewBase {
 
   async init() {
     try {
-      const { data } = await cinemaFilm({})
+      const { data } = await getpersons()
       this.cinemaDetail = data.items || []
 
       const checkSingle: any = []
@@ -169,6 +188,9 @@ export default class App extends ViewBase {
       .film-time {
         margin-left: 20px;
         height: 24px;
+        span:empty::before {
+          content: '暂无';
+        }
       }
       img {
         margin-left: 30px;

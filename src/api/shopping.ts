@@ -95,7 +95,7 @@ export async function addBrand(query: any) {
 
 /**
  * @param
- * 创建产品
+ * 创建订单
  */
 
 export async function addorders(query: any) {
