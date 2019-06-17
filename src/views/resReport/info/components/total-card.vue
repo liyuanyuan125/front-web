@@ -3,21 +3,21 @@
     <div class="total-box">
       <ul>
         <li>
-          <h6>曝光人次</h6>
+          <h6>总播放场次</h6>
           <p>
-            <numAdd :addNum="data.item0"></numAdd>
+            <numAdd :addNum="data.showCountSum"></numAdd>场
           </p>
         </li>
         <li>
-          <h6>曝光场次</h6>
+          <h6>总覆盖人次</h6>
           <p>
-            <numAdd :addNum="data.item1"></numAdd>
+            <numAdd :addNum="data.personCountSum"></numAdd>
           </p>
         </li>
         <li>
-          <h6>支出金额</h6>
+          <h6>总收益</h6>
           <p>
-            ¥ <numAdd :addNum="data.item2"></numAdd>
+            ￥<numAdd :addNum="data.profitAmountSum"></numAdd>
           </p>
         </li>
       </ul>

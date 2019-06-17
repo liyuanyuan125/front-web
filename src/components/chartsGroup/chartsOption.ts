@@ -106,7 +106,7 @@ export const dottedLineStyle = {
 export const yOption = {
   axisLabel: {
     textStyle: {
-      color: '#CDD0D3'
+      color: '#cdd0d3'
     }
   },
   axisLine: {

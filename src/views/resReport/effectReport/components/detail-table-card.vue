@@ -106,16 +106,15 @@ export default class DetailTableCard extends Vue {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background: url('../assets/icon-1.png') no-repeat center center;
+  background: url('../assets/download.png') no-repeat center center;
   vertical-align: sub;
   background-size: 100% 100%;
   margin-right: 10px;
 }
 .table-box {
-  margin-bottom: 20px;
-  background: rgba(0, 32, 45, 0.8);
   border-radius: 5px;
   padding: 25px 0;
+  min-height: 260px;
   /deep/ .ivu-table th,
   /deep/ .ivu-table-header {
     background: rgba(0, 32, 45, 0.8);
