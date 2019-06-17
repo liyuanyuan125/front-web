@@ -1,6 +1,6 @@
 <template>
   <BaseDialog v-model="model" :width="810" @ok="onOk">
-    <CitySelectPane v-model="cityIdsModel" :topCityIds="topCityIds"/>
+    <CitySelectPane v-model="cityIdsModel" :topCityIds="topCityIds" ref="citySelectPane"/>
   </BaseDialog>
 </template>
 
@@ -36,6 +36,10 @@ export default class CitySelectDialog extends ViewBase {
   onOk() {
     this.$emit('update:cityIds', this.cityIdsModel)
     this.model = false
+
+    const pane = this.$refs.citySelectPane as CitySelectPane
+    const fastList = pane.fastList
+    this.$emit('ok', { fastList: JSON.parse(JSON.stringify(fastList)) })
   }
 
   @Watch('value')
