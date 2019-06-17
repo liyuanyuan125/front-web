@@ -815,14 +815,19 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // KOL - 概览
   {
-    path: '/kol/figure/:id',
+    path: '/kol/figure/:id/:channel',
     name: 'kol-figure',
     component: () => import('./views/mainPage/kol.vue'),
     meta: {
       ...emptyAuth,
       immersionHeader: true
     },
-    props: idProps,
+    props: ({ params: { id, channel } }: Route) => {
+      return {
+        id: +id,
+        channel,
+      }
+    },
   },
 
   // KOL - 更多详情
