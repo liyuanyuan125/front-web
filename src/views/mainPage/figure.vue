@@ -12,12 +12,9 @@
       <div class="basic-box">
         <BasicPane
           :item="basic"
-          :more="{ name: 'home' }"
-          :figureWorks="{name: 'film-figure-detail-works', params: {id}}"
-          :figureBrand="{name: 'film-figure-detail-brand', params: {id}}"
-          :figureInfor="{name: 'film-figure-detail-information', params: {id}}"
           :opusList="opusList"
-          :figureList="figureList"
+          :brandData="brandData"
+          :more="{ }"
         />
       </div>
 
@@ -27,12 +24,12 @@
             title="粉丝画像"
             :man="fansMan"
             :woman="fansWoman"
-            :more="{ name: 'film-figure-detail-fans', params: {id} }"
+            :more="{ }"
             class="fans-pane"
           />
           <PiePane
             title="近7日评论分析"
-            :more="{ name: 'film-figure-detail-comment', params: {id}}"
+            :more="{ }"
             :data="commentData"
             class="comment-pane"
           />
@@ -42,7 +39,7 @@
           <BarPane
             title="近7日活跃粉丝数"
             :data="activeFansData"
-            :more="{ name: 'film-figure-detail-platform', params: {id}}"
+            :more="{ }"
             class="active-fans-pane"
           />
         </div>
@@ -51,7 +48,7 @@
           <HotPane
             title="近30日全网热度"
             :data="hotData"
-            :more="{ name: 'film-figure-detail-hot', params: {id} }"
+            :more="{ }"
             tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
             :legendList="legendList"
             :formatter="hotFormatter"
@@ -117,11 +114,17 @@ export default class FigurePage extends ViewBase {
     { title: '《流浪地球》演员是', count: '16.8亿' },
   ]
 
-  figureList = [
-    { logo: 'https://dummyimage.com/60x60/000/fff' },
-    { logo: 'https://dummyimage.com/60x60/fff/000' },
-    { logo: 'https://dummyimage.com/60x60/e2e/fff' },
-  ]
+  brandData = {
+    list: [
+      { logo: 'https://dummyimage.com/60x60/000/fff' },
+      { logo: 'https://dummyimage.com/60x60/fff/000' },
+      { logo: 'https://dummyimage.com/60x60/e2e/fff' },
+    ],
+    more: {
+      // name: 'kol-detail-brand',
+      // params: { id: this.id }
+    }
+  }
 
   commentData = [
     { name: '正面', value: 80, color: '#ca7273' },
