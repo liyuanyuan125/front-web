@@ -29,9 +29,9 @@
        <Col span='20' class='fo-bos'>{{itemlist.releaseDate == null ? '暂无' : releaseDate}}</Col>
      </Row>
      <Row class='row-bo'>
-       <Col span='3' class='fo-bo'>制作 / 发行</Col>
+       <Col span='3' class='fo-bo'>制作hahah / 发行</Col>
        <Col span='20' class='fo-bos'><em v-if='itemlist.companyMap.Production.length == 0'>暂无制作</em> / <em v-if='itemlist.companyMap.Distributor.length == 0'>暂无发行</em>
-       <em v-if='itemlist.companyMap.Production.length > 0'>{{itemlist.companyMap.Production}}</em> / <em v-if='itemlist.companyMap.Distributor.length > 0'>{{itemlist.companyMap.Distributor}}</em></Col>
+       <em v-if='itemlist.companyMap.Production.length > 0' v-for='(items,index) in itemlist.companyMap.Production'>{{item.name}}</em> / <em v-if='itemlist.companyMap.Distributor.length > 0'>{{itemlist.companyMap.Distributor[0].name}}</em></Col>
      </Row>
    </div>
    <!-- 图片 -->

@@ -4,7 +4,7 @@
   	<div class='director '>
   		<Row class='title'>导演&nbsp;Director</Row>
   		<Row class='bai-w' v-for='(it,index) in person.Director' :key='index'>
-  			<Row  class='col-img'><img :src="it.headImg == null ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2431454871,3087430277&fm=27&gp=0.jpg' : it.headImg" alt=""></Row>
+  			<Row  class='col-img'><img :src="it.headImg == null ? 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg' : it.headImg" alt=""></Row>
   			<Row class='r-h'>
   				<Row class='de-ro'>{{it.name}}<br>{{it.nameEn}}</Row>
   				<Row class='de-ro-two'>导演 Director</Row>
@@ -18,7 +18,7 @@
   		<Row  class='title'>演员&nbsp;actor</Row>
   		<Row class='bai-w' v-for='(it,index) in actors' :key='index'>
   			<Row :span='2' class='col-img'>
-          <img :src="it.headImg == null ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2431454871,3087430277&fm=27&gp=0.jpg' : it.headImg" alt="">
+          <img :src="it.headImg == null ? 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg' : it.headImg" alt="">
           <span v-if='it.jyIndex'>{{it.jyIndex}}</span></Row>
   			<Row class='r-h'>
   				<Row class='de-ro'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
@@ -35,7 +35,7 @@
     <div class='director'>
       <Row  class='title'>编剧&nbsp;Writer</Row>
       <Row class='bai-w' v-for='(it,index) in person.Writer' :key='index'>
-        <Row :span='2' class='col-img'><img :src="it.headImg == null ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2431454871,3087430277&fm=27&gp=0.jpg' : it.headImg" alt=""></Row>
+        <Row :span='2' class='col-img'><img :src="it.headImg == null ? 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg' : it.headImg" alt=""></Row>
         <Row class='r-h'>
           <Row class='de-ro'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
           <Row class='de-ro-two'>编剧 Writer</Row>
@@ -48,7 +48,7 @@
     <div class='zhipian'>
       <Row  class='title'>制片人&nbsp;Producer</Row>
       <Row class='bai-w' v-for='(it,index) in produced' :key='index'>
-        <Row :span='2' class='col-img'><img :src="it.headImg == null ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2431454871,3087430277&fm=27&gp=0.jpg' : it.headImg" alt=""></Row>
+        <Row :span='2' class='col-img'><img :src="it.headImg == null ? 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg' : it.headImg" alt=""></Row>
         <Row class='r-h'>
           <Row class='de-ro'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
           <Row class='de-ro-two'>制片人 Producer</Row>
@@ -93,7 +93,7 @@ export default class Main extends ViewBase {
     } else {
       this.sumFlag = 0
       this.sumTitle = '展示全部'
-      this.actors = this.person.Actor.slice(0, 0)
+      this.actors = this.person.Actor.slice(0, 4)
     }
   }
 
@@ -102,7 +102,7 @@ export default class Main extends ViewBase {
       const { data } =  await mains(this.$route.params.id)
       this.itemlist = data
       this.person = data.personMap
-      this.actors = this.person.Actor.slice(0, 0)
+      this.actors = this.person.Actor.slice(0, 4)
       this.produced = this.person['Produced by']
     } catch {
 
