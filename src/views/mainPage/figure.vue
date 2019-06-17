@@ -12,7 +12,7 @@
       <div class="basic-box">
         <BasicPane
           :item="basic"
-          :opusList="opusList"
+          :opusData="opusData"
           :brandData="brandData"
           :more="{ }"
         />
@@ -108,11 +108,18 @@ export default class FigurePage extends ViewBase {
     '少林寺',
   ]
 
-  opusList = [
-    { title: '《流浪地球》演员是放松放松时发生地方', count: '46.8亿' },
-    { title: '《流浪地球》演员', count: '6.8亿' },
-    { title: '《流浪地球》演员是', count: '16.8亿' },
-  ]
+  opusData = {
+    list: [
+      { title: '《流浪地球》演员是放松放松时发生地方', count: '46.8亿' },
+      { title: '《流浪地球》演员', count: '6.8亿' },
+      { title: '《流浪地球》演员是', count: '16.8亿' },
+    ],
+    more: {
+      // name: 'kol-detail-brand',
+      // params: { id: this.id }
+    }
+  }
+
 
   brandData = {
     list: [
