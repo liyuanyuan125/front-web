@@ -8,7 +8,7 @@
             <a class="remove-link"
                href="javascript:;"
                @click='removeItemHandle'>
-              <Icon color='#ffffff'
+              <Icon color='#fff'
                     size='29'
                     type="md-remove-circle" /></a>
           </div>
@@ -25,7 +25,7 @@
                 <a class="remove-link"
                    href="javascript:;"
                    @click="removeItemHandle(item.id)">
-                  <Icon color='#ffffff'
+                  <Icon color='#fff'
                         size='29'
                         type="md-remove-circle" /></a>
               </div>
@@ -39,7 +39,7 @@
             <a class="remove-link"
                    href="javascript:;"
                    @click="addItemHandle">
-                  <Icon color='#ffffff'
+                  <Icon color='#fff'
                         size='50'
                         type="md-add-circle" /></a>
           </li>

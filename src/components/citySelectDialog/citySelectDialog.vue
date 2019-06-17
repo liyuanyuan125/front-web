@@ -1,6 +1,6 @@
 <template>
-  <BaseDialog v-model="model" :width="810">
-    <CitySelectPane v-model="cityIdsModel" :topCityIds="topCityIds"/>
+  <BaseDialog v-model="model" :width="810" @ok="onOk">
+    <CitySelectPane v-model="cityIdsModel" :topCityIds="topCityIds" ref="citySelectPane"/>
   </BaseDialog>
 </template>
 
@@ -33,23 +33,24 @@ export default class CitySelectDialog extends ViewBase {
 
   cityIdsModel: number[] = this.cityIds
 
+  onOk() {
+    this.$emit('update:cityIds', this.cityIdsModel)
+    this.model = false
+
+    const pane = this.$refs.citySelectPane as CitySelectPane
+    const fastList = pane.fastList
+    this.$emit('ok', { fastList: JSON.parse(JSON.stringify(fastList)) })
+  }
+
   @Watch('value')
   watchValue(value: boolean) {
     this.model = value
+    value && (this.cityIdsModel = this.cityIds)
   }
 
   @Watch('model')
   watchModel(value: boolean) {
     this.$emit('input', value)
-  }
-
-  toplist(val: any) {
-
-  }
-
-  @Watch('cityIdsModel')
-  watchCityIdsModel(value: number[]) {
-    this.$emit('update:cityIds', value)
   }
 }
 </script>

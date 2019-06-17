@@ -1,27 +1,29 @@
 <template>
   <div class="banner-wp">
-    <div class="banner-box">
+    <div class="banner-box flex-box">
+      <p>Effect Report</p>
       <h1>2019款WEY新车发布影院广告</h1>
-      <button class="show-more-link"
-              @click="selectPlan">查看其它计划</button>
+      <a href="javascript:;"
+         class="show-more-link"
+         @click="selectPlan">查看其它计划</a>
     </div>
     <div class="dsc-box">
       <div class="cell">
         <ul>
-          <li><i class="icon-1">1</i><span class="name">投放排期</span><span>{{data.item0}}</span></li>
-          <li><i class="icon-2">2</i><span class="name">投放周期</span><span>7天</span></li>
+          <li><i class="icon-1"></i><span class="name">投放排期</span><span>{{data.item0}}</span></li>
+          <li><i class="icon-4"></i><span class="name">投放周期</span><span>7天</span></li>
         </ul>
       </div>
       <div class="cell">
         <ul>
-          <li><i class="icon-1">1</i><span class="name">投放排期</span><span>2019-05-01 ～ 2019-05</span></li>
-          <li><i class="icon-2">2</i><span class="name">投放周期</span><span>7天</span></li>
+          <li><i class="icon-2"></i><span class="name">投放排期</span><span>2019-05-01 ～ 2019-05</span></li>
+          <li><i class="icon-5"></i><span class="name">投放周期</span><span>7天</span></li>
         </ul>
       </div>
       <div class="cell">
         <ul>
-          <li><i class="icon-1">1</i><span class="name">投放排期</span><span>2019-05-01 ～ 2019-05</span></li>
-          <li><i class="icon-2">2</i><span class="name">投放周期</span><span>7天</span></li>
+          <li><i class="icon-3"></i><span class="name">投放排期</span><span>2019-05-01 ～ 2019-05</span></li>
+          <li><i class="icon-6"></i><span class="name">投放周期</span><span>7天</span></li>
         </ul>
       </div>
     </div>
@@ -46,22 +48,35 @@ export default class BannerCard extends Vue {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 .banner-wp {
-  background: linear-gradient(91deg, rgba(91, 74, 119, 1) 0%, rgba(29, 88, 139, 1) 100%);
+  background: url('../assets/banner.png') top center no-repeat;
+  background-size: 100%;
+  min-height: 400px;
+  border-radius: 5px;
   .banner-box {
+    min-height: 280px;
+    flex-flow: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 50px 0 0 70px;
     h1 {
       font-size: 70px;
       color: #fff;
-      padding-left: 70px;
+    }
+    p {
+      font-size: 24px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 1);
+      line-height: 24px;
     }
     .show-more-link {
-      margin-left: 70px;
-      margin-bottom: 46px;
       width: 300px;
       height: 50px;
+      line-height: 50px;
       background: rgba(163, 213, 230, 1);
       border-radius: 25px;
       font-size: 18px;
       color: #00202d;
+      text-align: center;
     }
   }
   .dsc-box {
@@ -88,7 +103,7 @@ export default class BannerCard extends Vue {
             height: 20px;
             display: inline-block;
             margin-right: 10px;
-            background-repeat: none;
+            background-repeat: no-repeat;
             background-size: contain;
           }
           span.name {
@@ -100,22 +115,22 @@ export default class BannerCard extends Vue {
       }
     }
     i.icon-1 {
-      background-image: url('../assets/icon-1.png');
+      background-image: url('../assets/icon-a-1.png');
     }
     i.icon-2 {
-      background-image: url('../assets/icon-1.png');
+      background-image: url('../assets/icon-a-2.png');
     }
     i.icon-3 {
-      background-image: url('../assets/icon-1.png');
+      background-image: url('../assets/icon-a-3.png');
     }
     i.icon-4 {
-      background-image: url('../assets/icon-1.png');
+      background-image: url('../assets/icon-a-4.png');
     }
     i.icon-5 {
-      background-image: url('../assets/icon-1.png');
+      background-image: url('../assets/icon-a-5.png');
     }
     i.icon-6 {
-      background-image: url('../assets/icon-1.png');
+      background-image: url('../assets/icon-a-6.png');
     }
   }
 }
