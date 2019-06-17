@@ -26,15 +26,15 @@
 
       <div
         class="zone opus-zone effect-lightning"
-        v-if="opusList && opusList.length > 0"
+        v-if="opusData"
       >
         <h4 class="zone-head flex-box">
           <em class="flex-1">主要作品</em>
-          <router-link :to="{}">更多 &gt;</router-link>
+          <router-link :to="opusData.more" v-if="opusData.more">更多 &gt;</router-link>
         </h4>
         <ul class="opus-list">
           <li
-            v-for="(it, i) in opusList"
+            v-for="(it, i) in opusData.list"
             :key="i"
             class="opus-item flex-box">
             <label class="flex-1">{{it.title}}</label>
@@ -184,6 +184,11 @@ export interface BrandData {
   more?: RawLocation
 }
 
+export interface OpusData {
+  list?: Opus[]
+  more?: RawLocation
+}
+
 export interface Item {
   id: number
   name: string
@@ -207,9 +212,7 @@ export default class BasicPane extends Vue {
 
   @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
 
-  @Prop({ type: [ Object, String ], default: null }) brand!: RawLocation
-
-  @Prop({ type: Array, default: () => [] }) opusList!: Opus[]
+  @Prop({ type: Object, default: null }) opusData!: OpusData
 
   @Prop({ type: Object, default: null }) brandData!: BrandData
 
