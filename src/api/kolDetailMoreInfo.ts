@@ -115,10 +115,149 @@ export async function platformData(query: any) {
  * @description https://yapi.aiads-dev.com/project/146/interface/api/4533
  * @deprecated 缺少数据，重置日期 http://fapi.aiads-dev.com/kol/accounts/1/comments?beginDate=20170112&endDate=20191212
  */
-export async function comment(query: any, id: number = 0) {
+export async function comment(query: any, id: string = '0') {
   // const res = await get(`/kol/accounts/${id}/comments`, query)
   // const res = await get(`/kol/accounts/1/comments`, {beginDate: 20170112, endDate: 20191212, channelCode: 'weibo'})
   // return res
+  return await mockGet(query, {
+    item: {
+        totalCount: 54516,
+        rate: {
+            neutral: '33.33',
+            positive: '33.33',
+            passive: '33.33'
+        },
+        keywords: {
+            yesterday: {
+                positive: [
+                    '特效',
+                    '中国',
+                    '国产'
+                ],
+                passive: [
+                    '特效',
+                    '中国',
+                    '国产'
+                ]
+            },
+            ninetyDay: {
+                positive: [
+                    '特效',
+                    '中国',
+                    '国产'
+                ],
+                passive: [
+                    '特效',
+                    '中国',
+                    '国产'
+                ]
+            },
+            sevenDay: {
+                positive: [
+                    '特效',
+                    '中国',
+                    '国产'
+                ],
+                passive: [
+                    '特效',
+                    '中国',
+                    '国产'
+                ]
+            },
+            thirtyDay: {
+                positive: [
+                    '特效',
+                    '中国',
+                    '国产'
+                ],
+                passive: [
+                    '特效',
+                    '中国',
+                    '国产'
+                ]
+            }
+        },
+        dates: [
+            {
+                date: 20190101,
+                positive: {
+                    count: 18172,
+                    trend: 99
+                },
+                passive: {
+                    count: 18172,
+                    trend: 54
+                },
+                neutral: {
+                    count: 18172,
+                    trend: 23
+                }
+            },
+            {
+                date: 20190102,
+                positive: {
+                    count: 18172,
+                    trend: 11
+                },
+                passive: {
+                    count: 18172,
+                    trend: 8
+                },
+                neutral: {
+                    count: 18172,
+                    trend: 76
+                }
+            },
+            {
+                date: 20190103,
+                positive: {
+                    count: 18172,
+                    trend: 88
+                },
+                passive: {
+                    count: 18172,
+                    trend: 22
+                },
+                neutral: {
+                    count: 18172,
+                    trend: 33
+                }
+            }
+        ]
+    },
+    emotion: [
+        {
+            key: 'positive',
+            text: '正面'
+        },
+        {
+            key: 'passive',
+            text: '负面'
+        },
+        {
+            key: 'neutral',
+            text: '中性'
+        }
+    ],
+    dayRanges: [
+          {
+              key: 'yesterday',
+              text: '昨日'
+          },
+          {
+              key: 'sevenDay',
+              text: '最近7天'
+          },
+          {
+              key: 'thirtyDay',
+              text: '最近30天'
+          },
+          {
+              key: 'ninetyDay',
+              text: '最近90天'
+          }
+      ]
+  })
   return await mockGet(query, {
     rate: {
       neutral: tid,

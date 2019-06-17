@@ -679,6 +679,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     },
   },
 
+  // 广告主 - 效果报表
+  {
+    path: '/reseport/effect-report',
+    name: 'effect-report',
+    component: () => import('./views/resReport/effectReport/index.vue'),
+    meta: unauth,
+  },
+
   // TODO: 下面的两个先不做了
 
   // 资源方 - 财务管理 - 收益账单

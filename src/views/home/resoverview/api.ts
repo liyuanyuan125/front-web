@@ -50,7 +50,7 @@ export async function getStats() {
 
 const makeReportList = (list: any[], valueKey: string | ((item: any) => number)) => {
   return (list || []).map(it => ({
-    name: String(it.date).replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3'),
+    name: String(it.date),
     value: typeof valueKey == 'function' ? valueKey(it) : it[valueKey]
   }))
 }
@@ -61,7 +61,7 @@ const makeReportList = (list: any[], valueKey: string | ((item: any) => number))
  */
 export async function queryReport({
   beginDate = '',
-  endDate = ''
+  endDate = '',
 }: any) {
   const {
     data: {
@@ -69,13 +69,19 @@ export async function queryReport({
         playVideo,
         executeCinema,
         advertRevenue,
-        dataList,
     }
   } = await get('/xadvert/plans/effectStatistics', {
     accountType: 'resource',
     beginDate,
     endDate
   })
+  const dataList  = await get('/xadvert/plans/effect', {
+    effectType: 1,
+    accountType: 'resource',
+    beginDate,
+    endDate
+  })
+  const a = dataList.data.dataList
 
   const result = {
     legends: [
@@ -89,22 +95,22 @@ export async function queryReport({
       {
         title: '广告收益',
         // yAxisName: '金额 ¥',
-        list: makeReportList(dataList, 'executeScene')
+        list: makeReportList(a, 'data')
       },
 
       {
         title: '播放广告片数',
-        list: makeReportList(dataList, 'playVideo')
+        list: makeReportList(a, 'data')
       },
 
       {
         title: '执行影院数',
-        list: makeReportList(dataList, it => (it.cinemas || []).length)
+        list: makeReportList(a, 'data')
       },
 
       {
         title: '执行场次数',
-        list: makeReportList(dataList, 'advertRevenue')
+        list: makeReportList(a, 'data')
       },
     ]
   }

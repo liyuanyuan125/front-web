@@ -9,7 +9,7 @@ export async function queryList(query: any) {
   return res
 }
 
-// 根绝id查询/movie/{id}
+// 根绝id查询列表详情
 export async function itemlist(id: any) {
   const res = await get(`/movie/cooperation/${id}`)
   return res

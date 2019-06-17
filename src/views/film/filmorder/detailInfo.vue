@@ -17,8 +17,12 @@
        <Col span='20' class='fo-bos'>{{itemlist.languages == null ? '暂无' : itemlist.languages}}</Col>
      </Row>
      <Row class='row-bo'>
-       <Col span='3' class='fo-bo'>国家 / 地区</Col>
-       <Col span='20' class='fo-bos'>{{itemlist.languages == null ? '暂无' : itemlist.languages}}</Col>
+       <Col span='3' class='fo-bo'>国家 / 地区{{itemlist.companyMap.Production== [] ? '暂无制作' : itemlist.companyMap.Production}}</Col>
+       <Col span='20' class='fo-bos'>{{itemlist.countries == null ? '暂无' : itemlist.countries}}
+       <!-- <span v-for='(it,index) in itemlist.countryCodeList' :key='index'>
+         <em v-fot='(its,index) in itemlist.countries' v-if='its == it.key'>{{it.text}}</em>
+       </span> -->
+     </Col>
      </Row>
      <Row class='row-bo'>
        <Col span='3' class='fo-bo'>上映 / 发行日期</Col>
@@ -26,7 +30,8 @@
      </Row>
      <Row class='row-bo'>
        <Col span='3' class='fo-bo'>制作 / 发行</Col>
-       <Col span='20' class='fo-bos'>{{itemlist.languages == null ? '暂无' : itemlist.languages}}</Col>
+       <Col span='20' class='fo-bos'><em v-if='itemlist.companyMap.Production.length == 0'>暂无制作</em> / <em v-if='itemlist.companyMap.Distributor.length == 0'>暂无发行</em>
+       <em v-if='itemlist.companyMap.Production.length > 0'>{{itemlist.companyMap.Production}}</em> / <em v-if='itemlist.companyMap.Distributor.length > 0'>{{itemlist.companyMap.Distributor}}</em></Col>
      </Row>
    </div>
    <!-- 图片 -->

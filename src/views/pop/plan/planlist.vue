@@ -71,7 +71,7 @@
               ID: {{row.id}}
             </p>
             <div>
-              <img :src="row.mainPicUrl" width="90px" height="90px">
+              <img :src="row.videoLogo" :onerror="defaultImg" width="90px" height="90px">
               <div>
                 <h3>{{row.name}}</h3>
                 <span>{{row.videoName}}&nbsp;&nbsp;{{row.customerName}}&nbsp;&nbsp;{{row.specification||0 }}s</span>
@@ -214,6 +214,10 @@ export default class Plan extends ViewBase {
 
   async mounted() {
     this.tableList()
+  }
+
+  get defaultImg() {
+    return 'this.src="' + require('./assets/error.png') + '"'
   }
 
   async tableList() {

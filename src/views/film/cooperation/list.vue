@@ -131,15 +131,15 @@
         <Row :gutter="10" v-if="done" class="res-row">
           <Col span="4" v-for="(item, index) in dataList" :key="index" class="res-col">
             <div class="res-item">
-              <div class="poster" @click="$router.push({name: 'film-movie', params: {id: item.id}})">
-                <img :src="item.images">
+              <div class="poster" @click="$router.push({name: 'film-movie', params: {id: item.movieId}})">
+                <img :src="item.movieMainPic">
               </div>
-              <router-link :to="{id:item.id}" class="movtitle cut-text">{{item.title}}</router-link>
-              <p class="movscore">{{item.score}}</p>
+              <router-link :to="{id:item.movieId}" class="movtitle cut-text">{{item.movieName}}</router-link>
+              <!-- <p class="movscore">{{item.score}}</p> -->
             </div>
           </Col>
         </Row>
-        <div v-else style="width: 100%; height: 400px">
+        <div v-else style="width: 100%; height: 400px; text-align: center">
           <TinyLoading/>
         </div>
       </div>
@@ -348,12 +348,17 @@ export default class Temporary extends ViewBase {
   async fetchHandler() {
     const that: any = this
     const mockObj = {
-      ...this.form
+      // ...this.form
     }
     try {
-      const { data } = await fetchList({ ...mockObj })
-      this.dataList = data.items
-      this.form.total = data.totalCount
+      const {
+        data: {
+          items,
+          totalCount
+        }
+      } = await fetchList({ ...mockObj })
+      this.dataList = items
+      this.form.total = totalCount
       that.done = true
     } catch (ex) {
       this.handleError(ex)
