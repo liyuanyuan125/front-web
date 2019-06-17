@@ -108,6 +108,8 @@ import { getKol } from './data'
 export default class FigurePage extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
+  @Prop({ type: String, default: '' }) channel!: string
+
   basic = {
     id: this.id,
     name: 'Papi酱',
@@ -141,8 +143,10 @@ export default class FigurePage extends ViewBase {
     { icon: 'xiaohongshu', name: '小红书', percent: 30, count: '888万' },
   ]
 
-  platformNav = 'weibo'
+  // 后端称为 channel，前端称为 flatform
+  platformNav = this.channel
 
+  // TODO: 应从后端读取
   platformNavList = [
     { icon: 'weibo', name: '微博' },
     { icon: 'wechat', name: '微信' },
@@ -231,7 +235,10 @@ export default class FigurePage extends ViewBase {
   }
 
   async initBasic() {
-    const data = await getKol(this.id)
+    const data = await getKol({
+      id: this.id,
+      channel: this.platformNav
+    })
     debugger
   }
 }
