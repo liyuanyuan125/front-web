@@ -21,7 +21,6 @@ export default class App extends ViewBase {
     {name: '微信', id: 3},
     {name: '抖音', id: 4},
     {name: '快手', id: 5},
-    {name: '小红书', id: 6},
   ]
   width: any = ''
   step = this.value

@@ -128,21 +128,22 @@
         </span>
       </div>
       <div class="check-box">
-        <p>
+        <p style="margin-left: 4px">
           共
           <b>{{accout(sunlist)}}</b> 个账号
-          <b>{{checkId.length}}</b> 个任务 粉丝合计
-          <b>{{fanscount(sunlist)}}</b>万
+          <span style="margin-left: 10px">共</span><b>{{checkId.length}}</b> 个任务 
+          <span style="margin-left: 10px">粉丝合计</span>
+          <b class="red">{{fanscount(sunlist)}}</b>万
         </p>
-        <p>
-          订单金额（不含撰稿费用）：
-          <b>¥{{mongysum}}</b>
-        </p>
+        <span style="margin-right: 20px">
+          订单金额（不含撰稿费用
+          <b class="big-red">¥{{mongysum}}</b>
+        </span>
       </div>
     </div>
     <component v-if="comloading" ref="detailbox" @done="uplist" :id="$route.params.code" :is="detail"></component>
     <div class="btn-center">
-      <Button type="primary" class="button-ok default-but" @click="next('dataform')">保存草稿</Button>
+      <Button type="primary" class="button-ok default-but" @click="next('dataform', 1)">保存草稿</Button>
       <Button type="primary" class="button-ok next-button" @click="next('dataform')">提交订单</Button>
     </div>
   </div>
@@ -248,7 +249,7 @@ export default class Main extends ViewBase {
 
   get mongysum() {
     let money = 0
-    this.sunlist.forEach((it: any) => {
+    this.tableDate.forEach((it: any) => {
       money += Number(it.orderItemList ? it.totalFee : 0)
     })
     return money
@@ -474,7 +475,7 @@ export default class Main extends ViewBase {
     return fans
   }
 
-  async next(form: any) {
+  async next(form: any, id?: number) {
     try {
       const volid = await (this.$refs[form] as any).validate()
       if (volid) {
@@ -484,12 +485,44 @@ export default class Main extends ViewBase {
             name: this.query
           })
           this.prodId = data
+        } else {
+          this.prodId = this.form.productId
         }
-        // const msg = this.tableDate.map((it: any) => {
-        //   return it.orderItemList ? it.orderItemList : ''
-        // })
-        // await addorders()
-
+        const msg = this.tableDate.map((it: any) => {
+          const item = it.orderItemList
+          const message = clean({
+            ...item,
+            pictureFileIds: item.pictureFileIds.join(','),
+            publishTime: new Date(item.publishTime).getTime()
+          })
+          return {
+            kolId: it.kolId,
+            channelDataId: it.channelDataId,
+            channelCode: it.channelCode,
+            accountPhotoFileId: it.accountImageUrl,
+            accountName: it.accountName,
+            salePrice: it.totalFee || 0,
+            accountTypeCode: it.accountTypeCode,
+            ...message
+          }
+        })
+        // console.log(JSON.stringify({
+        //   ...this.form,
+        //   draft: id ? id : '',
+        //   channelCode: this.$route.params.code,
+        //   totalFee: this.mongysum,
+        //   productId: this.prodId,
+        //   orderItemList: msg
+        // }))
+        await addorders({
+          ...this.form,
+          draft: 1,
+          channelCode: this.$route.params.code,
+          totalFee: this.mongysum,
+          productId: this.prodId,
+          orderItemList: msg
+        })
+        this.$router.push({ name: 'kol-orderlist' })
       }
     } catch (ex) {
       this.handleError(ex)
@@ -732,11 +765,19 @@ export default class Main extends ViewBase {
   padding-left: 14px;
   background: #fff;
   align-items: center;
+  justify-content: space-between;
   height: 80px;
   border-radius: 5px;
   span {
     margin-left: 20px;
     font-size: 14px;
+  }
+  .red {
+    color: #ff5353;
+  }
+  .big-red {
+    color: #ff5353;
+    font-size: 30px;
   }
 }
 .default-but {
