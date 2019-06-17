@@ -95,7 +95,7 @@ export default class MapChina extends ViewBase {
         },
         seriesIndex: [1],
         inRange: {
-          color: ['#009ac2', '#ffffff']
+          color: ['#009ac2', '#fff']
         },
         calculable: true
       },

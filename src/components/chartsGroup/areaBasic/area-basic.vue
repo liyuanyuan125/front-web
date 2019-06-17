@@ -11,14 +11,14 @@
         </Tooltip>
       </div>
       <RadioGroup size="small"
-                  class="nav"
+                  class='nav'
                   v-if="dict1.length > 0 && initDone"
                   @on-change='currentTypeChange'
                   v-model="currentIndex"
                   type="button">
         <Radio v-for="(item,index) in dict1"
                :key="item.key"
-               :label="index">{{item.name}}</Radio>
+               :label="index">{{item.text}}</Radio>
       </RadioGroup>
     </div>
     <Row type="flex"
@@ -55,20 +55,19 @@ import {
   xOption,
   barThinStyle
 } from '../chartsOption'
-
 @Component({
   components: {
     TinyLoading
   }
 })
-export default class BarXCategory extends ViewBase {
+// 基础面积图
+export default class AreaBasic extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
-  @Prop({ type: String, default: '' }) title?: string
+  @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
   @Prop({ type: Array, default: () => [] }) dict1!: any[]
   @Prop({ type: Array, default: () => [] }) dict2!: any[]
-  @Prop({ type: Array, default: () => [] }) dict3!: any[]
   @Prop({ type: Array, default: () => [] }) color!: any[]
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
   @Prop({ type: Number, default: 0 }) height?: number
@@ -82,6 +81,7 @@ export default class BarXCategory extends ViewBase {
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
   }
+  // 接口没调
   updateCharts() {
     if (
       !this.dataList[this.currentIndex] ||
@@ -89,32 +89,39 @@ export default class BarXCategory extends ViewBase {
     ) {
       return
     }
+
     const chartData = this.dataList[this.currentIndex]
     const myChart = echarts.init(this.$refs.refChart as any)
-
     const option: any = {
-      color: this.color,
+      color: this.color[this.currentIndex],
       ...pubOption,
       tooltip: this.toolTip,
       xAxis: {
-        axisLine: {
-          lineStyle: {
+        type: 'category',
+        boundaryGap: false,
+        data: chartData.date,
+        axisLabel: {
+          textStyle: {
             color: '#fff'
           }
-        },
-        axisTick: {
-          show: false
-        },
-        data: this.dict3.map((item: any) => {
-          return item.text
-        })
+        }
       },
       yAxis: {
-        ...yOption
+        type: 'value',
+        axisLabel: {
+          textStyle: {
+            color: '#fff'
+          }
+        }
       },
-      series: chartData
+      series: [
+        {
+          data: chartData.data,
+          type: 'line',
+          areaStyle: {}
+        }
+      ]
     }
-    // console.save(option, `${new Date()}.json`)
     myChart.setOption(option)
   }
   @Watch('initDone')
@@ -135,7 +142,6 @@ export default class BarXCategory extends ViewBase {
   }
 }
 </script>
-
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 /deep/ .ivu-radio-group {

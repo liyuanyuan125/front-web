@@ -114,7 +114,7 @@ export default class BarYCategoryDouble extends ViewBase {
         axisLabel: {
           formatter: '{value}',
           textStyle: {
-            color: '#CDD0D3'
+            color: '#cdd0d3'
           }
         },
         data: seriesData[0].itemNames
@@ -141,7 +141,7 @@ export default class BarYCategoryDouble extends ViewBase {
         axisLabel: {
           formatter: '{value}',
           textStyle: {
-            color: '#CDD0D3'
+            color: '#cdd0d3'
           }
         },
         data: seriesData[1].itemNames

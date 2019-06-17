@@ -139,7 +139,6 @@ export default class CinemaCard extends Vue {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 .cinema-list-wp {
-  background: rgba(0, 32, 45, 0.8);
   border-radius: 5px;
   padding: 25px;
   display: flex;
@@ -148,14 +147,32 @@ export default class CinemaCard extends Vue {
   align-items: center;
   dl {
     width: 33%;
-    padding: 0 20px;
-    border-right: 1px solid #3191aa;
+    border-right: 1px solid rgba(49, 145, 170, 0.5);
+    padding: 0 15px;
+    dt {
+      height: 30px;
+      line-height: 30px;
+      background: rgba(0, 32, 45, 0.3);
+      font-size: 14px;
+      font-weight: 400;
+      color: #fff;
+      padding: 0 20px;
+    }
+    dd {
+      padding: 10px 20px;
+    }
   }
   dl:last-child {
     border-right: 0;
   }
   ul.cinema-list {
     li {
+      margin-bottom: 20px;
+      span {
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+      }
       .cinema-list-item-inner {
         display: flex;
         flex-flow: row;
