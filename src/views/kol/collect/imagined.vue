@@ -2,24 +2,24 @@
   <div class="app">
      <div class="item-top" style="margin-top: 50px">
         <ul class="film-list" v-if="cinemaDetail.length > 0">
-          <li @click="checknum(it.id)" v-for="(it, index) in cinemaDetail" :key="index"
+          <li @click="checknum(it.movieId)" v-for="(it, index) in cinemaDetail" :key="index"
             :class="['film-item']">
-            <div :class="!singleId(it.id) ? 'check' : 'check checkall'"></div>
+            <div :class="!singleId(it.movieId) ? 'check' : 'check checkall'"></div>
             <div :class="['film-cover-box']">
-              <img :src="it.mainPicUrl" class="film-cover">
+              <img :src="it.logoUrl" class="film-cover">
               <div>
-                <div class="film-title">{{it.name}}</div>
-                <div class="film-time" style="margin-top: 20px"><span>{{it.name}}</span></div>
-                <div class="film-time"><span>{{it.name}}</span></div>
-                <div class="film-time">上映时间：<span>{{formatDate(it.openTime)}}</span></div>
-                <div class="film-time">投放排期: <span>{{formatDate(it.openTime)}}</span></div>
+                <div class="film-title">{{it.movieName}} <span>{{it.jyIndex}}</span></div>
+                <div class="film-time" style="margin-top: 20px"><span>{{it.types.join(' / ')}}</span></div>
+                <div class="film-time"><span>{{formatDate(it.releaseDate)}}</span></div>
+                <div class="film-time">导演: <span>{{it.director}}</span></div>
+                <div class="film-time">演员: <span>{{it.actorList.join(' /' )}}</span></div>
               </div>
             </div>
             <p class="item-bottom">申请合作</p>
           </li>
         </ul>
     </div>
-    <Page :total="total" v-if="total>0" class="btnCenter"
+    <!-- <Page :total="total" v-if="total>0" class="btnCenter"
         :current="pageIndex"
         :page-size="pageSize"
         :page-size-opts="[6, 20, 50, 100]"
@@ -27,11 +27,11 @@
         show-sizer
         show-elevator
         @on-change="sizeChangeHandle"
-        @on-page-size-change="currentChangeHandle"/>
+        @on-page-size-change="currentChangeHandle"/> -->
     <div class="audit">
       <span @click='checkAll' :class="!single ? 'check' : 'check checkall'"></span>
       <span style="color: #444">全选</span>
-      <span style="color: #00202D; cursor: pointer;">取消收藏</span>
+      <span @click="del" style="color: #00202D; cursor: pointer;">取消收藏</span>
     </div>
   </div>
 </template>
@@ -41,6 +41,8 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getTwodetail, cinemaFilm } from '@/api/popPlan.ts'
 import moment from 'moment'
+import { getmovies, delcollect } from '@/api/mycollect.ts'
+import { info } from '@/ui/modal'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component
@@ -66,7 +68,7 @@ export default class App extends ViewBase {
   }
 
   check(data: any) {
-    const ids = this.cinemaDetail.map((it: any) => it.id)
+    const ids = this.cinemaDetail.map((it: any) => it.movieId)
     const dataId = data.map((it: any) => it)
     const checkSingle: any = []
     data.forEach((item: any) => {
@@ -88,11 +90,29 @@ export default class App extends ViewBase {
     }
   }
 
+  async del() {
+    try {
+      if (this.checkId.length == 0) {
+        info('至少选择一个影片')
+      }
+      await delcollect({
+        channelType: 1,
+        dataIdList: this.checkId
+      })
+      this.init()
+      this.check([])
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
   checkAll() {
-    const ids = this.cinemaDetail.map((it: any) => it.id)
+    const ids = this.cinemaDetail.map((it: any) => it.movieId)
     this.single = !this.single
     if (this.single) {
       this.check(ids)
+    } else {
+      this.check([])
     }
   }
 
@@ -119,11 +139,11 @@ export default class App extends ViewBase {
 
   async init() {
     try {
-      const { data } = await cinemaFilm({})
+      const { data } = await getmovies()
       this.cinemaDetail = data.items || []
 
       const checkSingle: any = []
-      const ids = this.cinemaDetail.map((it: any) => it.id)
+      const ids = this.cinemaDetail.map((it: any) => it.movieId)
       ids.forEach((item: any) => {
       if (this.checkId.includes(item)) {
           checkSingle.push(item)

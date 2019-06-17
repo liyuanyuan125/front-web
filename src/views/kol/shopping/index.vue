@@ -244,6 +244,7 @@ export default class DlgEditCinema extends ViewBase {
     ]
     return columns
   }
+
   get columns() {
     const columns: any = [
       { type: 'selection', width: 70, align: 'center' },

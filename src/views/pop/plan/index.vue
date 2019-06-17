@@ -57,8 +57,8 @@ export default class App extends ViewBase {
     const id = Number(this.step.id)
     switch (id) {
       case 0:
-        this.currentTab = Orienteering
-        // this.currentTab = Promotion
+        // this.currentTab = Orienteering
+        this.currentTab = Promotion
         break
       case 1:
         this.currentTab = Orienteering

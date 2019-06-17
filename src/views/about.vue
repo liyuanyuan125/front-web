@@ -10,6 +10,7 @@
       v-model="visible"
       :cityIds.sync="cityIds"
       :topCityIds="topCityIds"
+      @ok="onCitySelectOk"
     />
 
     <ECharts :options="chartData" auto-resize class="chart"/>
@@ -66,6 +67,10 @@ export default class AboutPage extends ViewBase {
         ]
       }
     ]
+  }
+
+  onCitySelectOk({ fastList }: any) {
+    debugger
   }
 
   async mounted() {
