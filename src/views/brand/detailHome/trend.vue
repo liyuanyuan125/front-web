@@ -169,50 +169,53 @@ export default class Trend extends ViewBase {
     }
     try {
       this.itemList = []
-      const  { data }  = await trend(this.$route.params.id, { ...mockObj })
-      if (data.items != null) {
-        this.chart1.dataList = data.items.map((item: any, index: number) => {
-          return {
-            data: item.count,
-            date: item.date,
-          }
-          // this.chart1.dataList[index].data.push(item.count)
-          // this.chart1.dataList[index].date.push(item.date)
-        })
-        // console.log(this.chart1.dataList)
-        // for (const i in data.items) {
-        //   if (1 == 1) {
-        //     for (const j in data.items[i].channels) {
-        //       if (1 == 1) {
-        //         this.itemList.push(data.items[i].channels[j])
-        //       }
-        //     }
-        //   }
-        // }
-      }
-      // console.log(this.itemList)
 
-      // this.chart1.initDone = true
-      // if (data.channelCodeList.length > 0) {
-      //   this.chart2.dataList = data.channelCodeList.map(
-      //     (item: any, index: number) => {
-      //       return {
-      //         count: [],
-      //         date: []
-      //       }
-      //     }
-      //   )
-      // } else {
-      //   this.chart2.dataList.push({
-      //     count: [],
-      //     date: []
-      //   })
-      // }
-      // this.chart2.dict1 = data.channelCodeList
-      // data.chart2.dataList.forEach((item: any, index: number) => {
-      //   this.chart2.dataList[item.code].count.push(item.count)
-      //   this.chart2.dataList[item.code].date.push(item.date)
-      // })
+      const  { data }  = await trend(this.$route.params.id, { ...mockObj })
+
+      this.chart1.dataList.push({
+        data: [],
+        date: []
+      })
+
+      if (data.items != null) {
+        data.items.forEach((item: any, index: number) => {
+          this.chart1.dataList[0].data.push(item.count)
+          this.chart1.dataList[0].date.push(item.date)
+        })
+
+        this.chart1.initDone = true
+
+        for (const i in data.items) {
+          if (1 == 1) {
+            for (const j in data.items[i].channels) {
+              if (1 == 1) {
+                this.itemList.push(data.items[i].channels[j])
+              }
+            }
+          }
+        }
+      }
+
+      if (data.channelCodeList.length > 0) {
+        this.chart2.dataList = data.channelCodeList.map(
+          (item: any, index: number) => {
+            return {
+              data: [],
+              date: []
+            }
+          }
+        )
+      } else {
+        this.chart2.dataList.push({
+          data: [],
+          date: []
+        })
+      }
+      this.chart2.dict1 = data.channelCodeList
+      this.itemList.forEach((item: any, index: number) => {
+        this.chart2.dataList[0].data.push(item.count)
+        this.chart2.dataList[0].date.push(item.date)
+      })
       this.chart2.initDone = true
     } catch (ex) {
       this.handleError(ex)
@@ -240,9 +243,9 @@ export default class Trend extends ViewBase {
     this.form.beginDate[1] = this.endDate()
     this.chart1.initDone = false
     this.chart2.initDone = false
-    // this.resetData()
-    this.getChartsData()
-    // await this.getChartsData('', 0)
+    this.resetData()
+    // this.getChartsData()
+    await this.getChartsData('', 0)
   }
 
   async mounted() {
