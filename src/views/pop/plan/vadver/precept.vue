@@ -13,7 +13,7 @@
               <li v-for="(it) in filmList" :key="it.id"
                 :class="['film-item']">
                 <div class="film-top">
-                  <img :src="it.image" class="film-cover">
+                  <img :src="it.image ? it.image : defaultImg" onerror="defaultImg" class="film-cover">
                   <div style="position: relative">
                     <p class="film-title" :title="it.movieName">{{it.movieName}}</p>
                     <p class="film-title" style="margin-bottom: 20px">{{it.movieName}}</p>
@@ -66,7 +66,7 @@
 
           <h3 class="layout-titles">覆盖影院
             <span class="item-detail">影院总数</span>
-            <span class="custom" @click="exportData">下载列表</span>
+            <span class="custom" @click="exportData"><Exportfile /></span>
             <span class="custom" style="margin-right: 160px">自定义投放影院</span>
           </h3>
           <div class="item-top">
@@ -134,7 +134,7 @@
                     </template>
                   </Table>
 
-                  <Table height="320" style="display: none" ref="table" :loading="loading"  stripe :columns="columns" :data="tableDate1">
+                  <!-- <Table height="320" style="display: none" ref="table" :loading="loading"  stripe :columns="columns" :data="tableDate1">
                     <template v-if="tag == 1" slot-scope="{ row }" slot="citys">
                       {{row.provinceName}} {{row.cityName}} {{row.countyName}}
                     </template>
@@ -146,7 +146,7 @@
                     <template slot-scope="{ row }" slot="estimatePersonCount">
                       {{formatNums(row.estimatePersonCount)}}
                     </template>
-                  </Table>
+                  </Table> -->
 
                   <Page :total="total" v-if="total>0" class="btnCenter"
                     :current="pageIndex"
@@ -180,16 +180,18 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import PreceptHead from './precepthead.vue'
 import PrecepFilm from './preceptfile.vue'
-import { orienteering, cinemaFilm, adverdetail, getRecommend, getCheme,
+import { orienteering, adverdetail, getRecommend, getCheme,
   getcinemas, getchains, getcities, getprovinces } from '@/api/popPlan.ts'
 import moment from 'moment'
 import { formatCurrency } from '@/fn/string.ts'
+import Exportfile from './exportfile.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
     PreceptHead,
-    PrecepFilm
+    PrecepFilm,
+    Exportfile
   }
 })
 export default class App extends ViewBase {
@@ -420,6 +422,10 @@ export default class App extends ViewBase {
           name: '小明'
         }]
     })
+  }
+
+  get defaultImg() {
+    return 'this.src="' + require('../assets/error.png') + '"'
   }
 
   async cinemaFind() {

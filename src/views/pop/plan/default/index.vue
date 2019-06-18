@@ -94,7 +94,7 @@
     <div v-if="status != 1" class="plan-cinema-num">
       <div class="result-top">
         <h3>覆盖范围</h3>
-        <span class="custom">下载列表</span>
+        <span class="custom"><Exportfile v-model="$route.params.id" /></span>
       </div>
       <div class="cinema-box">
         <div class="cinema-right">
@@ -201,7 +201,12 @@
               <Col :span="2"><span>覆盖城市</span></Col>
               <Col :span="10">
                 <div v-if="headerValue.cityCustom">
-
+                  <span>共{{length}}个
+                    <b style="margin-left: 5px">|</b> 
+                  </span>
+                  <span style="margin-left: 5px" v-for="it in citynums" :key="it.sort">{{it.gradeName}}
+                    <b style="margin-left: 5px">|</b> 
+                  </span>
                 </div>
                 <div v-else>
                   <span v-if="headerValue.allNation">全国</span>
@@ -245,19 +250,22 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Number from '@/components/number.vue'
-import { orienteering, cinemaFilm, adverdetail, getcinemas, getchains,
+import { orienteering, adverdetail, getcinemas, getchains,
   getcities, getprovinces } from '@/api/popPlan.ts'
 import { toMap } from '@/fn/array.ts'
+import { uniq } from 'lodash'
 import { formatCurrency } from '@/fn/string.ts'
 import moment from 'moment'
 import Header from './header.vue'
+import Exportfile from '../vadver/exportfile.vue'
 
 const statusMap =  (list: any[]) => toMap(list, 'code', 'text')
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
     Number,
-    Header
+    Header,
+    Exportfile
   }
 })
 export default class App extends ViewBase {
@@ -283,6 +291,8 @@ export default class App extends ViewBase {
   }
   tags: any = []
   deliveryCityTypeList: any = []
+  citynums: any = []
+  length = 0
 
   get columns() {
     const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
@@ -406,6 +416,16 @@ export default class App extends ViewBase {
       this.headerValue = {
         ...data.item
       }
+      this.length = (data.cities || []).length
+      const citynums = uniq((data.cities || []).map((it: any) => {
+        return {
+          gradeName: it.gradeName,
+          sort: it.sort
+        }
+      }))
+      this.citynums = citynums.sort((a: any, b: any) => {
+        return a.sort - b.sort
+      })
       this.count.cinemaCount = data.cinemaCount
       this.count.chainCount = data.chainCount
       this.count.provinceCount = data.provinceCount
