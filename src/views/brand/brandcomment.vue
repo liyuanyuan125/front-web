@@ -104,7 +104,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { findIndex } from 'lodash'
 import moment from 'moment'
-import { comment } from '@/api/kolDetailMoreInfo'
+import { dayRanges , comment } from '@/api/brandfans'
 import PieNest from '@/components/chartsGroup/pieNest/'
 import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
@@ -322,11 +322,9 @@ export default class Temporary extends ViewBase {
       const {
         data,
         data: {
-          item: {
-            rate,
-            dates,
-            keywords
-          }
+          rate,
+          keyWords,
+          items,
         }
       } = await comment({ ...mockObj }, id)
       for ( const k in rate ) {
@@ -341,7 +339,7 @@ export default class Temporary extends ViewBase {
         }
       }
 
-      dates.forEach((item: any, index: number) => {
+      items.forEach((item: any, index: number) => {
         //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
         // trend 新增 index:0 | count 累计 index:1
         const { date, neutral, passive, positive } = item
@@ -353,19 +351,21 @@ export default class Temporary extends ViewBase {
         that.chart2.dataList[1][1].data.push(item.passive.count)
         that.chart2.dataList[1][2].data.push(item.neutral.count)
       })
-
-      keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
-        that.chart3.dataList[0].push({
-          name: item,
-          value: Math.floor(Math.random() * 100 + 1)
+      if (keyWords == null ) {
+      } else {
+        keyWords[this.form.dayRangesKey].positive.forEach((item: any) => {
+          that.chart3.dataList[0].push({
+            name: item,
+            value: Math.floor(Math.random() * 100 + 1)
+          })
         })
-      })
-      keywords[this.form.dayRangesKey].passive.forEach((item: any) => {
-        that.chart4.dataList[0].push({
-          name: item,
-          value: Math.floor(Math.random() * 100 + 1)
+        keyWords[this.form.dayRangesKey].negative.forEach((item: any) => {
+          that.chart4.dataList[0].push({
+            name: item,
+            value: Math.floor(Math.random() * 100 + 1)
+          })
         })
-      })
+      }
       that.chart1.initDone = true
       that.chart2.initDone = true
       that.chart3.initDone = true

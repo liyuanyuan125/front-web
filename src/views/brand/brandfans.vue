@@ -5,7 +5,7 @@
       <Form label-position="left"
             :label-width="100">
         <Card class="detailmore-card">
-          <div slot="title">
+          <!-- <div slot="title">
             <Row type="flex"
                  justify="space-between"
                  align="middle">
@@ -28,7 +28,7 @@
                         type="primary">查看匹配度</Button></router-link>
               </Col>
             </Row>
-          </div>
+          </div> -->
           <div class="content">
             <Row type="flex"
                  justify="space-between">
@@ -96,7 +96,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { fans, brands } from '@/api/figureDetailMoreInfo'
+import { fans, brands } from '@/api/brandfans'
 import DetailNavBar from './components/detailNavBar.vue'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import MapChina from '@/components/chartsGroup/mapChina/'
@@ -205,20 +205,16 @@ export default class Temporary extends ViewBase {
       const {
         data,
         data: {
-          item: { genders, ages, cities, provinces }
+          item: { femalePercent, malePercent, ages, cities, provinces }
         }
       } = await fans(id)
-      if (genders && genders.length > 0) {
+      if (1 == 1) {
         this.chart1.dataList[
           this.chart1.currentTypeIndex
-        ] = this.dict.genders.map(({ key, text }: any) => ({
-          name: text,
-          value: genders.reduce(
-            (pre: number, cur: any) =>
-              pre + (cur.gender === key ? cur.count : 0),
-            0
-          )
-        }))
+        ] = [
+          {name: '男', value: malePercent},
+          {name: '女', value: femalePercent},
+        ]
         this.chart1.initDone = true
       }
       if (ages && ages.length > 0) {
@@ -237,17 +233,17 @@ export default class Temporary extends ViewBase {
       }
       if (provinces && provinces.length > 0) {
         let [min, max] = [0, 0]
-        provinces.forEach(({ v, k }: any) => {
-          v = parseInt(v, 0)
-          max = (max < v) ? v : max
-          min = (min > v) ? v : min
+        provinces.forEach(({ count, name }: any) => {
+          count = parseInt(count, 0)
+          max = (max < count) ? count : max
+          min = (min > count) ? count : min
           this.chart3.dataList[this.chart3.currentTypeIndex].push({
-            name: k,
-            value: v
+            name,
+            value: count
           })
           this.chart4.dataList[0].push({
-            name: k,
-            value: v
+            name,
+            value: count
           })
         })
         this.chart3.min = min
@@ -256,10 +252,16 @@ export default class Temporary extends ViewBase {
         this.chart4.initDone = true
       }
       if (cities && cities.length > 0) {
-        cities.forEach(({ v, k }: any) => {
+        // cities.map((it: any) => {
+        //   this.chart4.dataList[1].push({
+        //     name: it.name,
+        //     value: typeof it.count === 'number' ? it.count : parseInt(it.count, 0)
+        //   })
+        // })
+        cities.forEach(({ count, name }: any) => {
           this.chart4.dataList[1].push({
-            name: k,
-            value: typeof v === 'number' ? v : parseInt(v, 0)
+            name,
+            value: typeof count === 'number' ? count : parseInt(count, 0)
           })
         })
         this.chart4.initDone = true
