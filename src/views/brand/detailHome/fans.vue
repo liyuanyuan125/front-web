@@ -96,13 +96,8 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-<<<<<<< HEAD:src/views/brand/brandfans.vue
 import { fans, brands } from '@/api/brandfans'
 import DetailNavBar from './components/detailNavBar.vue'
-=======
-import { fans, brands } from '@/api/figureDetailMoreInfo'
-import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
->>>>>>> 61d264e035403ed2c60d4dbae3a6da4b5cb14b2a:src/views/brand/detailHome/fans.vue
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import MapChina from '@/components/chartsGroup/mapChina/'
 import Pie from '@/components/chartsGroup/pieSimple/'
