@@ -30,7 +30,7 @@
         <div @click="adverSelcet(item.id)" v-for="item in releList"
           :class="['img-box', (value.item.videoId == item.id ) ? 'img-active' : '']"
           :key="item.id" >
-          <img :src="item.logo" width="120px" :onerror="defaultImg" height="120px" alt="" />
+          <img :src="item.logo ? item.logo : defaultImg" width="120px" :onerror="defaultImg" height="120px" alt="" />
           <p class="title-p">名称：{{item.name}}</p>
         </div>
       </div>
@@ -78,7 +78,7 @@ export default class Relevan extends ViewBase {
   total = 0
 
   get defaultImg() {
-    return 'this.src="' + require('../assets/error.png') + '"'
+    return 'this.src="' + require('./assets/error.png') + '"'
   }
 
   rules = {

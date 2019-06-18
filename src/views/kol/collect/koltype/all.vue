@@ -38,7 +38,7 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getTwodetail, cinemaFilm } from '@/api/popPlan.ts'
+import { getTwodetail } from '@/api/popPlan.ts'
 import moment from 'moment'
 
 const timeFormat = 'YYYY-MM-DD'
@@ -118,8 +118,7 @@ export default class App extends ViewBase {
 
   async init() {
     try {
-      const { data } = await cinemaFilm({})
-      this.cinemaDetail = data.items || []
+      this.cinemaDetail = []
 
       const checkSingle: any = []
       const ids = this.cinemaDetail.map((it: any) => it.id)

@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getTwodetail, cinemaFilm } from '@/api/popPlan.ts'
+import { getTwodetail } from '@/api/popPlan.ts'
 import moment from 'moment'
 import { getpersons, delcollect } from '@/api/mycollect.ts'
 import { info } from '@/ui/modal'
