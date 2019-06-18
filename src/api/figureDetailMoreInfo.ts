@@ -176,8 +176,8 @@ export async function comment(query: any, id: string = '') {
  * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
  */
 export async function fans(id: string = '') {
-  const res = await get(`/person/${id}/fans`)
-  return res
+  // const res = await get(`/person/${id}/fans`)
+  // return res
   return await mockGet({}, {
     item: {
       totalCount: 83724,

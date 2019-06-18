@@ -205,7 +205,7 @@ export default class Temporary extends ViewBase {
       const {
         data,
         data: {
-          item: { femalePercent, malePercent, ages, cities, provinces }
+          item: { femalePercent, malePercent, ages, citys, provinces }
         }
       } = await fans(id)
       if (1 == 1) {
@@ -251,14 +251,14 @@ export default class Temporary extends ViewBase {
         this.chart3.initDone = true
         this.chart4.initDone = true
       }
-      if (cities && cities.length > 0) {
+      if (citys && citys.length > 0) {
         // cities.map((it: any) => {
         //   this.chart4.dataList[1].push({
         //     name: it.name,
         //     value: typeof it.count === 'number' ? it.count : parseInt(it.count, 0)
         //   })
         // })
-        cities.forEach(({ count, name }: any) => {
+        citys.forEach(({ count, name }: any) => {
           this.chart4.dataList[1].push({
             name,
             value: typeof count === 'number' ? count : parseInt(count, 0)

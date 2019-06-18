@@ -351,8 +351,7 @@ export default class Temporary extends ViewBase {
         that.chart2.dataList[1][1].data.push(item.passive.count)
         that.chart2.dataList[1][2].data.push(item.neutral.count)
       })
-      if (keyWords == null ) {
-      } else {
+      if (keyWords !== null ) {
         keyWords[this.form.dayRangesKey].positive.forEach((item: any) => {
           that.chart3.dataList[0].push({
             name: item,
@@ -365,11 +364,11 @@ export default class Temporary extends ViewBase {
             value: Math.floor(Math.random() * 100 + 1)
           })
         })
+        that.chart3.initDone = true
+        that.chart4.initDone = true
       }
       that.chart1.initDone = true
       that.chart2.initDone = true
-      that.chart3.initDone = true
-      that.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
