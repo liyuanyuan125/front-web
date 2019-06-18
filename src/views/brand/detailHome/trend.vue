@@ -173,8 +173,8 @@ export default class Trend extends ViewBase {
       if (data.items != null) {
         this.chart1.dataList = data.items.map((item: any, index: number) => {
           return {
-            data: count,
-            date,
+            data: item.count,
+            date: item.date,
           }
           // this.chart1.dataList[index].data.push(item.count)
           // this.chart1.dataList[index].date.push(item.date)
