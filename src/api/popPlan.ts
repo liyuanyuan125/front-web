@@ -45,24 +45,6 @@ export async function orienteering(query: any) {
   })
 }
 
-// 影片分页
-export async function cinemaFilm(query: any) {
-  return await mockGet(query, {
-    'items|6': [{
-      id: tid,
-      name: title20,
-      mainPicUrl: 'https://p.ssl.qhimg.com/dmfd/400_300_/t0120b2f23b554b8402.jpg',
-      openTime: dateRange(),
-      type: ['科幻', '悬疑', '惊悚'],
-      sex: '男',
-      start: '1星',
-      viewNumber: 1234567,
-      matching: 99.6,
-      week: '2019/6/1~2019/6/7'
-    }],
-  })
-}
-
 export async function cinemaList(query: any) {
   const data = await get('/xadvert/plans/movie', query)
   return data
@@ -226,5 +208,41 @@ export async function getcities(id: any, query: any) {
  */
 export async function getprovinces(id: any, query: any) {
   const data = await get(`/xadvert/v1/plans/${id}/provinces`, query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 查询票仓城市列表
+ */
+export async function warehouse() {
+  const data = await get(`/xadvert/v1/ticket-warehouse/cities`)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 查询票仓城市列表
+ */
+export async function exportId(id: any) {
+  const data = await get(`/xadvert/v1/plans/export/${id}`)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 账户总览信息
+ */
+export async function financeMsg(id: any) {
+  const data = await get(`/finance/xadvertiser/accounts/${id}`)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 缴纳保证金
+ */
+export async function payMoney(id: any) {
+  const data = await get(`/xadvert/v1/plans/${id}/pay`)
   return data
 }

@@ -71,7 +71,7 @@
               ID: {{row.id}}
             </p>
             <div>
-              <img :src="row.videoLogo" :onerror="defaultImg" width="90px" height="90px">
+              <img :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
               <div>
                 <h3>{{row.name}}</h3>
                 <span>{{row.videoName}}&nbsp;&nbsp;{{row.customerName}}&nbsp;&nbsp;{{row.specification||0 }}s</span>
@@ -111,7 +111,7 @@
             </div>
             <div v-if="row.status == 3 || row.status == 4">
               <span class="edit-btn" v-if="row.status == 3" @click="sure(row.id)">确认方案</span>
-              <span class="edit-btn" v-if="row.status == 4" @click="pay(row.id)">立即缴费</span>
+              <span class="edit-btn" v-if="row.status == 4" @click="pay(row.companyId, row.freezeAmount, row.id)">立即缴费</span>
               <div class="adver-edit">
                 <p @click="plandetail(row.id)">详情</p>
                 <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p>
@@ -380,9 +380,9 @@ export default class Plan extends ViewBase {
     }
   }
 
-  pay(id: any) {
+  pay(id: any, freezeAmount: any, ids: any) {
     this.$nextTick(() => {
-      (this.$refs as any).Pay.init(id)
+      (this.$refs as any).Pay.init(id, freezeAmount, ids)
     })
   }
 
