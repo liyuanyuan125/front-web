@@ -29,6 +29,6 @@ const falseList = ['false', '0', 'null', 'undefined']
  * @param value 字符串
  */
 export function stringToBoolean(value: string | null) {
-  const val = String(value).trim()
+  const val = String(value).trim().toLowerCase()
   return falseList.includes(val) ? false : Boolean(val)
 }
