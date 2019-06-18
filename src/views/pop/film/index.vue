@@ -231,9 +231,13 @@ export default class Main extends ViewBase {
           max-width: 150px;
           overflow: hidden;
           text-overflow: ellipsis;
+          color: #fff;
         }
         .item-icon {
           width: 100%;
+          span {
+            color: #fff;
+          }
           .icon-img {
             position: absolute;
             right: 10px;

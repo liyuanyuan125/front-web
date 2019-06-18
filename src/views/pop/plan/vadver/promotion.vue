@@ -185,6 +185,7 @@ export default class Promotion extends ViewBase {
       this.adverList = data.items || []
       this.seach()
     } catch (ex) {
+      (this.$Spin as any).hide()
       this.handleError(ex)
     }
   }

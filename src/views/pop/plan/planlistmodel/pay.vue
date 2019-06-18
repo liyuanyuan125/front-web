@@ -7,7 +7,8 @@
     <div class="title">
       <i @click="cancel"></i>
       <img width="115px" height="115px" src="../assets/fanan.png" />
-      <p>余额不足，前去缴费</p>
+      <p v-if="!showmongy">余额不足，前去缴费</p>
+      <p v-else>确认缴费</p>
     </div>
     <div slot="footer" class="foot">
         <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
@@ -19,7 +20,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinemaList } from '@/api/popPlan'
+import { cinemaList, financeMsg, payMoney } from '@/api/popPlan'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
@@ -28,18 +29,39 @@ import moment from 'moment'
 const timeFormat = 'YYYY-MM-DD'
 @Component
 export default class DlgEditCinema extends ViewBase {
+
   showDlg = false
+  showmongy = false
+  id = 0
 
-  async init(type: any) {
-    this.showDlg = true
-  }
-
-  async open() {
+  async init(id: any, freezeAmount: any, ids: any) {
+    this.id = ids
     try {
+      const { data } = await financeMsg(id)
+      if (data.availableAmount - (freezeAmount || 0) > 0) {
+        this.showmongy = true
+      }
+      this.showDlg = true
     } catch (ex) {
       this.handleError(ex)
     }
   }
+
+  async open() {
+    try {
+      if (this.showmongy) {
+        await payMoney(this.id)
+        this.$emit('uplist')
+      } else {
+        this.$router.push({
+          name: 'finance-info'
+        })
+      }
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
   async seach() {
     try {
     } catch (ex) {

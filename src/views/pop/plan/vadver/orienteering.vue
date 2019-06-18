@@ -32,7 +32,17 @@
                           :key="it.key"
                           :label="it.key"
                           class="check-item form-item-first"
-                        >{{it.text}}</Checkbox>
+                        >{{it.text}}
+                        <Poptip trigger="hover" title="票仓城市top20" content="content">
+                          <img v-if="!form.cinema.includes(it.key)" width="20px" style="vertical-align:middle" src="./assets/question.png" />
+                          <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
+                          <div class="api" slot="content">
+                            <div class="city-show">
+                              <span v-for="it in warehouseLisst" :key="it.cityId">{{it.cityName}}</span>
+                            </div>
+                          </div>
+                        </Poptip>
+                        </Checkbox>
                         <Checkbox
                           v-for="(it, index) in cityList"
                           v-if="index > 0"
@@ -49,7 +59,7 @@
                     共{{citysId.length}}个城市
                     <span>设置</span>
                   </div>
-                  <City v-model="visible" :cityIds.sync="citysId" :topCityIds="topCitysId"></City>
+                  <City @ok="onCitySelectOk" v-model="visible" :cityIds.sync="citysId" :topCityIds="warehouseId"></City>
                 </div>
               </Row>
             </Col>
@@ -160,6 +170,7 @@ import Film from './film.vue'
 import Chain from '@/components/cityMap/CityMap.vue'
 import {
   getTwodetail,
+  warehouse,
   getRegionList,
   direction,
   searchcinema,
@@ -208,6 +219,8 @@ export default class Orienteering extends ViewBase {
     age: [0],
     type: [0]
   }
+  warehouseId: any = []
+  warehouseLisst: any = []
 
   movies: any = []
   timers: any = {}
@@ -258,6 +271,7 @@ export default class Orienteering extends ViewBase {
   ageList: any = []
   typeList: any = []
   cinemaDetail: any = []
+  citiesList: any = []
 
   created() {
     this.init()
@@ -272,8 +286,15 @@ export default class Orienteering extends ViewBase {
       const { data } = await getTwodetail()
       await getRegionList()
       const {
-        data: { item, deliveryCityTypeList, tags, movies }
+        data: { item, deliveryCityTypeList, tags, movies, cities }
       } = await adverdetail(this.value.setid)
+      const datas = await warehouse()
+      this.warehouseLisst = datas.data || []
+      this.cityCustom = item.cityCustom || 0
+      this.citiesList = cities || []
+      this.citysId = this.citiesList.map((it: any) => it.id)
+     // 哈哈
+      this.warehouseId = datas.data.map((it: any) => it.cityId)
       this.beginDate = item.beginDate
       this.endDate = item.endDate
       this.tags = tags
@@ -396,7 +417,7 @@ export default class Orienteering extends ViewBase {
           planId: this.$route.params.setid,
           cityCustom: this.cityCustom,
           allNation: this.form.cinema[0] == 0 ? 1 : 0,
-          deliveryCityTypes: this.form.cinema[0] == 0 ? '' : this.form.cinema,
+          deliveryCityTypes: this.cityCustom == 0 ? '' : this.form.cinema,
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
@@ -476,6 +497,9 @@ export default class Orienteering extends ViewBase {
       //   setid: this.$route.params.setid
       // })
     } catch (ex) {}
+  }
+
+  onCitySelectOk({ fastList }: any) {
   }
 
   back(dataform: any) {
@@ -638,7 +662,7 @@ export default class Orienteering extends ViewBase {
   margin-right: 16px;
 }
 .btn-center {
-  margin: 40px 0 30px;
+  margin: 60px 0 30px;
   text-align: center;
 }
 .default-but {
@@ -791,6 +815,15 @@ export default class Orienteering extends ViewBase {
   }
   .film-name {
     margin-top: 10px;
+  }
+}
+.city-show {
+  display: flex;
+  flex-wrap: wrap;
+  width: 320px;
+  span {
+    width: 80px;
+    overflow: hidden;
   }
 }
 </style>

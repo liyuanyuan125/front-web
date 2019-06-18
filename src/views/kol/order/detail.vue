@@ -40,7 +40,7 @@
                 <Row>
                   <Col :span='12'>
                     <div class="div-img">
-                      <img :src="it.accountPhotoUrl  == null ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2431454871,3087430277&fm=27&gp=0.jpg' : it.accountPhotoUrl" alt="">
+                      <img :src="it.accountPhotoUrl  == null ? 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg' : it.accountPhotoUrl" alt="">
                     </div>
                   </Col>
                   <Col :span='7' class='name'>

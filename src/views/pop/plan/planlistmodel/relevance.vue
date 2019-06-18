@@ -22,7 +22,7 @@
             </div>
           </FormItem> -->
           <FormItem :labelWidth="0">
-            <Input v-model="form.name" clearable style="width:500px" ></Input>
+            <Input v-model="form.name" placeholder="请输入广告片名称" clearable style="width:500px" ></Input>
           </FormItem>
         </Form>
       </div>
@@ -30,11 +30,19 @@
         <div @click="adverSelcet(item.id)" v-for="item in releList"
           :class="['img-box', (value.item.videoId == item.id ) ? 'img-active' : '']"
           :key="item.id" >
-          <img :src="item.logo" width="120px" height="120px" alt="" />
+          <img :src="item.logo ? item.logo : defaultImg" width="120px" :onerror="defaultImg" height="120px" alt="" />
           <p class="title-p">名称：{{item.name}}</p>
         </div>
       </div>
-      <pagination v-model="pageList" :total="totalCount" @uplist="uplist"></pagination>
+      <Page :total="total" v-if="total>0" class="btnCenter"
+        :current="pageList.pageIndex"
+        :page-size="pageList.pageSize"
+        :page-size-opts="[10, 20, 50, 100]"
+        show-total
+        show-sizer
+        show-elevator
+        @on-change="sizeChangeHandle"
+        @on-page-size-change="currentChangeHandle"/>
       <div slot="footer" class="foot btnCenter footer-btn">
         <Button class="button-cancel foot-cancel-button" @click="value.visible = false">取消</Button>
         <Button type="primary" class="button-ok foot-button" @click="handleSumbit">确认</Button>
@@ -67,7 +75,11 @@ export default class Relevan extends ViewBase {
     pageSize: 10
   }
 
-  totalCount = 0
+  total = 0
+
+  get defaultImg() {
+    return 'this.src="' + require('./assets/error.png') + '"'
+  }
 
   rules = {
     videoId: [
@@ -88,7 +100,7 @@ export default class Relevan extends ViewBase {
         status: 4
       } )
       this.releList = data.items || []
-      this.totalCount = data.totalCount
+      this.total = data.totalCount
     } catch (ex) {
       this.handleError(ex)
     }
@@ -104,6 +116,18 @@ export default class Relevan extends ViewBase {
 
   adverSelcet(id: any) {
     this.value.item.videoId = id
+  }
+
+  // 每页数
+  sizeChangeHandle(val: any) {
+    this.pageList.pageIndex = val
+    this.init()
+  }
+
+  // 当前页
+  currentChangeHandle(val: any) {
+    this.pageList.pageSize = val
+    this.init()
   }
 
   async handleSumbit() {
@@ -199,6 +223,7 @@ export default class Relevan extends ViewBase {
 .foot {
   text-align: center;
   height: 60px;
+  margin-top: 20px;
   .foot-button {
     width: 103px;
     height: 38px;
@@ -221,6 +246,7 @@ export default class Relevan extends ViewBase {
 }
 .adver-box {
   padding: 0 50px;
+  min-height: 100px;
   margin-bottom: 10px;
   .img-box {
     position: relative;
