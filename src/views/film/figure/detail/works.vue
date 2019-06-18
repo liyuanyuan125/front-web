@@ -17,19 +17,19 @@
     </div>
     <div class="flex-box">
       <div class="left-list">
-        <h3 class="header-title">
+        <h3 class="header-title" >
           <em>已上映作品（{{items.length - noMovie.length}}）</em>
           <span class="flex-box">
             <i v-for="item in selList" :class="{'active-pro': item.key == timeSort}" :key="item.key" @click="handlePro(item.key)">{{item.text}}</i>
           </span>
         </h3>
-        <div class="production-list flex-box">
-          <span>职业筛选：</span>
+        <div class="production-list flex-box" v-if="items.length">
+          <span class="move-title">职业筛选：</span>
           <div class="move-type">
             <a v-for="(item, index) in filterRelease" :key="index">{{handleProfession(index)}}({{item}})</a>
           </div>
         </div>
-        <div class="production-list flex-box">
+        <div class="production-list flex-box" v-if="items.length">
           <span class="move-title">影片类型：</span>
           <div class="move-type">
             <a v-for="(item, index) in filterMovie" :key="index">{{handleMoive(index)}}({{item}})</a>
@@ -48,8 +48,8 @@
                 <div class="text-right">
                   <h3 class="title-grade"><span>{{it.name}}</span><em>{{it.jyIndex}}</em></h3>
                   <h4 class="person-identity"><span v-for="(item, index) in it.professions" :key="index"> {{handleProfession(item)}} </span></h4>
-                  <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" :key="index">{{item}}</em></p>
-                  <p class="com-col">主演：<em class="em-actor" v-for="(item, index) in it.actors" :key="index">{{item}}</em></p>
+                  <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" :key="index">{{item.name}}</em></p>
+                  <p class="com-col">主演：<em class="em-actor" v-for="(item, index) in it.actors" :key="index">{{item.name}} </em></p>
                 </div>
               </div>
             </dd>
@@ -67,7 +67,7 @@
           <div class="text-right">
             <h3 class="title-grade"><span>{{it.name}}({{it.releaseYear}})</span></h3>
             <h4 class="person-identity"><span v-for="(item, index) in it.professions" :key="index"> {{handleProfession(item)}} </span></h4>
-            <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" :key="index">{{item}}</em></p>
+            <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" :key="index">{{item.name}}</em></p>
             <p class="com-col">类型：<em class="em-actor" v-for="(item, index) in it.types" :key="index">{{handleMoive(item)}}<i v-if="it.types.length-1 != index"> / </i></em></p>
             <p class="com-col">{{formatConversion(it.release)}} {{it.releaseCountry}}上映</p>
           </div>
@@ -133,24 +133,23 @@ export default class Master extends ViewBase {
   }
 
   async topCountList() {
-    const id = 370093 // this.id
+    const id = this.id // 370093
     try {
       const { data: {items, movieTypes} } = await topList(id, 5)
       this.topList = items
       this.movieTypes = movieTypes || []
       this.status = status || []
-      this.items = items
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
   async list() {
-    const id = 370093 // this.id
+    const id = this.id// 370093
     try {
       const { data: {items, movieTypes, professions} } = await personMovies(id)
       this.professions = professions
-      this.items = items
+      this.items = items || []
 
       // 查询获取未上映作品（release在今天和今天以前的表示已经上映，在今天以后的表示未上映
       const todayDate = getTodayDate()
@@ -267,7 +266,7 @@ export default class Master extends ViewBase {
 <style lang='less' scoped>
 .move-title {
   display: block;
-  width: 158px;
+  flex: 1;
 }
 h2, h3, h4 {
   font-weight: normal;
@@ -295,6 +294,7 @@ h2, h3, h4 {
       text-align: center;
       color: #fff;
       position: relative;
+      font-size: 14px;
       .hot {
         position: absolute;
         top: 0;
@@ -405,11 +405,11 @@ h2, h3, h4 {
   position: relative;
   .img {
     position: relative;
+    display: block;
     width: 140px;
     height: 160px;
     img {
-      width: 100%;
-      height: 100%;
+      height: 160px;
     }
     .nowing {
       width: 48px;
@@ -454,10 +454,17 @@ h2, h3, h4 {
 .production-list {
   font-size: 14px;
   color: #fff;
-  margin: 10px 0 20px;
-  a {
-    margin-right: 20px;
-    color: #fff;
+  margin: 10px 0 16px;
+  .move-type {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 5;
+    a {
+      margin-right: 17px;
+      margin-bottom: 5px;
+      color: #fff;
+      display: inline-block;
+    }
   }
   .col_222 {
     color: #fff;

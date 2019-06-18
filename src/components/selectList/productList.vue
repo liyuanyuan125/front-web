@@ -15,12 +15,8 @@ export default class Main extends ViewBase {
     @Prop({type: Number, default: 0}) value?: number
     @Prop({type: Number, default: 0 }) brandld?: any
 
-    inner = this.value
+    inner: any = this.value
     productsListSel = []
-
-    mounted() {
-        this.productList()
-    }
 
     queryProductName() {
         const ary: any = this.productsListSel.filter( (item: any) => item.id == this.inner) || []
@@ -48,6 +44,15 @@ export default class Main extends ViewBase {
     @Watch('inner')
     watchInner(value: number) {
        this.$emit('input', value)
+    }
+    @Watch('brandld')
+    watchBrandId(id: any) {
+        if (id) {
+          this.productList()
+        } else {
+          this.inner = 0
+          this.productsListSel = []
+        }
     }
 }
 
