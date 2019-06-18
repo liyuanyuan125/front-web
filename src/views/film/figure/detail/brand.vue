@@ -34,7 +34,7 @@ export default class Brand extends ViewBase {
   }
 
   async tableList() {
-    const id = 107028 // this.id
+    const id = this.id // this.id 107028
     try {
       const { data: {items, trades} } = await personBrands(id)
        this.list = items || []

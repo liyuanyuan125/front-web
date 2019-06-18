@@ -4,10 +4,10 @@
       <p>平台映前广告计费标准最小时长单位为15s，为节省您的广告投放成本，请准确设置广告片时长规格；时长规格不得低于广告片实际时长 广告片通过审核后，
       平台会统一为您进行转码为影院可播放的格式；转码费用标准为【3,000.00元/15s】</p>
     </div>
-     <Form :model="form" ref="dataform" :rules="rule" :label-width="100" class="form edit-input">
+     <Form :model="form" ref="dataform" :rules="rule" :label-width="120" class="jyd-form">
        <div class="item-center">
         <FormItem  label="名称" prop="name">
-          <Input v-model="form.name" placeholder="请输入广告片名称" :maxlength="30"></Input>
+          <Input v-model="form.name" placeholder="请输入广告片名称"  :maxlength="30" ></Input>
         </FormItem>
 
         <FormItem  label="客户" >
@@ -19,21 +19,21 @@
         </FormItem>
 
         <FormItem  label="产品" >
-          <Select v-model="form.productId" clearable filterable>
+          <Select v-model="form.productId" clearable filterable >
             <Option v-for="(item, index) in productsListSel" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
           <!-- <productList v-if="form.brandId" :brandld="form.brandld" v-model="form.productld" ref="refProduct" /> -->
         </FormItem>
 
         <FormItem label="广告片规格" prop="specification">
-          <Select v-model="form.specification" @on-change="handleChangeSpe"  clearable filterable>
+          <Select v-model="form.specification" @on-change="handleChangeSpe"   clearable filterable>
             <Option v-for="(item, index) in specificationList" :value="item.id" :key="index">{{ item.name }}</Option>
           </Select>
           <em class="remark">备注：不得低于广告片实际时长，否则将无法通过审核</em>
         </FormItem>
 
         <FormItem label="广告片下载地址" prop="srcFileUrl">
-          <Input type="textarea" v-model="form.srcFileUrl" :row="6" placeholder="" />
+          <Input type="textarea" v-model="form.srcFileUrl" class="input-textarea-col" :rows="5"  placeholder="" />
         </FormItem>
 
          <div class=" create-submit-btn">
@@ -229,14 +229,16 @@ export default class Main extends ViewBase {
   }
   @Watch('form.brandId')
   watchBrand(val: any) {
-    this.productList(val)
+    if (val) {
+      this.productList(val)
+    } else {
+      this.productsListSel = []
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
-// @import '~@/site/lib.less';
-// @import '~@/site/common.less';
 @import '~@/views/kol/less/common.less';
 @import './com.less';
 
@@ -247,11 +249,22 @@ export default class Main extends ViewBase {
   color: #00202d;
   margin-left: 20px;
   font-size: 13px;
+  display: block;
 }
 .item-center {
   position: relative;
   margin-left: 50%;
   transform: translateX(-50%);
   padding: 60px 0 66px;
+}
+.jyd-form {
+  /deep/ .ivu-form-item-content {
+    .ivu-input-wrapper {
+      width: 460px;
+    }
+    .ivu-select {
+      width: 460px;
+    }
+  }
 }
 </style>

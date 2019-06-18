@@ -54,21 +54,21 @@ export default class Information extends ViewBase {
   }
 
   async tableList() {
-    const id = 107028 // this.id
+    const id = this.id // 107028
     try {
       const { data: { item, professions} } = await personIntro(id)
-      this.item = item || {}
-      this.imgList = item.images || []
+      this.item = item || null
+      this.imgList = item && item.images || []
       // 合并数据
-      item.directorPartner ?  this.personalList.push({
+      item ?  this.personalList.push({
           title: '合作过最多的导演',
           ...item.directorPartner
         }) : null
-      item.malePartner ? this.personalList.push({
+      item ? this.personalList.push({
           title: '合作过最多的男演员',
           ...item.malePartner
         }) : null
-      item.femalePartner ? this.personalList.push({
+      item ? this.personalList.push({
           title: '合作过最多的女演员',
           ...item.malePartner
         }) : null
