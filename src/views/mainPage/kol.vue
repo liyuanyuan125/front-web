@@ -13,9 +13,8 @@
         <BasicPane
           :item="basic"
           :more="{ name: 'kol-detail-platform', params: { id } }"
-          :brand="{name: 'kol-detail-brand', params: { id }}"
+          :brandData="brandData"
           :platformList="platformList"
-          :brandList="brandList"
         />
       </div>
 
@@ -38,13 +37,13 @@
             title="粉丝画像"
             :man="fansMan"
             :woman="fansWoman"
-            :more="{ name: 'home' }"
+            :more="{ name: 'kol-detail-fans', params: {id} }"
             tip="与奔驰用户匹配度：72%"
             class="fans-pane"
           />
           <PiePane
             title="近7日评论分析"
-            :more="{ name: 'home' }"
+            :more="{ name: 'kol-detail-comment', params: {id} }"
             :data="commentData"
             class="comment-pane"
           />
@@ -54,7 +53,7 @@
           <HotPane
             title="近30日微博指数"
             :data="hotData"
-            :more="{ name: 'home' }"
+            :more="{ name: 'kol-detail-platform', params: {id} }"
             tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
             :formatter="hotFormatter"
             class="hot-pane"
@@ -108,6 +107,8 @@ import { getKol } from './data'
 export default class FigurePage extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
+  @Prop({ type: String, default: '' }) channel!: string
+
   basic = {
     id: this.id,
     name: 'Papi酱',
@@ -141,8 +142,10 @@ export default class FigurePage extends ViewBase {
     { icon: 'xiaohongshu', name: '小红书', percent: 30, count: '888万' },
   ]
 
-  platformNav = 'weibo'
+  // 后端称为 channel，前端称为 flatform
+  platformNav = this.channel
 
+  // TODO: 应从后端读取
   platformNavList = [
     { icon: 'weibo', name: '微博' },
     { icon: 'wechat', name: '微信' },
@@ -151,11 +154,17 @@ export default class FigurePage extends ViewBase {
     { icon: 'xiaohongshu', name: '小红书' },
   ]
 
-  brandList = [
-    { logo: 'https://dummyimage.com/60x60/000/fff' },
-    { logo: 'https://dummyimage.com/60x60/fff/000' },
-    { logo: 'https://dummyimage.com/60x60/e2e/fff' },
-  ]
+  brandData = {
+    list: [
+      { logo: 'https://dummyimage.com/60x60/000/fff' },
+      { logo: 'https://dummyimage.com/60x60/fff/000' },
+      { logo: 'https://dummyimage.com/60x60/e2e/fff' },
+    ],
+    more: {
+      name: 'kol-detail-brand',
+      params: { id: this.id }
+    }
+  }
 
   commentData = [
     { name: '正面', value: 80, color: '#ca7273' },
@@ -231,8 +240,10 @@ export default class FigurePage extends ViewBase {
   }
 
   async initBasic() {
-    const data = await getKol(this.id)
-    debugger
+    const data = await getKol({
+      id: this.id,
+      channel: this.platformNav
+    })
   }
 }
 </script>

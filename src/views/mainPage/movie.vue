@@ -10,7 +10,12 @@
       ></div>
 
       <div class="basic-box">
-        <BasicPane :item="basic" :movie="movie" :actorData="actorData" :more="{ name: 'home' }">
+        <BasicPane
+          :item="basic"
+          :movie="movie"
+          :actorData="actorData"
+          :more="{ name: 'film-detail-information', params: { id } }"
+        >
           <router-link
             :to="{
               name: 'film-filmorder-addmovielist',
@@ -27,24 +32,18 @@
             title="想看用户画像"
             :man="fansMan"
             :woman="fansWoman"
-            :more="{ name: 'home' }"
+            :more="{ name: 'film-detail-fans', params: {id} }"
             tip="与奔驰用户匹配度：72%"
             class="fans-pane"
           />
           <div class="pane-group">
             <TextPane
               title="今日实时票房"
-              :more="{ name: 'home' }"
               :main="boxOfficeToday.main"
               :sub="boxOfficeToday.sub"
               class="box-office-today"
             />
-            <TextPane
-              title="累计票房"
-              :more="{ name: 'home' }"
-              :main="boxOfficeTotal.main"
-              class="box-office-total"
-            />
+            <TextPane title="累计票房" :main="boxOfficeTotal.main" class="box-office-total"/>
           </div>
         </div>
 
@@ -52,7 +51,7 @@
           <BarPane
             title="近7日新增想看人数"
             :data="activeFansData"
-            :more="{ name: 'home' }"
+            :more="{ name: 'film-detail-trend', params: {id} }"
             class="active-fans-pane"
           />
         </div>
@@ -61,7 +60,7 @@
           <HotPane
             title="全网热度"
             :data="hotData"
-            :more="{ name: 'home' }"
+            :more="{ name: 'film-detail-hot', params: {id} }"
             tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
             :legendList="legendList"
             :formatter="hotFormatter"
@@ -82,6 +81,8 @@ import FansPane from './components/fansPane.vue'
 import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
 import TextPane from './components/textPane.vue'
+
+import { getMovie } from './data'
 
 @Component({
   components: {
@@ -108,8 +109,8 @@ export default class FigurePage extends ViewBase {
 
   bigFigure =
     this.id == 1
-      ? ''
-      : 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
+      ? 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
+      : ''
 
   boxOfficeToday = {
     main: '116.3 万',
@@ -140,7 +141,11 @@ export default class FigurePage extends ViewBase {
       { id: 1, name: '吴京', avatar: 'https://dummyimage.com/80x80/000/fff' },
       { id: 2, name: '阿娇', avatar: 'https://dummyimage.com/80x80/fff/000' },
       { id: 3, name: '吴奇隆', avatar: 'https://dummyimage.com/80x80/e2e/fff' }
-    ]
+    ],
+    more: {
+      name: 'film-detail-information',
+      params: { id: this.id }
+    }
   }
 
   activeFansData = [
@@ -173,6 +178,18 @@ export default class FigurePage extends ViewBase {
   hotFormatter([{ dataIndex }]: any) {
     const { value, rank } = this.hotData[dataIndex]
     return `综合热度：${value}<br>男演员排名：${rank}`
+  }
+
+  created() {
+    this.init()
+  }
+
+  init() {
+    this.initBasic()
+  }
+
+  async initBasic() {
+    const data = await getMovie(this.id)
   }
 }
 </script>
@@ -330,7 +347,7 @@ export default class FigurePage extends ViewBase {
   background-color: #fbd76c;
   font-size: 18px;
   text-align: center;
-  opacity: .88;
+  opacity: 0.88;
   &:hover {
     opacity: 1;
   }

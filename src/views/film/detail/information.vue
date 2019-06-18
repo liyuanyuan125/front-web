@@ -17,11 +17,11 @@
        <Col span='20' class='fo-bos'>{{itemlist.languages == null ? '暂无' : itemlist.languages}}</Col>
      </Row>
      <Row class='row-bo'>
-       <Col span='3' class='fo-bo'>国家 / 地区{{itemlist.companyMap.Production== [] ? '暂无制作' : itemlist.companyMap.Production}}</Col>
+       <Col span='3' class='fo-bo'>国家 / 地区 </Col>
        <Col span='20' class='fo-bos'>{{itemlist.countries == null ? '暂无' : itemlist.countries}}
-       <!-- <span v-for='(it,index) in itemlist.countryCodeList' :key='index'>
-         <em v-fot='(its,index) in itemlist.countries' v-if='its == it.key'>{{it.text}}</em>
-       </span> -->
+       <span v-if='itemlist.countries != null' v-for='(it,index) in itemlist.countryCodeList' :key='index'>
+         <em v-for='(its,index) in itemlist.countries' v-if='its == it.key'>{{it.text}}</em>
+       </span>
      </Col>
      </Row>
      <Row class='row-bo'>
@@ -29,9 +29,9 @@
        <Col span='20' class='fo-bos'>{{itemlist.releaseDate == null ? '暂无' : releaseDate}}</Col>
      </Row>
      <Row class='row-bo'>
-       <Col span='3' class='fo-bo'>制作hahah / 发行</Col>
-       <Col span='20' class='fo-bos'><em v-if='itemlist.companyMap.Production.length == 0'>暂无制作</em> / <em v-if='itemlist.companyMap.Distributor.length == 0'>暂无发行</em>
-       <em v-if='itemlist.companyMap.Production.length > 0' v-for='(items,index) in itemlist.companyMap.Production'>{{item.name}}</em> / <em v-if='itemlist.companyMap.Distributor.length > 0'>{{itemlist.companyMap.Distributor[0].name}}</em></Col>
+       <Col span='3' class='fo-bo'>制作 / 发行</Col>
+       <Col span='20' class='fo-bos'><em v-if='itemlist.companyMap.Production.length == 0'>暂无制作</em>  <em v-if='itemlist.companyMap.Distributor.length == 0'>/暂无发行</em>
+       <em v-if='itemlist.companyMap.Production.length > 0' v-for='(items,index) in itemlist.companyMap.Production'>{{items.name + ' '}}</em> / <em v-if='itemlist.companyMap.Distributor.length > 0'>{{ itemlist.companyMap.Distributor[0].name}}</em></Col>
      </Row>
    </div>
    <!-- 图片 -->
@@ -48,7 +48,7 @@
 </template>
 
 <script lang='ts'>
-import {Component, Watch} from 'vue-property-decorator'
+import {Component, Watch, Prop} from 'vue-property-decorator'
 import UploadButton, { SuccessEvent } from '@/views/order/components/UploadButton.vue'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
@@ -60,6 +60,7 @@ import { confirm , toast } from '@/ui/modal'
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 @Component
 export default class Main extends ViewBase {
+  @Prop({ type: Number, default: 0 }) id!: number
   value1 = 0
   info = false
   tabShowTitle = '展示全部'
