@@ -5,7 +5,7 @@
       <Form label-position="left"
             :label-width="100">
         <Card class="detailmore-card">
-      <!--     <div slot="title">
+          <!-- <div slot="title">
             <Row type="flex"
                  justify="space-between"
                  align="middle">
@@ -96,8 +96,13 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { fans, brands } from '@/api/productfans'
+<<<<<<< HEAD:src/views/brand/brandfans.vue
+import { fans, brands } from '@/api/brandfans'
 import DetailNavBar from './components/detailNavBar.vue'
+=======
+import { fans, brands } from '@/api/figureDetailMoreInfo'
+import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
+>>>>>>> 61d264e035403ed2c60d4dbae3a6da4b5cb14b2a:src/views/brand/detailHome/fans.vue
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import MapChina from '@/components/chartsGroup/mapChina/'
 import Pie from '@/components/chartsGroup/pieSimple/'
@@ -252,6 +257,12 @@ export default class Temporary extends ViewBase {
         this.chart4.initDone = true
       }
       if (cities && cities.length > 0) {
+        // cities.map((it: any) => {
+        //   this.chart4.dataList[1].push({
+        //     name: it.name,
+        //     value: typeof it.count === 'number' ? it.count : parseInt(it.count, 0)
+        //   })
+        // })
         cities.forEach(({ count, name }: any) => {
           this.chart4.dataList[1].push({
             name,

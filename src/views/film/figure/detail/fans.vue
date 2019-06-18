@@ -5,7 +5,7 @@
       <Form label-position="left"
             :label-width="100">
         <Card class="detailmore-card">
-          <!-- <div slot="title">
+          <div slot="title">
             <Row type="flex"
                  justify="space-between"
                  align="middle">
@@ -28,7 +28,7 @@
                         type="primary">查看匹配度</Button></router-link>
               </Col>
             </Row>
-          </div> -->
+          </div>
           <div class="content">
             <Row type="flex"
                  justify="space-between">
@@ -94,10 +94,10 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { fans, brands } from '@/api/brandfans'
-import DetailNavBar from './components/detailNavBar.vue'
+import { fans, brands } from '@/api/figureDetailMoreInfo'
+import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import MapChina from '@/components/chartsGroup/mapChina/'
 import Pie from '@/components/chartsGroup/pieSimple/'
@@ -113,6 +113,7 @@ import BarYCategory from '@/components/chartsGroup/barYCategory/'
   }
 })
 export default class Temporary extends ViewBase {
+  @Prop({ type: Number, default: 0 }) id!: number
   form: any = {
   }
   pageQuery: any = {
@@ -205,16 +206,20 @@ export default class Temporary extends ViewBase {
       const {
         data,
         data: {
-          item: { femalePercent, malePercent, ages, cities, provinces }
+          item: { genders, ages, cities, provinces }
         }
       } = await fans(id)
-      if (1 == 1) {
+      if (genders && genders.length > 0) {
         this.chart1.dataList[
           this.chart1.currentTypeIndex
-        ] = [
-          {name: '男', value: malePercent},
-          {name: '女', value: femalePercent},
-        ]
+        ] = this.dict.genders.map(({ key, text }: any) => ({
+          name: text,
+          value: genders.reduce(
+            (pre: number, cur: any) =>
+              pre + (cur.gender === key ? cur.count : 0),
+            0
+          )
+        }))
         this.chart1.initDone = true
       }
       if (ages && ages.length > 0) {
@@ -233,17 +238,17 @@ export default class Temporary extends ViewBase {
       }
       if (provinces && provinces.length > 0) {
         let [min, max] = [0, 0]
-        provinces.forEach(({ count, name }: any) => {
-          count = parseInt(count, 0)
-          max = (max < count) ? count : max
-          min = (min > count) ? count : min
+        provinces.forEach(({ v, k }: any) => {
+          v = parseInt(v, 0)
+          max = (max < v) ? v : max
+          min = (min > v) ? v : min
           this.chart3.dataList[this.chart3.currentTypeIndex].push({
-            name,
-            value: count
+            name: k,
+            value: v
           })
           this.chart4.dataList[0].push({
-            name,
-            value: count
+            name: k,
+            value: v
           })
         })
         this.chart3.min = min
@@ -252,16 +257,10 @@ export default class Temporary extends ViewBase {
         this.chart4.initDone = true
       }
       if (cities && cities.length > 0) {
-        // cities.map((it: any) => {
-        //   this.chart4.dataList[1].push({
-        //     name: it.name,
-        //     value: typeof it.count === 'number' ? it.count : parseInt(it.count, 0)
-        //   })
-        // })
-        cities.forEach(({ count, name }: any) => {
+        cities.forEach(({ v, k }: any) => {
           this.chart4.dataList[1].push({
-            name,
-            value: typeof count === 'number' ? count : parseInt(count, 0)
+            name: k,
+            value: typeof v === 'number' ? v : parseInt(v, 0)
           })
         })
         this.chart4.initDone = true
