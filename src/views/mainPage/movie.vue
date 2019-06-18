@@ -143,7 +143,7 @@ export default class FigurePage extends ViewBase {
       { id: 3, name: '吴奇隆', avatar: 'https://dummyimage.com/80x80/e2e/fff' }
     ],
     more: {
-      name: 'film-detail-information',
+      name: 'film-figure',
       params: { id: this.id }
     }
   }

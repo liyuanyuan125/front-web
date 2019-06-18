@@ -106,7 +106,6 @@
             <img :src="it.avatar" class="actor-img" :title="it.name">
           </li>
         </ul>
-        <router-link :to="more" class="button-more" v-if="more">更多资料xxx'</router-link>
       </div>
 
       <div

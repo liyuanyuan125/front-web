@@ -14,7 +14,7 @@
           :item="basic"
           :opusData="opusData"
           :brandData="brandData"
-          :more="{ }"
+          :more="{name: 'film-figure-detail-information', params: {id}}"
         />
       </div>
 
@@ -115,8 +115,8 @@ export default class FigurePage extends ViewBase {
       { title: '《流浪地球》演员是', count: '16.8亿' },
     ],
     more: {
-      // name: 'kol-detail-brand',
-      // params: { id: this.id }
+      name: 'film-figure-detail-works',
+      params: { id: this.id }
     }
   }
 
@@ -128,8 +128,8 @@ export default class FigurePage extends ViewBase {
       { logo: 'https://dummyimage.com/60x60/e2e/fff' },
     ],
     more: {
-      // name: 'kol-detail-brand',
-      // params: { id: this.id }
+      name: 'film-figure-detail-brand',
+      params: { id: this.id }
     }
   }
 
