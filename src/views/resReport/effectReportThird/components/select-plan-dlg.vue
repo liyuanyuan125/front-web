@@ -35,12 +35,13 @@
         </Row>
       </div>
       <div class="detail">
-        <ul class="plan-list" v-if="data.length > 0">
-          <li class="plan-item" v-for="(it, index) in data" :key="index">
+        <ul class="plan-list">
+          <li class="plan-item">
             <div class="plan-cover-box">
-              <img class="plan-cover" :src="it.videoLogo" />
+              <img class="plan-cover"
+                   src="http://img0.imgtn.bdimg.com/it/u=2387750928,3991855324&fm=26&gp=0.jpg" />
               <div style="flex: 1">
-                <div class="plan-title">{{it.name}}</div>
+                <div class="plan-title">2019款wey新车发布影院广告</div>
                 <div class="plan-time">上映时间：1970-01-01</div>
                 <div class="plan-time">投放周期 7天</div>
                 <div class="plan-time">广告片 vv6年轻有wey</div>
@@ -49,7 +50,8 @@
                 <div class="plan-time">最后更新时间 2019-05－11 12</div>
               </div>
               <div class="button-box">
-                <a href="javascript;:" class="btn">查看</a>
+                <a href="javascript;:"
+                   class="btn">查看</a>
               </div>
             </div>
           </li>
@@ -75,7 +77,8 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { plans } from '@/api/effectReport'
+import { searchcinema } from '@/api/popPlan'
+import { thirdMonitors } from '@/api/effectReport'
 import CustomerList from './x-select-customerlist.vue'
 import PlanList from './x-select-planlist.vue'
 import { clean } from '@/fn/object'
@@ -84,7 +87,19 @@ import { toast, warning } from '@/ui/modal.ts'
 import moment from 'moment'
 import { uniq, uniqBy } from 'lodash'
 const timeFormat = 'YYYY-MM-DD'
-
+const keepExclusion = <T>(
+  value: T[],
+  oldValue: T[],
+  aloneValue: any,
+  setter: (newValue: T[]) => any
+) => {
+  if (value.length > 1) {
+    const newHas = value.includes(aloneValue)
+    const oldHas = oldValue.includes(aloneValue)
+    newHas && setter([aloneValue])
+    newHas && oldHas && setter(value.filter(it => it != aloneValue))
+  }
+}
 @Component({
   components: {
     CustomerList,
@@ -119,7 +134,7 @@ export default class DlgEditCinema extends ViewBase {
     try {
       const {
         data: { items, totalCount }
-      } = await plans({ })
+      } = await thirdMonitors({ })
       this.data = items || []
       this.total = totalCount
     } catch (ex) {
@@ -160,6 +175,8 @@ export default class DlgEditCinema extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+// /deep/ .ivu-modal-body {
+// }
 .title {
   text-align: center;
   font-size: 16px;
@@ -194,18 +211,11 @@ export default class DlgEditCinema extends ViewBase {
       color: #00202d;
     }
   }
-  /deep/ .ivu-select-selection {
+  /deep/ .ivu-select-selection,
+  /deep/ .ivu-select-input {
     padding-left: 20px;
     height: 40px;
     line-height: 40px;
-    &::placeholder {
-      color: #00202d;
-    }
-  }
-  /deep/ .ivu-select-input {
-    height: 40px;
-    line-height: 40px;
-    padding: 0;
     &::placeholder {
       color: #00202d;
     }

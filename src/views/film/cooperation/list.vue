@@ -52,7 +52,7 @@
               <RadioGroup
                 class="nav"
                 @on-change="handleChange"
-                v-model="form.time"
+                v-model="selectdTime"
                 size="large"
                 type="button"
               >
@@ -68,36 +68,33 @@
               <RadioGroup
                 class="nav"
                 @on-change="handleChange"
-                v-model="form.filmType"
+                v-model="form.movieTypeCode"
                 size="large"
                 type="button"
               >
                 <Radio
-                  v-for="(item) in dict.filmTypes"
+                  v-for="(item) in dict.typeList"
                   :key="item.key"
-                  :disabled="item.disabled"
                   :label="item.key"
                 >{{item.text}}</Radio>
-                <Radio :key="-1" :label="-1" class="showMore">
+                <!-- <Radio key="-1" label="-1" class="showMore">
                   <span @click="showMoreHandle">
                     {{filterShowMoreText}}
-                    <Icon :type="filterShowMoreIcon"/>
+                    <Icon :type="filterShowMoreIcon" />
                   </span>
-                </Radio>
+                </Radio> -->
               </RadioGroup>
             </FormItem>
             <FormItem label="影片量级:">
               <RadioGroup
-                class="test"
                 @on-change="handleChange"
-                v-model="form.filmWeight"
+                v-model="form.movieCategoryCode"
                 size="large"
                 type="button"
               >
                 <Radio
-                  v-for="(item) in dict.filmWeights"
+                  v-for="(item) in dict.categoryList"
                   :key="item.key"
-                  :disabled="item.disabled"
                   :label="item.key"
                 >{{item.text}}</Radio>
               </RadioGroup>
@@ -110,14 +107,13 @@
               <RadioGroup
                 class="nav"
                 @on-change="handleChange"
-                v-model="form.rank"
+                v-model="form.sortBy"
                 size="large"
                 type="button"
               >
                 <Radio
-                  v-for="(item) in dict.rankSelected"
+                  v-for="(item) in dict.sortBy"
                   :key="item.key"
-                  :disabled="item.disabled"
                   :label="item.key"
                 >{{item.text}}</Radio>
               </RadioGroup>
@@ -131,11 +127,13 @@
         <Row :gutter="10" v-if="done" class="res-row">
           <Col span="4" v-for="(item, index) in dataList" :key="index" class="res-col">
             <div class="res-item">
-              <div class="poster" @click="$router.push({name: 'film-movie', params: {id: item.movieId}})">
+              <router-link :to="{ name: 'film-movie', params: { id: item.movie_id }}">
+              <div class="poster" >
                 <img :src="item.movieMainPic">
               </div>
-              <router-link :to="{id:item.movieId}" class="movtitle cut-text">{{item.movieName}}</router-link>
-              <!-- <p class="movscore">{{item.score}}</p> -->
+              <div class="movtitle cut-text">{{item.name_cn}}</div>
+              <p class="movscore">{{item.jy_index}}</p>
+              </router-link>
             </div>
           </Col>
         </Row>
@@ -145,7 +143,7 @@
       </div>
       <Page
         class="info-page"
-        :total="form.total"
+        :total="form.totalPages"
         :current="form.pageIndex"
         :page-size="form.pageSize"
         show-total
@@ -163,12 +161,10 @@ import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { formatTimestamp, formatTimes, formatNumber } from '@/util/validateRules'
 import { fetchList } from '@/api/filmCooperation'
-import numAdd from '../number.vue'
-import PieNest from '@/components/chartsGroup/pieNest/'
-import BarCategoryStack from '@/components/chartsGroup/barCategoryStack/'
-import WordCloud from '@/components/chartsGroup/wordCloud/'
 import DetailNavBar from './components/detailNavBar.vue'
 import TinyLoading from '@/components/TinyLoading.vue'
+
+const typeListMore: any[] = []
 
 @Component({
   components: {
@@ -176,33 +172,25 @@ import TinyLoading from '@/components/TinyLoading.vue'
   }
 })
 export default class Temporary extends ViewBase {
-  total = 0
   done = false
   filterShowMore = false
   filterShowMoreIcon = 'ios-arrow-down'
   filterShowMoreText = '更多'
+  selectdTime: string = ''
   form: any = {
-    time: 0,
-    filmType: 0,
-    filmWeight: 0,
-    rank: 0,
+    movieTypeCode: '',
+    movieCategoryCode: '',
+    sortBy: '',
     pageIndex: 1,
     pageSize: 10,
-    total: 0,
-    showMore: true
+    totalPages: 0,
   }
-  dataList: any[] = [
-    // {
-    //   title: '复仇者联盟4：终局之战',
-    //   score: 95.1,
-    //   images: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3139737031,3366713682&fm=26&gp=0.jpg'
-    // }
-  ]
+  dataList: any[] = []
   dict = {
     // 上映时间
     timeSelected: [
       {
-        key: 0,
+        key: '',
         text: '不限'
       },
       {
@@ -227,119 +215,35 @@ export default class Temporary extends ViewBase {
       }
     ],
     // 影片类型
-    filmTypes: [
+    typeList: [
       {
-        key: 0,
+        key: '',
         text: '不限'
-      },
-      {
-        key: 1,
-        text: '动作'
-      },
-      {
-        key: 2,
-        text: '动作'
-      },
-      {
-        key: 3,
-        text: '动作'
-      },
-      {
-        key: 4,
-        text: '动作'
-      },
-      {
-        key: 5,
-        text: '动作'
-      },
-      {
-        key: 6,
-        text: '动作'
-      },
-      {
-        key: 7,
-        text: '动作'
-      },
-      {
-        key: 8,
-        text: '动作'
-      },
-      {
-        key: 9,
-        text: '动作'
-      },
-      {
-        key: 10,
-        text: '动作'
-      },
-      {
-        key: 11,
-        text: '动作'
-      },
-      {
-        key: 12,
-        text: '动作'
-      },
-      {
-        key: 13,
-        text: '动作'
-      },
-      {
-        key: 14,
-        text: '动作'
-      },
-      {
-        key: 15,
-        text: '动作'
-      },
-      {
-        key: 16,
-        text: '动作'
-      },
-      {
-        key: 17,
-        text: '动作'
-      },
-      {
-        key: 18,
-        text: '动作'
       }
     ],
     // 影片量级 :
-    filmWeights: [
+    categoryList: [
       {
-        key: 0,
+        key: '',
         text: '不限'
-      },
-      {
-        key: 1,
-        text: '超级大片'
-      },
-      {
-        key: 2,
-        text: '热门影片'
-      },
-      {
-        key: 3,
-        text: '一般影片'
       }
     ],
     // 排序选择
-    rankSelected: [
+    sortBy: [
       {
-        key: 0,
+        key: '',
         text: '鲸娱指数'
       },
       {
-        key: 1,
+        key: 'hots',
         text: '实时热度'
       },
       {
-        key: 2,
+        key: 'wantSeeCount',
         text: '想看人数'
       },
       {
-        key: 3,
+        key: 'commentsScore',
         text: '口碑评分'
       }
     ]
@@ -348,27 +252,48 @@ export default class Temporary extends ViewBase {
   async fetchHandler() {
     const that: any = this
     const mockObj = {
-      // ...this.form
+      ...this.form
     }
     try {
       const {
         data: {
-          items,
-          totalCount
+          movies,
+          categoryList,
+          typeList,
+          totalPages
         }
       } = await fetchList({ ...mockObj })
-      this.dataList = items
-      this.form.total = totalCount
+      this.dataList = movies
+      this.form.totalPages = totalPages
+      if ( typeList.length > 0 ) {
+        this.dict.typeList.push(...typeList)
+      }
+      // if ( typeList.length > 11 ) {
+      //   const arr1 = typeList.filter((item: any, index: number) => {
+      //     return index < 6
+      //   })
+      //   const arr2 = typeList.filter((item: any, index: number) => {
+      //     return index > 6
+      //   })
+      //   this.dict.typeList.push(...arr1)
+      //   typeListMore.push(...arr2)
+      // } else {
+      //   this.dict.typeList.push( ...typeList )
+      // }
+      // this.dict.categoryList.push(...categoryList)
       that.done = true
     } catch (ex) {
       this.handleError(ex)
     }
   }
   handleChange() {
-    if (this.form.filmType === -1) {
-      return
-    }
+    this.form.moveTypeCode = 0
+    this.restHandler()
     this.fetchHandler()
+  }
+  restHandler() {
+    this.dict.typeList.splice(1, this.dict.typeList.length )
+    this.dataList = []
   }
   handlepageChange(val: any) {
     this.form.pageIndex = val
@@ -380,65 +305,20 @@ export default class Temporary extends ViewBase {
   }
   showMoreHandle() {
     if (!this.filterShowMore) {
-      const { filmType } = this.form
-      this.dict.filmTypes.push(
-        {
-          key: 20,
-          text: '动作'
-        },
-        {
-          key: 21,
-          text: '动作'
-        },
-        {
-          key: 22,
-          text: '动作'
-        },
-        {
-          key: 23,
-          text: '动作'
-        },
-        {
-          key: 24,
-          text: '动作'
-        },
-        {
-          key: 25,
-          text: '动作'
-        },
-        {
-          key: 26,
-          text: '动作'
-        },
-        {
-          key: 27,
-          text: '动作'
-        },
-        {
-          key: 97,
-          text: '动作'
-        },
-        {
-          key: 98,
-          text: '动作'
-        },
-        {
-          key: 99,
-          text: '动作'
-        }
-      )
+      const { movieTypeCode } = this.form
+      this.dict.typeList.push(...typeListMore)
       this.filterShowMore = true
       this.filterShowMoreIcon = 'ios-arrow-up'
       this.$nextTick(() => {
-        this.form.filmType = filmType
+        this.form.movieTypeCode = movieTypeCode
       })
     } else {
-      const { filmType } = this.form
-      this.dict.filmTypes.splice(-11, 11)
+      const { movieTypeCode } = this.form
+      this.dict.typeList.splice(-11, 11)
       this.filterShowMore = false
       this.filterShowMoreIcon = 'ios-arrow-down'
       this.$nextTick(() => {
-        this.form.filmType = 0
+        this.form.movieTypeCode = 0
       })
     }
   }
@@ -448,7 +328,7 @@ export default class Temporary extends ViewBase {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '~@/site/lib.less';
 .film-cooperation-wp {
   .guide {
@@ -527,17 +407,17 @@ export default class Temporary extends ViewBase {
       background: rgba(0, 32, 45, 1);
       border-radius: 5px 5px 0 0;
       opacity: 0.8;
-      .ivu-form-item-label {
+      /deep/ .ivu-form-item-label {
         color: #fff;
         padding: 6px 12px 10px 0;
       }
-      .ivu-radio-group {
+      /deep/ .ivu-radio-group {
         .showMore.ivu-radio-wrapper-checked {
           color: #fff;
           font-weight: 400;
           background: none;
         }
-        .ivu-radio-wrapper {
+        /deep/ .ivu-radio-wrapper {
           height: 28px;
           line-height: 28px;
           font-size: 14px;
@@ -552,7 +432,7 @@ export default class Temporary extends ViewBase {
             display: none;
           }
         }
-        .ivu-radio-wrapper-checked {
+        /deep/ .ivu-radio-wrapper-checked {
           background-color: #82d1e4;
           color: #00202d;
           .ivu-radio-inner {
@@ -568,14 +448,14 @@ export default class Temporary extends ViewBase {
     .filterbottom {
       background: rgba(255, 255, 255, 0.7);
       padding: 40px 63px;
-      .ivu-form-item {
+      /deep/ .ivu-form-item {
         margin-bottom: 0;
       }
-      .ivu-form-item-label {
+      /deep/ .ivu-form-item-label {
         font-size: 16px;
       }
-      .ivu-radio-group {
-        .ivu-radio-wrapper {
+      /deep/ .ivu-radio-group {
+        /deep/ .ivu-radio-wrapper {
           height: 36px;
           line-height: 36px;
           font-size: 16px;
@@ -589,11 +469,11 @@ export default class Temporary extends ViewBase {
             display: none;
           }
         }
-        .ivu-form-item-label {
+        /deep/ .ivu-form-item-label {
           color: #00202d;
           line-height: 35px;
         }
-        .ivu-radio-wrapper-checked {
+        /deep/ .ivu-radio-wrapper-checked {
           color: #00202d;
           border-bottom: 2px solid #00202d;
           font-weight: 400;
@@ -646,11 +526,11 @@ export default class Temporary extends ViewBase {
     .info-page {
       text-align: center;
       padding-bottom: 59px;
-      .ivu-page-prev,
-      .ivu-page-next,
-      .ivu-page-item,
-      .ivu-page-item-jump-prev,
-      .ivu-page-item-jump-next {
+      /deep/ .ivu-page-prev,
+      /deep/ .ivu-page-next,
+      /deep/ .ivu-page-item,
+      /deep/ .ivu-page-item-jump-prev,
+      /deep/ .ivu-page-item-jump-next {
         width: 35px;
         height: 35px;
         border-radius: 20px;
@@ -658,8 +538,8 @@ export default class Temporary extends ViewBase {
         border: none;
         color: #00202d;
       }
-      .ivu-page-item-active a,
-      .ivu-page-item-active:hover a {
+      /deep/ .ivu-page-item-active a,
+      /deep/ .ivu-page-item-active:hover a {
         display: inline-block;
         width: 35px;
         height: 35px;
@@ -672,7 +552,6 @@ export default class Temporary extends ViewBase {
     }
   }
 }
-
 .res-item {
   cursor: pointer;
 }
