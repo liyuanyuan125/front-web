@@ -36,7 +36,7 @@ export async function dayRanges(query: any = { beginDate: 20191212, endDate: 201
  */
 export async function comment(query: any, id: string = '') {
   // const res = await get(`/person/${id}/comments`, query)
-  const res = await get(`/brand/brands/${id}/comment`, { beginDate: 20170112, endDate: 20191212 })
+  const res = await get(`/brand/brands/${id}/comment`, query)
   return res
   return await mockGet(query, {
     emotion: [
