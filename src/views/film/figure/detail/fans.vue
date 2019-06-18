@@ -23,7 +23,7 @@
                         :value="option.value"
                         :key="index">{{option.label}}</Option>
               </Select>
-              <router-link :to="{path: '/figure/detailMoreInfo/matching/'+pageQuery.brandId}"><Button :disabled="pageQuery.brandId === ''"
+              <router-link :to="{path: `/film/figure/detail/${id}/matching/${pageQuery.brandId}`}"><Button :disabled="pageQuery.brandId === ''"
                         size="small"
                         type="primary">查看匹配度</Button></router-link>
               </Col>

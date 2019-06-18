@@ -36,7 +36,7 @@ export async function dayRanges(query: any = { beginDate: 20191212, endDate: 201
  */
 export async function comment(query: any, id: string = '') {
   // const res = await get(`/person/${id}/comments`, query)
-  const res = await get(`/person/107028/comments`, { beginDate: 20170112, endDate: 20191212 })
+  const res = await get(`/brand/products/${id}/comment`, { beginDate: 20170112, endDate: 20191212 })
   return res
   return await mockGet(query, {
     emotion: [
@@ -176,8 +176,8 @@ export async function comment(query: any, id: string = '') {
  * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
  */
 export async function fans(id: string = '') {
-  // const res = await get(`/person/${id}/fans`)
-  // return res
+  const res = await get(`/brand/products/${id}/portrait`)
+  return res
   return await mockGet({}, {
     item: {
       totalCount: 83724,

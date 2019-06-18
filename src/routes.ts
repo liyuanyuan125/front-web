@@ -1076,7 +1076,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       },
       // 影片 - 更多详情 - 粉丝画像 - 匹配度
       {
-        path: 'matching/:id',
+        path: 'matching/:brandId',
         name: 'film-detail-matching',
         component: () => import('./views/film/detail/matching.vue'),
         meta: {
@@ -1179,7 +1179,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       },
       // 影人详情 - 粉丝画像 - 受众匹配
       {
-        path: 'matching/:id',
+        path: 'matching/:brandId',
         name: 'film-figure-detail-matching',
         component: () => import('./views/film/figure/detail/matching.vue'),
         meta: {
