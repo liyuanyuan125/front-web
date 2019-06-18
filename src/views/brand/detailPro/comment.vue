@@ -108,7 +108,7 @@ import { comment } from '@/api/kolDetailMoreInfo'
 import PieNest from '@/components/chartsGroup/pieNest/'
 import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
-import DetailNavBar from './components/detailNavBar.vue'
+import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
 import { tooltipStyles } from '@/util/echarts'
 const timeFormat = 'YYYYMMDD'
 // #D0BF6B 中性
@@ -382,13 +382,13 @@ export default class Temporary extends ViewBase {
     switch ( dayRangesKey ) {
       case 'yesterday' :
         return moment(new Date()).add(-1, 'days').format(timeFormat)
-        break
+        // break
       case 'thirtyDay' :
         return moment(new Date()).add(-30, 'days').format(timeFormat)
-        break
+        // break
       case 'ninetyDay' :
         return moment(new Date()).add(-90, 'days').format(timeFormat)
-        break
+        // break
       default :
         return moment(new Date()).add(-7, 'days').format(timeFormat)
     }

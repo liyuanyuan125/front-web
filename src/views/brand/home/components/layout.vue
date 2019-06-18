@@ -26,7 +26,7 @@
 
     <section class="content-box">
       <div class="content-left">
-        <Pane title="百度搜索用户画像" :more="{}" class="baidu-pane">
+        <Pane title="百度搜索用户画像" :more="{name: 'brand-homedetail-fans', params: {id}}" class="baidu-pane">
           <ul class="baidu-list">
             <li class="baidu-item">
               <em>{{item.malePercent}}</em>%
@@ -37,7 +37,7 @@
           </ul>
         </Pane>
 
-        <Pane title="评论分析" :more="{}" class="analyze-pane">
+        <Pane title="评论分析" :more="{name: 'brand-homedetail-comment', params: {id}}" class="analyze-pane">
           <div
             class="analyze-summary"
             v-if="analyze.negativeTrend != 0"
@@ -90,13 +90,13 @@
           </div>
         </nav>
 
-        <Pane title="映前广告投放" :more="{}" class="putting-pane">
+        <Pane title="映前广告投放" :more="{name: 'pop-planlist'}" class="putting-pane">
           <ThrowPane :data="putting"/>
         </Pane>
       </div>
 
       <div class="content-right">
-        <Pane title="KOL推广" :more="{}" class="kol-pane">
+        <Pane title="KOL推广" :more="{name: 'kol-orderlist'}" class="kol-pane">
           <div class="count-stats" v-if="kol.pendCount > 0 || kol.runningCount > 0">
             <label>{{kol.pendCount}}个待处理</label>
             <label>{{kol.runningCount}}个执行中</label>
@@ -131,7 +131,7 @@
           </ul>
         </Pane>
 
-        <Pane title="影片合作" :more="{}" class="film-pane">
+        <Pane title="影片合作" :more="{name: 'film-filmorder-movielist'}" class="film-pane">
           <div class="count-stats" v-if="film.pendCount > 0 || film.runningCount > 0">
             <label>{{film.pendCount}}个待处理</label>
             <label>{{film.runningCount}}个执行中</label>
