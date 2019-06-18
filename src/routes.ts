@@ -1283,6 +1283,51 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  // 品牌 - 用户画像
+  {
+    path: '/brand/brandfans/:id',
+    name: 'film-filmorder-addmovielist',
+    component: () => import('./views/brand/brandfans.vue'),
+    meta: emptyAuth,
+  },
+  // 品牌 - 口碑评论
+  {
+    path: '/brand/brandcomment/:id',
+    name: 'film-filmorder-addmovielist',
+    component: () => import('./views/brand/brandcomment.vue'),
+    meta: emptyAuth,
+  },
+  // 品牌 - 热度趋势
+  {
+    path: '/brand/brandtrend/:id',
+    name: 'film-filmorder-addmovielist',
+    component: () => import('./views/brand/brandtrend.vue'),
+    meta: emptyAuth,
+  },
+
+  // 产品 - 用户画像
+  {
+    path: '/brand/productfans/:id',
+    name: 'film-filmorder-addmovielist',
+    component: () => import('./views/brand/productfans.vue'),
+    meta: emptyAuth,
+  },
+  // 产品 - 口碑评论
+  {
+    path: '/brand/productfans/:id',
+    name: 'film-filmorder-addmovielist',
+    component: () => import('./views/brand/productcomment.vue'),
+    meta: emptyAuth,
+  },
+  // 产品 - 热度趋势
+  {
+    path: '/brand/productfans/:id',
+    name: 'film-filmorder-addmovielist',
+    component: () => import('./views/brand/producttrend.vue'),
+    meta: emptyAuth,
+  },
+
+
   // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
   {
     path: '/brand/moredetail/:id/:brandId',
