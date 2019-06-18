@@ -1386,12 +1386,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: '',
       title: '产品',
     },
-    props({ params: { brandId, id } }: Route) {
-      return {
-        id: +id,
-        brandId: +brandId,
-      }
-    }
+    props: paramTypes({
+      id: Number,
+      brandId: Number
+    })
   },
 
   // 品牌 - 用户画像
