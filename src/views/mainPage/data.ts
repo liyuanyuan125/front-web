@@ -16,3 +16,22 @@ export async function getKol({
   }
   return result
 }
+
+/**
+ * 影片详情
+ * https://yapi.aiads-dev.com/project/161/interface/api/4751
+ */
+export async function getMovie(id: number) {
+  const {
+    data: {
+    }
+  } = await get(`/movie/${id}`)
+
+  const result = {
+    basic: {
+
+    }
+  }
+
+  return result
+}
