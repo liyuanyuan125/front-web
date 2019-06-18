@@ -22,12 +22,13 @@ export function numberify(obj: object, keys: string|string[]) {
   return newObj
 }
 
+const falseList = ['false', '0', 'null', 'undefined']
+
 /**
- * 字符串转换成 bool，字符串 'false' 会被转换成 false，其他情形，调用 Boolean
+ * 字符串转换成 bool
  * @param value 字符串
  */
 export function stringToBoolean(value: string | null) {
-  return value == null || value.trim().toLowerCase() == 'false'
-    ? false
-    : Boolean(value.trim())
+  const val = String(value).trim()
+  return falseList.includes(val) ? false : Boolean(val)
 }
