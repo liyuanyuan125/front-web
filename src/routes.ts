@@ -10,10 +10,32 @@ import Error from './views/error/index.vue'
 
 import { RouteConfig, Route, Location } from 'vue-router'
 import { devInfo, devError } from './util/dev'
+import { MapType } from './util/types'
+import { stringToBoolean } from './fn/typeCast'
 
-const idProps = ({ params: { id } }: Route) => {
-  return { id: +id }
+/**
+ * 处理 route 中的参数类型
+ * @param config 配置
+ */
+const paramTypes = (
+  config: MapType<NumberConstructor | BooleanConstructor | StringConstructor>
+) => {
+  return ({ params }: Route) => {
+    const props = Object.entries(config).reduce((map, [key, type]) => {
+      const strVal = params[key]
+      const value = type === Number
+        ? (+strVal || 0)
+        : type === Boolean
+        ? stringToBoolean(strVal)
+        : strVal
+      map[key] = value
+      return map
+    }, {} as MapType<any>)
+    return props
+  }
 }
+
+const idProps = paramTypes({ id: Number })
 
 /**
  * 面包屑
@@ -1325,12 +1347,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: '',
       title: '产品',
     },
-    props({ params: { brandId, id } }: Route) {
-      return {
-        id: +id,
-        brandId: +brandId,
-      }
-    }
+    props: paramTypes({
+      id: Number,
+      brandId: Number
+    })
   },
 
   // 品牌 - 产品 - 详情页

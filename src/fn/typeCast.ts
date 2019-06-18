@@ -21,3 +21,14 @@ export function numberify(obj: object, keys: string|string[]) {
   parse(keys).forEach(key => newObj[key] = +newObj[key])
   return newObj
 }
+
+const falseList = ['false', '0', 'null', 'undefined']
+
+/**
+ * 字符串转换成 bool
+ * @param value 字符串
+ */
+export function stringToBoolean(value: string | null) {
+  const val = String(value).trim().toLowerCase()
+  return falseList.includes(val) ? false : Boolean(val)
+}
