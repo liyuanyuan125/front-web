@@ -21,3 +21,13 @@ export function numberify(obj: object, keys: string|string[]) {
   parse(keys).forEach(key => newObj[key] = +newObj[key])
   return newObj
 }
+
+/**
+ * 字符串转换成 bool，字符串 'false' 会被转换成 false，其他情形，调用 Boolean
+ * @param value 字符串
+ */
+export function stringToBoolean(value: string | null) {
+  return value == null || value.trim().toLowerCase() == 'false'
+    ? false
+    : Boolean(value.trim())
+}
