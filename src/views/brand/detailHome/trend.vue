@@ -10,16 +10,16 @@
                   <RadioGroup
                     style="margin-right:15px"
                     @on-change="handleChange"
-                    v-model="form.statisticTimeId"
+                    v-model="form.dayRangesKey"
                     size="large"
                     type="button"
                   >
                     <Radio
-                      v-for="(item) in dict.statisticTime"
-                      :key="item.id"
+                      v-for="(item) in dict.dayRanges"
+                      :key="item.key"
                       :disabled="item.disabled"
-                      :label="item.id"
-                    >{{item.name}}</Radio>
+                      :label="item.key"
+                    >{{item.text}}</Radio>
                   </RadioGroup>
                   <DatePicker
                     type="daterange"
@@ -79,11 +79,12 @@ import {
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
+import moment from 'moment'
 import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
-import { trend } from '@/api/kolDetailMoreInfo'
+import { trend } from '@/api/brandtrend'
 import AreaBasic from '@/components/chartsGroup/areaBasic/'
 import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
-
+const timeFormat = 'YYYYMMDD'
 @Component({
   components: {
     AreaBasic,
@@ -98,32 +99,33 @@ export default class Trend extends ViewBase {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
+    dayRangesKey: 'sevenDay',
     statisticTimeId: 0
   }
 
   dict: any = {
-    statisticTime: [
+    dayRanges: [
       {
-        id: 0,
-        name: '昨天',
+        key: 'yesterday',
+        text: '昨日',
         disabled: false
       },
       {
-        id: 1,
-        name: '最近7天',
+        key: 'sevenDay',
+        text: '最近7天',
         disabled: false
       },
       {
-        id: 2,
-        name: '最近30天',
+        key: 'thirtyDay',
+        text: '最近30天',
         disabled: false
       },
       {
-        id: 3,
-        name: '最近90天',
-        disabled: true
+        key: 'ninetyDay',
+        text: '最近90天',
+        disabled: false
       }
-    ]
+    ],
   }
 
   chart1: any = {
@@ -146,6 +148,8 @@ export default class Trend extends ViewBase {
     color: ['#ff0000', '#3fb23f', '#0099cc', '#cc6600']
   }
 
+  itemList: any = []
+
   async typeChangeHander2(index: number = 0) {
     if (this.chart2.dataList[index].length < 1) {
       await this.getChartsData('chart2', index)
@@ -160,65 +164,90 @@ export default class Trend extends ViewBase {
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const mockObj = {
-      effectType: typeIndex
+      beginDate: this.form.beginDate[0],
+      endDate: this.form.beginDate[1],
     }
     try {
-      const { data } = await trend({ ...mockObj })
-      if (data.chart1.effectTypeList.length > 0) {
-        this.chart1.dataList = data.chart1.effectTypeList.map(
-          (item: any, index: number) => {
-            return {
-              data: [],
-              date: []
-            }
+      this.itemList = []
+      const  { data }  = await trend(this.$route.params.id, { ...mockObj })
+      if (data.items != null) {
+        this.chart1.dataList = data.items.map((item: any, index: number) => {
+          return {
+            data: count,
+            date,
           }
-        )
-      } else {
-        this.chart1.dataList.push({
-          data: [],
-          date: []
+          // this.chart1.dataList[index].data.push(item.count)
+          // this.chart1.dataList[index].date.push(item.date)
         })
+        // console.log(this.chart1.dataList)
+        // for (const i in data.items) {
+        //   if (1 == 1) {
+        //     for (const j in data.items[i].channels) {
+        //       if (1 == 1) {
+        //         this.itemList.push(data.items[i].channels[j])
+        //       }
+        //     }
+        //   }
+        // }
       }
-      this.chart1.dict1 = data.chart1.effectTypeList
-      data.chart1.dataList.forEach((item: any, index: number) => {
-        this.chart1.dataList[item.key].data.push(item.data)
-        this.chart1.dataList[item.key].date.push(item.date)
-      })
-      this.chart1.initDone = true
-      if (data.chart2.effectTypeList.length > 0) {
-        this.chart2.dataList = data.chart2.effectTypeList.map(
-          (item: any, index: number) => {
-            return {
-              data: [],
-              date: []
-            }
-          }
-        )
-      } else {
-        this.chart2.dataList.push({
-          data: [],
-          date: []
-        })
-      }
-      this.chart2.dict1 = data.chart2.effectTypeList
-      data.chart2.dataList.forEach((item: any, index: number) => {
-        this.chart2.dataList[item.key].data.push(item.data)
-        this.chart2.dataList[item.key].date.push(item.date)
-      })
+      // console.log(this.itemList)
+
+      // this.chart1.initDone = true
+      // if (data.channelCodeList.length > 0) {
+      //   this.chart2.dataList = data.channelCodeList.map(
+      //     (item: any, index: number) => {
+      //       return {
+      //         count: [],
+      //         date: []
+      //       }
+      //     }
+      //   )
+      // } else {
+      //   this.chart2.dataList.push({
+      //     count: [],
+      //     date: []
+      //   })
+      // }
+      // this.chart2.dict1 = data.channelCodeList
+      // data.chart2.dataList.forEach((item: any, index: number) => {
+      //   this.chart2.dataList[item.code].count.push(item.count)
+      //   this.chart2.dataList[item.code].date.push(item.date)
+      // })
       this.chart2.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
+  beginDate(dayRangesKey: string) {
+    switch ( dayRangesKey ) {
+      case 'yesterday' :
+        return moment(new Date()).add(-1, 'days').format(timeFormat)
+      case 'thirtyDay' :
+        return moment(new Date()).add(-30, 'days').format(timeFormat)
+      case 'ninetyDay' :
+        return moment(new Date()).add(-90, 'days').format(timeFormat)
+      default :
+        return moment(new Date()).add(-7, 'days').format(timeFormat)
+    }
+  }
+  endDate() {
+    return moment(new Date()).format(timeFormat)
+  }
+
   async handleChange() {
+    this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
+    this.form.beginDate[1] = this.endDate()
     this.chart1.initDone = false
     this.chart2.initDone = false
-    this.resetData()
-    await this.getChartsData('', 0)
+    // this.resetData()
+    this.getChartsData()
+    // await this.getChartsData('', 0)
   }
 
   async mounted() {
+    this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
+    this.form.beginDate[1] = this.endDate()
     await this.getChartsData('', 0)
   }
 

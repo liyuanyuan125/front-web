@@ -1,6 +1,6 @@
 <template>
-    <!-- 客户列表 -->
-    <Select v-model="inner"  clearable filterable placeholder="客户名称"  class="select-wid" >
+    <!-- 计划列表 -->
+    <Select v-model="inner"  clearable filterable placeholder="广告计划名称"  class="select-wid" >
         <Option v-for="item in data" :key="item.id" :value="item.id">{{item.name || item.nameShort}}</Option>
     </Select>
 </template>
@@ -8,22 +8,21 @@
 <script lang='ts'>
 import {Component, Prop, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { popPartners } from '@/api/effectReport'
+import { popPlans } from '@/api/effectReport'
 @Component
 export default class Main extends ViewBase {
-  // 双向绑定 v-model
   @Prop({ type: Number, default: 0 }) value!: number
 
   data = []
   inner: number = this.value
 
   mounted() {
-    this.popPartners()
+    this.popPlansHandle()
   }
 
-  async popPartners() {
+  async popPlansHandle() {
     try {
-      const { data, data: {items} } = await popPartners({
+      const { data: {items} } = await popPlans({
         pageSize: 99999,
         pageIndex: 1
       })
@@ -45,3 +44,5 @@ export default class Main extends ViewBase {
 }
 
 </script>
+<style lang='less' scoped>
+</style>
