@@ -293,7 +293,7 @@ export default class Orienteering extends ViewBase {
       this.cityCustom = item.cityCustom || 0
       this.citiesList = cities || []
       this.citysId = (this.citiesList || []).map((it: any) => it.id)
-     // 哈哈
+     //
       this.warehouseId = (datas.data || []).map((it: any) => it.cityId)
       this.beginDate = item.beginDate
       this.endDate = item.endDate
@@ -417,7 +417,7 @@ export default class Orienteering extends ViewBase {
           planId: this.$route.params.setid,
           cityCustom: this.cityCustom,
           allNation: this.form.cinema[0] == 0 ? 1 : 0,
-          deliveryCityTypes: this.cityCustom == 0 ? '' : this.form.cinema,
+          deliveryCityTypes: this.cityCustom == 0 ? this.form.cinema : '',
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
@@ -448,8 +448,8 @@ export default class Orienteering extends ViewBase {
                 })
         })
       )
+      ; (this.$Spin as any).show()
       let time: any = null
-      (this.$Spin as any).show()
       time = setInterval(() => {
         if (this.recommend) {
           (this.$Spin as any).hide()
