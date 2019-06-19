@@ -98,7 +98,7 @@ export async function getKol({
 
     fansList,
 
-    navList: fansList.map(it => slice(it, 'icon,name')),
+    navList: fansList.map(it => slice(it, 'icon,name')) as any[],
 
     brandData: brandList.length > 0 ? {
       list: brandList,

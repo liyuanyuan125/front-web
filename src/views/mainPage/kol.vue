@@ -172,7 +172,7 @@ export default class FigurePage extends ViewBase {
       const firstNav = navList[0]
       firstNav && this.$router.push({
         name: 'kol-figure',
-        params: { id: this.id, channel: firstNav.icon }
+        params: { id: this.id as any, channel: firstNav.icon }
       })
       return
     }

@@ -4,7 +4,7 @@ import { get , post , put, del } from '@/fn/ajax'
  * 推广管理 - 广告计划 - 列表
  * @param data
  */
-export async function kolsList(data: any) {
+export async function kolsList(data: any = {}) {
   const res = await get('/customer/favorites/kols', data)
   return res
 }
