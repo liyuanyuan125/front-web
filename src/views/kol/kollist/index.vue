@@ -76,7 +76,8 @@
             </div>
           </template>
           <template slot-scope="{ row }" slot="type">
-            {{row.typeName}}
+            <div v-if="acount == 1">{{row.typeName}}</div>
+            <div v-else>{{row.categoryName}}</div>
           </template>
           <template slot-scope="{ row }" slot="read">
             <div style="text-align:center">
@@ -132,7 +133,7 @@
                 <Icon type="md-add-circle" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
                 取消投放
               </p>
-              <p v-if="!kolIds.includes(row.id)" @click="collects(row.id)">
+              <p v-if="!kolIds.includes(this.accout == 1 ? row.id : row.accountDataId)" @click="collects(row.id)">
                 <Icon type="md-heart" style="margin-top: 5px;font-size: 17px; color: #CA7273" />
                 收藏
               </p>
@@ -163,7 +164,8 @@
     <div>
       <div v-show="yudingList.length > 0" class="check-box">
       <div></div>
-        <div class="check-title">已选择<span ref="end"> {{yudingList.length}} </span>个，总粉丝数：{{fansNums(yudingList)}}万+
+        <div class="check-title">已选择<span ref="end" class="red"> {{yudingList.length}} </span>个，总粉丝数：
+        <span class="red">{{fansNums(yudingList)}}</span>万+
           <Icon @click="detailShow" type="ios-arrow-up" class="ios-type" />
         </div>
         <div>
@@ -190,6 +192,7 @@ import jsxReactToVue from '@/util/jsxReactToVue'
 import { clean } from '@/fn/object.ts'
 import { getpersons, delcollect } from '@/api/mycollect.ts'
 import { kolList } from '@/api/collect.ts'
+import { findkol } from '@/api/shopping'
 
 // 保持互斥
 const keepExclusion = <T extends any>(
@@ -281,7 +284,7 @@ export default class Main extends ViewBase {
         minWidth: 40,
         key: 'followersCount',
         slot: 'flansNumber',
-        sortable: 'custom'
+        sortable: this.acount == 1 ? 'custom' : ''
       },
       {
         title: '粉丝画像',
@@ -295,7 +298,7 @@ export default class Main extends ViewBase {
         align: 'left',
         key: 'avgReadCount',
         slot: 'read',
-        sortable: 'custom'
+        sortable: this.acount == 1 ? 'custom' : ''
       },
       {
         title: '平均评论数',
@@ -311,7 +314,7 @@ export default class Main extends ViewBase {
         align: 'left',
         slot: 'like',
         key: 'avgAttitudesCount',
-        sortable: 'custom'
+        sortable: this.acount == 1 ? 'custom' : ''
       },
       {
         title: '平均转发数',
@@ -319,7 +322,7 @@ export default class Main extends ViewBase {
         minWidth: 51,
         key: 'avgRepostsCount',
         slot: 'transmit',
-        sortable: 'custom'
+        sortable: this.acount == 1 ? 'custom' : ''
       },
       {
         title: '投放价格',
@@ -470,6 +473,9 @@ export default class Main extends ViewBase {
 
   async put(row: any, e: any) {
     try {
+      const { data } = await findkol(this.title[this.type], {
+        channelDataIds: row.id
+      })
       this.$nextTick(() => {
         const dom: any   = this.$refs[`small${row.id}`]
         const id = row.id
@@ -517,6 +523,18 @@ export default class Main extends ViewBase {
     }
   }
 
+  // 我的收藏
+  async collectinit() {
+    try {
+      const { data } = await kolList({
+        channelTypeCode: this.type + 4
+      })
+      this.tabledata = data.items || []
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
   // 加入收藏
   async collects(id: any) {
     try {
@@ -543,6 +561,7 @@ export default class Main extends ViewBase {
     }
   }
 
+  // 取消投放
   async cancelShop(id: any) {
     try {
       await delShopping({
@@ -556,6 +575,7 @@ export default class Main extends ViewBase {
     }
   }
 
+  // 订单填写
   next() {
     this.$router.push({
       name: 'kol-shopping',
@@ -565,6 +585,7 @@ export default class Main extends ViewBase {
     })
   }
 
+  // 购物车显示
   detailShow() {
     this.$nextTick(() => {
       (this.$refs.detailbox as any).init(this.yudingList)
@@ -577,6 +598,7 @@ export default class Main extends ViewBase {
     this.KolSeach()
   }
 
+  // 粉丝数相加
   fansNums(row: any) {
     let num = 0
 
@@ -586,6 +608,7 @@ export default class Main extends ViewBase {
     return num
   }
 
+  // kol列表
   async KolSeach(key?: any, order?: any) {
     this.loading = true
     // await delall('weibo')
@@ -612,21 +635,12 @@ export default class Main extends ViewBase {
     }
   }
 
-  async allcollects(count: any) {
+  allcollects(count: any) {
     this.acount = count
     if (this.acount == 1) {
       this.KolSeach()
     } else {
-      try {
-        await allcollect({
-          channelCode: this.title[this.type],
-          pageIndex: this.form.pageIndex,
-          pageSize: this.form.pageSize
-        })
-
-      } catch (ex) {
-        this.handleError(ex)
-      }
+      this.collectinit()
     }
   }
 
@@ -780,6 +794,10 @@ export default class Main extends ViewBase {
     }
   }
 }
+.red {
+  color: #f18d94;
+  font-size: 22px;
+}
 .check-item {
   position: relative;
   top: 3px;
@@ -929,6 +947,8 @@ export default class Main extends ViewBase {
   }
   .button-ok {
     margin-left: 100px;
+    border-radius: 26px;
+    .button-style(#fff, #f18d94);
   }
 }
 </style>

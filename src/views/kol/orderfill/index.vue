@@ -68,7 +68,7 @@
             <img :src="row.accountImageUrl" alt>
             <ul>
               <li>{{row.accountName}}</li>
-              <li>{{row.type}}</li>
+              <li>{{accountCategory(row.accountTypeCode)}}</li>
               <li>粉丝数: &nbsp;&nbsp;{{formatNumber(row.fans)}}万</li>
             </ul>
             <p
@@ -183,6 +183,7 @@ export default class Main extends ViewBase {
     projectName: '',
     content: ''
   }
+  accountCategoryList: any = []
   loaddings = false
   statusList: any = []
   comloading = false
@@ -361,6 +362,7 @@ export default class Main extends ViewBase {
           pictureFileIds: it.pictureFileIds ? it.pictureFileIds.join(',') : '',
           publishTime: it.publishTime ? new Date(it.publishTime) : '',
           content: it.content ? it.content : '',
+          orderItemId: it.orderItemId ? it.orderItemId : '',
           title: it.title ? it.title : '',
           provideProduct: it.provideProduct ? it.provideProduct : '',
           summary: it.summary ? it.summary : '',
@@ -435,6 +437,7 @@ export default class Main extends ViewBase {
           this.statusList = data.xiaohongshuPublishCategoryList
           break
       }
+      this.accountCategoryList = data.accountCategoryList
     } catch (ex) {
       this.handleError(ex)
     }
@@ -495,6 +498,12 @@ export default class Main extends ViewBase {
     this.$nextTick(() => {
       (this.$refs.detailbox as any).init(this.statusList, id, kolid, orderItemList )
     })
+  }
+
+  // 账号类型
+  accountCategory(type: any) {
+    const msg = this.accountCategoryList.filter((it: any) => it.key == type)
+    return msg.length > 0 ? msg[0].text : '暂无'
   }
 
   setall() {
@@ -572,7 +581,10 @@ export default class Main extends ViewBase {
           productId: this.prodId,
           orderItemList: msg
         }
-        // console.log(JSON.stringify(query))
+        // console.log(JSON.stringify({
+        //    ...query,
+        //     orderId: this.$route.params.id
+        // }))
         if (this.$route.params.id) {
           await putadver({
             ...query,

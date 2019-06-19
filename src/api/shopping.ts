@@ -79,7 +79,7 @@ export async function ordersdradt(orderId: any) {
  */
 
 export async function putadver(query: any) {
-  const res = await put(`/kol/orders`, query)
+  const res = await put(`/kol/orders/draft`, query)
   return res
 }
 
@@ -110,5 +110,15 @@ export async function addBrand(query: any) {
 
 export async function addorders(query: any) {
   const res = await post(`/kol/orders`, query)
+  return res
+}
+
+/**
+ * @param
+ * 查看kol详情
+ */
+
+export async function findkol(channelCode: any, channelDataId: any) {
+  const res = await get(`/kol/channel-accounts/query-by-channel/${channelCode}`, channelDataId)
   return res
 }

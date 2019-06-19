@@ -1,7 +1,7 @@
 <template>
   <div class="kol-box">
     <div v-if="tableDates.length > 0" class="section">
-      <Table @on-row-click="collects" :columns="columns" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
+      <Table :columns="columns" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
         <template style="marin-top: 100px" slot-scope="{ row }" slot="type">
           <div class="table-name">
             <img :src="row.headerUrl" alt>
@@ -11,29 +11,25 @@
 
         <template style="marin-top: 100px" slot-scope="{ row }" slot="fansCount">
           <div class="table-name">
-            <p>{{formatNumber(row.fansCount)}}w+</p>
+            <p>{{formatNumber(row.followersCount)}}w+</p>
           </div>
         </template>
 
         <template slot-scope="{ row }" slot="genre">
-          <div class="table-price" v-if=" row.settlementPriceList">
-            <p v-for="(it, index) in row.settlementPriceList" :key="index">
-              <span>{{it.categoryName}}</span> <span>{{it.settlementPrice}}</span>
+          <div class="table-price" v-if=" row.prices">
+            <p v-for="(it, index) in row.prices" :key="index">
+              <span>{{it}}</span>
             </p>
           </div>
         </template>
 
         <template style="marin-top: 100px" slot-scope="{ row }" slot="action">
           <div class="table-action">
-            <p v-if="!checkId.includes(row.id)" @click="collects">
+            <p @click="collects(row)">
               <img width="14px" src="./assets/collect.png">
               预定
             </p>
-            <p v-else @click="collects">
-              <img width="14px" src="./assets/collectcheck.png">
-              取消预定
-            </p>
-            <p @click="cancelShop(row.channelDataId)" style="margin-top: 7px">
+            <p @click="cancelShop(row.accountDataId)" style="margin-top: 7px">
               <img width="14px" src="./assets/cancel.png">
               删除
             </p>
@@ -45,8 +41,8 @@
         <span @click="handleSelectAll">
           <Checkbox v-model="checkboxAll"></Checkbox>全选
         </span>
-        <span>删除</span>
-        <span>收藏</span>
+        <span @click="del">删除</span>
+        <span></span>
         <div class="check-span">
           <ul>
             <li>已选账号 <b class="">{{sum}}</b> 个  </li>
@@ -79,7 +75,7 @@
     <div v-else class="section-no">
       <img src="./assets/noshop.png" alt="">
       <h3>还没有添加KOL账号</h3>
-      <Button class="default-btn" @click="reserve">前往挑选</Button>
+      <Button class="default-btn" :to="{name: 'kol-kollist'}">前往挑选</Button>
     </div>
     <!-- <Detail ref="detail" /> -->
   </div>
@@ -88,11 +84,13 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { fileList, queryList } from '@/api/shopping'
+import { fileList, queryList, findkol } from '@/api/shopping'
 import { kolList } from '@/api/collect.ts'
 import { formatCurrency } from '@/fn/string'
 import { uniqBy } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
+import { getpersons, delcollect } from '@/api/mycollect.ts'
+import { info } from '@/ui/modal'
 
 @Component({
   components: {
@@ -111,6 +109,7 @@ export default class DlgEditCinema extends ViewBase {
   checkId: any = []
   sum = 0
   sumcount = '0.00'
+  titles: any = ['weibo', 'wechat', 'douyin', 'kuaishou', 'xiaohonghsu']
 
   get tableDates() {
     if (this.tableDate && this.tableDate.length > 0) {
@@ -197,8 +196,28 @@ export default class DlgEditCinema extends ViewBase {
     this.init()
   }
 
-  collects(data: any, index: any) {
-    (this.$refs.selection as any).toggleSelect(index)
+  async collects(row: any) {
+    try {
+      const { data } = await findkol(this.titles[this.value - 1], {channelDataIds: row.accountDataId})
+      const msg = {
+        accountImageUrl: data.item.headerUrl,
+        accountName: data.item.name,
+        accountTypeCode: data.item.accountCategoryCode,
+        fans: data.item.customFans.totalCount,
+        priceList: data.item.prices,
+        channelDataId: data.item.channelDataId,
+        kolId: data.item.kolId
+      }
+      sessionStorage.setItem('shopList', JSON.stringify([msg]))
+      this.$router.push({
+        name: 'order-orderfill',
+        params: {
+          code: this.titles[this.value - 1] || 'weibo'
+        }
+      })
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   cancelcollects() {
@@ -219,10 +238,62 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
-  reserve() {
-    this.$nextTick(() => {
-      (this.$refs.detail as any).init(this.filmCheck)
-    })
+  // 删除我的收藏
+  async cancelShop(id: any) {
+    try {
+       await delcollect({
+        channelType: this.value + 3,
+        dataIdList: [id]
+      })
+      this.init()
+      this.singleSelect([])
+    } catch (ex) {
+
+    }
+  }
+
+  async del() {
+    try {
+      if (this.checkId.length == 0) {
+        info('至少选择一个影片')
+      }
+      await delcollect({
+        channelType: this.value + 3,
+        dataIdList: this.checkId
+      })
+      this.init()
+      this.singleSelect([])
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async reserve() {
+    try {
+      const { data } = await findkol(this.titles[this.value - 1], {
+        channelDataIds: this.checkId.join(',')
+      })
+      const msg = data.items.map((it: any) => {
+        return {
+          accountImageUrl: it.headerUrl,
+          accountName: it.name,
+          accountTypeCode: it.accountCategoryCode,
+          fans: it.customFans.totalCount,
+          priceList: it.prices,
+          channelDataId: it.channelDataId,
+          kolId: it.kolId
+        }
+      })
+      sessionStorage.setItem('shopList', JSON.stringify(msg))
+      this.$router.push({
+        name: 'order-orderfill',
+        params: {
+          code: this.titles[this.value - 1] || 'weibo'
+        }
+      })
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   handleSelectAll() {
@@ -231,21 +302,21 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   singleSelect(select: any) {
-    const ids = this.tableDate.map((it: any) => it.id)
-    const dataId = select.map((it: any) => it.id)
+    const ids = this.tableDate.map((it: any) => it.accountDataId)
+    const dataId = select.map((it: any) => it.accountDataId)
     select.forEach((item: any) => {
-      if (!this.checkId.includes(item.id)) {
-        this.checkId.push(item.id)
+      if (!this.checkId.includes(item.accountDataId)) {
+        this.checkId.push(item.accountDataId)
         this.sumList.push(item)
       }
     })
     const filterId = ids.filter((it: any) => !dataId.includes(it))
     this.checkId = this.checkId.filter((it: any) => !filterId.includes(it))
-    this.sumList = this.sumList.filter((it: any) => !filterId.includes(it.id))
+    this.sumList = this.sumList.filter((it: any) => !filterId.includes(it.accountDataId))
     this.sum = this.checkId.length
     let sum = 0
     this.sumList.forEach((it: any) => {
-      sum += it.fansCount
+      sum += it.followersCount
     })
     this.sumcount = formatCurrency(sum)
     this.checkboxAll = select.length == this.tableDate.length ? true : false
@@ -388,9 +459,6 @@ export default class DlgEditCinema extends ViewBase {
   .table-price {
     > p {
       display: flex;
-      span:first-child {
-        width: 80px;
-      }
     }
   }
   .table-action {
@@ -423,6 +491,7 @@ export default class DlgEditCinema extends ViewBase {
   span {
     margin-left: 20px;
     font-size: 14px;
+    cursor: pointer;
   }
 }
 .section {
