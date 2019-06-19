@@ -1020,7 +1020,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 影片
   {
-    path: '/film/movie/:id/:release_status',
+    path: '/film/movie/:id',
     name: 'film-movie',
     component: () => import('./views/mainPage/movie.vue'),
     meta: {

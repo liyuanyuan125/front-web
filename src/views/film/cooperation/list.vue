@@ -121,7 +121,7 @@
         <Row :gutter="10" v-if="done" class="res-row">
           <Col span="4" v-for="(item, index) in dataList" :key="index" class="res-col">
             <div class="res-item">
-              <router-link :to="{ name: 'film-movie', params: { id: item.movie_id, release_status: item.release_status }}">
+              <router-link :to="{ name: 'film-movie', params: { id: item.movie_id}}">
                 <div class="poster" >
                   <img :src="item.movieMainPic">
                 </div>
@@ -180,11 +180,6 @@ export default class Temporary extends ViewBase {
     pageSize: 10,
     releaseStatus: 0
   }
-  // 0, "未知"),
-  // 1, "未上映"),
-  // 2, "即将上映"),
-  // 3, "正在上映"),
-  // 4, "已下映");
   dataList: any[] = []
   dict = {
     // 上映时间
