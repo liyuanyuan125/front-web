@@ -5,7 +5,7 @@
         <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
           <PreceptHead v-model="dataitem"/>
           <h3 class="layout-titles">投放影片
-              <span class="item-detail">优先投放 3 部</span>
+              <span class="item-detail">优先投放 {{filmList.length}} 部</span>
               <!-- <span class="custom">自定义投放电影</span> -->
           </h3>
           <div class="item-top">
@@ -408,7 +408,10 @@ export default class App extends ViewBase {
         allowAutoDelivery: this.single ? 1 : 0,
         planRecommed: { ...this.commendData }
       })
-      this.$emit('input', 3)
+      this.$emit('input', {
+        id: 3,
+        setid: this.$route.params.setid
+      })
     } catch (ex) {
       this.handleError(ex)
     }
@@ -526,6 +529,7 @@ export default class App extends ViewBase {
   margin-bottom: 10px;
   .film-item {
     width: 32%;
+    margin-bottom: 20px;
     border-radius: 5px;
     position: relative;
     box-sizing: border-box;
