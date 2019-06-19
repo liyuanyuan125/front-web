@@ -1,5 +1,5 @@
 <template>
-  <section class="basic-pane">
+  <section class="basic-pane" v-if="item">
     <div class="basic-in">
       <div class="zone name-zone effect-lightning">
         <h3 class="name">
@@ -20,8 +20,8 @@
 
       <div class="zone rank-zone effect-lightning">
         <div class="rank-label">鲸娱指数</div>
-        <div class="rank-no" v-if="item.rankNo">{{item.rankNo}}</div>
-        <div class="rank-title" v-html="item.rankTitle" v-if="item.rankTitle">{{item.rankTitle}}</div>
+        <div class="rank-no">{{item.rankNo}}</div>
+        <div class="rank-title" v-html="item.rankTitle">{{item.rankTitle}}</div>
       </div>
 
       <div
@@ -101,9 +101,14 @@
           <li
             v-for="(it, i) in actorData.list"
             :key="i"
-            class="actor-item flex-mid"
+            class="actor-item"
           >
-            <img :src="it.avatar" class="actor-img" :title="it.name">
+            <router-link
+              :to="{ name: 'film-figure', params: { id: it.id } }"
+              class="actor-item-in"
+            >
+              <img :src="it.avatar" class="actor-img" :title="it.name">
+            </router-link>
           </li>
         </ul>
       </div>
@@ -456,7 +461,13 @@ export default class BasicPane extends Vue {
 }
 
 .actor-item {
+  display: flex;
+  justify-content: center;
   margin-right: 13px;
+}
+
+.actor-item-in {
+  height: 68px;
 }
 
 .actor-img {

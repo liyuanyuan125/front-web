@@ -358,7 +358,7 @@ export default class Main extends ViewBase {
     this.tableDate = this.tableDate.map((it: any, index: number) => {
       const orderItemList: any = it.publishCategoryCode ?  {
           publishCategoryCode: it.publishCategoryCode ? it.publishCategoryCode : '',
-          pictureFileIds: it.pictureFileIds ? it.pictureFileIds : '',
+          pictureFileIds: it.pictureFileIds ? it.pictureFileIds.join(',') : '',
           publishTime: it.publishTime ? new Date(it.publishTime) : '',
           content: it.content ? it.content : '',
           title: it.title ? it.title : '',
@@ -534,20 +534,22 @@ export default class Main extends ViewBase {
     try {
       const volid = await (this.$refs[form] as any).validate()
       if (volid) {
-        if (this.product.filter((it: any) => it.name.indexOf(this.query + '') == -1)) {
+        if (this.product.filter((it: any) => it.name.indexOf(this.query + '') == -1).length > 0) {
           const { data } = await addBrand({
             brandId: this.form.brandid,
             name: this.query
           })
           this.prodId = data
         } else {
-          this.prodId = this.form.productId
+          const meg = this.product.filter((it: any) => it.name.indexOf(this.query + '') != -1)
+          const msgId = meg.map((it: any) => it.id)
+          this.prodId = msgId.includes(this.form.productId) ? this.form.productId : msgId[0]
         }
         const msg = this.tableDate.map((it: any) => {
           const item = it.orderItemList
           const message = clean({
             ...item,
-            pictureFileIds: item.pictureFileIds,
+            pictureFileIds: item.pictureFileIds ? item.pictureFileIds.join(',') : '',
             publishTime: new Date(item.publishTime).getTime()
           })
           return {
@@ -561,14 +563,7 @@ export default class Main extends ViewBase {
             ...message
           }
         })
-        // console.log(JSON.stringify({
-        //   ...this.form,
-        //   draft: id ? id : '',
-        //   channelCode: this.$route.params.code,
-        //   totalFee: this.mongysum,
-        //   productId: this.prodId,
-        //   orderItemList: msg
-        // }))
+
         const query = {
           ...this.form,
           draft: id ? id : '',
@@ -577,6 +572,7 @@ export default class Main extends ViewBase {
           productId: this.prodId,
           orderItemList: msg
         }
+        // console.log(JSON.stringify(query))
         if (this.$route.params.id) {
           await putadver({
             ...query,

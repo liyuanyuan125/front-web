@@ -38,7 +38,7 @@
    <div style='padding: 20px;'>
      <Row class='title' style='margin-bottom: 20px;'>图片(共{{imgUrl.length}}张)</Row>
       <transition-group name="list" tag="ul" class="loading-img">
-        <li v-for="img in imgList" :key="img.key"><img :src="img.img"/></li>
+        <li class='desimg' v-for="img in imgList" :key="img.key"><img :src="img.img"/></li>
       </transition-group>
       <div class="show-all" v-if="imgUrl.length > 5">
         <span @click="handleToggle">{{tabShowTitle}}<Icon :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}" type="ios-arrow-down" size="25" /></span>
@@ -92,7 +92,7 @@ export default class Main extends ViewBase {
     } else {
       this.arrowFlag = 0
       this.tabShowTitle = '展示全部'
-      this.imgList = this.imgUrl.slice(0, 5)
+      this.imgList = this.imgUrl.slice(0, 4)
     }
   }
   sumToggle() {
@@ -118,7 +118,7 @@ export default class Main extends ViewBase {
           img: it,
         }
       })
-      this.imgList = this.imgUrl.slice(0, 5)
+      this.imgList = this.imgUrl.slice(0, 4)
       this.summary = this.itemlist.summary.slice(0, 200)
     } catch {
 
@@ -197,6 +197,12 @@ export default class Main extends ViewBase {
     transform: rotate(-45deg);
   }
 }
+.desimg {
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
 .loading-img {
   display: flex;
   flex-wrap: wrap;
@@ -204,10 +210,10 @@ export default class Main extends ViewBase {
   margin-right: -10px;
   transition: all 2s;
   li {
-    width: 20%;
+    width: 25%;
     height: 180px;
     margin-bottom: 25px;
-    padding: 0 10px;
+    padding: 0 4px;
     img {
       width: 100%;
       height: 100%;

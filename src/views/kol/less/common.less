@@ -60,59 +60,71 @@ h1, h2, h3 ,h4, h5 {
 
 
 
-// select input 
-.jyd-form {
-  /deep/ .ivu-select {
-    height: 40px;
-    border-radius: 5px;
-    margin-right: 20px;
-    .ivu-select-selection {
+// ivu-form
+/deep/ .jyd-form {
+  // .ivu-form-item {
+    .ivu-form-item-label {
+      font-size: 15px;
+      color: #00202d;
+      padding: 13px 15px 0 0;
+    }
+    .ivu-select {
       height: 40px;
       border-radius: 5px;
-      border: none;
-    }
-    .ivu-select-placeholder {
-      height: 40px;
-      line-height: 40px;
-      font-size: 14px;
-    }
-    .ivu-select-selected-value {
-      height: 40px;
-      line-height: 40px;
-      font-size: 14px;
-    }
-  }
-  /deep/ .ivu-select-input {
-    height: 40px;
-    line-height: 40px;
-    font-size: 14px;
-  }
-  /deep/ .ivu-date-picker {
-    .ivu-input-suffix {
-      height: 40px;
-      i {
+      margin-right: 20px;
+      .ivu-select-selection {
+        height: 40px;
+        border-radius: 5px;
+        border: none;
+      }
+      .ivu-select-placeholder {
         height: 40px;
         line-height: 40px;
+        font-size: 14px;
+      }
+      .ivu-select-selected-value {
+        height: 40px;
+        line-height: 40px;
+        font-size: 14px;
       }
     }
-  }
-  /deep/ .ivu-input {
-    height: 40px;
-    font-size: 14px;
-    border-radius: 5px;
-    border: none;
-  }
+    .ivu-select-input {
+      height: 40px;
+      line-height: 40px;
+      font-size: 14px;
+    }
+    .ivu-date-picker {
+      .ivu-input-suffix {
+        height: 40px;
+        i {
+          height: 40px;
+          line-height: 40px;
+        }
+      }
+    }
+    .ivu-input {
+      font-size: 14px;
+      border-radius: 5px;
+      border: none;
+      height: 40px;
+    }
+    .input-textarea-col {
+      .ivu-input {
+        height: auto;
+      }
+    }
+//  } 
 }
 
 
-// btn
+// btn (广告单用到)
 .order-form {
   /deep/ .ivu-btn {
     height: 40px;
     border-radius: 20px;
     text-align: center;
     font-size: 14px;
-    padding: 0 20px;
+    padding: 5px 25px;
   }
 }
 /deep/ .ivu-btn {

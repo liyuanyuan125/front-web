@@ -5,7 +5,7 @@
       <Form label-position="left"
             :label-width="100">
         <Card class="detailmore-card">
-      <!--     <div slot="title">
+          <!-- <div slot="title">
             <Row type="flex"
                  justify="space-between"
                  align="middle">
@@ -96,13 +96,8 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-<<<<<<< HEAD:src/views/brand/productfans.vue
 import { fans, brands } from '@/api/productfans'
 import DetailNavBar from './components/detailNavBar.vue'
-=======
-import { fans, brands } from '@/api/figureDetailMoreInfo'
-import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
->>>>>>> 61d264e035403ed2c60d4dbae3a6da4b5cb14b2a:src/views/brand/detailPro/fans.vue
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import MapChina from '@/components/chartsGroup/mapChina/'
 import Pie from '@/components/chartsGroup/pieSimple/'
@@ -210,7 +205,7 @@ export default class Temporary extends ViewBase {
       const {
         data,
         data: {
-          item: { femalePercent, malePercent, ages, cities, provinces }
+          item: { femalePercent, malePercent, ages, citys, provinces }
         }
       } = await fans(id)
       if (1 == 1) {
@@ -243,11 +238,11 @@ export default class Temporary extends ViewBase {
           max = (max < count) ? count : max
           min = (min > count) ? count : min
           this.chart3.dataList[this.chart3.currentTypeIndex].push({
-            name,
+            name: name.substr(0, name.length - 1),
             value: count
           })
           this.chart4.dataList[0].push({
-            name,
+            name: name.substr(0, name.length - 1),
             value: count
           })
         })
@@ -256,8 +251,14 @@ export default class Temporary extends ViewBase {
         this.chart3.initDone = true
         this.chart4.initDone = true
       }
-      if (cities && cities.length > 0) {
-        cities.forEach(({ count, name }: any) => {
+      if (citys && citys.length > 0) {
+        // cities.map((it: any) => {
+        //   this.chart4.dataList[1].push({
+        //     name: it.name,
+        //     value: typeof it.count === 'number' ? it.count : parseInt(it.count, 0)
+        //   })
+        // })
+        citys.forEach(({ count, name }: any) => {
           this.chart4.dataList[1].push({
             name,
             value: typeof count === 'number' ? count : parseInt(count, 0)

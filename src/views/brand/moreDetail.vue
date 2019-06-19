@@ -4,13 +4,12 @@
       <!-- <img src="./assets/brand-logo.png" width="160" /> -->
       <Upload v-model="imageList" :max-count="1" accept="images/*" :isEdit="flagImg" confirm-on-del></Upload>
       <!-- <img src="./assets/add-icon.png" v-if="!flagImg" class="base-upload-img"/> -->
-      <p class="title">Mercedes－Benz</p>
+      <p class="title">Mercedes－Benz 待添加</p>
       <p class="types">汽车类</p>
       <ul class="tabs-title">
         <li v-for="item in tabs" :key="item.key" :class="{'active': item.route == tabActive}" 
         @click="handleTabs(item)" >{{item.name}}</li>
       </ul>
-      <!-- <Button type="primary" icon="md-add" @click="visibleBrand = true" class="btn-add">添加品牌</Button> -->
     </div>
     <div class="list-right model-bg">
       <router-view></router-view>

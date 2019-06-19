@@ -238,11 +238,11 @@ export default class Temporary extends ViewBase {
           max = (max < count) ? count : max
           min = (min > count) ? count : min
           this.chart3.dataList[this.chart3.currentTypeIndex].push({
-            name,
+            name: name.substr(0, name.length - 1),
             value: count
           })
           this.chart4.dataList[0].push({
-            name,
+            name: name.substr(0, name.length - 1),
             value: count
           })
         })

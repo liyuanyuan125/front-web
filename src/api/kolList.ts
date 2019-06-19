@@ -20,7 +20,7 @@ export async function addShopIng(query: any) {
  * 加入收藏
  */
 export async function addcollet(query: any) {
-  const res = await post(`/kol/channel-accounts/collect`, query)
+  const res = await post(`/customer/favorites`, query)
   return res
 }
 
@@ -28,7 +28,7 @@ export async function addcollet(query: any) {
  * 取消收藏
  */
 export async function cancelcollect(query: any) {
-  const res = await post(`/kol/channel-accounts/cancel-collect`, query)
+  const res = await post(`/customer/favorites`, query)
   return res
 }
 

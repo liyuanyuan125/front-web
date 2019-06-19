@@ -1,21 +1,21 @@
 <template>
   <div class="film-page">
-    <div class="page-title">
-      <span>广告片</span>
-       <Button type="primary" :to="{name: 'pop-film-edit'}" class="btn-new"
-        v-auth="'promotion.ad-video#create'">
-        <Icon type="ios-add" size="27"/>新建广告片
+    <div class="page-title-btn">
+       <Button type="primary" :to="{name: 'pop-film-edit'}" class="btn-add-line"
+        v-auth="'promotion.ad-video#create'">新建广告片
+        <!-- <Icon type="ios-add" size="27"/> -->
       </Button>
     </div>
-    <Form :model="form" class="jydate-form flex-box jyd-form">
+    <Form :model="form" class="form flex-box-center jyd-form">
       <Select v-model="form.status" clearable placeholder="广告片状态" class="select-wid" >
           <Option v-for="item in statusList" v-if="item.key != 6" :key="item.key" :value="item.key">{{item.text}}</Option>
       </Select>
       <customerList v-model="form.customerld" />
       <brandList v-model="form.brandld" />
-      <productList v-if="form.brandld" :brandld="form.brandld" v-model="form.productld" />
+      <!--  v-if="form.brandld" -->
+      <productList :brandld="form.brandld" v-model="form.productld" />
       <div class="flex-box film-search">
-          <Input v-model="form.query" placeholder="请输入广告ID/名称进行搜索"/>
+          <Input v-model="query" placeholder="请输入广告ID/名称进行搜索"/>
           <Button type="primary" class="bth-search" @click="searchList">
             <Icon type="ios-search" size="22"/>
           </Button>
@@ -26,7 +26,7 @@
       <div class="com-modal-title check-title">
         <span>全部文件（{{totalCount}}）</span>
         <span class="checkbox-all"><Checkbox @on-change="checkall" v-model="checkboxAll">全选</Checkbox></span>
-        <span class="del-btn" @click="deleteList">删除</span>
+        <span class="del-btn" @click="deleteList()">删除</span>
       </div>
       <ul class="ul-list">
         <li v-for="item in tableDate " :key="item.id">
@@ -47,7 +47,7 @@
                   <img v-if="item.status == 3" title="转码中" src="../assets/transing-icon.png" class="img-wid" />
                   <img v-if="item.status == 1 || item.status == 5" title="点击编辑" src="../assets/edit-icon.png" 
                   @click="$router.push({name: 'pop-film-edit', params: {id: item.id}})" class="img-wid" />
-                  <img src="../assets/del-icon.png"  @click="deleteList(item.id)" class="img-wid" title="点击删除" />
+                  <img src="../assets/del-icon.png" v-if="item.status != 3"  @click="deleteList(item.id)" class="img-wid" title="点击删除" />
                 </div>
               </div>
             </div>
@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
 import { dataList, delList, popCancel, popPayment, popPartners } from '@/api/popFilm'
@@ -83,6 +83,7 @@ import productList from '@/components/selectList/productList.vue'
 })
 export default class Main extends ViewBase {
   form: any = {}
+  query = null
   pageList = {
     pageIndex: 1,
     pageSize: 20
@@ -103,11 +104,13 @@ export default class Main extends ViewBase {
     this.tableList()
   }
   async tableList() {
+    const query = this.query
     try {
       const {
         data: { items, statusList, totalCount }
       } = await dataList({
         ...this.form,
+        query,
         ...this.pageList
       })
       this.tableDate = items || []
@@ -138,21 +141,29 @@ export default class Main extends ViewBase {
     if (id) {
       ids.push(id)
       await confirm('您确定要删除当前信息吗？')
-      await delList({ ids })
-      this.tableList()
     } else {
       if (this.selectIds.length) {
         ids = this.selectIds.map((item: any) => item.id) || []
-        await confirm('您确定要删除当前信息吗？')
-        await delList({ ids })
-        this.tableList()
+        await confirm(`您确定要删除当前${this.selectIds.length}条信息吗？`)
       } else {
         this.showWaring('请选择你要删除的元素')
+        return
       }
+    }
+    try {
+      await delList({ ids })
+      this.tableList()
+    } catch (ex) {
+      this.handleError(ex)
     }
   }
   uplist(size: any) {
     this.pageList.pageIndex = size
+    this.tableList()
+  }
+  @Watch('form', {deep: true})
+  watchForm(val: any) {
+    this.pageList.pageIndex = 1
     this.tableList()
   }
 }
@@ -160,6 +171,7 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/views/kol/less/common.less';
+@import '~@/views/brand/less/common.less';
 .noList {
   text-align: center;
   padding: 30px 0 40px;
@@ -168,27 +180,14 @@ export default class Main extends ViewBase {
 .film-page {
   padding: 20px 40px 40px;
 }
-.page-title {
-  display: flex;
-  justify-content: space-between;
-  color: #fff;
-  span {
-    font-size: 24px;
-  }
-  .btn-new {
-    padding: 0 15px;
-    height: 40px;
-    line-height: 40px;
-    background: rgba(0, 32, 45, 1);
-    border-radius: 20px;
-    font-size: 14px;
-    text-align: center;
-    border: none;
-  }
-}
+
 .bth-search {
   position: relative;
   left: -4px;
+  border: none;
+  background: #00202d;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 .ul-list {
   padding: 0 38px 40px;
@@ -277,7 +276,7 @@ export default class Main extends ViewBase {
     font-size: 14px;
   }
 }
-.jydate-form {
+.form {
   padding: 40px 0 44px;
   .select-wid {
     width: 160px;

@@ -38,12 +38,18 @@
           />
           <div class="pane-group">
             <TextPane
-              title="今日实时票房"
-              :main="boxOfficeToday.main"
-              :sub="boxOfficeToday.sub"
-              class="box-office-today"
+              :title="boxToday.title"
+              :main="boxToday.main"
+              :sub="boxToday.sub"
+              class="box-today"
+              v-if="boxToday != null"
             />
-            <TextPane title="累计票房" :main="boxOfficeTotal.main" class="box-office-total"/>
+            <TextPane
+              :title="boxTotal.title"
+              :main="boxTotal.main"
+              class="box-total"
+              v-if="boxTotal != null"
+            />
           </div>
         </div>
 
@@ -97,29 +103,16 @@ import { getMovie } from './data'
 export default class FigurePage extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
-  basic = {
-    id: this.id,
-    name: '流浪地球',
-    subName: 'The Wandering Earth',
-    title: '',
-    figure: 'https://picsum.photos/id/428/154/218',
-    rankNo: '86.5',
-    rankTitle: '同档期：第2'
-  }
+  basic: any = null
 
   bigFigure =
     this.id == 1
       ? 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
       : ''
 
-  boxOfficeToday = {
-    main: '116.3 万',
-    sub: '同档期第一'
-  }
+  boxToday: any = null
 
-  boxOfficeTotal = {
-    main: '3.8 亿'
-  }
+  boxTotal: any = null
 
   fansMan = 66
 
@@ -127,26 +120,9 @@ export default class FigurePage extends ViewBase {
 
   bubbleList = ['师兄李连杰', '流浪地球', '教练吴彬', '功夫小子', '导演', '少林寺']
 
-  movie = {
-    preview: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
-    director: '林德路',
-    type: '动作/犯罪',
-    date: '2019-04-03',
-    address: '香港'
-  }
+  movie: any = null
 
-  actorData = {
-    star: 2,
-    list: [
-      { id: 1, name: '吴京', avatar: 'https://dummyimage.com/80x80/000/fff' },
-      { id: 2, name: '阿娇', avatar: 'https://dummyimage.com/80x80/fff/000' },
-      { id: 3, name: '吴奇隆', avatar: 'https://dummyimage.com/80x80/e2e/fff' }
-    ],
-    more: {
-      name: 'film-figure',
-      params: { id: this.id }
-    }
-  }
+  actorData: any = null
 
   activeFansData = [
     { name: '5-16', value: 855000 },
@@ -189,7 +165,18 @@ export default class FigurePage extends ViewBase {
   }
 
   async initBasic() {
-    const data = await getMovie(this.id)
+    const {
+      basic,
+      movie,
+      actorData,
+      boxToday,
+      boxTotal,
+    } = await getMovie(this.id)
+    this.basic = basic
+    this.movie = movie
+    this.actorData = actorData
+    this.boxToday = boxToday
+    this.boxTotal = boxTotal
   }
 }
 </script>
@@ -328,11 +315,11 @@ export default class FigurePage extends ViewBase {
   border-radius: 0 0 5px 5px;
 }
 
-.box-office-today {
+.box-today {
   border-radius: 0 5px 0 0;
 }
 
-.box-office-total {
+.box-total {
   margin-top: 6px;
 }
 

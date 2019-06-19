@@ -1,40 +1,43 @@
 <template>
   <div class="kol-box">
     <div v-if="tableDates.length > 0" class="section">
-      <Table  :columns="columns" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
-        <!-- <template ref='title' slot="header">
-          <div>
-            <div class="top">
-              <p>
-                <span v-if="filename">影片：《{{filename}}》</span>
-              </p>
-              <p @click="checkFilm">
-                切换
-                <Icon v-if="!checkSelcet" type="ios-arrow-forward" />
-                <Icon v-else type="ios-arrow-down" />            </p>
-            </div>
-            <div class="check-button" v-if="checkSelcet">
-              <div>
-                  <RadioGroup v-model="filmCheck">
-                    <Radio v-for="it in filmList" :key="it.key" :label="it.key">{{it.text}}</Radio>
-                </RadioGroup>
-              </div>
-              <div class="check-btn">
-                <Button @click="sure">确定</Button>
-                <Button @click="checkFilm">取消</Button>
-              </div>
-            </div>
-          </div>
-        </template> -->
+      <Table @on-row-click="collects" :columns="columns" :data="tableDate" ref="selection"  @on-selection-change="singleSelect"  @on-select-all="selectAll" >
         <template style="marin-top: 100px" slot-scope="{ row }" slot="type">
           <div class="table-name">
-            <img :src="row.mainPicUrl" alt=""> 
-            <span>{{row.name}}</span>
+            <img :src="row.headerUrl" alt>
+            <span>{{row.name || '暂无'}}</span>
           </div>
         </template>
+
+        <template style="marin-top: 100px" slot-scope="{ row }" slot="fansCount">
+          <div class="table-name">
+            <p>{{formatNumber(row.fansCount)}}w+</p>
+          </div>
+        </template>
+
+        <template slot-scope="{ row }" slot="genre">
+          <div class="table-price" v-if=" row.settlementPriceList">
+            <p v-for="(it, index) in row.settlementPriceList" :key="index">
+              <span>{{it.categoryName}}</span> <span>{{it.settlementPrice}}</span>
+            </p>
+          </div>
+        </template>
+
         <template style="marin-top: 100px" slot-scope="{ row }" slot="action">
-          <p>取消</p>
-          <p>收藏</p>
+          <div class="table-action">
+            <p v-if="!checkId.includes(row.id)" @click="collects">
+              <img width="14px" src="./assets/collect.png">
+              预定
+            </p>
+            <p v-else @click="collects">
+              <img width="14px" src="./assets/collectcheck.png">
+              取消预定
+            </p>
+            <p @click="cancelShop(row.channelDataId)" style="margin-top: 7px">
+              <img width="14px" src="./assets/cancel.png">
+              删除
+            </p>
+          </div>
         </template>
       </Table>
 
@@ -86,6 +89,7 @@
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { fileList, queryList } from '@/api/shopping'
+import { kolList } from '@/api/collect.ts'
 import { formatCurrency } from '@/fn/string'
 import { uniqBy } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
@@ -95,7 +99,7 @@ import { toast, warning } from '@/ui/modal.ts'
   }
 })
 export default class DlgEditCinema extends ViewBase {
-  @Prop() id!: number
+  @Prop() value!: number
   showDlg = true
   tableDate: any = []
   filmList: any = []
@@ -110,91 +114,99 @@ export default class DlgEditCinema extends ViewBase {
 
   get tableDates() {
     if (this.tableDate && this.tableDate.length > 0) {
-      return this.tableDate.map((it: any) => {
-        if (this.checkId.includes(it.id)) {
-          return {
-            ...it,
-            _checked: true
-          }
-        } else {
-          return {
-            ...it,
-          }
-        }
-      })
+      return this.tableDate
     } else {
       return []
     }
   }
 
-  get columnsNum() {
-    const columns: any = [
-        {
-          title: '全选',
-          align: 'left',
-          width: 190,
-        },
-        {
-          title: '账号分类',
-          align: 'left',
-          slot: 'type'
-        },
-        {
-          title: '平台',
-          align: 'left',
-          key: 'platform'
-        },
-        {
-          title: '投放方式',
-          align: 'left',
-          key: 'type'
-        },
-        {
-          title: '操作',
-          align: 'center',
-          width: 160,
-          slot: 'action'
-        }
-      ]
-    return columns
-  }
+  // get columnsNum() {
+  //   const columns: any = [
+  //       {
+  //         title: '全选',
+  //         align: 'left',
+  //         width: 190,
+  //       },
+  //       {
+  //         title: '账号分类',
+  //         align: 'left',
+  //         slot: 'type'
+  //       },
+  //       {
+  //         title: '平台',
+  //         align: 'left',
+  //         key: 'platform'
+  //       },
+  //       {
+  //         title: '投放方式',
+  //         align: 'left',
+  //         key: 'type'
+  //       },
+  //       {
+  //         title: '操作',
+  //         align: 'center',
+  //         width: 160,
+  //         slot: 'action'
+  //       }
+  //     ]
+  //   return columns
+  // }
   get columns() {
     const columns: any = [
-        { type: 'selection', width: 70, align: 'center' },
-        {
-          title: '全选',
-          align: 'left',
-          width: 120,
-        },
-        {
-          title: '账号分类',
-          align: 'left',
-          slot: 'type'
-        },
-        {
-          title: '平台',
-          align: 'left',
-          key: 'platform'
-        },
-        {
-          title: '投放方式',
-          align: 'left',
-          key: 'type'
-        },
-        {
-          title: '操作',
-          align: 'center',
-          width: 160,
-          slot: 'action'
-        }
-      ]
+       { type: 'selection', width: 70, align: 'center' },
+      {
+        title: '全选',
+        align: 'left',
+        width: 80
+      },
+      {
+        title: '账号名称',
+        align: 'left',
+        slot: 'type',
+        width: 180
+      },
+      {
+        title: '账号分类',
+        align: 'left',
+        key: 'categoryName',
+      },
+      {
+        title: '粉丝数',
+        align: 'left',
+        slot: 'fansCount'
+      },
+      {
+        title: '价格',
+        align: 'left',
+        width: '180',
+        slot: 'genre'
+      },
+      {
+        title: '操作',
+        align: 'left',
+        width: 140,
+        slot: 'action'
+      }
+    ]
     return columns
   }
 
 
   created() {
-    this.filmFind()
+    // this.filmFind()
     this.init()
+  }
+
+  collects(data: any, index: any) {
+    (this.$refs.selection as any).toggleSelect(index)
+  }
+
+  cancelcollects() {
+
+  }
+
+  formatNumber(num: any) {
+    return num ? formatCurrency(num) : 0
   }
 
   async filmFind() {
@@ -233,7 +245,7 @@ export default class DlgEditCinema extends ViewBase {
     this.sum = this.checkId.length
     let sum = 0
     this.sumList.forEach((it: any) => {
-      sum += it.fansNumber
+      sum += it.fansCount
     })
     this.sumcount = formatCurrency(sum)
     this.checkboxAll = select.length == this.tableDate.length ? true : false
@@ -258,8 +270,10 @@ export default class DlgEditCinema extends ViewBase {
 
   async init() {
     try {
-      const { data } = await queryList({})
-      this.tableDate = data.items
+      const { data } = await kolList({
+        channelTypeCode: this.value + 3
+      })
+      this.tableDate = data.items || []
     } catch (ex) {
       this.handleError(ex)
     }
@@ -273,6 +287,10 @@ export default class DlgEditCinema extends ViewBase {
     this.showDlg = false
   }
 
+  @Watch('value')
+  watchValue(val: any) {
+    this.init()
+  }
 }
 </script>
 
@@ -367,6 +385,19 @@ export default class DlgEditCinema extends ViewBase {
   // .ivu-table-body {
   //   margin-top: 80px;
   // }
+  .table-price {
+    > p {
+      display: flex;
+      span:first-child {
+        width: 80px;
+      }
+    }
+  }
+  .table-action {
+    p {
+      cursor: pointer;
+    }
+  }
   .table-name {
     display: flex;
     padding: 20px 0;

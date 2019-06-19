@@ -7,7 +7,7 @@
       <p  v-else>您当前共有 {{cinemaTotalCount}} 家影院的广告代理权</p>
     </div>
     <div class="order-content">
-      <div class="order-form flex-box">
+      <div class="order-form jyd-form flex-box">
          <DatePicker type="daterange" class="item-list-sel" style="width: 250px"  v-model='putDate'  @on-change="handleChange"  placeholder="开始日期和结束日期" ></DatePicker>
          <Select v-model='form.CinemaId' class="item-list-sel" style="width: 250px" filterable clearable placeholder="影院名称" >
             <Option v-for="item in cinemaList" :key="item.id" :value="item.id" >{{item.shortName}}</Option>
@@ -323,6 +323,12 @@ export default class Main extends ViewBase {
     line-height: 56px;
     background: rgba(0, 32, 45, .9);
     color: #fff;
+    .ivu-tabs-bar {
+      border-bottom: none;
+    }
+    .ivu-tabs-tab {
+      padding: 18px 16px;
+    }
     .ivu-tabs-tab-active {
       font-size: 14px;
       color: #4fa6bb;
