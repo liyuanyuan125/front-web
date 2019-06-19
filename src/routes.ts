@@ -893,7 +893,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // KOL - 概览
   {
-    path: '/kol/figure/:id/:channel',
+    path: '/kol/figure/:id/:channel?',
     name: 'kol-figure',
     component: () => import('./views/mainPage/kol.vue'),
     meta: {

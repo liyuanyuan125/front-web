@@ -105,10 +105,7 @@ export default class FigurePage extends ViewBase {
 
   basic: any = null
 
-  bigFigure =
-    this.id == 1
-      ? 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
-      : ''
+  bigFigure = ''
 
   boxToday: any = null
 
@@ -161,10 +158,10 @@ export default class FigurePage extends ViewBase {
   }
 
   init() {
-    this.initBasic()
+    this.initMain()
   }
 
-  async initBasic() {
+  async initMain() {
     const {
       basic,
       movie,

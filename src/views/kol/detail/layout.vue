@@ -1,8 +1,10 @@
 <template>
   <DetailLayout :routeList="routeList">
     <div slot="beforeSide">
-      <h2 class="figure-name">{{name}}</h2>
-      <img :src="figure" class="figure-img">
+      <router-link :to="{ name: 'kol-figure', params: { id } }">
+        <h2 class="figure-name">{{name}}</h2>
+        <img :src="figure" class="figure-img">
+      </router-link>
     </div>
   </DetailLayout>
 </template>
@@ -10,6 +12,7 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DetailLayout, { RouteItem } from '@/components/detailLayout'
+import { getKol } from './data'
 
 @Component({
   components: {
@@ -30,9 +33,15 @@ export default class Layout extends ViewBase {
     { title: '合作过的品牌', route: 'kol-detail-brand' },
   ]
 
-  name = 'Papi酱'
+  name = ''
 
-  figure = 'https://picsum.photos/id/435/154/154'
+  figure = ''
+
+  async created() {
+    const { name, figure } = await getKol({ id: this.id, channel: 'weibo' })
+    this.name = name
+    this.figure = figure
+  }
 }
 </script>
 
