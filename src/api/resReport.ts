@@ -13,6 +13,7 @@ export async function effectStatistics(query: any) {
   const res = await get('/xadvert/plans/effectStatistics', query)
   return res
 }
+
 /**
  * trend
  * @param query
@@ -138,6 +139,7 @@ export async function trend(query: any) {
     }
   })
 }
+
 /**
  * 广告单列表接口
  * need status : 执行中、待结算、已完成
@@ -271,38 +273,5 @@ export async function xadvertOrders(data: any) {
       }
     ]
   })
-  return await mockGet(data, {
-    'items|50': [
-      {
-        id: tid,
-        status: typeInt(0, 7),
-        videoId: 1,
-        videoName: title20,
-        estimateRevenue: 100.01,
-        specification: 10,
-        beginDate: 20190101,
-        endDate: 20190110,
-        cycle: 10,
-        settlementAmount: null,
-        targetCinemas: [
-          10002,
-          10003
-        ],
-        receiveCinemas: null,
-        targetMovies: [
-          {
-            movieName: title20,
-            movieId: 51833,
-            beginDate: 20190101,
-            endDate: 20190105,
-            cycle: 7
-          }
-        ],
-        createTime: 1560234038317,
-        hallsCount: title20,
-        sceneCount: title20,
-        cinemaName: title20
-      }
-    ]
-  })
 }
+
