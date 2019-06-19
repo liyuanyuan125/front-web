@@ -1,8 +1,10 @@
 <template>
   <DetailLayout :routeList="routeList">
     <div slot="beforeSide">
-      <h2 class="figure-name">{{name}}</h2>
-      <img :src="figure" class="figure-img">
+      <router-link :to="{ name: 'film-figure', params: { id } }">
+        <h2 class="figure-name">{{name}}</h2>
+        <img :src="figure" class="figure-img">
+      </router-link>
     </div>
   </DetailLayout>
 </template>
@@ -10,6 +12,7 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DetailLayout, { RouteItem } from '@/components/detailLayout'
+import { getFigure } from './data'
 
 @Component({
   components: {
@@ -30,9 +33,15 @@ export default class Layout extends ViewBase {
     { title: '平台运营', route: 'film-figure-detail-platform' },
   ]
 
-  name = 'Papi酱'
+  name = ''
 
-  figure = 'https://picsum.photos/id/435/154/154'
+  figure = ''
+
+  async created() {
+    const { name, figure } = await getFigure(this.id)
+    this.name = name
+    this.figure = figure
+  }
 }
 </script>
 

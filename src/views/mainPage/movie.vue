@@ -30,12 +30,14 @@
         <div class="board-row flex-box">
           <FansPane
             title="想看用户画像"
-            :man="fansMan"
-            :woman="fansWoman"
+            :man="fansRate.man"
+            :woman="fansRate.woman"
             :more="{ name: 'film-detail-fans', params: {id} }"
-            tip="与奔驰用户匹配度：72%"
             class="fans-pane"
+            v-if="fansRate"
           />
+          <!-- TODO: FansPane tip="与奔驰用户匹配度：72%" -->
+
           <div class="pane-group">
             <TextPane
               :title="boxToday.title"
@@ -53,10 +55,10 @@
           </div>
         </div>
 
-        <div class="board-row">
+        <div class="board-row" v-if="riseCount">
           <BarPane
-            title="近7日新增想看人数"
-            :data="activeFansData"
+            :title="hasShow ? '近7日观影人次' : '近7日新增想看'"
+            :data="hasShow ? riseCount.box : riseCount.view"
             :more="{ name: 'film-detail-trend', params: {id} }"
             class="active-fans-pane"
           />
@@ -88,7 +90,7 @@ import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
 import TextPane from './components/textPane.vue'
 
-import { getMovie } from './data'
+import { getMovie, getVideoRise, getVideoHot } from './data'
 
 @Component({
   components: {
@@ -100,39 +102,28 @@ import { getMovie } from './data'
     TextPane
   }
 })
-export default class FigurePage extends ViewBase {
+export default class MoviePage extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
+
+  bubbleList: string[] = []
 
   basic: any = null
 
-  bigFigure =
-    this.id == 1
-      ? 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
-      : ''
+  hasShow = false
 
-  boxToday: any = null
-
-  boxTotal: any = null
-
-  fansMan = 66
-
-  fansWoman = 34
-
-  bubbleList = ['师兄李连杰', '流浪地球', '教练吴彬', '功夫小子', '导演', '少林寺']
+  bigFigure = ''
 
   movie: any = null
 
   actorData: any = null
 
-  activeFansData = [
-    { name: '5-16', value: 855000 },
-    { name: '5-17', value: 800000 },
-    { name: '5-18', value: 808000 },
-    { name: '5-19', value: 860000 },
-    { name: '5-20', value: 600000 },
-    { name: '5-21', value: 755000 },
-    { name: '5-22', value: 555000 }
-  ]
+  fansRate: any = null
+
+  boxToday: any = null
+
+  boxTotal: any = null
+
+  riseCount: any = null
 
   legendList = [
     { name: '新浪', no: 'No.3', inc: 0 },
@@ -161,22 +152,40 @@ export default class FigurePage extends ViewBase {
   }
 
   init() {
-    this.initBasic()
+    this.initMain()
+    this.initRise()
+    this.initHot()
   }
 
-  async initBasic() {
+  async initMain() {
     const {
+      bubbleList,
       basic,
+      hasShow,
       movie,
       actorData,
+      fansRate,
       boxToday,
       boxTotal,
     } = await getMovie(this.id)
+
+    this.bubbleList = bubbleList
     this.basic = basic
+    this.hasShow = hasShow
     this.movie = movie
     this.actorData = actorData
+    this.fansRate = fansRate
     this.boxToday = boxToday
     this.boxTotal = boxTotal
+  }
+
+  async initRise() {
+    const riseCount = await getVideoRise(this.id)
+    this.riseCount = riseCount
+  }
+
+  async initHot() {
+    await getVideoHot(this.id)
   }
 }
 </script>

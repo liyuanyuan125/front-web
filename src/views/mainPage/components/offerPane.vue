@@ -1,7 +1,7 @@
 <template>
   <Pane :title="title" class="offer-pane">
     <div class="offer-in flex-mid">
-      <em class="offer-price">{{price}}</em>
+      <em class="offer-price" v-html="price"></em>
       <Button type="primary" class="offer-button">加入投放</Button>
     </div>
   </Pane>

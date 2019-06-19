@@ -5,7 +5,7 @@
             :class="['film-item']">
           <div :class="['film-cover-box']">
             <span @click="del" class="del">×</span>
-            <img :src="it.image ? it.image : defaultImg" onerror="defaultImg" class="film-cover">
+            <img :src="it.image ? it.image : 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg'"  class="film-cover">
             <div>
               <div class="film-title">{{it.nameCn}}</div>
               <div class="film-time" style="margin-top: 10px"><span class="time-right">上映时间：</span>{{formatDate(it.releaseDate)}}</div>
@@ -69,9 +69,9 @@ export default class ComponentMain extends ViewBase {
     })
   }
 
-  get defaultImg() {
-    return 'this.src="' + require('../assets/error.png') + '"'
-  }
+  // get defaultImg() {
+  //   return 'this.src="' + require('http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg') + '"'
+  // }
 
   columndata(val: any) {
     this.inValue = val
@@ -117,7 +117,6 @@ export default class ComponentMain extends ViewBase {
 .film-list {
   display: flex;
   flex-wrap: wrap;
-  margin-top: -15px;
   margin-bottom: 40px;
   .film-item {
     width: calc(50% - 20px);
