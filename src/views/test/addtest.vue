@@ -30,18 +30,11 @@
 		<div class='dis'>
 			<div>请上传一份包含影院专资编码数据的xls文件，如上传错误，请下载模板<span>【影院数据模板.xls】</span></div>
 
-
-
-
 			<Form class="create-form form-item"   enctype="multipart/form-data" ref="form"
       :label-width="120">
 			<input type="file" @change="onChange" />
 			</Form>
 
-
-
-
-			共包含【1323家影院】
 		</div>
 		<div class='okbut' >
 			<span @click='addform()'>提交</span>
@@ -61,7 +54,7 @@ import { toMap } from '@/fn/array'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { formatTimestamp } from '@/util/validateRules'
 import WeekDatePicker from '@/components/weekDatePicker'
-import { confirm , toast } from '@/ui/modal'
+import { confirm , toast , info } from '@/ui/modal'
 import Uploader from '@/util/Uploader'
 import Film from './film.vue'
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
@@ -101,6 +94,7 @@ export default class Main extends ViewBase {
   showTime: any = []
 
   kehulist: any = []
+  codelist: any = []
 
   mounted() {
     this.seach()
@@ -120,13 +114,11 @@ export default class Main extends ViewBase {
     this.file = input.files && input.files[0]
   }
 
-  seachs() {
-    this.seach()
-  }
 
   timerfilm() {
-    this.seach()
+    // this.seach()
   }
+
 
   async seach() {
     try {
@@ -143,7 +135,9 @@ export default class Main extends ViewBase {
         this.query.endDate = items.data.item.endDate,
         this.query.cinemaCodes = items.data.item.deliveryCinemas,
         this.query.deliveryMovies = items.data.item.deliveryMovies
+        // this.numsList = items.data.item.deliveryMovies
       }
+      this.numsList = this.query.deliveryMovies
     } catch (ex) {
       this.handleError(ex)
     } finally {
@@ -156,9 +150,15 @@ export default class Main extends ViewBase {
   }
 
   async addform() {
+    if (this.$route.params.id == '0') {
+      if (this.numsList.length == 0) {
+       info('请选择影片')
+       return
+      }
+    }
     if (this.numsList.length > 0) {
-      this.query.deliveryMovies.push(this.numsList)
-      this.query.deliveryMovies = (this.query.deliveryMovies || []).map((it: any) => {
+      // this.query.deliveryMovies.push(this.numsList)
+      this.query.deliveryMovies = (this.numsList || []).map((it: any) => {
         return {
           movieId: it.movieId,
           beginDate: it.beginDate,
@@ -166,24 +166,37 @@ export default class Main extends ViewBase {
         }
       })
     } else {
-      this.query.deliveryMovies = (this.query.deliveryMovies || []).map((it: any) => {
+      this.query.deliveryMovies = (this.numsList || []).map((it: any) => {
         return {
           movieId: it.movieId,
           beginDate: it.beginDate,
           endDate: it.endDate
         }
       })
+      // this.query.deliveryMovies = [
+      // 	{
+      //     movieId: 55165,
+      //     beginDate: 20120202,
+      //     endDate: 20120203
+      //   }
+      // ]
     }
 
     if (this.file == null) {
       // TODO: 如果文件是必选的，提示选择文件
     }
+
+
     const  a = await uploader.upload(this.file)
-    // console.log(a)
+    this.codelist = a.items
     try {
       if (this.$route.params.id != '0') {
+        if (this.codelist.length > 0) {
+          this.query.cinemaCodes = a.items
+        }
         await editlist(this.$route.params.id , this.query)
       } else if (this.$route.params.id == '0') {
+        this.query.cinemaCodes = a.items
         await addlist(this.query)
       }
       this.$router.push({ path : '/test'})
@@ -192,21 +205,6 @@ export default class Main extends ViewBase {
     } finally {
     }
   }
-
-
-  handlepageChange(size: any) {
-    this.query.pageIndex = size
-    this.seach()
-  }
-  handlePageSize(size: any) {
-    this.query.pageIndex = size
-    this.seach()
-  }
-
-  // @Watch('query', {deep: true})
-  // watchQuery() {
-  //   this.seach()
-  // }
 }
 </script>
 <style lang="less" scoped>
@@ -231,7 +229,9 @@ export default class Main extends ViewBase {
     text-align: center;
     line-height: 47px;
     margin-top: 6px;
-    font-size: 22px;
+    font-size: 20px;
+    font-weight: 400;
+    cursor: pointer;
   }
 }
 .tiptis {

@@ -14,7 +14,7 @@
 		</Row>
 		<Table
 	      ref="selection"
-	      class="tables"
+	      class="table"
 	      :columns="columns"
 	      :data="list"
 	    >
@@ -195,6 +195,21 @@ export default class Main extends ViewBase {
   padding: 15px;
   margin-top: 20px;
   margin-bottom: 30px;
+}
+.table {
+  margin-top: 16px;
+  /deep/ .status-2,
+  /deep/ .aptitude-status-3 {
+    color: #ed4014;
+  }
+  /deep/ .aptitude-status-2 {
+    color: #19be6b;
+  }
+  /deep/ .ivu-table-cell > span:only-child:empty {
+    &::before {
+      content: '-';
+    }
+  }
 }
 /deep/ .ivu-input {
   height: 40px;
