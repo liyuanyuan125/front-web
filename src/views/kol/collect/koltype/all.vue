@@ -6,19 +6,23 @@
             :class="['film-item']">
             <div :class="!singleId(it.id) ? 'check' : 'check checkall'"></div>
             <div :class="['film-cover-box']">
-              <img :src="it.mainPicUrl" class="film-cover">
+              <img :src="it.headerUrl" class="film-cover">
               <div>
-                <div class="film-title">{{it.name}}</div>
-                <div class="film-time" style="margin-top: 20px"><span>{{it.name}}</span></div>
-                <div class="film-time"><span>{{it.name}}</span></div>
-                <div class="film-time">上映时间：<span>{{formatDate(it.openTime)}}</span></div>
-                <div class="film-time">投放排期: <span>{{formatDate(it.openTime)}}</span></div>
+                <div class="film-title">{{it.name}} <span>{{it.jyIndex}}</span></div>
+                <div class="film-time" style="margin-top: 20px"><span>{{it.summary || '暂无简介'}}</span></div>
+                <div class="film-time"><span>主要平台</span></div>
+                <div class="film-time">
+                  <img width="22px" height="22px" src="./assets/weibo.png" />
+                  <img width="22px" src="./assets/wechat.png" />
+                  <img width="22px" src="./assets/douyin.png" />
+                  <img width="22px" src="./assets/kuaishou.png" />
+                </div>
               </div>
             </div>
           </li>
         </ul>
     </div>
-    <Page :total="total" v-if="total>0" class="btnCenter"
+    <!-- <Page :total="total" v-if="total>0" class="btnCenter"
         :current="pageIndex"
         :page-size="pageSize"
         :page-size-opts="[6, 20, 50, 100]"
@@ -26,11 +30,11 @@
         show-sizer
         show-elevator
         @on-change="sizeChangeHandle"
-        @on-page-size-change="currentChangeHandle"/>
+        @on-page-size-change="currentChangeHandle"/> -->
     <div class="audit">
       <span @click='checkAll' :class="!single ? 'check' : 'check checkall'"></span>
       <span style="color: #444">全选</span>
-      <span style="color: #00202D; cursor: pointer;">取消收藏</span>
+      <span style="color: #00202D; cursor: pointer;" @click="del">取消收藏</span>
     </div>
   </div>
 </template>
@@ -38,8 +42,10 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getTwodetail } from '@/api/popPlan.ts'
+import { kolsList } from '@/api/collect.ts'
 import moment from 'moment'
+import { info } from '@/ui/modal'
+import { delcollect } from '@/api/mycollect.ts'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component
@@ -92,6 +98,8 @@ export default class App extends ViewBase {
     this.single = !this.single
     if (this.single) {
       this.check(ids)
+    } else {
+      this.check([])
     }
   }
 
@@ -116,9 +124,26 @@ export default class App extends ViewBase {
     this.check(this.checkNum)
   }
 
+  async del() {
+    try {
+      if (this.checkId.length == 0) {
+        info('至少选择一个kol')
+      }
+      await delcollect({
+        channelType: 3,
+        dataIdList: this.checkId
+      })
+      this.init()
+      this.check([])
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
   async init() {
     try {
-      this.cinemaDetail = []
+      const { data } = await kolsList()
+      this.cinemaDetail = data.items
 
       const checkSingle: any = []
       const ids = this.cinemaDetail.map((it: any) => it.id)
@@ -169,7 +194,7 @@ export default class App extends ViewBase {
         margin-left: 20px;
         height: 24px;
       }
-      img {
+      > img {
         margin-left: 30px;
         width: 104px;
         height: 146px;

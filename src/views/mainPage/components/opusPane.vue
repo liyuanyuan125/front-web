@@ -2,7 +2,7 @@
   <Pane :title="title" :more="more" class="opus-pane">
     <ul class="opus-list">
       <li v-for="(it, i) in data" :key="i" class="opus-item">
-        <router-link :to="{}" class="opus-item-in">
+        <a :href="it.url" target="_blank" class="opus-item-in">
           <figure class="opus-figure">
             <img :src="it.cover" class="opus-img">
           </figure>
@@ -11,7 +11,7 @@
             <em class="opus-praise">{{it.praise}}</em>
             <em class="opus-comment">{{it.comment}}</em>
           </div>
-        </router-link>
+        </a>
       </li>
     </ul>
   </Pane>
@@ -64,6 +64,7 @@ export default class OpusPane extends Vue {
 
 .opus-item-in {
   display: inline-block;
+  width: 100%;
   &:hover {
     opacity: .88;
   }

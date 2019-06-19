@@ -13,49 +13,53 @@
         <BasicPane
           :item="basic"
           :brandData="brandData"
-          :platformList="platformList"
+          :fansList="fansList"
+          :more="{ name: 'kol-detail-platform', params: { id } }"
         />
       </div>
 
       <section class="board-pane">
-        <nav class="flatform-nav">
-          <a
-            v-for="it in platformNavList"
+        <nav class="flatform-nav" v-if="navList && navList.length > 1">
+          <router-link
+            v-for="it in navList"
             :key="it.icon"
+            :to="{ name: 'kol-figure', params: { id, channel: it.icon } }"
             class="flatform-nav-item"
-            :class="{'flatform-nav-on': it.icon == platformNav}"
-            @click="platformNav = it.icon"
+            :class="{'flatform-nav-on': it.icon == channel}"
           >
             <i :class="`platform-icon-${it.icon}`"></i>
             <span class="platform-name">{{it.name}}</span>
-          </a>
+          </router-link>
         </nav>
 
         <div class="board-row flex-box">
           <FansPane
             title="粉丝画像"
-            :man="fansMan"
-            :woman="fansWoman"
+            :man="fansRate.man"
+            :woman="fansRate.woman"
             :more="{ name: 'kol-detail-fans', params: {id} }"
-            tip="与奔驰用户匹配度：72%"
             class="fans-pane"
+            v-if="fansRate"
           />
+          <!-- TODO: FansPane tip="与奔驰用户匹配度：72%" -->
+
           <PiePane
             title="近7日评论分析"
             :more="{ name: 'kol-detail-comment', params: {id} }"
             :data="commentData"
             class="comment-pane"
+            v-if="commentData"
           />
         </div>
 
         <div class="board-row">
           <HotPane
-            title="近30日微博指数"
-            :data="hotData"
+            :title="hotData.title"
+            :data="hotData.list"
             :more="{ name: 'kol-detail-platform', params: {id} }"
-            tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
             :formatter="hotFormatter"
             class="hot-pane"
+            v-if="hotData"
           />
         </div>
 
@@ -65,13 +69,14 @@
             :data="opusData"
             :more="{ name: 'kol-detail-opus', params: { id }}"
             class="opus-pane"
+            v-if="opusData"
           />
         </div>
 
-        <div class="board-row">
+        <div class="board-row" v-if="offerData">
           <OfferPane
-            title="投放报价"
-            price="视频：¥123,000 起"
+            :title="offerData.title"
+            :price="offerData.price"
             class="offer-pane"
           />
         </div>
@@ -81,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Layout from './components/layout.vue'
 import BasicPane from './components/basicPane.vue'
@@ -106,128 +111,34 @@ import { getKol } from './data'
 export default class FigurePage extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
-  @Prop({ type: String, default: '' }) channel!: string
+  @Prop({ type: String, default: 'weibo' }) channel!: string
 
-  basic = {
-    id: this.id,
-    name: 'Papi酱',
-    subName: '',
-    title: '搞笑视频自媒体',
-    figure: 'https://picsum.photos/id/435/154/154',
-    rankNo: '86.5',
-    rankTitle: '全网排名：100<br>搞笑类：1',
-  }
+  basic: any = null
 
-  bigFigure = this.id == 1 ? '' : 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
+  bigFigure = ''
 
-  fansMan = 66
+  bubbleList: string[] = []
 
-  fansWoman = 34
+  fansRate: any = null
 
-  bubbleList = [
-    '师兄李连杰',
-    '流浪地球',
-    '教练吴彬',
-    '功夫小子',
-    '导演',
-    '少林寺',
-  ]
+  fansList: any[] = []
 
-  platformList = [
-    { icon: 'douyin', name: '抖音', percent: 100, count: '3288万' },
-    { icon: 'weibo', name: '微博', percent: 80, count: '2288万' },
-    { icon: 'wechat', name: '微信', percent: 60, count: '1888万' },
-    { icon: 'kuaishou', name: '快手', percent: 50, count: '1288万' },
-    { icon: 'xiaohongshu', name: '小红书', percent: 30, count: '888万' },
-  ]
+  navList: any[] | null = null
 
-  // 后端称为 channel，前端称为 flatform
-  platformNav = this.channel
+  brandData: any = null
 
-  // TODO: 应从后端读取
-  platformNavList = [
-    { icon: 'weibo', name: '微博' },
-    { icon: 'wechat', name: '微信' },
-    { icon: 'douyin', name: '抖音' },
-    { icon: 'kuaishou', name: '快手' },
-    { icon: 'xiaohongshu', name: '小红书' },
-  ]
+  commentData: any = null
 
-  brandData = {
-    list: [
-      { logo: 'https://dummyimage.com/60x60/000/fff' },
-      { logo: 'https://dummyimage.com/60x60/fff/000' },
-      { logo: 'https://dummyimage.com/60x60/e2e/fff' },
-    ],
-    more: {
-      name: 'kol-detail-brand',
-      params: { id: this.id }
-    }
-  }
+  hotData: any = null
 
-  commentData = [
-    { name: '正面', value: 80, color: '#ca7273' },
-    { name: '中立', value: 30, color: '#f3d872' },
-    { name: '负面', value: 20, color: '#57b4c9' },
-  ]
+  opusData: any = null
 
-  activeFansData = [
-    { name: '5-16', value: 855000 },
-    { name: '5-17', value: 800000 },
-    { name: '5-18', value: 808000 },
-    { name: '5-19', value: 860000 },
-    { name: '5-20', value: 600000 },
-    { name: '5-21', value: 755000 },
-    { name: '5-22', value: 555000 },
-  ]
-
-  hotData = [
-    { name: '5-16', value: 855000, rank: 1 },
-    { name: '5-17', value: 100000, rank: 2 },
-    { name: '5-18', value: 808000, rank: 8 },
-    { name: '5-19', value: 260000, rank: 6 },
-    { name: '5-20', value: 600000, rank: 5 },
-    { name: '5-21', value: 755000, rank: 3 },
-    { name: '5-22', value: 555000, rank: 2 },
-  ]
-
-  opusData = [
-    {
-      id: 1,
-      cover: 'https://picsum.photos/id/520/150/150',
-      title: '《外挂的代价》快快快快快快快扩扩扩扩所付撒付付所付多所时发生地方撒旦法撒旦法方式是否所发生的撒旦法是放松放松第三方撒旦法是非得失双方都',
-      praise: '150万',
-      comment: '1万',
-    },
-
-    {
-      id: 2,
-      cover: 'https://picsum.photos/id/437/150/150',
-      title: '《外挂的代价》',
-      praise: '150万',
-      comment: '8888',
-    },
-
-    {
-      id: 3,
-      cover: 'https://picsum.photos/id/439/150/150',
-      title: '《外挂的代价》快快快快快快快扩扩扩扩所付胜多负少',
-      praise: '150万',
-      comment: '19999',
-    },
-
-    {
-      id: 4,
-      cover: 'https://picsum.photos/id/436/150/150',
-      title: '《外挂的代价》',
-      praise: '150万',
-      comment: '1万',
-    },
-  ]
+  offerData: any = null
 
   hotFormatter([{ dataIndex }]: any) {
-    const { value, rank } = this.hotData[dataIndex]
-    return `综合热度：${value}<br>男演员排名：${rank}`
+    const { category } = this.hotData
+    const { value, rank } = this.hotData.list[dataIndex]
+    return `综合热度：${value}` + (category ? `<br>${category}排名：${rank}` : '')
   }
 
   created() {
@@ -235,14 +146,52 @@ export default class FigurePage extends ViewBase {
   }
 
   init() {
-    this.initBasic()
+    this.initMain()
   }
 
-  async initBasic() {
-    const data = await getKol({
+  async initMain() {
+    const {
+      basic,
+      bubbleList,
+      fansRate,
+      fansList,
+      navList,
+      brandData,
+      commentData,
+      hotData,
+      opusData,
+      offerData
+    } = await getKol({
       id: this.id,
-      channel: this.platformNav
+      channel: this.channel
     })
+
+    // 检查 channel 是否在 navList 中，若不在，就强制跳转到第一个 nav
+    const navItem = navList.find(it => it.icon == this.channel)
+    if (navItem == null) {
+      const firstNav = navList[0]
+      firstNav && this.$router.push({
+        name: 'kol-figure',
+        params: { id: this.id as any, channel: firstNav.icon }
+      })
+      return
+    }
+
+    this.basic = basic
+    this.bubbleList = bubbleList
+    this.fansRate = fansRate
+    this.fansList = fansList
+    this.navList = navList
+    this.brandData = brandData
+    this.commentData = commentData
+    this.hotData = hotData
+    this.opusData = opusData
+    this.offerData = offerData
+  }
+
+  @Watch('channel')
+  watchChannel() {
+    this.init()
   }
 }
 </script>

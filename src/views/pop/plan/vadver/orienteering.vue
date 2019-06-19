@@ -292,9 +292,9 @@ export default class Orienteering extends ViewBase {
       this.warehouseLisst = datas.data || []
       this.cityCustom = item.cityCustom || 0
       this.citiesList = cities || []
-      this.citysId = this.citiesList.map((it: any) => it.id)
-     // 哈哈
-      this.warehouseId = datas.data.map((it: any) => it.cityId)
+      this.citysId = (this.citiesList || []).map((it: any) => it.id)
+     //
+      this.warehouseId = (datas.data || []).map((it: any) => it.cityId)
       this.beginDate = item.beginDate
       this.endDate = item.endDate
       this.tags = tags
@@ -344,7 +344,7 @@ export default class Orienteering extends ViewBase {
 
   citys(val: any) {
     if (this.item.allNation != 1) {
-      const message = val.map((it: any) => {
+      const message = (val || []).map((it: any) => {
         const msg = this.deliveryCityTypeList.filter(
           (item: any) => it == item.key
         )[0].key
@@ -417,7 +417,7 @@ export default class Orienteering extends ViewBase {
           planId: this.$route.params.setid,
           cityCustom: this.cityCustom,
           allNation: this.form.cinema[0] == 0 ? 1 : 0,
-          deliveryCityTypes: this.cityCustom == 0 ? '' : this.form.cinema,
+          deliveryCityTypes: this.cityCustom == 0 ? this.form.cinema : '',
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
@@ -448,6 +448,7 @@ export default class Orienteering extends ViewBase {
                 })
         })
       )
+      ; (this.$Spin as any).show()
       let time: any = null
       time = setInterval(() => {
         if (this.recommend) {
@@ -462,7 +463,6 @@ export default class Orienteering extends ViewBase {
             info('为找到匹配项')
           }
         } else {
-          (this.$Spin as any).show()
           this.loddding()
         }
       }, 3000)

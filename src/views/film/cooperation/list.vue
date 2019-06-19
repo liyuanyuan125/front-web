@@ -77,12 +77,6 @@
                   :key="item.key"
                   :label="item.key"
                 >{{item.text}}</Radio>
-                <!-- <Radio key="-1" label="-1" class="showMore">
-                  <span @click="showMoreHandle">
-                    {{filterShowMoreText}}
-                    <Icon :type="filterShowMoreIcon" />
-                  </span>
-                </Radio> -->
               </RadioGroup>
             </FormItem>
             <FormItem label="影片量级:">
@@ -127,12 +121,12 @@
         <Row :gutter="10" v-if="done" class="res-row">
           <Col span="4" v-for="(item, index) in dataList" :key="index" class="res-col">
             <div class="res-item">
-              <router-link :to="{ name: 'film-movie', params: { id: item.movie_id }}">
-              <div class="poster" >
-                <img :src="item.movieMainPic">
-              </div>
-              <div class="movtitle cut-text">{{item.name_cn}}</div>
-              <p class="movscore">{{item.jy_index}}</p>
+              <router-link :to="{ name: 'film-movie', params: { id: item.movie_id}}">
+                <div class="poster" >
+                  <img :src="item.movieMainPic">
+                </div>
+                <div class="movtitle cut-text">{{item.name_cn}}</div>
+                <p class="movscore">{{item.jy_index}}</p>
               </router-link>
             </div>
           </Col>
@@ -143,7 +137,7 @@
       </div>
       <Page
         class="info-page"
-        :total="form.totalPages"
+        :total="totalPages"
         :current="form.pageIndex"
         :page-size="form.pageSize"
         show-total
@@ -177,13 +171,14 @@ export default class Temporary extends ViewBase {
   filterShowMoreIcon = 'ios-arrow-down'
   filterShowMoreText = '更多'
   selectdTime: string = ''
+  totalPages: number = 0
   form: any = {
     movieTypeCode: '',
     movieCategoryCode: '',
     sortBy: '',
     pageIndex: 1,
     pageSize: 10,
-    totalPages: 0,
+    releaseStatus: 0
   }
   dataList: any[] = []
   dict = {
@@ -248,7 +243,9 @@ export default class Temporary extends ViewBase {
       }
     ]
   }
+
   async typeChangeHander4(index: number = 0) {}
+
   async fetchHandler() {
     const that: any = this
     const mockObj = {
@@ -263,65 +260,49 @@ export default class Temporary extends ViewBase {
           totalPages
         }
       } = await fetchList({ ...mockObj })
-      this.dataList = movies
-      this.form.totalPages = totalPages
-      if ( typeList.length > 0 ) {
-        this.dict.typeList.push(...typeList)
+      this.dataList = movies.map((it: any) => {
+        return {
+          movie_id: it.movie_id,
+          name_cn: it.name_cn,
+          release_date: it.release_date,
+          main_pic: it.main_pic,
+          release_status: it.release_status,
+          jy_index: it.jy_index
+        }
+      })
+      this.totalPages = totalPages
+      if ( this.dict.typeList.length === 1 ) {
+        this.dict.typeList.push( ...typeList )
       }
-      // if ( typeList.length > 11 ) {
-      //   const arr1 = typeList.filter((item: any, index: number) => {
-      //     return index < 6
-      //   })
-      //   const arr2 = typeList.filter((item: any, index: number) => {
-      //     return index > 6
-      //   })
-      //   this.dict.typeList.push(...arr1)
-      //   typeListMore.push(...arr2)
-      // } else {
-      //   this.dict.typeList.push( ...typeList )
-      // }
-      // this.dict.categoryList.push(...categoryList)
+      if ( this.dict.categoryList.length === 1 ) {
+        this.dict.categoryList.push( ...categoryList )
+      }
       that.done = true
     } catch (ex) {
       this.handleError(ex)
     }
   }
+
   handleChange() {
     this.form.moveTypeCode = 0
     this.restHandler()
     this.fetchHandler()
   }
+
   restHandler() {
-    this.dict.typeList.splice(1, this.dict.typeList.length )
     this.dataList = []
   }
+
   handlepageChange(val: any) {
     this.form.pageIndex = val
     this.fetchHandler()
   }
+
   handlePageSize(val: any) {
     this.form.pageIndex = val
     this.fetchHandler()
   }
-  showMoreHandle() {
-    if (!this.filterShowMore) {
-      const { movieTypeCode } = this.form
-      this.dict.typeList.push(...typeListMore)
-      this.filterShowMore = true
-      this.filterShowMoreIcon = 'ios-arrow-up'
-      this.$nextTick(() => {
-        this.form.movieTypeCode = movieTypeCode
-      })
-    } else {
-      const { movieTypeCode } = this.form
-      this.dict.typeList.splice(-11, 11)
-      this.filterShowMore = false
-      this.filterShowMoreIcon = 'ios-arrow-down'
-      this.$nextTick(() => {
-        this.form.movieTypeCode = 0
-      })
-    }
-  }
+
   created() {
     this.fetchHandler()
   }
@@ -494,13 +475,14 @@ export default class Temporary extends ViewBase {
     .res-list {
       width: 100%;
       .res-row {
+        min-height: 580px;
         .res-col {
           text-align: center;
           margin-bottom: 66px;
           .poster {
             img {
-              max-width: 168px;
-              max-height: 238px;
+              min-width: 168px;
+              min-height: 238px;
             }
           }
           .movtitle {

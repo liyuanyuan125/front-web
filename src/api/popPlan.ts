@@ -243,6 +243,6 @@ export async function financeMsg(id: any) {
  * 缴纳保证金
  */
 export async function payMoney(id: any) {
-  const data = await get(`/xadvert/v1/plans/${id}/pay`)
+  const data = await post(`/xadvert/v1/plans/${id}/pay`)
   return data
 }

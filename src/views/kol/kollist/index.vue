@@ -70,7 +70,7 @@
           <template slot-scope="{ row }" slot="name">
             <div class="table-name">
               <div class="to-detail" @click="$router.push({ name: 'kol-figure', params: { id: row.kolId, channel: row.channelCode }})">
-                <img :src="row.image" alt="">
+                <img width="30px" height="30px" :src="row.image" alt="">
                  <span>{{row.name}}</span>
               </div>
             </div>
@@ -132,7 +132,7 @@
                 <Icon type="md-add-circle" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
                 取消投放
               </p>
-              <p v-if="!row.collected" @click="collects(row.id)">
+              <p v-if="!kolIds.includes(row.id)" @click="collects(row.id)">
                 <Icon type="md-heart" style="margin-top: 5px;font-size: 17px; color: #CA7273" />
                 收藏
               </p>
@@ -188,6 +188,8 @@ import Detail from './detail.vue'
 import { animation } from '@/fn/self.ts'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { clean } from '@/fn/object.ts'
+import { getpersons, delcollect } from '@/api/mycollect.ts'
+import { kolList } from '@/api/collect.ts'
 
 // 保持互斥
 const keepExclusion = <T extends any>(
@@ -257,6 +259,8 @@ export default class Main extends ViewBase {
   title: any = ['weibo', 'wechat', 'douyin', 'kuaishou', 'xiaohonghsu']
   yudingList: any = []
   yudingListId: any = []
+  kolIds: any = []
+
   get columns() {
     const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号', '全部账号', '全部账号']
     return [
@@ -352,6 +356,18 @@ export default class Main extends ViewBase {
     this.init()
     this.seach()
     this.KolSeach()
+    this.kolinit()
+  }
+
+  async kolinit() {
+    try {
+      const { data } = await kolList({
+        channelTypeCode: this.type + 4
+      })
+      this.kolIds = (data.items || []).map((it: any) => it.accountDataId)
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   viewArea(areaId: any, id: any) {
@@ -505,10 +521,10 @@ export default class Main extends ViewBase {
   async collects(id: any) {
     try {
       await addcollet({
-        channelCode: this.title[this.type],
-        channelDataId: id
+        channelType: this.type + 4,
+        dataId: id
       })
-      this.KolSeach()
+      this.kolinit()
     } catch (ex) {
       this.handleError(ex)
     }
@@ -517,11 +533,11 @@ export default class Main extends ViewBase {
   // 取消收藏
   async cancelcollects(id: any) {
     try {
-      await cancelcollect({
-        channelCode: this.title[this.type],
-        channelDataId: id
+      await delcollect({
+        channelType: this.type + 4,
+        dataIdList: [id]
       })
-      this.KolSeach()
+      this.kolinit()
     } catch (ex) {
       this.handleError(ex)
     }
