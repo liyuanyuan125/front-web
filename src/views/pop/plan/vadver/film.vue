@@ -5,7 +5,7 @@
             :class="['film-item']">
           <div :class="['film-cover-box']">
             <span @click="del" class="del">×</span>
-            <img :src="it.image ? it.img : defaultImg" onerror="defaultImg" class="film-cover">
+            <img :src="it.image ? it.image : defaultImg" onerror="defaultImg" class="film-cover">
             <div>
               <div class="film-title">{{it.nameCn}}</div>
               <div class="film-time" style="margin-top: 10px"><span class="time-right">上映时间：</span>{{formatDate(it.releaseDate)}}</div>
