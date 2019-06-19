@@ -417,7 +417,7 @@ export default class Orienteering extends ViewBase {
           planId: this.$route.params.setid,
           cityCustom: this.cityCustom,
           allNation: this.form.cinema[0] == 0 ? 1 : 0,
-          deliveryCityTypes: this.cityCustom == 0 ? '' : this.form.cinema,
+          deliveryCityTypes: this.cityCustom == 0 ? this.form.cinema : '',
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
