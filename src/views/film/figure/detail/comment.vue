@@ -1,49 +1,33 @@
 
 <template>
   <div>
-    <Form label-position="left" :label-width="100">
-      <Card class="detailmore-card">
-        <div slot="title">
-          <Row type="flex" justify="space-between" align="middle">
-            <Col :span="17">
-              <DetailNavBar titleText="统计周期">
-                <div slot="item">
-                  <RadioGroup
-                    class="nav"
-                    @on-change="handleChange"
-                    v-model="form.dayRangesKey"
-                    size="large"
-                    type="button"
-                  >
-                    <Radio
-                      v-for="(item) in dict.dayRanges"
-                      :key="item.key"
-                      :disabled="item.disabled"
-                      :label="item.key"
-                    >{{item.text}}</Radio>
+    <Row>
+      <Col span="24">
+      <Form label-position="left"
+            :label-width="100">
+        <Card class="detailmore-card">
+          <div slot="title">
+            <Row type="flex" justify="space-between" align="middle">
+              <Col :span="17">
+                <DetailNavBar titleText='统计周期'>
+                  <div slot='item'>
+                    <RadioGroup class='nav'
+                              @on-change="handleChange"
+                              v-model="form.dayRangesKey"
+                              size="large"
+                              type="button">
+                    <Radio v-for="(item) in dict.dayRanges"
+                           :key="item.key"
+                           :disabled="item.disabled"
+                           :label="item.key">{{item.text}}</Radio>
                   </RadioGroup>
-                </div>
-              </DetailNavBar>
-            </Col>
-            <Col :span="7" style="text-align:right">
-              平台
-              <Select
-                v-model="form.channelCode"
-                clearable
-                @on-change="handleChange"
-                style="width:150px; text-align:left"
-              >
-                <Option
-                  v-for="(item) in dict.channelList"
-                  :key="item.key"
-                  :value="item.key"
-                >{{item.text}}</Option>
-              </Select>
-            </Col>
-          </Row>
-        </div>
-        <div class="content">
-          <Row type="flex" justify="space-between">
+                  </div>
+                </DetailNavBar>
+              </Col>
+            </Row>
+          </div>
+          <div class="content">
+            <Row type="flex" justify="space-between">
               <Col :span="12">
                 <div class='chart-wp' style='margin-right:10px'>
                   <PieNest :initDone="chart1.initDone"
@@ -93,22 +77,23 @@
                 </div>
               </Col>
             </Row>
-        </div>
-      </Card>
-    </Form>
+          </div>
+        </Card>
+      </Form>
+      </Col>
+    </Row>
   </div>
 </template>
-
 <script lang="ts">
-import { Component, Prop, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { findIndex } from 'lodash'
 import moment from 'moment'
-import { comment } from '@/api/kolDetailMoreInfo'
+import { dayRanges, comment } from '@/api/figureDetailMoreInfo'
 import PieNest from '@/components/chartsGroup/pieNest/'
 import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
-import DetailNavBar from './components/detailNavBar.vue'
+import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
 import { tooltipStyles } from '@/util/echarts'
 const timeFormat = 'YYYYMMDD'
 // #D0BF6B 中性
@@ -126,15 +111,12 @@ const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
 export default class Temporary extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
   tooltipStyles = tooltipStyles
-
   form: any = {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
-    dayRangesKey: 'sevenDay',
-    channelCode: 'weibo'
+    dayRangesKey: 'last_7_day',
   }
-
   dict: any = {
     dayRanges: [
       {
@@ -143,22 +125,22 @@ export default class Temporary extends ViewBase {
         disabled: false
       },
       {
-        key: 'sevenDay',
+        key: 'last_7_day',
         text: '最近7天',
         disabled: false
       },
       {
-        key: 'thirtyDay',
+        key: 'last_30_day',
         text: '最近30天',
         disabled: false
       },
       {
-        key: 'ninetyDay',
+        key: 'last_90_day',
         text: '最近90天',
         disabled: false
       }
     ],
-    // 情感分类
+    // 情感分类 写死适配多模块
     emotion: [
       {
         key: 0,
@@ -175,31 +157,8 @@ export default class Temporary extends ViewBase {
         name: 'neutral',
         text: '中性'
       }
-    ],
-    channelList: [
-      {
-        text: '微博',
-        key: 'weibo'
-      },
-      {
-        text: '微信',
-        key: 'wechat'
-      },
-      {
-        text: '快手',
-        key: 'kuaishou'
-      },
-      {
-        text: '抖音',
-        key: 'douyin'
-      },
-      {
-        text: '小红书',
-        key: 'xiaohongshu'
-      }
     ]
   }
-
   chart1: any = {
     title: '评论情绪分布',
     dict1: [],
@@ -291,7 +250,6 @@ export default class Temporary extends ViewBase {
   async typeChangeHander(index: number = 0) {
     this.chart2.currentTypeIndex = index
   }
-
   /**
    * 加载日期区间描述
    */
@@ -382,13 +340,10 @@ export default class Temporary extends ViewBase {
     switch ( dayRangesKey ) {
       case 'yesterday' :
         return moment(new Date()).add(-1, 'days').format(timeFormat)
-        break
-      case 'thirtyDay' :
+      case 'last_30_day' :
         return moment(new Date()).add(-30, 'days').format(timeFormat)
-        break
-      case 'ninetyDay' :
+      case 'last_90_day' :
         return moment(new Date()).add(-90, 'days').format(timeFormat)
-        break
       default :
         return moment(new Date()).add(-7, 'days').format(timeFormat)
     }
@@ -420,6 +375,7 @@ export default class Temporary extends ViewBase {
     } else {
       this.chart1.dataList.push([])
     }
+
     if (this.chart3.dict1.length > 0) {
       this.chart3.dict1.map((item: any, index: number) => {
         this.chart3.dataList.push([])

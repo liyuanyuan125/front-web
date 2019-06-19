@@ -1,8 +1,8 @@
 <template>
   <Pane :title="title" :more="more" class="text-pane">
     <div class="text-pane-in">
-      <h4 class="main-text" v-if="main">{{main}}</h4>
-      <h5 class="sub-text" v-if="sub">{{sub}}</h5>
+      <h4 class="main-text" v-if="main != null">{{main}}</h4>
+      <h5 class="sub-text" v-if="sub != null">{{sub}}</h5>
     </div>
   </Pane>
 </template>
@@ -22,9 +22,9 @@ export default class TextPane extends Vue {
 
   @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
 
-  @Prop({ type: String, default: '' }) main!: string
+  @Prop({ type: [ String, Number ], default: '' }) main!: string | number
 
-  @Prop({ type: String, default: '' }) sub!: string
+  @Prop({ type: [ String, Number ], default: '' }) sub!: string | number
 }
 </script>
 

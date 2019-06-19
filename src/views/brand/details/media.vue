@@ -8,10 +8,22 @@
       <li v-for="item in list" :key="item.id">
         <div class="inner">
           <div class="flex-box">
-            <img src="../assets/microblog.png" width="80" height="80" v-if="item.channelCode == 'weibo'" />
-            <img src="../assets/quick.png" width="80" height="80" v-if="item.channelCode == 'kuaishou'" />
-            <img src="../assets/vibrato.png" width="80" height="80" v-if="item.channelCode == 'douyin'" />
-            <img src="../assets/wechat.png" width="80" height="80" v-if="item.channelCode == 'wechat'" />
+            <p v-if="item.channelCode == 'weibo'">
+              <img :src="item.headImgUrl" v-if="item.headImgUrl" width="80" height="80"  />
+              <img src="../assets/microblog.png" v-else width="80" height="80"  />
+            </p>
+            <p v-if="item.channelCode == 'kuaishou'">
+              <img :src="item.headImgUrl" v-if="item.headImgUrl" width="80" height="80"  />
+              <img src="../assets/quick.png" v-else width="80" height="80"  />
+            </p>
+            <p v-if="item.channelCode == 'douyin'">
+              <img :src="item.headImgUrl" v-if="item.headImgUrl" width="80" height="80"  />
+              <img src="../assets/vibrato.png" v-else width="80" height="80"  />
+            </p>
+            <p v-if="item.channelCode == 'wechat'">
+              <img src="../assets/wechat.png" v-if="item.headImgUrl" width="80" height="80"  />
+              <img src="../assets/wechat.png" v-else width="80" height="80"  />
+            </p> 
             <div class="item">
               <p class="item-name">{{item.name}}</p>
               <p><a :href="item.url" target="_brank">{{item.url}}</a></p>

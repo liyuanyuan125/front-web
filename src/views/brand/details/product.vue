@@ -165,8 +165,8 @@ export default class Main extends ViewBase {
     }
   }
 
-  cutLength(text: string) {
-    return text.length > 20 ? text.substr(0, 20) + '....' : text
+  cutLength(text: any) {
+    return text && text.length > 20 ? text.substr(0, 20) + '....' : text
   }
 
   uplist(size: any) {

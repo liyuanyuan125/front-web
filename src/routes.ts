@@ -10,10 +10,32 @@ import Error from './views/error/index.vue'
 
 import { RouteConfig, Route, Location } from 'vue-router'
 import { devInfo, devError } from './util/dev'
+import { MapType } from './util/types'
+import { stringToBoolean } from './fn/typeCast'
 
-const idProps = ({ params: { id } }: Route) => {
-  return { id: +id }
+/**
+ * 处理 route 中的参数类型
+ * @param config 配置
+ */
+const paramTypes = (
+  config: MapType<NumberConstructor | BooleanConstructor | StringConstructor>
+) => {
+  return ({ params }: Route) => {
+    const props = Object.entries(config).reduce((map, [key, type]) => {
+      const strVal = params[key]
+      const value = type === Number
+        ? (+strVal || 0)
+        : type === Boolean
+        ? stringToBoolean(strVal)
+        : strVal
+      map[key] = value
+      return map
+    }, {} as MapType<any>)
+    return props
+  }
 }
+
+const idProps = paramTypes({ id: Number })
 
 /**
  * 面包屑
@@ -1054,7 +1076,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       },
       // 影片 - 更多详情 - 粉丝画像 - 匹配度
       {
-        path: 'matching/:id',
+        path: 'matching/:brandId',
         name: 'film-detail-matching',
         component: () => import('./views/film/detail/matching.vue'),
         meta: {
@@ -1110,80 +1132,97 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       ...emptyAuth,
     },
     props: idProps,
-    children: []
+    children: [
+      // 影人详情页 - 作品列表
+      {
+        path: 'works',
+        name: 'film-figure-detail-works',
+        component: () => import('./views/film/figure/detail/works.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '作品列表'
+        },
+        props: idProps,
+      },
+      // 影人详情 - 合作品牌
+      {
+        path: 'brand',
+        name: 'film-figure-detail-brand',
+        component: () => import('./views/film/figure/detail/brand.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '合作品牌'
+        },
+        props: idProps,
+      },
+      // 影人详情 - 更多资料
+      {
+        path: 'information',
+        name: 'film-figure-detail-information',
+        component: () => import('./views/film/figure/detail/information.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '更多资料'
+        },
+        props: idProps,
+      },
+      // 影人详情 - 粉丝画像
+      {
+        path: 'fans',
+        name: 'film-figure-detail-fans',
+        component: () => import('./views/film/figure/detail/fans.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '粉丝画像'
+        },
+        props: idProps,
+      },
+      // 影人详情 - 粉丝画像 - 受众匹配
+      {
+        path: 'matching/:brandId',
+        name: 'film-figure-detail-matching',
+        component: () => import('./views/film/figure/detail/matching.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '粉丝画像'
+        },
+        props: idProps,
+      },
+      // 影人详情 - 口碑评论
+      {
+        path: 'comment',
+        name: 'film-figure-detail-comment',
+        component: () => import('./views/film/figure/detail/comment.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '口碑评论'
+        },
+        props: idProps,
+      },
+      // 影人详情 - 全网热度
+      {
+        path: 'hot',
+        name: 'film-figure-detail-hot',
+        component: () => import('./views/film/figure/detail/hot.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '全网热度'
+        },
+        props: idProps,
+      },
+      // 影人详情 -  平台运营
+      {
+        path: 'platform',
+        name: 'film-figure-detail-platform',
+        component: () => import('./views/film/figure/detail/platform.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '平台运营'
+        },
+        props: idProps,
+      },
+    ]
   },
-
-  // 影人 - 详情 - 更多页 - 评论
-  {
-    path: '/figure/detailMoreInfo/comment/:id',
-    name: 'figure-detailMoreInfo-comment',
-    component: () => import('./views/film/figure/detailMoreInfo/comment.vue'),
-    meta: emptyAuth
-  },
-
-  // 影人 - 影人详情更多页 - 粉丝画像
-  {
-    path: '/figure/detailMoreInfo/fans/:id',
-    name: 'figure-detailMoreInfo-fans',
-    component: () => import('./views/film/figure/detailMoreInfo/fans.vue'),
-    meta: emptyAuth
-  },
-  // 影人 - 影人详情更多页 - 粉丝画像 受众匹配
-  {
-    path: '/figure/detailMoreInfo/matching/:id',
-    name: 'figure-detailMoreInfo-matching',
-    component: () => import('./views/film/figure/detailMoreInfo/matching.vue'),
-    meta: emptyAuth
-  },
-  // 影人（film）- 影人更多详情 - 合作品牌
-  {
-    path: '/film/filmmakerdetail/cobrand',
-    name: 'film-filmmakerdetail-cobrand',
-    component: () => import('./views/film/filmmakerDetails/coBrand.vue'),
-    meta: {
-      title: '合作品牌',
-      authKey: '',
-      authAction: '',
-    }
-  },
-  // 影人 - 影人更多详情 - 主要作品
-  {
-    path: '/film/filmmakerdetail/masterwork',
-    name: 'film-filmmakerdetail-masterwork',
-    component: () => import('./views/film/filmmakerDetails/masterWork.vue'),
-    meta: {
-      title: '主要作品',
-      authKey: '',
-      authAction: '',
-    }
-  },
-  // 影人 - 影人更多详情 - 更多资料
-  {
-    path: '/film/filmmakerdetail/moreinformation',
-    name: 'film-filmmakerdetail-moreinformation',
-    component: () => import('./views/film/filmmakerDetails/moreInformation.vue'),
-    meta: {
-      title: '更多资料',
-      authKey: '',
-      authAction: '',
-    },
-    props: idProps,
-  },
-
-  // 影片详情 - 影片详情更多页 - 主创阵容
-  // {
-  //   path: '/film/filmorder/mainLineup/:id',
-  //   name: 'film-filmorder-mainLineup',
-  //   component: () => import('./views/film/filmorder/mainLineup.vue'),
-  //   meta: emptyAuth,
-  // },
-  // 影片详情- 影片详情更多页  - 详细资料
-  // {
-  //   path: '/film/filmorder/detailInfo/:id',
-  //   name: 'film-filmorder-detailInfo',
-  //   component: () => import('./views/film/filmorder/detailInfo.vue'),
-  //   meta: emptyAuth,
-  // },
 
   // 影片（film）- 影片合作 - 列表
   {
@@ -1237,18 +1276,6 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/collect/index.vue'),
     meta: emptyAuth,
   },
-  // [直客] 品牌管理（详情页）登录判断
-  {
-    path: '/brand/list',
-    name: 'brand-list',
-    component: () => import('./views/brand/list.vue'),
-    meta: {
-      authKey: 'brand',
-      authAction: 'EMPTY',
-      authIsMenu: true,
-      title: '品牌管理',
-    }
-  },
 
   // 品牌 - 首页
   {
@@ -1261,6 +1288,51 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       title: '品牌',
     },
     props: idProps,
+  },
+  // 品牌 - 首页 - 详情页
+  {
+    path: '/brand/homedetail/:id',
+    name: 'brand-homedetail-layout',
+    component: () => import('./views/brand/detailHome/layout.vue'),
+    meta: {
+      ...emptyAuth,
+    },
+    props: idProps,
+    children: [
+      // 品牌 - 详情页 - 用户画像
+      {
+        path: 'fans',
+        name: 'brand-homedetail-fans',
+        component: () => import('./views/brand/detailHome/fans.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '用户画像'
+        },
+        props: idProps,
+      },
+      // 品牌 - 详情页 - 口碑评论
+      {
+        path: 'comment',
+        name: 'brand-homedetail-comment',
+        component: () => import('./views/brand/detailHome/comment.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '口碑评论'
+        },
+        props: idProps,
+      },
+      // 品牌 - 详情页 - 全网热度
+      {
+        path: 'trend',
+        name: 'brand-homedetail-trend',
+        component: () => import('./views/brand/detailHome/trend.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '全网热度'
+        },
+        props: idProps,
+      },
+    ]
   },
 
   // 品牌 - 产品 - 首页
@@ -1275,58 +1347,70 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: '',
       title: '产品',
     },
-    props({ params: { brandId, id } }: Route) {
-      return {
-        id: +id,
-        brandId: +brandId,
-      }
+    props: paramTypes({
+      id: Number,
+      brandId: Number
+    })
+  },
+
+  // 品牌 - 产品 - 详情页
+  {
+    path: '/brand/detailpro/:id',
+    name: 'brand-detailpro-layout',
+    component: () => import('./views/brand/detailPro/layout.vue'),
+    meta: {
+      ...emptyAuth,
+    },
+    props: idProps,
+    children: [
+      // 产品 - 详情页 - 用户画像
+      {
+        path: 'fans',
+        name: 'brand-detailpro-fans',
+        component: () => import('./views/brand/detailPro/fans.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '用户画像'
+        },
+        props: idProps,
+      },
+      // 产品 - 详情页 - 口碑评论
+      {
+        path: 'comment',
+        name: 'brand-detailpro-comment',
+        component: () => import('./views/brand/detailPro/comment.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '口碑评论'
+        },
+        props: idProps,
+      },
+      // 产品 - 详情页 - 全网热度
+      {
+        path: 'trend',
+        name: 'brand-detailpro-trend',
+        component: () => import('./views/brand/detailPro/trend.vue'),
+        meta: {
+          ...emptyAuth,
+          title: '全网热度'
+        },
+        props: idProps,
+      },
+    ]
+  },
+
+   // [直客] 品牌管理（详情页）登录判断
+   {
+    path: '/brand/list',
+    name: 'brand-list',
+    component: () => import('./views/brand/list.vue'),
+    meta: {
+      authKey: 'brand',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+      title: '品牌管理',
     }
   },
-
-  // 品牌 - 用户画像
-  {
-    path: '/brand/brandfans/:id',
-    name: 'brand-brandfans',
-    component: () => import('./views/brand/brandfans.vue'),
-    meta: emptyAuth,
-  },
-  // 品牌 - 口碑评论
-  {
-    path: '/brand/brandcomment/:id',
-    name: 'brand-brandcomment',
-    component: () => import('./views/brand/brandcomment.vue'),
-    meta: emptyAuth,
-  },
-  // 品牌 - 热度趋势
-  {
-    path: '/brand/brandtrend/:id',
-    name: 'brand-brandtrend',
-    component: () => import('./views/brand/brandtrend.vue'),
-    meta: emptyAuth,
-  },
-
-  // 产品 - 用户画像
-  {
-    path: '/brand/productfans/:id',
-    name: 'brand-productfans',
-    component: () => import('./views/brand/productfans.vue'),
-    meta: emptyAuth,
-  },
-  // 产品 - 口碑评论
-  {
-    path: '/brand/productcomment/:id',
-    name: 'brand-productcomment',
-    component: () => import('./views/brand/productcomment.vue'),
-    meta: emptyAuth,
-  },
-  // 产品 - 热度趋势
-  {
-    path: '/brand/producttrend/:id',
-    name: 'brand-producttrend',
-    component: () => import('./views/brand/producttrend.vue'),
-    meta: emptyAuth,
-  },
-
 
   // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
   {

@@ -23,7 +23,7 @@
                         :value="option.value"
                         :key="index">{{option.label}}</Option>
               </Select>
-              <router-link :to="{path: '/figure/detailMoreInfo/matching/'+pageQuery.brandId}"><Button :disabled="pageQuery.brandId === ''"
+              <router-link :to="{path: `/film/figure/detail/${id}/matching/${pageQuery.brandId}`}"><Button :disabled="pageQuery.brandId === ''"
                         size="small"
                         type="primary">查看匹配度</Button></router-link>
               </Col>
@@ -94,10 +94,10 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { fans, brands } from '@/api/figureDetailMoreInfo'
-import DetailNavBar from './components/detailNavBar.vue'
+import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import MapChina from '@/components/chartsGroup/mapChina/'
 import Pie from '@/components/chartsGroup/pieSimple/'
@@ -113,6 +113,7 @@ import BarYCategory from '@/components/chartsGroup/barYCategory/'
   }
 })
 export default class Temporary extends ViewBase {
+  @Prop({ type: Number, default: 0 }) id!: number
   form: any = {
   }
   pageQuery: any = {

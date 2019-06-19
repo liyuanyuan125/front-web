@@ -12,7 +12,6 @@
       <div class="basic-box">
         <BasicPane
           :item="basic"
-          :more="{ name: 'kol-detail-platform', params: { id } }"
           :brandData="brandData"
           :platformList="platformList"
         />
