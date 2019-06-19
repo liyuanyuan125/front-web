@@ -292,9 +292,9 @@ export default class Orienteering extends ViewBase {
       this.warehouseLisst = datas.data || []
       this.cityCustom = item.cityCustom || 0
       this.citiesList = cities || []
-      this.citysId = this.citiesList.map((it: any) => it.id)
+      this.citysId = (this.citiesList || []).map((it: any) => it.id)
      // 哈哈
-      this.warehouseId = datas.data.map((it: any) => it.cityId)
+      this.warehouseId = (datas.data || []).map((it: any) => it.cityId)
       this.beginDate = item.beginDate
       this.endDate = item.endDate
       this.tags = tags
@@ -344,7 +344,7 @@ export default class Orienteering extends ViewBase {
 
   citys(val: any) {
     if (this.item.allNation != 1) {
-      const message = val.map((it: any) => {
+      const message = (val || []).map((it: any) => {
         const msg = this.deliveryCityTypeList.filter(
           (item: any) => it == item.key
         )[0].key
@@ -449,6 +449,7 @@ export default class Orienteering extends ViewBase {
         })
       )
       let time: any = null
+      (this.$Spin as any).show()
       time = setInterval(() => {
         if (this.recommend) {
           (this.$Spin as any).hide()
@@ -462,7 +463,6 @@ export default class Orienteering extends ViewBase {
             info('为找到匹配项')
           }
         } else {
-          (this.$Spin as any).show()
           this.loddding()
         }
       }, 3000)
