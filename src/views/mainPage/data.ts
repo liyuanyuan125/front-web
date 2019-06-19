@@ -2,6 +2,7 @@ import { get } from '@/fn/ajax'
 import { at, keyBy, sumBy } from 'lodash'
 import { KeyText } from '@/util/types'
 import { slice } from '@/fn/object'
+import { dayOffsetRange } from '@/util/date'
 
 const dot = (object: any, path: string) => at(object, path)[0]
 
@@ -21,6 +22,8 @@ const sortBubble = (tags: string[]) => {
   const tagList = tags || []
   return bubbleSort.map(i => tagList[i] || '')
 }
+
+const monthDate = (date: number) => String(date).replace(/(\d{4})(\d{2})(\d{2})/, '$2-$3')
 
 /**
  * KOL详情
@@ -77,6 +80,8 @@ export async function getKol({
   }))
 
   const result = {
+    bubbleList: sortBubble(tags),
+
     basic: {
       id,
       name,
@@ -88,8 +93,6 @@ export async function getKol({
         cate ? `${cate.text}：${categoryRanking}` : ''
       ].filter(it => !!it).join('<br>')
     },
-
-    bubbleList: sortBubble(tags),
 
     fansRate: {
       man: percent(dot(fansRate.male, 'r')),
@@ -120,7 +123,7 @@ export async function getKol({
     hotData: indexes && indexes.length > 0 ? (() => {
       const channelName = dot(channelMap[channel], 'text')
       const list = (indexes || []).map((it: any) => {
-        const date = String(it.date).replace(/(\d{4})(\d{2})(\d{2})/, '$2-$3')
+        const date = monthDate(it.date)
         const item = (it.channels || []).find((tt: any) => tt.code == channel)
         return item && {
           name: date,
@@ -176,6 +179,9 @@ export async function getMovie(id: number) {
       jyIndexSamePeriodRanking,
       trailers,
 
+      searchKeywords,
+      fansPortrait,
+
       releaseStatus,
       boxofficeTodayCount,
       boxofficeTodayRanking,
@@ -199,6 +205,8 @@ export async function getMovie(id: number) {
   const hasShow = releaseStatus >= 3
 
   const result = {
+    bubbleList: sortBubble(searchKeywords),
+
     basic: {
       id,
       name,
@@ -207,6 +215,8 @@ export async function getMovie(id: number) {
       rankNo: jyIndex || 0,
       rankTitle: `同档期：第${jyIndexSamePeriodRanking || 0}`,
     },
+
+    hasShow,
 
     movie: {
       preview: trailers && trailers[0],
@@ -229,6 +239,11 @@ export async function getMovie(id: number) {
       }
     },
 
+    fansRate: {
+      man: percent(dot(fansPortrait, 'male')),
+      woman: percent(dot(fansPortrait, 'female')),
+    },
+
     boxToday: {
       title: hasShow ? '今日实时票房' : '累计想看人数',
       main: (hasShow ? boxofficeTodayCount : wantToSeeTotalCount) || 0,
@@ -238,7 +253,62 @@ export async function getMovie(id: number) {
     boxTotal: {
       title: hasShow ? '累计票房' : '预估票房',
       main: hasShow ? boxofficeTotalCount : predict
+    },
+  }
+
+  return result
+}
+
+/**
+ * 获取影片近 7 日新增观影、想看人数
+ * https://yapi.aiads-dev.com/project/161/interface/api/4911
+ * @param id 影片 id
+ */
+export async function getVideoRise(id: number) {
+  const [beginDate, endDate] = dayOffsetRange(-7)
+  const {
+    data: {
+      items
     }
+  } = await get(`/movie/views/${id}`, {
+    beginDate,
+    endDate
+  })
+
+  const dealList = (path: string) => {
+    const list = (items as any[] || []).map(it => {
+      const name = monthDate(it.date)
+      const value = dot(it, path) || 0
+      return { name, value }
+    })
+    return list
+  }
+
+  const result = {
+    box: dealList('boxoffice.count'),
+    view: dealList('view.count')
+  }
+
+  return result
+}
+
+/**
+ * 获取影片全网热度（暂定 60 天）
+ * https://yapi.aiads-dev.com/project/161/interface/api/4904
+ * @param id 影片 id
+ */
+export async function getVideoHot(id: number) {
+  const [beginDate, endDate] = dayOffsetRange(-60)
+  const {
+    data: {
+      items
+    }
+  } = await get(`/movie/${id}/hot`, {
+    beginDate,
+    endDate
+  })
+
+  const result = {
   }
 
   return result
@@ -256,20 +326,27 @@ export async function getFigure(id: number) {
         nameEn,
         headImgSmall,
         headImgBig,
+        professions,
         jyIndex,
-      }
+        tags,
+        tip,
+      },
+      professions: professionList,
     }
   } = await get(`/person/${id}`)
+
+  const titleKeys = (professions as any[] || []).map(it => it.code)
+  const titleList = getNames(titleKeys, professionList)
 
   const result = {
     basic: {
       id,
       name,
       subName: nameEn,
-      title: 'TODO',
+      title: titleList.join('/'),
       figure: headImgSmall,
       rankNo: jyIndex,
-      rankTitle: 'TODO',
+      rankTitle: tip,
     },
 
     bigFigure: headImgBig,

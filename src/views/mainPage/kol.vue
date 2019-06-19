@@ -113,11 +113,11 @@ export default class FigurePage extends ViewBase {
 
   @Prop({ type: String, default: 'weibo' }) channel!: string
 
+  bubbleList: string[] = []
+
   basic: any = null
 
   bigFigure = ''
-
-  bubbleList: string[] = []
 
   fansRate: any = null
 
@@ -151,8 +151,8 @@ export default class FigurePage extends ViewBase {
 
   async initMain() {
     const {
-      basic,
       bubbleList,
+      basic,
       fansRate,
       fansList,
       navList,
@@ -177,8 +177,8 @@ export default class FigurePage extends ViewBase {
       return
     }
 
-    this.basic = basic
     this.bubbleList = bubbleList
+    this.basic = basic
     this.fansRate = fansRate
     this.fansList = fansList
     this.navList = navList
