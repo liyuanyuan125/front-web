@@ -22,16 +22,19 @@
         <div class="board-row flex-box">
           <FansPane
             title="粉丝画像"
-            :man="fansMan"
-            :woman="fansWoman"
+            :man="fansRate.man"
+            :woman="fansRate.woman"
             :more="{ }"
             class="fans-pane"
+            v-if="fansRate"
           />
+
           <PiePane
             title="近7日评论分析"
             :more="{ }"
             :data="commentData"
             class="comment-pane"
+            v-if="commentData"
           />
         </div>
 
@@ -41,6 +44,7 @@
             :data="activeFansData"
             :more="{ }"
             class="active-fans-pane"
+            v-if="activeFansData"
           />
         </div>
 
@@ -70,7 +74,7 @@ import PiePane from './components/piePane.vue'
 import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
 
-import { getFigure } from './data'
+import { getFigure, getFigureActiveFans, getFigureHot } from './data'
 
 @Component({
   components: {
@@ -85,53 +89,19 @@ import { getFigure } from './data'
 export default class FigurePage extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
+  bubbleList: string[] = []
+
   basic: any = null
 
   bigFigure = ''
 
-  fansMan = 66
+  fansRate: any = null
 
-  fansWoman = 34
+  opusData: any = null
 
-  bubbleList = [
-    '师兄李连杰',
-    '流浪地球',
-    '教练吴彬',
-    '功夫小子',
-    '导演',
-    '少林寺',
-  ]
+  brandData: any = null
 
-  opusData = {
-    list: [
-      { title: '《流浪地球》演员是放松放松时发生地方', count: '46.8亿' },
-      { title: '《流浪地球》演员', count: '6.8亿' },
-      { title: '《流浪地球》演员是', count: '16.8亿' },
-    ],
-    more: {
-      name: 'film-figure-detail-works',
-      params: { id: this.id }
-    }
-  }
-
-
-  brandData = {
-    list: [
-      { logo: 'https://dummyimage.com/60x60/000/fff' },
-      { logo: 'https://dummyimage.com/60x60/fff/000' },
-      { logo: 'https://dummyimage.com/60x60/e2e/fff' },
-    ],
-    more: {
-      name: 'film-figure-detail-brand',
-      params: { id: this.id }
-    }
-  }
-
-  commentData = [
-    { name: '正面', value: 80, color: '#ca7273' },
-    { name: '中立', value: 30, color: '#f3d872' },
-    { name: '负面', value: 20, color: '#57b4c9' },
-  ]
+  commentData: any = null
 
   activeFansData = [
     { name: '5-16', value: 855000 },
@@ -171,16 +141,37 @@ export default class FigurePage extends ViewBase {
 
   init() {
     this.initMain()
+    this.initActiveFans()
+    this.initHot()
   }
 
   async initMain() {
     const {
+      bubbleList,
       basic,
-      bigFigure
+      bigFigure,
+      fansRate,
+      opusData,
+      brandData,
+      commentData,
     } = await getFigure(this.id)
 
+    this.bubbleList = bubbleList
     this.basic = basic
     this.bigFigure = bigFigure
+    this.fansRate = fansRate
+    this.opusData = opusData
+    this.brandData = brandData
+    this.commentData = commentData
+  }
+
+  async initActiveFans() {
+    const activeFansData = await getFigureActiveFans(this.id)
+    this.activeFansData = activeFansData
+  }
+
+  async initHot() {
+    await getFigureHot(this.id)
   }
 }
 </script>
@@ -224,6 +215,7 @@ export default class FigurePage extends ViewBase {
   left: 0;
   width: 100%;
   height: 100%;
+  max-width: 303px;
   background: no-repeat -5px 20px;
   z-index: 88;
   pointer-events: none;

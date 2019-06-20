@@ -1,40 +1,36 @@
 
 <template>
   <div>
-    <div style='text-align:center'>
-      <div class='title-box'>
+    <div style="text-align:center">
+      <div class="title-box">
         <span v-if=" title !=='' ">{{title}}</span>
-        <Tooltip max-width="200"
-                 v-if=" titleTips !=='' "
-                 :content="titleTips">
-          <Icon type="md-help-circle" />
+        <Tooltip max-width="200" v-if=" titleTips !=='' " :content="titleTips">
+          <Icon type="md-help-circle"/>
         </Tooltip>
       </div>
-      <RadioGroup size="small"
-                  v-if="dict1.length > 0"
-                  @on-change='currentTypeChange'
-                  v-model="currentIndex"
-                  type="button">
-        <Radio v-for="(item,index) in dict1"
-               :key="item.key"
-               :label="index">{{item.name}}</Radio>
+      <RadioGroup
+        size="small"
+        v-if="dict1.length > 0"
+        @on-change="currentTypeChange"
+        v-model="currentIndex"
+        type="button"
+      >
+        <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <Row type="flex"
-         justify="center" align="middle">
+    <Row type="flex" justify="center" align="middle">
       <Col :span="24">
         <div class="wordCloud-wp">
-          <div ref="refChart"
-              v-if="initDone"
-              style="width: 100%; height: 300px"></div>        
-          <div v-else class='loading-wp' style="width: 100%; height: 300px">
-            <TinyLoading  />
+          <div ref="refChart" v-if="initDone" style="width: 100%; height: 300px"></div>
+          <div v-else class="loading-wp" style="width: 100%; height: 300px">
+            <TinyLoading/>
           </div>
         </div>
       </Col>
     </Row>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -48,6 +44,7 @@ import {
   xOption,
   barThinStyle
 } from '../chartsOption'
+
 @Component({
   components: {
     TinyLoading
@@ -65,14 +62,19 @@ export default class WordCloudChart extends ViewBase {
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
   currentIndex: number = this.currentTypeIndex
   myOption: any = {}
+
   currentTypeChange(index: number) {
-    if ( !this.initDone ) { return }
+    if (!this.initDone) {
+      return
+    }
     this.currentIndex = index
     this.$emit('typeChange', index)
   }
+
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
   }
+
   updateCharts() {
     if (
       !this.dataList[this.currentIndex] ||
@@ -104,6 +106,7 @@ export default class WordCloudChart extends ViewBase {
     }
     WordCloud(ele, option)
   }
+
   @Watch('initDone')
   watchInitDone(val: boolean) {
     if (val) {
@@ -113,6 +116,7 @@ export default class WordCloudChart extends ViewBase {
       })
     }
   }
+
   @Watch('currentTypeIndex')
   watchcurrentTypeIndex(newIndex: any, oldIndex: any) {
     if (newIndex !== oldIndex) {
