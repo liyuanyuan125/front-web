@@ -1,6 +1,6 @@
 <template>
   <div class="page home-bg as">
-    
+
     <!-- <div class="userTitle">
       <span class="nav-top-title">财务信息</span>
     </div> -->
@@ -744,7 +744,7 @@ export default class Main extends ViewBase {
   .hui-div {
     width: 83%;
     height: 225px;
-    background: url('./../images/银行卡.png');
+    background: url('./../images/bank.png');
     border-radius: 6px;
     padding: 12px 30px;
     background-size: cover;
