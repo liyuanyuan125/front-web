@@ -13,7 +13,7 @@
               <li v-for="(it) in filmList" :key="it.id"
                 :class="['film-item']">
                 <div class="film-top">
-                  <img :src="it.image ? it.image : defaultImg" onerror="defaultImg" class="film-cover">
+                  <img :src="it.image ? it.image : defaultImg" @onerror="defaultImg" class="film-cover">
                   <div style="position: relative">
                     <p class="film-title" :title="it.movieName">{{it.movieName}}</p>
                     <p class="film-title" style="margin-bottom: 20px">{{it.movieName}}</p>
@@ -206,7 +206,7 @@ export default class App extends ViewBase {
   total = 0
   data: any = {}
   filmList: any = []
-  commendData: any = []
+  commendata: any = null
   loading = false
   single = false
   tableDate1: any = []
@@ -303,8 +303,6 @@ export default class App extends ViewBase {
   }
 
   created() {
-     (this.$Spin as any).show()
-    this.init()
     this.seach()
     this.detail()
   }
@@ -314,6 +312,7 @@ export default class App extends ViewBase {
       const { data } = await adverdetail(this.$route.params.setid)
       this.filmList = data.planMovies || []
       this.deatilItem = data.item || {}
+      this.cinemaFind()
     } catch (ex) {
       this.handleError(ex)
     }
@@ -329,11 +328,6 @@ export default class App extends ViewBase {
   currentChangeHandle(val: any) {
     this.pageSize = val
     this.seach()
-  }
-
-  async init() {
-    const { data } = await orienteering({})
-    this.filmList = data.items || []
   }
 
   seach() {
@@ -409,7 +403,7 @@ export default class App extends ViewBase {
       await getCheme({
         planId: this.$route.params.setid,
         allowAutoDelivery: this.single ? 1 : 0,
-        planRecommed: { ...this.commendData }
+        planRecommed: { ...this.commendata }
       })
       this.$emit('input', {
         id: 3,
@@ -431,11 +425,12 @@ export default class App extends ViewBase {
   }
 
   get defaultImg() {
-    return 'this.src="' + require('../assets/error.png') + '"'
+    return 'this.src="' + require('./assets/error.png') + '"'
   }
 
   async cinemaFind() {
     try {
+       (this.$Spin as any).show()
       const msg = {
         budgetAmount: this.deatilItem.budgetAmount,
         specification: this.deatilItem.specification,
@@ -451,9 +446,10 @@ export default class App extends ViewBase {
       const { data } = await getRecommend({
         ...msg
       })
+      this.commendata = data || {}
       ; (this.$Spin as any).hide()
-      this.commendData = data
     } catch (ex) {
+       (this.$Spin as any).hide()
       this.handleError(ex)
     }
   }
@@ -473,9 +469,11 @@ export default class App extends ViewBase {
     })
   }
 
-  @Watch('dataitem', { deep: true })
-  watchDataitem(val: any) {
-    this.cinemaFind()
+  @Watch('commendata', { deep: true })
+  watchCommendata(val: any) {
+    if (val) {
+      // ; (this.$Spin as any).hide()
+    }
   }
 }
 </script>
