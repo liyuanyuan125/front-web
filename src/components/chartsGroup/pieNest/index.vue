@@ -140,3 +140,48 @@ export default class PieNest extends ViewBase {
   }
 }
 </script>
+<style lang="less" scoped>
+@import '~@/site/lib.less';
+/deep/ .ivu-radio-group {
+  .ivu-radio-wrapper {
+    background: none;
+    border: none;
+    box-shadow: none !important;
+    color: #cdd0d3;
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+  /deep/ .ivu-radio-wrapper-checked {
+    color: #fff;
+    border-bottom: 2px solid #fff;
+    .ivu-radio-inner {
+      display: none;
+    }
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+}
+.nav {
+  .ivu-radio-wrapper {
+    height: 60px;
+    padding: 0;
+    line-height: 60px;
+    margin: 0 10px;
+    border-radius: 0 !important;
+  }
+  .ivu-radio-wrapper-checked {
+    color: #fff;
+    border-bottom: 2px solid #fff;
+  }
+}
+.loading-wp {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+}
+</style>

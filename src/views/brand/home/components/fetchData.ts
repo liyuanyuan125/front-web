@@ -8,6 +8,9 @@ import { dayOffsetRange } from '@/util/date'
 import { Type } from './types'
 import { MapType } from '@/util/types'
 
+// 将后台的万分率转成百分率
+const percent = (rate: number, digits = 0) => +((rate || 0) / 100).toFixed(digits)
+
 const urlMapStore = {
   // 品牌接口
   brand: {
@@ -92,17 +95,17 @@ export default class FetchData {
         figure,
         jyIndex,
         jyTrend,
-        malePercent: (+malePercent || 0).toFixed(0),
-        femalePercent: (+femalePercent || 0).toFixed(0),
+        malePercent: percent(malePercent),
+        femalePercent: percent(femalePercent),
         planOnExecuteCount
       },
 
       // 评论分析
       analyze: {
-        positive: +positive.rate || 0,
-        negative: +passive.rate || 0,
-        neutral: +neutral.rate || 0,
-        negativeTrend: +passive.trend || 0
+        positive: percent(positive.rate, 1),
+        negative: percent(passive.rate, 1),
+        neutral: percent(neutral.rate, 1),
+        negativeTrend: percent(passive.trend, 1)
       },
 
       kol: {

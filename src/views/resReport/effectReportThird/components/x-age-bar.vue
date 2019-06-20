@@ -1,10 +1,10 @@
 <template>
   <div class="progress-wp">
-    <div class="value">10.2%</div>
+    <div class="value">{{value}}%</div>
     <Progress :percent="value"
               v-if="isMax"
               class="percent"
-              stroke-color="#00B6CC"
+              stroke-color="#00b6cc"
               hide-info />
     <Progress :percent="value"
               v-else
@@ -12,7 +12,7 @@
               stroke-color="#BCE2F0"
               hide-info />
     <div class="name">
-      0～20岁
+      {{name}}岁
     </div>
   </div>
 </template>
@@ -23,8 +23,7 @@ import ViewBase from '@/util/ViewBase'
 export default class AgeBar extends ViewBase {
   @Prop({ type: Number, default: () => 0 }) value!: number
   @Prop({ type: Boolean, default: false }) isMax!: boolean
-  // isMax: boolean = false
-  // value: number = 50
+  @Prop({ type: String, default: '' }) name!: string
 }
 </script>
 <style lang="less" scoped>
@@ -32,7 +31,7 @@ export default class AgeBar extends ViewBase {
 .progress-wp {
   height: 147px;
   text-align: center;
-  width: 45px;
+  min-width: 51px;
   position: relative;
   .value {
     position: absolute;

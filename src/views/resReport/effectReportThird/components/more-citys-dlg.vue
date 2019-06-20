@@ -6,7 +6,7 @@
          :mask-closable='false'
          :styles="{top: '10%'}">
     <div class="title">
-      <h3>影院数据</h3>
+      <h3>城市数据</h3>
       <i @click="cancel"></i>
     </div>
     <div class="box-inner">
@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinemasReport } from '@/api/effectReport'
+import { citiesReport } from '@/api/effectReport'
 
 @Component({
   components: {}
@@ -55,7 +55,7 @@ export default class MoreCinemasDlg extends ViewBase {
   }
 
   columns: any[] = [
-    { title: '影院', key: 'name', align: 'center' },
+    { title: '城市', key: 'name', align: 'center' },
     {
       title: '曝光人次',
       key: 'viewCount',
@@ -88,7 +88,7 @@ export default class MoreCinemasDlg extends ViewBase {
     try {
       const {
         data: { items, totalCount }
-      } = await cinemasReport(id, {...this.form})
+      } = await citiesReport(id, {...this.form})
       this.data = items.map((it: any) => {
         return {
           name: it.name,
@@ -106,7 +106,7 @@ export default class MoreCinemasDlg extends ViewBase {
 
   exportData() {
     (this.$refs.table as any).exportCsv({
-        filename: '影院数据',
+        filename: '城市数据',
         // nxd todo
         // original: false,
         // data: [{

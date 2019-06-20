@@ -2,7 +2,7 @@ import { get } from '@/fn/ajax'
 
 /**
  * 影片详情
- * https://yapi.aiads-dev.com/project/161/interface/api/4751
+ * https://yapi.aiads-dev.com/project/146/interface/api/4497
  */
 export async function getMovie(id: number) {
   const {

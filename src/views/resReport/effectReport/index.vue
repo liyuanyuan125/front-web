@@ -26,11 +26,12 @@
       <CinemaCard @showMore="showMoreCinemasHandle" :data="cinemasData"></CinemaCard>
     </div>
     <div>
-      <UserCard></UserCard>
+      <UserCard :data="userData" ref="usercard" @moreCity="showMoreCitysHandle"></UserCard>
     </div>
-    <SelectPlanDlg ref="selectPlanDlg"></SelectPlanDlg>
     <MoreCinemasDlg ref="moreCinemasDlg" :id="planId"></MoreCinemasDlg>
     <MoreMoviesDlg ref="moreMoviesDlg" :id="planId" :moviesTotal="moviesTotal" :data="moreMovieData"></MoreMoviesDlg>
+    <MoreCitysDlg ref="moreCitysDlg" :id="planId"></MoreCitysDlg>
+    <SelectPlanDlg ref="selectPlanDlg" @update="updateHandle"></SelectPlanDlg>
   </div>
 </template>
 <script lang="ts">
@@ -48,6 +49,7 @@ import UserCard from './components/user-card.vue'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import SelectPlanDlg from './components/select-plan-dlg.vue'
 import MoreCinemasDlg from './components/more-cinemas-dlg.vue'
+import MoreCitysDlg from './components/more-citys-dlg.vue'
 import MoreMoviesDlg from './components/more-movies-dlg.vue'
 import { getPlansReport } from '@/api/effectReport'
 import { findIndex, at, keyBy } from 'lodash'
@@ -115,6 +117,7 @@ const toolTip: any = {
     AreaBasic,
     SelectPlanDlg,
     MoreCinemasDlg,
+    MoreCitysDlg,
     MoreMoviesDlg
   }
 })
@@ -146,24 +149,12 @@ export default class Index extends ViewBase {
       }
     ],
     data: [
-      {
-        date: '2019-05-08',
-        viewCount: '113,456',
-        scheduleCount: '8,789',
-        cost: '¥ 6,345.23'
-      },
-      {
-        date: '2019-05-08',
-        viewCount: '113,456',
-        scheduleCount: '8,789',
-        cost: '¥ 6,345.23'
-      },
-      {
-        date: '2019-05-08',
-        viewCount: '113,456',
-        scheduleCount: '8,789',
-        cost: '¥ 6,345.23'
-      }
+      // {
+      //   date: '2019-05-08',
+      //   viewCount: '113,456',
+      //   scheduleCount: '8,789',
+      //   cost: '¥ 6,345.23'
+      // }
     ]
   }
 
@@ -256,6 +247,89 @@ export default class Index extends ViewBase {
     toolTip
   }
 
+  userData: any = {
+    sex: {},
+    cityData: [],
+    ageData: {
+      age: [],
+      data: []
+    },
+    cityLevelData: []
+  }
+
+  async reset() {
+    this.userData = {
+      sex: {},
+      cityData: [],
+      ageData: {
+        age: [],
+        data: []
+      },
+      cityLevelData: []
+    }
+    this.chart1 = {
+      title: '',
+      dict1: [
+        {
+          name: 'name0',
+          text: '曝光人次',
+          key: 0
+        },
+        {
+          name: 'name1',
+          text: '曝光场次',
+          key: 1
+        },
+        {
+          name: 'name2',
+          text: '支出金额',
+          key: 2
+        }
+      ],
+      dict2: [],
+      currentTypeIndex: 0,
+      initDone: false,
+      dataList: [
+        {
+          data: [],
+          date: []
+        },
+        {
+          data: [],
+          date: []
+        },
+        {
+          data: [],
+          date: []
+        }
+      ],
+      color: ['#CA7273'],
+      height: 350,
+      toolTip
+    }
+    this.cinemasData = {
+      totalCount: 0,
+      viewRate: {
+        listName: '曝光人次 TOP10',
+        data: []
+      },
+      scheduleRate: {
+        listName: '曝光场次 TOP10',
+        data: []
+      },
+      costRate: {
+        listName: '支出金额 TOP10',
+        data: []
+      }
+    }
+    this.moreMovieData = []
+    this.moviesData = []
+    this.moviesTotal = 0
+    this.tableData.data = []
+    this.totalData = {}
+    this.bannerData = {}
+  }
+
   async typeChangeHander1(index: number = 0) {
     this.chart1.currentTypeIndex = index
   }
@@ -272,17 +346,28 @@ export default class Index extends ViewBase {
     })
   }
 
+  showMoreCitysHandle() {
+    this.$nextTick(() => {
+      (this.$refs.moreCitysDlg as any).init()
+    })
+  }
+
   showMoreMoviesHandle() {
     this.$nextTick(() => {
       (this.$refs.moreMoviesDlg as any).init()
     })
   }
 
-  async created() {
-    this.initStats(this.planId)
+  async updateHandle(id: number) {
+    this.reset()
+    this.init(id)
   }
 
-  async initStats(id: number = -1) {
+  async created() {
+    this.init(this.planId)
+  }
+
+  async init(id: number = -1) {
     try {
       const {
         data: {
@@ -373,8 +458,48 @@ export default class Index extends ViewBase {
         this.chart1.dataList[0].date.push(item.date)
         this.chart1.dataList[1].date.push(item.date)
         this.chart1.dataList[2].date.push(item.date)
+        this.tableData.data.push({
+          date: item.date,
+          viewCount: item.viewCount,
+          scheduleCount: item.scheduleCount,
+          cost: item.cost
+        })
       })
       this.chart1.initDone = true
+      if (user) {
+        const _ageData: any = {
+          age: [],
+          data: []
+        }
+        if (user.ages.length > 0 ) {
+          user.ages.forEach((it: any) => {
+            _ageData.age.push(it.k)
+            _ageData.data.push(it.v)
+          })
+        }
+        this.userData = {
+          sex: {
+            male: parseInt(user.male, 0),
+            female: parseInt(user.female, 0)
+          },
+          cityData: user.cities.map((item: any) => {
+            return {
+              cityName: item.k,
+              percent: parseInt(item.v, 0)
+            }
+          }),
+          cityLevelData: user.grades.map((it: any) => {
+            return {
+              name: getName(it.k, gradeCodes),
+              value: parseInt(it.v, 0)
+            }
+          }),
+          ageData: _ageData || {}
+        }
+        this.$nextTick(() => {
+          (this.$refs.usercard as any).init()
+        })
+      }
     } catch (ex) {
       this.handleError(ex)
     }

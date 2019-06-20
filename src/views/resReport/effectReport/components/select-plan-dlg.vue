@@ -49,7 +49,7 @@
                 <div class="plan-time">最后更新时间 2019-05－11 12</div>
               </div>
               <div class="button-box">
-                <a href="javascript:;" class="btn">查看</a>
+                <a href="javascript:;" class="btn" @click="updateHandle(it.id)">查看</a>
               </div>
             </div>
           </li>
@@ -115,6 +115,10 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   async search() {
+    if ( this.data.length > 0 ) {
+      this.data = []
+      this.total = 0
+    }
     try {
       const {
         data: { items, totalCount }
@@ -144,16 +148,15 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   cancel() {
-    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
+    this.$nextTick(() => {
+      (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
+    })
     this.showDlg = false
   }
 
-  async open() {
-    try {
-      this.cancel()
-    } catch (ex) {
-      this.handleError(ex)
-    }
+  updateHandle(id: string|number) {
+    this.cancel()
+    this.$emit('update', id)
   }
 }
 </script>

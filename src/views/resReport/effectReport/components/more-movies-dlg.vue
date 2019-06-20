@@ -109,7 +109,6 @@ export default class MoreMoviesDlg extends ViewBase {
           cost: it.cost
         }
       })
-      this.totalCount = totalCount
       this.showDlg = true
     } catch (ex) {
       this.handleError(ex)

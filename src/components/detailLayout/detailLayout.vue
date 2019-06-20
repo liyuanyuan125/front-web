@@ -50,6 +50,7 @@ export default class DetailLayout extends ViewBase {
   display: flex;
   margin-right: 20px;
   padding: 30px 0;
+  font-size: 14px;
 }
 
 .detail-side {
