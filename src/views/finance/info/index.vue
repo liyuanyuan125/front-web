@@ -164,7 +164,7 @@ import { toMap } from '@/fn/array'
 import moment from 'moment'
 import Upload from '../upload/Upload.vue'
 import { slice, clean } from '@/fn/object'
-import { warning , success, toast } from '@/ui/modal'
+import { warning , success, toast , info } from '@/ui/modal'
 
 // 获取当前登录用户信息
 const user: any = getUser()!
@@ -543,6 +543,10 @@ export default class Main extends ViewBase {
     ).getTime()
     this.dataForm.receipt =
       this.dataForm.receipts.length > 0 ? this.dataForm.receipts[0].fileId : []
+      if (this.dataForm.receipts.length == 0 ) {
+        info('请上传汇款底单')
+        return
+      }
     const myThis: any = this
     myThis.$refs[dataForms].validate(async (valid: any) => {
       if (valid) {
