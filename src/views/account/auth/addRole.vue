@@ -13,12 +13,10 @@
       :label-width="100"
       class="edit-input"
     >
+      <FormItem style="margin-left: 30%" label="角色名称" class="item-top" prop="name">
+        <Input v-model="form.name" placeholder="请输入权限角色名称"></Input>
+      </FormItem>
       <Row>
-        <Col :span="14" :offset="7">
-          <FormItem label="角色名称" class="item-top" prop="name">
-            <Input v-model="form.name" placeholder="请输入权限角色名称"></Input>
-          </FormItem>
-        </Col>
         <Row class="auth-check">
           <Col span="24" class="auth-box">
             <FormItem label="相关权限" :error="errorPerm" :class="{'item-sign': isSign}">
