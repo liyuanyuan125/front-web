@@ -45,7 +45,7 @@ export default class Layout extends ViewBase {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '~@/site/lib.less';
 
 .detail-layout {
