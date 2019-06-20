@@ -306,6 +306,10 @@ export default class Main extends ViewBase {
   height: 40px;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 1);
+  &::placeholder {
+    font-size: 14px;
+    color: #00202d;
+  }
 }
 /deep/ .ivu-table th, /deep/ .ivu-table-header {
   background: rgba(0, 32, 45, 0.8);
