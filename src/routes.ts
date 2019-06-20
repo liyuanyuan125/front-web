@@ -1279,7 +1279,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 品牌 - 首页
   {
-    path: '/brand/:id',
+    path: '/brand/home/:id',
     name: 'brand-home',
     component: () => import('./views/brand/home/index.vue'),
     meta: {
