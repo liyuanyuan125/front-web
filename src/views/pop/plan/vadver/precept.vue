@@ -303,6 +303,7 @@ export default class App extends ViewBase {
   }
 
   created() {
+     (this.$Spin as any).show()
     this.init()
     this.seach()
     this.detail()
@@ -450,6 +451,7 @@ export default class App extends ViewBase {
       const { data } = await getRecommend({
         ...msg
       })
+      ; (this.$Spin as any).hide()
       this.commendData = data
     } catch (ex) {
       this.handleError(ex)
