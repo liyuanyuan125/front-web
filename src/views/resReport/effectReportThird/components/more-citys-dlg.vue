@@ -6,7 +6,7 @@
          :mask-closable='false'
          :styles="{top: '10%'}">
     <div class="title">
-      <h3>影片数据</h3>
+      <h3>城市数据</h3>
       <i @click="cancel"></i>
     </div>
     <div class="box-inner">
@@ -19,7 +19,7 @@
              ref="table"
              :columns="columns"
              :data="data"></Table>
-      <!-- <Page :total="totalCount"
+      <Page :total="totalCount"
             class="info-page"
             :current="form.pageIndex"
             :page-size="form.pageSize"
@@ -28,7 +28,7 @@
             show-sizer
             show-elevator
             @on-change="sizeChangeHandle"
-            @on-page-size-change="currentChangeHandle" /> -->
+            @on-page-size-change="currentChangeHandle" />
     </div>
     <div slot="footer" style="display: none"></div>
   </Modal>
@@ -37,17 +37,17 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinemasReport } from '@/api/effectReport'
+import { citiesReport } from '@/api/effectReport'
 
 @Component({
   components: {}
 })
-export default class MoreMoviesDlg extends ViewBase {
+export default class MoreCinemasDlg extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
-  @Prop({ type: Number, default: 0 }) moviesTotal!: number
-  @Prop({ type: Array, default: () => ([]) }) data!: any[]
 
   showDlg = false
+
+  totalCount = 0
 
   form: any = {
     pageIndex: 1,
@@ -55,42 +55,32 @@ export default class MoreMoviesDlg extends ViewBase {
   }
 
   columns: any[] = [
-    { title: '影片', key: 'name', align: 'center' },
+    { title: '城市', key: 'name', align: 'center' },
     {
       title: '曝光人次',
-      key: 'viewCount', // 曝光人次
-      align: 'center'
-    },
-    {
-      title: '曝光人次占比',
-      key: 'viewRate', // 曝光人次占比
+      key: 'viewCount',
       align: 'center'
     },
     {
       title: '曝光场次',
-      key: 'scheduleCount', // 曝光场次
+      key: 'scheduleCount',
+      align: 'center'
+    },
+    {
+      title: '支出金额',
+      key: 'cost',
       align: 'center'
     }
   ]
 
-  // data: any[] = [{
-  //   name: '2019-05-08',
-  //   viewCount: '113,456',
-  //   viewRate: '8,789',
-  //   scheduleCount: '¥ 6,345.23'
-  // }]
+  data: any[] = []
 
   loading = false
 
   async init(type: any) {
     (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
-    // this.loading = true
-    // this.search()
-    this.initFn()
-  }
-
-  initFn() {
-    this.showDlg = true
+    this.loading = true
+    this.search()
   }
 
   async search() {
@@ -98,7 +88,7 @@ export default class MoreMoviesDlg extends ViewBase {
     try {
       const {
         data: { items, totalCount }
-      } = await cinemasReport(id, {...this.form})
+      } = await citiesReport(id, {...this.form})
       this.data = items.map((it: any) => {
         return {
           name: it.name,
@@ -107,6 +97,7 @@ export default class MoreMoviesDlg extends ViewBase {
           cost: it.cost
         }
       })
+      this.totalCount = totalCount
       this.showDlg = true
     } catch (ex) {
       this.handleError(ex)
@@ -115,7 +106,7 @@ export default class MoreMoviesDlg extends ViewBase {
 
   exportData() {
     (this.$refs.table as any).exportCsv({
-        filename: '影片数据',
+        filename: '城市数据',
         // nxd todo
         // original: false,
         // data: [{
@@ -126,13 +117,13 @@ export default class MoreMoviesDlg extends ViewBase {
   // 每页数
   sizeChangeHandle(val: any) {
     this.form.pageIndex = val
-    // this.search()
+    this.search()
   }
 
   // 当前页
   currentChangeHandle(val: any) {
     this.form.pageSize = val
-    // this.search()
+    this.search()
   }
 
   cancel() {

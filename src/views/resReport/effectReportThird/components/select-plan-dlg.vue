@@ -4,7 +4,7 @@
          :width='770'
          :closable='false'
          :mask-closable='false'
-         :styles="{top: '30%'}">
+         :styles="{top: '10%'}">
     <div class="title">
       <h3>选择计划</h3>
       <i @click="cancel"></i>
@@ -35,13 +35,12 @@
         </Row>
       </div>
       <div class="detail">
-        <ul class="plan-list">
-          <li class="plan-item">
+        <ul class="plan-list" v-if="data.length > 0">
+          <li class="plan-item" v-for="(it, index) in data" :key="index">
             <div class="plan-cover-box">
-              <img class="plan-cover"
-                   src="http://img0.imgtn.bdimg.com/it/u=2387750928,3991855324&fm=26&gp=0.jpg" />
+              <img class="plan-cover" :src="it.videoLogo" />
               <div style="flex: 1">
-                <div class="plan-title">2019款wey新车发布影院广告</div>
+                <div class="plan-title">{{it.name}}</div>
                 <div class="plan-time">上映时间：1970-01-01</div>
                 <div class="plan-time">投放周期 7天</div>
                 <div class="plan-time">广告片 vv6年轻有wey</div>
@@ -50,8 +49,7 @@
                 <div class="plan-time">最后更新时间 2019-05－11 12</div>
               </div>
               <div class="button-box">
-                <a href="javascript;:"
-                   class="btn">查看</a>
+                <a href="javascript:;" class="btn" @click="updateHandle(it.id)">查看</a>
               </div>
             </div>
           </li>
@@ -77,8 +75,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { searchcinema } from '@/api/popPlan'
-import { thirdMonitors } from '@/api/effectReport'
+import { plans } from '@/api/effectReport'
 import CustomerList from './x-select-customerlist.vue'
 import PlanList from './x-select-planlist.vue'
 import { clean } from '@/fn/object'
@@ -87,19 +84,7 @@ import { toast, warning } from '@/ui/modal.ts'
 import moment from 'moment'
 import { uniq, uniqBy } from 'lodash'
 const timeFormat = 'YYYY-MM-DD'
-const keepExclusion = <T>(
-  value: T[],
-  oldValue: T[],
-  aloneValue: any,
-  setter: (newValue: T[]) => any
-) => {
-  if (value.length > 1) {
-    const newHas = value.includes(aloneValue)
-    const oldHas = oldValue.includes(aloneValue)
-    newHas && setter([aloneValue])
-    newHas && oldHas && setter(value.filter(it => it != aloneValue))
-  }
-}
+
 @Component({
   components: {
     CustomerList,
@@ -126,17 +111,21 @@ export default class DlgEditCinema extends ViewBase {
   async init(type: any) {
     (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
     this.loading = true
-    this.showDlg = true
     this.search()
   }
 
   async search() {
+    if ( this.data.length > 0 ) {
+      this.data = []
+      this.total = 0
+    }
     try {
       const {
         data: { items, totalCount }
-      } = await thirdMonitors({ })
+      } = await plans({ })
       this.data = items || []
       this.total = totalCount
+      this.showDlg = true
     } catch (ex) {
       this.handleError(ex)
     }
@@ -159,24 +148,21 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   cancel() {
-    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
+    this.$nextTick(() => {
+      (document.getElementsByTagName('html')[0] as HTMLElement).style = 'overflow-y: auto'
+    })
     this.showDlg = false
   }
 
-  async open() {
-    try {
-      this.cancel()
-    } catch (ex) {
-      this.handleError(ex)
-    }
+  updateHandle(id: string|number) {
+    this.cancel()
+    this.$emit('update', id)
   }
 }
 </script>
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-// /deep/ .ivu-modal-body {
-// }
 .title {
   text-align: center;
   font-size: 16px;
@@ -211,11 +197,18 @@ export default class DlgEditCinema extends ViewBase {
       color: #00202d;
     }
   }
-  /deep/ .ivu-select-selection,
-  /deep/ .ivu-select-input {
+  /deep/ .ivu-select-selection {
     padding-left: 20px;
     height: 40px;
     line-height: 40px;
+    &::placeholder {
+      color: #00202d;
+    }
+  }
+  /deep/ .ivu-select-input {
+    height: 40px;
+    line-height: 40px;
+    padding: 0;
     &::placeholder {
       color: #00202d;
     }

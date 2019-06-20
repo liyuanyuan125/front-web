@@ -2,7 +2,7 @@
   <div class="banner-wp">
     <div class="banner-box flex-box">
       <p>Effect Report</p>
-      <h1>2019款WEY新车发布影院广告</h1>
+      <h1>{{data.item6}}</h1>
       <a href="javascript:;"
          class="show-more-link"
          @click="selectPlan">查看其它计划</a>
@@ -11,19 +11,19 @@
       <div class="cell">
         <ul>
           <li><i class="icon-1"></i><span class="name">投放排期</span><span>{{data.item0}}</span></li>
-          <li><i class="icon-4"></i><span class="name">投放周期</span><span>7天</span></li>
+          <li><i class="icon-4"></i><span class="name">投放周期</span><span>{{data.item1}}天</span></li>
         </ul>
       </div>
       <div class="cell">
         <ul>
-          <li><i class="icon-2"></i><span class="name">投放排期</span><span>2019-05-01 ～ 2019-05</span></li>
-          <li><i class="icon-5"></i><span class="name">投放周期</span><span>7天</span></li>
+          <li><i class="icon-2"></i><span class="name">广告片</span><span>{{data.item2}}</span></li>
+          <li><i class="icon-5"></i><span class="name">广告规格</span><span>{{data.item3}}s</span></li>
         </ul>
       </div>
       <div class="cell">
         <ul>
-          <li><i class="icon-3"></i><span class="name">投放排期</span><span>2019-05-01 ～ 2019-05</span></li>
-          <li><i class="icon-6"></i><span class="name">投放周期</span><span>7天</span></li>
+          <li><i class="icon-3"></i><span class="name">投放状态</span><span>{{data.item4}}</span></li>
+          <li><i class="icon-6"></i><span class="name">最后更新时间</span><span>{{data.item5}}</span></li>
         </ul>
       </div>
     </div>

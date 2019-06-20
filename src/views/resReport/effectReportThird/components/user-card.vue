@@ -15,7 +15,7 @@
                 <h6>性别分布</h6>
               </div>
               <div class="user-pane-body">
-                <SexCompare :data="sexData"></SexCompare>
+                <SexCompare :data="sex"></SexCompare>
               </div>
             </div>
             <div class="user-pane-group"
@@ -24,14 +24,14 @@
                 <h6>线级分布</h6>
               </div>
               <div class="user-pane-body">
-                <PieNest :initDone="cityLevelData.initDone"
-                         :dict1="cityLevelData.dict1"
-                         :dict2="cityLevelData.dict2"
-                         :height="cityLevelData.height"
+                <PieNest :initDone="cityLevel.initDone"
+                         :dict1="cityLevel.dict1"
+                         :dict2="cityLevel.dict2"
+                         :height="cityLevel.height"
                          :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})"
-                         :color="cityLevelData.color"
-                         :dataList="cityLevelData.dataList"
-                         :currentTypeIndex="cityLevelData.currentTypeIndex" />
+                         :color="cityLevel.color"
+                         :dataList="cityLevel.dataList"
+                         :currentTypeIndex="cityLevel.currentTypeIndex" />
               </div>
             </div>
             <div class="user-pane-group"
@@ -56,7 +56,7 @@
                  style="height: 700px; border-radius:0px 0px 5px 0px;">
               <div class="user-pane-head">
                 <h6>城市 TOP10</h6>
-                <a href="javascript:;">查看更多</a>
+                <a href="javascript:;" @click="showMore">查看更多</a>
               </div>
               <div class="user-pane-body">
                 <CitysCompare :data="citysData"></CitysCompare>
@@ -82,6 +82,7 @@ import { tooltipStyles } from '@/util/echarts'
 // #57B4C9 负面
 const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
 
+      // colors: ['#ca7273', '#f3d872', '#57b4c9'],
 @Component({
   components: {
     SexCompare,
@@ -91,102 +92,72 @@ const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
   }
 })
 export default class UserCard extends Vue {
-  // @Prop({ type: Object, default: () => ({}) }) data!: any
+  @Prop({ type: Object, default: () => ({}) }) data!: any
 
   tooltipStyles = tooltipStyles
 
   title: string = '用户画像'
 
-  sexData: any = {
-    malePercent: 55,
-    femalePercent: 45
-  }
-  cityLevelData: any = {
-    dict1: [],
-    dcit2: [],
-    currentTypeIndex: 0,
-    initDone: false,
-    dataList: [
-      [
-        {
-          name: '一线城市',
-          value: 80,
-          itemStyle: {
-            color: '#ca7273'
-          }
-        },
-        {
-          name: '二线城市',
-          value: 30,
-          itemStyle: {
-            color: '#f3d872'
-          }
-        },
-        {
-          name: '三线城市',
-          value: 20,
-          itemStyle: {
-            color: '#57b4c9'
-          }
-        }
-      ]
-    ],
-    color: colors,
-    height: 200
-  }
+  ageDataInitDone: boolean = false
 
-  ageData: any = {
-    dict1: [],
-    dict2: [],
-    dict3: [
-      { text: '18岁以下' },
-      { text: '18-25岁' },
-      { text: '26-30岁' },
-      { text: '31-40岁' },
-      { text: '40岁以上' }
-    ],
-    currentTypeIndex: 0,
-    initDone: false,
-    dataList: [
-      [{ type: 'bar', data: ['8372.4', '8372.4', '25117.2', '16744.8', '25117.2'] }]
-    ],
-    color: ['#B8E986'],
-    height: 300
-  }
+  cityLevelInitDone: boolean = false
 
-  citysData: any = [
-    {
-      cityName: '北京',
-      percent: 99.71
-    },
-    {
-      cityName: '上海',
-      percent: 88.71
-    },
-    {
-      cityName: '深圳',
-      percent: 77.71
-    },
-    {
-      cityName: '广州',
-      percent: 22.71
-    },
-    {
-      cityName: '杭州',
-      percent: 55.71
-    },
-    {
-      cityName: '成都',
-      percent: 31.71
-    },
-    {
-      cityName: '重庆',
-      percent: 22.71
+  get sex() {
+    return {
+      malePercent: this.data.sex.male,
+      femalePercent: this.data.sex.female
     }
-  ]
-  mounted() {
-    this.cityLevelData.initDone = true
-    this.ageData.initDone = true
+  }
+  get cityLevel() {
+    return {
+      dict1: [],
+      dict2: [],
+      currentTypeIndex: 0,
+      initDone: this.cityLevelInitDone,
+      dataList: [
+        this.data.cityLevelData
+      ],
+      color: ['#29cfe4', '#ff8b92', '#f5d44e'],
+      height: 200
+    }
+  }
+
+  get ageData() {
+    return {
+      dict1: [],
+      dict2: [],
+      dict3: this.data.ageData.age.map((it: any) => {
+        return {
+          text: it
+        }
+      }),
+      dataList: [
+        [
+          {
+            data: this.data.ageData.data,
+            type: 'bar',
+            barMaxWidth: '20'
+          }
+        ]
+      ],
+      currentTypeIndex: 0,
+      initDone: this.ageDataInitDone,
+      color: ['#B8E986'],
+      height: 300
+    }
+  }
+
+  get citysData() {
+   return this.data.cityData
+  }
+
+  init() {
+    this.cityLevelInitDone = true
+    this.ageDataInitDone = true
+  }
+
+  showMore() {
+    this.$emit('moreCity')
   }
 }
 </script>
