@@ -84,7 +84,6 @@ import ViewBase from '@/util/ViewBase'
 import {personMovies, topList } from '@/api/filmPersonDetail'
 import { getTodayDate, formatConversion } from '@/util/validateRules'
 import { cloneDeep } from 'lodash'
-import { getWorks } from './data'
 
 
 @Component

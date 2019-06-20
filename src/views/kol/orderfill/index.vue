@@ -68,7 +68,7 @@
             <img :src="row.accountImageUrl" alt>
             <ul>
               <li>{{row.accountName}}</li>
-              <li>{{row.type}}</li>
+              <li>{{accountCategory(row.accountTypeCode)}}</li>
               <li>粉丝数: &nbsp;&nbsp;{{formatNumber(row.fans)}}万</li>
             </ul>
             <p
@@ -183,6 +183,7 @@ export default class Main extends ViewBase {
     projectName: '',
     content: ''
   }
+  accountCategoryList: any = []
   loaddings = false
   statusList: any = []
   comloading = false
@@ -358,9 +359,10 @@ export default class Main extends ViewBase {
     this.tableDate = this.tableDate.map((it: any, index: number) => {
       const orderItemList: any = it.publishCategoryCode ?  {
           publishCategoryCode: it.publishCategoryCode ? it.publishCategoryCode : '',
-          pictureFileIds: it.pictureFileIds ? it.pictureFileIds : '',
+          pictureFileIds: it.pictureFileIds ? it.pictureFileIds.join(',') : '',
           publishTime: it.publishTime ? new Date(it.publishTime) : '',
           content: it.content ? it.content : '',
+          orderItemId: it.orderItemId ? it.orderItemId : '',
           title: it.title ? it.title : '',
           provideProduct: it.provideProduct ? it.provideProduct : '',
           summary: it.summary ? it.summary : '',
@@ -435,6 +437,7 @@ export default class Main extends ViewBase {
           this.statusList = data.xiaohongshuPublishCategoryList
           break
       }
+      this.accountCategoryList = data.accountCategoryList
     } catch (ex) {
       this.handleError(ex)
     }
@@ -497,6 +500,12 @@ export default class Main extends ViewBase {
     })
   }
 
+  // 账号类型
+  accountCategory(type: any) {
+    const msg = this.accountCategoryList.filter((it: any) => it.key == type)
+    return msg.length > 0 ? msg[0].text : '暂无'
+  }
+
   setall() {
     this.comloading = true
     this.$nextTick(() => {
@@ -534,20 +543,22 @@ export default class Main extends ViewBase {
     try {
       const volid = await (this.$refs[form] as any).validate()
       if (volid) {
-        if (this.product.filter((it: any) => it.name.indexOf(this.query + '') == -1)) {
+        if (this.product.filter((it: any) => it.name.indexOf(this.query + '') == -1).length > 0) {
           const { data } = await addBrand({
             brandId: this.form.brandid,
             name: this.query
           })
           this.prodId = data
         } else {
-          this.prodId = this.form.productId
+          const meg = this.product.filter((it: any) => it.name.indexOf(this.query + '') != -1)
+          const msgId = meg.map((it: any) => it.id)
+          this.prodId = msgId.includes(this.form.productId) ? this.form.productId : msgId[0]
         }
         const msg = this.tableDate.map((it: any) => {
           const item = it.orderItemList
           const message = clean({
             ...item,
-            pictureFileIds: item.pictureFileIds,
+            pictureFileIds: item.pictureFileIds ? item.pictureFileIds.join(',') : '',
             publishTime: new Date(item.publishTime).getTime()
           })
           return {
@@ -561,22 +572,20 @@ export default class Main extends ViewBase {
             ...message
           }
         })
-        // console.log(JSON.stringify({
-        //   ...this.form,
-        //   draft: id ? id : '',
-        //   channelCode: this.$route.params.code,
-        //   totalFee: this.mongysum,
-        //   productId: this.prodId,
-        //   orderItemList: msg
-        // }))
+
         const query = {
           ...this.form,
+          brandId: this.form.brandid,
           draft: id ? id : '',
           channelCode: this.$route.params.code,
           totalFee: this.mongysum,
           productId: this.prodId,
           orderItemList: msg
         }
+        // console.log(JSON.stringify({
+        //    ...query,
+        //     orderId: this.$route.params.id
+        // }))
         if (this.$route.params.id) {
           await putadver({
             ...query,

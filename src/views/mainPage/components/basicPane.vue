@@ -44,28 +44,28 @@
       </div>
 
       <div
-        class="zone platform-zone effect-lightning"
-        v-if="platformList && platformList.length > 0"
+        class="zone fans-zone effect-lightning"
+        v-if="fansList && fansList.length > 0"
       >
         <h4 class="zone-head flex-box">
           <em class="flex-1">粉丝平台分布（人）</em>
           <!-- <router-link :to="{}">更多 &gt;</router-link> -->
         </h4>
-        <ul class="platform-list">
+        <ul class="fans-list">
           <li
-            v-for="(it, i) in platformList"
+            v-for="(it, i) in fansList"
             :key="i"
-            class="platform-item flex-mid"
+            class="fans-item flex-mid"
           >
             <i :class="`platform-icon-${it.icon}`"></i>
-            <label class="platform-name">{{it.name}}</label>
+            <label class="fans-name">{{it.name}}</label>
             <Progress
               :percent="it.percent"
-              class="platform-percent"
+              class="fans-percent"
               stroke-color="rgba(255, 255, 255, .4)"
               hide-info
             />
-            <em class="platform-count">{{it.count}}</em>
+            <em class="fans-count">{{it.count}}</em>
           </li>
         </ul>
       </div>
@@ -127,7 +127,12 @@
             :key="i"
             class="brand-item"
           >
-            <img :src="it.logo" width="55" height="55" class="brand-img">
+            <router-link
+              :to="{ name: 'brand-home', params: { id: it.id } }"
+              class="brand-item-in"
+            >
+              <img :src="it.logo" width="55" height="55" class="brand-img">
+            </router-link>
           </li>
         </ul>
       </div>
@@ -153,6 +158,8 @@ export interface Opus {
 }
 
 export interface Brand {
+  id: number
+  name: string
   logo: string
 }
 
@@ -220,7 +227,7 @@ export default class BasicPane extends Vue {
 
   @Prop({ type: Object, default: null }) brandData!: BrandData
 
-  @Prop({ type: Array, default: () => [] }) platformList!: Platform[]
+  @Prop({ type: Array, default: () => [] }) fansList!: Platform[]
 
   @Prop({ type: Object, default: null }) movie!: Movie
 
@@ -400,18 +407,18 @@ export default class BasicPane extends Vue {
   margin: 8px auto 0;
 }
 
-.platform-list {
+.fans-list {
   padding-right: 12px;
 }
 
-// .platform-item {
+// .fans-item {
 // }
 
-.platform-icon {
+.fans-icon {
   width: 36px;
 }
 
-.platform-name {
+.fans-name {
   width: 44px;
   white-space: nowrap;
   overflow: hidden;
@@ -419,7 +426,7 @@ export default class BasicPane extends Vue {
   margin-left: 5px;
 }
 
-.platform-percent {
+.fans-percent {
   width: 88px;
   /deep/ .ivu-progress-inner {
     top: -1px;
@@ -427,7 +434,7 @@ export default class BasicPane extends Vue {
   }
 }
 
-.platform-count {
+.fans-count {
   flex: 1;
   white-space: nowrap;
   text-align: right;

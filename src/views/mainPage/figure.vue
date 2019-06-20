@@ -70,6 +70,8 @@ import PiePane from './components/piePane.vue'
 import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
 
+import { getFigure } from './data'
+
 @Component({
   components: {
     Layout,
@@ -83,17 +85,9 @@ import HotPane from './components/hotPane.vue'
 export default class FigurePage extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
-  basic = {
-    id: this.id,
-    name: '吴京',
-    subName: 'Wu Jing',
-    title: '演员 / 导演 / 制片人',
-    figure: 'https://picsum.photos/id/435/154/218',
-    rankNo: '92.02',
-    rankTitle: '中国男演员票房 : TOP1',
-  }
+  basic: any = null
 
-  bigFigure = this.id == 1 ? '' : 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bjnoh5p3lbm00083qlb0.png'
+  bigFigure = ''
 
   fansMan = 66
 
@@ -169,6 +163,24 @@ export default class FigurePage extends ViewBase {
   hotFormatter([{ dataIndex }]: any) {
     const { value, rank } = this.hotData[dataIndex]
     return `综合热度：${value}<br>男演员排名：${rank}`
+  }
+
+  created() {
+    this.init()
+  }
+
+  init() {
+    this.initMain()
+  }
+
+  async initMain() {
+    const {
+      basic,
+      bigFigure
+    } = await getFigure(this.id)
+
+    this.basic = basic
+    this.bigFigure = bigFigure
   }
 }
 </script>

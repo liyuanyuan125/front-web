@@ -1,12 +1,15 @@
 <template>
   <div class="app">
     <ul class="step">
-      <li v-for="(item, index) in step" :key="item.id" :class="(value.id) >= item.id ? 'active' : ''">
-        <span :class="(value.id) >= item.id ? 'actve-span' : ''" v-if="index!=3"></span>
+      <li v-for="(item, index) in step" :key="item.id"
+        :class="[(value.id) >= item.id ? 'active' : '', (value.id * 1 + 1) < item.id  ? 'default' : '']"
+      >
+        <span :class="[(value.id) >= item.id ? 'actve-span' : '', (value.id)  < item.id ? 'default-span' : '']" v-if="index!=3"></span>
       </li>
     </ul>
     <ul class="step-text">
-      <li v-for="(item) in step" :key="item.id" :class="(value.id) >= item.id ? 'active' : ''">
+      <li v-for="(item) in step" :key="item.id" :class="[(value.id) >= item.id ? 'active' : '',
+        (value.id * 1 + 1) < item.id  ? 'default' : '']">
         {{item.key}}
       </li>
     </ul>
@@ -80,6 +83,27 @@ export default class App extends ViewBase {
         transition: all .4s ease-in-out;
       }
     }
+    .default {
+      &::before {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 40px;
+        align-self: center;
+        margin-left: 4px;
+        border-radius: 50%;
+        text-align: center;
+        border: 2px solid #fff;
+        opacity: .4;
+        line-height: 40px;
+        font-size: 24px;
+        background: rgba(0, 0, 0, 0);
+        box-shadow: 0 5px 9px 1px rgba(0, 0, 0, 0);
+      }
+    }
+    .default-span {
+      opacity: .4;
+    }
     .active {
       &::before {
         content: '\2713';
@@ -95,6 +119,9 @@ export default class App extends ViewBase {
       flex: 1;
       margin-bottom: 30px;
       color: #fff;
+    }
+    .default {
+      opacity: .4;
     }
     .active {
       color: rgba(0, 32, 45, 1);

@@ -1,9 +1,11 @@
 <template>
-  <div class="detail-fix" v-if="showDlg" @click="flags">
-    <div class="table-action" @click.stop="flag">
-      <a>清空购物车</a>
+  <div v-if="showDlg">
+    <div class="detail-fix" @click="flags">
     </div>
     <div class="detail-modeal">
+      <div class="table-action" @click.stop="flag">
+        <a>清空购物车</a>
+      </div>
       <Table height="300" :loading="loading" :columns="columns" :data="tabledata">
         <template slot-scope="{ row }" slot="name">
             <div class="table-name">
@@ -56,11 +58,11 @@
           </template>
           <template slot-scope="{ row }" slot="action">
             <div class="action">
-              <p v-if="!row.collected" @click="collects(row.id)">
+              <p v-if="row.collected == 1" @click="collects(row.channelDataId)">
                 <Icon type="md-heart" style="font-size: 17px; color: #CA7273" />
                 收藏
               </p>
-              <p v-else @click="cancelcollects(row.id)">
+              <p v-else @click="cancelcollects(row.channelDataId)">
                 <Icon type="md-heart" style="font-size: 17px; color: #001F2C; opacity: .3" />
                 取消收藏
               </p>
@@ -97,6 +99,7 @@ import { toast, warning } from '@/ui/modal.ts'
 import moment from 'moment'
 import { queryList } from '@/api/kolList.ts'
 import jsxReactToVue from '@/util/jsxReactToVue'
+import { getpersons, delcollect } from '@/api/mycollect.ts'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component
@@ -187,7 +190,7 @@ export default class DlgEditCinema extends ViewBase {
 
   async cancelShop(id: any) {
     try {
-      await delShopping({
+      await delcollect({
         channelCode: this.titles[this.type],
         channelDataId: id
       })
@@ -197,32 +200,34 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
-  formatNum(data: any) {
-    return data ? formatCurrency(data, 0) : 0
-  }
-
   // 加入收藏
   async collects(id: any) {
     try {
       await addcollet({
-        channelCode: this.titles[this.type],
-        channelDataId: id
+        channelType: this.type + 4,
+        dataId: id
       })
+      this.search()
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
-  // 取消收藏
+  // 删除我的收藏
   async cancelcollects(id: any) {
     try {
-      await cancelcollect({
-        channelCode: this.titles[this.type],
-        channelDataId: id
+       await delcollect({
+        channelType: this.value + 4,
+        dataIdList: [id]
       })
+      this.search()
     } catch (ex) {
-      this.handleError(ex)
+
     }
+  }
+
+  formatNum(data: any) {
+    return data ? formatCurrency(data, 0) : 0
   }
 
   statusLists(it: any) {
@@ -294,23 +299,14 @@ export default class DlgEditCinema extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-.detail-fix {
+.detail-modeal {
   position: fixed;
-  top: 0;
   left: 120px;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, .6);
-  z-index: 991;
-  .detail-modeal {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 300px;
-    z-index: 998;
-    background: #fff;
-  }
+  height: 300px;
+  background: #fff;
+  z-index: 998;
   .table-action {
     position: absolute;
     z-index: 999;
@@ -362,6 +358,15 @@ export default class DlgEditCinema extends ViewBase {
       margin-top: -130px;
     }
   }
+}
+.detail-fix {
+  position: fixed;
+  top: 0;
+  left: 120px;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, .6);
+  z-index: 991;
 }
 .action {
   p {
