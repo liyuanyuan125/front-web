@@ -1,6 +1,12 @@
 import { get, post, put } from '@/fn/ajax'
 import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
 
+// 评论热词描述列表
+export async function codelist(id: any , data: any) {
+  const res = get(`/brand/brands/${id}/hot-comment`, data)
+  return res
+}
+
 /**
  * 日期区间描述
  * @param data

@@ -25,7 +25,7 @@
                 </div>
               </DetailNavBar>
             </Col>
-            <Col :span="7" style="text-align:right">
+           <!--  <Col :span="7" style="text-align:right">
               平台
               <Select
                 v-model="form.channelCode"
@@ -39,7 +39,7 @@
                   :value="item.key"
                 >{{item.text}}</Option>
               </Select>
-            </Col>
+            </Col> -->
           </Row>
         </div>
         <div class="content">
@@ -96,6 +96,7 @@
         </div>
       </Card>
     </Form>
+    <!-- <Table ref="selection"  class="table"  :columns="columns" :data="wordlist"></Table> -->
   </div>
 </template>
 
@@ -104,7 +105,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { findIndex } from 'lodash'
 import moment from 'moment'
-import { dayRanges , comment } from '@/api/brandfans'
+import { dayRanges , comment , codelist } from '@/api/brandfans'
 import PieNest from '@/components/chartsGroup/pieNest/'
 import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
@@ -199,6 +200,36 @@ export default class Temporary extends ViewBase {
       }
     ]
   }
+
+  // wordlist: any = []
+  // columns = [
+  //   { title: '序号', key: 'id', align: 'center' },
+  //   {
+  //     title: '内容',
+  //     key: 'accountNumber',
+  //     align: 'center'
+  //   },
+  //   {
+  //     title: '赞同',
+  //     key: 'accountName',
+  //     align: 'center'
+  //   },
+  //   {
+  //     title: '回复',
+  //     key: 'remittanceDate',
+  //     align: 'center',
+  //   },
+  //   {
+  //     title: '来源内容',
+  //     key: 'contactPhone',
+  //     align: 'center'
+  //   },
+  //   {
+  //     title: '评论时间',
+  //     key: 'applyTime',
+  //     align: 'center',
+  //   },
+  // ]
 
   chart1: any = {
     title: '评论情绪分布',
@@ -369,6 +400,8 @@ export default class Temporary extends ViewBase {
         })
         that.chart3.initDone = true
         that.chart4.initDone = true
+        // that.chart3.dataList[0].forEach((item: any) => {
+        // })
       }
       that.chart1.initDone = true
       that.chart2.initDone = true
