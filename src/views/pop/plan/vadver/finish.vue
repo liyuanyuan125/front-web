@@ -1,5 +1,5 @@
 <template>
-  <div class="plan-box">
+  <div class="plan-box" v-if="item">
     <h3 class="title">计划创建完毕，等待资源确认</h3>
     <div class="audit">
       平台会由专业映前投放专家对您的广告计划进行调整,请耐心等待。
@@ -14,7 +14,7 @@
       </dl>
       <dl>
         <dd>投放影片</dd>
-        <dt><Number :addNum="!!item.cinemaCount ? item.cinemaCount : 0" /></dt>
+        <dt><Number :addNum=" planMovies " /></dt>
         <dt>
           <img src="./assets/dianyingpiao.png" width="73" height="66px"/>
         </dt>
@@ -63,6 +63,7 @@ export default class Apps extends ViewBase {
   step = 0
   item: any = null
   cinemaCount = 0
+  planMovies = 0
 
   created() {
     this.lodding()
@@ -73,9 +74,10 @@ export default class Apps extends ViewBase {
       const { data: {
           item,
           cinemaCount,
-
+          planMovies
         } } = await adverdetail(this.$route.params.setid)
         this.item = item
+        this.planMovies = (planMovies || []).length
         this.cinemaCount = cinemaCount
     } catch (ex) {
     }

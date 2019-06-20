@@ -372,6 +372,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction(route) {
         const id = parseInt(route.params.id, 10) || 0
         return id > 0 ? 'edit' : 'create'
+      },
+      title(route) {
+        const id = route.params.id
+        return id ? '编辑' : '添加'
       }
     }
   },
@@ -384,7 +388,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.roles',
       authAction: 'view',
-    }
+      title() {
+        return '查看'
+      }
+    },
   },
 
   // 资源方 - 账户管理 - 影院管理

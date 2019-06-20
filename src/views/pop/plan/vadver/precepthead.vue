@@ -129,6 +129,9 @@ export default class App extends ViewBase {
     font-size: 30px;
     margin-top: 20px;
     color: #fff;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     /deep/ span::after {
       content: "万";
     }
