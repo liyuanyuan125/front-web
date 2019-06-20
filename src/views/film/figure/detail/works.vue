@@ -83,6 +83,8 @@ import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import {personMovies, topList } from '@/api/filmPersonDetail'
 import { getTodayDate, formatConversion } from '@/util/validateRules'
+import { cloneDeep } from 'lodash'
+import { getWorks } from './data'
 
 
 @Component
@@ -127,7 +129,8 @@ export default class Master extends ViewBase {
     return formatConversion
   }
 
-  mounted() {
+  async mounted() {
+    // getWorks(370093)
     this.topCountList()
     this.list()
   }
@@ -193,8 +196,8 @@ export default class Master extends ViewBase {
       this.filterMovie = filterMovie
 
       // 后台list 深层拷贝
-      const item1 = JSON.parse(JSON.stringify(this.items))
-      const item2 = JSON.parse(JSON.stringify(this.items))
+      const item1 = cloneDeep(this.items)
+      const item2 = cloneDeep(this.items)
       item1.sort((a: any, b: any) => {
         return b.release - a.release
       })

@@ -1423,6 +1423,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: '',
       title: '品牌管理详情页',
     },
+    props: paramTypes({
+      id: Number,
+      brandId: Number
+    }),
     children: [
       // 品牌详情 - 基础信息
       {
@@ -1433,7 +1437,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
           authKey: '',
           authAction: '',
           title: '基础信息',
-        }
+        },
+        props: paramTypes({
+          id: Number,
+          brandId: Number
+        }),
       },
       // 品牌详情 - 门店
       {
@@ -1444,7 +1452,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
           authKey: '',
           authAction: '',
           title: '门店',
-        }
+        },
+        props: paramTypes({
+          id: Number,
+          brandId: Number
+        }),
       },
       // 品牌详情 - 媒体平台
       {
@@ -1455,7 +1467,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
           authKey: '',
           authAction: '',
           title: '媒体平台',
-        }
+        },
+        props: paramTypes({
+          id: Number,
+          brandId: Number
+        }),
       },
       // 品牌详情 - 产品信息
       {
@@ -1466,7 +1482,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
           authKey: '',
           authAction: '',
           title: '产品信息',
-        }
+        },
+        props: paramTypes({
+          id: Number,
+          brandId: Number
+        }),
       },
     ]
   },
