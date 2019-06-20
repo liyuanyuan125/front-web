@@ -50,7 +50,7 @@
                 <div class="film-buttom">
                   <dl style="margin-bottom: 15px">
                     <dd>受众年龄：</dd>
-                    <dt>{{it.matching}}%</dt>
+                    <dt v-for="item in it.ageCodes" :key="item">{{item}}</dt>
                   </dl>
                   <dl>
                     <dd>投放周期：</dd>
@@ -67,7 +67,7 @@
           <h3 class="layout-titles">覆盖影院
             <span class="item-detail">影院总数</span>
             <span class="custom" @click="exportData"><Exportfile /></span>
-            <span class="custom" style="margin-right: 160px">自定义投放影院</span>
+            <!-- <span class="custom" style="margin-right: 160px">自定义投放影院</span> -->
           </h3>
           <div class="item-top">
            
@@ -210,6 +210,7 @@ export default class App extends ViewBase {
   loading = false
   single = false
   tableDate1: any = []
+  deatilItem: any = {}
 
   get columns() {
     const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
@@ -311,6 +312,7 @@ export default class App extends ViewBase {
     try {
       const { data } = await adverdetail(this.$route.params.setid)
       this.filmList = data.planMovies || []
+      this.deatilItem = data.item || {}
     } catch (ex) {
       this.handleError(ex)
     }
@@ -433,11 +435,20 @@ export default class App extends ViewBase {
 
   async cinemaFind() {
     try {
+      const msg = {
+        budgetAmount: this.deatilItem.budgetAmount,
+        specification: this.deatilItem.specification,
+        beginDate: this.deatilItem.beginDate,
+        endDate: this.deatilItem.endDate,
+        deliveryCityTypes: this.deatilItem.deliveryCityTypes,
+        cityIds: this.deatilItem.cityIds,
+        sexCodes: this.deatilItem.sexCodes,
+        ageCodes: this.deatilItem.ageCodes,
+        movieIds: this.deatilItem.movieIds,
+        cinemaIds: this.deatilItem.cinemaIds
+      }
       const { data } = await getRecommend({
-        budgetAmount: 100000,
-        specification: 15,
-        beginDate: 20190701,
-        endDate: 20190702
+        ...msg
       })
       this.commendData = data
     } catch (ex) {

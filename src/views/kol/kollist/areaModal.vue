@@ -4,7 +4,7 @@
       粉丝占比top10省份
     </h3>
     <ul class="area-box">
-      <li v-for="(it, index) in data" :key="index"><span>{{data.id}} {{data.name}}:</span><span>{{data.percent}}%</span></li>
+      <li v-for="(it, index) in data" :key="index"><span>{{index}} {{data.name}}:</span><span>{{data.percent}}%</span></li>
       
     </ul>
   </div>
