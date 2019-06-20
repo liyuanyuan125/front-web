@@ -372,6 +372,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction(route) {
         const id = parseInt(route.params.id, 10) || 0
         return id > 0 ? 'edit' : 'create'
+      },
+      title(route) {
+        const id = route.params.id
+        return id ? '编辑' : '添加'
       }
     }
   },
@@ -384,7 +388,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.roles',
       authAction: 'view',
-    }
+      title() {
+        return '查看'
+      }
+    },
   },
 
   // 资源方 - 账户管理 - 影院管理
@@ -479,6 +486,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'promotion.ad-plan',
       authAction: 'view',
+      title() {
+        return '详情'
+      }
     }
   },
 
@@ -510,7 +520,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/pop/planlist/add/:id?/:setid?',
     name: 'pop-planlist-add',
     component: () => import('./views/pop/plan/index.vue'),
-    meta: emptyAuth
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'edit',
+      title() {
+        return '创建'
+      }
+    }
   },
 
   // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
@@ -518,7 +534,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/pop/planlist/edit/:id/:setid',
     name: 'pop-planlist-edit',
     component: () => import('./views/pop/plan/index.vue'),
-    meta: emptyAuth
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'edit',
+      title() {
+        return '编辑'
+      }
+    }
   },
 
   // // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
@@ -827,7 +849,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/shopping/:id?',
     name: 'kol-shopping',
     component: () => import('./views/kol/shopping/index.vue'),
-    meta: emptyAuth
+    meta: {
+      authKey: '',
+      authAction: '',
+      title() {
+        return '购物车'
+      }
+    }
   },
 
    // kol - 订单详情
@@ -901,7 +929,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // KOL - 概览
   {
-    path: '/kol/figure/:id/:channel?',
+    path: '/kol/figure/:id/:channel',
     name: 'kol-figure',
     component: () => import('./views/mainPage/kol.vue'),
     meta: {
@@ -1275,14 +1303,26 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/orderfill/:code?/:id?',
     name: 'order-orderfill',
     component: () => import('./views/kol/orderfill/index.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: '',
+      authAction: '',
+      title() {
+        return '订单填写'
+      }
+    },
   },
   // kol - 我的收藏
   {
     path: '/kol/collect/:id',
     name: 'kol-collect',
     component: () => import('./views/kol/collect/index.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: '',
+      authAction: '',
+      title() {
+        return '我的收藏'
+      }
+    },
   },
 
   // 品牌 - 首页
@@ -1418,28 +1458,6 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authIsMenu: true,
       title: '品牌管理',
     }
-  },
-  // 第三方检测 - 列表
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('./views/test/index.vue'),
-    meta: {
-      authKey: '',
-      authAction: '',
-      authIsMenu: true,
-    },
-  },
-  // 第三方检测 - 新建/编辑
-  {
-    path: '/test/addtest/:id',
-    name: 'test-addtest',
-    component: () => import('./views/test/addtest.vue'),
-    meta: {
-      authKey: '',
-      authAction: '',
-      authIsMenu: true,
-    },
   },
 
   // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断

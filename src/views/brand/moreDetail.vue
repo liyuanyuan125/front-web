@@ -1,9 +1,7 @@
 <template>
   <div class="model-home list">
     <div class="list-left">
-      <!-- <img src="./assets/brand-logo.png" width="160" /> -->
       <Upload v-model="imageList" :max-count="1" accept="images/*" :isEdit="flagImg" confirm-on-del></Upload>
-      <!-- <img src="./assets/add-icon.png" v-if="!flagImg" class="base-upload-img"/> -->
       <p class="title">{{detailMes.enName}}</p>
       <p class="types">{{detailMes.tradeCodeName}}</p>
       <ul class="tabs-title">
@@ -22,6 +20,7 @@ import {Component, Prop, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import eventBus from './eventBus'
 import Upload from '@/components/uploadOnly'
+import { baseList, editBase } from '@/api/brandList'
 
 
 @Component({
@@ -47,17 +46,35 @@ export default class Main extends ViewBase {
 
   mounted() {
     this.tabActive = this.$route.name
-    eventBus.$on('uploadImg', (flag: any) => {
-      this.flagImg = flag
-    })
-    eventBus.$on('passParamer', (mes: any) => {
-      this.detailMes = mes
-    })
-    const fileds: any = localStorage.getItem('brandImg')
-    this.imageList = JSON.parse(fileds)
+    this.queryList()
+    // eventBus.$on('uploadImg', (flag: any) => {
+    //   this.flagImg = flag
+    // })
+    // eventBus.$on('passParamer', (mes: any) => {
+    //   this.detailMes = mes
+    // })
+    // const fileds: any = localStorage.getItem('brandImg')
+    // this.imageList = JSON.parse(fileds)
 
   }
+  async queryList() {
+    const { data: {item, tradeCodeList, countryCodeList} } = await baseList(this.brandId)
+    // 编辑头像
+    const imgList: any = [
+      {
+        url: item.logoUrl,
+        fileId: item.logo
+      }
+    ]
+    this.imageList = imgList
 
+    const tradeName: any = tradeCodeList.find((trade: any) => trade.key == item.tradeCode) || {}
+    const detail = {
+      enName: item.enName,
+      tradeCodeName: tradeName.text
+    }
+    this.detailMes = detail
+  }
   handleTabs(item: any) {
     this.$router.push({name: item.route})
     this.tabActive = item.route

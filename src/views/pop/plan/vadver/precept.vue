@@ -3,7 +3,7 @@
     <Row>
       <Col >
         <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
-          <PreceptHead v-model="dataitem"/>
+          <PreceptHead v-model="deatilItem"/>
           <h3 class="layout-titles">投放影片
               <span class="item-detail">优先投放 {{filmList.length}} 部</span>
               <!-- <span class="custom">自定义投放电影</span> -->
@@ -13,7 +13,7 @@
               <li v-for="(it) in filmList" :key="it.id"
                 :class="['film-item']">
                 <div class="film-top">
-                  <img :src="it.image ? it.image : defaultImg" onerror="defaultImg" class="film-cover">
+                  <img :src="it.image ? it.image : defaultImg" @onerror="defaultImg" class="film-cover">
                   <div style="position: relative">
                     <p class="film-title" :title="it.movieName">{{it.movieName}}</p>
                     <p class="film-title" style="margin-bottom: 20px">{{it.movieName}}</p>
@@ -75,21 +75,21 @@
           <div class="item-top">
             <div class="cinema-box">
               <div class="cinema-right">
-                <div>
+                <div v-if="detaildata">
                   <dl @click="tags(1)" :class="tag=='1' ? 'dl-active' : ''">
-                    <dd>1234</dd>
+                    <dd>{{detaildata.cinemaCount}}</dd>
                     <dt>覆盖影院</dt>
                   </dl>
                   <dl @click="tags(2)" :class="tag=='2' ? 'dl-active' : ''">
-                    <dd>234</dd>
+                    <dd>{{detaildata.chainCount}}</dd>
                     <dt>覆盖影线</dt>
                   </dl>
                   <dl @click="tags(3)" :class="tag=='3' ? 'dl-active' : ''">
-                    <dd>23</dd>
+                    <dd>{{detaildata.cityCount}}</dd>
                     <dt>覆盖城市</dt>
                   </dl>
                   <dl @click="tags(4)" :class="tag=='4' ? 'dl-active' : ''">
-                    <dd>3</dd>
+                    <dd>{{detaildata.provinceCount}}</dd>
                     <dt>覆盖省份</dt>
                   </dl>
                 </div>
@@ -204,9 +204,10 @@ export default class App extends ViewBase {
   pageSize = 6
   tableDate: any = []
   total = 0
+  detaildata: any = null
   data: any = {}
   filmList: any = []
-  commendData: any = []
+  commendata: any = null
   loading = false
   single = false
   tableDate1: any = []
@@ -303,7 +304,6 @@ export default class App extends ViewBase {
   }
 
   created() {
-    this.init()
     this.seach()
     this.detail()
   }
@@ -312,7 +312,9 @@ export default class App extends ViewBase {
     try {
       const { data } = await adverdetail(this.$route.params.setid)
       this.filmList = data.planMovies || []
+      this.detaildata = data
       this.deatilItem = data.item || {}
+      this.cinemaFind()
     } catch (ex) {
       this.handleError(ex)
     }
@@ -330,11 +332,6 @@ export default class App extends ViewBase {
     this.seach()
   }
 
-  async init() {
-    const { data } = await orienteering({})
-    this.filmList = data.items || []
-  }
-
   seach() {
     if (this.tag == 1) {
       this.cinemfind()
@@ -349,7 +346,7 @@ export default class App extends ViewBase {
 
   async cinemfind() {
     try {
-      const { data } = await getcinemas(22, {
+      const { data } = await getcinemas(this.$route.params.setid, {
         name: this.form.name,
         pageIndex: this.pageIndex,
         pageSize: this.pageSize
@@ -363,7 +360,7 @@ export default class App extends ViewBase {
 
   async provienfind() {
     try {
-      const { data } = await getprovinces(22, {
+      const { data } = await getprovinces(this.$route.params.setid, {
         name: this.form.name,
         pageIndex: this.pageIndex,
         pageSize: this.pageSize
@@ -377,7 +374,7 @@ export default class App extends ViewBase {
 
   async cityfind() {
     try {
-      const { data } = await getcities(22, {
+      const { data } = await getcities(this.$route.params.setid, {
         name: this.form.name,
         pageIndex: this.pageIndex,
         pageSize: this.pageSize
@@ -391,7 +388,7 @@ export default class App extends ViewBase {
 
   async chainsfind() {
     try {
-      const { data } = await getchains(22, {
+      const { data } = await getchains(this.$route.params.setid, {
         name: this.form.name,
         pageIndex: this.pageIndex,
         pageSize: this.pageSize
@@ -408,7 +405,7 @@ export default class App extends ViewBase {
       await getCheme({
         planId: this.$route.params.setid,
         allowAutoDelivery: this.single ? 1 : 0,
-        planRecommed: { ...this.commendData }
+        planRecommed: { ...this.commendata }
       })
       this.$emit('input', {
         id: 3,
@@ -430,11 +427,12 @@ export default class App extends ViewBase {
   }
 
   get defaultImg() {
-    return 'this.src="' + require('../assets/error.png') + '"'
+    return 'this.src="' + require('./assets/error.png') + '"'
   }
 
   async cinemaFind() {
     try {
+       (this.$Spin as any).show()
       const msg = {
         budgetAmount: this.deatilItem.budgetAmount,
         specification: this.deatilItem.specification,
@@ -450,8 +448,10 @@ export default class App extends ViewBase {
       const { data } = await getRecommend({
         ...msg
       })
-      this.commendData = data
+      this.commendata = data || {}
+      ; (this.$Spin as any).hide()
     } catch (ex) {
+       (this.$Spin as any).hide()
       this.handleError(ex)
     }
   }
@@ -471,9 +471,11 @@ export default class App extends ViewBase {
     })
   }
 
-  @Watch('dataitem', { deep: true })
-  watchDataitem(val: any) {
-    this.cinemaFind()
+  @Watch('commendata', { deep: true })
+  watchCommendata(val: any) {
+    if (val) {
+      // ; (this.$Spin as any).hide()
+    }
   }
 }
 </script>
