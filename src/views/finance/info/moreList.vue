@@ -83,7 +83,7 @@ export default class Main extends ViewBase {
   currentsize = 1
 
   columns4 = [
-    { title: '充值ID', key: 'id', align: 'center' },
+    { title: '充值ID', key: 'id', align: 'center' , width: 80},
     {
       title: '申请时间',
       key: 'applyTime',
@@ -172,7 +172,7 @@ export default class Main extends ViewBase {
     {
       title: '状态',
       key: 'statusText',
-      width: 100,
+      width: 80,
       align: 'center',
       render: (hh: any, { row: { rejectReason , approvalStatus, statusText } }: any) => {
         /* tslint:disable */
