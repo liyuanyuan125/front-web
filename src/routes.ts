@@ -929,7 +929,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // KOL - 概览
   {
-    path: '/kol/figure/:id/:channel?',
+    path: '/kol/figure/:id/:channel',
     name: 'kol-figure',
     component: () => import('./views/mainPage/kol.vue'),
     meta: {
@@ -1458,28 +1458,6 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authIsMenu: true,
       title: '品牌管理',
     }
-  },
-  // 第三方检测 - 列表
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('./views/test/index.vue'),
-    meta: {
-      authKey: '',
-      authAction: '',
-      authIsMenu: true,
-    },
-  },
-  // 第三方检测 - 新建/编辑
-  {
-    path: '/test/addtest/:id',
-    name: 'test-addtest',
-    component: () => import('./views/test/addtest.vue'),
-    meta: {
-      authKey: '',
-      authAction: '',
-      authIsMenu: true,
-    },
   },
 
   // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
