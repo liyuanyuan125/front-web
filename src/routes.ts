@@ -486,6 +486,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'promotion.ad-plan',
       authAction: 'view',
+      title() {
+        return '详情'
+      }
     }
   },
 
@@ -517,7 +520,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/pop/planlist/add/:id?/:setid?',
     name: 'pop-planlist-add',
     component: () => import('./views/pop/plan/index.vue'),
-    meta: emptyAuth
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'edit',
+      title() {
+        return '创建'
+      }
+    }
   },
 
   // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
@@ -525,7 +534,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/pop/planlist/edit/:id/:setid',
     name: 'pop-planlist-edit',
     component: () => import('./views/pop/plan/index.vue'),
-    meta: emptyAuth
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'edit',
+      title() {
+        return '编辑'
+      }
+    }
   },
 
   // // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
@@ -834,7 +849,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/shopping/:id?',
     name: 'kol-shopping',
     component: () => import('./views/kol/shopping/index.vue'),
-    meta: emptyAuth
+    meta: {
+      authKey: '',
+      authAction: '',
+      title() {
+        return '购物车'
+      }
+    }
   },
 
    // kol - 订单详情
@@ -1282,14 +1303,26 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/orderfill/:code?/:id?',
     name: 'order-orderfill',
     component: () => import('./views/kol/orderfill/index.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: '',
+      authAction: '',
+      title() {
+        return '订单填写'
+      }
+    },
   },
   // kol - 我的收藏
   {
     path: '/kol/collect/:id',
     name: 'kol-collect',
     component: () => import('./views/kol/collect/index.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: '',
+      authAction: '',
+      title() {
+        return '我的收藏'
+      }
+    },
   },
 
   // 品牌 - 首页
