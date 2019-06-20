@@ -149,7 +149,7 @@ export default class DlgEditCinema extends ViewBase {
 
   cancel() {
     this.$nextTick(() => {
-      (document.getElementsByTagName('html')[0] as HTMLElement).style = 'overflow-y: auto'
+      (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
     })
     this.showDlg = false
   }
