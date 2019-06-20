@@ -575,6 +575,7 @@ export default class Main extends ViewBase {
 
         const query = {
           ...this.form,
+          brandId: this.form.brandid,
           draft: id ? id : '',
           channelCode: this.$route.params.code,
           totalFee: this.mongysum,
