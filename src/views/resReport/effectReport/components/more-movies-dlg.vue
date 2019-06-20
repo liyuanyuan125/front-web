@@ -54,6 +54,8 @@ export default class MoreMoviesDlg extends ViewBase {
     pageSize: 10
   }
 
+  totalCount: number = 0
+
   columns: any[] = [
     { title: '影片', key: 'name', align: 'center' },
     {
@@ -107,7 +109,6 @@ export default class MoreMoviesDlg extends ViewBase {
           cost: it.cost
         }
       })
-      // this.totalCount = totalCount
       this.showDlg = true
     } catch (ex) {
       this.handleError(ex)

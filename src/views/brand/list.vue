@@ -48,35 +48,7 @@
       <ul class="no-data-list" v-if="list.length == 0">暂无数据</ul>
       <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
     </div>
-    <!-- 添加品牌 -->
-    <Modal v-model="visibleBrand" title="添加品牌" width="700" class="modal-dlg">
-      <Form ref="form" :model="form" :rules="rule" :label-width="90" class="edit-input">
-        <FormItem label="品牌" prop="brandId">
-          <Select
-            v-model="form.brandId"
-            clearable
-            filterable
-            remote
-            :loading="loading"
-            class="select-dlg"
-            :remote-method="remoteMethod"
-            @on-clear="brandList = []"
-            style="width: 400px"
-            placeholder="请输入品牌模糊查询"
-          >
-            <Option v-for="item in brandList" :value="item.id">{{item.name}}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="上传图片" prop="fileIds">
-          <Upload v-model="form.fileIds" :max-count="8" multiple accept="images/*" confirm-on-del/>
-          <div class="upload-tip">请上传您管理/代理此品牌的资质扫描件</div>
-        </FormItem>
-      </Form>
-      <div slot="footer">
-        <Button class="btn-cancel" @click="handleCancel">取消</Button>
-        <Button type="primary" @click="addBrand('form')">确定</Button>
-      </div>
-    </Modal>
+    <addBrand v-model="visibleBrand" v-if="visibleBrand" />
   </div>
 </template>
 
@@ -84,13 +56,13 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import pagination from '@/components/page.vue'
-import Upload, { FileItem } from '@/components/upload'
 import { brandList, createBrand, selectBrand } from '@/api/brandList'
+import addBrand from './modalDlg/addBrand.vue'
 
 @Component({
   components: {
     pagination,
-    Upload
+    addBrand
   }
 })
 export default class Main extends ViewBase {
@@ -102,8 +74,6 @@ export default class Main extends ViewBase {
     pageSize: 20
   }
 
-  form: any = {}
-
   // 品牌状态
   brandStatus = []
   // 品牌行业
@@ -112,29 +82,6 @@ export default class Main extends ViewBase {
 
   loading = false
   brandList = []
-
-  get rule() {
-    return {
-      brandId: [
-        {
-          require: true,
-          trigger: 'blur',
-          validator(rule: any, value: string[], callback: any) {
-            !value ? callback(new Error('请选择品牌')) : callback()
-          }
-        }
-      ],
-      fileIds: [
-        {
-          require: true,
-          trigger: 'change',
-          validator(rule: any, value: string[], callback: any) {
-            value.length == 0 ? callback(new Error('请选择上传图片')) : callback()
-          }
-        }
-      ]
-    }
-  }
 
   mounted() {
     this.tableList()
@@ -155,54 +102,6 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     }
   }
-
-  async remoteMethod(query: any) {
-    try {
-      if (query) {
-        this.loading = true
-        const {
-          data: { items }
-        } = await selectBrand({
-          name: query,
-          pageIndex: 1,
-          pageSize: 400
-        })
-        this.brandList = items || []
-      }
-      this.loading = false
-    } catch (ex) {
-      this.handleError(ex)
-      this.loading = false
-    }
-  }
-
-  async addBrand(dataform: any) {
-    const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) {
-      return
-    }
-    const list: any = this.brandList[0]
-    // 处理filelds fileld集合
-    const fileIds = this.form.fileIds.map((item: any) => item.fileId)
-    try {
-      const { data } = await createBrand({
-        ...this.form,
-        fileIds,
-        brandName: list.name,
-        brandEnName: list.enName
-      })
-      this.visibleBrand = false
-      this.tableList()
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
-
-  handleCancel() {
-    this.visibleBrand = false
-    ; (this.$refs.form as any).resetFields()
-  }
-
   uplist(size: any) {
     this.pageList.pageIndex = size
     this.tableList()

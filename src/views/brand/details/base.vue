@@ -63,6 +63,7 @@ import { baseList, editBase } from '@/api/brandList'
 @Component
 export default class Main extends ViewBase {
   @Prop({type: Number, default: 0}) id!: number
+  @Prop({type: Number, default: 0}) brandId!: number
 
   form = {}
 
@@ -89,7 +90,7 @@ export default class Main extends ViewBase {
 
   async queryList() {
     try {
-      const { data: {item, tradeCodeList, countryCodeList} } = await baseList(this.id)
+      const { data: {item, tradeCodeList, countryCodeList} } = await baseList(this.brandId)
       this.baseList = item
       this.countryCodeList = countryCodeList || []
       this.tradeCodeList = tradeCodeList || []
@@ -123,7 +124,7 @@ export default class Main extends ViewBase {
       const { data } = await editBase({
         ...this.form,
         logo: fileId,
-        id: this.id,
+        id: this.brandId,
       })
       this.readonly = false
       eventDate.$emit('uploadImg', false)

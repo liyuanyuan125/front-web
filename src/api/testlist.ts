@@ -42,4 +42,24 @@ export async function dels(id: any) {
 }
 
 
+// 数据报表
+export async function report(planMonitorId: any) {
+  const res = await get(`/xadvert/v1/third-plans/${planMonitorId}/report`)
+  return res
+}
+
+
+// 分页影院数据
+export async function reportcinemas(planMonitorId: any) {
+  const res = await get(`/xadvert/v1/third-plans/${planMonitorId}/report/cinemas`)
+  return res
+}
+
+
+// 分页城市数据
+export async function reportcities(planMonitorId: any) {
+  const res = await get(`/xadvert/v1/third-plans/${planMonitorId}/report/cities`)
+  return res
+}
+
 

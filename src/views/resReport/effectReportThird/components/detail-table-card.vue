@@ -1,15 +1,15 @@
 <template>
-  <ReportPane :title="title"
-              :moreFn="moreFnHandle">
+  <ReportPane :title="title">
     <template slot="more">
-      <a @click="moreFnHandle"
+      <a @click="exportData"
          class="more-link"
          href="javascript:;"><span class="downloadIcon"></span>下载表格</a>
     </template>
     <div class="table-box">
       <Table stripe
-             :columns="columns"
-             :data="tabledata"></Table>
+              ref="table"
+             :columns="data.columns"
+             :data="data.data"></Table>
     </div>
   </ReportPane>
 </template>
@@ -30,72 +30,10 @@ export default class DetailTableCard extends Vue {
 
   title: string = '数据明细'
 
-  columns = [
-    { title: '时间', key: 'time', align: 'center' },
-    {
-      title: '曝光人次',
-      key: 'personTime',
-      align: 'center'
-    },
-    {
-      title: '曝光场次',
-      key: 'filmTime',
-      align: 'center'
-    },
-    {
-      title: '支出金额',
-      key: 'amount',
-      align: 'center'
-    }
-  ]
-
-  tabledata: any = [
-    {
-      time: '2019-05-08',
-      personTime: '113,456',
-      filmTime: '8,789',
-      amount: '¥ 6,345.23'
-    },
-    {
-      time: '2019-05-08',
-      personTime: '113,456',
-      filmTime: '8,789',
-      amount: '¥ 6,345.23'
-    },
-    {
-      time: '2019-05-08',
-      personTime: '113,456',
-      filmTime: '8,789',
-      amount: '¥ 6,345.23'
-    },
-    {
-      time: '2019-05-08',
-      personTime: '113,456',
-      filmTime: '8,789',
-      amount: '¥ 6,345.23'
-    },
-    {
-      time: '2019-05-08',
-      personTime: '113,456',
-      filmTime: '8,789',
-      amount: '¥ 6,345.23'
-    },
-    {
-      time: '2019-05-08',
-      personTime: '113,456',
-      filmTime: '8,789',
-      amount: '¥ 6,345.23'
-    },
-    {
-      time: '2019-05-08',
-      personTime: '113,456',
-      filmTime: '8,789',
-      amount: '¥ 6,345.23'
-    }
-  ]
-
-  moreFnHandle() {
-    // console.log('下载表格！')
+  exportData() {
+    (this.$refs.table as any).exportCsv({
+        filename: 'filename'
+    })
   }
 }
 </script>
@@ -114,7 +52,7 @@ export default class DetailTableCard extends Vue {
 .table-box {
   border-radius: 5px;
   padding: 25px 0;
-  min-height: 260px;
+  min-height: 445px;
   /deep/ .ivu-table th,
   /deep/ .ivu-table-header {
     background: rgba(0, 32, 45, 0.8);

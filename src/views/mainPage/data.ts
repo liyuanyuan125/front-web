@@ -20,7 +20,7 @@ const bubbleSort = [ 3, 1, 4, 0, 5, 2 ]
 
 const sortBubble = (tags: string[]) => {
   const tagList = tags || []
-  return bubbleSort.map(i => tagList[i] || '')
+  return bubbleSort.map(i => tagList[i]).filter(it => it != null)
 }
 
 const monthDate = (date: number) => String(date).replace(/(\d{4})(\d{2})(\d{2})/, '$2-$3')
@@ -316,7 +316,8 @@ export async function getVideoHot(id: number) {
 
 /**
  * 影人详情
- * https://yapi.aiads-dev.com/project/148/interface/api/3254
+ * https://yapi.aiads-dev.com/project/146/interface/api/4497
+ * @param id 影人 id
  */
 export async function getFigure(id: number) {
   const {
@@ -330,6 +331,10 @@ export async function getFigure(id: number) {
         jyIndex,
         tags,
         tip,
+        fans,
+        movies,
+        brands,
+        comments
       },
       professions: professionList,
     }
@@ -339,6 +344,8 @@ export async function getFigure(id: number) {
   const titleList = getNames(titleKeys, professionList)
 
   const result = {
+    bubbleList: sortBubble(tags),
+
     basic: {
       id,
       name,
@@ -350,6 +357,89 @@ export async function getFigure(id: number) {
     },
 
     bigFigure: headImgBig,
+
+    fansRate: {
+      man: parseFloat(dot(fans, '男')),
+      woman: parseFloat(dot(fans, '女'))
+    },
+
+    opusData: movies && movies.length > 0 ? {
+      list: (movies as any[]).map(it => ({
+        title: it.name,
+        count: it.boxOffice + '亿'
+      })),
+      more: {
+        name: 'film-figure-detail-works',
+        params: { id }
+      }
+    } : null,
+
+    brandData: brands && brands.length > 0 ? {
+      list: (brands as any[]).map(it => ({
+        id: it.id,
+        name: it.name,
+        logo: it.logo,
+      })).slice(0, 3),
+      more: {
+        name: 'film-figure-detail-brand',
+        params: { id }
+      }
+    } : null,
+
+    commentData: comments && comments.length > 0 ? (() => {
+      const map = keyBy(comments, 'code')
+      return [
+        { name: '正面', value: percent(dot(map.positive, 'rate')), color: '#ca7273' },
+        { name: '中立', value: percent(dot(map.neutral, 'rate')), color: '#f3d872' },
+        { name: '负面', value: percent(dot(map.passive, 'rate')), color: '#57b4c9' },
+      ]
+    })() : null,
+  }
+
+  return result
+}
+
+/**
+ * 获取影人近 7 日活跃粉丝数
+ * https://yapi.aiads-dev.com/project/146/interface/api/4542
+ * @param id 影人 id
+ */
+export async function getFigureActiveFans(id: number) {
+  const [beginDate, endDate] = dayOffsetRange(-7)
+  const {
+    data: {
+      items
+    }
+  } = await get(`/person/${id}/dau`, {
+    beginDate,
+    endDate
+  })
+
+  const result = (items as any[] || []).map(it => {
+    const name = monthDate(it.data)
+    return { name, value: it.count }
+  })
+
+  return result
+}
+
+/**
+ * 获取影人近 30 天全网热度
+ * https://yapi.aiads-dev.com/project/146/interface/api/4560
+ * @param id 影人 id
+ */
+export async function getFigureHot(id: number) {
+  const [beginDate, endDate] = dayOffsetRange(-30)
+  const {
+    data: {
+      items
+    }
+  } = await get(`/person/${id}/hot`, {
+    beginDate,
+    endDate
+  })
+
+  const result = {
   }
 
   return result

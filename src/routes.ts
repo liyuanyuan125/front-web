@@ -722,6 +722,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: unauth,
   },
 
+  // 第三方 - 效果报表
+  {
+    path: '/reseport/effect-report-third',
+    name: 'effect-report-third',
+    component: () => import('./views/resReport/effectReportThird/index.vue'),
+    meta: unauth,
+  },
+
   // TODO: 下面的两个先不做了
 
   // 资源方 - 财务管理 - 收益账单
@@ -1279,7 +1287,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 品牌 - 首页
   {
-    path: '/brand/:id',
+    path: '/brand/home/:id',
     name: 'brand-home',
     component: () => import('./views/brand/home/index.vue'),
     meta: {

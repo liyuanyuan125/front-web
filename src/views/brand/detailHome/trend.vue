@@ -148,6 +148,20 @@ export default class Trend extends ViewBase {
     color: ['#ff0000', '#3fb23f', '#0099cc', '#cc6600']
   }
 
+  effectTypeList: any = [{
+        text: '新浪微博',
+        key: 0
+      }, {
+        text: '微信',
+        key: 1
+      }, {
+        text: '抖音',
+        key: 2
+      }, {
+        text: '快手',
+        key: 3
+      }]
+
   itemList: any = []
 
   async typeChangeHander2(index: number = 0) {
@@ -185,19 +199,24 @@ export default class Trend extends ViewBase {
 
         this.chart1.initDone = true
 
-        for (const i in data.items) {
-          if (1 == 1) {
-            for (const j in data.items[i].channels) {
-              if (1 == 1) {
-                this.itemList.push(data.items[i].channels[j])
+        for ( const i in data.items ) {
+          if ( 1 == 1 ) {
+            for ( const j in data.items[i].channels ) {
+              if ( 1 == 1 ) {
+                this.itemList.push({
+                  date: data.items[i].date,
+                  count: data.items[i].channels[j].count,
+                  key: data.items[i].channels[j].code
+                  // data.items[i].channels[j]
+                })
               }
             }
           }
         }
       }
 
-      if (data.channelCodeList.length > 0) {
-        this.chart2.dataList = data.channelCodeList.map(
+      if (this.effectTypeList.length > 0) {
+        this.chart2.dataList = this.effectTypeList.map(
           (item: any, index: number) => {
             return {
               data: [],
@@ -211,10 +230,21 @@ export default class Trend extends ViewBase {
           date: []
         })
       }
-      this.chart2.dict1 = data.channelCodeList
+      for ( const i in this.itemList) {
+        if (this.itemList[i].key === 'weibo') {
+          this.itemList[i].key = 0
+        } else if (this.itemList[i].key === 'wechat') {
+          this.itemList[i].key = 1
+        } else if (this.itemList[i].key === 'douyin') {
+          this.itemList[i].key = 2
+        } else if (this.itemList[i].key === 'kuaishou') {
+          this.itemList[i].key = 3
+        }
+      }
+      this.chart2.dict1 = this.effectTypeList
       this.itemList.forEach((item: any, index: number) => {
-        this.chart2.dataList[0].data.push(item.count)
-        this.chart2.dataList[0].date.push(item.date)
+        this.chart2.dataList[item.key].data.push(item.count)
+        this.chart2.dataList[item.key].date.push(item.date)
       })
       this.chart2.initDone = true
     } catch (ex) {

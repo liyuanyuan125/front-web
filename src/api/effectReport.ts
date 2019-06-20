@@ -149,8 +149,8 @@ export async function thirdMonitors(query: any) {
  * https://yapi.aiads-dev.com/project/139/interface/api/2009
  */
 export async function plans(query: any) {
-    // const res = await get('/xadvert/v1/plans', query)
-    // return res
+    const res = await get('/xadvert/v1/plans', query)
+    return res
     return await mockGet(query, {
         plan: {
             id: 39,
@@ -459,13 +459,35 @@ export async function plans(query: any) {
   * https://yapi.aiads-dev.com/project/139/interface/api/4740
   */
 
- export async function cinemasReport(id: string = '', query: any = {}) {
+  export async function cinemasReport(id: string = '', query: any = {}) {
     const res = await get(`xadvert/v1/plans/${id}/report/cinemas`, query)
     return res
     return await mockGet(id, {
         'items|10': [
             {
                 cinemaId: tid,
+                name: title20,
+                viewCount: tid,
+                scheduleCount: tid,
+                cost: tid
+            }
+        ],
+        totalCount: 50
+    })
+}
+
+/**
+ * 分页获取城市的效果报表
+ * @param id id
+ * @param query query
+ * https://yapi.aiads-dev.com/project/139/interface/api/4749
+ */
+export async function citiesReport(id: string = '', query: any = {}) {
+    // const res = await get(`xadvert/v1/plans/${id}/report/cities`, query)
+    // return res
+    return await mockGet(id, {
+        'items|10': [
+            {
                 name: title20,
                 viewCount: tid,
                 scheduleCount: tid,
@@ -767,8 +789,8 @@ export async function popPlans(data: any) {
             k: '北京'
           },
           {
-            v: '10',
-            k: '北京'
+            v: '101',
+            k: '上海'
           }
         ],
         grades: [{
