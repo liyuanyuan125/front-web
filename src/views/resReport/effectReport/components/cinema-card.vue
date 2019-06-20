@@ -6,43 +6,45 @@
          href="javascript:;">查看数据</a>
     </template>
     <div class="cinema-list-wp">
-      <dl v-if=" dataList[0].data && dataList[0].data.length > 0 ">
-        <dt>{{dataList[0].listName}}</dt>
+      <dl v-if=" data.viewRate.data && data.viewRate.data.length > 0 ">
+        <dt>{{data.viewRate.listName}}</dt>
         <dd>
           <ul class="cinema-list">
-            <li v-for=" (item, index) in dataList[0].data"
+            <li v-for=" (item, index) in data.viewRate.data"
                 :key="index">
               <div class="cinema-list-item-inner">
                 <span>{{item.name}}</span>
-                <span>{{item.count}}</span>
+                <span>{{item.count}}%</span>
               </div>
             </li>
           </ul>
         </dd>
       </dl>
-      <dl v-if=" dataList[1].data && dataList[1].data.length > 0 ">
-        <dt>{{dataList[1].listName}}</dt>
+
+      <dl v-if=" data.scheduleRate.data && data.scheduleRate.data.length > 0 ">
+        <dt>{{data.scheduleRate.listName}}</dt>
         <dd>
           <ul class="cinema-list">
-            <li v-for=" (item, index) in dataList[1].data"
+            <li v-for=" (item, index) in data.scheduleRate.data"
                 :key="index">
               <div class="cinema-list-item-inner">
                 <span>{{item.name}}</span>
-                <span>{{item.count}}</span>
+                <span>{{item.count}}%</span>
               </div>
             </li>
           </ul>
         </dd>
       </dl>
-      <dl v-if=" dataList[2].data && dataList[2].data.length > 0 ">
-        <dt>{{dataList[2].listName}}</dt>
+
+      <dl v-if=" data.costRate.data && data.costRate.data.length > 0 ">
+        <dt>{{data.costRate.listName}}</dt>
         <dd>
           <ul class="cinema-list">
-            <li v-for=" (item, index) in dataList[2].data"
+            <li v-for=" (item, index) in data.costRate.data"
                 :key="index">
               <div class="cinema-list-item-inner">
                 <span>{{item.name}}</span>
-                <span>{{item.count}}</span>
+                <span>{{item.count}}%</span>
               </div>
             </li>
           </ul>
@@ -65,73 +67,13 @@ import ReportPane from './report-pane.vue'
 })
 export default class CinemaCard extends Vue {
   @Prop({ type: Object, default: () => ({}) }) data!: any
-  totalCount: number = 123457
-  title: string = `覆盖影院（ ${this.totalCount}家 ）`
 
-  dataList: any[] = [
-    {
-      listName: '曝光人次 TOP10',
-      data: [
-        {
-          id: 1,
-          name: '北京万达影城CBD店',
-          count: '31.71%'
-        },
-        {
-          id: 2,
-          name: '北京万达影城CBD店',
-          count: '31.71%'
-        },
-        {
-          id: 3,
-          name: '北京万达影城CBD店',
-          count: '31.71%'
-        }
-      ]
-    },
-    {
-      listName: '曝光场次 TOP10',
-      data: [
-        {
-          id: 1,
-          name: '北京万达影城CBD店',
-          count: '31.71%'
-        },
-        {
-          id: 2,
-          name: '北京万达影城CBD店',
-          count: '31.71%'
-        },
-        {
-          id: 3,
-          name: '北京万达影城CBD店',
-          count: '31.71%'
-        }
-      ]
-    },
-    {
-      listName: '支出金额 TOP10',
-      data: [
-        {
-          id: 1,
-          name: '北京万达影城CBD店',
-          count: '31.71%'
-        },
-        {
-          id: 2,
-          name: '北京万达影城CBD店',
-          count: '31.71%'
-        },
-        {
-          id: 3,
-          name: '北京万达影城CBD店',
-          count: '31.71%'
-        }
-      ]
-    }
-  ]
+  get title() {
+    return `覆盖影院（ ${this.data.totalCount}家 ）`
+  }
+
   moreFnHandle() {
-    // console.log('查看数据!')
+    this.$emit('showMore')
   }
 }
 </script>

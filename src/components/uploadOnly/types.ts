@@ -13,3 +13,7 @@ export interface FileItem {
   /** 可选，客户端文件类型，内部添加，会传播到外部 */
   clientType?: string
 }
+export interface DoneEvent {
+  item: FileItem
+  file: File
+}

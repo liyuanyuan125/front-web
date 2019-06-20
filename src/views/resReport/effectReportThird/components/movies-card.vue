@@ -7,31 +7,30 @@
     </template>
     <div class="film-list-wp">
       <ul class="film-list">
-        <li v-for="(item, index) in filmData"
-            :key="item.id">
+        <li v-for="(item, index) in data" :key="index">
           <div class="inner">
             <div class="left">
               <dl class="film-card">
-                <dt><img :src="item.img" /></dt>
+                <dt><img :src="item.poster" /></dt>
                 <dd>
                   <div class="dsc-box">
                     <h5 class="name">{{item.name}}</h5>
-                    <div class="score">{{item.score}}时光评分：8.6</div>
+                    <div class="score">时光评分：{{item.score}}</div>
                     <div class="time">{{item.time}}上映</div>
                     <div class="type">{{item.type}}</div>
                   </div>
                   <div class="count-box">
                     <div>
                       <h6>曝光人次</h6>
-                      <p>{{item.value0}}</p>
+                      <p>{{item.viewCount}}</p>
                     </div>
                     <div>
                       <h6>曝光场次</h6>
-                      <p>{{item.value1}}</p>
+                      <p>{{item.scheduleCount}}</p>
                     </div>
                     <div>
                       <h6>曝光人次占比</h6>
-                      <p>{{item.value2}}%</p>
+                      <p>{{item.viewRate}}%</p>
                     </div>
                   </div>
                 </dd>
@@ -42,9 +41,10 @@
               <div class="age-pane">
                 <div class="bar-box">
                   <ul>
-                    <li v-for="(it, i) in item.ageData.data"
+                    <li v-for="(it, i) in item.userPortrait.ages"
                         :key="i">
                       <AgeBar :value="it.value"
+                              :name="it.key"
                               :isMax="it.isMax"></AgeBar>
                     </li>
                   </ul>
@@ -52,11 +52,11 @@
                 <div class="header">
                   <div class="item">
                     <i class="male"
-                       :style="`width: ${getSize(item.ageData.malePercent)}; height: ${getSize(item.ageData.malePercent)}`"><span>男</span><em>{{item.ageData.malePercent}}%</em></i>
+                       :style="`width: ${getSize(item.userPortrait.male)}; height: ${getSize(item.userPortrait.male)}`"><span>男</span><em>{{item.userPortrait.male}}%</em></i>
                   </div>
                   <div class="item">
                     <i class="female"
-                       :style="`width: ${getSize(item.ageData.femalePercent)}; height: ${getSize(item.ageData.femalePercent)}`"><span>女</span><em>{{item.ageData.femalePercent}}%</em></i>
+                       :style="`width: ${getSize(item.userPortrait.female)}; height: ${getSize(item.userPortrait.female)}`"><span>女</span><em>{{item.userPortrait.female}}%</em></i>
                   </div>
                 </div>
               </div>
@@ -79,113 +79,14 @@ import AgeBar from './x-age-bar.vue'
     AgeBar
   }
 })
-export default class FilmCard extends Vue {
-  @Prop({ type: Object, default: () => ({}) }) data!: any
-  totalCount: number = 20
-  title: string = `覆盖影片（ ${this.totalCount}部 ）`
-  dataList: any[] = []
+export default class MoviesCard extends Vue {
+  @Prop({ type: Number, default: () => 0 }) moviesTotal?: number
+  @Prop({ type: Array, default: () => [] }) data!: any[]
 
-  filmData: any[] = [
-    {
-      id: 0,
-      img: 'http://img5.mtime.cn/mt/2019/05/31/163639.93224012_1280X720X2.jpg',
-      name: '攀登者',
-      score: '时光评分：8.6',
-      time: '2019-09-30上映',
-      type: '剧情／冒险（中国大陆）',
-      value0: '67789', // 曝光人次
-      value1: '33333', // 曝光场次
-      value2: '40', // 曝光人次占比
-      ageData: {
-        data: [
-          {
-            isMax: false,
-            value: 50
-          },
-          {
-            isMax: true,
-            value: 33
-          },
-          {
-            isMax: false,
-            value: 22
-          },
-          {
-            isMax: false,
-            value: 50
-          },
-          {
-            isMax: true,
-            value: 33
-          },
-          {
-            isMax: false,
-            value: 22
-          }
-        ],
-        malePercent: 20,
-        femalePercent: 80
-      }
-    },
-    {
-      id: 1,
-      img: 'http://img5.mtime.cn/mt/2019/05/31/163639.93224012_1280X720X2.jpg',
-      name: '攀登者x',
-      score: '时光评分：8.1',
-      time: '2019-09-10上映',
-      type: '剧情／冒险（中国大陆）',
-      value0: '67789', // 曝光人次
-      value1: '33333', // 曝光场次
-      value2: '40', // 曝光人次占比
-      ageData: {
-        data: [
-          {
-            isMax: false,
-            value: 50
-          },
-          {
-            isMax: true,
-            value: 33
-          },
-          {
-            isMax: false,
-            value: 22
-          }
-        ],
-        malePercent: 50,
-        femalePercent: 50
-      }
-    },
-    {
-      id: 2,
-      img: 'http://img5.mtime.cn/mt/2019/05/31/163639.93224012_1280X720X2.jpg',
-      name: '攀登者x',
-      score: '时光评分：8.1',
-      time: '2019-09-10上映',
-      type: '剧情／冒险（中国大陆）',
-      value0: '67789', // 曝光人次
-      value1: '33333', // 曝光场次
-      value2: '40', // 曝光人次占比
-      ageData: {
-        data: [
-          {
-            isMax: false,
-            value: 33
-          },
-          {
-            isMax: true,
-            value: 33
-          },
-          {
-            isMax: false,
-            value: 22
-          }
-        ],
-        malePercent: 10,
-        femalePercent: 90
-      }
-    }
-  ]
+  get title() {
+    return `覆盖影片（ ${this.moviesTotal}部 ）`
+  }
+
   getSize(percent: number) {
     let width = `100%`
     if (percent === 50) {
@@ -198,7 +99,7 @@ export default class FilmCard extends Vue {
     return width
   }
   moreFnHandle() {
-    // console.log('查看数据!')
+    this.$emit('showMore')
   }
 }
 </script>
@@ -331,7 +232,7 @@ dl.film-card {
   padding: 0 17px;
   min-width: 600px;
   .bar-box {
-    padding-top: 10px;
+    margin-right: 10px;
     min-width: 375px;
     ul {
       display: flex;

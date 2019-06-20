@@ -13,7 +13,7 @@
     <div>
       <Progress :percent="data.femalePercent"
                 class="sex-percent"
-                stroke-color="#00B6CC"
+                stroke-color="#00b6cc"
                 hide-info />
     </div>
   </div>

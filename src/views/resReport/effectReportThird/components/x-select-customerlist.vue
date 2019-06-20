@@ -23,7 +23,7 @@ export default class Main extends ViewBase {
 
   async popPartners() {
     try {
-      const { data: {items} } = await popPartners({
+      const { data, data: {items} } = await popPartners({
         pageSize: 99999,
         pageIndex: 1
       })

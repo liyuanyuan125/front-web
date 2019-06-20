@@ -149,731 +149,352 @@ export async function thirdMonitors(query: any) {
  * https://yapi.aiads-dev.com/project/139/interface/api/2009
  */
 export async function plans(query: any) {
-    // const res = await get('/xadvert/v1/plans', query)
-    // return res
+    const res = await get('/xadvert/v1/plans', query)
+    return res
     return await mockGet(query, {
-        items: [{
-            id: 49,
-            companyId: 95,
-            name: '陈鹏宇的测试公司',
-            specification: 15,
-            videoId: 273,
-            videoLogo: 'http://img0.imgtn.bdimg.com/it/u=2387750928,3991855324&fm=26&gp=0.jpg',
-            videoName: '广告片1',
-            customerId: 15,
-            brandId: 3,
-            customerName: '奔驰',
-            beginDate: 20190613,
-            endDate: 20190619,
-            cycle: 7,
-            budgetAmount: 1334,
-            cityCustom: 0,
-            allNation: 0,
-            deliveryCityTypes: null,
-            cinemaCount: 0,
-            cinemaGradeCodes: null,
-            customDeliveryCities: null,
-            deliveryGroups: null,
-            movieCustom: 0,
-            deliveryMovies: null,
-            status: 4,
-            allowAutoDelivery: 0,
-            applyUser: 1293,
-            applyName: 'vv',
-            applyTime: '2019-06-11T09:43:39.529',
-            approvalUser: 4,
-            approvalName: '1admin',
-            approvalTime: '2019-06-11T20:56:16.651',
-            estimateShowCount: 0,
-            estimatePersonCount: 0,
-            estimateCostAmount: null,
-            settlementStatus: 0,
-            settlementUser: 0,
-            settlementName: null,
-            settlementTime: null,
-            payUser: 0,
-            payName: null,
-            payTime: null,
-            freezeAmount: null,
-            needPayAmount: null,
-            recommend: false,
-            refundAmount: null,
-            settlementAmount: null
-        },
-        {
-            id: 54,
-            companyId: 120,
-            name: '111',
-            specification: 15,
-            videoId: 273,
-            videoLogo: 'http://img0.imgtn.bdimg.com/it/u=2387750928,3991855324&fm=26&gp=0.jpg',
-            videoName: '广告片1',
-            customerId: 12,
-            brandId: 4,
-            customerName: '品牌2',
+        plan: {
+            id: 39,
+            name: '234gg',
             beginDate: 20190620,
             endDate: 20190626,
             cycle: 7,
-            budgetAmount: 100,
-            cityCustom: 0,
-            allNation: 0,
-            deliveryCityTypes: null,
-            cinemaCount: 0,
-            cinemaGradeCodes: null,
-            customDeliveryCities: null,
-            deliveryGroups: null,
-            movieCustom: 0,
-            deliveryMovies: null,
-            status: 4,
-            allowAutoDelivery: 0,
-            applyUser: 1323,
-            applyName: '看看账号联系人是否修改2',
-            applyTime: '2019-06-11T14:29:54.405',
-            approvalUser: 0,
-            approvalName: null,
-            approvalTime: null,
-            estimateShowCount: 0,
-            estimatePersonCount: 0,
-            estimateCostAmount: null,
-            settlementStatus: 0,
-            settlementUser: 0,
-            settlementName: null,
-            settlementTime: null,
-            payUser: 0,
-            payName: null,
-            payTime: null,
-            freezeAmount: null,
-            needPayAmount: null,
-            recommend: false,
-            refundAmount: null,
-            settlementAmount: null
-        },
-        {
-            id: 60,
-            companyId: 95,
-            name: '雨',
-            specification: 15,
-            videoId: 273,
-            videoLogo: 'http://img0.imgtn.bdimg.com/it/u=2387750928,3991855324&fm=26&gp=0.jpg',
             videoName: '广告片1',
-            customerId: 15,
-            brandId: 3,
-            customerName: '奔驰',
-            beginDate: 20190613,
-            endDate: 20190619,
-            cycle: 7,
-            budgetAmount: 234,
-            cityCustom: 0,
-            allNation: 1,
-            deliveryCityTypes: null,
-            cinemaCount: 0,
-            cinemaGradeCodes: null,
-            customDeliveryCities: null,
-            deliveryGroups: null,
-            movieCustom: 0,
-            deliveryMovies: null,
-            status: 1,
-            allowAutoDelivery: 0,
-            applyUser: 1293,
-            applyName: 'vv',
-            applyTime: '2019-06-15T13:39:09.327',
-            approvalUser: 0,
-            approvalName: null,
-            approvalTime: null,
-            estimateShowCount: 6861,
-            estimatePersonCount: 75862,
-            estimateCostAmount: 0,
-            settlementStatus: 0,
-            settlementUser: 0,
-            settlementName: null,
-            settlementTime: null,
-            payUser: 0,
-            payName: null,
-            payTime: null,
-            freezeAmount: null,
-            needPayAmount: null,
-            recommend: true,
-            refundAmount: null,
-            settlementAmount: null
-        },
-        {
-            id: 62,
-            companyId: 95,
-            name: '你好啊',
             specification: 15,
-            videoId: 273,
-            videoLogo: 'http://img0.imgtn.bdimg.com/it/u=2387750928,3991855324&fm=26&gp=0.jpg',
-            videoName: '广告片1',
-            customerId: 15,
-            brandId: 3,
-            customerName: '奔驰',
-            beginDate: 20190606,
-            endDate: 20190612,
-            cycle: 7,
-            budgetAmount: 234,
-            cityCustom: 0,
-            allNation: 0,
-            deliveryCityTypes: null,
-            cinemaCount: 0,
-            cinemaGradeCodes: null,
-            customDeliveryCities: null,
-            deliveryGroups: null,
-            movieCustom: 0,
-            deliveryMovies: null,
-            status: 8,
-            allowAutoDelivery: 0,
-            applyUser: 1293,
-            applyName: 'vv',
-            applyTime: '2019-06-11T20:08:20.924',
-            approvalUser: 0,
-            approvalName: null,
-            approvalTime: null,
-            estimateShowCount: 0,
-            estimatePersonCount: 0,
-            estimateCostAmount: null,
-            settlementStatus: 0,
-            settlementUser: 0,
-            settlementName: null,
-            settlementTime: null,
-            payUser: 0,
-            payName: null,
-            payTime: null,
-            freezeAmount: null,
-            needPayAmount: null,
-            recommend: false,
-            refundAmount: null,
-            settlementAmount: null
+            status: 'ONDRAFT'
         },
-        {
-            id: 63,
-            companyId: 95,
-            name: 'nihao',
-            specification: 15,
-            videoId: 273,
-            videoLogo: 'http://img0.imgtn.bdimg.com/it/u=2387750928,3991855324&fm=26&gp=0.jpg',
-            videoName: '广告片1',
-            customerId: 15,
-            brandId: 3,
-            customerName: '奔驰',
-            beginDate: 20190613,
-            endDate: 20190619,
-            cycle: 7,
-            budgetAmount: 1234,
-            cityCustom: 0,
-            allNation: 0,
-            deliveryCityTypes: null,
-            cinemaCount: 0,
-            cinemaGradeCodes: null,
-            customDeliveryCities: null,
-            deliveryGroups: null,
-            movieCustom: 0,
-            deliveryMovies: null,
-            status: 8,
-            allowAutoDelivery: 0,
-            applyUser: 1293,
-            applyName: 'vv',
-            applyTime: '2019-06-12T14:11:55.204',
-            approvalUser: 0,
-            approvalName: null,
-            approvalTime: null,
-            estimateShowCount: 0,
-            estimatePersonCount: 0,
-            estimateCostAmount: null,
-            settlementStatus: 0,
-            settlementUser: 0,
-            settlementName: null,
-            settlementTime: null,
-            payUser: 0,
-            payName: null,
-            payTime: null,
-            freezeAmount: null,
-            needPayAmount: null,
-            recommend: false,
-            refundAmount: null,
-            settlementAmount: null
+        report: {
+            viewCount: 97200,
+            scheduleCount: 6000,
+            cost: 25148181792,
+            dates: [
+                {
+                    date: 20190101,
+                    viewCount: 32400,
+                    scheduleCount: 2000,
+                    cost: 8382727264
+                },
+                {
+                    date: 20190102,
+                    viewCount: 32400,
+                    scheduleCount: 2000,
+                    cost: 8382727264
+                },
+                {
+                    date: 20190103,
+                    viewCount: 32400,
+                    scheduleCount: 2000,
+                    cost: 8382727264
+                }
+            ],
+            lastModifyTime: 1547178378340
         },
-        {
-            id: 64,
-            companyId: 120,
-            name: '1',
-            specification: 30,
-            videoId: 284,
-            videoLogo: 'http://img0.imgtn.bdimg.com/it/u=2387750928,3991855324&fm=26&gp=0.jpg',
-            videoName: '0601修改广告片',
-            customerId: 12,
-            brandId: 4,
-            customerName: '品牌2',
-            beginDate: 20190620,
-            endDate: 20190626,
-            cycle: 7,
-            budgetAmount: 10,
-            cityCustom: 0,
-            allNation: 0,
-            deliveryCityTypes: null,
-            cinemaCount: 0,
-            cinemaGradeCodes: null,
-            customDeliveryCities: null,
-            deliveryGroups: null,
-            movieCustom: 0,
-            deliveryMovies: null,
-            status: 1,
-            allowAutoDelivery: 0,
-            applyUser: 1323,
-            applyName: '看看账号联系人是否修改2',
-            applyTime: '2019-06-12T14:34:37.337',
-            approvalUser: 0,
-            approvalName: null,
-            approvalTime: null,
-            estimateShowCount: 0,
-            estimatePersonCount: 0,
-            estimateCostAmount: null,
-            settlementStatus: 0,
-            settlementUser: 0,
-            settlementName: null,
-            settlementTime: null,
-            payUser: 0,
-            payName: null,
-            payTime: null,
-            freezeAmount: null,
-            needPayAmount: null,
-            recommend: false,
-            refundAmount: null,
-            settlementAmount: null
+        movies: [
+            {
+                movieId: tid,
+                name: title20,
+                poster: 'http://img21.mtime.cn/mt/2012/02/17/102411.25247175_1280X720X2.jpg',
+                release: 20120217,
+                types: [
+                    'Action',
+                    'Thriller',
+                    'Crime'
+                ],
+                score: 7,
+                userPortrait: {
+                    male: 30,
+                    female: 70,
+                    ages: [
+                        {
+                            key: '0~20岁',
+                            value: 50
+                        },
+                        {
+                            key: '20~50岁',
+                            value: 30
+                        }
+                    ]
+                },
+                viewCount: 32400,
+                viewRate: '33.33',
+                scheduleCount: 2000
+            }
+        ],
+        cinemas: [
+            {
+                cinemaId: 10000,
+                name: '四川省宜宾市宜宾县华富国际4K巨幕影城',
+                viewRate: '33.33',
+                scheduleRate: '33.33',
+                costRate: '33.33'
+            },
+            {
+                cinemaId: 10001,
+                name: '河南省许昌市万达影院',
+                viewRate: '33.33',
+                scheduleRate: '33.33',
+                costRate: '33.33'
+            },
+            {
+                cinemaId: 10011,
+                name: '江苏泰兴星轶联和影城',
+                viewRate: '33.33',
+                scheduleRate: '33.33',
+                costRate: '33.33'
+            }
+        ],
+        user: {
+            male: '55',
+            female: '45',
+            ages: [
+                {
+                    v: '30',
+                    k: '30岁以下'
+                },
+                {
+                    v: '70',
+                    k: '30岁以上'
+                }
+            ],
+            cities: [
+                {
+                    v: '10',
+                    k: '北京'
+                },
+                {
+                    v: '10',
+                    k: '北京'
+                }
+            ],
+            grades: [
+                {
+                    v: '30',
+                    k: 'first-tier'
+                },
+                {
+                    v: '40',
+                    k: 'second-tier'
+                }
+            ]
         },
-        {
-            id: 65,
-            companyId: 120,
-            name: '订单',
-            specification: 30,
-            videoId: 284,
-            videoLogo: 'http://img0.imgtn.bdimg.com/it/u=2387750928,3991855324&fm=26&gp=0.jpg',
-            videoName: '0601修改广告片',
-            customerId: 12,
-            brandId: 4,
-            customerName: '品牌2',
-            beginDate: 20190711,
-            endDate: 20190717,
-            cycle: 7,
-            budgetAmount: 457789,
-            cityCustom: 0,
-            allNation: 0,
-            deliveryCityTypes: null,
-            cinemaCount: 0,
-            cinemaGradeCodes: null,
-            customDeliveryCities: null,
-            deliveryGroups: null,
-            movieCustom: 0,
-            deliveryMovies: null,
-            status: 1,
-            allowAutoDelivery: 0,
-            applyUser: 1323,
-            applyName: '看看账号联系人是否修改2',
-            applyTime: '2019-06-12T15:28:17.723',
-            approvalUser: 0,
-            approvalName: null,
-            approvalTime: null,
-            estimateShowCount: 0,
-            estimatePersonCount: 0,
-            estimateCostAmount: null,
-            settlementStatus: 0,
-            settlementUser: 0,
-            settlementName: null,
-            settlementTime: null,
-            payUser: 0,
-            payName: null,
-            payTime: null,
-            freezeAmount: null,
-            needPayAmount: null,
-            recommend: false,
-            refundAmount: null,
-            settlementAmount: null
-        },
-        {
-            id: 66,
-            companyId: 95,
-            name: '陈鹏宇的测试公司',
-            specification: 15,
-            videoId: 273,
-            videoLogo: 'http://img0.imgtn.bdimg.com/it/u=2387750928,3991855324&fm=26&gp=0.jpg',
-            videoName: '广告片1',
-            customerId: 15,
-            brandId: 3,
-            customerName: '奔驰',
-            beginDate: 20190613,
-            endDate: 20190619,
-            cycle: 7,
-            budgetAmount: 1334,
-            cityCustom: 0,
-            allNation: 0,
-            deliveryCityTypes: null,
-            cinemaCount: 0,
-            cinemaGradeCodes: null,
-            customDeliveryCities: null,
-            deliveryGroups: null,
-            movieCustom: 0,
-            deliveryMovies: null,
-            status: 1,
-            allowAutoDelivery: 0,
-            applyUser: 1293,
-            applyName: 'vv',
-            applyTime: '2019-06-12T16:05:56.601',
-            approvalUser: 0,
-            approvalName: null,
-            approvalTime: null,
-            estimateShowCount: 0,
-            estimatePersonCount: 0,
-            estimateCostAmount: null,
-            settlementStatus: 0,
-            settlementUser: 0,
-            settlementName: null,
-            settlementTime: null,
-            payUser: 0,
-            payName: null,
-            payTime: null,
-            freezeAmount: null,
-            needPayAmount: null,
-            recommend: false,
-            refundAmount: null,
-            settlementAmount: null
-        }],
-        totalCount: 46,
-        statusList: [{
-            text: '未知',
-            key: 0
-        },
-        {
-            text: '草稿',
-            key: 1
-        },
-        {
-            text: '待审核',
-            key: 2
-        },
-        {
-            text: '待确认',
-            key: 3
-        },
-        {
-            text: '待支付',
-            key: 4
-        },
-        {
-            text: '已支付',
-            key: 5
-        },
-        {
-            text: '接单中',
-            key: 6
-        },
-        {
-            text: '待执行',
-            key: 7
-        },
-        {
-            text: '执行中',
-            key: 8
-        },
-        {
-            text: '待结算',
-            key: 9
-        },
-        {
-            text: '结算中',
-            key: 10
-        },
-        {
-            text: '已完成',
-            key: 11
-        },
-        {
-            text: '已失效',
-            key: 12
-        }],
-        settlementStatusList: [{
-            text: '未知',
-            key: 0
-        },
-        {
-            text: '结算中',
-            key: 1
-        },
-        {
-            text: '已结算',
-            key: 2
-        },
-        {
-            text: '待结算',
-            key: 3
-        }],
-        tags: [{
-            name: '电影类型',
-            code: 'MOVIE_TYPE',
-            values: [{
-                controlStatus: 1,
+        gradeCodes: [
+            {
+                text: '新一线城市',
+                key: 'new-first-tier'
+            },
+            {
+                text: '一线城市',
+                key: 'first-tier'
+            },
+            {
+                text: '二线城市',
+                key: 'second-tier'
+            },
+            {
+                text: '三线城市',
+                key: 'third-tier'
+            },
+            {
+                text: '四线城市',
+                key: 'four-tier'
+            },
+            {
+                text: '五线城市',
+                key: 'five-tier'
+            }
+        ],
+        planStatus: [
+            {
+                text: '未知',
+                key: 'UNKNOWN'
+            },
+            {
+                text: '草稿',
+                key: 'ONDRAFT'
+            },
+            {
+                text: '待审核',
+                key: 'UNAPPROVE'
+            },
+            {
+                text: '待确认',
+                key: 'UNCONFIRM'
+            },
+            {
+                text: '待支付',
+                key: 'UNPAY'
+            },
+            {
+                text: '已支付',
+                key: 'BEPAY'
+            },
+            {
+                text: '接单中',
+                key: 'BEORDER'
+            },
+            {
+                text: '待执行',
+                key: 'UNEXECUTE'
+            },
+            {
+                text: '执行中',
+                key: 'ONEXECUTE'
+            },
+            {
+                text: '待结算',
+                key: 'UNSETTLEMENT'
+            },
+            {
+                text: '结算中',
+                key: 'SETTLEMENT'
+            },
+            {
+                text: '已完成',
+                key: 'FINISH'
+            },
+            {
+                text: '已失效',
+                key: 'INVALID'
+            }
+        ],
+        movieTypes: [
+            {
                 text: '儿童',
                 key: 'Kids'
             },
             {
-                controlStatus: 1,
                 text: '历史',
                 key: 'History'
             },
             {
-                controlStatus: 1,
                 text: '纪录片',
                 key: 'Documentary'
             },
             {
-                controlStatus: 1,
                 text: '战争',
                 key: 'War'
             },
             {
-                controlStatus: 1,
                 text: '戏曲',
                 key: 'Opera'
             },
             {
-                controlStatus: 1,
                 text: '音乐',
                 key: 'Music'
             },
             {
-                controlStatus: 1,
                 text: '歌舞',
                 key: 'Musical'
             },
             {
-                controlStatus: 1,
                 text: '犯罪',
                 key: 'Crime'
             },
             {
-                controlStatus: 1,
                 text: '传记',
                 key: 'Biography'
             },
             {
-                controlStatus: 1,
                 text: '青春',
                 key: 'Youth'
             },
             {
-                controlStatus: 1,
                 text: '奇幻',
                 key: 'Fantasy'
             },
             {
-                controlStatus: 1,
                 text: '短片',
                 key: 'Short'
             },
             {
-                controlStatus: 1,
                 text: '惊悚',
                 key: 'Thriller'
             },
             {
-                controlStatus: 1,
                 text: '冒险',
                 key: 'Adventure'
             },
             {
-                controlStatus: 1,
                 text: '科幻',
                 key: 'Sci-Fi'
             },
             {
-                controlStatus: 1,
                 text: '动作',
                 key: 'Action'
             },
             {
-                controlStatus: 1,
                 text: '家庭',
                 key: 'Family'
             },
             {
-                controlStatus: 1,
                 text: '动画',
                 key: 'Animation'
             },
             {
-                controlStatus: 1,
                 text: '励志',
                 key: 'Encouragement'
             },
             {
-                controlStatus: 1,
                 text: '喜剧',
                 key: 'Comedy'
             },
             {
-                controlStatus: 1,
                 text: '悬疑',
                 key: 'Mystery'
             },
             {
-                controlStatus: 1,
                 text: '爱情',
                 key: 'Romance'
             },
             {
-                controlStatus: 1,
                 text: '剧情',
                 key: 'Drama'
-            }]
-        },
-        {
-            name: '年龄',
-            code: 'PLAN_GROUP_AGE',
-            values: [{
-                controlStatus: 1,
-                text: '20岁以下',
-                key: '20year'
-            },
-            {
-                controlStatus: 1,
-                text: '20-24岁',
-                key: '20-24year'
-            },
-            {
-                controlStatus: 1,
-                text: '30-34岁',
-                key: '30-34year'
-            },
-            {
-                controlStatus: 1,
-                text: '25-29岁',
-                key: '25-29year'
-            },
-            {
-                controlStatus: 1,
-                text: '35-39岁',
-                key: '35-39year'
-            },
-            {
-                controlStatus: 1,
-                text: '40岁以上',
-                key: '40year'
-            }]
-        },
-        {
-            name: '性别',
-            code: 'PLAN_GROUP_SEX',
-            values: [{
-                controlStatus: 1,
-                text: '未知',
-                key: 'unknow'
-            },
-            {
-                controlStatus: 1,
-                text: '男',
-                key: 'man'
-            },
-            {
-                controlStatus: 1,
-                text: '女',
-                key: 'woman'
-            }]
-        }],
-        cinemaGradeList: [{
-            controlStatus: 1,
-            text: '四星级',
-            key: 'four'
-        },
-        {
-            controlStatus: 1,
-            text: '五星级',
-            key: 'five'
-        },
-        {
-            controlStatus: 1,
-            text: '三星级',
-            key: 'three'
-        },
-        {
-            controlStatus: 1,
-            text: '二星级',
-            key: 'two'
-        },
-        {
-            controlStatus: 1,
-            text: '一星级',
-            key: 'one'
-        }],
-        deliveryCityTypeList: [{
-            text: '票仓城市Top20',
-            key: 'top20'
-        },
-        {
-            text: '新一线城市',
-            key: 'new-first-tier'
-        },
-        {
-            text: '一线城市',
-            key: 'first-tier'
-        },
-        {
-            text: '二线城市',
-            key: 'second-tier'
-        },
-        {
-            text: '三线城市',
-            key: 'third-tier'
-        },
-        {
-            text: '四线城市',
-            key: 'four-tier'
-        },
-        {
-            text: '无线城市',
-            key: 'five-tier'
-        }]
+            }
+        ]
     })
+}
 
-    return await mockGet(query, {
-        items: [{
-            id: 55077,
-            nameCn: '唐人街探案3',
-            releaseDate: 20200125,
-            type: ['剧情', '动作'],
-            director: ['导演1', '导演2'],
-            actor: ['演员1', '演员2'],
-            wish: 88655,
-            image: null
-        },
-        {
-            id: 55078,
-            nameCn: '囧妈',
-            releaseDate: 20200125,
-            type: ['剧情', '喜剧'],
-            director: ['导演1', '导演2'],
-            actor: ['演员1', '演员2'],
-            wish: 6985,
-            image: null
-        },
-        {
-            id: 55165,
-            nameCn: '中国女排',
-            releaseDate: 20200125,
-            type: ['剧情', '运动'],
-            director: ['导演1', '导演2'],
-            actor: ['演员1', '演员2'],
-            wish: 3691,
-            image: null
-        },
-        {
-            id: 55076,
-            nameCn: '摸金校尉之九幽将军',
-            releaseDate: 20191001,
-            type: ['动作', '奇幻'],
-            director: ['导演1', '导演2'],
-            actor: ['演员1', '演员2'],
-            wish: 248425,
-            image: null
-        }],
-        totalCount: 20
+ /**
+  * 分页获取影院的效果报表
+  * @param id id
+  * https://yapi.aiads-dev.com/project/139/interface/api/4740
+  */
+
+  export async function cinemasReport(id: string = '', query: any = {}) {
+    const res = await get(`xadvert/v1/plans/${id}/report/cinemas`, query)
+    return res
+    return await mockGet(id, {
+        'items|10': [
+            {
+                cinemaId: tid,
+                name: title20,
+                viewCount: tid,
+                scheduleCount: tid,
+                cost: tid
+            }
+        ],
+        totalCount: 50
+    })
+}
+
+/**
+ * 分页获取城市的效果报表
+ * @param id id
+ * @param query query
+ * https://yapi.aiads-dev.com/project/139/interface/api/4749
+ */
+export async function citiesReport(id: string = '', query: any = {}) {
+    // const res = await get(`xadvert/v1/plans/${id}/report/cities`, query)
+    // return res
+    return await mockGet(id, {
+        'items|10': [
+            {
+                name: title20,
+                viewCount: tid,
+                scheduleCount: tid,
+                cost: tid
+            }
+        ],
+        totalCount: 50
     })
 }
 
@@ -956,10 +577,405 @@ export async function popPartners(data: any) {
 }
 
 /**
- * 计划
+ * 计划列表
  * @param data
+ * https://yapi.aiads-dev.com/project/128/interface/api/1251
  */
 export async function popPlans(data: any) {
-    const res = await get('/xadvert/plans', data)
-    return res
+    // const res = await get('/xadvert/plans', data)
+    // return res
+    return await mockGet( data, {
+        settlementStatusList: [
+            {
+                text: '未知',
+                key: 0
+            },
+            {
+                text: '结算中',
+                key: 1
+            },
+            {
+                text: '已结算',
+                key: 2
+            },
+            {
+                text: '待结算',
+                key: 3
+            }
+        ],
+        statusList: [
+            {
+                text: '未知',
+                key: 0
+            },
+            {
+                text: '草稿',
+                key: 1
+            },
+            {
+                text: '待审核',
+                key: 2
+            },
+            {
+                text: '已暂停',
+                key: 3
+            },
+            {
+                text: '待支付',
+                key: 4
+            },
+            {
+                text: '已支付',
+                key: 5
+            },
+            {
+                text: '待执行',
+                key: 6
+            },
+            {
+                text: '执行中',
+                key: 7
+            },
+            {
+                text: '已结束',
+                key: 8
+            },
+            {
+                text: '已取消',
+                key: 9
+            },
+            {
+                text: '已拒绝',
+                key: 10
+            }
+        ],
+        levelTypeList: [
+            {
+                text: '未知',
+                key: 0
+            },
+            {
+                text: '广告计划',
+                key: 1
+            },
+            {
+                text: '广告片',
+                key: 2
+            }
+        ],
+        totalCount: 0,
+        'items|10': [
+            {
+                id: tid,
+                name: title20
+            }
+        ]
+    })
 }
+
+
+/**
+ * 广告计划效果报表
+ * 当无法指定广告计划id时（入口在菜单栏），参数id传-1  表示按照产品的规则，显示一个默认的广告计划报表
+ * https://yapi.aiads-dev.com/project/139/interface/api/4731
+ * @param id
+ */
+ export async function getPlansReport(id: number = -1) {
+    // const res = await get(`xadvert/v1/plans/${id}/report`)
+    // return res
+    return await mockGet(id, {
+      plan: {
+        id: 39,
+        name: '234gg',
+        beginDate: 20190620,
+        endDate: 20190626,
+        cycle: 7,
+        videoName: '广告片1',
+        specification: 15,
+        status: 'ONDRAFT'
+      },
+      report: {
+        viewCount: 97200,
+        scheduleCount: 6000,
+        cost: 25148181792,
+        dates: [{
+            date: 20190101,
+            viewCount: 32400,
+            scheduleCount: 2000,
+            cost: 8382727264
+          },
+          {
+            date: 20190102,
+            viewCount: 22400,
+            scheduleCount: 3000,
+            cost: 6382727264
+          },
+          {
+            date: 20190103,
+            viewCount: 12400,
+            scheduleCount: 1000,
+            cost: 5382727264
+          }
+        ],
+        lastModifyTime: 1547178378340
+      },
+      'movies|12': [{
+          movieId: tid,
+          name: title20,
+          poster: 'http://img21.mtime.cn/mt/2012/02/17/102411.25247175_1280X720X2.jpg',
+          release: 20120217,
+          types: [
+            'Kids',
+            'Thriller'
+          ],
+          score: 10,
+          userPortrait: {
+            male: 1,
+            female: 22,
+            ages: [
+                {
+                    value: '10',
+                    key: '0～20'
+                },
+                {
+                    value: '10',
+                    key: '20～24'
+                },
+                {
+                    value: '20',
+                    key: '25～29'
+                },
+                {
+                    value: '30',
+                    key: '30～34'
+                },
+                {
+                    value: '20',
+                    key: '35～39'
+                },
+                {
+                    value: '10',
+                    key: '40＋'
+                }
+            ]
+          },
+          viewCount: 32400,
+          viewRate: '33.33',
+          scheduleCount: 2000
+        }
+      ],
+      'cinemas|3': [{
+          cinemaId: tid,
+          name: title20,
+          viewRate: tid,
+          scheduleRate: tid,
+          costRate: tid
+        }
+      ],
+      user: {
+        male: '55',
+        female: '45',
+        ages: [{
+            v: '30',
+            k: '30岁以下'
+          },
+          {
+            v: '70',
+            k: '30岁以上'
+          }
+        ],
+        cities: [{
+            v: '10',
+            k: '北京'
+          },
+          {
+            v: '101',
+            k: '上海'
+          }
+        ],
+        grades: [{
+            v: '30',
+            k: 'first-tier'
+          },
+          {
+            v: '40',
+            k: 'second-tier'
+          }
+        ]
+      },
+      gradeCodes: [
+            {
+                text: '新一线城市',
+                key: 'new-first-tier'
+            },
+            {
+                text: '一线城市',
+                key: 'first-tier'
+            },
+            {
+                text: '二线城市',
+                key: 'second-tier'
+            },
+            {
+                text: '三线城市',
+                key: 'third-tier'
+            },
+            {
+                text: '四线城市',
+                key: 'four-tier'
+            },
+            {
+                text: '五线城市',
+                key: 'five-tier'
+            }
+        ],
+      planStatus: [
+            {
+                text: '未知',
+                key: 'UNKNOWN'
+            },
+            {
+                text: '草稿',
+                key: 'ONDRAFT'
+            },
+            {
+                text: '待审核',
+                key: 'UNAPPROVE'
+            },
+            {
+                text: '待确认',
+                key: 'UNCONFIRM'
+            },
+            {
+                text: '待支付',
+                key: 'UNPAY'
+            },
+            {
+                text: '已支付',
+                key: 'BEPAY'
+            },
+            {
+                text: '接单中',
+                key: 'BEORDER'
+            },
+            {
+                text: '待执行',
+                key: 'UNEXECUTE'
+            },
+            {
+                text: '执行中',
+                key: 'ONEXECUTE'
+            },
+            {
+                text: '待结算',
+                key: 'UNSETTLEMENT'
+            },
+            {
+                text: '结算中',
+                key: 'SETTLEMENT'
+            },
+            {
+                text: '已完成',
+                key: 'FINISH'
+            },
+            {
+                text: '已失效',
+                key: 'INVALID'
+            }
+        ],
+      movieTypes: [
+            {
+                text: '儿童',
+                key: 'Kids'
+            },
+            {
+                text: '历史',
+                key: 'History'
+            },
+            {
+                text: '纪录片',
+                key: 'Documentary'
+            },
+            {
+                text: '战争',
+                key: 'War'
+            },
+            {
+                text: '戏曲',
+                key: 'Opera'
+            },
+            {
+                text: '音乐',
+                key: 'Music'
+            },
+            {
+                text: '歌舞',
+                key: 'Musical'
+            },
+            {
+                text: '犯罪',
+                key: 'Crime'
+            },
+            {
+                text: '传记',
+                key: 'Biography'
+            },
+            {
+                text: '青春',
+                key: 'Youth'
+            },
+            {
+                text: '奇幻',
+                key: 'Fantasy'
+            },
+            {
+                text: '短片',
+                key: 'Short'
+            },
+            {
+                text: '惊悚',
+                key: 'Thriller'
+            },
+            {
+                text: '冒险',
+                key: 'Adventure'
+            },
+            {
+                text: '科幻',
+                key: 'Sci-Fi'
+            },
+            {
+                text: '动作',
+                key: 'Action'
+            },
+            {
+                text: '家庭',
+                key: 'Family'
+            },
+            {
+                text: '动画',
+                key: 'Animation'
+            },
+            {
+                text: '励志',
+                key: 'Encouragement'
+            },
+            {
+                text: '喜剧',
+                key: 'Comedy'
+            },
+            {
+                text: '悬疑',
+                key: 'Mystery'
+            },
+            {
+                text: '爱情',
+                key: 'Romance'
+            },
+            {
+                text: '剧情',
+                key: 'Drama'
+            }
+        ]
+    })
+  }
