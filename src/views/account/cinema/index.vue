@@ -1,9 +1,9 @@
 <template>
-  <div class="page home-bg">
-    <h3 class="userTitle">
-      <span class="nav-top-title">影院管理</span>
+  <div class="page">
+    <h3 class="plan-title">
+      <span class="adver-tiele">影院管理</span>
     </h3>
-    <div class="flex-box  search-input">
+    <div class="search-input">
       <Input v-model="dataForm.searchKey"  placeholder="请输入专资编码或影院名称" />
       <Button  type="primary" class="bth-search" @click="seachList">
         <Icon type="ios-search" size="22"/>
@@ -129,79 +129,23 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import '~@/site/common.less';
-
+.page {
+  padding: 30px 0 0 20px;
+}
 .search-input {
   margin-left: 30px;
-}
-.colBg {
-  font-size: 14px;
-  height: 50px;
-  line-height: 50px;
-  padding: 0 30px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  background: @c-head-bg;
+  justify-content: center;
+  padding: 10px 0;
 }
-.page {
-  background: #fff;
-  height: 100%;
-  font-size: 14px;
-  .ivu-select {
-    width: auto;
-    margin-left: 25px;
-    /deep/ .ivu-select-selection {
-      height: 40px;
-      /deep/ .ivu-select-input {
-        height: 40px;
-        width: 400px;
-        margin-bottom: 30px;
-      }
-    }
-    /deep/ .ivu-select-dropdown {
-      /deep/ li, /deep/ .ivu-select-loading {
-        line-height: 35px;
-        height: 35px;
-      }
-      /deep/ .ivu-select-item {
-        line-height: 25px;
-        height: 35px;
-      }
-    }
-  }
-  .flex-box {
-    span {
-      display: block;
-      height: 40px;
-      width: 80px;
-      color: #fff;
-      text-align: center;
-      padding-top: 8px;
-      background: @c-button;
-    }
-  }
-  .userTitle {
-    .colBg;
-    .addUser {
-      width: 140px;
-      height: 40px;
-      line-height: 40px;
-      display: block;
-      text-align: center;
-      color: #fff;
-      cursor: pointer;
-      background: @c-button;
-    }
-  }
-  .tableTotal {
-    padding: 0 30px 20px;
-    display: flex;
-    justify-content: space-between;
-    color: #989898;
-  }
-  .tables {
-    margin: 20px;
+.plan-title {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #fff;
+  .adver-tiele {
+    color: #fff;
+    font-size: 24px;
+    font-weight: normal;
   }
 }
 /deep/ .ivu-input-wrapper {
@@ -209,7 +153,107 @@ export default class Main extends ViewBase {
   .ivu-input {
     width: 400px;
     line-height: 40px;
+    font-size: 14px;
     height: 40px;
+  }
+}
+.bth-search {
+  border-radius: 0 5px 5px 0;
+  .button-style(#fff, #00202d);
+}
+/deep/ .ivu-table-wrapper > .ivu-spin-fix {
+  background: rgba(0, 0, 0, 0);
+  border: none;
+}
+/deep/ .ivu-input-wrapper,
+/deep/ .ivu-input {
+  background: rgba(255, 255, 255, 0.4);
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  border-radius: 5px 0 0 5px;
+  &::placeholder {
+    font-size: 14px;
+    color: #00202d;
+  }
+}
+.list-box {
+  background: rgba(0, 32, 45, .8);
+  margin: 0 20px;
+  border-radius: 5px;
+  padding-bottom: 40px;
+}
+.list-table {
+  position: relative;
+  background: rgba(0, 0, 0, 0);
+  border-radius: 5px;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 61px;
+    border-radius: 5px 5px 0 0;
+    background: rgba(0, 32, 45, 0.3);
+  }
+  /deep/ .ivu-table-header {
+    position: relative;
+  }
+  /deep/ .ivu-table-row {
+    border-bottom: 1px solid #00202d;
+  }
+}
+/deep/ .ivu-table-wrapper {
+  border-radius: 5px;
+  min-height: 280px;
+  position: relative;
+  /deep/ .ivu-table-header th {
+    height: 60px;
+    background: rgba(0, 32, 45, 0.3);
+    color: #fff;
+    line-height: 60px;
+    span {
+      font-size: 14px;
+    }
+  }
+  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-row {
+    background: rgba(255, 255, 255, 0);
+    /deep/ td {
+      color: #fff;
+      background: rgba(0, 0, 0, 0);
+      a {
+        color: #4fa6bb;
+      }
+    }
+  }
+  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+    background: rgba(255, 255, 255, 0);
+  }
+  /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
+    span {
+      color: #fff;
+      font-size: 14px;
+    }
+  }
+
+  /deep/ .ivu-table-tip {
+    line-height: 200px;
+    /deep/ td {
+      color: #fff;
+      background: rgba(255, 255, 255, 0);
+    }
   }
 }
 </style>
