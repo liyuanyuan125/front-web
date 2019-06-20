@@ -580,6 +580,15 @@ export default class Main extends ViewBase {
   watchdataForms(val: any[]) {
     this.dataForm.receipts = val.map(it => it.fileId)
   }
+
+  @Watch('dataForm', { deep: true })
+  watchdataForm(val: any[]) {
+    if (this.dataForm.remark.length > 50) {
+      this.dataForm.remark = ''
+      info('备注不可大于50字')
+      return
+    }
+  }
 }
 </script>
 
