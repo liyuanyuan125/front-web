@@ -133,11 +133,12 @@
                 <Icon type="md-add-circle" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
                 取消投放
               </p>
-              <p v-if="!kolIds.includes(this.accout == 1 ? row.id : row.accountDataId)" @click="collects(row.id)">
+              <p v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)" 
+              @click="collects(acount == 1 ? row.id : row.accountDataId)">
                 <Icon type="md-heart" style="margin-top: 5px;font-size: 17px; color: #CA7273" />
                 收藏
               </p>
-              <p v-else @click="cancelcollects(row.id)">
+              <p v-else @click="cancelcollects(acount == 1 ? row.id : row.accountDataId)">
                 <Icon type="md-heart" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
                 取消收藏
               </p>
@@ -348,7 +349,9 @@ export default class Main extends ViewBase {
   }
 
   areabox(check: boolean) {
-    this.areaShow = check
+    if ( this.acount == 1) {
+      this.areaShow = check
+    }
   }
 
   formatNum(data: any) {

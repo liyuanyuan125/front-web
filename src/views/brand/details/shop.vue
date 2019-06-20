@@ -50,7 +50,7 @@
 </template>
 
 <script lang='ts'>
-import {Component} from 'vue-property-decorator'
+import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import pagination from '@/components/page.vue'
 import areaSelect from '@/components/areaSelect/AreaSelect.vue'
@@ -64,7 +64,7 @@ import { shopList, createList, editList, delShopList } from '@/api/brandList'
   }
 })
 export default class Main extends ViewBase {
-  brandId: string = ''
+  @Prop({ type: Number, default: 0}) brandId!: number
 
   total = 0
   pageList = {
@@ -93,7 +93,6 @@ export default class Main extends ViewBase {
   }
 
   mounted() {
-    this.brandId = this.$route.params.brandId
     this.tableList()
   }
 

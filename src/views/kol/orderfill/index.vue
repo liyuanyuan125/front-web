@@ -572,10 +572,13 @@ export default class Main extends ViewBase {
             ...message
           }
         })
-
-        const query = {
+        const forms = clean({
           ...this.form,
+          brandid: '',
           brandId: this.form.brandid,
+        })
+        const query = {
+          ...forms,
           draft: id ? id : '',
           channelCode: this.$route.params.code,
           totalFee: this.mongysum,

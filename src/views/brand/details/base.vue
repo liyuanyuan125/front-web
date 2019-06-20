@@ -54,7 +54,7 @@
 </template>
 
 <script lang='ts'>
-import {Component} from 'vue-property-decorator'
+import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import eventDate from '../eventBus'
 import { baseList, editBase } from '@/api/brandList'
@@ -62,8 +62,9 @@ import { baseList, editBase } from '@/api/brandList'
 
 @Component
 export default class Main extends ViewBase {
+  @Prop({type: Number, default: 0}) id!: number
+
   form = {}
-  id: any = ''
 
   readonly = false // 默认不编辑
   baseList: any = {}
@@ -83,7 +84,6 @@ export default class Main extends ViewBase {
   }
 
   mounted() {
-    this.id = this.$route.params.id
     this.queryList()
   }
 
@@ -101,6 +101,14 @@ export default class Main extends ViewBase {
         fileId: item.logo
       }
     ]
+
+    // 给moredetail 带enName 和 tradeCodeName  item.tradeCode
+    const tradeName: any = this.tradeCodeList.find((trade: any) => trade.key == item.tradeCode) || {}
+    const detail = {
+      enName: item.enName,
+      tradeCodeName: tradeName.text
+    }
+    eventDate.$emit('passParamer', detail)
 
     localStorage.setItem('brandImg', JSON.stringify(imgList))
     } catch (ex) {

@@ -63,11 +63,11 @@
 
         <template style="marin-top: 100px" slot-scope="{ row }" slot="action">
           <div class="table-action">
-            <p v-if="!row.collected" @click="collects(row.id)">
+            <p v-if="row.collected == 1" @click="collects(row.channelDataId)">
               <img width="14px" src="./assets/collect.png">
               收藏
             </p>
-            <p v-else @click="cancelcollects(row.id)">
+            <p v-else @click="cancelcollects(row.channelDataId)">
               <img width="14px" src="./assets/collectcheck.png">
               取消收藏
             </p>
@@ -130,11 +130,11 @@
           </template>
           <template style="marin-top: 100px" slot-scope="{ row }" slot="action">
             <div class="table-action">
-              <p v-if="!row.collected" @click="collects(row.id)">
+              <p v-if="row.collected == 1" @click="collects(row.channelDataId)">
                 <img width="14px" src="./assets/collect.png">
                 收藏
               </p>
-              <p v-else @click="cancelcollects(row.id)">
+              <p v-else @click="cancelcollects(row.channelDataId)">
                 <img width="14px" src="./assets/collectcheck.png">
                 取消收藏
               </p>
@@ -159,13 +159,14 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { kolShoppingCar, delShopping } from '@/api/kolList.ts'
+import { kolShoppingCar, delShopping, addcollet } from '@/api/kolList.ts'
 import Header from './header.vue'
 import Detail from './detail.vue'
 import { formatCurrency } from '@/fn/string'
 import { uniqBy } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
 import Step from './step.vue'
+import { delcollect } from '@/api/mycollect.ts'
 
 @Component({
   components: {
@@ -272,7 +273,7 @@ export default class DlgEditCinema extends ViewBase {
       },
       {
         title: '操作',
-        align: 'center',
+        align: 'left',
         width: 160,
         slot: 'action'
       }
@@ -283,11 +284,46 @@ export default class DlgEditCinema extends ViewBase {
   // 删除购物车
   async cancelShop(id: any) {
     try {
+      const index = this.titles.findIndex(
+        (it: any) => it == this.$route.params.code
+      )
       await delShopping({
         channelCode: this.titles[
-          this.$route.params.id ? Number(this.$route.params.id) : 0
+          this.$route.params.id ? index : 0
         ],
         channelDataId: id
+      })
+      this.init()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  // 加入收藏
+  async collects(id: any) {
+    try {
+      const index = this.titles.findIndex(
+        (it: any) => it == this.$route.params.id
+      )
+      await addcollet({
+        channelType: index + 4,
+        dataId: id
+      })
+      this.init()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  // 取消收藏
+  async cancelcollects(id: any) {
+    try {
+      const index = this.titles.findIndex(
+        (it: any) => it == this.$route.params.id
+      )
+      await delcollect({
+        channelType: index + 4,
+        dataIdList: [id]
       })
       this.init()
     } catch (ex) {
@@ -468,6 +504,19 @@ export default class DlgEditCinema extends ViewBase {
 
   async allcollect() {
     try {
+      const index = this.titles.findIndex(
+        (it: any) => it == this.$route.params.id
+      )
+      if (this.sumList.length == 0) {
+
+      } else {
+        const sum = this.sumList.filter((it: any) => it.collected == 1)
+        await addcollet({
+          channelType: index + 4,
+          dataId: sum.map((it: any) => it.channelDataId ).join(',')
+        })
+        this.init()
+      }
     } catch (ex) {
       this.handleError(ex)
     }
