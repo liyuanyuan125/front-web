@@ -4,8 +4,8 @@
       <!-- <img src="./assets/brand-logo.png" width="160" /> -->
       <Upload v-model="imageList" :max-count="1" accept="images/*" :isEdit="flagImg" confirm-on-del></Upload>
       <!-- <img src="./assets/add-icon.png" v-if="!flagImg" class="base-upload-img"/> -->
-      <p class="title">Mercedes－Benz 待添加</p>
-      <p class="types">汽车类</p>
+      <p class="title">{{detailMes.enName}}</p>
+      <p class="types">{{detailMes.tradeCodeName}}</p>
       <ul class="tabs-title">
         <li v-for="item in tabs" :key="item.key" :class="{'active': item.route == tabActive}" 
         @click="handleTabs(item)" >{{item.name}}</li>
@@ -18,7 +18,7 @@
 </template>
 
 <script lang='ts'>
-import {Component} from 'vue-property-decorator'
+import {Component, Prop, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import eventBus from './eventBus'
 import Upload from '@/components/uploadOnly'
@@ -30,9 +30,13 @@ import Upload from '@/components/uploadOnly'
   }
 })
 export default class Main extends ViewBase {
+  @Prop({type: Number, default: 0}) id!: number
+  @Prop({type: Number, default: 0}) brandId!: number
+
+
   tabActive: any = ''
   flagImg = false
-
+  detailMes = {}
   imageList: any = []
   tabs = [
     { name: '基础信息', key: 1, route: 'brand-moredetail-base'},
@@ -46,8 +50,12 @@ export default class Main extends ViewBase {
     eventBus.$on('uploadImg', (flag: any) => {
       this.flagImg = flag
     })
+    eventBus.$on('passParamer', (mes: any) => {
+      this.detailMes = mes
+    })
     const fileds: any = localStorage.getItem('brandImg')
     this.imageList = JSON.parse(fileds)
+
   }
 
   handleTabs(item: any) {

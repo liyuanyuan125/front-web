@@ -1,9 +1,6 @@
 <template>
-  <div :class="['upload-box',
-    readonly ? 'upload-box-readonly' : '',
-    canAdd ? '' : 'upload-box-cannot-add']">
+  <div :class="['upload-box']">
     <form  ref="form" v-if="isEdit">
-      <!-- v-if="canAdd" -->
       <label class="upload-add-in">
         <img src='./assets/add-icon.png' width="20" class="edit-btn" />
         <input type="file" :accept="accept" @change="onChange" />
@@ -12,19 +9,12 @@
     <ul name="list" tag="ul" class="upload-list">
       <li v-for="(it, i) in inValue" :key="it.uqid" class="upload-item">
         <img :src="it.url" v-if="it.url">
-        <!-- <div class="action-cover" v-if="it.status == 'done'">
-        </div> -->
-        <div class="loading-cover" v-if="it.status == 'loading'">
-          <TinyLoading/>
-        </div>
-        <div class="progress-cover" v-else-if="it.status == 'uploading'">
-          <Progress :percent="it.percent" status="success" hide-info/>
-        </div>
+        <Progress :percent="it.percent" :status="it.progressStatus" class="progress" v-if="isUploading"/>
       </li>
     </ul>
-    <Modal v-model="viewerShow" title="查看图片" width="888">
+    <!-- <Modal v-model="viewerShow" title="查看图片" width="888">
       <img :src="viewerImage" class="viewer-image">
-    </Modal>
+    </Modal> -->
   </div>
 </template>
 
@@ -32,13 +22,14 @@
 // doc: https://github.com/kaorun343/vue-property-decorator
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import TinyLoading from '@/components/TinyLoading.vue'
+// import TinyLoading from '@/components/TinyLoading.vue'
 import Uploader from '@/util/Uploader'
 import { alert, confirm } from '@/ui/modal'
 import { random } from '@/fn/string'
 import { slice } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { FileItem } from './types'
+
 
 const genUqid = () => random('upload')
 
@@ -52,6 +43,8 @@ interface UploadItem extends FileItem {
   /** 百分比 */
   percent: number
   /** 错误消息，内部使用 */
+  /** 进度条状态 */
+  progressStatus: string
   error: string
 }
 
@@ -65,6 +58,7 @@ const defItem: UploadItem = {
   percent: 0,
   uqid: '',
   error: '',
+  progressStatus: 'active',
 }
 
 const allDone = (item: FileItem | UploadItem) =>
@@ -79,11 +73,7 @@ const hasChange = (alist: FileItem[], blist: FileItem[]) => {
   return !isEqual(alistDone, blistDone)
 }
 
-@Component({
-  components: {
-    TinyLoading
-  }
-})
+@Component
 export default class Upload extends ViewBase {
   /**
    * 值本身，可以使用 v-model 进行双向绑定
@@ -103,7 +93,7 @@ export default class Upload extends ViewBase {
   /**
    * 是否为只读，默认为 false
    */
-  @Prop({ type: Boolean, default: false }) readonly!: boolean
+  // @Prop({ type: Boolean, default: false }) readonly!: boolean
 
   /**
    * 是否在删除前进行 confirm 提示，默认为 false
@@ -122,6 +112,8 @@ export default class Upload extends ViewBase {
 
   inValue: UploadItem[] = []
 
+  isUploading = false
+
   viewerShow = false
   viewerImage = ''
 
@@ -129,9 +121,9 @@ export default class Upload extends ViewBase {
     return this.inValue.length < this.maxCount
   }
 
-  get isUploading() {
-    return !this.inValue.every(it => it.status == 'done' || it.status == 'fail')
-  }
+  // get isUploading() {
+  //   return !this.inValue.every(it => it.status == 'done' || it.status == 'fail')
+  // }
 
   @Watch('value', { deep: true, immediate: true })
   async watchValue(value: FileItem[]) {
@@ -167,6 +159,7 @@ export default class Upload extends ViewBase {
       const uqid = genUqid()
       // 快速响应原则：只要选择，直接添加
       this.inValue = []
+      this.isUploading = true
       this.inValue.push({
         url: '',
         fileId: '',
@@ -176,6 +169,7 @@ export default class Upload extends ViewBase {
         status: 'loading',
         percent: 0,
         uqid,
+        progressStatus: 'active',
         error: '',
       })
 
@@ -186,7 +180,6 @@ export default class Upload extends ViewBase {
 
   uploadHandlers(uqid: string) {
     return {
-      thumb: this.onUploadThumb.bind(this, uqid),
       begin: this.onUploadBegin.bind(this, uqid),
       progress: this.onUploadProgress.bind(this, uqid),
       done: this.onUploadDone.bind(this, uqid),
@@ -194,11 +187,6 @@ export default class Upload extends ViewBase {
       end: this.onUploadEnd.bind(this, uqid),
     }
   }
-
-  onUploadThumb(uqid: string, { thumb }: any) {
-    // TODO: 暂时不用 thumb，chrome 预览图报错
-  }
-
   onUploadBegin(uqid: string) {
     const item = this.inValue.find(it => it.uqid === uqid)!
     item.status = 'uploading'
@@ -216,6 +204,8 @@ export default class Upload extends ViewBase {
     item.url = url
     item.fileId = fileId
     item.status = 'done'
+    item.progressStatus = 'success'
+    this.isUploading = false
 
     const file = this.inValue[0].fileId
     localStorage.setItem('fileId', file)
@@ -226,6 +216,8 @@ export default class Upload extends ViewBase {
     const item = this.inValue.find(it => it.uqid === uqid)!
     item.error = error
     item.status = 'fail'
+    item.percent = 100
+    item.progressStatus = 'wrong'
   }
 
   onUploadEnd(uqid: string) {
@@ -239,19 +231,19 @@ export default class Upload extends ViewBase {
     }
   }
 
-  onView(url: string) {
-    this.viewerImage = url
-    this.viewerShow = true
-  }
+  // onView(url: string) {
+  //   this.viewerImage = url
+  //   this.viewerShow = true
+  // }
 
   // async onDel(i: number) {
   //   this.confirmOnDel && await confirm(this.delConfirmMsg)
   //   this.inValue.splice(i, 1)
   // }
 
-  doDel(i: number) {
-    this.inValue.splice(i, 1)
-  }
+  // doDel(i: number) {
+  //   this.inValue.splice(i, 1)
+  // }
 }
 </script>
 
@@ -338,5 +330,9 @@ export default class Upload extends ViewBase {
     justify-content: center;
     align-items: center;
   }
+}
+.progress {
+  position: absolute;
+  text-align: center;
 }
 </style>

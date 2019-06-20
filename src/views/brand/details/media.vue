@@ -37,7 +37,6 @@
       </li>
     </ul>
     <ul class="no-data-list" v-if="list.length == 0">暂无数据</ul>
-    <!-- <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination> -->
 
     <!-- 添加媒体平台 -->
       <Modal v-model="visible.visMedia" :title="visible.title" width="700" class="modal-dlg">
@@ -66,7 +65,7 @@
 </template>
 
 <script lang='ts'>
-import {Component} from 'vue-property-decorator'
+import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import pagination from '@/components/page.vue'
 import {confirm} from '@/ui/modal'
@@ -78,13 +77,8 @@ import { querySelectList, mediaList, createMedia, editMedia, delMadia } from '@/
   }
 })
 export default class Main extends ViewBase {
-  brandId: string = ''
+  @Prop({type: Number, default: 0}) brandId!: number
 
-  // total = 0
-  // pageList = {
-  //   pageIndex: 1,
-  //   pageSize: 20
-  // }
   list = []
 
   visible: any = {
@@ -106,7 +100,6 @@ export default class Main extends ViewBase {
   }
 
   mounted() {
-    this.brandId = this.$route.params.brandId
     this.querySelectList()
     this.tableList()
   }
@@ -192,10 +185,6 @@ export default class Main extends ViewBase {
     this.visible.visMedia = false
     this.form = {}
   }
-  // uplist(size: any) {
-  //   this.pageList.pageIndex = size
-  //   this.tableList()
-  // }
 }
 
 </script>
