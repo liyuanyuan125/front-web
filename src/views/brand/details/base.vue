@@ -95,23 +95,10 @@ export default class Main extends ViewBase {
       this.countryCodeList = countryCodeList || []
       this.tradeCodeList = tradeCodeList || []
 
-      // 编辑头像
-    const imgList: any = [
-      {
-        url: item.logoUrl,
-        fileId: item.logo
-      }
-    ]
-
     // 给moredetail 带enName 和 tradeCodeName  item.tradeCode
-    const tradeName: any = this.tradeCodeList.find((trade: any) => trade.key == item.tradeCode) || {}
-    const detail = {
-      enName: item.enName,
-      tradeCodeName: tradeName.text
-    }
-    eventDate.$emit('passParamer', detail)
+    // eventDate.$emit('passParamer', detail)
 
-    localStorage.setItem('brandImg', JSON.stringify(imgList))
+    // localStorage.setItem('brandImg', JSON.stringify(imgList))
     } catch (ex) {
       this.handleError(ex)
     }
