@@ -2,16 +2,16 @@
   <div class="sex-wp">
     <div class="row">
       <div class="cell">
-        <div>71.81%</div>
+        <div>{{data.malePercent}}%</div>
         <Icon size="30" color="#00b6cc" type="ios-man" />
       </div>
       <div class="cell">
-        <div>33%</div>
+        <div>{{data.femalePercent}}%</div>
         <Icon size="30" color="#da6c70" type="ios-woman" />
       </div>
     </div>
     <div>
-      <Progress :percent="data.femalePercent"
+      <Progress :percent="data.malePercent"
                 class="sex-percent"
                 stroke-color="#00b6cc"
                 hide-info />

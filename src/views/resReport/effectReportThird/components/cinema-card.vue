@@ -36,7 +36,7 @@
         </dd>
       </dl>
 
-      <dl v-if=" data.costRate.data && data.costRate.data.length > 0 ">
+      <!-- <dl v-if=" data.costRate.data && data.costRate.data.length > 0 ">
         <dt>{{data.costRate.listName}}</dt>
         <dd>
           <ul class="cinema-list">
@@ -49,7 +49,7 @@
             </li>
           </ul>
         </dd>
-      </dl>
+      </dl> -->
     </div>
   </ReportPane>
 </template>
@@ -88,7 +88,7 @@ export default class CinemaCard extends Vue {
   justify-content: space-between;
   align-items: center;
   dl {
-    width: 33%;
+    width: 49%;
     border-right: 1px solid rgba(49, 145, 170, 0.5);
     padding: 0 15px;
     dt {

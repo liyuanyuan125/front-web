@@ -43,7 +43,7 @@
                   <ul>
                     <li v-for="(it, i) in item.userPortrait.ages"
                         :key="i">
-                      <AgeBar :value="it.value"
+                      <AgeBar :value="(it.value)/100"
                               :name="it.key"
                               :isMax="it.isMax"></AgeBar>
                     </li>
@@ -82,6 +82,7 @@ import AgeBar from './x-age-bar.vue'
 export default class MoviesCard extends Vue {
   @Prop({ type: Number, default: () => 0 }) moviesTotal?: number
   @Prop({ type: Array, default: () => [] }) data!: any[]
+
 
   get title() {
     return `覆盖影片（ ${this.moviesTotal}部 ）`

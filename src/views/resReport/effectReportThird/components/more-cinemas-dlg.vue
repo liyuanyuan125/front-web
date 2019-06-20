@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinemasReport } from '@/api/effectReport'
+import { cinemasReport } from '@/api/effectReportThird'
 
 @Component({
   components: {}
@@ -64,11 +64,6 @@ export default class MoreCinemasDlg extends ViewBase {
     {
       title: '曝光场次',
       key: 'scheduleCount',
-      align: 'center'
-    },
-    {
-      title: '支出金额',
-      key: 'cost',
       align: 'center'
     }
   ]

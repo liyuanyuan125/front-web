@@ -141,11 +141,6 @@ export default class Index extends ViewBase {
         title: '曝光场次',
         key: 'scheduleCount',
         align: 'center'
-      },
-      {
-        title: '支出金额',
-        key: 'cost',
-        align: 'center'
       }
     ],
     data: [
@@ -157,6 +152,32 @@ export default class Index extends ViewBase {
       // }
     ]
   }
+
+  typelist: any = [
+    {controlStatus: 1, text: '儿童', key: 'Kids'},
+    {controlStatus: 1, text: '历史', key: 'History'},
+    {controlStatus: 1, text: '纪录片', key: 'Documentary'},
+    {controlStatus: 1, text: '战争', key: 'War'},
+    {controlStatus: 1, text: '戏曲', key: 'Opera'},
+    {controlStatus: 1, text: '音乐', key: 'Music'},
+    {controlStatus: 1, text: '歌舞', key: 'Musical'},
+    {controlStatus: 1, text: '犯罪', key: 'Crime'},
+    {controlStatus: 1, text: '传记', key: 'Biography'},
+    {controlStatus: 1, text: '青春', key: 'Youth'},
+    {controlStatus: 1, text: '奇幻', key: 'Fantasy'},
+    {controlStatus: 1, text: '短片', key: 'Short'},
+    {controlStatus: 1, text: '惊悚', key: 'Thriller'},
+    {controlStatus: 1, text: '冒险', key: 'Adventure'},
+    {controlStatus: 1, text: '科幻', key: 'Sci-Fi'},
+    {controlStatus: 1, text: '动作', key: 'Action'},
+    {controlStatus: 1, text: '家庭', key: 'Family'},
+    {controlStatus: 1, text: '动画', key: 'Animation'},
+    {controlStatus: 1, text: '励志', key: 'Encouragement'},
+    {controlStatus: 1, text: '喜剧', key: 'Comedy'},
+    {controlStatus: 1, text: '悬疑', key: 'Mystery'},
+    {controlStatus: 1, text: '爱情', key: 'Romance'},
+    {controlStatus: 1, text: '剧情', key: 'Drama'}
+  ]
 
   moviesTotal: number = 0
 
@@ -201,7 +222,7 @@ export default class Index extends ViewBase {
       data: []
     },
     costRate: {
-      listName: '支出金额 TOP10',
+      listName: '',
       data: []
     }
   }
@@ -221,7 +242,7 @@ export default class Index extends ViewBase {
       },
       {
         name: 'name2',
-        text: '支出金额',
+        text: '',
         key: 2
       }
     ],
@@ -282,7 +303,7 @@ export default class Index extends ViewBase {
         },
         {
           name: 'name2',
-          text: '支出金额',
+          text: '',
           key: 2
         }
       ],
@@ -367,7 +388,7 @@ export default class Index extends ViewBase {
     this.init(this.planId)
   }
 
-  async init(id: number = -1) {
+  async init(id: any) {
     try {
       const {
         data: {
@@ -385,20 +406,22 @@ export default class Index extends ViewBase {
           }
         }
       } = await getPlansReport(id)
-      const name = getName( plan.status, planStatus)
+      // const name = getName( plan.status, planStatus)
+      const a = String(plan.beginDate).slice(0, 4) + '-' + String(plan.beginDate).slice(4, 6)
+      + '-' + String(plan.beginDate).slice(6, 8)
+      const b = String(plan.endDate).slice(0, 4) + '-' + String(plan.endDate).slice(4, 6)
+      + '-' + String(plan.endDate).slice(6, 8)
+      const sum = ((new Date(b).getTime() + (16 * 60 * 60 * 1000))
+        - (new Date(a).getTime() - (8 * 60 * 60 * 1000))) / (24 * 60 * 60 * 1000)
       this.bannerData = {
-        item0: `${plan.beginDate} ~ ${plan.endDate}`,
-        item1: plan.cycle,
-        item2: plan.videoName,
-        item3: plan.specification,
-        item4: getName( plan.status, planStatus),
+        item0: a + '~' + b,
+        item1: sum,
         item5: formatYell(lastModifyTime),
         item6: plan.name
       }
       this.totalData = {
         item0: report.viewCount,
         item1: report.scheduleCount,
-        item2: report.cost
       }
       if ( cinemas && cinemas.length > 0 ) {
         this.cinemasData.totalCount = cinemas.length
@@ -433,8 +456,9 @@ export default class Index extends ViewBase {
             poster: it.poster,
             name: it.name,
             score: it.score,
-            time: it.release,
-            type: getNames(it.types, movieTypes).join(' / ') + '（中国大陆）',
+            time: String(it.release).slice(0, 4) + '-' + String(it.release).slice(4, 6)
+            + '-' + String(it.release).slice(6, 8),
+            type: getNames(it.types, this.typelist).join(' / ') + '（中国大陆）',
             viewCount: it.viewCount, // 曝光人次
             scheduleCount: it.scheduleCount, // 曝光场次
             viewRate: it.viewRate, // 曝光人次占比
