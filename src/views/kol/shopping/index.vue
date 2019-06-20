@@ -507,11 +507,16 @@ export default class DlgEditCinema extends ViewBase {
       const index = this.titles.findIndex(
         (it: any) => it == this.$route.params.id
       )
-      await addcollet({
-        channelType: index + 4,
-        dataIdList: this.sumList.map((it: any) => it.channelDataId )
-      })
-      this.init()
+      if (this.sumList.length == 0) {
+
+      } else {
+        const sum = this.sumList.filter((it: any) => it.collected == 1)
+        await addcollet({
+          channelType: index + 4,
+          dataId: sum.map((it: any) => it.channelDataId ).join(',')
+        })
+        this.init()
+      }
     } catch (ex) {
       this.handleError(ex)
     }
