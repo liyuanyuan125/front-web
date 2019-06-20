@@ -7,7 +7,7 @@
     <div v-if="tableDate.length > 0 || tableDate1.length > 0" class="section">
       <Table
         :columns="columns"
-        :data="tableDate"
+        :data="tableDatecheck"
         ref="selection"
         @on-selection-change="singleSelect"
         @on-select-all="selectAll"
@@ -167,6 +167,7 @@ import { uniqBy } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
 import Step from './step.vue'
 import { delcollect } from '@/api/mycollect.ts'
+import { info } from '@/ui/modal'
 
 @Component({
   components: {
@@ -281,6 +282,23 @@ export default class DlgEditCinema extends ViewBase {
     return columns
   }
 
+  get tableDatecheck() {
+    const id = this.tableDate.map((it: any) => it.id)
+    const msg = this.tableDate.map((it: any) => {
+      if (this.checkId.includes(it.id)) {
+        return {
+          ...it,
+          _checked: true
+        }
+      } else {
+        return {
+          ...it
+        }
+      }
+    })
+    return msg
+  }
+
   // 删除购物车
   async cancelShop(id: any) {
     try {
@@ -288,9 +306,7 @@ export default class DlgEditCinema extends ViewBase {
         (it: any) => it == this.$route.params.code
       )
       await delShopping({
-        channelCode: this.titles[
-          this.$route.params.id ? index : 0
-        ],
+        channelCode: this.$route.params.id ? this.$route.params.id : 'weibo',
         channelDataId: id
       })
       this.init()
@@ -497,6 +513,20 @@ export default class DlgEditCinema extends ViewBase {
 
   async alldel() {
     try {
+      const index = this.titles.findIndex(
+        (it: any) => it == this.$route.params.id
+      )
+      if (this.sumList.length == 0) {
+        info('至少选择一个账号')
+      } else {
+        await delShopping({
+          channelCode: this.$route.params.id ? this.$route.params.id : 'weibo',
+          channelDataId: this.sumList.map((it: any) => it.channelDataId ).join(',')
+        })
+        this.init()
+        this.checkId = []
+        this.sumList = []
+      }
     } catch (ex) {
       this.handleError(ex)
     }
@@ -508,9 +538,12 @@ export default class DlgEditCinema extends ViewBase {
         (it: any) => it == this.$route.params.id
       )
       if (this.sumList.length == 0) {
-
+        info('至少选择一个账号')
       } else {
-        const sum = this.sumList.filter((it: any) => it.collected == 1)
+        const sum = this.sumList.filter((it: any) => it.collected == 1 && it.controlStatus == 1)
+        if (sum.length == 0) {
+          return
+        }
         await addcollet({
           channelType: index + 4,
           dataId: sum.map((it: any) => it.channelDataId ).join(',')
