@@ -13,7 +13,7 @@
               <li v-for="(it) in filmList" :key="it.id"
                 :class="['film-item']">
                 <div class="film-top">
-                  <img :src="it.image ? it.image : defaultImg" onerror="defaultImg" class="film-cover">
+                  <img :src="it.image ? it.image : defaultImg" @onerror="defaultImg" class="film-cover">
                   <div style="position: relative">
                     <p class="film-title" :title="it.movieName">{{it.movieName}}</p>
                     <p class="film-title" style="margin-bottom: 20px">{{it.movieName}}</p>
@@ -50,7 +50,7 @@
                 <div class="film-buttom">
                   <dl style="margin-bottom: 15px">
                     <dd>受众年龄：</dd>
-                    <dt>{{it.matching}}%</dt>
+                    <dt v-for="item in it.ageCodes" :key="item">{{item}}</dt>
                   </dl>
                   <dl>
                     <dd>投放周期：</dd>
@@ -67,7 +67,7 @@
           <h3 class="layout-titles">覆盖影院
             <span class="item-detail">影院总数</span>
             <span class="custom" @click="exportData"><Exportfile /></span>
-            <span class="custom" style="margin-right: 160px">自定义投放影院</span>
+            <!-- <span class="custom" style="margin-right: 160px">自定义投放影院</span> -->
           </h3>
           <div class="item-top">
            
@@ -206,10 +206,11 @@ export default class App extends ViewBase {
   total = 0
   data: any = {}
   filmList: any = []
-  commendData: any = []
+  commendata: any = null
   loading = false
   single = false
   tableDate1: any = []
+  deatilItem: any = {}
 
   get columns() {
     const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
@@ -302,7 +303,6 @@ export default class App extends ViewBase {
   }
 
   created() {
-    this.init()
     this.seach()
     this.detail()
   }
@@ -311,6 +311,8 @@ export default class App extends ViewBase {
     try {
       const { data } = await adverdetail(this.$route.params.setid)
       this.filmList = data.planMovies || []
+      this.deatilItem = data.item || {}
+      this.cinemaFind()
     } catch (ex) {
       this.handleError(ex)
     }
@@ -326,11 +328,6 @@ export default class App extends ViewBase {
   currentChangeHandle(val: any) {
     this.pageSize = val
     this.seach()
-  }
-
-  async init() {
-    const { data } = await orienteering({})
-    this.filmList = data.items || []
   }
 
   seach() {
@@ -406,7 +403,7 @@ export default class App extends ViewBase {
       await getCheme({
         planId: this.$route.params.setid,
         allowAutoDelivery: this.single ? 1 : 0,
-        planRecommed: { ...this.commendData }
+        planRecommed: { ...this.commendata }
       })
       this.$emit('input', {
         id: 3,
@@ -428,19 +425,31 @@ export default class App extends ViewBase {
   }
 
   get defaultImg() {
-    return 'this.src="' + require('../assets/error.png') + '"'
+    return 'this.src="' + require('./assets/error.png') + '"'
   }
 
   async cinemaFind() {
     try {
+       (this.$Spin as any).show()
+      const msg = {
+        budgetAmount: this.deatilItem.budgetAmount,
+        specification: this.deatilItem.specification,
+        beginDate: this.deatilItem.beginDate,
+        endDate: this.deatilItem.endDate,
+        deliveryCityTypes: this.deatilItem.deliveryCityTypes,
+        cityIds: this.deatilItem.cityIds,
+        sexCodes: this.deatilItem.sexCodes,
+        ageCodes: this.deatilItem.ageCodes,
+        movieIds: this.deatilItem.movieIds,
+        cinemaIds: this.deatilItem.cinemaIds
+      }
       const { data } = await getRecommend({
-        budgetAmount: 100000,
-        specification: 15,
-        beginDate: 20190701,
-        endDate: 20190702
+        ...msg
       })
-      this.commendData = data
+      this.commendata = data || {}
+      ; (this.$Spin as any).hide()
     } catch (ex) {
+       (this.$Spin as any).hide()
       this.handleError(ex)
     }
   }
@@ -460,9 +469,11 @@ export default class App extends ViewBase {
     })
   }
 
-  @Watch('dataitem', { deep: true })
-  watchDataitem(val: any) {
-    this.cinemaFind()
+  @Watch('commendata', { deep: true })
+  watchCommendata(val: any) {
+    if (val) {
+      // ; (this.$Spin as any).hide()
+    }
   }
 }
 </script>

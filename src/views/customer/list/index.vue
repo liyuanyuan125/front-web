@@ -380,4 +380,28 @@ export default class Main extends ViewBase {
   font-weight: 500;
   transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
 }
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 24px;
+  color: #00202d;
+}
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 24px;
+  color: #00202d;
+}
 </style>

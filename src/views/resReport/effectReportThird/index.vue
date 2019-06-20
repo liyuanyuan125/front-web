@@ -51,7 +51,7 @@ import SelectPlanDlg from './components/select-plan-dlg.vue'
 import MoreCinemasDlg from './components/more-cinemas-dlg.vue'
 import MoreCitysDlg from './components/more-citys-dlg.vue'
 import MoreMoviesDlg from './components/more-movies-dlg.vue'
-import { getPlansReport } from '@/api/effectReport'
+import { getPlansReport } from '@/api/effectReportThird'
 import { findIndex, at, keyBy } from 'lodash'
 import { KeyText } from '@/util/types'
 

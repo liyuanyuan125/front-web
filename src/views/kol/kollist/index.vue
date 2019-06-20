@@ -580,10 +580,12 @@ export default class Main extends ViewBase {
 
   // 订单填写
   next() {
+    const shopList = this.yudingList.filter((it: any) => it.controlStatus == 1)
+    sessionStorage.setItem('shopList', JSON.stringify(this.yudingList))
     this.$router.push({
-      name: 'kol-shopping',
+      name: 'order-orderfill',
       params: {
-        id: this.title[this.type]
+        code: this.$route.params.id || 'weibo'
       }
     })
   }

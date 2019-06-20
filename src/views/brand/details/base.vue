@@ -63,6 +63,7 @@ import { baseList, editBase } from '@/api/brandList'
 @Component
 export default class Main extends ViewBase {
   @Prop({type: Number, default: 0}) id!: number
+  @Prop({type: Number, default: 0}) brandId!: number
 
   form = {}
 
@@ -89,28 +90,15 @@ export default class Main extends ViewBase {
 
   async queryList() {
     try {
-      const { data: {item, tradeCodeList, countryCodeList} } = await baseList(this.id)
+      const { data: {item, tradeCodeList, countryCodeList} } = await baseList(this.brandId)
       this.baseList = item
       this.countryCodeList = countryCodeList || []
       this.tradeCodeList = tradeCodeList || []
 
-      // 编辑头像
-    const imgList: any = [
-      {
-        url: item.logoUrl,
-        fileId: item.logo
-      }
-    ]
-
     // 给moredetail 带enName 和 tradeCodeName  item.tradeCode
-    const tradeName: any = this.tradeCodeList.find((trade: any) => trade.key == item.tradeCode) || {}
-    const detail = {
-      enName: item.enName,
-      tradeCodeName: tradeName.text
-    }
-    eventDate.$emit('passParamer', detail)
+    // eventDate.$emit('passParamer', detail)
 
-    localStorage.setItem('brandImg', JSON.stringify(imgList))
+    // localStorage.setItem('brandImg', JSON.stringify(imgList))
     } catch (ex) {
       this.handleError(ex)
     }
@@ -123,7 +111,7 @@ export default class Main extends ViewBase {
       const { data } = await editBase({
         ...this.form,
         logo: fileId,
-        id: this.id,
+        id: this.brandId,
       })
       this.readonly = false
       eventDate.$emit('uploadImg', false)
