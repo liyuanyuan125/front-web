@@ -85,7 +85,9 @@
             <dl style="margin-bottom: 15px">
               <dd>受众年龄：</dd>
               <dt v-if="it.ageCodes && it.ageCodes.length > 0">
-                <span v-for="item in it.ageCodes" :key="item">{{item || '-'}}</span></dt>
+                <span v-for="item in it.ageCodes" :key="item">{{item || '-'}}</span>
+                <span v-if="index != it.ageCodes.length -1" style="margin: 0px 4px">/</span>
+              </dt>
               <dt v-else>-</dt>
             </dl>
             <dl>
