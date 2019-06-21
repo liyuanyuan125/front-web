@@ -119,7 +119,7 @@ export default class SearchPage extends ViewBase {
   @Watch('typeOn')
   watchTypeOn(type: string) {
     const params = type == 'figure' ? {} : { type }
-    this.$router.push({ name: 'search', params })
+    // this.$router.push({ name: 'search', params })
   }
 }
 </script>
