@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { citiesReport } from '@/api/effectReport'
+import { citiesReport } from '@/api/effectReportThird'
 
 @Component({
   components: {}

@@ -40,7 +40,7 @@ export default class PriceItem extends ViewBase {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '~@/site/lib.less';
 
 .price-item {

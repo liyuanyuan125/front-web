@@ -153,6 +153,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { queryList,
   productsList,
+  delOrderId,
   brandsList,
   ordersdradt,
   addBrand,
@@ -409,9 +410,21 @@ export default class Main extends ViewBase {
     this.singleSelect(this.tableDate.filter((it: any) => it._checked))
   }
 
-  del(index: any) {
-    this.tableDate.splice(index, 1)
-    this.singleSelect(this.tableDate.filter((it: any) => it._checked))
+  async del(index: any) {
+    try {
+      if (this.$route.params.id) {
+        const num = this.tableDate[index]
+        if (num && num.orderItemId) {
+          await delOrderId(num.orderItemId)
+        }
+      }
+      this.checkId.filter((it: any) => it != index)
+      this.sunlist.filter((it: any) => it.index == index)
+      this.tableDate.splice(index, 1)
+      this.singleSelect(this.tableDate.filter((it: any) => it._checked))
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   async inits() {
@@ -555,7 +568,7 @@ export default class Main extends ViewBase {
           this.prodId = msgId.includes(this.form.productId) ? this.form.productId : msgId[0]
         }
         const msg = this.tableDate.map((it: any) => {
-          const item = it.orderItemList
+          const item = it.orderItemList || {}
           const message = clean({
             ...item,
             pictureFileIds: item.pictureFileIds ? item.pictureFileIds.join(',') : '',

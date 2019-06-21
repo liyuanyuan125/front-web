@@ -20,7 +20,7 @@
 
       <div class="summary-count">
         <h3 class="summary-title">进行的推广计划</h3>
-        <div class="pop-count">{{item.planOnExecuteCount}}</div>
+        <div class="pop-count">{{item.onExecuteCount}}</div>
       </div>
     </section>
 
@@ -37,23 +37,16 @@
           </ul>
         </Pane>
 
-        <Pane title="评论分析" :more="{name: 'brand-homedetail-comment', params: {id}}" class="analyze-pane">
-          <div
-            class="analyze-summary"
-            v-if="analyze.negativeTrend != 0"
-          >负面占比{{analyze.negativeTrend > 0 ? '上升' : '下降'}} {{Math.abs(analyze.negativeTrend)}}%</div>
+        <Pane
+          title="近7日评论情绪"
+          :more="{name: 'brand-homedetail-comment', params: { id }}"
+          class="analyze-pane"
+        >
+          <PieChart title="近7日评论情绪" :data="commentData" v-if="commentData"/>
 
-          <ul class="analyze-list">
-            <li class="analyze-item flex-mid">
-              <em>{{analyze.positive}}%</em>正面
-            </li>
-            <li class="analyze-item flex-mid">
-              <em>{{analyze.negative}}%</em>负面
-            </li>
-            <li class="analyze-item flex-mid">
-              <em>{{analyze.neutral}}%</em>中立
-            </li>
-          </ul>
+          <WordCloud v-bind="wordCloudGood" v-if="wordCloudGood"/>
+
+          <WordCloud v-bind="wordCloudBad" v-if="wordCloudBad"/>
         </Pane>
       </div>
 
@@ -62,7 +55,7 @@
           <img :src="item.figure || item.logoUrl" class="item-img">
         </figure>
 
-        <nav class="sub-bar pane-like" v-if="type == 'brand'">
+        <nav class="sub-bar pane-like" v-if="type == 'brand' && subList.length > 0">
           <label class="sub-name">产　品</label>
           <div class="sub-main">
             <a
@@ -96,68 +89,46 @@
       </div>
 
       <div class="content-right">
-        <Pane title="KOL推广" :more="{name: 'kol-orderlist'}" class="kol-pane">
-          <div class="count-stats" v-if="kol.pendCount > 0 || kol.runningCount > 0">
-            <label>{{kol.pendCount}}个待处理</label>
-            <label>{{kol.runningCount}}个执行中</label>
-          </div>
-          <div class="count-stats" v-else>
-            <label>暂无推广计划</label>
-            <router-link :to="{}">去创建 &gt;</router-link>
-          </div>
-
-          <ul class="kol-list">
-            <li
-              v-for="it in kol.recommendList"
-              :key="it.id"
-              class="kol-item"
-              :class="{
-                'item-recommended': it.recommended
-              }"
+        <Pane title="热门影片" class="film-pane" v-if="hotFilmGroup">
+          <Tabs v-model="hotFilmTab">
+            <TabPane
+              v-for="it in hotFilmGroup"
+              :key="it.name"
+              :name="it.name"
+              :label="it.name"
             >
-              <figure class="kol-figure">
-                <img :src="it.avatar" class="kol-img">
-              </figure>
-              <a class="kol-add">加入投放</a>
-              <div class="kol-name text-omit">
-                <i :class="`platform-icon-${it.type}`"></i>
-                <span>{{it.name}}</span>
+              <div class="film-wrap">
+                <ul class="film-list">
+                  <li
+                    v-for="sub in it.list"
+                    :key="sub.id"
+                    class="film-item"
+                    :class="{'film-item-hot': sub.hasShow}"
+                  >
+                    <figure class="film-figure">
+                      <img :src="sub.movieMainPic" class="film-img">
+                    </figure>
+                    <div class="film-main">
+                      <div class="film-name text-omit">{{sub.name}}</div>
+                      <div class="film-index">鲸娱指数：{{sub.jyIndex}}</div>
+                      <div class="film-date">{{sub.date}}上映</div>
+                      <div class="film-stats text-omit" v-if="sub.hasShow">
+                        已上映{{sub.showDays}}天，累计{{sub.custom}}
+                      </div>
+                      <div class="film-stats text-omit" v-else>
+                        预估票房：<em>{{sub.customPredict}}</em>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
               </div>
-              <div class="kol-title text-omit" v-if="it.title">{{it.title}}</div>
-              <div class="kol-fans text-omit" v-if="it.fans">
-                关注数：<em>{{it.fans}}</em>
-              </div>
-            </li>
-          </ul>
-        </Pane>
-
-        <Pane title="影片合作" :more="{name: 'film-filmorder-movielist'}" class="film-pane">
-          <div class="count-stats" v-if="film.pendCount > 0 || film.runningCount > 0">
-            <label>{{film.pendCount}}个待处理</label>
-            <label>{{film.runningCount}}个执行中</label>
-          </div>
-          <div class="count-stats" v-else>
-            <label>暂无合作计划</label>
-            <router-link :to="{}">去申请 &gt;</router-link>
-          </div>
-
-          <div class="film-recommend item-recommended">
-            <figure class="film-figure">
-              <img :src="film.recommend.cover" class="film-img">
-            </figure>
-            <div class="film-main">
-              <div class="film-name text-omit">{{film.recommend.name}}</div>
-              <div class="film-date">{{film.recommend.date}}</div>
-              <div class="film-type text-omit">{{film.recommend.type}}</div>
-              <div class="film-rate">
-                用户匹配度：<em>{{film.recommend.rate}}</em>
-              </div>
-            </div>
-          </div>
-
-          <div class="film-acts">
-            <Button type="primary" class="film-apply">申请合作</Button>
-          </div>
+            </TabPane>
+          </Tabs>
+          <Button
+            type="primary"
+            :to="{ name: 'pop-planlist-add', params: { id: 0 } }"
+            class="button-put"
+          >投放映前广告</Button>
         </Pane>
       </div>
     </section>
@@ -171,6 +142,8 @@ import Pane from './pane.vue'
 import TrendChart from '@/components/trendChart'
 import BScroll from '@better-scroll/core'
 import ThrowPane from './throwPane.vue'
+import PieChart from './pieChart.vue'
+import WordCloud from '@/components/chartsGroup/wordCloud'
 
 import { dayOffsetRange } from '@/util/date'
 import FetchData from './fetchData'
@@ -180,7 +153,9 @@ import { Type } from './types'
   components: {
     Pane,
     TrendChart,
-    ThrowPane
+    ThrowPane,
+    PieChart,
+    WordCloud
   }
 })
 export default class BrandHomeLayout extends ViewBase {
@@ -203,55 +178,25 @@ export default class BrandHomeLayout extends ViewBase {
   // 综合热度
   trendList = []
 
-  analyze = {}
+  commentData: any = null
+
+  wordCloudGood: any = null
+
+  wordCloudBad: any = null
 
   // 产品数据
-  subList = []
+  subList: any = []
+
+  // 产品导航所用
+  bscroll: BScroll | null = null
+
+  bscrollOn = false
 
   // 广告投放数据
   putting = []
 
-  kol = {
-    pendCount: 2,
-    runningCount: 2,
-    recommendList: [
-      {
-        id: 1,
-        type: 'weibo',
-        name: '莫言清风不识字',
-        avatar: 'https://randomuser.me/api/portraits/women/66.jpg',
-        title: '中国非著名骑车评论员、鲁迅文学院卫生管理员',
-        fans: '94,869',
-        recommended: true
-      },
-
-      {
-        id: 2,
-        type: 'wechat',
-        name: '西门吹雪',
-        avatar: 'https://randomuser.me/api/portraits/women/60.jpg',
-        title: '汽车达人',
-        fans: '85,869'
-      }
-    ]
-  }
-
-  film = {
-    pendCount: 0,
-    runningCount: 0,
-    recommend: {
-      id: 1,
-      name: '莫言清风不识字',
-      cover: 'https://picsum.photos/id/268/320/480',
-      date: '2019-09-30上映',
-      type: '剧情/冒险',
-      rate: '88%'
-    }
-  }
-
-  bscroll: BScroll | null = null
-
-  bscrollOn = false
+  hotFilmTab = ''
+  hotFilmGroup: any = null
 
   created() {
     this.init()
@@ -260,14 +205,26 @@ export default class BrandHomeLayout extends ViewBase {
   init() {
     this.initHome()
     this.initTrend()
-    this.isBrand && this.initSub()
+    // 产品调整，暂时不显示品牌下的产品
+    // this.isBrand && this.initSub()
     this.initPutting()
   }
 
   async initHome() {
-    const { item, analyze } = await this.fetchData.getHome()
+    const {
+      item,
+      commentData,
+      wordCloudGood,
+      wordCloudBad,
+      hotFilmGroup
+    } = await this.fetchData.getHome()
+
     this.item = item
-    this.analyze = analyze
+    this.commentData = commentData
+    this.wordCloudGood = wordCloudGood
+    this.wordCloudBad = wordCloudBad
+    this.hotFilmTab = hotFilmGroup && hotFilmGroup[0].name || ''
+    this.hotFilmGroup = hotFilmGroup
   }
 
   async initTrend() {
@@ -476,6 +433,15 @@ export default class BrandHomeLayout extends ViewBase {
 .analyze-pane {
   border-top: 0;
   padding-top: 20px;
+  padding-bottom: 19px;
+  // 由于 WordCloud 设计不良，这里需要强制覆盖一些样式
+  /deep/ .word-cloud {
+    margin-top: 20px;
+    .title-box {
+      text-align: left;
+      text-indent: 18px;
+    }
+  }
 }
 
 .baidu-list {
@@ -559,7 +525,7 @@ export default class BrandHomeLayout extends ViewBase {
 
 .item-figure {
   position: relative;
-  height: 308px;
+  height: 342px;
   padding: 20px;
   box-sizing: border-box;
 }
@@ -722,21 +688,54 @@ export default class BrandHomeLayout extends ViewBase {
 }
 
 .film-pane {
-  margin-top: 10px;
-  padding-bottom: 20px;
-}
-
-.film-recommend {
-  display: flex;
-  margin: 44px 0 0 11px;
-  &::before {
-    top: -28px;
+  position: relative;
+  overflow: hidden;
+  /deep/ .ivu-tabs {
+    overflow: visible;
+  }
+  /deep/ .ivu-tabs-bar {
+    position: absolute;
+    top: -35px;
+    left: 105px;
+    color: #fff;
+    border-bottom: 0;
+    margin-bottom: 0;
+  }
+  /deep/ .ivu-tabs-tab {
+    padding: 0 8px;
+    line-height: 16px;
+    font-size: 12px;
+    border-radius: 8px;
+    margin-right: 10px;
+  }
+  /deep/ .ivu-tabs-tab-active {
+    color: #000;
+    background-color: #32c3e1;
+  }
+  /deep/ .ivu-tabs-ink-bar {
+    display: none;
   }
 }
 
+.film-wrap {
+  max-height: 520px;
+  overflow: auto;
+}
+
+.film-list {
+  color: #fff;
+  margin-top: 8px;
+}
+
+.film-item {
+  position: relative;
+  display: flex;
+  margin: 0 0 26px 12px;
+}
+
 .film-figure {
-  width: 110px;
-  height: 158px;
+  width: 78px;
+  height: 108px;
 }
 
 .film-img {
@@ -745,33 +744,52 @@ export default class BrandHomeLayout extends ViewBase {
 }
 
 .film-main {
-  width: 120px;
-  margin: -8px 0 0 8px;
+  position: relative;
+  width: 152px;
+  margin: -8px 0 0 10px;
   font-size: 12px;
   line-height: 2;
 }
 
 .film-name {
-  font-size: 20px;
+  font-size: 16px;
 }
 
-.film-rate {
-  color: #ff6d6d;
-  margin-top: 18px;
+.film-stats {
+  position: absolute;
+  left: 0;
+  bottom: -5px;
   em {
     font-size: 16px;
   }
 }
 
-.film-acts {
-  margin-top: 10px;
-  text-align: center;
+.film-item-hot {
+  &::before {
+    content: '正在热映';
+    position: absolute;
+    top: 0;
+    left: 0;
+    line-height: 24px;
+    padding: 0 7px;
+    font-size: 14px;
+    text-align: center;
+    color: #fff;
+    background-color: #ff6d6d;
+  }
+
+  .film-stats {
+    color: #ff8400;
+  }
 }
 
-.film-apply {
-  width: 108px;
-  height: 30px;
+.button-put {
+  display: block;
+  width: 180px;
+  line-height: 48px;
   padding: 0;
-  .button-style(14px);
+  border-radius: 88px;
+  margin: 25px auto;
+  .button-style(#fff, #4ae0fd);
 }
 </style>

@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="word-cloud">
     <div style="text-align:center">
       <div class="title-box">
         <span v-if=" title !=='' ">{{title}}</span>
@@ -21,8 +21,8 @@
     <Row type="flex" justify="center" align="middle">
       <Col :span="24">
         <div class="wordCloud-wp">
-          <div ref="refChart" v-if="initDone" style="width: 100%; height: 300px"></div>
-          <div v-else class="loading-wp" style="width: 100%; height: 300px">
+          <div ref="refChart" v-if="initDone" :style="chartStyle"></div>
+          <div v-else class="loading-wp" :style="chartStyle">
             <TinyLoading/>
           </div>
         </div>
@@ -60,8 +60,23 @@ export default class WordCloudChart extends ViewBase {
   @Prop({ type: Array, default: () => [] }) dict1!: any[]
   @Prop({ type: Array, default: () => [] }) color!: any[]
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
+
+  /** 前景色列表 */
+  @Prop({ type: Array, default: () => ['#a3d5e6'] }) foreColor!: string[]
+
+  /** 补丁参数：图表区域高度 */
+  @Prop({ type: Number, default: 300 }) chartHeight!: number
+
   currentIndex: number = this.currentTypeIndex
+
   myOption: any = {}
+
+  get chartStyle() {
+    return {
+      width: '100%',
+      height: `${this.chartHeight}px`
+    }
+  }
 
   currentTypeChange(index: number) {
     if (!this.initDone) {
@@ -98,13 +113,25 @@ export default class WordCloudChart extends ViewBase {
       //     console.log(item)
       //   }
       // },
-      color: '#A3D5E6',
+      color: this.foreColor,
       minSize: true,
       list: mocklist,
       shape: 'square',
-      ellipticity: 0.65
+      ellipticity: 0.65,
+      click: this.clickHandle
     }
     WordCloud(ele, option)
+  }
+
+  mounted() {
+    if (this.initDone) {
+      this.resetOptions()
+      this.updateCharts()
+    }
+  }
+
+  clickHandle(item: any, dimension: any, event: any) {
+    this.$emit('keyChange', item)
   }
 
   @Watch('initDone')

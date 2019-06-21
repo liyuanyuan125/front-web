@@ -1,6 +1,6 @@
 import { get } from '@/fn/ajax'
 import { at, keyBy, sumBy } from 'lodash'
-import { KeyText } from '@/util/types'
+import { KeyText, MapType } from '@/util/types'
 import { slice } from '@/fn/object'
 import { dayOffsetRange } from '@/util/date'
 
@@ -24,6 +24,37 @@ const sortBubble = (tags: string[]) => {
 }
 
 const monthDate = (date: number) => String(date).replace(/(\d{4})(\d{2})(\d{2})/, '$2-$3')
+
+const hotChannelMap: MapType = {
+  weibo: '微博',
+  toutiao: '头条',
+  wechat: '微信',
+  baidu: '百度',
+}
+
+const hotData = (items: any[]) => {
+  const list = (items || []).map(it => {
+    const date = monthDate(it.date)
+    const legends = (it.channels as any[] || [])
+    .sort((a, b) => b.trend - a.trend)
+    .map((sub, i) => {
+      return {
+        name: sub.name || hotChannelMap[sub.chanelCode] || sub.chanelCode,
+        no: `No.${i + 1}`,
+        inc: sub.trend,
+      }
+    })
+
+    return {
+      name: date,
+      value: it.count,
+      rank: it.ranking,
+      legends,
+    }
+  })
+
+  return list
+}
 
 /**
  * KOL详情
@@ -87,7 +118,7 @@ export async function getKol({
       name,
       title: cate && cate.text,
       figure: photo,
-      rankNo: jyIndex,
+      rankNo: percent(jyIndex, 2),
       rankTitle: [
         `全网排名：${ranking}`,
         cate ? `${cate.text}：${categoryRanking}` : ''
@@ -212,7 +243,7 @@ export async function getMovie(id: number) {
       name,
       subName: nameEn,
       figure: mainPic,
-      rankNo: jyIndex || 0,
+      rankNo: percent(jyIndex, 2),
       rankTitle: `同档期：第${jyIndexSamePeriodRanking || 0}`,
     },
 
@@ -261,33 +292,31 @@ export async function getMovie(id: number) {
 
 /**
  * 获取影片近 7 日新增观影、想看人数
- * https://yapi.aiads-dev.com/project/161/interface/api/4911
+ * 观影分析：https://yapi.aiads-dev.com/project/161/interface/api/4911
+ * 想看分析：https://yapi.aiads-dev.com/project/161/interface/api/5072
  * @param id 影片 id
+ * @param hasShow 是否已上映
  */
-export async function getVideoRise(id: number) {
+export async function getVideoRise(id: number, hasShow = false) {
   const [beginDate, endDate] = dayOffsetRange(-7)
-  const {
-    data: {
-      items
-    }
-  } = await get(`/movie/views/${id}`, {
+  const url = hasShow ? `/movie/${id}/view` : `/movie/${id}/wanttosee`
+  const { data } = await get(url, {
     beginDate,
     endDate
   })
 
-  const dealList = (path: string) => {
-    const list = (items as any[] || []).map(it => {
+  const dealList = (list: any[], path: string) => {
+    const ret = (list || []).map(it => {
       const name = monthDate(it.date)
       const value = dot(it, path) || 0
       return { name, value }
     })
-    return list
+    return ret
   }
 
-  const result = {
-    box: dealList('boxoffice.count'),
-    view: dealList('view.count')
-  }
+  const result = hasShow
+    ? dealList(data, 'view.count')
+    : dealList(data.items, 'count')
 
   return result
 }
@@ -308,8 +337,7 @@ export async function getVideoHot(id: number) {
     endDate
   })
 
-  const result = {
-  }
+  const result = hotData(items)
 
   return result
 }
@@ -352,7 +380,7 @@ export async function getFigure(id: number) {
       subName: nameEn,
       title: titleList.join('/'),
       figure: headImgSmall,
-      rankNo: jyIndex,
+      rankNo: percent(jyIndex, 2),
       rankTitle: tip,
     },
 
@@ -439,8 +467,7 @@ export async function getFigureHot(id: number) {
     endDate
   })
 
-  const result = {
-  }
+  const result = hotData(items)
 
   return result
 }

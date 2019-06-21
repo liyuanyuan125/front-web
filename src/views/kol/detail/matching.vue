@@ -19,12 +19,12 @@
                       :value="item.id"
                     >{{item.name}}</Option>
                   </Select>
-                  <span>整体匹配度72%</span>
+                  <span style="color:#fff">整体匹配度72%</span>
                 </div>
               </DetailNavBar>
             </Col>
             <Col :span="7" style="text-align:right">
-              <span>Papi酱 PK</span>
+              <span style="color:#fff">Papi酱 PK</span>
               <Select
                 v-model="form.brandId"
                 @on-change="handleChange"
@@ -383,7 +383,7 @@ export default class Matching extends ViewBase {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
 </style>

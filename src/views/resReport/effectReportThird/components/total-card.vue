@@ -14,12 +14,6 @@
             <numAdd :addNum="data.item1"></numAdd>
           </p>
         </li>
-        <li>
-          <h6>支出金额</h6>
-          <p>
-            ¥ <numAdd :addNum="data.item2"></numAdd>
-          </p>
-        </li>
       </ul>
     </div>
   </div>
@@ -51,7 +45,7 @@ export default class TotalPane extends Vue {
       flex-flow: row;
       justify-content: space-between;
       align-items: center;
-      padding: 67px 95px;
+      padding: 67px 245px;
       li {
         h6 {
           font-size: 16px;

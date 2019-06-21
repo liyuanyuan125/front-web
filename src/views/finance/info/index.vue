@@ -1,6 +1,6 @@
 <template>
   <div class="page home-bg as">
-    
+
     <!-- <div class="userTitle">
       <span class="nav-top-title">财务信息</span>
     </div> -->
@@ -580,6 +580,15 @@ export default class Main extends ViewBase {
   watchdataForms(val: any[]) {
     this.dataForm.receipts = val.map(it => it.fileId)
   }
+
+  @Watch('dataForm', { deep: true })
+  watchdataForm(val: any[]) {
+    if (this.dataForm.remark.length > 50) {
+      this.dataForm.remark = ''
+      info('备注不可大于50字')
+      return
+    }
+  }
 }
 </script>
 
@@ -744,7 +753,7 @@ export default class Main extends ViewBase {
   .hui-div {
     width: 83%;
     height: 225px;
-    background: url('./../images/银行卡.png');
+    background: url('./../images/bank.png');
     border-radius: 6px;
     padding: 12px 30px;
     background-size: cover;

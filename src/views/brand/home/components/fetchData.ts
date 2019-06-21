@@ -7,6 +7,8 @@ import { keyBy } from 'lodash'
 import { dayOffsetRange } from '@/util/date'
 import { Type } from './types'
 import { MapType } from '@/util/types'
+import moment from 'moment'
+import { groupBy } from 'lodash'
 
 // 将后台的万分率转成百分率
 const percent = (rate: number, digits = 0) => +((rate || 0) / 100).toFixed(digits)
@@ -34,6 +36,21 @@ const urlMapStore = {
 
     // https://yapi.aiads-dev.com/project/152/interface/api/4479
     track: (id: number) => `/brand/products/${id}/track`,
+  }
+}
+
+const cloudData = (title: string, color: string, words: string[]) => {
+  return {
+    title,
+    titleTips: '',
+    initDone: true,
+    foreColor: [color],
+    currentTypeIndex: 0,
+    dict1: [],
+    chartHeight: 100,
+    dataList: [
+      (words || []).map((name, i) => ({ name, value: Math.max(12, 20 - i) }))
+    ]
   }
 }
 
@@ -68,16 +85,17 @@ export default class FetchData {
           jyTrend,
           malePercent,
           femalePercent,
-          planOnExecuteCount,
+          onExecuteCount,
           comments,
           imgsUrl,
 
           // TODO: 假设 bigFigure 是大图字段的名称，请根据实际情况进行更改
           bigFigure,
 
-          kolHandleCount,
-          kolOnExecuteCount,
-          kols,
+          positive: goodWords,
+          negative: badWords,
+
+          movies,
         }
       }
     } = await get(this.urlMap.home)
@@ -97,23 +115,47 @@ export default class FetchData {
         jyTrend,
         malePercent: percent(malePercent),
         femalePercent: percent(femalePercent),
-        planOnExecuteCount
+        onExecuteCount
       },
 
-      // 评论分析
-      analyze: {
-        positive: percent(positive.rate, 1),
-        negative: percent(passive.rate, 1),
-        neutral: percent(neutral.rate, 1),
-        negativeTrend: percent(passive.trend, 1)
-      },
+      commentData: [
+        { name: '正面', value: percent(positive.rate, 1), color: '#ca7273' },
+        { name: '中立', value: percent(neutral.rate, 1), color: '#f3d872' },
+        { name: '负面', value: percent(passive.rate, 1), color: '#57b4c9' },
+      ],
 
-      kol: {
-        pendCount: kolHandleCount,
-        runningCount: kolOnExecuteCount,
-        recommendList: (kols || []).map((it: any) => ({
-        }))
-      }
+      wordCloudGood: goodWords && goodWords.length > 0
+        ? cloudData('正面热词', '#ca7273', goodWords)
+        : null,
+
+      wordCloudBad: badWords && badWords.length > 0
+        ? cloudData('负面热词', '#57b4c9', badWords)
+        : null,
+
+      hotFilmGroup: movies && movies.length > 0
+        ? (() => {
+          const list = (movies as any[]).map(it => {
+            const mdate = moment(String(it.releaseDate))
+            return {
+              ...it,
+              date: mdate.format('YYYY-MM-DD'),
+              month: mdate.month() + 1,
+              // 是否已上映，上映状态描述在 https://yapi.aiads-dev.com/project/161/interface/api/4974
+              hasShow: it.releaseStatus >= 3,
+              // 上映天数
+              showDays: moment.duration(moment.now() - Number(mdate)).days(),
+            }
+          })
+          const group = groupBy(list, 'month')
+          const m = moment().month() + 1
+          const ret = [m, m + 1, m + 2].map(it => ({
+            name: `${it}月`,
+            list: group[it]
+          }))
+          .filter(it => it.list != null)
+          return ret
+        })()
+        : null,
     }
 
     return result

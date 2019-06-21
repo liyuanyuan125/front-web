@@ -2,7 +2,7 @@
 .detailmore-card {
   background: none;
   border: none;
-  color: #fff;
+  // color: #fff;
   /deep/ .ivu-radio-group {
     .ivu-radio-wrapper {
       background: none;
@@ -55,6 +55,7 @@
   }
   /deep/ .content {
     padding: 0;
+    color: #fff;
     .chart-wp {
       background: rgba(0,32,45,0.8);
       min-height: 200px;
@@ -110,14 +111,14 @@
     text-align: left;
   }
 }
-.select-box {
+/deep/ .select-box {
   display: flex;
   flex-flow: row;
   justify-content: flex-end;
   align-items: center;
   text-align: right;
 }
-.one-v-one {
+/deep/ .one-v-one {
   display: inline-flex;
   flex-flow: row;
   justify-content: center;

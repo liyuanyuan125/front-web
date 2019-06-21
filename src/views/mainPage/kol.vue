@@ -168,9 +168,9 @@ export default class FigurePage extends ViewBase {
 
     // 检查 channel 是否在 navList 中，若不在，就强制跳转到第一个 nav
     const navItem = navList.find(it => it.icon == this.channel)
-    if (navItem == null) {
+    if (navItem == null && navList.length > 0) {
       const firstNav = navList[0]
-      firstNav && this.$router.push({
+      this.$router.push({
         name: 'kol-figure',
         params: { id: this.id as any, channel: firstNav.icon }
       })
