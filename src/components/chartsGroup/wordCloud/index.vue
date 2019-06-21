@@ -117,7 +117,8 @@ export default class WordCloudChart extends ViewBase {
       minSize: true,
       list: mocklist,
       shape: 'square',
-      ellipticity: 0.65
+      ellipticity: 0.65,
+      click: this.clickHandle
     }
     WordCloud(ele, option)
   }
@@ -127,6 +128,10 @@ export default class WordCloudChart extends ViewBase {
       this.resetOptions()
       this.updateCharts()
     }
+  }
+
+  clickHandle(item: any, dimension: any, event: any) {
+    this.$emit('keyChange', item)
   }
 
   @Watch('initDone')

@@ -55,22 +55,21 @@
           </div>
         </div>
 
-        <div class="board-row" v-if="riseCount">
+        <div class="board-row" v-if="riseData">
           <BarPane
             :title="hasShow ? '近7日观影人次' : '近7日新增想看'"
-            :data="hasShow ? riseCount.box : riseCount.view"
+            :data="riseData"
             :more="{ name: 'film-detail-trend', params: {id} }"
             class="active-fans-pane"
           />
         </div>
 
-        <div class="board-row">
+        <div class="board-row" v-if="hotData && hotData.length > 0">
           <HotPane
             title="全网热度"
             :data="hotData"
             :more="{ name: 'film-detail-hot', params: {id} }"
             tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
-            :legendList="legendList"
             :formatter="hotFormatter"
             class="hot-pane"
           />
@@ -123,28 +122,13 @@ export default class MoviePage extends ViewBase {
 
   boxTotal: any = null
 
-  riseCount: any = null
+  riseData: any = null
 
-  legendList = [
-    { name: '新浪', no: 'No.3', inc: 0 },
-    { name: '微信', no: 'No.2', inc: -2 },
-    { name: '百度', no: 'No.4', inc: 8 },
-    { name: '头条', no: 'No.1', inc: 3 }
-  ]
-
-  hotData = [
-    { name: '5-16', value: 855000, rank: 1 },
-    { name: '5-17', value: 100000, rank: 2 },
-    { name: '5-18', value: 808000, rank: 8 },
-    { name: '5-19', value: 260000, rank: 6 },
-    { name: '5-20', value: 600000, rank: 5 },
-    { name: '5-21', value: 755000, rank: 3 },
-    { name: '5-22', value: 555000, rank: 2 }
-  ]
+  hotData: any[] = []
 
   hotFormatter([{ dataIndex }]: any) {
     const { value, rank } = this.hotData[dataIndex]
-    return `综合热度：${value}<br>男演员排名：${rank}`
+    return `综合热度：${value}<br>排名：${rank}`
   }
 
   created() {
@@ -153,7 +137,6 @@ export default class MoviePage extends ViewBase {
 
   init() {
     this.initMain()
-    this.initRise()
     this.initHot()
   }
 
@@ -166,7 +149,7 @@ export default class MoviePage extends ViewBase {
       actorData,
       fansRate,
       boxToday,
-      boxTotal,
+      boxTotal
     } = await getMovie(this.id)
 
     this.bubbleList = bubbleList
@@ -177,15 +160,19 @@ export default class MoviePage extends ViewBase {
     this.fansRate = fansRate
     this.boxToday = boxToday
     this.boxTotal = boxTotal
+
+    // 拿到 hasShow 后，再调用 initRise
+    this.initRise()
   }
 
   async initRise() {
-    const riseCount = await getVideoRise(this.id)
-    this.riseCount = riseCount
+    const riseData = await getVideoRise(this.id, this.hasShow)
+    this.riseData = riseData
   }
 
   async initHot() {
-    await getVideoHot(this.id)
+    const hotData = await getVideoHot(this.id)
+    this.hotData = hotData
   }
 }
 </script>

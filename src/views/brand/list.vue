@@ -48,7 +48,7 @@
       <ul class="no-data-list" v-if="list.length == 0">暂无数据</ul>
       <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
     </div>
-    <addBrand v-model="visibleBrand" v-if="visibleBrand" />
+    <addBrand v-model="visibleBrand" v-if="visibleBrand" @updateBrand="updateBrand" />
   </div>
 </template>
 
@@ -104,6 +104,9 @@ export default class Main extends ViewBase {
   }
   uplist(size: any) {
     this.pageList.pageIndex = size
+    this.tableList()
+  }
+  updateBrand() {
     this.tableList()
   }
 }

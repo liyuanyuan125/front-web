@@ -10,10 +10,10 @@
       <Select v-model="form.status" clearable placeholder="广告片状态" class="select-wid" >
           <Option v-for="item in statusList" v-if="item.key != 6" :key="item.key" :value="item.key">{{item.text}}</Option>
       </Select>
-      <customerList v-model="form.customerld" />
-      <brandList v-model="form.brandld" />
+      <customerList v-model="form.customerId" />
+      <brandList v-model="form.brandId" />
       <!--  v-if="form.brandld" -->
-      <productList :brandld="form.brandld" v-model="form.productld" />
+      <productList :brandld="form.brandId" v-model="form.productId" />
       <div class="flex-box film-search">
           <Input v-model="query" placeholder="请输入广告ID/名称进行搜索"/>
           <Button type="primary" class="bth-search" @click="searchList">

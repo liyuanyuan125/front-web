@@ -314,6 +314,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.users',
       authAction: 'create',
+      title() {
+        return '添加子用户'
+      }
     }
   },
 
@@ -325,6 +328,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.users',
       authAction: 'edit',
+      title() {
+        return '编辑子用户'
+      }
     }
   },
 
