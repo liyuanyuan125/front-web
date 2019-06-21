@@ -12,7 +12,7 @@
           <div>
             <p class="title">曝光人次预估</p>
             <p class="number">
-              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount" />
+              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 10000" />
             </p>
           </div>
         </Col>
@@ -20,7 +20,7 @@
           <div>
             <p class="title">投放场次数预估</p>
             <p class="number">
-              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount" />
+              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 10000" />
             </p>
           </div>
         </Col>
@@ -28,7 +28,7 @@
           <div>
             <p class="title">预估花费</p>
             <p class="number">
-              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount" />
+              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 10000" />
             </p>
           </div>
         </Col>
@@ -53,7 +53,7 @@
               <p><span>想看人数：</span>{{it.wantSeeNum}}</p>
               <i-circle trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="it.matchPercent">
                 <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
-                <p class="demo-Circle-inner" style="font-size:22px;color:#DA6C70">{{it.matchPercent}}%</p>
+                <p class="demo-Circle-inner" style="font-size:18px;color:#DA6C70">{{it.matchPercent}}%</p>
               </i-circle>
             </div>
           </div>
