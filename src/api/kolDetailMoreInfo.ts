@@ -2,11 +2,11 @@ import { get, post, put } from '@/fn/ajax'
 import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
 
 /**
- * 查询KOL口碑评论
+ * 查询KOL运营状况
  * @param id id
- * @description http://yapi.aiads-dev.com/project/144/interface/api/4587
+ * @description http://yapi.aiads-dev.com/project/144/interface/api/4578
  */
-export async function platformData(query: any, id: number | string = '') {
+export async function platform(query: any, id: number | string = '') {
   // 演示 临时参数 nxd 20190621
   id = '2061'
   // 演示 临时参数 nxd 20190621
@@ -18,94 +18,104 @@ export async function platformData(query: any, id: number | string = '') {
   // const res = await get(`kol/accounts/${id}/comments`, query)
   // return res
   return await mockGet(query, {
-    // nxd
     items: [
       {
         id: tid,
         kolId: tid,
         channelCode: 'weibo',
-        date: 20190600,
-        positive: {
-          count: 100,
-          trend: 80
-        },
-        passive: {
-          count: 100,
-          trend: 80
-        },
-        neutral: {
-          count: 100,
-          trend: 80
-        },
-        updateTime: null
+        date: 20190602,
+        dau: tid,
+        likeCount: tid,
+        commentCount: tid,
+        playCount: tid,
+        readCount: tid,
+        forwardCount: tid,
+        shareCount: tid
+      },
+      {
+        id: tid,
+        kolId: tid,
+        channelCode: 'weibo',
+        date: 20190603,
+        dau: tid,
+        likeCount: tid,
+        commentCount: tid,
+        playCount: tid,
+        readCount: tid,
+        forwardCount: tid,
+        shareCount: tid
+      },
+      {
+        id: tid,
+        kolId: tid,
+        channelCode: 'weibo',
+        date: 20190604,
+        dau: tid,
+        likeCount: tid,
+        commentCount: tid,
+        playCount: tid,
+        readCount: tid,
+        forwardCount: tid,
+        shareCount: tid
+      },
+      {
+        id: tid,
+        kolId: tid,
+        channelCode: 'wechat',
+        date: 20190602,
+        dau: tid,
+        likeCount: tid,
+        commentCount: tid,
+        playCount: tid,
+        readCount: tid,
+        forwardCount: tid,
+        shareCount: tid
+      },
+      {
+        id: tid,
+        kolId: tid,
+        channelCode: 'douyin',
+        date: 20190602,
+        dau: tid,
+        likeCount: tid,
+        commentCount: tid,
+        playCount: tid,
+        readCount: tid,
+        forwardCount: tid,
+        shareCount: tid
+      },
+      {
+        id: tid,
+        kolId: tid,
+        channelCode: 'kuaishou',
+        date: 20190602,
+        dau: tid,
+        likeCount: tid,
+        commentCount: tid,
+        playCount: tid,
+        readCount: tid,
+        forwardCount: tid,
+        shareCount: tid
       }
     ],
-    rate: {
-      neutral: '0.33',
-      positive: '0.33',
-      passive: '0.33'
-    },
-    commentKeyword: {
-      kolId: 2061,
-      channelCode: 'weibo',
-      yesterday: {
-        positive: [
-          '才华',
-          '美丽',
-          '正能量',
-          '古灵精怪'
-        ],
-        negative: [
-          '负面',
-          '怨气',
-          '消极',
-          '负分'
-        ]
+    channelList: [
+      {
+        text: '微博',
+        key: 'weibo'
       },
-      sevenDay: {
-        positive: [
-          '才华',
-          '美丽',
-          '正能量',
-          '古灵精怪'
-        ],
-        negative: [
-          '负面',
-          '怨气',
-          '消极',
-          '负分'
-        ]
+      {
+        text: '微信',
+        key: 'wechat'
       },
-      thirtyDay: {
-        positive: [
-          '才华',
-          '美丽',
-          '正能量',
-          '古灵精怪'
-        ],
-        negative: [
-          '负面',
-          '怨气',
-          '消极',
-          '负分'
-        ]
+      {
+        text: '抖音',
+        key: 'douyin'
       },
-      ninetyDay: {
-        positive: [
-          '才华',
-          '美丽',
-          '正能量',
-          '古灵精怪'
-        ],
-        negative: [
-          '负面',
-          '怨气',
-          '消极',
-          '负分'
-        ]
-      },
-      updateTime: '2019-06-18T10:14:16.958'
-    }
+      {
+        text: '快手',
+        key: 'kuaishou'
+      }
+    ]
   })
 }
 
