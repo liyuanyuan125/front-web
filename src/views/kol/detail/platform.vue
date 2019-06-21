@@ -84,7 +84,9 @@ import { platformData } from '@/api/kolDetailMoreInfo'
 import { kolPlanflans } from '@/api/kolplatform'
 import numAdd from '../number.vue'
 import AreaBasic from '@/components/chartsGroup/areaBasic/'
+import moment from 'moment'
 
+const timeFormat = 'YYYYMMDD'
 @Component({
   components: {
     AreaBasic,
@@ -101,6 +103,8 @@ export default class Platform extends ViewBase {
     ],
     statisticTimeId: 0
   }
+
+  title: any = ['weibo', 'wechat', 'douyin', 'kuaishou', 'xiaohonghsu']
 
   dict: any = {
     statisticTime: [
@@ -155,6 +159,10 @@ export default class Platform extends ViewBase {
     color: ['#0099cc', '#0099cc', '#0099cc', '#0099cc']
   }
 
+  begin = ''
+  end = ''
+
+
   async typeChangeHander1(index: number = 0) {
     if (this.chart1.dataList[index].length < 1) {
       await this.getChartsData('chart2', index)
@@ -162,6 +170,23 @@ export default class Platform extends ViewBase {
     this.chart1.currentTypeIndex = index
   }
 
+  foemattime() {
+    const time = new Date().getTime()
+    this.end = moment(time).format(timeFormat)
+    if (this.form.statisticTimeId == 0) {
+      const begintime = time - 60 * 60 * 24 * 1000
+      this.begin = moment(begintime).format(timeFormat)
+    } else if (this.form.statisticTimeId == 1) {
+      const begintime = time - 60 * 60 * 24 * 1000 * 7
+      this.begin = moment(begintime).format(timeFormat)
+    } else if (this.form.statisticTimeId == 2) {
+      const begintime = time - 60 * 60 * 24 * 1000 * 30
+      this.begin = moment(begintime).format(timeFormat)
+    } else {
+      const begintime = time - 60 * 60 * 24 * 1000 * 90
+      this.begin = moment(begintime).format(timeFormat)
+    }
+  }
   /**
    * 加载图表数据
    * @param chart 图表名 (因为接口返回全部数据，暂时不用)
@@ -171,8 +196,11 @@ export default class Platform extends ViewBase {
     const mockObj = {
       effectType: typeIndex
     }
+    this.foemattime()
     try {
-      const { data } = await platformData({ ...mockObj })
+      const channelCode = this.title[this.form.platformId]
+      const { data } = await platformData({})
+
       if (data.chart1.effectTypeList.length > 0) {
         this.chart1.dataList = data.chart1.effectTypeList.map(
           (item: any, index: number) => {
@@ -212,6 +240,17 @@ export default class Platform extends ViewBase {
   resetData() {
     this.chart1.dataList = []
   }
+
+  @Watch('form.platformId', {deep: true})
+  watchFormPlatformId(val: any) {
+    this.getChartsData()
+  }
+
+  // @Watch('form.statisticTimeId', {deep: true})
+  // watchFormStatisticTimeId(val: any) {
+  //   console.log(2)
+  //   this.getChartsData()
+  // }
 }
 </script>
 

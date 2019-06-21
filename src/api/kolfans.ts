@@ -181,8 +181,8 @@ export async function comment(query: any, id: string = '') {
  * @param id id
  * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
  */
-export async function fans(id: string = '') {
-  const res = await get(`/brand/brands/${id}/portrait`)
+export async function fanslist(id: string = '' , query: any) {
+  const res = await get(`/kol/accounts/${id}/fans-portrait` , query)
   return res
   return await mockGet({}, {
     item: {
@@ -580,124 +580,5 @@ export async function brands(query: any) {
     item: {
       totalCount: 83724,
     }
-  })
-}
-
-/**
- * 活跃粉丝数
- * @param id id
- * @description http://yapi.aiads-dev.com/project/152/interface/api/4054
- */
- export async function trend(query: any, id: number | string = '') {
-  // 演示 临时参数 nxd 20190621
-  id = '10121'
-  query = {
-    beginDate: '20160520',
-    endDate: '20190620'
-  }
-  const res = await get(`/brand/brands/${id}/index`, query)
-  return res
-  return await mockGet({}, {
-    items: [
-      {
-        id: tid,
-        date: 20190602,
-        brandId: 10121,
-        trend: tid,
-        count: tid,
-        channels: [
-          {
-            name: '微博',
-            count: tid,
-            ranking: 10,
-            trend: 50
-          },
-          {
-            name: '头条',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          },
-          {
-            name: '微信',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          },
-          {
-            name: '百度',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          }
-        ]
-      },
-      {
-        id: tid,
-        date: 20190602,
-        brandId: 10121,
-        trend: tid,
-        count: tid,
-        channels: [
-          {
-            name: '微博',
-            count: tid,
-            ranking: 10,
-            trend: 50
-          },
-          {
-            name: '头条',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          },
-          {
-            name: '微信',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          },
-          {
-            name: '百度',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          }
-        ]
-      },
-      {
-        id: tid,
-        date: 20190602,
-        brandId: 10121,
-        trend: tid,
-        count: tid,
-        channels: [
-          {
-            name: '微博',
-            count: tid,
-            ranking: 10,
-            trend: 50
-          },
-          {
-            name: '头条',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          },
-          {
-            name: '微信',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          },
-          {
-            name: '百度',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          }
-        ]
-      }
-    ]
   })
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <header class="search-header">
-      <h2 class="search-title">搜索 “{{query.keyword}}” 共找到 {{totalCount}} 个资源</h2>
+      <h2 class="search-title">搜索 “{{keyword}}” 共找到 {{total}} 个资源</h2>
 
       <p class="search-suggest" v-if="suggest">
         系统猜测您想找
@@ -21,19 +21,61 @@
       </Tabs>
     </header>
 
-    <main class="search-body"></main>
+    <section class="search-body">
+      <main class="search-main">
+        <div class="figure-pane" v-if="typeOn == 'figure'">
+          <FetchList :fetch="fetchFigure" :query="{ keyword }">
+            <FigureItem slot="item" slot-scope="{ item }" :item="item"/>
+          </FetchList>
+        </div>
+
+        <div class="film-pane" v-if="typeOn == 'film'">
+          <FetchList :fetch="fetchFilm" :query="{ keyword }">
+            <FilmItem slot="item" slot-scope="{ item }" :item="item"/>
+          </FetchList>
+        </div>
+
+        <div class="kol-pane" v-if="typeOn == 'kol'">
+          <FetchList :fetch="fetchKol" :query="{ keyword }">
+            <KolItem slot="item" slot-scope="{ item }" :item="item"/>
+          </FetchList>
+        </div>
+      </main>
+
+      <aside class="search-side">
+        <template v-if="typeOn == 'figure'">
+          <SimilarPane
+            title="相似影人"
+            :list="figureData.similarList"
+            routeName="film-figure"
+          />
+        </template>
+      </aside>
+    </section>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import FetchList from '@/components/fetchList'
+import FigureItem from './components/figureItem.vue'
+import FilmItem from './components/filmItem.vue'
+import KolItem from './components/kolItem.vue'
+import SimilarPane from './components/similarPane.vue'
+import { searchFigure, searchFilm, searchKol } from './data'
 
 // 搜索类型，分别为：影人、影片、kol
 type Type = 'figure' | 'film' | 'kol'
 
 @Component({
-  components: {}
+  components: {
+    FetchList,
+    FigureItem,
+    FilmItem,
+    KolItem,
+    SimilarPane
+  }
 })
 export default class SearchPage extends ViewBase {
   @Prop({ type: String, default: '' }) keyword!: string
@@ -48,50 +90,36 @@ export default class SearchPage extends ViewBase {
     { name: 'kol', label: 'KOL' }
   ]
 
-  query = {
-    keyword: this.keyword,
-    pageIndex: 1,
-    pageSize: 10
-  }
-
-  oldQuery: any = {}
-
-  totalCount = 0
-
-  loading = true
-
-  list: any[] = []
+  total = 0
 
   suggest = ''
 
-  async fetch() {
-    if (this.loading) {
-      return
-    }
-
-    this.oldQuery = { ...this.query }
-
-    this.loading = true
-
-    try {
-    } catch (ex) {
-      this.handleError(ex)
-    } finally {
-      this.loading = false
-    }
+  figureData: any = {
+    similarList: [],
+    hotList: []
   }
 
-  @Watch('keyword')
-  watchKeyword() {
-    this.query.keyword = this.keyword
+  async fetchFigure(query: any) {
+    const data = await searchFigure(query)
+
+    this.figureData.similarList = data.similarList
+    this.figureData.hotList = data.hotList
+
+    return data
   }
 
-  @Watch('query', { deep: true })
-  watchQuery() {
-    if (this.query.pageIndex == this.oldQuery.pageIndex) {
-      this.query.pageIndex = 1
-    }
-    this.fetch()
+  async fetchFilm(query: any) {
+    return searchFilm(query)
+  }
+
+  async fetchKol(query: any) {
+    return searchKol(query)
+  }
+
+  @Watch('typeOn')
+  watchTypeOn(type: string) {
+    const params = type == 'figure' ? {} : { type }
+    this.$router.push({ name: 'search', params })
   }
 }
 </script>
@@ -152,8 +180,18 @@ export default class SearchPage extends ViewBase {
 }
 
 .search-body {
+  display: flex;
   min-height: 388px;
   background-color: rgba(255, 255, 255, .8);
   border-radius: 0 0 7px 7px;
+  padding: 40px 45px 60px;
+}
+
+.search-main {
+  width: 814px;
+}
+
+.search-side {
+  width: 270px;
 }
 </style>

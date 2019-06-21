@@ -58,7 +58,7 @@
             </Col>
             <Col span="12">
               <Row class="adver-detail">
-                <FormItem label="投放排期:" class="timer" :labelWidth='100' prop="advertime" :show-message="form.advertime.length == 0">
+                <FormItem label="投放排期:" class="timer" :labelWidth='100' prop="advertime">
                   <DatePicker v-model="form.advertime" type="daterange" placement="bottom-end" placeholder="请选择日期" ></DatePicker>
                   <!-- <weekDatePicker  style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker> -->
                 </FormItem>
@@ -99,6 +99,7 @@ import { formatCurrency } from '@/fn/string.ts'
 import { clean } from '@/fn/object.ts'
 import weekDatePicker from '@/components/weekDatePicker/weekDatePicker.vue'
 import moment, { relativeTimeRounding } from 'moment'
+import { info } from '@/ui/modal'
 
 const timeFormat = 'YYYYMMDD'
 @Component({
@@ -146,6 +147,20 @@ export default class Promotion extends ViewBase {
         callback()
       }
     }
+    const msgtime = ( rules: any, value: any, callback: any) => {
+      if (value[0] == '') {
+        callback(new Error('请选择投放排期'))
+      } else {
+        const begin: any = new Date(value[0]).getTime()
+        const end: any = new Date(value[1]).getTime()
+        const flag = (end - begin) / 86400000 % 7
+        if (flag == 6) {
+          callback()
+        } else {
+          callback(new Error('投放排期为7的倍数'))
+        }
+      }
+    }
     return {
       name: [
         { required: true, message: '请输入广告片名称', trigger: 'change' }
@@ -158,14 +173,8 @@ export default class Promotion extends ViewBase {
       ],
       advertime: [
         {
-          type: 'array',
-          required: true,
-          message: '请选择投放排期',
-          trigger: 'change',
-          fields: {
-            0: {type: 'date', required: true, message: '请选择投放排期'},
-            1: {type: 'date', required: true, message: '请选择投放排期'}
-          }
+          validator: msgtime,
+          trigger: 'change'
         }
       ]
     }
@@ -252,7 +261,10 @@ export default class Promotion extends ViewBase {
 
   async getnums(val: any) {
     try {
-      const { data } = await estimate({budgetAmount: val})
+      if (!this.form.specification) {
+        info('请选择广告片规格')
+      }
+      const { data } = await estimate({budgetAmount: val, specification: this.form.specification})
       this.nums = formatCurrency(data.estimatePersonCount)
     } catch (ex) {
       this.handleError(ex)

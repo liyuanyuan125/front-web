@@ -1,12 +1,6 @@
 import { get, post, put } from '@/fn/ajax'
 import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
 
-// 评论热词描述列表
-export async function codelist(id: any , data: any) {
-  const res = get(`/brand/brands/${id}/hot-comment`, data)
-  return res
-}
-
 /**
  * 日期区间描述
  * @param data
@@ -19,15 +13,15 @@ export async function dayRanges(query: any = { beginDate: 20191212, endDate: 201
         text: '昨日'
       },
       {
-        key: 'sevenDay',
+        key: 'last_7_day',
         text: '最近7天'
       },
       {
-        key: 'thirtyDay',
+        key: 'last_30_day',
         text: '最近30天'
       },
       {
-        key: 'ninetyDay',
+        key: 'last_90_day',
         text: '最近90天'
       }
     ],
@@ -38,11 +32,11 @@ export async function dayRanges(query: any = { beginDate: 20191212, endDate: 201
  * @param query 起止时间
  * @param id id
  * @description https://yapi.aiads-dev.com/project/146/interface/api/4533
- * @deprecated 缺少数据，重置日期 http://fapi.aiads-dev.com/person/107028/comments?beginDate=20170112&endDate=20191212
+ * @deprecated 缺少数据，起止时间临时使用
  */
 export async function comment(query: any, id: string = '') {
   // const res = await get(`/person/${id}/comments`, query)
-  const res = await get(`/brand/brands/${id}/comment`, query)
+  const res = await get(`/person/${id}/comments`, { beginDate: 20170112, endDate: 20191212 })
   return res
   return await mockGet(query, {
     emotion: [
@@ -177,12 +171,47 @@ export async function comment(query: any, id: string = '') {
 }
 
 /**
+ * 关键词评论列表
+ * @param query 起止时间
+ * @param id id
+ * @description https://yapi.aiads-dev.com/project/146/interface/api/4695
+ */
+export async function keywordComment(query: any, id: number | string = '') {
+  // const res = await get(`person/${id}/keyword-comments`, query)
+  // return res
+  return await mockGet(query, {
+    'items|10': [
+      {
+        id: tid,
+        commentId: '448934333334811222222218361922554123749479949179weibo',
+        content: '又咳fdkddjd的科大大家都jdlslihei-f7ca09d6e8.png" style="width:1em; height:1em;" /></span>',
+        favorCount: 111,
+        replyCount: 22,
+        sourceContent: '医院开的药和现在每天每顿要吃的药，水喝得好饱。。。还老特么卡嗓子眼儿，一打嗝一股混合药味=w= ',
+        sourceUrl: 'wwww.baidu.com',
+        channelCode: 'weibo',
+        channelName: '微博',
+        emotionType: 2,
+        commentDate: '2017-6-28',
+        highLightWords: '咳fdkddjd的科<em style="color:red">大</em>都'
+      }
+    ],
+    totalCount: 2
+  })
+}
+
+/**
  * fans
  * @param id id
  * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
  */
+// 根绝id查询列表详情
+export async function film(id: any) {
+  const res = await get(`/movie/${id}`)
+  return res
+}
 export async function fans(id: string = '') {
-  const res = await get(`/brand/brands/${id}/portrait`)
+  const res = await get(`/movie/${id}`)
   return res
   return await mockGet({}, {
     item: {
@@ -567,6 +596,114 @@ export async function matching(query: any) {
   })
 }
 
+/**
+ * trend
+ * @param data
+ */
+export async function trend(query: any) {
+  // const res = await get('/person/${id}/hot' , query)
+  // return res
+  return await mockGet(query, {
+    items: [
+      {
+        date: 20190101,
+        count: tid,
+        ranking: 3, // 综合热度在同类中的排名
+        trend: 0, // 综合热度排名变化趋势，正负数分别表示上升和下降名词
+        channels: [
+          {
+            name: '微博', // 平台名称
+            count: 29526, // 热度
+            ranking: 3, // 在当前平台排名
+            trend: 0  // 正负数表示上升或者下降名次
+          },
+          {
+            name: '微信',
+            count: 29526,
+            ranking: 3,
+            trend: 0
+          },
+          {
+            name: '百度',
+            count: 29526,
+            ranking: 3,
+            trend: 0
+          },
+          {
+            name: '头条',
+            count: 29526,
+            ranking: 3,
+            trend: 0
+          }
+        ]
+      },
+      {
+        date: 20190102,
+        count: tid,
+        ranking: 3,
+        trend: 0,
+        channels: [
+          {
+            name: '微博',
+            count: 29526,
+            ranking: 3,
+            trend: 0
+          },
+          {
+            name: '微信',
+            count: 29526,
+            ranking: 3,
+            trend: 0
+          },
+          {
+            name: '百度',
+            count: 29526,
+            ranking: 3,
+            trend: 0
+          },
+          {
+            name: '头条',
+            count: 29526,
+            ranking: 3,
+            trend: 0
+          }
+        ]
+      },
+      {
+        date: 20190103,
+        count: tid,
+        ranking: 3,
+        trend: 0,
+        channels: [
+          {
+            name: '微博',
+            count: 29526,
+            ranking: 3,
+            trend: 0
+          },
+          {
+            name: '微信',
+            count: 29526,
+            ranking: 3,
+            trend: 0
+          },
+          {
+            name: '百度',
+            count: 29526,
+            ranking: 3,
+            trend: 0
+          },
+          {
+            name: '头条',
+            count: 29526,
+            ranking: 3,
+            trend: 0
+          }
+        ]
+      }
+    ]
+  })
+}
 
 /**
  * 品牌列表含分页
@@ -580,124 +717,5 @@ export async function brands(query: any) {
     item: {
       totalCount: 83724,
     }
-  })
-}
-
-/**
- * 活跃粉丝数
- * @param id id
- * @description http://yapi.aiads-dev.com/project/152/interface/api/4054
- */
- export async function trend(query: any, id: number | string = '') {
-  // 演示 临时参数 nxd 20190621
-  id = '10121'
-  query = {
-    beginDate: '20160520',
-    endDate: '20190620'
-  }
-  const res = await get(`/brand/brands/${id}/index`, query)
-  return res
-  return await mockGet({}, {
-    items: [
-      {
-        id: tid,
-        date: 20190602,
-        brandId: 10121,
-        trend: tid,
-        count: tid,
-        channels: [
-          {
-            name: '微博',
-            count: tid,
-            ranking: 10,
-            trend: 50
-          },
-          {
-            name: '头条',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          },
-          {
-            name: '微信',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          },
-          {
-            name: '百度',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          }
-        ]
-      },
-      {
-        id: tid,
-        date: 20190602,
-        brandId: 10121,
-        trend: tid,
-        count: tid,
-        channels: [
-          {
-            name: '微博',
-            count: tid,
-            ranking: 10,
-            trend: 50
-          },
-          {
-            name: '头条',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          },
-          {
-            name: '微信',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          },
-          {
-            name: '百度',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          }
-        ]
-      },
-      {
-        id: tid,
-        date: 20190602,
-        brandId: 10121,
-        trend: tid,
-        count: tid,
-        channels: [
-          {
-            name: '微博',
-            count: tid,
-            ranking: 10,
-            trend: 50
-          },
-          {
-            name: '头条',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          },
-          {
-            name: '微信',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          },
-          {
-            name: '百度',
-            count: tid,
-            ranking: 0,
-            trend: 0
-          }
-        ]
-      }
-    ]
   })
 }

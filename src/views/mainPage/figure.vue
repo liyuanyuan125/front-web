@@ -14,7 +14,7 @@
           :item="basic"
           :opusData="opusData"
           :brandData="brandData"
-          :more="{name: 'film-figure-detail-information', params: {id}}"
+          :more="{ name: 'film-figure-detail-information', params: { id } }"
         />
       </div>
 
@@ -24,14 +24,14 @@
             title="粉丝画像"
             :man="fansRate.man"
             :woman="fansRate.woman"
-            :more="{ }"
+            :more="{ name: 'film-figure-detail-fans', params: { id } }"
             class="fans-pane"
             v-if="fansRate"
           />
 
           <PiePane
             title="近7日评论分析"
-            :more="{ }"
+            :more="{ name: 'film-figure-detail-comment', params: { id } }"
             :data="commentData"
             class="comment-pane"
             v-if="commentData"
@@ -42,7 +42,7 @@
           <BarPane
             title="近7日活跃粉丝数"
             :data="activeFansData"
-            :more="{ }"
+            :more="{ name: 'film-figure-detail-platform', params: { id } }"
             class="active-fans-pane"
             v-if="activeFansData"
           />
@@ -52,7 +52,7 @@
           <HotPane
             title="近30日全网热度"
             :data="hotData"
-            :more="{ }"
+            :more="{ name: 'film-figure-detail-hot', params: { id } }"
             :formatter="hotFormatter"
             class="hot-pane"
           />
@@ -107,7 +107,7 @@ export default class FigurePage extends ViewBase {
 
   hotFormatter([{ dataIndex }]: any) {
     const { value, rank } = this.hotData[dataIndex]
-    return `综合热度：${value}<br>男演员排名：${rank}`
+    return `综合热度：${value}`
   }
 
   created() {

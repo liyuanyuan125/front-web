@@ -79,10 +79,26 @@ import {
   formatNumber
 } from '@/util/validateRules'
 import DetailNavBar from './components/detailNavBar.vue'
-import { trend } from '@/api/figureDetailMoreInfo'
+import { trend } from '@/api/brandfans'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
 const timeFormat = 'YYYYMMDD'
+import { findIndex, at, keyBy } from 'lodash'
+import { KeyText } from '@/util/types'
+
+const getName = (key: string, list: any[]) => {
+  const i: number = findIndex( list, (it: any) => {
+    return key === it.key
+  })
+  const res: string = list[i].text
+  return res
+}
+const dot = (object: any, path: string) => at(object, path)[0]
+const getNames = (keys: string[], list: KeyText[]) => {
+  const map = keyBy(list, 'key')
+  const names = (keys || []).map((it: any) => dot(map[it], 'text') as string)
+  return names
+}
 const toolTip: any = {
   borderWidth: 1,
   borderColor: 'rgba(0, 0, 0, .8)',
@@ -202,14 +218,21 @@ export default class Main extends ViewBase {
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const mockObj = {
-      effectType: typeIndex
+      beginDate: this.beginDate(this.form.dayRangesKey),
+      endDate: this.endDate()
     }
+    const id = this.id
     try {
       const {
+        data,
         data: {
+          items: {
+            date,
+            count
+          },
           items
-        }
-      } = await trend({ ...mockObj })
+        },
+      } = await trend({ ...mockObj }, id)
 
       if (items && items.length > 0) {
         this.chart2.dict1 = items[0].channels.map((it: any, index: number) => {
