@@ -52,7 +52,7 @@
               <RadioGroup
                 class="nav"
                 @on-change="handleChange"
-                v-model="selectdTime"
+                v-model="form.releaseStatus"
                 size="large"
                 type="button"
               >
@@ -123,7 +123,7 @@
             <div class="res-item">
               <router-link :to="{ name: 'film-movie', params: { id: item.movie_id}}">
                 <div class="poster" >
-                  <img :src="item.movieMainPic">
+                  <img :src="item.main_pic">
                 </div>
                 <div class="movtitle cut-text">{{item.name_cn}}</div>
                 <p class="movscore">{{item.jy_index}}</p>
@@ -185,7 +185,7 @@ export default class Temporary extends ViewBase {
     // 上映时间
     timeSelected: [
       {
-        key: '',
+        key: 0,
         text: '不限'
       },
       {
@@ -481,8 +481,8 @@ export default class Temporary extends ViewBase {
           margin-bottom: 66px;
           .poster {
             img {
-              min-width: 168px;
-              min-height: 238px;
+              max-width: 168px;
+              max-height: 238px;
             }
           }
           .movtitle {

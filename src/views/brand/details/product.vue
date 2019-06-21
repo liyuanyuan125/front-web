@@ -22,25 +22,7 @@
     </ul>
      <ul class="no-data-list" v-if="list.length == 0">暂无数据</ul>
      <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
-
-     <!-- 添加产品 -->
-      <Modal v-model="modal.visible" :title="modal.title" width="700" class="modal-dlg">
-        <Form ref="form" :model="form" :rules="rule" :label-width="90" class="edit-input">
-            <FormItem label="产品名称" prop="name" >
-                <Input v-model="form.name" placeholder="请输入产品名称" />
-            </FormItem>
-            <FormItem label="产品描述" prop="description" >
-                <Input v-model="form.description" placeholder="可输入价格或者产品介绍等" />
-            </FormItem>
-            <FormItem label="上传图片" prop="imgs">
-                <Upload v-model="form.imgs" :max-count="1" accept="images/*" class="upload-list" confirm-on-del/>
-            </FormItem>
-        </Form>
-        <div slot="footer">
-            <Button class="btn-cancel" @click="handleCancel">取消</Button>
-            <Button type="primary" @click="addProduct">确定</Button>
-        </div>
-     </Modal>
+     <addProduct v-model="modal" v-if="modal.visible" @updataProduct = 'uplist' />
   </div>
 </template>
 
@@ -48,13 +30,13 @@
 import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import pagination from '@/components/page.vue'
-import Upload, { FileItem } from '@/components/upload'
 import {productList, createProduct, editProduct } from '@/api/brandList'
+import addProduct from '../modalDlg/addProduct.vue'
 
 @Component({
   components: {
     pagination,
-    Upload
+    addProduct
   }
 })
 export default class Main extends ViewBase {
@@ -67,21 +49,10 @@ export default class Main extends ViewBase {
   }
   list = []
 
-  modal = {
+  modal: any = {
     visible: false,
     title: '添加产品',
     flag: 1, // 1-create 2-edit
-  }
-
-  form: any = {
-    imgs: []
-  }
-  get rule() {
-    return {
-      name: [{ required: true, type: 'string', message: '产品名称不能为空', trigger: 'blur' }],
-      description: [{ required: true, type: 'string', message: '产品描述不能为空', trigger: 'blur' }],
-      imgs: [{ required: true, type: 'array', message: '上传图片不能为空', trigger: 'blur' }]
-    }
   }
 
   mounted() {
@@ -93,25 +64,27 @@ export default class Main extends ViewBase {
     this.modal = {
       visible: true,
       title: '添加产品',
+      brandId: this.brandId,
       flag: 1
     }
   }
   // 编辑产品
   editProductList(item: any) {
-    this.modal = {
-      visible: true,
-      title: '编辑产品',
-      flag: 2
-    }
     const fileds = [{
       fileId: item.imgs[0],
       url: item.imgsUrl[0]
     }]
-    this.form = {
-      id: item.id,
-      name: item.name,
-      description: item.description,
-      imgs: fileds
+    this.modal = {
+      visible: true,
+      title: '编辑产品',
+      brandId: this.brandId,
+      flag: 2,
+      items: {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        imgs: fileds
+      }
     }
   }
 
@@ -126,41 +99,6 @@ export default class Main extends ViewBase {
       this.list = items || []
     } catch (ex) {
       this.handleError(ex)
-    }
-  }
-
-  handleCancel() {
-    this.modal.visible = false
-    this.form = {}
-  }
-
-  async addProduct() {
-    const brandId = this.brandId
-    const volid = await (this.$refs.form as any).validate()
-    if (!volid) { return }
-
-    const filedIds = this.form.imgs.map((item: any) => item.fileId)
-    try {
-      // 创建
-      if (this.modal.flag == 1) {
-        const { data } = await createProduct({
-          ...this.form,
-          imgs: filedIds,
-          brandId
-        })
-      } else {
-        const { data } = await editProduct({
-          ...this.form,
-          imgs: filedIds,
-          brandId
-        })
-      }
-      this.tableList()
-      this.modal.visible = false
-      this.form = {}
-    } catch (ex) {
-      this.handleError(ex)
-      this.modal.visible = false
     }
   }
 

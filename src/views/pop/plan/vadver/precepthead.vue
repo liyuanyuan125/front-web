@@ -1,11 +1,11 @@
 <template>
-  <div class="precept-box">
+  <div class="precept-box" v-if="data">
     <Row class="precept" :gutter="16">
       <Col span="5" class="item">
         <div>
           <p class="title">曝光人次预估</p>
           <p class="number">
-            <Number :addNum="data.estimatePersonCount" />
+            <Number :addNum="data.estimatePersonCount/10000" />
           </p>
         </div>
       </Col>
@@ -13,7 +13,7 @@
         <div>
           <p class="title">投放场次数预估</p>
           <p class="number">
-            <Number :addNum="data.estimateShowCount" />
+            <Number :addNum="data.estimateShowCount/10000" />
           </p>
         </div>
       </Col>
@@ -21,7 +21,7 @@
         <div>
           <p class="title">预估花费</p>
           <p class="number">
-            <Number :addNum="data.estimateCostAmount" />
+            <Number :addNum="data.estimateCostAmount/10000" />
           </p>
         </div>
       </Col>

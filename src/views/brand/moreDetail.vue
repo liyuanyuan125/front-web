@@ -47,15 +47,10 @@ export default class Main extends ViewBase {
   mounted() {
     this.tabActive = this.$route.name
     this.queryList()
-    // eventBus.$on('uploadImg', (flag: any) => {
-    //   this.flagImg = flag
-    // })
-    // eventBus.$on('passParamer', (mes: any) => {
-    //   this.detailMes = mes
-    // })
-    // const fileds: any = localStorage.getItem('brandImg')
-    // this.imageList = JSON.parse(fileds)
-
+    // 监听是否编辑
+    eventBus.$on('uploadImg', (val: any) => {
+      this.flagImg = val
+    })
   }
   async queryList() {
     const { data: {item, tradeCodeList, countryCodeList} } = await baseList(this.brandId)
@@ -70,7 +65,7 @@ export default class Main extends ViewBase {
 
     const tradeName: any = tradeCodeList.find((trade: any) => trade.key == item.tradeCode) || {}
     const detail = {
-      enName: item.enName,
+      enName: item.name,
       tradeCodeName: tradeName.text
     }
     this.detailMes = detail
@@ -78,6 +73,10 @@ export default class Main extends ViewBase {
   handleTabs(item: any) {
     this.$router.push({name: item.route})
     this.tabActive = item.route
+  }
+  @Watch('imageList')
+  watchImageList(val: any) {
+    localStorage.setItem('fileId', val[0].fileId)
   }
 }
 

@@ -141,7 +141,7 @@ export default class Upload extends ViewBase {
   watchInValue(value: UploadItem[]) {
     if (hasChange(value, this.value)) {
       const nude = value.map(toFileItem)
-      this.$emit('input', nude)
+      // this.$emit('input', nude)
     }
   }
 
@@ -206,9 +206,12 @@ export default class Upload extends ViewBase {
     item.status = 'done'
     item.progressStatus = 'success'
     this.isUploading = false
-
-    const file = this.inValue[0].fileId
-    localStorage.setItem('fileId', file)
+    this.$emit('input', [{
+      fileId,
+      url
+    }])
+    // const file = this.inValue[0].fileId
+    // localStorage.setItem('fileId', file)
   }
 
   onUploadFail(uqid: string, ex: any) {

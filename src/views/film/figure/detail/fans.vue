@@ -5,7 +5,7 @@
       <Form label-position="left"
             :label-width="100">
         <Card class="detailmore-card">
-          <div slot="title">
+          <!-- <div slot="title">
             <Row type="flex"
                  justify="space-between"
                  align="middle">
@@ -28,7 +28,7 @@
                         type="primary">查看匹配度</Button></router-link>
               </Col>
             </Row>
-          </div>
+          </div> 演示临时关闭 nxd 20190621  -->
           <div class="content">
             <Row type="flex"
                  justify="space-between">
@@ -97,7 +97,7 @@
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { fans, brands } from '@/api/figureDetailMoreInfo'
-import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
+import DetailNavBar from './components/detailNavBar.vue'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import MapChina from '@/components/chartsGroup/mapChina/'
 import Pie from '@/components/chartsGroup/pieSimple/'
@@ -198,10 +198,7 @@ export default class Temporary extends ViewBase {
    * @param typeIndex 当前类别下标
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
-
-    const that: any = this
-    const id: string = this.$route.params.id || ''
-
+    const id: string = this.id.toString()
     try {
       const {
         data,
@@ -210,16 +207,19 @@ export default class Temporary extends ViewBase {
         }
       } = await fans(id)
       if (genders && genders.length > 0) {
+        this.chart1.dict2 = data.genders.filter(({ key, text }: any) => {
+          return text !== '未知' || key !== 0
+        })
         this.chart1.dataList[
           this.chart1.currentTypeIndex
-        ] = this.dict.genders.map(({ key, text }: any) => ({
-          name: text,
-          value: genders.reduce(
-            (pre: number, cur: any) =>
-              pre + (cur.gender === key ? cur.count : 0),
-            0
-          )
-        }))
+        ] = this.chart1.dict2.map(({ key, text }: any) => {
+          return {
+            name: text,
+            value: genders.filter((it: any) => {
+              return it.gender === key
+            })[0].rate
+          }
+        })
         this.chart1.initDone = true
       }
       if (ages && ages.length > 0) {
@@ -233,7 +233,6 @@ export default class Temporary extends ViewBase {
           })
           this.chart2.dataList[this.chart2.currentTypeIndex].data.push(v)
         })
-        // console.log(this.chart2.dict3)
         this.chart2.initDone = true
       }
       if (provinces && provinces.length > 0) {

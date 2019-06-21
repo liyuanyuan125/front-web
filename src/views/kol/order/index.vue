@@ -171,7 +171,7 @@ export default class Main extends ViewBase {
   total = 0
   pageList = {
     pageIndex: 1,
-    pageSize: 10
+    pageSize: 20
   }
   form = {}
 
@@ -218,7 +218,7 @@ export default class Main extends ViewBase {
       if (this.status == 1) {
         this.pageList.pageSize = 300
       } else {
-        this.pageList.pageSize = 10
+        this.pageList.pageSize = 20
       }
       const { data } = await orderList({
         ...this.pageList,

@@ -1,76 +1,89 @@
 <template>
-  <div class="page home-bg">
-    <!-- <h2 class="layout-nav-title">用户管理 > 新增子用户</h2> -->
-    <div class="layout-nav-title">
-       <router-link :to="{name: 'account-user'}" >用户管理</router-link> > 
-       <span>新增子用户</span>
-    </div>
+  <div class="">
     <Form
       ref="forms"
       :model="form"
-      : ="rules"
-      label-position="left"
+      :rules="rules"
+      label-position="right"
       class="edit-input"
       :label-width="100"
     >
-      <h3 class="layout-title">设置登录账号</h3>
-      <FormItem label="登录邮箱" class="item-top" prop="email" :error="emailError">
-        <Input v-model="form.email" @on-blur="handleEmail" placeholder="请输入正确的邮箱地址"></Input>
-      </FormItem>
-      <h3 class="layout-title">设置联系人（选填）</h3>
-      <FormItem label="联系人名称" class="item-top">
-        <Input v-model="form.contactName" :disabled="!isAccountAuth" placeholder="请输入联系人名称"></Input>
-      </FormItem>
-      <FormItem label="手机号码" class="padbottom">
-        <Input
-          v-model="form.mobile"
-          :maxlength="11"
-          :disabled="!isAccountAuth"
-          placeholder="请输入手机号码"
-        ></Input>
-      </FormItem>
-      <h3 class="layout-title" v-if="systemCode == 'ads'">关联客户（选填）</h3>
-      <h3 class="layout-title" v-else-if="systemCode == 'resource'">关联影院（选填）</h3>
-      <div class="text-rows">
-        <Row>
-          <Col :span="24">
-            <div v-if="systemCode == 'ads'">
-              <p>
-                <label>客户</label>
-                {{custList}} 个
-              </p>
-              <p class="query-cinema" @click="handleEdit">编辑关联客户</p>
-            </div>
-            <div v-else-if="systemCode == 'resource'">
-              <p>
-                覆盖区域 &nbsp;0个 &nbsp;&nbsp; &nbsp; &nbsp; 覆盖省份 &nbsp;0个&nbsp;&nbsp; &nbsp; &nbsp;
-                覆盖城市 &nbsp;0个&nbsp;&nbsp; &nbsp; &nbsp; 影院 &nbsp;{{cinemaLen || 0}}个
-              </p>
-              <p class="query-cinema" @click="handleEdit">编辑关联影院</p>
-            </div>
-          </Col>
-        </Row>
+      <div class="bgs">
+        <h3 class="layout-title tits">设置登录账号</h3>
+        <div class="formleft">
+          <FormItem label="登录邮箱" class="item-top" prop="email" :error="emailError">
+            <Input v-model="form.email" @on-blur="handleEmail" placeholder="请输入正确的邮箱地址"></Input>
+          </FormItem>
+        </div>
       </div>
-      <h3 class="layout-title">设置账号权限</h3>
-      <FormItem label="权限角色" class="item-top" prop="role">
-        <Select v-model="form.role" style="width:400px" @on-change="handleChange">
-          <Option :value="item.id" :key="item.id" v-for="item in roleList">{{item.name}}</Option>
-        </Select>
-      </FormItem>
-      <FormItem label="相关权限">
-        <PermTree v-model="permTreeModal" readonly v-if="permTreeModal"/>
-      </FormItem>
+      <div class="bgs">
+        <h3 class="layout-title tits">设置联系人（选填）</h3>
+        <div class="formleft">
+          <FormItem label="联系人名称" class="item-top">
+            <Input v-model="form.contactName" :disabled="!isAccountAuth" placeholder="请输入联系人名称"></Input>
+          </FormItem>
+          <FormItem label="手机号码" class="padbottom">
+            <Input
+              v-model="form.mobile"
+              :maxlength="11"
+              :disabled="!isAccountAuth"
+              placeholder="请输入手机号码"
+            ></Input>
+          </FormItem>
+        </div>
+      </div>
+      <div class="bgs">
+        <h3 class="layout-title tits" v-if="systemCode == 'ads'">关联客户(选填)
+          <p class="query-cinema" @click="handleEdit">编辑关联客户</p>
+        </h3>
+        <h3 class="layout-title tits" v-else-if="systemCode == 'resource'">关联影院(选填)
+          <p class="query-cinema" @click="handleEdit">编辑关联影院</p>
+        </h3>
+        <div class="text-rows">
+          <div class="formleft">
+            <Row>
+              <Col :span="24">
+                <div class="flex" v-if="systemCode == 'ads'">
+                  <p>
+                    <label>客户</label>
+                    {{custList}} 个
+                  </p>
+                </div>
+                <div class="flex" v-else-if="systemCode == 'resource'">
+                  <p>
+                    覆盖区域 &nbsp;0个 &nbsp;&nbsp; &nbsp; &nbsp; 覆盖省份 &nbsp;0个&nbsp;&nbsp; &nbsp; &nbsp;
+                    覆盖城市 &nbsp;0个&nbsp;&nbsp; &nbsp; &nbsp; 影院 &nbsp;{{cinemaLen || 0}}个
+                  </p>
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      </div>
+      <div class="bgs">
+        <h3 class="layout-title tits">设置账号权限</h3>
+        <div class="formleft">
+          <div class="btnCenter">
+            <Button
+              type="primary"
+              v-if="isAccountAuth"
+              class="button-ok"
+              @click="handleInforma"
+              :disabled="submitDisabled"
+            >确定增加</Button>
+            <Button type="primary" v-else class="button-ok" :disabled="submitDisabled" @click="handleInforma">更改信息</Button>
+          </div>
+          <FormItem label="权限角色" class="item-top" prop="role">
+            <Select v-model="form.role" style="width:400px" @on-change="handleChange">
+              <Option :value="item.id" :key="item.id" v-for="item in roleList">{{item.name}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="相关权限" v-if="permTreeModal">
+            <PermTree v-model="permTreeModal" readonly />
+          </FormItem>
+        </div>
+      </div>
     </Form>
-    <div class="btnCenter">
-      <Button
-        type="primary"
-        v-if="isAccountAuth"
-        class="button-ok addSumbit"
-        @click="handleInforma"
-        :disabled="submitDisabled"
-      >确定增加</Button>
-      <Button type="primary" v-else class="button-ok addSumbit" :disabled="submitDisabled" @click="handleInforma">更改信息</Button>
-    </div>
     <editDig v-model="editVisible" v-if="editVisible.editVis" @save="save"></editDig>
     <resEditDlg v-model="resEditDlg" @save="save" v-if="resEditDlg.visible"></resEditDlg>
   </div>
@@ -304,6 +317,61 @@ export default class Main extends ViewBase {
   }
   .addSumbit {
     margin: 20px 0 30px;
+  }
+}
+.flex {
+  display: flex;
+  .query-cinema {
+    margin-left: 30px;
+  }
+}
+.bgs {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 5px;
+  margin: 20px 40px 0;
+}
+.tits {
+  background: rgba(255, 255, 255, 0);
+  color: #00202d;
+  font-size: 24px;
+  font-weight: 500;
+  padding-top: 4px;
+  height: 70px;
+  line-height: 70px;
+  display: flex;
+  p {
+    font-size: 16px;
+    margin-left: 40px;
+  }
+}
+.formleft {
+  margin-left: 50px;
+  padding-bottom: 26px;
+  /deep/ .ivu-form-item-label {
+    font-size: 16px;
+    color: #00202d;
+  }
+  /deep/ .ivu-input-wrapper,
+  /deep/ .ivu-form-item-content,
+  /deep/ .ivu-input,
+  /deep/ .ivu-select-input {
+    color: #00202d;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 400px;
+    &::placeholder {
+      font-size: 16px;
+      color: #b3bcc0;
+    }
+  }
+}
+.btnCenter {
+  position: absolute;
+  left: 770px;
+  margin-top: 16px;
+  .button-ok {
+    .button-style(#fff, #00202d);
+    border-radius: 25px;
   }
 }
 </style>

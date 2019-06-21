@@ -2,9 +2,9 @@
   <div class="personal-information">
     <h2 class="nav-title">人物简介</h2>
     <ul class="personal-mes">
-      <li><span>出生日期：</span><span>{{item.birthday}}</span></li>
+      <li><span>出生日期：</span><span>{{formatConversion(item.birthday)}}</span></li>
       <li> <span>身高: {{item.height}}</span> </li>
-      <li><span>出生地：</span><span>{{item.country}},{{item.province}},{{item.city}}</span></li>
+      <li><span>出生地：</span><span>{{item.country}},{{item.province}}</span></li>
       <li><span>体重: {{item.weight}}</span></li>
     </ul>
     <div class="personal-text">{{item.introduction}}</div>
@@ -15,7 +15,7 @@
         <p class="head-img"><img :src="item.headImg" /></p>
         <p class="per-name font_18">{{item.name}}</p>
         <p class="per-englist font_18">{{item.nameEn || '暂无'}}</p>
-        <p><span v-for="(it, index) in (item.professions || [])" :key="index">{{it}}<em v-if="item.idtentity.length-1 != index"> / </em></span></p>
+        <p><span v-for="(it, index) in item.professions" :key="index">{{handleProfess(it.code)}}<em v-if="item.professions.length-1 != index"> / </em></span></p>
         <p>代表作品</p>
         <p><span v-for="it in item.movies" :key="it.id">《{{it.name}}》</span></p>
       </li>
@@ -25,9 +25,9 @@
       <li v-for="(img, index) in imgList" :key="index"><img :src="img" alt=""/></li>
     </ul>
 
-    <div class="show-all" v-if="imgUrl.length > 5">
+    <!-- <div class="show-all" v-if="imgUrl.length > 5">
       <span @click="handleToggle">{{tabShowTitle}}<Icon :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}" type="ios-arrow-down" size="25" /></span>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -35,6 +35,7 @@
 import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { personIntro } from '@/api/filmPersonDetail'
+import {formatConversion} from '@/util/validateRules'
 // import { swiper, swiperSlide } from 'vue-awesome-swiper'
 // import 'swiper/dist/css/swiper.css'
 
@@ -49,6 +50,11 @@ export default class Information extends ViewBase {
   imgUrl = []
   imgList: any = []
   personalList: any = []
+  professionsList: any[] = []
+
+  get formatConversion() {
+    return formatConversion
+  }
   mounted() {
     this.tableList()
   }
@@ -59,6 +65,7 @@ export default class Information extends ViewBase {
       const { data: { item, professions} } = await personIntro(id)
       this.item = item || null
       this.imgList = item && item.images || []
+      this.professionsList = professions
       // 合并数据
       item ?  this.personalList.push({
           title: '合作过最多的导演',
@@ -70,13 +77,16 @@ export default class Information extends ViewBase {
         }) : null
       item ? this.personalList.push({
           title: '合作过最多的女演员',
-          ...item.malePartner
+          ...item.femalePartner
         }) : null
     } catch (ex) {
       this.handleError(ex)
     }
   }
-
+  handleProfess(code: any) {
+    const item = this.professionsList.find((it: any) => code == it.key)
+    return item.text
+  }
   handleToggle() {
     if (!this.arrowFlag) {
       this.arrowFlag = 1

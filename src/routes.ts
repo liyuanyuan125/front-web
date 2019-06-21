@@ -314,6 +314,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.users',
       authAction: 'create',
+      title() {
+        return '添加子用户'
+      }
     }
   },
 
@@ -325,6 +328,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.users',
       authAction: 'edit',
+      title() {
+        return '编辑子用户'
+      }
     }
   },
 
@@ -1468,19 +1474,41 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
+  // 第三方检测 - 列表
   {
-    path: '/brand/moredetail/:id/:brandId',
-    name: 'brand-moredetail',
-    redirect: '/brand/moredetail/:id/:brandId/base',
-    component: () => import('./views/brand/moreDetail.vue'),
+    path: '/test',
+    name: 'test',
+    component: () => import('./views/test/index.vue'),
     meta: {
       authKey: '',
       authAction: '',
+      authIsMenu: true,
+    },
+  },
+  // 第三方检测 - 新建/编辑
+  {
+    path: '/test/addtest/:id',
+    name: 'test-addtest',
+    component: () => import('./views/test/addtest.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      authIsMenu: true,
+    },
+  },
+
+
+  // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
+  {
+    path: '/brand/moredetail/:brandId',
+    name: 'brand-moredetail',
+    redirect: '/brand/moredetail/:brandId/base',
+    component: () => import('./views/brand/moreDetail.vue'),
+    meta: {
+      ...emptyAuth,
       title: '品牌管理详情页',
     },
     props: paramTypes({
-      id: Number,
       brandId: Number
     }),
     children: [
@@ -1490,12 +1518,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         name: 'brand-moredetail-base',
         component: () => import('./views/brand/details/base.vue'),
         meta: {
-          authKey: '',
-          authAction: '',
+          ...emptyAuth,
           title: '基础信息',
         },
         props: paramTypes({
-          id: Number,
           brandId: Number
         }),
       },
@@ -1505,12 +1531,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         name: 'brand-moredetail-shop',
         component: () => import('./views/brand/details/shop.vue'),
         meta: {
-          authKey: '',
-          authAction: '',
+          ...emptyAuth,
           title: '门店',
         },
         props: paramTypes({
-          id: Number,
           brandId: Number
         }),
       },
@@ -1520,12 +1544,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         name: 'brand-moredetail-media',
         component: () => import('./views/brand/details/media.vue'),
         meta: {
-          authKey: '',
-          authAction: '',
+          ...emptyAuth,
           title: '媒体平台',
         },
         props: paramTypes({
-          id: Number,
           brandId: Number
         }),
       },
@@ -1535,12 +1557,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         name: 'brand-moredetail-product',
         component: () => import('./views/brand/details/product.vue'),
         meta: {
-          authKey: '',
-          authAction: '',
+          ...emptyAuth,
           title: '产品信息',
         },
         props: paramTypes({
-          id: Number,
           brandId: Number
         }),
       },

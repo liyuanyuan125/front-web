@@ -6,7 +6,7 @@
     </div> -->
     <div class="fince"  v-auth="'financial-manage.info#viewsummary'">
       <h3 class="userTitle">
-        <span style="color:#222222;" class="nav-top-title">账户总览</span>
+        <span style="color:#fff;" class="nav-top-title">账户总览</span>
       </h3>
       <div class="fince-list">
         <div class="fince-list-big">
@@ -219,7 +219,11 @@ export default class Main extends ViewBase {
   accountNumbers: any = ''
 
   rules = {
-    accountName: []
+    accountName: [],
+    remark: [
+      { required: true, message: '请输入50字以内' , trigger: 'blur' },
+      { type: 'string', max: 50, message: '请输入50字以内', trigger: 'blur' }
+    ]
   }
   count = 0
   end: any = 0
@@ -584,7 +588,8 @@ export default class Main extends ViewBase {
   @Watch('dataForm', { deep: true })
   watchdataForm(val: any[]) {
     if (this.dataForm.remark.length > 50) {
-      this.dataForm.remark = ''
+      this.dataForm.remark = (this.dataForm.remark).slice(0, 49)
+      alert((this.dataForm.remark))
       info('备注不可大于50字')
       return
     }

@@ -118,10 +118,18 @@ export default class AreaBasic extends ViewBase {
         {
           data: chartData.data,
           type: 'line',
-          areaStyle: {}
+          smooth: true,
+          lineStyle: {
+            width: 1
+          },
+          areaStyle: {
+            shadowColor: this.color[this.currentIndex],
+            opacity: 0.4
+          }
         }
       ]
     }
+    // console.save(option, `${new Date()}.json`)
     myChart.setOption(option)
   }
   @Watch('initDone')

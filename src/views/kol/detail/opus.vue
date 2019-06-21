@@ -14,7 +14,7 @@
     </div>
 
     <div class="list-items"> 
-      <div class="item" v-for="item in list" :key="item.id">
+      <div class="item" v-for="(item, index) in list" :key="index">
         <div class="item-inner flex-box">
           <a :href="item.url" target="_blank" class="video-url" >
             <i></i>
@@ -23,7 +23,7 @@
           <div class="inner-right">
             <p class="title" :title="item.title">{{handleSlice(item.title)}}</p>
             <p class="icon-num">
-              <span><i class="iconfont icon-shipin"  /><em>{{item.playCout}}万</em></span>
+              <span><i class="iconfont icon-shipin"  /><em>{{item.playCount}}万</em></span>
               <span><i class="iconfont icon-dianzan"  /><em>{{item.likeCount}}万</em></span>
               <span><i class="iconfont icon-dianping"  /><em>{{item.commentCount}}万</em></span>
             </p>
@@ -44,6 +44,8 @@ import { opusList } from '@/api/kolDetails'
 import { querySelectList } from '@/api/brandList'
 import defaultImg from '../assets/error.png'
 import pagination from '@/components/page.vue'
+import moment from 'moment'
+const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 
 @Component({
   components: {
@@ -60,7 +62,7 @@ export default class Opus extends ViewBase {
   }
 
   form = {
-    channelCode: '',
+    channelCode: 'weibo',
     sortBy: 0
   }
   // 选择平台
@@ -69,18 +71,7 @@ export default class Opus extends ViewBase {
   // 排序
   selectOption = []
 
-  list = [
-     {
-      id: 0,
-      imgUrl: '',
-      videoUrl: '',
-      time: '20120-12-12 30:00',
-      title: '我家的马桶香香的~（最后的马桶香香的~（最后马桶香香的~（最后',
-      videoNum: 10,
-      likesNum: 10,
-      remarkNum: 3,
-    },
-  ]
+  list = []
 
   get defaultImg() {
     return `this.src = '${defaultImg}'`
@@ -99,7 +90,13 @@ export default class Opus extends ViewBase {
         sortBy: this.form.sortBy + 1,
         id: this.id,
       })
-      this.list = items || []
+      // this.list = items || []
+      this.list = (items || []).map((it: any) => {
+        return {
+          ...it,
+          publishTime : moment(it.publishTime).format(timeFormat)
+        }
+      })
       this.total = totalCount
       this.selectOption = sortByList
     } catch (ex) {

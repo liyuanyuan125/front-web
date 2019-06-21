@@ -23,12 +23,15 @@ interface UserData {
   accountType: number
   // systemCode 通常不会返回，应通过 postData 设置
   systemCode: SystemCode
+  // 二级代理商和直客身份
+  secondaryCode: string
 }
 
 /**
- * 使用登录或注册时返回的信息，设置用户
+ * 使用登录或注册时返回的信息，设置用户  (data.systems || []).find(it => it.code == data.systemCode).secondaryCod
  */
 export default function setUserByData(data: UserData) {
+  const secondaryCode: any = data.systems.find((it: any) => it.code == data.systemCode)
   // 设置用户
   const user: User = {
     id: data.userId as number,
@@ -44,6 +47,8 @@ export default function setUserByData(data: UserData) {
     companyName: data.companyName || '<我的公司>',
 
     perms: data.perms || [],
+
+    secondaryCode: secondaryCode.secondaryCode
   }
   setUser(user)
 }
