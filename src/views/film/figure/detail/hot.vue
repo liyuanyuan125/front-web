@@ -130,9 +130,6 @@ export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
   form: any = {
-    beginDate: [
-      // new Date(2019, 3, 9), new Date(2019, 4, 11)
-    ],
     dayRangesKey: 'last_7_day',
   }
 
@@ -202,8 +199,10 @@ export default class Main extends ViewBase {
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const mockObj = {
-      effectType: typeIndex
+      beginDate: this.beginDate(this.form.dayRangesKey),
+      endDate: this.endDate()
     }
+    const id = this.id
     try {
       const {
         data,
@@ -214,8 +213,7 @@ export default class Main extends ViewBase {
           },
           items
         },
-      } = await trend({ ...mockObj })
-
+      } = await trend({ ...mockObj }, id)
       if (items && items.length > 0) {
         this.chart2.dict1 = items[0].channels.map((it: any, index: number) => {
           return {

@@ -114,9 +114,6 @@ export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
   form: any = {
-    beginDate: [
-      // new Date(2019, 3, 9), new Date(2019, 4, 11)
-    ],
     dayRangesKey: 'last_7_day',
   }
 
@@ -169,8 +166,8 @@ export default class Main extends ViewBase {
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const mockObj = {
-      beginDate: this.form.beginDate[0],
-      endDate: this.form.beginDate[1]
+      beginDate: this.beginDate(this.form.dayRangesKey),
+      endDate: this.endDate()
     }
     const id = this.id
     try {

@@ -363,7 +363,6 @@ export default class Main extends ViewBase {
       beginDate: this.form.beginDate[0],
       endDate: this.form.beginDate[1],
     }
-    // 107028 dev有数据
     const id = this.$route.params.id || ''
     try {
       const {
@@ -509,7 +508,11 @@ export default class Main extends ViewBase {
 
   async getKeywordList( key?: string ) {
     const that: any = this
-    const mockObj = (key == '') ? this.keywordQuery.keyword : key
+    const mockObj = {
+      keyword: (key == '') ? this.keywordQuery.keyword : key,
+      pageIndex: 1,
+      pageSize: 10
+    }
     const id = this.id
     try {
       const {
@@ -543,7 +546,6 @@ export default class Main extends ViewBase {
   }
 
   keyChangeHandle(item: any) {
-    console.log(item)
     this.tableData = []
     this.getKeywordList(item[0])
   }

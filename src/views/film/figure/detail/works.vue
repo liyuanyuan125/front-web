@@ -9,8 +9,12 @@
              <img :src="item.poster" class="img-top" />
              <span v-if="item.boxOfficeRanking">影史票房NO.{{item.boxOfficeRanking}}</span>
           </p>
-          <p class="title-year">{{item.name}}({{item.release}})</p>
-          <p><span v-for="(it, index) in item.types">{{handleMoive(it)}}<em v-if="item.types.length-1 != index"> / </em></span></p>
+          <p class="title-year">{{spliceName(item.name)}}({{item.release}})</p>
+          <p>
+            <span v-for="(it, index) in item.types" :key="index" v-if="!!handleMoive(it)">{{handleMoive(it)}}
+              <em v-if="item.types.length-1 != index"> / </em>
+            </span>
+          </p>
           <p class="top-money"><span>{{item.boxOffice}}</span></p>
         </li>
       </ul>
@@ -32,7 +36,7 @@
         <div class="production-list flex-box" v-if="items.length">
           <span class="move-title">影片类型：</span>
           <div class="move-type">
-            <a v-for="(item, index) in filterMovie" :key="index">{{handleMoive(index)}}({{item}})</a>
+            <a v-for="(item, index) in filterMovie" :key="index"  v-if="handleMoive(index)">{{handleMoive(index)}}<i>({{item}})</i></a>
           </div>
         </div>
         <div class="per_rele_list">
@@ -179,7 +183,7 @@ export default class Master extends ViewBase {
       })
       this.filterRelease = filterRelease
 
-      // 上映作品 - 影片类型
+      // 上映作品 - 影片类型(未匹配到类型不展示)
       const filterMovie: any = {}
       this.items.map((item: any) => {
         if (item.isRelease) {
@@ -262,6 +266,9 @@ export default class Master extends ViewBase {
     this.timeSort = id
     this.tableList = this.timeSort == 0 ? this.filmList : this.jyList
   }
+  spliceName(name: string) {
+    return name && name.length > 5 ? name.substr(0, 4) + '...' : name
+  }
 }
 
 </script>
@@ -342,6 +349,7 @@ h2, h3, h4 {
   border-radius: 5px;
   .header-title {
     padding-bottom: 10px;
+    font-size: 15px;
     display: flex;
     justify-content: space-between;
     em {
@@ -356,7 +364,7 @@ h2, h3, h4 {
       overflow: hidden;
       i {
         display: block;
-        width: 110px;
+        width: 118px;
         line-height: 32px;
         text-align: center;
         color: #fff;

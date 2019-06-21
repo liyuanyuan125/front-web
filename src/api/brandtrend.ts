@@ -121,142 +121,142 @@ export async function comment(query: any, id: string = '0') {
   // return res
   return await mockGet(query, {
     item: {
-        totalCount: 54516,
-        rate: {
-            neutral: '33.33',
-            positive: '33.33',
-            passive: '33.33'
+      totalCount: 54516,
+      rate: {
+        neutral: '33.33',
+        positive: '33.33',
+        passive: '33.33'
+      },
+      keywords: {
+        yesterday: {
+          positive: [
+            '特效',
+            '中国',
+            '国产'
+          ],
+          passive: [
+            '特效',
+            '中国',
+            '国产'
+          ]
         },
-        keywords: {
-            yesterday: {
-                positive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ],
-                passive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ]
-            },
-            ninetyDay: {
-                positive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ],
-                passive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ]
-            },
-            sevenDay: {
-                positive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ],
-                passive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ]
-            },
-            thirtyDay: {
-                positive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ],
-                passive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ]
-            }
+        ninetyDay: {
+          positive: [
+            '特效',
+            '中国',
+            '国产'
+          ],
+          passive: [
+            '特效',
+            '中国',
+            '国产'
+          ]
         },
-        dates: [
-            {
-                date: 20190101,
-                positive: {
-                    count: 18172,
-                    trend: 99
-                },
-                passive: {
-                    count: 18172,
-                    trend: 54
-                },
-                neutral: {
-                    count: 18172,
-                    trend: 23
-                }
-            },
-            {
-                date: 20190102,
-                positive: {
-                    count: 18172,
-                    trend: 11
-                },
-                passive: {
-                    count: 18172,
-                    trend: 8
-                },
-                neutral: {
-                    count: 18172,
-                    trend: 76
-                }
-            },
-            {
-                date: 20190103,
-                positive: {
-                    count: 18172,
-                    trend: 88
-                },
-                passive: {
-                    count: 18172,
-                    trend: 22
-                },
-                neutral: {
-                    count: 18172,
-                    trend: 33
-                }
-            }
-        ]
+        sevenDay: {
+          positive: [
+            '特效',
+            '中国',
+            '国产'
+          ],
+          passive: [
+            '特效',
+            '中国',
+            '国产'
+          ]
+        },
+        thirtyDay: {
+          positive: [
+            '特效',
+            '中国',
+            '国产'
+          ],
+          passive: [
+            '特效',
+            '中国',
+            '国产'
+          ]
+        }
+      },
+      dates: [
+        {
+          date: 20190101,
+          positive: {
+            count: 18172,
+            trend: 99
+          },
+          passive: {
+            count: 18172,
+            trend: 54
+          },
+          neutral: {
+            count: 18172,
+            trend: 23
+          }
+        },
+        {
+          date: 20190102,
+          positive: {
+            count: 18172,
+            trend: 11
+          },
+          passive: {
+            count: 18172,
+            trend: 8
+          },
+          neutral: {
+            count: 18172,
+            trend: 76
+          }
+        },
+        {
+          date: 20190103,
+          positive: {
+            count: 18172,
+            trend: 88
+          },
+          passive: {
+            count: 18172,
+            trend: 22
+          },
+          neutral: {
+            count: 18172,
+            trend: 33
+          }
+        }
+      ]
     },
     emotion: [
-        {
-            key: 'positive',
-            text: '正面'
-        },
-        {
-            key: 'passive',
-            text: '负面'
-        },
-        {
-            key: 'neutral',
-            text: '中性'
-        }
+      {
+        key: 'positive',
+        text: '正面'
+      },
+      {
+        key: 'passive',
+        text: '负面'
+      },
+      {
+        key: 'neutral',
+        text: '中性'
+      }
     ],
     dayRanges: [
-          {
-              key: 'yesterday',
-              text: '昨日'
-          },
-          {
-              key: 'sevenDay',
-              text: '最近7天'
-          },
-          {
-              key: 'thirtyDay',
-              text: '最近30天'
-          },
-          {
-              key: 'ninetyDay',
-              text: '最近90天'
-          }
-      ]
+      {
+        key: 'yesterday',
+        text: '昨日'
+      },
+      {
+        key: 'sevenDay',
+        text: '最近7天'
+      },
+      {
+        key: 'thirtyDay',
+        text: '最近30天'
+      },
+      {
+        key: 'ninetyDay',
+        text: '最近90天'
+      }
+    ]
   })
   return await mockGet(query, {
     rate: {
@@ -265,24 +265,24 @@ export async function comment(query: any, id: string = '0') {
       passive: tid
     },
     'items|10': [{
-        id: 0,
-        kolId: 1,
-        channelCode: 'weibo',
-        date: 20190600,
-        positive: {
-          count: tid,
-          trend: tid
-        },
-        passive: {
-          count: tid,
-          trend: tid
-        },
-        neutral: {
-          count: tid,
-          trend: tid
-        },
-        updateTime: null
-      }
+      id: 0,
+      kolId: 1,
+      channelCode: 'weibo',
+      date: 20190600,
+      positive: {
+        count: tid,
+        trend: tid
+      },
+      passive: {
+        count: tid,
+        trend: tid
+      },
+      neutral: {
+        count: tid,
+        trend: tid
+      },
+      updateTime: null
+    }
     ],
     commentKeyword: {
       kolId: 1,
@@ -642,131 +642,68 @@ export async function fans(query: any) {
  * trend
  * @param data
  */
-export async function trend(id: any , query: any) {
-  const res = await get(`/brand/brands/${id}/index` , query)
-  return res
-  // return await mockGet(query, {
-  //   chart1: {
-  //     dataList: [{
-  //       date: '2019-01-01',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 0
-  //     }, {
-  //       date: '2019-01-02',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 0
-  //     }, {
-  //       date: '2019-01-03',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 0
-  //     }, {
-  //       date: '2019-01-04',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 0
-  //     }, {
-  //       date: '2019-01-05',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 0
-  //     }],
-  //     effectTypeList: []
-  //   },
-  //   chart2: {
-  //     dataList: [{
-  //       date: '2019-01-01',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 0
-  //     }, {
-  //       date: '2019-01-02',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 0
-  //     }, {
-  //       date: '2019-01-03',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 0
-  //     }, {
-  //       date: '2019-01-04',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 0
-  //     }, {
-  //       date: '2019-01-05',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 0
-  //     }, {
-  //       date: '2019-01-01',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 1
-  //     }, {
-  //       date: '2019-01-02',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 1
-  //     }, {
-  //       date: '2019-01-03',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 1
-  //     }, {
-  //       date: '2019-01-04',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 1
-  //     }, {
-  //       date: '2019-01-05',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 1
-  //     }, {
-  //       date: '2019-01-01',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 2
-  //     }, {
-  //       date: '2019-01-02',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 2
-  //     }, {
-  //       date: '2019-01-03',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 2
-  //     }, {
-  //       date: '2019-01-04',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 2
-  //     }, {
-  //       date: '2019-01-05',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 2
-  //     }, {
-  //       date: '2019-01-01',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 3
-  //     }, {
-  //       date: '2019-01-02',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 3
-  //     }, {
-  //       date: '2019-01-03',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 3
-  //     }, {
-  //       date: '2019-01-04',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 3
-  //     }, {
-  //       date: '2019-01-05',
-  //       data: Math.floor(Math.random() * 100 + 1),
-  //       key: 3
-  //     } ],
-  //     effectTypeList: [{
-  //       text: '微博指数',
-  //       key: 0
-  //     }, {
-  //       text: '微信指数',
-  //       key: 1
-  //     }, {
-  //       text: '百度指数',
-  //       key: 2
-  //     }, {
-  //       text: '头条指数',
-  //       key: 3
-  //     }]
-  //   }
-  // })
+export async function trend(id: any, query: any) {
+  // const res = await get(`/brand/brands/${id}/index` , query)
+  // return res
+  return await mockGet(query, {
+    items: [
+      {
+        id: tid,
+        date: 20190602,
+        brandId: 10121,
+        trend: tid,
+        count: tid,
+        channels: [
+          {
+            code: 'weibo',
+            count: tid,
+            ranking: 0,
+            trend: 514087
+          },
+          {
+            code: 'toutiao',
+            count: tid,
+            ranking: 0,
+            trend: 0
+          },
+          {
+            code: 'wechat',
+            count: tid,
+            ranking: 0,
+            trend: 0
+          },
+          {
+            code: 'baidu',
+            count: tid,
+            ranking: 0,
+            trend: 0
+          }
+        ]
+      }
+    ],
+    channelCodeList: [
+      {
+        controlStatus: 1,
+        text: '新浪微博',
+        key: 'weibo'
+      },
+      {
+        controlStatus: 1,
+        text: '微信',
+        key: 'wechat'
+      },
+      {
+        controlStatus: 1,
+        text: '抖音',
+        key: 'douyin'
+      },
+      {
+        controlStatus: 1,
+        text: '快手',
+        key: 'kuaishou'
+      }
+    ]
+  })
 }
 
 
