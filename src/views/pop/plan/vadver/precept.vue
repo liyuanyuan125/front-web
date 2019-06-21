@@ -16,7 +16,7 @@
                   <img :src="it.image ? it.image : defaultImg" @onerror="defaultImg" class="film-cover">
                   <div style="position: relative">
                     <!-- <p class="film-title" :title="it.movieName">{{it.movieName}}</p> -->
-                    <p class="film-title" :title="it.movieName" style="margin-bottom: 20px">{{it.movieName}}</p>
+                    <p class="film-title" :title="it.movieName" style="margin-bottom: 30px">{{it.movieName}}</p>
                     <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
                     <p style="margin-bottom: 6px"><span>影片类型：</span>{{it.movieType}}</p>
                     <p style="margin-bottom: 6px"><span>想看人数：</span>{{it.wantSeeNum || '-'}}</p>
