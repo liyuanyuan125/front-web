@@ -49,6 +49,41 @@
             :list="figureData.similarList"
             routeName="film-figure"
           />
+
+          <HotPane
+            title="全网影人热度榜"
+            :list="figureData.hotList"
+            routeName="film-figure"
+          />
+        </template>
+
+        <template v-if="typeOn == 'film'">
+          <SimilarPane
+            title="相似影片"
+            :list="filmData.similarList"
+            :size="{ width: 80, height: 110 }"
+            routeName="film-movie"
+          />
+
+          <HotPane
+            title="全网影人热度榜"
+            :list="filmData.hotList"
+            routeName="film-movie"
+          />
+        </template>
+
+        <template v-if="typeOn == 'kol'">
+          <SimilarPane
+            title="相似影人"
+            :list="kolData.similarList"
+            routeName="film-figure"
+          />
+
+          <HotPane
+            title="全网影人热度榜"
+            :list="kolData.hotList"
+            routeName="film-figure"
+          />
         </template>
       </aside>
     </section>
@@ -63,6 +98,7 @@ import FigureItem from './components/figureItem.vue'
 import FilmItem from './components/filmItem.vue'
 import KolItem from './components/kolItem.vue'
 import SimilarPane from './components/similarPane.vue'
+import HotPane from './components/hotPane.vue'
 import { searchFigure, searchFilm, searchKol } from './data'
 
 // 搜索类型，分别为：影人、影片、kol
@@ -74,7 +110,8 @@ type Type = 'figure' | 'film' | 'kol'
     FigureItem,
     FilmItem,
     KolItem,
-    SimilarPane
+    SimilarPane,
+    HotPane
   }
 })
 export default class SearchPage extends ViewBase {
@@ -99,6 +136,16 @@ export default class SearchPage extends ViewBase {
     hotList: []
   }
 
+  filmData: any = {
+    similarList: [],
+    hotList: []
+  }
+
+  kolData: any = {
+    similarList: [],
+    hotList: []
+  }
+
   async fetchFigure(query: any) {
     const data = await searchFigure(query)
 
@@ -109,17 +156,29 @@ export default class SearchPage extends ViewBase {
   }
 
   async fetchFilm(query: any) {
-    return searchFilm(query)
+    const data = await searchFilm(query)
+
+    this.filmData.similarList = data.similarList
+    this.filmData.hotList = data.hotList
+
+    return data
   }
 
   async fetchKol(query: any) {
-    return searchKol(query)
+    const data = await searchKol(query)
+
+    this.kolData.similarList = data.similarList
+    this.kolData.hotList = data.hotList
+
+    return data
   }
 
   @Watch('typeOn')
   watchTypeOn(type: string) {
-    const params = type == 'figure' ? {} : { type }
-    this.$router.push({ name: 'search', params })
+    const route = type == 'figure'
+      ? { name: 'search' }
+      : { name: 'search', params: { type } }
+    this.$router.push(route)
   }
 }
 </script>
@@ -181,6 +240,7 @@ export default class SearchPage extends ViewBase {
 
 .search-body {
   display: flex;
+  justify-content: space-between;
   min-height: 388px;
   background-color: rgba(255, 255, 255, .8);
   border-radius: 0 0 7px 7px;
@@ -189,9 +249,22 @@ export default class SearchPage extends ViewBase {
 
 .search-main {
   width: 814px;
+  /deep/ .fetch-list {
+    margin-top: -25px;
+  }
+  /deep/ .fetch-item {
+    border-top: 1px solid rgba(0, 32, 45, .1);
+    &:first-child {
+      border-top: 0;
+    }
+  }
 }
 
 .search-side {
   width: 270px;
+
+  /deep/ .similar-pane ~ .hot-pane {
+    margin-top: 26px;
+  }
 }
 </style>
