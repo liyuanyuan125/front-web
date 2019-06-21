@@ -65,7 +65,7 @@ export default class Main extends ViewBase {
 
     const tradeName: any = tradeCodeList.find((trade: any) => trade.key == item.tradeCode) || {}
     const detail = {
-      enName: item.enName,
+      enName: item.name,
       tradeCodeName: tradeName.text
     }
     this.detailMes = detail

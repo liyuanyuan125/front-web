@@ -1466,17 +1466,15 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
   {
-    path: '/brand/moredetail/:id/:brandId',
+    path: '/brand/moredetail/:brandId',
     name: 'brand-moredetail',
-    redirect: '/brand/moredetail/:id/:brandId/base',
+    redirect: '/brand/moredetail/:brandId/base',
     component: () => import('./views/brand/moreDetail.vue'),
     meta: {
-      authKey: '',
-      authAction: '',
+      ...emptyAuth,
       title: '品牌管理详情页',
     },
     props: paramTypes({
-      id: Number,
       brandId: Number
     }),
     children: [
@@ -1486,12 +1484,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         name: 'brand-moredetail-base',
         component: () => import('./views/brand/details/base.vue'),
         meta: {
-          authKey: '',
-          authAction: '',
+          ...emptyAuth,
           title: '基础信息',
         },
         props: paramTypes({
-          id: Number,
           brandId: Number
         }),
       },
@@ -1501,12 +1497,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         name: 'brand-moredetail-shop',
         component: () => import('./views/brand/details/shop.vue'),
         meta: {
-          authKey: '',
-          authAction: '',
+          ...emptyAuth,
           title: '门店',
         },
         props: paramTypes({
-          id: Number,
           brandId: Number
         }),
       },
@@ -1516,12 +1510,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         name: 'brand-moredetail-media',
         component: () => import('./views/brand/details/media.vue'),
         meta: {
-          authKey: '',
-          authAction: '',
+          ...emptyAuth,
           title: '媒体平台',
         },
         props: paramTypes({
-          id: Number,
           brandId: Number
         }),
       },
@@ -1531,12 +1523,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         name: 'brand-moredetail-product',
         component: () => import('./views/brand/details/product.vue'),
         meta: {
-          authKey: '',
-          authAction: '',
+          ...emptyAuth,
           title: '产品信息',
         },
         props: paramTypes({
-          id: Number,
           brandId: Number
         }),
       },
