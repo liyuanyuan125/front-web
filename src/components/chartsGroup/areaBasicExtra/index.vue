@@ -1,24 +1,3 @@
-<style lang='less'>
-.areaExtra-type-selectbox {
-  .wp {
-    padding: 0 15px;
-    .inner {
-      padding: 15px;
-      background: rgba(0, 32, 45, 0.6);
-      border-radius: 6px;
-      border-width: 2px;
-      border-style: solid;
-      .charts {
-        padding: 0;
-        margin: 0;
-      }
-    }
-    .noBorder {
-      border-color: rgba(0, 32, 45, 0.6) !important;
-    }
-  }
-}
-</style>
 <template>
   <div>
     <div style='text-align:center'>
@@ -42,9 +21,8 @@
              @click="currentTypeChange(item.key)">
           <div :class="['inner', currentIndex === item.key ? '' : 'noBorder']"
                :style="{ 'border-color':color[item.key] }">
-            <div class="content">
-              <Icon type="md-help-circle"
-                    size="35" />{{item.text}}</div>
+            <div class="content name-box">
+              <i :style="`backgroundImage: url(${ icons[cName2PicName(item.text)] })`"></i>{{item.text}}</div>
             <div class="chart">
               <div :ref="'type-'+index"
                    style="width: 100%; height: 100px"></div>
@@ -54,13 +32,20 @@
         </Col>
       </Row>
     </div>
-    <div ref="refChart"
-         v-if="initDone"
-         style="width: 100%; height: 400px"></div>
-    <div v-else
-         style="width: 100%; height: 400px">
-      <TinyLoading />
-    </div>
+    <Row type="flex"
+         justify="center"
+         align="middle">
+      <Col :span="24">
+      <div ref="refChart"
+           v-if="initDone"
+           :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
+      <div v-else
+           class='loading-wp'
+           :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
+        <TinyLoading />
+      </div>
+      </Col>
+    </Row>
   </div>
 </template>
 <script lang="ts">
@@ -68,6 +53,11 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
+import { tooltipStyles } from '@/util/echarts'
+const tooltipsDefault = tooltipStyles({
+  trigger: 'item',
+  formatter: '{b} <br/> {c}'
+})
 import {
   pubOption,
   seriesOption,
@@ -76,29 +66,61 @@ import {
   xOption,
   barThinStyle
 } from '../chartsOption'
+
 @Component({
   components: {
     TinyLoading
   }
 })
-// 基础面积图
 export default class AreaBasic extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
-  @Prop({ type: Array, default: () => [] })  dict1!: any[]
-  @Prop({ type: Array, default: () => [] })  dict2!: any[]
-  @Prop({ type: Array, default: () => [] })  color!: any[]
-  @Prop({ type: Array, default: () => [] })  dataList!: any[]
+  @Prop({ type: Array, default: () => [] }) dict1!: any[]
+  @Prop({ type: Array, default: () => [] }) dict2!: any[]
+  @Prop({ type: Array, default: () => [] }) color!: any[]
+  @Prop({ type: Array, default: () => [] }) dataList!: any[]
+  @Prop({ type: Number, default: 0 }) height?: number
+  @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
+
+  icons = {
+    weibo: require('../../../assets/icon/weibo.png'),
+    wechat: require('../../../assets/icon/wechat.png'),
+    baidu: require('../../../assets/icon/baidu.png'),
+    toutiao: require('../../../assets/icon/toutiao.png')
+  }
+
   currentIndex: number = this.currentTypeIndex
+
   currentTypeChange(index: number) {
     this.currentIndex = index
     this.$emit('typeChange', index)
   }
+
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
   }
+
+  cName2PicName(name: string) {
+    switch (name) {
+      case '微博指数':
+        return 'weibo'
+        break
+      case '微信指数':
+        return 'wechat'
+        break
+      case '百度指数':
+        return 'baidu'
+        break
+      case '头条指数':
+        return 'toutiao'
+        break
+      default:
+        return 'weibo'
+    }
+  }
+
   // 接口没调
   updateCharts() {
     if (
@@ -112,7 +134,31 @@ export default class AreaBasic extends ViewBase {
     const myChart = echarts.init(this.$refs.refChart as any)
     const option: any = {
       color: this.color[this.currentIndex],
-      ...pubOption,
+      legend: {
+        show: false,
+        y: 'bottom'
+      },
+      grid: {
+        left: '2%',
+        right: '2%',
+        bottom: '20%',
+        containLabel: true,
+        show: false,
+        borderWidth: 0
+      },
+      tooltip: {
+        borderWidth: 1,
+        borderColor: this.color[this.currentIndex],
+        backgroundColor: this.color[this.currentIndex],
+        padding: [7, 10],
+        textStyle: {
+          color: '#fff',
+          fontSize: 12,
+          lineHeight: 22
+        },
+        trigger: 'item',
+        formatter: '{b} <br/> {c}'
+      },
       xAxis: {
         ...xOption,
         boundaryGap: false,
@@ -128,7 +174,13 @@ export default class AreaBasic extends ViewBase {
           data: chartData.data,
           type: 'line',
           smooth: true,
-          ...seriesOption
+          lineStyle: {
+            width: 1
+          },
+          areaStyle: {
+            shadowColor: this.color[this.currentIndex],
+            opacity: 0.4
+          }
         }
       ]
     }
@@ -139,8 +191,10 @@ export default class AreaBasic extends ViewBase {
       option.tooltip.formatter = _title + ` {c}`
     }
     option.tooltip.backgroundColor = this.color[this.currentIndex]
+    // console.save(option, `${new Date()}.json`)
     myChart.setOption(option)
   }
+
   updateTypeCharts() {
     const ref: any[] = []
     this.dict1.forEach((item, index) => {
@@ -205,6 +259,7 @@ export default class AreaBasic extends ViewBase {
       echarts.init(ref[index]).setOption(option)
     })
   }
+
   @Watch('initDone')
   watchInitDone(val: boolean) {
     if (val) {
@@ -215,6 +270,7 @@ export default class AreaBasic extends ViewBase {
       })
     }
   }
+
   @Watch('currentTypeIndex')
   watchcurrentTypeIndex(newIndex: any, oldIndex: any) {
     if (newIndex !== oldIndex) {
@@ -224,3 +280,39 @@ export default class AreaBasic extends ViewBase {
   }
 }
 </script>
+<style lang="less" scoped>
+/deep/ .areaExtra-type-selectbox {
+  .wp {
+    padding: 0 15px;
+    .name-box {
+      display: flex;
+      flex-flow: row;
+      justify-content: center;
+      align-items: center;
+      i {
+        display: inline-block;
+        padding: 15px;
+        background-size: 100%;
+        background-position: center center;
+        background-repeat: no-repeat;
+        text-align: center;
+        margin-right: 5px;
+      }
+    }
+    .inner {
+      padding: 15px;
+      background: rgba(0, 32, 45, 0.6);
+      border-radius: 6px;
+      border-width: 2px;
+      border-style: solid;
+      .charts {
+        padding: 0;
+        margin: 0;
+      }
+    }
+    .noBorder {
+      border-color: rgba(0, 32, 45, 0.6) !important;
+    }
+  }
+}
+</style>

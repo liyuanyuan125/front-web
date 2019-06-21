@@ -45,6 +45,8 @@ export interface User {
   accountType: number
   /** 权限列表 */
   perms: string[]
+  // 二级代理商和直客身份
+  secondaryCode: string
 }
 
 const KEY_USER = 'user@www.aiads.com'

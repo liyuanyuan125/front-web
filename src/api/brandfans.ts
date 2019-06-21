@@ -582,3 +582,144 @@ export async function brands(query: any) {
     }
   })
 }
+
+/**
+ * 活跃粉丝数
+ * @param id id
+ * @description http://yapi.aiads-dev.com/project/152/interface/api/4054
+ */
+ export async function trend(query: any, id: number | string = '') {
+  // 演示 临时参数 nxd 20190621
+  id = '10121'
+  query = {
+    beginDate: '20160520',
+    endDate: '20190620'
+  }
+  const res = await get(`/brand/brands/${id}/index`, query)
+  return res
+  return await mockGet({}, {
+    items: [
+      {
+        id: tid,
+        date: 20190602,
+        brandId: 10121,
+        trend: tid,
+        count: tid,
+        channels: [
+          {
+              code: 'weibo',
+              count: tid,
+              ranking: 0,
+              trend: tid
+          },
+          {
+              code: 'baidu',
+              count: tid,
+              ranking: 0,
+              trend: tid
+          },
+          {
+              code: 'wechat',
+              count: tid,
+              ranking: 0,
+              trend: tid
+          },
+          {
+              code: 'toutiao',
+              count: tid,
+              ranking: 0,
+              trend: tid
+          }
+        ]
+      },
+      {
+        id: tid,
+        date: 20190603,
+        brandId: 10121,
+        trend: tid,
+        count: tid,
+        channels: [
+          {
+              code: 'weibo',
+              count: tid,
+              ranking: 0,
+              trend: tid
+          },
+          {
+              code: 'baidu',
+              count: tid,
+              ranking: 0,
+              trend: tid
+          },
+          {
+              code: 'wechat',
+              count: tid,
+              ranking: 0,
+              trend: tid
+          },
+          {
+              code: 'toutiao',
+              count: tid,
+              ranking: 0,
+              trend: tid
+          }
+        ]
+      },
+      {
+        id: tid,
+        date: 20190604,
+        brandId: 10121,
+        trend: tid,
+        count: tid,
+        channels: [
+          {
+              code: 'weibo',
+              count: tid,
+              ranking: 0,
+              trend: tid
+          },
+          {
+              code: 'baidu',
+              count: tid,
+              ranking: 0,
+              trend: tid
+          },
+          {
+              code: 'wechat',
+              count: tid,
+              ranking: 0,
+              trend: tid
+          },
+          {
+              code: 'toutiao',
+              count: tid,
+              ranking: 0,
+              trend: tid
+          }
+        ]
+      },
+    ],
+    channelCodeList: [
+      {
+          controlStatus: 1,
+          text: '新浪微博',
+          key: 'weibo'
+      },
+      {
+          controlStatus: 1,
+          text: '微信',
+          key: 'wechat'
+      },
+      {
+          controlStatus: 1,
+          text: '百度',
+          key: 'baidu'
+      },
+      {
+          controlStatus: 1,
+          text: '头条',
+          key: 'toutiao'
+      }
+  ]
+  })
+}

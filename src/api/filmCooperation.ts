@@ -4,7 +4,7 @@ import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
 /**
  * 搜索接口
  * @param query
- * https://yapi.aiads-dev.com/project/161/interface/api/4974
+ * http://yapi.aiads-dev.com/project/161/interface/api/4974
  */
 export async function fetchList(query: any) {
   const res = await get('/movie/search' , query)

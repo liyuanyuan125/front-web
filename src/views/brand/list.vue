@@ -14,7 +14,7 @@
       <ul class="ul-lists">
         <li v-for="item in list" :key="item.id">
           <router-link
-            :to="{ name: 'brand-home', params: { id: item.id } }"
+            :to="{ name: 'brand-moredetail', params: { brandId: item.brandId } }"
             class="col-first span-first"
           >
             <img :src="item.logo" class="logo">
@@ -35,12 +35,12 @@
             v-if="it.key == item.status"
           >{{it.text}}</span>
 
-          <span v-if="item.status == 15" class="col-fourth">
+          <span v-if="item.status == 15 && secondaryCode != 'daili'" class="col-fourth">
             <img
               src="./assets/add-icon.png"
               width="20"
               class="cursor"
-              @click="$router.push({name: 'brand-moredetail', params: {id: item.id, brandId: item.brandId}})"
+              @click="$router.push({name: 'brand-moredetail', params: {brandId: item.brandId}})"
             >
           </span>
         </li>
@@ -58,6 +58,7 @@ import ViewBase from '@/util/ViewBase'
 import pagination from '@/components/page.vue'
 import { brandList, createBrand, selectBrand } from '@/api/brandList'
 import addBrand from './modalDlg/addBrand.vue'
+import { getUser } from '@/store'
 
 @Component({
   components: {
@@ -74,6 +75,8 @@ export default class Main extends ViewBase {
     pageSize: 20
   }
 
+  // 直客或者代理商
+  secondaryCode: any = null
   // 品牌状态
   brandStatus = []
   // 品牌行业
@@ -85,6 +88,7 @@ export default class Main extends ViewBase {
 
   mounted() {
     this.tableList()
+    this.secondaryCode = getUser() && getUser()!.secondaryCode
   }
 
   async tableList() {
@@ -102,6 +106,7 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     }
   }
+
   uplist(size: any) {
     this.pageList.pageIndex = size
     this.tableList()
