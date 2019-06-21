@@ -13,7 +13,7 @@
        <Col :span='12'>下单时间：{{item.createTime == null ? '暂无时间' : createTime}}</Col>
       </Row>
       <Row>
-       <Col :span='24'>推广产品：{{item.productName}}</Col>
+       <Col :span='24'>推广产品：{{item.productName == null ? '暂无' : item.productName}}</Col>
       </Row>
       <Row>
        <Col :span='24'>推广内容：{{item.content}}</Col>
@@ -60,7 +60,7 @@
                  <em style='margin-left: 5px;' v-for="item in channelCodeList" v-if="item.key == it.channelCode">{{item.text}}</em>
                  </div>
               </Col>
-              <Col :span='3' class='li-ti-col ss'>{{it.publishCategoryCode}}</Col>
+              <Col :span='3' class='li-ti-col ss'><span v-for='(item,index) in publishCategoryList' :key='index' v-if='item.key == it.publishCategoryCode'>{{item.text}}</span></Col>
               <Col :span='3' class='li-ti-col ss'>￥{{it.salePrice}}</Col>
               <Col :span='3' class='li-ti-col ss'>{{it.publishTime}}</Col>
               <Col :span='4' class='li-ti-col ss'>{{it.content}}</Col>
@@ -94,6 +94,9 @@
         </ul>
       </div>
     </div>
+    <div style='margin-top: 40px;text-align: center;'>
+      <Button class="bth" icon="md-return-left" @click="goback">返回上一页</Button>
+    </div>
   </div>
 </template>
 
@@ -108,7 +111,7 @@ import { orderDetail } from '@/api/kolOrderList'
 import { querySelectList } from '@/api/brandList'
 
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
-
+const times = 'YYYY-MM-DD'
 
 @Component({
   components: {
@@ -133,6 +136,7 @@ export default class Main extends ViewBase {
   subStatusList = []
   // 订单日志
   orderLogList = []
+  publishCategoryList: any = []
 
   mounted() {
     this.seach()
@@ -157,13 +161,13 @@ export default class Main extends ViewBase {
         this.taskItemList = (taskItemList || []).map((it: any) => {
           return {
             ...it,
-            publishTime: String(it.publishTime).slice(0, 4) + '-' + String(it.publishTime).slice(4, 6)
-            + '-' + String(it.publishTime).slice(6, 8)
+            publishTime: moment(it.publishTime).format(times)
           }
         })
         this.subStatusList = subStatusList
         this.orderLogList = orderLogList
         this.createTime = moment(this.item.createTime).format(timeFormat)
+        this.publishCategoryList = publishCategoryList
     } catch (ex) {
       this.handleError(ex)
     }
@@ -182,6 +186,9 @@ export default class Main extends ViewBase {
     // } finally {
     // }
   }
+  goback() {
+    this.$router.go(-1)
+  }
   // 获取推广平台
   async querySelectList() {
     try {
@@ -199,6 +206,14 @@ export default class Main extends ViewBase {
 .flex-box-items {
   display: flex;
   align-items: center;
+}
+.bth {
+  width: 200px;
+  height: 45px;
+  border: 0;
+  background: #00202d;
+  color: #fff;
+  border-radius: 25px;
 }
 .page {
   padding-left: 30px;
