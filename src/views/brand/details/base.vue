@@ -100,7 +100,7 @@ export default class Main extends ViewBase {
   }
   async baseSubmit() {
     // 如果fileId为空 则传logo
-    const logo = localStorage.getItem('fileId')
+    const logo = localStorage.getItem('fileId') || this.baseList.logo
     try {
       const { data } = await editBase({
         ...this.form,
