@@ -1,40 +1,49 @@
 <template>
   <div>
-    <Modal v-model="value.visible" title="编辑关联影院" width="800">
-      <Row type="flex" justify="space-between">
-        <Col :span="6">
-          <Select v-model="form.areaCode" clearable>
-            <Option :value="item.key" :key="item.key" v-for="item in areaList">{{item.text}}</Option>
-          </Select>
-        </Col>
-        <Col :span="6">
-          <AreaSelect v-model="area" :max-level="2" no-self/>
-        </Col>
-        <Col :span="11" class="search-btn flex-box">
-          <Input v-model="form.searchKey" @click="getList" placeholder="请输入影院专资编码或名称"/>
-          <span @click="searchList">
-            <Icon type="ios-search" size="22"/>
-          </span>
-        </Col>
-      </Row>
-      <Table
-        stripe
-        :columns="columns"
-        :data="data"
-        @on-select="singleSelect"
-        @on-select-all="selectAll"
-      ></Table>
-      <Page
-        :total="value.totalCount"
-        v-if="value.totalCount>0"
-        class="btnCenter"
-        :current="current"
-        :page-size="pageSize"
-        show-total
-        show-elevator
-        @on-change="handlepageChange"
-        @on-page-size-change="handlePageSize"
-      />
+    <Modal v-model="value.visible"
+      title="编辑关联影院"
+      width="800"
+      :transfer='false'
+      :closable='false'
+      :mask-closable='false'
+      >
+      <div class="title">
+        <i @click="cancel"></i>>
+        <Row type="flex" justify="space-between">
+          <Col :span="6">
+            <Select v-model="form.areaCode" clearable>
+              <Option :value="item.key" :key="item.key" v-for="item in areaList">{{item.text}}</Option>
+            </Select>
+          </Col>
+          <Col :span="6">
+            <AreaSelect v-model="area" :max-level="2" no-self/>
+          </Col>
+          <Col :span="11" class="search-btn flex-box">
+            <Input v-model="form.searchKey" @click="getList" placeholder="请输入影院专资编码或名称"/>
+            <span @click="searchList">
+              <Icon type="ios-search" size="22"/>
+            </span>
+          </Col>
+        </Row>
+        <Table
+          stripe
+          :columns="columns"
+          :data="data"
+          @on-select="singleSelect"
+          @on-select-all="selectAll"
+        ></Table>
+        <Page
+          :total="value.totalCount"
+          v-if="value.totalCount>0"
+          class="btnCenter"
+          :current="current"
+          :page-size="pageSize"
+          show-total
+          show-elevator
+          @on-change="handlepageChange"
+          @on-page-size-change="handlePageSize"
+        />
+      </div>
       <div slot="footer" class="btnCenter footer-bottom">
         <Button class="button-cancel" @click="handleCancel">取消</Button>
         <Button type="primary" class="button-ok" @click="handleOk">保存</Button>
@@ -161,6 +170,35 @@ export default class Change extends ViewBase {
   padding: 10px 13px;
   background: #f9f9f9;
   font-weight: none;
+}
+.title {
+  border-radius: 5px 5px 0 0;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 30px;
+  font-weight: 500;
+  background: #eee;
+  padding: 20px;
+  color: #00202d;
+  i {
+    position: absolute;
+    right: -12px;
+    top: -12px;
+    display: block;
+    width: 27px;
+    height: 27px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid rgba(209, 216, 219, 1);
+    &::before {
+      display: block;
+      content: "×";
+      font-size: 26px;
+      line-height: 24px;
+      text-align: center;
+    }
+  }
 }
 .search-btn {
   /deep/ .ivu-input {

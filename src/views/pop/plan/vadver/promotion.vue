@@ -59,7 +59,8 @@
             <Col span="12">
               <Row class="adver-detail">
                 <FormItem label="投放排期:" class="timer" :labelWidth='100' prop="advertime" :show-message="form.advertime.length == 0">
-                  <weekDatePicker v-model="form.advertime" style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker>
+                  <DatePicker v-model="form.advertime" type="daterange" placement="bottom-end" placeholder="请选择日期" ></DatePicker>
+                  <!-- <weekDatePicker  style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker> -->
                 </FormItem>
               </Row>
             </Col>
@@ -396,7 +397,7 @@ export default class Promotion extends ViewBase {
   }
   /deep/ .ivu-icon-ios-calendar-outline {
     position: absolute;
-    right: -64px;
+    right: 0;
     width: 22px;
     top: 4px;
     height: 22px;
@@ -405,7 +406,6 @@ export default class Promotion extends ViewBase {
   }
   .timer {
     /deep/ .ivu-form-item-content {
-      border-bottom: 1px solid #00202d;
       label {
         color: #fff;
         font-size: 16px;

@@ -34,7 +34,8 @@
         </Col>
       </Row>
     </div>
-    <!-- <div v-if="planMovies.length > 0" class="plan-cinema">
+
+    <div v-if="planMovies && planMovies.length > 0" class="plan-cinema">
       <div class="result-top">
         <h3>投放影片{{planMovies.length}}部</h3>
         <span>效果不足时允许系统投放更多影片确保曝光效果</span>
@@ -59,7 +60,10 @@
 
           <div class="film-center">
             <p style="opacity: .7">受众性别</p>
-            <div class="file-sex-box">
+            <p style="margin-left: 20px" v-if="it.sexCodes == 'man'">男性</p>
+            <p style="margin-left: 20px" v-else-if="it.sexCodes == 'woman'">女性</p>
+            <p  style="margin-left: 20px" v-else>-</p>
+            <!-- <div class="file-sex-box">
               <div>
                 <div class="file-sex-man" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.8 + 30}px`}">
                   <img width="30px" height="30" src="../vadver/assets/man.png" alt="">
@@ -74,22 +78,24 @@
                 </div>
               </div>
               <span style="color: #CA7273">女性：{{it.matching}}%</span>
-            </div>
+            </div> -->
           </div>
 
           <div class="film-buttom">
             <dl style="margin-bottom: 15px">
               <dd>受众年龄：</dd>
-              <dt>{{it.matching}}%</dt>
+              <dt v-if="it.ageCodes && it.ageCodes.length > 0">
+                <span v-for="item in it.ageCodes" :key="item">{{item || '-'}}</span></dt>
+              <dt v-else>-</dt>
             </dl>
             <dl>
               <dd>投放周期：</dd>
-              <dt>{{it.beginDate}}</dt>
+              <dt>{{formatDate(it.beginDate)}} 至 {{formatDate(it.endDate)}}</dt>
             </dl>
           </div>
         </li>
       </ul>
-    </div> -->
+    </div>
 
     <div v-if="status != 1" class="plan-cinema-num">
       <div class="result-top">

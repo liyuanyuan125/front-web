@@ -1,12 +1,21 @@
 <template>
   <div>
-    <Modal v-model="value.visible" title="查看关联影院" width="800">
-      <div v-if="visible">当前没有关联的客户</div>
-      <Table v-else stripe :columns="columns" :data="data">
-        <template slot-scope="{row, index}" slot="areaName">
-          <span>{{row.areaName}}/{{row.provinceName}}/{{row.cityName}}</span>
-        </template>
-      </Table>
+    <Modal v-model="value.visible"
+      :transfer='false'
+      :width='460'
+      :closable='false'
+      :mask-closable='false'
+      title="查看关联影院"
+      width="800">
+      <div class="title">
+        <i @click="cancel"></i>
+        <div v-if="visible">当前没有关联的客户</div>
+        <Table v-else stripe :columns="columns" :data="data">
+          <template slot-scope="{row, index}" slot="areaName">
+            <span>{{row.areaName}}/{{row.provinceName}}/{{row.cityName}}</span>
+          </template>
+        </Table>
+      </div>
       <div slot="footer" class="btnCenter footer-bottom">
         <Button type="primary" class="button-cancel ok" @click="value.visible = false">关闭</Button>
       </div>
@@ -57,6 +66,36 @@ export default class Change extends ViewBase {
   background: rgba(0, 32, 45, 1);
   border-radius: 25px;
 }
+.title {
+  border-radius: 5px 5px 0 0;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 30px;
+  font-weight: 500;
+  background: #eee;
+  padding: 20px;
+  color: #00202d;
+  i {
+    position: absolute;
+    right: -12px;
+    top: -12px;
+    display: block;
+    width: 27px;
+    height: 27px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid rgba(209, 216, 219, 1);
+    &::before {
+      display: block;
+      content: "×";
+      font-size: 26px;
+      line-height: 24px;
+      text-align: center;
+    }
+  }
+}
+
 /deep/ .theme-resource .ivu-btn-primary:hover {
   color: #fff;
   background-color: rgba(0, 32, 45, 1);
