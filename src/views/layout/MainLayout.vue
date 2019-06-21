@@ -622,7 +622,6 @@ export default class MainLayout extends ViewBase {
 .site-content {
   position: relative;
   padding: 10px 10px 10px 130px;
-  overflow: auto;
 }
 
 // TODO: 临时隐藏

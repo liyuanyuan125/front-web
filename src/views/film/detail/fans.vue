@@ -5,7 +5,7 @@
       <Form label-position="left"
             :label-width="100">
         <Card class="detailmore-card">
-          <div slot="title">
+          <!-- <div slot="title">
             <Row type="flex"
                  justify="space-between"
                  align="middle">
@@ -28,7 +28,7 @@
                         type="primary">查看匹配度</Button></router-link>
               </Col>
             </Row>
-          </div>
+          </div> -->
           <div class="content">
             <Row type="flex"
                  justify="space-between">
@@ -62,28 +62,62 @@
               <Col :span="12">
               <div class='chart-wp borderRadius'
                    style='margin-right:10px; height:460px'>
-                <MapChina :initDone="chart3.initDone"
-                          :title="chart3.title"
-                          :dict1="chart3.dict1"
-                          :dict2="chart3.dict2"
-                          :color="chart3.color"
-                          :max="chart3.max"
-                          :dataList="chart3.dataList"
-                          :currentTypeIndex="chart3.currentTypeIndex" />
+                <BarXCategory :initDone="chart3.initDone"
+                              :title='chart3.title'
+                              :dict1="chart3.dict1"
+                              :dict3="chart3.dict3"
+                              :color="chart3.color"
+                              :dataList="chart3.dataList"
+                              :currentTypeIndex="chart3.currentTypeIndex" />
               </div>
               </Col>
               <Col :span="12">
-              <div class='chart-wp'
-                   style='height:460px'>
-                <BarYCategory :initDone="chart4.initDone"
-                              :title="chart4.title"
-                              :dict1="chart4.dict1"
-                              :dict2="chart4.dict2"
-                              :color="chart4.color"
-                              :dataList="chart4.dataList"
-                              :currentTypeIndex="chart4.currentTypeIndex"
-                              @typeChange='typeChangeHander4' />
-              </div>
+                <div class='chart-wp'
+                    style='margin-right:10px'>
+                  <Pie :initDone="chart4.initDone"
+                      :title='chart4.title'
+                      :dict1="chart4.dict1"
+                      :dict2="chart4.dict2"
+                      :color="chart4.color"
+                      :dataList="chart4.dataList"
+                      :currentTypeIndex="chart4.currentTypeIndex" />
+                </div>
+              </Col>
+              <Col :span="12">
+                <div class='chart-wp'
+                    style='margin-right:10px'>
+                  <Pie :initDone="chart5.initDone"
+                      :title='chart5.title'
+                      :dict1="chart5.dict1"
+                      :dict2="chart5.dict2"
+                      :color="chart5.color"
+                      :dataList="chart5.dataList"
+                      :currentTypeIndex="chart5.currentTypeIndex" />
+                </div>
+              </Col>
+              <Col :span="12">
+                <div class='chart-wp'
+                    style='margin-right:10px'>
+                  <Pie :initDone="chart6.initDone"
+                      :title='chart6.title'
+                      :dict1="chart6.dict1"
+                      :dict2="chart6.dict2"
+                      :color="chart6.color"
+                      :dataList="chart6.dataList"
+                      :currentTypeIndex="chart6.currentTypeIndex" />
+                </div>
+              </Col>
+              <Col :span="12">
+                <div class='chart-wp'
+                    style='margin-right:10px'>
+                  <PieNest :initDone="chart7.initDone"
+                      :title='chart7.title'
+                      :dict1="chart7.dict1"
+                      :dict2="chart7.dict2"
+                      :color="chart7.color"
+                      :dataList="chart7.dataList"
+                      :currentTypeIndex="chart7.currentTypeIndex" />
+                </div>
               </Col>
             </Row>
           </div>
@@ -96,12 +130,14 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { fans, brands } from '@/api/figureDetailMoreInfo'
+import { fans, brands , film } from '@/api/filmfans'
 import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import MapChina from '@/components/chartsGroup/mapChina/'
 import Pie from '@/components/chartsGroup/pieSimple/'
+import PieNest from '@/components/chartsGroup/pieSimple/'
 import BarYCategory from '@/components/chartsGroup/barYCategory/'
+import { toMap } from '@/fn/array'
 
 @Component({
   components: {
@@ -109,7 +145,8 @@ import BarYCategory from '@/components/chartsGroup/barYCategory/'
     Pie,
     MapChina,
     BarYCategory,
-    DetailNavBar
+    DetailNavBar,
+    PieNest
   }
 })
 export default class Temporary extends ViewBase {
@@ -156,32 +193,50 @@ export default class Temporary extends ViewBase {
     color: ['#00B6CC']
   }
   chart3: any = {
-    title: '省份分布',
+    title: '县级分布',
+    dict1: [],
+    dict2: [],
+    dict3: [],
+    currentTypeIndex: 0,
+    initDone: false,
+    dataList: [],
+    color: ['#ff9933']
+  }
+  chart4: any = {
+    title: '购物类型偏好',
     dict1: [],
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: ['#ff9933', '#169bd5'],
-    max: 100000
+    color: ['#00B6CC', '#DA6C70']
   }
-  chart4: any = {
-    title: '城市分粉丝量TOP10',
-    dict1: [
-      {
-        key: 0,
-        name: '省份'
-      },
-      {
-        key: 1,
-        name: '城市'
-      }
-    ],
+  chart5: any = {
+    title: '电影偏好',
+    dict1: [],
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: ['#ff9933', '#169bd5']
+    color: ['#00B6CC', '#DA6C70']
+  }
+  chart6: any = {
+    title: '学历',
+    dict1: [],
+    dict2: [],
+    currentTypeIndex: 0,
+    initDone: false,
+    dataList: [],
+    color: ['#00B6CC', '#DA6C70']
+  }
+  chart7: any = {
+    title: '职业',
+    dict1: [],
+    dict2: [],
+    currentTypeIndex: 0,
+    initDone: false,
+    dataList: [],
+    color: ['#00B6CC', '#DA6C70']
   }
   brandsLoading = false
   brands = []
@@ -206,20 +261,18 @@ export default class Temporary extends ViewBase {
       const {
         data,
         data: {
-          item: { genders, ages, cities, provinces }
+           genders, ages, cityLevels, shoppingTypes , movieTypes , educations , jobs
         }
       } = await fans(id)
       if (genders && genders.length > 0) {
         this.chart1.dataList[
           this.chart1.currentTypeIndex
-        ] = this.dict.genders.map(({ key, text }: any) => ({
-          name: text,
-          value: genders.reduce(
-            (pre: number, cur: any) =>
-              pre + (cur.gender === key ? cur.count : 0),
-            0
-          )
-        }))
+        ] = genders.map((it: any) => {
+          return {
+            name: it.gender == 1 ? '男' : '女',
+            value: it.rate
+          }
+        })
         this.chart1.initDone = true
       }
       if (ages && ages.length > 0) {
@@ -233,37 +286,64 @@ export default class Temporary extends ViewBase {
           })
           this.chart2.dataList[this.chart2.currentTypeIndex].data.push(v)
         })
-        // console.log(this.chart2.dict3)
         this.chart2.initDone = true
       }
-      if (provinces && provinces.length > 0) {
-        let [min, max] = [0, 0]
-        provinces.forEach(({ v, k }: any) => {
-          v = parseInt(v, 0)
-          max = (max < v) ? v : max
-          min = (min > v) ? v : min
-          this.chart3.dataList[this.chart3.currentTypeIndex].push({
-            name: k,
-            value: v
+      if (cityLevels && cityLevels.length > 0) {
+        this.chart3.dataList[this.chart3.currentTypeIndex] = {
+          type: 'bar',
+          data: []
+        }
+        cityLevels.forEach(({ v, k }: any) => {
+          this.chart3.dict3.push({
+            text: k
           })
-          this.chart4.dataList[0].push({
-            name: k,
-            value: v
-          })
+          this.chart3.dataList[this.chart3.currentTypeIndex].data.push(v)
         })
-        this.chart3.min = min
-        this.chart3.max = max
         this.chart3.initDone = true
+      }
+      if (shoppingTypes && shoppingTypes.length > 0) {
+        this.chart4.dataList[
+          this.chart4.currentTypeIndex
+        ] = shoppingTypes.map((it: any) => {
+          return {
+            name: it.k,
+            value: it.v
+          }
+        })
         this.chart4.initDone = true
       }
-      if (cities && cities.length > 0) {
-        cities.forEach(({ v, k }: any) => {
-          this.chart4.dataList[1].push({
-            name: k,
-            value: typeof v === 'number' ? v : parseInt(v, 0)
-          })
+      if (movieTypes && movieTypes.length > 0) {
+        this.chart5.dataList[
+          this.chart5.currentTypeIndex
+        ] = movieTypes.map((it: any) => {
+          return {
+            name: it.k,
+            value: it.v
+          }
         })
-        this.chart4.initDone = true
+        this.chart5.initDone = true
+      }
+      if (educations && educations.length > 0) {
+        this.chart6.dataList[
+          this.chart6.currentTypeIndex
+        ] = educations.map((it: any) => {
+          return {
+            name: it.k,
+            value: it.v
+          }
+        })
+        this.chart6.initDone = true
+      }
+      if (jobs && jobs.length > 0) {
+        this.chart7.dataList[
+          this.chart7.currentTypeIndex
+        ] = jobs.map((it: any) => {
+          return {
+            name: it.k,
+            value: it.v
+          }
+        })
+        this.chart7.initDone = true
       }
     } catch (ex) {
       this.handleError(ex)
