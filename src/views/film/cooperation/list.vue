@@ -52,7 +52,7 @@
               <RadioGroup
                 class="nav"
                 @on-change="handleChange"
-                v-model="selectdTime"
+                v-model="form.releaseStatus"
                 size="large"
                 type="button"
               >
@@ -185,7 +185,7 @@ export default class Temporary extends ViewBase {
     // 上映时间
     timeSelected: [
       {
-        key: '',
+        key: 0,
         text: '不限'
       },
       {
