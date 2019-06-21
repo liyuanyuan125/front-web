@@ -31,7 +31,7 @@
                   :key="item.id"
                 >{{ item.name }}</Option>
               </Select>
-              <router-link :to="{path: '/kol/detailMoreInfo/matching/'+pageQuery.brandId}">
+              <router-link :to="{path: `/kol/detail/${id}/matching/`+pageQuery.brandId}">
                 <Button :disabled="pageQuery.brandId === ''" size="small" type="primary">查看匹配度</Button>
               </router-link>
             </Col>
