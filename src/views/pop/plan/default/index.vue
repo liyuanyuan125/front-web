@@ -234,10 +234,10 @@
           <Col :span="2"><span>影片定向:</span></Col>
           <Col :span="10">
             <span v-if="item.movieCustom == 1">
-              系统智能匹配
+              自定义影片
             </span>
             <span v-else>
-              自定义影片
+              系统智能匹配
             </span>
           </Col>
         </Row>

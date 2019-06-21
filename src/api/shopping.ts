@@ -122,3 +122,13 @@ export async function findkol(channelCode: any, channelDataId: any) {
   const res = await get(`/kol/channel-accounts/query-by-channel/${channelCode}`, channelDataId)
   return res
 }
+
+/**
+ * @param
+ * 查看kol详情
+ */
+
+export async function delOrderId(orderItemId: any) {
+  const res = await del(`/kol/orders/move/${orderItemId}`)
+  return res
+}
