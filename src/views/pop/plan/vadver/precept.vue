@@ -131,11 +131,11 @@
                     </template>
 
                     <template slot-scope="{ row }" slot="estimateShowCount">
-                      {{formatNums(row.estimateShowCount)}}
+                      {{formatNums(row.estimateShowCount/10000)}}
                     </template>
 
                     <template slot-scope="{ row }" slot="estimatePersonCount">
-                      {{formatNums(row.estimatePersonCount)}}
+                      {{formatNums(row.estimatePersonCount/10000)}}
                     </template>
                   </Table>
 

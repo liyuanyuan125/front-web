@@ -200,7 +200,7 @@ export default class Promotion extends ViewBase {
       const { data } = await adverdetail(this.$route.params.setid)
       this.form.name = data.item.name
       this.form.specification = data.item.specification
-      this.form.budgetAmount = data.item.budgetAmount
+      this.form.budgetAmount = data.item.budgetAmount / 10000
       this.form.customerId = data.item.customerId
       if (!data.item.videoId) {
         this.setadver = true
@@ -228,7 +228,7 @@ export default class Promotion extends ViewBase {
           id: this.$route.params.setid ? this.$route.params.setid : '',
           advertime: '',
           specification: this.form.specification ?  this.form.specification + '' : '',
-          budgetAmount: Number(this.form.budgetAmount)}))
+          budgetAmount: Number(this.form.budgetAmount * 10000)}))
         if (!this.$route.params.setid) {
           this.$router.push({
             name: 'pop-planlist-add',
@@ -281,7 +281,7 @@ export default class Promotion extends ViewBase {
   watchformBudgetAmount(val: any) {
     const reg = /^(?!(0[0-9]{0,}$))[0-9]+(.[0-9]+)?$/
     if (val && reg.test(val)) {
-      this.getnums(val)
+      this.getnums(val * 10000)
     } else {
       this.nums = 0
     }
