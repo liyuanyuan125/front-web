@@ -2,7 +2,7 @@ import { get, post, put } from '@/fn/ajax'
 import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
 
 /**
- * 日期区间描述
+ * 日期区间描述 暂未使用
  * @param data
  */
 export async function dayRanges(query: any = { beginDate: 20191212, endDate: 20191212 }, id: number = 107028) {
@@ -28,7 +28,7 @@ export async function dayRanges(query: any = { beginDate: 20191212, endDate: 201
   })
 }
 /**
- * comment
+ * 影人评论分析
  * @param query 起止时间
  * @param id id
  * @description https://yapi.aiads-dev.com/project/146/interface/api/4533
@@ -201,7 +201,7 @@ export async function keywordComment(query: any, id: number | string = '') {
 }
 
 /**
- * fans
+ * 粉丝画像
  * @param id id
  * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
  */
@@ -411,9 +411,151 @@ export async function fans(id: string = '') {
 }
 
 /**
+ * 活跃粉丝数
+ * @param id id
+ * @description http://yapi.aiads-dev.com/project/146/interface/api/4542
+ */
+ export async function dau(query: any, id: number | string = '') {
+  // const res = await get(`/person/${id}/dau`)
+  // return res
+  return await mockGet({}, {
+    items: [
+        {
+            data: 20190520,
+            count: 7262
+        },
+        {
+            data: 20190521,
+            count: 2313
+        },
+        {
+            data: 20190522,
+            count: 564
+        },
+        {
+            data: 20190523,
+            count: 67674
+        },
+        {
+            data: 20190524,
+            count: 234
+        },
+        {
+            data: 20190525,
+            count: 5452
+        },
+        {
+            data: 20190526,
+            count: 9387
+        },
+        {
+            data: 20190527,
+            count: 761
+        },
+        {
+            data: 20190528,
+            count: 716
+        },
+        {
+            data: 20190529,
+            count: 982
+        },
+        {
+            data: 20190530,
+            count: 777
+        },
+        {
+            data: 20190531,
+            count: 19881
+        },
+        {
+            data: 20190601,
+            count: 3445
+        },
+        {
+            data: 20190602,
+            count: 3445
+        },
+        {
+            data: 20190603,
+            count: 3445
+        },
+        {
+            data: 20190604,
+            count: 3445
+        },
+        {
+            data: 20190605,
+            count: 3445
+        },
+        {
+            data: 20190606,
+            count: 3445
+        },
+        {
+            data: 20190607,
+            count: 3445
+        },
+        {
+            data: 20190608,
+            count: 3445
+        },
+        {
+            data: 20190609,
+            count: 3445
+        },
+        {
+            data: 20190610,
+            count: 3445
+        },
+        {
+            data: 20190611,
+            count: 3445
+        },
+        {
+            data: 20190612,
+            count: 3445
+        },
+        {
+            data: 20190613,
+            count: 3445
+        },
+        {
+            data: 20190614,
+            count: 3445
+        },
+        {
+            data: 20190615,
+            count: 3445
+        },
+        {
+            data: 20190616,
+            count: 3445
+        },
+        {
+            data: 20190617,
+            count: 3445
+        },
+        {
+            data: 20190618,
+            count: 3445
+        },
+        {
+            data: 20190619,
+            count: 3445
+        },
+        {
+            data: 20190620,
+            count: 7262
+        }
+    ]
+  })
+}
+
+/**
  * matching 影人受众匹配
  * @param query
- * @description 在那屋
+ * @description
  */
 export async function matching(query: any) {
   return await mockGet(query, {
@@ -592,8 +734,9 @@ export async function matching(query: any) {
 }
 
 /**
- * trend
+ * 全网热度
  * @param data
+ * @description http://yapi.aiads-dev.com/project/146/interface/api/4560
  */
 export async function trend(query: any) {
   // const res = await get('/person/${id}/hot' , query)
