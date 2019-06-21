@@ -1480,8 +1480,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'test',
     component: () => import('./views/test/index.vue'),
     meta: {
-      authKey: '',
-      authAction: '',
+      authKey: 'promotion.evaluate',
+      authAction: 'EMPTY',
       authIsMenu: true,
     },
   },

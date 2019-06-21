@@ -119,3 +119,12 @@ export function filterItemInList(
   })
   return newItem
 }
+
+/**
+ * 将后台万分比率转成百分比
+ * @param rate 万分比率值
+ * @param digits 保留位数，默认为 0
+ */
+export function percent(rate: number, digits = 0) {
+  return +((rate || 0) / 100).toFixed(digits)
+}
