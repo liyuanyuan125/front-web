@@ -60,7 +60,8 @@
                  <em style='margin-left: 5px;' v-for="item in channelCodeList" v-if="item.key == it.channelCode">{{item.text}}</em>
                  </div>
               </Col>
-              <Col :span='3' class='li-ti-col ss'><span v-for='(item,index) in publishCategoryList' :key='index' v-if='item.key == it.publishCategoryCode'>{{item.text}}</span></Col>
+              <Col :span='3' class='li-ti-col ss'><span v-for='(item,index) in publishCategoryList' :key='index' v-if='item.key == it.publishCategoryCode'>{{item.text}}</span>
+              <span v-if='it.publishCategoryCode == null'>暂无</span></Col>
               <Col :span='3' class='li-ti-col ss'>￥{{it.salePrice}}</Col>
               <Col :span='3' class='li-ti-col ss'>{{it.publishTime}}</Col>
               <Col :span='4' class='li-ti-col ss'>{{it.content}}</Col>
@@ -161,7 +162,7 @@ export default class Main extends ViewBase {
         this.taskItemList = (taskItemList || []).map((it: any) => {
           return {
             ...it,
-            publishTime: moment(it.publishTime).format(times)
+            publishTime: it.publishTime == null ? '暂无' : moment(it.publishTime).format(times)
           }
         })
         this.subStatusList = subStatusList
