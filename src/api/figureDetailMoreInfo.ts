@@ -608,25 +608,25 @@ export async function trend(query: any) {
         channels: [
           {
             name: '微博', // 平台名称
-            count: 29526, // 热度
+            count: tid, // 热度
             ranking: 3, // 在当前平台排名
             trend: 0  // 正负数表示上升或者下降名次
           },
           {
             name: '微信',
-            count: 29526,
+            count: tid,
             ranking: 3,
             trend: 0
           },
           {
             name: '百度',
-            count: 29526,
+            count: tid,
             ranking: 3,
             trend: 0
           },
           {
             name: '头条',
-            count: 29526,
+            count: tid,
             ranking: 3,
             trend: 0
           }
@@ -640,25 +640,25 @@ export async function trend(query: any) {
         channels: [
           {
             name: '微博',
-            count: 29526,
+            count: tid,
             ranking: 3,
             trend: 0
           },
           {
             name: '微信',
-            count: 29526,
+            count: tid,
             ranking: 3,
             trend: 0
           },
           {
             name: '百度',
-            count: 29526,
+            count: tid,
             ranking: 3,
             trend: 0
           },
           {
             name: '头条',
-            count: 29526,
+            count: tid,
             ranking: 3,
             trend: 0
           }
@@ -672,25 +672,25 @@ export async function trend(query: any) {
         channels: [
           {
             name: '微博',
-            count: 29526,
+            count: tid,
             ranking: 3,
             trend: 0
           },
           {
             name: '微信',
-            count: 29526,
+            count: tid,
             ranking: 3,
             trend: 0
           },
           {
             name: '百度',
-            count: 29526,
+            count: tid,
             ranking: 3,
             trend: 0
           },
           {
             name: '头条',
-            count: 29526,
+            count: tid,
             ranking: 3,
             trend: 0
           }
