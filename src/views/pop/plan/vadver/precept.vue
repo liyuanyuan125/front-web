@@ -131,11 +131,11 @@
                     </template>
 
                     <template slot-scope="{ row }" slot="estimateShowCount">
-                      {{formatNums(row.estimateShowCount/10000)}}
+                      {{formatNums(row.estimateShowCount)}}
                     </template>
 
                     <template slot-scope="{ row }" slot="estimatePersonCount">
-                      {{formatNums(row.estimatePersonCount/10000)}}
+                      {{formatNums(row.estimatePersonCount)}}
                     </template>
                   </Table>
 
@@ -594,7 +594,6 @@ export default class App extends ViewBase {
     }
     .film-center {
       margin: 15px 0;
-      padding: 10px 0;
       display: flex;
       p {
         height: 30px;

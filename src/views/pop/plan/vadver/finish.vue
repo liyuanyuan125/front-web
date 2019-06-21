@@ -7,35 +7,35 @@
     <div class="finish-detail">
       <dl>
         <dd>覆盖影院</dd>
-        <dt><Number :addNum="!!cinemaCount ? cinemaCount : 0" /></dt>
+        <dt><Number :addNum="!!cinemaCount ? cinemaCount : 0" />家</dt>
         <dt>
           <img src="./assets/yingyuanb.png" width="73" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>投放影片</dd>
-        <dt><Number :addNum=" planMovies " /></dt>
+        <dt>{{planMovies}}部</dt>
         <dt>
           <img src="./assets/dianyingpiao.png" width="73" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>曝光人次预估</dd>
-        <dt><Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/10000 : 0" /></dt>
+        <dt><Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/10000 : 0" />万</dt>
         <dt>
           <img src="./assets/renqun.png" width="73" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>投放场次数预估</dd>
-        <dt><Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/10000 : 0" /></dt>
+        <dt><Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/10000 : 0" />万</dt>
         <dt>
           <img src="./assets/toufangfangan.png" width="73" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>预估花费</dd>
-        <dt><Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount/10000 : 0" /></dt>
+        <dt><Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount/10000 : 0" />万</dt>
         <dt>
           <img src="./assets/qian-2.png" width="73" height="66px"/>
         </dt>
@@ -43,7 +43,7 @@
     </div>
     <div class="btn-center">
       <Button type="default" class="button-ok btn-next" @click="back('dataform')"><img width="16px" src="./assets/next.png" /> 返回上一步</Button>
-      <Button type="default" class="button-ok btn-save" @click="back('dataform')"> 导出投放方案</Button>
+      <!-- <Button type="default" class="button-ok btn-save" @click="back('dataform')">确定</Button> -->
     </div>
   </div>
 </template>
