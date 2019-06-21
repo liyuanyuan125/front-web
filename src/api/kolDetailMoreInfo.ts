@@ -2,109 +2,258 @@ import { get, post, put } from '@/fn/ajax'
 import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
 
 /**
- * platformInfoData1
- * @param query
+ * 查询KOL口碑评论
+ * @param id id
+ * @description http://yapi.aiads-dev.com/project/144/interface/api/4587
  */
-export async function platformData(query: any) {
-  // const res = await get('/xadvert/plans/effect' , query)
+export async function platformData(query: any, id: number | string = '') {
+  // 演示 临时参数 nxd 20190621
+  id = '2061'
+  // 演示 临时参数 nxd 20190621
+  query = {
+    beginDate: '20160520',
+    endDate: '20190620',
+    channelCode: 'weibo'
+  }
+  // const res = await get(`kol/accounts/${id}/comments`, query)
   // return res
   return await mockGet(query, {
-    chart1: {
-      dataList: [{
-        date: '2019-01-01',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-03',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-04',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-05',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-01',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        date: '2019-01-03',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        date: '2019-01-04',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        date: '2019-01-05',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        date: '2019-01-01',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        date: '2019-01-03',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        date: '2019-01-04',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        date: '2019-01-05',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        date: '2019-01-01',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        date: '2019-01-03',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        date: '2019-01-04',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        date: '2019-01-05',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }],
-      effectTypeList: [{
-        text: '活跃粉丝数',
-        key: 0
-      }, {
-        text: '点赞数',
-        key: 1
-      }, {
-        text: '评论数',
-        key: 2
-      }, {
-        text: '播放数',
-        key: 3
-      }]
+    // nxd
+    items: [
+      {
+        id: tid,
+        kolId: tid,
+        channelCode: 'weibo',
+        date: 20190600,
+        positive: {
+          count: 100,
+          trend: 80
+        },
+        passive: {
+          count: 100,
+          trend: 80
+        },
+        neutral: {
+          count: 100,
+          trend: 80
+        },
+        updateTime: null
+      }
+    ],
+    rate: {
+      neutral: '0.33',
+      positive: '0.33',
+      passive: '0.33'
+    },
+    commentKeyword: {
+      kolId: 2061,
+      channelCode: 'weibo',
+      yesterday: {
+        positive: [
+          '才华',
+          '美丽',
+          '正能量',
+          '古灵精怪'
+        ],
+        negative: [
+          '负面',
+          '怨气',
+          '消极',
+          '负分'
+        ]
+      },
+      sevenDay: {
+        positive: [
+          '才华',
+          '美丽',
+          '正能量',
+          '古灵精怪'
+        ],
+        negative: [
+          '负面',
+          '怨气',
+          '消极',
+          '负分'
+        ]
+      },
+      thirtyDay: {
+        positive: [
+          '才华',
+          '美丽',
+          '正能量',
+          '古灵精怪'
+        ],
+        negative: [
+          '负面',
+          '怨气',
+          '消极',
+          '负分'
+        ]
+      },
+      ninetyDay: {
+        positive: [
+          '才华',
+          '美丽',
+          '正能量',
+          '古灵精怪'
+        ],
+        negative: [
+          '负面',
+          '怨气',
+          '消极',
+          '负分'
+        ]
+      },
+      updateTime: '2019-06-18T10:14:16.958'
     }
+  })
+}
+
+
+/**
+ * 活跃粉丝数
+ * @param id id
+ * @description http://yapi.aiads-dev.com/project/146/interface/api/4542
+ */
+ export async function dau(query: any, id: number | string = '') {
+  // 演示 临时参数 nxd 20190621
+  query = {
+    beginDate: '20160520',
+    endDate: '20190620'
+  }
+  const res = await get(`/person/${id}/dau`, query)
+  return res
+  return await mockGet({}, {
+    items: [
+        {
+            data: 20190520,
+            count: 7262
+        },
+        {
+            data: 20190521,
+            count: 2313
+        },
+        {
+            data: 20190522,
+            count: 564
+        },
+        {
+            data: 20190523,
+            count: 67674
+        },
+        {
+            data: 20190524,
+            count: 234
+        },
+        {
+            data: 20190525,
+            count: 5452
+        },
+        {
+            data: 20190526,
+            count: 9387
+        },
+        {
+            data: 20190527,
+            count: 761
+        },
+        {
+            data: 20190528,
+            count: 716
+        },
+        {
+            data: 20190529,
+            count: 982
+        },
+        {
+            data: 20190530,
+            count: 777
+        },
+        {
+            data: 20190531,
+            count: 19881
+        },
+        {
+            data: 20190601,
+            count: 3445
+        },
+        {
+            data: 20190602,
+            count: 3445
+        },
+        {
+            data: 20190603,
+            count: 3445
+        },
+        {
+            data: 20190604,
+            count: 3445
+        },
+        {
+            data: 20190605,
+            count: 3445
+        },
+        {
+            data: 20190606,
+            count: 3445
+        },
+        {
+            data: 20190607,
+            count: 3445
+        },
+        {
+            data: 20190608,
+            count: 3445
+        },
+        {
+            data: 20190609,
+            count: 3445
+        },
+        {
+            data: 20190610,
+            count: 3445
+        },
+        {
+            data: 20190611,
+            count: 3445
+        },
+        {
+            data: 20190612,
+            count: 3445
+        },
+        {
+            data: 20190613,
+            count: 3445
+        },
+        {
+            data: 20190614,
+            count: 3445
+        },
+        {
+            data: 20190615,
+            count: 3445
+        },
+        {
+            data: 20190616,
+            count: 3445
+        },
+        {
+            data: 20190617,
+            count: 3445
+        },
+        {
+            data: 20190618,
+            count: 3445
+        },
+        {
+            data: 20190619,
+            count: 3445
+        },
+        {
+            data: 20190620,
+            count: 7262
+        }
+    ]
   })
 }
 
@@ -527,136 +676,26 @@ export async function fans(query: any) {
   })
 }
 
+
+
 /**
- * trend
+ * 查询KOL热度趋势
  * @param data
+ * @description http://yapi.aiads-dev.com/project/144/interface/api/4569
  */
-export async function trend(query: any) {
-  // const res = await get('/xadvert/plans/effectStatistics' , query)
-  // return res
+ export async function trend(query: any, id: number | string = '') {
+  query = {
+    beginDate: '20160520',
+    endDate: '20190620',
+    channelCode: 'weibo'
+  }
+  const res = await get(`/kol/accounts/${id}/indexes` , query)
+  return res
   return await mockGet(query, {
-    chart1: {
-      dataList: [{
-        date: '2019-01-01',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-03',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-04',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-05',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }],
-      effectTypeList: []
-    },
-    chart2: {
-      dataList: [{
-        date: '2019-01-01',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-03',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-04',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-05',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        date: '2019-01-01',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        date: '2019-01-03',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        date: '2019-01-04',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        date: '2019-01-05',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        date: '2019-01-01',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        date: '2019-01-03',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        date: '2019-01-04',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        date: '2019-01-05',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        date: '2019-01-01',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        date: '2019-01-02',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        date: '2019-01-03',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        date: '2019-01-04',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        date: '2019-01-05',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }],
-      effectTypeList: [{
-        text: '微博指数No.1',
-        key: 0
-      }, {
-        text: '微信指数No.2',
-        key: 1
-      }, {
-        text: '百度指数No.3',
-        key: 2
-      }, {
-        text: '头条指数No.1',
-        key: 3
-      }]
-    }
+    // no
   })
 }
+
 
 /**
  * 关键词评论列表
