@@ -1,6 +1,6 @@
 <template>
   <div class="page home-bg as">
-    <h3 class="userTitle title" >
+    <h3 class="userTitle title" style='border-bottom: 0;margin-bottom: 15px;'>
       <span class="nav-top-title"></span>
       <Button  class="btn-new but" type="primary" v-auth="'customer-manage#create'" @click="addUser">
         <Icon type="ios-add" size="27"/>新建客户
@@ -185,6 +185,9 @@ export default class Main extends ViewBase {
 @import '~@/site/common.less';
 .as {
   background: rgba(255, 255, 255, 0);
+}
+.userTitle {
+  border: 0;
 }
 .action-btn {
   margin-right: 10px;

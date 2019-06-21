@@ -60,7 +60,7 @@ export default class Opus extends ViewBase {
   }
 
   form = {
-    channelCode: '',
+    channelCode: 'weibo',
     sortBy: 0
   }
   // 选择平台

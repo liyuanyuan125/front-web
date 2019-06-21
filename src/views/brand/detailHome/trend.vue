@@ -243,8 +243,8 @@ export default class Trend extends ViewBase {
       }
       this.chart2.dict1 = this.effectTypeList
       this.itemList.forEach((item: any, index: number) => {
-        this.chart2.dataList[item.key].data.push(item.count)
-        this.chart2.dataList[item.key].date.push(item.date)
+        this.chart2.dataList[index].data.push(item.count)
+        this.chart2.dataList[index].date.push(item.date)
       })
       this.chart2.initDone = true
     } catch (ex) {
@@ -291,7 +291,7 @@ export default class Trend extends ViewBase {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
 </style>

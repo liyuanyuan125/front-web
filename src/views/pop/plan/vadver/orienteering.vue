@@ -460,7 +460,7 @@ export default class Orienteering extends ViewBase {
               setid: this.$route.params.setid
             })
           } else {
-            info('为找到匹配项')
+            info('未找到匹配项')
           }
         } else {
           this.loddding()

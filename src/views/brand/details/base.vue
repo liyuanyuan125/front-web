@@ -94,28 +94,23 @@ export default class Main extends ViewBase {
       this.baseList = item
       this.countryCodeList = countryCodeList || []
       this.tradeCodeList = tradeCodeList || []
-
-    // 给moredetail 带enName 和 tradeCodeName  item.tradeCode
-    // eventDate.$emit('passParamer', detail)
-
-    // localStorage.setItem('brandImg', JSON.stringify(imgList))
     } catch (ex) {
       this.handleError(ex)
     }
   }
   async baseSubmit() {
-    // const volid = await (this.$refs.form as any).validate()
-    // if (!volid) { return }
-    const fileId = localStorage.getItem('fileId') || ''
+    // 如果fileId为空 则传logo
+    const logo = localStorage.getItem('fileId') || this.baseList.logo
     try {
       const { data } = await editBase({
         ...this.form,
-        logo: fileId,
         id: this.brandId,
+        logo,
       })
       this.readonly = false
       eventDate.$emit('uploadImg', false)
       this.queryList()
+      localStorage.setItem('fileId', '')
     } catch (ex) {
       this.handleError(ex)
     }
@@ -133,7 +128,7 @@ export default class Main extends ViewBase {
       tradeCode,
       founder,
       companySlogan,
-      description
+      description,
     }
     eventDate.$emit('uploadImg', true)
   }
