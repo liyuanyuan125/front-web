@@ -112,215 +112,104 @@ export async function platformData(query: any) {
  * comment
  * @param query 起止时间
  * @param id id
- * @description https://yapi.aiads-dev.com/project/146/interface/api/4533
- * @deprecated 缺少数据，重置日期 http://fapi.aiads-dev.com/kol/accounts/1/comments?beginDate=20170112&endDate=20191212
+ * @description http://yapi.aiads-dev.com/project/144/interface/api/4587
  */
-export async function comment(query: any, id: string = '0') {
-  // const res = await get(`/kol/accounts/${id}/comments`, query)
-  // const res = await get(`/kol/accounts/1/comments`, {beginDate: 20170112, endDate: 20191212, channelCode: 'weibo'})
-  // return res
-  return await mockGet(query, {
-    item: {
-        totalCount: 54516,
-        rate: {
-            neutral: '33.33',
-            positive: '33.33',
-            passive: '33.33'
-        },
-        keywords: {
-            yesterday: {
-                positive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ],
-                passive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ]
-            },
-            ninetyDay: {
-                positive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ],
-                passive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ]
-            },
-            sevenDay: {
-                positive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ],
-                passive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ]
-            },
-            thirtyDay: {
-                positive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ],
-                passive: [
-                    '特效',
-                    '中国',
-                    '国产'
-                ]
-            }
-        },
-        dates: [
-            {
-                date: 20190101,
-                positive: {
-                    count: 18172,
-                    trend: 99
-                },
-                passive: {
-                    count: 18172,
-                    trend: 54
-                },
-                neutral: {
-                    count: 18172,
-                    trend: 23
-                }
-            },
-            {
-                date: 20190102,
-                positive: {
-                    count: 18172,
-                    trend: 11
-                },
-                passive: {
-                    count: 18172,
-                    trend: 8
-                },
-                neutral: {
-                    count: 18172,
-                    trend: 76
-                }
-            },
-            {
-                date: 20190103,
-                positive: {
-                    count: 18172,
-                    trend: 88
-                },
-                passive: {
-                    count: 18172,
-                    trend: 22
-                },
-                neutral: {
-                    count: 18172,
-                    trend: 33
-                }
-            }
-        ]
-    },
-    emotion: [
-        {
-            key: 'positive',
-            text: '正面'
-        },
-        {
-            key: 'passive',
-            text: '负面'
-        },
-        {
-            key: 'neutral',
-            text: '中性'
-        }
-    ],
-    dayRanges: [
-          {
-              key: 'yesterday',
-              text: '昨日'
-          },
-          {
-              key: 'sevenDay',
-              text: '最近7天'
-          },
-          {
-              key: 'thirtyDay',
-              text: '最近30天'
-          },
-          {
-              key: 'ninetyDay',
-              text: '最近90天'
-          }
-      ]
-  })
+export async function comment(query: any, id: number | string = '') {
+  // 演示 临时参数 nxd 20190621
+  id = '2061'
+  query = {
+    beginDate: 20190101,
+    endDate: 20190107,
+    channelCode: 'weibo'
+  }
   return await mockGet(query, {
     rate: {
-      neutral: tid,
-      positive: tid,
-      passive: tid
+      neutral: '0.33',
+      positive: '0.33',
+      passive: '0.33'
     },
-    'items|10': [{
-        id: 0,
-        kolId: 1,
-        channelCode: 'weibo',
-        date: 20190600,
-        positive: {
-          count: tid,
-          trend: tid
-        },
-        passive: {
-          count: tid,
-          trend: tid
-        },
-        neutral: {
-          count: tid,
-          trend: tid
-        },
-        updateTime: null
-      }
-    ],
     commentKeyword: {
-      kolId: 1,
+      kolId: 2061,
       channelCode: 'weibo',
       yesterday: {
-        'positive|6': [
-          title20
+        positive: [
+          '才华',
+          '美丽',
+          '正能量',
+          '古灵精怪'
         ],
-        'passive|6': [
-          title20
+        negative: [
+          '负面',
+          '怨气',
+          '消极',
+          '负分'
         ]
       },
       sevenDay: {
-        'positive|6': [
-          title20
+        positive: [
+          '才华',
+          '美丽',
+          '正能量',
+          '古灵精怪'
         ],
-        'passive|6': [
-          title20
+        negative: [
+          '负面',
+          '怨气',
+          '消极',
+          '负分'
         ]
       },
       thirtyDay: {
-        'positive|6': [
-          title20
+        positive: [
+          '才华',
+          '美丽',
+          '正能量',
+          '古灵精怪'
         ],
-        'passive|6': [
-          title20
+        negative: [
+          '负面',
+          '怨气',
+          '消极',
+          '负分'
         ]
       },
       ninetyDay: {
-        'positive|6': [
-          title20
+        positive: [
+          '才华',
+          '美丽',
+          '正能量',
+          '古灵精怪'
         ],
-        'passive|6': [
-          title20
+        negative: [
+          '负面',
+          '怨气',
+          '消极',
+          '负分'
         ]
       },
-      updateTime: dateRange()
-    }
+      updateTime: '2019-06-18T10:14:16.958'
+    },
+    items: [
+      {
+        id: tid,
+        kolId: tid,
+        channelCode: 'weibo',
+        date: 20190600,
+        positive: {
+          count: 100,
+          trend: 80
+        },
+        passive: {
+          count: 100,
+          trend: 80
+        },
+        neutral: {
+          count: 100,
+          trend: 80
+        },
+        updateTime: null
+      },
+    ]
   })
 }
 /**
@@ -751,7 +640,7 @@ export async function trend(query: any) {
         date: '2019-01-05',
         data: Math.floor(Math.random() * 100 + 1),
         key: 3
-      } ],
+      }],
       effectTypeList: [{
         text: '微博指数No.1',
         key: 0
@@ -769,5 +658,40 @@ export async function trend(query: any) {
   })
 }
 
+/**
+ * 关键词评论列表
+ * @param query 起止时间
+ * @param id id
+ * @description http://yapi.aiads-dev.com/project/144/interface/api/4960
+ */
+export async function keywordComment(query: any, id: number | string = '') {
+  // 演示 临时参数 nxd 20190621
+  id = '558'
+  query = {
+    keyword: '大家',
+    pageIndex: 1,
+    pageSize: 10,
+    channelCode: 'weibo'
+  }
+  // const res = await get(`person/${id}/keyword-comments`, query)
+  // return res
+  return await mockGet(query, {
+    'items|10': [
+      {
+        id: tid,
+        commentId: '55843740074381051314374009745219519weibo',
+        content: '这是你520给大家发的男朋友吗？',
+        sourceContent: '吹爆7号的颜！雕塑般的鼻子啊吹爆7号的颜！雕塑般的鼻子啊吹爆7号的颜！雕塑般的鼻子啊吹爆7号的颜！雕塑般的鼻子啊 ',
+        sourceContentUrl: 'wwww.baidu.com',
+        replyCount: 12,
+        favorCount: 23,
+        emotionType: 0,
+        commentDate: '2019-5-20 13:04:10',
+        highlightContent: '这是你520给<em>大</em><em>家</em>发的男朋友吗？'
+      }
+    ],
 
+    totalCount: 2
+  })
+}
 
