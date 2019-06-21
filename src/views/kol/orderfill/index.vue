@@ -600,7 +600,7 @@ export default class Main extends ViewBase {
         }
         // console.log(JSON.stringify({
         //    ...query,
-        //     orderId: this.$route.params.id
+        //    orderId: this.$route.params.id
         // }))
         if (this.$route.params.id) {
           await putadver({
