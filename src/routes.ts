@@ -741,7 +741,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/reseport/effect-report',
     name: 'effect-report',
     component: () => import('./views/resReport/effectReport/index.vue'),
-    meta: unauth,
+    meta: {
+      authKey: 'promotion.report',
+      authAction: 'EMPTY',
+      authIsMenu: true
+    },
   },
 
   // 第三方 - 效果报表
@@ -933,7 +937,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // KOL - 概览
   {
-    path: '/kol/figure/:id/:channel',
+    path: '/kol/figure/:id/:channel?',
     name: 'kol-figure',
     component: () => import('./views/mainPage/kol.vue'),
     meta: {
