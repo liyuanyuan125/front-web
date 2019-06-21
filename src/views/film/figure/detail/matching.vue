@@ -148,7 +148,7 @@ import {
 import { matching } from '@/api/figureDetailMoreInfo'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import BarYCategoryDouble from '@/components/chartsGroup/barYCategoryDouble/'
-import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
+import DetailNavBar from './components/detailNavBar.vue'
 import { tooltipStyles } from '@/util/echarts'
 @Component({
   components: {

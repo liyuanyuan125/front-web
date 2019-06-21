@@ -21,21 +21,21 @@
       </dl>
       <dl>
         <dd>曝光人次预估</dd>
-        <dt><Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount : 0" /></dt>
+        <dt><Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/10000 : 0" /></dt>
         <dt>
           <img src="./assets/renqun.png" width="73" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>投放场次数预估</dd>
-        <dt><Number :addNum="!!item.estimateShowCount ? item.estimateShowCount : 0" /></dt>
+        <dt><Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/10000 : 0" /></dt>
         <dt>
           <img src="./assets/toufangfangan.png" width="73" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>预估花费</dd>
-        <dt><Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount : 0" /></dt>
+        <dt><Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount/10000 : 0" /></dt>
         <dt>
           <img src="./assets/qian-2.png" width="73" height="66px"/>
         </dt>

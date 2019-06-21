@@ -5,7 +5,7 @@
         <div>
           <p class="title">曝光人次预估</p>
           <p class="number">
-            <Number :addNum="data.estimatePersonCount" />
+            <Number :addNum="data.estimatePersonCount ? data.estimatePersonCount/10000 : 0" />
           </p>
         </div>
       </Col>
@@ -13,7 +13,7 @@
         <div>
           <p class="title">投放场次数预估</p>
           <p class="number">
-            <Number :addNum="data.estimateShowCount" />
+            <Number :addNum="data.estimateShowCount ? data.estimateShowCount/10000 : 0" />
           </p>
         </div>
       </Col>
@@ -21,7 +21,7 @@
         <div>
           <p class="title">预估花费</p>
           <p class="number">
-            <Number :addNum="data.estimateCostAmount" />
+            <Number :addNum="data.estimateCostAmount ? data.estimateCostAmount/10000 : 0" />
           </p>
         </div>
       </Col>

@@ -369,11 +369,11 @@ export default class Main extends ViewBase {
           summary: it.summary ? it.summary : '',
           url: it.url ? it.url : '',
       } : ''
-      const money = it.priceList.filter((item: any) => item.categoryCode == orderItemList.publishCategoryCode)[0].value
+      const money = it.priceList.filter((item: any) => item.categoryCode == orderItemList.publishCategoryCode)
       return clean({
         ...it,
         orderItemList,
-        totalFee: money,
+        totalFee: money.length > 0 ? money[0].value : '',
         _checked: true,
         index
       })
@@ -600,7 +600,7 @@ export default class Main extends ViewBase {
         }
         // console.log(JSON.stringify({
         //    ...query,
-        //     orderId: this.$route.params.id
+        //    orderId: this.$route.params.id
         // }))
         if (this.$route.params.id) {
           await putadver({

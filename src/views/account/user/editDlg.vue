@@ -1,6 +1,16 @@
 <template>
   <div>
-    <Modal v-model="value.editVis" title="查看关联客户" width="800">
+    <Modal
+      v-model="value.editVis"
+      width="700"
+      :transfer='true'
+      :closable='false'
+      :mask-closable='false'
+      >
+      <div class="title">
+        <i @click="handleCancel"></i>
+        <p>查看关联用户</p>
+      </div>
       <div class="flex-box">
         <Input v-model="search" placeholder="请输入客户ID或名称"/>
         <span @click="searchList">
@@ -118,6 +128,40 @@ export default class Change extends ViewBase {
   background: #f9f9f9;
   font-weight: none;
 }
+/deep/ .ivu-modal-body {
+  padding: 0;
+}
+.title {
+  border-radius: 5px 5px 0 0;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 20px;
+  color: #00202d;
+  i {
+    position: absolute;
+    right: -12px;
+    top: -12px;
+    display: block;
+    width: 27px;
+    height: 27px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid rgba(209, 216, 219, 1);
+    &::before {
+      display: block;
+      content: "×";
+      font-size: 26px;
+      line-height: 24px;
+      text-align: center;
+    }
+  }
+}
+.btnCenter {
+  margin-top: 40px;
+}
 .flex-box {
   padding-left: 25px;
   .ivu-input-wrapper {
@@ -141,11 +185,34 @@ export default class Change extends ViewBase {
   }
 }
 /deep/ .ivu-table {
-  height: 500px;
+  min-height: 200px;
   overflow-y: auto;
 }
 .footer-bottom {
   margin: 0 0 10px;
+}
+/deep/ .ivu-input-wrapper,
+/deep/ .ivu-form-item-content,
+/deep/ .ivu-input,
+/deep/ .ivu-select-input {
+  color: #00202d;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 400px;
+  &::placeholder {
+    font-size: 16px;
+    color: #b3bcc0;
+  }
+}
+.button-ok {
+  width: 200px;
+  .button-style(#fff, #00202d);
+  border-radius: 25px;
+}
+.button-cancel {
+  width: 200px;
+  .button-style(#00202d, rgba(0, 0, 0, 0));
+  border-radius: 25px;
 }
 /deep/ .ivu-page {
   margin-top: 25px;

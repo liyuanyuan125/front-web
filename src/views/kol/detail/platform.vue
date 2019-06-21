@@ -81,6 +81,7 @@ import {
 } from '@/util/validateRules'
 import DetailNavBar from './components/detailNavBar.vue'
 import { platformData } from '@/api/kolDetailMoreInfo'
+import { kolPlanflans } from '@/api/kolplatform'
 import numAdd from '../number.vue'
 import AreaBasic from '@/components/chartsGroup/areaBasic/'
 
