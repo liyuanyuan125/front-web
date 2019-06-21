@@ -3,6 +3,7 @@ import { at, keyBy, sumBy } from 'lodash'
 import { KeyText, MapType } from '@/util/types'
 import { slice } from '@/fn/object'
 import { dayOffsetRange } from '@/util/date'
+import { percent } from '@/util/dealData'
 
 const dot = (object: any, path: string) => at(object, path)[0]
 
@@ -11,9 +12,6 @@ const getNames = (keys: string[], list: KeyText[]) => {
   const names = (keys || []).map((it: any) => dot(map[it], 'text') as string)
   return names
 }
-
-// 将后台的万分率转成百分率
-const percent = (rate: number, digits = 0) => +((rate || 0) / 100).toFixed(digits)
 
 // 后端按照从上到下的排序，但前端按照球的大小排序
 const bubbleSort = [ 3, 1, 4, 0, 5, 2 ]
@@ -36,11 +34,10 @@ const hotData = (items: any[]) => {
   const list = (items || []).map(it => {
     const date = monthDate(it.date)
     const legends = (it.channels as any[] || [])
-    .sort((a, b) => b.trend - a.trend)
     .map((sub, i) => {
       return {
         name: sub.name || hotChannelMap[sub.chanelCode] || sub.chanelCode,
-        no: `No.${i + 1}`,
+        no: `No.${sub.ranking}`,
         inc: sub.trend,
       }
     })
@@ -417,9 +414,9 @@ export async function getFigure(id: number) {
     commentData: comments && comments.length > 0 ? (() => {
       const map = keyBy(comments, 'code')
       return [
-        { name: '正面', value: percent(dot(map.positive, 'rate')), color: '#ca7273' },
-        { name: '中立', value: percent(dot(map.neutral, 'rate')), color: '#f3d872' },
-        { name: '负面', value: percent(dot(map.passive, 'rate')), color: '#57b4c9' },
+        { name: '正面', value: +dot(map.positive, 'rate') || 0, color: '#ca7273' },
+        { name: '中立', value: +dot(map.neutral, 'rate') || 0, color: '#f3d872' },
+        { name: '负面', value: +dot(map.passive, 'rate') || 0, color: '#57b4c9' },
       ]
     })() : null,
   }
