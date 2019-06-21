@@ -254,6 +254,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/search/index.vue'),
     meta: {
       ...emptyAuth,
+      breadcrumbs: [{ label: '搜索' }]
     },
     props: true,
   },
