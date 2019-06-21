@@ -28,9 +28,12 @@
                 </div>
 
                 <div class="film-center">
-                  <p style="opacity: .7">受众性别</p>
-                  <div class="file-sex-box">
-                    <div>
+                  <p style="opacity: .7">受众性别: </p>
+                  <p style="margin-left: 20px" v-if="it.sexCodes == 'man'">男性</p>
+                  <p style="margin-left: 20px" v-else-if="it.sexCodes == 'woman'">女性</p>
+                  <p  style="margin-left: 20px" v-else>-</p>
+                  <!-- <div class="file-sex-box">
+                    <div v-if="it.sexCodes == 'woman'">
                       <div class="file-sex-man" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.7 + 20}px`}">
                         <img width="30px" height="30" src="./assets/man.png" alt="">
                       </div>
@@ -44,13 +47,15 @@
                       </div>
                     </div>
                     <span style="color: #CA7273">女性：{{it.matching}}%</span>
-                  </div>
+                  </div> -->
                 </div>
 
                 <div class="film-buttom">
                   <dl style="margin-bottom: 15px">
                     <dd>受众年龄：</dd>
-                    <dt v-for="item in it.ageCodes" :key="item">{{item}}</dt>
+                    <dt v-if="it.ageCodes && it.ageCodes.length > 0">
+                      <span v-for="item in it.ageCodes" :key="item">{{item || '-'}}</span></dt>
+                    <dt v-else>-</dt>
                   </dl>
                   <dl>
                     <dd>投放周期：</dd>
@@ -66,7 +71,7 @@
 
           <h3 class="layout-titles">覆盖影院
             <span class="item-detail">影院总数</span>
-            <span class="custom" @click="exportData"><Exportfile /></span>
+            <!-- <span class="custom" @click="exportData"><Exportfile /></span> -->
             <!-- <span class="custom" style="margin-right: 160px">自定义投放影院</span> -->
           </h3>
           <div class="item-top">
@@ -126,11 +131,11 @@
                     </template>
 
                     <template slot-scope="{ row }" slot="estimateShowCount">
-                      {{formatNums(row.estimateShowCount)}}
+                      {{formatNums(row.estimateShowCount/10000)}}
                     </template>
 
                     <template slot-scope="{ row }" slot="estimatePersonCount">
-                      {{formatNums(row.estimatePersonCount)}}
+                      {{formatNums(row.estimatePersonCount/10000)}}
                     </template>
                   </Table>
 
@@ -165,8 +170,8 @@
 
           <div class="btn-center">
             <Button type="default" class="button-ok btn-next" @click="back('dataform')"><img width="16px" src="./assets/next.png" /> 返回上一步</Button>
-            <Button type="primary" class="button-ok btn-save" @click="next('dataform')">保存导出方案</Button>
-            <Button type="default" class="button-ok btn-export" @click="back('dataform')"><img width="16px" src="./assets/export.png" /> 导出投放方案</Button>
+            <Button type="primary" class="button-ok btn-save" @click="next('dataform')">保存投放方案</Button>
+            <!-- <Button type="default" class="button-ok btn-export" @click="back('dataform')"><img width="16px" src="./assets/export.png" /> 导出投放方案</Button> -->
             <!-- <Button type="default" class="button-ok btn-collect" @click="back('dataform')">联系商务</Button> -->
           </div>
         </Form>  
