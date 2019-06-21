@@ -71,9 +71,9 @@
               <Col :span="6" class="three-left">
                 <div class="orient-title">受众性别</div>
                 <FormItem class="item-top form-item-type">
-                  <CheckboxGroup v-model="form.sex" class="item-radio-top">
-                    <Checkbox style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
-                    <Checkbox
+                  <RadioGroup v-model="form.sex" class="item-radio-top">
+                    <Radio  style="width: 220px" class="check-item form-item-first" :label="0">不限</Radio>
+                    <Radio 
                       v-if="it.key != 'unknow'"
                       style="width: 220px; height: 70px;"
                       v-for="it in sexList"
@@ -88,8 +88,8 @@
                         <i class="check-woman"></i>
                       </div>
                       <span>{{it.text}}</span>
-                    </Checkbox>
-                  </CheckboxGroup>
+                    </Radio>
+                  </RadioGroup>
                 </FormItem>
               </Col>
 
@@ -215,7 +215,7 @@ export default class Orienteering extends ViewBase {
   form: any = {
     name: '',
     cinema: [0],
-    sex: [0],
+    sex: 0,
     age: [0],
     type: [0]
   }
@@ -367,7 +367,7 @@ export default class Orienteering extends ViewBase {
         )[0].key
         return value
       })
-      this.form.sex = message
+      this.form.sex = message.join(',')
     } else {
     }
   }
@@ -384,7 +384,7 @@ export default class Orienteering extends ViewBase {
         )[0].key
         return value
       })
-      this.form.age = message
+      this.form.age = message.join(',')
     } else {
     }
   }
@@ -429,7 +429,7 @@ export default class Orienteering extends ViewBase {
             },
             {
               tagTypeCode: 'PLAN_GROUP_SEX',
-              text: this.form.sex.join(';')
+              text: this.form.sex
             }
           ].filter((it: any) => {
             return it.text != 0
@@ -526,16 +526,16 @@ export default class Orienteering extends ViewBase {
     }
   }
 
-  @Watch('form.sex', { deep: true })
-  watchformSex(value: number[], oldValue: number[]) {
-    // 不限与其他项互斥
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.form.sex = newValue
-    })
-    if (value.length == 0) {
-      this.form.sex = [0]
-    }
-  }
+  // @Watch('form.sex', { deep: true })
+  // watchformSex(value: number[], oldValue: number[]) {
+  //   // 不限与其他项互斥
+  //   keepExclusion(value, oldValue, 0, newValue => {
+  //     this.form.sex = newValue
+  //   })
+  //   if (value.length == 0) {
+  //     this.form.sex = [0]
+  //   }
+  // }
 
   @Watch('form.type', { deep: true })
   watchformType(value: number[], oldValue: number[]) {
@@ -593,7 +593,29 @@ export default class Orienteering extends ViewBase {
   /deep/ .ivu-checkbox {
     display: none;
   }
+  /deep/ .ivu-radio {
+    display: none;
+  }
   /deep/&.ivu-checkbox-wrapper-checked {
+    color: #fff;
+    background-color: #00202d;
+    border: 1px solid #00202d;
+    &::after {
+      content: '\2713';
+      color: #fff;
+      position: absolute;
+      right: -8px;
+      top: -8px;
+      border: 1px solid #00202d;
+      background: #00202d;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 16px;
+    }
+  }
+  /deep/&.ivu-radio-wrapper-checked {
     color: #fff;
     background-color: #00202d;
     border: 1px solid #00202d;
@@ -747,7 +769,7 @@ export default class Orienteering extends ViewBase {
     background-size: 40px;
   }
 }
-/deep/ .ivu-checkbox-wrapper-checked {
+/deep/ .ivu-radio-wrapper-checked {
   .check-man {
     background: url(./assets/man.png);
     background-size: 40px;
