@@ -1,17 +1,3 @@
-<style lang="less" scoped>
-@import '~@/site/lib.less';
-.wp {
-  display: flex;
-  flex-flow: row;
-  justify-content: flex-start;
-  align-items: center;
-  .title {
-    margin-right: 15px;
-    font-size: 15px;
-  }
-  span { padding-left: 15px; }
-}
-</style>
 <template>
   <div class='wp'>
     <div class='title'>
@@ -28,3 +14,18 @@ export default class Main extends ViewBase {
   @Prop({ type: String, default: '' }) titleText!: string
 }
 </script>
+<style lang="less" scoped>
+@import '~@/site/lib.less';
+.wp {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: center;
+  .title {
+    margin-right: 15px;
+    font-size: 15px;
+    color: #fff;
+  }
+  span { padding-left: 15px; }
+}
+</style>
