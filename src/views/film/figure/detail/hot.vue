@@ -8,18 +8,16 @@
               <DetailNavBar titleText="统计周期">
                 <div slot="item">
                   <RadioGroup
-                    style="margin-right:15px"
-                    @on-change="handleChange"
-                    v-model="form.statisticTimeId"
-                    size="large"
-                    type="button"
-                  >
-                    <Radio
-                      v-for="(item) in dict.statisticTime"
-                      :key="item.id"
-                      :disabled="item.disabled"
-                      :label="item.id"
-                    >{{item.name}}</Radio>
+                      class='nav'
+                      style="margin-right:15px"
+                      @on-change="handleChange"
+                      v-model="form.dayRangesKey"
+                      size="large"
+                      type="button">
+                    <Radio v-for="(item) in dict.dayRanges"
+                           :key="item.key"
+                           :disabled="item.disabled"
+                           :label="item.key">{{item.text}}</Radio>
                   </RadioGroup>
                   <DatePicker
                     type="daterange"
@@ -74,16 +72,17 @@
 <script lang="ts">
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import moment from 'moment'
 import {
   formatTimestamp,
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
-import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
+import DetailNavBar from './components/detailNavBar.vue'
 import { trend } from '@/api/figureDetailMoreInfo'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
-
+const timeFormat = 'YYYYMMDD'
 const toolTip: any = {
   borderWidth: 1,
   borderColor: 'rgba(0, 0, 0, .8)',
@@ -134,32 +133,32 @@ export default class Main extends ViewBase {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
-    statisticTimeId: 0
+    dayRangesKey: 'last_7_day',
   }
 
   dict: any = {
-    statisticTime: [
+    dayRanges: [
       {
-        id: 0,
-        name: '昨天',
+        key: 'yesterday',
+        text: '昨日',
         disabled: false
       },
       {
-        id: 1,
-        name: '最近7天',
+        key: 'last_7_day',
+        text: '最近7天',
         disabled: false
       },
       {
-        id: 2,
-        name: '最近30天',
+        key: 'last_30_day',
+        text: '最近30天',
         disabled: false
       },
       {
-        id: 3,
-        name: '最近90天',
-        disabled: true
+        key: 'last_90_day',
+        text: '最近90天',
+        disabled: false
       }
-    ]
+    ],
   }
 
   chart1: any = {
@@ -174,7 +173,7 @@ export default class Main extends ViewBase {
         date: []
       }
     ],
-    color: ['#CA7273'],
+    color: ['#00b6cc'],
     height: 350,
     toolTip
   }
@@ -218,92 +217,53 @@ export default class Main extends ViewBase {
       } = await trend({ ...mockObj })
 
       if (items && items.length > 0) {
+        this.chart2.dict1 = items[0].channels.map((it: any, index: number) => {
+          return {
+            text: it.name + '指数',
+            key: index
+          }
+        })
+        items[0].channels.forEach((it: any) => {
+          this.chart2.dataList.push({
+            data: [],
+            date: []
+          })
+        })
         items.forEach((it: any, index: number) => {
           this.chart1.dataList[0].date.push(it.date)
           this.chart1.dataList[0].data.push(it.count)
+          it.channels.forEach((channelItem: any, i: number) => {
+            this.chart2.dataList[i].data.push(channelItem.count)
+            this.chart2.dataList[i].date.push(it.date)
+          })
         })
         this.chart1.initDone = true
+        this.chart2.initDone = true
       }
-      this.chart2.dict1 = [{
-          text: '微博指数No.1',
-          key: 0
-      },
-      {
-          text: '微信指数No.2',
-          key: 1
-      },
-      {
-          text: '百度指数No.3',
-          key: 2
-      },
-      {
-          text: '头条指数No.1',
-          key: 3
-      }]
-
-      this.chart2.dataList = [{
-          data: [24, 80, 61, 45, 48],
-          date: ['2019-01-01', '2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05']
-      },
-      {
-          data: [12, 95, 73, 13, 61],
-          date: ['2019-01-01', '2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05']
-      },
-      {
-          data: [4, 67, 85, 8, 92],
-          date: ['2019-01-01', '2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05']
-      },
-      {
-          data: [97, 17, 10, 75, 93],
-          date: ['2019-01-01', '2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05']
-      }]
-      this.chart2.initDone = true
-
-      // if (data.chart1.effectTypeList.length > 0) {
-      //   this.chart1.dataList = data.chart1.effectTypeList.map(
-      //     (item: any, index: number) => {
-      //       return {
-      //         data: [],
-      //         date: []
-      //       }
-      //     }
-      //   )
-      // } else {
-      //   this.chart1.dataList.push({
-      //     data: [],
-      //     date: []
-      //   })
-      // }
-      // this.chart1.dict1 = data.chart1.effectTypeList
-      // data.chart1.dataList.forEach((item: any, index: number) => {
-      //   this.chart1.dataList[item.key].data.push(item.data)
-      //   this.chart1.dataList[item.key].date.push(item.date)
-      // })
-      // this.chart1.initDone = true
-      // if (data.chart2.effectTypeList.length > 0) {
-      //   this.chart2.dataList = data.chart2.effectTypeList.map(
-      //     (item: any, index: number) => {
-      //       return {
-      //         data: [],
-      //         date: []
-      //       }
-      //     }
-      //   )
-      // } else {
-      //   this.chart2.dataList.push({
-      //     data: [],
-      //     date: []
-      //   })
-      // }
-      // this.chart2.dict1 = data.chart2.effectTypeList
-      // data.chart2.dataList.forEach((item: any, index: number) => {
-      //   this.chart2.dataList[item.key].data.push(item.data)
-      //   this.chart2.dataList[item.key].date.push(item.date)
-      // })
-      // this.chart2.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
+  }
+
+  /**
+   * 根据筛选返回起始日期，影人、影片、kol字段名未统一
+   * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
+   */
+  beginDate(dayRangesKey: string) {
+    switch ( dayRangesKey ) {
+      case 'yesterday' :
+        return moment(new Date()).add(-1, 'days').format(timeFormat)
+      case 'last_30_day' :
+        return moment(new Date()).add(-30, 'days').format(timeFormat)
+      case 'last_90_day' :
+        return moment(new Date()).add(-90, 'days').format(timeFormat)
+      default :
+        return moment(new Date()).add(-7, 'days').format(timeFormat)
+    }
+  }
+
+  endDate() {
+    return moment(new Date()).format(timeFormat)
   }
 
   async handleChange() {
@@ -318,7 +278,8 @@ export default class Main extends ViewBase {
   }
 
   resetData() {
-    this.chart1.dataList = []
+    this.chart1.dataList.data = []
+    this.chart1.dataList.date = []
     this.chart2.dataList = []
   }
 }

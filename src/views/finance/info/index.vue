@@ -132,6 +132,7 @@
                   class="inp-style-tex"
                   type="textarea"
                   placeholder="限50字"
+                  maxlength = "50"
                 />
               </FormItem>
             </Col>
@@ -584,7 +585,8 @@ export default class Main extends ViewBase {
   @Watch('dataForm', { deep: true })
   watchdataForm(val: any[]) {
     if (this.dataForm.remark.length > 50) {
-      this.dataForm.remark = ''
+      alert(this.dataForm.remark)
+      this.dataForm.remark = String(this.dataForm.remark).slice(0, 50)
       info('备注不可大于50字')
       return
     }
