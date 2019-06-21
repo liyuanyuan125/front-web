@@ -43,7 +43,7 @@
     </div>
     <div class="btn-center">
       <Button type="default" class="button-ok btn-next" @click="back('dataform')"><img width="16px" src="./assets/next.png" /> 返回上一步</Button>
-      <!-- <Button type="default" class="button-ok btn-save" @click="back('dataform')">确定</Button> -->
+      <Button type="default" class="button-ok btn-save" @click="next('dataform')">确定方案</Button>
     </div>
   </div>
 </template>
@@ -53,6 +53,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { adverdetail } from '@/api/popPlan.ts'
 import Number from '@/components/number.vue'
+import { sureEdit } from '@/api/plan'
 
 @Component({
   components: {
@@ -80,6 +81,17 @@ export default class Apps extends ViewBase {
         this.planMovies = (planMovies || []).length
         this.cinemaCount = cinemaCount
     } catch (ex) {
+    }
+  }
+
+  async next() {
+    try {
+      await sureEdit(this.$route.params.setid)
+      this.$router.push({
+        name: 'pop-planlist'
+      })
+    } catch (ex) {
+      this.handleError(ex)
     }
   }
 }
