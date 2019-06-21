@@ -793,6 +793,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction(route) {
         const id = parseInt(route.params.id, 10) || 0
         return id > 0 ? 'edit' : 'create'
+      },
+      title(route) {
+        const id = route.params.id
+        return id ? '客户管理 - 编辑信息' : '客户管理 - 添加信息'
       }
     }
   },

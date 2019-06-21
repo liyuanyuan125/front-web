@@ -1,7 +1,7 @@
 <template>
   <Pane :title="title" :more="more" :tooltip="tooltip">
-    <ul class="legend-list" v-if="legendList.length > 0">
-      <li v-for="it in legendList" :key="it.name" class="legend-item">
+    <ul class="legend-list" v-if="legends && legends.length > 0">
+      <li v-for="it in legends" :key="it.name" class="legend-item">
         <label class="legend-name">{{it.name}}</label>
         <em class="legend-no">{{it.no}}</em>
         <em
@@ -13,7 +13,7 @@
         >{{it.inc != 0 ? Math.abs(it.inc) : ''}}</em>
       </li>
     </ul>
-    <ECharts :options="chartData" auto-resize class="chart"/>
+    <ECharts :options="chartData" auto-resize class="chart" @mousemove="chartMouseMove"/>
   </Pane>
 </template>
 
@@ -41,6 +41,7 @@ export interface DataItem {
   name: string
   value: number
   rank: number
+  legends: Legend[]
 }
 
 export interface Legend {
@@ -60,44 +61,50 @@ export default class HotPane extends Vue {
 
   @Prop({ type: Array, default: () => [] }) data!: DataItem[]
 
-  @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
+  @Prop({ type: [Object, String], default: null }) more!: RawLocation
 
   @Prop({ type: String, default: '' }) tooltip!: string
 
-  @Prop({ type: Array, default: () => [] }) legendList!: Legend[]
-
   // https://www.echartsjs.com/option.html#tooltip.formatter
-  @Prop({ type: [ String, Function ], default: '{a} <br>{b} : {c}' })
+  @Prop({ type: [String, Function], default: '{a} <br>{b} : {c}' })
   formatter!: string | ((data: any) => string)
+
+  hoverIndex = 0
+
+  get legends() {
+    const hoverItem = this.data && this.data[this.hoverIndex]
+    return hoverItem ? hoverItem.legends : []
+  }
 
   chartData: any = {
     tooltip: tooltipStyles({
       trigger: 'axis',
-      formatter: this.formatter,
-      axisPointer: {
-        type: 'line',
-        lineStyle: {
-          width: 22,
-          color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 0,
-            y2: 1,
-            colorStops: [
-              {
-                offset: 0,
-                color: 'rgba(87, 180, 201, .01)'
-              },
-              {
-                offset: 1,
-                color: 'rgba(87, 180, 201, .9)'
-              }
-            ]
-          }
+      formatter: this.formatter
+    }),
+
+    axisPointer: {
+      type: 'line',
+      lineStyle: {
+        width: 22,
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [
+            {
+              offset: 0,
+              color: 'rgba(87, 180, 201, .01)'
+            },
+            {
+              offset: 1,
+              color: 'rgba(87, 180, 201, .9)'
+            }
+          ]
         }
       }
-    }),
+    },
 
     xAxis: {
       type: 'category',
@@ -105,7 +112,7 @@ export default class HotPane extends Vue {
       axisLine: lineStyle,
       axisTick: false,
       axisLabel,
-      boundaryGap: false,
+      boundaryGap: false
     },
 
     yAxis: {
@@ -113,7 +120,7 @@ export default class HotPane extends Vue {
       axisLine: false,
       splitLine: lineStyle,
       axisLabel,
-      splitNumber: 4,
+      splitNumber: 4
     },
 
     grid: {
@@ -134,9 +141,15 @@ export default class HotPane extends Vue {
           color: '#57b4c9'
         },
         symbol: 'circle',
-        showSymbol: false,
+        showSymbol: false
       }
     ]
+  }
+
+  chartMouseMove({ componentType, dataIndex }: any) {
+    if (componentType == 'series') {
+      this.hoverIndex = dataIndex
+    }
   }
 }
 </script>

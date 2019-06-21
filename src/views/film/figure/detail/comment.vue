@@ -63,6 +63,7 @@
                            :dict1="chart3.dict1"
                            :color="chart3.color"
                            :dataList="chart3.dataList"
+                           @keyChange='keyChangeHandle'
                            :currentTypeIndex="chart3.currentTypeIndex" />
                 </div>
               </Col>
@@ -73,10 +74,29 @@
                            :dict1="chart4.dict1"
                            :color="chart4.color"
                            :dataList="chart4.dataList"
+                           @keyChange='keyChangeHandle'
                            :currentTypeIndex="chart4.currentTypeIndex" />
                 </div>
               </Col>
             </Row>
+            
+            <Row type="flex" justify="space-between" style='margin-top:10px'>
+              <Col :span="24">
+                <div class='chart-wp keyword-box borderRadius'>
+                  <div class="keyword-title">
+                    提及到“{{keywordQuery.keyword}}”的热门评论
+                  </div>
+                  <div class="table-box">
+                    <Table stripe
+                      ref="table"
+                      :columns="tableColumns"
+                      :loading="tableLoading"  
+                      :data="tableData"></Table>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+
           </div>
         </Card>
       </Form>
@@ -84,12 +104,13 @@
     </Row>
   </div>
 </template>
-<script lang="ts">
+<script lang="tsx">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import jsxReactToVue from '@/util/jsxReactToVue'
 import { findIndex } from 'lodash'
 import moment from 'moment'
-import { dayRanges, comment } from '@/api/figureDetailMoreInfo'
+import { dayRanges, comment, keywordComment } from '@/api/figureDetailMoreInfo'
 import PieNest from '@/components/chartsGroup/pieNest/'
 import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
@@ -100,6 +121,7 @@ const timeFormat = 'YYYYMMDD'
 // #AD686C 正面
 // #57B4C9 负面
 const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
+
 @Component({
   components: {
     PieNest,
@@ -108,15 +130,24 @@ const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
     DetailNavBar
   }
 })
-export default class Temporary extends ViewBase {
+export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
+
   tooltipStyles = tooltipStyles
+
+  keywordQuery: any = {
+    keyword: '大家',
+    pageIndex: 0,
+    pageSize: 10
+  }
+
   form: any = {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
     dayRangesKey: 'last_7_day',
   }
+
   dict: any = {
     dayRanges: [
       {
@@ -159,6 +190,7 @@ export default class Temporary extends ViewBase {
       }
     ]
   }
+
   chart1: any = {
     title: '评论情绪分布',
     dict1: [],
@@ -168,6 +200,7 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: colors
   }
+
   chart2: any = {
     title: '',
     dict1: [
@@ -231,6 +264,7 @@ export default class Temporary extends ViewBase {
     ],
     color: colors
   }
+
   chart3: any = {
     title: '正面评论关键词',
     dict1: [],
@@ -239,6 +273,7 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['rgba(0,32,45,0)']
   }
+
   chart4: any = {
     title: '负面评论关键词',
     dict1: [],
@@ -247,9 +282,63 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['rgba(0,32,45,0)']
   }
+
+  tableLoading: boolean = false
+
+  tableColumns = [
+    {
+      title: '序号',
+      key: 'index',
+      align: 'center'
+    },
+    {
+      title: '内容',
+      key: 'highLightWords',
+      align: 'left',
+      render: (hh: any, { row }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        return (
+          <div v-html={row.highLightWords}></div>
+        )
+        /* tslint:disable */
+      }
+    },
+    {
+      title: '赞同',
+      key: 'favorCount',
+      align: 'center'
+    },
+    {
+      title: '回复',
+      key: 'replyCount',
+      align: 'center'
+    },
+    {
+      title: '来源内容',
+      key: 'sourceContent',
+      align: 'left',
+      render: (hh: any, { row }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        return (
+          <a class="sourceContent" href={row.sourceUrl} v-html={row.sourceContent}></a>
+        )
+        /* tslint:disable */
+      }
+    },
+    {
+      title: '评论时间',
+      key: 'commentDate',
+      align: 'center'
+    }]
+
+  tableData: any[] = []
+
   async typeChangeHander(index: number = 0) {
     this.chart2.currentTypeIndex = index
   }
+
   /**
    * 加载日期区间描述
    */
@@ -332,6 +421,7 @@ export default class Temporary extends ViewBase {
       this.handleError(ex)
     }
   }
+
   /**
    * 根据筛选返回起始日期，影人、影片、kol字段名未统一
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
@@ -348,9 +438,11 @@ export default class Temporary extends ViewBase {
         return moment(new Date()).add(-7, 'days').format(timeFormat)
     }
   }
+
   endDate() {
     return moment(new Date()).format(timeFormat)
   }
+
   async handleChange() {
     this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
     this.form.beginDate[1] = this.endDate()
@@ -361,12 +453,14 @@ export default class Temporary extends ViewBase {
     this.resetData()
     await this.getChartsData('', 0)
   }
+
   created() {
     this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
     this.form.beginDate[1] = this.endDate()
     // this.dayRangesFetch() // 本地写死，暂时取消
     this.initHandler()
   }
+
   async initHandler() {
     if (this.chart1.dict1.length > 0) {
       this.chart1.dict1.map((item: any, index: number) => {
@@ -392,7 +486,9 @@ export default class Temporary extends ViewBase {
       this.chart4.dataList.push([])
     }
     await this.getChartsData('', 0)
+    await this.getKeywordList()
   }
+
   resetData() {
     this.chart1.dataList.forEach((item: any[]) => {
       item.splice(0, item.length)
@@ -410,9 +506,115 @@ export default class Temporary extends ViewBase {
       item.splice(0, item.length)
     })
   }
+
+  async getKeywordList( key?: string ) {
+    const that: any = this
+    const mockObj = (key == '') ? this.keywordQuery.keyword : key
+    const id = this.id
+    try {
+      const {
+        data,
+        data: {
+          items
+        }
+      } = await keywordComment({ ...mockObj }, id)
+      if (items && items.length > 0 ) {
+        items.map((it: any, index: number) => {
+          this.tableData.push({
+            index: this.indexNumber(index),
+            highLightWords: it.highLightWords,
+            content: it.content,
+            favorCount: it.favorCount, // 赞同数
+            replyCount: it.replyCount, // 回复数
+            sourceContent: it.sourceContent, // 来源内容
+            sourceUrl: it.sourceUrl, // 来源url
+            commentDate: it.commentDate // 评论时间
+          })
+        })
+      }
+      this.tableLoading = false
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  indexNumber(index: number): string {
+    return index+'1'
+  }
+
+  keyChangeHandle(item: any) {
+    console.log(item)
+    this.tableData = []
+    this.getKeywordList(item[0])
+  }
 }
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
+
+.table-box {
+  border-radius: 5px;
+  padding: 25px 0;
+  min-height: 445px;
+  /deep/ .ivu-table th,
+  /deep/ .ivu-table-header {
+    background: rgba(208, 233, 246, 1);
+    height: 40px;
+    line-height: 40px;
+    color: rgba(0, 32, 45, 1);
+    font-size: 15px;
+    font-weight: 400;
+  }
+  /deep/ .ivu-table {
+    background: none;
+  }
+  /deep/ .ivu-table td {
+    background: none;
+    transition: background-color 0.2s ease-in-out;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #0e3240;
+  }
+  /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+    background: rgba(32, 67, 80, 1);
+  }
+  /deep/ .ivu-table-body {
+    background: none;
+  }
+  /deep/ .ivu-table-tip {
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: transparent;
+  }
+  /deep/ .ivu-table-wrapper {
+    margin: 0;
+    border: none;
+  }
+  /deep/.ivu-table-stripe .ivu-table-body tr:nth-child(2n) td,
+  .ivu-table-stripe .ivu-table-fixed-body tr:nth-child(2n) td {
+    background: none;
+  }
+  /deep/.ivu-table-stripe .ivu-table-body tr:last-child td {
+    border-bottom: 0;
+  }
+}
+/deep/ .sourceContent {
+  color: #a3d5e6;
+  width: 80%;
+  height: 120px;
+  .cut-text;
+}
+.keyword-box {
+  padding: 20px 0;
+  .keyword-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 1);
+    padding: 0 25px;
+  }
+}
 </style>

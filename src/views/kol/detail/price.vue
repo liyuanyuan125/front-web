@@ -36,7 +36,7 @@ export default class Price extends ViewBase {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '~@/site/lib.less';
 
 .price-list {

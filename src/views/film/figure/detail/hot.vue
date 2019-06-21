@@ -1,18 +1,330 @@
 <template>
   <div>
-      全网热度
+    <Form label-position="left" :label-width="100">
+      <Card class="detailmore-card">
+        <div slot="title">
+          <Row type="flex" justify="space-between">
+            <Col :span="24">
+              <DetailNavBar titleText="统计周期">
+                <div slot="item">
+                  <RadioGroup
+                    style="margin-right:15px"
+                    @on-change="handleChange"
+                    v-model="form.statisticTimeId"
+                    size="large"
+                    type="button"
+                  >
+                    <Radio
+                      v-for="(item) in dict.statisticTime"
+                      :key="item.id"
+                      :disabled="item.disabled"
+                      :label="item.id"
+                    >{{item.name}}</Radio>
+                  </RadioGroup>
+                  <DatePicker
+                    type="daterange"
+                    v-model="form.beginDate"
+                    @on-change="handleChange"
+                    placement="bottom-end"
+                    placeholder="自定义时间段"
+                  ></DatePicker>
+                </div>
+              </DetailNavBar>
+            </Col>
+          </Row>
+        </div>
+        <div class="content">
+          <Row type="flex" justify="space-between">
+            <Col :span="24">
+              <div class="chart-wp">
+                <AreaBasic :initDone="chart1.initDone"
+                    :title="chart1.title"
+                    :dict1="chart1.dict1"
+                    :dict2="chart1.dict2"
+                    :toolTip="chart1.toolTip"
+                    :height="chart1.height"
+                    :color="chart1.color"
+                    :dataList="chart1.dataList"
+                    :currentTypeIndex="chart1.currentTypeIndex" />
+              </div>
+            </Col>
+          </Row>
+          <Row type="flex" justify="space-between">
+            <Col :span="24">
+              <div class="chart-wp borderRadius">
+                <AreaBasicxtra
+                  :initDone="chart2.initDone"
+                  :title="chart2.title"
+                  :dict1="chart2.dict1"
+                  :dict2="chart2.dict2"
+                  :color="chart2.color"
+                  :dataList="chart2.dataList"
+                  :currentTypeIndex="chart2.currentTypeIndex"
+                  @typeChange="typeChangeHander2" 
+                />
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </Card>
+    </Form>
   </div>
 </template>
 
-<script lang='ts'>
-import {Component, Prop} from 'vue-property-decorator'
+<script lang="ts">
+import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-@Component
+import {
+  formatTimestamp,
+  formatTimes,
+  formatNumber
+} from '@/util/validateRules'
+import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
+import { trend } from '@/api/figureDetailMoreInfo'
+import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
+import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
+
+const toolTip: any = {
+  borderWidth: 1,
+  borderColor: 'rgba(0, 0, 0, .8)',
+  backgroundColor: 'rgba(0, 0, 0, .8)',
+  padding: [7, 10],
+  textStyle: {
+    color: '#fff',
+    fontSize: 12,
+    lineHeight: 22
+  },
+  trigger: 'axis',
+  axisPointer: {
+    type: 'line',
+    lineStyle: {
+      width: 22,
+      color: {
+        type: 'linear',
+        x: 0,
+        y: 0,
+        x2: 0,
+        y2: 1,
+        colorStops: [
+          {
+            offset: 0,
+            color: 'rgba(255, 255, 255, .01)'
+          },
+          {
+            offset: 1,
+            color: 'rgba(255, 255, 255, .5)'
+          }
+        ]
+      }
+    }
+  }
+}
+
+@Component({
+  components: {
+    AreaBasic,
+    AreaBasicxtra,
+    DetailNavBar
+  }
+})
 export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
-}
+  form: any = {
+    beginDate: [
+      // new Date(2019, 3, 9), new Date(2019, 4, 11)
+    ],
+    statisticTimeId: 0
+  }
 
+  dict: any = {
+    statisticTime: [
+      {
+        id: 0,
+        name: '昨天',
+        disabled: false
+      },
+      {
+        id: 1,
+        name: '最近7天',
+        disabled: false
+      },
+      {
+        id: 2,
+        name: '最近30天',
+        disabled: false
+      },
+      {
+        id: 3,
+        name: '最近90天',
+        disabled: true
+      }
+    ]
+  }
+
+  chart1: any = {
+    title: '综合热度',
+    dict1: [],
+    dict2: [],
+    currentTypeIndex: 0,
+    initDone: false,
+    dataList: [
+      {
+        data: [],
+        date: []
+      }
+    ],
+    color: ['#CA7273'],
+    height: 350,
+    toolTip
+  }
+
+  chart2: any = {
+    title: '',
+    dict1: [],
+    dict2: [],
+    currentTypeIndex: 0,
+    initDone: false,
+    dataList: [],
+    color: ['#ff0000', '#3fb23f', '#0099cc', '#cc6600']
+  }
+
+  async typeChangeHander2(index: number = 0) {
+    if (this.chart2.dataList[index].length < 1) {
+      await this.getChartsData('chart2', index)
+    }
+    this.chart2.currentTypeIndex = index
+  }
+
+  /**
+   * 加载图表数据
+   * @param chart 图表名 (因为接口返回全部数据，暂时不用)
+   * @param typeIndex 当前类别下标
+   */
+  async getChartsData(chart: string = '', typeIndex: number = 0) {
+    const mockObj = {
+      effectType: typeIndex
+    }
+    try {
+      const {
+        data,
+        data: {
+          items: {
+            date,
+            count
+          },
+          items
+        },
+      } = await trend({ ...mockObj })
+
+      if (items && items.length > 0) {
+        items.forEach((it: any, index: number) => {
+          this.chart1.dataList[0].date.push(it.date)
+          this.chart1.dataList[0].data.push(it.count)
+        })
+        this.chart1.initDone = true
+      }
+      this.chart2.dict1 = [{
+          text: '微博指数No.1',
+          key: 0
+      },
+      {
+          text: '微信指数No.2',
+          key: 1
+      },
+      {
+          text: '百度指数No.3',
+          key: 2
+      },
+      {
+          text: '头条指数No.1',
+          key: 3
+      }]
+
+      this.chart2.dataList = [{
+          data: [24, 80, 61, 45, 48],
+          date: ['2019-01-01', '2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05']
+      },
+      {
+          data: [12, 95, 73, 13, 61],
+          date: ['2019-01-01', '2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05']
+      },
+      {
+          data: [4, 67, 85, 8, 92],
+          date: ['2019-01-01', '2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05']
+      },
+      {
+          data: [97, 17, 10, 75, 93],
+          date: ['2019-01-01', '2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05']
+      }]
+      this.chart2.initDone = true
+
+      // if (data.chart1.effectTypeList.length > 0) {
+      //   this.chart1.dataList = data.chart1.effectTypeList.map(
+      //     (item: any, index: number) => {
+      //       return {
+      //         data: [],
+      //         date: []
+      //       }
+      //     }
+      //   )
+      // } else {
+      //   this.chart1.dataList.push({
+      //     data: [],
+      //     date: []
+      //   })
+      // }
+      // this.chart1.dict1 = data.chart1.effectTypeList
+      // data.chart1.dataList.forEach((item: any, index: number) => {
+      //   this.chart1.dataList[item.key].data.push(item.data)
+      //   this.chart1.dataList[item.key].date.push(item.date)
+      // })
+      // this.chart1.initDone = true
+      // if (data.chart2.effectTypeList.length > 0) {
+      //   this.chart2.dataList = data.chart2.effectTypeList.map(
+      //     (item: any, index: number) => {
+      //       return {
+      //         data: [],
+      //         date: []
+      //       }
+      //     }
+      //   )
+      // } else {
+      //   this.chart2.dataList.push({
+      //     data: [],
+      //     date: []
+      //   })
+      // }
+      // this.chart2.dict1 = data.chart2.effectTypeList
+      // data.chart2.dataList.forEach((item: any, index: number) => {
+      //   this.chart2.dataList[item.key].data.push(item.data)
+      //   this.chart2.dataList[item.key].date.push(item.date)
+      // })
+      // this.chart2.initDone = true
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async handleChange() {
+    this.chart1.initDone = false
+    this.chart2.initDone = false
+    this.resetData()
+    await this.getChartsData('', 0)
+  }
+
+  async mounted() {
+    await this.getChartsData('', 0)
+  }
+
+  resetData() {
+    this.chart1.dataList = []
+    this.chart2.dataList = []
+  }
+}
 </script>
+
 <style lang='less' scoped>
+@import '~@/site/lib.less';
+@import '~@/site/detailmore.less';
 </style>

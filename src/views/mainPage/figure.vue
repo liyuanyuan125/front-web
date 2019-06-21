@@ -48,13 +48,11 @@
           />
         </div>
 
-        <div class="board-row">
+        <div class="board-row" v-if="hotData && hotData.length > 0">
           <HotPane
             title="近30日全网热度"
             :data="hotData"
             :more="{ }"
-            tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
-            :legendList="legendList"
             :formatter="hotFormatter"
             class="hot-pane"
           />
@@ -103,32 +101,9 @@ export default class FigurePage extends ViewBase {
 
   commentData: any = null
 
-  activeFansData = [
-    { name: '5-16', value: 855000 },
-    { name: '5-17', value: 800000 },
-    { name: '5-18', value: 808000 },
-    { name: '5-19', value: 860000 },
-    { name: '5-20', value: 600000 },
-    { name: '5-21', value: 755000 },
-    { name: '5-22', value: 555000 },
-  ]
+  activeFansData: any = null
 
-  legendList = [
-    { name: '新浪', no: 'No.3', inc: 0 },
-    { name: '微信', no: 'No.2', inc: -2 },
-    { name: '百度', no: 'No.4', inc: 8 },
-    { name: '头条', no: 'No.1', inc: 3 },
-  ]
-
-  hotData = [
-    { name: '5-16', value: 855000, rank: 1 },
-    { name: '5-17', value: 100000, rank: 2 },
-    { name: '5-18', value: 808000, rank: 8 },
-    { name: '5-19', value: 260000, rank: 6 },
-    { name: '5-20', value: 600000, rank: 5 },
-    { name: '5-21', value: 755000, rank: 3 },
-    { name: '5-22', value: 555000, rank: 2 },
-  ]
+  hotData: any[] = []
 
   hotFormatter([{ dataIndex }]: any) {
     const { value, rank } = this.hotData[dataIndex]
@@ -171,7 +146,8 @@ export default class FigurePage extends ViewBase {
   }
 
   async initHot() {
-    await getFigureHot(this.id)
+    const hotData = await getFigureHot(this.id)
+    this.hotData = hotData
   }
 }
 </script>

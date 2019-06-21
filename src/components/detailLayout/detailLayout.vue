@@ -26,6 +26,7 @@
     </main>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -42,7 +43,7 @@ export default class DetailLayout extends ViewBase {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '~@/site/lib.less';
 
 .detail-layout {

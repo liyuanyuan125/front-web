@@ -214,7 +214,7 @@ export default class Platform extends ViewBase {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
 </style>
