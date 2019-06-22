@@ -42,7 +42,7 @@
       <Col span="3" class="item item-dl">
         <dl>
           <dd>客户</dd>
-          <dt>{{data.customerName}}</dt>
+          <dt style="width: 70px">{{data.customerName}}</dt>
         </dl>
         <dl>
           <dd>广告规格</dd>
@@ -158,6 +158,9 @@ export default class App extends ViewBase {
     dt {
       margin-left: 10px;
       color: #fff;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 }

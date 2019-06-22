@@ -53,7 +53,7 @@
               <p><span>想看人数：</span>{{it.wantSeeNum}}</p>
               <i-circle trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="it.matchPercent">
                 <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
-                <p class="demo-Circle-inner" style="font-size:18px;color:#DA6C70">{{it.matchPercent}}%</p>
+                <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent}}%</p>
               </i-circle>
             </div>
           </div>
@@ -85,7 +85,7 @@
             <dl style="margin-bottom: 15px">
               <dd>受众年龄：</dd>
               <dt v-if="it.ageCodes && it.ageCodes.length > 0">
-                <span v-for="item in it.ageCodes" :key="item">{{item || '-'}}
+                <span v-for="(item, index) in it.ageCodes" :key="item">{{item || '-'}}
                   <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
                 </span>
               </dt>

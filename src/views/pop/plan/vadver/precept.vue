@@ -73,7 +73,7 @@
           </div>
 
           <h3 class="layout-titles">覆盖影院
-            <span class="item-detail">影院总数</span>
+            <!-- <span class="item-detail">影院总数</span> -->
             <!-- <span class="custom" @click="exportData"><Exportfile /></span> -->
             <!-- <span class="custom" style="margin-right: 160px">自定义投放影院</span> -->
           </h3>
@@ -217,7 +217,7 @@ export default class App extends ViewBase {
   filmList: any = []
   commendata: any = null
   loading = false
-  single = false
+  single = true
   tableDate1: any = []
   deatilItem: any = {}
 

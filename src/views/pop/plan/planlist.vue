@@ -90,9 +90,11 @@
         </template>
 
         <template slot="settlementStatus" slot-scope="{row}">
-          <p v-if="row.freezeAmount">冻结金额：{{row.freezeAmount}}</p>
-          <p v-if="row.settlementStatus">广告花费：{{row.settlementAmount}}</p>
-          <p v-if="row.refundAmount">退款金额：{{row.refundAmount}}</p>
+          <div class="table-empty">
+            <p v-if="row.freezeAmount">冻结金额：{{row.freezeAmount}}</p>
+            <p v-if="row.settlementStatus">广告花费：{{row.settlementAmount}}</p>
+            <p v-if="row.refundAmount">退款金额：{{row.refundAmount}}</p>
+          </div>
         </template>
 
         <template slot="status" slot-scope="{row}">
@@ -193,7 +195,7 @@ export default class Plan extends ViewBase {
   columns = [
     { title: '广告', key: 'id', minWidth: 170, slot: 'msg' },
     { title: '投放周期', slot: 'date' },
-    { title: '款项清算', slot: 'settlementStatus' },
+    { title: '款项清算', slot: 'settlementStatus', align: 'center' },
     { title: '计划状态', slot: 'status' },
     { title: '操作', slot: 'operation', width: 150, align: 'left' }
   ]
@@ -647,6 +649,11 @@ export default class Plan extends ViewBase {
     span {
       margin-left: 10px;
     }
+  }
+}
+.table-empty {
+  &:empty::before {
+    content: '-';
   }
 }
 .status-wating {
