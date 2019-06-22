@@ -177,7 +177,7 @@ export default class Temporary extends ViewBase {
     movieCategoryCode: '',
     sortBy: '',
     pageIndex: 1,
-    pageSize: 10,
+    pageSize: 18,
     releaseStatus: 0
   }
   dataList: any[] = []
