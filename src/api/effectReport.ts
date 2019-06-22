@@ -680,9 +680,11 @@ export async function popPlans(data: any) {
  * https://yapi.aiads-dev.com/project/139/interface/api/4731
  * @param id
  */
- export async function getPlansReport(id: number = -1) {
-    // const res = await get(`xadvert/v1/plans/${id}/report`)
-    // return res
+ export async function getPlansReport(id: number|string = -1) {
+    // 演示 临时参数 nxd 20190621
+    id = '173'
+    const res = await get(`xadvert/v1/plans/${id}/report`)
+    return res
     return await mockGet(id, {
       plan: {
         id: 39,

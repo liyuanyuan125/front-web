@@ -1,5 +1,5 @@
 import { get } from '@/fn/ajax'
-import { percent } from '@/util/dealData'
+import { percent, intDate, textList, dot } from '@/util/dealData'
 
 /**
  * 搜索影人
@@ -44,34 +44,6 @@ export async function searchFigure({
 }
 
 /**
- * 搜索 KOL
- * https://yapi.aiads-dev.com/project/144/interface/api/5086
- */
-export async function searchKol({
-  keyword,
-  pageIndex,
-  pageSize
-}: any) {
-  const {
-    data: {
-      items,
-      totalCount
-    }
-  } = await get('/kol/search-kol', {
-    name: '',
-    pageIndex,
-    pageSize
-  })
-
-  const result = {
-    list: items || [],
-    total: totalCount || 0,
-  }
-
-  return result
-}
-
-/**
  * 搜索影片
  * https://yapi.aiads-dev.com/project/161/interface/api/4974
  */
@@ -83,7 +55,8 @@ export async function searchFilm({
   const {
     data: {
       movies,
-      totalCount
+      totalCount,
+      typeList
     }
   } = await get('/movie/search', {
     name: keyword,
@@ -92,8 +65,67 @@ export async function searchFilm({
   })
 
   const result = {
-    list: movies || [],
+    list: (movies as any[] || []).map(it => {
+      const { director, actor, release_date, types } = it
+      return {
+        ...it,
+        directorName: (director || []).join('、'),
+        actorName: (actor || []).join('、'),
+        pubDate: intDate(release_date),
+        typeName: textList(types, typeList).join('、')
+      }
+    }),
     total: totalCount || 0,
+    similarList: [],
+    hotList: []
+  }
+
+  return result
+}
+
+/**
+ * 搜索 KOL
+ * https://yapi.aiads-dev.com/project/144/interface/api/5086
+ */
+export async function searchKol({
+  keyword,
+  pageIndex,
+  pageSize
+}: any) {
+  const {
+    data: {
+      items,
+      totalCount,
+      similars,
+      ranking
+    }
+  } = await get('/kol/search-kol', {
+    name: '',
+    pageIndex,
+    pageSize
+  })
+
+  const result = {
+    list: (items as any[] || []).map(it => {
+      return {
+        ...it,
+        fansCount: dot(it.channelFans, '0.count'),
+        fansRanking: dot(it.channelFans, '0.rank'),
+      }
+    }),
+    total: totalCount || 0,
+    similarList: (similars as any[] || []).map(it => ({
+      id: it.id,
+      name: it.name,
+      avatar: it.photo
+    })),
+    hotList: (ranking as any[] || []).map(it => ({
+      id: it.id,
+      name: it.name,
+      jyIndex: percent(it.jyIndex),
+      // TODO: 全网热度？
+      rank: it.hotIndex
+    }))
   }
 
   return result

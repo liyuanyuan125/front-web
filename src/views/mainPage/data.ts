@@ -3,9 +3,7 @@ import { at, keyBy, sumBy } from 'lodash'
 import { KeyText, MapType } from '@/util/types'
 import { slice } from '@/fn/object'
 import { dayOffsetRange } from '@/util/date'
-import { percent } from '@/util/dealData'
-
-const dot = (object: any, path: string) => at(object, path)[0]
+import { percent, dot } from '@/util/dealData'
 
 const getNames = (keys: string[], list: KeyText[]) => {
   const map = keyBy(list, 'key')

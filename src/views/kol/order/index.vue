@@ -17,7 +17,7 @@
                 >{{item.text}}</Option>
               </Select>
               <Input v-model='form.project' placeholder="输入项目名称模糊查询" />
-              <Select v-model='form.brand' filterable clearable placeholder="全部品牌">
+              <Select v-model='form.brandId' filterable clearable placeholder="全部品牌">
                 <Option
                   v-for="item in allBrandSelect"
                   :key="item.brandId"

@@ -166,7 +166,7 @@ import {
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
-import { platformData, matching } from '@/api/kolDetailMoreInfo'
+import { matching } from '@/api/kolDetailMoreInfo'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import BarYCategoryDouble from '@/components/chartsGroup/barYCategoryDouble/'
 import DetailNavBar from './components/detailNavBar.vue'
