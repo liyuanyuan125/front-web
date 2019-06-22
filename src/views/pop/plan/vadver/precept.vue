@@ -419,11 +419,11 @@ export default class App extends ViewBase {
 
   async next(dataform: any) {
     try {
-      await getCheme({
-        planId: this.$route.params.setid,
-        allowAutoDelivery: this.single ? 1 : 0,
-        planRecommed: { ...this.commendata }
-      })
+      // await getCheme({
+      //   planId: this.$route.params.setid,
+      //   allowAutoDelivery: this.single ? 1 : 0,
+      //   planRecommed: { ...this.commendata }
+      // })
       this.$emit('input', {
         id: 3,
         setid: this.$route.params.setid

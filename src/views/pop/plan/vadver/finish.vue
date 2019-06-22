@@ -88,7 +88,8 @@ export default class Apps extends ViewBase {
     try {
       await surecaogao(this.$route.params.setid)
       this.$router.push({
-        name: 'pop-planlist'
+        name: 'pop-planlist',
+        id: 2
       })
     } catch (ex) {
       this.handleError(ex)
