@@ -1,19 +1,5 @@
 <template>
   <div class="login-home">
-    <header>
-      <div class="nav flex-mid">
-        <div class="logo">
-          <img src="~@/assets/site/logo.png" alt="alias" height="50">
-        </div>
-        <div class="nav-title">
-          <router-link tag="span" to>概览</router-link>
-          <router-link tag="span" to>平台介绍</router-link>
-          <router-link tag="span" to>联系咨询</router-link>
-          <router-link tag="span" to>合作伙伴</router-link>
-        </div>
-      </div>
-    </header>
-
     <content class="content">
       <div class="main-wrap">
         <div>
@@ -71,7 +57,7 @@
       </div>
     </content>
 
-    <detail />
+    <!-- <detail /> -->
   </div>
 </template>
 
@@ -259,7 +245,7 @@ export default class Main extends ViewBase {
     width: 100%;
     height: 100%;
     min-height: 600px;
-    background: url(//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bhj7kl98jlg00080873g.jpg) no-repeat center;
+    background: url('../assets/home-bg.png') no-repeat center;
     background-size: cover;
     .main-wrap {
       position: relative;

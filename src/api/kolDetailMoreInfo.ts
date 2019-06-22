@@ -753,8 +753,8 @@ export async function fans(query: any) {
  */
  export async function trend(query: any, id: number | string = '') {
   query = {
-    beginDate: '20160520',
-    endDate: '20190620',
+    beginDate: query.beginDate,
+    endDate: query.endDate,
     channelCode: 'weibo'
   }
   const res = await get(`/kol/accounts/${id}/indexes` , query)
