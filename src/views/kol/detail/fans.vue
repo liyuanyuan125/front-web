@@ -209,7 +209,7 @@ export default class Temporary extends ViewBase {
         data,
         data: {
           channelList,
-          item: { femalePercent, malePercent, ages, cities, provinces , fans }
+          item: { ages, cities, provinces , fans }
         }
       } = await fanslist(id, this.pageQuery)
       this.channelList = channelList
