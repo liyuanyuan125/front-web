@@ -148,16 +148,41 @@ export default class AreaBasic extends ViewBase {
       },
       tooltip: {
         borderWidth: 1,
-        borderColor: this.color[this.currentIndex],
-        backgroundColor: this.color[this.currentIndex],
-        padding: [7, 10],
+        borderColor: 'rgba(0, 0, 0, .8)',
+        backgroundColor: 'rgba(0, 0, 0, .8)',
+        padding: [
+          7,
+          10
+        ],
         textStyle: {
           color: '#fff',
           fontSize: 12,
           lineHeight: 22
         },
-        trigger: 'item',
-        formatter: '{b} <br/> {c}'
+        trigger: 'axis',
+        axisPointer: {
+          type: 'line',
+          lineStyle: {
+            width: 22,
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [
+                {
+                  offset: 0,
+                  color: 'rgba(255, 255, 255, .01)'
+                },
+                {
+                  offset: 1,
+                  color: 'rgba(255, 255, 255, .5)'
+                }
+              ]
+            }
+          }
+        }
       },
       xAxis: {
         ...xOption,
