@@ -85,7 +85,7 @@
               </Col>
               <Col :span="12">
                 <div class='chart-wp borderRadius'
-                    style='margin-right:10px;margin-top:-208px;height: 398px;'>
+                    style='margin-right:10px;margin-top:-208px;'>
                   <PieNest :initDone="chart5.initDone"
                       :title='chart5.title'
                       :dict1="chart5.dict1"
@@ -109,7 +109,7 @@
               </Col>
               <Col :span="12">
                 <div class='chart-wp borderRadius'
-                    style='margin-right:10px;margin-top:-319px;height: 395px;'>
+                    style='margin-right:10px;margin-top:-274px;'>
                   <PieNest :initDone="chart7.initDone"
                       :title='chart7.title'
                       :dict1="chart7.dict1"
