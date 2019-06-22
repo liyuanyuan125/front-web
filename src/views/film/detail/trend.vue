@@ -30,9 +30,23 @@
             <Row type="flex" justify="space-between">
               <Col :span="24">
                 <div class='chart-wp'>
+                  <!-- 累计和增加 -->
+                  <RadioGroup size="small" class="grand-total"  @on-change='currentTypeChange'
+                          v-model="currentIndex"  type="button">
+                    <Radio v-for="(item,index) in grandTotal"
+                          :key="item.key"
+                          :label="index">{{item.name}}</Radio>
+                  </RadioGroup>
+                  <!-- 观影title -->
+                  <RadioGroup size="small" class="watch-film"  @on-change='currentTypeChange'
+                          v-model="filmIndex"  type="button">
+                    <Radio v-for="(item,index) in watchFilm"
+                          :key="item.key"
+                          :label="item.key">{{item.text}}</Radio>
+                  </RadioGroup>
+
                   <BarxCategoryStack :initDone="chart2.initDone"
                                   :title='chart2.title'
-                                  :dict1="chart2.dict1"
                                   :dict2="chart2.dict2"
                                   :xAxis="chart2.xAxis"
                                   :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})"
@@ -82,11 +96,34 @@ export default class Main extends ViewBase {
 
   tooltipStyles = tooltipStyles
 
+  // 新增和累计
+  grandTotal: any = [
+    {
+      key: 'trend',
+      name: '新增'
+    },
+    {
+      key: 'count',
+      name: '累计'
+    }
+  ]
+  currentIndex = 0
+
+  // 观影人数
+  watchFilm: any = [
+    {key: 'watchNum', text: '观影人数'},
+    {key: 'movieNum', text: '影片票房'},
+    {key: 'wantNum', text: '想看人数' }
+  ]
+  filmIndex = 'wantNum'
+
+
   keywordQuery: any = {
     keyword: '大家',
     pageIndex: 0,
     pageSize: 10
   }
+
 
   form: any = {
     beginDate: [
@@ -171,41 +208,21 @@ export default class Main extends ViewBase {
           type: 'bar',
           stack: 'totalCount',
           barMaxWidth: '20',
-          data: []
+          data: [40, 90, 30]
         },
         {
           name: '淘票想看',
           type: 'bar',
           stack: 'totalCount',
           barMaxWidth: '20',
-          data: []
+          data: [300, 20, 40]
         },
         {
           name: '豆瓣想看',
           type: 'bar',
           stack: 'totalCount',
           barMaxWidth: '20',
-          data: []
-        }
-      ],
-      [
-        {
-          name: '猫眼想看',
-          type: 'bar',
-          stack: 'totalCount',
-          data: []
-        },
-        {
-          name: '淘票想看',
-          type: 'bar',
-          stack: 'totalCount',
-          data: []
-        },
-        {
-          name: '豆瓣想看',
-          type: 'bar',
-          stack: 'totalCount',
-          data: []
+          data: [30, 90, 60]
         }
       ]
     ],
@@ -282,6 +299,12 @@ export default class Main extends ViewBase {
 
   tableData: any[] = []
 
+  currentTypeChange(val: any) {}
+
+
+
+
+
   async typeChangeHander(index: number = 0) {
     this.chart2.currentTypeIndex = index
   }
@@ -338,13 +361,13 @@ export default class Main extends ViewBase {
         //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
         // trend 新增 index:0 | count 累计 index:1
         const { date, neutral, passive, positive } = item
-        that.chart2.xAxis.push( date )
-        that.chart2.dataList[0][0].data.push(item.positive.trend)
-        that.chart2.dataList[0][1].data.push(item.passive.trend)
-        that.chart2.dataList[0][2].data.push(item.neutral.trend)
-        that.chart2.dataList[1][0].data.push(item.positive.count)
-        that.chart2.dataList[1][1].data.push(item.passive.count)
-        that.chart2.dataList[1][2].data.push(item.neutral.count)
+        // that.chart2.xAxis.push( date )
+        // that.chart2.dataList[0][0].data.push(item.positive.trend)
+        // that.chart2.dataList[0][1].data.push(item.passive.trend)
+        // that.chart2.dataList[0][2].data.push(item.neutral.trend)
+        // that.chart2.dataList[1][0].data.push(item.positive.count)
+        // that.chart2.dataList[1][1].data.push(item.passive.count)
+        // that.chart2.dataList[1][2].data.push(item.neutral.count)
       })
 
       keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
@@ -501,6 +524,13 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
+.grand-total {
+  padding: 20px 0 0 30px;
+}
+.watch-film {
+  display: block;
+  text-align: center;
+}
 
 .table-box {
   border-radius: 5px;

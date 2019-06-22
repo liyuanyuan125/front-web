@@ -53,7 +53,7 @@
                   <h3 class="title-grade"><span>{{it.name}}</span><em>{{it.jyIndex}}</em></h3>
                   <h4 class="person-identity"><span v-for="(item, index) in it.professions" :key="index"> {{handleProfession(item)}} </span></h4>
                   <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" :key="index">{{item.name}}</em></p>
-                  <p class="com-col">主演：<em class="em-actor" v-for="(item, index) in it.actors" :key="index">{{item.name}} </em></p>
+                  <p class="com-col">主演：<em class="em-actor" v-for="(item, index) in it.actors" v-if="index < 2" :key="index">{{item.name}} </em></p>
                 </div>
               </div>
             </dd>
@@ -280,9 +280,9 @@ export default class Master extends ViewBase {
 h2, h3, h4 {
   font-weight: normal;
 }
-.page {
-  padding: 30px 20px 30px 40px;
-}
+// .page {
+//   padding: 30px 20px 30px 40px;
+// }
 .nav-title {
   font-size: 24px;
   margin-bottom: 30px;
@@ -325,7 +325,7 @@ h2, h3, h4 {
         }
       }
       .img-top {
-        width: 100%;
+        // width: 100%;
         height: 240px;
       }
       .title-year {

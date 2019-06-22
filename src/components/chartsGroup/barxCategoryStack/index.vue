@@ -22,7 +22,7 @@
     </div>
     <Row type="flex"
          justify="center" align="middle">
-      <Col :span="24">
+      <Col :span="24"> 
           <div ref="refChart"
             v-if="initDone"
             :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`" ></div>      
@@ -89,7 +89,6 @@ export default class BarXCategoryStack extends ViewBase {
       return
     }
     const myChart = echarts.init(this.$refs.refChart as any)
-
     const option: any = {
       color: this.color,
       ...pubOption,
