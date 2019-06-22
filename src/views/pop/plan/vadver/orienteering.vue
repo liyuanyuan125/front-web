@@ -96,9 +96,9 @@
               <Col :span="6" class="three-left">
                 <div class="orient-title">受众年龄</div>
                 <FormItem class="item-top form-item-type">
-                  <CheckboxGroup v-model="form.age" class="item-radio-top">
-                    <Checkbox style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
-                    <Checkbox
+                  <RadioGroup v-model="form.age" class="item-radio-top">
+                    <Radio  style="width: 220px" class="check-item form-item-first" :label="0">不限</Radio>
+                    <Radio
                       style="100px"
                       v-for="it in ageList"
                       :key="it.key"
@@ -106,8 +106,8 @@
                       class="check-item"
                     >
                       <span>{{it.text}}</span>
-                    </Checkbox>
-                  </CheckboxGroup>
+                    </Radio>
+                  </RadioGroup>
                 </FormItem>
               </Col>
 
@@ -115,14 +115,15 @@
                 <div ref="types">
                   <div class="orient-title">影片类型</div>
                   <FormItem :labelWidth="0" class="item-top form-item-type">
-                    <CheckboxGroup v-model="form.type" class="item-radio-top">
-                      <Checkbox
+                    <RadioGroup v-model="form.type" class="item-radio-top">
+                      <Radio  style="width: 220px" class="check-item form-item-first" :label="0">不限</Radio>
+                      <Radio
                         v-for="it in typeList"
                         :key="it.key"
                         :label="it.key"
                         class="check-item"
-                      >{{it.text}}</Checkbox>
-                    </CheckboxGroup>
+                      >{{it.text}}</Radio>
+                    </RadioGroup>
                   </FormItem>
                 </div>
               </Col>
@@ -216,8 +217,8 @@ export default class Orienteering extends ViewBase {
     name: '',
     cinema: [0],
     sex: 0,
-    age: [0],
-    type: [0]
+    age: 0,
+    type: 0
   }
   warehouseId: any = []
   warehouseLisst: any = []
@@ -312,7 +313,7 @@ export default class Orienteering extends ViewBase {
       this.typeList = data.tags[0].values || []
       this.cinemaDetail = data.items || []
     } catch (ex) {
-      this.handleError(ex)
+      this.handleError('系统错误，请重新尝试！')
     }
   }
 
@@ -368,7 +369,7 @@ export default class Orienteering extends ViewBase {
         )[0].key
         return value
       })
-      this.form.sex = message.join(',')
+      this.form.sex = message
     } else {
       this.form.sex = 0
     }
@@ -424,11 +425,11 @@ export default class Orienteering extends ViewBase {
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
-              text: this.form.type.join(';')
+              text: this.form.type
             },
             {
               tagTypeCode: 'PLAN_GROUP_AGE',
-              text: this.form.age.join(';')
+              text: this.form.age
             },
             {
               tagTypeCode: 'PLAN_GROUP_SEX',
@@ -481,7 +482,7 @@ export default class Orienteering extends ViewBase {
         }
       }, 3000)
     } catch (ex) {
-      this.handleError(ex)
+      this.handleError('系统错误，请重新尝试！')
     }
   }
 
@@ -510,7 +511,9 @@ export default class Orienteering extends ViewBase {
       //   id: 2,
       //   setid: this.$route.params.setid
       // })
-    } catch (ex) {}
+    } catch (ex) {
+      this.handleError('系统错误，请重新尝试！')
+    }
   }
 
   onCitySelectOk({ fastList }: any) {
@@ -551,27 +554,27 @@ export default class Orienteering extends ViewBase {
   //   }
   // }
 
-  @Watch('form.type', { deep: true })
-  watchformType(value: number[], oldValue: number[]) {
-    // 不限与其他项互斥
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.form.type = newValue
-    })
-    if (value.length == -1) {
-      this.form.type = [0]
-    }
-  }
+  // @Watch('form.type', { deep: true })
+  // watchformType(value: number[], oldValue: number[]) {
+  //   // 不限与其他项互斥
+  //   keepExclusion(value, oldValue, 0, newValue => {
+  //     this.form.type = newValue
+  //   })
+  //   if (value.length == -1) {
+  //     this.form.type = [0]
+  //   }
+  // }
 
-  @Watch('form.age', { deep: true })
-  watchformAge(value: number[], oldValue: number[]) {
-    // 不限与其他项互斥
-    keepExclusion(value, oldValue, 0, newValue => {
-      this.form.age = newValue
-    })
-    if (value.length == 0) {
-      this.form.age = [0]
-    }
-  }
+  // @Watch('form.age', { deep: true })
+  // watchformAge(value: number[], oldValue: number[]) {
+  //   // 不限与其他项互斥
+  //   keepExclusion(value, oldValue, 0, newValue => {
+  //     this.form.age = newValue
+  //   })
+  //   if (value.length == 0) {
+  //     this.form.age = [0]
+  //   }
+  // }
 }
 </script>
 
