@@ -684,6 +684,7 @@ export async function fans(query: any) {
  * @description http://yapi.aiads-dev.com/project/144/interface/api/4569
  */
  export async function trend(query: any, id: number | string = '') {
+   id = '2061'
   query = {
     beginDate: '20160520',
     endDate: '20190620',
