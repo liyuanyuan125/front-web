@@ -398,7 +398,7 @@ export default class Index extends ViewBase {
       this.totalData = {
         item0: report.viewCount,
         item1: report.scheduleCount,
-        item2: report.cost
+        item2: parseInt(report.cost, 0) / 100 // 单位为'分'
       }
       if ( cinemas && cinemas.length > 0 ) {
         this.cinemasData.totalCount = cinemas.length
@@ -424,7 +424,7 @@ export default class Index extends ViewBase {
             name: item.name,
             viewCount: item.viewCount, // 曝光人次
             viewRate: item.viewRate, // 曝光人次占比
-            scheduleCount: `￥${item.scheduleCount}`// 曝光场次
+            scheduleCount: item.scheduleCount // 曝光场次
           })
         })
         movies.slice(0, 3).forEach((it: any) => {
@@ -462,7 +462,7 @@ export default class Index extends ViewBase {
           date: item.date,
           viewCount: item.viewCount,
           scheduleCount: item.scheduleCount,
-          cost: item.cost
+          cost: parseInt(item.cost, 0) / 100  // 单位为'分'
         })
       })
       this.chart1.initDone = true

@@ -96,23 +96,23 @@ export default class MoreMoviesDlg extends ViewBase {
   }
 
   async search() {
-    const id = (this.id).toString() || ''
-    try {
-      const {
-        data: { items, totalCount }
-      } = await cinemasReport(id, {...this.form})
-      this.data = items.map((it: any) => {
-        return {
-          name: it.name,
-          viewCount: it.viewCount,
-          scheduleCount: it.scheduleCount,
-          cost: it.cost
-        }
-      })
-      this.showDlg = true
-    } catch (ex) {
-      this.handleError(ex)
-    }
+    // const id = (this.id).toString() || ''
+    // try {
+    //   const {
+    //     data: { items, totalCount }
+    //   } = await cinemasReport(id, {...this.form})
+    //   this.data = items.map((it: any) => {
+    //     return {
+    //       name: it.name,
+    //       viewCount: it.viewCount,
+    //       scheduleCount: it.scheduleCount,
+    //       cost: it.cost
+    //     }
+    //   })
+    //   this.showDlg = true
+    // } catch (ex) {
+    //   this.handleError(ex)
+    // }
   }
 
   exportData() {

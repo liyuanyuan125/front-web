@@ -15,7 +15,7 @@ export async function platform(query: any, id: number | string = '') {
     endDate: '20190620',
     channelCode: 'weibo'
   }
-  // const res = await get(`kol/accounts/${id}/comments`, query)
+  // const res = await get(`kol/accounts/${id}/trends`, query)
   // return res
   return await mockGet(query, {
     items: [
@@ -275,96 +275,154 @@ export async function platform(query: any, id: number | string = '') {
  */
 export async function comment(query: any, id: number | string = '') {
   // 演示 临时参数 nxd 20190621
-  id = '2061'
+  id = 2061
   query = {
-    beginDate: 20190101,
-    endDate: 20190107,
+    beginDate: 20170101,
+    endDate: 20190607,
     channelCode: 'weibo'
   }
+  // const res = await get(`/kol/accounts/${id}/comments`, query)
+  // return res
   return await mockGet(query, {
     rate: {
-      neutral: '0.33',
-      positive: '0.33',
-      passive: '0.33'
+        neutral: '0.33',
+        positive: '0.33',
+        passive: '0.33'
     },
     commentKeyword: {
-      kolId: 2061,
-      channelCode: 'weibo',
-      yesterday: {
-        positive: [
-          '才华',
-          '美丽',
-          '正能量',
-          '古灵精怪'
-        ],
-        negative: [
-          '负面',
-          '怨气',
-          '消极',
-          '负分'
-        ]
-      },
-      sevenDay: {
-        positive: [
-          '才华',
-          '美丽',
-          '正能量',
-          '古灵精怪'
-        ],
-        negative: [
-          '负面',
-          '怨气',
-          '消极',
-          '负分'
-        ]
-      },
-      thirtyDay: {
-        positive: [
-          '才华',
-          '美丽',
-          '正能量',
-          '古灵精怪'
-        ],
-        negative: [
-          '负面',
-          '怨气',
-          '消极',
-          '负分'
-        ]
-      },
-      ninetyDay: {
-        positive: [
-          '才华',
-          '美丽',
-          '正能量',
-          '古灵精怪'
-        ],
-        negative: [
-          '负面',
-          '怨气',
-          '消极',
-          '负分'
-        ]
-      },
-      updateTime: '2019-06-18T10:14:16.958'
+        kolId: 2061,
+        channelCode: 'weibo',
+        yesterday: {
+            positive: [
+                '才华',
+                '美丽',
+                '正能量',
+                '古灵精怪'
+            ],
+            negative: [
+                '负面',
+                '怨气',
+                '消极',
+                '负分'
+            ]
+        },
+        sevenDay: {
+            positive: [
+                '才华',
+                '美丽',
+                '正能量',
+                '古灵精怪'
+            ],
+            negative: [
+                '负面',
+                '怨气',
+                '消极',
+                '负分'
+            ]
+        },
+        thirtyDay: {
+            positive: [
+                '才华',
+                '美丽',
+                '正能量',
+                '古灵精怪'
+            ],
+            negative: [
+                '负面',
+                '怨气',
+                '消极',
+                '负分'
+            ]
+        },
+        ninetyDay: {
+            positive: [
+                '才华',
+                '美丽',
+                '正能量',
+                '古灵精怪'
+            ],
+            negative: [
+                '负面',
+                '怨气',
+                '消极',
+                '负分'
+            ]
+        },
+        updateTime: '2019-06-18T10:14:16.958'
     },
+    channelList: [
+        {
+            text: '微博',
+            key: 'weibo'
+        },
+        {
+            text: '微信',
+            key: 'wechat'
+        },
+        {
+            text: '抖音',
+            key: 'douyin'
+        },
+        {
+            text: '快手',
+            key: 'kuaishou'
+        }
+    ],
     items: [
       {
         id: tid,
         kolId: tid,
         channelCode: 'weibo',
-        date: 20190600,
+        date: 20190601,
         positive: {
-          count: 100,
-          trend: 80
+          count: tid,
+          trend: tid
         },
         passive: {
-          count: 100,
-          trend: 80
+          count: tid,
+          trend: tid
         },
         neutral: {
-          count: 100,
-          trend: 80
+          count: tid,
+          trend: tid
+        },
+        updateTime: null
+      },
+      {
+        id: tid,
+        kolId: tid,
+        channelCode: 'weibo',
+        date: 20190602,
+        positive: {
+          count: tid,
+          trend: tid
+        },
+        passive: {
+          count: tid,
+          trend: tid
+        },
+        neutral: {
+          count: tid,
+          trend: tid
+        },
+        updateTime: null
+      },
+      {
+        id: tid,
+        kolId: tid,
+        channelCode: 'weibo',
+        date: 20190603,
+        positive: {
+          count: tid,
+          trend: tid
+        },
+        passive: {
+          count: tid,
+          trend: tid
+        },
+        neutral: {
+          count: tid,
+          trend: tid
         },
         updateTime: null
       },
@@ -694,7 +752,6 @@ export async function fans(query: any) {
  * @description http://yapi.aiads-dev.com/project/144/interface/api/4569
  */
  export async function trend(query: any, id: number | string = '') {
-   id = '2061'
   query = {
     beginDate: '20160520',
     endDate: '20190620',
