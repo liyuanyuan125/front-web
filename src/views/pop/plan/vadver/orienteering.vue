@@ -369,7 +369,7 @@ export default class Orienteering extends ViewBase {
         )[0].key
         return value
       })
-      this.form.sex = message
+      this.form.sex = message.join(',')
     } else {
       this.form.sex = 0
     }
@@ -387,8 +387,9 @@ export default class Orienteering extends ViewBase {
         )[0].key
         return value
       })
-      this.form.age = message
+      this.form.age = message.join(',')
     } else {
+      this.form.age = 0
     }
   }
 
@@ -404,8 +405,9 @@ export default class Orienteering extends ViewBase {
         )[0].key
         return value
       })
-      this.form.type = message
+      this.form.type = message.join(',')
     } else {
+      this.form.type = 0
     }
   }
 
@@ -454,6 +456,7 @@ export default class Orienteering extends ViewBase {
       )
       ; (this.$Spin as any).show()
       let time: any = null
+      this.recommend = false
       time = setInterval(() => {
         if (this.recommend) {
           (this.$Spin as any).hide()

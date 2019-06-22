@@ -58,7 +58,7 @@ export function normalizeList(list: any[], idKey: string, nameKey: string) {
 }
 
 /**
- * 格式化数字（每三位加逗号
+ * 格式化数字（每三位加逗号）
  * @param nums 数字
  */
 export function toThousands(nums: any) {

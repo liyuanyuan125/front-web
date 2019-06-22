@@ -279,7 +279,7 @@ export default class Promotion extends ViewBase {
       this.form.brandId = data[0].brandId
       this.form.specification = data[0].specification
       this.form.productId = data[0].productId
-      this.form.name = `${data[0].name} ${data[0].customerName} ${data[0].productName} ${data[0].specification}s`
+      this.form.name = `[ ${data[0].name} ] [ ${data[0].customerName} ] [ ${data[0].productName} ]`
     }
   }
   @Watch('form.advertime', {deep: true})

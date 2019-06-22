@@ -198,14 +198,13 @@ export default class Temporary extends ViewBase {
    * @param typeIndex 当前类别下标
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
-    const id: string = this.id.toString()
     try {
       const {
         data,
         data: {
           item: { genders, ages, cities, provinces }
         }
-      } = await fans(id)
+      } = await fans(this.id)
       if (genders && genders.length > 0) {
         this.chart1.dict2 = data.genders.filter(({ key, text }: any) => {
           return text !== '未知' || key !== 0

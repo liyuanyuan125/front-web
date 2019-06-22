@@ -207,7 +207,13 @@ export default class Main extends ViewBase {
        }
       } = await trend({ ...mockObj }, id)
       if (items && items.length > 0) {
-        const item = items.slice(1)
+        let item: any = null
+        if ( this.form.dayRangesKey != 'yesterday') {
+           item = items.slice(1)
+        } else {
+          item = items
+        }
+
         const msgcode = item[0].channels.map((it: any) => {
           return it.code
         })

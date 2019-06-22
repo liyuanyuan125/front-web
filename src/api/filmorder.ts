@@ -39,4 +39,12 @@ export async function mains(id: any ) {
   return res
 }
 
-
+/**
+ * 全网热度
+ * @param data
+ * @description http://yapi.aiads-dev.com/project/161/interface/api/4904
+ */
+export async function trend(query: any, id: number | string = '') {
+  const res = await get(`/movie/${id}/hot` , query)
+  return res
+}
