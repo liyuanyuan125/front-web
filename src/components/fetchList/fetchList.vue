@@ -2,11 +2,19 @@
   <section class="fetch-pane">
     <div class="fetch-loading" v-if="loading">加载中</div>
     <div class="fetch-empty" v-if="!loading && total === 0">空空如也</div>
+
     <ul class="fetch-list" v-if="!loading && list && list.length > 0">
       <li v-for="(item, index) in list" class="fetch-item">
         <slot name="item" :item="item" :index="index"></slot>
       </li>
     </ul>
+
+    <Page
+      :total="total"
+      :current.sync="queryData.pageIndex"
+      :page-size="queryData.pageSize"
+      v-if="!loading && total > 10"
+    />
   </section>
 </template>
 
@@ -78,6 +86,11 @@ export default class FetchList extends ViewBase {
       this.query.pageIndex = 1
     }
     this.fetchData()
+  }
+
+  @Watch('total')
+  watchTotal(total: number) {
+    this.$emit('totalChange', total)
   }
 }
 </script>

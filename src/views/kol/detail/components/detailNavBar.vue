@@ -21,7 +21,6 @@ export default class Main extends ViewBase {
   flex-flow: row;
   justify-content: flex-start;
   align-items: center;
-  color: #fff;
   .title {
     margin-right: 15px;
     font-size: 15px;

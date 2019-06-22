@@ -361,14 +361,16 @@ export default class Orienteering extends ViewBase {
       (item: any) => item.tagTypeCode == 'PLAN_GROUP_SEX'
     )
     if (msg.length > 0) {
-      const message = msg.map((it: any) => {
+      const msgKey = msg[0].text.split(';')
+      const message = msgKey.map((it: any) => {
         const value = this.tags[2].values.filter(
-          (item: any) => it.text == item.key
+          (item: any) => it == item.key
         )[0].key
         return value
       })
       this.form.sex = message.join(',')
     } else {
+      this.form.sex = 0
     }
   }
 
@@ -376,15 +378,15 @@ export default class Orienteering extends ViewBase {
     const msg = (this.item.deliveryGroups || []).filter(
       (item: any) => item.tagTypeCode == 'PLAN_GROUP_AGE'
     )
-
     if (msg.length > 0) {
-      const message = msg.map((it: any) => {
+      const msgKey = msg[0].text.split(';')
+      const message = msgKey.map((it: any) => {
         const value = this.tags[1].values.filter(
-          (item: any) => it.text == item.key
+          (item: any) => it == item.key
         )[0].key
         return value
       })
-      this.form.age = message.join(',')
+      this.form.age = message
     } else {
     }
   }
@@ -394,9 +396,10 @@ export default class Orienteering extends ViewBase {
       (item: any) => item.tagTypeCode == 'MOVIE_TYPE'
     )
     if (msg.length > 0) {
-      const message = msg.map((it: any) => {
+      const msgKey = msg[0].text.split(';')
+      const message = msgKey.map((it: any) => {
         const value = this.tags[0].values.filter(
-          (item: any) => it.text == item.key
+          (item: any) => it == item.key
         )[0].key
         return value
       })
@@ -421,7 +424,7 @@ export default class Orienteering extends ViewBase {
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
-              text: this.form.type[0]
+              text: this.form.type.join(';')
             },
             {
               tagTypeCode: 'PLAN_GROUP_AGE',
@@ -459,6 +462,17 @@ export default class Orienteering extends ViewBase {
               id: 2,
               setid: this.$route.params.setid
             })
+            if (this.$route.name == 'pop-planlist-add') {
+              this.$router.push({
+                name: 'pop-planlist-add',
+                params: { id: '2', setid: this.$route.params.setid  }
+              })
+            } else {
+              this.$router.push({
+                name: 'pop-planlist-edit',
+                params: { id: '2', setid: this.$route.params.setid  }
+              })
+            }
           } else {
             info('未找到匹配项')
           }
@@ -845,6 +859,7 @@ export default class Orienteering extends ViewBase {
   width: 320px;
   span {
     width: 80px;
+    color: #00202d;
     overflow: hidden;
   }
 }
