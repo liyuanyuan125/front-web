@@ -105,20 +105,25 @@
                     class="film-item"
                     :class="{'film-item-hot': sub.hasShow}"
                   >
-                    <figure class="film-figure">
-                      <img :src="sub.movieMainPic" class="film-img">
-                    </figure>
-                    <div class="film-main">
-                      <div class="film-name text-omit">{{sub.name}}</div>
-                      <div class="film-index">鲸娱指数：{{sub.jyIndex}}</div>
-                      <div class="film-date">{{sub.date}}上映</div>
-                      <div class="film-stats text-omit" v-if="sub.hasShow">
-                        已上映{{sub.showDays}}天，累计{{sub.custom}}
+                    <router-link
+                      :to="{ name: 'film-movie', params: { id: sub.id } }"
+                      class="film-item-in"
+                    >
+                      <figure class="film-figure">
+                        <img :src="sub.movieMainPic" class="film-img">
+                      </figure>
+                      <div class="film-main">
+                        <div class="film-name text-omit">{{sub.name}}</div>
+                        <div class="film-index">鲸娱指数：{{sub.jyIndex}}</div>
+                        <div class="film-date">{{sub.date}}上映</div>
+                        <div class="film-stats text-omit" v-if="sub.hasShow">
+                          已上映{{sub.showDays}}天，累计{{sub.custom}}
+                        </div>
+                        <div class="film-stats text-omit" v-else>
+                          预估票房：<em>{{sub.customPredict}}</em>
+                        </div>
                       </div>
-                      <div class="film-stats text-omit" v-else>
-                        预估票房：<em>{{sub.customPredict}}</em>
-                      </div>
-                    </div>
+                    </router-link>
                   </li>
                 </ul>
               </div>
@@ -723,14 +728,17 @@ export default class BrandHomeLayout extends ViewBase {
 }
 
 .film-list {
-  color: #fff;
   margin-top: 8px;
 }
 
 .film-item {
   position: relative;
-  display: flex;
   margin: 0 0 26px 12px;
+}
+
+.film-item-in {
+  display: flex;
+  color: #fff;
 }
 
 .film-figure {
