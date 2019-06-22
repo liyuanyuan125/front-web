@@ -41,7 +41,7 @@
         <span>效果不足时允许系统投放更多影片确保曝光效果</span>
       </div>
       <ul class="film-list" v-if="planMovies.length > 0">
-        <li v-for="(it) in planMovies" :key="it.id"
+        <li @click="filmdetail(it.movieId)" v-for="(it) in planMovies" :key="it.id"
           :class="['film-item']">
           <div class="film-top">
             <img :src="it.image" class="film-cover">
@@ -85,8 +85,9 @@
             <dl style="margin-bottom: 15px">
               <dd>受众年龄：</dd>
               <dt v-if="it.ageCodes && it.ageCodes.length > 0">
-                <span v-for="item in it.ageCodes" :key="item">{{item || '-'}}</span>
-                <span v-if="index != it.ageCodes.length -1" style="margin: 0px 4px">/</span>
+                <span v-for="item in it.ageCodes" :key="item">{{item || '-'}}
+                  <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
+                </span>
               </dt>
               <dt v-else>-</dt>
             </dl>
@@ -379,6 +380,15 @@ export default class App extends ViewBase {
       ]
     }
 
+  }
+
+  filmdetail(id: any) {
+    this.$router.push({
+      name: 'film-movie',
+      params: {
+        id
+      }
+    })
   }
 
   created() {

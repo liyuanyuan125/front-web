@@ -10,7 +10,7 @@
           </h3>
           <div class="item-top">
             <ul class="film-list" v-if="filmList.length > 0">
-              <li v-for="(it) in filmList" :key="it.id"
+              <li @click="filmdetail(it.movieId)" v-for="(it) in filmList" :key="it.id"
                 :class="['film-item']">
                 <div class="film-top">
                   <img :src="it.image ? it.image : defaultImg" @onerror="defaultImg" class="film-cover">
@@ -54,8 +54,9 @@
                   <dl style="margin-bottom: 15px">
                     <dd>受众年龄：</dd>
                     <dt v-if="it.ageCodes && it.ageCodes.length > 0">
-                      <span v-for="(item, index) in it.ageCodes" :key="item">{{item || '-'}}</span>
-                      <span v-if="index != it.ageCodes.length -1" style="margin: 0px 4px">/</span>
+                      <span v-for="(item, index) in it.ageCodes" :key="item">{{item || '-'}}
+                        <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
+                      </span>
                     </dt>
                     <dt v-else>-</dt>
                   </dl>
@@ -300,6 +301,15 @@ export default class App extends ViewBase {
 
   get rule() {
     return {}
+  }
+
+  filmdetail(id: any) {
+    this.$router.push({
+      name: 'film-movie',
+      params: {
+        id
+      }
+    })
   }
 
   formatDate(data: any) {
@@ -555,6 +565,7 @@ export default class App extends ViewBase {
     box-sizing: border-box;
     background: rgba(255, 255, 255, 0.3);
     padding: 28px;
+    cursor: pointer;
     &:not(:nth-child(3n)) {
       margin-right: 1.5%;
     }
