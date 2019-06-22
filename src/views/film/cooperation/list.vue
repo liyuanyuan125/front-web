@@ -118,7 +118,7 @@
     </div>
     <div class="res-box">
       <div class="res-list">
-        <Row :gutter="10" v-if="done" class="res-row">
+        <Row :gutter="10" v-if="done" type="flex" justify="start" class="res-row">
           <Col span="4" v-for="(item, index) in dataList" :key="index" class="res-col">
             <div class="res-item">
               <router-link :to="{ name: 'film-movie', params: { id: item.movie_id}}">
@@ -177,7 +177,7 @@ export default class Temporary extends ViewBase {
     movieCategoryCode: '',
     sortBy: '',
     pageIndex: 1,
-    pageSize: 10,
+    pageSize: 18,
     releaseStatus: 0
   }
   dataList: any[] = []

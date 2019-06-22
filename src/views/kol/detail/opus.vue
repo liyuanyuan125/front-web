@@ -148,7 +148,7 @@ export default class Opus extends ViewBase {
 }
 
 .brand-list {
-  margin: 0 20px 30px;
+  // margin: 0 20px 30px;
   font-size: 14px;
   .select-brand {
     padding-left: 30px;

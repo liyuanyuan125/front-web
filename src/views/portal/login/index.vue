@@ -1,19 +1,5 @@
 <template>
   <div class="login-home">
-    <header>
-      <div class="nav flex-mid">
-        <div class="logo">
-          <img src="~@/assets/site/logo.png" alt="alias" height="50">
-        </div>
-        <div class="nav-title">
-          <router-link tag="span" to>概览</router-link>
-          <router-link tag="span" to>平台介绍</router-link>
-          <router-link tag="span" to>联系咨询</router-link>
-          <router-link tag="span" to>合作伙伴</router-link>
-        </div>
-      </div>
-    </header>
-
     <content class="content">
       <div class="main-wrap">
         <div>
@@ -71,7 +57,7 @@
       </div>
     </content>
 
-    <detail />
+    <!-- <detail /> -->
   </div>
 </template>
 
