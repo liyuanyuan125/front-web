@@ -22,9 +22,10 @@
                 <p style='margin-left: 30px;' v-for='(it , index) in codeList' :key='index' v-if='item.channelCode == it.key'>{{it.text}}推广</p>
               </Col>
               <Col style='padding-top: 10px;' :span="8" class="flex-box">
-                <img v-if='item.orderItemList.length <= 5' :src="it.accountPhotoFileUrl" v-for="(it, index) in item.orderItemList" :key = 'index' alt="" class="li-img"/>
-                <img v-if='item.orderItemList.length > 5' :src="it.accountPhotoFileUrl" v-for="(it, index) in item.orderItemList.slice(0 , 5)" :key = 'index' alt="" class="li-img"/>
-                <span class="img-num" v-if='item.orderItemList.length > 5'>...等{{item.orderItemList.length}}个账号</span>
+                <span v-if='item.orderItemList == null'>暂无账号</span>
+                <img v-if='item.orderItemList != null && item.orderItemList.length <= 5' :src="it.accountPhotoFileUrl" v-for="(it, index) in item.orderItemList" :key = 'index' alt="" class="li-img"/>
+                <img v-if='item.orderItemList != null && item.orderItemList.length > 5' :src="it.accountPhotoFileUrl" v-for="(it, index) in item.orderItemList.slice(0, 5)" :key = 'index' alt="" class="li-img"/>
+                <span class="img-num" v-if='item.orderItemList != null && item.orderItemList.length > 5'>...等{{item.orderItemList.length}}个账号</span>
               </Col>
               <Col :span="8">
                 <p >实付金额：<span style='font-size: 20px;font-weight: 500'>¥{{item.totalFee}}</span></p>

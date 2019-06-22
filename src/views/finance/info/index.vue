@@ -220,10 +220,10 @@ export default class Main extends ViewBase {
 
   rules = {
     accountName: [],
-    remark: [
-      { required: true, message: '请输入50字以内' , trigger: 'blur' },
-      { type: 'string', max: 50, message: '请输入50字以内', trigger: 'blur' }
-    ]
+    // remark: [
+    //   { required: true, message: '请输入50字以内' , trigger: 'blur' },
+    //   { type: 'string', max: 50, message: '请输入50字以内', trigger: 'blur' }
+    // ]
   }
   count = 0
   end: any = 0
@@ -894,6 +894,10 @@ export default class Main extends ViewBase {
   height: 40px;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 1);
+  &::placeholder {
+    font-size: 14px;
+    color: #00202d;
+  }
 }
 /deep/ .upload-box {
   width: 400px;
@@ -951,5 +955,29 @@ export default class Main extends ViewBase {
   cursor: pointer;
   font-weight: 500;
   transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 24px;
+  color: #00202d;
+}
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 24px;
+  color: #00202d;
 }
 </style>
