@@ -289,11 +289,11 @@ export default class Plan extends ViewBase {
       const idO: any = {}
       if (this.checkboxall) {
         id.forEach((it: any) => {
-          idO[it] = true
+          idO[it] = false
         })
       } else {
         id.forEach((it: any) => {
-          idO[it] = false
+          idO[it] = true
         })
       }
       this.checks = {

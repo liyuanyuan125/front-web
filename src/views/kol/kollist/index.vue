@@ -682,6 +682,9 @@ export default class Main extends ViewBase {
 @import '~@/site/lib.less';
 .to-detail {
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 /deep/ .ivu-checkbox-wrapper {
   width: 150px;
