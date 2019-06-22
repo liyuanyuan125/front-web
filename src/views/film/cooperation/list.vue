@@ -126,7 +126,7 @@
                   <img :src="item.main_pic">
                 </div>
                 <div class="movtitle cut-text">{{item.name_cn}}</div>
-                <p class="movscore">{{item.jy_index}}</p>
+                <p class="movscore">{{handleFixed(item.jy_index)}}</p>
               </router-link>
             </div>
           </Col>
@@ -257,7 +257,8 @@ export default class Temporary extends ViewBase {
           movies,
           categoryList,
           typeList,
-          totalPages
+          totalPages,
+          totalCount
         }
       } = await fetchList({ ...mockObj })
       this.dataList = movies.map((it: any) => {
@@ -270,7 +271,7 @@ export default class Temporary extends ViewBase {
           jy_index: it.jy_index
         }
       })
-      this.totalPages = totalPages
+      this.totalPages = totalCount
       if ( this.dict.typeList.length === 1 ) {
         this.dict.typeList.push( ...typeList )
       }
@@ -287,6 +288,10 @@ export default class Temporary extends ViewBase {
     this.form.moveTypeCode = 0
     this.restHandler()
     this.fetchHandler()
+  }
+
+  handleFixed(val: any) {
+    return val != 0 ? (val / 100).toFixed(2) : val
   }
 
   restHandler() {

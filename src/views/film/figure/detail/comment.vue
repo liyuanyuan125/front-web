@@ -80,7 +80,7 @@
               </Col>
             </Row>
             
-            <Row type="flex" justify="space-between" style='margin-top:10px'>
+            <Row v-if="tableData.length > 0" type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="24">
                 <div class='chart-wp keyword-box borderRadius'>
                   <div class="keyword-title">
@@ -136,7 +136,7 @@ export default class Main extends ViewBase {
   tooltipStyles = tooltipStyles
 
   keywordQuery: any = {
-    keyword: '大家',
+    keyword: '',
     pageIndex: 0,
     pageSize: 10
   }
@@ -363,7 +363,6 @@ export default class Main extends ViewBase {
       beginDate: this.form.beginDate[0],
       endDate: this.form.beginDate[1],
     }
-    const id = this.$route.params.id || ''
     try {
       const {
         data,
@@ -374,7 +373,7 @@ export default class Main extends ViewBase {
             keywords
           }
         }
-      } = await comment({ ...mockObj }, id)
+      } = await comment({ ...mockObj }, this.id)
       for ( const k in rate ) {
         if ( rate[k] ) {
           const index = findIndex(this.dict.emotion, (it: any) => {
@@ -485,7 +484,6 @@ export default class Main extends ViewBase {
       this.chart4.dataList.push([])
     }
     await this.getChartsData('', 0)
-    await this.getKeywordList()
   }
 
   resetData() {
@@ -513,14 +511,14 @@ export default class Main extends ViewBase {
       pageIndex: 1,
       pageSize: 10
     }
-    const id = this.id
     try {
       const {
         data,
         data: {
           items
         }
-      } = await keywordComment({ ...mockObj }, id)
+      } = await keywordComment({ ...mockObj }, this.id)
+      this.tableData = []
       if (items && items.length > 0 ) {
         items.map((it: any, index: number) => {
           this.tableData.push({
@@ -546,8 +544,8 @@ export default class Main extends ViewBase {
   }
 
   keyChangeHandle(item: any) {
-    this.tableData = []
     this.getKeywordList(item[0])
+    this.keywordQuery.keyword = item[0].toString()
   }
 }
 </script>
