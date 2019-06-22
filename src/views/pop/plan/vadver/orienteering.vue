@@ -848,6 +848,7 @@ export default class Orienteering extends ViewBase {
   width: 320px;
   span {
     width: 80px;
+    color: #00202d;
     overflow: hidden;
   }
 }
