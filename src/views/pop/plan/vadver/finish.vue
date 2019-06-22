@@ -89,6 +89,17 @@ export default class Apps extends ViewBase {
       id: 2,
       setid: this.$route.params.setid
     })
+    if (this.$route.name == 'pop-planlist-add') {
+      this.$router.push({
+        name: 'pop-planlist-add',
+        params: { id: '2', setid: this.$route.params.setid  }
+      })
+    } else {
+      this.$router.push({
+        name: 'pop-planlist-edit',
+        params: { id: '2', setid: this.$route.params.setid  }
+      })
+    }
   }
   async next() {
     try {
