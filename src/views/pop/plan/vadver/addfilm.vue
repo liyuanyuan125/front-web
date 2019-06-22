@@ -34,6 +34,9 @@
             </div>
           </li>
         </ul>
+        <div class="film-no" v-else>
+          <span>暂无影片</span>
+        </div>
        </div>
        <div class="check-films">
          <span @click="checkAll">
@@ -325,7 +328,7 @@ export default class DlgEditCinema extends ViewBase {
 }
 @cancel-color: rgba(59, 152, 255, 1);
 .detail {
-  max-height: 500px;
+  min-height: 200px;
   overflow: auto;
   margin-top: 16px;
   margin-left: 20px;
@@ -348,7 +351,7 @@ export default class DlgEditCinema extends ViewBase {
   margin-top: 10px;
 }
 .reject-cinema {
-  min-height: 400px;
+  min-height: 200px;
 }
 .film-list {
   display: flex;
@@ -460,5 +463,9 @@ export default class DlgEditCinema extends ViewBase {
 .open-button {
   .button-style(#fff, #00202d);
   border-radius: 25px;
+}
+.film-no {
+  text-align: center;
+  padding-top: 50px;
 }
 </style>

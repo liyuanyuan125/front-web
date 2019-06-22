@@ -3,8 +3,8 @@
     <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="form">
       <Row>
         <Col span="14" offset="3" class="adver-name select-adv-type">
-          <FormItem :label-width="210" label="请输入广告计划名称:" prop="name">
-            <Input style="border-radius: 5px"  v-model="form.name" placeholder=""></Input>
+          <FormItem :label-width="210" label="广告计划名称:" prop="name">
+            <Input :disabled="true" style="border-radius: 5px"  v-model="form.name" placeholder=""></Input>
           </FormItem>
         </Col>
       </Row>
@@ -163,7 +163,7 @@ export default class Promotion extends ViewBase {
     }
     return {
       name: [
-        { required: true, message: '请输入广告片名称', trigger: 'change' }
+        { required: true, message: '请设置广告片', trigger: 'change' }
       ],
       videoId: [
         { validator: video }
@@ -279,6 +279,7 @@ export default class Promotion extends ViewBase {
       this.form.brandId = data[0].brandId
       this.form.specification = data[0].specification
       this.form.productId = data[0].productId
+      this.form.name = `${data[0].name} ${data[0].customerName} ${data[0].productName} ${data[0].specification}s`
     }
   }
   @Watch('form.advertime', {deep: true})
