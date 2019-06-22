@@ -23,7 +23,13 @@
   			<Row class='r-h'>
   				<Row class='de-ro'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
   				<Row class='de-ro-two'>演员 actor</Row>
-  				<Row class='de-ro-thr'>代表作品:<br> {{it.movies == null ? '暂无' : it.movies}}</Row>
+  				<Row class='de-ro-thr'>代表作品:<br> 
+           <span  v-if='it.movies == null'>暂无</span>
+           <div style='    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;'>
+           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>{{its.name + ' '}}</em></span></div>
+            </Row>
   			</Row>
   		</Row>
       <div v-if='person.Actor.length == 0'>暂无演员</div>
