@@ -276,8 +276,8 @@ export default class Main extends ViewBase {
   }
 
   resetData() {
-    this.chart1.dataList.data = []
-    this.chart1.dataList.date = []
+    this.chart1.dataList[0].data = []
+    this.chart1.dataList[0].date = []
     this.chart2.dataList = []
   }
 }

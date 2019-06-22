@@ -36,11 +36,11 @@ export async function dayRanges(query: any = { beginDate: 20191212, endDate: 201
  */
 export async function comment(query: any, id: number | string = '') {
   // 演示 临时参数 nxd 20190621
-  id = '107028'
-  query = {
-    beginDate: '20170112',
-    endDate: '20191212'
-  }
+  // id = '107028'
+  // query = {
+  //   beginDate: '20170112',
+  //   endDate: '20191212'
+  // }
   const res = await get(`/person/${id}/comments`, query)
   return res
   return await mockGet(query, {
@@ -183,13 +183,13 @@ export async function comment(query: any, id: number | string = '') {
  */
 export async function keywordComment(query: any, id: number | string = '') {
   // 演示 临时参数 nxd 20190621
-  id = '375284'
-  query = {
-    keyword: '大家',
-    pageIndex: 1,
-    pageSize: 10
-  }
-  const res = await get(`person/${id}/keyword-comments`, query)
+  // id = '375284'
+  // query = {
+  //   keyword: '大家',
+  //   pageIndex: 1,
+  //   pageSize: 10
+  // }
+  const res = await get(`/person/${id}/keyword-comments`, query)
   return res
   return await mockGet(query, {
     'items|10': [
@@ -217,9 +217,9 @@ export async function keywordComment(query: any, id: number | string = '') {
  * @param id id
  * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
  */
-export async function fans(id: string = '') {
+export async function fans(id: string|number = '') {
   // 演示 临时参数 nxd 20190621
-  id = '375284'
+  // id = '375284'
   const res = await get(`/person/${id}/fans`)
   return res
   return await mockGet({}, {
