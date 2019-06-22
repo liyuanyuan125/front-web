@@ -653,7 +653,12 @@ export default class Plan extends ViewBase {
 }
 .table-empty {
   &:empty::before {
-    content: '-';
+    content: '';
+    display: block;
+    height: 1px;
+    width: 20px;
+    margin-left: 44%;
+    background: #00202d;
   }
 }
 .status-wating {

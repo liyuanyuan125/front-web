@@ -46,12 +46,11 @@
           <div class="film-top">
             <img :src="it.image" class="film-cover">
             <div style="position: relative">
-              <p class="film-title" :title="it.movieName">{{it.movieName}}</p>
-              <p class="film-title" style="margin-bottom: 20px">{{it.movieName}}</p>
-              <p><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
-              <p><span>影片类型：</span>{{it.movieType}}</p>
-              <p><span>想看人数：</span>{{it.wantSeeNum}}</p>
-              <i-circle trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="it.matchPercent">
+              <p class="film-title" style="margin-bottom: 20px" :title="it.movieName">{{it.movieName}}</p>
+              <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
+              <p style="margin-bottom: 6px"><span>影片类型：</span>{{it.movieType || '-'}}</p>
+              <p style="margin-bottom: 6px"><span>想看人数：</span>{{it.wantSeeNum}}</p>
+              <i-circle trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                 <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
                 <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent}}%</p>
               </i-circle>
