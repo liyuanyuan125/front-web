@@ -64,7 +64,11 @@
               <span v-if='it.publishCategoryCode == null'>暂无</span></Col>
               <Col :span='3' class='li-ti-col ss'>￥{{it.salePrice}}</Col>
               <Col :span='3' class='li-ti-col ss'>{{it.publishTime}}</Col>
-              <Col :span='4' class='li-ti-col ss'>{{it.content}}</Col>
+              <Col :span='4' class='li-ti-col ss'>
+              <span v-if='it.content == null'>暂无</span>
+                  <Tooltip v-if='it.content != null' :content="it.content">
+                    <span>{{it.content.slice(0,13)}}</span></Tooltip>
+              </Col>
               <Col :span='3' class='li-ti-col ss'>
               <i v-for="item in subStatusList" :key="item.key" v-if="item.key == it.status">{{item.text}}</i>
               </Col>
@@ -78,17 +82,19 @@
       <div style='margin-top: 15px;border-bottom: 0px'>
         <ul>
           <li>
-            <!-- <row class='itemss itemss-w'>
-              <Col :span='3' class='ss-left'>ewqeqweqw<span></span></Col>
-              <Col :span='18' class='ss-right'>qweqweqweqw</Col>
-            </row> -->
-          </li>
-          <li v-for='item in orderLogList' :key='item.orderId'>
-            <row class='itemss'>
-              <Col :span='3' class='ss-left'>{{item.createTime}}<span></span></Col>
+            <row class='itemss itemss-w'>
+              <Col :span='4' class='ss-left'>{{orderLogList[0].createTime}}<span></span></Col>
               <Col :span='18' class='ss-right'>
-                  <p v-for="it in statusList" v-if="it.key == item.status">{{it.text}}</p>
-                  <p>{{item.remark}}</p>
+                  <span v-for="it in statusList" v-if="it.key == orderLogList[0].status">{{it.text}}</span>
+                  <span style='margin-left: 10px;'>{{orderLogList[0].remark}}</span></Col>
+            </row>
+          </li>
+          <li v-for='(item,index) in orderLogList.slice(1)' :key='index'>
+            <row class='itemss'>
+              <Col :span='4' class='ss-left'>{{item.createTime}}<span></span></Col>
+              <Col :span='18' class='ss-right'>
+                  <span v-for="(it,index) in statusList"  :key='index' v-if="it.key == item.status">{{it.text}}</span>
+                  <span style='margin-left: 10px;'>{{item.remark}}</span>
               </Col>
             </row>
           </li>
@@ -166,7 +172,12 @@ export default class Main extends ViewBase {
           }
         })
         this.subStatusList = subStatusList
-        this.orderLogList = orderLogList
+        this.orderLogList = (orderLogList || []).map((it: any) => {
+          return {
+            ...it,
+            createTime: it.createTime == null ? '暂无' : moment(it.createTime).format(timeFormat)
+          }
+        })
         this.createTime = moment(this.item.createTime).format(timeFormat)
         this.publishCategoryList = publishCategoryList
     } catch (ex) {
@@ -360,7 +371,7 @@ export default class Main extends ViewBase {
       background-size: cover;
       position: absolute;
       top: 37%;
-      right: -6%;
+      right: -4.5%;
     }
   }
   .ss-right {
