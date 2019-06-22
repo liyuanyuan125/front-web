@@ -361,14 +361,16 @@ export default class Orienteering extends ViewBase {
       (item: any) => item.tagTypeCode == 'PLAN_GROUP_SEX'
     )
     if (msg.length > 0) {
-      const message = msg.map((it: any) => {
+      const msgKey = msg[0].text.split(';')
+      const message = msgKey.map((it: any) => {
         const value = this.tags[2].values.filter(
-          (item: any) => it.text == item.key
+          (item: any) => it == item.key
         )[0].key
         return value
       })
       this.form.sex = message.join(',')
     } else {
+      this.form.sex = 0
     }
   }
 
@@ -376,15 +378,15 @@ export default class Orienteering extends ViewBase {
     const msg = (this.item.deliveryGroups || []).filter(
       (item: any) => item.tagTypeCode == 'PLAN_GROUP_AGE'
     )
-
     if (msg.length > 0) {
-      const message = msg.map((it: any) => {
+      const msgKey = msg[0].text.split(';')
+      const message = msgKey.map((it: any) => {
         const value = this.tags[1].values.filter(
-          (item: any) => it.text == item.key
+          (item: any) => it == item.key
         )[0].key
         return value
       })
-      this.form.age = message.join(',')
+      this.form.age = message
     } else {
     }
   }
@@ -394,9 +396,10 @@ export default class Orienteering extends ViewBase {
       (item: any) => item.tagTypeCode == 'MOVIE_TYPE'
     )
     if (msg.length > 0) {
-      const message = msg.map((it: any) => {
+      const msgKey = msg[0].text.split(';')
+      const message = msgKey.map((it: any) => {
         const value = this.tags[0].values.filter(
-          (item: any) => it.text == item.key
+          (item: any) => it == item.key
         )[0].key
         return value
       })
