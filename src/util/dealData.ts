@@ -1,7 +1,9 @@
 /**
  * 提供一组处理数据的工具方法
  */
-import { KeyTextControlStatus } from '@/util/types'
+import { KeyTextControlStatus, KeyText } from '@/util/types'
+import moment from 'moment'
+import { keyBy, at } from 'lodash'
 
 /**
  * 将数字 0 以及字符串 '0' 作为空串，其他保留原值
@@ -118,4 +120,42 @@ export function filterItemInList(
     }
   })
   return newItem
+}
+
+/**
+ * 将后台万分比率转成百分比
+ * @param rate 万分比率值
+ * @param digits 保留位数，默认为 0
+ */
+export function percent(rate: number, digits = 0) {
+  return +((rate || 0) / 100).toFixed(digits)
+}
+
+/**
+ * 将形如 20190622 形式的整数，格式化成日期
+ * @param date 整数
+ * @param format 格式
+ */
+export function intDate(date: number, format = 'YYYY-MM-DD') {
+  return moment(String(date)).format(format)
+}
+
+/**
+ * 将 keys 映射到 texts
+ * @param list 所有 key test 列表
+ * @param keys key 列表
+ */
+export function textList(list: KeyText[], keys: Array<(string | number)>) {
+  const keyMap = keyBy(list, 'key')
+  const result = (keys || []).map(it => (keyMap[it] || {}).text).filter(it => it != null)
+  return result
+}
+
+/**
+ * 通过 lodash at 访问对象的值
+ * @param object 对象
+ * @param path 路径
+ */
+export function dot(object: any, path: string) {
+  return at(object, path)[0]
 }

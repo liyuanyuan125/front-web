@@ -150,3 +150,11 @@ export async function sureEdit(id: any) {
   const res = await post(`/xadvert/v1/plans/${id}/confirm`)
   return res
 }
+
+/**
+ * 确认草稿方案
+ */
+export async function surecaogao(id: any) {
+  const res = await post(`/xadvert/v1/plans/${id}/confirm-draft`)
+  return res
+}

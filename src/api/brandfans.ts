@@ -607,119 +607,97 @@ export async function brands(query: any) {
         count: tid,
         channels: [
           {
-              code: 'weibo',
-              count: tid,
-              ranking: 0,
-              trend: tid
+            name: '微博',
+            count: tid,
+            ranking: 10,
+            trend: 50
           },
           {
-              code: 'baidu',
-              count: tid,
-              ranking: 0,
-              trend: tid
+            name: '头条',
+            count: tid,
+            ranking: 0,
+            trend: 0
           },
           {
-              code: 'wechat',
-              count: tid,
-              ranking: 0,
-              trend: tid
+            name: '微信',
+            count: tid,
+            ranking: 0,
+            trend: 0
           },
           {
-              code: 'toutiao',
-              count: tid,
-              ranking: 0,
-              trend: tid
+            name: '百度',
+            count: tid,
+            ranking: 0,
+            trend: 0
           }
         ]
       },
       {
         id: tid,
-        date: 20190603,
+        date: 20190602,
         brandId: 10121,
         trend: tid,
         count: tid,
         channels: [
           {
-              code: 'weibo',
-              count: tid,
-              ranking: 0,
-              trend: tid
+            name: '微博',
+            count: tid,
+            ranking: 10,
+            trend: 50
           },
           {
-              code: 'baidu',
-              count: tid,
-              ranking: 0,
-              trend: tid
+            name: '头条',
+            count: tid,
+            ranking: 0,
+            trend: 0
           },
           {
-              code: 'wechat',
-              count: tid,
-              ranking: 0,
-              trend: tid
+            name: '微信',
+            count: tid,
+            ranking: 0,
+            trend: 0
           },
           {
-              code: 'toutiao',
-              count: tid,
-              ranking: 0,
-              trend: tid
+            name: '百度',
+            count: tid,
+            ranking: 0,
+            trend: 0
           }
         ]
       },
       {
         id: tid,
-        date: 20190604,
+        date: 20190602,
         brandId: 10121,
         trend: tid,
         count: tid,
         channels: [
           {
-              code: 'weibo',
-              count: tid,
-              ranking: 0,
-              trend: tid
+            name: '微博',
+            count: tid,
+            ranking: 10,
+            trend: 50
           },
           {
-              code: 'baidu',
-              count: tid,
-              ranking: 0,
-              trend: tid
+            name: '头条',
+            count: tid,
+            ranking: 0,
+            trend: 0
           },
           {
-              code: 'wechat',
-              count: tid,
-              ranking: 0,
-              trend: tid
+            name: '微信',
+            count: tid,
+            ranking: 0,
+            trend: 0
           },
           {
-              code: 'toutiao',
-              count: tid,
-              ranking: 0,
-              trend: tid
+            name: '百度',
+            count: tid,
+            ranking: 0,
+            trend: 0
           }
         ]
-      },
-    ],
-    channelCodeList: [
-      {
-          controlStatus: 1,
-          text: '新浪微博',
-          key: 'weibo'
-      },
-      {
-          controlStatus: 1,
-          text: '微信',
-          key: 'wechat'
-      },
-      {
-          controlStatus: 1,
-          text: '百度',
-          key: 'baidu'
-      },
-      {
-          controlStatus: 1,
-          text: '头条',
-          key: 'toutiao'
       }
-  ]
+    ]
   })
 }

@@ -224,16 +224,20 @@ export default class Main extends ViewBase {
     const id = this.id
     try {
       const {
+        data,
         data: {
-          items,
-          channelCodeList
-        }
+          items: {
+            date,
+            count
+          },
+          items
+        },
       } = await trend({ ...mockObj }, id)
 
       if (items && items.length > 0) {
-        this.chart2.dict1 = items[5].channels.map((it: any, index: number) => {
+        this.chart2.dict1 = items[0].channels.map((it: any, index: number) => {
           return {
-            text: getName( it.code, channelCodeList),
+            text: it.name + '指数',
             key: index
           }
         })

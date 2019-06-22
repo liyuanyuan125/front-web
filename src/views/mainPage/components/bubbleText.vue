@@ -17,8 +17,10 @@ export default class BubbleText extends Vue {
 
 <style lang="less" scoped>
 .bubble-text-list {
-  position: fixed;
-  top: 0;
+  // position: fixed;
+  // top: 0;
+  position: absolute;
+  top: -55px;
   width: 685px;
   height: 100vw;
   z-index: 18;
