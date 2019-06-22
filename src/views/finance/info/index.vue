@@ -627,6 +627,20 @@ export default class Main extends ViewBase {
         height: 35px;
       }
     }
+    /deep/ .ivu-input {
+      height: 40px;
+      &::placeholder {
+        font-size: 14px;
+        color: #000;
+      }
+    }
+    /deep/ .inp-style-tex .ivu-input {
+      height: 100px;
+      &::placeholder {
+        font-size: 14px;
+        color: #000;
+      }
+    }
   }
   .table-box {
     div {
@@ -822,12 +836,20 @@ export default class Main extends ViewBase {
       margin-top: 12px;
     }
   }
-  /deep/ .ivu-input {
-    height: 40px;
-  }
-  /deep/ .inp-style-tex .ivu-input {
-    height: 100px;
-  }
+  // /deep/ .ivu-input {
+  //   height: 40px;
+  //   &::placeholder {
+  //     font-size: 14px;
+  //     color: #000;
+  //   }
+  // }
+  // /deep/ .inp-style-tex .ivu-input {
+  //   height: 100px;
+  //   &::placeholder {
+  //     font-size: 14px;
+  //     color: #000;
+  //   }
+  // }
   .btnq {
     margin-top: 35px;
     padding-bottom: 50px;
@@ -889,14 +911,15 @@ export default class Main extends ViewBase {
 /deep/ .ivu-select-input {
   margin-top: 3px;
 }
+/deep/ .ivu-input-wrapper,
 /deep/ .ivu-input {
-  border-radius: 5px 5px  5px 5px;
+  border-radius: 5px 5px 5px 5px;
   height: 40px;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 1);
   &::placeholder {
     font-size: 14px;
-    color: #00202d;
+    color: #000 !important;
   }
 }
 /deep/ .upload-box {
