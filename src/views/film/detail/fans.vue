@@ -34,7 +34,7 @@
                  justify="space-between">
               <Col :span="12">
                 <div class='chart-wp'
-                    style='margin-right:10px'>
+                    style='margin-right:10px;height: 390px;'>
                   <Pie :initDone="chart1.initDone"
                       :title='chart1.title'
                       :dict1="chart1.dict1"
@@ -45,7 +45,7 @@
                 </div>
               </Col>
               <Col :span="12">
-              <div class='chart-wp'>
+              <div class='chart-wp' style='height: 490px;'>
                 <BarXCategory :initDone="chart2.initDone"
                               :title='chart2.title'
                               :dict1="chart2.dict1"
@@ -61,7 +61,7 @@
                  style='margin-top:10px'>
               <Col :span="12">
               <div class='chart-wp borderRadius'
-                   style='margin-right:10px;'>
+                   style='margin-right:10px;height: 392px;margin-top: -100px;'>
                 <BarXCategory :initDone="chart3.initDone"
                               :title='chart3.title'
                               :dict1="chart3.dict1"
@@ -73,7 +73,7 @@
               </Col>
               <Col :span="12">
                 <div class='chart-wp borderRadius'
-                    style=''>
+                    style='height: 510px;'>
                   <BarYCategory :initDone="chart4.initDone"
                       :title='chart4.title'
                       :dict1="chart4.dict1"
@@ -85,7 +85,7 @@
               </Col>
               <Col :span="12">
                 <div class='chart-wp borderRadius'
-                    style='margin-right:10px;margin-top:10px'>
+                    style='margin-right:10px;margin-top:-208px;height: 398px;'>
                   <PieNest :initDone="chart5.initDone"
                       :title='chart5.title'
                       :dict1="chart5.dict1"
@@ -97,7 +97,7 @@
               </Col>
               <Col :span="12">
                 <div class='chart-wp borderRadius'
-                    style='margin-top:10px'>
+                    style='margin-top:10px;height: 510px;'>
                   <PieNest :initDone="chart6.initDone"
                       :title='chart6.title'
                       :dict1="chart6.dict1"
@@ -109,7 +109,7 @@
               </Col>
               <Col :span="12">
                 <div class='chart-wp borderRadius'
-                    style='margin-right:10px;margin-top:10px'>
+                    style='margin-right:10px;margin-top:-319px;height: 395px;'>
                   <PieNest :initDone="chart7.initDone"
                       :title='chart7.title'
                       :dict1="chart7.dict1"
@@ -200,7 +200,7 @@ export default class Temporary extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: ['#00B6CC']
+    color: ['#D0BF6B']
   }
   chart4: any = {
     title: '购物类型偏好',

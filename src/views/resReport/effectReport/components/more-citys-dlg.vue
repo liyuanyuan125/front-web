@@ -94,7 +94,7 @@ export default class MoreCinemasDlg extends ViewBase {
           name: it.name,
           viewCount: it.viewCount,
           scheduleCount: it.scheduleCount,
-          cost: it.cost
+          cost: parseInt(it.cost, 0)  // 单位为'分'
         }
       })
       this.totalCount = totalCount

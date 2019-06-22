@@ -3,7 +3,7 @@
     :to="{ name: 'kol-figure', params: { id: item.id } }"
     class="item-in"
   >
-    <div class="item-img" :style="{ backgroundImage: `url(${item.image})` }"></div>
+    <figure class="item-img" :style="{ backgroundImage: `url(${item.image})` }"></figure>
     <main class="item-main">
       <h4 class="line line-name">{{item.name}}</h4>
       <div class="line line-sub">
@@ -43,7 +43,7 @@ export default class KolItem extends ViewBase {
   width: 100px;
   height: 100px;
   background: no-repeat center top;
-  background-size: contain;
+  background-size: cover;
   border-radius: 50%;
 }
 
