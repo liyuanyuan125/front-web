@@ -419,15 +419,26 @@ export default class App extends ViewBase {
 
   async next(dataform: any) {
     try {
-      await getCheme({
-        planId: this.$route.params.setid,
-        allowAutoDelivery: this.single ? 1 : 0,
-        planRecommed: { ...this.commendata }
-      })
+      // await getCheme({
+      //   planId: this.$route.params.setid,
+      //   allowAutoDelivery: this.single ? 1 : 0,
+      //   planRecommed: { ...this.commendata }
+      // })
       this.$emit('input', {
         id: 3,
         setid: this.$route.params.setid
       })
+      if (this.$route.name == 'pop-planlist-add') {
+          this.$router.push({
+            name: 'pop-planlist-add',
+            params: { id: '3', setid: this.$route.params.setid  }
+          })
+        } else {
+          this.$router.push({
+            name: 'pop-planlist-edit',
+            params: { id: '3', setid: this.$route.params.setid  }
+          })
+        }
     } catch (ex) {
       this.handleError(ex)
     }
@@ -462,10 +473,10 @@ export default class App extends ViewBase {
         movieIds: this.deatilItem.movieIds,
         cinemaIds: this.deatilItem.cinemaIds
       }
-      const { data } = await getRecommend({
-        ...msg
-      })
-      this.commendata = data || {}
+      // const { data } = await getRecommend({
+      //   ...msg
+      // })
+      // this.commendata = data || {}
       ; (this.$Spin as any).hide()
     } catch (ex) {
        (this.$Spin as any).hide()
@@ -486,6 +497,17 @@ export default class App extends ViewBase {
       id: 1,
       setid: this.$route.params.setid
     })
+    if (this.$route.name == 'pop-planlist-add') {
+      this.$router.push({
+        name: 'pop-planlist-add',
+        params: { id: '1', setid: this.$route.params.setid  }
+      })
+    } else {
+      this.$router.push({
+        name: 'pop-planlist-edit',
+        params: { id: '1', setid: this.$route.params.setid  }
+      })
+    }
   }
 
   @Watch('commendata', { deep: true })

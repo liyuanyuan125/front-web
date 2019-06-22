@@ -94,7 +94,9 @@
         v-if="actorData"
       >
         <h4 class="zone-head flex-box">
-          <em class="flex-1">演员阵容：<Star :value="actorData.star" readonly/></em>
+          <em class="flex-1">
+            演员阵容：<Star :value="actorData.star" readonly v-if="actorData.star > 0"/>
+          </em>
           <router-link :to="actorData.more">更多 &gt;</router-link>
         </h4>
         <ul class="actor-list">
@@ -107,7 +109,11 @@
               :to="{ name: 'film-figure', params: { id: it.id } }"
               class="actor-item-in"
             >
-              <img :src="it.avatar" class="actor-img" :title="it.name">
+              <figure
+                class="actor-img"
+                :style="{ backgroundImage: `url(${it.avatar})` }"
+                :title="it.name"
+              ></figure>
             </router-link>
           </li>
         </ul>
@@ -481,5 +487,7 @@ export default class BasicPane extends Vue {
   width: 68px;
   height: 68px;
   border-radius: 50%;
+  background: no-repeat center top;
+  background-size: cover;
 }
 </style>

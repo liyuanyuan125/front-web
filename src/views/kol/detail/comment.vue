@@ -24,7 +24,7 @@
                   </div>
                 </DetailNavBar>
               </Col>
-              <Col :span="7" style="text-align:right">
+              <Col :span="7" style="text-align: right; color: #fff">
                 平台
                 <Select
                   v-model="form.channelCode"
@@ -188,29 +188,27 @@ export default class Main extends ViewBase {
       }
     ],
     // 情感分类 写死适配多模块
-    emotion: [
+    emotionList: [
       {
-        key: 0,
-        name: 'positive',
+        key: 'positive',
         text: '正面'
       },
       {
-        key: 1,
-        name: 'passive',
+        key: 'passive',
         text: '负面'
       },
       {
-        key: 2,
-        name: 'neutral',
+        key: 'neutral',
         text: '中性'
       }
-    ]
+    ],
+    channelList: []
   }
 
   chart1: any = {
     title: '评论情绪分布',
     dict1: [],
-    dict2: this.dict.emotion,
+    dict2: this.dict.emotionList,
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
@@ -229,7 +227,7 @@ export default class Main extends ViewBase {
         name: '累计'
       }
     ],
-    dict2: this.dict.emotion,
+    dict2: this.dict.emotionList,
     xAxis: [],
     currentTypeIndex: 0,
     initDone: false,
@@ -378,59 +376,64 @@ export default class Main extends ViewBase {
     const mockObj = {
       beginDate: this.form.beginDate[0],
       endDate: this.form.beginDate[1],
+      ...this.form
     }
     const id = this.$route.params.id || ''
-    return
     try {
       const {
         data,
         data: {
           items,
           rate,
-          commentKeyword
+          commentKeyword,
+          channelList
         }
       } = await comment({ ...mockObj }, id)
-      // for ( const k in rate ) {
-      //   if ( rate[k] ) {
-      //     const index = findIndex(this.dict.emotion, (it: any) => {
-      //       return it.name == k
-      //     })
-      //     this.chart1.dataList[0].push({
-      //       value: rate[k],
-      //       name: this.dict.emotion[index].text
-      //     })
-      //   }
-      // }
+      if (channelList && channelList.length > 0) {
+        this.dict.channelList = channelList
+      }
+      
+      for ( const k in rate ) {
+        if ( rate[k] ) {
+          const index = findIndex(this.dict.emotionList, (it: any) => {
+            return it.key == k
+          })
+          this.chart1.dataList[0].push({
+            value: rate[k],
+            name: this.dict.emotionList[index].text
+          })
+        }
+      }
 
-      // dates.forEach((item: any, index: number) => {
-      //   //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
-      //   // trend 新增 index:0 | count 累计 index:1
-      //   const { date, neutral, passive, positive } = item
-      //   that.chart2.xAxis.push( date )
-      //   that.chart2.dataList[0][0].data.push(item.positive.trend)
-      //   that.chart2.dataList[0][1].data.push(item.passive.trend)
-      //   that.chart2.dataList[0][2].data.push(item.neutral.trend)
-      //   that.chart2.dataList[1][0].data.push(item.positive.count)
-      //   that.chart2.dataList[1][1].data.push(item.passive.count)
-      //   that.chart2.dataList[1][2].data.push(item.neutral.count)
-      // })
+      items.forEach((item: any, index: number) => {
+        //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
+        // trend 新增 index:0 | count 累计 index:1
+        const { date, neutral, passive, positive } = item
+        that.chart2.xAxis.push( date )
+        that.chart2.dataList[0][0].data.push(item.positive.trend)
+        that.chart2.dataList[0][1].data.push(item.passive.trend)
+        that.chart2.dataList[0][2].data.push(item.neutral.trend)
+        that.chart2.dataList[1][0].data.push(item.positive.count)
+        that.chart2.dataList[1][1].data.push(item.passive.count)
+        that.chart2.dataList[1][2].data.push(item.neutral.count)
+      })
 
-      // keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
-      //   that.chart3.dataList[0].push({
-      //     name: item,
-      //     value: Math.floor(Math.random() * 100 + 1)
-      //   })
-      // })
-      // keywords[this.form.dayRangesKey].passive.forEach((item: any) => {
-      //   that.chart4.dataList[0].push({
-      //     name: item,
-      //     value: Math.floor(Math.random() * 100 + 1)
-      //   })
-      // })
-      // that.chart1.initDone = true
-      // that.chart2.initDone = true
-      // that.chart3.initDone = true
-      // that.chart4.initDone = true
+      commentKeyword[this.form.dayRangesKey].positive.forEach((item: any) => {
+        that.chart3.dataList[0].push({
+          name: item,
+          value: Math.floor(Math.random() * 100 + 1)
+        })
+      })
+      commentKeyword[this.form.dayRangesKey].negative.forEach((item: any) => {
+        that.chart4.dataList[0].push({
+          name: item,
+          value: Math.floor(Math.random() * 100 + 1)
+        })
+      })
+      that.chart1.initDone = true
+      that.chart2.initDone = true
+      that.chart3.initDone = true
+      that.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
@@ -504,20 +507,18 @@ export default class Main extends ViewBase {
   }
 
   resetData() {
-    this.chart1.dataList.forEach((item: any[]) => {
-      item.splice(0, item.length)
-    })
-    this.chart2.xAxis.splice(0, this.chart2.xAxis.length)
+    this.chart1.dataList[0] = []
+    this.chart2.xAxis = []
     this.chart2.dataList.forEach((item: any) => {
       item.forEach((it: any) => {
-        it.data.splice(0, it.data.length)
+        it.data = []
       })
     })
     this.chart3.dataList.forEach((item: any) => {
-      item.splice(0, item.length)
+      item = []
     })
     this.chart4.dataList.forEach((item: any) => {
-      item.splice(0, item.length)
+      item = []
     })
   }
 
@@ -569,7 +570,6 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
-
 .table-box {
   border-radius: 5px;
   padding: 25px 0;
