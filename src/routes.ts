@@ -1344,7 +1344,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   {
     path: '/brand/home/:id',
     name: 'brand-home',
-    component: () => import('./views/brand/home/index.vue'),
+    component: () => import('./views/mainPage/brand/index.vue'),
     meta: {
       authKey: '',
       authAction: '',
