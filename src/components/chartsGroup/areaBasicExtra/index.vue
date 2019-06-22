@@ -221,7 +221,7 @@ export default class AreaBasic extends ViewBase {
   }
 
   updateTypeCharts() {
-    const ref: any[] = []
+    /* const ref: any[] = []
     this.dict1.forEach((item, index) => {
       const refArr = this.$refs[`type-${index}`] as any
       ref.push(refArr[0])
@@ -278,10 +278,42 @@ export default class AreaBasic extends ViewBase {
       xAxis: xAxes,
       yAxis: yAxes,
       series
-    }
-    this.dict1.forEach((item: any, index: number) => {
-      option.color = [this.color[index]]
-      echarts.init(ref[index]).setOption(option)
+    } */
+
+    const options: any[] = []
+    const refs: any[] = []
+    this.dict1.forEach((item, index) => {
+      const refArr = this.$refs[`type-${index}`] as any
+      refs.push(refArr[0])
+      options.push({
+        grid: [{
+          show: true,
+          borderWidth: 0,
+          shadowBlur: 2
+        }],
+        xAxis: {
+          show: false,
+          type: 'category',
+          data: []
+        },
+        yAxis: {
+          show: false,
+          type: 'value'
+        },
+        series: [{
+          data: [],
+          type: 'line',
+          smooth: true
+        }]
+      })
+    })
+    this.dataList.forEach((item: any, index: number) => {
+      options[index].color = [this.color[index]]
+      options[index].xAxis.data = item.date
+      options[index].series[0].data = item.data
+    })
+    this.dataList.forEach((item: any, index: number) => {
+      echarts.init(refs[index]).setOption(options[index])
     })
   }
 
