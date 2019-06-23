@@ -28,33 +28,36 @@
         <span class="checkbox-all"><Checkbox @on-change="checkall" v-model="checkboxAll">全选</Checkbox></span>
         <span class="del-btn" @click="deleteList()">删除</span>
       </div>
-      <ul class="ul-list">
-        <li v-for="item in tableDate " :key="item.id">
-          <div class="flex-box inner">
-            <div class="left-item"  @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">
-              <img :src="item.logo" class="img" :onerror="defaultImg" />
-            </div>
-            
-            <div class="right-item">
-              <p class="name">{{item.name}}</p>
-              <p class="brand-name">{{item.brandName || item.productName}}</p>
-              <div class="item-icon">
-                <span>{{transformSpecif(item.specification)}}</span>
-                <div class="icon-img">
-                  <img v-if="item.status == 1" title="审核中" src="../assets/audit-icon.png" class="img-wid" />
-                  <img v-if="item.status == 5" title="审核拒绝" src="../assets/reject-icon.png" class="img-wid" />
-                  <img v-if="item.status == 2" title="支付" src="../assets/pay-icon.png" class="img-wid" />
-                  <img v-if="item.status == 3" title="转码中" src="../assets/transing-icon.png" class="img-wid" />
-                  <img v-if="item.status == 1 || item.status == 5" title="点击编辑" src="../assets/edit-icon.png" 
-                  @click="$router.push({name: 'pop-film-edit', params: {id: item.id}})" class="img-wid" />
-                  <img src="../assets/del-icon.png" v-if="item.status != 3"  @click="deleteList(item.id)" class="img-wid" title="点击删除" />
+      <div class="spin-show">
+        <ul class="ul-list demo-spin-article">
+          <li v-for="item in tableDate " :key="item.id">
+            <div class="flex-box inner">
+              <div class="left-item"  @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">
+                <img :src="item.logo" class="img" :onerror="defaultImg" />
+              </div>
+              
+              <div class="right-item">
+                <p class="name">{{item.name}}</p>
+                <p class="brand-name">{{item.brandName || item.productName}}</p>
+                <div class="item-icon">
+                  <span>{{transformSpecif(item.specification)}}</span>
+                  <div class="icon-img">
+                    <Tooltip content="审核中"> <img v-if="item.status == 1"  src="../assets/audit-icon.png" class="img-wid" /></Tooltip>
+                    <Tooltip content="审核拒绝"><img v-if="item.status == 5" src="../assets/reject-icon.png" class="img-wid" /></Tooltip>
+                    <Tooltip content="支付"><img v-if="item.status == 2" src="../assets/pay-icon.png" class="img-wid" /></Tooltip>
+                    <Tooltip content="转码中"><img v-if="item.status == 3"  src="../assets/transing-icon.png" class="img-wid" /></Tooltip>
+                    <Tooltip content="点击编辑"><img v-if="item.status == 1 || item.status == 5" src="../assets/edit-icon.png" 
+                    @click="$router.push({name: 'pop-film-edit', params: {id: item.id}})" class="img-wid" /></Tooltip>
+                    <Tooltip content="点击删除"><img src="../assets/del-icon.png" v-if="item.status != 3"  @click="deleteList(item.id)" class="img-wid" /></Tooltip>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </li>
-      </ul>
-       <div class="noList" v-if="tableDate.length == 0">暂无数据</div>
+          </li>
+        </ul>
+        <Spin fix v-if="spinShow"></Spin>
+        <div class="noList" v-if="tableDate.length == 0">暂无数据</div>
+      </div>
        <pagination :pageList="pageList" :total="totalCount" @uplist="uplist"></pagination>
     </div>
   </div>
@@ -89,7 +92,7 @@ export default class Main extends ViewBase {
     pageSize: 20
   }
   totalCount = 0
-
+  spinShow = false
   statusList: any = []
   selectIds: any[] = []
   checkboxAll = false
@@ -104,6 +107,7 @@ export default class Main extends ViewBase {
     this.tableList()
   }
   async tableList() {
+    this.spinShow = true
     const query = this.query
     try {
       const {
@@ -113,11 +117,13 @@ export default class Main extends ViewBase {
         query,
         ...this.pageList
       })
+      this.spinShow = false
       this.tableDate = items || []
       this.statusList = statusList || []
       this.totalCount = totalCount || 0
 
     } catch (ex) {
+      this.spinShow = false
       this.handleError(ex)
     }
   }
@@ -172,6 +178,9 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/views/kol/less/common.less';
 @import '~@/views/brand/less/common.less';
+.spin-show {
+  position: relative;
+}
 .noList {
   text-align: center;
   padding: 30px 0 40px;
