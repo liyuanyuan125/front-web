@@ -3,6 +3,7 @@
     <h3 class="kol-title">KOL列表</h3>
     <Header v-model="type" :invalue="acount" />
     <div>
+      
       <Form :model="form" ref="dataform" label-position="left" :label-width="100" class="edit-input forms">
         <div class="check-detail">
           <FormItem label="账号类别"  class="form-item-type">
