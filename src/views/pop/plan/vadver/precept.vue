@@ -18,7 +18,7 @@
                     <!-- <p class="film-title" :title="it.movieName">{{it.movieName}}</p> -->
                     <p class="film-title" :title="it.movieName" style="margin-bottom: 30px">{{it.movieName}}</p>
                     <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
-                    <p style="margin-bottom: 6px"><span>影片类型：</span>{{it.movieType}}</p>
+                    <p style="margin-bottom: 6px"><span>影片类型：</span>{{movieMap(it.movieType)}}</p>
                     <p style="margin-bottom: 6px"><span>想看人数：</span>{{it.wantSeeNum || '-'}}</p>
                     <i-circle trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                       <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
@@ -220,6 +220,7 @@ export default class App extends ViewBase {
   single = true
   tableDate1: any = []
   deatilItem: any = {}
+  movieTypeList: any = []
 
   get columns() {
     const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
@@ -312,6 +313,13 @@ export default class App extends ViewBase {
     })
   }
 
+  movieMap(val: any) {
+    const vals = val ? val.split('|') : []
+    return this.movieTypeList.filter((it: any) => {
+      return vals.includes(it.key)
+    }).map((it: any) => it.text).join(' | ')
+  }
+
   formatDate(data: any) {
     return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
@@ -330,6 +338,7 @@ export default class App extends ViewBase {
       const { data } = await adverdetail(this.$route.params.setid)
       this.filmList = data.planMovies || []
       this.detaildata = data
+      this.movieTypeList = data.movieTypeList
       this.deatilItem = data.item || {}
       this.cinemaFind()
     } catch (ex) {

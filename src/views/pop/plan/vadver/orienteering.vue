@@ -33,7 +33,7 @@
                           :label="it.key"
                           class="check-item form-item-first"
                         >{{it.text}}
-                        <Poptip trigger="hover" title="票仓城市top20" content="content">
+                        <Poptip trigger="hover" title="票仓城市top10" content="content">
                           <img v-if="!form.cinema.includes(it.key)" width="20px" style="vertical-align:middle" src="./assets/question.png" />
                           <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
                           <div class="api" slot="content">

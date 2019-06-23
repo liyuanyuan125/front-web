@@ -79,9 +79,26 @@ import {
   formatNumber
 } from '@/util/validateRules'
 import DetailNavBar from './components/detailNavBar.vue'
-import { trend } from '@/api/filmorder.ts'
+import { trend } from '@/api/filmorder'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
+import { findIndex, at, keyBy } from 'lodash'
+import { KeyText } from '@/util/types'
+
+const getName = (key: string, list: any[]) => {
+  const i: number = findIndex( list, (it: any) => {
+    return key === it.key
+  })
+  const res: string = list[i].text
+  return res
+}
+const dot = (object: any, path: string) => at(object, path)[0]
+const getNames = (keys: string[], list: KeyText[]) => {
+  const map = keyBy(list, 'key')
+  const names = (keys || []).map((it: any) => dot(map[it], 'text') as string)
+  return names
+}
+
 const timeFormat = 'YYYYMMDD'
 const toolTip: any = {
   borderWidth: 1,
@@ -205,41 +222,32 @@ export default class Main extends ViewBase {
     const id = this.id
     try {
       const {
-       data: {
-         items,
-         channelCodeList
-       }
+        data,
+        data: {
+          items: {
+            date,
+            count
+          },
+          items,
+          channelCodeList
+        },
       } = await trend({ ...mockObj }, id)
-
       if (items && items.length > 0) {
-        const msgcode = items[0].channels.map((it: any) => {
-          return it.chanelCode
-        })
-        this.chart2.dict1 = channelCodeList.filter((it: any, index: number) => {
-           return msgcode.includes(it.key)
-        }).map((its: any, index: number) => {
+        this.chart2.dict1 = items[0].channels.map((it: any, index: number) => {
           return {
-            text: its.text + '指数',
+            text: getName(it.chanelCode, channelCodeList) + '指数',
             key: index
           }
         })
-        items.forEach((it: any) => {
+        items[0].channels.forEach((it: any) => {
           this.chart2.dataList.push({
             data: [],
             date: []
           })
         })
-        const date: any = []
-        const data: any = []
         items.forEach((it: any, index: number) => {
-          date.push(it.date)
-          data.push(it.count)
-          this.chart1.dataList[0] = {
-            date,
-            data
-          }
-          // this.chart1.dataList[0].date.push(it.date)
-          // this.chart1.dataList[0].data.push(it.count)
+          this.chart1.dataList[0].date.push(it.date)
+          this.chart1.dataList[0].data.push(it.count)
           it.channels.forEach((channelItem: any, i: number) => {
             this.chart2.dataList[i].data.push(channelItem.count)
             this.chart2.dataList[i].date.push(it.date)
@@ -286,8 +294,8 @@ export default class Main extends ViewBase {
   }
 
   resetData() {
-    this.chart1.dataList.data = []
-    this.chart1.dataList.date = []
+    this.chart1.dataList[0].data = []
+    this.chart1.dataList[0].date = []
     this.chart2.dataList = []
   }
 }
