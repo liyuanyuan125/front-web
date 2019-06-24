@@ -54,6 +54,7 @@
     </div>
     <Sure ref="Sure" @uplist="uplist" />
     <Pay ref="Pay" @uplist="uplist" />  
+    <Collect ref="collect" />
   </div>
 </template>
 
@@ -63,11 +64,12 @@ import ViewBase from '@/util/ViewBase'
 import { formatCurrency } from '@/fn/string.ts'
 import Sure from '../planlistmodel/sure.vue'
 import Pay from '../planlistmodel/pay.vue'
-
+import Collect from '../planlistmodel/collect.vue'
 @Component({
   components: {
     Sure,
-    Pay
+    Pay,
+    Collect
   }
 })
 export default class App extends ViewBase {
@@ -94,8 +96,8 @@ export default class App extends ViewBase {
   }
 
   collect() {
-    this.$router.push({
-      name: 'home-overview'
+     this.$nextTick(() => {
+      (this.$refs as any).collect.init()
     })
   }
 }
