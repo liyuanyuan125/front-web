@@ -5,7 +5,7 @@
     <div v-if="status != 1" class="plan-result">
       <div class="result-top">
         <h3>效果预估</h3>
-        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【500,000.00】时，您无需补缴任何款项</span>
+        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【{{formatNums(item.estimateCostAmount)}}】时，您无需补缴任何款项</span>
       </div>
       <Row class="precept" :gutter="16">
         <Col span="5" class="item">
@@ -417,11 +417,11 @@ export default class App extends ViewBase {
   }
 
   formatNums(data: any, id?: any) {
-    const datanums = data ? formatCurrency(data) : '暂无'
-    if (id == 1 && datanums != '暂无') {
+    const datanums = data ? formatCurrency(data) : '0'
+    if (id == 1 && datanums != '0') {
       const msg = data ? formatCurrency(data, 0) : '0'
       return msg
-    } else if (id == 2 && datanums != '暂无') {
+    } else if (id == 2 && datanums != '0') {
       const msg1 = data ? formatCurrency(data, 0) : 0
       return msg1 ? msg1 + '人' : '-'
     } else {

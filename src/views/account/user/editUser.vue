@@ -48,7 +48,7 @@
       <div class="bgs">
         <h3 class="layout-title tits">设置账号权限
         </h3>
-        <div class="btnCenter">
+        <div class="btnCenter zIndex-button">
           <Button type="primary" class="button-ok editSumbit"
             :disabled="submitDisabled" @click="handleInforma">确定修改</Button>
         </div>
@@ -197,12 +197,17 @@ export default class Main extends ViewBase {
     }
   }
   save(val: any) {
-    if (val.length > 0) {
-      this.data.partners = val
-      this.data.cinemas = val
-      this.partnerIds = val.map((item: any) => item.id)
-      this.customer = this.cinemaLen = this.partnerIds.length
-    }
+    // 关联客户可以为[]
+    this.data.partners = val
+    this.data.cinemas = val
+    this.partnerIds = val.map((item: any) => item.id)
+    this.customer = this.cinemaLen = this.partnerIds.length
+    // if (val.length > 0) {
+    //   this.data.partners = val
+    //   this.data.cinemas = val
+    //   this.partnerIds = val.map((item: any) => item.id)
+    //   this.customer = this.cinemaLen = this.partnerIds.length
+    // }
   }
   async handleSelect(id: any) {
     try {
@@ -254,6 +259,10 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+.zIndex-button {
+  position: relative;
+  z-index: 999;
+}
 .ivu-form-item {
   padding-left: 30px;
   color: @c-text;

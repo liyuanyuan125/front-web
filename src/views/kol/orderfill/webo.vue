@@ -43,7 +43,7 @@
         </FormItem>
 
         <FormItem label="原发图片" prop="pictureFileIds">
-          <Upload v-model="form.pictureFileIds" :maxCount="1" accept="image/*"/>
+          <Upload v-model="form.pictureFileIds" :maxCount="9" accept="image/*"/>
         </FormItem>
 
         <!-- <FormItem label="推广链接" prop="url">
@@ -115,7 +115,6 @@ export default class DlgEditCinema extends ViewBase {
     }
     return {
       publishTime: [
-        { required: true },
         { validator }
       ],
       publishCategoryCode: [

@@ -1,6 +1,5 @@
 <template>
   <div class="page home-bg">
-    <h2 class="layout-nav-title">影院管理 > 查看影院</h2>
     <h3 class="layout-title">影院信息</h3>
     <div class="text-rows">
       <Row>
@@ -12,7 +11,7 @@
             <label>影厅数量</label> {{items.hallCount}}
           </p>
           <p>
-            <label>影院地址</label>{{items.provinceName}}{{items.cityName}}{{items.countyName}} {{items.address}}
+            <label>影院地址</label> {{items.address}}
           </p>
         </Col>
         <Col :span="12">
