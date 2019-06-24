@@ -268,7 +268,8 @@ export default class Main extends ViewBase {
     if (this.setadever.length > 0) {
       this.setadever.forEach((it: any) => {
         money += (it.priceList.filter((item: any) => {
-          return item.categoryCode == it.orderItemList.publishCategoryCode)[0].salePrice || 0
+          return item.categoryCode == it.orderItemList.publishCategoryCode
+        })[0].salePrice || 0)
       })
     }
     return money
@@ -544,7 +545,7 @@ export default class Main extends ViewBase {
     })
   }
 
-  statusLists(it: any, id ? : any) {
+  statusLists(it: any, id?: any) {
     if (it) {
       const msg: any = (this.statusList.filter(
         (its: any) => its.key == it.categoryCode
@@ -570,7 +571,7 @@ export default class Main extends ViewBase {
     return formatCurrency(fans / 10000)
   }
 
-  async next(form: any, id ? : number) {
+  async next(form: any, id?: number) {
     try {
       const volid = await (this.$refs[form] as any).validate()
       if (volid) {
