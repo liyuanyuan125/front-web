@@ -272,6 +272,12 @@ export default class Main extends ViewBase {
       .ivu-radio-inner {
         width: 20px;
         height: 20px;
+        &::after {
+          width: 12px;
+          height: 12px;
+          left: 3px;
+          top: 3px;
+        }
       }
     }
   }

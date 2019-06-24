@@ -102,12 +102,13 @@
         </div>
 
         <!-- 草稿 -->
-        <div class="caogao" v-else>
-          <ul class="table-list demo-spin-article">
+        <div class="table-list" v-else>
+          <div class="demo-spin-article">
+            <ul>
               <li class="list-li" v-for="item in list" :key = "item.id">
                 <Row>
                   <Col :span="5"><span>订单号 {{item.orderNo}}</span></Col>
-                  <Col :span="7"><span>下单时间 {{item.createTime}}</span></Col>
+                  <Col :span="7"><span>创建时间 {{item.createTime}}</span></Col>
                 </Row>
                 <Row class="li-col" type="flex" justify="center" align="middle">
                   <Col :span="5">
@@ -139,8 +140,9 @@
                 </Row>
               </li>
             </ul>
-            <ul v-if ="list.length == 0" class="no-list-data">暂无数据</ul>
             <Spin fix v-if="spinShow"></Spin>
+            <ul v-if ="list.length == 0" class="no-list-data">暂无数据</ul>
+          </div>
         </div>
 
       </div>
@@ -377,9 +379,9 @@ export default class Main extends ViewBase {
 <style lang='less' scoped>
 // @import '~@/site/common.less';
 @import './order.less';
-.caogao {
-  position: relative;
-}
+// .caogao {
+//   position: relative;
+// }
 .order-monery {
   font-size: 20px;
   color: #000;
