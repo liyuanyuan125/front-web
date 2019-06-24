@@ -1,8 +1,8 @@
 <template>
 	<div class='page'>
 		<div class='t-title'>
-			<div class='te-l'>第三方检测</div>
-			<div class='te-r' @click='add()'> + 新建第三方检测</div>
+			<div class='te-l'>第三方监测</div>
+			<div class='te-r' @click='add()'> + 新建第三方监测</div>
 		</div>
 		<Row class='tiptis'>
 			该功能为您提供详细的曝光效果第三方监测报告，您可以将往期（线下）的映前广告投放计划按条件进行录入，在下方即可查看到专业的投放结果数据报告
@@ -182,6 +182,7 @@ export default class Main extends ViewBase {
     line-height: 47px;
     margin-top: 6px;
     font-size: 22px;
+    cursor: pointer;
   }
 }
 .tiptis {
