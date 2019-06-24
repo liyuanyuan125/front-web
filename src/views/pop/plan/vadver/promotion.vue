@@ -68,7 +68,7 @@
               <Row>
                 <Col :span="12" style="padding-left: 0px" class="adver-schedule">
                   <FormItem label="推广预算:" :labelWidth='100' prop="budgetAmount">
-                    <Input v-model="form.budgetAmount" placeholder="请输入"></Input>
+                    <Input :disabled="!form.specification" v-model="form.budgetAmount" placeholder="请输入"></Input>
                     <span class="hint">万元 </span>
                   </FormItem>
                 </Col>
@@ -278,6 +278,7 @@ export default class Promotion extends ViewBase {
       this.form.customerId = data[0].customerId
       this.form.brandId = data[0].brandId
       this.form.specification = data[0].specification
+      this.form.budgetAmount = 0
       this.form.productId = data[0].productId
       this.form.name = `[ ${data[0].name} ] [ ${data[0].customerName} ] [ ${data[0].productName} ]`
     }
