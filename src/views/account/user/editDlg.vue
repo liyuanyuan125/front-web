@@ -9,7 +9,7 @@
       >
       <div class="title">
         <i @click="handleCancel"></i>
-        <p>查看关联用户</p>
+        <p>编辑关联用户</p>
       </div>
       <div class="flex-box">
         <Input v-model="search" placeholder="请输入客户ID或名称"/>
