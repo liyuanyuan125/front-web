@@ -32,7 +32,9 @@
 
 			<Form class="create-form form-item"   enctype="multipart/form-data" ref="form"
       :label-width="120">
+      <!-- <a href="javascript:;" class='file'> -->
 			<input type="file" @change="onChange" />
+    <!-- </a> -->
 			</Form>
 
 		</div>
@@ -410,6 +412,32 @@ export default class Main extends ViewBase {
   padding-right: 24px;
   color: #00202d;
 }
+// .file {
+//   position: relative;
+//   display: inline-block;
+//   background: #d0eeff;
+//   border: 1px solid #99d3f5;
+//   border-radius: 4px;
+//   padding: 4px 12px;
+//   overflow: hidden;
+//   color: #1e88c7;
+//   text-decoration: none;
+//   text-indent: 0;
+//   line-height: 20px;
+// }
+// .file input {
+//   position: absolute;
+//   font-size: 100px;
+//   right: 0;
+//   top: 0;
+//   opacity: 0;
+// }
+// .file::hover {
+//   background: #aadffd;
+//   border-color: #78c3f3;
+//   color: #004974;
+//   text-decoration: none;
+// }
 </style>
 
 
