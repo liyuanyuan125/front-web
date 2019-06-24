@@ -882,7 +882,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     props: idProps,
   },
 
-  // kol - 检测
+  // kol - 监测
   {
     path: '/kol/order/taskDetection/:id',
     name: 'order-order-taskDetection',
@@ -890,7 +890,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: emptyAuth,
   },
 
-  // kol - 检测详情
+  // kol - 监测详情
   {
     path: '/kol/order/taskDetection/detail/:id',
     name: 'order-order-taskDetection-detail',
@@ -1475,7 +1475,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 第三方检测 - 列表
+  // 第三方监测 - 列表
   {
     path: '/test',
     name: 'test',
@@ -1486,7 +1486,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authIsMenu: true,
     },
   },
-  // 第三方检测 - 新建/编辑
+  // 第三方监测 - 新建/编辑
   {
     path: '/test/addtest/:id',
     name: 'test-addtest',
