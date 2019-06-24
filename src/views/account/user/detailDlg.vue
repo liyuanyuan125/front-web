@@ -41,10 +41,8 @@ export default class Change extends ViewBase {
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
 /deep/ .ivu-modal-header {
   border-bottom: 0;
-  padding: 10px 13px;
   background: #f9f9f9;
   font-weight: none;
 }
@@ -85,7 +83,7 @@ export default class Change extends ViewBase {
 }
 .button-cancel {
   width: 200px;
-  .button-style(#00202d, rgba(0, 0, 0, 0));
+  .button-style(#fff, #00202d);
   border-radius: 25px;
 }
 </style>
