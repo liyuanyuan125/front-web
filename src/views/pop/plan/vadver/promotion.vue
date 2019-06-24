@@ -278,7 +278,7 @@ export default class Promotion extends ViewBase {
       this.form.customerId = data[0].customerId
       this.form.brandId = data[0].brandId
       this.form.specification = data[0].specification
-      this.form.budgetAmount = 0
+      this.form.budgetAmount = ''
       this.form.productId = data[0].productId
       this.form.name = `[ ${data[0].name} ] [ ${data[0].customerName} ] [ ${data[0].productName} ]`
     }
