@@ -582,7 +582,7 @@ export default class App extends ViewBase {
 
   async provienfind() {
     try {
-      const { data } = await getprovinces(22, {
+      const { data } = await getprovinces(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []
@@ -594,7 +594,7 @@ export default class App extends ViewBase {
 
   async cityfind() {
     try {
-      const { data } = await getcities(22, {
+      const { data } = await getcities(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []
@@ -606,7 +606,7 @@ export default class App extends ViewBase {
 
   async chainsfind() {
     try {
-      const { data } = await getchains(22, {
+      const { data } = await getchains(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []

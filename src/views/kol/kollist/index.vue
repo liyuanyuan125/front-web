@@ -610,7 +610,7 @@ export default class Main extends ViewBase {
     row.forEach((it: any) => {
       num += Number(it.fans)
     })
-    return num
+    return formatCurrency(num / 10000)
   }
 
   // kol列表
