@@ -49,7 +49,7 @@
               <p class="film-title" style="margin-bottom: 20px" :title="it.movieName">{{it.movieName}}</p>
               <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
               <p style="margin-bottom: 6px"><span>影片类型：</span>{{movieMap(it.movieType)}}</p>
-              <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum, 1)}}</p>
+              <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum, 2)}}</p>
               <i-circle trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                 <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
                 <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent}}%</p>
@@ -405,8 +405,11 @@ export default class App extends ViewBase {
   formatNums(data: any, id?: any) {
     const datanums = data ? formatCurrency(data) : '暂无'
     if (id == 1 && datanums != '暂无') {
-      const msg = data ? formatCurrency(data, 0) : '暂无'
+      const msg = data ? formatCurrency(data, 0) : '0'
       return msg
+    } else if (id == 2 && datanums != '暂无') {
+      const msg1 = data ? formatCurrency(data / 10000, 0) : 0
+      return msg1 ? msg1 + '万' : '-'
     } else {
       return datanums
     }

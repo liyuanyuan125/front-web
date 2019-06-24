@@ -340,6 +340,9 @@ export default class App extends ViewBase {
     if (id == 1 && datanums != '暂无') {
       const msg = data ? formatCurrency(data, 0) : '暂无'
       return msg
+    } else if (id == 2 && datanums != '暂无') {
+      const msg1 = data ? formatCurrency(data / 10000, 0) : 0
+      return msg1 ? msg1 + '万' : '-'
     } else {
       return datanums
     }
