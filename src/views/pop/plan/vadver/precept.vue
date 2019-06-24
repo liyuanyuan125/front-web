@@ -338,7 +338,7 @@ export default class App extends ViewBase {
   formatNums(data: any, id: any) {
     const datanums = data ? formatCurrency(data) : '暂无'
     if (id == 1 && datanums != '暂无') {
-      const msg = parseInt(datanums, 10)
+      const msg = data ? formatCurrency(data, 0) : '暂无'
       return msg
     } else {
       return datanums
