@@ -629,16 +629,14 @@ export default class Main extends ViewBase {
     }
     /deep/ .ivu-input {
       height: 40px;
-      &::placeholder {
-        font-size: 14px;
-        color: #000;
+      &::-webkit-input-placeholder {
+        color: #00202d;
       }
     }
     /deep/ .inp-style-tex .ivu-input {
       height: 100px;
-      &::placeholder {
-        font-size: 14px;
-        color: #000;
+      &::-webkit-input-placeholder {
+        color: #00202d;
       }
     }
   }
@@ -836,20 +834,24 @@ export default class Main extends ViewBase {
       margin-top: 12px;
     }
   }
-  // /deep/ .ivu-input {
-  //   height: 40px;
-  //   &::placeholder {
-  //     font-size: 14px;
-  //     color: #000;
-  //   }
-  // }
-  // /deep/ .inp-style-tex .ivu-input {
-  //   height: 100px;
-  //   &::placeholder {
-  //     font-size: 14px;
-  //     color: #000;
-  //   }
-  // }
+  /deep/ .ivu-input {
+    height: 40px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 1);
+    &::-webkit-input-placeholder {
+      color: rgba(136, 136, 136, 1);
+    }
+  }
+  /deep/ .inp-style-tex .ivu-input {
+    height: 40px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 1);
+    &::-webkit-input-placeholder {
+      color: rgba(136, 136, 136, 1);
+    }
+  }
   .btnq {
     margin-top: 35px;
     padding-bottom: 50px;
@@ -911,17 +913,17 @@ export default class Main extends ViewBase {
 /deep/ .ivu-select-input {
   margin-top: 3px;
 }
-/deep/ .ivu-input-wrapper,
-/deep/ .ivu-input {
-  border-radius: 5px 5px 5px 5px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 1);
-  &::placeholder {
-    font-size: 14px;
-    color: #000 !important;
-  }
-}
+// /deep/ .ivu-input-wrapper,
+// /deep/ .ivu-input {
+//   border-radius: 5px 5px 5px 5px;
+//   height: 40px;
+//   background: rgba(255, 255, 255, 0.8);
+//   border: 1px solid rgba(255, 255, 255, 1);
+//   &::placeholder {
+//     font-size: 14px;
+//     color: #000 !important;
+//   }
+// }
 /deep/ .upload-box {
   width: 400px;
   height: 225px;

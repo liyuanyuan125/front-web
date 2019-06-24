@@ -31,11 +31,13 @@
 			<div>请上传一份包含影院专资编码数据的xls文件，如上传错误，请下载模板<span>【影院数据模板.xls】</span></div>
 
 			<Form class="create-form form-item"   enctype="multipart/form-data" ref="form"
-      :label-width="120">
+      :label-width="120">上传文件
       <!-- <a href="javascript:;" class='file'> -->
-			<input type="file" @change="onChange" />
+			<input type="file" class='adds' @change="onChange" />
     <!-- </a> -->
+      
 			</Form>
+      <span class='viewhtml'>{{inputhtml}}</span>
 
 		</div>
 		<div class='okbut' >
@@ -84,6 +86,7 @@ export default class Main extends ViewBase {
   }
 
   file: File | any = null
+  inputhtml: any = ''
 
 
   totalCount = 0
@@ -114,6 +117,7 @@ export default class Main extends ViewBase {
   onChange(ev: Event) {
     const input = ev.target as HTMLInputElement
     this.file = input.files && input.files[0]
+    this.inputhtml = this.file.name
   }
 
 
@@ -253,6 +257,7 @@ export default class Main extends ViewBase {
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 1);
   padding: 20px;
+  height: 115px;
   div {
     line-height: 24px;
     margin-bottom: 15px;
@@ -280,6 +285,9 @@ export default class Main extends ViewBase {
   background: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 1);
+  &::-webkit-input-placeholder {
+    color: #00202d;
+  }
 }
 /deep/ .ivu-input-search {
   cursor: pointer;
@@ -412,32 +420,47 @@ export default class Main extends ViewBase {
   padding-right: 24px;
   color: #00202d;
 }
-// .file {
-//   position: relative;
-//   display: inline-block;
-//   background: #d0eeff;
-//   border: 1px solid #99d3f5;
-//   border-radius: 4px;
-//   padding: 4px 12px;
-//   overflow: hidden;
-//   color: #1e88c7;
-//   text-decoration: none;
-//   text-indent: 0;
-//   line-height: 20px;
-// }
-// .file input {
-//   position: absolute;
-//   font-size: 100px;
-//   right: 0;
-//   top: 0;
-//   opacity: 0;
-// }
-// .file::hover {
-//   background: #aadffd;
-//   border-color: #78c3f3;
-//   color: #004974;
-//   text-decoration: none;
-// }
+.create-form {
+  position: relative;
+  display: block;
+  float: left;
+  width: 77px;
+  background: #d0eeff;
+  border: 1px solid #99d3f5;
+  border-radius: 4px;
+  padding: 4px 12px;
+  overflow: hidden;
+  color: #1e88c7;
+  text-decoration: none;
+  text-indent: 0;
+  line-height: 20px;
+}
+.adds {
+  width: 200px;
+  position: absolute;
+  font-size: 100px;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+.viewhtml {
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+  margin-left: 20px;
+}
+/deep/ .ivu-input-prefix i {
+  font-size: 16px;
+  line-height: 32px;
+  color: #808695;
+  margin-top: 5px;
+}
+/deep/ .ivu-input-suffix i {
+  font-size: 16px;
+  line-height: 32px;
+  color: #808695;
+  margin-top: 4px;
+}
 </style>
 
 

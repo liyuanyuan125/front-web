@@ -309,8 +309,7 @@ export default class Main extends ViewBase {
   height: 40px;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 1);
-  &::placeholder {
-    font-size: 14px;
+  &::-webkit-input-placeholder {
     color: #00202d;
   }
 }
