@@ -409,7 +409,7 @@ export default class App extends ViewBase {
       return msg
     } else if (id == 2 && datanums != '暂无') {
       const msg1 = data ? formatCurrency(data, 0) : 0
-      return msg1 ? msg1 + 'w' : '-'
+      return msg1 ? msg1 + '万人' : '-'
     } else {
       return datanums
     }
@@ -556,7 +556,7 @@ export default class App extends ViewBase {
 
   async cinemfind() {
     try {
-      const { data } = await getcinemas(22, {
+      const { data } = await getcinemas(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []
