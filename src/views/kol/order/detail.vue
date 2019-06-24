@@ -123,7 +123,7 @@ import { orderDetail } from '@/api/kolOrderList'
 import { querySelectList } from '@/api/brandList'
 
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
-const times = 'YYYY-MM-DD'
+const times = 'YYYY-MM-DD HH:mm'
 
 @Component({
   components: {
