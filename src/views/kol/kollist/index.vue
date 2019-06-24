@@ -341,7 +341,7 @@ export default class Main extends ViewBase {
       },
       {
         title: '操作',
-        minWidth: 90,
+        minWidth: 50,
         align: 'left',
         slot: 'action'
       }
