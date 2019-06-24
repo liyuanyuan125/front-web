@@ -120,7 +120,6 @@ export default class Change extends ViewBase {
 @import '~@/site/lib.less';
 /deep/ .ivu-modal-header {
   border-bottom: 0;
-  padding: 10px 13px;
   background: #f9f9f9;
   font-weight: none;
 }
