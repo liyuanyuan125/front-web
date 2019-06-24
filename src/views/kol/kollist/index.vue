@@ -341,7 +341,7 @@ export default class Main extends ViewBase {
       },
       {
         title: '操作',
-        width: 90,
+        minWidth: 90,
         align: 'left',
         slot: 'action'
       }
@@ -850,7 +850,7 @@ export default class Main extends ViewBase {
 }
 .list-table {
   border-radius: 5px;
-  width: 1146px;
+  min-width: 1146px;
   padding-left: 20px;
   padding-right: 20px;
   &::before {
