@@ -40,7 +40,7 @@
         <h3>投放影片{{planMovies.length}}部</h3>
         <span>效果不足时允许系统投放更多影片确保曝光效果</span>
       </div>
-      <ul class="film-list" v-if="planMovies.length > 0">
+      <ul class="film-list" :class="[ !arrowloding ? 'film-max' : '']" v-if="planMovies.length > 0">
         <li @click="filmdetail(it.movieId)" v-for="(it) in planMovies" :key="it.id"
           :class="['film-item']">
           <div class="film-top">
@@ -97,6 +97,11 @@
           </div>
         </li>
       </ul>
+      <div class="arrow-box">
+        <Checkbox :disabled="false" v-if="item.allowAutoDelivery" v-model="item.allowAutoDelivery">效果不足时允许系统投放更多影片确保曝光效果</Checkbox>
+        <div @click="arrowloding = true" v-if="arrowshow && !arrowloding" class="arrow">展开<Icon type="ios-arrow-forward" ></Icon></div>
+        <div @click="arrowloding = false" v-if="arrowshow && arrowloding" class="arrow">收起<Icon type="ios-arrow-up" /></div>
+      </div>
     </div>
 
     <div v-if="status != 1" class="plan-cinema-num">
@@ -303,6 +308,15 @@ export default class App extends ViewBase {
   citynums: any = []
   length = 0
   movieTypeList: any = []
+  arrowloding = false
+
+  get arrowshow() {
+    if (this.planMovies.length > 6) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   get columns() {
     const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
@@ -409,7 +423,7 @@ export default class App extends ViewBase {
       return msg
     } else if (id == 2 && datanums != '暂无') {
       const msg1 = data ? formatCurrency(data, 0) : 0
-      return msg1 ? msg1 + '万人' : '-'
+      return msg1 ? msg1 + '人' : '-'
     } else {
       return datanums
     }
