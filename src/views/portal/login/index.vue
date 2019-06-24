@@ -215,7 +215,7 @@ export default class Main extends ViewBase {
   position: absolute;
   left: 14%;
   top: 50%;
-  transform: translateY(-65%);
+  transform: translateY(-55%);
   .home-logo {
     height: 255px;
   }

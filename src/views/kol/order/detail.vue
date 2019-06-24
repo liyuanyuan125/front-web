@@ -1,6 +1,11 @@
 <template>
   <div class="page">
-    <div class='t-title'>订单状态： <span v-for="it in statusList" v-if="it.key == item.status">{{it.text}}</span></div>
+    <div class='t-title'>订单状态： <span v-for="it in statusList" v-if="it.key == item.status">
+      
+      <i v-if="[2,3].includes(item.status)">待审核</i>
+      <i v-else>{{it.text}}</i>
+      </span>
+      </div>
     
     <div class='title-tip'>
       <Row style='font-size: 24px;line-height: 50px;font-weight: 500'>订单信息</Row>

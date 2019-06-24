@@ -77,6 +77,7 @@ import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
 import DetailNavBar from './components/detailNavBar.vue'
 import { tooltipStyles } from '@/util/echarts'
+import {movieView, wanttosee} from '@/api/filmPersonDetail'
 const timeFormat = 'YYYYMMDD'
 // #D0BF6B 中性
 // #AD686C 正面
@@ -159,17 +160,17 @@ export default class Main extends ViewBase {
     emotion: [
       {
         key: 0,
-        name: 'positive',
+        name: 'maoyan',
         text: '猫眼想看'
       },
       {
         key: 1,
-        name: 'passive',
+        name: 'taopiaopiao',
         text: '淘票想看'
       },
       {
         key: 2,
-        name: 'neutral',
+        name: 'douban',
         text: '豆瓣想看'
       }
     ]
@@ -204,21 +205,21 @@ export default class Main extends ViewBase {
     dataList: [
       [
         {
-          name: '猫眼想看',
+          name: 'maoyan',
           type: 'bar',
           stack: 'totalCount',
           barMaxWidth: '20',
           data: [40, 90, 30]
         },
         {
-          name: '淘票想看',
+          name: 'taopiaopiao',
           type: 'bar',
           stack: 'totalCount',
           barMaxWidth: '20',
-          data: [300, 20, 40]
+          data: [50, 20, 40]
         },
         {
-          name: '豆瓣想看',
+          name: 'douban',
           type: 'bar',
           stack: 'totalCount',
           barMaxWidth: '20',
@@ -301,8 +302,22 @@ export default class Main extends ViewBase {
 
   currentTypeChange(val: any) {}
 
+  mounted() {
+    this.trendList()
+  }
 
-
+  async trendList() {
+    const id = 55184
+    try {
+      const data = await wanttosee({
+        beginDate: '20160520',
+        endDate: '20190620'
+      }, id)
+      this.chart2.initDone = true
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
 
 
   async typeChangeHander(index: number = 0) {
@@ -420,7 +435,7 @@ export default class Main extends ViewBase {
     this.chart3.initDone = false
     this.chart4.initDone = false
     this.resetData()
-    await this.getChartsData('', 0)
+    // await this.getChartsData('', 0)
   }
 
   created() {
@@ -454,8 +469,8 @@ export default class Main extends ViewBase {
     } else {
       this.chart4.dataList.push([])
     }
-    await this.getChartsData('', 0)
-    await this.getKeywordList()
+    // await this.getChartsData('', 0)
+    // await this.getKeywordList()
   }
 
   resetData() {
@@ -517,7 +532,7 @@ export default class Main extends ViewBase {
 
   keyChangeHandle(item: any) {
     this.tableData = []
-    this.getKeywordList(item[0])
+    // this.getKeywordList(item[0])
   }
 }
 </script>

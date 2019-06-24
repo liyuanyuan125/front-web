@@ -95,7 +95,7 @@
               </Col>
             </Row>
             
-            <Row type="flex" justify="space-between" style='margin-top:10px'>
+            <Row v-if="tableData.length > 0" type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="24">
                 <div class='chart-wp keyword-box borderRadius'>
                   <div class="keyword-title">
@@ -503,7 +503,6 @@ export default class Main extends ViewBase {
       this.chart4.dataList.push([])
     }
     await this.getChartsData('', 0)
-    await this.getKeywordList()
   }
 
   resetData() {
@@ -525,9 +524,8 @@ export default class Main extends ViewBase {
   async getKeywordList( key?: string ) {
     const that: any = this
     const mockObj = {
-      keyword: (key == '') ? this.keywordQuery.keyword : key,
-      pageIndex: 1,
-      pageSize: 10
+      keyWord: (key == '') ? this.keywordQuery.keyword : key,
+      channelCode: this.form.channelCode
     }
     const id = this.id
     try {
@@ -541,12 +539,12 @@ export default class Main extends ViewBase {
         items.map((it: any, index: number) => {
           this.tableData.push({
             index: this.indexNumber(index),
-            highLightWords: it.highLightWords,
+            highLightWords: it.highlightContent,
             content: it.content,
             favorCount: it.favorCount, // 赞同数
             replyCount: it.replyCount, // 回复数
             sourceContent: it.sourceContent, // 来源内容
-            sourceUrl: it.sourceUrl, // 来源url
+            sourceUrl: it.sourceContentUrl, // 来源url
             commentDate: it.commentDate // 评论时间
           })
         })
@@ -564,6 +562,7 @@ export default class Main extends ViewBase {
   keyChangeHandle(item: any) {
     this.tableData = []
     this.getKeywordList(item[0])
+    this.keywordQuery.keyword = item[0]
   }
 }
 </script>

@@ -48,8 +48,8 @@
             <div style="position: relative">
               <p class="film-title" style="margin-bottom: 20px" :title="it.movieName">{{it.movieName}}</p>
               <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
-              <p style="margin-bottom: 6px"><span>影片类型：</span>{{it.movieType || '-'}}</p>
-              <p style="margin-bottom: 6px"><span>想看人数：</span>{{it.wantSeeNum}}</p>
+              <p style="margin-bottom: 6px"><span>影片类型：</span>{{movieMap(it.movieType)}}</p>
+              <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum)}}</p>
               <i-circle trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                 <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
                 <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent}}%</p>
@@ -84,7 +84,7 @@
             <dl style="margin-bottom: 15px">
               <dd>受众年龄：</dd>
               <dt v-if="it.ageCodes && it.ageCodes.length > 0">
-                <span v-for="(item, index) in it.ageCodes" :key="item">{{item || '-'}}
+                <span v-for="(item, index) in it.ageCodes" :key="item">{{ageTypeMap(item)}}
                   <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
                 </span>
               </dt>
@@ -297,10 +297,12 @@ export default class App extends ViewBase {
     provinceCount: '',
     cityCount: ''
   }
+  ageTypeList: any = []
   tags: any = []
   deliveryCityTypeList: any = []
   citynums: any = []
   length = 0
+  movieTypeList: any = []
 
   get columns() {
     const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
@@ -426,6 +428,26 @@ export default class App extends ViewBase {
     }
   }
 
+  ageTypeMap(val: any) {
+    if (!val) {
+      return '-'
+    }
+    const vals = val || []
+    return this.ageTypeList.filter((it: any) => {
+      return vals.includes(it.key)
+    }).map((it: any) => it.text).join(' | ')
+  }
+
+  movieMap(val: any) {
+    if (!val) {
+      return '-'
+    }
+    const vals = val ? val.split('|') : []
+    return this.movieTypeList.filter((it: any) => {
+      return vals.includes(it.key)
+    }).map((it: any) => it.text).join(' | ')
+  }
+
   async init() {
     try {
       (this.$Spin as any).hide()
@@ -443,6 +465,7 @@ export default class App extends ViewBase {
       this.citynums = citynums.sort((a: any, b: any) => {
         return a.sort - b.sort
       })
+      this.ageTypeList = data.ageTypeList
       this.count.cinemaCount = data.cinemaCount
       this.count.chainCount = data.chainCount
       this.count.provinceCount = data.provinceCount
@@ -451,6 +474,7 @@ export default class App extends ViewBase {
       this.item = data.item || {}
       this.tags = data.tags
       this.status = data.item.status
+      this.movieTypeList = data.movieTypeList || []
       this.deliveryCityTypeList = data.deliveryCityTypeList
       this.planMovies = data.planMovies || []
     } catch (ex) {

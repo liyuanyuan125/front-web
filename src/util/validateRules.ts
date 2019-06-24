@@ -146,3 +146,24 @@ export function getTodayDate() {
   const date = todayDate[2].length == 1 ? '0' + todayDate[2] :  todayDate[2]
   return `${year}${mouth}${date}`
 }
+
+/**
+ * 数字规则
+ * 千用逗号表示，万用万字表示保留一位小数，亿保留2位小数
+ */
+export function roleNumber(num: string | number) {
+  num = '' + num
+  if (num.length < 4) {
+    return num
+  } else if (num.length == 4) {
+    return num.replace(/^(\d{1})(\d{3})$/, '$1,$2')
+  } else if (num.length >= 5 ) {
+    const tenThousand = (Number(num) / 10000).toFixed(1)
+    return `${tenThousand}万`
+  } else if (num.length >= 9) {
+    const calculate = (Number(num) / 100000000).toFixed(2)
+    return `${calculate}亿`
+  } else {
+    return 0
+  }
+}

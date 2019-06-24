@@ -43,17 +43,17 @@ export default class ComponentMain extends ViewBase {
         return number
       }
     } else {
-      for (let i = number.indexOf('.') - 1; i >= 0; i--) {
-        if (this.count % 3 == 0 && this.count != 0) {
-          this.newend = number.charAt(i) + ',' + this.newend // 碰到3的倍数则加上“,”号
-        } else {
-          this.newend = number.charAt(i) + this.newend // 逐个字符相接起来
-        }
-        this.count++
-      }
-      number =
-        this.newend + (number + '00').substr((number + '00').indexOf('.'), 3)
-      return number
+      // for (let i = number.indexOf('.') - 1; i >= 0; i--) {
+      //   if (this.count % 3 == 0 && this.count != 0) {
+      //     this.newend = number.charAt(i) + ',' + this.newend // 碰到3的倍数则加上“,”号
+      //   } else {
+      //     this.newend = number.charAt(i) + this.newend // 逐个字符相接起来
+      //   }
+      //   this.count++
+      // }
+      // number =
+      //   this.newend + (number + '00').substr((number + '00').indexOf('.'), 3)
+      return this.addNum
     }
   }
   mounted() {

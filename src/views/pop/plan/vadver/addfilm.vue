@@ -27,7 +27,7 @@
               <div>
                 <div class="film-title">{{it.nameCn}}</div>
                 <div class="film-time" style="margin-top: 10px">上映时间：{{formatDate(it.releaseDate)}}</div>
-                <div class="film-time">{{typeCinema(it.type)}}</div>
+                <div class="film-time">影片类型：{{typeCinema(it.type)}}</div>
                 <div class="film-time">导演: {{it.director.join(' / ')}}</div>
                 <div class="film-time">主演: {{it.actor.join(' / ')}}</div>
               </div>

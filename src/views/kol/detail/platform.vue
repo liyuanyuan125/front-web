@@ -29,7 +29,7 @@
                 </div>
               </DetailNavBar>
             </Col>
-            <Col :span="7" style="text-align:right">
+            <Col :span="7" style="text-align:right; color:#fff;">
               平台
               <Select
                 v-model="form.channelCode"

@@ -16,7 +16,7 @@
                   :value="item.key"
                 >{{item.text}}</Option>
               </Select>
-              <Input v-model='form.project' placeholder="输入项目名称模糊查询" />
+              <Input v-model='form.projectName' placeholder="输入项目名称模糊查询" />
               <Select v-model='form.brandId' filterable clearable placeholder="全部品牌">
                 <Option
                   v-for="item in allBrandSelect"
@@ -28,7 +28,7 @@
           </div>
             <div class="flex-box status-content">
                 <Tabs v-model="status" class="order-status-tab">
-                  <TabPane label="全部订单" key="0" name="" ></TabPane>
+                  <TabPane label="全部订单" key="" name="" ></TabPane>
                   <TabPane :label="auditStatu" key="2" name="2,3" ></TabPane>
                   <TabPane :label="paymentStatu" key="4" name="4,8"></TabPane>
                   <TabPane :label="sendOrderStatu" key="5" name="5" ></TabPane>
@@ -49,6 +49,7 @@
                 <Button type="primary" @click="$router.push({name: 'kol-applyTicket'})" class="apply-btn">申请发票</Button>
             </div>
             <div class="table-list">
+              <div class="demo-spin-article">
                 <ul>
                   <li class="list-li" v-for="item in list" :key = "item.id">
                     <Row>
@@ -75,7 +76,10 @@
                         <p v-if="[5,6,7,8].includes(item.status)" class="col_00202d rest-order">部分支付 {{item.advanceFee}}</p>
                       </Col>
                       <Col :span="2" class="li-item-status">
-                        <span v-for="it in intStatusList" :key ="it.key" v-if="it.key == item.status">{{it.text}}</span>
+                        <span v-for="it in intStatusList" :key ="it.key" v-if="it.key == item.status">
+                          <i v-if="[2,3].includes(item.status)">待审核</i>
+                          <i v-else>{{it.text}}</i>
+                        </span>
                       </Col>
                       <Col :span="4" class="status-btn">
                       <!-- 状态 -->
@@ -91,13 +95,15 @@
                   </li>
                 </ul>
                 <ul v-if ="list.length == 0" class="no-list-data">暂无数据</ul>
+                <Spin fix v-if="spinShow"></Spin>
+              </div>
                 <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
             </div>
         </div>
 
         <!-- 草稿 -->
-        <div v-else>
-          <ul class="table-list">
+        <div class="caogao" v-else>
+          <ul class="table-list demo-spin-article">
               <li class="list-li" v-for="item in list" :key = "item.id">
                 <Row>
                   <Col :span="5"><span>订单号 {{item.orderNo}}</span></Col>
@@ -134,6 +140,7 @@
               </li>
             </ul>
             <ul v-if ="list.length == 0" class="no-list-data">暂无数据</ul>
+            <Spin fix v-if="spinShow"></Spin>
         </div>
 
       </div>
@@ -174,11 +181,11 @@ export default class Main extends ViewBase {
     pageSize: 20
   }
   form = {}
-
+  spinShow = false
   // 订单和草稿 默认0订单 1草稿
   orderTab = 0
   // 订单状态
-  status: any = null
+  status: any = ''
   cloneStatus: any = null
   // 全部推广平台
   channelCodeList = []
@@ -214,6 +221,7 @@ export default class Main extends ViewBase {
     this.orderBrand()
   }
   async tableList() {
+    this.spinShow = true
     try {
       if (this.status == 1) {
         this.pageList.pageSize = 300
@@ -223,8 +231,9 @@ export default class Main extends ViewBase {
       const { data } = await orderList({
         ...this.pageList,
         ...this.form,
-        orderStatus: this.status
+        orderStatus: this.status == 0 ? null : this.status
       })
+      this.spinShow = false
       this.countData = data
       this.list = (data.items || []).map((it: any) => {
         return {
@@ -245,6 +254,7 @@ export default class Main extends ViewBase {
       this.cancelStatu = data.cancelSize
       this.failStatu = data.failSize
     } catch (ex) {
+      this.spinShow = false
       this.handleError(ex)
     }
   }
@@ -367,6 +377,9 @@ export default class Main extends ViewBase {
 <style lang='less' scoped>
 // @import '~@/site/common.less';
 @import './order.less';
+.caogao {
+  position: relative;
+}
 .order-monery {
   font-size: 20px;
   color: #000;
@@ -388,6 +401,7 @@ export default class Main extends ViewBase {
   color: rgba(0, 32, 45, .5);
 }
 .table-list {
+  position: relative;
   background: rgba(255, 255, 255, .7);
   color: #222;
 }
