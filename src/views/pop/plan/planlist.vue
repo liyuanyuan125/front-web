@@ -656,7 +656,7 @@ export default class Plan extends ViewBase {
     content: '';
     display: block;
     height: 1px;
-    width: 20px;
+    width: 16px;
     margin-left: 44%;
     background: #00202d;
   }
