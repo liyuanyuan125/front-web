@@ -215,7 +215,7 @@ export default class Main extends ViewBase {
   position: absolute;
   left: 14%;
   top: 50%;
-  transform: translateY(-65%);
+  transform: translateY(-53%);
   .home-logo {
     height: 255px;
   }
@@ -407,6 +407,12 @@ export default class Main extends ViewBase {
     .home-logo {
       height: 180px;
     }
+  }
+}
+@media screen and(min-height: 1200px) {
+  .main-wrap {
+    left: 14%;
+    transform: translateY(-58%);
   }
 }
 </style>

@@ -14,7 +14,7 @@
       <ul class="ul-lists">
         <li v-for="item in list" :key="item.id">
           <router-link
-            :to="{ name: 'brand-moredetail', params: { brandId: item.brandId } }"
+            :to="{ name: 'brand-home', params: { id: item.brandId } }"
             class="col-first span-first"
           >
             <img :src="item.logo" class="logo">

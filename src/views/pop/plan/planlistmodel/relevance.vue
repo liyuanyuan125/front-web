@@ -248,6 +248,8 @@ export default class Relevan extends ViewBase {
   padding: 0 50px;
   min-height: 100px;
   margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
   .img-box {
     position: relative;
     width: 120px;

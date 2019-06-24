@@ -7,7 +7,7 @@
     <div class="finish-detail">
       <dl>
         <dd>覆盖影院</dd>
-        <dt><Number :addNum="!!cinemaCount ? cinemaCount : 0" />家</dt>
+        <dt><Number :flag="2" :addNum="!!cinemaCount ? cinemaCount : 0" />家</dt>
         <dt>
           <img src="./assets/yingyuanb.png" width="73" height="66px"/>
         </dt>

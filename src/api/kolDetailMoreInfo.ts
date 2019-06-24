@@ -773,15 +773,15 @@ export async function fans(query: any) {
  */
 export async function keywordComment(query: any, id: number | string = '') {
   // 演示 临时参数 nxd 20190621
-  id = '558'
-  query = {
-    keyword: '大家',
-    pageIndex: 1,
-    pageSize: 10,
-    channelCode: 'weibo'
-  }
-  // const res = await get(`person/${id}/keyword-comments`, query)
-  // return res
+  // id = '558'
+  // query = {
+  //   keyword: '大家',
+  //   pageIndex: 1,
+  //   pageSize: 10,
+  //   channelCode: 'weibo'
+  // }
+  const res = await get(`/kol/accounts/${id}/hot-comment`, query)
+  return res
   return await mockGet(query, {
     'items|10': [
       {

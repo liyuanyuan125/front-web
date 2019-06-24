@@ -221,71 +221,13 @@ export default class AreaBasic extends ViewBase {
   }
 
   updateTypeCharts() {
-    /* const ref: any[] = []
-    this.dict1.forEach((item, index) => {
-      const refArr = this.$refs[`type-${index}`] as any
-      ref.push(refArr[0])
-    })
-    let option: any = {}
-    function quadraticIn(k: number) {
-      return k * k
-    }
-    const N_POINT: number = 10
-    const grids: any[] = []
-    const xAxes: any[] = []
-    const yAxes: any[] = []
-    const series: any[] = []
-    const count: number = 0
-    const data: any[] = []
-    for (let i = 0; i <= N_POINT; i++) {
-      const x = i / N_POINT
-      const y = quadraticIn(x)
-      data.push([x, y])
-    }
-    grids.push({
-      show: true,
-      borderWidth: 0,
-      // backgroundColor: '#fff',
-      // shadowColor: 'rgba(0, 0, 0, 0.3)',
-      shadowBlur: 2
-    })
-    xAxes.push({
-      type: 'value',
-      show: false,
-      min: 0,
-      max: 1,
-      gridIndex: count
-    })
-    yAxes.push({
-      type: 'value',
-      show: false,
-      min: -0.4,
-      max: 1.4,
-      gridIndex: count
-    })
-    series.push({
-      name,
-      type: 'line',
-      xAxisIndex: count,
-      yAxisIndex: count,
-      data,
-      showSymbol: false,
-      animationEasing: name,
-      animationDuration: 1000
-    })
-    option = {
-      grid: grids,
-      xAxis: xAxes,
-      yAxis: yAxes,
-      series
-    } */
-
     const options: any[] = []
     const refs: any[] = []
     this.dict1.forEach((item, index) => {
       const refArr = this.$refs[`type-${index}`] as any
       refs.push(refArr[0])
       options.push({
+        color: '',
         grid: [{
           show: true,
           borderWidth: 0,
@@ -308,7 +250,7 @@ export default class AreaBasic extends ViewBase {
       })
     })
     this.dataList.forEach((item: any, index: number) => {
-      options[index].color = [this.color[index]]
+      options[index].color = this.color[index]
       options[index].xAxis.data = item.date
       options[index].series[0].data = item.data
     })

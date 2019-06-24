@@ -40,18 +40,17 @@
         <h3>投放影片{{planMovies.length}}部</h3>
         <span>效果不足时允许系统投放更多影片确保曝光效果</span>
       </div>
-      <ul class="film-list" v-if="planMovies.length > 0">
+      <ul class="film-list" :class="[ !arrowloding ? 'film-max' : '']" v-if="planMovies.length > 0">
         <li @click="filmdetail(it.movieId)" v-for="(it) in planMovies" :key="it.id"
           :class="['film-item']">
           <div class="film-top">
             <img :src="it.image" class="film-cover">
             <div style="position: relative">
-              <p class="film-title" :title="it.movieName">{{it.movieName}}</p>
-              <p class="film-title" style="margin-bottom: 20px">{{it.movieName}}</p>
-              <p><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
-              <p><span>影片类型：</span>{{it.movieType}}</p>
-              <p><span>想看人数：</span>{{it.wantSeeNum}}</p>
-              <i-circle trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="it.matchPercent">
+              <p class="film-title" style="margin-bottom: 20px" :title="it.movieName">{{it.movieName}}</p>
+              <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
+              <p style="margin-bottom: 6px"><span>影片类型：</span>{{movieMap(it.movieType)}}</p>
+              <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum, 2)}}</p>
+              <i-circle trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                 <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
                 <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent}}%</p>
               </i-circle>
@@ -85,7 +84,7 @@
             <dl style="margin-bottom: 15px">
               <dd>受众年龄：</dd>
               <dt v-if="it.ageCodes && it.ageCodes.length > 0">
-                <span v-for="(item, index) in it.ageCodes" :key="item">{{item || '-'}}
+                <span v-for="(item, index) in it.ageCodes" :key="item">{{ageTypeMap(item)}}
                   <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
                 </span>
               </dt>
@@ -98,6 +97,11 @@
           </div>
         </li>
       </ul>
+      <div class="arrow-box">
+        <Checkbox :disabled="false" v-if="item.allowAutoDelivery" v-model="item.allowAutoDelivery">效果不足时允许系统投放更多影片确保曝光效果</Checkbox>
+        <div @click="arrowloding = true" v-if="arrowshow && !arrowloding" class="arrow">展开<Icon type="ios-arrow-forward" ></Icon></div>
+        <div @click="arrowloding = false" v-if="arrowshow && arrowloding" class="arrow">收起<Icon type="ios-arrow-up" /></div>
+      </div>
     </div>
 
     <div v-if="status != 1" class="plan-cinema-num">
@@ -157,11 +161,11 @@
               </template>
 
               <template slot-scope="{ row }" slot="estimateShowCount">
-                {{formatNums(row.estimateShowCount)}}
+                {{formatNums(row.estimateShowCount, 1)}}
               </template>
 
               <template slot-scope="{ row }" slot="estimatePersonCount">
-                {{formatNums(row.estimatePersonCount)}}
+                {{formatNums(row.estimatePersonCount, 1)}}
               </template>
             </Table>
 
@@ -298,10 +302,21 @@ export default class App extends ViewBase {
     provinceCount: '',
     cityCount: ''
   }
+  ageTypeList: any = []
   tags: any = []
   deliveryCityTypeList: any = []
   citynums: any = []
   length = 0
+  movieTypeList: any = []
+  arrowloding = false
+
+  get arrowshow() {
+    if (this.planMovies.length > 6) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   get columns() {
     const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
@@ -401,8 +416,17 @@ export default class App extends ViewBase {
     return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
 
-  formatNums(data: any) {
-    return data ? formatCurrency(data) : '暂无'
+  formatNums(data: any, id?: any) {
+    const datanums = data ? formatCurrency(data) : '暂无'
+    if (id == 1 && datanums != '暂无') {
+      const msg = data ? formatCurrency(data, 0) : '0'
+      return msg
+    } else if (id == 2 && datanums != '暂无') {
+      const msg1 = data ? formatCurrency(data, 0) : 0
+      return msg1 ? msg1 + '人' : '-'
+    } else {
+      return datanums
+    }
   }
 
   tages(id: any) {
@@ -427,6 +451,26 @@ export default class App extends ViewBase {
     }
   }
 
+  ageTypeMap(val: any) {
+    if (!val) {
+      return '-'
+    }
+    const vals = val || []
+    return this.ageTypeList.filter((it: any) => {
+      return vals.includes(it.key)
+    }).map((it: any) => it.text).join(' | ')
+  }
+
+  movieMap(val: any) {
+    if (!val) {
+      return '-'
+    }
+    const vals = val ? val.split('|') : []
+    return this.movieTypeList.filter((it: any) => {
+      return vals.includes(it.key)
+    }).map((it: any) => it.text).join(' | ')
+  }
+
   async init() {
     try {
       (this.$Spin as any).hide()
@@ -444,6 +488,7 @@ export default class App extends ViewBase {
       this.citynums = citynums.sort((a: any, b: any) => {
         return a.sort - b.sort
       })
+      this.ageTypeList = data.ageTypeList
       this.count.cinemaCount = data.cinemaCount
       this.count.chainCount = data.chainCount
       this.count.provinceCount = data.provinceCount
@@ -452,6 +497,7 @@ export default class App extends ViewBase {
       this.item = data.item || {}
       this.tags = data.tags
       this.status = data.item.status
+      this.movieTypeList = data.movieTypeList || []
       this.deliveryCityTypeList = data.deliveryCityTypeList
       this.planMovies = data.planMovies || []
     } catch (ex) {
@@ -524,7 +570,7 @@ export default class App extends ViewBase {
 
   async cinemfind() {
     try {
-      const { data } = await getcinemas(22, {
+      const { data } = await getcinemas(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []
@@ -536,7 +582,7 @@ export default class App extends ViewBase {
 
   async provienfind() {
     try {
-      const { data } = await getprovinces(22, {
+      const { data } = await getprovinces(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []
@@ -548,7 +594,7 @@ export default class App extends ViewBase {
 
   async cityfind() {
     try {
-      const { data } = await getcities(22, {
+      const { data } = await getcities(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []
@@ -560,7 +606,7 @@ export default class App extends ViewBase {
 
   async chainsfind() {
     try {
-      const { data } = await getchains(22, {
+      const { data } = await getchains(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []

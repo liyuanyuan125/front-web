@@ -27,7 +27,7 @@
               <div>
                 <div class="film-title">{{it.nameCn}}</div>
                 <div class="film-time" style="margin-top: 10px">上映时间：{{formatDate(it.releaseDate)}}</div>
-                <div class="film-time">{{it.type.join(' / ')}}</div>
+                <div class="film-time">影片类型：{{typeCinema(it.type)}}</div>
                 <div class="film-time">导演: {{it.director.join(' / ')}}</div>
                 <div class="film-time">主演: {{it.actor.join(' / ')}}</div>
               </div>
@@ -103,8 +103,13 @@ export default class DlgEditCinema extends ViewBase {
   data: any = []
   checkId: any = []
   checkObj: any = []
+
   formatDate(data: any) {
-    return data ? moment(data).format(timeFormat) : '暂无'
+    return data
+      ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(
+          data + ''
+        ).substr(6, 2)}`
+      : '暂无'
   }
 
   async init(type: any) {
@@ -126,6 +131,20 @@ export default class DlgEditCinema extends ViewBase {
         this.checks[it] = true
       })
       this.seach()
+    }
+  }
+
+  typeCinema(type: any) {
+    type = type || []
+    const maps = this.movieTypeList.filter((it: any) => {
+      return type.includes(it.key)
+    })
+    if (maps.length > 0) {
+      return maps.map((it: any) => {
+        return it.text
+      }).join(' / ')
+    } else {
+      return '暂无'
     }
   }
 
