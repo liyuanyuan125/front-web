@@ -45,7 +45,7 @@ import echarts from 'echarts'
 import { tooltipStyles } from '@/util/echarts'
 const tooltipsDefault = tooltipStyles({
   trigger: 'item',
-  formatter: '{b} <br/> {c}'
+  formatter: '{b} <br/> {c}%'
 })
 import {
   pubOption,
