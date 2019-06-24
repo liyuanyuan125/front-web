@@ -11,14 +11,6 @@ const getNames = (keys: string[], list: KeyText[]) => {
   return names
 }
 
-// 后端按照从上到下的排序，但前端按照球的大小排序
-const bubbleSort = [ 3, 1, 4, 0, 5, 2 ]
-
-const sortBubble = (tags: string[]) => {
-  const tagList = tags || []
-  return bubbleSort.map(i => tagList[i]).filter(it => it != null)
-}
-
 const monthDate = (date: number) => String(date).replace(/(\d{4})(\d{2})(\d{2})/, '$2-$3')
 
 const hotChannelMap: MapType = {
@@ -106,7 +98,7 @@ export async function getKol({
   }))
 
   const result = {
-    bubbleList: sortBubble(tags),
+    bubbleList: tags || [],
 
     basic: {
       id,
@@ -231,7 +223,7 @@ export async function getMovie(id: number) {
   const hasShow = releaseStatus >= 3
 
   const result = {
-    bubbleList: sortBubble(searchKeywords),
+    bubbleList: searchKeywords || [],
 
     basic: {
       id,
@@ -367,7 +359,7 @@ export async function getFigure(id: number) {
   const titleList = getNames(titleKeys, professionList)
 
   const result = {
-    bubbleList: sortBubble(tags),
+    bubbleList: tags || [],
 
     basic: {
       id,

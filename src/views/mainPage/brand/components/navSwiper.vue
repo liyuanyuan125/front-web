@@ -7,7 +7,7 @@
       :disabled="!showPrev"
     ></button>
 
-    <swiper :options="options" class="swiper" @slideChange="slideChange">
+    <swiper :options="finalOptions" class="swiper" @slideChange="slideChange">
       <slot></slot>
     </swiper>
 
@@ -27,7 +27,8 @@ import ViewBase from '@/util/ViewBase'
 import { swiper } from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 
-import { devLog } from '@/util/dev'
+import { dot } from '@/util/dealData'
+import { merge } from 'lodash'
 
 @Component({
   components: {
@@ -35,33 +36,33 @@ import { devLog } from '@/util/dev'
   }
 })
 export default class NavSwiper extends ViewBase {
+  @Prop({ type: Object, default: () => ({}) }) options!: object
+
   instance: any = null
 
   showPrev = false
 
   showNext = false
 
-  get options() {
+  get finalOptions() {
+    // 用 on.init 进行特殊处理
+    const userInit = dot(this.options, 'on.init')
+
     const vm = this
-    return {
+    const options = merge({
       slidesPerView: 5,
-      slidesPerGroup: 5,
       spaceBetween: 8,
+    }, this.options, {
       on: {
         init() {
           vm.instance = this
           vm.updateUI()
-        },
-
-        touchStart(ev: any) {
-          devLog('touchStart: ', ev.pageX)
-        },
-
-        touchEnd(ev: any) {
-          devLog('touchEnd: ', ev.pageX)
+          userInit && userInit.call(this)
         }
       }
-    }
+    })
+
+    return options
   }
 
   updateUI() {
@@ -74,11 +75,17 @@ export default class NavSwiper extends ViewBase {
   }
 
   slidePrev() {
-    this.instance && this.instance.slidePrev()
+    this.slideGroup(-1)
   }
 
   slideNext() {
-    this.instance && this.instance.slideNext()
+    this.slideGroup(1)
+  }
+
+  slideGroup(by: number) {
+    const { slidesPerView } = this.finalOptions
+    const toIndex = this.instance.activeIndex + slidesPerView * by
+    this.instance && this.instance.slideTo(toIndex)
   }
 }
 </script>
