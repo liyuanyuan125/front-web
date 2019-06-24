@@ -21,8 +21,7 @@
         stripe
         :columns="columns"
         :data="data"
-        @on-select="singleSelect"
-        @on-select-all="selectAll"
+        @on-selection-change="selectChange"
       ></Table>
       <Page
         :total="value.totalCount"
@@ -103,10 +102,7 @@ export default class Change extends ViewBase {
     this.getList()
   }
 
-  singleSelect(select: any) {
-    this.selectList = select
-  }
-  selectAll(select: any) {
+  selectChange(select: any) {
     this.selectList = select
   }
 

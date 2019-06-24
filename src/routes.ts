@@ -422,6 +422,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.managecinema',
       authAction: 'view',
+      title() {
+        return '查看'
+      }
     }
   },
 
