@@ -8,7 +8,7 @@
       :mask-closable='false'
     >
       <div class="title">
-        <i @click="handleCancel"></i>
+        <!-- <i @click="handleCancel"></i> -->
         <p>查看关联用户</p>
       </div>
       <div v-if="visible">当前没有关联的客户</div>
@@ -49,7 +49,7 @@ export default class Change extends ViewBase {
   font-weight: none;
 }
 /deep/ .ivu-table {
-  height: 550px;
+  height: 450px;
   overflow-y: auto;
 }
 .footer-bottom {
