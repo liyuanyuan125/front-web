@@ -212,8 +212,8 @@ export default class Temporary extends ViewBase {
         this.chart1.dataList[
           this.chart1.currentTypeIndex
         ] = [
-          {name: '男', value: malePercent},
-          {name: '女', value: femalePercent},
+          {name: '男', value: malePercent / 100},
+          {name: '女', value: femalePercent / 100},
         ]
         this.chart1.initDone = true
       }
@@ -226,7 +226,7 @@ export default class Temporary extends ViewBase {
           this.chart2.dict3.push({
             text: k
           })
-          this.chart2.dataList[this.chart2.currentTypeIndex].data.push(v)
+          this.chart2.dataList[this.chart2.currentTypeIndex].data.push(v / 100)
         })
         // console.log(this.chart2.dict3)
         this.chart2.initDone = true
@@ -239,11 +239,11 @@ export default class Temporary extends ViewBase {
           min = (min > count) ? count : min
           this.chart3.dataList[this.chart3.currentTypeIndex].push({
             name: name.substr(0, name.length - 1),
-            value: count
+            value: count / 100
           })
           this.chart4.dataList[0].push({
             name: name.substr(0, name.length - 1),
-            value: count
+            value: count / 100
           })
         })
         this.chart3.min = min
@@ -261,7 +261,7 @@ export default class Temporary extends ViewBase {
         citys.forEach(({ count, name }: any) => {
           this.chart4.dataList[1].push({
             name,
-            value: typeof count === 'number' ? count : parseInt(count, 0)
+            value: typeof count === 'number' ? (count / 100) : (parseInt(count, 0) / 100)
           })
         })
         this.chart4.initDone = true

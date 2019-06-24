@@ -1,13 +1,13 @@
 <template>
   <div class="page">
-    <div class="user-add">
+    <div class="page-title-btn">
       <Button type="primary" @click="addUser" class="btn-add"
           v-auth="'account-manage.users#create'">
           <Icon type="ios-add" size="27"/>新增子用户
       </Button>
     </div>
   
-    <Form :model="form" class="jyd-form flex-box search-list">
+    <Form :model="form" class="jyd-form flex-box-center search-list">
       <Select v-model="form.roleId" clearable style="width: 200px">
         <Option :value="item.id" :key="item.id" v-for="item in rolelist">{{item.name}}</Option>
       </Select>
@@ -17,7 +17,7 @@
       </Select>
 
       <div class="flex-box">
-        <Input v-model="form.searchKey" style="width: 260px" placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
+        <Input v-model="form.searchKey" style="width: 328px" placeholder="请输入联系人姓名／邮箱账号／手机号码进行搜索"/>
         <Button type="primary" @click="searchTableList" class="search-icon-btn">
           <Icon type="ios-search" size="22"/>
         </Button>
@@ -46,10 +46,11 @@
         <a class="action-btn" v-else-if="row.statusCode == 3" @click="activeEmail(row.id)">重新激活</a>
       </template>
     </Table>
-    <div class="checkAll" v-auth="'account-manage.users#delete'">
+    <div class="checkAll flex-box"   v-if="total>0" v-auth="'account-manage.users#delete'">
       <span @click="handleSelectAll">
         <Checkbox v-model="checkboxAll"></Checkbox>全选
       </span>
+      <i class="check-line">|</i>
       <span @click="deleteList">批量删除</span>
     </div>
     <Page
@@ -104,14 +105,14 @@ export default class Main extends ViewBase {
 
   formatTimes: any = ''
   columns = [
-    { type: 'selection', width: 60,  align: 'center' },
-    { title: '联系人', key: 'name' },
+    { type: 'selection', width: 30,  align: 'center' },
+    { title: '联系人', key: 'name', minWidth: 50},
     { title: '登录邮箱', width: 160,  key: 'email'},
-    { title: '手机号码', key: 'mobile' },
-    {  title: '权限角色',   slot: 'roleId' },
-    { title: '状态',  slot: 'statusCode' },
-    { title: '上次登录时间',  slot: 'lastLoginTime' },
-    { title: '操作', slot: 'action',  width: 160  }
+    { title: '手机号码', key: 'mobile', minWidth: 90 },
+    {  title: '权限角色',   slot: 'roleId', minWidth: 100 },
+    { title: '状态',  slot: 'statusCode', minWidth: 40 },
+    { title: '上次登录时间',  slot: 'lastLoginTime', minWidth: 100 },
+    { title: '操作', slot: 'action',  width: 180  }
   ]
 
   async mounted() {
@@ -271,7 +272,7 @@ export default class Main extends ViewBase {
   padding: 0 20px 30px;
 }
 .search-list {
-  margin-bottom: 30px;
+  margin: 30px 0;
 }
 .user-add {
   padding: 20px 0;
@@ -279,15 +280,16 @@ export default class Main extends ViewBase {
 }
 .action-btn {
   margin-right: 10px;
+  color: #4fa6bb;
 }
 .aneble {
-  color: @c-text;
+  color: #5f961f;
 }
 .display {
-  color: @c-fail;
+  color: #da6c70;
 }
 .warting {
-  color: @c-done;
+  color: #fff;
 }
 .page-bottom {
   padding: 40px 0 100px;
