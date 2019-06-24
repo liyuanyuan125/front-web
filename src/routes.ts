@@ -343,6 +343,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.users',
       authAction: 'view',
+      title: '查看'
     }
   },
 

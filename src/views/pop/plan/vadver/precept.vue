@@ -9,7 +9,7 @@
               <!-- <span class="custom">自定义投放电影</span> -->
           </h3>
           <div class="item-top">
-            <ul class="film-list" v-if="filmList.length > 0">
+            <ul class="film-list" :class="[ !arrowloding ? 'film-max' : '']" v-if="filmList.length > 0">
               <li @click="filmdetail(it.movieId)" v-for="(it) in filmList" :key="it.id"
                 :class="['film-item']">
                 <div class="film-top">
@@ -19,7 +19,7 @@
                     <p class="film-title" :title="it.movieName" style="margin-bottom: 30px">{{it.movieName}}</p>
                     <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
                     <p style="margin-bottom: 6px"><span>影片类型：</span>{{movieMap(it.movieType)}}</p>
-                    <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum, 1)}}</p>
+                    <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum, 2)}}</p>
                     <i-circle trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                       <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
                       <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent || '-'}}%</p>
@@ -67,8 +67,10 @@
                 </div>
               </li>
             </ul>
-            <div>
+            <div class="arrow-box">
               <Checkbox v-model="single">效果不足时允许系统投放更多影片确保曝光效果</Checkbox>
+              <div @click="arrowloding = true" v-if="arrowshow && !arrowloding" class="arrow">展开<Icon type="ios-arrow-forward" ></Icon></div>
+              <div @click="arrowloding = false" v-if="arrowshow && arrowloding" class="arrow">收起<Icon type="ios-arrow-up" /></div>
             </div>
           </div>
 
@@ -222,6 +224,7 @@ export default class App extends ViewBase {
   deatilItem: any = {}
   movieTypeList: any = []
   ageTypeList: any = []
+  arrowloding: any = false
 
   get columns() {
     const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
@@ -305,6 +308,14 @@ export default class App extends ViewBase {
     return {}
   }
 
+  get arrowshow() {
+    if (this.filmList.length > 6) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   filmdetail(id: any) {
     this.$router.push({
       name: 'film-movie',
@@ -341,8 +352,8 @@ export default class App extends ViewBase {
       const msg = data ? formatCurrency(data, 0) : '暂无'
       return msg
     } else if (id == 2 && datanums != '暂无') {
-      const msg1 = data ? formatCurrency(data / 10000, 0) : 0
-      return msg1 ? msg1 + '万' : '-'
+      const msg1 = data ? formatCurrency(data, 0) : 0
+      return msg1 ? msg1 + '人' : '-'
     } else {
       return datanums
     }
@@ -604,11 +615,26 @@ export default class App extends ViewBase {
 .form-item-first:first-child {
   margin-bottom: 20px;
 }
+.film-max {
+  overflow: hidden;
+  max-height: 690px;
+}
+.arrow-box {
+  position: relative;
+  .arrow {
+    position: absolute;
+    right: 20px;
+    font-size: 20px;
+    bottom: 4px;
+    cursor: pointer;
+  }
+}
 .film-list {
   display: flex;
   flex-wrap: wrap;
   margin-top: 15px;
   margin-bottom: 10px;
+  position: relative;
   .film-item {
     width: 32%;
     margin-bottom: 20px;

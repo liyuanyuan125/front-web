@@ -485,7 +485,6 @@ export default class Orienteering extends ViewBase {
         }
       }, 3000)
     } catch (ex) {
-      this.handleError('系统错误，请重新尝试！')
     }
   }
 
@@ -515,7 +514,6 @@ export default class Orienteering extends ViewBase {
       //   setid: this.$route.params.setid
       // })
     } catch (ex) {
-      this.handleError('系统错误，请重新尝试！')
     }
   }
 

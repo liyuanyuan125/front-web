@@ -159,3 +159,20 @@ export function textList(list: KeyText[], keys: Array<(string | number)>) {
 export function dot(object: any, path: string) {
   return at(object, path)[0]
 }
+
+const WAN = 10000
+
+const YI = 100000000
+
+/**
+ * 将数字格式化成可读格式
+ * @param number 数字
+ * @param digits 保留位数，默认为 2
+ */
+export function readableNumber(number: number, digits = 2) {
+  return number >= YI
+    ? (number / YI).toFixed(digits) + '亿'
+    : number >= WAN
+    ? (number / WAN).toFixed(digits) + '万'
+    : number
+}

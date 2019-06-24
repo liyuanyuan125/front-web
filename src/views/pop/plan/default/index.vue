@@ -5,7 +5,7 @@
     <div v-if="status != 1" class="plan-result">
       <div class="result-top">
         <h3>效果预估</h3>
-        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【500,000.00】时，您无需补缴任何款项</span>
+        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【{{formatNums(item.estimateCostAmount)}}】时，您无需补缴任何款项</span>
       </div>
       <Row class="precept" :gutter="16">
         <Col span="5" class="item">
@@ -40,7 +40,7 @@
         <h3>投放影片{{planMovies.length}}部</h3>
         <span>效果不足时允许系统投放更多影片确保曝光效果</span>
       </div>
-      <ul class="film-list" v-if="planMovies.length > 0">
+      <ul class="film-list" :class="[ !arrowloding ? 'film-max' : '']" v-if="planMovies.length > 0">
         <li @click="filmdetail(it.movieId)" v-for="(it) in planMovies" :key="it.id"
           :class="['film-item']">
           <div class="film-top">
@@ -97,6 +97,11 @@
           </div>
         </li>
       </ul>
+      <div class="arrow-box">
+        <Checkbox :disabled="false" v-if="item.allowAutoDelivery" v-model="item.allowAutoDelivery">效果不足时允许系统投放更多影片确保曝光效果</Checkbox>
+        <div @click="arrowloding = true" v-if="arrowshow && !arrowloding" class="arrow">展开<Icon type="ios-arrow-forward" ></Icon></div>
+        <div @click="arrowloding = false" v-if="arrowshow && arrowloding" class="arrow">收起<Icon type="ios-arrow-up" /></div>
+      </div>
     </div>
 
     <div v-if="status != 1" class="plan-cinema-num">
@@ -303,6 +308,15 @@ export default class App extends ViewBase {
   citynums: any = []
   length = 0
   movieTypeList: any = []
+  arrowloding = false
+
+  get arrowshow() {
+    if (this.planMovies.length > 6) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   get columns() {
     const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
@@ -403,13 +417,13 @@ export default class App extends ViewBase {
   }
 
   formatNums(data: any, id?: any) {
-    const datanums = data ? formatCurrency(data) : '暂无'
-    if (id == 1 && datanums != '暂无') {
+    const datanums = data ? formatCurrency(data) : '0'
+    if (id == 1 && datanums != '0') {
       const msg = data ? formatCurrency(data, 0) : '0'
       return msg
-    } else if (id == 2 && datanums != '暂无') {
-      const msg1 = data ? formatCurrency(data / 10000, 0) : 0
-      return msg1 ? msg1 + '万' : '-'
+    } else if (id == 2 && datanums != '0') {
+      const msg1 = data ? formatCurrency(data, 0) : 0
+      return msg1 ? msg1 + '人' : '-'
     } else {
       return datanums
     }
@@ -556,7 +570,7 @@ export default class App extends ViewBase {
 
   async cinemfind() {
     try {
-      const { data } = await getcinemas(22, {
+      const { data } = await getcinemas(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []
@@ -568,7 +582,7 @@ export default class App extends ViewBase {
 
   async provienfind() {
     try {
-      const { data } = await getprovinces(22, {
+      const { data } = await getprovinces(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []
@@ -580,7 +594,7 @@ export default class App extends ViewBase {
 
   async cityfind() {
     try {
-      const { data } = await getcities(22, {
+      const { data } = await getcities(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []
@@ -592,7 +606,7 @@ export default class App extends ViewBase {
 
   async chainsfind() {
     try {
-      const { data } = await getchains(22, {
+      const { data } = await getchains(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []

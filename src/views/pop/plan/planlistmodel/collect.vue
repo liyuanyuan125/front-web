@@ -7,11 +7,13 @@
     <div class="title">
       <i @click="cancel"></i>
       <img width="115px" height="115px" src="../assets/fanan.png" />
-      <p v-if="!showmongy">余额不足，前去缴费</p>
-      <p v-else>确认缴费</p>
+      <p><span>QQ:&nbsp;&nbsp;</span>1728252212</p>
+      <p><span>联系电话:</span>13718668880</p>
+      <p><span>联系邮箱:</span>webcpy@163.com</p>
+      <p></p>
     </div>
     <div slot="footer" class="foot">
-        <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
+        <!-- <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button> -->
         <Button class="foot-button" type="primary" @click="open">确定</Button>
     </div>
   </Modal>
@@ -35,32 +37,11 @@ export default class DlgEditCinema extends ViewBase {
   id = 0
 
   async init(id: any, freezeAmount: any, ids: any) {
-    this.id = ids
-    try {
-      const { data } = await financeMsg(id)
-      if (data.availableAmount - (freezeAmount || 0) > 0) {
-        this.showmongy = true
-      }
-      this.showDlg = true
-    } catch (ex) {
-      this.handleError(ex)
-    }
+    this.showDlg = true
   }
 
-  async open() {
-    try {
-      if (this.showmongy) {
-        await payMoney(this.id)
-        this.cancel()
-        this.$emit('uplist')
-      } else {
-        this.$router.push({
-          name: 'finance-info'
-        })
-      }
-    } catch (ex) {
-      this.handleError(ex)
-    }
+  open() {
+    this.showDlg = false
   }
 
   async seach() {
@@ -108,6 +89,11 @@ export default class DlgEditCinema extends ViewBase {
       line-height: 24px;
       text-align: center;
     }
+  }
+  p {
+    font-size: 18px;
+    text-align: left;
+    padding-left: 106px;
   }
 }
 

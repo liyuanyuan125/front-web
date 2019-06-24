@@ -9,7 +9,7 @@ import { Type } from './types'
 import { MapType } from '@/util/types'
 import moment from 'moment'
 import { groupBy } from 'lodash'
-import { percent } from '@/util/dealData'
+import { percent, readableNumber } from '@/util/dealData'
 
 const urlMapStore = {
   // 品牌接口
@@ -93,9 +93,6 @@ export default class FetchData {
           // TODO: 假设 bigFigure 是大图字段的名称，请根据实际情况进行更改
           bigFigure,
 
-          positive: goodWords,
-          negative: badWords,
-
           movies,
         }
       }
@@ -128,26 +125,21 @@ export default class FetchData {
         { name: '负面', value: percent(passive.rate, 1), color: '#57b4c9' },
       ],
 
-      wordCloudGood: goodWords && goodWords.length > 0
-        ? cloudData('正面热词', '#ca7273', goodWords)
-        : null,
-
-      wordCloudBad: badWords && badWords.length > 0
-        ? cloudData('负面热词', '#57b4c9', badWords)
-        : null,
-
       hotFilmGroup: movies && movies.length > 0
         ? (() => {
           const list = (movies as any[]).map(it => {
             const mdate = moment(String(it.releaseDate))
+            const hasShow = it.releaseStatus >= 3
+            const { custom, customPredict } = it
             return {
               ...it,
-              date: mdate.format('YYYY-MM-DD'),
+              date: mdate.format('MM月DD日'),
               month: mdate.month() + 1,
               // 是否已上映，上映状态描述在 https://yapi.aiads-dev.com/project/161/interface/api/4974
-              hasShow: it.releaseStatus >= 3,
+              hasShow,
               // 上映天数
               showDays: moment.duration(moment.now() - Number(mdate)).days(),
+              boxOffice: readableNumber(hasShow ? custom : customPredict),
             }
           })
           const group = groupBy(list, 'month')
