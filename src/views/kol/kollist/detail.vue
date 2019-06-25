@@ -29,28 +29,28 @@
           <template slot-scope="{ row }" slot="flansFace">
             <div>
               <p class="flans-box">
-                <span>男性：</span>  <span>{{row.femalePercent}}%</span>
+                <span>男性：</span>  <span>{{formatnums(row.femalePercent/100, '%')}}</span>
               </p>
               <p class="flans-box">
-                <span>女性：</span>  <span>{{row.malePercent}}%</span>
+                <span>女性：</span>  <span>{{formatnums(row.malePercent/100, '%')}}</span>
               </p>
             </div>
           </template>
           <template slot-scope="{ row }" slot="discuss">
             <div>
-              <span v-if="row.averageComment">{{formatNum(row.averageComment)}}</span>
+              <span v-if="row.averageComment">{{formatnums(row.averageComment)}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="like">
             <div>
-              <span v-if="row.averageLike">{{formatNum(row.averageLike)}}w+</span>
+              <span v-if="row.averageLike">{{formatnums(row.averageLike, 'w+')}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="transmit">
             <div>
-              <span v-if="row.averageShare">{{formatNum(row.averageShare)}}w+</span>
+              <span v-if="row.averageShare">{{formatnums(row.averageShare, 'w+')}}</span>
               <span v-else>-</span>
             </div>
           </template>
@@ -191,6 +191,20 @@ export default class DlgEditCinema extends ViewBase {
         }
       }
     ]
+  }
+
+  formatnums(val: any, msg: any = '') {
+    if (val == '0') {
+      return '-'
+    }
+    const num = (val + '').split('.')
+    if (num.length > 1) {
+      const numbers = formatCurrency(val, 2)
+      return `${numbers}${msg}`
+    } else {
+      const numbers = formatCurrency(val, 0)
+      return `${numbers}${msg}`
+    }
   }
 
   async cancelShop(id: any) {
