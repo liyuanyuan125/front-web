@@ -99,7 +99,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import {
@@ -108,7 +108,7 @@ import {
   formatNumber
 } from '@/util/validateRules'
 import BarCategoryStack from '@/components/chartsGroup/barCategoryStack/'
-import { fans, brands } from '@/api/kolCompare'
+import { fans, getBrands, compare } from '@/api/kolCompare'
 import WorksPane from './components/works.vue'
 import CitysPane from './components/citys.vue'
 import TotalPane from './components/total.vue'
@@ -127,7 +127,10 @@ import SelectModal from './dlg.vue'
     SelectModal
   }
 })
-export default class Temporary extends ViewBase {
+export default class KolCompare extends ViewBase {
+  @Prop({ type: Number, default: 0 }) id!: number
+  @Prop({ type: Array, default: () => [] }) compareIds!: any[]
+
   columns = [
     { title: 'KOL名称', key: 'name', align: 'center' },
     {
@@ -259,10 +262,10 @@ export default class Temporary extends ViewBase {
 
   // 对比目标
   kol: any = {
-    id: 0,
-    color: '#DA6C70',
-    nickName: 'papi',
-    avatar: 'http://sina.lt/gdYZ'
+    // id: 2061,
+    // color: '#DA6C70',
+    // nickName: 'papi',
+    // avatar: 'http://sina.lt/gdYZ'
   }
 
   // 对比项 颜色
@@ -270,56 +273,22 @@ export default class Temporary extends ViewBase {
 
   // 对比项
   compareList: any[] = [
-    {
-      id: 1,
-      nickName: '陈翔六点半',
-      avatar:
-        'http://sina.lt/gdYZ'
-    },
-    {
-      id: 2,
-      nickName: '办公室小野',
-      avatar:
-        'http://sina.lt/gdYZ'
-    },
-    {
-      id: 3,
-      nickName: '一禅小和尚',
-      avatar:
-        'http://sina.lt/gdYZ'
-    },
-    {
-      id: 4,
-      nickName: '李子柒',
-      avatar:
-        'http://sina.lt/gdYZ'
-    }
+    // {
+    //   id: 1,
+    //   nickName: '陈翔六点半',
+    //   avatar:
+    //     'http://sina.lt/gdYZ'
+    // }
   ]
 
   fansData: any = {
     title: '',
     dict1: [],
     dict2: [
-      {
-        key: 0,
-        text: 'papi'
-      },
-      {
-        key: 1,
-        text: '陈翔六点半'
-      },
-      {
-        key: 2,
-        text: '办公室小野'
-      },
-      {
-        key: 3,
-        text: '一禅小和尚'
-      },
-      {
-        key: 4,
-        text: '李子柒'
-      }
+      // {
+      //   key: 0,
+      //   text: 'papi'
+      // },
     ],
     currentTypeIndex: 0,
     initDone: false,
@@ -488,15 +457,39 @@ export default class Temporary extends ViewBase {
     ]
 
   }
-  fecthData() {
-    const { id, ids } = this.$route.params
-    // console.log( id , ids )
+
+  async fecthData() {
+    const { id, compareIds } = this.$route.params
+    const query = {
+      ids: id + ',' + compareIds
+    }
+    try {
+      const {
+        data: {
+          items,
+          brands,
+          brandCategoryList,
+          ageCategoryList
+        }
+      } = await compare(query)
+      this.fansData.dict2 = ageCategoryList.map((it: any) => {
+        return {
+          text: it.text,
+          key: it.key
+        }
+      })
+    } catch (ex) {
+      this.handleError(ex)
+    }
     this.fansData.initDone = true
   }
+
   typeChangeHander() {}
+
   mounted() {
     this.fecthData()
   }
+
   channelChangeHandle(name: string) {
     if ( name === '') { return }
     switch ( name ) {
@@ -516,15 +509,19 @@ export default class Temporary extends ViewBase {
         this.totalIndex = 0
     }
   }
+
   channelChangeCb(param: any) {
     this.channelChangeHandle(param.name)
   }
+
   selectedHandle(cart: any) {
     // console.log( cart)
   }
+
   addItemHandle() {
     (this.$refs.SelectModal as any).init()
   }
+
   removeItemHandle(val: string) {
     this.compareList = this.compareList.filter(item => item.id  !== val)
   }
