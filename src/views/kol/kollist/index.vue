@@ -80,20 +80,26 @@
             <div v-else>{{row.categoryName}}</div>
           </template>
           <template slot-scope="{ row }" slot="read">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgReadCount)}}w+</span>
+            <div>
+              <span v-if="row.avgReadCount">{{formatNum(row.avgReadCount)}}w+</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="flansNumber">
-            {{formatNum(row.followersCount)}}
+            <span v-if="row.followersCount">{{formatNum(row.followersCount)}}</span>
+            <span v-else>-</span>
           </template>
           <template slot-scope="{ row }" slot="flansFace">
             <div>
               <p class="flans-box">
-                <span>男性：</span>  <span>{{row.maleFans}}%</span>
+                <span>男性：</span>  
+                <span v-if="row.maleFans">{{row.maleFans}}%</span>
+                <span v-else>-</span>
               </p>
               <p class="flans-box">
-                <span>女性：</span>  <span>{{row.femaleFans}}%</span>
+                <span>女性：</span>
+                <span v-if="row.femaleFans">{{row.femaleFans}}%</span>
+                <span v-else>-</span>
               </p>
               <div>
                 <a @click="viewArea(row.areaId, row.id)" >查看地域</a>
@@ -102,26 +108,39 @@
             </div>
           </template>
           <template slot-scope="{ row }" slot="discuss">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgCommentsCount)}}</span>
+            <div>
+              <span v-if="row.avgCommentsCount">{{formatNum(row.avgCommentsCount)}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="like">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgAttitudesCount)}}w+</span>
+            <div>
+              <span v-if="row.avgAttitudesCount">{{formatNum(row.avgAttitudesCount)}}w+</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="transmit">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgRepostsCount)}}w+</span>
+            <div>
+              <span v-if="row.avgRepostsCount">{{formatNum(row.avgRepostsCount)}}w+</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="price">
             <div v-if="row.prices">
-              <p v-for="it in row.prices" :key="it" style="margin-top: 5px">
-                {{it}}
-              </p>
+              <Tooltip placement="top">
+                <div class="prices">
+                  <p v-for="it in row.prices" :key="it" style="margin-top: 5px">
+                    {{it}}
+                  </p>
+                </div>
+                <div slot="content">
+                  <p v-for="it in row.prices" :key="it" style="margin-top: 5px">
+                    {{it}}
+                  </p>
+                </div>
+              </Tooltip>
             </div>
+            <div v-else>-</div>
           </template>
           <template slot-scope="{ row }" slot="action">
             <div class="table-action">
@@ -150,7 +169,7 @@
         </Table>
       </div>
 
-      <Page :total="total" v-if="total>0" class="btnCenter"
+      <!-- <Page :total="total" v-if="total>0" class="btnCenter"
         :current="form.pageIndex"
         :page-size="form.pageSize"
         :page-size-opts="[10, 20, 50, 100]"
@@ -158,7 +177,8 @@
         show-sizer
         show-elevator
         @on-change="sizeChangeHandle"
-        @on-page-size-change="currentChangeHandle"/>
+        @on-page-size-change="currentChangeHandle"/> -->
+        <pagination :pageList="pageList" :total="total" @uplist="KolSeach"></pagination>
       </div>
       <Detail ref='detailbox' v-model="type" @done="checkDetailSet" />
     </div>
@@ -170,7 +190,7 @@
           <Icon @click="detailShow" type="ios-arrow-up" class="ios-type" />
         </div>
         <div>
-          <Button type="primary" class="button-ok" @click="next">立即绑定</Button>
+          <Button type="primary" class="button-ok" @click="next">立即预定</Button>
         </div>
       </div>
     </div>
@@ -194,6 +214,7 @@ import { clean } from '@/fn/object.ts'
 import { getpersons, delcollect } from '@/api/mycollect.ts'
 import { kolList } from '@/api/collect.ts'
 import { findkol } from '@/api/shopping'
+import pagination from '@/components/page.vue'
 
 // 保持互斥
 const keepExclusion = <T extends any>(
@@ -224,7 +245,8 @@ const defaultForm: any = {
   components: {
     Header,
     AreaModal,
-    Detail
+    Detail,
+    pagination
   },
   directives: {
     clickoutside
@@ -265,6 +287,12 @@ export default class Main extends ViewBase {
   yudingListId: any = []
   kolIds: any = []
 
+  get pageList() {
+    return {
+      pageIndex: this.form.pageIndex,
+      pageSize: this.form.pageSize
+    }
+  }
   get columns() {
     const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号', '全部账号', '全部账号']
     return [
@@ -289,7 +317,7 @@ export default class Main extends ViewBase {
       },
       {
         title: '粉丝画像',
-        align: 'center',
+        align: 'left',
         minWidth: 40,
         slot: 'flansFace'
       },
@@ -908,6 +936,14 @@ export default class Main extends ViewBase {
       cursor: pointer;
     }
   }
+  .prices {
+    cursor: pointer;
+    p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
   .table-name {
     display: flex;
     padding: 20px 0;
@@ -957,6 +993,17 @@ export default class Main extends ViewBase {
     margin-left: 100px;
     border-radius: 26px;
     .button-style(#fff, #f18d94);
+  }
+}
+/deep/ .page-list {
+  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+    color: #00202d;
+  }
+  .ivu-page-item.ivu-page-item-active {
+    background: #00202d;
+    a {
+      color: #fff;
+    }
   }
 }
 </style>

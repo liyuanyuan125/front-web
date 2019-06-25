@@ -80,7 +80,7 @@ export default class FetchData {
           finish,
 
           // TODO: 假设 bigFigure 是大图字段的名称，请根据实际情况进行更改
-          bigFigure,
+          headImgBigUrl,
 
           recommendMovies,
           movies,
@@ -96,13 +96,12 @@ export default class FetchData {
 
     // 产品图片列表
     const imgList = imgsUrl || []
-    const figure = this.isItem ? imgList[0] : bigFigure
+    const bigFigure = this.isItem ? imgList[0] : headImgBigUrl
 
     const result = {
       item: {
         name,
         logoUrl,
-        figure,
         jyIndex,
         jyTrend,
         malePercent: percent(malePercent),
@@ -112,6 +111,8 @@ export default class FetchData {
         onexecute,
         finish,
       },
+
+      bigFigure,
 
       commentData: [
         { name: '正面', value: percent(positive.rate, 1), color: '#ca7273' },

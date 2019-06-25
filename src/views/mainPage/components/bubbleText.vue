@@ -18,7 +18,7 @@ export default class BubbleText extends Vue {
 
   get sortList() {
     const textList = this.list || []
-    return bubbleSort.map(i => textList[i]).filter(it => it != null)
+    return bubbleSort.map(i => textList[i] || '')
   }
 }
 </script>
