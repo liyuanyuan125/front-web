@@ -1519,6 +1519,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       authIsMenu: true,
+      title: '新建第三方监测',
     },
   },
 
