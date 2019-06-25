@@ -3,7 +3,7 @@
     <h4 class="pane-head flex-box" v-if="title">
       <em>
         {{title}}
-        <Tooltip class="tip" :content="tooltip" max-width="200" v-if="tooltip">?</Tooltip>
+        <Tooltip :content="tooltip" v-if="tooltip"/>
       </em>
 
       <router-link :to="more" class="more-link" v-if="more">更多 &gt;</router-link>
@@ -62,15 +62,5 @@ export default class Pane extends Vue {
 
 .pane-body {
   position: relative;
-}
-
-.tip {
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  text-align: center;
-  color: #255771;
-  border-radius: 100%;
-  background-color: rgba(255, 255, 255, .6);
 }
 </style>
