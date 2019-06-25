@@ -519,7 +519,7 @@ export default class Main extends ViewBase {
         const y = e.clientY
         const end: any  = this.$refs.end
         this.checkDetail = true
-        const left = end.getBoundingClientRect().left || window.screen.width / 3 + 100
+        const left = end.getBoundingClientRect().left || window.screen.width - 300
         const top = end.getBoundingClientRect().top || window.screen.availHeight - 120
         dom.style.cssText = `left: ${x }px; top: ${ y - 80}px; display: block`
         animation(dom, {
@@ -989,7 +989,7 @@ export default class Main extends ViewBase {
   .check-title {
     color: #fff;
     font-size: 18px;
-    margin-left: 30%;
+    margin-left: 50%;
   }
   .ios-type {
     cursor: pointer;
@@ -997,7 +997,7 @@ export default class Main extends ViewBase {
     margin-left: 20px;
   }
   .button-ok {
-    margin-left: 100px;
+    margin-left: 30px;
     border-radius: 26px;
     .button-style(#fff, #f18d94);
   }
