@@ -31,8 +31,7 @@
           <div>
             <p>4</p>
             <p>
-              品牌上传资源
-              <br>使用照片
+              品牌上传使用图片
             </p>
           </div>
         </li>
@@ -121,18 +120,18 @@
         <Row :gutter="10" v-if="done" type="flex" justify="start" class="res-row">
           <Col span="4" v-for="(item, index) in dataList" :key="index" class="res-col">
             <div class="res-item">
-              <router-link :to="{ name: 'film-movie', params: { id: item.movie_id}}">
+              <router-link target='_blank' :to="{ name: 'film-movie', params: { id: item.movie_id}}">
                 <div class="poster" >
                   <img :src="item.main_pic">
                 </div>
                 <div class="movtitle cut-text">{{item.name_cn}}</div>
-                <p class="movscore">{{handleFixed(item.jy_index)}}</p>
+                <p class="movscore">{{getItemValue(item)}}</p>
               </router-link>
             </div>
           </Col>
         </Row>
-        <div v-else style="width: 100%; height: 400px; text-align: center">
-          <TinyLoading/>
+        <div v-else class="loading-box">
+          <TinyLoading />
         </div>
       </div>
       <Page
@@ -152,10 +151,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import moment from 'moment'
-import { formatTimestamp, formatTimes, formatNumber } from '@/util/validateRules'
 import { fetchList } from '@/api/filmCooperation'
-import DetailNavBar from './components/detailNavBar.vue'
 import TinyLoading from '@/components/TinyLoading.vue'
 
 const typeListMore: any[] = []
@@ -165,7 +161,7 @@ const typeListMore: any[] = []
     TinyLoading
   }
 })
-export default class Temporary extends ViewBase {
+export default class CooperationFilmList extends ViewBase {
   done = false
   filterShowMore = false
   filterShowMoreIcon = 'ios-arrow-down'
@@ -247,6 +243,7 @@ export default class Temporary extends ViewBase {
   async typeChangeHander4(index: number = 0) {}
 
   async fetchHandler() {
+    this.done = false
     const that: any = this
     const mockObj = {
       ...this.form
@@ -268,7 +265,10 @@ export default class Temporary extends ViewBase {
           release_date: it.release_date,
           main_pic: it.main_pic,
           release_status: it.release_status,
-          jy_index: it.jy_index
+          jy_index: it.jy_index,
+          want_see: it.want_see,
+          hots: it.hots,
+          comments_score: it.comments_score
         }
       })
       this.totalPages = totalCount
@@ -286,12 +286,25 @@ export default class Temporary extends ViewBase {
 
   handleChange() {
     this.form.moveTypeCode = 0
+    this.form.pageIndex = 1
     this.restHandler()
     this.fetchHandler()
   }
 
-  handleFixed(val: any) {
-    return val != 0 ? (val / 100).toFixed(2) : val
+  getItemValue(it: any) {
+    switch ( this.form.sortBy ) {
+      case 'hots':
+        return it.hots
+        break
+      case 'wantSeeCount':
+        return it.want_see
+        break
+      case 'commentsScore':
+        return it.comments_score != 0 ? (it.comments_score / 100).toFixed(2) : it.comments_score
+        break
+      default:
+        return it.jy_index != 0 ? (it.jy_index / 100).toFixed(2) : it.jy_index
+    }
   }
 
   restHandler() {
@@ -395,7 +408,7 @@ export default class Temporary extends ViewBase {
       opacity: 0.8;
       /deep/ .ivu-form-item-label {
         color: #fff;
-        padding: 6px 12px 10px 0;
+        padding: 6px 0 10px 0;
       }
       /deep/ .ivu-radio-group {
         .showMore.ivu-radio-wrapper-checked {
@@ -450,6 +463,8 @@ export default class Temporary extends ViewBase {
           box-shadow: none !important;
           color: #00202d;
           border-radius: 0;
+          padding: 0;
+          margin-right: 50px;
           &::before,
           &::after {
             display: none;
@@ -486,8 +501,8 @@ export default class Temporary extends ViewBase {
           margin-bottom: 66px;
           .poster {
             img {
-              max-width: 168px;
-              max-height: 238px;
+              width: 168px;
+              height: 238px;
             }
           }
           .movtitle {
@@ -498,13 +513,13 @@ export default class Temporary extends ViewBase {
             overflow: hidden;
             text-overflow: ellipsis;
             width: 168px;
+            line-height: 36px;
             white-space: nowrap;
           }
           .movscore {
             font-size: 24px;
             font-weight: 500;
             color: rgba(0, 32, 45, 1);
-            line-height: 16px;
           }
         }
       }
@@ -541,5 +556,14 @@ export default class Temporary extends ViewBase {
 }
 .res-item {
   cursor: pointer;
+}
+.loading-box {
+  width: 100%;
+  height: 500px;
+  text-align: center;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
 }
 </style>
