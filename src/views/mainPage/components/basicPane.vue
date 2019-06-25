@@ -75,7 +75,7 @@
 
       <div
         class="zone movie-zone effect-lightning"
-        v-if="movie != null && movie.preview && movieList.length > 0"
+        v-if="movie != null"
       >
         <VideoPreviewer
           :url="movie.preview"
