@@ -846,7 +846,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     props: ({ params: { id, compareIds } }: Route) => {
       return {
         id: +id,
-        compareIds: parse(compareIds),
+        compareIds: parse(compareIds).map(it => +it),
       }
     }
   },
