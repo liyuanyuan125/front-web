@@ -312,7 +312,9 @@ export default class BasicPane extends Vue {
 
 .name-zone {
   font-size: 24px;
+  line-height: 1.2;
   padding: 28px 0 13px 4px;
+  margin-right: 46px;
 }
 
 .name {
@@ -321,9 +323,9 @@ export default class BasicPane extends Vue {
 
 .heart {
   position: relative;
-  top: 6px;
-  left: 10px;
-  font-size: 18px;
+  top: 7px;
+  left: 3px;
+  font-size: 22px;
   vertical-align: top;
   cursor: pointer;
   transition: transform ease 200ms;

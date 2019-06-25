@@ -32,6 +32,7 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -41,7 +42,7 @@ import {
   customerRole,
   customerSet
 } from '@/api/authUser'
-import { getUser } from '@/store.ts'
+import { getUser } from '@/store'
 import { isArray, isString } from '@/fn/type.ts'
 import { uniq } from 'lodash'
 import { toast } from '@/ui/modal'
