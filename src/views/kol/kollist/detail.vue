@@ -6,7 +6,7 @@
       <div class="table-action" @click.stop="flag">
         <a>清空购物车</a>
       </div>
-      <Table height="300" :loading="loading" :columns="columns" :data="tabledata">
+      <Table v-if='tabledata.length > 0' height="300" :loading="loading" :columns="columns" :data="tabledata">
         <template slot-scope="{ row }" slot="name">
             <div class="table-name">
               <img :src="row.accountImageUrl" width="70px" height="70px" alt=""> 
@@ -14,15 +14,17 @@
             </div>
           </template>
           <template slot-scope="{ row }" slot="type">
-            {{accountCategoryList.filter((it) => it.key == row.accountTypeCode)[0].text}}
+            {{formatmap(row)}}
           </template>
           <template slot-scope="{ row }" slot="read">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgReadCount)}}w+</span>
+            <div>
+              <span v-if="row.avgReadCount">{{formatNum(row.avgReadCount)}}w+</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="flansNumber">
-            {{formatNum(row.fans)}}
+            <span v-if="row.fans">{{formatNum(row.fans)}}</span>
+            <span v-else>-</span>
           </template>
           <template slot-scope="{ row }" slot="flansFace">
             <div>
@@ -35,18 +37,21 @@
             </div>
           </template>
           <template slot-scope="{ row }" slot="discuss">
-            <div style="text-align:center">
-              <span>{{formatNum(row.averageComment)}}</span>
+            <div>
+              <span v-if="row.averageComment">{{formatNum(row.averageComment)}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="like">
-            <div style="text-align:center">
-              <span>{{formatNum(row.averageLike)}}w+</span>
+            <div>
+              <span v-if="row.averageLike">{{formatNum(row.averageLike)}}w+</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="transmit">
-            <div style="text-align:center">
-              <span>{{formatNum(row.averageShare)}}w+</span>
+            <div>
+              <span v-if="row.averageShare">{{formatNum(row.averageShare)}}w+</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="price">
@@ -190,7 +195,7 @@ export default class DlgEditCinema extends ViewBase {
 
   async cancelShop(id: any) {
     try {
-      await delcollect({
+      await delShopping({
         channelCode: this.titles[this.type],
         channelDataId: id
       })
@@ -224,6 +229,14 @@ export default class DlgEditCinema extends ViewBase {
     } catch (ex) {
 
     }
+  }
+
+  formatmap(val: any) {
+    const msg = this.accountCategoryList.filter(it => it.key == val.accountTypeCode)
+    if (msg.length > 0) {
+      return msg[0].text
+    }
+    return '-'
   }
 
   formatNum(data: any) {
@@ -276,7 +289,7 @@ export default class DlgEditCinema extends ViewBase {
                 this.statusList = data.xiaohongshuPublishCategoryList
           break
       }
-      this.accountCategoryList = data.xiaohongshuPublishCategoryList
+      this.accountCategoryList = data.accountCategoryList
     } catch (ex) {
       this.handleError(ex)
     }

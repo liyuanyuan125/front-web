@@ -2,7 +2,7 @@
   <div class="page">
     <ul class="">
       <li @click="active(index, it.id)" :class="step == index ? 'liactive' : ''" v-for="(it, index) in name" :key='index'>
-        <img width="34px" :src="it.url" alt="">
+        <img :width="it.id=='kuaishou' ? '30px' : '36px'" :src="it.url" alt="">
         {{it.name}}
       </li>
     </ul>
@@ -28,7 +28,7 @@ export default class App extends ViewBase {
     {name: '微博', id: 'weibo', url: xinlang},
     {name: '微信', id: 'weixin', url: weixin},
     {name: '抖音', id: 'douyin', url: douyin},
-    {name: '快手', id: 'kuaishou', url: kuaisou},
+    {name: '快手', width: '30', id: 'kuaishou', url: kuaisou},
     // {name: '小红书', id: 'xiaohonghsu', url: xiaohongshu},
   ]
   step = this.value
@@ -74,13 +74,20 @@ export default class App extends ViewBase {
     cursor: pointer;
     &:hover {
       color: #fff;
+      img {
+        opacity: 1;
+      }
     }
     img {
       vertical-align: middle;
+      opacity: .6;
     }
   }
   .liactive {
     color: #fff;
+    img {
+      opacity: 1;
+    }
   }
 }
 .active {

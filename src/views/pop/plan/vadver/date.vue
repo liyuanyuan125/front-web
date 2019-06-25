@@ -11,15 +11,22 @@
       @on-ok="handleOk"
     >
     </DatePicker>
+    <!-- {{leftDatePanelLabel}} -->
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { getcalendars } from '@/api/popPlan'
 
 @Component
 export default class Apps extends ViewBase {
+
+  get years() {
+    const labels = (this.$refs.dates as any).$refs.pickerPanel.rightDatePanelLabel.labels[0]
+    return parseInt(labels.label, 10)
+  }
 
   @Prop({ type: [Array, String], default: ''}) value: any
 
@@ -29,6 +36,22 @@ export default class Apps extends ViewBase {
 
   opentios = {
     shortcuts: []
+  }
+
+  mounted() {
+    this.init()
+  }
+
+  async init() {
+    try {
+      await getcalendars({
+        years: this.years + '',
+        pageIndex: 1,
+        pageSize: 500
+      })
+    } catch (ex) {
+
+    }
   }
 
   handleClick() {
