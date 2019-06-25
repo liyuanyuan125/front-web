@@ -170,6 +170,7 @@ export default class Main extends ViewBase {
   overflow: hidden;
   img {
     max-width: 130px;
+    width: 100%;
   }
   span {
     width: 50px;

@@ -60,7 +60,7 @@
                 <Row>
                   <Col span='8'>
                     <div class='div-img'>
-                      <img @click='jump(it.id)' :src='it.movieMainPic' alt="">
+                      <img @click='jump(it.movieId)' :src='it.movieMainPic' alt="">
                     </div>
                   </Col>
                   <Col span='14' class='row-x'>
@@ -300,6 +300,7 @@ export default class Main extends ViewBase {
 .div-img {
   width: 90px;
   height: 120px;
+  cursor: pointer;
   img {
     width: 100%;
     height: 100%;

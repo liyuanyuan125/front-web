@@ -58,7 +58,6 @@
                 <Input v-model="dataForm.projectDescription" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广"/>
               </FormItem>
             </Col>
-            <Col span="12" style='line-height: 40px;'>&nbsp;&nbsp;( 选填 )</Col>
           </Row>
           <Row class='add-line'>希望获得片方的资源</Row>
          <Row class='box' style='height: 200px ;padding: 20px;'>
@@ -577,9 +576,6 @@ export default class Main extends ViewBase {
   background: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 1);
-  &::-webkit-input-placeholder {
-    color: #00202d;
-  }
 }
 /deep/ .ivu-select-selection {
   height: 40px;
@@ -590,9 +586,6 @@ export default class Main extends ViewBase {
 /deep/ .ivu-select-input {
   margin-top: 3px;
   color: #00202d;
-  &::-webkit-input-placeholder {
-    color: #00202d;
-  }
 }
 /deep/ .ivu-form .ivu-form-item-label {
   font-size: 14px;
@@ -645,7 +638,7 @@ export default class Main extends ViewBase {
   white-space: nowrap;
   padding-left: 8px;
   padding-right: 24px;
-  color: #00202d;
+  // color: #00202d;
 }
 /deep/ .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
   display: block;
@@ -657,6 +650,6 @@ export default class Main extends ViewBase {
   white-space: nowrap;
   padding-left: 8px;
   padding-right: 24px;
-  color: #00202d;
+  // color: #00202d;
 }
 </style>
