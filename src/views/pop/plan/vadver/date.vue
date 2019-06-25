@@ -21,7 +21,7 @@ import ViewBase from '@/util/ViewBase'
 import { getcalendars } from '@/api/popPlan'
 
 @Component
-export default class Apps extends ViewBase {
+export default class Dates extends ViewBase {
 
   get years() {
     const labels = (this.$refs.dates as any).$refs.pickerPanel.rightDatePanelLabel.labels[0]

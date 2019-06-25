@@ -107,7 +107,6 @@ const timeFormat = 'YYYYMMDD'
 @Component({
   components: {
     weekDatePicker,
-    Date
   }
 })
 export default class Promotion extends ViewBase {
@@ -154,8 +153,8 @@ export default class Promotion extends ViewBase {
       if (value[0] == '') {
         callback(new Error('请选择投放排期'))
       } else {
-        const begin: any = new Date(value[0]).getTime()
-        const end: any = new Date(value[1]).getTime()
+        const begin: any = (new Date(value[0]) as any).getTime()
+        const end: any = (new Date(value[1]) as any).getTime()
         const flag = (end - begin) / 86400000 % 7
         if (flag == 6) {
           callback()
@@ -219,8 +218,10 @@ export default class Promotion extends ViewBase {
       } else {
         this.form.videoId = data.item.videoId
       }
-      this.form.advertime = [new Date(this.formatDate(data.item.beginDate)),
-        new Date(this.formatDate(data.item.endDate))]
+      const begin: any = this.formatDate(data.item.beginDate)
+      const end: any = this.formatDate(data.item.endDate)
+      this.form.advertime = [new Date(begin),
+        new Date(end)]
     } catch (ex) {
       this.handleError(ex)
     }

@@ -232,7 +232,7 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   formatmap(val: any) {
-    const msg = this.accountCategoryList.filter(it => it.key == val.accountTypeCode)
+    const msg = this.accountCategoryList.filter((it: any) => it.key == val.accountTypeCode)
     if (msg.length > 0) {
       return msg[0].text
     }
