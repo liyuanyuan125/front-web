@@ -126,16 +126,16 @@
             </div>
           </template>
           <template slot-scope="{ row }" slot="price">
-            <div v-if="row.prices">
+            <div v-if="row.price.length > 0">
               <Tooltip placement="top">
                 <div class="prices">
-                  <p v-for="it in row.prices" :key="it" style="margin-top: 5px">
-                    {{it}}
+                  <p v-for="it in row.price" :key="it.key" style="margin-top: 5px">
+                    {{it.key}} {{it.value || '-'}}
                   </p>
                 </div>
                 <div slot="content">
-                  <p v-for="it in row.prices" :key="it" style="margin-top: 5px">
-                    {{it}}
+                  <p v-for="it in row.price" :key="it.key" style="margin-top: 5px">
+                    {{it.key}} {{it.value || '-'}}
                   </p>
                 </div>
               </Tooltip>
@@ -293,6 +293,7 @@ export default class Main extends ViewBase {
       pageSize: this.form.pageSize
     }
   }
+
   get columns() {
     const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号', '全部账号', '全部账号']
     return [
@@ -374,6 +375,10 @@ export default class Main extends ViewBase {
         slot: 'action'
       }
     ]
+  }
+
+  formatnums(val: any) {
+
   }
 
   areabox(check: boolean) {
@@ -629,6 +634,7 @@ export default class Main extends ViewBase {
     this.yudingList = val
     this.yudingListId = this.yudingList.map((it: any) => it.kolId)
     this.KolSeach()
+    this.kolinit()
   }
 
   // 粉丝数相加
@@ -925,7 +931,8 @@ export default class Main extends ViewBase {
     color: #001f2c;
   }
   /deep/ .ivu-table-tip td {
-    margin-top: 50px;
+    background: rgba(255, 255, 255, 0);
+    padding-top: 60px;
   }
   /deep/ .ivu-table-cell {
     padding-right: 10px;
@@ -962,7 +969,7 @@ export default class Main extends ViewBase {
     position: absolute;
     margin-left: 60px;
     z-index: 999;
-    margin-top: -130px;
+    margin-top: -120px;
   }
 }
 .btnCenter {
@@ -998,6 +1005,11 @@ export default class Main extends ViewBase {
 /deep/ .page-list {
   .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
     color: #00202d;
+  }
+  .ivu-page-item {
+    a {
+      color: #00202d;
+    }
   }
   .ivu-page-item.ivu-page-item-active {
     background: #00202d;

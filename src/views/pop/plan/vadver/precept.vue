@@ -32,22 +32,6 @@
                   <p style="margin-left: 20px" v-if="it.sexCodes == 'man'">男性</p>
                   <p style="margin-left: 20px" v-else-if="it.sexCodes == 'woman'">女性</p>
                   <p  style="margin-left: 20px" v-else>-</p>
-                  <!-- <div class="file-sex-box">
-                    <div v-if="it.sexCodes == 'woman'">
-                      <div class="file-sex-man" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.7 + 20}px`}">
-                        <img width="30px" height="30" src="./assets/man.png" alt="">
-                      </div>
-                    </div>
-                    <span style="color: #57B4C9">男性：{{it.matching}}%</span>
-                  </div>
-                  <div class="file-sex-box">
-                    <div>
-                      <div class="file-sex-woman" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.7 + 20}px`}">
-                        <img width="30px" height="30" src="./assets/woman.png" alt="">
-                      </div>
-                    </div>
-                    <span style="color: #CA7273">女性：{{it.matching}}%</span>
-                  </div> -->
                 </div>
 
                 <div class="film-buttom">
