@@ -143,6 +143,7 @@ import { toThousands } from '@/util/dealData'
 
 import NavSwiper from './navSwiper.vue'
 import { swiperSlide } from 'vue-awesome-swiper'
+import { backImage } from '@/store'
 
 import moment from 'moment'
 
@@ -178,6 +179,8 @@ export default class BrandLayout extends ViewBase {
 
   item = {}
 
+  bigFigure: string | null = null
+
   commentData: any = null
 
   recommendList: any = null
@@ -195,6 +198,10 @@ export default class BrandLayout extends ViewBase {
     this.init()
   }
 
+  beforeDestroy() {
+    backImage('')
+  }
+
   init() {
     this.initHome()
   }
@@ -202,6 +209,7 @@ export default class BrandLayout extends ViewBase {
   async initHome() {
     const {
       item,
+      bigFigure,
       commentData,
       recommendList,
       hotFilmGroup,
@@ -209,11 +217,14 @@ export default class BrandLayout extends ViewBase {
     } = await this.fetchData.getHome()
 
     this.item = item
+    this.bigFigure = bigFigure
     this.commentData = commentData
     this.recommendList = recommendList
     this.hotFilmTab = (hotFilmGroup && hotFilmGroup[0].name) || ''
     this.hotFilmGroup = hotFilmGroup
     this.bubbleList = bubbleList
+
+    backImage(bigFigure || '')
   }
 
   @Watch('type')

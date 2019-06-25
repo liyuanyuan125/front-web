@@ -1,5 +1,5 @@
 <template>
-  <div class="site-layout">
+  <div class="site-layout" :style="layoutStyle">
     <header
       class="site-header flex-box"
       :style="headerStyle"
@@ -103,6 +103,7 @@ import event from '@/fn/event'
 import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
 import { devInfo } from '@/util/dev'
 import { usePosition } from '@/util/scroll'
+import { backImage } from '@/store'
 
 let instance: any = null
 let viewName: string = 'default'
@@ -205,6 +206,15 @@ export default class MainLayout extends ViewBase {
 
     // 最后的手段：硬编码映射关系
     return this.siderActiveMap[name]
+  }
+
+  get layoutStyle() {
+    const image = backImage()
+    return {
+      backgroundImage: image
+        ? `url(${image})`
+        : null
+    }
   }
 
   // 沉浸式 header

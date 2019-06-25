@@ -3,7 +3,7 @@ import { at, keyBy, sumBy } from 'lodash'
 import { KeyText, MapType } from '@/util/types'
 import { slice } from '@/fn/object'
 import { dayOffsetRange } from '@/util/date'
-import { percent, dot } from '@/util/dealData'
+import { percent, dot, intDate } from '@/util/dealData'
 
 const getNames = (keys: string[], list: KeyText[]) => {
   const map = keyBy(list, 'key')
@@ -240,7 +240,7 @@ export async function getMovie(id: number) {
       preview: trailers && trailers[0],
       director: dot(personMap, 'Director[0].name'),
       type: getNames(types, typeList).join('/'),
-      date: releaseDate,
+      date: intDate(releaseDate),
       address: getNames(countries, countryCodeList).join('/')
     },
 

@@ -69,7 +69,7 @@
             title="全网热度"
             :data="hotData"
             :more="{ name: 'film-detail-hot', params: {id} }"
-            tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
+            tooltip=""
             :formatter="hotFormatter"
             class="hot-pane"
           />
