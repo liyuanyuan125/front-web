@@ -4,35 +4,35 @@
   	<div class='director '>
   		<Row class='title'>导演&nbsp;Director</Row>
   		<Row class='bai-w' v-for='(it,index) in person.Director' :key='index'>
-  			<Row  class='col-img'><img :src="it.headImg == null  || it.headImg == '' ? 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg' : it.headImg" alt=""></Row>
+  			<Row  class='col-img'><img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt=""></Row>
   			<Row class='r-h'>
-  				<Row class='de-ro'>{{it.name}}<br>{{it.nameEn}}</Row>
+  				<Row class='de-ro' @click='jump(it.id)'>{{it.name}}<br>{{it.nameEn}}</Row>
   				<Row class='de-ro-two'>导演 Director</Row>
   				<Row class='de-ro-thr'>代表作品:<br> <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;'>
-           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>{{its.name + ' '}}</em></span></div></Row>
+           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name + ' '}}》</em></span></div></Row>
   			</Row>
   		</Row>
       <div v-if='person.Director.length == 0'>暂无导演</div>
   	</div>
     <!-- 演员 -->
   	<div class='cast'>
-  		<Row  class='title'>演员&nbsp;actor</Row>
+  		<Row  class='title'>演员&nbsp;Actor</Row>
   		<Row class='bai-w' v-for='(it,index) in actors' :key='index'>
   			<Row :span='2' class='col-img'>
-          <img :src="it.headImg == null  || it.headImg == '' ? 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg' : it.headImg" alt="">
-          <span v-if='it.jyIndex'>{{it.jyIndex}}</span></Row>
+          <img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt="">
+          <span v-if='it.jyIndex'>{{it.jyIndex / 100}}</span></Row>
   			<Row class='r-h'>
-  				<Row class='de-ro'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
+  				<Row class='de-ro' @click='jump(it.id)'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
   				<Row class='de-ro-two'>演员 actor</Row>
   				<Row class='de-ro-thr'>代表作品:<br> 
            <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;'>
-           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>{{its.name + ' '}}</em></span></div>
+           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name + ' '}}》</em></span></div>
             </Row>
   			</Row>
   		</Row>
@@ -45,15 +45,15 @@
     <div class='director'>
       <Row  class='title'>编剧&nbsp;Writer</Row>
       <Row class='bai-w' v-for='(it,index) in person.Writer' :key='index'>
-        <Row :span='2' class='col-img'><img :src="it.headImg == null || it.headImg == '' ? 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg' : it.headImg" alt=""></Row>
+        <Row :span='2' class='col-img'><img @click='jump(it.id)' :src="it.headImg == null || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt=""></Row>
         <Row class='r-h'>
-          <Row class='de-ro'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
+          <Row class='de-ro' @click='jump(it.id)'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
           <Row class='de-ro-two'>编剧 Writer</Row>
           <Row class='de-ro-thr'>代表作品:<br> <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;'>
-           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>{{its.name + ' '}}</em></span></div></Row>
+           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name + ' '}}》</em></span></div></Row>
         </Row>
       </Row>
       <div v-if='person.Writer.length == 0'>暂无编剧</div>
@@ -62,15 +62,15 @@
     <div class='zhipian'>
       <Row  class='title'>制片人&nbsp;Producer</Row>
       <Row class='bai-w' v-for='(it,index) in produced' :key='index'>
-        <Row :span='2' class='col-img'><img :src="it.headImg == null  || it.headImg == '' ? 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg' : it.headImg" alt=""></Row>
+        <Row :span='2' class='col-img'><img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt=""></Row>
         <Row class='r-h'>
-          <Row class='de-ro'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
+          <Row class='de-ro' @click='jump(it.id)'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
           <Row class='de-ro-two'>制片人 Producer</Row>
           <Row class='de-ro-thr'>代表作品:<br> <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;'>
-           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>{{its.name + ' '}}</em></span></div></Row>
+           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name + ' '}}》</em></span></div></Row>
         </Row>
       </Row>
       <div v-if='produced.length == 0'>暂无制片人</div>
@@ -113,6 +113,10 @@ export default class Main extends ViewBase {
       this.sumTitle = '展示全部'
       this.actors = this.person.Actor.slice(0, 4)
     }
+  }
+
+  jump(id: any) {
+    this.$router.push({ path : '/film/figure/' + id})
   }
 
   async search() {
@@ -163,24 +167,23 @@ export default class Main extends ViewBase {
   border-radius: 50%;
   margin: 0 auto;
   margin-bottom: 15px;
+  overflow: hidden;
   img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
+    max-width: 130px;
   }
   span {
-    width: 36px;
-    height: 30px;
+    width: 50px;
+    height: 24px;
     text-align: center;
     font-size: 12px;
     font-weight: 500;
     color: #fff;
-    line-height: 35px;
+    line-height: 25px;
     position: absolute;
     bottom: 2%;
-    left: 39%;
-    background: url('../assets/hot.png');
-    background-size: cover;
+    left: 31%;
+    background: rgba(87, 180, 201, 1);
+    border-radius: 19px;
   }
 }
 .de-ro {
