@@ -8,6 +8,7 @@
           </FormItem>
         </Col>
       </Row>
+      <!-- <Date v-model="form.advertime" /> -->
       <Row>
         <Col span="14" offset="3">
           <Row>
@@ -100,11 +101,13 @@ import { clean } from '@/fn/object.ts'
 import weekDatePicker from '@/components/weekDatePicker/weekDatePicker.vue'
 import moment, { relativeTimeRounding } from 'moment'
 import { info } from '@/ui/modal'
+import Date from './date.vue'
 
 const timeFormat = 'YYYYMMDD'
 @Component({
   components: {
-    weekDatePicker
+    weekDatePicker,
+    Date
   }
 })
 export default class Promotion extends ViewBase {

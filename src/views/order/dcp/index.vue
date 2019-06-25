@@ -36,7 +36,7 @@
 <script lang="tsx">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getUser } from '@/store.ts'
+import { getUser } from '@/store'
 import { authUserList, customerDel } from '@/api/authUser'
 import { clean } from '@/fn/object'
 import jsxReactToVue from '@/util/jsxReactToVue'

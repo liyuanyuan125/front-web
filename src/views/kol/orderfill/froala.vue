@@ -16,6 +16,10 @@ import ImageResize from 'quill-image-resize-module'
 import Uploader from '@/util/Uploader'
 import { random } from '@/fn/string'
 
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
 const genUqid = () => random('upload')
 
 Quill.register('modules/imageDrop', ImageResize)

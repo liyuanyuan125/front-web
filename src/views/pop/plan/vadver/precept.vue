@@ -201,7 +201,7 @@ const timeFormat = 'YYYY-MM-DD'
   components: {
     PreceptHead,
     PrecepFilm,
-    Exportfile
+    Exportfile,
   }
 })
 export default class App extends ViewBase {

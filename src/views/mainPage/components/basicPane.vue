@@ -19,7 +19,10 @@
       </div>
 
       <div class="zone rank-zone effect-lightning">
-        <div class="rank-label">鲸娱指数</div>
+        <div class="rank-label">
+          鲸娱指数
+          <Tooltip content="鲸娱指数"/>
+        </div>
         <div class="rank-no">{{item.rankNo}}</div>
         <div class="rank-title" v-html="item.rankTitle">{{item.rankTitle}}</div>
       </div>
@@ -72,7 +75,7 @@
 
       <div
         class="zone movie-zone effect-lightning"
-        v-if="movie != null && movie.preview && movieList.length > 0"
+        v-if="movie != null"
       >
         <VideoPreviewer
           :url="movie.preview"
@@ -157,6 +160,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import { RawLocation } from 'vue-router'
 import VideoPreviewer from '@/components/videoPreviewer'
 import Star from '@/components/star'
+import Tooltip from './tooltip.vue'
 
 export interface Opus {
   title: string
@@ -219,7 +223,8 @@ export interface Item {
 @Component({
   components: {
     VideoPreviewer,
-    Star
+    Star,
+    Tooltip
   }
 })
 export default class BasicPane extends Vue {
@@ -312,7 +317,9 @@ export default class BasicPane extends Vue {
 
 .name-zone {
   font-size: 24px;
+  line-height: 1.2;
   padding: 28px 0 13px 4px;
+  margin-right: 46px;
 }
 
 .name {
@@ -321,9 +328,9 @@ export default class BasicPane extends Vue {
 
 .heart {
   position: relative;
-  top: 6px;
-  left: 10px;
-  font-size: 18px;
+  top: 7px;
+  left: 3px;
+  font-size: 22px;
   vertical-align: top;
   cursor: pointer;
   transition: transform ease 200ms;
