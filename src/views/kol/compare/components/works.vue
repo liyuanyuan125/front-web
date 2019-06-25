@@ -63,7 +63,7 @@ import {
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
-import { fans, brands } from '@/api/kolCompare'
+import { fans, getBrands } from '@/api/kolCompare'
 import DetailNavBar from './detailNavBar.vue'
 @Component({
   components: {
