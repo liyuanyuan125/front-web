@@ -186,7 +186,7 @@
       <div v-show="yudingList.length > 0" class="check-box">
       <div></div>
         <div class="check-title">已选择<span ref="end" class="red"> {{yudingList.length}} </span>个，总粉丝数：
-        <span class="red">{{fansNums(yudingList)}}</span>万+
+        <span class="red">{{fansNums(yudingList)}}</span>
           <Icon @click="detailShow" type="ios-arrow-up" class="ios-type" />
         </div>
         <div>
@@ -660,7 +660,7 @@ export default class Main extends ViewBase {
     row.forEach((it: any) => {
       num += Number(it.fans)
     })
-    return formatCurrency(num / 10000)
+    return this.formatNum(num)
   }
 
   // kol列表

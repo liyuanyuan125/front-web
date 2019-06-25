@@ -23,7 +23,7 @@
             </div>
           </template>
           <template slot-scope="{ row }" slot="flansNumber">
-            <span v-if="row.fans">{{formatNum(row.fans)}}</span>
+            <span v-if="row.fans">{{formatNumfans(row.fans)}}</span>
             <span v-else>-</span>
           </template>
           <template slot-scope="{ row }" slot="flansFace">
@@ -193,6 +193,16 @@ export default class DlgEditCinema extends ViewBase {
     ]
   }
 
+  formatNumfans(data: any) {
+    if ((data + '').length > 4) {
+      return data ? formatCurrency(data / 10000, 2) + '万' : 0
+    } else if (data.length > 8) {
+      return data ? formatCurrency(data / 1000000000, 2) + '亿' : 0
+    } else {
+      return data ? formatCurrency(data, 0) : 0
+    }
+  }
+
   formatnums(val: any, msg: any = '') {
     if (val == '0') {
       return '-'
@@ -317,6 +327,7 @@ export default class DlgEditCinema extends ViewBase {
   watchTabledata(val: any) {
     if (val.length == 0) {
       this.$emit('done', val)
+      this.flags()
     }
     this.$emit('done', val)
   }
