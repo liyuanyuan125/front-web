@@ -116,14 +116,14 @@ export default class DlgEditCinema extends ViewBase {
   tabledata = []
   title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号']
   accountCategoryList: any = []
-  titles: any = ['weibo', 'wechat', 'douyin', 'xiaohonghsu']
+  titles: any = ['weibo', 'wechat', 'douyin', 'kuaishou']
   statusList = []
 
   get columns() {
     const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号']
     return [
       {
-        title: title[this.type],
+        title: title[this.value],
         align: 'left',
         width: 160,
         slot: 'name'
@@ -196,7 +196,7 @@ export default class DlgEditCinema extends ViewBase {
   async cancelShop(id: any) {
     try {
       await delShopping({
-        channelCode: this.titles[this.type],
+        channelCode: this.titles[this.value],
         channelDataId: id
       })
       this.search()
@@ -272,7 +272,7 @@ export default class DlgEditCinema extends ViewBase {
   async search() {
     try {
       const { data } = await kolShoppingCar()
-      switch (this.type) {
+      switch (this.value) {
         case 0: this.tabledata = data.weiboList
                 this.statusList = data.weiboPublishCategoryList
           break
