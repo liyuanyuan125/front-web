@@ -1307,14 +1307,26 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/filmorder/addmovielist/:id',
     name: 'film-filmorder-addmovielist',
     component: () => import('./views/film/filmorder/addmovielist.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: '',
+      authAction: '',
+      title() {
+        return '影片合作订单添加'
+      }
+    },
   },
   // 影片 - 影片合作订单详情
   {
     path: '/film/filmorder/movielist/detail/:id',
     name: 'film-filmorder-movielist-detail',
     component: () => import('./views/film/filmorder/moviedetail.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: '',
+      authAction: '',
+      title() {
+        return '影片合作订单详情'
+      }
+    },
   },
 
   // kol - 订单填写
