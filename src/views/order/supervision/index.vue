@@ -75,7 +75,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
+import { Component , Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { querylist ,  getcinid , addvideo , delvideo , movielist } from '@/api/supervision'
@@ -119,7 +119,7 @@ export default class Main extends ViewBase {
 
 
   mounted() {
-    if (new Date().getDay() == 5 || 6 || 0) {
+    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
       this.weekDate = [
       new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
       new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
@@ -127,7 +127,7 @@ export default class Main extends ViewBase {
       const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
-    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
       return
     }
     this.seach()
@@ -317,6 +317,16 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     } finally {
     }
+  }
+
+  @Watch('query', {deep: true})
+  watchQuery() {
+    this.seach()
+  }
+
+  @Watch('weekDate', {deep: true})
+  watchWeekDate() {
+    this.seach()
   }
 
 }

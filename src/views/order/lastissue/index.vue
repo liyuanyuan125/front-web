@@ -116,7 +116,7 @@ export default class Main extends ViewBase {
   idsArray: any = []
 
   mounted() {
-    if (new Date().getDay() == 5 || 6 || 0) {
+    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
       this.weekDate = [
       new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
       new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
@@ -124,7 +124,7 @@ export default class Main extends ViewBase {
       const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
-    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
       return
     }
     this.seach()
