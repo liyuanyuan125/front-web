@@ -637,6 +637,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: 'view',
       authIsMenu: true,
+      title() {
+        return '详情'
+      }
     }
   },
 
