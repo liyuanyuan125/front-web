@@ -105,7 +105,7 @@ export default class Main extends ViewBase {
   ed = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
 
   query: any = {
-    cinemaId: 11,
+    cinemaId: null,
     beginDate: this.sd[0] + this.sd[1] + this.sd[2],
     endDate: this.ed[0] + this.ed[1] + this.ed[2],
   }
@@ -127,10 +127,11 @@ export default class Main extends ViewBase {
       const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
+      this.seach()
     } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
+      this.seach()
       return
     }
-    this.seach()
   }
 
   async remoteMethod(query: any) {
@@ -302,11 +303,11 @@ export default class Main extends ViewBase {
       // const movieList = await movielist()
       // this.movieList = movieList.data.items
       // 获取默认影院id
-      // const cinid = await getcinid()
+      const cinid = await getcinid()
       // if (cinid.data.cinemaId == 0) {
-      //   this.query.cinemaId = movieList.data.items[0].id
+        // this.query.cinemaId = 11
       // } else {
-      //   this.query.cinemaId = cinid.data.cinemaId
+        this.query.cinemaId = cinid.data.cinemaId
       // }
 
 
