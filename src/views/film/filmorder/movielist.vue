@@ -60,7 +60,7 @@
                 <Row>
                   <Col span='8'>
                     <div class='div-img'>
-                      <img :src='it.movieMainPic' alt="">
+                      <img @click='jump(it.movieId)' :src='it.movieMainPic' alt="">
                     </div>
                   </Col>
                   <Col span='14' class='row-x'>
@@ -244,6 +244,10 @@ export default class Main extends ViewBase {
     this.$router.push({ path : '/film/filmorder/movielist/detail/' + id})
   }
 
+  jump(id: any) {
+    this.$router.push({ path : '/film/movie/' + id})
+  }
+
   handlepageChange(size: any) {
     this.query.pageIndex = size
     this.seach()
@@ -296,6 +300,7 @@ export default class Main extends ViewBase {
 .div-img {
   width: 90px;
   height: 120px;
+  cursor: pointer;
   img {
     width: 100%;
     height: 100%;
