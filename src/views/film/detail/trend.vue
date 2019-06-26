@@ -1,102 +1,166 @@
-
 <template>
   <div>
-    <Row>
-      <Col span="24">
-      <Form label-position="left"
-            :label-width="100">
-        <Card class="detailmore-card">
-          <div slot="title">
-            <Row type="flex" justify="space-between" align="middle">
-              <Col :span="17">
-                <DetailNavBar titleText='统计周期'>
-                  <div slot='item'>
-                    <RadioGroup class='nav'
-                              @on-change="handleChange"
-                              v-model="form.dayRangesKey"
-                              size="large"
-                              type="button">
+    <Form label-position="left" :label-width="100">
+      <Card class="detailmore-card">
+        <div slot="title">
+          <Row type="flex" justify="space-between">
+            <Col :span="24">
+              <DetailNavBar titleText="统计周期">
+                <div slot="item">
+                  <RadioGroup
+                      class='nav'
+                      style="margin-right:15px"
+                      @on-change="handleChange"
+                      v-model="form.dayRangesKey"
+                      size="large"
+                      type="button">
                     <Radio v-for="(item) in dict.dayRanges"
                            :key="item.key"
                            :disabled="item.disabled"
                            :label="item.key">{{item.text}}</Radio>
                   </RadioGroup>
-                  </div>
-                </DetailNavBar>
-              </Col>
-            </Row>
-          </div>
-          <div class="content">
-            <Row type="flex" justify="space-between">
-              <Col :span="24">
-                <div class='chart-wp'>
-                  <!-- 累计和增加 -->
-                  <RadioGroup size="small" class="grand-total"  @on-change='currentTypeChange'
-                          v-model="currentIndex"  type="button">
-                    <Radio v-for="(item,index) in grandTotal"
-                          :key="item.key"
-                          :label="index">{{item.name}}</Radio>
-                  </RadioGroup>
-                  <!-- 观影title -->
-                  <RadioGroup size="small" class="watch-film"  @on-change='currentTypeChange'
-                          v-model="filmIndex"  type="button">
-                    <Radio v-for="(item,index) in watchFilm"
-                          :key="item.key"
-                          :label="item.key">{{item.text}}</Radio>
-                  </RadioGroup>
 
-                  <BarxCategoryStack :initDone="chart2.initDone"
-                                  :title='chart2.title'
-                                  :dict2="chart2.dict2"
-                                  :xAxis="chart2.xAxis"
-                                  :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})"
-                                  :color="chart2.color"
-                                  :dataList="chart2.dataList"
-                                  :currentTypeIndex="chart2.currentTypeIndex"
-                                  @typeChange='typeChangeHander' />
+                  <DatePicker
+                    type="daterange"
+                    v-model="form.beginDate"
+                    @on-change="handleChange"
+                    placement="bottom-end"
+                    placeholder="自定义时间段"
+                  ></DatePicker>
                 </div>
-              </Col>
-            </Row>
+              </DetailNavBar>
+            </Col>
+          </Row>
+        </div>
+        <div class="content">
+          <Row type="flex" justify="space-between">
+            <Col :span="24">
+              <div class="chart-wp">
+                <!-- 累计和增加 -->
+                <RadioGroup size="small" class="grand-total"  @on-change='currentTypeChange'
+                        v-model="currentIndex"  type="button">
+                  <Radio v-for="(item,index) in grandTotal"
+                        :key="item.key"
+                        :label="index">{{item.name}}</Radio>
+                </RadioGroup>
+                <!-- 观影title -->
+                <RadioGroup size="small" class="watch-film" @on-change="handleWatchFilm"
+                        v-model="filmIndex"  type="button">
+                  <Radio v-for="(item,index) in watchFilm"
+                        :key="item.key"
+                        :label="item.key">{{item.text}}</Radio>
+                </RadioGroup>
 
-          </div>
-        </Card>
-      </Form>
-      </Col>
-    </Row>
+                <AreaBasic :initDone="chart1.initDone"
+                    v-if="filmIndex == 'watchNum'"
+                    :title="chart1.title"
+                    :dict1="chart1.dict1"
+                    :dict2="chart1.dict2"
+                    :toolTip="chart1.toolTip"
+                    :height="chart1.height"
+                    :color="chart1.color"
+                    :dataList="chart1.dataList"
+                    :currentTypeIndex="chart1.currentTypeIndex" />
+
+                <AreaBasicView :initDone="chart2.initDone"
+                    v-if="filmIndex == 'movieNum'"
+                    :title="chart2.title"
+                    :dict1="chart2.dict1"
+                    :dict2="chart2.dict2"
+                    :toolTip="chart2.toolTip"
+                    :height="chart2.height"
+                    :color="chart2.color"
+                    :dataList="chart2.dataList"
+                    :currentTypeIndex="chart2.currentTypeIndex" />
+
+                    <!-- @typeChange='typeChangeHander' -->
+                    <BarxCategoryStack :initDone="chart3.initDone"
+                      v-if="filmIndex == 'wantNum'"
+                      :title='chart3.title'
+                      :dict1="chart3.dict1"
+                      :dict2="chart3.dict2"
+                      :xAxis="chart3.xAxis"
+                      :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})"
+                      :color="chart3.color"
+                      :dataList="chart3.dataList"
+                      :currentTypeIndex="chart3.currentTypeIndex"
+                       />
+              </div> 
+            </Col>
+          </Row>
+        </div>
+      </Card>
+    </Form>
   </div>
 </template>
-<script lang="tsx">
-import { Component, Watch, Prop } from 'vue-property-decorator'
+
+<script lang="ts">
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import jsxReactToVue from '@/util/jsxReactToVue'
-import { findIndex } from 'lodash'
 import moment from 'moment'
-import { dayRanges, comment, keywordComment } from '@/api/figureDetailMoreInfo'
-import PieNest from '@/components/chartsGroup/pieNest/'
-import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
-import WordCloud from '@/components/chartsGroup/wordCloud/'
+import echarts from 'echarts'
+import {
+  formatTimestamp,
+  formatTimes,
+  formatNumber
+} from '@/util/validateRules'
 import DetailNavBar from './components/detailNavBar.vue'
-import { tooltipStyles } from '@/util/echarts'
+import { trend } from '@/api/kolDetailMoreInfo'
 import {movieView, wanttosee} from '@/api/filmPersonDetail'
+import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
+import AreaBasicView from '@/components/chartsGroup/areaBasic/area-basic.vue'
+import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
+import { tooltipStyles } from '@/util/echarts'
 const timeFormat = 'YYYYMMDD'
-// #D0BF6B 中性
-// #AD686C 正面
-// #57B4C9 负面
+const toolTip: any = {
+  borderWidth: 1,
+  borderColor: 'rgba(0, 0, 0, .8)',
+  backgroundColor: 'rgba(0, 0, 0, .8)',
+  padding: [7, 10],
+  textStyle: {
+    color: '#fff',
+    fontSize: 12,
+    lineHeight: 22
+  },
+  trigger: 'axis',
+  axisPointer: {
+    type: 'line',
+    lineStyle: {
+      width: 22,
+      color: {
+        type: 'linear',
+        x: 0,
+        y: 0,
+        x2: 0,
+        y2: 1,
+        colorStops: [
+          {
+            offset: 0,
+            color: 'rgba(255, 255, 255, .01)'
+          },
+          {
+            offset: 1,
+            color: 'rgba(255, 255, 255, .5)'
+          }
+        ]
+      }
+    }
+  }
+}
 const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
 
 @Component({
   components: {
-    PieNest,
-    BarxCategoryStack,
-    WordCloud,
-    DetailNavBar
+    AreaBasic,
+    DetailNavBar,
+    AreaBasicView,
+    BarxCategoryStack
   }
 })
 export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
   tooltipStyles = tooltipStyles
-
   // 新增和累计
   grandTotal: any = [
     {
@@ -111,26 +175,16 @@ export default class Main extends ViewBase {
   currentIndex = 0
 
   // 观影人数
+  filmIndex = 'watchNum'
   watchFilm: any = [
     {key: 'watchNum', text: '观影人数'},
     {key: 'movieNum', text: '影片票房'},
     {key: 'wantNum', text: '想看人数' }
   ]
-  filmIndex = 'wantNum'
-
-
-  keywordQuery: any = {
-    keyword: '大家',
-    pageIndex: 0,
-    pageSize: 10
-  }
-
 
   form: any = {
-    beginDate: [
-      // new Date(2019, 3, 9), new Date(2019, 4, 11)
-    ],
-    dayRangesKey: 'last_7_day',
+    dayRangesKey: 'sevenDay',
+    channelCode: 'weibo'
   }
 
   dict: any = {
@@ -141,271 +195,239 @@ export default class Main extends ViewBase {
         disabled: false
       },
       {
-        key: 'last_7_day',
+        key: 'sevenDay',
         text: '最近7天',
         disabled: false
       },
       {
-        key: 'last_30_day',
+        key: 'thirtyDay',
         text: '最近30天',
         disabled: false
       },
       {
-        key: 'last_90_day',
+        key: 'ninetyDay',
         text: '最近90天',
         disabled: false
       }
-    ],
-    // 情感分类 写死适配多模块
-    emotion: [
-      {
-        key: 0,
-        name: 'maoyan',
-        text: '猫眼想看'
-      },
-      {
-        key: 1,
-        name: 'taopiaopiao',
-        text: '淘票想看'
-      },
-      {
-        key: 2,
-        name: 'douban',
-        text: '豆瓣想看'
-      }
     ]
   }
-
+  // 观影人数
   chart1: any = {
-    title: '评论情绪分布',
+    title: '',
     dict1: [],
-    dict2: this.dict.emotion,
+    dict2: [],
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: colors
+    color:  ['#da6c70'],
+    height: 450,
+    toolTip
   }
-
+  // 影片票房
   chart2: any = {
     title: '',
-    dict1: [
+    dict1: [],
+    dict2: [],
+    currentTypeIndex: 0,
+    initDone: false,
+    dataList: [],
+    color:  ['#d0bf6b'],
+    height: 450,
+    toolTip
+  }
+  // 想看人数
+  chart3: any = {
+    title: '',
+    dict1: [],
+    dict2: [
       {
-        key: 'trend',
-        name: '新增'
+        key: 'maoyan',
+        text: '猫眼'
       },
       {
-        key: 'count',
-        name: '累计'
+        key: 'taopiaopiao',
+        text: '淘票票'
+      },
+      {
+        key: 'douban',
+        text: '豆瓣'
       }
     ],
-    dict2: this.dict.emotion,
     xAxis: [],
     currentTypeIndex: 0,
     initDone: false,
     dataList: [
       [
         {
-          name: 'maoyan',
+          name: '猫眼',
           type: 'bar',
           stack: 'totalCount',
           barMaxWidth: '20',
-          data: [40, 90, 30]
+          data: []
         },
         {
-          name: 'taopiaopiao',
+          name: '淘票票',
           type: 'bar',
           stack: 'totalCount',
           barMaxWidth: '20',
-          data: [50, 20, 40]
+          data: []
         },
         {
-          name: 'douban',
+          name: '豆瓣',
           type: 'bar',
           stack: 'totalCount',
           barMaxWidth: '20',
-          data: [30, 90, 60]
+          data: []
+        }
+      ],
+      [
+        {
+          name: '猫眼',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
+        },
+        {
+          name: '淘票票',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
+        },
+        {
+          name: '豆瓣',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
         }
       ]
     ],
     color: colors
   }
-
-  chart3: any = {
-    title: '正面评论关键词',
-    dict1: [],
-    currentTypeIndex: 0,
-    initDone: false,
-    dataList: [],
-    color: ['rgba(0,32,45,0)']
-  }
-
-  chart4: any = {
-    title: '负面评论关键词',
-    dict1: [],
-    currentTypeIndex: 0,
-    initDone: false,
-    dataList: [],
-    color: ['rgba(0,32,45,0)']
-  }
-
-  tableLoading: boolean = false
-
-  tableColumns = [
-    {
-      title: '序号',
-      key: 'index',
-      align: 'center'
-    },
-    {
-      title: '内容',
-      key: 'highLightWords',
-      align: 'left',
-      render: (hh: any, { row }: any) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        return (
-          <div v-html={row.highLightWords}></div>
-        )
-        /* tslint:disable */
-      }
-    },
-    {
-      title: '赞同',
-      key: 'favorCount',
-      align: 'center'
-    },
-    {
-      title: '回复',
-      key: 'replyCount',
-      align: 'center'
-    },
-    {
-      title: '来源内容',
-      key: 'sourceContent',
-      align: 'left',
-      render: (hh: any, { row }: any) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        return (
-          <a class="sourceContent" href={row.sourceUrl} v-html={row.sourceContent}></a>
-        )
-        /* tslint:disable */
-      }
-    },
-    {
-      title: '评论时间',
-      key: 'commentDate',
-      align: 'center'
-    }]
-
-  tableData: any[] = []
-
-  currentTypeChange(val: any) {}
-
-  mounted() {
-    this.trendList()
-  }
-
-  async trendList() {
-    const id = 55184
-    try {
-      const data = await wanttosee({
-        beginDate: '20160520',
-        endDate: '20190620'
-      }, id)
-      this.chart2.initDone = true
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
-
-
-  async typeChangeHander(index: number = 0) {
-    this.chart2.currentTypeIndex = index
-  }
-
-  /**
-   * 加载日期区间描述
-   */
-  async dayRangesFetch() {
-    /* const query = {}
-    const id: number = 107028
-    try {
-      const { data } = await dayRanges({ ...query, id })
-      this.dict.dayRanges = data.dayRanges
-    } catch (ex) {
-      this.handleError(ex)
-    } */
-  }
-  /**
-   * 加载图表数据
-   * @param chart 图表名 (因为接口返回全部数据，暂时不用)
-   * @param typeIndex 当前类别下标
-   */
-  async getChartsData(chart: string = '', typeIndex: number = 0) {
-    const that: any = this
+  // 观影人数 影片票房
+  async watchFilmList() {
     const mockObj = {
-      beginDate: this.form.beginDate[0],
-      endDate: this.form.beginDate[1],
+      beginDate: this.beginDate(this.form.dayRangesKey),
+      endDate: this.endDate()
     }
-    const id = this.$route.params.id || ''
+    const id = this.id  // this.id  55184
     try {
-      const {
-        data,
-        data: {
-          item: {
-            rate,
-            dates,
-            keywords
+      const { data } = await movieView({ ...mockObj }, id)
+      // 取出 票神boxoffice 观看view数据
+      const items = data || []
+      // 放置后台数据顺序错乱
+      items.sort((a: any, b: any) => a.date - b.date )
+      const date: any[] = [] // 存放日期
+      const boxoTrendData: any[] = [] // 票神新增数据
+      const boxoCountData: any[] = [] // 票神累计数据
+      const viewTrendData: any[] = [] // 观看新增数据
+      const viewCountData: any[] = [] // 观看累计数据
+
+      this.chart1.dataList = []
+      this.chart2.dataList = []
+      if (items && items.length > 0) {
+        items.filter((it: any) => {
+          date.push(it.date)
+          viewTrendData.push(it.view.trend)
+          viewCountData.push(it.view.count)
+          boxoTrendData.push(it.boxoffice.trend)
+          boxoCountData.push(it.boxoffice.count)
+        })
+
+        // 观影
+        if (this.filmIndex == 'watchNum') {
+          this.chart1.dataList[0] = {
+            date,
+            data: viewTrendData
           }
+          this.chart1.dataList[1] = {
+            date,
+            data: viewCountData
+          }
+          this.chart1.initDone = true
+          this.chart2.initDone = false
+          this.chart3.initDone = false
         }
-      } = await comment({ ...mockObj }, id)
-      for ( const k in rate ) {
-        if ( rate[k] ) {
-          const index = findIndex(this.dict.emotion, (it: any) => {
-            return it.name == k
-          })
-          this.chart1.dataList[0].push({
-            value: rate[k],
-            name: this.dict.emotion[index].text
-          })
+        // 票神
+        if (this.filmIndex === 'movieNum') {
+          this.chart2.dataList[0] = {
+            date,
+            data: boxoTrendData
+          }
+          this.chart2.dataList[1] = {
+            date,
+            data: boxoCountData
+          }
+          this.chart2.initDone = true
+          this.chart1.initDone = false
+          this.chart3.initDone = false
         }
       }
-
-      dates.forEach((item: any, index: number) => {
-        //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
-        // trend 新增 index:0 | count 累计 index:1
-        const { date, neutral, passive, positive } = item
-        // that.chart2.xAxis.push( date )
-        // that.chart2.dataList[0][0].data.push(item.positive.trend)
-        // that.chart2.dataList[0][1].data.push(item.passive.trend)
-        // that.chart2.dataList[0][2].data.push(item.neutral.trend)
-        // that.chart2.dataList[1][0].data.push(item.positive.count)
-        // that.chart2.dataList[1][1].data.push(item.passive.count)
-        // that.chart2.dataList[1][2].data.push(item.neutral.count)
-      })
-
-      keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
-        that.chart3.dataList[0].push({
-          name: item,
-          value: Math.floor(Math.random() * 100 + 1)
-        })
-      })
-      keywords[this.form.dayRangesKey].passive.forEach((item: any) => {
-        that.chart4.dataList[0].push({
-          name: item,
-          value: Math.floor(Math.random() * 100 + 1)
-        })
-      })
-      that.chart1.initDone = true
-      that.chart2.initDone = true
-      that.chart3.initDone = true
-      that.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
   }
+  // 想看人数
+  async wanttoseeList() {
+    const mockObj = {
+      beginDate: this.beginDate(this.form.dayRangesKey),
+      endDate: this.endDate()
+    }
+    const id = this.id  // this.id  55184
+    try {
+      const { data: {items, channelCodeList} } =  await wanttosee({ ...mockObj }, id)
+      if (items && items.length > 0) {
+        // sort 后台日期数据不准
+        items.sort((a: any, b: any) => {
+          return a.date - b.date
+        })
+        const date: any = [] // 日期
+        const dataTrend: any = { // 新增
+          douban: [],
+          maoyan: [],
+          taopiaopiao: []
+        }
+        const dataCount: any = { // 累计
+          douban: [],
+          maoyan: [],
+          taopiaopiao: []
+        }
+        // 观影总人数 对应页面是累计，趋势是每日新增
+        items.map((it: any) => {
+          date.push(it.date)
+          it.channels.map((code: any) => {
+            dataTrend[code.chanelCode].push(code.trend)
+            dataCount[code.chanelCode].push(code.count)
+          })
+        })
+        this.chart3.xAxis = date
+        this.chart3.dataList[0][0].data = dataTrend.maoyan
+        this.chart3.dataList[0][1].data = dataTrend.taopiaopiao
+        this.chart3.dataList[0][2].data = dataTrend.douban
 
+        this.chart3.dataList[1][0].data = dataCount.maoyan
+        this.chart3.dataList[1][1].data = dataCount.taopiaopiao
+        this.chart3.dataList[1][2].data = dataCount.douban
+        this.chart3.initDone = true
+      }
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+  currentTypeChange(index: number = 0) {
+    // this.chart2.initDone = false
+    // this.chart1.initDone = false
+    // this.chart3.initDone = false
+    if (this.filmIndex == 'watchNum') { // 观影人数
+      this.chart1.currentTypeIndex = index
+    } else if (this.filmIndex == 'movieNum') {
+      this.chart2.currentTypeIndex = index
+    } else if (this.filmIndex == 'wantNum') { // 想看人数
+      this.chart3.currentTypeIndex = index
+    }
+  }
   /**
    * 根据筛选返回起始日期，影人、影片、kol字段名未统一
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
@@ -414,9 +436,9 @@ export default class Main extends ViewBase {
     switch ( dayRangesKey ) {
       case 'yesterday' :
         return moment(new Date()).add(-1, 'days').format(timeFormat)
-      case 'last_30_day' :
+      case 'thirtyDay' :
         return moment(new Date()).add(-30, 'days').format(timeFormat)
-      case 'last_90_day' :
+      case 'ninetyDay' :
         return moment(new Date()).add(-90, 'days').format(timeFormat)
       default :
         return moment(new Date()).add(-7, 'days').format(timeFormat)
@@ -427,188 +449,140 @@ export default class Main extends ViewBase {
     return moment(new Date()).format(timeFormat)
   }
 
-  async handleChange() {
-    this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
-    this.form.beginDate[1] = this.endDate()
+  async handleChange() { // 修改日期判断我当前请求的接口---------
     this.chart2.initDone = false
     this.chart1.initDone = false
     this.chart3.initDone = false
-    this.chart4.initDone = false
-    this.resetData()
-    // await this.getChartsData('', 0)
+    if (this.filmIndex == 'wantNum') { // 想看
+      this.wanttoseeList()
+    } else {
+      this.watchFilmList()
+    }
   }
 
-  created() {
-    this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
-    this.form.beginDate[1] = this.endDate()
-    // this.dayRangesFetch() // 本地写死，暂时取消
-    this.initHandler()
+  async mounted() {
+    await this.watchFilmList()
   }
-
-  async initHandler() {
-    if (this.chart1.dict1.length > 0) {
-      this.chart1.dict1.map((item: any, index: number) => {
-        this.chart1.dataList.push([])
-      })
-    } else {
-      this.chart1.dataList.push([])
+  async chartList() {
+    const myChart = echarts.init(this.$refs.refChart as any)
+    const option: any = {
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: [
+          {
+            name: '猫眼',
+            icon: 'circle',
+          },
+          {
+            name: '淘票票',
+            icon: 'circle',
+          },
+          {
+            name: '豆瓣',
+            icon: 'circle',
+          },
+        ], // '猫眼', '淘票票', '豆瓣'
+        textStyle: {
+          color: '#fff'
+        }
+      },
+      xAxis: [
+        {
+          type: 'category',
+          boundaryGap : false,
+          data: this.chart1.dataList.date,
+          axisLabel: {
+            textStyle: {
+              color: '#fff'
+            }
+          }
+        }
+      ],
+      yAxis : [
+        {
+          type: 'value',
+          axisLabel: {
+            textStyle: {
+              color: '#fff'
+            }
+          }
+        }
+      ],
+      series: [
+        {
+          name: '猫眼',
+          type: 'line',
+          smooth: true,
+          areaStyle: {
+              color: '#DA6C70'
+          },
+          lineStyle: {
+            color: '#DA6C70',
+            width: 1,
+            // opacity: 0.7
+          },
+          data: this.chart1.dataList.data.maoyan
+        },
+        {
+          name: '淘票票',
+          type: 'line',
+          smooth: true,
+          areaStyle: {
+              color: '#00B6CC'
+          },
+          lineStyle: {
+            color: '#00B6CC',
+            width: 1,
+            // opacity: 0.7
+          },
+          data: this.chart1.dataList.data.taopiaopiao
+        },
+        {
+          name: '豆瓣',
+          type: 'line',
+          smooth: true,
+          areaStyle: {
+              color: '#D0BF6B'
+          },
+          lineStyle: {
+            color: '#D0BF6B',
+            width: 1,
+            // opacity: 0.7
+          },
+          data: this.chart1.dataList.data.douban
+        }
+      ]
     }
-
-    if (this.chart3.dict1.length > 0) {
-      this.chart3.dict1.map((item: any, index: number) => {
-        this.chart3.dataList.push([])
-      })
-    } else {
-      this.chart3.dataList.push([])
-    }
-
-    if (this.chart4.dict1.length > 0) {
-      this.chart4.dict1.map((item: any, index: number) => {
-        this.chart4.dataList.push([])
-      })
-    } else {
-      this.chart4.dataList.push([])
-    }
-    // await this.getChartsData('', 0)
-    // await this.getKeywordList()
+    myChart.setOption(option)
   }
 
   resetData() {
-    this.chart1.dataList.forEach((item: any[]) => {
-      item.splice(0, item.length)
-    })
-    this.chart2.xAxis.splice(0, this.chart2.xAxis.length)
-    this.chart2.dataList.forEach((item: any) => {
-      item.forEach((it: any) => {
-        it.data.splice(0, it.data.length)
-      })
-    })
-    this.chart3.dataList.forEach((item: any) => {
-      item.splice(0, item.length)
-    })
-    this.chart4.dataList.forEach((item: any) => {
-      item.splice(0, item.length)
-    })
+    this.chart1.dataList = []
+    this.chart2.dataList = []
+    this.chart3.dataList = []
   }
-
-  async getKeywordList( key?: string ) {
-    const that: any = this
-    const mockObj = {
-      keyword: (key == '') ? this.keywordQuery.keyword : key,
-      pageIndex: 1,
-      pageSize: 10
+  handleWatchFilm(val: any) {
+    this.filmIndex = val
+    if (val == 'wantNum') { // 想看
+      this.wanttoseeList()
+    } else {
+      this.watchFilmList()
     }
-    const id = this.id
-    try {
-      const {
-        data,
-        data: {
-          items
-        }
-      } = await keywordComment({ ...mockObj }, id)
-      if (items && items.length > 0 ) {
-        items.map((it: any, index: number) => {
-          this.tableData.push({
-            index: this.indexNumber(index),
-            highLightWords: it.highLightWords,
-            content: it.content,
-            favorCount: it.favorCount, // 赞同数
-            replyCount: it.replyCount, // 回复数
-            sourceContent: it.sourceContent, // 来源内容
-            sourceUrl: it.sourceUrl, // 来源url
-            commentDate: it.commentDate // 评论时间
-          })
-        })
-      }
-      this.tableLoading = false
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
-
-  indexNumber(index: number): string {
-    return index+'1'
-  }
-
-  keyChangeHandle(item: any) {
-    this.tableData = []
-    // this.getKeywordList(item[0])
   }
 }
 </script>
-<style lang="less" scoped>
+
+<style lang='less' scoped>
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
 .grand-total {
-  padding: 20px 0 0 30px;
+  display: block;
+  padding: 30px 0 0 50px;
 }
 .watch-film {
   display: block;
   text-align: center;
-}
-
-.table-box {
-  border-radius: 5px;
-  padding: 25px 0;
-  min-height: 445px;
-  /deep/ .ivu-table th,
-  /deep/ .ivu-table-header {
-    background: rgba(208, 233, 246, 1);
-    height: 40px;
-    line-height: 40px;
-    color: rgba(0, 32, 45, 1);
-    font-size: 15px;
-    font-weight: 400;
-  }
-  /deep/ .ivu-table {
-    background: none;
-  }
-  /deep/ .ivu-table td {
-    background: none;
-    transition: background-color 0.2s ease-in-out;
-    font-size: 13px;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 1);
-    height: 50px;
-    line-height: 50px;
-    border-bottom: 1px solid #0e3240;
-  }
-  /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
-    background: rgba(32, 67, 80, 1);
-  }
-  /deep/ .ivu-table-body {
-    background: none;
-  }
-  /deep/ .ivu-table-tip {
-    overflow-x: auto;
-    overflow-y: hidden;
-    background: transparent;
-  }
-  /deep/ .ivu-table-wrapper {
-    margin: 0;
-    border: none;
-  }
-  /deep/.ivu-table-stripe .ivu-table-body tr:nth-child(2n) td,
-  .ivu-table-stripe .ivu-table-fixed-body tr:nth-child(2n) td {
-    background: none;
-  }
-  /deep/.ivu-table-stripe .ivu-table-body tr:last-child td {
-    border-bottom: 0;
-  }
-}
-/deep/ .sourceContent {
-  color: #a3d5e6;
-  width: 80%;
-  height: 120px;
-  .cut-text;
-}
-.keyword-box {
-  padding: 20px 0;
-  .keyword-title {
-    font-size: 16px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 1);
-    padding: 0 25px;
-  }
 }
 </style>
