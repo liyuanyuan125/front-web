@@ -11,7 +11,17 @@
        <Col span='6' class='data'> <WeekDatePicker class='data-s' v-model="weekDate"/></Col>
         <Col :span="10">
           <Col style='margin-left: 12px;' span="14">
-            <Select class='sels' v-model='query.cinemaId'  filterable  @on-change="seachs">
+            <Select 
+             class='sels' 
+             v-model='query.cinemaId'  
+             clearable
+             filterable
+             placeholder="请输入影院名称/专资编码查询" 
+             remote
+             :loading="loading"
+             :remote-method="remoteMethod"
+             @on-clear="movieList = []"
+             @on-change="seachs">
               <Option
                 v-for="item in movieList"
                 :key="item.id"
@@ -96,6 +106,7 @@ export default class Main extends ViewBase {
 
 
   movieList: any = []
+  loading = false
 
 
   itemlist: any = []
@@ -117,6 +128,24 @@ export default class Main extends ViewBase {
       return
     }
     this.seach()
+  }
+
+  async remoteMethod(query: any) {
+    try {
+      if (query) {
+        this.loading = true
+        const {
+          data: { items }
+        } = await movielist({
+          searchKey: query,
+        })
+        this.movieList = items || []
+      }
+      this.loading = false
+    } catch (ex) {
+      this.handleError(ex)
+      this.loading = false
+    }
   }
 
 
@@ -300,8 +329,8 @@ export default class Main extends ViewBase {
   async seach() {
     try {
       // 影院列表
-      const movieList = await movielist()
-      this.movieList = movieList.data.items
+      // const movieList = await movielist()
+      // this.movieList = movieList.data.items
 
       // 获取默认影院id
       // const cinid = await getcinid()

@@ -21,7 +21,7 @@
        <Col :span='24'>推广产品：{{item.productName == null ? '暂无' : item.productName}}</Col>
       </Row>
       <Row>
-       <Col :span='24'>推广内容：{{item.content}}</Col>
+       <Col :span='24'>推广内容：{{item.content == null ? '暂无' : item.content}}</Col>
       </Row>
     </div>
     <div class='body'>

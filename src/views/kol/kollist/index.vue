@@ -81,7 +81,7 @@
           </template>
           <template slot-scope="{ row }" slot="read">
             <div>
-              <span v-if="row.avgReadCount">{{formatNum(row.avgReadCount)}}w+</span>
+              <span v-if="row.avgReadCount">{{formatnums(row.avgReadCount, 'w+')}}</span>
               <span v-else>-</span>
             </div>
           </template>
@@ -93,12 +93,12 @@
             <div>
               <p class="flans-box">
                 <span>男性：</span>  
-                <span v-if="row.maleFans">{{row.maleFans}}%</span>
+                <span v-if="row.maleFans">{{formatnums(row.maleFans, '%')}}</span>
                 <span v-else>-</span>
               </p>
               <p class="flans-box">
                 <span>女性：</span>
-                <span v-if="row.femaleFans">{{row.femaleFans}}%</span>
+                <span v-if="row.femaleFans">{{formatnums(row.femaleFans, '%')}}</span>
                 <span v-else>-</span>
               </p>
               <div>
@@ -109,19 +109,19 @@
           </template>
           <template slot-scope="{ row }" slot="discuss">
             <div>
-              <span v-if="row.avgCommentsCount">{{formatNum(row.avgCommentsCount)}}</span>
+              <span v-if="row.avgCommentsCount">{{formatnums(row.avgCommentsCount)}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="like">
             <div>
-              <span v-if="row.avgAttitudesCount">{{formatNum(row.avgAttitudesCount)}}w+</span>
+              <span v-if="row.avgAttitudesCount">{{formatnums(row.avgAttitudesCount, 'w+')}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="transmit">
             <div>
-              <span v-if="row.avgRepostsCount">{{formatNum(row.avgRepostsCount)}}w+</span>
+              <span v-if="row.avgRepostsCount">{{formatnums(row.avgRepostsCount, 'w+')}}</span>
               <span v-else>-</span>
             </div>
           </template>
@@ -130,17 +130,17 @@
               <Tooltip placement="top">
                 <div class="prices">
                   <p v-for="it in row.price" :key="it.key" style="margin-top: 5px">
-                    {{it.key}} {{it.value || '-'}}
+                    {{it.key}} {{formatnums(it.value, '', '暂无报价')}}
                   </p>
                 </div>
                 <div slot="content">
                   <p v-for="it in row.price" :key="it.key" style="margin-top: 5px">
-                    {{it.key}} {{it.value || '-'}}
+                    {{it.key}} {{formatnums(it.value, '', '暂无报价')}}
                   </p>
                 </div>
               </Tooltip>
             </div>
-            <div v-else>-</div>
+            <div v-else>暂无报价</div>
           </template>
           <template slot-scope="{ row }" slot="action">
             <div class="table-action">
@@ -186,7 +186,7 @@
       <div v-show="yudingList.length > 0" class="check-box">
       <div></div>
         <div class="check-title">已选择<span ref="end" class="red"> {{yudingList.length}} </span>个，总粉丝数：
-        <span class="red">{{fansNums(yudingList)}}</span>万+
+        <span class="red">{{fansNums(yudingList)}}</span>
           <Icon @click="detailShow" type="ios-arrow-up" class="ios-type" />
         </div>
         <div>
@@ -377,8 +377,18 @@ export default class Main extends ViewBase {
     ]
   }
 
-  formatnums(val: any) {
-
+  formatnums(val: any, msg: any = '', errors: string = '-') {
+    if (val == '0') {
+      return errors
+    }
+    const num = (val + '').split('.')
+    if (num.length > 1) {
+      const numbers = formatCurrency(val, 2)
+      return `${numbers}${msg}`
+    } else {
+      const numbers = formatCurrency(val, 0)
+      return `${numbers}${msg}`
+    }
   }
 
   areabox(check: boolean) {
@@ -388,7 +398,13 @@ export default class Main extends ViewBase {
   }
 
   formatNum(data: any) {
-    return data ? formatCurrency(data, 0) : 0
+    if ((data + '').length > 4) {
+      return data ? formatCurrency(data / 10000, 2) + '万' : 0
+    } else if (data.length > 8) {
+      return data ? formatCurrency(data / 1000000000, 2) + '亿' : 0
+    } else {
+      return data ? formatCurrency(data, 0) : 0
+    }
   }
 
   created() {
@@ -644,7 +660,7 @@ export default class Main extends ViewBase {
     row.forEach((it: any) => {
       num += Number(it.fans)
     })
-    return formatCurrency(num / 10000)
+    return this.formatNum(num)
   }
 
   // kol列表
