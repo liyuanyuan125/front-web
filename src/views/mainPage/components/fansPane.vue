@@ -7,11 +7,11 @@
     <div class="fans-content flex-box">
       <div class="fans-man">
         <div class="fans-type">男</div>
-        <div class="fans-rate">{{man}}%</div>
+        <div class="fans-rate">{{man > 0 ? `${man}%` : '-'}}</div>
       </div>
       <div class="fans-woman">
         <div class="fans-type">女</div>
-        <div class="fans-rate">{{woman}}%</div>
+        <div class="fans-rate">{{woman > 0 ? `${woman}%` : '-'}}</div>
       </div>
     </div>
     <template slot="footer">

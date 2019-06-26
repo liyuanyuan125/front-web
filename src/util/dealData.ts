@@ -65,10 +65,12 @@ export function toThousands(nums: any) {
   let num = (nums || 0).toString()
   let result = ''
   while (num.length > 3) {
-      result = ',' + num.slice(-3) + result
-      num = num.slice(0, num.length - 3)
+    result = ',' + num.slice(-3) + result
+    num = num.slice(0, num.length - 3)
   }
-  if (num) { result = num + result }
+  if (num) {
+    result = num + result
+  }
   return result
 }
 
@@ -133,11 +135,19 @@ export function percent(rate: number, digits = 0) {
 
 /**
  * 将形如 20190622 形式的整数，格式化成日期
+ * 同时处理形如 2019、201906、2019-06、2019/06 的情况
  * @param date 整数
  * @param format 格式
  */
 export function intDate(date: number, format = 'YYYY-MM-DD') {
-  return moment(String(date)).format(format)
+  const strDate = String(date).trim()
+  if (/^\d{4}\d{2}\d{2}$/.test(strDate)) {
+    return moment(strDate).format(format)
+  }
+  if (/^(\d{4})[-\/\.]?(\d{2})$/.test(strDate)) {
+    return [RegExp.$1, RegExp.$2].join('-')
+  }
+  return date
 }
 
 /**
@@ -160,6 +170,11 @@ export function dot(object: any, path: string) {
   return at(object, path)[0]
 }
 
+const isZero = (n: number | string) => {
+  const num = parseInt(n as string, 10)
+  return isNaN(num) || num == 0
+}
+
 const WAN = 10000
 
 const YI = 100000000
@@ -168,11 +183,29 @@ const YI = 100000000
  * 将数字格式化成可读格式
  * @param number 数字
  * @param digits 保留位数，默认为 2
+ * @param placeholder 数字为 0 时的占位符，默认为 -
  */
-export function readableNumber(number: number, digits = 2) {
+export function readableNumber(number: number | string, digits = 2, placeholder = '-') {
+  if (isZero(number)) {
+    return placeholder
+  }
+
   return number >= YI
-    ? (number / YI).toFixed(digits) + '亿'
+    ? (+number / YI).toFixed(digits) + '亿'
     : number >= WAN
-    ? (number / WAN).toFixed(digits) + '万'
+    ? (+number / WAN).toFixed(digits) + '万'
     : number
+}
+
+/**
+ * 将数字格式化成千分位，对于 0，做了特殊处理，显示占位
+ * @param number 数字
+ * @param placeholder 数字为 0 时的占位符，默认为 -
+ */
+export function readableThousands(number: number | string, placeholder = '-') {
+  if (isZero(number)) {
+    return placeholder
+  }
+
+  return toThousands(number)
 }
