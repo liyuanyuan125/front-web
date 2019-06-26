@@ -19,3 +19,12 @@ export function dayOffsetRange(beginOffset: number, endOffset = 0) {
     dayOffset(endOffset)
   ]
 }
+
+/**
+ * 将后端形如 20190618 的数字转成 moment
+ * @param date 形如 20190618 的日期数字
+ */
+export function intToDate(date: number) {
+  const strDate = String(date)
+  return /^\d{8}$/.test(strDate) ? moment(strDate) : null
+}

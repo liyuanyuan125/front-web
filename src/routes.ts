@@ -1,17 +1,18 @@
 // 将登陆注册等模块「静态」到主文件中，以便用户更流畅
-import home from './views/home.vue'
-import login from './views/portal/login/index.vue'
-import register from './views/portal/register.vue'
-import registerComplete from './views/portal/registerComplete.vue'
-import activeEmail from './views/portal/activeEmail.vue'
-import registerSuccess from './views/portal/registerSuccess.vue'
-import MainLayout from './views/layout/MainLayout.vue'
-import Error from './views/error/index.vue'
+import home from '@/views/home.vue'
+import login from '@/views/portal/login/index.vue'
+import register from '@/views/portal/register.vue'
+import registerComplete from '@/views/portal/registerComplete.vue'
+import activeEmail from '@/views/portal/activeEmail.vue'
+import registerSuccess from '@/views/portal/registerSuccess.vue'
+import MainLayout from '@/views/layout/MainLayout.vue'
+import Error from '@/views/error/index.vue'
 
 import { RouteConfig, Route, Location } from 'vue-router'
-import { devInfo, devError } from './util/dev'
-import { MapType } from './util/types'
-import { stringToBoolean } from './fn/typeCast'
+import { devInfo, devError } from '@/util/dev'
+import { MapType } from '@/util/types'
+import { stringToBoolean } from '@/fn/typeCast'
+import { parse } from '@/fn/array'
 
 /**
  * 处理 route 中的参数类型
@@ -595,7 +596,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/pop/film/edit.vue'),
     meta: {
       authKey: 'promotion.ad-video',
-      title({params}) {
+      title({ params }) {
         return params.id as any > 0 ? '编辑' : '新建'
       },
       authAction(route) {
@@ -838,12 +839,19 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import(/* webpackChunkName: "about" */'./views/about.vue'),
     meta: emptyAuth,
   },
+
   // KOL - KOL 对比
   {
-    path: '/kol/compare/:id/:ids',
+    path: '/kol/compare/:id/:compareIds',
     name: 'kol-compare',
     component: () => import('./views/kol/compare/index.vue'),
-    meta: emptyAuth
+    meta: emptyAuth,
+    props: ({ params: { id, compareIds } }: Route) => {
+      return {
+        id: +id,
+        compareIds: parse(compareIds).map(it => +it),
+      }
+    }
   },
 
    // KOL - KOl 订单管理
@@ -1310,14 +1318,26 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/filmorder/addmovielist/:id',
     name: 'film-filmorder-addmovielist',
     component: () => import('./views/film/filmorder/addmovielist.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: '',
+      authAction: '',
+      title() {
+        return '影片合作订单添加'
+      }
+    },
   },
   // 影片 - 影片合作订单详情
   {
     path: '/film/filmorder/movielist/detail/:id',
     name: 'film-filmorder-movielist-detail',
     component: () => import('./views/film/filmorder/moviedetail.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: '',
+      authAction: '',
+      title() {
+        return '影片合作订单详情'
+      }
+    },
   },
 
   // kol - 订单填写
@@ -1502,6 +1522,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       authIsMenu: true,
+      title: '新建第三方监测',
     },
   },
 

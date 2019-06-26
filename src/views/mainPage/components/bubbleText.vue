@@ -1,6 +1,6 @@
 <template>
   <div class="bubble-text-list">
-    <div v-for="(it, i) in list" :key="i" class="bubble-text">
+    <div v-for="(it, i) in sortList" :key="i" class="bubble-text">
       <div class="bubble-text-in">{{it}}</div>
     </div>
   </div>
@@ -9,9 +9,17 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
+// 后端按照从上到下的排序，但前端按照球的大小排序
+const bubbleSort = [ 3, 1, 4, 0, 5, 2 ]
+
 @Component
 export default class BubbleText extends Vue {
   @Prop({ type: Array, default: () => [] }) list!: string[]
+
+  get sortList() {
+    const textList = this.list || []
+    return bubbleSort.map(i => textList[i] || '')
+  }
 }
 </script>
 

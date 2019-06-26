@@ -8,6 +8,7 @@
           </FormItem>
         </Col>
       </Row>
+      <!-- <Date v-model="form.advertime" /> -->
       <Row>
         <Col span="14" offset="3">
           <Row>
@@ -100,11 +101,12 @@ import { clean } from '@/fn/object.ts'
 import weekDatePicker from '@/components/weekDatePicker/weekDatePicker.vue'
 import moment, { relativeTimeRounding } from 'moment'
 import { info } from '@/ui/modal'
+import Date from './date.vue'
 
 const timeFormat = 'YYYYMMDD'
 @Component({
   components: {
-    weekDatePicker
+    weekDatePicker,
   }
 })
 export default class Promotion extends ViewBase {
@@ -122,6 +124,7 @@ export default class Promotion extends ViewBase {
     brandId: 1,
     advertime: []
   }
+  steps: any = 1
   planID: any = ''
   length = 0
   customerName = ''
@@ -151,8 +154,8 @@ export default class Promotion extends ViewBase {
       if (value[0] == '') {
         callback(new Error('请选择投放排期'))
       } else {
-        const begin: any = new Date(value[0]).getTime()
-        const end: any = new Date(value[1]).getTime()
+        const begin: any = (value[0] as any).getTime()
+        const end: any = (value[1] as any).getTime()
         const flag = (end - begin) / 86400000 % 7
         if (flag == 6) {
           callback()
@@ -209,15 +212,18 @@ export default class Promotion extends ViewBase {
       const { data } = await adverdetail(this.$route.params.setid)
       this.form.name = data.item.name
       this.form.specification = data.item.specification
-      this.form.budgetAmount = data.item.budgetAmount / 10000
+      this.form.budgetAmount = (data.item.budgetAmount / 10000) + ''
       this.form.customerId = data.item.customerId
+      this.steps = 2
       if (!data.item.videoId) {
         this.setadver = true
       } else {
         this.form.videoId = data.item.videoId
       }
-      this.form.advertime = [new Date(this.formatDate(data.item.beginDate)),
-        new Date(this.formatDate(data.item.endDate))]
+      const begin: any = this.formatDate(data.item.beginDate)
+      const end: any = this.formatDate(data.item.endDate)
+      this.form.advertime = [begin,
+        end]
     } catch (ex) {
       this.handleError(ex)
     }
@@ -272,13 +278,18 @@ export default class Promotion extends ViewBase {
   }
 
   @Watch('form.videoId')
-  watchformVideoId(val: any) {
+  watchformVideoId(val: any, old: any) {
     if (val) {
       const data = this.adverList.filter((it: any) => val == it.id)
       this.form.customerId = data[0].customerId
       this.form.brandId = data[0].brandId
       this.form.specification = data[0].specification
-      this.form.budgetAmount = ''
+      if (this.steps == 2) {
+
+      } else {
+        this.form.budgetAmount = ''
+      }
+      this.steps = 1
       this.form.productId = data[0].productId
       this.form.name = `[ ${data[0].name} ] [ ${data[0].customerName} ] [ ${data[0].productName} ]`
     }

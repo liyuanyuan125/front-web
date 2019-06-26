@@ -424,7 +424,7 @@ export default class Main extends ViewBase {
   position: relative;
   display: block;
   float: left;
-  width: 77px;
+  width: 83px;
   background: #d0eeff;
   border: 1px solid #99d3f5;
   border-radius: 4px;

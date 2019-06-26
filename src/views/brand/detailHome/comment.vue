@@ -73,23 +73,41 @@
             </Row>
             <Row type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="12">
-                <div class='chart-wp borderRadius' style='margin-right:10px'>
+                <div class='chart-wp borderRadius' style='margin-right:10px;cursor: pointer;'>
                   <WordCloud :initDone="chart3.initDone"
                            :title='chart3.title'
                            :dict1="chart3.dict1"
                            :color="chart3.color"
                            :dataList="chart3.dataList"
+                           @keyChange='keyChangeHandle'
                            :currentTypeIndex="chart3.currentTypeIndex" />
                 </div>
               </Col>
               <Col :span="12">
-                <div class='chart-wp borderRadius'>
+                <div class='chart-wp borderRadius' style='cursor: pointer'>
                   <WordCloud :initDone="chart4.initDone"
                            :title='chart4.title'
                            :dict1="chart4.dict1"
                            :color="chart4.color"
                            :dataList="chart4.dataList"
+                           @keyChange='keyChangeHandle'
                            :currentTypeIndex="chart4.currentTypeIndex" />
+                </div>
+              </Col>
+            </Row>
+             <Row v-if="tableData.length > 0" type="flex" justify="space-between" style='margin-top:10px'>
+              <Col :span="24">
+                <div class='chart-wp keyword-box borderRadius'>
+                  <div class="keyword-title">
+                    提及到“{{keywordQuery.keyword}}”的热门评论
+                  </div>
+                  <div class="table-box">
+                    <Table stripe
+                      ref="table"
+                      :columns="tableColumns"
+                      :loading="tableLoading"  
+                      :data="tableData"></Table>
+                  </div>
                 </div>
               </Col>
             </Row>
@@ -100,12 +118,13 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="tsx">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import jsxReactToVue from '@/util/jsxReactToVue'
 import { findIndex } from 'lodash'
 import moment from 'moment'
-import { dayRanges , comment , codelist } from '@/api/brandfans'
+import { dayRanges , comment , codelist , keywordComment } from '@/api/brandfans'
 import PieNest from '@/components/chartsGroup/pieNest/'
 import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
 import WordCloud from '@/components/chartsGroup/wordCloud/'
@@ -134,6 +153,12 @@ export default class Temporary extends ViewBase {
     ],
     dayRangesKey: 'sevenDay',
     channelCode: 'weibo'
+  }
+
+  keywordQuery: any = {
+    keyword: '大家',
+    pageIndex: 0,
+    pageSize: 10
   }
 
   dict: any = {
@@ -319,6 +344,62 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['rgba(0,32,45,0)']
   }
+
+  tableLoading: boolean = false
+
+  tableColumns = [
+    {
+      title: '序号',
+      key: 'index',
+      align: 'center',
+      width: 70,
+    },
+    {
+      title: '内容',
+      key: 'highlightContent',
+      align: 'left',
+      render: (hh: any, { row }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        return (
+          <div class='wenben' v-html={row.highlightContent}></div>
+        )
+        /* tslint:disable */
+      }
+    },
+    {
+      title: '赞同',
+      key: 'likeCount',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: '回复',
+      key: 'replyCount',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: '来源内容',
+      key: 'sourceContent',
+      align: 'left',
+      render: (hh: any, { row }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        return (
+          <a class="sourceContent" href={row.sourceContentUrl} v-html={row.sourceContent}></a>
+        )
+        /* tslint:disable */
+      }
+    },
+    {
+      title: '评论时间',
+      key: 'commentDate',
+      align: 'center',
+    }]
+
+  tableData: any[] = []
+
   async typeChangeHander(index: number = 0) {
     this.chart2.currentTypeIndex = index
   }
@@ -486,9 +567,133 @@ export default class Temporary extends ViewBase {
       item.splice(0, item.length)
     })
   }
+
+   async getKeywordList( key?: string ) {
+    this.tableData = []
+    const that: any = this
+    const mockObj = {
+      keyWord: (key == '') ? this.keywordQuery.keyword : key,
+      channelCode: this.form.channelCode
+    }
+    const id = this.id
+    try {
+      const {
+        data,
+        data: {
+          items
+        }
+      } = await keywordComment({ ...mockObj }, id)
+      if (items && items.length > 0 ) {
+        // this.tableData = items
+        items.map((it: any, index: number) => {
+          this.tableData.push({
+            index: (index + 1),
+            highlightContent: it.highlightContent,
+            content: it.content,
+            likeCount: it.likeCount, // 赞同数
+            replyCount: it.replyCount, // 回复数
+            sourceContent: it.sourceContent, // 来源内容
+            sourceContentUrl: it.sourceContentUrl, // 来源url
+            commentDate: it.commentDate // 评论时间
+          })
+        })
+      }
+      this.tableLoading = false
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  indexNumber(index: number): string {
+    return index+'1'
+  }
+
+  keyChangeHandle(item: any) {
+    this.tableData = []
+    this.getKeywordList(item[0])
+    this.keywordQuery.keyword = item[0]
+  }
 }
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
+.table-box {
+  border-radius: 5px;
+  padding: 25px 0;
+  min-height: 445px;
+  /deep/ .ivu-table th,
+  /deep/ .ivu-table-header {
+    background: rgba(208, 233, 246, 1);
+    height: 40px;
+    line-height: 40px;
+    color: rgba(0, 32, 45, 1);
+    font-size: 15px;
+    font-weight: 400;
+  }
+  /deep/ .ivu-table {
+    background: none;
+  }
+  /deep/ .ivu-table td {
+    background: none;
+    transition: background-color 0.2s ease-in-out;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #0e3240;
+  }
+  /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+    background: rgba(32, 67, 80, 1);
+  }
+  /deep/ .ivu-table-body {
+    background: none;
+    /deep/ .ivu-table-row {
+      /deep/ .ivu-table-column-left {
+        /deep/ .ivu-table-cell {
+          div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            em {
+              color: red;
+            }
+          }
+        }
+      }
+    }
+  }
+  /deep/ .ivu-table-tip {
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: transparent;
+  }
+  /deep/ .ivu-table-wrapper {
+    margin: 0;
+    border: none;
+  }
+  /deep/.ivu-table-stripe .ivu-table-body tr:nth-child(2n) td,
+  .ivu-table-stripe .ivu-table-fixed-body tr:nth-child(2n) td {
+    background: none;
+  }
+  /deep/.ivu-table-stripe .ivu-table-body tr:last-child td {
+    border-bottom: 0;
+  }
+}
+/deep/ .sourceContent {
+  color: #a3d5e6;
+  width: 80%;
+  height: 120px;
+  .cut-text;
+}
+.keyword-box {
+  padding-left: 20px;
+  .keyword-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 1);
+    padding: 25px 25px 0 0;
+  }
+}
 </style>

@@ -80,20 +80,26 @@
             <div v-else>{{row.categoryName}}</div>
           </template>
           <template slot-scope="{ row }" slot="read">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgReadCount)}}w+</span>
+            <div>
+              <span v-if="row.avgReadCount">{{formatnums(row.avgReadCount, 'w+')}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="flansNumber">
-            {{formatNum(row.followersCount)}}
+            <span v-if="row.followersCount">{{formatNum(row.followersCount)}}</span>
+            <span v-else>-</span>
           </template>
           <template slot-scope="{ row }" slot="flansFace">
             <div>
               <p class="flans-box">
-                <span>男性：</span>  <span>{{row.maleFans}}%</span>
+                <span>男性：</span>  
+                <span v-if="row.maleFans">{{formatnums(row.maleFans, '%')}}</span>
+                <span v-else>-</span>
               </p>
               <p class="flans-box">
-                <span>女性：</span>  <span>{{row.femaleFans}}%</span>
+                <span>女性：</span>
+                <span v-if="row.femaleFans">{{formatnums(row.femaleFans, '%')}}</span>
+                <span v-else>-</span>
               </p>
               <div>
                 <a @click="viewArea(row.areaId, row.id)" >查看地域</a>
@@ -102,26 +108,39 @@
             </div>
           </template>
           <template slot-scope="{ row }" slot="discuss">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgCommentsCount)}}</span>
+            <div>
+              <span v-if="row.avgCommentsCount">{{formatnums(row.avgCommentsCount)}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="like">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgAttitudesCount)}}w+</span>
+            <div>
+              <span v-if="row.avgAttitudesCount">{{formatnums(row.avgAttitudesCount, 'w+')}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="transmit">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgRepostsCount)}}w+</span>
+            <div>
+              <span v-if="row.avgRepostsCount">{{formatnums(row.avgRepostsCount, 'w+')}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="price">
-            <div v-if="row.prices">
-              <p v-for="it in row.prices" :key="it" style="margin-top: 5px">
-                {{it}}
-              </p>
+            <div v-if="row.price.length > 0">
+              <Tooltip placement="top">
+                <div class="prices">
+                  <p v-for="it in row.price" :key="it.key" style="margin-top: 5px">
+                    {{it.key}} {{formatnums(it.value, '', '暂无报价')}}
+                  </p>
+                </div>
+                <div slot="content">
+                  <p v-for="it in row.price" :key="it.key" style="margin-top: 5px">
+                    {{it.key}} {{formatnums(it.value, '', '暂无报价')}}
+                  </p>
+                </div>
+              </Tooltip>
             </div>
+            <div v-else>暂无报价</div>
           </template>
           <template slot-scope="{ row }" slot="action">
             <div class="table-action">
@@ -150,7 +169,7 @@
         </Table>
       </div>
 
-      <Page :total="total" v-if="total>0" class="btnCenter"
+      <!-- <Page :total="total" v-if="total>0" class="btnCenter"
         :current="form.pageIndex"
         :page-size="form.pageSize"
         :page-size-opts="[10, 20, 50, 100]"
@@ -158,7 +177,8 @@
         show-sizer
         show-elevator
         @on-change="sizeChangeHandle"
-        @on-page-size-change="currentChangeHandle"/>
+        @on-page-size-change="currentChangeHandle"/> -->
+        <pagination :pageList="pageList" :total="total" @uplist="KolSeach"></pagination>
       </div>
       <Detail ref='detailbox' v-model="type" @done="checkDetailSet" />
     </div>
@@ -166,11 +186,11 @@
       <div v-show="yudingList.length > 0" class="check-box">
       <div></div>
         <div class="check-title">已选择<span ref="end" class="red"> {{yudingList.length}} </span>个，总粉丝数：
-        <span class="red">{{fansNums(yudingList)}}</span>万+
+        <span class="red">{{fansNums(yudingList)}}</span>
           <Icon @click="detailShow" type="ios-arrow-up" class="ios-type" />
         </div>
         <div>
-          <Button type="primary" class="button-ok" @click="next">立即绑定</Button>
+          <Button type="primary" class="button-ok" @click="next">立即预定</Button>
         </div>
       </div>
     </div>
@@ -194,6 +214,7 @@ import { clean } from '@/fn/object.ts'
 import { getpersons, delcollect } from '@/api/mycollect.ts'
 import { kolList } from '@/api/collect.ts'
 import { findkol } from '@/api/shopping'
+import pagination from '@/components/page.vue'
 
 // 保持互斥
 const keepExclusion = <T extends any>(
@@ -224,7 +245,8 @@ const defaultForm: any = {
   components: {
     Header,
     AreaModal,
-    Detail
+    Detail,
+    pagination
   },
   directives: {
     clickoutside
@@ -265,6 +287,13 @@ export default class Main extends ViewBase {
   yudingListId: any = []
   kolIds: any = []
 
+  get pageList() {
+    return {
+      pageIndex: this.form.pageIndex,
+      pageSize: this.form.pageSize
+    }
+  }
+
   get columns() {
     const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号', '全部账号', '全部账号']
     return [
@@ -289,7 +318,7 @@ export default class Main extends ViewBase {
       },
       {
         title: '粉丝画像',
-        align: 'center',
+        align: 'left',
         minWidth: 40,
         slot: 'flansFace'
       },
@@ -348,6 +377,20 @@ export default class Main extends ViewBase {
     ]
   }
 
+  formatnums(val: any, msg: any = '', errors: string = '-') {
+    if (val == '0') {
+      return errors
+    }
+    const num = (val + '').split('.')
+    if (num.length > 1) {
+      const numbers = formatCurrency(val, 2)
+      return `${numbers}${msg}`
+    } else {
+      const numbers = formatCurrency(val, 0)
+      return `${numbers}${msg}`
+    }
+  }
+
   areabox(check: boolean) {
     if ( this.acount == 1) {
       this.areaShow = check
@@ -355,7 +398,13 @@ export default class Main extends ViewBase {
   }
 
   formatNum(data: any) {
-    return data ? formatCurrency(data, 0) : 0
+    if ((data + '').length > 4) {
+      return data ? formatCurrency(data / 10000, 2) + '万' : 0
+    } else if (data.length > 8) {
+      return data ? formatCurrency(data / 1000000000, 2) + '亿' : 0
+    } else {
+      return data ? formatCurrency(data, 0) : 0
+    }
   }
 
   created() {
@@ -486,7 +535,7 @@ export default class Main extends ViewBase {
         const y = e.clientY
         const end: any  = this.$refs.end
         this.checkDetail = true
-        const left = end.getBoundingClientRect().left || window.screen.width / 3 + 100
+        const left = end.getBoundingClientRect().left || window.screen.width - 300
         const top = end.getBoundingClientRect().top || window.screen.availHeight - 120
         dom.style.cssText = `left: ${x }px; top: ${ y - 80}px; display: block`
         animation(dom, {
@@ -601,6 +650,7 @@ export default class Main extends ViewBase {
     this.yudingList = val
     this.yudingListId = this.yudingList.map((it: any) => it.kolId)
     this.KolSeach()
+    this.kolinit()
   }
 
   // 粉丝数相加
@@ -610,7 +660,7 @@ export default class Main extends ViewBase {
     row.forEach((it: any) => {
       num += Number(it.fans)
     })
-    return formatCurrency(num / 10000)
+    return this.formatNum(num)
   }
 
   // kol列表
@@ -897,7 +947,8 @@ export default class Main extends ViewBase {
     color: #001f2c;
   }
   /deep/ .ivu-table-tip td {
-    margin-top: 50px;
+    background: rgba(255, 255, 255, 0);
+    padding-top: 60px;
   }
   /deep/ .ivu-table-cell {
     padding-right: 10px;
@@ -906,6 +957,14 @@ export default class Main extends ViewBase {
   .table-action {
     p {
       cursor: pointer;
+    }
+  }
+  .prices {
+    cursor: pointer;
+    p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   .table-name {
@@ -926,7 +985,7 @@ export default class Main extends ViewBase {
     position: absolute;
     margin-left: 60px;
     z-index: 999;
-    margin-top: -130px;
+    margin-top: -120px;
   }
 }
 .btnCenter {
@@ -946,7 +1005,7 @@ export default class Main extends ViewBase {
   .check-title {
     color: #fff;
     font-size: 18px;
-    margin-left: 30%;
+    margin-left: 50%;
   }
   .ios-type {
     cursor: pointer;
@@ -954,9 +1013,25 @@ export default class Main extends ViewBase {
     margin-left: 20px;
   }
   .button-ok {
-    margin-left: 100px;
+    margin-left: 30px;
     border-radius: 26px;
     .button-style(#fff, #f18d94);
+  }
+}
+/deep/ .page-list {
+  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+    color: #00202d;
+  }
+  .ivu-page-item {
+    a {
+      color: #00202d;
+    }
+  }
+  .ivu-page-item.ivu-page-item-active {
+    background: #00202d;
+    a {
+      color: #fff;
+    }
   }
 }
 </style>

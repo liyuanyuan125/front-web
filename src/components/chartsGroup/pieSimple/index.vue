@@ -94,7 +94,7 @@ export default class PieSimple extends ViewBase {
       ...pubOption,
       tooltip : tooltipStyles({
         trigger: 'item',
-        formatter: '{b} : {c}'
+        formatter: '{b} : {c}%'
       }),
       series: [
         {

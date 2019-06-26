@@ -1,14 +1,19 @@
 <template>
-  <Tooltip class="tooltip" v-bind="$attrs">
-    <slot></slot>
+  <Tooltip class="tooltip" v-bind="attrs">
+    <slot><i class="tooltip-help">?</i></slot>
   </Tooltip>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { merge } from 'lodash'
 
 @Component
 export default class MyTooltip extends Vue {
+  get attrs() {
+    const result = merge({ 'max-width': 200 }, this.$attrs)
+    return result
+  }
 }
 </script>
 
@@ -68,7 +73,15 @@ export default class MyTooltip extends Vue {
     }
   }
 }
+
+.tooltip-help {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  color: #255771;
+  border-radius: 100%;
+  background-color: rgba(255, 255, 255, .6);
+}
 </style>
-
-
-

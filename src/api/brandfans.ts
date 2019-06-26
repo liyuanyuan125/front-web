@@ -701,3 +701,40 @@ export async function brands(query: any) {
     ]
   })
 }
+
+/**
+ * 关键词评论列表
+ * @param query 起止时间
+ * @param id id
+ * @description http://yapi.aiads-dev.com/project/144/interface/api/4960
+ */
+export async function keywordComment(query: any, id: number | string = '') {
+  // 演示 临时参数 nxd 20190621
+  // id = '558'
+  // query = {
+  //   keyword: '大家',
+  //   pageIndex: 1,
+  //   pageSize: 10,
+  //   channelCode: 'weibo'
+  // }
+  const res = await get(`/brand/brands/${id}/hot-comment`, query)
+  return res
+  // return await mockGet(query, {
+  //   'items|10': [
+  //     {
+  //       id: tid,
+  //       commentId: '55843740074381051314374009745219519weibo',
+  //       content: '这是你520给大家发的男朋友吗？',
+  //       sourceContent: '吹爆7号的颜！雕塑般的鼻子啊吹爆7号的颜！雕塑般的鼻子啊吹爆7号的颜！雕塑般的鼻子啊吹爆7号的颜！雕塑般的鼻子啊 ',
+  //       sourceContentUrl: 'wwww.baidu.com',
+  //       replyCount: 12,
+  //       favorCount: 23,
+  //       emotionType: 0,
+  //       commentDate: '2019-5-20 13:04:10',
+  //       highlightContent: '这是你520给<em>大</em><em>家</em>发的男朋友吗？'
+  //     }
+  //   ],
+
+  //   totalCount: 2
+  // })
+}

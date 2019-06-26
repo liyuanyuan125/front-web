@@ -6,7 +6,7 @@
       <div class="table-action" @click.stop="flag">
         <a>清空购物车</a>
       </div>
-      <Table height="300" :loading="loading" :columns="columns" :data="tabledata">
+      <Table v-if='tabledata.length > 0' height="300" :loading="loading" :columns="columns" :data="tabledata">
         <template slot-scope="{ row }" slot="name">
             <div class="table-name">
               <img :src="row.accountImageUrl" width="70px" height="70px" alt=""> 
@@ -14,39 +14,44 @@
             </div>
           </template>
           <template slot-scope="{ row }" slot="type">
-            {{accountCategoryList.filter((it) => it.key == row.accountTypeCode)[0].text}}
+            {{formatmap(row)}}
           </template>
           <template slot-scope="{ row }" slot="read">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgReadCount)}}w+</span>
+            <div>
+              <span v-if="row.avgReadCount">{{formatNum(row.avgReadCount)}}w+</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="flansNumber">
-            {{formatNum(row.fans)}}
+            <span v-if="row.fans">{{formatNumfans(row.fans)}}</span>
+            <span v-else>-</span>
           </template>
           <template slot-scope="{ row }" slot="flansFace">
             <div>
               <p class="flans-box">
-                <span>男性：</span>  <span>{{row.femalePercent}}%</span>
+                <span>男性：</span>  <span>{{formatnums(row.femalePercent/100, '%')}}</span>
               </p>
               <p class="flans-box">
-                <span>女性：</span>  <span>{{row.malePercent}}%</span>
+                <span>女性：</span>  <span>{{formatnums(row.malePercent/100, '%')}}</span>
               </p>
             </div>
           </template>
           <template slot-scope="{ row }" slot="discuss">
-            <div style="text-align:center">
-              <span>{{formatNum(row.averageComment)}}</span>
+            <div>
+              <span v-if="row.averageComment">{{formatnums(row.averageComment)}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="like">
-            <div style="text-align:center">
-              <span>{{formatNum(row.averageLike)}}w+</span>
+            <div>
+              <span v-if="row.averageLike">{{formatnums(row.averageLike, 'w+')}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="transmit">
-            <div style="text-align:center">
-              <span>{{formatNum(row.averageShare)}}w+</span>
+            <div>
+              <span v-if="row.averageShare">{{formatnums(row.averageShare, 'w+')}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="price">
@@ -111,14 +116,14 @@ export default class DlgEditCinema extends ViewBase {
   tabledata = []
   title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号']
   accountCategoryList: any = []
-  titles: any = ['weibo', 'wechat', 'douyin', 'xiaohonghsu']
+  titles: any = ['weibo', 'wechat', 'douyin', 'kuaishou']
   statusList = []
 
   get columns() {
     const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号']
     return [
       {
-        title: title[this.type],
+        title: title[this.value],
         align: 'left',
         width: 160,
         slot: 'name'
@@ -188,10 +193,34 @@ export default class DlgEditCinema extends ViewBase {
     ]
   }
 
+  formatNumfans(data: any) {
+    if ((data + '').length > 4) {
+      return data ? formatCurrency(data / 10000, 2) + '万' : 0
+    } else if (data.length > 8) {
+      return data ? formatCurrency(data / 1000000000, 2) + '亿' : 0
+    } else {
+      return data ? formatCurrency(data, 0) : 0
+    }
+  }
+
+  formatnums(val: any, msg: any = '') {
+    if (val == '0') {
+      return '-'
+    }
+    const num = (val + '').split('.')
+    if (num.length > 1) {
+      const numbers = formatCurrency(val, 2)
+      return `${numbers}${msg}`
+    } else {
+      const numbers = formatCurrency(val, 0)
+      return `${numbers}${msg}`
+    }
+  }
+
   async cancelShop(id: any) {
     try {
-      await delcollect({
-        channelCode: this.titles[this.type],
+      await delShopping({
+        channelCode: this.titles[this.value],
         channelDataId: id
       })
       this.search()
@@ -224,6 +253,14 @@ export default class DlgEditCinema extends ViewBase {
     } catch (ex) {
 
     }
+  }
+
+  formatmap(val: any) {
+    const msg = this.accountCategoryList.filter((it: any) => it.key == val.accountTypeCode)
+    if (msg.length > 0) {
+      return msg[0].text
+    }
+    return '-'
   }
 
   formatNum(data: any) {
@@ -259,7 +296,7 @@ export default class DlgEditCinema extends ViewBase {
   async search() {
     try {
       const { data } = await kolShoppingCar()
-      switch (this.type) {
+      switch (this.value) {
         case 0: this.tabledata = data.weiboList
                 this.statusList = data.weiboPublishCategoryList
           break
@@ -276,7 +313,7 @@ export default class DlgEditCinema extends ViewBase {
                 this.statusList = data.xiaohongshuPublishCategoryList
           break
       }
-      this.accountCategoryList = data.xiaohongshuPublishCategoryList
+      this.accountCategoryList = data.accountCategoryList
     } catch (ex) {
       this.handleError(ex)
     }
@@ -290,6 +327,7 @@ export default class DlgEditCinema extends ViewBase {
   watchTabledata(val: any) {
     if (val.length == 0) {
       this.$emit('done', val)
+      this.flags()
     }
     this.$emit('done', val)
   }

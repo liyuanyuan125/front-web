@@ -8,7 +8,16 @@
         </Col>
         <Col :span="7">
           <Col style='margin-left: 12px;' span="18">
-            <Select v-model='query.brandId'  clearable placeholder="全部品牌" @on-change="seachs">
+            <Select 
+             v-model='query.brandId'  
+             clearable
+             filterable
+             placeholder="全部品牌"
+             remote
+             :loading="loading"
+             :remote-method="remoteMethod"
+             @on-clear="brandList = []"
+             @on-change="seachs">
               <Option
                 v-for="item in brandList"
                 :key="item.id"
@@ -51,7 +60,7 @@
                 <Row>
                   <Col span='8'>
                     <div class='div-img'>
-                      <img :src='it.movieMainPic' alt="">
+                      <img @click='jump(it.movieId)' :src='it.movieMainPic' alt="">
                     </div>
                   </Col>
                   <Col span='14' class='row-x'>
@@ -64,13 +73,13 @@
                 </Row>
               </Col>
               <Col v-if='it.status != 6 || it.status != 7' span='8' style='line-height: 38px'>
-                <Row style='margin-top: 13px;'><span class='hui'>申请资源:&nbsp;&nbsp;</span><em v-if='it.movieResource.material.need == true'>海报授权</em> <em style='margin-left: 2px;' v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.coupon.material == false '>暂无资源</em></Row>
+                <Row style='margin-top: 13px;'><span class='hui'>申请资源:&nbsp;&nbsp;</span><em v-if='it.movieResource.material.need == true'>海报授权</em> <em style='margin-left: 2px;' v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.material.need == false '>暂无资源</em></Row>
                 <Row><span class='hui'>提供资源:</span>&nbsp;&nbsp;<em v-if='it.brandResource.onlines == null'>暂无资源</em><em v-else v-for='(its,index) in channelCodeList' :key='index'>
                   <i v-for='(items,index) in it.brandResource.onlines' :key='index' v-if='its.key == items.channelCode'>{{its.text}}宣传&nbsp;</i>
                 </em></Row>
               </Col>
               <Col v-if='it.status == 6 || it.status == 7' span='8' style='line-height: 25px'>
-                <Row><span class='hui'>申请资源:&nbsp;&nbsp;</span><em v-if='it.movieResource.material.need == true'>海报授权</em> <em  style='margin-left: 2px;' v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.coupon.material == false '>暂无资源</em></Row>
+                <Row><span class='hui'>申请资源:&nbsp;&nbsp;</span><em v-if='it.movieResource.material.need == true'>海报授权</em> <em  style='margin-left: 2px;' v-if='it.movieResource.coupon.need == true'>电影票券</em>&nbsp;&nbsp;<em v-if='it.movieResource.coupon.need == false && it.movieResource.material.need == false '>暂无资源</em></Row>
                 <Row>
                   <Col span='10' style='color: #00B6CC;margin-left: 53px;'>《攀登者》首款海报</Col>
                   <Col span='8'><a class='okbut' :href="it.movieMainPic" :download='it.movieMainPic'>立即下载</a></Col>
@@ -132,6 +141,7 @@ export default class Main extends ViewBase {
     pageIndex: 1,
     pageSize: 10,
   }
+  loading = false
 
   totalCount = 0
   brandList: any = []
@@ -195,10 +205,28 @@ export default class Main extends ViewBase {
       this.typeList = data.typeList
       this.offlineResourceTypeList = data.offlineResourceTypeList
       this.channelCodeList = data.channelCodeList
-      // 品牌列表
-      const brand = await brandsList({})
-      this.brandList = brand.data.items
+      // // 品牌列表
+      // const brand = await brandsList({})
+      // this.brandList = brand.data.items
     } catch (ex) {
+    }
+  }
+
+  async remoteMethod(query: any) {
+    try {
+      if (query) {
+        this.loading = true
+        const {
+          data: { items }
+        } = await brandsList({
+          name: query,
+        })
+        this.brandList = items || []
+      }
+      this.loading = false
+    } catch (ex) {
+      this.handleError(ex)
+      this.loading = false
     }
   }
 
@@ -216,6 +244,10 @@ export default class Main extends ViewBase {
     this.$router.push({ path : '/film/filmorder/movielist/detail/' + id})
   }
 
+  jump(id: any) {
+    this.$router.push({ path : '/film/movie/' + id})
+  }
+
   handlepageChange(size: any) {
     this.query.pageIndex = size
     this.seach()
@@ -231,10 +263,10 @@ export default class Main extends ViewBase {
     this.viewerShow = true
   }
 
-  @Watch('query', {deep: true})
-  watchQuery() {
-    this.seach()
-  }
+  // @Watch('query', {deep: true})
+  // watchQuery() {
+  //   this.seach()
+  // }
 
 }
 
@@ -268,6 +300,7 @@ export default class Main extends ViewBase {
 .div-img {
   width: 90px;
   height: 120px;
+  cursor: pointer;
   img {
     width: 100%;
     height: 100%;
@@ -297,6 +330,9 @@ export default class Main extends ViewBase {
 /deep/ .ivu-select-input {
   margin-top: 3px;
   color: #00202d;
+  &::-webkit-input-placeholder {
+    color: #00202d;
+  }
 }
 /deep/ .ivu-input {
   height: 40px;
