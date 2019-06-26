@@ -430,9 +430,9 @@ export default class Main extends ViewBase {
   color: #00202d;
   padding: 0 10px 0 10px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.3);
   line-height: 40px;
   font-size: 14px;
+  background: #c2d6e3;
 }
 .li-item {
   color: #00202d;
