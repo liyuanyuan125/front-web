@@ -31,7 +31,7 @@
           <div>
             <p>4</p>
             <p>
-              品牌上传使用图片
+              品牌上传<br>使用图片
             </p>
           </div>
         </li>
@@ -125,7 +125,10 @@
                   <img :src="item.main_pic">
                 </div>
                 <div class="movtitle cut-text">{{item.name_cn}}</div>
-                <p class="movscore">{{getItemValue(item)}}</p>
+                <p class="movscore" v-if=" form.sortBy === 'hots' "><i class="hots"></i><span>{{getItemValue(item)}}</span></p>
+                <p class="movscore" v-else-if=" form.sortBy === 'wantSeeCount' "><span>{{getItemValue(item)}}</span>人想看</p>
+                <p class="movscore" v-else-if=" form.sortBy === 'commentsScore' "><span>{{getItemValue(item)}}</span>分</p>
+                <p class="movscore" v-else ><span>{{getItemValue(item)}}</span></p>
               </router-link>
             </div>
           </Col>
@@ -153,6 +156,8 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { fetchList } from '@/api/filmCooperation'
 import TinyLoading from '@/components/TinyLoading.vue'
+
+import { percent, readableNumber, textList } from '@/util/dealData'
 
 const typeListMore: any[] = []
 
@@ -297,7 +302,7 @@ export default class CooperationFilmList extends ViewBase {
         return it.hots
         break
       case 'wantSeeCount':
-        return it.want_see
+        return readableNumber(it.want_see)
         break
       case 'commentsScore':
         return it.comments_score != 0 ? (it.comments_score / 100).toFixed(2) : it.comments_score
@@ -452,6 +457,7 @@ export default class CooperationFilmList extends ViewBase {
       }
       /deep/ .ivu-form-item-label {
         font-size: 16px;
+        padding: 10px 12px 10px 0;
       }
       /deep/ .ivu-radio-group {
         /deep/ .ivu-radio-wrapper {
@@ -463,8 +469,9 @@ export default class CooperationFilmList extends ViewBase {
           box-shadow: none !important;
           color: #00202d;
           border-radius: 0;
-          padding: 0;
           margin-right: 50px;
+          padding-left: 0;
+          padding-right: 0;
           &::before,
           &::after {
             display: none;
@@ -517,9 +524,28 @@ export default class CooperationFilmList extends ViewBase {
             white-space: nowrap;
           }
           .movscore {
-            font-size: 24px;
+            color: #00202d;
+            display: flex;
+            flex-flow: row;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
             font-weight: 500;
-            color: rgba(0, 32, 45, 1);
+            span {
+              color: #da6c70;
+              font-size: 24px;
+              font-weight: 500;
+              position: relative;
+              top: -4px;
+            }
+            i.hots {
+              display: inline-block;
+              width: 24px;
+              height: 24px;
+              background: url('./assets/images/hots.png') center center no-repeat;
+              position: relative;
+              top: -6px;
+            }
           }
         }
       }

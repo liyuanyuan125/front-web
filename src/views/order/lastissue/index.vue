@@ -52,8 +52,8 @@
         				<row>
         					<Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
                   
-                  <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
-                  <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
+                  <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
+                  <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
         					  <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
 						        <router-link style='color: #00202D;margin-left: 25px;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,10)}}...</router-link>
 						      </Tooltip>
@@ -98,7 +98,7 @@ export default class Main extends ViewBase {
   sd = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
   ed = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
   query: any = {
-    cinemaId: 11,
+    cinemaId: null,
     beginDate: this.sd[0] + this.sd[1] + this.sd[2],
     endDate: this.ed[0] + this.ed[1] + this.ed[2],
   }
@@ -116,7 +116,7 @@ export default class Main extends ViewBase {
   idsArray: any = []
 
   mounted() {
-    if (new Date().getDay() == 5 || 6 || 0) {
+    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
       this.weekDate = [
       new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
       new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
@@ -124,10 +124,11 @@ export default class Main extends ViewBase {
       const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
-    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+      this.seach()
+    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
+      this.seach()
       return
     }
-    this.seach()
   }
 
   async remoteMethod(query: any) {
@@ -164,7 +165,7 @@ export default class Main extends ViewBase {
     this.startTime = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000  // 本周的开始时间
     this.endTime = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1 // 本周的结束时间
 
-    if (new Date().getDay() == 5 || 6 || 0) {
+    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
       this.weekDate = [
       new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
       new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
@@ -173,7 +174,7 @@ export default class Main extends ViewBase {
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
       this.seach()
-    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
       this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
       const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
       const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
@@ -184,7 +185,7 @@ export default class Main extends ViewBase {
   }
   // 上周
   seachchgup() {
-    if (new Date().getDay() == 5 || 6 || 0) {
+    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
       let ss = this.startTime + (24 * 60 * 60 * 1000 * 7)
       let ee = this.endTime + (24 * 60 * 60 * 1000 * 7)
       this.weekDate = [
@@ -197,7 +198,7 @@ export default class Main extends ViewBase {
       this.startTime -= this.datanum
       this.endTime -= this.datanum
       this.seach()
-    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
       this.weekDate = [new Date(this.startTime -= this.datanum), new Date(this.endTime -= this.datanum)]
       const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
       const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
@@ -209,7 +210,7 @@ export default class Main extends ViewBase {
 
   // 下周
   seachchgdown() {
-    if (new Date().getDay() == 5 || 6 || 0) {
+    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
       let ss = this.startTime + (24 * 60 * 60 * 1000 * 7)
       let ee = this.endTime + (24 * 60 * 60 * 1000 * 7)
       this.weekDate = [
@@ -222,7 +223,7 @@ export default class Main extends ViewBase {
       this.startTime += this.datanum
       this.endTime += this.datanum
       this.seach()
-    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
       this.weekDate = [new Date(this.startTime += this.datanum), new Date(this.endTime += this.datanum)]
       const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
       const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
@@ -333,11 +334,11 @@ export default class Main extends ViewBase {
       // this.movieList = movieList.data.items
 
       // 获取默认影院id
-      // const cinid = await getcinid()
+      const cinid = await getcinid()
       // if (cinid.data.cinemaId == 0) {
-      //   this.query.cinemaId = movieList.data.items[0].id
+        // this.query.cinemaId = 11
       // } else {
-      //   this.query.cinemaId = cinid.data.cinemaId
+        this.query.cinemaId = cinid.data.cinemaId
       // }
 
       // 获取上刊列表
@@ -430,9 +431,9 @@ export default class Main extends ViewBase {
   color: #00202d;
   padding: 0 10px 0 10px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.3);
   line-height: 40px;
   font-size: 14px;
+  background: #c2d6e3;
 }
 .li-item {
   color: #00202d;

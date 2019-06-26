@@ -242,9 +242,10 @@ export default class Main extends ViewBase {
   dataForm: any = { ...dataForm }
 
   columns4 = [
-    { title: '充值ID', key: 'id', align: 'center' },
+    { title: '充值ID', key: 'id', align: 'center', width: 70, },
     {
       title: '申请时间',
+      width: 120,
       key: 'applyTime',
       align: 'center',
       render: (hh: any, { row: { applyTime } }: any) => {
@@ -263,16 +264,29 @@ export default class Main extends ViewBase {
       title: '银行账号',
       key: 'accountNumber',
       align: 'center',
-      width: 150,
+      width: 90,
+      render: (hh: any, { row: { accountNumber } }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        const html = String(accountNumber).substring(String(accountNumber).length - 4)
+        return accountNumber == null ? (
+          <span class="datetime" v-html="-" />
+        ) : (
+          <span class="datetime" v-html={'****' + html} />
+        )
+        /* tslint:enable */
+      }
     },
     {
       title: '汇款人姓名',
       key: 'accountName',
-      align: 'center'
+      align: 'center',
+      width: 115,
     },
     {
       title: '汇款时间',
       key: 'remittanceDate',
+      width: 120,
       align: 'center',
       render: (hh: any, { row: { remittanceDate } }: any) => {
         /* tslint:disable */
@@ -295,18 +309,18 @@ export default class Main extends ViewBase {
     {
       title: '充值金额/元',
       key: 'amount',
-      align: 'center'
+      align: 'center',
+      width: 125,
     },
     {
       title: '备注',
       key: 'remark',
       align: 'center',
-      width: 130,
       render: (hh: any, { row: { remark } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        const html1 = String(remark).slice(0, 6) + '...'
-        if (String(remark).length >= 7) {
+        const html1 = String(remark).slice(0, 4) + '...'
+        if (String(remark).length >= 4) {
           return (
             <div>
               <tooltip max-width="200" transfer content={remark} placement="top">
@@ -325,7 +339,7 @@ export default class Main extends ViewBase {
     {
       title: '汇款凭证',
       align: 'center',
-      width: 130,
+      width: 100,
       render: (hh: any, { row: { imageList } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
@@ -336,7 +350,7 @@ export default class Main extends ViewBase {
             href="javascript:;"
             on-click={this.onView.bind(this , imageList.url)}
             class="operation">
-            查看汇款凭证
+            查看
           </a>
         )
         /* tslint:enable */
@@ -345,7 +359,7 @@ export default class Main extends ViewBase {
     {
       title: '状态',
       key: 'statusText',
-      width: 80,
+      width: 90,
       align: 'center',
       render: (
         hh: any,
@@ -876,6 +890,15 @@ export default class Main extends ViewBase {
   top: 80%;
   left: 18%;
 }
+/deep/ .ivu-table-cell {
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-all;
+  box-sizing: border-box;
+}
 /deep/ .ivu-form .ivu-form-item-label {
   font-size: 14px !important;
   color: rgba(179, 188, 192, 1);
@@ -885,7 +908,7 @@ export default class Main extends ViewBase {
   height: 40px;
   line-height: 40px;
   color: rgba(179, 188, 192, 1);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
 }
 /deep/ .ivu-table td {

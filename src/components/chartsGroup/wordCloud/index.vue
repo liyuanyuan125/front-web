@@ -118,7 +118,8 @@ export default class WordCloudChart extends ViewBase {
       list: mocklist,
       shape: 'square',
       ellipticity: 0.65,
-      click: this.clickHandle
+      click: this.clickHandle,
+      // hover: this.hoverHandle
     }
     WordCloud(ele, option)
   }
@@ -133,6 +134,10 @@ export default class WordCloudChart extends ViewBase {
   clickHandle(item: any, dimension: any, event: any) {
     this.$emit('keyChange', item)
   }
+
+  // hoverHandle(item: any, dimension: any, event: any) {
+  //   console.log(item, dimension, event)
+  // }
 
   @Watch('initDone')
   watchInitDone(val: boolean) {
@@ -153,3 +158,9 @@ export default class WordCloudChart extends ViewBase {
   }
 }
 </script>
+<style lang="less" scoped>
+.wordCloud-wp {
+  cursor: pointer;
+}
+</style>
+

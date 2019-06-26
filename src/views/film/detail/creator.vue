@@ -7,7 +7,7 @@
   			<Row  class='col-img'><img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt=""></Row>
   			<Row class='r-h'>
   				<Row class='de-ro' @click='jump(it.id)'>{{it.name}}<br>{{it.nameEn}}</Row>
-  				<Row class='de-ro-two'>导演 Director</Row>
+  				<Row class='de-ro-two'>导演</Row>
   				<Row class='de-ro-thr'>代表作品:<br> <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
@@ -26,7 +26,7 @@
           <span v-if='it.jyIndex'>{{it.jyIndex / 100}}</span></Row>
   			<Row class='r-h'>
   				<Row class='de-ro' @click='jump(it.id)'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
-  				<Row class='de-ro-two'>演员 actor</Row>
+  				<Row class='de-ro-two'>演员</Row>
   				<Row class='de-ro-thr'>代表作品:<br> 
            <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
@@ -48,7 +48,7 @@
         <Row :span='2' class='col-img'><img @click='jump(it.id)' :src="it.headImg == null || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt=""></Row>
         <Row class='r-h'>
           <Row class='de-ro' @click='jump(it.id)'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
-          <Row class='de-ro-two'>编剧 Writer</Row>
+          <Row class='de-ro-two'>编剧</Row>
           <Row class='de-ro-thr'>代表作品:<br> <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
@@ -65,7 +65,7 @@
         <Row :span='2' class='col-img'><img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt=""></Row>
         <Row class='r-h'>
           <Row class='de-ro' @click='jump(it.id)'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
-          <Row class='de-ro-two'>制片人 Producer</Row>
+          <Row class='de-ro-two'>制片人</Row>
           <Row class='de-ro-thr'>代表作品:<br> <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;

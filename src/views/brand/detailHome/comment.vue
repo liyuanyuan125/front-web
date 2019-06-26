@@ -693,7 +693,7 @@ export default class Temporary extends ViewBase {
     font-size: 16px;
     font-weight: 500;
     color: rgba(255, 255, 255, 1);
-    padding: 0 25px;
+    padding: 25px 25px 0 0;
   }
 }
 </style>

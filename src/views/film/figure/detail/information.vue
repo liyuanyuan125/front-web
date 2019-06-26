@@ -12,7 +12,9 @@
     <ul class="personal-relation">
       <li v-for="item in personalList" :key="item.id">
         <p class="per-title font_16">{{item.title}}</p>
-        <p class="head-img"><img :src="item.headImg" /></p>
+        <p class="head-img">
+          <a class=""><img :src="item.headImg" /></a>
+        </p>
         <p class="per-name font_18">{{item.name}}</p>
         <p class="per-englist font_18">{{item.nameEn || '暂无'}}</p>
         <p><span v-for="(it, index) in item.professions" :key="index">{{handleProfess(it.code)}}<em v-if="item.professions.length-1 != index"> / </em></span></p>
@@ -22,7 +24,9 @@
     </ul>
     <h2 class="nav-title">图片（{{imgList.length}}）</h2>
     <ul name="list" v-if="imgList.length" tag="ul" class="loading-img">
-      <li v-for="(img, index) in imgList" :key="index"><img :src="img" alt=""/></li>
+      <li v-for="(img, index) in imgList" :key="index">
+        <a class="img-list"><img :src="img" alt=""/></a>
+      </li>
     </ul>
 
     <!-- <div class="show-all" v-if="imgUrl.length > 5">
@@ -173,11 +177,16 @@ export default class Information extends ViewBase {
       text-align: center;
       padding-bottom: 20px;
       .head-img {
-        img {
+        a {
           width: 140px;
           height: 140px;
+          display: block;
+          overflow: hidden;
           border-radius: 100%;
-          margin: 18px 0 18px;
+          margin: 18px auto;
+          img {
+            width: 140px;
+          }
         }
       }
       .per-englist {
@@ -194,12 +203,16 @@ export default class Information extends ViewBase {
     transition: all 2s;
     li {
       width: 20%;
-      height: 180px;
       margin-bottom: 25px;
       padding: 0 10px;
+      .img-list {
+        display: block;
+        width: 180px;
+        height: 180px;
+        overflow: hidden;
+      }
       img {
-        width: 100%;
-        height: 100%;
+        width: 180px;
       }
     }
   }
