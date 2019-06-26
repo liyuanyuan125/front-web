@@ -133,11 +133,19 @@ export function percent(rate: number, digits = 0) {
 
 /**
  * 将形如 20190622 形式的整数，格式化成日期
+ * 同时处理形如 2019、201906、2019-06、2019/06 的情况
  * @param date 整数
  * @param format 格式
  */
 export function intDate(date: number, format = 'YYYY-MM-DD') {
-  return moment(String(date)).format(format)
+  const strDate = String(date).trim()
+  if (/^\d{4}\d{2}\d{2}$/.test(strDate)) {
+    return moment(strDate).format(format)
+  }
+  if (/^(\d{4})[-\/\.]?(\d{2})$/.test(strDate)) {
+    return [RegExp.$1, RegExp.$2].join('-')
+  }
+  return date
 }
 
 /**
