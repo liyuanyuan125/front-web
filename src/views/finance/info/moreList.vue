@@ -99,7 +99,8 @@ export default class Main extends ViewBase {
     {
       title: '银行账号',
       key: 'accountNumber',
-      align: 'center'
+      align: 'center',
+      width: 150,
     },
     {
       title: '汇款人姓名',
@@ -121,7 +122,8 @@ export default class Main extends ViewBase {
     {
       title: '联系人电话',
       key: 'contactPhone',
-      align: 'center'
+      align: 'center',
+      width: 120,
     },
     {
       title: '充值金额/元',
@@ -131,6 +133,7 @@ export default class Main extends ViewBase {
     {
       title: '备注',
       key: 'remark',
+      width: 130,
       align: 'center',
       render: (hh: any, { row: { remark } }: any) => {
         /* tslint:disable */
@@ -153,6 +156,7 @@ export default class Main extends ViewBase {
     {
       title: '汇款凭证',
       align: 'center',
+      width: 130,
       render: (hh: any, { row: { imageList } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
