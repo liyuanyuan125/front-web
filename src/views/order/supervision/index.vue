@@ -196,7 +196,7 @@ export default class Main extends ViewBase {
     this.startTime = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000  // 本周的开始时间
     this.endTime = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1 // 本周的结束时间
 
-    if (new Date().getDay() == 5 || 6 || 0) {
+    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
       this.weekDate = [
       new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
       new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
@@ -205,7 +205,7 @@ export default class Main extends ViewBase {
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
       this.seach()
-    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
       this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
       const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
       const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
@@ -216,7 +216,7 @@ export default class Main extends ViewBase {
   }
   // 上周
   seachchgup() {
-    if (new Date().getDay() == 5 || 6 || 0) {
+    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
       let ss = this.startTime + (24 * 60 * 60 * 1000 * 7)
       let ee = this.endTime + (24 * 60 * 60 * 1000 * 7)
       this.weekDate = [
@@ -229,7 +229,7 @@ export default class Main extends ViewBase {
       this.startTime -= this.datanum
       this.endTime -= this.datanum
       this.seach()
-    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
       this.weekDate = [new Date(this.startTime -= this.datanum), new Date(this.endTime -= this.datanum)]
       const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
       const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
@@ -241,7 +241,7 @@ export default class Main extends ViewBase {
 
   // 下周
   seachchgdown() {
-    if (new Date().getDay() == 5 || 6 || 0) {
+    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
       let ss = this.startTime + (24 * 60 * 60 * 1000 * 7)
       let ee = this.endTime + (24 * 60 * 60 * 1000 * 7)
       this.weekDate = [
@@ -254,7 +254,7 @@ export default class Main extends ViewBase {
       this.startTime += this.datanum
       this.endTime += this.datanum
       this.seach()
-    } else if (new Date().getDay() == 1 || 2 || 3 ) {
+    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
       this.weekDate = [new Date(this.startTime += this.datanum), new Date(this.endTime += this.datanum)]
       const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
       const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
