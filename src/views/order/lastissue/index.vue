@@ -52,8 +52,8 @@
         				<row>
         					<Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
                   
-                  <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
-                  <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
+                  <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
+                  <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
         					  <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
 						        <router-link style='color: #00202D;margin-left: 25px;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,10)}}...</router-link>
 						      </Tooltip>

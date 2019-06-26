@@ -242,10 +242,10 @@ export default class Main extends ViewBase {
   dataForm: any = { ...dataForm }
 
   columns4 = [
-    { title: '充值ID', key: 'id', align: 'center' },
+    { title: '充值ID', key: 'id', align: 'center', width: 70, },
     {
       title: '申请时间',
-      width: 100,
+      width: 120,
       key: 'applyTime',
       align: 'center',
       render: (hh: any, { row: { applyTime } }: any) => {
@@ -264,7 +264,7 @@ export default class Main extends ViewBase {
       title: '银行账号',
       key: 'accountNumber',
       align: 'center',
-      width: 100,
+      width: 90,
       render: (hh: any, { row: { accountNumber } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
@@ -281,12 +281,12 @@ export default class Main extends ViewBase {
       title: '汇款人姓名',
       key: 'accountName',
       align: 'center',
-      width: 110,
+      width: 115,
     },
     {
       title: '汇款时间',
       key: 'remittanceDate',
-      width: 100,
+      width: 120,
       align: 'center',
       render: (hh: any, { row: { remittanceDate } }: any) => {
         /* tslint:disable */
@@ -310,13 +310,12 @@ export default class Main extends ViewBase {
       title: '充值金额/元',
       key: 'amount',
       align: 'center',
-      width: 113,
+      width: 125,
     },
     {
       title: '备注',
       key: 'remark',
       align: 'center',
-      width: 110,
       render: (hh: any, { row: { remark } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
@@ -891,6 +890,15 @@ export default class Main extends ViewBase {
   top: 80%;
   left: 18%;
 }
+/deep/ .ivu-table-cell {
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-all;
+  box-sizing: border-box;
+}
 /deep/ .ivu-form .ivu-form-item-label {
   font-size: 14px !important;
   color: rgba(179, 188, 192, 1);
@@ -900,7 +908,7 @@ export default class Main extends ViewBase {
   height: 40px;
   line-height: 40px;
   color: rgba(179, 188, 192, 1);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
 }
 /deep/ .ivu-table td {
