@@ -38,7 +38,10 @@
    <div style='padding: 20px;'>
      <Row class='title' style='margin-bottom: 20px;'>图片(共{{imgUrl.length}}张)</Row>
       <transition-group name="list" tag="ul" class="loading-img">
-        <li class='desimg' v-for="img in imgList" :key="img.key"><img :src="img.img"/></li>
+        <!-- <li class='desimg' v-for="img in imgList" :key="img.key"><img :src="img.img"/></li> -->
+        <li class='desimg' v-for="img in imgList" :key="img.key" :style="{
+          backgroundImage: `url(${img.img})`
+        }"></li>
       </transition-group>
       <div class="show-all" v-if="imgUrl.length > 5">
         <span @click="handleToggle">{{tabShowTitle}}<Icon :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}" type="ios-arrow-down" size="25" /></span>
@@ -198,6 +201,7 @@ export default class Main extends ViewBase {
   }
 }
 .desimg {
+  background-size: cover;
   img {
     width: 100%;
     height: 100%;
@@ -210,10 +214,12 @@ export default class Main extends ViewBase {
   margin-right: -10px;
   transition: all 2s;
   li {
-    width: 25%;
+    width: 22%;
     height: 180px;
     margin-bottom: 25px;
     padding: 0 4px;
+    background-size: cover;
+    margin-left: 2.5%;
     img {
       width: 100%;
       height: 100%;

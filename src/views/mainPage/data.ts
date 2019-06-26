@@ -197,7 +197,7 @@ export async function getMovie(id: number) {
       jyIndexSamePeriodRanking,
       trailers,
 
-      searchKeywords,
+      tags,
       fansPortrait,
 
       releaseStatus,
@@ -223,7 +223,7 @@ export async function getMovie(id: number) {
   const hasShow = releaseStatus >= 3
 
   const result = {
-    bubbleList: searchKeywords || [],
+    bubbleList: tags || [],
 
     basic: {
       id,

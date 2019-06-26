@@ -35,10 +35,10 @@
     <div class="list-col-item">
       <h3 class="title">广告排期</h3>
       <div class="text-rows-col">
-        <Row>
-          <Col :span="8"><p><label>影片</label>{{schedulingData.movieName || '暂无'}} </p></Col>
-          <Col :span="8"><p><label>投放排期</label> <span>{{formatConversion(schedulingData.beginDate)}} ~ {{formatConversion(schedulingData.endDate)}}</span> </p></Col>
-          <Col :span="8"><p><label>投放周期</label>{{schedulingData.cycle || 0}}天 </p></Col>
+        <Row v-for="it in schedulingData" :key="it.movieId">
+          <Col :span="8"><p><label>影片</label>{{it.movieName || '暂无'}} </p></Col>
+          <Col :span="8"><p><label>投放排期</label> <span>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</span> </p></Col>
+          <Col :span="8"><p><label>投放周期</label>{{it.cycle || 0}}天 </p></Col>
         </Row>
       </div>
     </div>
@@ -66,7 +66,7 @@
     <!-- dcp包 -->
     <div class="list-col-item">
       <h3 class="title">DCP包</h3>
-      <div class="video-plyr">
+      <div class="video-plyr player-wrap">
         <VuePlyr> <video :src="list.srcFileUrl" ></video></VuePlyr>
       </div>
       <div class="down-dcp-url">
@@ -74,21 +74,13 @@
         <ul>
           <li v-for="item in dcpData" class="flex-box">
              <span v-for=" it in list.typeList" v-if="item.typeCode == it.key">{{it.text}}</span>
-             <a :href="item.fileUrl" target="_blank">{{item.name}}</a>
+             <a :href="item.fileUrl" target="_blank">{{item.fileUrl}}</a>
           </li>
         </ul>
       </div>
     </div>
-    <!-- <Table  stripe  :columns="columnsDcp" :data="dcpData">
-      <template slot="typeCode" slot-scope="{row}">
-        <span v-for=" item in list.typeList" v-if="row.typeCode == item.key">{{item.text}}</span>
-      </template>
-      <template slot="name" slot-scope="{row, index}">
-        <a :href="row.fileUrl" target="_blank">{{row.name}}</a>
-      </template>
-    </Table> -->
     <!-- 日志 -->
-    <div class="list-col-item">
+    <div class="list-col-item" v-if="logList.length > 0">
       <h3 class="title">日志</h3>
       <div class="text-rows log-list">
         <p v-for="(item, index) in logList" :key="index">
@@ -139,6 +131,9 @@ export default class Main extends ViewBase {
   schedulingData = []
   cinemaDataList: any = []
 
+  // 详情接单影院
+  receiveCinemas = []
+
   dcpData = []
   logList = []
 
@@ -150,10 +145,10 @@ export default class Main extends ViewBase {
     return formatNumber
   }
 
-  mounted() {
+  async mounted() {
     this.id = this.$route.params.id
-    this.querySelect()
-    this.receiveCinemaList()
+    await this.querySelect()
+    await this.receiveCinemaList()
   }
   handleCreateTime(times: any) {
     return moment(times).format(timeFormat)
@@ -172,9 +167,11 @@ export default class Main extends ViewBase {
         data: {item}
       } = await orderDetail(id)
       this.list = item || {}
-      this.schedulingData = item.targetMovies[0] || []
+      this.schedulingData = item.targetMovies || []
       // 目标影院
       this.targetCinemaLength = item.targetCinemas.length
+      // 接单影院
+      this.receiveCinemas = item.receiveCinemas || []
       this.dcpData = item.attachments
       this.logList = item.logList
     } catch (ex) {
@@ -189,8 +186,20 @@ export default class Main extends ViewBase {
       } = await receiveCinemaList(this.id, {
         ...this.form
       })
-      this.cinemaDataList = items || []
-      this.total = totalCount
+      const itemsList = items || []
+      // this.cinemaDataList = items || []
+      const receiveList: any[] = []
+      if (this.receiveCinemas.length > 0) {
+        this.receiveCinemas.map((it: any) => {
+          itemsList.filter((item: any) => {
+            if (item.id == it) {
+              receiveList.push(item)
+            }
+          })
+        })
+      }
+      this.cinemaDataList = receiveList
+      this.total = this.cinemaDataList.length
     } catch (ex) {
       this.handleError(ex)
     }
