@@ -271,11 +271,14 @@ export async function getMovie(id: number) {
 
     actorData: {
       star: celebrityRating,
-      list: (dot(personMap, 'Actor') || []).slice(0, 3).map((it: any) => ({
-        id: it.id,
-        name: it.name,
-        avatar: it.headImg
-      })),
+      list: (dot(personMap, 'Actor') as any[] || [])
+        .filter(it => it != null)
+        .slice(0, 3)
+        .map((it: any) => ({
+          id: it.id,
+          name: it.name,
+          avatar: it.headImg
+        })),
       more: {
         name: 'film-detail-creator',
         params: { id }
