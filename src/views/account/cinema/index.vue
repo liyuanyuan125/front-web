@@ -9,20 +9,25 @@
         <Icon type="ios-search" size="22"/>
       </Button>
     </div>
-    <Table ref="selection" stripe class="tables" :loading="tableLoading" :columns="columns4" :data="cinemaData">
-      <template slot-scope="{row}" slot="action">
-        <a v-auth="'account-manage.managecinema#view'" @click="toDetail( row.id)" class="operation" >详情</a>
-      </template>
-    </Table>
-    <Page :total="total" v-if="total>0" class="btnCenter"
-      :current="dataForm.pageIndex"
-      :page-size="dataForm.pageSize"
-      :page-size-opts="[10, 20, 50, 100]"
-      show-total
-      show-sizer
-      show-elevator
-      @on-change="sizeChangeHandle"
-      @on-page-size-change="currentChangeHandle"/>
+    <div class="list-box">
+      <div class="list-table">
+        <Table stripe  :loading="tableLoading" :columns="columns4" :data="cinemaData">
+          <template slot-scope="{row}" slot="action">
+            <a v-auth="'account-manage.managecinema#view'" @click="toDetail( row.id)" class="operation" >详情</a>
+          </template>
+        </Table>
+        <Page :total="total" v-if="total>0" class="btnCenter"
+          :current="dataForm.pageIndex"
+          :page-size="dataForm.pageSize"
+          :page-size-opts="[10, 20, 50, 100]"
+          show-total
+          show-sizer
+          show-elevator
+          @on-change="sizeChangeHandle"
+          @on-page-size-change="currentChangeHandle"/>
+      </div>
+    </div>
+    
   </div>
 </template>
 
@@ -127,8 +132,8 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-@import '~@/site/lib.less';
 @import '~@/site/common.less';
+@import '../less/table.less';
 .page {
   padding: 30px 0 0 20px;
 }
@@ -155,105 +160,13 @@ export default class Main extends ViewBase {
     line-height: 40px;
     font-size: 14px;
     height: 40px;
-  }
-}
-.bth-search {
-  border-radius: 0 5px 5px 0;
-  .button-style(#fff, #00202d);
-}
-/deep/ .ivu-table-wrapper > .ivu-spin-fix {
-  background: rgba(0, 0, 0, 0);
-  border: none;
-}
-/deep/ .ivu-input-wrapper,
-/deep/ .ivu-input {
-  background: rgba(255, 255, 255, 0.4);
-  height: 40px;
-  line-height: 40px;
-  font-size: 14px;
-  border-radius: 5px 0 0 5px;
-  &::placeholder {
-    font-size: 14px;
-    color: #00202d;
-  }
-}
-.list-box {
-  background: rgba(0, 32, 45, .8);
-  margin: 0 20px;
-  border-radius: 5px;
-  padding-bottom: 40px;
-}
-.list-table {
-  position: relative;
-  background: rgba(0, 0, 0, 0);
-  border-radius: 5px;
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 61px;
-    border-radius: 5px 5px 0 0;
-    background: rgba(0, 32, 45, 0.3);
-  }
-  /deep/ .ivu-table-header {
-    position: relative;
-  }
-  /deep/ .ivu-table-row {
-    border-bottom: 1px solid #00202d;
-  }
-}
-/deep/ .ivu-table-wrapper {
-  border-radius: 5px;
-  min-height: 280px;
-  position: relative;
-  /deep/ .ivu-table-header th {
-    height: 60px;
-    background: rgba(0, 32, 45, 0.3);
-    color: #fff;
-    line-height: 60px;
-    span {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 5px 0 0 5px;
+    &::placeholder {
       font-size: 14px;
+      color: #00202d;
     }
   }
-  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
-    background: rgba(255, 255, 255, 0);
-  }
-  /deep/ .ivu-table {
-    background: rgba(255, 255, 255, 0);
-  }
-  /deep/ .ivu-table-row {
-    background: rgba(255, 255, 255, 0);
-    /deep/ td {
-      color: #fff;
-      background: rgba(0, 0, 0, 0);
-      a {
-        color: #4fa6bb;
-      }
-    }
-  }
-  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
-    background: rgba(255, 255, 255, 0);
-  }
-  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
-    background: rgba(255, 255, 255, 0);
-  }
-  /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
-    background: rgba(255, 255, 255, 0);
-  }
-  /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
-    span {
-      color: #fff;
-      font-size: 14px;
-    }
-  }
+}
 
-  /deep/ .ivu-table-tip {
-    line-height: 200px;
-    /deep/ td {
-      color: #fff;
-      background: rgba(255, 255, 255, 0);
-    }
-  }
-}
 </style>

@@ -45,15 +45,22 @@
                 <p><label>投放周期</label><em>{{it.cycle || 0}}天</em></p>
                 <p><label>目标场次</label><em>{{it.targetSession || '暂无'}}</em></p>
               </div>
-              <div class="col-order target-cinema"><p><label>目标影片</label><span  v-if='it.targetMovies.length > 0' 
-                v-for='item in it.targetMovies'>《{{item.movieName}}》</span><span v-if='it.targetMovies.length == 0'>暂无    </span></p></div>
+              <div class="target-cinema">
+                <label>目标影片</label>
+                <div>
+                  <span  v-if='it.targetMovies.length > 0' v-for='item in it.targetMovies'>《{{item.movieName}}》</span>
+                  <span v-if='it.targetMovies.length == 0'>暂无 </span>
+                </div>
+              </div>
+
             </col>
             <Col span="5">
                  <div v-for="item in statusList" :key="item.key" v-if="item.key == it.status" class="statu-col" 
                  :class="{'statu-col-error': item.key == 4 || item.key == 5}">{{item.text}}</div>
             </col>
             <Col span="5" class="text-center">
-               <div class="btn-sure-cancel">
+            <!-- 待审核状态展示 -->
+                <div class="btn-sure-cancel" v-if="it.status == 1">
                   <p><Button type="primary" @click="editReject(it.id)" class="operation-btn">确定接单</Button></p>
                   <p><Button  @click="editRefuse(it)" class="operation-btn result-btn">拒绝接单</Button></p>
                 </div>
@@ -74,7 +81,7 @@
 
     <dlgRejec ref="reject" v-model="rejectVisible" v-if="rejectVisible.visible" @rejReload="orderList"/>
     <targetDlg ref="target" v-if="targetShow" />
-    <refuseDlg ref="refuse" v-if="refuseShow"  @refReload="orderList" />
+    <refuseDlg ref="refuse" v-if="refuseShow"  @refReload="refReload" />
   </div>
 </template>
 
@@ -148,7 +155,10 @@ export default class Main extends ViewBase {
     this.queryCinemaList()
     this.orderList()
   }
-
+  refReload() {
+    this.refuseShow = false
+    this.orderList()
+  }
   handleJoin(tab: any) {
     if ('num' in tab) {
       return `${tab.text}(${tab.num})`
@@ -361,6 +371,11 @@ export default class Main extends ViewBase {
       padding: 30px 0 40px 30px;
       .target-cinema {
         padding-top: 35px;
+        display: flex;
+        label {
+          display: block;
+          min-width: 86px;
+        }
       }
       .col-order {
         margin-bottom: 12px;
@@ -374,6 +389,17 @@ export default class Main extends ViewBase {
           }
         }
       }
+      // .target-cinema {
+      //   margin-bottom: 12px;
+      //   p {
+      //     display: flex;
+      //     label {
+      //       display: inline-block;
+      //       width: 80px;
+      //       color: rgba(0, 32, 45, .7);
+      //     }
+      //   }
+      // }
     }
     .li-item {
       padding: 0 10px 0 10px;

@@ -134,6 +134,7 @@ export default class Main extends ViewBase {
   .count {
     font-size: 24px;
     padding-left: 20px;
+    color: #fff;
   }
 }
 .model-table-title {
