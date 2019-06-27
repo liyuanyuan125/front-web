@@ -160,13 +160,15 @@
           <div class="btn-center">
             <Button type="default" class="button-ok btn-next" @click="back('dataform')"><img width="16px" src="./assets/next.png" /> 返回上一步</Button>
             <Button type="primary" class="button-ok btn-save" @click="next('dataform')">保存投放方案</Button>
-            <!-- <Button type="default" class="button-ok btn-export" @click="back('dataform')"><img width="16px" src="./assets/export.png" /> 导出投放方案</Button> -->
-            <!-- <Button type="default" class="button-ok btn-collect" @click="back('dataform')">联系商务</Button> -->
+            <Button type="default" class="button-ok btn-export" @click="exportadver" ><img width="16px" src="./assets/export.png" /> 导出投放方案</Button>
+            <Button type="default" class="button-ok btn-collect" @click="collectpeo">联系商务</Button>
           </div>
         </Form>  
       </Col>
     </Row>
     <Xlsx ref="down" :id="$route.params.setid" />
+    <Precept ref="precept" :id="$route.params.setid" />
+    <Collect ref="collectpeos" />
   </div>
 </template>
 
@@ -179,16 +181,18 @@ import { orienteering, adverdetail, getRecommend, getCheme,
   getcinemas, getchains, getcities, getprovinces } from '@/api/popPlan.ts'
 import moment from 'moment'
 import { formatCurrency } from '@/fn/string.ts'
-import Exportfile from './exportfile.vue'
+import Precept from './exprecept.vue'
 import Xlsx from './downxsxl.vue'
+import Collect from '../planlistmodel/collect.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
     PreceptHead,
+    Precept,
     PrecepFilm,
-    Exportfile,
-    Xlsx
+    Xlsx,
+    Collect
   }
 })
 export default class App extends ViewBase {
@@ -312,11 +316,21 @@ export default class App extends ViewBase {
     })
   }
 
+  collectpeo() {
+     this.$nextTick(() => {
+      (this.$refs as any).collectpeos.init()
+    })
+  }
+
   movieMap(val: any) {
-    const vals = val ? val.split('|') : []
-    return this.movieTypeList.filter((it: any) => {
-      return vals.includes(it.key)
-    }).map((it: any) => it.text).join(' | ')
+    if (val && val.length > 0) {
+      const vals = val ? val.split('|') : []
+      return this.movieTypeList.filter((it: any) => {
+        return vals.includes(it.key)
+      }).map((it: any) => it.text).join(' | ')
+    } else {
+      return '-'
+    }
   }
 
   ageTypeMap(val: any) {
@@ -401,6 +415,10 @@ export default class App extends ViewBase {
     } catch (ex) {
       this.handleError(ex)
     }
+  }
+
+  exportadver() {
+    (this.$refs.precept as any).down()
   }
 
   async provienfind() {

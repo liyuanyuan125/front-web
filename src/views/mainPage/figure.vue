@@ -33,6 +33,7 @@
             title="近7日评论分析"
             :more="{ name: 'film-figure-detail-comment', params: { id } }"
             :data="commentData"
+            :formatter="commentFormatter"
             class="comment-pane"
           />
         </div>
@@ -103,6 +104,12 @@ export default class FigurePage extends ViewBase {
   activeFansData: any = null
 
   hotData: any[] = []
+
+  commentFormatter({ seriesName, dataIndex }: any) {
+    const { name, value, trend } = this.commentData[dataIndex]
+    const inc = trend > 0 ? `(上升${trend}%)` : trend < 0 ? `(下降${-trend}%)` : ''
+    return `${seriesName}<br>${name}：${value}%${inc}`
+  }
 
   hotFormatter([{ dataIndex }]: any) {
     const { value } = this.hotData[dataIndex]
@@ -202,7 +209,7 @@ export default class FigurePage extends ViewBase {
 }
 
 .board-pane {
-  min-width: 580px;
+  width: 580px;
   margin-top: 14px;
 }
 

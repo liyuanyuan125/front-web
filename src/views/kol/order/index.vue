@@ -29,21 +29,18 @@
             <div class="flex-box status-content">
                 <Tabs v-model="status" class="order-status-tab">
                   <TabPane label="全部订单" key="" name="" ></TabPane>
-                  <TabPane :label="auditStatu" key="2" name="2,3" ></TabPane>
-                  <TabPane :label="paymentStatu" key="4" name="4,8"></TabPane>
-                  <TabPane :label="sendOrderStatu" key="5" name="5" ></TabPane>
-                  <TabPane :label="carryOutStatu" key="6" name="6" ></TabPane>
-                  <TabPane :label="runningStatu" key="7" name="7" ></TabPane>
-                  <!-- <TabPane label="全部订单" key="0" ></TabPane> -->
-                  <!-- <TabPane :label="item.text" v-for="item in statusList" v-if="item.key < 9 && item.key != 1" :key="item.key"></TabPane> -->
+                  <TabPane :label="countData.approvalSize ? `待审核(${countData.approvalSize})` : '待审核'" key="2" name="2,3" ></TabPane>
+                  <TabPane :label="countData.waitPaySize ? `待支付(${countData.waitPaySize})` : '待支付'" key="4" name="4,8"></TabPane>
+                  <TabPane :label="countData.distributorSize ? `派单中(${countData.distributorSize})` : '派单中' " key="5" name="5" ></TabPane>
+                  <TabPane :label="countData.waitExecuteSize ? `待执行(${countData.waitExecuteSize})` : '待执行' " key="6" name="6" ></TabPane>
+                  <TabPane :label="countData.execuTingSize ? `执行中(${countData.execuTingSize})` : '执行中'" key="7" name="7" ></TabPane>
                 </Tabs>
-                <Dropdown class="drop-down" @on-click="(id) => status=id">
+                <Dropdown class="drop-down"  v-if="total > 0" @on-click="(id) => status=id">
                     <span href="javascript:void(0)">其他<Icon type="ios-arrow-down"></Icon></span>
                     <DropdownMenu slot="list">
-                        <DropdownItem name="9" >已完成<i v-if="finishStatu">({{finishStatu}})</i></DropdownItem>
-                        <DropdownItem name="10" >已取消<i v-if="cancelStatu">({{cancelStatu}})</i></DropdownItem>
-                        <DropdownItem name="11" >派单失败<i v-if="failStatu">({{failStatu}})</i></DropdownItem>
-                        <!-- <DropdownItem v-for="item in statusRest" :name="item.key" :key="item.key">{{item.text}}</DropdownItem> -->
+                        <DropdownItem name="9" >{{countData.finishSize ? `已完成(${countData.finishSize})` : '已完成'}}</i></DropdownItem>
+                        <DropdownItem name="10" >{{countData.cancelSize ? `已取消(${countData.cancelSize})` : '已取消'}}</i></DropdownItem>
+                        <DropdownItem name="11" >{{countData.failSize ? `派单失败(${countData.failSize})` : '派单失败'}}</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
                 <Button type="primary" @click="$router.push({name: 'kol-applyTicket'})" class="apply-btn">申请发票</Button>
@@ -128,8 +125,8 @@
                     </p>
                   </Col>
                   <Col :span="7" class="flex-box">
-                    <img v-for="(item, index) in item.orderItemList" :src="item.accountPhotoUrl" v-if="index < 5" :key="index" alt="" class="li-img"/>
-                    <span class="img-num">等10个账号</span>
+                     <img v-for="(it, index) in item.orderItemList" :src="it.accountPhotoUrl" v-if="index < 5" :key="index" alt="" class="li-img"/>
+                     <span class="img-num" v-if="(item.orderItemList || []).length > 4">等{{(item.orderItemList || []).length}}个账号</span>
                   </Col>
                   <Col :span="8">
                     <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(item.totalFee)}}</em></p>
@@ -165,6 +162,7 @@ import { getUser } from '@/store'
 import pagination from '@/components/page.vue'
 import moment from 'moment'
 import { toMap } from '@/fn/array'
+import { uniq, uniqBy } from 'lodash'
 import {
   orderList,
   orderBrand,
@@ -188,7 +186,9 @@ export default class Main extends ViewBase {
     pageIndex: 1,
     pageSize: 20
   }
-  form = {}
+  form = {
+    projectName: null
+  }
   spinShow = false
   // 订单和草稿 默认0订单 1草稿
   orderTab = 0
@@ -208,17 +208,6 @@ export default class Main extends ViewBase {
 
   list = []
   countData: any = {}
-  // draftList = []
-
-  // 状态数量展示
-  auditStatu = ''
-  paymentStatu = ''
-  sendOrderStatu = ''
-  carryOutStatu = ''
-  runningStatu = ''
-  finishStatu = ''
-  cancelStatu = ''
-  failStatu = ''
 
   // 定义数字格式
   formatNumber = formatNumber
@@ -231,38 +220,34 @@ export default class Main extends ViewBase {
   async tableList() {
     this.spinShow = true
     try {
-      if (this.status == 1) {
+      if (this.status == 1) { // 草稿
         this.pageList.pageSize = 300
       } else {
         this.pageList.pageSize = 20
       }
+      let projectName: any = this.form.projectName
+      projectName = projectName && projectName.startsWith('*') ? `\\${projectName}` : projectName
       const { data } = await orderList({
         ...this.pageList,
         ...this.form,
+        projectName,
         orderStatus: this.status == 0 ? null : this.status
       })
       this.spinShow = false
-      this.countData = data
+      this.countData = data || []
       this.list = (data.items || []).map((it: any) => {
         return {
           ...it,
-          createTime : moment(it.createTime).format(timeFormat)
+          orderItemList: uniqBy(it.orderItemList, 'kolId'), // 去重一个kol有两个任务
+          createTime: moment(it.createTime).format(timeFormat)
         }
       })
       this.total = data.totalCount || 0
       this.intStatusList = data.statusList
-
-      // 数量展示
-      this.auditStatu = data.approvalSize ? `待审核(${ data.approvalSize})` : '待审核'
-      this.paymentStatu = data.approvalSize ? `待支付(${ data.waitPaySize})` : '待支付'
-      this.sendOrderStatu = data.distributorSize ? `派单中(${ data.distributorSize})` : '派单中'
-      this.carryOutStatu = data.waitExecuteSize ? `待执行(${ data.waitExecuteSize})` : '待执行'
-      this.runningStatu = data.execuTingSize ? `执行中(${ data.execuTingSize})` : '执行中'
-      this.finishStatu = data.finishSize
-      this.cancelStatu = data.cancelSize
-      this.failStatu = data.failSize
     } catch (ex) {
       this.spinShow = false
+      this.list = []
+       this.total = 0
       this.handleError(ex)
     }
   }
