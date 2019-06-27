@@ -37,7 +37,10 @@
       <div class="text-rows-col">
         <Row v-for="it in schedulingData" :key="it.movieId">
           <Col :span="8"><p><label>影片</label>{{it.movieName || '暂无'}} </p></Col>
-          <Col :span="8"><p><label>投放排期</label> <span>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</span> </p></Col>
+          <Col :span="8"><p><label>投放排期</label>
+            <span v-if="it.beginDate && it.endDate">{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</span>
+            <span v-else>暂无</span>
+          </p></Col>
           <Col :span="8"><p><label>投放周期</label>{{it.cycle || 0}}天 </p></Col>
         </Row>
       </div>
@@ -70,7 +73,7 @@
         <VuePlyr> <video :src="list.srcFileUrl" ></video></VuePlyr>
       </div>
       <div class="down-dcp-url">
-        <h4 class="flex-box"><span>格式</span><span>下载链接</span></h4>
+        <!-- <h4 class="flex-box"><span>格式</span><span>下载链接</span></h4> -->
         <ul>
           <li v-for="item in dcpData" class="flex-box">
              <span v-for=" it in list.typeList" v-if="item.typeCode == it.key">{{it.text}}</span>
