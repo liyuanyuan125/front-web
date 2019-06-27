@@ -14,7 +14,7 @@
                   @on-change='currentTypeChange'
                   v-model="currentIndex"
                   type="button">
-        <Radio v-for="(item,index) in dict1"
+        <Radio v-for="(item,index) in dict1" v-show=" initDone "
                :key="item.key"
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
@@ -22,11 +22,11 @@
     <Row type="flex"
          justify="center" align="middle">
       <Col :span="24">
-        <div ref="refChart"
-           v-if="initDone"
-           :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
-        <div v-else class='loading-wp' :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
-            <TinyLoading  />
+        <div v-if="initDone">
+          <div ref="refChart" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
+        </div>
+        <div v-else class="loading-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
+          <TinyLoading />
         </div>
       </Col>
     </Row>
@@ -101,11 +101,32 @@ export default class PieNest extends ViewBase {
         {
           name: ' ',
           type: 'pie',
+          avoidLabelOverlap: true,
+          minAngle: 25, // 最小的扇区角度
           radius: ['40%', '55%'],
           color: this.color,
           label: {
             normal: {
-              formatter: '{b|{b}}\n{d}%  ',
+              formatter(v: any) {
+                let text = Math.round(v.percent) + '%' + '' + v.name
+                if ( text.length <= 8 ) {
+                  return text
+                } else if (text.length > 8 && text.length <= 16) {
+                  return text = `${text.slice(0, 8)}\n${text.slice(8)}`
+                } else if (text.length > 16 && text.length <= 24) {
+                  return text = `${text.slice(0, 8)}\n${text.slice(8, 16)}\n${text.slice(16)}`
+                } else if (text.length > 24 && text.length <= 30) {
+                  return text = `${text.slice(0, 8)}\n${text.slice(8, 16)}\n${text.slice(16, 24)}\n${text.slice(24)}`
+                } else if (text.length > 30) {
+                  return text = `
+                    ${text.slice(0, 8)}
+                    \n${text.slice(8, 16)}
+                    \n${text.slice(16, 24)}
+                    \n${text.slice(24, 30)}
+                    \n${text.slice(30)}
+                  `
+                }
+              },
               borderWidth: 1,
               borderRadius: 4,
               rich: {
