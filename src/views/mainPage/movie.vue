@@ -245,7 +245,7 @@ export default class MoviePage extends ViewBase {
 }
 
 .board-pane {
-  min-width: 580px;
+  width: 580px;
   margin-top: 19px;
 }
 
