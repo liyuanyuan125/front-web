@@ -1,6 +1,6 @@
 <template>
-  <div class="page home-bg">
-    <h3 class="layout-title">影院信息</h3>
+  <div class="page">
+    <div class="cinema-title">影院信息</div>
     <div class="text-rows">
       <Row>
         <Col :span="12">
@@ -24,7 +24,7 @@
         </Col>
       </Row>
     </div>
-    <h3 class="layout-title">影厅信息</h3>
+    <div class="cinema-title">影厅信息</div>
     <Table stripe class="tables" :columns="columns4" :data="tableData"></Table>
   </div>
 </template>
@@ -102,8 +102,15 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-@import '~@/site/lib.less';
-
+.cinema-title {
+  font-size: 22px;
+  color: #fff;
+  padding: 30px 0 30px 30px;
+}
+.text-rows {
+  background: rgba(0, 32, 45, .8);
+  color: #fff;
+}
 </style>
 
 
