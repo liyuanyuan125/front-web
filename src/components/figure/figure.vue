@@ -4,10 +4,7 @@
     :content="title"
     class="figure-component"
   >
-    <figure
-      class="figure-img"
-      :style="{ backgroundImage: `url(${src})` }"
-    ></figure>
+    <img :src="src" class="figure-img">
   </component>
 </template>
 
@@ -29,19 +26,21 @@ export default class Figure extends Vue {
 
 <style lang="less" scoped>
 .figure-component {
+  display: inline-block;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   background-color: #fff;
+
   /deep/ .ivu-tooltip-rel {
     width: 100%;
     height: 100%;
+    overflow: hidden;
   }
 }
 
 .figure-img {
   width: 100%;
-  height: 100%;
-  background: no-repeat center top;
-  background-size: cover;
+  min-height: 100%;
 }
 </style>
