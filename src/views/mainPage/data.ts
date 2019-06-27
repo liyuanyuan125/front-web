@@ -3,7 +3,7 @@ import { at, keyBy, sumBy } from 'lodash'
 import { KeyText, MapType } from '@/util/types'
 import { slice } from '@/fn/object'
 import { dayOffsetRange } from '@/util/date'
-import { percent, dot, intDate } from '@/util/dealData'
+import { percent, dot, intDate, readableThousands, readableNumber } from '@/util/dealData'
 
 const getNames = (keys: string[], list: KeyText[]) => {
   const map = keyBy(list, 'key')
@@ -27,7 +27,7 @@ const hotData = (items: any[]) => {
     .map((sub, i) => {
       return {
         name: sub.name || hotChannelMap[sub.chanelCode] || sub.chanelCode,
-        no: `No.${sub.ranking}`,
+        no: sub.ranking ? `No.${sub.ranking}` : '-',
         inc: sub.trend,
       }
     })
@@ -55,6 +55,7 @@ export async function getKol({
     data: {
       item: {
         name,
+        description,
         photo,
         jyIndex,
         ranking,
@@ -86,7 +87,7 @@ export async function getKol({
     icon: it.channelCode,
     name: dot(channelMap[it.channelCode], 'text'),
     percent: it.count * 100 / fansTotal,
-    count: it.count
+    count: readableNumber(it.count)
   }))
 
   const fansRate = keyBy(fans, 'k')
@@ -103,12 +104,12 @@ export async function getKol({
     basic: {
       id,
       name,
-      title: cate && cate.text,
+      title: description,
       figure: photo,
       rankNo: percent(jyIndex, 2),
       rankTitle: [
-        `全网排名：${ranking}`,
-        cate ? `${cate.text}：${categoryRanking}` : ''
+        `全网排名：${ranking || '-'}`,
+        cate ? `${cate.text}：${categoryRanking || '-'}` : ''
       ].filter(it => !!it).join('<br>')
     },
 
@@ -152,7 +153,7 @@ export async function getKol({
       })
       .filter((it: any) => it != null)
       return list.length > 0 ? {
-        title: `近30日${channelName}微博指数`,
+        title: `近30日${channelName}指数`,
         list,
         category: cate && cate.text
       } : null
@@ -231,17 +232,17 @@ export async function getMovie(id: number) {
       subName: nameEn,
       figure: mainPic,
       rankNo: percent(jyIndex, 2),
-      rankTitle: `同档期：第${jyIndexSamePeriodRanking || 0}`,
+      rankTitle: `同档期：第${jyIndexSamePeriodRanking || '-'}`,
     },
 
     hasShow,
 
     movie: {
       preview: trailers && trailers[0],
-      director: dot(personMap, 'Director[0].name'),
-      type: getNames(types, typeList).join('/'),
-      date: intDate(releaseDate),
-      address: getNames(countries, countryCodeList).join('/')
+      director: dot(personMap, 'Director[0].name') || '-',
+      type: getNames(types, typeList).join('/') || '-',
+      date: intDate(releaseDate) || '-',
+      address: getNames(countries, countryCodeList).join('/') || '-'
     },
 
     actorData: {
@@ -264,13 +265,15 @@ export async function getMovie(id: number) {
 
     boxToday: {
       title: hasShow ? '今日实时票房' : '累计想看人数',
-      main: (hasShow ? boxofficeTodayCount : wantToSeeTotalCount) || 0,
-      sub: `同档期排名 ${(hasShow ? boxofficeTodayRanking : wantToSeeSamePeriodRanking) || 0}`,
+      main: hasShow
+        ? readableNumber(boxofficeTodayCount)
+        : readableThousands(wantToSeeTotalCount),
+      sub: `同档期排名 ${(hasShow ? boxofficeTodayRanking : wantToSeeSamePeriodRanking) || '-'}`,
     },
 
     boxTotal: {
       title: hasShow ? '累计票房' : '预估票房',
-      main: hasShow ? boxofficeTotalCount : predict
+      main: readableNumber(hasShow ? boxofficeTotalCount : predict)
     },
   }
 

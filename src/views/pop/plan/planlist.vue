@@ -2,7 +2,7 @@
   <div class>
     <h3 class="plan-title">
       <span class="adver-tiele">广告计划</span>
-
+      <!-- <Xlsx /> -->
       <Button
         type="primary"
         :to="{name: 'pop-planlist-add'}"
@@ -160,6 +160,7 @@ import Pay from './planlistmodel/pay.vue'
 import moment from 'moment'
 import relevanceDlg from './planlistmodel/relevance.vue'
 import { clean } from '@/fn/object'
+import Xlsx from './vadver/downxsxl.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
@@ -167,7 +168,8 @@ const timeFormat = 'YYYY-MM-DD'
     Sure,
     Pay,
     pagination,
-    relevanceDlg
+    relevanceDlg,
+    Xlsx
   }
 })
 export default class Plan extends ViewBase {

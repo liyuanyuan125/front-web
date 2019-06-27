@@ -1,6 +1,6 @@
 <template>
   <Pane :title="title" :more="more">
-    <ECharts :options="chartData" auto-resize class="chart"/>
+    <ECharts :options="chartData" auto-resize class="chart" v-if="data"/>
   </Pane>
 </template>
 
@@ -52,7 +52,7 @@ export default class PiePane extends Vue {
         labelLine: {
           show: false
         },
-        data: this.data.map(it => ({
+        data: (this.data || []).map(it => ({
           name: it.name,
           value: it.value,
           itemStyle: { color: it.color }

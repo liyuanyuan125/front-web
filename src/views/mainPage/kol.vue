@@ -48,7 +48,6 @@
             :more="{ name: 'kol-detail-comment', params: {id} }"
             :data="commentData"
             class="comment-pane"
-            v-if="commentData"
           />
         </div>
 
@@ -138,7 +137,8 @@ export default class FigurePage extends ViewBase {
   hotFormatter([{ dataIndex }]: any) {
     const { category } = this.hotData
     const { value, rank } = this.hotData.list[dataIndex]
-    return `综合热度：${value}` + (category ? `<br>${category}排名：${rank}` : '')
+    return `综合热度：${+value || '-'}`
+      + (category ? `<br>${category}排名：${+rank || '-'}` : '')
   }
 
   created() {

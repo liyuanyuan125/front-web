@@ -57,7 +57,7 @@
             <span @click="allcollects(2)" :class="acount == 2 ? 'active' : ''">我的收藏</span>
           </div>
           <span class="content-set">平均数量以近90天的内容计算</span>
-          <span class="content-set">数据更新日期2019-04-28</span>
+          <span class="content-set">数据更新日期{{times}}</span>
           <FormItem  class="form-name">
             <Input :disabled="acount == 2" style="width: 300px" v-model="form.name" suffix="ios-search" :placeholder="nameList[type]" />
           </FormItem>
@@ -130,12 +130,12 @@
               <Tooltip placement="top">
                 <div class="prices">
                   <p v-for="it in row.price" :key="it.key" style="margin-top: 5px">
-                    {{it.key}} {{formatnums(it.value, '', '暂无报价')}}
+                    {{it.key}} {{formatnums(it.value, '', '暂无报价', 1)}}
                   </p>
                 </div>
                 <div slot="content">
                   <p v-for="it in row.price" :key="it.key" style="margin-top: 5px">
-                    {{it.key}} {{formatnums(it.value, '', '暂无报价')}}
+                    {{it.key}} {{formatnums(it.value, '', '暂无报价', 1)}}
                   </p>
                 </div>
               </Tooltip>
@@ -145,21 +145,21 @@
           <template slot-scope="{ row }" slot="action">
             <div class="table-action">
               <p v-if="!yudingListId.includes(row.kolId)" @click="debounce(row, $event, 1000)">
-                <Icon type="md-add-circle" style="margin-top: 5px; font-size: 17px; color: #CA7273" />
+                <Icon type="md-add-circle" style=" font-size: 17px; color: #CA7273" />
                 加入投放
               </p>
-              <p  v-else @click="cancelShop(row.id)">
-                <Icon type="md-add-circle" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
-                取消投放
+              <p v-else @click="cancelShop(row.id)">
+                <Icon type="ios-checkmark-circle" style="font-size: 17px; color: #001F2C; opacity: .3" />
+                已加入
               </p>
-              <p v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)" 
+              <p style="margin-top: 5px" v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)" 
               @click="collects(acount == 1 ? row.id : row.accountDataId)">
-                <Icon type="md-heart" style="margin-top: 5px;font-size: 17px; color: #CA7273" />
+                <Icon type="md-heart" style="font-size: 17px; color: #CA7273" />
                 收藏
               </p>
-              <p v-else @click="cancelcollects(acount == 1 ? row.id : row.accountDataId)">
-                <Icon type="md-heart" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
-                取消收藏
+              <p style="margin-top: 5px" v-else @click="cancelcollects(acount == 1 ? row.id : row.accountDataId)">
+                <Icon type="md-heart" style="font-size: 17px; color: #001F2C; opacity: .3" />
+                已收藏
               </p>
               <div :ref="'small' + row.id" class="radiu-url">
                 <img src="http://seopic.699pic.com/photo/50035/0520.jpg_wh1200.jpg" />
@@ -203,11 +203,12 @@ import ViewBase from '@/util/ViewBase'
 import Header from './header.vue'
 import { cloneDeep } from 'lodash'
 import { titleMsgList, areaList, kolmsglist, addcollet, cancelcollect, delShopping,
-  allcollect, addShopIng, kolShoppingCar, delall } from '@/api/kolList.ts'
+  allcollect, addShopIng, kolShoppingCar, delall, updatetime } from '@/api/kolList.ts'
 import AreaModal from './areaModal.vue'
 import clickoutside from './directive'
 import { formatCurrency } from '@/fn/string'
 import Detail from './detail.vue'
+import moment from 'moment'
 import { animation } from '@/fn/self.ts'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { clean } from '@/fn/object.ts'
@@ -230,6 +231,7 @@ const keepExclusion = <T extends any>(
     newHas && oldHas && setter(value.filter(it => it != aloneValue))
   }
 }
+const timeFormat = 'YYYY-MM-DD'
 const defaultForm: any = {
   channelCode: 'weibo',
   accountCategoryCode: 0,
@@ -286,6 +288,7 @@ export default class Main extends ViewBase {
   yudingList: any = []
   yudingListId: any = []
   kolIds: any = []
+  times: any = ''
 
   get pageList() {
     return {
@@ -377,16 +380,22 @@ export default class Main extends ViewBase {
     ]
   }
 
-  formatnums(val: any, msg: any = '', errors: string = '-') {
+  formatnums(val: any, msg: any = '', errors: string = '-', id: number = 0) {
     if (val == '0') {
       return errors
     }
     const num = (val + '').split('.')
     if (num.length > 1) {
       const numbers = formatCurrency(val, 2)
+      if (id == 1) {
+        return `￥${numbers}${msg}`
+      }
       return `${numbers}${msg}`
     } else {
       const numbers = formatCurrency(val, 0)
+      if (id == 1) {
+        return `￥${numbers}${msg}`
+      }
       return `${numbers}${msg}`
     }
   }
@@ -442,6 +451,8 @@ export default class Main extends ViewBase {
         sexList,
         channelPriceList
       } } = await titleMsgList(this.title[this.type])
+      const time = await updatetime(this.title[this.type])
+      this.times = time.data ? moment(time.data * 1000).format(timeFormat) : '暂无'
       const data: any = await areaList({
         parentIds: 0,
         pageIndex: 1,
@@ -910,10 +921,14 @@ export default class Main extends ViewBase {
     right: 0;
     height: 61px;
     border-radius: 5px 5px 0 0;
-    background: #f8f8f9;
+    background: #d5e7f2;
   }
   /deep/ .ivu-table-header {
     position: relative;
+    background: #d5e7f2;
+    th {
+      background: #d5e7f2;
+    }
   }
   /deep/ .ivu-table-row {
     border-bottom: 2px solid rgba(255, 255, 255, .4);
@@ -953,6 +968,9 @@ export default class Main extends ViewBase {
   /deep/ .ivu-table-cell {
     padding-right: 10px;
     padding-left: 10px;
+  }
+  /deep/ .ivu-table-row-hover {
+    background: rgba(255, 255, 255, .4);
   }
   .table-action {
     p {

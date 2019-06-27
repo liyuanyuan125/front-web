@@ -34,3 +34,8 @@ export async function wanttosee(data: any, id: any) {
     const res = await get(`/movie/${id}/wanttosee`, data)
     return res
 }
+// 影片获取上映 - 状态
+export async function MovieStatus(id: number) {
+    const res = await get(`/movie/${id}`)
+    return res
+}

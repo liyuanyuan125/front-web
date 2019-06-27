@@ -1,59 +1,68 @@
 <template>
-  <div class="precept-box" v-if="data">
-    <Row class="precept" :gutter="16">
-      <Col span="5" class="item">
-        <div>
-          <p class="title">曝光人次预估</p>
-          <p class="number">
-            <Number :addNum="data.estimatePersonCount/10000" />
-          </p>
-        </div>
-      </Col>
-      <Col span="5" class="item">
-        <div>
-          <p class="title">投放场次数预估</p>
-          <p class="number">
-            <Number :addNum="data.estimateShowCount/10000" />
-          </p>
-        </div>
-      </Col>
-      <Col span="5" class="item">
-        <div>
-          <p class="title">预估花费</p>
-          <p class="number">
-            <Number :addNum="data.estimateCostAmount/10000" />
-          </p>
-        </div>
-      </Col>
-      <Col span="6" class="item item-dl">
-        <dl>
-          <dd>计划名称</dd>
-          <dt>{{data.name}}</dt>
-        </dl>
-        <dl>
-          <dd>广告片</dd>
-          <dt>{{data.videoName}}</dt>
-        </dl>
-        <dl>
-          <dd>投放排期</dd>
-          <dt>{{formatDate(data.beginDate)}}至{{formatDate(data.endDate)}}</dt>
-        </dl>
-      </Col>
-      <Col span="3" class="item item-dl">
-        <dl>
-          <dd>客户</dd>
-          <dt style="width: 70px">{{data.customerName}}</dt>
-        </dl>
-        <dl>
-          <dd>广告规格</dd>
-          <dt>{{data.specification}}s</dt>
-        </dl>
-        <dl>
-          <dd>投放周期</dd>
-          <dt>{{days(data.beginDate, data.endDate)}}天</dt>
-        </dl>
-      </Col>
+  <div class="precept-box " v-if="data">
+    <Row class="precept">
+      <Row class="" :gutter="16">
+        <Col span="5" class="item">
+          <div>
+            <p class="title">曝光人次预估</p>
+            <p class="number">
+              <Number :addNum="data.estimatePersonCount/10000" />
+            </p>
+          </div>
+        </Col>
+        <Col span="5" class="item">
+          <div>
+            <p class="title">投放场次数预估</p>
+            <p class="number">
+              <Number :addNum="data.estimateShowCount/10000" />
+            </p>
+          </div>
+        </Col>
+        <Col span="5" class="item">
+          <div>
+            <p class="title">预估花费</p>
+            <p class="number">
+              <Number :addNum="data.estimateCostAmount/10000" />
+            </p>
+          </div>
+          <div class="line-right"></div>
+        </Col>
+        <Col span="6" class="item item-dl">
+          <dl>
+            <dd>计划名称</dd>
+            <dt>{{data.name}}</dt>
+          </dl>
+          <dl>
+            <dd>广告片</dd>
+            <dt>{{data.videoName}}</dt>
+          </dl>
+          <dl>
+            <dd>投放排期</dd>
+            <dt>{{formatDate(data.beginDate)}}至{{formatDate(data.endDate)}}</dt>
+          </dl>
+        </Col>
+        <Col span="3" class="item item-dl">
+          <dl>
+            <dd>客户</dd>
+            <dt style="width: 70px">{{data.customerName}}</dt>
+          </dl>
+          <dl>
+            <dd>广告规格</dd>
+            <dt>{{data.specification}}s</dt>
+          </dl>
+          <dl>
+            <dd>投放周期</dd>
+            <dt>{{days(data.beginDate, data.endDate)}}天</dt>
+          </dl>
+        </Col>
+        <Col span="24" class="item" style="margin-top: 30px; color:#57B4C9">
+        <img src="./assets/info.png" />
+          以上曝光数据为根据影片想看指数、预售情况、近两年同档期影片市场表现情况综合预估,
+          实际投放周期和投放场次数请以最终实际投放结果为准.
+        </Col>
+      </Row>
     </Row>
+    
   </div>
 </template>
 
@@ -110,7 +119,7 @@ export default class App extends ViewBase {
   margin-right: 10px;
   .precept {
     padding: 0 30px;
-    height: 136px;
+    height: 186px;
     background: rgba(0, 32, 45, 1);
     border-radius: 5px;
     opacity: 0.9;
@@ -129,6 +138,8 @@ export default class App extends ViewBase {
     font-size: 30px;
     margin-top: 20px;
     color: #fff;
+    display: inline-block;
+    width: 180px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -143,6 +154,7 @@ export default class App extends ViewBase {
     display: flex;
     flex-wrap: wrap;
     align-content: center;
+    margin-top: 20px;
     height: 100%;
   }
   dl {
@@ -163,5 +175,13 @@ export default class App extends ViewBase {
       text-overflow: ellipsis;
     }
   }
+}
+.line-right {
+  position: absolute;
+  width: 1px;
+  height: 81px;
+  top: 30px;
+  right: 40px;
+  background: #fff;
 }
 </style>
