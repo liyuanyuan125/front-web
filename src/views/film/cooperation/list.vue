@@ -421,31 +421,31 @@ export default class CooperationFilmList extends ViewBase {
           font-weight: 400;
           background: none;
         }
-        /deep/ .ivu-radio-wrapper {
-          height: 28px;
-          line-height: 28px;
-          font-size: 14px;
-          box-shadow: none !important;
-          color: #cdd0d3;
-          border-radius: 3px;
-          background: none;
-          border: none;
-          margin-bottom: 10px;
-          &::before,
-          &::after {
-            display: none;
-          }
+      }
+      /deep/ .ivu-radio-wrapper {
+        height: 28px;
+        line-height: 28px;
+        font-size: 14px;
+        box-shadow: none !important;
+        color: #cdd0d3;
+        border-radius: 3px;
+        background: none;
+        border: none;
+        margin-bottom: 10px;
+        &::before,
+        &::after {
+          display: none;
         }
-        /deep/ .ivu-radio-wrapper-checked {
-          background-color: #82d1e4;
-          color: #00202d;
-          .ivu-radio-inner {
-            display: none;
-          }
-          &::before,
-          &::after {
-            display: none;
-          }
+      }
+      /deep/ .ivu-radio-wrapper-checked {
+        background-color: #82d1e4;
+        color: #00202d;
+        .ivu-radio-inner {
+          display: none;
+        }
+        &::before,
+        &::after {
+          display: none;
         }
       }
     }
@@ -455,43 +455,38 @@ export default class CooperationFilmList extends ViewBase {
       /deep/ .ivu-form-item {
         margin-bottom: 0;
       }
+      /deep/ .ivu-radio-wrapper {
+        height: 36px;
+        line-height: 36px;
+        font-size: 16px;
+        background: none;
+        border: none;
+        box-shadow: none !important;
+        color: #00202d;
+        border-radius: 0;
+        margin-right: 50px;
+        padding-left: 0;
+        padding-right: 0;
+        &::before,
+        &::after {
+          display: none;
+        }
+      }
       /deep/ .ivu-form-item-label {
         font-size: 16px;
         padding: 10px 12px 10px 0;
+        color: #00202d;
       }
-      /deep/ .ivu-radio-group {
-        /deep/ .ivu-radio-wrapper {
-          height: 36px;
-          line-height: 36px;
-          font-size: 16px;
-          background: none;
-          border: none;
-          box-shadow: none !important;
-          color: #00202d;
-          border-radius: 0;
-          margin-right: 50px;
-          padding-left: 0;
-          padding-right: 0;
-          &::before,
-          &::after {
-            display: none;
-          }
+      /deep/ .ivu-radio-wrapper-checked {
+        color: #00202d;
+        border-bottom: 2px solid #00202d;
+        font-weight: 400;
+        .ivu-radio-inner {
+          display: none;
         }
-        /deep/ .ivu-form-item-label {
-          color: #00202d;
-          line-height: 35px;
-        }
-        /deep/ .ivu-radio-wrapper-checked {
-          color: #00202d;
-          border-bottom: 2px solid #00202d;
-          font-weight: 400;
-          .ivu-radio-inner {
-            display: none;
-          }
-          &::before,
-          &::after {
-            display: none;
-          }
+        &::before,
+        &::after {
+          display: none;
         }
       }
     }
