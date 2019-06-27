@@ -2167,8 +2167,8 @@ ccount@^1.0.0:
 
 cfb@>=0.10.0, cfb@^1.1.0:
   version "1.1.1"
-  resolved "https://registry.yarnpkg.com/cfb/-/cfb-1.1.1.tgz#7f399f4c541954715d0ced9b1cdecc52b554290a"
-  integrity sha512-eov9L63s9/uMiiDvWCiTYbK3AcM5x5AYo4NL1q75G0AZBrD2X0+Lm9hubk94qy1MJP7pYFuM6/xn0h3grAvBXQ==
+  resolved "https://registry.npm.taobao.org/cfb/download/cfb-1.1.1.tgz?cache=0&sync_timestamp=1560171931488&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcfb%2Fdownload%2Fcfb-1.1.1.tgz#7f399f4c541954715d0ced9b1cdecc52b554290a"
+  integrity sha1-fzmfTFQZVHFdDO2bHN7MUrVUKQo=
   dependencies:
     adler-32 "~1.2.0"
     commander "^2.16.0"
@@ -2462,8 +2462,8 @@ commander@, commander@*, commander@^2.12.1, commander@^2.14.1, commander@^2.16.0
 
 commander@2.17.x, commander@~2.17.1:
   version "2.17.1"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
-  integrity sha512-wPMUt6FnH2yzG95SA6mzjQOEKUU3aLaDEmzs1ti+1E9h+CsrZghRlqEM/EJ4KscsQVG8uNN4uVreUeT8+drlgg==
+  resolved "https://registry.npm.taobao.org/commander/download/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
+  integrity sha1-vXerfebelCBc6sxy8XFtKfIKd78=
 
 commander@~2.14.1:
   version "2.14.1"

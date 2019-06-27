@@ -3,7 +3,7 @@
     <div slot="beforeSide">
       <router-link :to="{ name: 'kol-figure', params: { id } }">
         <h2 class="figure-name">{{name}}</h2>
-        <img :src="figure" class="figure-img">
+        <Figure :src="figure" class="figure-img"/>
       </router-link>
     </div>
   </DetailLayout>
@@ -12,11 +12,13 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DetailLayout, { RouteItem } from '@/components/detailLayout'
+import Figure from '@/components/figure'
 import { getKol } from './data'
 
 @Component({
   components: {
-    DetailLayout
+    DetailLayout,
+    Figure
   }
 })
 export default class Layout extends ViewBase {

@@ -5,6 +5,9 @@ const webpack = require('webpack');
 const resolve = dir => path.join(__dirname, 'src', dir)
 
 module.exports = {
+  // 加快编译速度
+  productionSourceMap: false,
+
   devServer: {
     headers: {
       'Access-Control-Allow-Origin': '*'
@@ -35,6 +38,7 @@ module.exports = {
   chainWebpack: config => {
     config
     .plugin('provide')
+    // TODO: 去掉全局引入
     .use(webpack.ProvidePlugin, [{
       'window.Quill': 'quill/dist/quill.js',
       'Quill': 'quill/dist/quill.js'

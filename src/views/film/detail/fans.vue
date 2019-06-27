@@ -278,6 +278,7 @@ export default class Temporary extends ViewBase {
       if (ages && ages.length > 0) {
         this.chart2.dataList[this.chart2.currentTypeIndex] = {
           type: 'bar',
+          barMaxWidth: '20',
           data: []
         }
         ages.forEach(({ v, k }: any) => {
@@ -291,6 +292,7 @@ export default class Temporary extends ViewBase {
       if (cityLevels && cityLevels.length > 0) {
         this.chart3.dataList[this.chart3.currentTypeIndex] = {
           type: 'bar',
+          barMaxWidth: '20',
           data: []
         }
         cityLevels.forEach(({ v, k }: any) => {
