@@ -66,7 +66,7 @@ export default class AreaBasic extends ViewBase {
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
   @Prop({ type: Array, default: () => [] }) dict1!: any[]
   @Prop({ type: Array, default: () => [] }) dict2!: any[]
-  @Prop({ type: Array, default: () => [] }) color!: any[]
+  @Prop({ type: Array, default: () => ['#00B6CC'] }) color!: string[]
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
   @Prop({ type: Number, default: 0 }) height?: number
   @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
