@@ -182,19 +182,19 @@ const YI = 100000000
 /**
  * 将数字格式化成可读格式
  * @param number 数字
- * @param digits 保留位数，默认为 2
  * @param placeholder 数字为 0 时的占位符，默认为 -
  */
-export function readableNumber(number: number | string, digits = 2, placeholder = '-') {
+export function readableNumber(number: number | string, placeholder = '-') {
   if (isZero(number)) {
     return placeholder
   }
 
+  // 产品需求：亿保留 2 位，万保留 1 位
   return number >= YI
-    ? (+number / YI).toFixed(digits) + '亿'
+    ? (+number / YI).toFixed(2) + '亿'
     : number >= WAN
-    ? (+number / WAN).toFixed(digits) + '万'
-    : number
+    ? (+number / WAN).toFixed(1) + '万'
+    : toThousands(number)
 }
 
 /**
