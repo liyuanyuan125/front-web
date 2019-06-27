@@ -60,7 +60,7 @@
 
           <h3 class="layout-titles">覆盖影院
             <!-- <span class="item-detail">影院总数</span> -->
-            <!-- <span class="custom" @click="exportData"><Exportfile /></span> -->
+            <span class="custom" @click="exportData">导出影院</span>
             <!-- <span class="custom" style="margin-right: 160px">自定义投放影院</span> -->
           </h3>
           <div class="item-top">
@@ -166,6 +166,7 @@
         </Form>  
       </Col>
     </Row>
+    <Xlsx ref="down" :id="$route.params.setid" />
   </div>
 </template>
 
@@ -179,6 +180,7 @@ import { orienteering, adverdetail, getRecommend, getCheme,
 import moment from 'moment'
 import { formatCurrency } from '@/fn/string.ts'
 import Exportfile from './exportfile.vue'
+import Xlsx from './downxsxl.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
@@ -186,6 +188,7 @@ const timeFormat = 'YYYY-MM-DD'
     PreceptHead,
     PrecepFilm,
     Exportfile,
+    Xlsx
   }
 })
 export default class App extends ViewBase {
@@ -310,10 +313,14 @@ export default class App extends ViewBase {
   }
 
   movieMap(val: any) {
-    const vals = val ? val.split('|') : []
-    return this.movieTypeList.filter((it: any) => {
-      return vals.includes(it.key)
-    }).map((it: any) => it.text).join(' | ')
+    if (val && val.length > 0) {
+      const vals = val ? val.split('|') : []
+      return this.movieTypeList.filter((it: any) => {
+        return vals.includes(it.key)
+      }).map((it: any) => it.text).join(' | ')
+    } else {
+      return '-'
+    }
   }
 
   ageTypeMap(val: any) {
@@ -470,13 +477,7 @@ export default class App extends ViewBase {
   }
 
   exportData() {
-    (this.$refs.table as any).exportCsv({
-        filename: '你好',
-        original: false,
-        data: [{
-          name: '小明'
-        }]
-    })
+    (this.$refs.down as any).down()
   }
 
   get defaultImg() {

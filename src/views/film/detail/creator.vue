@@ -6,9 +6,9 @@
   		<Row class='bai-w' v-for='(it,index) in person.Director' :key='index'>
   			<Row  class='col-img'><img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt=""></Row>
   			<Row class='r-h'>
-  				<Row class='de-ro' @click='jump(it.id)'>{{it.name}}<br>{{it.nameEn}}</Row>
-  				<Row class='de-ro-two'>导演</Row>
-  				<Row class='de-ro-thr'>代表作品:<br> <span  v-if='it.movies == null'>暂无</span>
+  				<Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
+  				<Row class='de-ro-two'>{{it.nameEn}}</Row>
+  				<Row class='de-ro-thr'>代表作品<br> <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;'>
@@ -25,9 +25,9 @@
           <img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt="">
           <span v-if='it.jyIndex'>{{it.jyIndex / 100}}</span></Row>
   			<Row class='r-h'>
-  				<Row class='de-ro' @click='jump(it.id)'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
-  				<Row class='de-ro-two'>演员</Row>
-  				<Row class='de-ro-thr'>代表作品:<br> 
+  				<Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
+  				<Row class='de-ro-two'>{{it.nameEn}}</Row>
+  				<Row class='de-ro-thr'>代表作品<br> 
            <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
@@ -47,9 +47,9 @@
       <Row class='bai-w' v-for='(it,index) in person.Writer' :key='index'>
         <Row :span='2' class='col-img'><img @click='jump(it.id)' :src="it.headImg == null || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt=""></Row>
         <Row class='r-h'>
-          <Row class='de-ro' @click='jump(it.id)'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
-          <Row class='de-ro-two'>编剧</Row>
-          <Row class='de-ro-thr'>代表作品:<br> <span  v-if='it.movies == null'>暂无</span>
+          <Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
+          <Row class='de-ro-two'>{{it.nameEn}}</Row>
+          <Row class='de-ro-thr'>代表作品<br> <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;'>
@@ -64,9 +64,9 @@
       <Row class='bai-w' v-for='(it,index) in produced' :key='index'>
         <Row :span='2' class='col-img'><img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt=""></Row>
         <Row class='r-h'>
-          <Row class='de-ro' @click='jump(it.id)'>{{it.name}}&nbsp;{{it.nameEn}}</Row>
-          <Row class='de-ro-two'>制片人</Row>
-          <Row class='de-ro-thr'>代表作品:<br> <span  v-if='it.movies == null'>暂无</span>
+          <Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
+          <Row class='de-ro-two'>{{it.nameEn}}</Row>
+          <Row class='de-ro-thr'>代表作品<br> <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;'>
@@ -151,6 +151,7 @@ export default class Main extends ViewBase {
   color: #fff;
   line-height: 50px;
   font-size: 24px;
+  padding-left: 7px;
 }
 .cast {
   padding: 15px;
@@ -176,7 +177,7 @@ export default class Main extends ViewBase {
     width: 50px;
     height: 24px;
     text-align: center;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 500;
     color: #fff;
     line-height: 25px;
@@ -193,6 +194,9 @@ export default class Main extends ViewBase {
   font-size: 18px;
   font-weight: 500;
   color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .de-ro-two {
   text-align: center;
@@ -200,6 +204,9 @@ export default class Main extends ViewBase {
   font-size: 14px;
   font-weight: 400;
   color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .de-ro-thr {
   text-align: center;

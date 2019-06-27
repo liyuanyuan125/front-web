@@ -965,7 +965,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       ...emptyAuth,
       immersionHeader: true,
-      title: 'kol-详情页'
+      title: 'KOL详情页'
     },
     props: ({ params: { id, channel } }: Route) => {
       return {

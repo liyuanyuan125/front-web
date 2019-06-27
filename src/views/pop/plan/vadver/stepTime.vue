@@ -49,6 +49,7 @@ export default class App extends ViewBase {
     display: flex;
     cursor: default;
     height: 50px;
+    margin-top: 40px;
     line-height: 50px;
     li {
       flex: 1;

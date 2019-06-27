@@ -1,10 +1,9 @@
 <template>
   <section class="pane-item">
     <h4 class="pane-head flex-box" v-if="title">
-      <em>
-        {{title}}
-        <Tooltip :content="tooltip" v-if="tooltip"/>
-      </em>
+      <em>{{title}} <Tooltip :content="tooltip" v-if="tooltip"/></em>
+
+      <slot name="head-side"></slot>
 
       <router-link :to="more" class="more-link" v-if="more">更多 &gt;</router-link>
     </h4>
@@ -18,7 +17,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { RawLocation } from 'vue-router'
-import Tooltip from './tooltip.vue'
+import Tooltip from '@/components/tooltip'
 
 @Component({
   components: {
@@ -55,6 +54,7 @@ export default class Pane extends Vue {
 }
 
 .pane-head {
+  position: relative;
   padding: 24px 30px;
   justify-content: space-between;
   font-weight: 400;
@@ -62,5 +62,15 @@ export default class Pane extends Vue {
 
 .pane-body {
   position: relative;
+}
+
+.pane-body:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 130px);
+  &::before {
+    content: '-';
+  }
 }
 </style>

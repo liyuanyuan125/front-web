@@ -222,14 +222,14 @@ export default class Orienteering extends ViewBase {
   }
   warehouseId: any = []
   warehouseLisst: any = []
-
+  loadingitem: any = {}
   movies: any = []
   timers: any = {}
   numsList: any = []
   cityCustom: number = 0
   movieCustom: number = 0
   cinemaType: number = 0
-
+  settime: any = null
   deliveryCityTypeList: any = []
   tags: any = []
   item: any = null
@@ -455,36 +455,58 @@ export default class Orienteering extends ViewBase {
         })
       )
       ; (this.$Spin as any).show()
-      let time: any = null
+      let settime: any = null
       this.recommend = false
-      time = setInterval(() => {
+      settime = setInterval(() => {
         if (this.recommend) {
           (this.$Spin as any).hide()
-          clearInterval(time)
-          if (this.planMovies && this.planMovies.length > 0) {
-            this.$emit('input', {
-              id: 2,
-              setid: this.$route.params.setid
-            })
-            if (this.$route.name == 'pop-planlist-add') {
-              this.$router.push({
-                name: 'pop-planlist-add',
-                params: { id: '2', setid: this.$route.params.setid  }
+          clearInterval(settime)
+          // if (this.loadingitem.item.movieCustom == 1) {
+          //   if ( this.loadingitem.movies.length > 0 ) {
+          //     this.$emit('input', {
+          //       id: 2,
+          //       setid: this.$route.params.setid
+          //     })
+          //     if (this.$route.name == 'pop-planlist-add') {
+          //       this.$router.push({
+          //         name: 'pop-planlist-add',
+          //         params: { id: '2', setid: this.$route.params.setid  }
+          //       })
+          //     } else {
+          //       this.$router.push({
+          //         name: 'pop-planlist-edit',
+          //         params: { id: '2', setid: this.$route.params.setid  }
+          //       })
+          //     }
+          //   }
+          // } else {
+            if (this.planMovies && this.planMovies.length > 0) {
+              this.$emit('input', {
+                id: 2,
+                setid: this.$route.params.setid
               })
+              if (this.$route.name == 'pop-planlist-add') {
+                this.$router.push({
+                  name: 'pop-planlist-add',
+                  params: { id: '2', setid: this.$route.params.setid  }
+                })
+              } else {
+                this.$router.push({
+                  name: 'pop-planlist-edit',
+                  params: { id: '2', setid: this.$route.params.setid  }
+                })
+              }
             } else {
-              this.$router.push({
-                name: 'pop-planlist-edit',
-                params: { id: '2', setid: this.$route.params.setid  }
-              })
+              info('未找到匹配项')
             }
-          } else {
-            info('未找到匹配项')
-          }
+          // }
         } else {
           this.loddding()
         }
       }, 3000)
     } catch (ex) {
+      clearInterval(this.settime)
+      this.handleError(ex)
     }
   }
 
@@ -505,10 +527,14 @@ export default class Orienteering extends ViewBase {
   async loddding() {
     try {
       const {
-        data: { item, planMovies }
+        data: { item, planMovies, movies }
       } = await adverdetail(this.value.setid)
       this.recommend = item.recommend
       this.planMovies = planMovies
+      this.loadingitem = {
+        item,
+        movies
+      }
       // this.$emit('input', {
       //   id: 2,
       //   setid: this.$route.params.setid
