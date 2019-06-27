@@ -43,7 +43,7 @@
           backgroundImage: `url(${img.img})`
         }"></li>
       </transition-group>
-      <div class="show-all" v-if="imgUrl.length > 5">
+      <div class="show-all" v-if="imgUrl.length > 16">
         <span @click="handleToggle">{{tabShowTitle}}<Icon :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}" type="ios-arrow-down" size="25" /></span>
       </div>
    </div>
@@ -95,7 +95,7 @@ export default class Main extends ViewBase {
     } else {
       this.arrowFlag = 0
       this.tabShowTitle = '展示全部'
-      this.imgList = this.imgUrl.slice(0, 4)
+      this.imgList = this.imgUrl.slice(0, 16)
     }
   }
   sumToggle() {
@@ -106,7 +106,7 @@ export default class Main extends ViewBase {
     } else {
       this.sumFlag = 0
       this.sumTitle = '展示全部'
-      this.summary = this.itemlist.summary.slice(0, 200)
+      this.summary = this.itemlist.summary.slice(0, 211) + '...'
     }
   }
   async search() {
@@ -121,8 +121,8 @@ export default class Main extends ViewBase {
           img: it,
         }
       })
-      this.imgList = this.imgUrl.slice(0, 4)
-      this.summary = this.itemlist.summary.slice(0, 200)
+      this.imgList = this.imgUrl.slice(0, 16)
+      this.summary = this.itemlist.summary.slice(0, 211) + '...'
     } catch {
 
     } finally {
@@ -213,13 +213,16 @@ export default class Main extends ViewBase {
   margin-left: -10px;
   margin-right: -10px;
   transition: all 2s;
+  li:nth-child(0) {
+    margin-left: 1.7%;
+  }
   li {
     width: 22%;
     height: 180px;
     margin-bottom: 25px;
     padding: 0 4px;
     background-size: cover;
-    margin-left: 2.5%;
+    margin-left: 2.7%;
     img {
       width: 100%;
       height: 100%;

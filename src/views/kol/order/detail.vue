@@ -25,7 +25,7 @@
       </Row>
       <Row>
        <Col :span='24' class='conover' style='display: flex;'>
-       <div style='width: 6%;display: inline-block;'>推广内容：</div>
+       <div style='width: 7%;display: inline-block;'>推广内容：</div>
        <div style='width: 80%;display: inline-block;'>{{item.content == null ? '暂无' : item.content}}</div>
        </Col>
       </Row>
@@ -87,6 +87,9 @@
         	</li>
         </ul>
       </div>
+      <div class='all'>
+        订单总额： <span>￥<Number :addNum='item.totalFee'></Number></span>
+      </div>
     </div>
     <div class='body' style='padding-left: 30px;'>
       <Row style='font-size: 24px;line-height: 50px;font-weight: 500'>订单日志</Row>
@@ -121,6 +124,7 @@
 <script lang="ts">
 import { Component, Watch, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import Number from '@/components/number.vue'
 import moment from 'moment'
 import { itemlist  } from '@/api/lastissue'
 import { toMap } from '@/fn/array'
@@ -133,6 +137,7 @@ const times = 'YYYY-MM-DD HH:mm'
 
 @Component({
   components: {
+    Number,
   }
 })
 export default class Main extends ViewBase {
@@ -288,14 +293,14 @@ export default class Main extends ViewBase {
   line-height: 22px;
 }
 .conover {
-  line-height: 26px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
 }
 .taskorder {
-  font-size: 20px;
+  font-size: 24px;
   line-height: 50px;
   margin-left: 30px;
+  font-weight: 500;
 }
 .taskok {
   font-weight: 500;
@@ -400,6 +405,22 @@ export default class Main extends ViewBase {
   }
   .ss-right {
     padding-left: 40px;
+  }
+}
+.all {
+  height: 80px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 0 0 5px 5px;
+  opacity: 0.9;
+  line-height: 80px;
+  text-align: right;
+  padding-right: 70px;
+  font-size: 14px;
+  color: rgba(0, 32, 45, 1);
+  span {
+    font-size: 30px;
+    color: #ff5353;
+    margin-left: 5px;
   }
 }
 </style>

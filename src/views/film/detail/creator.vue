@@ -151,6 +151,7 @@ export default class Main extends ViewBase {
   color: #fff;
   line-height: 50px;
   font-size: 24px;
+  padding-left: 7px;
 }
 .cast {
   padding: 15px;
