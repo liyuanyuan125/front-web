@@ -313,10 +313,14 @@ export default class App extends ViewBase {
   }
 
   movieMap(val: any) {
-    const vals = val ? val.split('|') : []
-    return this.movieTypeList.filter((it: any) => {
-      return vals.includes(it.key)
-    }).map((it: any) => it.text).join(' | ')
+    if (val && val.length > 0) {
+      const vals = val ? val.split('|') : []
+      return this.movieTypeList.filter((it: any) => {
+        return vals.includes(it.key)
+      }).map((it: any) => it.text).join(' | ')
+    } else {
+      return '-'
+    }
   }
 
   ageTypeMap(val: any) {

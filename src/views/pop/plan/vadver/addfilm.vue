@@ -151,26 +151,29 @@ export default class DlgEditCinema extends ViewBase {
   async seach() {
     try {
       const { data: {
-       items,
-       movies,
-       typeList,
-       totalCount
-      } } = await moviefind(clean({
-        ...this.form,
-        types: this.form.types[0] == 0 ? '' : this.form.types.join(',')
-      }))
-      this.data = (movies || []).map((it: any) => {
-        return {
-          ...it,
-          id: it.movie_id,
-          image: it.main_pic,
-          nameCn: it.name_cn,
-          releaseDate: it.release_date,
-          type: it.types
-        }
-      })
+        items,
+        movieTypeList,
+        totalCount
+        } } = await searchcinema(clean({
+          ...this.form,
+          types: this.form.types[0] == 0 ? '' : this.form.types.join(',')
+        }))
+      this.data = items || []
       this.total = totalCount
-      this.movieTypeList = typeList || []
+      this.movieTypeList = movieTypeList || []
+
+      // this.data = (movies || []).map((it: any) => {
+      //   return {
+      //     ...it,
+      //     id: it.movie_id,
+      //     image: it.main_pic,
+      //     nameCn: it.name_cn,
+      //     releaseDate: it.release_date,
+      //     type: it.types
+      //   }
+      // })
+      // this.total = totalCount
+      // this.movieTypeList = typeList || []
       this.checkNum()
     } catch (ex) {
       this.handleError(ex)
@@ -198,17 +201,17 @@ export default class DlgEditCinema extends ViewBase {
     this.showDlg = false
   }
 
-  async cinemaseach() {
-    try {
-      const {
-        data: {
+  // async cinemaseach() {
+  //   try {
+  //     const {
+  //       data: {
 
-        }
-      } = await searchcinema(this.form)
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
+  //       }
+  //     } = await searchcinema(this.form)
+  //   } catch (ex) {
+  //     this.handleError(ex)
+  //   }
+  // }
 
   async open() {
     try {
