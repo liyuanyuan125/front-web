@@ -24,11 +24,12 @@ const hotData = (items: any[]) => {
   const list = (items || []).map(it => {
     const date = monthDate(it.date)
     const legends = (it.channels as any[] || [])
-    .map((sub, i) => {
+    .map(sub => {
       return {
         name: sub.name || hotChannelMap[sub.chanelCode] || sub.chanelCode,
         no: sub.ranking ? `No.${sub.ranking}` : '-',
         inc: sub.trend,
+        incShow: readableThousands(Math.abs(sub.trend))
       }
     })
 
