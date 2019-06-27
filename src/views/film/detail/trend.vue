@@ -62,7 +62,7 @@
                     :dataList="chart1.dataList"
                     :currentTypeIndex="chart1.currentTypeIndex" />
 
-                <AreaBasicView :initDone="chart2.initDone"
+                <AreaBasic :initDone="chart2.initDone"
                     v-if="filmIndex == 'movieNum'"
                     :title="chart2.title"
                     :dict1="chart2.dict1"
@@ -106,7 +106,7 @@ import {
 } from '@/util/validateRules'
 import DetailNavBar from './components/detailNavBar.vue'
 import { trend } from '@/api/kolDetailMoreInfo'
-import {movieView, wanttosee} from '@/api/filmPersonDetail'
+import {movieView, wanttosee, MovieStatus} from '@/api/filmPersonDetail'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import AreaBasicView from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
@@ -159,8 +159,9 @@ const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
 })
 export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
-
   tooltipStyles = tooltipStyles
+  // 上映状态
+  releaseStatus: any = null
   // 新增和累计
   grandTotal: any = [
     {
@@ -306,6 +307,22 @@ export default class Main extends ViewBase {
     ],
     color: colors
   }
+
+  async handleWatchFilm(val: any) {
+    this.filmIndex = val
+    this.chart1.initDone = false
+    this.chart2.initDone = false
+    this.chart3.initDone = false
+    this.resetData()
+    if (this.filmIndex == 'wantNum') { // 想看
+      await this.wanttoseeList()
+    } else if (this.filmIndex == 'watchNum') {
+      await this.watchFilmList()
+    } else if (this.filmIndex == 'movieNum') {
+      await this.watchFilmList()
+    }
+  }
+
   // 观影人数 影片票房
   async watchFilmList() {
     const mockObj = {
@@ -320,14 +337,24 @@ export default class Main extends ViewBase {
       // 放置后台数据顺序错乱
       items.sort((a: any, b: any) => a.date - b.date )
       const date: any[] = [] // 存放日期
-      const boxoTrendData: any[] = [] // 票神新增数据
-      const boxoCountData: any[] = [] // 票神累计数据
-      const viewTrendData: any[] = [] // 观看新增数据
-      const viewCountData: any[] = [] // 观看累计数据
 
-      this.chart1.dataList = []
-      this.chart2.dataList = []
       if (items && items.length > 0) {
+        this.chart1.dataList = []
+        this.chart2.dataList = []
+
+        this.chart1.dataList.push({
+          data: [],
+          date: []
+        })
+        this.chart2.dataList.push({
+          data: [],
+          date: []
+        })
+        const boxoTrendData: any[] = [] // 票神新增数据
+        const boxoCountData: any[] = [] // 票神累计数据
+        const viewTrendData: any[] = [] // 观看新增数据
+        const viewCountData: any[] = [] // 观看累计数据
+
         items.filter((it: any) => {
           date.push(it.date)
           viewTrendData.push(it.view.trend)
@@ -347,11 +374,9 @@ export default class Main extends ViewBase {
             data: viewCountData
           }
           this.chart1.initDone = true
-          this.chart2.initDone = false
-          this.chart3.initDone = false
         }
-        // 票神
-        if (this.filmIndex === 'movieNum') {
+        // // 票神
+        if (this.filmIndex == 'movieNum') {
           this.chart2.dataList[0] = {
             date,
             data: boxoTrendData
@@ -360,15 +385,16 @@ export default class Main extends ViewBase {
             date,
             data: boxoCountData
           }
-          this.chart2.initDone = true
-          this.chart1.initDone = false
-          this.chart3.initDone = false
         }
       }
+      this.chart1.initDone = true
+      this.chart2.initDone = true
+
     } catch (ex) {
       this.handleError(ex)
     }
   }
+
   // 想看人数
   async wanttoseeList() {
     const mockObj = {
@@ -417,9 +443,6 @@ export default class Main extends ViewBase {
     }
   }
   currentTypeChange(index: number = 0) {
-    // this.chart2.initDone = false
-    // this.chart1.initDone = false
-    // this.chart3.initDone = false
     if (this.filmIndex == 'watchNum') { // 观影人数
       this.chart1.currentTypeIndex = index
     } else if (this.filmIndex == 'movieNum') {
@@ -450,8 +473,8 @@ export default class Main extends ViewBase {
   }
 
   async handleChange() { // 修改日期判断我当前请求的接口---------
-    this.chart2.initDone = false
     this.chart1.initDone = false
+    this.chart2.initDone = false
     this.chart3.initDone = false
     if (this.filmIndex == 'wantNum') { // 想看
       this.wanttoseeList()
@@ -461,115 +484,31 @@ export default class Main extends ViewBase {
   }
 
   async mounted() {
-    await this.watchFilmList()
+    this.movieStatus()
+    // await this.watchFilmList()
   }
-  async chartList() {
-    const myChart = echarts.init(this.$refs.refChart as any)
-    const option: any = {
-      tooltip: {
-        trigger: 'axis'
-      },
-      legend: {
-        data: [
-          {
-            name: '猫眼',
-            icon: 'circle',
-          },
-          {
-            name: '淘票票',
-            icon: 'circle',
-          },
-          {
-            name: '豆瓣',
-            icon: 'circle',
-          },
-        ], // '猫眼', '淘票票', '豆瓣'
-        textStyle: {
-          color: '#fff'
-        }
-      },
-      xAxis: [
-        {
-          type: 'category',
-          boundaryGap : false,
-          data: this.chart1.dataList.date,
-          axisLabel: {
-            textStyle: {
-              color: '#fff'
-            }
-          }
-        }
-      ],
-      yAxis : [
-        {
-          type: 'value',
-          axisLabel: {
-            textStyle: {
-              color: '#fff'
-            }
-          }
-        }
-      ],
-      series: [
-        {
-          name: '猫眼',
-          type: 'line',
-          smooth: true,
-          areaStyle: {
-              color: '#DA6C70'
-          },
-          lineStyle: {
-            color: '#DA6C70',
-            width: 1,
-            // opacity: 0.7
-          },
-          data: this.chart1.dataList.data.maoyan
-        },
-        {
-          name: '淘票票',
-          type: 'line',
-          smooth: true,
-          areaStyle: {
-              color: '#00B6CC'
-          },
-          lineStyle: {
-            color: '#00B6CC',
-            width: 1,
-            // opacity: 0.7
-          },
-          data: this.chart1.dataList.data.taopiaopiao
-        },
-        {
-          name: '豆瓣',
-          type: 'line',
-          smooth: true,
-          areaStyle: {
-              color: '#D0BF6B'
-          },
-          lineStyle: {
-            color: '#D0BF6B',
-            width: 1,
-            // opacity: 0.7
-          },
-          data: this.chart1.dataList.data.douban
-        }
-      ]
+
+  async movieStatus() {
+    const id = this.id
+    try {
+      const { data } = await MovieStatus(id)
+      this.releaseStatus = data.releaseStatus
+      // 假如是0,1,2 展示想看人数， 3-4展示观影人数，4 下映展示出上映时间和下映时间
+      if (this.releaseStatus < 3) {
+        this.filmIndex = 'wantNum'
+        this.wanttoseeList()
+      } else {
+        this.filmIndex = 'watchNum'
+        this.watchFilmList()
+      }
+    } catch (ex) {
+      this.handleError(ex)
     }
-    myChart.setOption(option)
   }
 
   resetData() {
     this.chart1.dataList = []
     this.chart2.dataList = []
-    this.chart3.dataList = []
-  }
-  handleWatchFilm(val: any) {
-    this.filmIndex = val
-    if (val == 'wantNum') { // 想看
-      this.wanttoseeList()
-    } else {
-      this.watchFilmList()
-    }
   }
 }
 </script>
