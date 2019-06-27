@@ -3,10 +3,10 @@
     <!-- 剧情简介 -->
    <Row class='de-info' >
       <Row class='title' >剧情简介</Row>
-      <Row style='margin-top: 20px;line-height:30px; color: #B3BCC0;'>&nbsp;&nbsp;{{summary}}<span v-if='info'>123...</span></Row>
+      <Row style='margin-top: 20px;line-height:30px; color: #B3BCC0;' :class="[ sumFlag == 0 ? 'activeClass' : '']">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{summary}}</Row>
       <!-- <div class='mores' style='text-align: right;margin-right: 30px;'@click='detailinfo' >展开全部<span></span></div> -->
       <div class="show-all" v-if="itemlist.summary.length > 200">
-        <span @click="sumToggle">{{sumTitle}}<Icon :class="{'sumDown': sumFlag == 0, 'sumUp': sumFlag == 1}" type="ios-arrow-down" size="25" /></span>
+        <span @click="sumToggle" >{{sumTitle}}<Icon :class="{'sumDown': sumFlag == 0, 'sumUp': sumFlag == 1}" type="ios-arrow-down" size="25" /></span>
       </div>
    </Row>
    <!-- 更多资料 -->
@@ -106,7 +106,7 @@ export default class Main extends ViewBase {
     } else {
       this.sumFlag = 0
       this.sumTitle = '展示全部'
-      this.summary = this.itemlist.summary.slice(0, 211) + '...'
+      this.summary = this.itemlist.summary.slice(0, 211)
     }
   }
   async search() {
@@ -122,7 +122,7 @@ export default class Main extends ViewBase {
         }
       })
       this.imgList = this.imgUrl.slice(0, 16)
-      this.summary = this.itemlist.summary.slice(0, 211) + '...'
+      this.summary = this.itemlist.summary.slice(0, 211)
     } catch {
 
     } finally {
@@ -137,6 +137,12 @@ export default class Main extends ViewBase {
 .page {
   background: rgba(0, 32, 45, 0.8);
   border-radius: 5px;
+}
+.activeClass {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 .de-info {
   padding: 20px;
@@ -179,6 +185,7 @@ export default class Main extends ViewBase {
   color: #fff;
   line-height: 50px;
   font-size: 24px;
+  padding-left: 7px;
 }
 .mores {
   text-align: center;
@@ -210,12 +217,9 @@ export default class Main extends ViewBase {
 .loading-img {
   display: flex;
   flex-wrap: wrap;
-  margin-left: -10px;
+  margin-left: -16px;
   margin-right: -10px;
   transition: all 2s;
-  li:nth-child(0) {
-    margin-left: 1.7%;
-  }
   li {
     width: 22%;
     height: 180px;
@@ -230,9 +234,11 @@ export default class Main extends ViewBase {
   }
 }
 .show-all {
+  margin-top: 5px;
   text-align: center;
   font-size: 14px;
   color: #b3bcc0;
+  line-height: 30px;
   span {
     cursor: pointer;
   }
