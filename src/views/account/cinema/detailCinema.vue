@@ -5,7 +5,7 @@
       <Row>
         <Col :span="12">
           <p>
-            <label>影院信息</label>{{items.shortName}}
+            <label>影院名称</label>{{items.shortName}}
           </p>
           <p>
             <label>影厅数量</label> {{items.hallCount}}
@@ -24,8 +24,12 @@
         </Col>
       </Row>
     </div>
-    <div class="cinema-title">影厅信息</div>
-    <Table stripe class="tables" :columns="columns4" :data="tableData"></Table>
+    <div class="cinema-title cinema-mes">影厅信息</div>
+    <div class="list-box">
+      <div class="list-table">
+         <Table stripe class="tables" :columns="columns4" :data="tableData"></Table>
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -102,6 +106,8 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import '~@/site/common.less';
+@import '../less/table.less';
 .cinema-title {
   font-size: 22px;
   color: #fff;
@@ -110,6 +116,13 @@ export default class Main extends ViewBase {
 .text-rows {
   background: rgba(0, 32, 45, .8);
   color: #fff;
+  margin: 0 30px;
+  label {
+    color: #fff;
+  }
+}
+.cinema-mes {
+  padding-bottom: 0;
 }
 </style>
 
