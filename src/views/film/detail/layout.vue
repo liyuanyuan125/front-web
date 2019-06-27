@@ -67,7 +67,9 @@ export default class Layout extends ViewBase {
 
 .figure-img {
   width: 122px;
-  height: 122px;
+  height: auto;
+  min-height: 122px;
+  max-height: 220px;
   border: 1px solid #53c5df;
   border-radius: 6px;
 }
