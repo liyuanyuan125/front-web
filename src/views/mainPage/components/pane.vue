@@ -17,7 +17,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { RawLocation } from 'vue-router'
-import Tooltip from './tooltip.vue'
+import Tooltip from '@/components/tooltip'
 
 @Component({
   components: {

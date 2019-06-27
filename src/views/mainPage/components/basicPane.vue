@@ -112,11 +112,12 @@
               :to="{ name: 'film-figure', params: { id: it.id } }"
               class="actor-item-in"
             >
-              <figure
+              <!-- <figure
                 class="actor-img"
                 :style="{ backgroundImage: `url(${it.avatar})` }"
                 :title="it.name"
-              ></figure>
+              ></figure> -->
+              <Figure :src="it.avatar" :title="it.name" class="actor-img"/>
             </router-link>
           </li>
         </ul>
@@ -157,7 +158,8 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import { RawLocation } from 'vue-router'
 import VideoPreviewer from '@/components/videoPreviewer'
 import Star from '@/components/star'
-import Tooltip from './tooltip.vue'
+import Tooltip from '@/components/tooltip'
+import Figure from '@/components/figure'
 
 export interface Opus {
   title: string
@@ -219,9 +221,10 @@ export interface Item {
 
 @Component({
   components: {
+    Tooltip,
     VideoPreviewer,
     Star,
-    Tooltip
+    Figure
   }
 })
 export default class BasicPane extends Vue {
@@ -492,7 +495,6 @@ export default class BasicPane extends Vue {
   width: 68px;
   height: 68px;
   border-radius: 50%;
-  background: no-repeat center top;
-  background-size: cover;
+  overflow: hidden;
 }
 </style>
