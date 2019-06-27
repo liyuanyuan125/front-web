@@ -136,9 +136,26 @@ export async function getKol({
       }
       const map = keyBy(comments, 'code')
       const ret = [
-        { name: '正面', value: percent(dot(map.positive, 'rate')), color: '#ca7273' },
-        { name: '中立', value: percent(dot(map.neutral, 'rate')), color: '#f3d872' },
-        { name: '负面', value: percent(dot(map.passive, 'rate')), color: '#57b4c9' },
+        {
+          name: '正面',
+          value: percent(dot(map.positive, 'rate')),
+          trend: +dot(map.positive, 'trend') || 0,
+          color: '#ca7273'
+        },
+
+        {
+          name: '中立',
+          value: percent(dot(map.neutral, 'rate')),
+          trend: +dot(map.neutral, 'trend') || 0,
+          color: '#f3d872'
+        },
+
+        {
+          name: '负面',
+          value: percent(dot(map.passive, 'rate')),
+          trend: +dot(map.passive, 'trend') || 0,
+          color: '#57b4c9'
+        },
       ]
       const allZero = ret.every(it => it.value == 0)
       return allZero ? [] : ret
@@ -411,14 +428,34 @@ export async function getFigure(id: number) {
       }
     } : null,
 
-    commentData: comments && comments.length > 0 ? (() => {
+    commentData: (() => {
+      if (comments == null || comments.length == 0) {
+        return []
+      }
       const map = keyBy(comments, 'code')
       return [
-        { name: '正面', value: +dot(map.positive, 'rate') || 0, color: '#ca7273' },
-        { name: '中立', value: +dot(map.neutral, 'rate') || 0, color: '#f3d872' },
-        { name: '负面', value: +dot(map.passive, 'rate') || 0, color: '#57b4c9' },
+        {
+          name: '正面',
+          value: +dot(map.positive, 'rate') || 0,
+          trend: +dot(map.positive, 'trend') || 0,
+          color: '#ca7273'
+        },
+
+        {
+          name: '中立',
+          value: +dot(map.neutral, 'rate') || 0,
+          trend: +dot(map.neutral, 'trend') || 0,
+          color: '#f3d872'
+        },
+
+        {
+          name: '负面',
+          value: +dot(map.passive, 'rate') || 0,
+          trend: +dot(map.passive, 'trend') || 0,
+          color: '#57b4c9'
+        },
       ]
-    })() : null,
+    })(),
   }
 
   return result

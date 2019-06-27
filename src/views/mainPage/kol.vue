@@ -47,6 +47,7 @@
             title="近7日评论分析"
             :more="{ name: 'kol-detail-comment', params: {id} }"
             :data="commentData"
+            :formatter="commentFormatter"
             class="comment-pane"
           />
         </div>
@@ -133,6 +134,12 @@ export default class FigurePage extends ViewBase {
   opusData: any = null
 
   offerData: any = null
+
+  commentFormatter({ seriesName, dataIndex }: any) {
+    const { name, value, trend } = this.commentData[dataIndex]
+    const inc = trend > 0 ? `(上升${trend}%)` : trend < 0 ? `(下降${-trend}%)` : ''
+    return `${seriesName}<br>${name}：${value}%${inc}`
+  }
 
   hotFormatter([{ dataIndex }]: any) {
     const { category } = this.hotData
@@ -261,7 +268,7 @@ export default class FigurePage extends ViewBase {
 }
 
 .board-pane {
-  min-width: 580px;
+  width: 580px;
   margin-top: 19px;
 }
 
