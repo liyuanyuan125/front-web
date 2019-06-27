@@ -55,6 +55,7 @@ export async function getKol({
     data: {
       item: {
         name,
+        description,
         photo,
         jyIndex,
         ranking,
@@ -86,7 +87,7 @@ export async function getKol({
     icon: it.channelCode,
     name: dot(channelMap[it.channelCode], 'text'),
     percent: it.count * 100 / fansTotal,
-    count: it.count
+    count: readableNumber(it.count)
   }))
 
   const fansRate = keyBy(fans, 'k')
@@ -103,12 +104,12 @@ export async function getKol({
     basic: {
       id,
       name,
-      title: cate && cate.text,
+      title: description,
       figure: photo,
       rankNo: percent(jyIndex, 2),
       rankTitle: [
-        `全网排名：${ranking}`,
-        cate ? `${cate.text}：${categoryRanking}` : ''
+        `全网排名：${ranking || '-'}`,
+        cate ? `${cate.text}：${categoryRanking || '-'}` : ''
       ].filter(it => !!it).join('<br>')
     },
 
@@ -152,7 +153,7 @@ export async function getKol({
       })
       .filter((it: any) => it != null)
       return list.length > 0 ? {
-        title: `近30日${channelName}微博指数`,
+        title: `近30日${channelName}指数`,
         list,
         category: cate && cate.text
       } : null
@@ -231,7 +232,7 @@ export async function getMovie(id: number) {
       subName: nameEn,
       figure: mainPic,
       rankNo: percent(jyIndex, 2),
-      rankTitle: `同档期：第${jyIndexSamePeriodRanking || 0}`,
+      rankTitle: `同档期：第${jyIndexSamePeriodRanking || '-'}`,
     },
 
     hasShow,

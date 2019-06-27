@@ -48,7 +48,6 @@
             :more="{ name: 'kol-detail-comment', params: {id} }"
             :data="commentData"
             class="comment-pane"
-            v-if="commentData"
           />
         </div>
 

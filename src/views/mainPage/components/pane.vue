@@ -63,4 +63,14 @@ export default class Pane extends Vue {
 .pane-body {
   position: relative;
 }
+
+.pane-body:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 130px);
+  &::before {
+    content: '-';
+  }
+}
 </style>
