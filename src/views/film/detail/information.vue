@@ -185,6 +185,7 @@ export default class Main extends ViewBase {
   color: #fff;
   line-height: 50px;
   font-size: 24px;
+  padding-left: 7px;
 }
 .mores {
   text-align: center;
@@ -216,12 +217,9 @@ export default class Main extends ViewBase {
 .loading-img {
   display: flex;
   flex-wrap: wrap;
-  margin-left: -10px;
+  margin-left: -16px;
   margin-right: -10px;
   transition: all 2s;
-  li:nth-child(0) {
-    margin-left: 1.7%;
-  }
   li {
     width: 22%;
     height: 180px;
