@@ -9463,6 +9463,19 @@ yup@^0.27.0:
     synchronous-promise "^2.0.6"
     toposort "^2.0.2"
 
+yxg-xlsx-style@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/yxg-xlsx-style/-/yxg-xlsx-style-0.0.1.tgz#4dc18b8458ff3cd5fb8ed028f025da2b5acc933e"
+  integrity sha512-chJKDgjBb89TbuhapwlWWY6KQFzd8PxOaD7ZmIU3/t0+fp6DmPMFHwpF16nAAj7Q9woQlf2hE5g3gncy0sqvcw==
+  dependencies:
+    adler-32 ""
+    cfb ">=0.10.0"
+    codepage "~1.3.6"
+    commander ""
+    crc-32 ""
+    jszip "2.4.0"
+    ssf "~0.8.1"
+
 zrender@4.0.7:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/zrender/-/zrender-4.0.7.tgz#15ae960822f5efed410995d37e5107fe3de10e6d"

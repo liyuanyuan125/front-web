@@ -59,7 +59,7 @@ export default class Layout extends ViewBase {
 .figure-name {
   position: absolute;
   top: 16px;
-  color: #00202e;
+  color: #fff;
   font-size: 24px;
   font-weight: normal;
 }

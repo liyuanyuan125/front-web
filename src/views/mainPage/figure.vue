@@ -106,8 +106,8 @@ export default class FigurePage extends ViewBase {
   hotData: any[] = []
 
   hotFormatter([{ dataIndex }]: any) {
-    const { value, rank } = this.hotData[dataIndex]
-    return `综合热度：${value}`
+    const { value } = this.hotData[dataIndex]
+    return `综合热度：${+value || '-'}`
   }
 
   created() {

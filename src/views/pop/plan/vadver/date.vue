@@ -58,7 +58,7 @@ export default class Dates extends ViewBase {
     this.open = !this.open
   }
 
-  handleChange(date: any) {
+  handleChange(date: any, numbers: any) {
     this.$emit('onChange', date)
   }
 

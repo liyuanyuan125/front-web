@@ -128,7 +128,7 @@ export default class MoviePage extends ViewBase {
 
   hotFormatter([{ dataIndex }]: any) {
     const { value, rank } = this.hotData[dataIndex]
-    return `综合热度：${value}<br>排名：${rank}`
+    return `综合热度：${+value || '-'}<br>排名：${+rank || '-'}`
   }
 
   created() {
