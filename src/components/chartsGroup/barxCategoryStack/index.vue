@@ -11,11 +11,11 @@
         </Tooltip>
       </div>
       <RadioGroup size="small"
-                  v-if="dict1.length > 0"
+                  v-if=" dict1.length > 0 "
                   @on-change='currentTypeChange'
                   v-model="currentIndex"
                   type="button">
-        <Radio v-for="(item,index) in dict1"
+        <Radio v-for="(item,index) in dict1" v-show=" initDone "
                :key="item.key"
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
