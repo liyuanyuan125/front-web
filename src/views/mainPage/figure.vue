@@ -71,8 +71,8 @@ import FansPane from './components/fansPane.vue'
 import PiePane from './components/piePane.vue'
 import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
-
 import { getFigure, getFigureActiveFans, getFigureHot } from './data'
+import { readableThousands } from '@/util/dealData'
 
 @Component({
   components: {
@@ -113,7 +113,7 @@ export default class FigurePage extends ViewBase {
 
   hotFormatter([{ dataIndex }]: any) {
     const { value } = this.hotData[dataIndex]
-    return `综合热度：${+value || '-'}`
+    return `综合热度：${readableThousands(value)}`
   }
 
   created() {
