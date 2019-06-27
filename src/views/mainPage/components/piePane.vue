@@ -1,6 +1,11 @@
 <template>
   <Pane :title="title" :more="more">
-    <ECharts :options="chartData" auto-resize class="chart" v-if="data"/>
+    <ECharts
+      :options="chartData"
+      auto-resize
+      class="chart"
+      v-if="data && data.length > 0"
+    />
   </Pane>
 </template>
 

@@ -75,7 +75,7 @@
         <div class="board-row" v-if="offerData">
           <OfferPane
             :title="offerData.title"
-            :price="offerData.price"
+            :priceList="offerData.priceList"
             class="offer-pane"
           />
         </div>
