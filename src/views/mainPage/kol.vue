@@ -48,7 +48,6 @@
             :more="{ name: 'kol-detail-comment', params: {id} }"
             :data="commentData"
             class="comment-pane"
-            v-if="commentData"
           />
         </div>
 
@@ -76,7 +75,7 @@
         <div class="board-row" v-if="offerData">
           <OfferPane
             :title="offerData.title"
-            :price="offerData.price"
+            :priceList="offerData.priceList"
             class="offer-pane"
           />
         </div>

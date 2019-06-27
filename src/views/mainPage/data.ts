@@ -55,6 +55,7 @@ export async function getKol({
     data: {
       item: {
         name,
+        description,
         photo,
         jyIndex,
         ranking,
@@ -86,7 +87,7 @@ export async function getKol({
     icon: it.channelCode,
     name: dot(channelMap[it.channelCode], 'text'),
     percent: it.count * 100 / fansTotal,
-    count: it.count
+    count: readableNumber(it.count)
   }))
 
   const fansRate = keyBy(fans, 'k')
@@ -103,12 +104,12 @@ export async function getKol({
     basic: {
       id,
       name,
-      title: cate && cate.text,
+      title: description,
       figure: photo,
       rankNo: percent(jyIndex, 2),
       rankTitle: [
-        `全网排名：${ranking}`,
-        cate ? `${cate.text}：${categoryRanking}` : ''
+        `全网排名：${ranking || '-'}`,
+        cate ? `${cate.text}：${categoryRanking || '-'}` : ''
       ].filter(it => !!it).join('<br>')
     },
 
@@ -129,14 +130,19 @@ export async function getKol({
       }
     } : null,
 
-    commentData: comments && comments.length > 0 ? (() => {
+    commentData: (() => {
+      if (comments == null || comments.length == 0) {
+        return []
+      }
       const map = keyBy(comments, 'code')
-      return [
+      const ret = [
         { name: '正面', value: percent(dot(map.positive, 'rate')), color: '#ca7273' },
         { name: '中立', value: percent(dot(map.neutral, 'rate')), color: '#f3d872' },
         { name: '负面', value: percent(dot(map.passive, 'rate')), color: '#57b4c9' },
       ]
-    })() : null,
+      const allZero = ret.every(it => it.value == 0)
+      return allZero ? [] : ret
+    })(),
 
     hotData: indexes && indexes.length > 0 ? (() => {
       const channelName = dot(channelMap[channel], 'text')
@@ -152,7 +158,7 @@ export async function getKol({
       })
       .filter((it: any) => it != null)
       return list.length > 0 ? {
-        title: `近30日${channelName}微博指数`,
+        title: `近30日${channelName}指数`,
         list,
         category: cate && cate.text
       } : null
@@ -170,14 +176,16 @@ export async function getKol({
       }
     }),
 
-    offerData: settlementPrices && settlementPrices.length > 0
-      ? {
-        title: '投放报价',
-        price: settlementPrices.map(({ categoryName, settlementPrice }: any) => {
-          return `${categoryName}：¥${settlementPrice} 起`
-        }).join('<br>')
-      }
-      : null
+    offerData: {
+      title: '投放报价',
+      priceList: (settlementPrices || []).map(({ categoryName, settlementPrice }: any) => {
+        const price = readableThousands(settlementPrice)
+        return {
+          name: categoryName,
+          value: price != '-' ? `¥${price} 起` : price
+        }
+      })
+    }
   }
 
   return result
@@ -231,7 +239,7 @@ export async function getMovie(id: number) {
       subName: nameEn,
       figure: mainPic,
       rankNo: percent(jyIndex, 2),
-      rankTitle: `同档期：第${jyIndexSamePeriodRanking || 0}`,
+      rankTitle: `同档期：第${jyIndexSamePeriodRanking || '-'}`,
     },
 
     hasShow,

@@ -58,7 +58,11 @@
                     </Row>
                     <Row class="li-col" type="flex" justify="center" align="middle">
                       <Col :span="5">
-                        <div class="order-title">{{item.projectName}}</div>
+                        <div class="order-title">
+                          <Tooltip max-width="200" transfer v-if='item.projectName != null' :content="item.projectName">
+                          <span>{{item.projectName}}</span>
+                          </Tooltip>
+                        </div>
                         <p class="brand-mark col_00202d flex-box" v-for="it in channelCodeList" v-if="it.key == item.channelCode">
                           <img src="~@/views/brand/assets/microblog.png" v-if="item.channelCode == 'weibo'" width="20" height="20" alt="alias" />
                           <img src="~@/views/brand/assets/quick.png" v-if="item.channelCode == 'kuaishou'" width="20" height="20" alt="alias" />
@@ -112,7 +116,9 @@
                 </Row>
                 <Row class="li-col" type="flex" justify="center" align="middle">
                   <Col :span="5">
-                    <div class="order-title">{{item.projectName}}</div>
+                    <div class="order-title"><Tooltip max-width="200" transfer v-if='item.projectName != null' :content="item.projectName">
+                          <span>{{item.projectName}}</span>
+                          </Tooltip></div>
                     <p class="brand-mark col_00202d flex-box" v-for="it in channelCodeList" v-if="it.key == item.channelCode">
                       <img src="~@/views/brand/assets/microblog.png" v-if="item.channelCode == 'weibo'" width="20" height="20" alt="alias" />
                       <img src="~@/views/brand/assets/quick.png" v-if="item.channelCode == 'kuaishou'" width="20" height="20" alt="alias" />
@@ -529,6 +535,15 @@ export default class Main extends ViewBase {
 
 .order-title {
   font-size: 15px;
+  span {
+    overflow: hidden;
+    width: 150px;
+    height: 45px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 22px;
+  }
 }
 /deep/ .ivu-select-input {
   height: 40px;

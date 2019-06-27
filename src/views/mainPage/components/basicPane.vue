@@ -132,16 +132,13 @@
         </h4>
         <ul class="brand-list">
           <li
-            v-for="(it, i) in brandData.list"
+            v-for="(it, i) in brandData.list.slice(0, 3)"
             :key="i"
             class="brand-item"
           >
-            <router-link
-              :to="{ name: 'brand-home', params: { id: it.id } }"
-              class="brand-item-in"
-            >
+            <Tooltip :content="it.name">
               <img :src="it.logo" width="55" height="55" class="brand-img">
-            </router-link>
+            </Tooltip>
           </li>
         </ul>
       </div>
@@ -406,6 +403,7 @@ export default class BasicPane extends Vue {
 }
 
 .brand-img {
+  background-color: #fff;
   vertical-align: top;
 }
 

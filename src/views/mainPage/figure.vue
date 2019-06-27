@@ -34,7 +34,6 @@
             :more="{ name: 'film-figure-detail-comment', params: { id } }"
             :data="commentData"
             class="comment-pane"
-            v-if="commentData"
           />
         </div>
 
