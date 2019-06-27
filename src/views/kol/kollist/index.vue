@@ -145,24 +145,24 @@
           <template slot-scope="{ row }" slot="action">
             <div class="table-action">
               <p v-if="!yudingListId.includes(row.kolId)" @click="debounce(row, $event, 1000)">
-                <Icon type="md-add-circle" style=" font-size: 17px; color: #CA7273" />
+                <Icon type="md-add-circle" style=" font-size: 17px; color: #001F2C; opacity: .3" />
                 加入投放
               </p>
               <p v-else @click="cancelShop(row.id)">
-                <Icon type="ios-checkmark-circle" style="font-size: 17px; color: #001F2C; opacity: .3" />
+                <Icon type="ios-checkmark-circle" style="font-size: 17px; color: #CA7273;" />
                 已加入
               </p>
               <p style="margin-top: 5px" v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)" 
               @click="collects(acount == 1 ? row.id : row.accountDataId)">
-                <Icon type="md-heart" style="font-size: 17px; color: #CA7273" />
+                <Icon type="md-heart" style="font-size: 17px;color: #001F2C; opacity: .3" />
                 收藏
               </p>
               <p style="margin-top: 5px" v-else @click="cancelcollects(acount == 1 ? row.id : row.accountDataId)">
-                <Icon type="md-heart" style="font-size: 17px; color: #001F2C; opacity: .3" />
+                <Icon type="md-heart" style="font-size: 17px; color: #CA7273" />
                 已收藏
               </p>
               <div :ref="'small' + row.id" class="radiu-url">
-                <img src="http://seopic.699pic.com/photo/50035/0520.jpg_wh1200.jpg" />
+                <img :src="ballsrc" />
               </div>
             </div>
           </template>
@@ -289,6 +289,7 @@ export default class Main extends ViewBase {
   yudingListId: any = []
   kolIds: any = []
   times: any = ''
+  ballsrc: any = ''
 
   get pageList() {
     return {
@@ -546,7 +547,8 @@ export default class Main extends ViewBase {
         const y = e.clientY
         const end: any  = this.$refs.end
         this.checkDetail = true
-        const left = end.getBoundingClientRect().left || window.screen.width - 300
+        this.ballsrc = row.image
+        const left = end.getBoundingClientRect().left || window.screen.width - 450
         const top = end.getBoundingClientRect().top || window.screen.availHeight - 120
         dom.style.cssText = `left: ${x }px; top: ${ y - 80}px; display: block`
         animation(dom, {
