@@ -10,7 +10,10 @@
     <div class='title-tip'>
       <Row style='font-size: 24px;line-height: 50px;font-weight: 500'>订单信息</Row>
     	<Row>
-       <Col :span='12'>项目名称：{{item.projectName}}</Col>
+       <Col :span='12' style='display:flex;'>
+        <div style='width: 13%;display: inline-block;'>项目名称：</div>
+        <div style='width: 80%;display: inline-block;'>{{item.projectName}}</div>
+      </Col>
        <Col :span='12'>订单编号：{{item.orderNo}}</Col>
       </Row>
       <Row>
@@ -21,7 +24,10 @@
        <Col :span='24'>推广产品：{{item.productName == null ? '暂无' : item.productName}}</Col>
       </Row>
       <Row>
-       <Col :span='24'>推广内容：{{item.content == null ? '暂无' : item.content}}</Col>
+       <Col :span='24' class='conover' style='display: flex;'>
+       <div style='width: 6%;display: inline-block;'>推广内容：</div>
+       <div style='width: 80%;display: inline-block;'>{{item.content == null ? '暂无' : item.content}}</div>
+       </Col>
       </Row>
     </div>
     <div class='body'>
@@ -49,7 +55,7 @@
                     </div>
                   </Col>
                   <Col :span='7' class='name'>
-                    <Tooltip v-if='it.accountName.length > 5' :content="it.name">
+                    <Tooltip v-if='it.accountName.length > 5' max-width="200" transfer :content="it.name">
                     <div>{{it.accountName.slice(0,5)}}...</div></Tooltip>
                     <div v-if='it.accountName.length <= 5'>{{it.accountName}}</div>
                     <div v-for="code in accountCategoryList" v-if="code.key == it.accountTypeCode">{{code.text}}</div>
@@ -71,8 +77,8 @@
               <Col :span='3' class='li-ti-col ss'>{{it.publishTime}}</Col>
               <Col :span='4' class='li-ti-col ss'>
               <span v-if='it.content == null'>暂无</span>
-                  <Tooltip v-if='it.content != null' :content="it.content">
-                    <span>{{it.content.slice(0,13)}}</span></Tooltip>
+                  <Tooltip max-width="200" transfer v-if='it.content != null' :content="it.content">
+                    <span class='overs'>{{it.content}}</span></Tooltip>
               </Col>
               <Col :span='3' class='li-ti-col ss'>
               <i v-for="item in subStatusList" :key="item.key" v-if="item.key == it.status">{{item.text}}</i>
@@ -273,6 +279,19 @@ export default class Main extends ViewBase {
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 1);
 }
+.overs {
+  overflow: hidden;
+  height: 45px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 22px;
+}
+.conover {
+  line-height: 26px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
 .taskorder {
   font-size: 20px;
   line-height: 50px;
@@ -357,7 +376,7 @@ export default class Main extends ViewBase {
       background-size: cover;
       position: absolute;
       top: 37%;
-      right: -4%;
+      right: -3%;
     }
   }
   .ss-right {

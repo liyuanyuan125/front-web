@@ -176,7 +176,7 @@ export default class Main extends ViewBase {
     width: 50px;
     height: 24px;
     text-align: center;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 500;
     color: #fff;
     line-height: 25px;
@@ -193,6 +193,9 @@ export default class Main extends ViewBase {
   font-size: 18px;
   font-weight: 500;
   color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .de-ro-two {
   text-align: center;
