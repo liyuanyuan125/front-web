@@ -34,6 +34,10 @@ declare module 'js-calendar' {
   }
 }
 
+declare module 'yxg-xlsx-style' {
+  export const xlsxStyle: any // tslint:disable-line
+}
+
 declare module 'vue-quill-editor' {
   export const quillEditor: any // tslint:disable-line
   export const Quill: any // tslint:disable-line

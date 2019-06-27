@@ -269,7 +269,7 @@ export default class DlgEditCinema extends ViewBase {
 
   statusLists(it: any) {
     const msg = (this.statusList.filter((its: any) => its.key == it.categoryCode)[0] as any).text
-    return `${msg}: ${it.salePrice}w+`
+    return `${msg}: ￥${it.salePrice}`
   }
 
   async flag() {

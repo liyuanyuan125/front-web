@@ -399,6 +399,10 @@ export default class DlgEditCinema extends ViewBase {
       .film-time {
         margin-left: 20px;
         height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 180px;
       }
       img {
         margin-left: 20px;

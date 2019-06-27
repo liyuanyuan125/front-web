@@ -252,6 +252,6 @@ export async function payMoney(id: any) {
  * 缴纳保证金
  */
 export async function getcalendars(query: any) {
-  const data = await post(`/basis/calendars`, query)
+  const data = await get(`/basis/calendars`, query)
   return data
 }
