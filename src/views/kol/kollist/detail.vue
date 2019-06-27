@@ -64,12 +64,12 @@
           <template slot-scope="{ row }" slot="action">
             <div class="action">
               <p v-if="row.collected == 1" @click="collects(row.channelDataId)">
-                <Icon type="md-heart" style="font-size: 17px; color: #CA7273" />
+                <Icon type="md-heart" style="font-size: 17px;  color: #001F2C; opacity: .3" />
                 收藏
               </p>
               <p v-else @click="cancelcollects(row.channelDataId)">
-                <Icon type="md-heart" style="font-size: 17px; color: #001F2C; opacity: .3" />
-                取消收藏
+                <Icon type="md-heart" style="font-size: 17px; color: #CA7273;" />
+                已收藏
               </p>
               <p @click="cancelShop(row.channelDataId)">
                 <Icon type="ios-close-circle-outline" style="font-size: 17px;  color: #001F2C; opacity: .3" />
