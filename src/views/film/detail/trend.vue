@@ -220,7 +220,7 @@ export default class Main extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color:  ['#da6c70'],
+    color:  ['#00b6cc'],
     height: 450,
     toolTip
   }
@@ -232,7 +232,7 @@ export default class Main extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color:  ['#d0bf6b'],
+    color:  ['#00b6cc'],
     height: 450,
     toolTip
   }

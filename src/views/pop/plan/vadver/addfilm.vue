@@ -64,7 +64,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { searchcinema } from '@/api/popPlan'
+import { searchcinema, moviefind } from '@/api/popPlan'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
@@ -152,15 +152,25 @@ export default class DlgEditCinema extends ViewBase {
     try {
       const { data: {
        items,
-       movieTypeList,
+       movies,
+       typeList,
        totalCount
-      } } = await searchcinema(clean({
+      } } = await moviefind(clean({
         ...this.form,
         types: this.form.types[0] == 0 ? '' : this.form.types.join(',')
       }))
-      this.data = items || []
+      this.data = (movies || []).map((it: any) => {
+        return {
+          ...it,
+          id: it.movie_id,
+          image: it.main_pic,
+          nameCn: it.name_cn,
+          releaseDate: it.release_date,
+          type: it.types
+        }
+      })
       this.total = totalCount
-      this.movieTypeList = movieTypeList || []
+      this.movieTypeList = typeList || []
       this.checkNum()
     } catch (ex) {
       this.handleError(ex)

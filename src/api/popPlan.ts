@@ -255,3 +255,12 @@ export async function getcalendars(query: any) {
   const data = await get(`/basis/calendars`, query)
   return data
 }
+
+/**
+ * @param  {any} query
+ * 电影计划单搜索接口
+ */
+export async function moviefind(query: any) {
+  const data = await get(`/movie/search/advert`, query)
+  return data
+}

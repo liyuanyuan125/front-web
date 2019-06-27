@@ -130,14 +130,19 @@ export async function getKol({
       }
     } : null,
 
-    commentData: comments && comments.length > 0 ? (() => {
+    commentData: (() => {
+      if (comments == null || comments.length == 0) {
+        return []
+      }
       const map = keyBy(comments, 'code')
-      return [
+      const ret = [
         { name: '正面', value: percent(dot(map.positive, 'rate')), color: '#ca7273' },
         { name: '中立', value: percent(dot(map.neutral, 'rate')), color: '#f3d872' },
         { name: '负面', value: percent(dot(map.passive, 'rate')), color: '#57b4c9' },
       ]
-    })() : null,
+      const allZero = ret.every(it => it.value == 0)
+      return allZero ? [] : ret
+    })(),
 
     hotData: indexes && indexes.length > 0 ? (() => {
       const channelName = dot(channelMap[channel], 'text')
@@ -171,14 +176,16 @@ export async function getKol({
       }
     }),
 
-    offerData: settlementPrices && settlementPrices.length > 0
-      ? {
-        title: '投放报价',
-        price: settlementPrices.map(({ categoryName, settlementPrice }: any) => {
-          return `${categoryName}：¥${settlementPrice} 起`
-        }).join('<br>')
-      }
-      : null
+    offerData: {
+      title: '投放报价',
+      priceList: (settlementPrices || []).map(({ categoryName, settlementPrice }: any) => {
+        const price = readableThousands(settlementPrice)
+        return {
+          name: categoryName,
+          value: price != '-' ? `¥${price} 起` : price
+        }
+      })
+    }
   }
 
   return result

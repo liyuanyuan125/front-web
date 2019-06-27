@@ -1,9 +1,14 @@
 <template>
   <Pane :title="title" class="offer-pane">
-    <div class="offer-in flex-mid">
-      <em class="offer-price" v-html="price"></em>
+    <ul class="offer-list">
+      <li v-for="(it, i) in priceList" :key="i" class="offer-item">
+        <label class="offer-item-name">{{it.name}}：</label>
+        <em class="offer-item-value">{{it.value}}</em>
+      </li>
+    </ul>
+    <template slot="head-side">
       <Button type="primary" class="offer-button">加入投放</Button>
-    </div>
+    </template>
   </Pane>
 </template>
 
@@ -19,7 +24,7 @@ import Pane from './pane.vue'
 export default class OfferPane extends Vue {
   @Prop({ type: String, default: '' }) title!: string
 
-  @Prop({ type: String, default: '' }) price!: string
+  @Prop({ type: Array, default: () => [] }) priceList!: Array<{ name: string, value: string }>
 }
 </script>
 
@@ -27,16 +32,25 @@ export default class OfferPane extends Vue {
 @import '~@/site/lib.less';
 
 .offer-pane {
+  position: relative;
   min-height: 118px;
 }
 
-.offer-in {
-  margin-top: -27px;
-  font-size: 22px;
+.offer-list {
+  display: flex;
+  font-size: 16px;
+  padding: 0 30px 30px;
+  list-style: disc inside;
+}
+
+.offer-item {
+  flex: 1;
 }
 
 .offer-button {
-  margin-left: 46px;
+  position: absolute;
+  top: 17px;
+  right: 18px;
   padding: 0 30px;
   height: 34px;
   line-height: 1;

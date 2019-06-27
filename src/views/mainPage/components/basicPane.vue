@@ -132,7 +132,7 @@
         </h4>
         <ul class="brand-list">
           <li
-            v-for="(it, i) in brandData.list"
+            v-for="(it, i) in brandData.list.slice(0, 3)"
             :key="i"
             class="brand-item"
           >

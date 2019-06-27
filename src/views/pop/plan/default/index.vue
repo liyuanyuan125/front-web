@@ -107,7 +107,7 @@
     <div v-if="status != 1" class="plan-cinema-num">
       <div class="result-top">
         <h3>覆盖范围</h3>
-        <span class="custom"><Exportfile v-model="$route.params.id" /></span>
+        <span class="custom" @click="exportData">导出影院</span>
       </div>
       <div class="cinema-box">
         <div class="cinema-right">
@@ -256,6 +256,7 @@
         </Row>
       </Row>
     </div>
+    <Xlsx v-if="status != 1" ref="down" :id="$route.params.id" />
   </div>
 </template>
 
@@ -271,6 +272,7 @@ import { formatCurrency } from '@/fn/string.ts'
 import moment from 'moment'
 import Header from './header.vue'
 import Exportfile from '../vadver/exportfile.vue'
+import Xlsx from '../vadver/downxsxl.vue'
 
 const statusMap =  (list: any[]) => toMap(list, 'code', 'text')
 const timeFormat = 'YYYY-MM-DD'
@@ -278,7 +280,8 @@ const timeFormat = 'YYYY-MM-DD'
   components: {
     Number,
     Header,
-    Exportfile
+    Exportfile,
+    Xlsx
   }
 })
 export default class App extends ViewBase {
@@ -449,6 +452,10 @@ export default class App extends ViewBase {
     } else {
       this.provienfind()
     }
+  }
+
+  exportData() {
+    (this.$refs.down as any).down()
   }
 
   ageTypeMap(val: any) {

@@ -25,14 +25,12 @@
          justify="center"
          align="middle">
       <Col :span="24">
-      <div ref="refChart"
-           v-if="initDone"
-           :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
-      <div v-else
-           class='loading-wp'
-           :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
-        <TinyLoading />
-      </div>
+        <div v-if="initDone">
+          <div ref="refChart" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
+        </div>
+        <div v-else class="loading-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
+          <TinyLoading />
+        </div>
       </Col>
     </Row>
   </div>
@@ -123,8 +121,17 @@ export default class AreaBasic extends ViewBase {
             width: 1
           },
           areaStyle: {
-            shadowColor: this.color[this.currentIndex],
-            opacity: 0.4
+            // shadowColor: this.color[this.currentIndex],
+            // opacity: 0.4,
+            normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    offset: 0,
+                    color: 'rgba(0,182,204, 1)'
+                }, {
+                    offset: 1,
+                    color: ' rgba(0,182,204, 0.2)'
+                }])
+            }
           }
         }
       ]
