@@ -94,7 +94,8 @@ export function xlsl({
   filename,
   merges = [],
   autoWidth = true,
-  bookType = 'xlsx'
+  bookType = 'xlsx',
+  type
 }: any = {}) {
   filename = filename || 'excel-list'
   const chunks = chunk(data, 4).map((it: any) => it.length)
@@ -199,37 +200,55 @@ export function xlsl({
   }
 
   // const collenght = multiHeader.length
-  header.forEach((it: any, index: number) => {
-    const ind = brr[index]
-    dataInfo[`${ind}1`].s = {
-      fill: {
-        fgColor: {rgb: '3388FF'},
-      },
-      font: {
-        name: '宋体',
-        color: {rgb: 'ffffff'},
-      },
-      alignment: {
-        horizontal: 'center'
-      }
-    }
-    let step = 1
-    chunks.forEach((item: any) => {
-      step += item
-      dataInfo[`${ind}${step}`].s = {
+  if (type == 1) {
+    header.forEach((it: any, index: number) => {
+      const ind = brr[index]
+      dataInfo[`${ind}${data.length}`].s = {
         fill: {
           fgColor: {rgb: '239B56'},
         },
         font: {
           name: '宋体',
-          color: {rgb: 'ffffff'},
+          color: {rgb: '000000'},
         },
         alignment: {
           horizontal: 'center'
         }
       }
     })
-  })
+  } else {
+    header.forEach((it: any, index: number) => {
+      const ind = brr[index]
+      dataInfo[`${ind}1`].s = {
+        fill: {
+          fgColor: {rgb: '3388FF'},
+        },
+        font: {
+          name: '宋体',
+          color: {rgb: '000000'},
+        },
+        alignment: {
+          horizontal: 'center'
+        }
+      }
+      let step = 1
+      chunks.forEach((item: any) => {
+        step += item
+        dataInfo[`${ind}${step}`].s = {
+          fill: {
+            fgColor: {rgb: '239B56'},
+          },
+          font: {
+            name: '宋体',
+            color: {rgb: '000000'},
+          },
+          alignment: {
+            horizontal: 'center'
+          }
+        }
+      })
+    })
+  }
   // 设置主标题样式
   // dataInfo.A1.s = {
     // font: {

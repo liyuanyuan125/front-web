@@ -551,10 +551,17 @@ export default class Orienteering extends ViewBase {
       id: 0,
       setid: this.$route.params.setid
     })
-    this.$router.push({
-      name: 'pop-planlist-edit',
-      params: { id: '0', setid: this.$route.params.setid  }
-    })
+    if (this.$route.name == 'pop-planlist-add') {
+      this.$router.push({
+        name: 'pop-planlist-add',
+        params: { id: '0', setid: this.$route.params.setid  }
+      })
+    } else {
+      this.$router.push({
+        name: 'pop-planlist-edit',
+        params: { id: '0', setid: this.$route.params.setid  }
+      })
+    }
   }
 
   @Watch('form.cinema', { deep: true })
