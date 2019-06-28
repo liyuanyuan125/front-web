@@ -14,24 +14,38 @@
      <Row class='title'>更多资料</Row>
      <Row class='row-bo'>
        <Col span='3' class='fo-bo'>对白语言</Col>
-       <Col span='20' class='fo-bos'>{{itemlist.languages == null ? '暂无' : itemlist.languages}}</Col>
+       <Col span='20' class='fo-bos'>
+         <em v-if='itemlist.languages == null'>暂无对白语言</em>
+       <div style='margin-bottom: 10px;' v-if='itemlist.languages != null' v-for='(items,index) in itemlist.languages'>{{items}}</div><br>
+       </Col>
      </Row>
      <Row class='row-bo'>
-       <Col span='3' class='fo-bo'>国家 / 地区 </Col>
-       <Col span='20' class='fo-bos'>{{itemlist.countries == null ? '暂无' : itemlist.countries}}
-       <span v-if='itemlist.countries != null' v-for='(it,index) in itemlist.countryCodeList' :key='index'>
-         <em v-for='(its,index) in itemlist.countries' v-if='its == it.key'>{{it.text}}</em>
-       </span>
+       <Col span='3' class='fo-bo'>上映日期</Col>
+       <Col span='20' class='fo-bos'>
+         <em v-if='itemlist.releaseDates == null'>暂无</em>
+       <div style='margin-bottom: 10px;height: 30px;line-height: 30px;' v-if='itemlist.releaseDates != null' v-for='(items,index) in dataitemlist'>
+         <div class='nams' style='width: 21%;'>{{items.countryName}}&nbsp;&nbsp;{{items.countryNameEn}}</div>
+         <div class='nams' style='margin-left: 2%;'>-------------------------</div>
+         <div class='nams' style='margin-left: 4%;'>{{items.date}}</div>
+       </div><br>
+       <div class="show-all" v-if="itemlist.releaseDates.length > 5">
+        <span @click="dataToggle">{{dataTitle}}<Icon :class="{'dataDown': dataFlag == 0, 'dataUp': dataFlag == 1}" type="ios-arrow-down" size="25" /></span>
+      </div>
+     </Col>
+       </Col>
+     </Row>
+     <Row class='row-bo'>
+       <Col span='3' class='fo-bo'>制作公司</Col>
+       <Col span='20' class='fo-bos'>
+       <em v-if='itemlist.companyMap.Production.length == 0'>暂无制作</em>
+       <div style='margin-bottom: 10px;' v-if='itemlist.companyMap.Production.length > 0' v-for='(items,index) in itemlist.companyMap.Production'>{{items.name}}</div><br>
      </Col>
      </Row>
      <Row class='row-bo'>
-       <Col span='3' class='fo-bo'>上映 / 发行日期</Col>
-       <Col span='20' class='fo-bos'>{{itemlist.releaseDate == null ? '暂无' : releaseDate}}</Col>
-     </Row>
-     <Row class='row-bo'>
-       <Col span='3' class='fo-bo'>制作 / 发行</Col>
-       <Col span='20' class='fo-bos'><em v-if='itemlist.companyMap.Production.length == 0'>暂无制作</em>  <em v-if='itemlist.companyMap.Distributor.length == 0'>/暂无发行</em>
-       <em v-if='itemlist.companyMap.Production.length > 0' v-for='(items,index) in itemlist.companyMap.Production'>{{items.name + ' '}}</em> / <em v-if='itemlist.companyMap.Distributor.length > 0'>{{ itemlist.companyMap.Distributor[0].name}}</em></Col>
+       <Col span='3' class='fo-bo'>发行公司</Col>
+       <Col span='20' class='fo-bos'>
+       <em v-if='itemlist.companyMap.Distributor.length == 0'>/暂无发行</em>
+       <div style='margin-bottom: 10px;' v-if='itemlist.companyMap.Distributor.length > 0' v-for='(items,index) in itemlist.companyMap.Distributor'>{{items.name}}</div><br></Col>
      </Row>
    </div>
    <!-- 图片 -->
@@ -68,6 +82,12 @@ export default class Main extends ViewBase {
   info = false
   tabShowTitle = '展示全部'
   arrowFlag = 0
+
+  dataTitle = '展示全部'
+  dataFlag = 0
+  datalist: any = []
+  dataitemlist: any = []
+
   imgUrl = []
   imgList: any = []
   sumTitle = '展示全部'
@@ -98,6 +118,17 @@ export default class Main extends ViewBase {
       this.imgList = this.imgUrl.slice(0, 16)
     }
   }
+  dataToggle() {
+    if (!this.dataFlag) {
+      this.dataFlag = 1
+      this.dataTitle = '向上隐藏'
+      this.dataitemlist = this.itemlist.releaseDates
+    } else {
+      this.dataFlag = 0
+      this.dataTitle = '展示全部'
+      this.dataitemlist = this.itemlist.releaseDates.slice(0, 5)
+    }
+  }
   sumToggle() {
     if (!this.sumFlag) {
       this.sumFlag = 1
@@ -122,6 +153,7 @@ export default class Main extends ViewBase {
         }
       })
       this.imgList = this.imgUrl.slice(0, 16)
+      this.dataitemlist = this.itemlist.releaseDates.slice(0, 5)
       this.summary = this.itemlist.summary.slice(0, 211)
     } catch {
 
@@ -265,6 +297,28 @@ export default class Main extends ViewBase {
     transform: rotate(0);
   }
 }
+.dataDown {
+  animation: dataDown .5s both;
+}
+@keyframes dataDown {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+.dataUp {
+  animation: dataUp .5s both;
+}
+@keyframes dataUp {
+  0% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
 .sumDown {
   animation: sumDown .5s both;
 }
@@ -294,5 +348,8 @@ export default class Main extends ViewBase {
 
 .list-enter, .list-leave-to {
   opacity: 0;
+}
+.nams {
+  float: left;
 }
 </style>

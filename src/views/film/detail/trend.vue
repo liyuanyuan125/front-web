@@ -23,9 +23,10 @@
                   <DatePicker
                     type="daterange"
                     v-model="form.beginDate"
-                    @on-change="handleChange"
+                    @on-change="handleChangePic"
                     placement="bottom-end"
                     placeholder="自定义时间段"
+                    style="width: 200px"
                   ></DatePicker>
                 </div>
               </DetailNavBar>
@@ -102,7 +103,8 @@ import echarts from 'echarts'
 import {
   formatTimestamp,
   formatTimes,
-  formatNumber
+  formatNumber,
+  formatConversion
 } from '@/util/validateRules'
 import DetailNavBar from './components/detailNavBar.vue'
 import { trend } from '@/api/kolDetailMoreInfo'
@@ -162,6 +164,9 @@ export default class Main extends ViewBase {
   tooltipStyles = tooltipStyles
   // 上映状态
   releaseStatus: any = null
+  releaseDate: any = null
+  releaseEndDate: any = null
+
   // 新增和累计
   grandTotal: any = [
     {
@@ -185,8 +190,12 @@ export default class Main extends ViewBase {
 
   form: any = {
     dayRangesKey: 'sevenDay',
-    channelCode: 'weibo'
+    beginDate: []
   }
+
+  // 提交日期初始化
+  formBeginDate: any = null
+  formEndDate: any = null
 
   dict: any = {
     dayRanges: [
@@ -308,11 +317,17 @@ export default class Main extends ViewBase {
     color: colors
   }
 
-  async handleWatchFilm(val: any) {
-    this.filmIndex = val
+  get formatConversion() {
+    return formatConversion
+  }
+  comInitDone() {
     this.chart1.initDone = false
     this.chart2.initDone = false
     this.chart3.initDone = false
+  }
+  async handleWatchFilm(val: any) {
+    this.filmIndex = val
+    this.comInitDone()
     this.resetData()
     if (this.filmIndex == 'wantNum') { // 想看
       await this.wanttoseeList()
@@ -322,13 +337,18 @@ export default class Main extends ViewBase {
       await this.watchFilmList()
     }
   }
-
+  mounted() {
+    this.formBeginDate = this.beginDate(this.form.dayRangesKey)
+    this.formEndDate = this.endDate()
+    this.movieStatus()
+  }
   // 观影人数 影片票房
   async watchFilmList() {
     const mockObj = {
-      beginDate: this.beginDate(this.form.dayRangesKey),
-      endDate: this.endDate()
+      beginDate: this.formBeginDate,
+      endDate: this.formEndDate
     }
+
     const id = this.id  // this.id  55184
     try {
       const { data } = await movieView({ ...mockObj }, id)
@@ -356,7 +376,7 @@ export default class Main extends ViewBase {
         const viewCountData: any[] = [] // 观看累计数据
 
         items.filter((it: any) => {
-          date.push(it.date)
+          date.push(formatConversion(it.date))
           viewTrendData.push(it.view.trend)
           viewCountData.push(it.view.count)
           boxoTrendData.push(it.boxoffice.trend)
@@ -398,8 +418,8 @@ export default class Main extends ViewBase {
   // 想看人数
   async wanttoseeList() {
     const mockObj = {
-      beginDate: this.beginDate(this.form.dayRangesKey),
-      endDate: this.endDate()
+      beginDate: this.formBeginDate,
+      endDate: this.formEndDate
     }
     const id = this.id  // this.id  55184
     try {
@@ -422,7 +442,7 @@ export default class Main extends ViewBase {
         }
         // 观影总人数 对应页面是累计，趋势是每日新增
         items.map((it: any) => {
-          date.push(it.date)
+          date.push(formatConversion(it.date))
           it.channels.map((code: any) => {
             dataTrend[code.chanelCode].push(code.trend)
             dataCount[code.chanelCode].push(code.count)
@@ -436,7 +456,38 @@ export default class Main extends ViewBase {
         this.chart3.dataList[1][0].data = dataCount.maoyan
         this.chart3.dataList[1][1].data = dataCount.taopiaopiao
         this.chart3.dataList[1][2].data = dataCount.douban
-        this.chart3.initDone = true
+      }
+      this.chart3.initDone = true
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async movieStatus() {
+    const id = this.id
+    try {
+      const { data } = await MovieStatus(id)
+      this.releaseStatus = data.releaseStatus // 上映状态
+      this.releaseDate = data.releaseDate
+      this.releaseEndDate = data.releaseEndDate
+      // 假如是0,1,2 展示想看人数， 3-4展示观影人数，4 下映展示出上映时间和下映时间
+      if (this.releaseStatus < 3) {
+        this.filmIndex = 'wantNum'
+        this.wanttoseeList()
+      } else {
+        this.filmIndex = 'watchNum'
+        if (this.releaseStatus == 3) {
+          this.form.dayRangesKey = 'sevenDay'
+          this.formBeginDate = this.beginDate(this.form.dayRangesKey)
+          this.formEndDate = this.endDate()
+        } else if (this.releaseStatus == 4) {
+          this.form.dayRangesKey = ''
+          this.form.beginDate = [formatConversion(data.releaseDate), formatConversion(data.releaseEndDate)]
+
+          this.formBeginDate = data.releaseDate
+          this.formEndDate = data.releaseEndDate
+        }
+        this.watchFilmList()
       }
     } catch (ex) {
       this.handleError(ex)
@@ -472,40 +523,33 @@ export default class Main extends ViewBase {
     return moment(new Date()).format(timeFormat)
   }
 
-  async handleChange() { // 修改日期判断我当前请求的接口---------
-    this.chart1.initDone = false
-    this.chart2.initDone = false
-    this.chart3.initDone = false
+  async handleChange() {
+    this.comInitDone()
+    this.resetData()
+    this.form.beginDate = []
+    this.formBeginDate = this.beginDate(this.form.dayRangesKey)
+    this.formEndDate = this.endDate()
     if (this.filmIndex == 'wantNum') { // 想看
       this.wanttoseeList()
     } else {
       this.watchFilmList()
     }
   }
+  handleChangePic(val: any) {
+    this.comInitDone()
 
-  async mounted() {
-    this.movieStatus()
-    // await this.watchFilmList()
-  }
-
-  async movieStatus() {
-    const id = this.id
-    try {
-      const { data } = await MovieStatus(id)
-      this.releaseStatus = data.releaseStatus
-      // 假如是0,1,2 展示想看人数， 3-4展示观影人数，4 下映展示出上映时间和下映时间
-      if (this.releaseStatus < 3) {
-        this.filmIndex = 'wantNum'
+    this.form.dayRangesKey = ''
+    this.resetData()
+    if (val[0]) {
+      this.formBeginDate = formatConversion(val[0], 2)
+      this.formEndDate = formatConversion(val[1], 2)
+      if (this.filmIndex == 'wantNum') { // 想看
         this.wanttoseeList()
       } else {
-        this.filmIndex = 'watchNum'
         this.watchFilmList()
       }
-    } catch (ex) {
-      this.handleError(ex)
     }
   }
-
   resetData() {
     this.chart1.dataList = []
     this.chart2.dataList = []

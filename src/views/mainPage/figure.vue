@@ -33,6 +33,7 @@
             title="近7日评论分析"
             :more="{ name: 'film-figure-detail-comment', params: { id } }"
             :data="commentData"
+            :formatter="commentFormatter"
             class="comment-pane"
           />
         </div>
@@ -70,8 +71,8 @@ import FansPane from './components/fansPane.vue'
 import PiePane from './components/piePane.vue'
 import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
-
 import { getFigure, getFigureActiveFans, getFigureHot } from './data'
+import { readableThousands } from '@/util/dealData'
 
 @Component({
   components: {
@@ -104,9 +105,15 @@ export default class FigurePage extends ViewBase {
 
   hotData: any[] = []
 
+  commentFormatter({ seriesName, dataIndex }: any) {
+    const { name, value, trend } = this.commentData[dataIndex]
+    const inc = trend > 0 ? `(上升${trend}%)` : trend < 0 ? `(下降${-trend}%)` : ''
+    return `${seriesName}<br>${name}：${value}%${inc}`
+  }
+
   hotFormatter([{ dataIndex }]: any) {
     const { value } = this.hotData[dataIndex]
-    return `综合热度：${+value || '-'}`
+    return `综合热度：${readableThousands(value)}`
   }
 
   created() {
@@ -202,7 +209,7 @@ export default class FigurePage extends ViewBase {
 }
 
 .board-pane {
-  min-width: 580px;
+  width: 580px;
   margin-top: 14px;
 }
 

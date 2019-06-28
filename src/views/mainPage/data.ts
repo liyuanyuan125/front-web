@@ -24,11 +24,12 @@ const hotData = (items: any[]) => {
   const list = (items || []).map(it => {
     const date = monthDate(it.date)
     const legends = (it.channels as any[] || [])
-    .map((sub, i) => {
+    .map(sub => {
       return {
         name: sub.name || hotChannelMap[sub.chanelCode] || sub.chanelCode,
         no: sub.ranking ? `No.${sub.ranking}` : '-',
         inc: sub.trend,
+        incShow: readableThousands(Math.abs(sub.trend))
       }
     })
 
@@ -136,9 +137,26 @@ export async function getKol({
       }
       const map = keyBy(comments, 'code')
       const ret = [
-        { name: '正面', value: percent(dot(map.positive, 'rate')), color: '#ca7273' },
-        { name: '中立', value: percent(dot(map.neutral, 'rate')), color: '#f3d872' },
-        { name: '负面', value: percent(dot(map.passive, 'rate')), color: '#57b4c9' },
+        {
+          name: '正面',
+          value: percent(dot(map.positive, 'rate')),
+          trend: +dot(map.positive, 'trend') || 0,
+          color: '#ca7273'
+        },
+
+        {
+          name: '中立',
+          value: percent(dot(map.neutral, 'rate')),
+          trend: +dot(map.neutral, 'trend') || 0,
+          color: '#f3d872'
+        },
+
+        {
+          name: '负面',
+          value: percent(dot(map.passive, 'rate')),
+          trend: +dot(map.passive, 'trend') || 0,
+          color: '#57b4c9'
+        },
       ]
       const allZero = ret.every(it => it.value == 0)
       return allZero ? [] : ret
@@ -254,11 +272,14 @@ export async function getMovie(id: number) {
 
     actorData: {
       star: celebrityRating,
-      list: (dot(personMap, 'Actor') || []).slice(0, 3).map((it: any) => ({
-        id: it.id,
-        name: it.name,
-        avatar: it.headImg
-      })),
+      list: (dot(personMap, 'Actor') as any[] || [])
+        .filter(it => it != null)
+        .slice(0, 3)
+        .map((it: any) => ({
+          id: it.id,
+          name: it.name,
+          avatar: it.headImg
+        })),
       more: {
         name: 'film-detail-creator',
         params: { id }
@@ -319,12 +340,12 @@ export async function getVideoRise(id: number, hasShow = false) {
 }
 
 /**
- * 获取影片全网热度（暂定 60 天）
+ * 获取影片全网热度
  * https://yapi.aiads-dev.com/project/161/interface/api/4904
  * @param id 影片 id
  */
 export async function getVideoHot(id: number) {
-  const [beginDate, endDate] = dayOffsetRange(-60)
+  const [beginDate, endDate] = dayOffsetRange(-30)
   const {
     data: {
       items
@@ -391,7 +412,7 @@ export async function getFigure(id: number) {
     opusData: movies && movies.length > 0 ? {
       list: (movies as any[]).map(it => ({
         title: it.name,
-        count: it.boxOffice + '亿'
+        count: readableNumber(it.boxOffice)
       })),
       more: {
         name: 'film-figure-detail-works',
@@ -411,14 +432,34 @@ export async function getFigure(id: number) {
       }
     } : null,
 
-    commentData: comments && comments.length > 0 ? (() => {
+    commentData: (() => {
+      if (comments == null || comments.length == 0) {
+        return []
+      }
       const map = keyBy(comments, 'code')
       return [
-        { name: '正面', value: +dot(map.positive, 'rate') || 0, color: '#ca7273' },
-        { name: '中立', value: +dot(map.neutral, 'rate') || 0, color: '#f3d872' },
-        { name: '负面', value: +dot(map.passive, 'rate') || 0, color: '#57b4c9' },
+        {
+          name: '正面',
+          value: +dot(map.positive, 'rate') || 0,
+          trend: +dot(map.positive, 'trend') || 0,
+          color: '#ca7273'
+        },
+
+        {
+          name: '中立',
+          value: +dot(map.neutral, 'rate') || 0,
+          trend: +dot(map.neutral, 'trend') || 0,
+          color: '#f3d872'
+        },
+
+        {
+          name: '负面',
+          value: +dot(map.passive, 'rate') || 0,
+          trend: +dot(map.passive, 'trend') || 0,
+          color: '#57b4c9'
+        },
       ]
-    })() : null,
+    })(),
   }
 
   return result

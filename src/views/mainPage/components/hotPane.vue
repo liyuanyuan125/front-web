@@ -10,7 +10,7 @@
             'legend-ping': it.inc == 0,
             'legend-down': it.inc < 0
           }"
-        >{{it.inc != 0 ? Math.abs(it.inc) : ''}}</em>
+        >{{it.inc != 0 ? it.incShow : ''}}</em>
       </li>
     </ul>
     <ECharts :options="chartData" auto-resize class="chart" @mousemove="chartMouseMove"/>
@@ -76,74 +76,76 @@ export default class HotPane extends Vue {
     return hoverItem ? hoverItem.legends : []
   }
 
-  chartData: any = {
-    tooltip: tooltipStyles({
-      trigger: 'axis',
-      formatter: this.formatter
-    }),
+  get chartData() {
+    return {
+      tooltip: tooltipStyles({
+        trigger: 'axis',
+        formatter: this.formatter
+      }),
 
-    axisPointer: {
-      type: 'line',
-      lineStyle: {
-        width: 22,
-        color: {
-          type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            {
-              offset: 0,
-              color: 'rgba(87, 180, 201, .01)'
-            },
-            {
-              offset: 1,
-              color: 'rgba(87, 180, 201, .9)'
-            }
-          ]
-        }
-      }
-    },
-
-    xAxis: {
-      type: 'category',
-      data: this.data.map(it => it.name),
-      axisLine: lineStyle,
-      axisTick: false,
-      axisLabel,
-      boundaryGap: false
-    },
-
-    yAxis: {
-      type: 'value',
-      axisLine: false,
-      splitLine: lineStyle,
-      axisLabel,
-      splitNumber: 4
-    },
-
-    grid: {
-      left: 42,
-      right: 42,
-      top: 20,
-      bottom: 20,
-      containLabel: true
-    },
-
-    series: [
-      {
-        name: this.title,
+      axisPointer: {
         type: 'line',
-        smooth: true,
-        data: this.data.map(it => it.value),
-        itemStyle: {
-          color: '#57b4c9'
-        },
-        symbol: 'circle',
-        showSymbol: false
-      }
-    ]
+        lineStyle: {
+          width: 22,
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: 'rgba(87, 180, 201, .01)'
+              },
+              {
+                offset: 1,
+                color: 'rgba(87, 180, 201, .9)'
+              }
+            ]
+          }
+        }
+      },
+
+      xAxis: {
+        type: 'category',
+        data: this.data.map(it => it.name),
+        axisLine: lineStyle,
+        axisTick: false,
+        axisLabel,
+        boundaryGap: false
+      },
+
+      yAxis: {
+        type: 'value',
+        axisLine: false,
+        splitLine: lineStyle,
+        axisLabel,
+        splitNumber: 4
+      },
+
+      grid: {
+        left: 42,
+        right: 42,
+        top: 20,
+        bottom: 20,
+        containLabel: true
+      },
+
+      series: [
+        {
+          name: this.title,
+          type: 'line',
+          smooth: true,
+          data: this.data.map(it => it.value),
+          itemStyle: {
+            color: '#57b4c9'
+          },
+          symbol: 'circle',
+          showSymbol: false
+        }
+      ]
+    }
   }
 
   chartMouseMove({ componentType, dataIndex }: any) {

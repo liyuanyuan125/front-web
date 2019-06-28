@@ -162,6 +162,7 @@ import { getUser } from '@/store'
 import pagination from '@/components/page.vue'
 import moment from 'moment'
 import { toMap } from '@/fn/array'
+import { uniq, uniqBy } from 'lodash'
 import {
   orderList,
   orderBrand,
@@ -233,11 +234,12 @@ export default class Main extends ViewBase {
         orderStatus: this.status == 0 ? null : this.status
       })
       this.spinShow = false
-      this.countData = data
+      this.countData = data || []
       this.list = (data.items || []).map((it: any) => {
         return {
           ...it,
-          createTime : moment(it.createTime).format(timeFormat)
+          orderItemList: uniqBy(it.orderItemList, 'kolId'), // 去重一个kol有两个任务
+          createTime: moment(it.createTime).format(timeFormat)
         }
       })
       this.total = data.totalCount || 0
