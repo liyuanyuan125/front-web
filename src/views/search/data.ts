@@ -100,7 +100,7 @@ export async function searchKol({
       ranking
     }
   } = await get('/kol/search-kol', {
-    name: keyword,
+    query: keyword,
     pageIndex,
     pageSize
   })
