@@ -340,12 +340,12 @@ export async function getVideoRise(id: number, hasShow = false) {
 }
 
 /**
- * 获取影片全网热度（暂定 60 天）
+ * 获取影片全网热度
  * https://yapi.aiads-dev.com/project/161/interface/api/4904
  * @param id 影片 id
  */
 export async function getVideoHot(id: number) {
-  const [beginDate, endDate] = dayOffsetRange(-60)
+  const [beginDate, endDate] = dayOffsetRange(-30)
   const {
     data: {
       items
