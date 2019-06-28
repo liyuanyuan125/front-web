@@ -193,6 +193,10 @@ export default class Main extends ViewBase {
     beginDate: []
   }
 
+  // 提交日期初始化
+  formBeginDate: any = null
+  formEndDate: any = null
+
   dict: any = {
     dayRanges: [
       {
@@ -316,12 +320,14 @@ export default class Main extends ViewBase {
   get formatConversion() {
     return formatConversion
   }
-
-  async handleWatchFilm(val: any) {
-    this.filmIndex = val
+  comInitDone() {
     this.chart1.initDone = false
     this.chart2.initDone = false
     this.chart3.initDone = false
+  }
+  async handleWatchFilm(val: any) {
+    this.filmIndex = val
+    this.comInitDone()
     this.resetData()
     if (this.filmIndex == 'wantNum') { // 想看
       await this.wanttoseeList()
@@ -332,21 +338,15 @@ export default class Main extends ViewBase {
     }
   }
   mounted() {
+    this.formBeginDate = this.beginDate(this.form.dayRangesKey)
+    this.formEndDate = this.endDate()
     this.movieStatus()
   }
   // 观影人数 影片票房
   async watchFilmList() {
-    let  mockObj = null
-    if (this.releaseStatus == 4) { // 下映展示上映日期 - 结束时间段
-      mockObj = {
-        beginDate: this.releaseDate,
-        endDate: this.releaseEndDate
-      }
-    } else {
-      mockObj = {
-        beginDate: this.beginDate(this.form.dayRangesKey),
-        endDate: this.endDate()
-      }
+    const mockObj = {
+      beginDate: this.formBeginDate,
+      endDate: this.formEndDate
     }
 
     const id = this.id  // this.id  55184
@@ -376,7 +376,7 @@ export default class Main extends ViewBase {
         const viewCountData: any[] = [] // 观看累计数据
 
         items.filter((it: any) => {
-          date.push(it.date)
+          date.push(formatConversion(it.date))
           viewTrendData.push(it.view.trend)
           viewCountData.push(it.view.count)
           boxoTrendData.push(it.boxoffice.trend)
@@ -418,8 +418,8 @@ export default class Main extends ViewBase {
   // 想看人数
   async wanttoseeList() {
     const mockObj = {
-      beginDate: this.beginDate(this.form.dayRangesKey),
-      endDate: this.endDate()
+      beginDate: this.formBeginDate,
+      endDate: this.formEndDate
     }
     const id = this.id  // this.id  55184
     try {
@@ -442,7 +442,7 @@ export default class Main extends ViewBase {
         }
         // 观影总人数 对应页面是累计，趋势是每日新增
         items.map((it: any) => {
-          date.push(it.date)
+          date.push(formatConversion(it.date))
           it.channels.map((code: any) => {
             dataTrend[code.chanelCode].push(code.trend)
             dataCount[code.chanelCode].push(code.count)
@@ -456,8 +456,8 @@ export default class Main extends ViewBase {
         this.chart3.dataList[1][0].data = dataCount.maoyan
         this.chart3.dataList[1][1].data = dataCount.taopiaopiao
         this.chart3.dataList[1][2].data = dataCount.douban
-        this.chart3.initDone = true
       }
+      this.chart3.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
@@ -475,13 +475,18 @@ export default class Main extends ViewBase {
         this.filmIndex = 'wantNum'
         this.wanttoseeList()
       } else {
+        this.filmIndex = 'watchNum'
         if (this.releaseStatus == 3) {
           this.form.dayRangesKey = 'sevenDay'
+          this.formBeginDate = this.beginDate(this.form.dayRangesKey)
+          this.formEndDate = this.endDate()
         } else if (this.releaseStatus == 4) {
           this.form.dayRangesKey = ''
           this.form.beginDate = [formatConversion(data.releaseDate), formatConversion(data.releaseEndDate)]
+
+          this.formBeginDate = data.releaseDate
+          this.formEndDate = data.releaseEndDate
         }
-        this.filmIndex = 'watchNum'
         this.watchFilmList()
       }
     } catch (ex) {
@@ -519,16 +524,32 @@ export default class Main extends ViewBase {
   }
 
   async handleChange() {
-    this.chart1.initDone = false
-    this.chart2.initDone = false
-    this.chart3.initDone = false
+    this.comInitDone()
+    this.resetData()
+    this.form.beginDate = []
+    this.formBeginDate = this.beginDate(this.form.dayRangesKey)
+    this.formEndDate = this.endDate()
     if (this.filmIndex == 'wantNum') { // 想看
       this.wanttoseeList()
     } else {
       this.watchFilmList()
     }
   }
-  handleChangePic(val: any) {}
+  handleChangePic(val: any) {
+    this.comInitDone()
+
+    this.form.dayRangesKey = ''
+    this.resetData()
+    if (val[0]) {
+      this.formBeginDate = formatConversion(val[0], 2)
+      this.formEndDate = formatConversion(val[1], 2)
+      if (this.filmIndex == 'wantNum') { // 想看
+        this.wanttoseeList()
+      } else {
+        this.watchFilmList()
+      }
+    }
+  }
   resetData() {
     this.chart1.dataList = []
     this.chart2.dataList = []
