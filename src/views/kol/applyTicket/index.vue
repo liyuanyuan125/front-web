@@ -68,6 +68,7 @@ import { toMap } from '@/fn/array'
 import moment from 'moment'
 import { slice, clean } from '@/fn/object'
 import { warning , success, toast } from '@/ui/modal'
+import { uniq, uniqBy } from 'lodash'
 
 
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
@@ -105,6 +106,7 @@ export default class Main extends ViewBase {
       this.list = (data.items || []).map((it: any) => {
         return {
           ...it,
+          orderItemList: uniqBy(it.orderItemList, 'kolId'), // 去重一个kol有两个任务
           createTime: moment(it.createTime).format(timeFormat)
         }
       })
