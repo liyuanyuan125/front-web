@@ -30,7 +30,7 @@
         <div @click="adverSelcet(item.id)" v-for="item in releList"
           :class="['img-box', (value.item.videoId == item.id ) ? 'img-active' : '']"
           :key="item.id" >
-          <img :src="item.logo ? item.logo : defaultImg" width="120px" :onerror="defaultImg" height="120px" alt="" />
+          <img :src="item.logo ? item.logo : defaultImg" :onerror="defaultImg" width="118px" height="120px" alt="" />
           <p class="title-p">名称：{{item.name}}</p>
         </div>
       </div>
@@ -51,7 +51,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { queryRelevanceList, relevanceVideo, setVideo } from '@/api/plan'
 import { advertising } from '@/api/popPlan.ts'
@@ -95,7 +95,8 @@ export default class Relevan extends ViewBase {
 
   async init() {
     try {
-       const { data } = await advertising( {
+      (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
+      const { data } = await advertising( {
         ...this.pageList,
         status: 4
       } )
@@ -142,6 +143,7 @@ export default class Relevan extends ViewBase {
         }
       )
       this.value.visible = false
+      (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
       this.$emit('submitRelevance')
     } catch (ex) {
       this.handleError(ex)
@@ -164,6 +166,13 @@ export default class Relevan extends ViewBase {
       this.releList = items
     } catch (ex) {
       this.handleError(ex)
+    }
+  }
+
+  @Watch('value.visible')
+  watchValueVisible(val: any) {
+    if (!val) {
+      (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
     }
   }
 }
@@ -255,6 +264,10 @@ export default class Relevan extends ViewBase {
     width: 120px;
     cursor: pointer;
     margin-right: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #d1d8db;
+    border-radius: 5px;
+    height: 150px;
     .title-p {
       position: absolute;
       left: 0;

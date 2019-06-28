@@ -657,7 +657,7 @@ export default class Main extends ViewBase {
   watch$routeParams(val: any) {
     if (val.code == 'weibo') {
       this.detail = webo
-    } else if (val.code == 'weixin') {
+    } else if (val.code == 'wechat') {
       this.detail = wbDtail
     } else {
       this.detail = otherdetail
