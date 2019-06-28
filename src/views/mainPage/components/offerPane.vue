@@ -38,13 +38,15 @@ export default class OfferPane extends Vue {
 
 .offer-list {
   display: flex;
-  font-size: 16px;
+  flex-wrap: wrap;
+  font-size: 14px;
   padding: 0 30px 30px;
   list-style: disc inside;
+  line-height: 2;
 }
 
 .offer-item {
-  flex: 1;
+  width: 50%;
 }
 
 .offer-button {

@@ -23,9 +23,10 @@
                   <DatePicker
                     type="daterange"
                     v-model="form.beginDate"
-                    @on-change="handleChange"
+                    @on-change="handleChangePic"
                     placement="bottom-end"
                     placeholder="自定义时间段"
+                    style="width: 200px"
                   ></DatePicker>
                 </div>
               </DetailNavBar>
@@ -102,7 +103,8 @@ import echarts from 'echarts'
 import {
   formatTimestamp,
   formatTimes,
-  formatNumber
+  formatNumber,
+  formatConversion
 } from '@/util/validateRules'
 import DetailNavBar from './components/detailNavBar.vue'
 import { trend } from '@/api/kolDetailMoreInfo'
@@ -162,6 +164,9 @@ export default class Main extends ViewBase {
   tooltipStyles = tooltipStyles
   // 上映状态
   releaseStatus: any = null
+  releaseDate: any = null
+  releaseEndDate: any = null
+
   // 新增和累计
   grandTotal: any = [
     {
@@ -185,7 +190,7 @@ export default class Main extends ViewBase {
 
   form: any = {
     dayRangesKey: 'sevenDay',
-    channelCode: 'weibo'
+    beginDate: []
   }
 
   dict: any = {
@@ -308,6 +313,10 @@ export default class Main extends ViewBase {
     color: colors
   }
 
+  get formatConversion() {
+    return formatConversion
+  }
+
   async handleWatchFilm(val: any) {
     this.filmIndex = val
     this.chart1.initDone = false
@@ -322,13 +331,24 @@ export default class Main extends ViewBase {
       await this.watchFilmList()
     }
   }
-
+  mounted() {
+    this.movieStatus()
+  }
   // 观影人数 影片票房
   async watchFilmList() {
-    const mockObj = {
-      beginDate: this.beginDate(this.form.dayRangesKey),
-      endDate: this.endDate()
+    let  mockObj = null
+    if (this.releaseStatus == 4) { // 下映展示上映日期 - 结束时间段
+      mockObj = {
+        beginDate: this.releaseDate,
+        endDate: this.releaseEndDate
+      }
+    } else {
+      mockObj = {
+        beginDate: this.beginDate(this.form.dayRangesKey),
+        endDate: this.endDate()
+      }
     }
+
     const id = this.id  // this.id  55184
     try {
       const { data } = await movieView({ ...mockObj }, id)
@@ -442,6 +462,32 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     }
   }
+
+  async movieStatus() {
+    const id = this.id
+    try {
+      const { data } = await MovieStatus(id)
+      this.releaseStatus = data.releaseStatus // 上映状态
+      this.releaseDate = data.releaseDate
+      this.releaseEndDate = data.releaseEndDate
+      // 假如是0,1,2 展示想看人数， 3-4展示观影人数，4 下映展示出上映时间和下映时间
+      if (this.releaseStatus < 3) {
+        this.filmIndex = 'wantNum'
+        this.wanttoseeList()
+      } else {
+        if (this.releaseStatus == 3) {
+          this.form.dayRangesKey = 'sevenDay'
+        } else if (this.releaseStatus == 4) {
+          this.form.dayRangesKey = ''
+          this.form.beginDate = [formatConversion(data.releaseDate), formatConversion(data.releaseEndDate)]
+        }
+        this.filmIndex = 'watchNum'
+        this.watchFilmList()
+      }
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
   currentTypeChange(index: number = 0) {
     if (this.filmIndex == 'watchNum') { // 观影人数
       this.chart1.currentTypeIndex = index
@@ -472,7 +518,7 @@ export default class Main extends ViewBase {
     return moment(new Date()).format(timeFormat)
   }
 
-  async handleChange() { // 修改日期判断我当前请求的接口---------
+  async handleChange() {
     this.chart1.initDone = false
     this.chart2.initDone = false
     this.chart3.initDone = false
@@ -482,30 +528,7 @@ export default class Main extends ViewBase {
       this.watchFilmList()
     }
   }
-
-  async mounted() {
-    this.movieStatus()
-    // await this.watchFilmList()
-  }
-
-  async movieStatus() {
-    const id = this.id
-    try {
-      const { data } = await MovieStatus(id)
-      this.releaseStatus = data.releaseStatus
-      // 假如是0,1,2 展示想看人数， 3-4展示观影人数，4 下映展示出上映时间和下映时间
-      if (this.releaseStatus < 3) {
-        this.filmIndex = 'wantNum'
-        this.wanttoseeList()
-      } else {
-        this.filmIndex = 'watchNum'
-        this.watchFilmList()
-      }
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
-
+  handleChangePic(val: any) {}
   resetData() {
     this.chart1.dataList = []
     this.chart2.dataList = []
