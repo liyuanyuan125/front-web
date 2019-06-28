@@ -156,7 +156,7 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { fetchList } from '@/api/filmCooperation'
 import TinyLoading from '@/components/TinyLoading.vue'
-
+import { dayOffset } from '@/util/date'
 import { percent, readableNumber, textList } from '@/util/dealData'
 
 const typeListMore: any[] = []
@@ -190,23 +190,23 @@ export default class CooperationFilmList extends ViewBase {
         text: '不限'
       },
       {
-        key: 1,
+        key: 3,
         text: '正在热映'
       },
       {
-        key: 2,
+        key: 4,
         text: '1个月内'
       },
       {
-        key: 3,
+        key: 5,
         text: '3个月内'
       },
       {
-        key: 4,
+        key: 6,
         text: '6个月内'
       },
       {
-        key: 5,
+        key: 7,
         text: '一年内'
       }
     ],
@@ -252,6 +252,23 @@ export default class CooperationFilmList extends ViewBase {
     const that: any = this
     const mockObj = {
       ...this.form
+    }
+    if ( mockObj.releaseStatus !== 3 &&  mockObj.releaseStatus !== 0 ) {
+      mockObj.endDate = dayOffset(0)
+      switch ( mockObj.releaseStatus ) {
+        case 4:
+          mockObj.beginDate = dayOffset(-30)
+          break
+        case 5:
+          mockObj.beginDate = dayOffset(-90)
+          break
+        case 6:
+          mockObj.beginDate = dayOffset(-120)
+          break
+        default:
+          mockObj.beginDate = dayOffset(-365)
+      }
+      mockObj.releaseStatus = ''
     }
     try {
       const {

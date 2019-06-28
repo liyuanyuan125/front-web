@@ -27,7 +27,7 @@
   			<Row class='r-h'>
   				<Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
   				<Row class='de-ro-two'>{{it.nameEn == null || it.nameEn == '' ? '暂无英文名' : it.nameEn}}</Row>
-  				<Row class='de-ro-thr'>代表作品<br> 
+  				<Row class='de-ro-thr'>代表作品<br>
            <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
@@ -170,8 +170,11 @@ export default class Main extends ViewBase {
   margin-bottom: 15px;
   overflow: hidden;
   img {
-    max-width: 130px;
     width: 100%;
+    max-width: 130px;
+    min-height: 130px;
+    object-fit: contain;
+    background-color: #fff;
   }
   span {
     width: 50px;
