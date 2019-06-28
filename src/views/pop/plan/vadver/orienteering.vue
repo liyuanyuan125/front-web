@@ -506,6 +506,7 @@ export default class Orienteering extends ViewBase {
       }, 3000)
     } catch (ex) {
       clearInterval(this.settime)
+      (this.$Spin as any).hide()
       this.handleError(ex)
     }
   }
