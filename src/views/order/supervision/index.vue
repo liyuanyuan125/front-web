@@ -40,16 +40,16 @@
       </Row>
       <div style=' margin-top: 15px; '>
       	<Row class='li-title'>
-          <Col span='3' style='text-align: center;'>影片名称</Col>
-          <Col span='3' style='text-align: center;'>总投放时长</Col>
-          <Col span='13'>广告列表</Col>
+          <Col span='3' >影片名称</Col>
+          <Col span='2' >总投放时长</Col>
+          <Col span='14'>广告列表</Col>
           <Col span='5' style='text-align: center;'>监播视频</Col>
         </Row>
         <ul class='itemul'>
         	<li class='li-item' v-for='(it,index) in itemlist' :key='index'>
         		<row>
         			<Col span='3'>{{it.movieName}}</Col>
-        			<Col span='2' style='text-align: center;'>{{it.videoTotalLength}}s</Col>
+        			<Col span='2' >{{it.videoTotalLength}}s</Col>
         			<Col span='14'>
         				<row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
@@ -112,6 +112,7 @@ export default class Main extends ViewBase {
 
   movieList: any = []
   loading = false
+  asd = false
 
 
   itemlist: any = []
@@ -119,6 +120,7 @@ export default class Main extends ViewBase {
 
 
   mounted() {
+    this.asd = true
     if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
       this.weekDate = [
       new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
@@ -302,18 +304,21 @@ export default class Main extends ViewBase {
       // 影院列表
       // const movieList = await movielist()
       // this.movieList = movieList.data.items
-      // 获取默认影院id
-      const cinid = await getcinid()
-      if (cinid.data.cinemaId == 0) {
-        info('当前用户下没有关联影院')
-        this.query.cinemaId = cinid.data.cinemaId
-      } else {
-        this.query.cinemaId = cinid.data.cinemaId
+      if (this.asd == true) {
+        // 获取默认影院id
+        const cinid = await getcinid()
+        if (cinid.data.cinemaId == 0) {
+          info('当前用户下没有关联影院')
+          this.query.cinemaId = cinid.data.cinemaId
+        } else {
+          this.query.cinemaId = cinid.data.cinemaId
+          this.remoteMethod(cinid.data.cinemaName)
+        }
       }
-
 
       const datalist = await querylist(this.query)
       this.itemlist = datalist.data.items
+      this.asd = false
 
     } catch (ex) {
       this.handleError(ex)
