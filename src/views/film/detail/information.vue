@@ -297,6 +297,28 @@ export default class Main extends ViewBase {
     transform: rotate(0);
   }
 }
+.dataDown {
+  animation: dataDown .5s both;
+}
+@keyframes dataDown {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+.dataUp {
+  animation: dataUp .5s both;
+}
+@keyframes dataUp {
+  0% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
 .sumDown {
   animation: sumDown .5s both;
 }
