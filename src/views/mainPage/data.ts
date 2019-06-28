@@ -24,11 +24,12 @@ const hotData = (items: any[]) => {
   const list = (items || []).map(it => {
     const date = monthDate(it.date)
     const legends = (it.channels as any[] || [])
-    .map((sub, i) => {
+    .map(sub => {
       return {
         name: sub.name || hotChannelMap[sub.chanelCode] || sub.chanelCode,
         no: sub.ranking ? `No.${sub.ranking}` : '-',
         inc: sub.trend,
+        incShow: readableThousands(Math.abs(sub.trend))
       }
     })
 
@@ -271,11 +272,14 @@ export async function getMovie(id: number) {
 
     actorData: {
       star: celebrityRating,
-      list: (dot(personMap, 'Actor') || []).slice(0, 3).map((it: any) => ({
-        id: it.id,
-        name: it.name,
-        avatar: it.headImg
-      })),
+      list: (dot(personMap, 'Actor') as any[] || [])
+        .filter(it => it != null)
+        .slice(0, 3)
+        .map((it: any) => ({
+          id: it.id,
+          name: it.name,
+          avatar: it.headImg
+        })),
       more: {
         name: 'film-detail-creator',
         params: { id }
@@ -336,12 +340,12 @@ export async function getVideoRise(id: number, hasShow = false) {
 }
 
 /**
- * 获取影片全网热度（暂定 60 天）
+ * 获取影片全网热度
  * https://yapi.aiads-dev.com/project/161/interface/api/4904
  * @param id 影片 id
  */
 export async function getVideoHot(id: number) {
-  const [beginDate, endDate] = dayOffsetRange(-60)
+  const [beginDate, endDate] = dayOffsetRange(-30)
   const {
     data: {
       items
@@ -408,7 +412,7 @@ export async function getFigure(id: number) {
     opusData: movies && movies.length > 0 ? {
       list: (movies as any[]).map(it => ({
         title: it.name,
-        count: it.boxOffice + '亿'
+        count: readableNumber(it.boxOffice)
       })),
       more: {
         name: 'film-figure-detail-works',
