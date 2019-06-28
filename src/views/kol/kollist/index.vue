@@ -647,7 +647,7 @@ export default class Main extends ViewBase {
     this.$router.push({
       name: 'order-orderfill',
       params: {
-        code: this.$route.params.id || 'weibo'
+        code: this.title[this.type]
       }
     })
   }

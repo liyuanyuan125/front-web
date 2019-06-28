@@ -14,11 +14,25 @@
      <Row class='title'>更多资料</Row>
      <Row class='row-bo'>
        <Col span='3' class='fo-bo'>对白语言</Col>
-       <Col span='20' class='fo-bos'>{{itemlist.languages == null ? '暂无' : itemlist.languages}}</Col>
+       <Col span='20' class='fo-bos'>
+         <em v-if='itemlist.languages == null'>暂无对白语言</em>
+       <div style='margin-bottom: 10px;' v-if='itemlist.languages != null' v-for='(items,index) in itemlist.languages'>{{items}}</div><br>
+       </Col>
      </Row>
      <Row class='row-bo'>
        <Col span='3' class='fo-bo'>上映日期</Col>
-       <Col span='20' class='fo-bos'>{{itemlist.releaseDate == null ? '暂无' : releaseDate}}</Col>
+       <Col span='20' class='fo-bos'>
+         <em v-if='itemlist.releaseDates == null'>暂无</em>
+       <div style='margin-bottom: 10px;height: 30px;line-height: 30px;' v-if='itemlist.releaseDates != null' v-for='(items,index) in dataitemlist'>
+         <div class='nams' style='width: 21%;'>{{items.countryName}}&nbsp;&nbsp;{{items.countryNameEn}}</div>
+         <div class='nams' style='margin-left: 2%;'>-------------------------</div>
+         <div class='nams' style='margin-left: 4%;'>{{items.date}}</div>
+       </div><br>
+       <div class="show-all" v-if="itemlist.releaseDates.length > 5">
+        <span @click="dataToggle">{{dataTitle}}<Icon :class="{'dataDown': dataFlag == 0, 'dataUp': dataFlag == 1}" type="ios-arrow-down" size="25" /></span>
+      </div>
+     </Col>
+       </Col>
      </Row>
      <Row class='row-bo'>
        <Col span='3' class='fo-bo'>制作公司</Col>
@@ -39,7 +53,7 @@
      <Row class='title' style='margin-bottom: 20px;'>图片(共{{imgUrl.length}}张)</Row>
       <transition-group name="list" tag="ul" class="loading-img">
         <!-- <li class='desimg' v-for="img in imgList" :key="img.key"><img :src="img.img"/></li> -->
-        <li class='desimg' v-for="img in imgList" :key="img.key" :style="{
+        <li class='desimg'@click='onView(img.img)' v-for="img in imgList" :key="img.key" :style="{
           backgroundImage: `url(${img.img})`
         }"></li>
       </transition-group>
@@ -47,6 +61,9 @@
         <span @click="handleToggle">{{tabShowTitle}}<Icon :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}" type="ios-arrow-down" size="25" /></span>
       </div>
    </div>
+   <Modal v-model="viewerShow" title="查看图片" width="500" height="500">
+      <img style="width: 100%;" :src="viewerImage" alt sizes srcset>
+    </Modal>
   </div>
 </template>
 
@@ -68,11 +85,21 @@ export default class Main extends ViewBase {
   info = false
   tabShowTitle = '展示全部'
   arrowFlag = 0
+
+  dataTitle = '展示全部'
+  dataFlag = 0
+  datalist: any = []
+  dataitemlist: any = []
+
   imgUrl = []
   imgList: any = []
   sumTitle = '展示全部'
   sumFlag = 0
   summary: any = ''
+
+  // 查看图片
+  viewerShow = false
+  viewerImage = ''
 
 
 
@@ -87,6 +114,12 @@ export default class Main extends ViewBase {
     this.info = true
   }
 
+  // 查看图片
+  onView(url: string) {
+    this.viewerImage = url
+    this.viewerShow = true
+  }
+
   handleToggle() {
     if (!this.arrowFlag) {
       this.arrowFlag = 1
@@ -96,6 +129,17 @@ export default class Main extends ViewBase {
       this.arrowFlag = 0
       this.tabShowTitle = '展示全部'
       this.imgList = this.imgUrl.slice(0, 16)
+    }
+  }
+  dataToggle() {
+    if (!this.dataFlag) {
+      this.dataFlag = 1
+      this.dataTitle = '向上隐藏'
+      this.dataitemlist = this.itemlist.releaseDates
+    } else {
+      this.dataFlag = 0
+      this.dataTitle = '展示全部'
+      this.dataitemlist = this.itemlist.releaseDates.slice(0, 5)
     }
   }
   sumToggle() {
@@ -122,6 +166,7 @@ export default class Main extends ViewBase {
         }
       })
       this.imgList = this.imgUrl.slice(0, 16)
+      this.dataitemlist = this.itemlist.releaseDates.slice(0, 5)
       this.summary = this.itemlist.summary.slice(0, 211)
     } catch {
 
@@ -265,6 +310,28 @@ export default class Main extends ViewBase {
     transform: rotate(0);
   }
 }
+.dataDown {
+  animation: dataDown .5s both;
+}
+@keyframes dataDown {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+.dataUp {
+  animation: dataUp .5s both;
+}
+@keyframes dataUp {
+  0% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
 .sumDown {
   animation: sumDown .5s both;
 }
@@ -294,5 +361,8 @@ export default class Main extends ViewBase {
 
 .list-enter, .list-leave-to {
   opacity: 0;
+}
+.nams {
+  float: left;
 }
 </style>

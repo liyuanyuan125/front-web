@@ -82,7 +82,7 @@ import { querylist ,  getcinid , addvideo , delvideo , movielist } from '@/api/s
 import { formatTimestamp } from '@/util/validateRules'
 import UploadButton, { SuccessEvent } from '../components/UploadButton.vue'
 import WeekDatePicker from '@/components/weekDatePicker'
-import { confirm , toast } from '@/ui/modal'
+import { confirm , toast , info } from '@/ui/modal'
 
 
 const timeFormat = 'YYYY-MM-DD'
@@ -304,11 +304,12 @@ export default class Main extends ViewBase {
       // this.movieList = movieList.data.items
       // 获取默认影院id
       const cinid = await getcinid()
-      // if (cinid.data.cinemaId == 0) {
-        // this.query.cinemaId = 11
-      // } else {
+      if (cinid.data.cinemaId == 0) {
+        info('当前用户下没有关联影院')
         this.query.cinemaId = cinid.data.cinemaId
-      // }
+      } else {
+        this.query.cinemaId = cinid.data.cinemaId
+      }
 
 
       const datalist = await querylist(this.query)

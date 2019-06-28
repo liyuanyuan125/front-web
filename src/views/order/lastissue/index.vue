@@ -79,7 +79,7 @@ import { queryList ,   getcinid , oneover , oneout , allover , movielist } from 
 import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
 import WeekDatePicker from '@/components/weekDatePicker'
-import { confirm , toast } from '@/ui/modal'
+import { confirm , toast , info} from '@/ui/modal'
 
 
 const timeFormat = 'YYYY-MM-DD'
@@ -335,11 +335,12 @@ export default class Main extends ViewBase {
 
       // 获取默认影院id
       const cinid = await getcinid()
-      // if (cinid.data.cinemaId == 0) {
-        // this.query.cinemaId = 11
-      // } else {
+      if (cinid.data.cinemaId == 0) {
+        info('当前用户没有关联影院')
         this.query.cinemaId = cinid.data.cinemaId
-      // }
+      } else {
+        this.query.cinemaId = cinid.data.cinemaId
+      }
 
       // 获取上刊列表
       const datalist = await queryList(this.query)
