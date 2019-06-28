@@ -6,7 +6,7 @@
       :closable='false'
       :mask-closable='false'>
       <div class="title">
-        <i @click="value.visible = false"></i>
+        <i @click="cancel"></i>
         <p>{{!!value.item.videoId ? '修改广告片' : '关联广告片'}}</p>
         <Form ref="forms" :model="form" style="margin-top: 30px" :rules="rules" :label-width="100">
           <!-- <FormItem label="已关联广告片" class="item-top">
@@ -44,7 +44,7 @@
         @on-change="sizeChangeHandle"
         @on-page-size-change="currentChangeHandle"/>
       <div slot="footer" class="foot btnCenter footer-btn">
-        <Button class="button-cancel foot-cancel-button" @click="value.visible = false">取消</Button>
+        <Button class="button-cancel foot-cancel-button" @click="cancel">取消</Button>
         <Button type="primary" class="button-ok foot-button" @click="handleSumbit">确认</Button>
       </div>
     </Modal>
@@ -143,11 +143,16 @@ export default class Relevan extends ViewBase {
         }
       )
       this.value.visible = false
-      (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
       this.$emit('submitRelevance')
+      ; (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
     } catch (ex) {
       this.handleError(ex)
     }
+  }
+
+  cancel() {
+    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
+    this.value.visible = false
   }
 
   uplist(size: any) {
@@ -169,12 +174,6 @@ export default class Relevan extends ViewBase {
     }
   }
 
-  @Watch('value.visible')
-  watchValueVisible(val: any) {
-    if (!val) {
-      (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
-    }
-  }
 }
 </script>
 <style lang="less" scoped>
