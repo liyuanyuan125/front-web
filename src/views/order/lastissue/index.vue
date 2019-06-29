@@ -168,10 +168,10 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
-  reloadSearch() {
-    this.seach()
-    this.seachchg()
-  }
+  // reloadSearch() {
+  //   this.seach()
+  //   this.seachchg()
+  // }
 
  // 本周
   seachchg() {
@@ -313,7 +313,7 @@ export default class Main extends ViewBase {
       this.$Message.success({
         content: `修改成功`,
       })
-      this.reloadSearch()
+      this.seach()
     } catch (ex) {
       this.handleError(ex)
     }
@@ -328,14 +328,14 @@ export default class Main extends ViewBase {
         this.$Message.success({
           content: `更改成功`,
         })
-        this.reloadSearch()
+        this.seach()
       } else if (status == 2) {
         await confirm('您确定修改当前状态信息吗？')
         await oneout (id, {orderId : orderid})
         this.$Message.success({
           content: `更改成功`,
         })
-        this.reloadSearch()
+        this.seach()
       }
     } catch (ex) {
     }
