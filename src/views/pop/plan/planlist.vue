@@ -251,6 +251,12 @@ export default class Plan extends ViewBase {
     return time / (3600 * 24 * 1000) + 1
   }
 
+  findId(id: any) {
+    this.$router.push({ name: 'effect-report', params: {
+      id
+    }})
+  }
+
   formatDate(data: any) {
     return data
       ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(
