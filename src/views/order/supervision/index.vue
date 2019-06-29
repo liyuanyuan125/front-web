@@ -119,8 +119,17 @@ export default class Main extends ViewBase {
 
 
 
-  mounted() {
-    this.asd = true
+  async mounted() {
+    // this.asd = true
+    this.remoteMethod('')
+    const cinid = await getcinid()
+    if (cinid.data.cinemaId == 0) {
+      info('当前用户下没有关联影院')
+      this.query.cinemaId = cinid.data.cinemaId
+    } else {
+      this.query.cinemaId = cinid.data.cinemaId
+      this.remoteMethod(cinid.data.cinemaName)
+    }
     if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
       this.weekDate = [
       new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
@@ -156,6 +165,9 @@ export default class Main extends ViewBase {
 
 
   seachs() {
+    if (this.query.cinemaId == undefined) {
+      return
+    }
     this.seach()
   }
 
@@ -207,14 +219,14 @@ export default class Main extends ViewBase {
       const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
-      this.seach()
+      // this.seach()
     } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
       this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
       const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
       const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
-      this.seach()
+      // this.seach()
     }
   }
   // 上周
@@ -304,18 +316,21 @@ export default class Main extends ViewBase {
       // 影院列表
       // const movieList = await movielist()
       // this.movieList = movieList.data.items
-      if (this.asd == true) {
-        // 获取默认影院id
-        const cinid = await getcinid()
-        if (cinid.data.cinemaId == 0) {
-          info('当前用户下没有关联影院')
-          this.query.cinemaId = cinid.data.cinemaId
-        } else {
-          this.query.cinemaId = cinid.data.cinemaId
-          this.remoteMethod(cinid.data.cinemaName)
-        }
+      // if (this.asd == true) {
+      //   // 获取默认影院id
+      //   const cinid = await getcinid()
+      //   if (cinid.data.cinemaId == 0) {
+      //     info('当前用户下没有关联影院')
+      //     this.query.cinemaId = cinid.data.cinemaId
+      //   } else {
+      //     this.query.cinemaId = cinid.data.cinemaId
+      //     this.remoteMethod(cinid.data.cinemaName)
+      //   }
+      // }
+      if (this.query.cinemaId == undefined) {
+        info('请选择影院')
+        return
       }
-
       const datalist = await querylist(this.query)
       this.itemlist = datalist.data.items
       this.asd = false
@@ -326,14 +341,23 @@ export default class Main extends ViewBase {
     }
   }
 
-  @Watch('query', {deep: true})
-  watchQuery() {
-    this.seach()
-  }
+  // @Watch('query', {deep: true})
+  // watchQuery() {
+  //   if (this.query.cinemaId == null) {
+  //     return
+  //   }
+  //   this.seach()
+  // }
 
   @Watch('weekDate', {deep: true})
   watchWeekDate() {
-    this.seach()
+    const aa = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+    const bb = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+    this.query.beginDate =  aa[0] + aa[1] + aa[2]
+    this.query.endDate =  bb[0] + bb[1] + bb[2]
+    // if (this.asd == false) {
+      this.seach()
+    // }
   }
 
 }
@@ -406,7 +430,7 @@ export default class Main extends ViewBase {
     width: 20px;
     height: 20px;
     border: 1px solid #ccc;
-    background: url('./assets/dels.png');
+    background: url('./assets/wait.png');
     background-size: cover;
     margin-right: 2px;
     position: absolute;
@@ -428,7 +452,7 @@ export default class Main extends ViewBase {
     width: 20px;
     height: 20px;
     border: 1px solid #ccc;
-    background: url('./assets/wait.png');
+    background: url('./assets/dels.png');
     background-size: cover;
     margin-right: 2px;
     position: absolute;

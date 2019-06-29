@@ -1,5 +1,13 @@
 <template>
   <div class="pages">
+    <Form
+        :model="query"
+        ref="dataform"
+        :rules="rule"
+        label-position="left"
+        :label-width="100"
+        class="edit-input"
+      >
      <Row>
        <Col class='box'>
          <Row>
@@ -35,17 +43,25 @@
             </RadioGroup>
            </Col>
           </Row>
-          <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'>发票抬头<span class='bx'>*</span></Col>
+          <Row style='margin-top: 15px;'><span class='bx'>*</span>
+           <!-- <Col :span='4' style='margin-top: 5px;'>发票抬头
+           </Col>
            <Col :span='20'>
             <Input  v-model="query.name" ></Input>
-           </Col>
+           </Col> -->
+           <FormItem label="发票抬头" prop="name">
+            <Input v-model="query.name"></Input>
+          </FormItem>
           </Row>
-          <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'>税号<span class='bx'>*</span></Col>
+          <Row style='margin-top: 15px;'><span class='bx'>*</span>
+           <!-- <Col :span='4' style='margin-top: 5px;'>税号
+           </Col>
            <Col :span='20'>
             <Input  v-model="query.taxId" placeholder=''></Input>
-           </Col>
+           </Col> -->
+           <FormItem label="税号" prop="taxId">
+            <Input v-model="query.taxId"></Input>
+          </FormItem>
           </Row>
           <Row style='margin-top: 15px;'>
            <Col :span='4' style='margin-top: 5px;'><span class='hui'>地址</span></Col>
@@ -56,28 +72,40 @@
            </Col>
           </Row>
           <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'><span class='hui'>电话</span></Col>
+           <!-- <Col :span='4' style='margin-top: 5px;'><span class='hui'>电话</span></Col>
            <Col :span='20'>
             <InputNumber  v-model="query.telphone" placeholder=''></InputNumber >
-           </Col>
+           </Col> -->
+           <FormItem label="电话" prop="telphone">
+            <InputNumber v-model="query.telphone"></InputNumber>
+          </FormItem>
           </Row>
           <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'><span class='hui'>开户行</span></Col>
+           <!-- <Col :span='4' style='margin-top: 5px;'><span class='hui'>开户行</span></Col>
            <Col :span='20'>
             <Input  v-model="query.accountBank" placeholder=''></Input>
-           </Col>
+           </Col> -->
+           <FormItem label="开户行" prop="accountBank">
+            <Input v-model="query.accountBank"></Input>
+          </FormItem>
           </Row>
           <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'><span class='hui'>开户账号</span></Col>
+          <!--  <Col :span='4' style='margin-top: 5px;'><span class='hui'>开户账号</span></Col>
            <Col :span='20'>
-            <InputNumber v-model="query.accountNumber" placeholder=''></InputNumber>
-           </Col>
+            <Input v-model="query.accountNumber" placeholder=''></Input>
+           </Col> -->
+           <FormItem label="开户账号" prop="accountNumber">
+            <Input v-model="query.accountNumber"></Input>
+          </FormItem>
           </Row>
           <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'><span class='hui'>备注说明</span></Col>
+           <!-- <Col :span='4' style='margin-top: 5px;'><span class='hui'>备注说明</span></Col>
            <Col :span='20'>
             <Input  v-model="query.memo" placeholder=''></Input>
-           </Col>
+           </Col> -->
+           <FormItem label="备注说明" prop="memo">
+            <Input v-model="query.memo"></Input>
+          </FormItem>
           </Row>
        </Col>
        <Col class='box' style='margin-left: 3%;'>
@@ -101,16 +129,22 @@
            </Col>
           </Row>
           <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'>联系人<span class='bx'>*</span></Col>
+           <!-- <Col :span='4' style='margin-top: 5px;'>联系人<span class='bx'>*</span></Col>
            <Col :span='20'>
             <Input  v-model="query.contact" placeholder='为方便寄出请输入全名'></Input>
-           </Col>
+           </Col> -->
+           <FormItem label="联系人" prop="contact">
+            <Input v-model="query.contact"></Input>
+          </FormItem>
           </Row>
           <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'>联系电话<span class='bx'>*</span></Col>
+           <!-- <Col :span='4' style='margin-top: 5px;'>联系电话<span class='bx'>*</span></Col>
            <Col :span='20'>
             <InputNumber v-model="query.contactTelphone" placeholder='请输入能正常联系的电话'></InputNumber>
-           </Col>
+           </Col> -->
+           <FormItem label="联系电话" prop="contactTelphone">
+            <InputNumber v-model="query.contactTelphone"></InputNumber>
+          </FormItem>
           </Row>
           <Row style='margin-top: 15px;'>
            <Col :span='4' style='margin-top: 5px;'><span class='hui'>留言</span></Col>
@@ -120,6 +154,7 @@
           </Row>
        </Col>
      </Row>
+     </Form>
      <div class='button'>
        <span class='cancel' @click='cancel()'>返回</span>
        <span class='ok' @click='ok()'>确认提交</span>
@@ -201,6 +236,35 @@ export default class Main extends ViewBase {
       this.seach()
     } else if (this.$route.params.key == '0') {
       this.detail()
+    }
+  }
+
+  get rule() {
+    return {
+      name: [
+        { required: true, message: '请输入发票抬头', trigger: 'blur' },
+      ],
+      taxId: [
+        { required: true, message: '请输入税号', trigger: 'blur' },
+      ],
+      telphone: [
+        { required: true, message: '请输入电话', trigger: 'blur' },
+      ],
+      accountBank: [
+        { required: true, message: '请输入开户行', trigger: 'blur' },
+      ],
+      accountNumber: [
+        { required: true, message: '请输入开户账号', trigger: 'blur' },
+      ],
+      memo: [
+        { required: true, message: '请输入开户说明', trigger: 'blur' },
+      ],
+      contact: [
+        { required: true, message: '为方便寄出请输入全名', trigger: 'blur' },
+      ],
+      contactTelphone: [
+        { required: true, message: '请输入可以正常联系的电话', trigger: 'blur' },
+      ]
     }
   }
 
@@ -442,5 +506,11 @@ export default class Main extends ViewBase {
   padding-left: 8px;
   padding-right: 24px;
   color: #00202d;
+}
+/deep/ .edit-input .ivu-form-item-content .ivu-input-wrapper {
+  width: 100%;
+}
+/deep/ .ivu-form-item {
+  margin-bottom: 0;
 }
 </style>
