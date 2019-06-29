@@ -15,7 +15,12 @@
             </Row>
             <Row class="li-col" style='padding-left: 24px;'>
               <Col :span="4">
-                <div style='font-size: 16px;font-weight: 500;margin-bottom: 6px'>{{item.projectName}}</div>
+                <div  class="order-title" style='font-size: 16px;font-weight: 500;margin-bottom: 6px'>
+                <!-- {{item.projectName}} -->
+                <Tooltip max-width="200" transfer v-if='item.projectName != null' :content="item.projectName">
+                          <span>{{item.projectName}}</span>
+                          </Tooltip>
+                </div>
                 <div class='simg'>
                   <img :src="require('./assets/'+ item.channelCode + '.png')" alt="">
                 </div>
@@ -68,6 +73,7 @@ import { toMap } from '@/fn/array'
 import moment from 'moment'
 import { slice, clean } from '@/fn/object'
 import { warning , success, toast } from '@/ui/modal'
+import { uniq, uniqBy } from 'lodash'
 
 
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
@@ -105,6 +111,7 @@ export default class Main extends ViewBase {
       this.list = (data.items || []).map((it: any) => {
         return {
           ...it,
+          orderItemList: uniqBy(it.orderItemList, 'kolId'), // 去重一个kol有两个任务
           createTime: moment(it.createTime).format(timeFormat)
         }
       })
@@ -297,6 +304,18 @@ export default class Main extends ViewBase {
 .di {
   width: 100%;
   height: 91px;
+}
+.order-title {
+  font-size: 15px;
+  span {
+    overflow: hidden;
+    width: 150px;
+    height: 45px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 22px;
+  }
 }
 .bot-sha {
   height: 91px;

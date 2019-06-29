@@ -184,13 +184,14 @@
     </div>
     <div>
       <div v-show="yudingList.length > 0" class="check-box">
-      <div></div>
-        <div class="check-title">已选择<span ref="end" class="red"> {{yudingList.length}} </span>个，总粉丝数：
-        <span class="red">{{fansNums(yudingList)}}</span>
-          <Icon @click="detailShow" type="ios-arrow-up" class="ios-type" />
-        </div>
         <div>
-          <Button type="primary" class="button-ok" @click="next">立即预定</Button>
+          <div class="check-title">已选择<span ref="end" class="red"> {{yudingList.length}} </span>个，总粉丝数：
+          <span class="red">{{fansNums(yudingList)}}</span>
+            <Icon @click="detailShow" type="ios-arrow-up" class="ios-type" />
+          </div>
+          <div style="margin-right: 20px">
+            <Button type="primary" class="button-ok" @click="next">立即预定</Button>
+          </div>
         </div>
       </div>
     </div>
@@ -386,6 +387,10 @@ export default class Main extends ViewBase {
       return errors
     }
     const num = (val + '').split('.')
+    if (msg == '%') {
+      const numbers = formatCurrency(val, 2)
+       return `${numbers}${msg}`
+    }
     if (num.length > 1) {
       const numbers = formatCurrency(val, 2)
       if (id == 1) {
@@ -647,7 +652,7 @@ export default class Main extends ViewBase {
     this.$router.push({
       name: 'order-orderfill',
       params: {
-        code: this.$route.params.id || 'weibo'
+        code: this.title[this.type]
       }
     })
   }
@@ -815,9 +820,6 @@ export default class Main extends ViewBase {
     width: 144px;
   }
   .button-ok {
-    position: absolute;
-    right: 20px;
-    bottom: 10px;
     width: 60px;
     height: 34px;
     font-size: 14px;
@@ -905,7 +907,7 @@ export default class Main extends ViewBase {
   img {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
+    border-radius: 58%;
   }
 }
 /deep/ .edit-input .ivu-form-item-content .ivu-input-wrapper input {
@@ -1022,10 +1024,13 @@ export default class Main extends ViewBase {
   line-height: 80px;
   background: rgba(0, 0, 0, .6);
   display: flex;
+  justify-content: flex-end;
+  > div {
+    display: flex;
+  }
   .check-title {
     color: #fff;
     font-size: 18px;
-    margin-left: 50%;
   }
   .ios-type {
     cursor: pointer;

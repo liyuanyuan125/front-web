@@ -305,7 +305,7 @@ export default class BasicPane extends Vue {
   top: 34px;
   right: -91px;
   width: 156px;
-  height: 220px;
+  max-height: 300px;
   border: 1px solid #53c5df;
   box-shadow: -8px 8px 8px rgba(0, 0, 0, .38);
   border-radius: 2px;

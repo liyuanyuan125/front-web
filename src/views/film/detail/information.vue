@@ -53,7 +53,7 @@
      <Row class='title' style='margin-bottom: 20px;'>图片(共{{imgUrl.length}}张)</Row>
       <transition-group name="list" tag="ul" class="loading-img">
         <!-- <li class='desimg' v-for="img in imgList" :key="img.key"><img :src="img.img"/></li> -->
-        <li class='desimg' v-for="img in imgList" :key="img.key" :style="{
+        <li class='desimg'@click='onView(img.img)' v-for="img in imgList" :key="img.key" :style="{
           backgroundImage: `url(${img.img})`
         }"></li>
       </transition-group>
@@ -61,6 +61,9 @@
         <span @click="handleToggle">{{tabShowTitle}}<Icon :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}" type="ios-arrow-down" size="25" /></span>
       </div>
    </div>
+   <Modal v-model="viewerShow" title="查看图片" width="500" height="500">
+      <img style="width: 100%;" :src="viewerImage" alt sizes srcset>
+    </Modal>
   </div>
 </template>
 
@@ -94,6 +97,10 @@ export default class Main extends ViewBase {
   sumFlag = 0
   summary: any = ''
 
+  // 查看图片
+  viewerShow = false
+  viewerImage = ''
+
 
 
   itemlist: any = {}
@@ -105,6 +112,12 @@ export default class Main extends ViewBase {
 
   detailinfo() {
     this.info = true
+  }
+
+  // 查看图片
+  onView(url: string) {
+    this.viewerImage = url
+    this.viewerShow = true
   }
 
   handleToggle() {
@@ -290,6 +303,28 @@ export default class Main extends ViewBase {
   animation: arrowUp .5s both;
 }
 @keyframes arrowUp {
+  0% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+.dataDown {
+  animation: dataDown .5s both;
+}
+@keyframes dataDown {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+.dataUp {
+  animation: dataUp .5s both;
+}
+@keyframes dataUp {
   0% {
     transform: rotate(180deg);
   }
