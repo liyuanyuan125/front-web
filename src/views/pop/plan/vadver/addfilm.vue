@@ -300,6 +300,7 @@ export default class DlgEditCinema extends ViewBase {
   @Watch('form.types', { deep: true })
   watchformTypes(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
+    this.form.pageIndex = 1
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.types = newValue
     })
@@ -412,6 +413,9 @@ export default class DlgEditCinema extends ViewBase {
         height: 24px;
         font-weight: 400;
         margin-left: 20px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
       .film-time {
         margin-left: 20px;
