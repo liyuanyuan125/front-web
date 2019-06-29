@@ -160,6 +160,7 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   searchList() {
+    this.form.pageIndex = 1
     this.seach()
   }
 
