@@ -86,6 +86,8 @@ import { warning , success, toast } from '@/ui/modal'
 import AreaSelect from '@/components/areaSelect'
 import number from '@/components/number.vue'
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
+import { uniq, uniqBy } from 'lodash'
+
 @Component({
   components: {
     AreaSelect,

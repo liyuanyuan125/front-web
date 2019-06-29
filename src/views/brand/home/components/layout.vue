@@ -368,10 +368,12 @@ export default class BrandHomeLayout extends ViewBase {
 }
 
 .button-manage {
+  position: relative;
+  top: 1px;
   margin: 36px 0 0 16px;
+  padding: 0 25px;
   font-size: 14px;
   line-height: 30px;
-  padding: 0 25px;
   border-radius: 88px;
   .button-style(#fff, #0383c2);
 }
