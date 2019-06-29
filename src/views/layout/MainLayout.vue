@@ -23,7 +23,7 @@
         </Button>
       </form>
 
-      <router-link :to="{}" class="cart-node">
+      <router-link :to="{ name: 'kol-shopping' }" class="cart-node">
         <i class="iconfont icon-cart"/>
         <span class="cart-count" v-if="cartCount > 0">{{cartCount}}</span>
       </router-link>
@@ -245,7 +245,7 @@ export default class MainLayout extends ViewBase {
 
   keyword = ''
 
-  cartCount = 8
+  cartCount = 0
 
   hasNotice = true
 

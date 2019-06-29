@@ -1,8 +1,9 @@
 import { setUser, User } from '@/store'
-import { SystemCode } from '@/util/types'
+import { SystemCode, SecondaryCode, defaultSecondaryCode } from '@/util/types'
 
 interface SystemItem {
   code: SystemCode
+  secondaryCode: SecondaryCode
   status: number
 }
 
@@ -24,14 +25,14 @@ interface UserData {
   // systemCode 通常不会返回，应通过 postData 设置
   systemCode: SystemCode
   // 二级代理商和直客身份
-  secondaryCode: string
+  secondaryCode: SecondaryCode
 }
 
 /**
  * 使用登录或注册时返回的信息，设置用户  (data.systems || []).find(it => it.code == data.systemCode).secondaryCod
  */
 export default function setUserByData(data: UserData) {
-  const secondaryCode: any = data.systems.find((it: any) => it.code == data.systemCode)
+  const system = data.systems.find(it => it.code == data.systemCode)
   // 设置用户
   const user: User = {
     id: data.userId as number,
@@ -42,13 +43,12 @@ export default function setUserByData(data: UserData) {
 
     systemCode: data.systemCode as SystemCode,
     systems: (data.systems || []).filter(it => it.status == 1).map(it => it.code),
+    secondaryCode: system && system.secondaryCode || defaultSecondaryCode(data.systemCode),
 
     companyId: data.companyId as number,
     companyName: data.companyName || '<我的公司>',
 
     perms: data.perms || [],
-
-    secondaryCode: secondaryCode.secondaryCode
   }
   setUser(user)
 }
