@@ -34,7 +34,7 @@
           </Select>
         </Col>
 
-        <Col :span="5">
+        <!-- <Col :span="5">
           <Select v-model="form.settlementStatus" clearable placeholder="请选择结算状态">
             <Option
               v-for="item in data.settlementStatusList"
@@ -43,7 +43,7 @@
               :value="item.key"
             >{{item.text}}</Option>
           </Select>
-        </Col>
+        </Col> -->
       </Row>
     </Form>
 
@@ -115,7 +115,7 @@
               <span class="edit-btn" v-if="row.status == 4" @click="pay(row.companyId, row.freezeAmount, row.id)">立即缴费</span>
               <div class="adver-edit">
                 <p @click="plandetail(row.id)">详情</p>
-                <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p>
+                <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
                 <p @click="plandel(row.id)">删除</p>
               </div>
             </div>
@@ -335,9 +335,13 @@ export default class Plan extends ViewBase {
   }
 
   async plandel(id: any) {
+    await confirm(`是否要删除广告计划`, {
+      title: '删除广告计划'
+    })
     try {
       await delCheckPlanList(id)
       this.tableList()
+      toast('操作成功')
     } catch (ex) {
       this.handleError(ex)
     }
