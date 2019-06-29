@@ -1,5 +1,5 @@
 import xlsxStyle from 'yxg-xlsx-style'
-import { chunk } from 'lodash'
+// import { flatten, uniqBy, findLastIndex } from 'lodash'
 
 class Workbook {
   // tslint:disable-next-line:variable-name
@@ -98,7 +98,7 @@ export function xlsl({
   type
 }: any = {}) {
   filename = filename || 'excel-list'
-  const chunks = chunk(data, 4).map((it: any) => it.length)
+  // const chunks = chunk(data, 4).map((it: any) => it.length)
   data = [...data]
   data.unshift(header)
   // data.unshift(title)
@@ -231,22 +231,38 @@ export function xlsl({
           horizontal: 'center'
         }
       }
-      let step = 1
-      chunks.forEach((item: any) => {
-        step += item
-        dataInfo[`${ind}${step}`].s = {
-          fill: {
-            fgColor: {rgb: '239B56'},
-          },
-          font: {
-            name: '宋体',
-            color: {rgb: '000000'},
-          },
-          alignment: {
-            horizontal: 'center'
+      data.forEach((its: any, insd: any) => {
+        if (its[0] == '小计') {
+          dataInfo[`${ind}${insd + 1}`].s = {
+            fill: {
+              fgColor: {rgb: '239B56'},
+            },
+            font: {
+              name: '宋体',
+              color: {rgb: '000000'},
+            },
+            alignment: {
+              horizontal: 'center'
+            }
           }
         }
       })
+      // const numsarray = uniqBy((data || []), 'provinceNname').map((items: any) => items.provinceNname)
+      // numsarray.forEach((its: any) => {
+      //   const adindex = findLastIndex(data.planCinemas, (item: any) => item.provinceNname == its)
+      //   dataInfo[`${ind}${adindex}`].s = {
+      //     fill: {
+      //       fgColor: {rgb: '239B56'},
+      //     },
+      //     font: {
+      //       name: '宋体',
+      //       color: {rgb: '000000'},
+      //     },
+      //     alignment: {
+      //       horizontal: 'center'
+      //     }
+      //   }
+      // }
     })
   }
   // 设置主标题样式
