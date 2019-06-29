@@ -412,6 +412,7 @@ export default class DlgEditCinema extends ViewBase {
       .film-title {
         font-size: 14px;
         height: 24px;
+        width: 146px;
         font-weight: 400;
         margin-left: 20px;
         overflow: hidden;
