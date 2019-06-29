@@ -3,7 +3,7 @@
     <div v-show="false">
       <input ref="inputUpdate" id="upload" type="file" accept="image/*" @change="onChange">
     </div>
-    <quillEditor v-model="content" ref="myQuillEditor" :options="editorOption"/>
+    <quillEditor v-model="value" ref="myQuillEditor" :options="editorOption"/>
   </div>
 </template>
 
@@ -103,8 +103,8 @@ export default class DlgEditCinema extends ViewBase {
 
   onUploadFail() {}
 
-  @Watch('content', { deep: true })
-  watchContent(val: any) {
+  @Watch('value', { deep: true })
+  watchValue(val: any) {
     this.$emit('input', val)
   }
 }

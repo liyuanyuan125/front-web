@@ -168,7 +168,7 @@ import otherdetail from './otherdetail.vue'
 import webo from './webo.vue'
 import { clean } from '@/fn/object.ts'
 import { uniqBy } from 'lodash'
-import { info } from '@/ui/modal'
+import { info, toast } from '@/ui/modal'
 
 const timeFormat = 'YYYY-MM-DD HH:mm'
 @Component({
@@ -635,7 +635,10 @@ export default class Main extends ViewBase {
             ...query
           })
         }
-        this.$router.push({ name: 'kol-orderlist' })
+        toast('操作成功')
+        if (!id) {
+          this.$router.push({ name: 'kol-orderlist' })
+        }
       }
     } catch (ex) {
       this.handleError(ex)

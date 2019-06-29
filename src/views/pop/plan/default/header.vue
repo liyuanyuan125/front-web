@@ -20,7 +20,7 @@
 
     <div v-if="value.status == 2" class="plan-message" style="height:80px; padding-top: 16px;">
       <div class="btn-box">
-        <Button type="default" class="btn-contact">查看效果报表</Button>
+        <Button type="default" :to="{ name: 'effect-report'}" class="btn-contact">查看效果报表</Button>
       </div>
     </div>
 
@@ -40,7 +40,7 @@
       <p>您已缴纳 ￥{{formatNums(value.budgetAmount)}} 为保证金，投放结束后保证金剩余余额将退还到您的账户 </p>
       <p style="margin-bottom: 20px">（ 如果实际花费超出您的保证金，您无需补交任何款项 ）</p>
       <div class="btn-box">
-        <Button type="default" class="btn-contact">查看效果报表</Button>
+        <Button type="default" :to="{ name: 'effect-report'}" class="btn-contact">查看效果报表</Button>
       </div>
     </div>
 
@@ -49,7 +49,7 @@
       <p>（ 如果实际花费超出您的保证金，您无需补交任何款项 ）</p>
       <span style="margin-top: 20px; margin-bottom: 20px">本计划将于【2019/02/21日】开始 </span>
       <div class="btn-box">
-        <Button type="default" class="btn-contact">查看效果报表</Button>
+        <Button type="default" :to="{ name: 'effect-report'}" class="btn-contact">查看效果报表</Button>
       </div>
     </div>
     <Sure ref="Sure" @uplist="uplist" />
