@@ -26,7 +26,7 @@
                 v-for="item in movieList"
                 :key="item.id"
                 :value="item.id"
-              >{{item.name}}</Option>
+              >{{item.shortName}}</Option>
             </Select>
           </Col>
         </Col>
@@ -118,8 +118,9 @@ export default class Main extends ViewBase {
 
   async mounted() {
     // this.asd = true
-    this.remoteMethod('')
+    // this.remoteMethod('')
     const cinid = await getcinid()
+
         if (cinid.data.cinemaId == 0) {
           info('当前用户没有关联影院')
           this.query.cinemaId = cinid.data.cinemaId
@@ -142,14 +143,14 @@ export default class Main extends ViewBase {
     }
   }
 
-  async remoteMethod(query: any) {
+  async remoteMethod(querys: any) {
     try {
-      if (query) {
+      if (querys) {
         this.loading = true
         const {
           data: { items }
         } = await movielist({
-          searchKey: query,
+          query: querys,
         })
         this.movieList = items || []
       }
