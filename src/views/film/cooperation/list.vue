@@ -176,7 +176,7 @@ export default class CooperationFilmList extends ViewBase {
   form: any = {
     movieTypeCode: '',
     movieCategoryCode: '',
-    sortBy: '',
+    sortBy: 'wantSeeCount',
     pageIndex: 1,
     pageSize: 18,
     releaseStatus: 0
@@ -227,6 +227,14 @@ export default class CooperationFilmList extends ViewBase {
     // 排序选择
     sortBy: [
       {
+        key: 'wantSeeCount',
+        text: '想看人数'
+      },
+      {
+        key: 'commentsScore',
+        text: '口碑评分'
+      },
+      {
         key: '',
         text: '鲸娱指数'
       },
@@ -234,14 +242,6 @@ export default class CooperationFilmList extends ViewBase {
         key: 'hots',
         text: '实时热度'
       },
-      {
-        key: 'wantSeeCount',
-        text: '想看人数'
-      },
-      {
-        key: 'commentsScore',
-        text: '口碑评分'
-      }
     ]
   }
 
