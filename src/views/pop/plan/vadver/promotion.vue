@@ -253,6 +253,8 @@ export default class Promotion extends ViewBase {
       this.form.specification = data.item.specification
       this.form.budgetAmount = (data.item.budgetAmount / 10000) + ''
       this.form.customerId = data.item.customerId
+      this.form.productId = data.item.productId
+      this.form.brandId = data.item.brandId
       this.steps = 2
       if (!data.item.videoId) {
         this.setadver = true
