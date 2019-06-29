@@ -104,6 +104,7 @@ import { login } from '@/api/auth'
 import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 import detail from './detail.vue'
+
 @Component({
   components: {
     detail

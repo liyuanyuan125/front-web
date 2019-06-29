@@ -70,6 +70,11 @@ export interface RouteMetaBase {
    * 是否使用沉浸式 header，默认为 false，只能设置为 true 或不设置
    */
   immersionHeader?: true
+
+  /**
+   * 点亮的侧边菜单名称
+   */
+  siderMenu?: string
 }
 
 /**
@@ -1376,9 +1381,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       title: '品牌',
+      siderMenu: 'brand-list'
     },
     props: idProps,
   },
+
   // 品牌 - 首页 - 详情页
   {
     path: '/brand/homedetail/:id',

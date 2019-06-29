@@ -51,4 +51,5 @@ export default function setUserByData(data: UserData) {
     perms: data.perms || [],
   }
   setUser(user)
+  return user
 }
