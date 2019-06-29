@@ -220,13 +220,6 @@ export default class Main extends ViewBase {
     dataList: [
       [
         {
-          name: '中性',
-          type: 'bar',
-          stack: 'totalCount',
-          barMaxWidth: '20',
-          data: []
-        },
-        {
           name: '正面',
           type: 'bar',
           stack: 'totalCount',
@@ -235,6 +228,13 @@ export default class Main extends ViewBase {
         },
         {
           name: '负面',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
+        },
+        {
+          name: '中性',
           type: 'bar',
           stack: 'totalCount',
           barMaxWidth: '20',
@@ -243,12 +243,6 @@ export default class Main extends ViewBase {
       ],
       [
         {
-          name: '中性',
-          type: 'bar',
-          stack: 'totalCount',
-          data: []
-        },
-        {
           name: '正面',
           type: 'bar',
           stack: 'totalCount',
@@ -259,7 +253,13 @@ export default class Main extends ViewBase {
           type: 'bar',
           stack: 'totalCount',
           data: []
-        }
+        },
+        {
+          name: '中性',
+          type: 'bar',
+          stack: 'totalCount',
+          data: []
+        },
       ]
     ],
     color: colors
