@@ -31,8 +31,9 @@ Quill.register('modules/imageDrop', ImageResize)
   }
 })
 export default class DlgEditCinema extends ViewBase {
-  @Prop() value!: any
-  content = ''
+  @Prop({ default: '' }) value!: any
+  content = this.value
+
   editorOption: any = {
     modules: {
       imageResize: {
