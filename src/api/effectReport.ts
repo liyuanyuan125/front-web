@@ -2,6 +2,7 @@ import { get, post, put } from '@/fn/ajax'
 import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
 
 // 分页查询三方检测列表
+// 待整理
 export async function thirdMonitors(query: any) {
     const res = await get('/xadvert/v1/plans', query)
     return res
@@ -148,10 +149,73 @@ export async function thirdMonitors(query: any) {
  * 分页查询广告计划列表
  * https://yapi.aiads-dev.com/project/139/interface/api/2009
  */
-export async function plans(query: any) {
+export async function getPlans(query: any) {
     const res = await get('/xadvert/v1/plans', query)
     return res
     return await mockGet(query, {
+        'items|3': [
+            {
+                id: tid,
+                companyId: tid,
+                name: title20,
+                specification: 30,
+                videoId: tid,
+                videoLogo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bka7cktjqctg008ubkq0.png',
+                videoName: '奔驰广告片',
+                customerId: tid,
+                brandId: tid,
+                customerName: '奔驰客户',
+                beginDate: 20190627,
+                endDate: 20190703,
+                cycle: 7,
+                budgetAmount: 100000,
+                cityCustom: 0,
+                allNation: 1,
+                deliveryCityTypes: null,
+                cinemaCount: 0,
+                cinemaGradeCodes: null,
+                customDeliveryCities: null,
+                deliveryGroups: [
+                    {
+                        tagTypeCode: 'MOVIE_TYPE',
+                        text: 'Romance'
+                    },
+                    {
+                        tagTypeCode: 'PLAN_GROUP_AGE',
+                        text: '20-24year'
+                    },
+                    {
+                        tagTypeCode: 'PLAN_GROUP_SEX',
+                        text: 'woman'
+                    }
+                ],
+                movieCustom: 0,
+                deliveryMovies: null,
+                status: 1,
+                allowAutoDelivery: 0,
+                applyUser: 1323,
+                applyName: '看看账号联系人是否修改2',
+                applyTime: '2019-06-25T17:14:26.217',
+                approvalUser: 0,
+                approvalName: null,
+                approvalTime: null,
+                estimateShowCount: 5320,
+                estimatePersonCount: 198824,
+                estimateCostAmount: 99852,
+                settlementStatus: 0,
+                settlementUser: 0,
+                settlementName: null,
+                settlementTime: null,
+                payUser: 0,
+                payName: null,
+                payTime: null,
+                freezeAmount: null,
+                needPayAmount: null,
+                recommend: true,
+                refundAmount: null,
+                settlementAmount: null
+            },
+        ],
         plan: {
             id: 39,
             name: '234gg',
@@ -453,13 +517,13 @@ export async function plans(query: any) {
     })
 }
 
- /**
-  * 分页获取影院的效果报表
-  * @param id id
-  * https://yapi.aiads-dev.com/project/139/interface/api/4740
-  */
+/**
+ * 分页获取影院的效果报表
+ * @param id id
+ * https://yapi.aiads-dev.com/project/139/interface/api/4740
+ */
 
-  export async function cinemasReport(id: string = '', query: any = {}) {
+export async function cinemasReport(id: string = '', query: any = {}) {
     const res = await get(`xadvert/v1/plans/${id}/report/cinemas`, query)
     return res
     return await mockGet(id, {
@@ -483,8 +547,8 @@ export async function plans(query: any) {
  * https://yapi.aiads-dev.com/project/139/interface/api/4749
  */
 export async function citiesReport(id: string = '', query: any = {}) {
-    // const res = await get(`xadvert/v1/plans/${id}/report/cities`, query)
-    // return res
+    const res = await get(`xadvert/v1/plans/${id}/report/cities`, query)
+    return res
     return await mockGet(id, {
         'items|10': [
             {
@@ -499,18 +563,18 @@ export async function citiesReport(id: string = '', query: any = {}) {
 }
 
 /**
- * 客户
+ * 模糊搜索客户
  * @param data
+ * http://yapi.aiads-dev.com/project/94/interface/api/785
  */
-export async function popPartners(data: any) {
-    // const res = await get('/customer/partners', data)
-    // return res
-
+export async function searchPartners(data: any) {
+    const res = await get('/customer/partners', data)
+    return res
     return await mockGet(data, {
         businessList: [
             {
                 code: 'PARTNER_BUSINESS_CAR',
-                desc: '汽车'
+                desc: '汽车用品'
             },
             {
                 code: 'PARTNER_BUSINESS_ONLINE_SHOPPING',
@@ -529,8 +593,12 @@ export async function popPartners(data: any) {
                 desc: '服饰鞋帽'
             },
             {
+                code: 'PARTNER_BUSINESS_TECHNOLOGY',
+                desc: 'IT业'
+            },
+            {
                 code: 'PARTNER_BUSINESS_FOOD',
-                desc: '食品'
+                desc: '食品饮料'
             },
             {
                 code: 'PARTNER_BUSINESS_BANKING',
@@ -539,6 +607,10 @@ export async function popPartners(data: any) {
             {
                 code: 'PARTNER_BUSINESS_JEWELRY',
                 desc: '珠宝钟表'
+            },
+            {
+                code: 'PARTNER_BUSINESS_RESTAURANT',
+                desc: '餐饮'
             },
             {
                 code: 'PARTNER_BUSINESS_DAILYUSE ',
@@ -557,13 +629,73 @@ export async function popPartners(data: any) {
                 desc: '其他'
             }
         ],
-        'items|15': [
+        items: [
             {
-                id: tid,
-                name: title20,
-                nameShort: '客户简称',
+                id: 1,
+                name: '奔驰1',
+                nameShort: '奔驰1',
                 businessCode: 'PARTNER_BUSINESS_CAR',
-                businessName: '汽车',
+                businessName: '汽车用品',
+                businessCategoryCode: 'CAR',
+                businessCategoryName: '汽车',
+                contactName: '联系人',
+                contactTel: '18521112231',
+                contactAddress: '北京朝阳'
+            },
+            {
+                id: 2,
+                name: '奔驰2',
+                nameShort: '奔驰2',
+                businessCode: 'PARTNER_BUSINESS_CAR',
+                businessName: '汽车用品',
+                businessCategoryCode: 'CAR',
+                businessCategoryName: '汽车',
+                contactName: '联系人',
+                contactTel: '18521112231',
+                contactAddress: '北京朝阳'
+            },
+            {
+                id: 3,
+                name: '奔驰3',
+                nameShort: '奔驰3',
+                businessCode: 'PARTNER_BUSINESS_CAR',
+                businessName: '汽车用品',
+                businessCategoryCode: 'CAR',
+                businessCategoryName: '汽车',
+                contactName: '联系人',
+                contactTel: '18521112231',
+                contactAddress: '北京朝阳'
+            },
+            {
+                id: 4,
+                name: '奔驰4',
+                nameShort: '奔驰4',
+                businessCode: 'PARTNER_BUSINESS_CAR',
+                businessName: '汽车用品',
+                businessCategoryCode: 'CAR',
+                businessCategoryName: '汽车',
+                contactName: '联系人',
+                contactTel: '18521112231',
+                contactAddress: '北京朝阳'
+            },
+            {
+                id: 5,
+                name: '奔驰5',
+                nameShort: '奔驰5',
+                businessCode: 'PARTNER_BUSINESS_CAR',
+                businessName: '汽车用品',
+                businessCategoryCode: 'CAR',
+                businessCategoryName: '汽车',
+                contactName: '联系人',
+                contactTel: '18521112231',
+                contactAddress: '北京朝阳'
+            },
+            {
+                id: 6,
+                name: '奔驰6',
+                nameShort: '奔驰6',
+                businessCode: 'PARTNER_BUSINESS_CAR',
+                businessName: '汽车用品',
                 businessCategoryCode: 'CAR',
                 businessCategoryName: '汽车',
                 contactName: '联系人',
@@ -572,19 +704,138 @@ export async function popPartners(data: any) {
             }
         ],
         companyId: 120,
-        totalCount: 205
+        totalCount: 246
     })
 }
 
 /**
- * 计划列表
+ * 计划列表 v1
  * @param data
- * https://yapi.aiads-dev.com/project/128/interface/api/1251
+ * https://yapi.aiads-dev.com/project/139/interface/api/2009
  */
-export async function popPlans(data: any) {
-    // const res = await get('/xadvert/plans', data)
-    // return res
-    return await mockGet( data, {
+export async function searchPlans(data: any) {
+    data.statusList = '6,7,8,9'
+    const res = await get('/xadvert/v1/plans', data)
+    return res
+    return await mockGet(data, {
+        items: [
+            {
+                id: 256,
+                companyId: 120,
+                name: '[ 奔驰广告片 ] [ 奔驰客户 ] [ 奔驰G级 ]',
+                specification: 30,
+                videoId: 298,
+                videoLogo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bka7cktjqctg008ubkq0.png',
+                videoName: '奔驰广告片',
+                customerId: 1051,
+                brandId: 10121,
+                customerName: '奔驰客户',
+                beginDate: 20190627,
+                endDate: 20190703,
+                cycle: 7,
+                budgetAmount: 100000,
+                cityCustom: 0,
+                allNation: 1,
+                deliveryCityTypes: null,
+                cinemaCount: 0,
+                cinemaGradeCodes: null,
+                customDeliveryCities: null,
+                deliveryGroups: [
+                    {
+                        tagTypeCode: 'MOVIE_TYPE',
+                        text: 'Romance'
+                    },
+                    {
+                        tagTypeCode: 'PLAN_GROUP_AGE',
+                        text: '20-24year'
+                    },
+                    {
+                        tagTypeCode: 'PLAN_GROUP_SEX',
+                        text: 'woman'
+                    }
+                ],
+                movieCustom: 0,
+                deliveryMovies: null,
+                status: 1,
+                allowAutoDelivery: 0,
+                applyUser: 1323,
+                applyName: '看看账号联系人是否修改2',
+                applyTime: '2019-06-25T17:14:26.217',
+                approvalUser: 0,
+                approvalName: null,
+                approvalTime: null,
+                estimateShowCount: 5320,
+                estimatePersonCount: 198824,
+                estimateCostAmount: 99852,
+                settlementStatus: 0,
+                settlementUser: 0,
+                settlementName: null,
+                settlementTime: null,
+                payUser: 0,
+                payName: null,
+                payTime: null,
+                freezeAmount: null,
+                needPayAmount: null,
+                recommend: true,
+                refundAmount: null,
+                settlementAmount: null
+            },
+        ],
+        totalCount: 27,
+        statusList: [
+            {
+                text: '未知',
+                key: 0
+            },
+            {
+                text: '草稿',
+                key: 1
+            },
+            {
+                text: '待审核',
+                key: 2
+            },
+            {
+                text: '待确认',
+                key: 3
+            },
+            {
+                text: '待支付',
+                key: 4
+            },
+            {
+                text: '已支付',
+                key: 5
+            },
+            {
+                text: '接单中',
+                key: 6
+            },
+            {
+                text: '待执行',
+                key: 7
+            },
+            {
+                text: '执行中',
+                key: 8
+            },
+            {
+                text: '待结算',
+                key: 9
+            },
+            {
+                text: '结算中',
+                key: 10
+            },
+            {
+                text: '已完成',
+                key: 11
+            },
+            {
+                text: '已失效',
+                key: 12
+            }
+        ],
         settlementStatusList: [
             {
                 text: '未知',
@@ -603,76 +854,245 @@ export async function popPlans(data: any) {
                 key: 3
             }
         ],
-        statusList: [
+        tags: [
             {
-                text: '未知',
-                key: 0
+                name: '电影类型',
+                code: 'MOVIE_TYPE',
+                values: [
+                    {
+                        controlStatus: 1,
+                        text: '儿童',
+                        key: 'Kids'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '历史',
+                        key: 'History'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '纪录片',
+                        key: 'Documentary'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '战争',
+                        key: 'War'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '戏曲',
+                        key: 'Opera'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '音乐',
+                        key: 'Music'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '歌舞',
+                        key: 'Musical'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '犯罪',
+                        key: 'Crime'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '传记',
+                        key: 'Biography'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '青春',
+                        key: 'Youth'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '奇幻',
+                        key: 'Fantasy'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '短片',
+                        key: 'Short'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '惊悚',
+                        key: 'Thriller'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '冒险',
+                        key: 'Adventure'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '科幻',
+                        key: 'Sci-Fi'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '动作',
+                        key: 'Action'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '家庭',
+                        key: 'Family'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '动画',
+                        key: 'Animation'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '励志',
+                        key: 'Encouragement'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '喜剧',
+                        key: 'Comedy'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '悬疑',
+                        key: 'Mystery'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '爱情',
+                        key: 'Romance'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '剧情',
+                        key: 'Drama'
+                    }
+                ]
             },
             {
-                text: '草稿',
-                key: 1
+                name: '年龄',
+                code: 'PLAN_GROUP_AGE',
+                values: [
+                    {
+                        controlStatus: 1,
+                        text: '20岁以下',
+                        key: '20year'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '20-24岁',
+                        key: '20-24year'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '30-34岁',
+                        key: '30-34year'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '25-29岁',
+                        key: '25-29year'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '35-39岁',
+                        key: '35-39year'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '40岁以上',
+                        key: '40year'
+                    }
+                ]
             },
             {
-                text: '待审核',
-                key: 2
-            },
-            {
-                text: '已暂停',
-                key: 3
-            },
-            {
-                text: '待支付',
-                key: 4
-            },
-            {
-                text: '已支付',
-                key: 5
-            },
-            {
-                text: '待执行',
-                key: 6
-            },
-            {
-                text: '执行中',
-                key: 7
-            },
-            {
-                text: '已结束',
-                key: 8
-            },
-            {
-                text: '已取消',
-                key: 9
-            },
-            {
-                text: '已拒绝',
-                key: 10
+                name: '性别',
+                code: 'PLAN_GROUP_SEX',
+                values: [
+                    {
+                        controlStatus: 1,
+                        text: '未知',
+                        key: 'unknow'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '男',
+                        key: 'man'
+                    },
+                    {
+                        controlStatus: 1,
+                        text: '女',
+                        key: 'woman'
+                    }
+                ]
             }
         ],
-        levelTypeList: [
+        cinemaGradeList: [
             {
-                text: '未知',
-                key: 0
+                controlStatus: 1,
+                text: '四星级',
+                key: 'four'
             },
             {
-                text: '广告计划',
-                key: 1
+                controlStatus: 1,
+                text: '五星级',
+                key: 'five'
             },
             {
-                text: '广告片',
-                key: 2
+                controlStatus: 1,
+                text: '三星级',
+                key: 'three'
+            },
+            {
+                controlStatus: 1,
+                text: '二星级',
+                key: 'two'
+            },
+            {
+                controlStatus: 1,
+                text: '一星级',
+                key: 'one'
             }
         ],
-        totalCount: 0,
-        'items|10': [
+        deliveryCityTypeList: [
             {
-                id: tid,
-                name: title20
+                text: '票仓城市Top10',
+                key: 'top20'
+            },
+            {
+                text: '新一线城市',
+                key: 'new-first-tier'
+            },
+            {
+                text: '一线城市',
+                key: 'first-tier'
+            },
+            {
+                text: '二线城市',
+                key: 'second-tier'
+            },
+            {
+                text: '三线城市',
+                key: 'third-tier'
+            },
+            {
+                text: '四线城市',
+                key: 'four-tier'
+            },
+            {
+                text: '五线城市',
+                key: 'five-tier'
             }
         ]
     })
 }
-
 
 /**
  * 广告计划效果报表
@@ -680,132 +1100,132 @@ export async function popPlans(data: any) {
  * https://yapi.aiads-dev.com/project/139/interface/api/4731
  * @param id
  */
- export async function getPlansReport(id: number|string = -1) {
+export async function getPlansReport(id: number | string = -1) {
     // 演示 临时参数 nxd 20190621
-    id = '173'
+    // id = '173'
     const res = await get(`xadvert/v1/plans/${id}/report`)
     return res
     return await mockGet(id, {
-      plan: {
-        id: 39,
-        name: '234gg',
-        beginDate: 20190620,
-        endDate: 20190626,
-        cycle: 7,
-        videoName: '广告片1',
-        specification: 15,
-        status: 'ONDRAFT'
-      },
-      report: {
-        viewCount: 97200,
-        scheduleCount: 6000,
-        cost: 25148181792,
-        dates: [{
-            date: 20190101,
+        plan: {
+            id: 39,
+            name: '234gg',
+            beginDate: 20190620,
+            endDate: 20190626,
+            cycle: 7,
+            videoName: '广告片1',
+            specification: 15,
+            status: 'ONDRAFT'
+        },
+        report: {
+            viewCount: 97200,
+            scheduleCount: 6000,
+            cost: 25148181792,
+            dates: [{
+                date: 20190101,
+                viewCount: 32400,
+                scheduleCount: 2000,
+                cost: 8382727264
+            },
+            {
+                date: 20190102,
+                viewCount: 22400,
+                scheduleCount: 3000,
+                cost: 6382727264
+            },
+            {
+                date: 20190103,
+                viewCount: 12400,
+                scheduleCount: 1000,
+                cost: 5382727264
+            }
+            ],
+            lastModifyTime: 1547178378340
+        },
+        'movies|12': [{
+            movieId: tid,
+            name: title20,
+            poster: 'http://img21.mtime.cn/mt/2012/02/17/102411.25247175_1280X720X2.jpg',
+            release: 20120217,
+            types: [
+                'Kids',
+                'Thriller'
+            ],
+            score: 10,
+            userPortrait: {
+                male: 1,
+                female: 22,
+                ages: [
+                    {
+                        value: '10',
+                        key: '0～20'
+                    },
+                    {
+                        value: '10',
+                        key: '20～24'
+                    },
+                    {
+                        value: '20',
+                        key: '25～29'
+                    },
+                    {
+                        value: '30',
+                        key: '30～34'
+                    },
+                    {
+                        value: '20',
+                        key: '35～39'
+                    },
+                    {
+                        value: '10',
+                        key: '40＋'
+                    }
+                ]
+            },
             viewCount: 32400,
-            scheduleCount: 2000,
-            cost: 8382727264
-          },
-          {
-            date: 20190102,
-            viewCount: 22400,
-            scheduleCount: 3000,
-            cost: 6382727264
-          },
-          {
-            date: 20190103,
-            viewCount: 12400,
-            scheduleCount: 1000,
-            cost: 5382727264
-          }
+            viewRate: '33.33',
+            scheduleCount: 2000
+        }
         ],
-        lastModifyTime: 1547178378340
-      },
-      'movies|12': [{
-          movieId: tid,
-          name: title20,
-          poster: 'http://img21.mtime.cn/mt/2012/02/17/102411.25247175_1280X720X2.jpg',
-          release: 20120217,
-          types: [
-            'Kids',
-            'Thriller'
-          ],
-          score: 10,
-          userPortrait: {
-            male: 1,
-            female: 22,
-            ages: [
-                {
-                    value: '10',
-                    key: '0～20'
-                },
-                {
-                    value: '10',
-                    key: '20～24'
-                },
-                {
-                    value: '20',
-                    key: '25～29'
-                },
-                {
-                    value: '30',
-                    key: '30～34'
-                },
-                {
-                    value: '20',
-                    key: '35～39'
-                },
-                {
-                    value: '10',
-                    key: '40＋'
-                }
+        'cinemas|3': [{
+            cinemaId: tid,
+            name: title20,
+            viewRate: tid,
+            scheduleRate: tid,
+            costRate: tid
+        }
+        ],
+        user: {
+            male: '55',
+            female: '45',
+            ages: [{
+                v: '30',
+                k: '30岁以下'
+            },
+            {
+                v: '70',
+                k: '30岁以上'
+            }
+            ],
+            cities: [{
+                v: '10',
+                k: '北京'
+            },
+            {
+                v: '101',
+                k: '上海'
+            }
+            ],
+            grades: [{
+                v: '30',
+                k: 'first-tier'
+            },
+            {
+                v: '40',
+                k: 'second-tier'
+            }
             ]
-          },
-          viewCount: 32400,
-          viewRate: '33.33',
-          scheduleCount: 2000
-        }
-      ],
-      'cinemas|3': [{
-          cinemaId: tid,
-          name: title20,
-          viewRate: tid,
-          scheduleRate: tid,
-          costRate: tid
-        }
-      ],
-      user: {
-        male: '55',
-        female: '45',
-        ages: [{
-            v: '30',
-            k: '30岁以下'
-          },
-          {
-            v: '70',
-            k: '30岁以上'
-          }
-        ],
-        cities: [{
-            v: '10',
-            k: '北京'
-          },
-          {
-            v: '101',
-            k: '上海'
-          }
-        ],
-        grades: [{
-            v: '30',
-            k: 'first-tier'
-          },
-          {
-            v: '40',
-            k: 'second-tier'
-          }
-        ]
-      },
-      gradeCodes: [
+        },
+        gradeCodes: [
             {
                 text: '新一线城市',
                 key: 'new-first-tier'
@@ -831,7 +1251,7 @@ export async function popPlans(data: any) {
                 key: 'five-tier'
             }
         ],
-      planStatus: [
+        planStatus: [
             {
                 text: '未知',
                 key: 'UNKNOWN'
@@ -885,7 +1305,7 @@ export async function popPlans(data: any) {
                 key: 'INVALID'
             }
         ],
-      movieTypes: [
+        movieTypes: [
             {
                 text: '儿童',
                 key: 'Kids'
@@ -980,4 +1400,4 @@ export async function popPlans(data: any) {
             }
         ]
     })
-  }
+}

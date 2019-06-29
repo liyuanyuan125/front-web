@@ -50,16 +50,16 @@ export default class BannerCard extends Vue {
 .banner-wp {
   background: url('../assets/banner.png') top center no-repeat;
   background-size: 100%;
-  min-height: 400px;
+  // min-height: 400px;
   border-radius: 5px;
   .banner-box {
-    min-height: 280px;
+    height: 262px;
     flex-flow: column;
     justify-content: center;
     align-items: flex-start;
     padding: 50px 0 0 70px;
     h1 {
-      font-size: 70px;
+      font-size: 65px;
       color: #fff;
     }
     p {
