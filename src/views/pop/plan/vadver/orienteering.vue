@@ -294,7 +294,6 @@ export default class Orienteering extends ViewBase {
       this.cityCustom = item.cityCustom || 0
       this.citiesList = cities || []
       this.citysId = (this.citiesList || []).map((it: any) => it.id)
-     //
       this.warehouseId = (datas.data || []).map((it: any) => it.cityId)
       this.beginDate = item.beginDate
       this.endDate = item.endDate
@@ -505,8 +504,8 @@ export default class Orienteering extends ViewBase {
         }
       }, 3000)
     } catch (ex) {
-      clearInterval(this.settime)
       (this.$Spin as any).hide()
+      clearInterval(this.settime)
       this.handleError(ex)
     }
   }

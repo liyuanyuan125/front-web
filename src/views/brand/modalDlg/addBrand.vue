@@ -80,7 +80,7 @@ export default class Main extends ViewBase {
         } = await selectBrand({
           name: query,
           pageIndex: 1,
-          pageSize: 400
+          // pageSize: 400
         })
         this.brandList = items || []
       }

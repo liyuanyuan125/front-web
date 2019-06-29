@@ -247,8 +247,8 @@ export default class Main extends ViewBase {
     } catch (ex) {
       this.spinShow = false
       this.list = []
-       this.total = 0
-      this.handleError(ex)
+      this.total = 0
+      // this.handleError(ex)
     }
   }
 

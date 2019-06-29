@@ -19,9 +19,7 @@
       >
         <FormItem label="广告位" prop="publishCategoryCode">
           <RadioGroup v-model="form.publishCategoryCode">
-            <Radio label="单图文"></Radio>
-            <Radio label="图文"></Radio>
-            <Radio label="多图文"></Radio>
+            <Radio v-for="it in statuslist" :key="it.key" :label="it.key">{{it.text}}</Radio>
           </RadioGroup>
         </FormItem>
 
@@ -41,16 +39,13 @@
             placeholder="请输入"
           />
         </FormItem>
-
         <FormItem label="正文内容" prop="content">
           <Froala v-model="form.content"/>
         </FormItem>
-
         <FormItem label="发布时间" prop="publishTime">
           <DatePicker
             format="yyyy-MM-dd HH:mm"
             v-model="form.publishTime"
-            :options="startDate"
             type="datetime"
             placeholder="Select date"
             style="width: 200px"
@@ -90,7 +85,6 @@ export default class DlgEditCinema extends ViewBase {
   dataName = ''
   form: any = {
     pictureFileIds: [],
-    value: '',
     publishCategoryCode: '',
     title: '',
     summary: '',
@@ -98,25 +92,90 @@ export default class DlgEditCinema extends ViewBase {
     publishTime: '',
     url: ''
   }
+  kolid: any = null
+  statuslist: any = []
 
-  rule: any = {}
-
-  startDate: any = {
-    disabledDate: (date: any) => {
-      return date && date.valueOf() < Date.now()
+  get rule() {
+    const validator = ( rules: any, value: any, callback: any) => {
+      const msg: any = new Date(value).getTime()
+      const time = Date.now()
+      if (!msg) {
+        callback(new Error('请选择发布时间'))
+      } else if (msg - time < 86400) {
+        callback(new Error('时间距离发布时间不足一天'))
+      } else {
+        callback()
+      }
+    }
+    return {
+      publishTime: [
+        { validator }
+      ],
+      publishCategoryCode: [
+        { required: true, message: '请选择投放类型', type: 'number', trigger: 'change' },
+      ],
+      content: [
+        { required: true, message: '请输入原发内容', trigger: 'change' },
+      ]
     }
   }
 
-  async init(id: number) {
+  async init(statuslist: any, id: any, kolid: any, orderItemList?: any) {
+    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
+    this.statuslist = statuslist
     this.numId = id
+    this.kolid = kolid
     this.showDlg = true
+    if (orderItemList) {
+      this.form.publishCategoryCode = Number(orderItemList.publishCategoryCode)
+      this.form.content = orderItemList.content || ''
+      this.form.pictureFileIds = orderItemList.pictureFileIds || []
+      this.form.publishTime = orderItemList.publishTime || ''
+      this.form.url = orderItemList.url
+      this.form.title = orderItemList.title
+    }
   }
 
-  async open() {}
+  async open() {
+    try {
+      const volid = await (this.$refs.dataform as any).validate()
+      if (volid) {
+        // const { data } = await kolprice({
+        //   channelCode: this.$route.params.code,
+        //   categoryCode: this.form.publishCategoryCode,
+        //   channelDataId: this.kolid
+        // })
+        if (typeof this.numId == 'number') {
+          this.$emit('done', {
+            id: [this.numId],
+            form: {
+              ...this.form
+            },
+            check: false
+          })
+        } else {
+          this.$emit('done', {
+            id: this.numId,
+            form: {
+              ...this.form
+            },
+            check: true
+          })
+        }
+        this.cancel()
+      }
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
 
   drop(name: any) {}
 
   cancel() {
+    (this.$refs.dataform as any).resetFields()
+    const html: HTMLHtmlElement = (document.getElementsByTagName('html')[0] as HTMLHtmlElement)
+    // html.style = 'overflow-y: auto'
+    this.form.content = ''
     this.showDlg = false
   }
 }

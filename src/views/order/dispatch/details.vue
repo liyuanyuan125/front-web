@@ -69,9 +69,9 @@
     <!-- dcp包 -->
     <div class="list-col-item">
       <h3 class="title">DCP包</h3>
-      <div class="video-plyr player-wrap">
+      <!-- <div class="video-plyr player-wrap">
         <VuePlyr> <video :src="list.srcFileUrl" ></video></VuePlyr>
-      </div>
+      </div> -->
       <div class="down-dcp-url">
         <!-- <h4 class="flex-box"><span>格式</span><span>下载链接</span></h4> -->
         <ul>
