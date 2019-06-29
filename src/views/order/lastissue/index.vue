@@ -14,7 +14,7 @@
             <Select 
              class='sels' 
              v-model='query.cinemaId'  
-             
+             clearable
              filterable
              placeholder="请输入影院名称/专资编码查询" 
              remote
@@ -26,7 +26,7 @@
                 v-for="item in movieList"
                 :key="item.id"
                 :value="item.id"
-              >{{item.name}}</Option>
+              >{{item.shortName}}</Option>
             </Select>
           </Col>
         </Col>
@@ -116,8 +116,18 @@ export default class Main extends ViewBase {
   deArray: any = []
   idsArray: any = []
 
-  mounted() {
-    this.asd = true
+  async mounted() {
+    // this.asd = true
+    // this.remoteMethod('')
+    const cinid = await getcinid()
+
+        if (cinid.data.cinemaId == 0) {
+          info('当前用户没有关联影院')
+          this.query.cinemaId = cinid.data.cinemaId
+        } else {
+          this.query.cinemaId = cinid.data.cinemaId
+          this.remoteMethod(cinid.data.cinemaName)
+        }
     if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
       this.weekDate = [
       new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
@@ -133,14 +143,14 @@ export default class Main extends ViewBase {
     }
   }
 
-  async remoteMethod(query: any) {
+  async remoteMethod(querys: any) {
     try {
-      if (query) {
+      if (querys) {
         this.loading = true
         const {
           data: { items }
         } = await movielist({
-          searchKey: query,
+          query: querys,
         })
         this.movieList = items || []
       }
@@ -153,13 +163,16 @@ export default class Main extends ViewBase {
 
 
   seachs() {
+    if (this.query.cinemaId == undefined) {
+      return
+    }
     this.seach()
   }
 
-  reloadSearch() {
-    this.seach()
-    this.seachchg()
-  }
+  // reloadSearch() {
+  //   this.seach()
+  //   this.seachchg()
+  // }
 
  // 本周
   seachchg() {
@@ -175,14 +188,14 @@ export default class Main extends ViewBase {
       const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
-      this.seach()
+      // this.seach()
     } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
       this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
       const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
       const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
-      this.seach()
+      // this.seach()
     }
   }
   // 上周
@@ -301,7 +314,7 @@ export default class Main extends ViewBase {
       this.$Message.success({
         content: `修改成功`,
       })
-      this.reloadSearch()
+      this.seach()
     } catch (ex) {
       this.handleError(ex)
     }
@@ -316,14 +329,14 @@ export default class Main extends ViewBase {
         this.$Message.success({
           content: `更改成功`,
         })
-        this.reloadSearch()
+        this.seach()
       } else if (status == 2) {
         await confirm('您确定修改当前状态信息吗？')
         await oneout (id, {orderId : orderid})
         this.$Message.success({
           content: `更改成功`,
         })
-        this.reloadSearch()
+        this.seach()
       }
     } catch (ex) {
     }
@@ -334,18 +347,14 @@ export default class Main extends ViewBase {
       // 影院列表
       // const movieList = await movielist()
       // this.movieList = movieList.data.items
-      if (this.asd == true) {
-        // 获取默认影院id
-        const cinid = await getcinid()
-        if (cinid.data.cinemaId == 0) {
-          info('当前用户没有关联影院')
-          this.query.cinemaId = cinid.data.cinemaId
-        } else {
-          this.query.cinemaId = cinid.data.cinemaId
-          this.remoteMethod(cinid.data.cinemaName)
-        }
-      }
+      // if (this.asd == true) {
+      //   // 获取默认影院id
 
+      // }
+      if (this.query.cinemaId == undefined) {
+        info('请选择影院')
+        return
+      }
       // 获取上刊列表
       const datalist = await queryList(this.query)
       this.itemlist = datalist.data.items
@@ -357,19 +366,26 @@ export default class Main extends ViewBase {
     }
   }
 
-  @Watch('query', {deep: true})
-  watchQuery() {
+  // @Watch('query', {deep: true})
+  // watchQuery() {
+  //   // if (this.asd == false) {
+  //   if (this.query.cinemaId == null) {
+  //     return
+  //   }
+  //   this.seach()
+  //   // }
+  // }
+
+  @Watch('weekDate', {deep: true})
+  watchWeekDate() {
+    const aa = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+    const bb = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+    this.query.beginDate =  aa[0] + aa[1] + aa[2]
+    this.query.endDate =  bb[0] + bb[1] + bb[2]
     // if (this.asd == false) {
       this.seach()
     // }
   }
-
-  // @Watch('weekDate', {deep: true})
-  // watchWeekDate() {
-  //   // if (this.asd == false) {
-  //     this.seach()
-  //   // }
-  // }
 
 }
 </script>

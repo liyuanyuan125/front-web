@@ -8,7 +8,7 @@
 <script lang='ts'>
 import {Component, Prop, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { popPartners } from '@/api/effectReport'
+import { searchPartners } from '@/api/effectReport'
 @Component
 export default class Main extends ViewBase {
   // 双向绑定 v-model
@@ -23,7 +23,7 @@ export default class Main extends ViewBase {
 
   async popPartners() {
     try {
-      const { data, data: {items} } = await popPartners({
+      const { data, data: {items} } = await searchPartners({
         pageSize: 99999,
         pageIndex: 1
       })

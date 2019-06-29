@@ -135,6 +135,7 @@ const timeFormat = 'YYYYMMDD'
 // #AD686C 正面
 // #57B4C9 负面
 const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
+
 @Component({
   components: {
     PieNest,
@@ -284,13 +285,6 @@ export default class Temporary extends ViewBase {
     dataList: [
       [
         {
-          name: '中性',
-          type: 'bar',
-          stack: 'totalCount',
-          barMaxWidth: '20',
-          data: []
-        },
-        {
           name: '正面',
           type: 'bar',
           stack: 'totalCount',
@@ -299,6 +293,13 @@ export default class Temporary extends ViewBase {
         },
         {
           name: '负面',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
+        },
+        {
+          name: '中性',
           type: 'bar',
           stack: 'totalCount',
           barMaxWidth: '20',
@@ -307,21 +308,24 @@ export default class Temporary extends ViewBase {
       ],
       [
         {
-          name: '中性',
-          type: 'bar',
-          stack: 'totalCount',
-          data: []
-        },
-        {
           name: '正面',
           type: 'bar',
           stack: 'totalCount',
+          barMaxWidth: '20',
           data: []
         },
         {
           name: '负面',
           type: 'bar',
           stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
+        },
+        {
+          name: '中性',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
           data: []
         }
       ]

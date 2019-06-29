@@ -176,7 +176,7 @@ export default class CooperationFilmList extends ViewBase {
   form: any = {
     movieTypeCode: '',
     movieCategoryCode: '',
-    sortBy: '',
+    sortBy: 'wantSeeCount',
     pageIndex: 1,
     pageSize: 18,
     releaseStatus: 0
@@ -227,6 +227,14 @@ export default class CooperationFilmList extends ViewBase {
     // 排序选择
     sortBy: [
       {
+        key: 'wantSeeCount',
+        text: '想看人数'
+      },
+      {
+        key: 'commentsScore',
+        text: '口碑评分'
+      },
+      {
         key: '',
         text: '鲸娱指数'
       },
@@ -234,14 +242,6 @@ export default class CooperationFilmList extends ViewBase {
         key: 'hots',
         text: '实时热度'
       },
-      {
-        key: 'wantSeeCount',
-        text: '想看人数'
-      },
-      {
-        key: 'commentsScore',
-        text: '口碑评分'
-      }
     ]
   }
 
@@ -254,19 +254,19 @@ export default class CooperationFilmList extends ViewBase {
       ...this.form
     }
     if ( mockObj.releaseStatus !== 3 &&  mockObj.releaseStatus !== 0 ) {
-      mockObj.endDate = dayOffset(0)
+      mockObj.beginDate = dayOffset(0)
       switch ( mockObj.releaseStatus ) {
         case 4:
-          mockObj.beginDate = dayOffset(-30)
+          mockObj.endDate = dayOffset(+30)
           break
         case 5:
-          mockObj.beginDate = dayOffset(-90)
+          mockObj.endDate = dayOffset(+90)
           break
         case 6:
-          mockObj.beginDate = dayOffset(-120)
+          mockObj.endDate = dayOffset(+120)
           break
         default:
-          mockObj.beginDate = dayOffset(-365)
+          mockObj.endDate = dayOffset(+365)
       }
       mockObj.releaseStatus = ''
     }
@@ -280,27 +280,35 @@ export default class CooperationFilmList extends ViewBase {
           totalCount
         }
       } = await fetchList({ ...mockObj })
-      this.dataList = movies.map((it: any) => {
-        return {
-          movie_id: it.movie_id,
-          name_cn: it.name_cn,
-          release_date: it.release_date,
-          main_pic: it.main_pic,
-          release_status: it.release_status,
-          jy_index: it.jy_index,
-          want_see: it.want_see,
-          hots: it.hots,
-          comments_score: it.comments_score
+      if ( movies && movies.length > 0 ) {
+        this.dataList = movies.map((it: any) => {
+          return {
+            movie_id: it.movie_id,
+            name_cn: it.name_cn,
+            release_date: it.release_date,
+            main_pic: it.main_pic,
+            release_status: it.release_status,
+            jy_index: it.jy_index,
+            want_see: it.want_see,
+            hots: it.hots,
+            comments_score: it.comments_score
+          }
+        })
+        this.totalPages = totalCount
+        if ( this.dict.typeList.length === 1 ) {
+          const res = typeList.filter((it: any) => {
+            return it.controlStatus !== 0
+          })
+          this.dict.typeList.push( ...res )
         }
-      })
-      this.totalPages = totalCount
-      if ( this.dict.typeList.length === 1 ) {
-        this.dict.typeList.push( ...typeList )
+        if ( this.dict.categoryList.length === 1 ) {
+          const res = categoryList.filter((it: any) => {
+            return it.controlStatus !== 0
+          })
+          this.dict.categoryList.push( ...res )
+        }
+        that.done = true
       }
-      if ( this.dict.categoryList.length === 1 ) {
-        this.dict.categoryList.push( ...categoryList )
-      }
-      that.done = true
     } catch (ex) {
       this.handleError(ex)
     }
