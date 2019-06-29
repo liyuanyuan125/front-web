@@ -15,6 +15,12 @@
         <span>{{it.text}}</span>
       </Checkbox>
     </CheckboxGroup>
+    <div class="flex-box search-border-left" style="width: 500px">
+      <Input v-model="form.name" placeholder="请输入影片名称进行搜索"/>
+      <Button type="primary" class="bth-search" @click="searchList">
+        <Icon type="ios-search" size="22"/>
+      </Button>
+    </div>
     <div class="reject-cinema">
       <div class="flex-box search-input">
       </div>
@@ -91,6 +97,7 @@ export default class DlgEditCinema extends ViewBase {
   form: any = {
     pageIndex: 1,
     pageSize: 4,
+    name: '',
     types: [0]
   }
   idO: any = {}
@@ -148,32 +155,37 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
+  searchList() {
+    this.seach()
+  }
+
   async seach() {
     try {
       const { data: {
         items,
-        movieTypeList,
-        totalCount
-        } } = await searchcinema(clean({
+        typeList,
+        totalCount,
+        movies
+        } } = await moviefind(clean({
           ...this.form,
           types: this.form.types[0] == 0 ? '' : this.form.types.join(',')
         }))
-      this.data = items || []
-      this.total = totalCount
-      this.movieTypeList = movieTypeList || []
-
-      // this.data = (movies || []).map((it: any) => {
-      //   return {
-      //     ...it,
-      //     id: it.movie_id,
-      //     image: it.main_pic,
-      //     nameCn: it.name_cn,
-      //     releaseDate: it.release_date,
-      //     type: it.types
-      //   }
-      // })
+      // this.data = items || []
       // this.total = totalCount
-      // this.movieTypeList = typeList || []
+      // this.movieTypeList = movieTypeList || []
+
+      this.data = (movies || []).map((it: any) => {
+        return {
+          ...it,
+          id: it.movie_id,
+          image: it.main_pic,
+          nameCn: it.name_cn,
+          releaseDate: it.release_date,
+          type: it.types
+        }
+      })
+      this.total = totalCount
+      this.movieTypeList = typeList || []
       this.checkNum()
     } catch (ex) {
       this.handleError(ex)
@@ -200,18 +212,6 @@ export default class DlgEditCinema extends ViewBase {
     (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
     this.showDlg = false
   }
-
-  // async cinemaseach() {
-  //   try {
-  //     const {
-  //       data: {
-
-  //       }
-  //     } = await searchcinema(this.form)
-  //   } catch (ex) {
-  //     this.handleError(ex)
-  //   }
-  // }
 
   async open() {
     try {
@@ -503,5 +503,26 @@ export default class DlgEditCinema extends ViewBase {
 .film-no {
   text-align: center;
   padding-top: 50px;
+}
+/deep/ .search-border-left {
+  input {
+    border-right: none;
+  }
+}
+.bth-search {
+  border-radius: 0 5px 5px 0;
+  .button-style(#fff, #00202d);
+}
+/deep/ .ivu-input,
+/deep/ .ivu-input-wrapper {
+  background: rgba(255, 255, 255, 0.4);
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  border-radius: 5px;
+  &::placeholder {
+    font-size: 14px;
+    color: #00202d;
+  }
 }
 </style>

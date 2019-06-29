@@ -73,7 +73,6 @@ export default class Relevan extends ViewBase {
       })
       this.value.visible = false
       this.$emit('submitRelevance')
-      (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
     } catch (ex) {
       this.handleError(ex)
     }

@@ -3,7 +3,7 @@
     <div slot="beforeSide">
       <router-link :to="{ name: 'brand-home', params: { id } }">
         <h2 class="figure-name">{{name}}</h2>
-        <img :src="figure" class="figure-img">
+        <img :src="figure" class="figure-img" v-if="figure">
       </router-link>
     </div>
   </DetailLayout>
@@ -56,7 +56,7 @@ export default class Layout extends ViewBase {
 .figure-name {
   position: absolute;
   top: 16px;
-  color: #00202e;
+  color: #fff;
   font-size: 24px;
   font-weight: normal;
 }

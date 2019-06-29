@@ -178,7 +178,7 @@ export default class DlgEditCinema extends ViewBase {
       },
       {
         title: '',
-        minWidth: 60,
+        width: 126,
         align: 'left',
         slot: 'action',
         renderHeader: (hh: any, { row }: any) => {
@@ -349,7 +349,7 @@ export default class DlgEditCinema extends ViewBase {
     position: absolute;
     z-index: 999;
     bottom: 260px;
-    right: 30px;
+    right: 50px;
     background: #000;
     a {
       font-size: 16px;
