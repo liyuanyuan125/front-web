@@ -112,6 +112,10 @@ export default class DlgEditCinema extends ViewBase {
   checkObj: any = []
 
   formatDate(data: any) {
+    const years = data + ''
+    if (data && years.length == 4) {
+      return `${(data + '').slice(0, 4)}年`
+    }
     return data
       ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(
           data + ''
@@ -156,6 +160,7 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   searchList() {
+    this.form.pageIndex = 1
     this.seach()
   }
 
@@ -296,6 +301,7 @@ export default class DlgEditCinema extends ViewBase {
   @Watch('form.types', { deep: true })
   watchformTypes(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
+    this.form.pageIndex = 1
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.types = newValue
     })
@@ -406,8 +412,12 @@ export default class DlgEditCinema extends ViewBase {
       .film-title {
         font-size: 14px;
         height: 24px;
+        width: 146px;
         font-weight: 400;
         margin-left: 20px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
       .film-time {
         margin-left: 20px;

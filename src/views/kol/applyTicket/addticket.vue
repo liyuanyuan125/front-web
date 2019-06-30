@@ -15,8 +15,8 @@
            <Col v-if='this.$route.params.edit == "0" ' class='fa-m' :span='12'>发票总额：  <span style='font-size: 23px;'>￥<number :addNum='Number(this.list.totalTaxFee)' /></span></Col>
            <Col v-if='this.$route.params.key == "0" ' class='fa-m' :span='12'>发票总额：  <span style='font-size: 23px;'>￥<number :addNum='Number(this.money)' /></span></Col>
          </Row>
-         <Row style='margin-top: 10px;'>
-           <Col :span='4' style='margin-top: 5px;'>发票内容：<span class='bx'>*</span></Col>
+         <Row style='margin-top: 10px;'><span class='bx'>*</span>
+          <!--  <Col :span='4' style='margin-top: 5px;width: 100px；'>发票内容：</Col>
            <Col :span='6'>
              <Select v-model="query.itemCode" placeholder="发票内容" filterable
                 clearable class="component" >
@@ -25,25 +25,44 @@
                   <span>{{it.text}}</span>
                 </Option>
               </Select>
-           </Col>
+           </Col> -->
+           <FormItem label="发票内容" prop="itemCode">
+            <Select v-model="query.itemCode" placeholder="发票内容" filterable
+                clearable class="component" >
+                <Option v-for="it in faList" :key="it.key" :value="it.key"
+                  :label="it.text" class="flex-box">
+                  <span>{{it.text}}</span>
+                </Option>
+              </Select>
+          </FormItem>
          </Row>
-         <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'>发票类型<span class='bx'>*</span></Col>
+         <Row style='margin-top: 16px;'><span class='bx'>*</span>
+           <!-- <Col :span='4' style='margin-top: 5px;width: 100px；'>发票类型</Col>
            <Col :span='20'>
              <RadioGroup v-model="query.invoiceType" >
               <Radio v-for="it in faType"  :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
             </RadioGroup>
-           </Col>
+           </Col> -->
+           <FormItem label="发票类型" prop="invoiceType">
+            <RadioGroup v-model="query.invoiceType" >
+              <Radio v-for="it in faType"  :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
+            </RadioGroup>
+          </FormItem>
          </Row>
-         <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'>抬头类型<span class='bx'>*</span></Col>
+         <Row style='margin-top: 4px;'><span class='bx'>*</span>
+           <!-- <Col :span='4' style='margin-top: 5px;width: 100px；'>抬头类型</Col>
            <Col :span='20'>
              <RadioGroup v-model="query.customerType" >
               <Radio v-for="it in taiType"  :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
             </RadioGroup>
-           </Col>
+           </Col> -->
+           <FormItem label="抬头类型" prop="customerType">
+            <RadioGroup v-model="query.customerType" >
+              <Radio v-for="it in taiType"  :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
+            </RadioGroup>
+          </FormItem>
           </Row>
-          <Row style='margin-top: 15px;'><span class='bx'>*</span>
+          <Row style='margin-top: 19px;'><span class='bx'>*</span>
            <!-- <Col :span='4' style='margin-top: 5px;'>发票抬头
            </Col>
            <Col :span='20'>
@@ -53,7 +72,7 @@
             <Input v-model="query.name"></Input>
           </FormItem>
           </Row>
-          <Row style='margin-top: 15px;'><span class='bx'>*</span>
+          <Row style='margin-top: 27px;'><span class='bx'>*</span>
            <!-- <Col :span='4' style='margin-top: 5px;'>税号
            </Col>
            <Col :span='20'>
@@ -63,15 +82,20 @@
             <Input v-model="query.taxId"></Input>
           </FormItem>
           </Row>
-          <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'><span class='hui'>地址</span></Col>
+          <Row style='margin-top: 27px;'>
+           <!-- <Col :span='4' style='margin-top: 5px;'><span class='hui'>地址</span></Col>
            <Col :span='20'>
             <AreaSelect v-model="area" />
             <br><br>
             <Input  v-model="query.address" placeholder='请输入详细地址'></Input>
-           </Col>
+           </Col> -->
+           <FormItem label="地址" prop="address">
+            <AreaSelect v-model="area" />
+            <br><br>
+            <Input  v-model="query.address" placeholder='请输入详细地址'></Input>
+          </FormItem>
           </Row>
-          <Row style='margin-top: 15px;'>
+          <Row style='margin-top: 27px;'>
            <!-- <Col :span='4' style='margin-top: 5px;'><span class='hui'>电话</span></Col>
            <Col :span='20'>
             <InputNumber  v-model="query.telphone" placeholder=''></InputNumber >
@@ -80,7 +104,7 @@
             <InputNumber v-model="query.telphone"></InputNumber>
           </FormItem>
           </Row>
-          <Row style='margin-top: 15px;'>
+          <Row style='margin-top: 27px;'>
            <!-- <Col :span='4' style='margin-top: 5px;'><span class='hui'>开户行</span></Col>
            <Col :span='20'>
             <Input  v-model="query.accountBank" placeholder=''></Input>
@@ -89,7 +113,7 @@
             <Input v-model="query.accountBank"></Input>
           </FormItem>
           </Row>
-          <Row style='margin-top: 15px;'>
+          <Row style='margin-top: 27px;'>
           <!--  <Col :span='4' style='margin-top: 5px;'><span class='hui'>开户账号</span></Col>
            <Col :span='20'>
             <Input v-model="query.accountNumber" placeholder=''></Input>
@@ -98,7 +122,7 @@
             <Input v-model="query.accountNumber"></Input>
           </FormItem>
           </Row>
-          <Row style='margin-top: 15px;'>
+          <Row style='margin-top: 27px;'>
            <!-- <Col :span='4' style='margin-top: 5px;'><span class='hui'>备注说明</span></Col>
            <Col :span='20'>
             <Input  v-model="query.memo" placeholder=''></Input>
@@ -120,15 +144,20 @@
              </div>
            </Col>
          </Row>
-         <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'>邮寄地址<span class='bx'>*</span></Col>
+         <Row style='margin-top: 27px;'>
+           <!-- <Col :span='4' style='margin-top: 5px;'>邮寄地址<span class='bx'>*</span></Col>
            <Col :span='20'>
             <AreaSelect v-model="areas" />
             <br><br>
             <Input  v-model="query.addressDetail" placeholder='请输入详细地址'></Input>
-           </Col>
+           </Col> -->
+           <FormItem label="邮寄地址" prop="addressDetail">
+            <AreaSelect v-model="areas" />
+            <br><br>
+            <Input  v-model="query.addressDetail" placeholder='请输入详细地址'></Input>
+          </FormItem>
           </Row>
-          <Row style='margin-top: 15px;'>
+          <Row style='margin-top: 27px;'>
            <!-- <Col :span='4' style='margin-top: 5px;'>联系人<span class='bx'>*</span></Col>
            <Col :span='20'>
             <Input  v-model="query.contact" placeholder='为方便寄出请输入全名'></Input>
@@ -137,7 +166,7 @@
             <Input v-model="query.contact"></Input>
           </FormItem>
           </Row>
-          <Row style='margin-top: 15px;'>
+          <Row style='margin-top: 27px;'>
            <!-- <Col :span='4' style='margin-top: 5px;'>联系电话<span class='bx'>*</span></Col>
            <Col :span='20'>
             <InputNumber v-model="query.contactTelphone" placeholder='请输入能正常联系的电话'></InputNumber>
@@ -146,11 +175,14 @@
             <InputNumber v-model="query.contactTelphone"></InputNumber>
           </FormItem>
           </Row>
-          <Row style='margin-top: 15px;'>
-           <Col :span='4' style='margin-top: 5px;'><span class='hui'>留言</span></Col>
+          <Row style='margin-top: 27px;'>
+           <!-- <Col :span='4' style='margin-top: 5px;'><span class='hui'>留言</span></Col>
            <Col :span='20'>
             <Input type='textarea' style='max-height: 200px;' v-model="query.comment" placeholder='如有特殊情况请说明'></Input>
-           </Col>
+           </Col> -->
+           <FormItem label="留言" prop="comment">
+            <Input type='textarea' style='max-height: 200px;' v-model="query.comment" placeholder='如有特殊情况请说明'></Input>
+          </FormItem>
           </Row>
        </Col>
      </Row>
@@ -241,6 +273,9 @@ export default class Main extends ViewBase {
 
   get rule() {
     return {
+      itemCode: [
+        { required: true, message: '请选择发票内容', trigger: 'blur' },
+      ],
       name: [
         { required: true, message: '请输入发票抬头', trigger: 'blur' },
       ],
@@ -264,6 +299,15 @@ export default class Main extends ViewBase {
       ],
       contactTelphone: [
         { required: true, message: '请输入可以正常联系的电话', trigger: 'blur' },
+      ],
+      comment: [
+        { required: true, message: '请输入留言', trigger: 'blur' },
+      ],
+      address: [
+        { required: true, message: '请输入地址', trigger: 'blur' },
+      ],
+      addressDetail: [
+        { required: true, message: '请输入详细地址', trigger: 'blur' },
       ]
     }
   }
@@ -388,7 +432,7 @@ export default class Main extends ViewBase {
 }
 .box {
   width: 48%;
-  height: 680px;
+  height: 782px;
   float: left;
   background: rgba(255, 255, 255, 0.4);
   border: 1px solid #eee;
@@ -409,6 +453,7 @@ export default class Main extends ViewBase {
   color: #d76d72;
   position: absolute;
   left: -7px;
+  top: 11px;
 }
 .hui {
   color: rgba(0, 32, 45, 0.5);
@@ -460,9 +505,6 @@ export default class Main extends ViewBase {
   background: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 1);
-}
-/deep/ .ivu-select-input {
-  margin-top: 3px;
 }
 /deep/ .ivu-input {
   border-radius: 5px;
