@@ -37,7 +37,7 @@
               </Col>
               <Col :span="12">
               <div class='chart-wp' style=''>
-                <BarXCategory :initDone="chart2.initDone" :title='chart2.title' :dict1="chart2.dict1" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" />
+                <BarXCategory :initDone="chart2.initDone" :noData="chart2.noData" :title='chart2.title' :dict1="chart2.dict1" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" />
               </div>
               </Col>
             </Row>
@@ -146,6 +146,7 @@ export default class Temporary extends ViewBase {
     dict3: [],
     currentTypeIndex: 0,
     initDone: false,
+    noData: false,
     dataList: [],
     color: ['#00B6CC']
   }
@@ -288,6 +289,9 @@ export default class Temporary extends ViewBase {
           this.chart2.dataList[this.chart2.currentTypeIndex].data.push(v)
         })
         this.chart2.initDone = true
+      } else {
+        this.chart2.initDone = true
+        this.chart2.noData = true
       }
 
       if ( cityLevels && cityLevels.length > 0 ) {
