@@ -44,7 +44,7 @@
             <Row type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="12">
               <div class='chart-wp borderRadius' style='margin-right:10px;'>
-                <BarXCategory :initDone="chart3.initDone" :title='chart3.title' :dict1="chart3.dict1" :dict3="chart3.dict3" :color="chart3.color" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" />
+                <BarXCategory :initDone="chart3.initDone" :noData="chart3.noData" :title='chart3.title' :dict1="chart3.dict1" :dict3="chart3.dict3" :color="chart3.color" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" />
               </div>
               </Col>
               <Col :span="12">
@@ -156,6 +156,7 @@ export default class Temporary extends ViewBase {
     dict3: [],
     currentTypeIndex: 0,
     initDone: false,
+    noData: false,
     dataList: [],
     color: ['#D0BF6B']
   }
@@ -247,7 +248,8 @@ export default class Temporary extends ViewBase {
           genderCodeList
         }
       } = await fans(id)
-      if (genders && genders.length > 0) {
+
+      if ( genders && genders.length > 0 ) {
         genders.forEach((it: any) => {
           if (getName(it.gender, genderCodeList) === '男') {
             this.chart1.dataList[0].push({
@@ -287,7 +289,8 @@ export default class Temporary extends ViewBase {
         })
         this.chart2.initDone = true
       }
-      if (cityLevels && cityLevels.length > 0) {
+
+      if ( cityLevels && cityLevels.length > 0 ) {
         this.chart3.dataList[this.chart3.currentTypeIndex] = {
           type: 'bar',
           barMaxWidth: '20',
@@ -300,7 +303,11 @@ export default class Temporary extends ViewBase {
           this.chart3.dataList[this.chart3.currentTypeIndex].data.push(v)
         })
         this.chart3.initDone = true
+      } else {
+        this.chart3.initDone = true
+        this.chart3.noData = true
       }
+
       if (shoppingTypes && shoppingTypes.length > 0) {
         this.chart4.dataList[this.chart4.currentTypeIndex] = shoppingTypes.map(
           (it: any) => {
@@ -312,6 +319,7 @@ export default class Temporary extends ViewBase {
         )
         this.chart4.initDone = true
       }
+
       if (movieTypes && movieTypes.length > 0) {
         this.chart5.dataList[this.chart5.currentTypeIndex] = movieTypes.map(
           (it: any) => {
@@ -323,6 +331,7 @@ export default class Temporary extends ViewBase {
         )
         this.chart5.initDone = true
       }
+
       if (educations && educations.length > 0) {
         this.chart6.dataList[this.chart6.currentTypeIndex] = educations.map(
           (it: any) => {
@@ -334,6 +343,7 @@ export default class Temporary extends ViewBase {
         )
         this.chart6.initDone = true
       }
+
       if (jobs && jobs.length > 0) {
         this.chart7.dataList[this.chart7.currentTypeIndex] = jobs.map((it: any) => {
           return {

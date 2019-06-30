@@ -1,6 +1,7 @@
 import { get, post, put } from '@/fn/ajax'
 import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
 
+
 /**
  * 日期区间描述
  * @param data
@@ -213,8 +214,37 @@ export async function film(id: any) {
   return res
 }
 
+/**
+ * fans
+ * 数据排序。待接口修复之后移除。演示临时解决方案 nxd 20190630
+ * @param id id
+ * @description http://yapi.aiads-dev.com/project/161/interface/api/4751
+ */
 export async function fans(id: string = '') {
   const res = await get(`/movie/${id}`)
+  const { data: { cityLevels, ages } } = res
+  if ( cityLevels && cityLevels.length > 0 ) {
+    const num: any = {
+      一: 1,
+      二: 2,
+      三: 3,
+      四: 4
+    }
+    res.data.cityLevels = cityLevels.sort((a: any, b: any) => {
+      return num[a.k.charAt(0)] - num[b.k.charAt(0)]
+    })
+  }
+  if ( ages && ages.length > 0 ) {
+    const num: any = {
+      0: 1,
+      2: 2,
+      3: 3,
+      4: 4
+    }
+    res.data.ages = ages.sort((a: any, b: any) => {
+      return num[a.k.charAt(0)] - num[b.k.charAt(0)]
+    })
+  }
   return res
   return await mockGet({}, {
     id: 55229,
@@ -1227,6 +1257,10 @@ export async function fans(id: string = '') {
     ],
     ages: [
       {
+        v: '4.93',
+        k: '35-39'
+      },
+      {
         v: '35.22',
         k: '20-24'
       },
@@ -1245,28 +1279,24 @@ export async function fans(id: string = '') {
       {
         v: '7.80',
         k: '30-34'
-      },
-      {
-        v: '4.93',
-        k: '35-39'
       }
     ],
     cityLevels: [
       {
-        v: '40.37',
-        k: '二线城市'
+        v: '14.64',
+        k: '一线城市'
       },
       {
-        v: '25.25',
-        k: '四线城市'
+        v: '40.37',
+        k: '二线城市'
       },
       {
         v: '19.73',
         k: '三线城市'
       },
       {
-        v: '14.64',
-        k: '一线城市'
+        v: '25.25',
+        k: '四线城市'
       }
     ],
     shoppingTypes: [
