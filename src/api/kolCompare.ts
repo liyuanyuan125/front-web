@@ -3191,6 +3191,33 @@ export async function compare(query: any) {
         text: '50+以上',
         key: '50+'
       }
+    ],
+    kols: [
+      {
+        id: 3898,
+        name: '办公室小野',
+        photo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bk5g6gljqctg008ubivg.png'
+      },
+      {
+        id: 5173,
+        name: '大胃mini',
+        photo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bk5g7rtjqctg008ubj00.png'
+      },
+      {
+        id: 5178,
+        name: '大胃王朵一',
+        photo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bk5g8kdjqctg008ubj0g.png'
+      },
+      {
+        id: 5203,
+        name: '大连老湿王博文',
+        photo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bk5g98ljqctg008ubj10.png'
+      },
+      {
+        id: 5937,
+        name: '密子君',
+        photo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bk5ga7ljqctg008ubj1g.png'
+      }
     ]
   })
 }

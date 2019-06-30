@@ -2,7 +2,7 @@
   <div class="compare-wp">
     <div class="compare-card">
       <div class="inner-box">
-        <div class="compare-list-item central">
+        <div class="compare-list-item central" v-if=" kol.id ">
           <div class="avatar-wp">
             <img :src="kol.avatar" />
             <a class="remove-link"
@@ -16,7 +16,8 @@
             <i :style="{backgroundColor: kol.color}"></i> <span>{{kol.nickName}}</span>
           </div>
         </div>
-        <ul >
+        <TinyLoading v-else />
+        <ul>
           <li v-for="(item, index) in compareList"
               :key="item.id">
             <div class="compare-list-item">
@@ -55,7 +56,9 @@
                           :color="fansData.color"
                           :dataList="fansData.dataList"
                           :fn="channelChangeCb"
+                          :toolTip="tooltipStyles({trigger:  'item', formatter:'{a}<br/>{b}<br/>{c}'})"
                           :height="255"
+                          textColor="#ffffff"
                           :currentTypeIndex="fansData.currentTypeIndex"
                           @typeChange='typeChangeHander' />
         <TotalPane :totalList="totalList" :index="totalIndex"></TotalPane>
@@ -115,6 +118,8 @@ import TotalPane from './components/total.vue'
 import SexPane from './components/sex.vue'
 import BarPane from './components/barPane.vue'
 import SelectModal from './dlg.vue'
+import TinyLoading from '@/components/TinyLoading.vue'
+import { tooltipStyles } from '@/util/echarts'
 
 @Component({
   components: {
@@ -124,12 +129,15 @@ import SelectModal from './dlg.vue'
     SexPane,
     BarCategoryStack,
     BarPane,
-    SelectModal
+    SelectModal,
+    TinyLoading
   }
 })
 export default class KolCompare extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
   @Prop({ type: Array, default: () => [] }) compareIds!: any[]
+
+  tooltipStyles = tooltipStyles
 
   columns = [
     { title: 'KOL名称', key: 'name', align: 'center' },
@@ -227,6 +235,22 @@ export default class KolCompare extends ViewBase {
       }
     ],
     channelList: [
+      // {
+      //   text: '微博',
+      //   key: 'weibo'
+      // },
+      // {
+      //   text: '头条',
+      //   key: 'toutiao'
+      // },
+      // {
+      //   text: '抖音',
+      //   key: 'douyin'
+      // },
+      // {
+      //   text: '微信',
+      //   key: 'wechat'
+      // },
       {
         id: 0,
         name: '微博'
@@ -262,8 +286,8 @@ export default class KolCompare extends ViewBase {
 
   // 对比目标
   kol: any = {
+    color: '#da6c70',
     // id: 2061,
-    // color: '#DA6C70',
     // nickName: 'papi',
     // avatar: 'http://sina.lt/gdYZ'
   }
@@ -289,6 +313,7 @@ export default class KolCompare extends ViewBase {
       //   key: 0,
       //   text: 'papi'
       // },
+      // nxd
     ],
     currentTypeIndex: 0,
     initDone: false,
@@ -319,7 +344,7 @@ export default class KolCompare extends ViewBase {
         { data: 312768, date: '小红书', key: 3 }
       ]
     ],
-    color: [this.kol.color, ...this.compareColors]
+    color: [this.kol.color, ...this.compareColors],
   }
 
   sexData: any[] = [
@@ -455,7 +480,6 @@ export default class KolCompare extends ViewBase {
         value: '11.1 万'
       }
     ]
-
   }
 
   async fecthData() {
@@ -466,18 +490,44 @@ export default class KolCompare extends ViewBase {
     try {
       const {
         data: {
+          kols,
           items,
           brands,
           brandCategoryList,
           ageCategoryList
         }
       } = await compare(query)
-      this.fansData.dict2 = ageCategoryList.map((it: any) => {
+
+      // 组装接口联调中 nxd 20190630
+      this.fansData.dict2.push({
+        key: 0,
+        text: kols[0].name
+      })
+
+      this.kol = {
+        id: kols[0].id,
+        color: '#da6c70',
+        nickName: kols[0].name,
+        avatar: kols[0].photo
+      }
+
+      this.compareList = kols.filter((it: any, index: number) => {
+        return index > 0
+      }).map((it: any) => {
         return {
-          text: it.text,
-          key: it.key
+          id: it.id,
+          nickName: it.name,
+          avatar: it.photo
         }
       })
+
+      this.compareList.forEach((it: any, index: number) => {
+        this.fansData.dict2.push({
+          key: index + 1,
+          text: it.nickName
+        })
+      })
+
     } catch (ex) {
       this.handleError(ex)
     }
