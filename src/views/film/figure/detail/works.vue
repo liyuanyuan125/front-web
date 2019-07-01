@@ -304,7 +304,9 @@ h2, h3, h4 {
       }
       .item-list {
         position: relative;
-        width: 180px;
+        width: 160px;
+        height: 240px;
+        overflow: hidden;
         margin: 0 auto;
         span {
           position: absolute;
@@ -319,7 +321,7 @@ h2, h3, h4 {
         }
       }
       .img-top {
-        width: 180px;
+        width: 160px;
       }
       .title-year {
         font-size: 16px;

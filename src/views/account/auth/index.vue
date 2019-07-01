@@ -19,7 +19,7 @@
     </Row>
     <div class="list-box">
       <div class="list-table">
-        <Table ref="selection" stripe :loading="tableLoading"  :columns="columns4" :data="authDate">
+        <Table ref="selection" stripe  :columns="columns4" :data="authDate">
           <template slot="modifyTime" slot-scope="{row, index}">
             <span>{{formatTimes(row.modifyTime)}}</span>
           </template>
@@ -229,7 +229,7 @@ export default class Main extends ViewBase {
   }
 }
 // /deep/ .ivu-table-wrapper > .ivu-spin-fix {
-//   background: rgba(0, 0, 0, 0);
+//   background: #204350;
 //   border: none;
 // }
 /deep/ .ivu-input-wrapper,
@@ -245,14 +245,14 @@ export default class Main extends ViewBase {
   }
 }
 .list-box {
-  background: rgba(0, 32, 45, .8);
+  background: #204350;
   margin: 0 20px;
   border-radius: 5px;
   padding-bottom: 40px;
 }
 .list-table {
   position: relative;
-  background: rgba(0, 0, 0, 0);
+  background: #204350;
   border-radius: 5px;
   &::before {
     content: '';
@@ -261,7 +261,7 @@ export default class Main extends ViewBase {
     right: 0;
     height: 61px;
     border-radius: 5px 5px 0 0;
-    background: rgba(0, 32, 45, 0.3);
+    background: #204350;
   }
   /deep/ .ivu-table-header {
     position: relative;
@@ -274,9 +274,10 @@ export default class Main extends ViewBase {
   border-radius: 5px;
   min-height: 280px;
   position: relative;
+  margin: 20px 0;
   /deep/ .ivu-table-header th {
     height: 60px;
-    background: rgba(0, 32, 45, 0.3);
+    background: rgba(0, 32, 45, 0.8);
     color: #fff;
     line-height: 60px;
     span {
@@ -284,29 +285,29 @@ export default class Main extends ViewBase {
     }
   }
   /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
-    background: rgba(0, 0, 0, 0);
+    background: #204350;
   }
   /deep/ .ivu-table {
-    background: rgba(0, 0, 0, 0);
+    background: #204350;
   }
   /deep/ .ivu-table-row {
-    background: rgba(0, 0, 0, 0);
-    /deep/ td {
+    background: #204350;
+    td {
       color: #fff;
-      background: rgba(0, 0, 0, 0);
+      background: #204350;
       a {
         color: #4fa6bb;
       }
     }
   }
   /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
-    background: rgba(0, 0, 0, 0);
+    background: #204350;
   }
   // /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
   //   background: rgba(255, 255, 255, 0);
   // }
   /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
-    background: rgba(0, 0, 0, 0);
+    background: #204350;
   }
   /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
     span {
@@ -319,7 +320,7 @@ export default class Main extends ViewBase {
     line-height: 200px;
     /deep/ td {
       color: #fff;
-      background: rgba(0, 0, 0, 0);
+      background: #204350;
     }
   }
 }

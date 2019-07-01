@@ -4,8 +4,8 @@
       <Row>
         <Col span="14" offset="3" class="adver-name select-adv-type">
           <FormItem :show-message="!setadver" :label-width="210" label="广告计划名称:">
-            <Input v-if="!setadver" :disabled="true" style="width: 380px;border-radius: 5px"  v-model="form.name" placeholder=""></Input>
-            <span class="jia-input" v-else>{{pername}}</span>
+            <Input v-if="!setadver" style="width: 380px;border-radius: 5px"  v-model="form.name" placeholder=""></Input>
+            <Input style="width: 380px;border-radius: 5px" v-model="pername" v-else></Input>
           </FormItem>
         </Col>
       </Row>
@@ -280,6 +280,15 @@ export default class Promotion extends ViewBase {
     try {
       const volid = await (this.$refs[dataform] as any).validate()
       if (volid) {
+        if ( this.setadver ) {
+          if (this.pername.length == 0) {
+            info('请输入广告计划名称')
+          }
+        } else {
+          if (this.form.name.length == 0) {
+            info('请输入广告计划名称')
+          }
+        }
         const data = await createdDraft(clean({
           ...this.form,
           name: this.setadver ? this.pername : this.form.name,

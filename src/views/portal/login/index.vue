@@ -1,15 +1,13 @@
 <template>
   <div class="login-home">
     <content class="content">
-      <img src="../assets/logo.png" class="login-logo"/>
+      <img src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcpcgljqctg008ubl7g.png" class="login-logo"/>
       <p class="login-title">全网精准娱乐营销平台</p>
-      <Button type="primary"  class="login-but">
+      <Button type="primary" :to="{name: 'tologin'}"  class="login-but">登 录 / 注 册</Button>
+      <!-- <Button type="primary"  class="login-but">
         <router-link tag="span" to="tologin">登 录</router-link> / <router-link tag="span" to="register">注 册</router-link>
-      </Button>
+      </Button> -->
     </content>
-    <!-- <div class="login-whale">
-      <img src="../assets/whale.png" />
-    </div> -->
   </div>
 </template>
 
