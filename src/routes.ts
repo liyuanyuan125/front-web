@@ -480,6 +480,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'financial-manage.info',
       authAction: 'viewList',
+      title() {
+        return '更多充值记录'
+      }
     }
   },
 

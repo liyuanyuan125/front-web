@@ -136,22 +136,22 @@
               <div :class="'border-bottom' + tag"></div>
             </div>
             <div class="cineme-input" v-if="tag == 1">
-              <Input v-model="name" placeholder="影院名称" style="width: 275px">
+              <Input @on-enter="seach" v-model="name" placeholder="影院名称" style="width: 275px">
                   <Icon type="ios-search" @click="seach" slot="suffix" />
               </Input>
             </div>
             <div class="cineme-input" v-if="tag == 2">
-              <Input v-model="name" placeholder="院线名称" style="width: 275px">
+              <Input @on-enter="seach" v-model="name" placeholder="院线名称" style="width: 275px">
                   <Icon type="ios-search" @click="seach" slot="suffix" />
               </Input>
             </div>
             <div class="cineme-input" v-if="tag == 3">
-              <Input v-model="name" placeholder="城市名称" style="width: 275px">
+              <Input @on-enter="seach" v-model="name" placeholder="城市名称" style="width: 275px">
                   <Icon type="ios-search" @click="seach" slot="suffix" />
               </Input>
             </div>
             <div class="cineme-input" v-if="tag == 4">
-              <Input v-model="name" placeholder="省份名称" style="width: 275px">
+              <Input @on-enter="seach" v-model="name" placeholder="省份名称" style="width: 275px">
                   <Icon type="ios-search" @click="seach" slot="suffix" />
               </Input>
             </div>
@@ -517,11 +517,13 @@ export default class App extends ViewBase {
   // 每页数
   sizeChangeHandle(val: any) {
     this.pageIndex = val
+    this.seach()
   }
 
   // 当前页
   currentChangeHandle(val: any) {
     this.pageSize = val
+    this.seach()
   }
 
   citys(val: any) {

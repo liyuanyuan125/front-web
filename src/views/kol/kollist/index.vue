@@ -931,6 +931,7 @@ export default class Main extends ViewBase {
     position: relative;
     background: #d5e7f2;
     th {
+      height: 61px;
       background: #d5e7f2;
     }
   }
@@ -951,13 +952,13 @@ export default class Main extends ViewBase {
     }
   }
   /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
   }
   /deep/ .ivu-table {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
   }
   /deep/ .ivu-table-row {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
     /deep/ td {
       background: rgba(0, 0, 0, 0);
     }
@@ -966,7 +967,7 @@ export default class Main extends ViewBase {
     color: #001f2c;
   }
   /deep/ .ivu-table-tip td {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
     padding-top: 60px;
   }
   /deep/ .ivu-table-cell {
