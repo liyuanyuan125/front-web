@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <Form label-position="left" :label-width="100">
@@ -47,6 +46,7 @@
               <Col :span="12">
                 <div class='chart-wp' style='margin-right:10px'>
                   <PieNest :initDone="chart1.initDone"
+                  :noData="chart1.noData"
                          :title='chart1.title'
                          :dict1="chart1.dict1"
                          :dict2="chart1.dict2"
@@ -59,6 +59,7 @@
               <Col :span="12">
                 <div class='chart-wp'>
                   <BarxCategoryStack :initDone="chart2.initDone"
+                  :noData="chart2.noData"
                                   :title='chart2.title'
                                   :dict1="chart2.dict1"
                                   :dict2="chart2.dict2"
@@ -263,6 +264,7 @@ export default class Temporary extends ViewBase {
     dict2: this.dict.emotion,
     currentTypeIndex: 0,
     initDone: false,
+    noData: false,
     dataList: [],
     color: colors
   }
@@ -282,6 +284,7 @@ export default class Temporary extends ViewBase {
     xAxis: [],
     currentTypeIndex: 0,
     initDone: false,
+    noData: false,
     dataList: [
       [
         {
@@ -443,7 +446,7 @@ export default class Temporary extends ViewBase {
           items,
         }
       } = await comment({ ...mockObj }, id)
-      if (rate != null) {
+      if ( rate && rate.neutral && rate.passive && rate.positive ) {
         for ( const k in rate ) {
           if ( rate[k] ) {
             const index = findIndex(this.dict.emotion, (it: any) => {
@@ -455,8 +458,10 @@ export default class Temporary extends ViewBase {
             })
           }
         }
+        this.chart1.initDone = true
       }
-      if (items != null) {
+
+      if ( items && items.length > 0 ) {
         items.forEach((item: any, index: number) => {
           //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
           // trend 新增 index:0 | count 累计 index:1
@@ -469,27 +474,32 @@ export default class Temporary extends ViewBase {
           that.chart2.dataList[1][1].data.push(item.passive.count)
           that.chart2.dataList[1][2].data.push(item.neutral.count)
         })
+        that.chart2.initDone = true
+      } else {
+        this.chart2.initDone = true
+        this.chart2.noData = true
       }
-      if (keyWords !== null ) {
-        keyWords[this.form.dayRangesKey].positive.forEach((item: any) => {
-          that.chart3.dataList[0].push({
-            name: item,
-            value: Math.floor(Math.random() * 100 + 1)
+
+      if ( keyWords && keyWords[this.form.dayRangesKey] ) {
+        if ( keyWords[this.form.dayRangesKey].positive ) {
+          keyWords[this.form.dayRangesKey].positive.forEach((item: any) => {
+            that.chart3.dataList[0].push({
+              name: item,
+              value: Math.floor(Math.random() * 100 + 1)
+            })
           })
-        })
-        keyWords[this.form.dayRangesKey].negative.forEach((item: any) => {
-          that.chart4.dataList[0].push({
-            name: item,
-            value: Math.floor(Math.random() * 100 + 1)
+          that.chart3.initDone = true
+        }
+        if ( keyWords[this.form.dayRangesKey].negative ) {
+          keyWords[this.form.dayRangesKey].negative.forEach((item: any) => {
+            that.chart4.dataList[0].push({
+              name: item,
+              value: Math.floor(Math.random() * 100 + 1)
+            })
           })
-        })
-        that.chart3.initDone = true
-        that.chart4.initDone = true
-        // that.chart3.dataList[0].forEach((item: any) => {
-        // })
+          that.chart4.initDone = true
+        }
       }
-      that.chart1.initDone = true
-      that.chart2.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
