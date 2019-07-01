@@ -93,7 +93,7 @@
             <dl style="margin-bottom: 15px">
               <dd>受众年龄：</dd>
               <dt v-if="it.ages && it.ages.length > 0">
-                <span v-for="(item, index) in it.ages" :key="item.key">{{ageTypeMap(item.key)}} {{item.text || '-'}}%
+                <span v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}} {{item.text}}%
                   <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
                 </span>
               </dt>
@@ -519,7 +519,7 @@ export default class App extends ViewBase {
         const names = (it.ageCodes || []).map((items: any, ins: number) => {
           return {
             key: items,
-            text: it.ageValues[ins]
+            text: (it.ageValues) ? it.ageValues[ins] : '-'
           }
         })
         return {
