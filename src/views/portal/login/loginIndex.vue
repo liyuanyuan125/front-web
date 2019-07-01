@@ -11,7 +11,7 @@
             @submit.native.prevent="submit" novalidate>
             <FormItem prop="email" :error="emailError">
               <Input type="email" v-model="form.email" placeholder="请输入邮箱">
-                <i class="iconfont icon-ren" slot="prefix" />
+                <i class="iconfont icon-youxiang" slot="prefix" />
               </Input>
             </FormItem>
             <FormItem prop="password" :error="passwordError">
