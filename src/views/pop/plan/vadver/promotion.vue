@@ -232,11 +232,11 @@ export default class Promotion extends ViewBase {
   async init() {
     (this.$Spin as any).show()
     try {
-      const { data } = await advertising( {
+      const { data } = await advertising( clean({
         pageIndex: 1,
         pageSize: 200000,
-        status: 4
-      } )
+        status: this.setadver ? '' : 4
+      }) )
       this.adverList = data.items || []
       this.seach()
     } catch (ex) {
@@ -286,10 +286,12 @@ export default class Promotion extends ViewBase {
         if ( this.setadver ) {
           if (this.pername.length == 0) {
             info('请输入广告计划名称')
+            return
           }
         } else {
           if (this.form.name.length == 0) {
             info('请输入广告计划名称')
+            return
           }
         }
         const data = await createdDraft(clean({
@@ -371,6 +373,7 @@ export default class Promotion extends ViewBase {
 
   @Watch('setadver')
   watchSetadver(val: any) {
+    this.init()
     if (val) {
       this.form.videoId = 0
     }
