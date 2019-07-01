@@ -16,7 +16,7 @@ const store = new Vuex.Store({
     siderMenuActiveMap: {
     } as MapType<string | null>,
 
-    // 默认头像
+    /** 默认头像 */
     defaultAvatar: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcq1fljqctg008ubl80.jpg'
   },
 
