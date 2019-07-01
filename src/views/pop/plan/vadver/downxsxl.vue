@@ -8,7 +8,7 @@ import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { xlsl } from './excl'
 import { exportId } from '@/api/popPlan.ts'
-import { chunk, flatten } from 'lodash'
+import { chunk, flatten, uniqBy, findLastIndex } from 'lodash'
 
 @Component
 export default class Dates extends ViewBase {
@@ -40,9 +40,13 @@ export default class Dates extends ViewBase {
   async exportData() {
     try {
       const { data } = await exportId(this.id)
+      let indexs = 0
       this.tableDate1 = (data.planCinemas.map((it: any, index: number) => {
+        if (it.num != -1) {
+          indexs += 1
+        }
         return [
-          index,
+          it.num == -1 ? '小计' : indexs,
           it.provinceNname || '',
           it.cityName  || '',
           it.cinemaName  || '',
@@ -52,30 +56,6 @@ export default class Dates extends ViewBase {
           it.address  || ''
         ]
       }))
-      const numsarray = chunk(this.tableDate1, 3)
-      const table = numsarray.map((it: any, index: any) => {
-        let nums = 0
-        let peoplo = 0
-        it.forEach((item: any) => {
-          nums += item[5]
-          peoplo += item[6]
-        })
-        const msg: any = [
-          '小计',
-          '',
-          '',
-          '',
-          '',
-          nums,
-          peoplo,
-          ''
-        ]
-        return [
-          ...it,
-          msg
-        ]
-      })
-     this.tableDate1 = flatten(table)
     } catch (ex) {
       this.handleError(ex)
     }

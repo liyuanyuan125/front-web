@@ -39,7 +39,6 @@
             placeholder="请输入"
           />
         </FormItem>
-        {{form.content}}
         <FormItem label="正文内容" prop="content">
           <Froala v-model="form.content"/>
         </FormItem>
@@ -173,9 +172,9 @@ export default class DlgEditCinema extends ViewBase {
   drop(name: any) {}
 
   cancel() {
-    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
-
-    // ;(this.$refs.dataform as any).resetFields()
+    (this.$refs.dataform as any).resetFields()
+    const html: any = (document.getElementsByTagName('html')[0] as HTMLHtmlElement)
+    html.style = 'overflow-y: auto'
     this.form.content = ''
     this.showDlg = false
   }

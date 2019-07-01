@@ -24,6 +24,7 @@ export default class Main extends ViewBase {
   .title {
     margin-right: 15px;
     font-size: 15px;
+    color: #fff;
   }
   span { padding-left: 15px; }
 }

@@ -15,37 +15,38 @@
              justify="space-between"
              style="width: 100%;">
           <Col :span="11">
-          <DatePicker type="daterange"
-                      style="width: 100%;"
-                      v-model="form.beginDate"
-                      @on-change="handleChange"
-                      placement="bottom-end"
-                      placeholder="请选择开始日期和结束日期"></DatePicker>
+            <DatePicker type="daterange"
+                        style="width: 100%;"
+                        v-model="form.beginDate"
+                        @on-change="handleChange"
+                        placement="bottom-end"
+                        :start-date="new Date()"
+                        placeholder="请选择开始日期和结束日期"></DatePicker>
           </Col>
           <Col :span="12">
-          <CustomerList v-model="form.customerId"></CustomerList>
+            <CustomerList v-model="form.customerId"></CustomerList>
           </Col>
         </Row>
         <Row type="flex"
              justify="space-between"
              style="width: 100%; padding-top: 15px;">
           <Col :span="24">
-          <PlanList v-model="form.planId"></PlanList>
+            <PlanList v-model="form.planId"></PlanList>
           </Col>
         </Row>
       </div>
       <div class="detail">
-        <ul class="plan-list" v-if="data.length > 0">
+        <ul class="plan-list" v-if="data.length > 0" >
           <li class="plan-item" v-for="(it, index) in data" :key="index">
             <div class="plan-cover-box">
               <img class="plan-cover" :src="it.videoLogo" />
               <div style="flex: 1">
                 <div class="plan-title">{{it.name}}</div>
-                <div class="plan-time">上映时间：1970-01-01</div>
-                <div class="plan-time">投放周期 7天</div>
+                <div class="plan-time">投放排期 {{it.beginDate}} ~ {{it.endDate}}</div>
+                <div class="plan-time">投放周期 {{days(it.beginDate, it.endDate)}}天</div>
                 <div class="plan-time">广告片 vv6年轻有wey</div>
-                <div class="plan-time">广告规格 30s</div>
-                <div class="plan-time">投放状态 投放中</div>
+                <div class="plan-time">广告规格 {{it.specification}}</div>
+                <div class="plan-time">投放状态 {{getStatus(it.status)}}</div>
                 <div class="plan-time">最后更新时间 2019-05－11 12</div>
               </div>
               <div class="button-box">
@@ -54,6 +55,9 @@
             </div>
           </li>
         </ul>
+        <div v-else style="text-align: center; padding: 25px 15px;">
+          暂无数据
+        </div>
       </div>
       <Page :total="total"
             v-if="total>0"
@@ -75,15 +79,24 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { plans } from '@/api/effectReport'
+import { searchPlans } from '@/api/effectReport'
 import CustomerList from './x-select-customerlist.vue'
 import PlanList from './x-select-planlist.vue'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
 import moment from 'moment'
-import { uniq, uniqBy } from 'lodash'
-const timeFormat = 'YYYY-MM-DD'
+import { uniq, uniqBy, findIndex } from 'lodash'
+
+const getName = (key: string, list: any[]) => {
+  const i: number = findIndex( list, (it: any) => {
+    return key === it.key
+  })
+  const res: string = list[i].text
+  return res
+}
+
+const timeFormat = 'YYYYMMDD'
 
 @Component({
   components: {
@@ -91,22 +104,53 @@ const timeFormat = 'YYYY-MM-DD'
     PlanList
   }
 })
-export default class DlgEditCinema extends ViewBase {
+export default class SelectPlanDlg extends ViewBase {
   showDlg = false
 
   total = 122
 
-  form: any = {
+  formDefault: any = {
     pageIndex: 1,
     pageSize: 4,
-    beginDate: [new Date(2019, 3, 9), new Date(2019, 4, 11)],
+    beginDate: [
+      // new Date(), // 需要 365天之前的时间
+      new Date((moment().add(-1, 'years')) as any),
+      new Date()
+    ],
     customerId: null,
+    status: 11,
     planId: null
+  }
+
+  form: any = {
+    ...this.formDefault
   }
 
   loading = false
 
-  data: any = []
+  statusList: any[] = []
+
+  data: any[] = []
+
+  getStatus(status: string) {
+    if (!this.statusList || this.statusList.length < 1 || status == '' ) { return ''}
+    return getName( status, this.statusList )
+  }
+
+  days(begin: any, end: any) {
+    const time =
+      new Date(this.formatDate(end)).getTime() -
+      new Date(this.formatDate(begin)).getTime()
+    return time / (3600 * 24 * 1000) + 1
+  }
+
+  formatDate(data: any) {
+    return data
+      ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(
+          data + ''
+        ).substr(6, 2)}`
+      : '暂无'
+  }
 
   async init(type: any) {
     (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
@@ -119,13 +163,20 @@ export default class DlgEditCinema extends ViewBase {
       this.data = []
       this.total = 0
     }
+    const mockObj = {
+      beginDate: this.form.beginDate[0] ? moment(this.form.beginDate[0]).format(timeFormat) : '',
+      endDate: this.form.beginDate[1] ? moment(this.form.beginDate[1]).format(timeFormat) : '',
+      customerId: this.form.customerId ? this.form.customerId : null,
+    }
+
     try {
       const {
-        data: { items, totalCount }
-      } = await plans({ })
+        data: { items, statusList, totalCount }
+      } = await searchPlans({ ...mockObj })
       this.data = items || []
       this.total = totalCount
       this.showDlg = true
+      this.statusList = statusList
     } catch (ex) {
       this.handleError(ex)
     }
@@ -151,12 +202,29 @@ export default class DlgEditCinema extends ViewBase {
     this.$nextTick(() => {
       (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
     })
+    this.form = this.formDefault
     this.showDlg = false
   }
 
   updateHandle(id: string|number) {
     this.cancel()
     this.$emit('update', id)
+  }
+
+  @Watch('form.planId', {deep: true})
+  watchPlanId(val: any) {
+    if (val) {
+      this.loading = true
+      this.search()
+    }
+  }
+
+  @Watch('form.customerId', {deep: true})
+  watchCustomerId(val: any) {
+    if (val) {
+      this.loading = true
+      this.search()
+    }
   }
 }
 </script>
@@ -190,15 +258,15 @@ export default class DlgEditCinema extends ViewBase {
 .search-input {
   margin-left: 20px;
   /deep/ .ivu-input {
-    padding-left: 20px;
+    // padding-left: 20px;
     height: 40px;
     line-height: 40px;
-    &::placeholder {
-      color: #00202d;
-    }
+    // &::placeholder {
+    //   color: #00202d;
+    // }
   }
   /deep/ .ivu-select-selection {
-    padding-left: 20px;
+    // padding-left: 20px;
     height: 40px;
     line-height: 40px;
     &::placeholder {
@@ -208,10 +276,10 @@ export default class DlgEditCinema extends ViewBase {
   /deep/ .ivu-select-input {
     height: 40px;
     line-height: 40px;
-    padding: 0;
-    &::placeholder {
-      color: #00202d;
-    }
+    // padding: 0;
+    // &::placeholder {
+    //   color: #00202d;
+    // }
   }
   /deep/ .ivu-btn {
     height: 40px;
@@ -220,12 +288,12 @@ export default class DlgEditCinema extends ViewBase {
     font-size: 20px;
     line-height: 38px;
     margin-right: 20px;
-    color: #00202d;
+    // color: #00202d;
   }
 }
 @cancel-color: rgba(59, 152, 255, 1);
 .detail {
-  max-height: 500px;
+  height: 500px;
   overflow: auto;
   margin-top: 16px;
   margin-left: 20px;

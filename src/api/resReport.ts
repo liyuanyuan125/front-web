@@ -19,8 +19,8 @@ export async function effectStatistics(query: any) {
  * @param query
  */
 export async function trend(query: any) {
-  // const res = await get(`/xadvert/v1/orders/2/report` , query)
-  // return res
+  const res = await get(`/xadvert/v1/orders/2/report` , query)
+  return res
   return await mockGet(query, {
     item: {
       showCountSum: 200,

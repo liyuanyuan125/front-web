@@ -1,5 +1,5 @@
 <template>
-  <div class="effect-report-wp">
+  <div class="effect-report-wp" >
     <BannerCard v-if="bannerData.item6" :data="bannerData" @selectPlan="selectPlanHandle"></BannerCard>
     <TotalCard :data="totalData"></TotalCard>
     <div class="flex-box">
@@ -123,7 +123,9 @@ const toolTip: any = {
 })
 export default class Index extends ViewBase {
 
-  planId: number = 39
+  planId: number = 173 // 演示临时使用 nxd 20190629
+
+  initDone: boolean = false
 
   bannerData: any = {}
 
@@ -242,7 +244,7 @@ export default class Index extends ViewBase {
         date: []
       }
     ],
-    color: ['#CA7273'],
+    color: ['#00B6CC'],
     height: 350,
     toolTip
   }
@@ -364,10 +366,12 @@ export default class Index extends ViewBase {
   }
 
   async created() {
+    this.planId = parseInt(this.$route.params.id, 0) || 173 // 演示临时使用 nxd 20190629
     this.init(this.planId)
   }
 
   async init(id: number = -1) {
+    this.initDone = false
     try {
       const {
         data: {
@@ -378,127 +382,127 @@ export default class Index extends ViewBase {
           user,
           gradeCodes,
           planStatus,
-          movieTypes,
-          report: {
-            lastModifyTime,
-            dates
-          }
+          movieTypes
         }
       } = await getPlansReport(id)
-      const name = getName( plan.status, planStatus)
-      this.bannerData = {
-        item0: `${plan.beginDate} ~ ${plan.endDate}`,
-        item1: plan.cycle,
-        item2: plan.videoName,
-        item3: plan.specification,
-        item4: getName( plan.status, planStatus),
-        item5: formatYell(lastModifyTime),
-        item6: plan.name
-      }
-      this.totalData = {
-        item0: report.viewCount,
-        item1: report.scheduleCount,
-        item2: parseInt(report.cost, 0) / 100 // 单位为'分'
-      }
-      if ( cinemas && cinemas.length > 0 ) {
-        this.cinemasData.totalCount = cinemas.length
-        cinemas.slice(0, 10).forEach((it: any, index: number) => {
-          this.cinemasData.viewRate.data.push({
-            name: it.name,
-            count: it.viewRate
-          })
-          this.cinemasData.scheduleRate.data.push({
-            name: it.name,
-            count: it.scheduleRate
-          })
-          this.cinemasData.costRate.data.push({
-            name: it.name,
-            count: it.costRate
-          })
-        })
-      }
-      if ( movies && movies.length > 0 ) {
-        this.moviesTotal = movies.length
-        movies.forEach((item: any) => {
-          this.moreMovieData.push({
-            name: item.name,
-            viewCount: item.viewCount, // 曝光人次
-            viewRate: item.viewRate, // 曝光人次占比
-            scheduleCount: item.scheduleCount // 曝光场次
-          })
-        })
-        movies.slice(0, 3).forEach((it: any) => {
-          this.moviesData.push({
-            movieId: it.movieId,
-            poster: it.poster,
-            name: it.name,
-            score: it.score,
-            time: it.release,
-            type: getNames(it.types, movieTypes).join(' / ') + '（中国大陆）',
-            viewCount: it.viewCount, // 曝光人次
-            scheduleCount: it.scheduleCount, // 曝光场次
-            viewRate: it.viewRate, // 曝光人次占比
-            userPortrait: {
-              ages: it.userPortrait.ages.map((item: any) => {
-                return {
-                  value: parseInt(item.value, 0),
-                  key: item.key
-                }
-              }),
-              male: it.userPortrait.male,
-              female: it.userPortrait.female
-            }
-          })
-        })
-      }
-      dates.forEach((item: any, index: number) => {
-        this.chart1.dataList[0].data.push(item.viewCount)
-        this.chart1.dataList[1].data.push(item.scheduleCount)
-        this.chart1.dataList[2].data.push(item.cost)
-        this.chart1.dataList[0].date.push(item.date)
-        this.chart1.dataList[1].date.push(item.date)
-        this.chart1.dataList[2].date.push(item.date)
-        this.tableData.data.push({
-          date: item.date,
-          viewCount: item.viewCount,
-          scheduleCount: item.scheduleCount,
-          cost: parseInt(item.cost, 0) / 100  // 单位为'分'
-        })
-      })
-      this.chart1.initDone = true
-      if (user) {
-        const _ageData: any = {
-          age: [],
-          data: []
+      if ( report && report.lastModifyTime ) {
+        const dates = report.dates
+        const name = getName( plan.status, planStatus )
+        this.bannerData = {
+          item0: `${plan.beginDate} ~ ${plan.endDate}`,
+          item1: plan.cycle,
+          item2: plan.videoName,
+          item3: plan.specification,
+          item4: getName( plan.status, planStatus),
+          item5: formatYell(report.lastModifyTime),
+          item6: plan.name
         }
-        if (user.ages.length > 0 ) {
-          user.ages.forEach((it: any) => {
-            _ageData.age.push(it.k)
-            _ageData.data.push(it.v)
+        this.totalData = {
+          item0: report.viewCount,
+          item1: report.scheduleCount,
+          item2: parseInt(report.cost, 0) / 100 // 单位为'分'
+        }
+        if ( cinemas && cinemas.length > 0 ) {
+          this.cinemasData.totalCount = cinemas.length
+          cinemas.slice(0, 10).forEach((it: any, index: number) => {
+            this.cinemasData.viewRate.data.push({
+              name: it.name,
+              count: it.viewRate
+            })
+            this.cinemasData.scheduleRate.data.push({
+              name: it.name,
+              count: it.scheduleRate
+            })
+            this.cinemasData.costRate.data.push({
+              name: it.name,
+              count: it.costRate
+            })
           })
         }
-        this.userData = {
-          sex: {
-            male: parseInt(user.male, 0),
-            female: parseInt(user.female, 0)
-          },
-          cityData: user.cities.map((item: any) => {
-            return {
-              cityName: item.k,
-              percent: parseInt(item.v, 0)
-            }
-          }),
-          cityLevelData: user.grades.map((it: any) => {
-            return {
-              name: getName(it.k, gradeCodes),
-              value: parseInt(it.v, 0)
-            }
-          }),
-          ageData: _ageData || {}
+        if ( movies && movies.length > 0 ) {
+          this.moviesTotal = movies.length
+          movies.forEach((item: any) => {
+            this.moreMovieData.push({
+              name: item.name,
+              viewCount: item.viewCount, // 曝光人次
+              viewRate: item.viewRate, // 曝光人次占比
+              scheduleCount: item.scheduleCount // 曝光场次
+            })
+          })
+          movies.slice(0, 3).forEach((it: any) => {
+            this.moviesData.push({
+              movieId: it.movieId,
+              poster: it.poster,
+              name: it.name,
+              score: it.score,
+              time: it.release,
+              type: getNames(it.types, movieTypes).join(' / ') + '（中国大陆）',
+              viewCount: it.viewCount, // 曝光人次
+              scheduleCount: it.scheduleCount, // 曝光场次
+              viewRate: it.viewRate, // 曝光人次占比
+              userPortrait: {
+                ages: it.userPortrait.ages.map((item: any) => {
+                  return {
+                    value: parseInt(item.value, 0),
+                    key: item.key
+                  }
+                }),
+                male: it.userPortrait.male,
+                female: it.userPortrait.female
+              }
+            })
+          })
         }
-        this.$nextTick(() => {
-          (this.$refs.usercard as any).init()
+        dates.forEach((item: any, index: number) => {
+          this.chart1.dataList[0].data.push(item.viewCount)
+          this.chart1.dataList[1].data.push(item.scheduleCount)
+          this.chart1.dataList[2].data.push(item.cost)
+          this.chart1.dataList[0].date.push(item.date)
+          this.chart1.dataList[1].date.push(item.date)
+          this.chart1.dataList[2].date.push(item.date)
+          this.tableData.data.push({
+            date: item.date,
+            viewCount: item.viewCount,
+            scheduleCount: item.scheduleCount,
+            cost: parseInt(item.cost, 0) / 100  // 单位为'分'
+          })
         })
+        this.chart1.initDone = true
+        if (user) {
+          const _ageData: any = {
+            age: [],
+            data: []
+          }
+          if (user.ages.length > 0 ) {
+            user.ages.forEach((it: any) => {
+              _ageData.age.push(it.k)
+              _ageData.data.push(it.v)
+            })
+          }
+          this.userData = {
+            sex: {
+              male: parseInt(user.male, 0),
+              female: parseInt(user.female, 0)
+            },
+            cityData: user.cities.map((item: any) => {
+              return {
+                cityName: item.k,
+                percent: parseInt(item.v, 0)
+              }
+            }),
+            cityLevelData: user.grades.map((it: any) => {
+              return {
+                name: getName(it.k, gradeCodes),
+                value: parseInt(it.v, 0)
+              }
+            }),
+            ageData: _ageData || {}
+          }
+          this.$nextTick(() => {
+            (this.$refs.usercard as any).init()
+          })
+          this.initDone = true
+        }
       }
     } catch (ex) {
       this.handleError(ex)

@@ -170,8 +170,7 @@ export default class Main extends ViewBase {
         this.loading = true
         const { data: {items, totalCount}} = await queryCinemaList({
            pageIndex: 1,
-           pageSize: 500,
-           companyId,
+           pageSize: 400,
            query
         })
         this.cinemaList = items || []

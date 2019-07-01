@@ -168,7 +168,7 @@ import otherdetail from './otherdetail.vue'
 import webo from './webo.vue'
 import { clean } from '@/fn/object.ts'
 import { uniqBy } from 'lodash'
-import { info } from '@/ui/modal'
+import { info, toast } from '@/ui/modal'
 
 const timeFormat = 'YYYY-MM-DD HH:mm'
 @Component({
@@ -379,7 +379,7 @@ export default class Main extends ViewBase {
     this.tableDate = this.tableDate.map((it: any, index: number) => {
       const orderItemList: any = it.publishCategoryCode ?  {
           publishCategoryCode: it.publishCategoryCode ? it.publishCategoryCode : '',
-          pictureFileIds: it.pictureFileIds ? it.pictureFileIds.join(',') : '',
+          pictureFileIds: it.pictureFileIds ? it.pictureFileIds : [],
           publishTime: it.publishTime ? new Date(it.publishTime) : '',
           content: it.content ? it.content : '',
           orderItemId: it.orderItemId ? it.orderItemId : '',
@@ -539,6 +539,10 @@ export default class Main extends ViewBase {
   }
 
   setall() {
+    if (this.checkId.length == 0) {
+      info('最少设置一个任务')
+      return
+    }
     this.comloading = true
     this.$nextTick(() => {
       (this.$refs.detailbox as any).init(this.statusList, this.checkId )
@@ -591,10 +595,11 @@ export default class Main extends ViewBase {
           this.prodId = msgId.includes(this.form.productId) ? this.form.productId : msgId[0]
         }
         const msg = this.setadever.map((it: any) => {
-          const item = it.orderItemList || {}
+          const item: any = it.orderItemList || {}
+          const images = (item.pictureFileIds || []).map((its: any) => its.fileId)
           const message = clean({
             ...item,
-            pictureFileIds: item.pictureFileIds ? item.pictureFileIds.join(',') : '',
+            pictureFileIds: images ? images.join(',') : '',
             publishTime: new Date(item.publishTime).getTime()
           })
           return {
@@ -635,7 +640,10 @@ export default class Main extends ViewBase {
             ...query
           })
         }
-        this.$router.push({ name: 'kol-orderlist' })
+        toast('操作成功')
+        if (!id) {
+          this.$router.push({ name: 'kol-orderlist' })
+        }
       }
     } catch (ex) {
       this.handleError(ex)
@@ -745,6 +753,9 @@ export default class Main extends ViewBase {
     line-height: 50px;
     span {
       font-size: 14px;
+    }
+    .ivu-checkbox {
+      display: none;
     }
   }
   /deep/ .ivu-table-column-center,

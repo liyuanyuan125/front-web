@@ -1,6 +1,8 @@
 // 将登陆注册等模块「静态」到主文件中，以便用户更流畅
 import home from '@/views/home.vue'
 import login from '@/views/portal/login/index.vue'
+import loginIndex from '@/views/portal/login/loginIndex.vue'
+import apply from '@/views/portal/login/apply.vue'
 import register from '@/views/portal/register.vue'
 import registerComplete from '@/views/portal/registerComplete.vue'
 import activeEmail from '@/views/portal/activeEmail.vue'
@@ -154,6 +156,18 @@ const singleRoutes: RouteConfigEnhance[] = [
     path: '/login',
     name: 'login',
     component: login,
+    meta: unauth
+  },
+  {
+    path: '/tologin',
+    name: 'tologin',
+    component: loginIndex,
+    meta: unauth
+  },
+  {
+    path: '/apply',
+    name: 'apply',
+    component: apply,
     meta: unauth
   },
 
@@ -758,7 +772,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 效果报表
   {
-    path: '/reseport/effect-report',
+    path: '/reseport/effect-report/:id',
     name: 'effect-report',
     component: () => import('./views/resReport/effectReport/index.vue'),
     meta: {
@@ -907,7 +921,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/order/taskDetection/:id',
     name: 'order-order-taskDetection',
     component: () => import('./views/kol/order/taskDetection.vue'),
-    meta: emptyAuth,
+    meta: {
+      ...emptyAuth,
+      title: '监测'
+    },
   },
 
   // kol - 监测详情
@@ -915,7 +932,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/order/taskDetection/detail/:id',
     name: 'order-order-taskDetection-detail',
     component: () => import('./views/kol/order/taskdet.vue'),
-    meta: emptyAuth,
+    meta: {
+      ...emptyAuth,
+      title: '监测详情'
+    },
   },
 
   // KOL - 申请发票列表
@@ -923,7 +943,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/applyTicket',
     name: 'kol-applyTicket',
     component: () => import('./views/kol/applyTicket/index.vue'),
-    meta: emptyAuth
+    meta: {
+      ...emptyAuth,
+      title: '申请发票列表'
+    },
   },
 
   // KOL - 申请发票填写
@@ -931,7 +954,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/applyTicket/addticket/:edit/:key',
     name: 'kol-applyTicket-addticket',
     component: () => import('./views/kol/applyTicket/addticket.vue'),
-    meta: emptyAuth
+    meta: {
+      ...emptyAuth,
+      title: '申请发票填写页'
+    },
   },
 
   // KOL - 查看开票历史
@@ -939,7 +965,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/applyTicket/ticketHis',
     name: 'kol-applyTicket-ticketHis',
     component: () => import('./views/kol/applyTicket/ticketHis.vue'),
-    meta: emptyAuth
+    meta: {
+      ...emptyAuth,
+      title: '查看开票历史'
+    },
   },
 
   // KOL - 查看开票详情
@@ -947,7 +976,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/applyTicket/detail/:id',
     name: 'kol-applyTicket-detail',
     component: () => import('./views/kol/applyTicket/detail.vue'),
-    meta: emptyAuth
+    meta: {
+      ...emptyAuth,
+      title: '查看开票详情'
+    },
   },
 
   // kol - koll列表

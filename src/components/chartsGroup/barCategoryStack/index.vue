@@ -68,6 +68,7 @@ export default class BarCategoryStack extends ViewBase {
   @Prop({ type: Array, default: () => [] })  dataList!: any[]
   @Prop({ type: Function, default: () => {} }) fn?: any
   @Prop({ type: Number, default: 0 }) height?: number
+  @Prop({ type: String, default: '' }) textColor?: string
   @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
 
   xaxisList: any = []
@@ -123,7 +124,11 @@ export default class BarCategoryStack extends ViewBase {
       xAxis: {
         ...xOption,
         type: 'category',
-        data: this.xaxisList
+        data: this.xaxisList,
+        nameTextStyle: {
+          color: this.textColor ? this.textColor : '#000',
+
+        }
       },
       yAxis: {
         ...dottedLineStyle,
@@ -131,7 +136,7 @@ export default class BarCategoryStack extends ViewBase {
       },
       series: chartSeries.map(item => item)
     }
-    // debugger
+    // console.save(option, `${new Date()}.json`)
     myChart.setOption(option)
     if ( this.fn !== null ) {
       myChart.on('click', this.fn)

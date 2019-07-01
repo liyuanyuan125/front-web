@@ -226,14 +226,14 @@ export async function fans(id: string|number = '') {
     item: {
       totalCount: 288200,
       genders: [
-        {
-            gender: 1,
-            rate: '31.40'
-        },
-        {
-            gender: 2,
-            rate: '68.60'
-        }
+        // {
+        //     gender: 1,
+        //     rate: '31.40'
+        // },
+        // {
+        //     gender: 2,
+        //     rate: '68.60'
+        // }
       ],
       ages: [
           {

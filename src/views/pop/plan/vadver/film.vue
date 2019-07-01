@@ -81,6 +81,10 @@ export default class ComponentMain extends ViewBase {
   }
 
   formatDate(data: any) {
+    const years = data + ''
+    if (data && years.length == 4) {
+      return `${(data + '').slice(0, 4)}年`
+    }
     return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
 
