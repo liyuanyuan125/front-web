@@ -20,11 +20,11 @@
           <Row>
             <Col span="12">
               <FormItem label="推广品牌" prop="brandId">
-                <Select 
-                v-model='dataForm.brandId'  
+                <Select
+                v-model='dataForm.brandId'
                 clearable
                 filterable
-                placeholder="请输入推广品牌查询" 
+                placeholder="请输入推广品牌查询"
                 remote
                 :loading="loading"
                 :remote-method="remoteMethod"
@@ -65,7 +65,7 @@
                 <Row>
                   <Col span='8'>
                     <div class='div-img'>
-                      <img :src="filmdata.mainPic == null ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2431454871,3087430277&fm=27&gp=0.jpg' : filmdata.mainPic" alt="">
+                      <img :src="filmdata.mainPic == null ? $store.state.defaultAvatar : filmdata.mainPic" alt="">
                     </div>
                   </Col>
                   <Col span='14' class='row-x'>
@@ -81,10 +81,10 @@
               <Col :span='12'>
                 <!-- <Row class='bus' > <span class='tag'>电影海报</span><br><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span> </Row>
                 <Row class='bus' > <span class='tag'>电影票券</span>  &nbsp;  100张   <br><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span></Row> -->
-                <!-- <Row class='bus' v-for="item in lineqqq" :key='item.key'> 
-                  <span @click="active(item.key)" class='tag' :class="['tag', moval == item.key ? 'activeClass' : '']">{{item.text}}</span><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span> 
+                <!-- <Row class='bus' v-for="item in lineqqq" :key='item.key'>
+                  <span @click="active(item.key)" class='tag' :class="['tag', moval == item.key ? 'activeClass' : '']">{{item.text}}</span><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span>
                 </Row> -->
-                <CheckboxGroup v-model="dataForm.haibao" class='bus'> 
+                <CheckboxGroup v-model="dataForm.haibao" class='bus'>
                   <Checkbox   v-for="item in lineqqq" :key='item.key' :value='item.id' :label="item.key" class="check-item tag" style='margin-bottom: 40px;'>{{item.text}}</Checkbox> <span class='hui aaa'>后台配置的使用说明，暂无使用说明</span>  <span class='hui sss'>后台配置的使用说明，暂无使用说明</span>
                 </CheckboxGroup>
                 <Col span='16' class="inps" ><InputNumber   @on-focus='chgindex(2)' v-model="dataForm.count"  placeholder="期望张数"/></InputNumber></Col>
@@ -115,7 +115,7 @@
                     <Col :span='24'><Input @on-focus='chgindex2(3)' v-model="dataForm.guang" class="inp-style" placeholder="可选填，输入官网地址"/></Col>
                   </Row>
                 </Col>
-                
+
               </Col>
             </Row>
             <Row class='add-row'>
@@ -128,7 +128,7 @@
               </Col>
             </Row>
           </div>
-          
+
           <Row class="add-row">
             <Col span="24">
               <FormItem label="留言" prop="message">
@@ -144,7 +144,7 @@
         </Form>
         <div class='btnq' style="text-align: center">
           <Button class='ok' type="primary" @click="dataFormSubmit()">提交意向</Button>
-        </div> 
+        </div>
     </div>
   </div>
 </template>

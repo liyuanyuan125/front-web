@@ -3,7 +3,7 @@
     :to="{ name: 'film-figure', params: { id: item.id } }"
     class="item-in"
   >
-    <img :src="item.headImgSmall" class="item-img">
+    <img :src="item.avatar" class="item-img">
     <main class="item-main">
       <h4 class="line line-name">{{item.name}}</h4>
       <div class="line line-sub">
@@ -40,6 +40,8 @@ export default class FigureItem extends ViewBase {
 .item-img {
   width: 100px;
   height: 132px;
+  object-fit: contain;
+  background-color: #fff;
 }
 
 .item-main {
