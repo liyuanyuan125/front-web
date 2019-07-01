@@ -76,7 +76,7 @@
                   </dl>
                   <dl @click="tags(2)" :class="tag=='2' ? 'dl-active' : ''">
                     <dd>{{detaildata.chainCount}}</dd>
-                    <dt>覆盖影线</dt>
+                    <dt>覆盖院线</dt>
                   </dl>
                   <dl @click="tags(3)" :class="tag=='3' ? 'dl-active' : ''">
                     <dd>{{detaildata.cityCount}}</dd>
