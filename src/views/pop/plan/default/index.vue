@@ -582,8 +582,9 @@ export default class App extends ViewBase {
 
     if (msg.length > 0) {
         const message = msg.map((it: any) => {
-        const value = this.tags[1].values.filter((item: any) => it.text == item.key)[0].text
-        return value
+          const maps = it.text.split(';')
+          const value = this.tags[1].values.filter((item: any) => maps.includes(item.key))
+          return value.map((its: any) => its.text).join('/')
       })
       return message.join(' / ')
     } else {
@@ -595,8 +596,9 @@ export default class App extends ViewBase {
     const msg = (this.item.deliveryGroups || []).filter((item: any) => item.tagTypeCode == 'MOVIE_TYPE')
     if (msg.length > 0) {
       const message = msg.map((it: any) => {
-        const value = this.tags[0].values.filter((item: any) => it.text == item.key)[0].text
-        return value
+        const maps = it.text.split(';')
+        const value = this.tags[1].values.filter((item: any) => maps.includes(item.key))
+        return value.map((its: any) => its.text).join('/')
       })
       return message.join(' / ')
     } else {

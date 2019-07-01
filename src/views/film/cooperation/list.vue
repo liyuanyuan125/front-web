@@ -330,7 +330,7 @@ export default class CooperationFilmList extends ViewBase {
         return readableNumber(it.want_see)
         break
       case 'commentsScore':
-        return it.comments_score
+        return it.comments_score != 0 ? (it.comments_score / 10) : it.comments_score
         break
       default:
         return it.jy_index != 0 ? (it.jy_index / 100).toFixed(2) : it.jy_index
