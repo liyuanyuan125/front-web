@@ -274,7 +274,7 @@ export default class Main extends ViewBase {
   get rule() {
     return {
       itemCode: [
-        { required: true, message: '请选择发票内容', trigger: 'blur' },
+        { required: true, message: '请选择发票内容'  },
       ],
       name: [
         { required: true, message: '请输入发票抬头', trigger: 'blur' },
