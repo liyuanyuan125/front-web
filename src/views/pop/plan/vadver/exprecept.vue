@@ -50,10 +50,12 @@ export default class Dates extends ViewBase {
     try {
       const { data } = await exportId(this.id)
       this.tableDate1 = (data.planMovies.map((it: any, index: number) => {
+        const nums = it.movieType.split('|')
+        const msg = data.movieTypeList.filter((item: any) => nums.includes(item.key))
         return [
           it.movieName,
           it.publishStartDate ? this.formatDate(it.publishStartDate) : '',
-          it.movieType,
+          msg ? msg.map((its: any) => its.text).join('/') : '',
           it.beginDate ? this.formatDate(it.beginDate) : '',
           it.endDate ? this.formatDate(it.endDate) : '',
           it.endDate ? this.days(it.beginDate, it.endDate) : '',
