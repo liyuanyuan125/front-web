@@ -4,7 +4,7 @@
 import tryParseJson from '@/fn/tryParseJson'
 import cookie from 'js-cookie'
 import { logout as postLogout } from '@/api/auth'
-import { SystemCode, systemList, PermPage, MapType } from '@/util/types'
+import { SystemCode, SecondaryCode, systemList, PermPage, MapType } from '@/util/types'
 import innerAccess, { AccessToken } from '@/fn/innerAccess'
 import event from '@/fn/event'
 import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
@@ -36,6 +36,8 @@ export interface User {
   systemCode: SystemCode
   /** 所拥有的系统列表 */
   systems: SystemCode[]
+  /** 二级代理商和直客身份 */
+  secondaryCode: SecondaryCode
 
   /** 所属公司 ID */
   companyId: number
@@ -45,8 +47,6 @@ export interface User {
   accountType: number
   /** 权限列表 */
   perms: string[]
-  // 二级代理商和直客身份
-  secondaryCode: string
 }
 
 const KEY_USER = 'user@www.aiads.com'

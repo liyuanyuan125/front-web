@@ -29,7 +29,7 @@
             </FormItem>
              <Row class="login-etc">
               <Col span="10">
-               <Checkbox v-model="toLogin">七日内免登陆</Checkbox>
+               <Checkbox v-model="toLogin">七日内免登录</Checkbox>
               </Col>
               <Col align="right" span="10" offset="4">
                 <router-link :to="{name: 'resetpwd'}"><span class="forgot">忘记密码?</span></router-link>
