@@ -537,17 +537,17 @@ export default class App extends ViewBase {
       id: 1,
       setid: this.$route.params.setid
     })
-    if (this.$route.name == 'pop-planlist-add') {
-      this.$router.push({
-        name: 'pop-planlist-add',
-        params: { id: '1', setid: this.$route.params.setid  }
-      })
-    } else {
-      this.$router.push({
-        name: 'pop-planlist-edit',
-        params: { id: '1', setid: this.$route.params.setid  }
-      })
-    }
+    // if (this.$route.name == 'pop-planlist-add') {
+    //   this.$router.push({
+    //     name: 'pop-planlist-add',
+    //     params: { id: '1', setid: this.$route.params.setid  }
+    //   })
+    // } else {
+    this.$router.push({
+      name: 'pop-planlist-edit',
+      params: { id: '1', setid: this.$route.params.setid  }
+    })
+    // }
   }
 
   @Watch('commendata', { deep: true })

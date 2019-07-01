@@ -5,7 +5,7 @@
     <div v-if="status != 1" class="plan-result">
       <div class="result-top">
         <h3>效果预估</h3>
-        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【{{formatNums(item.estimateCostAmount)}}】时，您无需补缴任何款项</span>
+        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【{{formatNums(item.needPayAmount)}}】时，您无需补缴任何款项</span>
       </div>
       <Row class="precept" :gutter="16">
         <Col span="5" class="item">
@@ -185,7 +185,7 @@
     </div>
 
     <h3 class="plan-title">计划信息
-      <span v-if="headerValue.status > 0 && headerValue.status < 4" @click="edit" class="custom">编辑广告计划</span>
+      <span v-if="headerValue.status > 0 && headerValue.status < 3" @click="edit" class="custom">编辑广告计划</span>
     </h3>
     <div class="plan-msg">
       <Row>
