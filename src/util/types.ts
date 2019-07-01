@@ -30,6 +30,25 @@ export interface KeyTextControlStatus extends KeyText {
 /** 系统 code 枚举 */
 export type SystemCode = 'ads' | 'resource'
 
+/** 广告主子类型：代理商、直客 */
+export type AdsSecondaryCode = 'daili' | 'zhike'
+
+/** 资源方子类型：代理商、影院 */
+export type ResourceSecondaryCode = 'agent' | 'cinema'
+
+/** 合并后的二级子类型 */
+export type SecondaryCode = AdsSecondaryCode | ResourceSecondaryCode
+
+const defaultSecondaryCodeMap: MapType<SecondaryCode> = {
+  ads: 'daili',
+  resource: 'agent'
+}
+
+/** 获取默认的二级子类型，对于广告主，是代理商，对于资源方，也是代理商 */
+export function defaultSecondaryCode(code: SystemCode) {
+  return defaultSecondaryCodeMap[code]
+}
+
 /** 系统类型 */
 export interface SystemType {
   /** 系统对应的 code */

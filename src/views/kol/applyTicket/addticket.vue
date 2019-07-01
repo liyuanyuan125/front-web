@@ -2,7 +2,7 @@
   <div class="pages">
     <Form
         :model="query"
-        ref="dataform"
+        ref="query"
         :rules="rule"
         label-position="left"
         :label-width="100"
@@ -189,7 +189,7 @@
      </Form>
      <div class='button'>
        <span class='cancel' @click='cancel()'>返回</span>
-       <span class='ok' @click='ok()'>确认提交</span>
+       <span class='ok' @click="ok('query')">确认提交</span>
      </div>
   </div>
 </template>
@@ -274,7 +274,7 @@ export default class Main extends ViewBase {
   get rule() {
     return {
       itemCode: [
-        { required: true, message: '请选择发票内容', trigger: 'blur' },
+        { required: true, message: '请选择发票内容'  },
       ],
       name: [
         { required: true, message: '请输入发票抬头', trigger: 'blur' },
@@ -382,29 +382,34 @@ export default class Main extends ViewBase {
     this.$router.go(-1)
   }
 
-  async ok() {
-    if (this.$route.params.edit == '0') {
-      this.query.totalTaxFee = this.list.totalTaxFee
-      this.query.orderIds = this.list.order_ids
-      this.query.orderNo = this.list.order_no
-      try {
-        const res =  await addticket (this.query)
-        toast('操作成功')
-        this.$router.push({ path : '/kol/applyTicket'})
-      } catch (ex) {
-        this.handleError(ex)
-      } finally {
+  async ok(dataForms: any) {
+    const myThis: any = this
+   myThis.$refs[dataForms].validate(async ( valid: any ) => {
+      if (valid) {
+        if (this.$route.params.edit == '0') {
+          this.query.totalTaxFee = this.list.totalTaxFee
+          this.query.orderIds = this.list.order_ids
+          this.query.orderNo = this.list.order_no
+          try {
+            const res =  await addticket (this.query)
+            toast('操作成功')
+            this.$router.push({ path : '/kol/applyTicket'})
+          } catch (ex) {
+            this.handleError(ex)
+          } finally {
+          }
+        } else if (this.$route.params.key == '0') {
+          try {
+            const res =  await editticket (this.$route.params.edit , this.query)
+            toast('操作成功')
+            this.$router.push({ path : '/kol/applyTicket'})
+          } catch (ex) {
+            this.handleError(ex)
+          } finally {
+          }
+        }
       }
-    } else if (this.$route.params.key == '0') {
-      try {
-        const res =  await editticket (this.$route.params.edit , this.query)
-        toast('操作成功')
-        this.$router.push({ path : '/kol/applyTicket'})
-      } catch (ex) {
-        this.handleError(ex)
-      } finally {
-      }
-    }
+    })
   }
 
   @Watch('area')
@@ -554,5 +559,8 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-form-item {
   margin-bottom: 0;
+}
+/deep/ .edit-input .ivu-form-item-content .ivu-select-selection {
+  width: 100%;
 }
 </style>

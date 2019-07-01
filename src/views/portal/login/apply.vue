@@ -4,7 +4,7 @@
           <div class="tablist">
             <p class="systerm flex-box">
                 <span>申请加入</span>
-                <em>已有账户？<router-link :to="{name: 'login'}">立即登录</router-link></em>
+                <em>已有账户？<router-link :to="{name: 'tologin'}">立即登录</router-link></em>
             </p>
           </div>
           <Form :model="form" :rules="rules" ref="form"

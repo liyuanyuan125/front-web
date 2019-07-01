@@ -3,11 +3,13 @@
     <content class="content">
       <img src="../assets/logo.png" class="login-logo"/>
       <p class="login-title">全网精准娱乐营销平台</p>
-      <Button type="primary" :to="{name: 'tologin'}" class="login-but">登 录 / 注 册</Button>
+      <Button type="primary"  class="login-but">
+        <router-link tag="span" to="tologin">登 录</router-link> / <router-link tag="span" to="register">注 册</router-link>
+      </Button>
     </content>
-    <div class="login-whale">
+    <!-- <div class="login-whale">
       <img src="../assets/whale.png" />
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -18,6 +20,7 @@ import { login } from '@/api/auth'
 import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 // import detail from './detail.vue'
+
 @Component
 export default class Main extends ViewBase {
   form = {
@@ -119,7 +122,7 @@ export default class Main extends ViewBase {
   height: 100%;
   width: 100%;
   min-height: 100vh;
-  background: url('../assets/logo-bg.png') no-repeat center;
+  background: url('//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcpcd5jqctg008ubl6g.jpg') no-repeat center;
   background-size: cover;
   .login-whale {
     position: absolute;
@@ -148,9 +151,9 @@ export default class Main extends ViewBase {
   }
   /deep/ .ivu-btn {
     width: 250px;
-    height: 34px;
+    height: 38px;
     color: #fff;
-    font-size: 14px;
+    font-size: 16px;
     text-align: center;
     background: #2f6af9;
     border-radius: 17px;

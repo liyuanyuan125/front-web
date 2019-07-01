@@ -123,7 +123,7 @@ const toolTip: any = {
 })
 export default class Index extends ViewBase {
 
-  planId: number = 173 // 演示临时使用 nxd 20190629
+  planId: number = 0
 
   initDone: boolean = false
 
@@ -365,9 +365,16 @@ export default class Index extends ViewBase {
     this.init(id)
   }
 
-  async created() {
-    this.planId = parseInt(this.$route.params.id, 0) || 173 // 演示临时使用 nxd 20190629
-    this.init(this.planId)
+  created() {
+    const id = parseInt(this.$route.params.id, 0)
+    // 173 演示数据id
+    if ( id ) {
+      this.planId = id
+      this.init(id)
+    } else {
+      this.planId = 173
+      this.init(173)
+    }
   }
 
   async init(id: number = -1) {
@@ -388,6 +395,7 @@ export default class Index extends ViewBase {
       if ( report && report.lastModifyTime ) {
         const dates = report.dates
         const name = getName( plan.status, planStatus )
+
         this.bannerData = {
           item0: `${plan.beginDate} ~ ${plan.endDate}`,
           item1: plan.cycle,
@@ -397,11 +405,13 @@ export default class Index extends ViewBase {
           item5: formatYell(report.lastModifyTime),
           item6: plan.name
         }
+
         this.totalData = {
           item0: report.viewCount,
           item1: report.scheduleCount,
           item2: parseInt(report.cost, 0) / 100 // 单位为'分'
         }
+
         if ( cinemas && cinemas.length > 0 ) {
           this.cinemasData.totalCount = cinemas.length
           cinemas.slice(0, 10).forEach((it: any, index: number) => {
@@ -419,6 +429,7 @@ export default class Index extends ViewBase {
             })
           })
         }
+
         if ( movies && movies.length > 0 ) {
           this.moviesTotal = movies.length
           movies.forEach((item: any) => {
@@ -429,6 +440,7 @@ export default class Index extends ViewBase {
               scheduleCount: item.scheduleCount // 曝光场次
             })
           })
+
           movies.slice(0, 3).forEach((it: any) => {
             this.moviesData.push({
               movieId: it.movieId,
@@ -453,22 +465,26 @@ export default class Index extends ViewBase {
             })
           })
         }
-        dates.forEach((item: any, index: number) => {
-          this.chart1.dataList[0].data.push(item.viewCount)
-          this.chart1.dataList[1].data.push(item.scheduleCount)
-          this.chart1.dataList[2].data.push(item.cost)
-          this.chart1.dataList[0].date.push(item.date)
-          this.chart1.dataList[1].date.push(item.date)
-          this.chart1.dataList[2].date.push(item.date)
-          this.tableData.data.push({
-            date: item.date,
-            viewCount: item.viewCount,
-            scheduleCount: item.scheduleCount,
-            cost: parseInt(item.cost, 0) / 100  // 单位为'分'
+
+        if ( dates && dates.length > 0 ) {
+          dates.forEach((item: any, index: number) => {
+            this.chart1.dataList[0].data.push(item.viewCount)
+            this.chart1.dataList[1].data.push(item.scheduleCount)
+            this.chart1.dataList[2].data.push(item.cost)
+            this.chart1.dataList[0].date.push(item.date)
+            this.chart1.dataList[1].date.push(item.date)
+            this.chart1.dataList[2].date.push(item.date)
+            this.tableData.data.push({
+              date: item.date,
+              viewCount: item.viewCount,
+              scheduleCount: item.scheduleCount,
+              cost: parseInt(item.cost, 0) / 100  // 单位为'分'
+            })
           })
-        })
-        this.chart1.initDone = true
-        if (user) {
+          this.chart1.initDone = true
+        }
+
+        if ( user && user.ages && user.ages.length > 0 ) {
           const _ageData: any = {
             age: [],
             data: []
@@ -501,8 +517,8 @@ export default class Index extends ViewBase {
           this.$nextTick(() => {
             (this.$refs.usercard as any).init()
           })
-          this.initDone = true
         }
+        this.initDone = true
       }
     } catch (ex) {
       this.handleError(ex)
