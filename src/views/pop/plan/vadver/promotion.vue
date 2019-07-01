@@ -536,6 +536,9 @@ export default class Promotion extends ViewBase {
       color: #00202d;
     }
   }
+  /deep/ .ivu-input {
+    border: 0;
+  }
   /deep/ .ivu-form-item-label {
     font-size: 16px;
     font-weight: 500;
