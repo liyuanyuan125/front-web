@@ -13,7 +13,7 @@
               <li @click="filmdetail(it.movieId)" v-for="(it) in filmList" :key="it.id"
                 :class="['film-item']">
                 <div class="film-top">
-                  <img :src="it.image ? it.image : defaultImg" @onerror="defaultImg" class="film-cover">
+                  <img :src="it.image ? it.image : defaultImg" :onerror="defaultImg" class="film-cover">
                   <div style="position: relative">
                     <!-- <p class="film-title" :title="it.movieName">{{it.movieName}}</p> -->
                     <p class="film-title" :title="it.movieName" style="margin-bottom: 30px">{{it.movieName}}</p>

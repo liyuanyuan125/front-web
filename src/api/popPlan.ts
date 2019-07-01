@@ -261,6 +261,6 @@ export async function getcalendars(query: any) {
  * 电影计划单搜索接口
  */
 export async function moviefind(query: any) {
-  const data = await get(`/movie/search/advert`, query)
+  const data = await get(`/movie/search/xadvert`, query)
   return data
 }

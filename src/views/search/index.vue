@@ -242,7 +242,7 @@ export default class SearchPage extends ViewBase {
 }
 
 .search-main {
-  width: 814px;
+  flex: 1;
   /deep/ .fetch-list {
     margin-top: -25px;
   }
@@ -256,6 +256,7 @@ export default class SearchPage extends ViewBase {
 
 .search-side {
   width: 270px;
+  margin-left: 30px;
 
   /deep/ .similar-pane ~ .hot-pane {
     margin-top: 26px;

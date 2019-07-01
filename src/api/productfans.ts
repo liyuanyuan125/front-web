@@ -31,142 +31,113 @@ export async function dayRanges(query: any = { beginDate: 20191212, endDate: 201
  * comment
  * @param query 起止时间
  * @param id id
- * @description https://yapi.aiads-dev.com/project/146/interface/api/4533
- * @deprecated 缺少数据，重置日期 http://fapi.aiads-dev.com/person/107028/comments?beginDate=20170112&endDate=20191212
+ * @description http://yapi.aiads-dev.com/project/152/interface/api/4488
  */
 export async function comment(query: any, id: string = '') {
-  // const res = await get(`/person/${id}/comments`, query)
   const res = await get(`/brand/products/${id}/comment`, query)
   return res
   return await mockGet(query, {
-    emotion: [
-      {
-        key: 'positive',
-        text: '正面'
-      },
-      {
-        key: 'passive',
-        text: '负面'
-      },
-      {
-        key: 'neutral',
-        text: '中性'
-      }
-    ],
-    dayRanges: [
-      {
-        key: 'yesterday',
-        text: '昨日'
-      },
-      {
-        key: 'last_7_day',
-        text: '最近7天'
-      },
-      {
-        key: 'last_30_day',
-        text: '最近30天'
-      },
-      {
-        key: 'last_90_day',
-        text: '最近90天'
-      }
-    ],
-    item: {
-      totalCount: tid,
-      rate: {
-        neutral: tid,
-        positive: tid,
-        passive: tid
-      },
-      keywords: {
-        yesterday: {
-          // 可能没有value 接口无返回
-          // 'positive|6': [
-          //   {
-          //     name: typeTitle(3, 10),
-          //     value: Math.floor(Math.random() * 100 + 1)
-          //   },
-          // ],
-          'positive|6': [
-            title20
-          ],
-          'passive|6': [
-            title20
-          ]
-        },
-        last_90_day: {
-          'positive|6': [
-            title20
-          ],
-          'passive|6': [
-            title20
-          ]
-        },
-        last_7_day: {
-          'positive|6': [
-            title20
-          ],
-          'passive|6': [
-            title20
-          ]
-        },
-        last_30_day: {
-          'positive|6': [
-            title20
-          ],
-          'passive|6': [
-            title20
-          ]
-        }
-      },
-      dates: [
-        {
-          date: 20190101,
-          positive: {
-            count: tid,
-            trend: tid
-          },
-          passive: {
-            count: tid,
-            trend: tid
-          },
-          neutral: {
-            count: tid,
-            trend: tid
-          }
-        },
-        {
-          date: 20190102,
-          positive: {
-            count: tid,
-            trend: tid
-          },
-          passive: {
-            count: tid,
-            trend: tid
-          },
-          neutral: {
-            count: tid,
-            trend: tid
-          }
-        },
-        {
-          date: 20190103,
-          positive: {
-            count: tid,
-            trend: tid
-          },
-          passive: {
-            count: tid,
-            trend: tid
-          },
-          neutral: {
-            count: tid,
-            trend: tid
-          }
-        }
-      ]
+    rate: {
+      neutral: '0.33',
+      positive: '0.33',
+      passive: '0.33'
     },
+    keyWords: {
+        yesterDay: {
+            positive: [
+                '正面'
+            ],
+            negative: [
+                '负面'
+            ]
+        },
+        ninetyDay: {
+            positive: [
+                '正面'
+            ],
+            negative: [
+                '负面'
+            ]
+        },
+        sevenDay: {
+            positive: [
+                '正面'
+            ],
+            negative: [
+                '负面'
+            ]
+        },
+        thirtyDay: {
+            positive: [
+                '正面'
+            ],
+            negative: [
+                '负面'
+            ]
+        }
+    },
+    items: [
+        {
+            date: 20190503,
+            positive: {
+                count: 101,
+                trend: 81
+            },
+            passive: {
+                count: 101,
+                trend: 81
+            },
+            neutral: {
+                count: 101,
+                trend: 81
+            }
+        },
+        {
+            date: 20190504,
+            positive: {
+                count: 102,
+                trend: 82
+            },
+            passive: {
+                count: 102,
+                trend: 82
+            },
+            neutral: {
+                count: 102,
+                trend: 82
+            }
+        },
+        {
+            date: 20190505,
+            positive: {
+                count: 103,
+                trend: 83
+            },
+            passive: {
+                count: 103,
+                trend: 83
+            },
+            neutral: {
+                count: 103,
+                trend: 83
+            }
+        },
+        {
+            date: 20190506,
+            positive: {
+                count: 104,
+                trend: 84
+            },
+            passive: {
+                count: 104,
+                trend: 84
+            },
+            neutral: {
+                count: 104,
+                trend: 84
+            }
+        }
+    ]
   })
 }
 
@@ -252,131 +223,6 @@ export async function fans(id: string = '') {
         text: '女'
       }
     ]
-  })
-  return await mockGet({}, {
-    chart1: {
-      dataList: [{
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }],
-      coverCinema: 8,
-      advertAmount: 1069.0,
-      coverPeople: 856,
-      coverScene: 92,
-      effectTypeList: [{
-        text: '男',
-        key: 0
-      }, {
-        text: '女',
-        key: 1
-      }]
-    },
-    chart2: {
-      dataList: [{
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 4
-      }],
-      effectTypeList: [{
-        text: '19岁及以下',
-        key: 0
-      }, {
-        text: '20-29岁',
-        key: 1
-      }, {
-        text: '30-29岁',
-        key: 2
-      }, {
-        text: '40-49岁',
-        key: 3
-      }, {
-        text: '50岁及以上',
-        key: 4
-      }]
-    },
-    chart3: {
-      dataList: [{
-        itemName: '广东',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '北京',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '江苏',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '广东',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        itemName: '江苏省',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        itemName: '浙江省',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }],
-      effectTypeList: [{
-        text: 'Papi酱',
-        key: 0
-      }, {
-        text: '奔驰',
-        key: 1
-      }]
-    },
-    chart4: {
-      dataList: [{
-        itemName: '重庆',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '上海',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '天津',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '广东',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        itemName: '厦门',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        itemName: '浙江省',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }],
-      effectTypeList: [{
-        key: 0,
-        name: '省份'
-      },
-      {
-        key: 1,
-        name: '城市'
-      }]
-    }
   })
 }
 
