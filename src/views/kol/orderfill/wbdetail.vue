@@ -173,8 +173,13 @@ export default class DlgEditCinema extends ViewBase {
 
   cancel() {
     (this.$refs.dataform as any).resetFields()
+<<<<<<< HEAD
+    const html: HTMLHtmlElement = (document.getElementsByTagName('html')[0] as HTMLHtmlElement)
+    // html.style = 'overflow-y: auto'
+=======
     const html: any = (document.getElementsByTagName('html')[0] as HTMLHtmlElement)
     html.style = 'overflow-y: auto'
+>>>>>>> 9e3bd6c928e99864b0acedfa4459eda26a0d347c
     this.form.content = ''
     this.showDlg = false
   }
