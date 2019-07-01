@@ -3,7 +3,9 @@
     <content class="content">
       <img src="../assets/logo.png" class="login-logo"/>
       <p class="login-title">全网精准娱乐营销平台</p>
-      <Button type="primary" :to="{name: 'tologin'}" class="login-but">登 录 / 注 册</Button>
+      <Button type="primary"  class="login-but">
+        <router-link tag="span" to="tologin">登 录</router-link> / <router-link tag="span" to="register">注 册</router-link>
+      </Button>
     </content>
     <!-- <div class="login-whale">
       <img src="../assets/whale.png" />
@@ -120,7 +122,7 @@ export default class Main extends ViewBase {
   height: 100%;
   width: 100%;
   min-height: 100vh;
-  background: url('../assets/logo-bg1.png') no-repeat center;
+  background: url('//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcpcd5jqctg008ubl6g.jpg') no-repeat center;
   background-size: cover;
   .login-whale {
     position: absolute;

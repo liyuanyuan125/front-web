@@ -567,7 +567,6 @@ export default class Plan extends ViewBase {
     /deep/ td {
       height: 200px;
       color: #00202d;
-      background: rgba(0, 0, 0, 0);
     }
   }
   /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
