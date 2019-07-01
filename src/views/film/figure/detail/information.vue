@@ -2,10 +2,10 @@
   <div class="personal-information">
     <h2 class="nav-title">人物简介</h2>
     <ul class="personal-mes">
-      <li><span>出生日期：</span><span>{{formatConversion(item.birthday)}}</span></li>
-      <li> <span>身高: {{item.height}}</span> </li>
-      <li><span>出生地：</span><span>{{item.country}},{{item.province}}</span></li>
-      <li><span>体重: {{item.weight}}</span></li>
+      <li><span>出生日期：</span><span>{{formatConversion(item.birthday) || '-'}}</span></li>
+      <li> <span>身高: {{item.height || '-'}}</span> </li>
+      <li><span>出生地：</span><span>{{item.country || '-'}},{{item.province || '-'}}</span></li>
+      <li><span>体重: {{item.weight || '-'}}</span></li>
     </ul>
     <div class="personal-text">{{item.introduction}}</div>
     <h2 class="nav-title">人物关系</h2>
@@ -13,16 +13,16 @@
       <li v-for="item in personalList" :key="item.id">
         <p class="per-title font_16">{{item.title}}</p>
         <p class="head-img">
-          <a class=""><img :src="item.headImg" /></a>
+          <a class=""><img :src="item.headImg == '' || item.headImg == null ? $store.state.defaultAvatar : item.headImg" /></a>
         </p>
-        <p class="per-name font_18">{{item.name}}</p>
-        <p class="per-englist font_18">{{item.nameEn || '暂无'}}</p>
+        <p class="per-name font_18">{{item.name || '-'}}</p>
+        <p class="per-englist font_18">{{item.nameEn || '-'}}</p>
         <p><span v-for="(it, index) in item.professions" :key="index">{{handleProfess(it.code)}}<em v-if="item.professions.length-1 != index"> / </em></span></p>
         <p>代表作品</p>
         <p><span v-for="it in item.movies" :key="it.id">《{{it.name}}》</span></p>
       </li>
     </ul>
-    <h2 class="nav-title">图片（{{imgList.length}}）</h2>
+    <h2 class="nav-title" v-if="imgList.length">图片（{{imgList.length}}）</h2>
     <ul name="list" v-if="imgList.length" tag="ul" class="loading-img">
       <li v-for="(img, index) in imgList" :key="index">
         <a class="img-list"><img :src="img" alt=""/></a>

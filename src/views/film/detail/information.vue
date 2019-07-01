@@ -12,39 +12,39 @@
    <!-- 更多资料 -->
    <div class="more">
      <Row class='title'>更多资料</Row>
-     <Row class='row-bo'>
+     <Row class='row-bo' style='padding-bottom: 0px;'>
        <Col span='3' class='fo-bo'>对白语言</Col>
        <Col span='20' class='fo-bos'>
          <em v-if='itemlist.languages == null'>暂无对白语言</em>
        <div style='margin-bottom: 10px;' v-if='itemlist.languages != null' v-for='(items,index) in itemlist.languages'>{{items}}</div><br>
        </Col>
      </Row>
-     <Row class='row-bo'>
+     <Row class='row-bo' style='padding-top: 0px;padding-bottom: 0px'>
        <Col span='3' class='fo-bo'>上映日期</Col>
        <Col span='20' class='fo-bos'>
          <em v-if='itemlist.releaseDates == null'>暂无</em>
-       <div style='margin-bottom: 10px;height: 30px;line-height: 30px;' v-if='itemlist.releaseDates != null' v-for='(items,index) in dataitemlist'>
+       <div style='margin-bottom: 10px;height: 20px;line-height: 20px;' v-if='itemlist.releaseDates != null' v-for='(items,index) in dataitemlist'>
          <div class='nams' style='width: 21%;'>{{items.countryName}}&nbsp;&nbsp;{{items.countryNameEn}}</div>
          <div class='nams' style='margin-left: 2%;'>-------------------------</div>
          <div class='nams' style='margin-left: 4%;'>{{items.date}}</div>
        </div><br>
-       <div class="show-all" v-if="itemlist.releaseDates.length > 5">
+       <div class="show-alls" v-if="itemlist.releaseDates.length > 5">
         <span @click="dataToggle">{{dataTitle}}<Icon :class="{'dataDown': dataFlag == 0, 'dataUp': dataFlag == 1}" type="ios-arrow-down" size="25" /></span>
       </div>
      </Col>
        </Col>
      </Row>
-     <Row class='row-bo'>
+     <Row class='row-bo' style='padding-top: 0px;'>
        <Col span='3' class='fo-bo'>制作公司</Col>
        <Col span='20' class='fo-bos'>
        <em v-if='itemlist.companyMap.Production.length == 0'>暂无制作</em>
        <div style='margin-bottom: 10px;' v-if='itemlist.companyMap.Production.length > 0' v-for='(items,index) in itemlist.companyMap.Production'>{{items.name}}</div><br>
      </Col>
      </Row>
-     <Row class='row-bo'>
+     <Row class='row-bo' style='padding-top: 20px;'>
        <Col span='3' class='fo-bo'>发行公司</Col>
        <Col span='20' class='fo-bos'>
-       <em v-if='itemlist.companyMap.Distributor.length == 0'>/暂无发行</em>
+       <em v-if='itemlist.companyMap.Distributor.length == 0'>暂无发行</em>
        <div style='margin-bottom: 10px;' v-if='itemlist.companyMap.Distributor.length > 0' v-for='(items,index) in itemlist.companyMap.Distributor'>{{items.name}}</div><br></Col>
      </Row>
    </div>
@@ -280,6 +280,15 @@ export default class Main extends ViewBase {
 }
 .show-all {
   margin-top: 5px;
+  text-align: center;
+  font-size: 14px;
+  color: #b3bcc0;
+  line-height: 30px;
+  span {
+    cursor: pointer;
+  }
+}
+.show-alls {
   text-align: center;
   font-size: 14px;
   color: #b3bcc0;
