@@ -34,7 +34,7 @@
                   <span>{{it.text}}</span>
                 </Option>
               </Select>
-          </FormItem>
+           </FormItem>
          </Row>
          <Row style='margin-top: 16px;'><span class='bx'>*</span>
            <!-- <Col :span='4' style='margin-top: 5px;width: 100px；'>发票类型</Col>
@@ -44,7 +44,7 @@
             </RadioGroup>
            </Col> -->
            <FormItem label="发票类型" prop="invoiceType">
-            <RadioGroup v-model="query.invoiceType" >
+            <RadioGroup v-model="query.invoiceType" @on-change='ass'>
               <Radio v-for="it in faType"  :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
             </RadioGroup>
           </FormItem>
@@ -82,14 +82,19 @@
             <Input v-model="query.taxId"></Input>
           </FormItem>
           </Row>
-          <Row style='margin-top: 27px;'>
+          <Row  style='margin-top: 27px;'>
            <!-- <Col :span='4' style='margin-top: 5px;'><span class='hui'>地址</span></Col>
            <Col :span='20'>
             <AreaSelect v-model="area" />
             <br><br>
             <Input  v-model="query.address" placeholder='请输入详细地址'></Input>
            </Col> -->
-           <FormItem label="地址" prop="address">
+           <FormItem v-if='query.invoiceType == 1' label="地址" prop="address">
+            <AreaSelect v-model="area" />
+            <br><br>
+            <Input  v-model="query.address" placeholder='请输入详细地址'></Input>
+          </FormItem>
+          <FormItem v-if='query.invoiceType == 2' label="地址" prop="">
             <AreaSelect v-model="area" />
             <br><br>
             <Input  v-model="query.address" placeholder='请输入详细地址'></Input>
@@ -100,7 +105,10 @@
            <Col :span='20'>
             <InputNumber  v-model="query.telphone" placeholder=''></InputNumber >
            </Col> -->
-           <FormItem label="电话" prop="telphone">
+           <FormItem v-if='query.invoiceType == 1' label="电话" prop="telphone">
+            <Input v-model="query.telphone"></Input>
+          </FormItem>
+           <FormItem v-if='query.invoiceType == 2' label="电话" prop="">
             <Input v-model="query.telphone"></Input>
           </FormItem>
           </Row>
@@ -109,7 +117,10 @@
            <Col :span='20'>
             <Input  v-model="query.accountBank" placeholder=''></Input>
            </Col> -->
-           <FormItem label="开户行" prop="accountBank">
+           <FormItem v-if='query.invoiceType == 1'  label="开户行" prop="accountBank">
+            <Input v-model="query.accountBank"></Input>
+          </FormItem>
+          <FormItem v-if='query.invoiceType == 2'  label="开户行" prop="">
             <Input v-model="query.accountBank"></Input>
           </FormItem>
           </Row>
@@ -118,7 +129,10 @@
            <Col :span='20'>
             <Input v-model="query.accountNumber" placeholder=''></Input>
            </Col> -->
-           <FormItem label="开户账号" prop="accountNumber">
+           <FormItem  v-if='query.invoiceType == 1'  label="开户账号" prop="accountNumber">
+            <Input v-model="query.accountNumber"></Input>
+          </FormItem>
+          <FormItem  v-if='query.invoiceType == 2'  label="开户账号" prop="">
             <Input v-model="query.accountNumber"></Input>
           </FormItem>
           </Row>
@@ -219,6 +233,7 @@ import number from '@/components/number.vue'
     number
   }
 })
+
 export default class Main extends ViewBase {
   totalCount = 0
   query: any = {
@@ -246,6 +261,7 @@ export default class Main extends ViewBase {
     orderIds: [],
     orderNo: []
   }
+  aaa: any = 0
 
 
   list: any = []
@@ -269,6 +285,12 @@ export default class Main extends ViewBase {
     } else if (this.$route.params.key == '0') {
       this.detail()
     }
+  }
+
+  ass() {
+    this.aaa = this.query.invoiceType
+    ; (this.$refs.query as any).resetFields()
+    this.query.invoiceType = this.aaa
   }
 
   get rule() {

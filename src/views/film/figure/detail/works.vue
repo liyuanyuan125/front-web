@@ -15,7 +15,7 @@
               <em v-if="item.types.length-1 != index"> / </em>
             </span>
           </p>
-          <p class="top-money"><span>{{item.boxOffice}}</span></p>
+          <p class="top-money"><span>{{readableNumber(item.boxOffice)}}</span></p>
         </li>
       </ul>
     </div>
@@ -88,6 +88,7 @@ import ViewBase from '@/util/ViewBase'
 import {personMovies, topList } from '@/api/filmPersonDetail'
 import { getTodayDate, formatConversion } from '@/util/validateRules'
 import { cloneDeep } from 'lodash'
+import { readableNumber } from '@/util/dealData'
 
 
 @Component
@@ -115,7 +116,7 @@ export default class Master extends ViewBase {
   // 影片类型
   selList = [
     {key: 0, text: '按时间排序'},
-    {key: 1, text: '按鲸鱼指数排序'}
+    {key: 1, text: '按鲸娱指数排序'}
   ]
   // 影片类型筛选
   filmListSelect = [
@@ -130,6 +131,10 @@ export default class Master extends ViewBase {
 
   get formatConversion() {
     return formatConversion
+  }
+
+  get readableNumber() {
+    return readableNumber
   }
 
   async mounted() {

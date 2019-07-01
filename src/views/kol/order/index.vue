@@ -95,7 +95,7 @@
                     </Row>
                   </li>
                 </ul>
-                <ul v-if ="list.length == 0" class="no-list-data">暂无数据</ul>
+                <ul v-if ="list.length == 0" class="no-list-data">{{list.length == 0 ? '暂无数据' : null}}</ul>
                 <Spin fix v-if="spinShow"></Spin>
               </div>
                 <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
