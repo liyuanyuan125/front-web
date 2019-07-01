@@ -1,6 +1,8 @@
 // 将登陆注册等模块「静态」到主文件中，以便用户更流畅
 import home from '@/views/home.vue'
 import login from '@/views/portal/login/index.vue'
+import loginIndex from '@/views/portal/login/loginIndex.vue'
+import apply from '@/views/portal/login/apply.vue'
 import register from '@/views/portal/register.vue'
 import registerComplete from '@/views/portal/registerComplete.vue'
 import activeEmail from '@/views/portal/activeEmail.vue'
@@ -70,6 +72,11 @@ export interface RouteMetaBase {
    * 是否使用沉浸式 header，默认为 false，只能设置为 true 或不设置
    */
   immersionHeader?: true
+
+  /**
+   * 点亮的侧边菜单名称
+   */
+  siderMenu?: string
 }
 
 /**
@@ -149,6 +156,18 @@ const singleRoutes: RouteConfigEnhance[] = [
     path: '/login',
     name: 'login',
     component: login,
+    meta: unauth
+  },
+  {
+    path: '/tologin',
+    name: 'tologin',
+    component: loginIndex,
+    meta: unauth
+  },
+  {
+    path: '/apply',
+    name: 'apply',
+    component: apply,
     meta: unauth
   },
 
@@ -1394,9 +1413,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       title: '品牌',
+      siderMenu: 'brand-list'
     },
     props: idProps,
   },
+
   // 品牌 - 首页 - 详情页
   {
     path: '/brand/homedetail/:id',
