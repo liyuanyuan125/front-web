@@ -159,12 +159,11 @@ export default class Main extends ViewBase {
   }
 
   mounted() {
-    // this.queryCinemaList()
+    this.remoteMethod()
     this.orderList()
   }
 
-  async remoteMethod(query: any) {
-    const companyId = getUser() && getUser()!.companyId
+  async remoteMethod(query?: any) {
     try {
       if (query) {
         this.loading = true
@@ -174,6 +173,13 @@ export default class Main extends ViewBase {
            query
         })
         this.cinemaList = items || []
+      } else {
+        this.loading = true
+        const { data: {items, totalCount}} = await queryCinemaList({
+           pageIndex: 1,
+           pageSize: 400,
+           query
+        })
         this.cinemaTotalCount = totalCount
       }
       this.loading = false
@@ -195,23 +201,6 @@ export default class Main extends ViewBase {
       return tab.text
     }
   }
-
-  // async queryCinemaList() {
-  //   try {
-  //     const companyId = getUser() && getUser()!.companyId
-  //     const {
-  //       data: {items, totalCount}
-  //     } = await queryCinemaList({
-  //       pageIndex: 1,
-  //       pageSize: 999,
-  //       companyId
-  //     })
-  //     this.cinemaList = items || []
-  //     this.cinemaTotalCount = totalCount
-  //   } catch (ex) {
-  //     this.handleError(ex)
-  //   }
-  // }
 
   async orderList() {
     try {

@@ -41,7 +41,6 @@ export async function dayRanges(query: any = { beginDate: 20191212, endDate: 201
  * @deprecated 缺少数据，重置日期 http://fapi.aiads-dev.com/person/107028/comments?beginDate=20170112&endDate=20191212
  */
 export async function comment(query: any, id: string = '') {
-  // const res = await get(`/person/${id}/comments`, query)
   const res = await get(`/brand/brands/${id}/comment`, query)
   return res
   return await mockGet(query, {

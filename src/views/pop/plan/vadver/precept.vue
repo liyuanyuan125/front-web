@@ -13,7 +13,7 @@
               <li @click="filmdetail(it.movieId)" v-for="(it) in filmList" :key="it.id"
                 :class="['film-item']">
                 <div class="film-top">
-                  <img :src="it.image ? it.image : defaultImg" @onerror="defaultImg" class="film-cover">
+                  <img :src="it.image ? it.image : defaultImg" :onerror="defaultImg" class="film-cover">
                   <div style="position: relative">
                     <!-- <p class="film-title" :title="it.movieName">{{it.movieName}}</p> -->
                     <p class="film-title" :title="it.movieName" style="margin-bottom: 30px">{{it.movieName}}</p>
@@ -94,22 +94,22 @@
                     <div :class="'border-bottom' + tag"></div>
                   </div>
                   <div class="cineme-input" v-if="tag == 1">
-                    <Input placeholder="影院名称" v-model="form.name" style="width: 275px">
+                    <Input @on-enter="seach" placeholder="影院名称" v-model="form.name" style="width: 275px">
                         <Icon @click="seach" type="ios-search" slot="suffix" />
                     </Input>
                   </div>
                   <div class="cineme-input" v-if="tag == 2">
-                    <Input v-model="form.name" placeholder="院线名称" style="width: 275px">
+                    <Input @on-enter="seach" v-model="form.name" placeholder="院线名称" style="width: 275px">
                         <Icon @click="seach" type="ios-search" slot="suffix" />
                     </Input>
                   </div>
                   <div class="cineme-input" v-if="tag == 3">
-                    <Input v-model="form.name" placeholder="城市名称" style="width: 275px">
+                    <Input @on-enter="seach" v-model="form.name" placeholder="城市名称" style="width: 275px">
                         <Icon @click="seach" type="ios-search" slot="suffix" />
                     </Input>
                   </div>
                   <div class="cineme-input" v-if="tag == 4">
-                    <Input v-model="form.name" placeholder="省份名称" style="width: 275px">
+                    <Input @on-enter="seach" v-model="form.name" placeholder="省份名称" style="width: 275px">
                         <Icon @click="seach" type="ios-search" slot="suffix" />
                     </Input>
                   </div>

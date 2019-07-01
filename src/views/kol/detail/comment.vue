@@ -376,7 +376,7 @@ export default class Main extends ViewBase {
     const mockObj = {
       beginDate: this.form.beginDate[0],
       endDate: this.form.beginDate[1],
-      ...this.form
+      channelCode: this.form.channelCode
     }
     const id = this.$route.params.id || ''
     try {
@@ -389,51 +389,62 @@ export default class Main extends ViewBase {
           channelList
         }
       } = await comment({ ...mockObj }, id)
+      if ( !items ) { return }
+      
       if (channelList && channelList.length > 0) {
         this.dict.channelList = channelList
       }
       
-      for ( const k in rate ) {
-        if ( rate[k] ) {
-          const index = findIndex(this.dict.emotionList, (it: any) => {
-            return it.key == k
-          })
-          this.chart1.dataList[0].push({
-            value: rate[k],
-            name: this.dict.emotionList[index].text
-          })
+      if ( rate ) {
+        for ( const k in rate ) {
+          if ( rate[k] ) {
+            const index = findIndex(this.dict.emotionList, (it: any) => {
+              return it.key == k
+            })
+            this.chart1.dataList[0].push({
+              value: rate[k],
+              name: this.dict.emotionList[index].text
+            })
+          }
+          that.chart1.initDone = true
         }
       }
 
-      items.forEach((item: any, index: number) => {
-        //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
-        // trend 新增 index:0 | count 累计 index:1
-        const { date, neutral, passive, positive } = item
-        that.chart2.xAxis.push( date )
-        that.chart2.dataList[0][0].data.push(item.positive.trend)
-        that.chart2.dataList[0][1].data.push(item.passive.trend)
-        that.chart2.dataList[0][2].data.push(item.neutral.trend)
-        that.chart2.dataList[1][0].data.push(item.positive.count)
-        that.chart2.dataList[1][1].data.push(item.passive.count)
-        that.chart2.dataList[1][2].data.push(item.neutral.count)
-      })
-
-      commentKeyword[this.form.dayRangesKey].positive.forEach((item: any) => {
-        that.chart3.dataList[0].push({
-          name: item,
-          value: Math.floor(Math.random() * 100 + 1)
+      if ( items && items.length > 0 ) {
+        items.forEach((item: any, index: number) => {
+          //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
+          // trend 新增 index:0 | count 累计 index:1
+          const { date, neutral, passive, positive } = item
+          that.chart2.xAxis.push( date )
+          that.chart2.dataList[0][0].data.push(item.positive.trend)
+          that.chart2.dataList[0][1].data.push(item.passive.trend)
+          that.chart2.dataList[0][2].data.push(item.neutral.trend)
+          that.chart2.dataList[1][0].data.push(item.positive.count)
+          that.chart2.dataList[1][1].data.push(item.passive.count)
+          that.chart2.dataList[1][2].data.push(item.neutral.count)
         })
-      })
-      commentKeyword[this.form.dayRangesKey].negative.forEach((item: any) => {
-        that.chart4.dataList[0].push({
-          name: item,
-          value: Math.floor(Math.random() * 100 + 1)
-        })
-      })
-      that.chart1.initDone = true
-      that.chart2.initDone = true
-      that.chart3.initDone = true
-      that.chart4.initDone = true
+        that.chart2.initDone = true
+      }
+      if ( commentKeyword ) {
+        if ( commentKeyword[this.form.dayRangesKey].positive && commentKeyword[this.form.dayRangesKey].positive.length > 0 ) {
+          commentKeyword[this.form.dayRangesKey].positive.forEach((item: any) => {
+            that.chart3.dataList[0].push({
+              name: item,
+              value: Math.floor(Math.random() * 100 + 1)
+            })
+          })
+          that.chart3.initDone = true
+        }
+        if ( commentKeyword[this.form.dayRangesKey].negative && commentKeyword[this.form.dayRangesKey].negative.length > 0 ) {
+          commentKeyword[this.form.dayRangesKey].negative.forEach((item: any) => {
+            that.chart4.dataList[0].push({
+              name: item,
+              value: Math.floor(Math.random() * 100 + 1)
+            })
+          })
+          that.chart4.initDone = true
+        }
+      }
     } catch (ex) {
       this.handleError(ex)
     }

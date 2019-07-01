@@ -1,6 +1,6 @@
 <template>
   <div class="login-home">
-    <img src="../assets/logo.png" class="layout-log" />
+    <img src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcpcgljqctg008ubl7g.png" class="layout-log" />
     <slot></slot>
   </div>
 </template>
@@ -19,7 +19,7 @@ export default class Main extends ViewBase {
   height: 100%;
   width: 100%;
   min-height: 100vh;
-  background: url('../assets/logo-bg.png') no-repeat center;
+  background: url('//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcpcetjqctg008ubl70.jpg') no-repeat center;
   background-size: cover;
   .layout-log {
     width: 189px;
