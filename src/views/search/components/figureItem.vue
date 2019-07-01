@@ -56,11 +56,11 @@ export default class FigureItem extends ViewBase {
 }
 
 .col1 {
-  width: 300px;
+  width: 43.23%;
 }
 
 .col2 {
-  width: 260px;
+  width: 37.46%;
 }
 
 .col3 {

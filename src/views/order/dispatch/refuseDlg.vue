@@ -50,7 +50,7 @@
     </Row>
     <div slot="footer" class="foot">
       <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
-      <Button class="foot-button" type="primary" @click="refuseSubmit">拒绝执行</Button>
+      <Button class="foot-button" type="primary" :loading="refuseLoading" @click="refuseSubmit">拒绝执行</Button>
     </div>
   </Modal>
 </template>
@@ -68,6 +68,8 @@ export default class DlgEditCinema extends ViewBase {
   showDlg = true
   data: any = null
 
+  refuseLoading = false
+
   init(data: any) {
     this.data = data
     this.showDlg = true
@@ -82,11 +84,14 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   async refuseSubmit() {
+    this.refuseLoading = true
     try {
       const data = await refuse(this.data.id)
       this.$emit('refReload')
+      this.refuseLoading = false
     } catch (ex) {
       this.handleError(ex)
+      this.refuseLoading = false
     }
   }
 }

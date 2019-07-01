@@ -133,6 +133,7 @@ export default class Promotion extends ViewBase {
   adverList: any = []
   nums: any = 0
   times: any = new Date().getTime()
+  pername: any = ''
 
   startDate: any = {
     disabledDate: (dates: any) => {
@@ -140,13 +141,14 @@ export default class Promotion extends ViewBase {
     }
   }
 
-  get pername() {
-    const data = this.adverList.filter((it: any) => this.form.productId == it.productId)
-    const data1 = this.adverList.filter((it: any) => this.form.brandId == it.brandId)
-    const customerName = data.length > 0 ? `[ ${data[0].customerName} ]` : ''
-    const productName = data1.length > 0 ? `[ ${data1[0].productName} ]` : ''
-    return `${customerName} ${productName}`
-  }
+  // get pername() {
+  //   const data = this.adverList.filter((it: any) => this.form.productId == it.productId)
+  //   const data1 = this.adverList.filter((it: any) => this.form.brandId == it.brandId)
+  //   const customerName = data.length > 0 ? `[ ${data[0].customerName} ]` : ''
+  //   const productName = data1.length > 0 ? `[ ${data1[0].productName} ]` : ''
+  //   this.names = `${customerName} ${productName}`
+  //   return `${customerName} ${productName}`
+  // }
 
   get rule() {
     const moneyvalidator = ( rules: any, value: any, callback: any) => {
@@ -258,6 +260,7 @@ export default class Promotion extends ViewBase {
       this.steps = 2
       if (!data.item.videoId) {
         this.setadver = true
+        this.pername = data.item.name
       } else {
         this.form.name = data.item.name
         this.form.videoId = data.item.videoId
@@ -338,13 +341,12 @@ export default class Promotion extends ViewBase {
       this.form.brandId = data[0].brandId
       this.form.specification = data[0].specification
       if (this.steps == 2) {
-
       } else {
         this.form.budgetAmount = ''
+        this.form.productId = data[0].productId
+        this.form.name = `[ ${data[0].name} ] [ ${data[0].customerName} ] [ ${data[0].productName} ]`
       }
       this.steps = 1
-      this.form.productId = data[0].productId
-      this.form.name = `[ ${data[0].name} ] [ ${data[0].customerName} ] [ ${data[0].productName} ]`
     } else {
       this.form.name = ''
     }
@@ -420,10 +422,12 @@ export default class Promotion extends ViewBase {
     background: #00202d;
     height: 57px;
     border-radius: 5px;
+    /deep/ .ivu-input-wrapper {
+      margin-top: 7px;
+    }
     /deep/ .ivu-input-wrapper, .ivu-input {
       background: #00202d;
       height: 47px;
-      line-height: 60px;
       border: 0;
       font-size: 20px;
       color: #fff;
