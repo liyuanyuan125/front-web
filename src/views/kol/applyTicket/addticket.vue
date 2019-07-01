@@ -306,9 +306,9 @@ export default class Main extends ViewBase {
             message: '请输入正确的手机号码', trigger: 'blur'
           }
       ],
-      comment: [
-        { required: true, message: '请输入留言'},
-      ],
+      // comment: [
+      //   { required: true, message: '请输入留言'},
+      // ],
       address: [
         { required: true, message: '请输入地址', trigger: 'blur' },
       ],
