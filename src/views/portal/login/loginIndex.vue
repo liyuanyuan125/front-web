@@ -170,7 +170,7 @@ export default class Main extends ViewBase {
         cursor: pointer;
         &.active {
           color: #4561d7;
-          padding-bottom: 3px;
+          padding-bottom: 6px;
           border-bottom: solid 3px #4561d7;
         }
         &:nth-child(1) {
