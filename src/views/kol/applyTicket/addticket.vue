@@ -307,7 +307,7 @@ export default class Main extends ViewBase {
           }
       ],
       comment: [
-        { required: true, message: '请输入留言', trigger: 'blur' },
+        { required: true, message: '请输入留言'},
       ],
       address: [
         { required: true, message: '请输入地址', trigger: 'blur' },
