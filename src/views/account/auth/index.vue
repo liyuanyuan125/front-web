@@ -274,9 +274,10 @@ export default class Main extends ViewBase {
   border-radius: 5px;
   min-height: 280px;
   position: relative;
+  margin: 20px 0;
   /deep/ .ivu-table-header th {
     height: 60px;
-    background: #204350;
+    background: rgba(0, 32, 45, 0.8);
     color: #fff;
     line-height: 60px;
     span {
@@ -291,7 +292,7 @@ export default class Main extends ViewBase {
   }
   /deep/ .ivu-table-row {
     background: #204350;
-    /deep/ td {
+    td {
       color: #fff;
       background: #204350;
       a {

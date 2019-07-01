@@ -29,7 +29,7 @@
           <li @click="checkNum(it.id)" v-for="(it, index) in data" :key="index"
             :class="['film-item', !!checkId.includes(it.id + '') ? 'list-active' : '']">
             <div :class="['film-cover-box']">
-              <img :src="it.image ? it.image : defaultImg" onerror="defaultImg" class="film-cover">
+              <img :src="it.image ? it.image : defaultImg" :onerror="defaultImg" class="film-cover">
               <div>
                 <div class="film-title">{{it.nameCn}}</div>
                 <div class="film-time" style="margin-top: 10px">上映时间：{{formatDate(it.releaseDate)}}</div>
