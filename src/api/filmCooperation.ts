@@ -48,113 +48,140 @@ export async function fetchList(query: any) {
     categoryList: [
       {
           text: '一般影片',
-          key: 'commonly'
+          key: 'commonly',
+          controlStatus: 1
       },
       {
           text: 'test分类',
-          key: 'test'
+          key: 'test',
+          controlStatus: 0
       },
       {
           text: '超级大片',
-          key: 'super'
+          key: 'super',
+          controlStatus: 1
       },
       {
           text: '热门大片',
-          key: 'popular'
+          key: 'popular',
+          controlStatus: 0
       }
     ],
     typeList: [
       {
           text: '儿童',
-          key: 'Kids'
+          key: 'Kids',
+          controlStatus: 0
       },
       {
           text: '历史',
-          key: 'History'
+          key: 'History',
+          controlStatus: 1
       },
       {
           text: '纪录片',
-          key: 'Documentary'
+          key: 'Documentary',
+          controlStatus: 1
       },
       {
           text: '战争',
-          key: 'War'
+          key: 'War',
+          controlStatus: 1
       },
       {
           text: '戏曲',
-          key: 'Opera'
+          key: 'Opera',
+          controlStatus: 1
       },
       {
           text: '音乐',
-          key: 'Music'
+          key: 'Music',
+          controlStatus: 1
       },
       {
           text: '歌舞',
-          key: 'Musical'
+          key: 'Musical',
+          controlStatus: 1
       },
       {
           text: '犯罪',
-          key: 'Crime'
+          key: 'Crime',
+          controlStatus: 1
       },
       {
           text: '传记',
-          key: 'Biography'
+          key: 'Biography',
+          controlStatus: 1
       },
       {
           text: '青春',
-          key: 'Youth'
+          key: 'Youth',
+          controlStatus: 1
       },
       {
           text: '奇幻',
-          key: 'Fantasy'
+          key: 'Fantasy',
+          controlStatus: 1
       },
       {
           text: '短片',
-          key: 'Short'
+          key: 'Short',
+          controlStatus: 1
       },
       {
           text: '惊悚',
-          key: 'Thriller'
+          key: 'Thriller',
+          controlStatus: 1
       },
       {
           text: '冒险',
-          key: 'Adventure'
+          key: 'Adventure',
+          controlStatus: 1
       },
       {
           text: '科幻',
-          key: 'Sci-Fi'
+          key: 'Sci-Fi',
+          controlStatus: 1
       },
       {
           text: '动作',
-          key: 'Action'
+          key: 'Action',
+          controlStatus: 1
       },
       {
           text: '家庭',
-          key: 'Family'
+          key: 'Family',
+          controlStatus: 1
       },
       {
           text: '动画',
-          key: 'Animation'
+          key: 'Animation',
+          controlStatus: 1
       },
       {
           text: '励志',
-          key: 'Encouragement'
+          key: 'Encouragement',
+          controlStatus: 1
       },
       {
           text: '喜剧',
-          key: 'Comedy'
+          key: 'Comedy',
+          controlStatus: 1
       },
       {
           text: '悬疑',
-          key: 'Mystery'
+          key: 'Mystery',
+          controlStatus: 1
       },
       {
           text: '爱情',
-          key: 'Romance'
+          key: 'Romance',
+          controlStatus: 1
       },
       {
           text: '剧情',
-          key: 'Drama'
+          key: 'Drama',
+          controlStatus: 0
       }
     ]
   })

@@ -54,7 +54,7 @@ export async function queryList(query: any) {
 
 // 获取影院列表
 export async function movielist(query: any) {
-  const res = await get('/customer/cinemas' , query)
+  const res = await get('/theater/cinemas/query-for-current' , query)
   return res
 }
 

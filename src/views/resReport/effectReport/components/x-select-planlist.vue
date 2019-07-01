@@ -1,33 +1,54 @@
 <template>
-    <!-- 计划列表 -->
-    <Select v-model="inner"  clearable filterable placeholder="广告计划名称"  class="select-wid" >
-        <Option v-for="item in data" :key="item.id" :value="item.id">{{item.name || item.nameShort}}</Option>
+    <!-- 客户列表 -->
+    <Select v-model="inner"
+        placeholder="广告计划名称"
+        filterable
+        remote
+        clearable
+        :remote-method="remoteMethod"
+        :loading="loading"
+        @on-clear="data = []"
+        class="select-wid" >
+        <Option v-for="(item, index) in data" :key="index" :value="item.id" >{{item.name}}</Option>        
     </Select>
 </template>
 
 <script lang='ts'>
 import {Component, Prop, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { popPlans } from '@/api/effectReport'
+import { searchPlans } from '@/api/effectReport'
 @Component
-export default class Main extends ViewBase {
-  @Prop({ type: Number, default: 0 }) value!: number
+export default class SelectPlan extends ViewBase {
+  // 双向绑定 v-model
+  @Prop({ type: Number, default: '' }) value!: number
+
+  loading: boolean = false
 
   data = []
+
   inner: number = this.value
 
-  mounted() {
-    this.popPlansHandle()
-  }
+  mounted() { }
 
-  async popPlansHandle() {
+  async remoteMethod(query: any) {
     try {
-      const { data: {items} } = await popPlans({
-        pageSize: 99999,
-        pageIndex: 1
-      })
-      this.data = items
+      if (query) {
+        this.loading = true
+        const {
+          data: { items }
+        } = await searchPlans({
+          pageSize: 99,
+          pageIndex: 1,
+          // name: query.trim()
+          name: encodeURIComponent(query.trim())
+        })
+        if ( items && items.length > 0 ) {
+          this.data = items
+        }
+      }
+      this.loading = false
     } catch (ex) {
+      this.loading = false
       this.handleError(ex)
     }
   }
@@ -39,10 +60,12 @@ export default class Main extends ViewBase {
 
   @Watch('inner')
   watchInner(value: number) {
-    this.$emit('input', value)
+    if ( value ) {
+      this.$emit('input', value)
+    } else {
+      this.$emit('input', null)
+    }
   }
 }
 
 </script>
-<style lang='less' scoped>
-</style>

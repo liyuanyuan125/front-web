@@ -186,13 +186,6 @@ export default class Temporary extends ViewBase {
     dataList: [
       [
         {
-          name: '中性',
-          type: 'bar',
-          stack: 'totalCount',
-          barMaxWidth: '20',
-          data: []
-        },
-        {
           name: '正面',
           type: 'bar',
           stack: 'totalCount',
@@ -205,16 +198,17 @@ export default class Temporary extends ViewBase {
           stack: 'totalCount',
           barMaxWidth: '20',
           data: []
-        }
+        },
+        {
+          name: '中性',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
+        },
       ],
       [
         {
-          name: '中性',
-          type: 'bar',
-          stack: 'totalCount',
-          data: []
-        },
-        {
           name: '正面',
           type: 'bar',
           stack: 'totalCount',
@@ -225,7 +219,13 @@ export default class Temporary extends ViewBase {
           type: 'bar',
           stack: 'totalCount',
           data: []
-        }
+        },
+        {
+          name: '中性',
+          type: 'bar',
+          stack: 'totalCount',
+          data: []
+        },
       ]
     ],
     color: colors

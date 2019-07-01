@@ -767,7 +767,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 效果报表
   {
-    path: '/reseport/effect-report',
+    path: '/reseport/effect-report/:id',
     name: 'effect-report',
     component: () => import('./views/resReport/effectReport/index.vue'),
     meta: {
@@ -916,7 +916,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/order/taskDetection/:id',
     name: 'order-order-taskDetection',
     component: () => import('./views/kol/order/taskDetection.vue'),
-    meta: emptyAuth,
+    meta: {
+      ...emptyAuth,
+      title: '监测'
+    },
   },
 
   // kol - 监测详情
@@ -924,7 +927,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/order/taskDetection/detail/:id',
     name: 'order-order-taskDetection-detail',
     component: () => import('./views/kol/order/taskdet.vue'),
-    meta: emptyAuth,
+    meta: {
+      ...emptyAuth,
+      title: '监测详情'
+    },
   },
 
   // KOL - 申请发票列表
@@ -932,7 +938,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/applyTicket',
     name: 'kol-applyTicket',
     component: () => import('./views/kol/applyTicket/index.vue'),
-    meta: emptyAuth
+    meta: {
+      ...emptyAuth,
+      title: '申请发票列表'
+    },
   },
 
   // KOL - 申请发票填写
@@ -940,7 +949,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/applyTicket/addticket/:edit/:key',
     name: 'kol-applyTicket-addticket',
     component: () => import('./views/kol/applyTicket/addticket.vue'),
-    meta: emptyAuth
+    meta: {
+      ...emptyAuth,
+      title: '申请发票填写页'
+    },
   },
 
   // KOL - 查看开票历史
@@ -948,7 +960,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/applyTicket/ticketHis',
     name: 'kol-applyTicket-ticketHis',
     component: () => import('./views/kol/applyTicket/ticketHis.vue'),
-    meta: emptyAuth
+    meta: {
+      ...emptyAuth,
+      title: '查看开票历史'
+    },
   },
 
   // KOL - 查看开票详情
@@ -956,7 +971,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/applyTicket/detail/:id',
     name: 'kol-applyTicket-detail',
     component: () => import('./views/kol/applyTicket/detail.vue'),
-    meta: emptyAuth
+    meta: {
+      ...emptyAuth,
+      title: '查看开票详情'
+    },
   },
 
   // kol - koll列表

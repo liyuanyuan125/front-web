@@ -8,7 +8,7 @@
 <script lang='ts'>
 import {Component, Prop, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { popPlans } from '@/api/effectReport'
+import { searchPlans } from '@/api/effectReport'
 @Component
 export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0 }) value!: number
@@ -22,7 +22,7 @@ export default class Main extends ViewBase {
 
   async popPlansHandle() {
     try {
-      const { data: {items} } = await popPlans({
+      const { data: {items} } = await searchPlans({
         pageSize: 99999,
         pageIndex: 1
       })
