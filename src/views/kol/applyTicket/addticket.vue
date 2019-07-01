@@ -34,7 +34,7 @@
                   <span>{{it.text}}</span>
                 </Option>
               </Select>
-          </FormItem>
+           </FormItem>
          </Row>
          <Row style='margin-top: 16px;'><span class='bx'>*</span>
            <!-- <Col :span='4' style='margin-top: 5px;width: 100px；'>发票类型</Col>
@@ -82,14 +82,19 @@
             <Input v-model="query.taxId"></Input>
           </FormItem>
           </Row>
-          <Row style='margin-top: 27px;'>
+          <Row  style='margin-top: 27px;'>
            <!-- <Col :span='4' style='margin-top: 5px;'><span class='hui'>地址</span></Col>
            <Col :span='20'>
             <AreaSelect v-model="area" />
             <br><br>
             <Input  v-model="query.address" placeholder='请输入详细地址'></Input>
            </Col> -->
-           <FormItem label="地址" prop="address">
+           <FormItem v-if='query.invoiceType == 1' label="地址" prop="address">
+            <AreaSelect v-model="area" />
+            <br><br>
+            <Input  v-model="query.address" placeholder='请输入详细地址'></Input>
+          </FormItem>
+          <FormItem v-if='query.invoiceType == 2' label="地址" prop="">
             <AreaSelect v-model="area" />
             <br><br>
             <Input  v-model="query.address" placeholder='请输入详细地址'></Input>
@@ -100,7 +105,10 @@
            <Col :span='20'>
             <InputNumber  v-model="query.telphone" placeholder=''></InputNumber >
            </Col> -->
-           <FormItem label="电话" prop="telphone">
+           <FormItem v-if='query.invoiceType == 1' label="电话" prop="telphone">
+            <Input v-model="query.telphone"></Input>
+          </FormItem>
+           <FormItem v-if='query.invoiceType == 2' label="电话" prop="">
             <Input v-model="query.telphone"></Input>
           </FormItem>
           </Row>
@@ -109,7 +117,10 @@
            <Col :span='20'>
             <Input  v-model="query.accountBank" placeholder=''></Input>
            </Col> -->
-           <FormItem label="开户行" prop="accountBank">
+           <FormItem v-if='query.invoiceType == 1'  label="开户行" prop="accountBank">
+            <Input v-model="query.accountBank"></Input>
+          </FormItem>
+          <FormItem v-if='query.invoiceType == 2'  label="开户行" prop="">
             <Input v-model="query.accountBank"></Input>
           </FormItem>
           </Row>
@@ -118,7 +129,10 @@
            <Col :span='20'>
             <Input v-model="query.accountNumber" placeholder=''></Input>
            </Col> -->
-           <FormItem label="开户账号" prop="accountNumber">
+           <FormItem  v-if='query.invoiceType == 1'  label="开户账号" prop="accountNumber">
+            <Input v-model="query.accountNumber"></Input>
+          </FormItem>
+          <FormItem  v-if='query.invoiceType == 2'  label="开户账号" prop="">
             <Input v-model="query.accountNumber"></Input>
           </FormItem>
           </Row>
