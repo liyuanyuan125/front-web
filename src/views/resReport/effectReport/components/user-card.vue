@@ -9,8 +9,7 @@
       <div class="pane-body">
         <div class="user-content-wp">
           <div class="left">
-            <div class="user-pane-group"
-                 style="width: 49.2%; height: 310px">
+            <div class="user-pane-group" style="width: 49.2%; height: 310px">
               <div class="user-pane-head">
                 <h6>性别分布</h6>
               </div>
@@ -18,42 +17,25 @@
                 <SexCompare :data="sex"></SexCompare>
               </div>
             </div>
-            <div class="user-pane-group"
-                 style="width: 49.2%; margin-left: 0.6%;height: 310px">
+            <div class="user-pane-group" style="width: 49.2%; margin-left: 0.6%;height: 310px">
               <div class="user-pane-head">
                 <h6>线级分布</h6>
               </div>
               <div class="user-pane-body">
-                <PieNest :initDone="cityLevel.initDone"
-                         :dict1="cityLevel.dict1"
-                         :dict2="cityLevel.dict2"
-                         :height="cityLevel.height"
-                         :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})"
-                         :color="cityLevel.color"
-                         :dataList="cityLevel.dataList"
-                         :currentTypeIndex="cityLevel.currentTypeIndex" />
+                <PieNest :initDone="cityLevel.initDone" :dict1="cityLevel.dict1" :dict2="cityLevel.dict2" :height="cityLevel.height" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})" :color="cityLevel.color" :dataList="cityLevel.dataList" :currentTypeIndex="cityLevel.currentTypeIndex" />
               </div>
             </div>
-            <div class="user-pane-group"
-                 style="width: 100%; margin-top: 10px; height: 380px; border-radius:0px 0px 0px 5px;">
+            <div class="user-pane-group" style="width: 100%; margin-top: 10px; height: 380px; border-radius:0px 0px 0px 5px;">
               <div class="user-pane-head">
                 <h6>年龄分布</h6>
               </div>
               <div class="user-pane-body">
-                <BarXCategory :initDone="ageData.initDone"
-                              :dict1="ageData.dict1"
-                              :dict3="ageData.dict3"
-                              :color="ageData.color"
-                              :height="ageData.height"
-                              :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})"
-                              :dataList="ageData.dataList"
-                              :currentTypeIndex="ageData.currentTypeIndex" />
+                <BarXCategory :initDone="ageData.initDone" :noData="ageData.noData" :dict1="ageData.dict1" :dict3="ageData.dict3" :color="ageData.color" :height="ageData.height" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})" :dataList="ageData.dataList" :currentTypeIndex="ageData.currentTypeIndex" />
               </div>
             </div>
           </div>
           <div class="right">
-            <div class="user-pane-group"
-                 style="height: 700px; border-radius:0px 0px 5px 0px;">
+            <div class="user-pane-group" style="height: 700px; border-radius:0px 0px 5px 0px;">
               <div class="user-pane-head">
                 <h6>城市 TOP10</h6>
                 <a href="javascript:;" @click="showMore">查看更多</a>
@@ -82,7 +64,7 @@ import { tooltipStyles } from '@/util/echarts'
 // #57B4C9 负面
 const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
 
-      // colors: ['#ca7273', '#f3d872', '#57b4c9'],
+// colors: ['#ca7273', '#f3d872', '#57b4c9'],
 @Component({
   components: {
     SexCompare,
@@ -99,6 +81,7 @@ export default class UserCard extends Vue {
   title: string = '用户画像'
 
   ageDataInitDone: boolean = false
+  ageNoData: boolean = false
 
   cityLevelInitDone: boolean = false
 
@@ -114,9 +97,7 @@ export default class UserCard extends Vue {
       dict2: [],
       currentTypeIndex: 0,
       initDone: this.cityLevelInitDone,
-      dataList: [
-        this.data.cityLevelData
-      ],
+      dataList: [this.data.cityLevelData],
       color: ['#29cfe4', '#ff8b92', '#f5d44e'],
       height: 200
     }
@@ -142,18 +123,20 @@ export default class UserCard extends Vue {
       ],
       currentTypeIndex: 0,
       initDone: this.ageDataInitDone,
+      noData: this.ageNoData,
       color: ['#B8E986'],
       height: 300
     }
   }
 
   get citysData() {
-   return this.data.cityData
+    return this.data.cityData
   }
 
   init() {
     this.cityLevelInitDone = true
     this.ageDataInitDone = true
+    // this.ageNoData = true  // nxd20190701
   }
 
   showMore() {

@@ -2,8 +2,7 @@
   <div>
     <Row>
       <Col span="24">
-      <Form label-position="left"
-            :label-width="100">
+      <Form label-position="left" :label-width="100">
         <Card class="detailmore-card">
           <!-- <div slot="title">
             <Row type="flex"
@@ -30,59 +29,27 @@
             </Row>
           </div> -->
           <div class="content">
-            <Row type="flex"
-                 justify="space-between">
+            <Row type="flex" justify="space-between">
               <Col :span="12">
-                <div class='chart-wp'
-                    style='margin-right:10px'>
-                  <Pie :initDone="chart1.initDone"
-                      :title='chart1.title'
-                      :dict1="chart1.dict1"
-                      :dict2="chart1.dict2"
-                      :color="chart1.color"
-                      :dataList="chart1.dataList"
-                      :currentTypeIndex="chart1.currentTypeIndex" />
-                </div>
+              <div class='chart-wp' style='margin-right:10px'>
+                <Pie :initDone="chart1.initDone" :noData="chart1.noData" :title='chart1.title' :dict1="chart1.dict1" :dict2="chart1.dict2" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
+              </div>
               </Col>
               <Col :span="12">
               <div class='chart-wp'>
-                <BarXCategory :initDone="chart2.initDone"
-                              :title='chart2.title'
-                              :dict1="chart2.dict1"
-                              :dict3="chart2.dict3"
-                              :color="chart2.color"
-                              :dataList="chart2.dataList"
-                              :currentTypeIndex="chart2.currentTypeIndex" />
+                <BarXCategory :initDone="chart2.initDone" :noData="chart2.noData" :title='chart2.title' :dict1="chart2.dict1" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" />
               </div>
               </Col>
             </Row>
-            <Row type="flex"
-                 justify="space-between"
-                 style='margin-top:10px'>
+            <Row type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="12">
-              <div class='chart-wp borderRadius'
-                   style='margin-right:10px; height:460px'>
-                <MapChina :initDone="chart3.initDone"
-                          :title="chart3.title"
-                          :dict1="chart3.dict1"
-                          :dict2="chart3.dict2"
-                          :color="chart3.color"
-                          :max="chart3.max"
-                          :dataList="chart3.dataList"
-                          :currentTypeIndex="chart3.currentTypeIndex" />
+              <div class='chart-wp borderRadius' style='margin-right:10px; height:460px'>
+                <MapChina :initDone="chart3.initDone" :title="chart3.title" :dict1="chart3.dict1" :dict2="chart3.dict2" :color="chart3.color" :max="chart3.max" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" />
               </div>
               </Col>
               <Col :span="12">
-              <div class='chart-wp'
-                   style='height:460px'>
-                <BarYCategory :initDone="chart4.initDone"
-                              :title="chart4.title"
-                              :dict1="chart4.dict1"
-                              :dict2="chart4.dict2"
-                              :color="chart4.color"
-                              :dataList="chart4.dataList"
-                              :currentTypeIndex="chart4.currentTypeIndex"
-                              @typeChange='typeChangeHander4' />
+              <div class='chart-wp' style='height:460px'>
+                <BarYCategory :initDone="chart4.initDone" :title="chart4.title" :dict1="chart4.dict1" :dict2="chart4.dict2" :color="chart4.color" :dataList="chart4.dataList" :currentTypeIndex="chart4.currentTypeIndex" @typeChange='typeChangeHander4' />
               </div>
               </Col>
             </Row>
@@ -113,8 +80,7 @@ import BarYCategory from '@/components/chartsGroup/barYCategory/'
   }
 })
 export default class Temporary extends ViewBase {
-  form: any = {
-  }
+  form: any = {}
   pageQuery: any = {
     brandId: ''
   }
@@ -141,6 +107,7 @@ export default class Temporary extends ViewBase {
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
+    noData: false,
     dataList: [],
     color: ['#00B6CC', '#DA6C70']
   }
@@ -151,6 +118,7 @@ export default class Temporary extends ViewBase {
     dict3: [],
     currentTypeIndex: 0,
     initDone: false,
+    noData: false,
     dataList: [],
     color: ['#00B6CC']
   }
@@ -197,7 +165,6 @@ export default class Temporary extends ViewBase {
    * @param typeIndex 当前类别下标
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
-
     const that: any = this
     const id: string = this.$route.params.id || ''
 
@@ -208,18 +175,21 @@ export default class Temporary extends ViewBase {
           item: { femalePercent, malePercent, ages, citys, provinces }
         }
       } = await fans(id)
-      if (1 == 1) {
-        this.chart1.dataList[
-          this.chart1.currentTypeIndex
-        ] = [
-          {name: '男', value: malePercent / 100},
-          {name: '女', value: femalePercent / 100},
+      if ( femalePercent && malePercent ) {
+        this.chart1.dataList[this.chart1.currentTypeIndex] = [
+          { name: '男', value: malePercent / 100 },
+          { name: '女', value: femalePercent / 100 }
         ]
         this.chart1.initDone = true
+      } else {
+        this.chart1.initDone = true
+        this.chart1.noData = true
       }
+
       if (ages && ages.length > 0) {
         this.chart2.dataList[this.chart2.currentTypeIndex] = {
           type: 'bar',
+          barMaxWidth: '20',
           data: []
         }
         ages.forEach(({ v, k }: any) => {
@@ -228,15 +198,18 @@ export default class Temporary extends ViewBase {
           })
           this.chart2.dataList[this.chart2.currentTypeIndex].data.push(v / 100)
         })
-        // console.log(this.chart2.dict3)
         this.chart2.initDone = true
+      } else {
+        this.chart2.initDone = true
+        this.chart2.noData = true
       }
+
       if (provinces && provinces.length > 0) {
         let [min, max] = [0, 0]
         provinces.forEach(({ count, name }: any) => {
           count = parseInt(count, 0)
-          max = (max < count) ? count : max
-          min = (min > count) ? count : min
+          max = max < count ? count : max
+          min = min > count ? count : min
           this.chart3.dataList[this.chart3.currentTypeIndex].push({
             name: name.substr(0, name.length - 1),
             value: count / 100
@@ -261,7 +234,7 @@ export default class Temporary extends ViewBase {
         citys.forEach(({ count, name }: any) => {
           this.chart4.dataList[1].push({
             name,
-            value: typeof count === 'number' ? (count / 100) : (parseInt(count, 0) / 100)
+            value: typeof count === 'number' ? count / 100 : parseInt(count, 0) / 100
           })
         })
         this.chart4.initDone = true
@@ -281,9 +254,7 @@ export default class Temporary extends ViewBase {
       try {
         const {
           data,
-          data: {
-            items
-          }
+          data: { items }
         } = await brands({ ...mockObj })
         const list = items.map((it: any) => {
           return {
@@ -292,8 +263,7 @@ export default class Temporary extends ViewBase {
           }
         })
         this.brands = list.filter(
-          (it: any) =>
-            it.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+          (it: any) => it.label.toLowerCase().indexOf(query.toLowerCase()) > -1
         )
         this.brandsLoading = false
       } catch (ex) {
@@ -310,9 +280,7 @@ export default class Temporary extends ViewBase {
       pageSize: 100
     }
     try {
-      const {
-        data
-      } = await brands({ ...mockObj })
+      const { data } = await brands({ ...mockObj })
     } catch (ex) {
       this.handleError(ex)
     }

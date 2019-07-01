@@ -4,35 +4,28 @@
     <div style='text-align:center'>
       <div class='title-box'>
         <span v-if=" title !=='' ">{{title}}</span>
-        <Tooltip max-width="200"
-                 v-if=" titleTips !=='' "
-                 :content="titleTips">
+        <Tooltip max-width="200" v-if=" titleTips !=='' " :content="titleTips">
           <Icon type="md-help-circle" />
         </Tooltip>
       </div>
-      <RadioGroup size="small"
-                  class="nav"
-                  v-if="dict1.length > 0 && initDone"
-                  @on-change='currentTypeChange'
-                  v-model="currentIndex"
-                  type="button">
-        <Radio v-for="(item,index) in dict1"
-               :key="item.key"
-               :label="index">{{item.name}}</Radio>
+      <RadioGroup size="small" v-if="dict1.length > 0" @on-change='currentTypeChange' v-model="currentIndex" type="button">
+        <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <Row type="flex"
-         justify="center"
-         align="middle">
+
+    <Row type="flex" justify="center" align="middle">
       <Col :span="24">
-      <div ref="refChart"
-           v-if="initDone"
-           :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
-      <div v-else
-           class='loading-wp'
-           :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
+
+      <div v-if="initDone && !noData">
+        <div ref="refChart" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
+      </div>
+
+      <div v-else-if="noData" class="nodata-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">暂无数据</div>
+
+      <div v-else class="loading-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
         <TinyLoading />
       </div>
+
       </Col>
     </Row>
   </div>
@@ -62,6 +55,7 @@ import {
   }
 })
 export default class BarXCategory extends ViewBase {
+  @Prop({ type: Boolean, default: false }) noData?: boolean
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title?: string
   @Prop({ type: String, default: '' }) titleTips?: string
@@ -99,7 +93,7 @@ export default class BarXCategory extends ViewBase {
       xAxis: {
         axisLine: {
           lineStyle: {
-            color: '#fff'
+            color: '#CDD0D3'
           }
         },
         axisTick: {
@@ -110,7 +104,22 @@ export default class BarXCategory extends ViewBase {
         })
       },
       yAxis: {
-        ...yOption
+        ...yOption,
+        axisLabel: {
+          formatter: '{value} %'
+        },
+        axisLine: {
+          show: false,
+          type: 'dashed',
+          lineStyle: {
+            color: '#CDD0D3',
+            width: 0,
+            opacity: 0
+          },
+          axisTick: {
+            show: false
+          }
+        }
       },
       series: chartData
     }
@@ -179,5 +188,14 @@ export default class BarXCategory extends ViewBase {
   flex-flow: row;
   align-items: center;
   justify-content: center;
+}
+
+.nodata-wp {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: #999;
 }
 </style>
