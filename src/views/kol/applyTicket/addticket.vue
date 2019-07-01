@@ -101,7 +101,7 @@
             <InputNumber  v-model="query.telphone" placeholder=''></InputNumber >
            </Col> -->
            <FormItem label="电话" prop="telphone">
-            <InputNumber v-model="query.telphone"></InputNumber>
+            <Input v-model="query.telphone"></Input>
           </FormItem>
           </Row>
           <Row style='margin-top: 27px;'>
@@ -172,7 +172,7 @@
             <InputNumber v-model="query.contactTelphone" placeholder='请输入能正常联系的电话'></InputNumber>
            </Col> -->
            <FormItem label="联系电话" prop="contactTelphone">
-            <InputNumber v-model="query.contactTelphone"></InputNumber>
+            <Input v-model="query.contactTelphone"></Input>
           </FormItem>
           </Row>
           <Row style='margin-top: 27px;'>
@@ -283,7 +283,10 @@ export default class Main extends ViewBase {
         { required: true, message: '请输入税号', trigger: 'blur' },
       ],
       telphone: [
-        { required: true, message: '请输入电话', trigger: 'blur' },
+          { required: true, message: '请输入手机号码', trigger: 'blur' },
+          { pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/,
+            message: '请输入正确的手机号码', trigger: 'blur'
+          }
       ],
       accountBank: [
         { required: true, message: '请输入开户行', trigger: 'blur' },
@@ -298,7 +301,10 @@ export default class Main extends ViewBase {
         { required: true, message: '为方便寄出请输入全名', trigger: 'blur' },
       ],
       contactTelphone: [
-        { required: true, message: '请输入可以正常联系的电话', trigger: 'blur' },
+          { required: true, message: '请输入手机号码', trigger: 'blur' },
+          { pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/,
+            message: '请输入正确的手机号码', trigger: 'blur'
+          }
       ],
       comment: [
         { required: true, message: '请输入留言', trigger: 'blur' },
@@ -428,7 +434,6 @@ export default class Main extends ViewBase {
     this.query.contactCountyId = val[2]
   }
 }
-
 </script>
 <style lang='less' scoped>
 @import '~@/site/common.less';
