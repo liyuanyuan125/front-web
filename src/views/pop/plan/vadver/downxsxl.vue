@@ -31,7 +31,7 @@ export default class Dates extends ViewBase {
       header: tHeader,
       data: this.tableDate1,
       merges,
-      filename: '影片列表',
+      filename: '影院列表',
       autoWidth: true,
       bookType: 'xlsx'
     })
