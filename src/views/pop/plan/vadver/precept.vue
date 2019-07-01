@@ -37,8 +37,8 @@
                 <div class="film-buttom">
                   <dl style="margin-bottom: 15px">
                     <dd>受众年龄：</dd>
-                    <dt v-if="it.ageCodes && it.ageCodes.length > 0">
-                      <span v-for="(item, index) in it.ageCodes" :key="item">{{ageTypeMap(item)}}
+                    <dt v-if="it.ages && it.ages.length > 0">
+                      <span v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}}{{item.text}}%
                         <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
                       </span>
                     </dt>
@@ -76,7 +76,7 @@
                   </dl>
                   <dl @click="tags(2)" :class="tag=='2' ? 'dl-active' : ''">
                     <dd>{{detaildata.chainCount}}</dd>
-                    <dt>覆盖影线</dt>
+                    <dt>覆盖院线</dt>
                   </dl>
                   <dl @click="tags(3)" :class="tag=='3' ? 'dl-active' : ''">
                     <dd>{{detaildata.cityCount}}</dd>
@@ -368,7 +368,18 @@ export default class App extends ViewBase {
   async detail() {
     try {
       const { data } = await adverdetail(this.$route.params.setid)
-      this.filmList = data.planMovies || []
+      this.filmList = (data.planMovies || []).map((it: any) => {
+        const names = (it.ageCodes || []).map((items: any, ins: number) => {
+          return {
+            key: items,
+            text: (it.ageValues) ? it.ageValues[ins] : '-'
+          }
+        })
+        return {
+          ...it,
+          ages: names
+        }
+      })
       this.detaildata = data
       this.ageTypeList = data.ageTypeList || []
       this.movieTypeList = data.movieTypeList

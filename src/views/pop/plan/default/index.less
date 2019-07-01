@@ -122,7 +122,7 @@
         opacity: .7;
       }
     }
-    .number {
+    .number, .onenumber {
       font-size: 30px;
       margin-top: 20px;
       color: @h-color;
@@ -131,6 +131,11 @@
       }
       /deep/ span::before {
         content: "≈";
+      }
+    }
+    .onenumber {
+      /deep/ span::after {
+        content: "";
       }
     }
   }
