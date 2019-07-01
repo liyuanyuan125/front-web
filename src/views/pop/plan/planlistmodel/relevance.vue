@@ -6,7 +6,7 @@
       :closable='false'
       :mask-closable='false'>
       <div class="title">
-        <i @click="value.visible = false"></i>
+        <i @click="cancel"></i>
         <p>{{!!value.item.videoId ? '修改广告片' : '关联广告片'}}</p>
         <Form ref="forms" :model="form" style="margin-top: 30px" :rules="rules" :label-width="100">
           <!-- <FormItem label="已关联广告片" class="item-top">
@@ -30,7 +30,7 @@
         <div @click="adverSelcet(item.id)" v-for="item in releList"
           :class="['img-box', (value.item.videoId == item.id ) ? 'img-active' : '']"
           :key="item.id" >
-          <img :src="item.logo ? item.logo : defaultImg" width="120px" :onerror="defaultImg" height="120px" alt="" />
+          <img :src="item.logo ? item.logo : defaultImg" :onerror="defaultImg" width="118px" height="120px" alt="" />
           <p class="title-p">名称：{{item.name}}</p>
         </div>
       </div>
@@ -44,14 +44,14 @@
         @on-change="sizeChangeHandle"
         @on-page-size-change="currentChangeHandle"/>
       <div slot="footer" class="foot btnCenter footer-btn">
-        <Button class="button-cancel foot-cancel-button" @click="value.visible = false">取消</Button>
+        <Button class="button-cancel foot-cancel-button" @click="cancel">取消</Button>
         <Button type="primary" class="button-ok foot-button" @click="handleSumbit">确认</Button>
       </div>
     </Modal>
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { queryRelevanceList, relevanceVideo, setVideo } from '@/api/plan'
 import { advertising } from '@/api/popPlan.ts'
@@ -95,7 +95,8 @@ export default class Relevan extends ViewBase {
 
   async init() {
     try {
-       const { data } = await advertising( {
+      (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
+      const { data } = await advertising( {
         ...this.pageList,
         status: 4
       } )
@@ -143,9 +144,15 @@ export default class Relevan extends ViewBase {
       )
       this.value.visible = false
       this.$emit('submitRelevance')
+      ; (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
     } catch (ex) {
       this.handleError(ex)
     }
+  }
+
+  cancel() {
+    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
+    this.value.visible = false
   }
 
   uplist(size: any) {
@@ -166,6 +173,7 @@ export default class Relevan extends ViewBase {
       this.handleError(ex)
     }
   }
+
 }
 </script>
 <style lang="less" scoped>
@@ -248,11 +256,17 @@ export default class Relevan extends ViewBase {
   padding: 0 50px;
   min-height: 100px;
   margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
   .img-box {
     position: relative;
     width: 120px;
     cursor: pointer;
     margin-right: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #d1d8db;
+    border-radius: 5px;
+    height: 150px;
     .title-p {
       position: absolute;
       left: 0;

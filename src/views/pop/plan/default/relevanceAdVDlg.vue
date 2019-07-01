@@ -54,6 +54,7 @@ export default class Relevan extends ViewBase {
 
   mounted() {
     // 编辑
+    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
     if (this.value.item) {
       this.form.voidID = this.value.item.videoId
     }

@@ -75,7 +75,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { plans } from '@/api/effectReport'
+import { getPlans } from '@/api/effectReport'
 import CustomerList from './x-select-customerlist.vue'
 import PlanList from './x-select-planlist.vue'
 import { clean } from '@/fn/object'
@@ -122,7 +122,7 @@ export default class DlgEditCinema extends ViewBase {
     try {
       const {
         data: { items, totalCount }
-      } = await plans({ })
+      } = await getPlans({ })
       this.data = items || []
       this.total = totalCount
       this.showDlg = true

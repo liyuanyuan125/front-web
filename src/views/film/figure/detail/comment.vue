@@ -220,13 +220,6 @@ export default class Main extends ViewBase {
     dataList: [
       [
         {
-          name: '中性',
-          type: 'bar',
-          stack: 'totalCount',
-          barMaxWidth: '20',
-          data: []
-        },
-        {
           name: '正面',
           type: 'bar',
           stack: 'totalCount',
@@ -235,6 +228,13 @@ export default class Main extends ViewBase {
         },
         {
           name: '负面',
+          type: 'bar',
+          stack: 'totalCount',
+          barMaxWidth: '20',
+          data: []
+        },
+        {
+          name: '中性',
           type: 'bar',
           stack: 'totalCount',
           barMaxWidth: '20',
@@ -243,12 +243,6 @@ export default class Main extends ViewBase {
       ],
       [
         {
-          name: '中性',
-          type: 'bar',
-          stack: 'totalCount',
-          data: []
-        },
-        {
           name: '正面',
           type: 'bar',
           stack: 'totalCount',
@@ -259,7 +253,13 @@ export default class Main extends ViewBase {
           type: 'bar',
           stack: 'totalCount',
           data: []
-        }
+        },
+        {
+          name: '中性',
+          type: 'bar',
+          stack: 'totalCount',
+          data: []
+        },
       ]
     ],
     color: colors
@@ -367,54 +367,68 @@ export default class Main extends ViewBase {
       const {
         data,
         data: {
-          item: {
-            rate,
-            dates,
-            keywords
-          }
+          item
         }
       } = await comment({ ...mockObj }, this.id)
-      for ( const k in rate ) {
-        if ( rate[k] ) {
-          const index = findIndex(this.dict.emotion, (it: any) => {
-            return it.name == k
-          })
-          this.chart1.dataList[0].push({
-            value: rate[k],
-            name: this.dict.emotion[index].text
-          })
+      if ( !item ) {
+        return
+      }
+      const rate = item.rate || null
+      const dates = item.dates || null
+      const keywords = item.keywords || null
+
+      if ( rate ) {
+        for ( const k in rate ) {
+          if ( rate[k] ) {
+            const index = findIndex(this.dict.emotion, (it: any) => {
+              return it.name == k
+            })
+            this.chart1.dataList[0].push({
+              value: rate[k],
+              name: this.dict.emotion[index].text
+            })
+          }
+          that.chart1.initDone = true
         }
       }
 
-      dates.forEach((item: any, index: number) => {
-        //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
-        // trend 新增 index:0 | count 累计 index:1
-        const { date, neutral, passive, positive } = item
-        that.chart2.xAxis.push( date )
-        that.chart2.dataList[0][0].data.push(item.positive.trend)
-        that.chart2.dataList[0][1].data.push(item.passive.trend)
-        that.chart2.dataList[0][2].data.push(item.neutral.trend)
-        that.chart2.dataList[1][0].data.push(item.positive.count)
-        that.chart2.dataList[1][1].data.push(item.passive.count)
-        that.chart2.dataList[1][2].data.push(item.neutral.count)
-      })
+      if ( dates && dates.length > 0 ) {
+        dates.forEach((item: any, index: number) => {
+          //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
+          // trend 新增 index:0 | count 累计 index:1
+          const { date, neutral, passive, positive } = item
+          that.chart2.xAxis.push( date )
+          that.chart2.dataList[0][0].data.push(item.positive.trend)
+          that.chart2.dataList[0][1].data.push(item.passive.trend)
+          that.chart2.dataList[0][2].data.push(item.neutral.trend)
+          that.chart2.dataList[1][0].data.push(item.positive.count)
+          that.chart2.dataList[1][1].data.push(item.passive.count)
+          that.chart2.dataList[1][2].data.push(item.neutral.count)
+        })
+        that.chart2.initDone = true
+      }
 
-      keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
-        that.chart3.dataList[0].push({
-          name: item,
-          value: Math.floor(Math.random() * 100 + 1)
-        })
-      })
-      keywords[this.form.dayRangesKey].passive.forEach((item: any) => {
-        that.chart4.dataList[0].push({
-          name: item,
-          value: Math.floor(Math.random() * 100 + 1)
-        })
-      })
-      that.chart1.initDone = true
-      that.chart2.initDone = true
-      that.chart3.initDone = true
-      that.chart4.initDone = true
+      if ( keywords ) {
+        if ( keywords[this.form.dayRangesKey].positive && keywords[this.form.dayRangesKey].positive.length > 0 ) {
+          that.chart3.initDone = true
+          keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
+            that.chart3.dataList[0].push({
+              name: item,
+              value: Math.floor(Math.random() * 100 + 1)
+            })
+          })
+        }
+
+        if ( keywords[this.form.dayRangesKey].passive && keywords[this.form.dayRangesKey].passive.length > 0 ) {
+          keywords[this.form.dayRangesKey].passive.forEach((item: any) => {
+            that.chart4.dataList[0].push({
+              name: item,
+              value: Math.floor(Math.random() * 100 + 1)
+            })
+          })
+          that.chart4.initDone = true
+        }
+      }      
     } catch (ex) {
       this.handleError(ex)
     }

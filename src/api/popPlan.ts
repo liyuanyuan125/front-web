@@ -246,3 +246,21 @@ export async function payMoney(id: any) {
   const data = await post(`/xadvert/v1/plans/${id}/pay`)
   return data
 }
+
+/**
+ * @param  {any} query
+ * 缴纳保证金
+ */
+export async function getcalendars(query: any) {
+  const data = await get(`/basis/calendars`, query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 电影计划单搜索接口
+ */
+export async function moviefind(query: any) {
+  const data = await get(`/movie/search/xadvert`, query)
+  return data
+}

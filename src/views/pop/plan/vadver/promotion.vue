@@ -3,18 +3,20 @@
     <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="form">
       <Row>
         <Col span="14" offset="3" class="adver-name select-adv-type">
-          <FormItem :label-width="210" label="广告计划名称:" prop="name">
-            <Input :disabled="true" style="border-radius: 5px"  v-model="form.name" placeholder=""></Input>
+          <FormItem :show-message="!setadver" :label-width="210" label="广告计划名称:">
+            <Input v-if="!setadver" style="width: 380px;border-radius: 5px"  v-model="form.name" placeholder=""></Input>
+            <Input style="width: 380px;border-radius: 5px" v-model="pername" v-else></Input>
           </FormItem>
         </Col>
       </Row>
+      <!-- <Date v-model="form.advertime" /> -->
       <Row>
         <Col span="14" offset="3">
           <Row>
             <Col span="24">
               <Row :gutter="24" class="adver-detail">
                 <Col span="17">
-                  <FormItem :labelWidth='100' label="广告片:" :prop="setadver ? '': 'videoId'">
+                  <FormItem :show-message="!setadver" :labelWidth='100' label="广告片:" :prop="setadver ? '': 'videoId'">
                     <Select v-model="form.videoId" :disabled="setadver" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.id" :key="index">{{ item.name }}</Option>
                     </Select>
@@ -26,29 +28,28 @@
               </Row>
               <Row class="adver-detail" :gutter="10">
                 <Col :span="7">
-                  <FormItem style="margin-left: 3px" label="广告片规格:" :labelWidth='100'>
+                  <FormItem style="margin-left: 3px" label="广告片规格:" prop="specification" :labelWidth='100'>
                     <Select :disabled="!setadver" v-model="form.specification" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.specification" :key="index">{{ item.specification }}</Option>
                     </Select>
                   </FormItem>
                 </Col>
                 <Col :span="5">
-                  <FormItem label="客户:" :labelWidth='50'>
+                  <FormItem label="客户:" :labelWidth='50' prop="customerId">
                     <Select :disabled="!setadver" v-model="form.customerId" filterable clearable>
-                      {{adverList}}
                       <Option v-for="(item, index) in adverList" :value="item.customerId" :key="index">{{ item.customerName }}</Option>
                     </Select>
                   </FormItem>
                 </Col>
                 <Col :span="6">
-                  <FormItem label="品牌:" :labelWidth='60'>
+                  <FormItem label="品牌:" :labelWidth='60' prop="brandId">
                     <Select :disabled="!setadver" v-model="form.brandId" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.brandId" :key="index">{{ item.brandName }}</Option>
                     </Select>
                   </FormItem>
                 </Col>
                 <Col :span="6">
-                  <FormItem label="产品:" :labelWidth='60'>
+                  <FormItem label="产品:" :labelWidth='60' prop="productId">
                     <Select :disabled="!setadver" v-model="form.productId" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.productId" :key="index">{{ item.productName }}</Option>
                     </Select>
@@ -59,7 +60,9 @@
             <Col span="12">
               <Row class="adver-detail">
                 <FormItem label="投放排期:" class="timer" :labelWidth='100' prop="advertime">
-                  <DatePicker v-model="form.advertime" type="daterange" placement="bottom-end" placeholder="请选择日期" ></DatePicker>
+                  <DatePicker v-model="form.advertime"
+                    :options="startDate"
+                    type="daterange" placement="bottom-end" placeholder="请选择日期" ></DatePicker>
                   <!-- <weekDatePicker  style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker> -->
                 </FormItem>
               </Row>
@@ -68,7 +71,7 @@
               <Row>
                 <Col :span="12" style="padding-left: 0px" class="adver-schedule">
                   <FormItem label="推广预算:" :labelWidth='100' prop="budgetAmount">
-                    <Input v-model="form.budgetAmount" placeholder="请输入"></Input>
+                    <Input :disabled="!form.specification" v-model="form.budgetAmount" placeholder="请输入"></Input>
                     <span class="hint">万元 </span>
                   </FormItem>
                 </Col>
@@ -100,11 +103,12 @@ import { clean } from '@/fn/object.ts'
 import weekDatePicker from '@/components/weekDatePicker/weekDatePicker.vue'
 import moment, { relativeTimeRounding } from 'moment'
 import { info } from '@/ui/modal'
+// import Date from './date.vue'
 
 const timeFormat = 'YYYYMMDD'
 @Component({
   components: {
-    weekDatePicker
+    weekDatePicker,
   }
 })
 export default class Promotion extends ViewBase {
@@ -118,22 +122,47 @@ export default class Promotion extends ViewBase {
     videoId: null,
     specification: null,
     customerId: null,
-    productId: 1,
-    brandId: 1,
+    productId: null,
+    brandId: null,
     advertime: []
   }
+  steps: any = 1
   planID: any = ''
   length = 0
   customerName = ''
   adverList: any = []
   nums: any = 0
+  times: any = new Date().getTime()
+  pername: any = ''
+
+  startDate: any = {
+    disabledDate: (dates: any) => {
+      return dates && dates.valueOf() < this.times
+    }
+  }
+
+  // get pername() {
+  //   const data = this.adverList.filter((it: any) => this.form.productId == it.productId)
+  //   const data1 = this.adverList.filter((it: any) => this.form.brandId == it.brandId)
+  //   const customerName = data.length > 0 ? `[ ${data[0].customerName} ]` : ''
+  //   const productName = data1.length > 0 ? `[ ${data1[0].productName} ]` : ''
+  //   this.names = `${customerName} ${productName}`
+  //   return `${customerName} ${productName}`
+  // }
 
   get rule() {
     const moneyvalidator = ( rules: any, value: any, callback: any) => {
       const msg: any = value + ''
       const reg = /^(?!(0[0-9]{0,}$))[0-9]+(.[0-9]+)?$/
+      // if () {
+
+      // }
       if (msg.length == 0) {
-        callback(new Error('请输入推广预算'))
+        if (!this.form.name && this.setadver == false) {
+          callback(new Error('请设置广告片'))
+        } else {
+          callback(new Error('请输入推广预算'))
+        }
       } else if (!reg.test(msg)) {
         callback(new Error('格式不正确'))
       } else {
@@ -141,18 +170,22 @@ export default class Promotion extends ViewBase {
       }
     }
     const video = ( rules: any, value: any, callback: any) => {
-      if (!this.setadver && !value) {
-        callback(new Error('请选择广告片'))
-      } else {
-        callback()
+      if (this.setadver == true) {
+          callback()
+      } {
+        if (!this.setadver && !value) {
+          callback(new Error('请选择广告片'))
+        } else {
+          callback()
+        }
       }
     }
     const msgtime = ( rules: any, value: any, callback: any) => {
       if (value[0] == '') {
         callback(new Error('请选择投放排期'))
       } else {
-        const begin: any = new Date(value[0]).getTime()
-        const end: any = new Date(value[1]).getTime()
+        const begin: any = (value[0] as any).getTime()
+        const end: any = (value[1] as any).getTime()
         const flag = (end - begin) / 86400000 % 7
         if (flag == 6) {
           callback()
@@ -171,6 +204,18 @@ export default class Promotion extends ViewBase {
       budgetAmount: [
         { validator: moneyvalidator }
       ],
+      specification: [
+        { required: true, type: 'number', message: '不能为空', trigger: 'change' }
+      ],
+      customerId: [
+        { required: true, type: 'number', message: '不能为空', trigger: 'change' }
+      ],
+      productId: [
+        { required: true, type: 'number', message: '不能为空', trigger: 'change' }
+      ],
+      brandId: [
+        { required: true, type: 'number', message: '不能为空', trigger: 'change' }
+      ],
       advertime: [
         {
           validator: msgtime,
@@ -187,11 +232,11 @@ export default class Promotion extends ViewBase {
   async init() {
     (this.$Spin as any).show()
     try {
-      const { data } = await advertising( {
+      const { data } = await advertising( clean({
         pageIndex: 1,
         pageSize: 200000,
-        status: 4
-      } )
+        status: this.setadver ? '' : 4
+      }) )
       this.adverList = data.items || []
       this.seach()
     } catch (ex) {
@@ -207,17 +252,23 @@ export default class Promotion extends ViewBase {
     }
     try {
       const { data } = await adverdetail(this.$route.params.setid)
-      this.form.name = data.item.name
       this.form.specification = data.item.specification
-      this.form.budgetAmount = data.item.budgetAmount / 10000
+      this.form.budgetAmount = (data.item.budgetAmount / 10000) + ''
       this.form.customerId = data.item.customerId
+      this.form.productId = data.item.productId
+      this.form.brandId = data.item.brandId
+      this.steps = 2
       if (!data.item.videoId) {
         this.setadver = true
+        this.pername = data.item.name
       } else {
+        this.form.name = data.item.name
         this.form.videoId = data.item.videoId
       }
-      this.form.advertime = [new Date(this.formatDate(data.item.beginDate)),
-        new Date(this.formatDate(data.item.endDate))]
+      const begin: any = this.formatDate(data.item.beginDate)
+      const end: any = this.formatDate(data.item.endDate)
+      this.form.advertime = [begin,
+        end]
     } catch (ex) {
       this.handleError(ex)
     }
@@ -232,8 +283,21 @@ export default class Promotion extends ViewBase {
     try {
       const volid = await (this.$refs[dataform] as any).validate()
       if (volid) {
+        if ( this.setadver ) {
+          if (this.pername.length == 0) {
+            info('请输入广告计划名称')
+            return
+          }
+        } else {
+          if (this.form.name.length == 0) {
+            info('请输入广告计划名称')
+            return
+          }
+        }
         const data = await createdDraft(clean({
           ...this.form,
+          name: this.setadver ? this.pername : this.form.name,
+          videoId: this.setadver ? '' : this.form.videoId,
           id: this.$route.params.setid ? this.$route.params.setid : '',
           advertime: '',
           specification: this.form.specification ?  this.form.specification + '' : '',
@@ -265,21 +329,28 @@ export default class Promotion extends ViewBase {
         info('请选择广告片规格')
       }
       const { data } = await estimate({budgetAmount: val, specification: this.form.specification})
-      this.nums = formatCurrency(data.estimatePersonCount)
+      this.nums = formatCurrency(data.estimatePersonCount, 0)
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
   @Watch('form.videoId')
-  watchformVideoId(val: any) {
+  watchformVideoId(val: any, old: any) {
     if (val) {
       const data = this.adverList.filter((it: any) => val == it.id)
       this.form.customerId = data[0].customerId
       this.form.brandId = data[0].brandId
       this.form.specification = data[0].specification
-      this.form.productId = data[0].productId
-      this.form.name = `[ ${data[0].name} ] [ ${data[0].customerName} ] [ ${data[0].productName} ]`
+      if (this.steps == 2) {
+      } else {
+        this.form.budgetAmount = ''
+        this.form.productId = data[0].productId
+        this.form.name = `[ ${data[0].name} ] [ ${data[0].customerName} ] [ ${data[0].productName} ]`
+      }
+      this.steps = 1
+    } else {
+      this.form.name = ''
     }
   }
   @Watch('form.advertime', {deep: true})
@@ -302,6 +373,7 @@ export default class Promotion extends ViewBase {
 
   @Watch('setadver')
   watchSetadver(val: any) {
+    this.init()
     if (val) {
       this.form.videoId = 0
     }
@@ -313,6 +385,15 @@ export default class Promotion extends ViewBase {
 @import '~@/site/lib.less';
 .item-top {
   margin-left: 30px;
+}
+.jia-input {
+  display: inline-block;
+  height: 47px;
+  line-height: 60px;
+  border: 0;
+  font-size: 20px;
+  color: #fff;
+  width: 380px;
 }
 .form {
   height: 570px;
@@ -344,10 +425,12 @@ export default class Promotion extends ViewBase {
     background: #00202d;
     height: 57px;
     border-radius: 5px;
+    /deep/ .ivu-input-wrapper {
+      margin-top: 7px;
+    }
     /deep/ .ivu-input-wrapper, .ivu-input {
       background: #00202d;
       height: 47px;
-      line-height: 60px;
       border: 0;
       font-size: 20px;
       color: #fff;
@@ -456,6 +539,9 @@ export default class Promotion extends ViewBase {
       color: #00202d;
     }
   }
+  /deep/ .ivu-input {
+    border: 0;
+  }
   /deep/ .ivu-form-item-label {
     font-size: 16px;
     font-weight: 500;
@@ -525,6 +611,9 @@ export default class Promotion extends ViewBase {
   text-align: center;
   left: 50%;
   transform: translateX(-50%);
+}
+/deep/ .ivu-form-item-required .ivu-form-item-label::before {
+  margin-right: 0;
 }
 </style>
 

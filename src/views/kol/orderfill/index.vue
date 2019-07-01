@@ -65,11 +65,11 @@
       >
         <template style="marin-top: 100px" slot-scope="{ row }" slot="name">
           <div class="table-name">
-            <img :src="row.accountImageUrl" alt>
+            <img :src="$route.params.id ? row.accountPhotoFileId : row.accountImageUrl" alt>
             <ul>
               <li>{{row.accountName}}</li>
               <li>{{accountCategory(row.accountTypeCode)}}</li>
-              <li>粉丝数: &nbsp;&nbsp;{{formatNumber(row.fans)}}万</li>
+              <li>粉丝数: &nbsp;&nbsp;{{formatNumber((row.fans || 0)/10000)}}万</li>
             </ul>
             <p
               v-if="loaddings"
@@ -130,10 +130,10 @@
       <div class="check-box">
         <p style="margin-left: 4px">
           共
-          <b>{{accout(sunlist)}}</b> 个账号
-          <span style="margin-left: 10px">共</span><b>{{checkId.length}}</b> 个任务 
+          <b>{{setadever.length}}</b> 个账号
+          <span style="margin-left: 10px">共</span><b>{{setadever.length}}</b> 个任务 
           <span style="margin-left: 10px">粉丝合计</span>
-          <b class="red">{{fanscount(sunlist)}}</b>万
+          <b class="red">{{fanscount(setadever)}}</b>万
         </p>
         <span style="margin-right: 20px">
           订单金额（不含撰稿费用
@@ -168,6 +168,7 @@ import otherdetail from './otherdetail.vue'
 import webo from './webo.vue'
 import { clean } from '@/fn/object.ts'
 import { uniqBy } from 'lodash'
+import { info, toast } from '@/ui/modal'
 
 const timeFormat = 'YYYY-MM-DD HH:mm'
 @Component({
@@ -217,6 +218,13 @@ export default class Main extends ViewBase {
     ]
   }
 
+  get setadever() {
+    const setnums = this.tableDate.filter((it: any) => {
+      return it.orderItemList
+    })
+    return setnums
+  }
+
   get koltitle() {
     const index = this.titles.findIndex(
       (it: any) => it == this.$route.params.code
@@ -257,12 +265,23 @@ export default class Main extends ViewBase {
 
   get mongysum() {
     let money = 0
-    this.tableDate.forEach((it: any) => {
-      if (this.checkId.includes(it.index)) {
-        money += Number(it.orderItemList ? it.totalFee : 0)
-      }
-    })
+    if (this.setadever.length > 0) {
+      this.setadever.forEach((it: any) => {
+        money += (it.priceList.filter((item: any) => {
+          return item.categoryCode == it.orderItemList.publishCategoryCode
+        })[0].salePrice || 0)
+      })
+    }
     return money
+  }
+
+  get setfans() {
+    let fans = 0
+    const price =
+    this.setadever.forEach((it: any) => {
+      fans += Number(it.fans || 0)
+    })
+    return formatCurrency(fans / 10000)
   }
 
   created() {
@@ -360,7 +379,7 @@ export default class Main extends ViewBase {
     this.tableDate = this.tableDate.map((it: any, index: number) => {
       const orderItemList: any = it.publishCategoryCode ?  {
           publishCategoryCode: it.publishCategoryCode ? it.publishCategoryCode : '',
-          pictureFileIds: it.pictureFileIds ? it.pictureFileIds.join(',') : '',
+          pictureFileIds: it.pictureFileIds ? it.pictureFileIds : [],
           publishTime: it.publishTime ? new Date(it.publishTime) : '',
           content: it.content ? it.content : '',
           orderItemId: it.orderItemId ? it.orderItemId : '',
@@ -520,6 +539,10 @@ export default class Main extends ViewBase {
   }
 
   setall() {
+    if (this.checkId.length == 0) {
+      info('最少设置一个任务')
+      return
+    }
     this.comloading = true
     this.$nextTick(() => {
       (this.$refs.detailbox as any).init(this.statusList, this.checkId )
@@ -547,15 +570,19 @@ export default class Main extends ViewBase {
   fanscount(val: any) {
     let fans = 0
     val.forEach((it: any) => {
-      fans += Number(it.fans)
+      fans += Number(it.fans || 0)
     })
-    return fans
+    return formatCurrency(fans / 10000)
   }
 
   async next(form: any, id?: number) {
     try {
       const volid = await (this.$refs[form] as any).validate()
       if (volid) {
+        if (this.setadever.length == 0) {
+          info('最少设置一个任务')
+          return
+        }
         if (this.product.filter((it: any) => it.name.indexOf(this.query + '') == -1).length > 0) {
           const { data } = await addBrand({
             brandId: this.form.brandid,
@@ -567,11 +594,12 @@ export default class Main extends ViewBase {
           const msgId = meg.map((it: any) => it.id)
           this.prodId = msgId.includes(this.form.productId) ? this.form.productId : msgId[0]
         }
-        const msg = this.tableDate.map((it: any) => {
-          const item = it.orderItemList || {}
+        const msg = this.setadever.map((it: any) => {
+          const item: any = it.orderItemList || {}
+          const images = (item.pictureFileIds || []).map((its: any) => its.fileId)
           const message = clean({
             ...item,
-            pictureFileIds: item.pictureFileIds ? item.pictureFileIds.join(',') : '',
+            pictureFileIds: images ? images.join(',') : '',
             publishTime: new Date(item.publishTime).getTime()
           })
           return {
@@ -612,7 +640,10 @@ export default class Main extends ViewBase {
             ...query
           })
         }
-        this.$router.push({ name: 'kol-orderlist' })
+        toast('操作成功')
+        if (!id) {
+          this.$router.push({ name: 'kol-orderlist' })
+        }
       }
     } catch (ex) {
       this.handleError(ex)
@@ -634,7 +665,7 @@ export default class Main extends ViewBase {
   watch$routeParams(val: any) {
     if (val.code == 'weibo') {
       this.detail = webo
-    } else if (val.code == 'weixin') {
+    } else if (val.code == 'wechat') {
       this.detail = wbDtail
     } else {
       this.detail = otherdetail
@@ -722,6 +753,9 @@ export default class Main extends ViewBase {
     line-height: 50px;
     span {
       font-size: 14px;
+    }
+    .ivu-checkbox {
+      display: none;
     }
   }
   /deep/ .ivu-table-column-center,

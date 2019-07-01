@@ -5,30 +5,46 @@
     <div v-if="status != 1" class="plan-result">
       <div class="result-top">
         <h3>效果预估</h3>
-        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【500,000.00】时，您无需补缴任何款项</span>
+        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【
+          <span v-if="item.needPayAmount">
+            {{formatNums(item.needPayAmount)}}
+          </span>
+          <span v-else>
+            {{formatNums(item.estimateCostAmount)}}
+          </span>
+          】时，您无需补缴任何款项</span>
       </div>
       <Row class="precept" :gutter="16">
         <Col span="5" class="item">
           <div>
             <p class="title">曝光人次预估</p>
-            <p class="number">
+            <p v-if="item.estimatePersonCount && (item.estimatePersonCount + '').length > 4" class="number">
               <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 10000" />
+            </p>
+            <p class="onenumber" v-else>
+              <Number :flag="2"  :addNum="item.estimatePersonCount" />
             </p>
           </div>
         </Col>
         <Col span="5" class="item">
           <div>
             <p class="title">投放场次数预估</p>
-            <p class="number">
+            <p v-if="item.estimateShowCount && (item.estimateShowCount + '').length > 4" class="number">
               <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 10000" />
+            </p>
+            <p class="onenumber" v-else>
+              <Number :flag="2"  :addNum="item.estimateShowCount" />
             </p>
           </div>
         </Col>
         <Col span="5" class="item">
           <div>
             <p class="title">预估花费</p>
-            <p class="number">
+            <p v-if="item.estimateCostAmount && (item.estimateCostAmount + '').length > 4" class="number">
               <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 10000" />
+            </p>
+            <p class="onenumber" v-else>
+              <Number :flag="2"  :addNum="item.estimateCostAmount" />
             </p>
           </div>
         </Col>
@@ -40,7 +56,7 @@
         <h3>投放影片{{planMovies.length}}部</h3>
         <span>效果不足时允许系统投放更多影片确保曝光效果</span>
       </div>
-      <ul class="film-list" v-if="planMovies.length > 0">
+      <ul class="film-list" :class="[ !arrowloding ? 'film-max' : '']" v-if="planMovies.length > 0">
         <li @click="filmdetail(it.movieId)" v-for="(it) in planMovies" :key="it.id"
           :class="['film-item']">
           <div class="film-top">
@@ -48,8 +64,8 @@
             <div style="position: relative">
               <p class="film-title" style="margin-bottom: 20px" :title="it.movieName">{{it.movieName}}</p>
               <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
-              <p style="margin-bottom: 6px"><span>影片类型：</span>{{it.movieType || '-'}}</p>
-              <p style="margin-bottom: 6px"><span>想看人数：</span>{{it.wantSeeNum}}</p>
+              <p style="margin-bottom: 6px"><span>影片类型：</span>{{movieMap(it.movieType)}}</p>
+              <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum, 2)}}</p>
               <i-circle trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                 <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
                 <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent}}%</p>
@@ -83,8 +99,8 @@
           <div class="film-buttom">
             <dl style="margin-bottom: 15px">
               <dd>受众年龄：</dd>
-              <dt v-if="it.ageCodes && it.ageCodes.length > 0">
-                <span v-for="(item, index) in it.ageCodes" :key="item">{{item || '-'}}
+              <dt v-if="it.ages && it.ages.length > 0">
+                <span v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}} {{item.text}}%
                   <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
                 </span>
               </dt>
@@ -97,12 +113,17 @@
           </div>
         </li>
       </ul>
+      <div class="arrow-box">
+        <Checkbox :disabled="false" v-if="item.allowAutoDelivery" v-model="item.allowAutoDelivery">效果不足时允许系统投放更多影片确保曝光效果</Checkbox>
+        <div @click="arrowloding = true" v-if="arrowshow && !arrowloding" class="arrow">展开<Icon type="ios-arrow-forward" ></Icon></div>
+        <div @click="arrowloding = false" v-if="arrowshow && arrowloding" class="arrow">收起<Icon type="ios-arrow-up" /></div>
+      </div>
     </div>
 
     <div v-if="status != 1" class="plan-cinema-num">
       <div class="result-top">
         <h3>覆盖范围</h3>
-        <span class="custom"><Exportfile v-model="$route.params.id" /></span>
+        <span class="custom" @click="exportData">导出影院</span>
       </div>
       <div class="cinema-box">
         <div class="cinema-right">
@@ -113,7 +134,7 @@
             </dl>
             <dl @click="tages(2)" :class="tag=='2' ? 'dl-active' : ''">
               <dd>{{count.chainCount}}</dd>
-              <dt>覆盖影线</dt>
+              <dt>覆盖院线</dt>
             </dl>
             <dl @click="tages(3)" :class="tag=='3' ? 'dl-active' : ''">
               <dd>{{count.cityCount}}</dd>
@@ -131,22 +152,22 @@
               <div :class="'border-bottom' + tag"></div>
             </div>
             <div class="cineme-input" v-if="tag == 1">
-              <Input v-model="name" placeholder="影院名称" style="width: 275px">
+              <Input @on-enter="seach" v-model="name" placeholder="影院名称" style="width: 275px">
                   <Icon type="ios-search" @click="seach" slot="suffix" />
               </Input>
             </div>
             <div class="cineme-input" v-if="tag == 2">
-              <Input v-model="name" placeholder="院线名称" style="width: 275px">
+              <Input @on-enter="seach" v-model="name" placeholder="院线名称" style="width: 275px">
                   <Icon type="ios-search" @click="seach" slot="suffix" />
               </Input>
             </div>
             <div class="cineme-input" v-if="tag == 3">
-              <Input v-model="name" placeholder="城市名称" style="width: 275px">
+              <Input @on-enter="seach" v-model="name" placeholder="城市名称" style="width: 275px">
                   <Icon type="ios-search" @click="seach" slot="suffix" />
               </Input>
             </div>
             <div class="cineme-input" v-if="tag == 4">
-              <Input v-model="name" placeholder="省份名称" style="width: 275px">
+              <Input @on-enter="seach" v-model="name" placeholder="省份名称" style="width: 275px">
                   <Icon type="ios-search" @click="seach" slot="suffix" />
               </Input>
             </div>
@@ -156,11 +177,11 @@
               </template>
 
               <template slot-scope="{ row }" slot="estimateShowCount">
-                {{formatNums(row.estimateShowCount)}}
+                {{formatNums(row.estimateShowCount, 1)}}
               </template>
 
               <template slot-scope="{ row }" slot="estimatePersonCount">
-                {{formatNums(row.estimatePersonCount)}}
+                {{formatNums(row.estimatePersonCount, 1)}}
               </template>
             </Table>
 
@@ -180,7 +201,7 @@
     </div>
 
     <h3 class="plan-title">计划信息
-      <span v-if="headerValue.status > 0 && headerValue.status < 4" @click="edit" class="custom">编辑广告计划</span>
+      <span v-if="headerValue.status > 0 && headerValue.status < 3" @click="edit" class="custom">编辑广告计划</span>
     </h3>
     <div class="plan-msg">
       <Row>
@@ -251,6 +272,7 @@
         </Row>
       </Row>
     </div>
+    <Xlsx v-if="status != 1" ref="down" :id="$route.params.id" />
   </div>
 </template>
 
@@ -266,6 +288,7 @@ import { formatCurrency } from '@/fn/string.ts'
 import moment from 'moment'
 import Header from './header.vue'
 import Exportfile from '../vadver/exportfile.vue'
+import Xlsx from '../vadver/downxsxl.vue'
 
 const statusMap =  (list: any[]) => toMap(list, 'code', 'text')
 const timeFormat = 'YYYY-MM-DD'
@@ -273,7 +296,8 @@ const timeFormat = 'YYYY-MM-DD'
   components: {
     Number,
     Header,
-    Exportfile
+    Exportfile,
+    Xlsx
   }
 })
 export default class App extends ViewBase {
@@ -297,10 +321,21 @@ export default class App extends ViewBase {
     provinceCount: '',
     cityCount: ''
   }
+  ageTypeList: any = []
   tags: any = []
   deliveryCityTypeList: any = []
   citynums: any = []
   length = 0
+  movieTypeList: any = []
+  arrowloding = false
+
+  get arrowshow() {
+    if (this.planMovies.length > 6) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   get columns() {
     const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
@@ -400,8 +435,17 @@ export default class App extends ViewBase {
     return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
 
-  formatNums(data: any) {
-    return data ? formatCurrency(data) : '暂无'
+  formatNums(data: any, id?: any) {
+    const datanums = data ? formatCurrency(data) : '0'
+    if (id == 1 && datanums != '0') {
+      const msg = data ? formatCurrency(data, 0) : '0'
+      return msg
+    } else if (id == 2 && datanums != '0') {
+      const msg1 = data ? formatCurrency(data, 0) : 0
+      return msg1 ? msg1 + '人' : '-'
+    } else {
+      return datanums
+    }
   }
 
   tages(id: any) {
@@ -426,6 +470,30 @@ export default class App extends ViewBase {
     }
   }
 
+  exportData() {
+    (this.$refs.down as any).down()
+  }
+
+  ageTypeMap(val: any) {
+    if (!val) {
+      return '-'
+    }
+    const vals = val || []
+    return this.ageTypeList.filter((it: any) => {
+      return vals.includes(it.key)
+    }).map((it: any) => it.text).join(' | ')
+  }
+
+  movieMap(val: any) {
+    if (!val) {
+      return '-'
+    }
+    const vals = val ? val.split('|') : []
+    return this.movieTypeList.filter((it: any) => {
+      return vals.includes(it.key)
+    }).map((it: any) => it.text).join(' | ')
+  }
+
   async init() {
     try {
       (this.$Spin as any).hide()
@@ -443,6 +511,7 @@ export default class App extends ViewBase {
       this.citynums = citynums.sort((a: any, b: any) => {
         return a.sort - b.sort
       })
+      this.ageTypeList = data.ageTypeList
       this.count.cinemaCount = data.cinemaCount
       this.count.chainCount = data.chainCount
       this.count.provinceCount = data.provinceCount
@@ -451,8 +520,20 @@ export default class App extends ViewBase {
       this.item = data.item || {}
       this.tags = data.tags
       this.status = data.item.status
+      this.movieTypeList = data.movieTypeList || []
       this.deliveryCityTypeList = data.deliveryCityTypeList
-      this.planMovies = data.planMovies || []
+      this.planMovies = (data.planMovies || []).map((it: any) => {
+        const names = (it.ageCodes || []).map((items: any, ins: number) => {
+          return {
+            key: items,
+            text: (it.ageValues) ? it.ageValues[ins] : '-'
+          }
+        })
+        return {
+          ...it,
+          ages: names
+        }
+      })
     } catch (ex) {
       (this.$Spin as any).hide()
       this.handleError(ex)
@@ -463,11 +544,13 @@ export default class App extends ViewBase {
   // 每页数
   sizeChangeHandle(val: any) {
     this.pageIndex = val
+    this.seach()
   }
 
   // 当前页
   currentChangeHandle(val: any) {
     this.pageSize = val
+    this.seach()
   }
 
   citys(val: any) {
@@ -499,8 +582,9 @@ export default class App extends ViewBase {
 
     if (msg.length > 0) {
         const message = msg.map((it: any) => {
-        const value = this.tags[1].values.filter((item: any) => it.text == item.key)[0].text
-        return value
+          const maps = it.text.split(';')
+          const value = this.tags[1].values.filter((item: any) => maps.includes(item.key))
+          return value.map((its: any) => its.text).join('/')
       })
       return message.join(' / ')
     } else {
@@ -512,8 +596,9 @@ export default class App extends ViewBase {
     const msg = (this.item.deliveryGroups || []).filter((item: any) => item.tagTypeCode == 'MOVIE_TYPE')
     if (msg.length > 0) {
       const message = msg.map((it: any) => {
-        const value = this.tags[0].values.filter((item: any) => it.text == item.key)[0].text
-        return value
+        const maps = it.text.split(';')
+        const value = this.tags[1].values.filter((item: any) => maps.includes(item.key))
+        return value.map((its: any) => its.text).join('/')
       })
       return message.join(' / ')
     } else {
@@ -523,7 +608,7 @@ export default class App extends ViewBase {
 
   async cinemfind() {
     try {
-      const { data } = await getcinemas(22, {
+      const { data } = await getcinemas(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []
@@ -535,7 +620,7 @@ export default class App extends ViewBase {
 
   async provienfind() {
     try {
-      const { data } = await getprovinces(22, {
+      const { data } = await getprovinces(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []
@@ -547,7 +632,7 @@ export default class App extends ViewBase {
 
   async cityfind() {
     try {
-      const { data } = await getcities(22, {
+      const { data } = await getcities(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []
@@ -559,7 +644,7 @@ export default class App extends ViewBase {
 
   async chainsfind() {
     try {
-      const { data } = await getchains(22, {
+      const { data } = await getchains(this.$route.params.id, {
         name: this.name
       })
       this.tableDate = data.items || []

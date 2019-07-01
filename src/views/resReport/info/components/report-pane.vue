@@ -52,6 +52,7 @@ export default class ReportPane extends Vue {
     position: relative;
     background: rgba(0, 32, 45, 0.6);
     border-radius: 0 0 5px 5px;
+    padding-top: 30px;
   }
 }
 </style>

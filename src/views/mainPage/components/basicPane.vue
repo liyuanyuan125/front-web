@@ -19,7 +19,10 @@
       </div>
 
       <div class="zone rank-zone effect-lightning">
-        <div class="rank-label">鲸娱指数</div>
+        <div class="rank-label">
+          鲸娱指数
+          <Tooltip content="鲸娱指数"/>
+        </div>
         <div class="rank-no">{{item.rankNo}}</div>
         <div class="rank-title" v-html="item.rankTitle">{{item.rankTitle}}</div>
       </div>
@@ -72,7 +75,7 @@
 
       <div
         class="zone movie-zone effect-lightning"
-        v-if="movie != null && movie.preview && movieList.length > 0"
+        v-if="movie != null"
       >
         <VideoPreviewer
           :url="movie.preview"
@@ -109,11 +112,12 @@
               :to="{ name: 'film-figure', params: { id: it.id } }"
               class="actor-item-in"
             >
-              <figure
+              <!-- <figure
                 class="actor-img"
                 :style="{ backgroundImage: `url(${it.avatar})` }"
                 :title="it.name"
-              ></figure>
+              ></figure> -->
+              <Figure :src="it.avatar" :title="it.name" class="actor-img"/>
             </router-link>
           </li>
         </ul>
@@ -129,16 +133,13 @@
         </h4>
         <ul class="brand-list">
           <li
-            v-for="(it, i) in brandData.list"
+            v-for="(it, i) in brandData.list.slice(0, 3)"
             :key="i"
             class="brand-item"
           >
-            <router-link
-              :to="{ name: 'brand-home', params: { id: it.id } }"
-              class="brand-item-in"
-            >
+            <Tooltip :content="it.name">
               <img :src="it.logo" width="55" height="55" class="brand-img">
-            </router-link>
+            </Tooltip>
           </li>
         </ul>
       </div>
@@ -157,6 +158,8 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import { RawLocation } from 'vue-router'
 import VideoPreviewer from '@/components/videoPreviewer'
 import Star from '@/components/star'
+import Tooltip from '@/components/tooltip'
+import Figure from '@/components/figure'
 
 export interface Opus {
   title: string
@@ -218,8 +221,10 @@ export interface Item {
 
 @Component({
   components: {
+    Tooltip,
     VideoPreviewer,
-    Star
+    Star,
+    Figure
   }
 })
 export default class BasicPane extends Vue {
@@ -300,7 +305,7 @@ export default class BasicPane extends Vue {
   top: 34px;
   right: -91px;
   width: 156px;
-  height: 220px;
+  max-height: 300px;
   border: 1px solid #53c5df;
   box-shadow: -8px 8px 8px rgba(0, 0, 0, .38);
   border-radius: 2px;
@@ -312,7 +317,9 @@ export default class BasicPane extends Vue {
 
 .name-zone {
   font-size: 24px;
+  line-height: 1.2;
   padding: 28px 0 13px 4px;
+  margin-right: 46px;
 }
 
 .name {
@@ -321,9 +328,9 @@ export default class BasicPane extends Vue {
 
 .heart {
   position: relative;
-  top: 6px;
-  left: 10px;
-  font-size: 18px;
+  top: 7px;
+  left: 3px;
+  font-size: 22px;
   vertical-align: top;
   cursor: pointer;
   transition: transform ease 200ms;
@@ -399,6 +406,7 @@ export default class BasicPane extends Vue {
 }
 
 .brand-img {
+  background-color: #fff;
   vertical-align: top;
 }
 
@@ -487,7 +495,6 @@ export default class BasicPane extends Vue {
   width: 68px;
   height: 68px;
   border-radius: 50%;
-  background: no-repeat center top;
-  background-size: cover;
+  overflow: hidden;
 }
 </style>

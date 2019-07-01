@@ -80,7 +80,7 @@ export default class Main extends ViewBase {
         } = await selectBrand({
           name: query,
           pageIndex: 1,
-          pageSize: 400
+          // pageSize: 400
         })
         this.brandList = items || []
       }
@@ -123,4 +123,7 @@ export default class Main extends ViewBase {
 </script>
 <style lang='less' scoped>
 @import '~@/views/brand/less/common.less';
+.upload-box {
+  background: none;
+}
 </style>

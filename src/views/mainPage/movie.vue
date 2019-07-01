@@ -69,7 +69,7 @@
             title="全网热度"
             :data="hotData"
             :more="{ name: 'film-detail-hot', params: {id} }"
-            tooltip="爽肤水发发送方是否舒服舒服是否时所发生的撒旦法"
+            tooltip=""
             :formatter="hotFormatter"
             class="hot-pane"
           />
@@ -88,8 +88,8 @@ import FansPane from './components/fansPane.vue'
 import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
 import TextPane from './components/textPane.vue'
-
 import { getMovie, getVideoRise, getVideoHot } from './data'
+import { readableThousands } from '@/util/dealData'
 
 @Component({
   components: {
@@ -128,7 +128,7 @@ export default class MoviePage extends ViewBase {
 
   hotFormatter([{ dataIndex }]: any) {
     const { value, rank } = this.hotData[dataIndex]
-    return `综合热度：${value}<br>排名：${rank}`
+    return `综合热度：${readableThousands(value)}<br>排名：${readableThousands(rank)}`
   }
 
   created() {
@@ -245,7 +245,7 @@ export default class MoviePage extends ViewBase {
 }
 
 .board-pane {
-  min-width: 580px;
+  width: 580px;
   margin-top: 19px;
 }
 

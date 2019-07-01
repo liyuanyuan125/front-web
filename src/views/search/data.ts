@@ -1,5 +1,8 @@
 import { get } from '@/fn/ajax'
 import { percent, intDate, textList, dot } from '@/util/dealData'
+import store from '@/store'
+
+const { defaultAvatar } = store.state
 
 /**
  * 搜索影人
@@ -24,12 +27,15 @@ export async function searchFigure({
   })
 
   const result = {
-    list: items || [],
+    list: (items as any[] || []).map(it => ({
+      ...it,
+      avatar: it.headImgSmall || defaultAvatar
+    })),
     total: itemsTotalCount || 0,
     similarList: (similars as any[] || []).map(it => ({
       id: it.id,
       name: it.name,
-      avatar: it.headImgSmall
+      avatar: it.headImgSmall || defaultAvatar
     })),
     hotList: (hotTops as any[] || []).map(it => ({
       id: it.id,
@@ -100,7 +106,7 @@ export async function searchKol({
       ranking
     }
   } = await get('/kol/search-kol', {
-    name: keyword,
+    query: keyword,
     pageIndex,
     pageSize
   })

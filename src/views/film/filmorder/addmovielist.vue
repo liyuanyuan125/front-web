@@ -20,7 +20,16 @@
           <Row>
             <Col span="12">
               <FormItem label="推广品牌" prop="brandId">
-                <Select v-model='dataForm.brandId'  clearable placeholder="推广品牌" @on-change='brandsearch'>
+                <Select
+                v-model='dataForm.brandId'
+                clearable
+                filterable
+                placeholder="请输入推广品牌查询"
+                remote
+                :loading="loading"
+                :remote-method="remoteMethod"
+                @on-clear="brandList = []"
+                @on-change='brandsearch'>
               <Option
                 v-for="item in brandList"
                 :key="item.id"
@@ -46,10 +55,9 @@
           <Row>
             <Col span="12">
               <FormItem label="推广内容(选填)" prop="projectDescription">
-                <Input v-model="dataForm.projectDescription" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广’"/>
+                <Input v-model="dataForm.projectDescription" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广"/>
               </FormItem>
             </Col>
-            <Col span="12" style='line-height: 40px;'>&nbsp;&nbsp;(选填)</Col>
           </Row>
           <Row class='add-line'>希望获得片方的资源</Row>
          <Row class='box' style='height: 200px ;padding: 20px;'>
@@ -57,7 +65,7 @@
                 <Row>
                   <Col span='8'>
                     <div class='div-img'>
-                      <img :src="filmdata.mainPic == null ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2431454871,3087430277&fm=27&gp=0.jpg' : filmdata.mainPic" alt="">
+                      <img :src="filmdata.mainPic == null ? $store.state.defaultAvatar : filmdata.mainPic" alt="">
                     </div>
                   </Col>
                   <Col span='14' class='row-x'>
@@ -73,13 +81,13 @@
               <Col :span='12'>
                 <!-- <Row class='bus' > <span class='tag'>电影海报</span><br><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span> </Row>
                 <Row class='bus' > <span class='tag'>电影票券</span>  &nbsp;  100张   <br><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span></Row> -->
-                <!-- <Row class='bus' v-for="item in lineqqq" :key='item.key'> 
-                  <span @click="active(item.key)" class='tag' :class="['tag', moval == item.key ? 'activeClass' : '']">{{item.text}}</span><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span> 
+                <!-- <Row class='bus' v-for="item in lineqqq" :key='item.key'>
+                  <span @click="active(item.key)" class='tag' :class="['tag', moval == item.key ? 'activeClass' : '']">{{item.text}}</span><span class='hui'>后台配置的使用说明，吧啦啦啦啦</span>
                 </Row> -->
-                <CheckboxGroup v-model="dataForm.haibao" class='bus'> 
+                <CheckboxGroup v-model="dataForm.haibao" class='bus'>
                   <Checkbox   v-for="item in lineqqq" :key='item.key' :value='item.id' :label="item.key" class="check-item tag" style='margin-bottom: 40px;'>{{item.text}}</Checkbox> <span class='hui aaa'>后台配置的使用说明，暂无使用说明</span>  <span class='hui sss'>后台配置的使用说明，暂无使用说明</span>
                 </CheckboxGroup>
-                <Col span='16' class="inps" ><InputNumber @on-focus='chgindex(2)' v-model="dataForm.count"  placeholder="可选填，例如‘奥迪Q3新款上线推广’"/></InputNumber></Col>
+                <Col span='16' class="inps" ><InputNumber   @on-focus='chgindex(2)' v-model="dataForm.count"  placeholder="期望张数"/></InputNumber></Col>
               </Col>
             </Row>
           <Row class='add-line' style='margin-top: 40;'>品牌方可提供资源</Row>
@@ -98,16 +106,16 @@
                     <Col :span='24' :key='index'><Input @on-focus='chgindex2(item.key)' v-model="dataForm.s + item.key" class="inp-style" :key='key' :placeholder='item.text'/></Col>
                   </Row> -->
                   <Row class='add-row'>
-                    <Col :span='24'><Input @on-focus='chgindex2(1)' v-model="dataForm.wechat" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广’"/></Col>
+                    <Col :span='24'><Input @on-focus='chgindex2(1)' v-model="dataForm.wechat" class="inp-style" placeholder="可选填，输入微信公众号"/></Col>
                   </Row>
                   <Row class='add-row'>
-                    <Col :span='24'><Input @on-focus='chgindex2(2)' v-model="dataForm.weibo" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广’"/></Col>
+                    <Col :span='24'><Input @on-focus='chgindex2(2)' v-model="dataForm.weibo" class="inp-style" placeholder="可选填，输入微博号"/></Col>
                   </Row>
                   <Row class='add-row'>
-                    <Col :span='24'><Input @on-focus='chgindex2(3)' v-model="dataForm.guang" class="inp-style" placeholder="可选填，例如‘奥迪Q3新款上线推广’"/></Col>
+                    <Col :span='24'><Input @on-focus='chgindex2(3)' v-model="dataForm.guang" class="inp-style" placeholder="可选填，输入官网地址"/></Col>
                   </Row>
                 </Col>
-                
+
               </Col>
             </Row>
             <Row class='add-row'>
@@ -120,7 +128,7 @@
               </Col>
             </Row>
           </div>
-          
+
           <Row class="add-row">
             <Col span="24">
               <FormItem label="留言" prop="message">
@@ -136,7 +144,7 @@
         </Form>
         <div class='btnq' style="text-align: center">
           <Button class='ok' type="primary" @click="dataFormSubmit()">提交意向</Button>
-        </div> 
+        </div>
     </div>
   </div>
 </template>
@@ -237,6 +245,7 @@ export default class Main extends ViewBase {
   productList: any = []
   filmdata: any = {}
   bid: any = []
+  loading = false
 
 
   totalCount = 0
@@ -244,14 +253,14 @@ export default class Main extends ViewBase {
 
 
   mounted() {
-    this.dataForm.s1 = '456'
+    // this.dataForm.s1 = '456'
     this.dataForm.movieId = this.$route.params.id
     this.seach()
   }
-  seachs() {
-    this.query.pageIndex = 1
-    this.seach()
-  }
+  // seachs() {
+  //   this.query.pageIndex = 1
+  //   this.seach()
+  // }
 
   active(id: any) {
     this.moval = id
@@ -268,14 +277,15 @@ export default class Main extends ViewBase {
   }
 
   async seach() {
-    const brand = await brandsList({})
-    this.brandList = brand.data.items
-    const bid = (this.brandList || []).map((it: any) => {
-      return it.id
-    })[0]
-    this.dataForm.brandId = bid
-    const product = await productsList({brandId: bid})
-    this.productList = product.data.items
+    // const brand = await brandsList({pageSize: 5000})
+    // this.brandList = brand.data.items
+    // this.remoteMethod('')
+    // const bid = (this.brandList || []).map((it: any) => {
+    //   return it.id
+    // })[0]
+    // this.dataForm.brandId = bid
+    // const product = await productsList({brandId: bid})
+    // this.productList = product.data.items
     this.asd = []
     try {
       const { data } = await queryList({})
@@ -290,6 +300,24 @@ export default class Main extends ViewBase {
       String(film.data.releaseDate).slice(4, 6) + '-' +
       String(film.data.releaseDate).slice(6, 8)
     } catch (ex) {
+    }
+  }
+
+  async remoteMethod(query: any) {
+    try {
+      if (query) {
+        this.loading = true
+        const {
+          data: { items }
+        } = await brandsList({
+          name: query,
+        })
+        this.brandList = items || []
+      }
+      this.loading = false
+    } catch (ex) {
+      this.handleError(ex)
+      this.loading = false
     }
   }
 
@@ -365,23 +393,6 @@ export default class Main extends ViewBase {
       return it.id
     })[0]
   }
-
-  handlepageChange(size: any) {
-    this.query.pageIndex = size
-    this.seach()
-  }
-  handlePageSize(size: any) {
-    this.query.pageIndex = size
-    this.seach()
-  }
-
-  // @Watch('dataForm', {deep: true})
-  // watchDataForm() {
-  //   this.brandsearch()
-  //   this.dataForm.productId = (this.productList || []).map((it: any) => {
-  //     return it.id
-  //   })[0]
-  // }
 
 }
 
@@ -627,7 +638,7 @@ export default class Main extends ViewBase {
   white-space: nowrap;
   padding-left: 8px;
   padding-right: 24px;
-  color: #00202d;
+  // color: #00202d;
 }
 /deep/ .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
   display: block;
@@ -639,6 +650,6 @@ export default class Main extends ViewBase {
   white-space: nowrap;
   padding-left: 8px;
   padding-right: 24px;
-  color: #00202d;
+  // color: #00202d;
 }
 </style>

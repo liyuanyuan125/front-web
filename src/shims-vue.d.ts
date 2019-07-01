@@ -34,10 +34,8 @@ declare module 'js-calendar' {
   }
 }
 
-interface VarType {
-  env: string
-  baseUrl: string
-  ajaxBaseUrl: string
+declare module 'yxg-xlsx-style' {
+  export const xlsxStyle: any // tslint:disable-line
 }
 
 declare module 'vue-quill-editor' {
@@ -47,6 +45,12 @@ declare module 'vue-quill-editor' {
 
 declare module 'quill-image-resize-module' {
   export const ImageResize: any // tslint:disable-line
+}
+
+interface VarType {
+  env: string
+  baseUrl: string
+  ajaxBaseUrl: string
 }
 
 declare const VAR: VarType

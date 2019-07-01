@@ -1,6 +1,11 @@
 <template>
   <Pane :title="title" :more="more">
-    <ECharts :options="chartData" auto-resize class="chart"/>
+    <ECharts
+      :options="chartData"
+      auto-resize
+      class="chart"
+      v-if="data && data.length > 0"
+    />
   </Pane>
 </template>
 
@@ -33,32 +38,38 @@ export default class PiePane extends Vue {
 
   @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
 
-  chartData: any = {
-    tooltip: tooltipStyles({
-      trigger: 'item',
-      formatter: '{a} <br>{b} : {c} ({d}%)'
-    }),
+  // https://www.echartsjs.com/option.html#tooltip.formatter
+  @Prop({ type: [String, Function], default: '{a} <br>{b} : {d}%' })
+  formatter!: string | ((data: any) => string)
 
-    series: [
-      {
-        name: this.title,
-        type: 'pie',
-        radius: [33, 49],
-        label: {
-          formatter: '{b}\n{d}%',
-          lineHeight: 18,
-          rich: {}
-        },
-        labelLine: {
-          show: false
-        },
-        data: this.data.map(it => ({
-          name: it.name,
-          value: it.value,
-          itemStyle: { color: it.color }
-        }))
-      }
-    ]
+  get chartData() {
+    return {
+      tooltip: tooltipStyles({
+        trigger: 'item',
+        formatter: this.formatter
+      }),
+
+      series: [
+        {
+          name: this.title,
+          type: 'pie',
+          radius: [33, 49],
+          label: {
+            formatter: '{b}\n{d}%',
+            lineHeight: 18,
+            rich: {}
+          },
+          labelLine: {
+            show: false
+          },
+          data: (this.data || []).map(it => ({
+            name: it.name,
+            value: it.value,
+            itemStyle: { color: it.color }
+          }))
+        }
+      ]
+    }
   }
 }
 </script>

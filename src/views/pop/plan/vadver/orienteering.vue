@@ -65,7 +65,7 @@
             </Col>
           </Row>
 
-          <h3 class="layout-titles" style="margin-top: 45px">受众定向</h3>
+          <h3 class="layout-titles" style="margin-top: 45px">受众偏好</h3>
           <Row class="item-top item-three">
             <Col :span="24" class="flex">
               <Col :span="6" class="three-left">
@@ -96,9 +96,9 @@
               <Col :span="6" class="three-left">
                 <div class="orient-title">受众年龄</div>
                 <FormItem class="item-top form-item-type">
-                  <RadioGroup v-model="form.age" class="item-radio-top">
-                    <Radio  style="width: 220px" class="check-item form-item-first" :label="0">不限</Radio>
-                    <Radio
+                  <CheckboxGroup v-model="form.age" class="item-radio-top">
+                    <Checkbox  style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
+                    <Checkbox
                       style="100px"
                       v-for="it in ageList"
                       :key="it.key"
@@ -106,8 +106,8 @@
                       class="check-item"
                     >
                       <span>{{it.text}}</span>
-                    </Radio>
-                  </RadioGroup>
+                    </Checkbox>
+                  </CheckboxGroup>
                 </FormItem>
               </Col>
 
@@ -115,15 +115,15 @@
                 <div ref="types">
                   <div class="orient-title">影片类型</div>
                   <FormItem :labelWidth="0" class="item-top form-item-type">
-                    <RadioGroup v-model="form.type" class="item-radio-top">
-                      <Radio  style="width: 220px" class="check-item form-item-first" :label="0">不限</Radio>
-                      <Radio
+                    <CheckboxGroup v-model="form.type" class="item-radio-top">
+                      <Checkbox  style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
+                      <Checkbox
                         v-for="it in typeList"
                         :key="it.key"
                         :label="it.key"
                         class="check-item"
-                      >{{it.text}}</Radio>
-                    </RadioGroup>
+                      >{{it.text}}</Checkbox>
+                    </CheckboxGroup>
                   </FormItem>
                 </div>
               </Col>
@@ -217,19 +217,19 @@ export default class Orienteering extends ViewBase {
     name: '',
     cinema: [0],
     sex: 0,
-    age: 0,
-    type: 0
+    age: [0],
+    type: [0]
   }
   warehouseId: any = []
   warehouseLisst: any = []
-
+  loadingitem: any = {}
   movies: any = []
   timers: any = {}
   numsList: any = []
   cityCustom: number = 0
   movieCustom: number = 0
   cinemaType: number = 0
-
+  settime: any = null
   deliveryCityTypeList: any = []
   tags: any = []
   item: any = null
@@ -294,7 +294,6 @@ export default class Orienteering extends ViewBase {
       this.cityCustom = item.cityCustom || 0
       this.citiesList = cities || []
       this.citysId = (this.citiesList || []).map((it: any) => it.id)
-     //
       this.warehouseId = (datas.data || []).map((it: any) => it.cityId)
       this.beginDate = item.beginDate
       this.endDate = item.endDate
@@ -387,9 +386,9 @@ export default class Orienteering extends ViewBase {
         )[0].key
         return value
       })
-      this.form.age = message.join(',')
+      this.form.age = message
     } else {
-      this.form.age = 0
+      this.form.age = [0]
     }
   }
 
@@ -405,9 +404,9 @@ export default class Orienteering extends ViewBase {
         )[0].key
         return value
       })
-      this.form.type = message.join(',')
+      this.form.type = message
     } else {
-      this.form.type = 0
+      this.form.type = [0]
     }
   }
 
@@ -427,11 +426,11 @@ export default class Orienteering extends ViewBase {
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
-              text: this.form.type
+              text: this.form.type.join(';')
             },
             {
               tagTypeCode: 'PLAN_GROUP_AGE',
-              text: this.form.age
+              text: this.form.age.join(';')
             },
             {
               tagTypeCode: 'PLAN_GROUP_SEX',
@@ -455,37 +454,59 @@ export default class Orienteering extends ViewBase {
         })
       )
       ; (this.$Spin as any).show()
-      let time: any = null
+      let settime: any = null
       this.recommend = false
-      time = setInterval(() => {
+      settime = setInterval(() => {
         if (this.recommend) {
           (this.$Spin as any).hide()
-          clearInterval(time)
-          if (this.planMovies && this.planMovies.length > 0) {
-            this.$emit('input', {
-              id: 2,
-              setid: this.$route.params.setid
-            })
-            if (this.$route.name == 'pop-planlist-add') {
-              this.$router.push({
-                name: 'pop-planlist-add',
-                params: { id: '2', setid: this.$route.params.setid  }
+          clearInterval(settime)
+          // if (this.loadingitem.item.movieCustom == 1) {
+          //   if ( this.loadingitem.movies.length > 0 ) {
+          //     this.$emit('input', {
+          //       id: 2,
+          //       setid: this.$route.params.setid
+          //     })
+          //     if (this.$route.name == 'pop-planlist-add') {
+          //       this.$router.push({
+          //         name: 'pop-planlist-add',
+          //         params: { id: '2', setid: this.$route.params.setid  }
+          //       })
+          //     } else {
+          //       this.$router.push({
+          //         name: 'pop-planlist-edit',
+          //         params: { id: '2', setid: this.$route.params.setid  }
+          //       })
+          //     }
+          //   }
+          // } else {
+            if (this.planMovies && this.planMovies.length > 0) {
+              this.$emit('input', {
+                id: 2,
+                setid: this.$route.params.setid
               })
+              if (this.$route.name == 'pop-planlist-add') {
+                this.$router.push({
+                  name: 'pop-planlist-add',
+                  params: { id: '2', setid: this.$route.params.setid  }
+                })
+              } else {
+                this.$router.push({
+                  name: 'pop-planlist-edit',
+                  params: { id: '2', setid: this.$route.params.setid  }
+                })
+              }
             } else {
-              this.$router.push({
-                name: 'pop-planlist-edit',
-                params: { id: '2', setid: this.$route.params.setid  }
-              })
+              info('非常抱歉，暂未找到匹配项；请尝试扩大定向范围或投放排期范围')
             }
-          } else {
-            info('未找到匹配项')
-          }
+          // }
         } else {
           this.loddding()
         }
       }, 3000)
     } catch (ex) {
-      this.handleError('系统错误，请重新尝试！')
+      (this.$Spin as any).hide()
+      clearInterval(this.settime)
+      this.handleError(ex)
     }
   }
 
@@ -506,16 +527,19 @@ export default class Orienteering extends ViewBase {
   async loddding() {
     try {
       const {
-        data: { item, planMovies }
+        data: { item, planMovies, movies }
       } = await adverdetail(this.value.setid)
       this.recommend = item.recommend
       this.planMovies = planMovies
+      this.loadingitem = {
+        item,
+        movies
+      }
       // this.$emit('input', {
       //   id: 2,
       //   setid: this.$route.params.setid
       // })
     } catch (ex) {
-      this.handleError('系统错误，请重新尝试！')
     }
   }
 
@@ -527,6 +551,17 @@ export default class Orienteering extends ViewBase {
       id: 0,
       setid: this.$route.params.setid
     })
+    if (this.$route.name == 'pop-planlist-add') {
+      this.$router.push({
+        name: 'pop-planlist-add',
+        params: { id: '0', setid: this.$route.params.setid  }
+      })
+    } else {
+      this.$router.push({
+        name: 'pop-planlist-edit',
+        params: { id: '0', setid: this.$route.params.setid  }
+      })
+    }
   }
 
   @Watch('form.cinema', { deep: true })
@@ -535,12 +570,12 @@ export default class Orienteering extends ViewBase {
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.cinema = newValue
     })
-    keepExclusion(value, oldValue, 'top20', newValue => {
-      this.form.cinema = newValue
-    })
-    if (value[value.length] == -1) {
-      this.form.cinema = [-1]
-    }
+    // keepExclusion(value, oldValue, 'top20', newValue => {
+    //   this.form.cinema = newValue
+    // })
+    // if (value[value.length] == -1) {
+    //   this.form.cinema = [-1]
+    // }
     if (value.length == 0) {
       this.form.cinema = [0]
     }
@@ -557,27 +592,27 @@ export default class Orienteering extends ViewBase {
   //   }
   // }
 
-  // @Watch('form.type', { deep: true })
-  // watchformType(value: number[], oldValue: number[]) {
-  //   // 不限与其他项互斥
-  //   keepExclusion(value, oldValue, 0, newValue => {
-  //     this.form.type = newValue
-  //   })
-  //   if (value.length == -1) {
-  //     this.form.type = [0]
-  //   }
-  // }
+  @Watch('form.type', { deep: true })
+  watchformType(value: number[], oldValue: number[]) {
+    // 不限与其他项互斥
+    keepExclusion(value, oldValue, 0, newValue => {
+      this.form.type = newValue
+    })
+    if (value.length == -1) {
+      this.form.type = [0]
+    }
+  }
 
-  // @Watch('form.age', { deep: true })
-  // watchformAge(value: number[], oldValue: number[]) {
-  //   // 不限与其他项互斥
-  //   keepExclusion(value, oldValue, 0, newValue => {
-  //     this.form.age = newValue
-  //   })
-  //   if (value.length == 0) {
-  //     this.form.age = [0]
-  //   }
-  // }
+  @Watch('form.age', { deep: true })
+  watchformAge(value: number[], oldValue: number[]) {
+    // 不限与其他项互斥
+    keepExclusion(value, oldValue, 0, newValue => {
+      this.form.age = newValue
+    })
+    if (value.length == 0) {
+      this.form.age = [0]
+    }
+  }
 }
 </script>
 

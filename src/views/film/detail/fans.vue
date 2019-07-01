@@ -2,8 +2,7 @@
   <div>
     <Row>
       <Col span="24">
-      <Form label-position="left"
-            :label-width="100">
+      <Form label-position="left" :label-width="100">
         <Card class="detailmore-card">
           <!-- <div slot="title">
             <Row type="flex"
@@ -30,94 +29,43 @@
             </Row>
           </div> -->
           <div class="content">
-            <Row type="flex"
-                 justify="space-between">
+            <Row type="flex" justify="space-between">
               <Col :span="12">
-                <div class='chart-wp'
-                    style='margin-right:10px;height: 390px;'>
-                  <Pie :initDone="chart1.initDone"
-                      :title='chart1.title'
-                      :dict1="chart1.dict1"
-                      :dict2="chart1.dict2"
-                      :color="chart1.color"
-                      :dataList="chart1.dataList"
-                      :currentTypeIndex="chart1.currentTypeIndex" />
-                </div>
+              <div class='chart-wp' style='margin-right:10px;'>
+                <Pie :initDone="chart1.initDone" :noData="chart1.noData" :title='chart1.title' :dict1="chart1.dict1" :dict2="chart1.dict2" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
+              </div>
               </Col>
               <Col :span="12">
-              <div class='chart-wp' style='height: 490px;'>
-                <BarXCategory :initDone="chart2.initDone"
-                              :title='chart2.title'
-                              :dict1="chart2.dict1"
-                              :dict3="chart2.dict3"
-                              :color="chart2.color"
-                              :dataList="chart2.dataList"
-                              :currentTypeIndex="chart2.currentTypeIndex" />
+              <div class='chart-wp' style=''>
+                <BarXCategory :initDone="chart2.initDone" :noData="chart2.noData" :title='chart2.title' :dict1="chart2.dict1" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" />
               </div>
               </Col>
             </Row>
-            <Row type="flex"
-                 justify="space-between"
-                 style='margin-top:10px'>
+            <Row type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="12">
-              <div class='chart-wp borderRadius'
-                   style='margin-right:10px;height: 392px;margin-top: -100px;'>
-                <BarXCategory :initDone="chart3.initDone"
-                              :title='chart3.title'
-                              :dict1="chart3.dict1"
-                              :dict3="chart3.dict3"
-                              :color="chart3.color"
-                              :dataList="chart3.dataList"
-                              :currentTypeIndex="chart3.currentTypeIndex" />
+              <div class='chart-wp borderRadius' style='margin-right:10px;'>
+                <BarXCategory :initDone="chart3.initDone" :noData="chart3.noData" :title='chart3.title' :dict1="chart3.dict1" :dict3="chart3.dict3" :color="chart3.color" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" />
               </div>
               </Col>
               <Col :span="12">
-                <div class='chart-wp borderRadius'
-                    style='height: 510px;'>
-                  <BarYCategory :initDone="chart4.initDone"
-                      :title='chart4.title'
-                      :dict1="chart4.dict1"
-                      :dict2="chart4.dict2"
-                      :color="chart4.color"
-                      :dataList="chart4.dataList"
-                      :currentTypeIndex="chart4.currentTypeIndex" />
-                </div>
+              <div class='chart-wp borderRadius' style=''>
+                <PieNest :initDone="chart4.initDone" :title='chart4.title' :dict1="chart4.dict1" :dict2="chart4.dict2" :color="chart4.color" :dataList="chart4.dataList" :currentTypeIndex="chart4.currentTypeIndex" />
+              </div>
               </Col>
               <Col :span="12">
-                <div class='chart-wp borderRadius'
-                    style='margin-right:10px;margin-top:-208px;'>
-                  <PieNest :initDone="chart5.initDone"
-                      :title='chart5.title'
-                      :dict1="chart5.dict1"
-                      :dict2="chart5.dict2"
-                      :color="chart5.color"
-                      :dataList="chart5.dataList"
-                      :currentTypeIndex="chart5.currentTypeIndex" />
-                </div>
+              <div class='chart-wp borderRadius' style='margin-right:10px;margin-top: 10px;'>
+                <PieNest :initDone="chart5.initDone" :title='chart5.title' :dict1="chart5.dict1" :dict2="chart5.dict2" :color="chart5.color" :dataList="chart5.dataList" :currentTypeIndex="chart5.currentTypeIndex" />
+              </div>
               </Col>
               <Col :span="12">
-                <div class='chart-wp borderRadius'
-                    style='margin-top:10px;height: 510px;'>
-                  <PieNest :initDone="chart6.initDone"
-                      :title='chart6.title'
-                      :dict1="chart6.dict1"
-                      :dict2="chart6.dict2"
-                      :color="chart6.color"
-                      :dataList="chart6.dataList"
-                      :currentTypeIndex="chart6.currentTypeIndex" />
-                </div>
+              <div class='chart-wp borderRadius' style='margin-top:10px;'>
+                <PieNest :initDone="chart6.initDone" :title='chart6.title' :dict1="chart6.dict1" :dict2="chart6.dict2" :color="chart6.color" :dataList="chart6.dataList" :currentTypeIndex="chart6.currentTypeIndex" />
+              </div>
               </Col>
               <Col :span="12">
-                <div class='chart-wp borderRadius'
-                    style='margin-right:10px;margin-top:-274px;'>
-                  <PieNest :initDone="chart7.initDone"
-                      :title='chart7.title'
-                      :dict1="chart7.dict1"
-                      :dict2="chart7.dict2"
-                      :color="chart7.color"
-                      :dataList="chart7.dataList"
-                      :currentTypeIndex="chart7.currentTypeIndex" />
-                </div>
+              <div class='chart-wp borderRadius' style='margin-right:10px;margin-top: 10px;'>
+                <PieNest :initDone="chart7.initDone" :title='chart7.title' :dict1="chart7.dict1" :dict2="chart7.dict2" :color="chart7.color" :dataList="chart7.dataList" :currentTypeIndex="chart7.currentTypeIndex" />
+              </div>
               </Col>
             </Row>
           </div>
@@ -130,7 +78,7 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { fans, brands , film } from '@/api/filmfans'
+import { fans, brands, film } from '@/api/filmfans'
 import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import MapChina from '@/components/chartsGroup/mapChina/'
@@ -138,6 +86,15 @@ import Pie from '@/components/chartsGroup/pieSimple/'
 import PieNest from '@/components/chartsGroup/pieNest/'
 import BarYCategory from '@/components/chartsGroup/barYCategory/'
 import { toMap } from '@/fn/array'
+import { findIndex } from 'lodash'
+
+const getName = (key: string, list: any[]) => {
+  const i: number = findIndex(list, (it: any) => {
+    return key === it.key
+  })
+  const res: string = list[i].text
+  return res
+}
 
 @Component({
   components: {
@@ -151,8 +108,7 @@ import { toMap } from '@/fn/array'
 })
 export default class Temporary extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
-  form: any = {
-  }
+  form: any = {}
   pageQuery: any = {
     brandId: ''
   }
@@ -179,6 +135,7 @@ export default class Temporary extends ViewBase {
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
+    noData: false,
     dataList: [],
     color: ['#00B6CC', '#DA6C70']
   }
@@ -189,16 +146,18 @@ export default class Temporary extends ViewBase {
     dict3: [],
     currentTypeIndex: 0,
     initDone: false,
+    noData: false,
     dataList: [],
     color: ['#00B6CC']
   }
   chart3: any = {
-    title: '县级分布',
+    title: '地域分布',
     dict1: [],
     dict2: [],
     dict3: [],
     currentTypeIndex: 0,
     initDone: false,
+    noData: false,
     dataList: [],
     color: ['#D0BF6B']
   }
@@ -209,7 +168,17 @@ export default class Temporary extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: ['#ff9933', '#169bd5']
+    color: [
+      '#FF8B92',
+      '#9B83FF',
+      '#F5D44E',
+      '#29CFE4',
+      '#E49E42',
+      '#F17A40',
+      '#00B6CC',
+      '#55DE6A',
+      '#599BFC'
+    ]
   }
   chart5: any = {
     title: '电影偏好',
@@ -218,7 +187,17 @@ export default class Temporary extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: ['#FF8B92', '#9B83FF', '#F5D44E', '#29CFE4', '#E49E42', '#F17A40', '#00B6CC', '#55DE6A', '#599BFC']
+    color: [
+      '#FF8B92',
+      '#9B83FF',
+      '#F5D44E',
+      '#29CFE4',
+      '#E49E42',
+      '#F17A40',
+      '#00B6CC',
+      '#55DE6A',
+      '#599BFC'
+    ]
   }
   chart6: any = {
     title: '学历',
@@ -253,7 +232,6 @@ export default class Temporary extends ViewBase {
    * @param typeIndex 当前类别下标
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
-
     const that: any = this
     const id: string = this.$route.params.id || ''
 
@@ -261,23 +239,47 @@ export default class Temporary extends ViewBase {
       const {
         data,
         data: {
-           genders, ages, cityLevels, shoppingTypes , movieTypes , educations , jobs
+          genders,
+          ages,
+          cityLevels,
+          shoppingTypes,
+          movieTypes,
+          educations,
+          jobs,
+          genderCodeList
         }
       } = await fans(id)
-      if (genders && genders.length > 0) {
-        this.chart1.dataList[
-          this.chart1.currentTypeIndex
-        ] = genders.map((it: any) => {
-          return {
-            name: it.gender == 1 ? '男' : '女',
-            value: it.rate
+
+      if ( genders && genders.length > 0 ) {
+        genders.forEach((it: any) => {
+          if (getName(it.gender, genderCodeList) === '男') {
+            this.chart1.dataList[0].push({
+              name: '男',
+              value: it.rate,
+              itemStyle: {
+                color: '#00B6CC'
+              }
+            })
+          } else if (getName(it.gender, genderCodeList) === '女') {
+            this.chart1.dataList[0].push({
+              name: '女',
+              value: it.rate,
+              itemStyle: {
+                color: '#DA6C70'
+              }
+            })
           }
         })
         this.chart1.initDone = true
+      } else {
+        this.chart1.initDone = true
+        this.chart1.noData = true
       }
+
       if (ages && ages.length > 0) {
         this.chart2.dataList[this.chart2.currentTypeIndex] = {
           type: 'bar',
+          barMaxWidth: '20',
           data: []
         }
         ages.forEach(({ v, k }: any) => {
@@ -287,10 +289,15 @@ export default class Temporary extends ViewBase {
           this.chart2.dataList[this.chart2.currentTypeIndex].data.push(v)
         })
         this.chart2.initDone = true
+      } else {
+        this.chart2.initDone = true
+        this.chart2.noData = true
       }
-      if (cityLevels && cityLevels.length > 0) {
+
+      if ( cityLevels && cityLevels.length > 0 ) {
         this.chart3.dataList[this.chart3.currentTypeIndex] = {
           type: 'bar',
+          barMaxWidth: '20',
           data: []
         }
         cityLevels.forEach(({ v, k }: any) => {
@@ -300,44 +307,49 @@ export default class Temporary extends ViewBase {
           this.chart3.dataList[this.chart3.currentTypeIndex].data.push(v)
         })
         this.chart3.initDone = true
+      } else {
+        this.chart3.initDone = true
+        this.chart3.noData = true
       }
+
       if (shoppingTypes && shoppingTypes.length > 0) {
-        this.chart4.dataList[
-          this.chart4.currentTypeIndex
-        ] = shoppingTypes.map((it: any) => {
-          return {
-            name: it.k,
-            value: it.v
+        this.chart4.dataList[this.chart4.currentTypeIndex] = shoppingTypes.map(
+          (it: any) => {
+            return {
+              name: it.k,
+              value: it.v
+            }
           }
-        })
+        )
         this.chart4.initDone = true
       }
+
       if (movieTypes && movieTypes.length > 0) {
-        this.chart5.dataList[
-          this.chart5.currentTypeIndex
-        ] = movieTypes.map((it: any) => {
-          return {
-            name: it.k,
-            value: it.v
+        this.chart5.dataList[this.chart5.currentTypeIndex] = movieTypes.map(
+          (it: any) => {
+            return {
+              name: it.k,
+              value: it.v
+            }
           }
-        })
+        )
         this.chart5.initDone = true
       }
+
       if (educations && educations.length > 0) {
-        this.chart6.dataList[
-          this.chart6.currentTypeIndex
-        ] = educations.map((it: any) => {
-          return {
-            name: it.k,
-            value: it.v
+        this.chart6.dataList[this.chart6.currentTypeIndex] = educations.map(
+          (it: any) => {
+            return {
+              name: it.k,
+              value: it.v
+            }
           }
-        })
+        )
         this.chart6.initDone = true
       }
+
       if (jobs && jobs.length > 0) {
-        this.chart7.dataList[
-          this.chart7.currentTypeIndex
-        ] = jobs.map((it: any) => {
+        this.chart7.dataList[this.chart7.currentTypeIndex] = jobs.map((it: any) => {
           return {
             name: it.k,
             value: it.v
@@ -360,9 +372,7 @@ export default class Temporary extends ViewBase {
       try {
         const {
           data,
-          data: {
-            items
-          }
+          data: { items }
         } = await brands({ ...mockObj })
         const list = items.map((it: any) => {
           return {
@@ -371,8 +381,7 @@ export default class Temporary extends ViewBase {
           }
         })
         this.brands = list.filter(
-          (it: any) =>
-            it.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+          (it: any) => it.label.toLowerCase().indexOf(query.toLowerCase()) > -1
         )
         this.brandsLoading = false
       } catch (ex) {
@@ -389,9 +398,7 @@ export default class Temporary extends ViewBase {
       pageSize: 100
     }
     try {
-      const {
-        data
-      } = await brands({ ...mockObj })
+      const { data } = await brands({ ...mockObj })
     } catch (ex) {
       this.handleError(ex)
     }

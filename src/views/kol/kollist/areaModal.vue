@@ -3,9 +3,11 @@
     <h3>
       粉丝占比top10省份
     </h3>
-    <ul class="area-box">
+    <ul class="area-box" v-if="data.length > 0">
       <li v-for="(it, index) in data" :key="index"><span>{{index}} {{data.name}}:</span><span>{{data.percent}}%</span></li>
-      
+    </ul>
+    <ul v-else>
+      <li class="no-data">暂无数据</li>
     </ul>
   </div>
 </template>
@@ -71,5 +73,10 @@ export default class DlgEditCinema extends ViewBase {
       font-size: 14px;
     }
   }
+}
+.no-data {
+  text-align: center;
+  margin-top: 60px;
+  font-size: 14px;
 }
 </style>

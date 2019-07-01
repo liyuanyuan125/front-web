@@ -1,14 +1,12 @@
 <template>
   <div>
     <Modal v-model="value.visible"
-      :transfer='false'
-      :width='460'
+      :transfer='true'
       :closable='false'
       :mask-closable='false'
-      title="查看关联影院"
-      width="800">
+      width="700">
       <div class="title">
-        <i @click="cancel"></i>
+        <i @click="value.visible = false"></i>
         <div v-if="visible">当前没有关联的客户</div>
         <Table v-else stripe :columns="columns" :data="data">
           <template slot-scope="{row, index}" slot="areaName">
@@ -17,7 +15,7 @@
         </Table>
       </div>
       <div slot="footer" class="btnCenter footer-bottom">
-        <Button type="primary" class="button-cancel ok" @click="value.visible = false">关闭</Button>
+        <Button type="primary" class="button-ok ok" @click="value.visible = false">关闭</Button>
       </div>
     </Modal>
   </div>
@@ -47,10 +45,11 @@ export default class Change extends ViewBase {
 }
 </script>
 <style lang="less" scoped>
+@import '~@/site/lib.less';
+
 /deep/ .ivu-modal-header {
   border-bottom: 0;
-  padding: 10px 13px;
-  text-align: center;
+  background: #f9f9f9;
   font-weight: none;
 }
 /deep/ .ivu-table {
@@ -59,6 +58,9 @@ export default class Change extends ViewBase {
 }
 .footer-bottom {
   margin: 10px 0 10px;
+}
+/deep/ .ivu-modal-body {
+  padding: 0;
 }
 .ok {
   width: 200px;
@@ -72,7 +74,6 @@ export default class Change extends ViewBase {
   margin-bottom: 10px;
   font-size: 30px;
   font-weight: 500;
-  background: #eee;
   padding: 20px;
   color: #00202d;
   i {
@@ -100,6 +101,11 @@ export default class Change extends ViewBase {
   color: #fff;
   background-color: rgba(0, 32, 45, 1);
   border-color: rgba(0, 32, 45, 1);
+}
+.button-ok {
+  width: 200px;
+  .button-style(#fff, #00202d);
+  border-radius: 25px;
 }
 </style>
 

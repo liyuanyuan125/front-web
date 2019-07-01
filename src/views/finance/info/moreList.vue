@@ -83,11 +83,12 @@ export default class Main extends ViewBase {
   currentsize = 1
 
   columns4 = [
-    { title: '充值ID', key: 'id', align: 'center' , width: 80},
+    { title: '充值ID', key: 'id', align: 'center' , width: 70},
     {
       title: '申请时间',
       key: 'applyTime',
       align: 'center',
+      width: 120,
       render: (hh: any, { row: { applyTime } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
@@ -99,16 +100,30 @@ export default class Main extends ViewBase {
     {
       title: '银行账号',
       key: 'accountNumber',
-      align: 'center'
+      align: 'center',
+      width: 90,
+      render: (hh: any, { row: { accountNumber } }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        const html = String(accountNumber).substring(String(accountNumber).length - 4)
+        return accountNumber == null ? (
+          <span class="datetime" v-html="-" />
+        ) : (
+          <span class="datetime" v-html={'****' + html} />
+        )
+        /* tslint:enable */
+      }
     },
     {
       title: '汇款人姓名',
       key: 'accountName',
-      align: 'center'
+      align: 'center',
+      width: 115,
     },
     {
       title: '汇款时间',
       key: 'remittanceDate',
+      width: 120,
       align: 'center',
       render: (hh: any, { row: { remittanceDate } }: any) => {
         /* tslint:disable */
@@ -121,12 +136,14 @@ export default class Main extends ViewBase {
     {
       title: '联系人电话',
       key: 'contactPhone',
-      align: 'center'
+      align: 'center',
+      width: 120,
     },
     {
       title: '充值金额/元',
       key: 'amount',
-      align: 'center'
+      align: 'center',
+      width: 125,
     },
     {
       title: '备注',
@@ -135,17 +152,19 @@ export default class Main extends ViewBase {
       render: (hh: any, { row: { remark } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        const html1 = String(remark).slice(0,10) + '...'
-        if (String(remark).length >= 10) {
-          return <div>
-            <tooltip content={remark} placement="top">
-                <span class="datetime" v-html={html1} />
+        const html1 = String(remark).slice(0, 4) + '...'
+        if (String(remark).length >= 4) {
+          return (
+            <div>
+              <tooltip max-width="200" transfer content={remark} placement="top">
+                <span class="bei" v-html={html1} />
               </tooltip>
-          </div>
+            </div>
+          )
         } else {
-          return <div>
-            <span class='datetime' v-html={remark}></span>
-          </div>
+          return (
+              <span class="bei" v-html={remark} />
+          )
         }
         /* tslint:enable */
       }
@@ -153,6 +172,7 @@ export default class Main extends ViewBase {
     {
       title: '汇款凭证',
       align: 'center',
+      width: 100,
       render: (hh: any, { row: { imageList } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
@@ -163,7 +183,7 @@ export default class Main extends ViewBase {
             href="javascript:;"
             on-click={this.onView.bind(this , imageList.url)}
             class="operation">
-            查看汇款凭证
+            查看
           </a>
         )
         /* tslint:enable */
@@ -172,7 +192,7 @@ export default class Main extends ViewBase {
     {
       title: '状态',
       key: 'statusText',
-      width: 80,
+      width: 90,
       align: 'center',
       render: (hh: any, { row: { rejectReason , approvalStatus, statusText } }: any) => {
         /* tslint:disable */

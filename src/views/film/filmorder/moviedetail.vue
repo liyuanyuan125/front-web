@@ -5,7 +5,7 @@
       <Row style='margin-bottom: 10px;' class='tits'>订单信息</Row>
       <div class='title-tip'>
       	<Row>
-         <Col :span='12'><span>项目名称：</span>{{itemlist.projectName}}</Col>
+         <Col :span='12'><span>项目名称：</span>{{itemlist.projectName == null || itemlist.projectName == '' ? '暂无' : itemlist.projectName}}</Col>
          <Col :span='12'><span>订单编号：</span>{{itemlist.id}}</Col>
         </Row>
         <Row>
@@ -13,7 +13,7 @@
          <Col :span='12'><span>下单时间：</span>{{fonttime}}</Col>
         </Row>
         <Row>
-         <Col :span='24'><span>推广内容：</span>{{itemlist.projectDescription == null ? '暂无' : itemlist.projectDescription}}</Col>
+         <Col :span='24'><span>推广内容：</span>{{itemlist.projectDescription == null || itemlist.projectDescription == '' ? '暂无' : itemlist.projectDescription}}</Col>
         </Row>
       </div>
       <div class='body'>
@@ -33,8 +33,8 @@
               <Row>{{itemlist.movieReleaseDate}} 上映</Row>
             </Col>
             <Col :span='10'>
-              <Row class='bus' style='margin-top: 18px;'> 电影海报   <br><span class='hui'>后台配置的使用说明，暂无使用说明</span> <a class='okbut' :href="itemlist.movieMainPic" :download='itemlist.movieMainPic'>立即下载</a></Row>
-              <Row class='bus' > 电影票券  &nbsp;  {{itemlist.movieResource.coupon.count}}张   <br><span class='hui'>后台配置的使用说明，暂无使用说明</span> <a class='okbut' :download='itemlist.id'>立即下载</a></Row>
+              <Row class='bus' style='margin-top: 18px;'> 电影海报   <br><span class='hui'>后台配置的使用说明，暂无使用说明</span> <a v-if='itemlist.status == 3' class='okbut' :href="itemlist.movieMainPic" :download='itemlist.movieMainPic'>立即下载</a></Row>
+              <Row class='bus' > 电影票券  &nbsp;  {{itemlist.movieResource.coupon.count}}张   <br><span class='hui'>后台配置的使用说明，暂无使用说明</span> <a v-if='itemlist.status == 3' class='okbut' :download='itemlist.id'>立即下载</a></Row>
               <Row></Row>
             </Col>
           </Row>
@@ -58,7 +58,7 @@
       <div class='body'>
         <Row class='tits'>留言</Row>
         <Row class='liuyan'>
-          {{itemlist.message == '' ? '暂无留言' : itemlist.message}}
+          {{itemlist.message == '' || itemlist.message == null ? '暂无留言' : itemlist.message}}
         </Row>
       </div>
       <div class='body'>

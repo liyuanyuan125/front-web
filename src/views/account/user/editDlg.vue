@@ -9,7 +9,7 @@
       >
       <div class="title">
         <i @click="handleCancel"></i>
-        <p>查看关联用户</p>
+        <p>编辑关联用户</p>
       </div>
       <div class="flex-box">
         <Input v-model="search" placeholder="请输入客户ID或名称"/>
@@ -21,8 +21,7 @@
         stripe
         :columns="columns"
         :data="data"
-        @on-select="singleSelect"
-        @on-select-all="selectAll"
+        @on-selection-change="selectChange"
       ></Table>
       <Page
         :total="value.totalCount"
@@ -103,10 +102,7 @@ export default class Change extends ViewBase {
     this.getList()
   }
 
-  singleSelect(select: any) {
-    this.selectList = select
-  }
-  selectAll(select: any) {
+  selectChange(select: any) {
     this.selectList = select
   }
 
@@ -124,7 +120,6 @@ export default class Change extends ViewBase {
 @import '~@/site/lib.less';
 /deep/ .ivu-modal-header {
   border-bottom: 0;
-  padding: 10px 13px;
   background: #f9f9f9;
   font-weight: none;
 }

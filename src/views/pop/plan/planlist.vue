@@ -2,7 +2,6 @@
   <div class>
     <h3 class="plan-title">
       <span class="adver-tiele">广告计划</span>
-
       <Button
         type="primary"
         :to="{name: 'pop-planlist-add'}"
@@ -35,7 +34,7 @@
           </Select>
         </Col>
 
-        <Col :span="5">
+        <!-- <Col :span="5">
           <Select v-model="form.settlementStatus" clearable placeholder="请选择结算状态">
             <Option
               v-for="item in data.settlementStatusList"
@@ -44,7 +43,7 @@
               :value="item.key"
             >{{item.text}}</Option>
           </Select>
-        </Col>
+        </Col> -->
       </Row>
     </Form>
 
@@ -116,7 +115,7 @@
               <span class="edit-btn" v-if="row.status == 4" @click="pay(row.companyId, row.freezeAmount, row.id)">立即缴费</span>
               <div class="adver-edit">
                 <p @click="plandetail(row.id)">详情</p>
-                <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p>
+                <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
                 <p @click="plandel(row.id)">删除</p>
               </div>
             </div>
@@ -167,7 +166,7 @@ const timeFormat = 'YYYY-MM-DD'
     Sure,
     Pay,
     pagination,
-    relevanceDlg
+    relevanceDlg,
   }
 })
 export default class Plan extends ViewBase {
@@ -252,6 +251,12 @@ export default class Plan extends ViewBase {
     return time / (3600 * 24 * 1000) + 1
   }
 
+  findId(id: any) {
+    this.$router.push({ name: 'effect-report', params: {
+      id
+    }})
+  }
+
   formatDate(data: any) {
     return data
       ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(
@@ -330,9 +335,13 @@ export default class Plan extends ViewBase {
   }
 
   async plandel(id: any) {
+    await confirm(`是否要删除广告计划`, {
+      title: '删除广告计划'
+    })
     try {
       await delCheckPlanList(id)
       this.tableList()
+      toast('操作成功')
     } catch (ex) {
       this.handleError(ex)
     }
@@ -548,27 +557,26 @@ export default class Plan extends ViewBase {
   }
   /deep/ .ivu-table-column-center,
   /deep/ .ivu-table-column-left {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
   }
   /deep/ .ivu-table {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
   }
   /deep/ .ivu-table-row {
     background: rgba(255, 255, 255, 0.8);
     /deep/ td {
       height: 200px;
       color: #00202d;
-      background: rgba(0, 0, 0, 0);
     }
   }
   /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
   }
   /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
     background: rgba(255, 255, 255, 0.5);
   }
   /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
   }
   /deep/ .ivu-table-body .ivu-table-column-center,
   /deep/ .ivu-table-body .ivu-table-column-left {
@@ -656,7 +664,7 @@ export default class Plan extends ViewBase {
     content: '';
     display: block;
     height: 1px;
-    width: 20px;
+    width: 16px;
     margin-left: 44%;
     background: #00202d;
   }

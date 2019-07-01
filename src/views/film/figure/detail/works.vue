@@ -4,10 +4,10 @@
       <h2 class="nav-title">票房TOP5作品</h2>
       <ul>
         <li v-for="item in topList" :key="item.id">
-          <img v-if="item.status == 3" src="~@/views/film/assets/hotShow.png" alt="alias" class="hot"/>
           <p class="item-list">
-             <img :src="item.poster" class="img-top" />
-             <span v-if="item.boxOfficeRanking">影史票房NO.{{item.boxOfficeRanking}}</span>
+              <img :src="item.poster" class="img-top" />
+              <span v-if="item.boxOfficeRanking">影史票房NO.{{item.boxOfficeRanking}}</span>
+              <img v-if="item.status == 3" src="~@/views/film/assets/hotShow.png" width="48px" alt="alias" class="hot"/>
           </p>
           <p class="title-year">{{spliceName(item.name)}}({{item.release}})</p>
           <p>
@@ -15,7 +15,7 @@
               <em v-if="item.types.length-1 != index"> / </em>
             </span>
           </p>
-          <p class="top-money"><span>{{item.boxOffice}}</span></p>
+          <p class="top-money"><span>{{readableNumber(item.boxOffice)}}</span></p>
         </li>
       </ul>
     </div>
@@ -43,14 +43,14 @@
           <dl>
             <dd v-for="(list, index) in tableList" :key="index">
               <i class="year-tag" v-if="list.year">{{list.year}}</i>
-              <i class="year-tag" v-else>+{{list.jyIndex}}</i>
+              <i class="year-tag" v-else>{{handleJy(list.jyIndex)}}</i>
               <div class="pic-item flex-box" v-for="it in list.items">
                 <a :href="it.videoUrl" class="img" >
-                  <i class="nowing" v-if="it.status == 3"><img src="~@/views/film/assets/hotShow.png" alt="alias" /></i>
-                  <img :src="it.poster" />
+                  <i class="nowing" v-if="it.status == 3"><img src="~@/views/film/assets/hotShow.png" width="48px" alt="alias" /></i>
+                  <img :src="it.poster" class="img-item" />
                 </a>
                 <div class="text-right">
-                  <h3 class="title-grade"><span>{{it.name}}</span><em>{{it.jyIndex}}</em></h3>
+                  <h3 class="title-grade"><span>{{it.name}}</span><em>{{handleJy(it.jyIndex)}}</em></h3>
                   <h4 class="person-identity"><span v-for="(item, index) in it.professions" :key="index"> {{handleProfession(item)}} </span></h4>
                   <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" :key="index">{{item.name}}</em></p>
                   <p class="com-col">主演：<em class="em-actor" v-for="(item, index) in it.actors" v-if="index < 2" :key="index">{{item.name}} </em></p>
@@ -66,7 +66,7 @@
          <div class="production-list">作品（{{noMovie.length}}）</div>
          <div class="pic-item flex-box" v-for="it in noMovie">
           <a :href="it.videoUrl" class="img" >
-            <img :src="it.poster" />
+            <img :src="it.poster" class="img-item" />
           </a>
           <div class="text-right">
             <h3 class="title-grade"><span>{{it.name}}({{it.releaseYear}})</span></h3>
@@ -88,6 +88,7 @@ import ViewBase from '@/util/ViewBase'
 import {personMovies, topList } from '@/api/filmPersonDetail'
 import { getTodayDate, formatConversion } from '@/util/validateRules'
 import { cloneDeep } from 'lodash'
+import { readableNumber } from '@/util/dealData'
 
 
 @Component
@@ -115,7 +116,7 @@ export default class Master extends ViewBase {
   // 影片类型
   selList = [
     {key: 0, text: '按时间排序'},
-    {key: 1, text: '按鲸鱼指数排序'}
+    {key: 1, text: '按鲸娱指数排序'}
   ]
   // 影片类型筛选
   filmListSelect = [
@@ -130,6 +131,10 @@ export default class Master extends ViewBase {
 
   get formatConversion() {
     return formatConversion
+  }
+
+  get readableNumber() {
+    return readableNumber
   }
 
   async mounted() {
@@ -151,27 +156,19 @@ export default class Master extends ViewBase {
   }
 
   async list() {
-    const id = this.id// 370093
+    const id = this.id// 370093  366995
     try {
       const { data: {items, movieTypes, professions} } = await personMovies(id)
       this.professions = professions
       this.items = items || []
 
-      // 查询获取未上映作品（release在今天和今天以前的表示已经上映，在今天以后的表示未上映
-      const todayDate = getTodayDate()
-      this.noMovie = this.items.filter((item: any) => item.release > todayDate)
-      this.items.map( (item: any) => {
-        if (item.release > todayDate) {
-          item.isRelease = false
-        } else {
-          item.isRelease = true
-        }
-      })
+      // status > 2 上映状态
+      this.noMovie = this.items.filter((item: any) => item.status < 3)
 
       // 上映作品 - 职业筛选
       const filterRelease: any = {}
       this.items.map((item: any) => {
-        if (item.isRelease) {
+        if (item.status > 2) {
           item.professions.map((pro: any) => {
             if (filterRelease[pro]) {
               filterRelease[pro] = filterRelease[pro] + 1
@@ -186,7 +183,7 @@ export default class Master extends ViewBase {
       // 上映作品 - 影片类型(未匹配到类型不展示)
       const filterMovie: any = {}
       this.items.map((item: any) => {
-        if (item.isRelease) {
+        if (item.status > 2) {
           item.types.map((pro: any) => {
             if (filterMovie[pro]) {
               filterMovie[pro] = filterMovie[pro] + 1
@@ -212,7 +209,7 @@ export default class Master extends ViewBase {
       const filmList: any[] = []
       item1.map((item: any) => {
         const findIndex = filmList.findIndex((film: any) => film.year == item.releaseYear)
-        if (item.isRelease) { // 上映
+        if (item.status > 2) { // 上映
           if (findIndex == -1) {
             // let childItems: any = []
             filmList.push({
@@ -231,7 +228,7 @@ export default class Master extends ViewBase {
       const jyList: any[] = []
       item2.map((item: any) => {
         const findIndex = jyList.findIndex((jy: any) => Math.floor(jy.jyIndex) == Math.floor(item.jyIndex))
-        if (item.isRelease) { // 上映
+        if (item.status > 2) { // 上映
           if (findIndex == -1) {
             const childItems: any = []
             jyList.push({
@@ -252,6 +249,10 @@ export default class Master extends ViewBase {
   handleProfession(id: string) {
     const profess: any = this.professions.filter((item: any) => item.key == id )
     return profess[0].text
+  }
+
+  handleJy(jy: number) {
+    return (jy / 100).toFixed(2)
   }
 
   handleMoive(it: any) {
@@ -307,11 +308,16 @@ h2, h3, h4 {
       .hot {
         position: absolute;
         top: 0;
-        left: 20px;
-        width: 48px;
+        left: 0;
+        z-index: 9;
       }
       .item-list {
         position: relative;
+        width: 160px;
+        height: 240px;
+        overflow: hidden;
+        margin: 0 auto;
+        background: #fff;
         span {
           position: absolute;
           bottom: 5px;
@@ -325,8 +331,7 @@ h2, h3, h4 {
         }
       }
       .img-top {
-        // width: 100%;
-        height: 240px;
+        width: 160px;
       }
       .title-year {
         font-size: 16px;
@@ -380,7 +385,7 @@ h2, h3, h4 {
         position: relative;
         font-size: 14px;
         .year-tag {
-          width: 56px;
+          width: 60px;
           height: 26px;
           line-height: 26px;
           position: absolute;
@@ -417,9 +422,8 @@ h2, h3, h4 {
     position: relative;
     display: block;
     width: 140px;
-    height: 160px;
-    img {
-      height: 160px;
+    .img-item {
+      width: 140px;
     }
     .nowing {
       width: 48px;

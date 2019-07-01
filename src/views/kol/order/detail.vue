@@ -1,11 +1,19 @@
 <template>
   <div class="page">
-    <div class='t-title'>订单状态： <span v-for="it in statusList" v-if="it.key == item.status">{{it.text}}</span></div>
+    <div class='t-title'>订单状态： <span v-for="it in statusList" v-if="it.key == item.status">
+      
+      <i v-if="[2,3].includes(item.status)">待审核</i>
+      <i v-else>{{it.text}}</i>
+      </span>
+      </div>
     
     <div class='title-tip'>
       <Row style='font-size: 24px;line-height: 50px;font-weight: 500'>订单信息</Row>
     	<Row>
-       <Col :span='12'>项目名称：{{item.projectName}}</Col>
+       <Col :span='12' style='display:flex;'>
+        <div style='width: 13%;display: inline-block;'>项目名称：</div>
+        <div style='width: 80%;display: inline-block;'>{{item.projectName}}</div>
+      </Col>
        <Col :span='12'>订单编号：{{item.orderNo}}</Col>
       </Row>
       <Row>
@@ -16,7 +24,10 @@
        <Col :span='24'>推广产品：{{item.productName == null ? '暂无' : item.productName}}</Col>
       </Row>
       <Row>
-       <Col :span='24'>推广内容：{{item.content}}</Col>
+       <Col :span='24' class='conover' style='display: flex;'>
+       <div style='width: 7%;display: inline-block;'>推广内容：</div>
+       <div style='width: 80%;display: inline-block;'>{{item.content == null ? '暂无' : item.content}}</div>
+       </Col>
       </Row>
     </div>
     <div class='body'>
@@ -44,7 +55,7 @@
                     </div>
                   </Col>
                   <Col :span='7' class='name'>
-                    <Tooltip v-if='it.accountName.length > 5' :content="it.name">
+                    <Tooltip v-if='it.accountName.length > 5' max-width="200" transfer :content="it.name">
                     <div>{{it.accountName.slice(0,5)}}...</div></Tooltip>
                     <div v-if='it.accountName.length <= 5'>{{it.accountName}}</div>
                     <div v-for="code in accountCategoryList" v-if="code.key == it.accountTypeCode">{{code.text}}</div>
@@ -66,8 +77,8 @@
               <Col :span='3' class='li-ti-col ss'>{{it.publishTime}}</Col>
               <Col :span='4' class='li-ti-col ss'>
               <span v-if='it.content == null'>暂无</span>
-                  <Tooltip v-if='it.content != null' :content="it.content">
-                    <span>{{it.content.slice(0,13)}}</span></Tooltip>
+                  <Tooltip max-width="200" transfer v-if='it.content != null' :content="it.content">
+                    <span class='overs'>{{it.content}}</span></Tooltip>
               </Col>
               <Col :span='3' class='li-ti-col ss'>
               <i v-for="item in subStatusList" :key="item.key" v-if="item.key == it.status">{{item.text}}</i>
@@ -75,6 +86,9 @@
         		</row>
         	</li>
         </ul>
+      </div>
+      <div class='all'>
+        订单总额： <span>￥<Number :addNum='item.totalFee'></Number></span>
       </div>
     </div>
     <div class='body' style='padding-left: 30px;'>
@@ -110,6 +124,7 @@
 <script lang="ts">
 import { Component, Watch, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import Number from '@/components/number.vue'
 import moment from 'moment'
 import { itemlist  } from '@/api/lastissue'
 import { toMap } from '@/fn/array'
@@ -118,10 +133,11 @@ import { orderDetail } from '@/api/kolOrderList'
 import { querySelectList } from '@/api/brandList'
 
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
-const times = 'YYYY-MM-DD'
+const times = 'YYYY-MM-DD HH:mm'
 
 @Component({
   components: {
+    Number,
   }
 })
 export default class Main extends ViewBase {
@@ -268,10 +284,23 @@ export default class Main extends ViewBase {
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 1);
 }
+.overs {
+  overflow: hidden;
+  height: 45px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 22px;
+}
+.conover {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
 .taskorder {
-  font-size: 20px;
+  font-size: 24px;
   line-height: 50px;
   margin-left: 30px;
+  font-weight: 500;
 }
 .taskok {
   font-weight: 500;
@@ -352,7 +381,7 @@ export default class Main extends ViewBase {
       background-size: cover;
       position: absolute;
       top: 37%;
-      right: -4%;
+      right: -3%;
     }
   }
   .ss-right {
@@ -376,6 +405,22 @@ export default class Main extends ViewBase {
   }
   .ss-right {
     padding-left: 40px;
+  }
+}
+.all {
+  height: 80px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 0 0 5px 5px;
+  opacity: 0.9;
+  line-height: 80px;
+  text-align: right;
+  padding-right: 70px;
+  font-size: 14px;
+  color: rgba(0, 32, 45, 1);
+  span {
+    font-size: 30px;
+    color: #ff5353;
+    margin-left: 5px;
   }
 }
 </style>

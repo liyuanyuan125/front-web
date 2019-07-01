@@ -1,17 +1,20 @@
 // 将登陆注册等模块「静态」到主文件中，以便用户更流畅
-import home from './views/home.vue'
-import login from './views/portal/login/index.vue'
-import register from './views/portal/register.vue'
-import registerComplete from './views/portal/registerComplete.vue'
-import activeEmail from './views/portal/activeEmail.vue'
-import registerSuccess from './views/portal/registerSuccess.vue'
-import MainLayout from './views/layout/MainLayout.vue'
-import Error from './views/error/index.vue'
+import home from '@/views/home.vue'
+import login from '@/views/portal/login/index.vue'
+import loginIndex from '@/views/portal/login/loginIndex.vue'
+import apply from '@/views/portal/login/apply.vue'
+import register from '@/views/portal/register.vue'
+import registerComplete from '@/views/portal/registerComplete.vue'
+import activeEmail from '@/views/portal/activeEmail.vue'
+import registerSuccess from '@/views/portal/registerSuccess.vue'
+import MainLayout from '@/views/layout/MainLayout.vue'
+import Error from '@/views/error/index.vue'
 
 import { RouteConfig, Route, Location } from 'vue-router'
-import { devInfo, devError } from './util/dev'
-import { MapType } from './util/types'
-import { stringToBoolean } from './fn/typeCast'
+import { devInfo, devError } from '@/util/dev'
+import { MapType } from '@/util/types'
+import { stringToBoolean } from '@/fn/typeCast'
+import { parse } from '@/fn/array'
 
 /**
  * 处理 route 中的参数类型
@@ -69,6 +72,11 @@ export interface RouteMetaBase {
    * 是否使用沉浸式 header，默认为 false，只能设置为 true 或不设置
    */
   immersionHeader?: true
+
+  /**
+   * 点亮的侧边菜单名称
+   */
+  siderMenu?: string
 }
 
 /**
@@ -148,6 +156,18 @@ const singleRoutes: RouteConfigEnhance[] = [
     path: '/login',
     name: 'login',
     component: login,
+    meta: unauth
+  },
+  {
+    path: '/tologin',
+    name: 'tologin',
+    component: loginIndex,
+    meta: unauth
+  },
+  {
+    path: '/apply',
+    name: 'apply',
+    component: apply,
     meta: unauth
   },
 
@@ -343,6 +363,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.users',
       authAction: 'view',
+      title: '查看'
     }
   },
 
@@ -421,6 +442,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.managecinema',
       authAction: 'view',
+      title() {
+        return '查看'
+      }
     }
   },
 
@@ -456,6 +480,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'financial-manage.info',
       authAction: 'viewList',
+      title() {
+        return '更多充值记录'
+      }
     }
   },
 
@@ -591,7 +618,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/pop/film/edit.vue'),
     meta: {
       authKey: 'promotion.ad-video',
-      title({params}) {
+      title({ params }) {
         return params.id as any > 0 ? '编辑' : '新建'
       },
       authAction(route) {
@@ -633,6 +660,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: 'view',
       authIsMenu: true,
+      title() {
+        return '详情'
+      }
     }
   },
 
@@ -745,7 +775,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 效果报表
   {
-    path: '/reseport/effect-report',
+    path: '/reseport/effect-report/:id',
     name: 'effect-report',
     component: () => import('./views/resReport/effectReport/index.vue'),
     meta: {
@@ -831,12 +861,19 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import(/* webpackChunkName: "about" */'./views/about.vue'),
     meta: emptyAuth,
   },
+
   // KOL - KOL 对比
   {
-    path: '/kol/compare/:id/:ids',
+    path: '/kol/compare/:id/:compareIds',
     name: 'kol-compare',
     component: () => import('./views/kol/compare/index.vue'),
-    meta: emptyAuth
+    meta: emptyAuth,
+    props: ({ params: { id, compareIds } }: Route) => {
+      return {
+        id: +id,
+        compareIds: parse(compareIds).map(it => +it),
+      }
+    }
   },
 
    // KOL - KOl 订单管理
@@ -882,20 +919,26 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     props: idProps,
   },
 
-  // kol - 检测
+  // kol - 监测
   {
     path: '/kol/order/taskDetection/:id',
     name: 'order-order-taskDetection',
     component: () => import('./views/kol/order/taskDetection.vue'),
-    meta: emptyAuth,
+    meta: {
+      ...emptyAuth,
+      title: '监测'
+    },
   },
 
-  // kol - 检测详情
+  // kol - 监测详情
   {
     path: '/kol/order/taskDetection/detail/:id',
     name: 'order-order-taskDetection-detail',
     component: () => import('./views/kol/order/taskdet.vue'),
-    meta: emptyAuth,
+    meta: {
+      ...emptyAuth,
+      title: '监测详情'
+    },
   },
 
   // KOL - 申请发票列表
@@ -903,7 +946,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/applyTicket',
     name: 'kol-applyTicket',
     component: () => import('./views/kol/applyTicket/index.vue'),
-    meta: emptyAuth
+    meta: {
+      ...emptyAuth,
+      title: '申请发票列表'
+    },
   },
 
   // KOL - 申请发票填写
@@ -911,7 +957,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/applyTicket/addticket/:edit/:key',
     name: 'kol-applyTicket-addticket',
     component: () => import('./views/kol/applyTicket/addticket.vue'),
-    meta: emptyAuth
+    meta: {
+      ...emptyAuth,
+      title: '申请发票填写页'
+    },
   },
 
   // KOL - 查看开票历史
@@ -919,7 +968,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/applyTicket/ticketHis',
     name: 'kol-applyTicket-ticketHis',
     component: () => import('./views/kol/applyTicket/ticketHis.vue'),
-    meta: emptyAuth
+    meta: {
+      ...emptyAuth,
+      title: '查看开票历史'
+    },
   },
 
   // KOL - 查看开票详情
@@ -927,7 +979,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/applyTicket/detail/:id',
     name: 'kol-applyTicket-detail',
     component: () => import('./views/kol/applyTicket/detail.vue'),
-    meta: emptyAuth
+    meta: {
+      ...emptyAuth,
+      title: '查看开票详情'
+    },
   },
 
   // kol - koll列表
@@ -950,7 +1005,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       ...emptyAuth,
       immersionHeader: true,
-      title: 'kol-详情页'
+      title: 'KOL详情页'
     },
     props: ({ params: { id, channel } }: Route) => {
       return {
@@ -1303,14 +1358,26 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/film/filmorder/addmovielist/:id',
     name: 'film-filmorder-addmovielist',
     component: () => import('./views/film/filmorder/addmovielist.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: '',
+      authAction: '',
+      title() {
+        return '影片合作订单添加'
+      }
+    },
   },
   // 影片 - 影片合作订单详情
   {
     path: '/film/filmorder/movielist/detail/:id',
     name: 'film-filmorder-movielist-detail',
     component: () => import('./views/film/filmorder/moviedetail.vue'),
-    meta: emptyAuth,
+    meta: {
+      authKey: '',
+      authAction: '',
+      title() {
+        return '影片合作订单详情'
+      }
+    },
   },
 
   // kol - 订单填写
@@ -1349,9 +1416,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       title: '品牌',
+      siderMenu: 'brand-list'
     },
     props: idProps,
   },
+
   // 品牌 - 首页 - 详情页
   {
     path: '/brand/homedetail/:id',
@@ -1475,7 +1544,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 第三方检测 - 列表
+  // 第三方监测 - 列表
   {
     path: '/test',
     name: 'test',
@@ -1486,7 +1555,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authIsMenu: true,
     },
   },
-  // 第三方检测 - 新建/编辑
+  // 第三方监测 - 新建/编辑
   {
     path: '/test/addtest/:id',
     name: 'test-addtest',
@@ -1495,6 +1564,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       authIsMenu: true,
+      title: '新建第三方监测',
     },
   },
 

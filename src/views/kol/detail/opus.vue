@@ -18,14 +18,14 @@
         <div class="item-inner flex-box">
           <a :href="item.url" target="_blank" class="video-url" >
             <i></i>
-            <img :src="item.coverPic" :onerror="defaultImg" alt="" class="img" />
+            <img :src="item.coverPic" alt="" class="img" />
           </a>
           <div class="inner-right">
             <p class="title" :title="item.title">{{handleSlice(item.title)}}</p>
             <p class="icon-num">
-              <span><i class="iconfont icon-shipin"  /><em>{{item.playCount}}万</em></span>
-              <span><i class="iconfont icon-dianzan"  /><em>{{item.likeCount}}万</em></span>
-              <span><i class="iconfont icon-dianping"  /><em>{{item.commentCount}}万</em></span>
+              <span><i class="iconfont icon-shipin"  /><em>{{roleNumber(item.playCount)}}</em></span>
+              <span><i class="iconfont icon-dianzan"  /><em>{{roleNumber(item.likeCount)}}</em></span>
+              <span><i class="iconfont icon-dianping"  /><em>{{roleNumber(item.commentCount)}}</em></span>
             </p>
             <p class="times">{{item.publishTime}}</p>
           </div>
@@ -45,6 +45,7 @@ import { querySelectList } from '@/api/brandList'
 import defaultImg from '../assets/error.png'
 import pagination from '@/components/page.vue'
 import moment from 'moment'
+import { roleNumber } from '@/util/validateRules'
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 
 @Component({
@@ -73,8 +74,11 @@ export default class Opus extends ViewBase {
 
   list = []
 
-  get defaultImg() {
-    return `this.src = '${defaultImg}'`
+  // get defaultImg() {
+  //   return `this.src = '${defaultImg}'`
+  // }
+  get roleNumber() {
+    return roleNumber
   }
 
   mounted() {

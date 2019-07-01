@@ -58,7 +58,7 @@
             <span @click="allcollects(2)" :class="acount == 2 ? 'active' : ''">我的收藏</span>
           </div>
           <span class="content-set">平均数量以近90天的内容计算</span>
-          <span class="content-set">数据更新日期2019-04-28</span>
+          <span class="content-set">数据更新日期{{times}}</span>
           <FormItem  class="form-name">
             <Input :disabled="acount == 2" style="width: 300px" v-model="form.name" suffix="ios-search" :placeholder="nameList[type]" />
           </FormItem>
@@ -81,20 +81,26 @@
             <div v-else>{{row.categoryName}}</div>
           </template>
           <template slot-scope="{ row }" slot="read">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgReadCount)}}w+</span>
+            <div>
+              <span v-if="row.avgReadCount">{{formatnums(row.avgReadCount, 'w+')}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="flansNumber">
-            {{formatNum(row.followersCount)}}
+            <span v-if="row.followersCount">{{formatNum(row.followersCount)}}</span>
+            <span v-else>-</span>
           </template>
           <template slot-scope="{ row }" slot="flansFace">
             <div>
               <p class="flans-box">
-                <span>男性：</span>  <span>{{row.maleFans}}%</span>
+                <span>男性：</span>  
+                <span v-if="row.maleFans">{{formatnums(row.maleFans, '%')}}</span>
+                <span v-else>-</span>
               </p>
               <p class="flans-box">
-                <span>女性：</span>  <span>{{row.femaleFans}}%</span>
+                <span>女性：</span>
+                <span v-if="row.femaleFans">{{formatnums(row.femaleFans, '%')}}</span>
+                <span v-else>-</span>
               </p>
               <div>
                 <a @click="viewArea(row.areaId, row.id)" >查看地域</a>
@@ -103,55 +109,68 @@
             </div>
           </template>
           <template slot-scope="{ row }" slot="discuss">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgCommentsCount)}}</span>
+            <div>
+              <span v-if="row.avgCommentsCount">{{formatnums(row.avgCommentsCount)}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="like">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgAttitudesCount)}}w+</span>
+            <div>
+              <span v-if="row.avgAttitudesCount">{{formatnums(row.avgAttitudesCount, 'w+')}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="transmit">
-            <div style="text-align:center">
-              <span>{{formatNum(row.avgRepostsCount)}}w+</span>
+            <div>
+              <span v-if="row.avgRepostsCount">{{formatnums(row.avgRepostsCount, 'w+')}}</span>
+              <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="price">
-            <div v-if="row.prices">
-              <p v-for="it in row.prices" :key="it" style="margin-top: 5px">
-                {{it}}
-              </p>
+            <div v-if="row.price.length > 0">
+              <Tooltip placement="top">
+                <div class="prices">
+                  <p v-for="it in row.price" :key="it.key" style="margin-top: 5px">
+                    {{it.key}} {{formatnums(it.value, '', '暂无报价', 1)}}
+                  </p>
+                </div>
+                <div slot="content">
+                  <p v-for="it in row.price" :key="it.key" style="margin-top: 5px">
+                    {{it.key}} {{formatnums(it.value, '', '暂无报价', 1)}}
+                  </p>
+                </div>
+              </Tooltip>
             </div>
+            <div v-else>暂无报价</div>
           </template>
           <template slot-scope="{ row }" slot="action">
             <div class="table-action">
               <p v-if="!yudingListId.includes(row.kolId)" @click="debounce(row, $event, 1000)">
-                <Icon type="md-add-circle" style="margin-top: 5px; font-size: 17px; color: #CA7273" />
+                <Icon type="md-add-circle" style=" font-size: 17px; color: #001F2C; opacity: .3" />
                 加入投放
               </p>
-              <p  v-else @click="cancelShop(row.id)">
-                <Icon type="md-add-circle" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
-                取消投放
+              <p v-else @click="cancelShop(row.id)">
+                <Icon type="ios-checkmark-circle" style="font-size: 17px; color: #CA7273;" />
+                已加入
               </p>
-              <p v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)" 
+              <p style="margin-top: 5px" v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)" 
               @click="collects(acount == 1 ? row.id : row.accountDataId)">
-                <Icon type="md-heart" style="margin-top: 5px;font-size: 17px; color: #CA7273" />
+                <Icon type="md-heart" style="font-size: 17px;color: #001F2C; opacity: .3" />
                 收藏
               </p>
-              <p v-else @click="cancelcollects(acount == 1 ? row.id : row.accountDataId)">
-                <Icon type="md-heart" style="margin-top: 5px;font-size: 17px; color: #001F2C; opacity: .3" />
-                取消收藏
+              <p style="margin-top: 5px" v-else @click="cancelcollects(acount == 1 ? row.id : row.accountDataId)">
+                <Icon type="md-heart" style="font-size: 17px; color: #CA7273" />
+                已收藏
               </p>
               <div :ref="'small' + row.id" class="radiu-url">
-                <img src="http://seopic.699pic.com/photo/50035/0520.jpg_wh1200.jpg" />
+                <img :src="ballsrc" />
               </div>
             </div>
           </template>
         </Table>
       </div>
 
-      <Page :total="total" v-if="total>0" class="btnCenter"
+      <!-- <Page :total="total" v-if="total>0" class="btnCenter"
         :current="form.pageIndex"
         :page-size="form.pageSize"
         :page-size-opts="[10, 20, 50, 100]"
@@ -159,19 +178,21 @@
         show-sizer
         show-elevator
         @on-change="sizeChangeHandle"
-        @on-page-size-change="currentChangeHandle"/>
+        @on-page-size-change="currentChangeHandle"/> -->
+        <pagination :pageList="pageList" :total="total" @uplist="KolSeach"></pagination>
       </div>
       <Detail ref='detailbox' v-model="type" @done="checkDetailSet" />
     </div>
     <div>
       <div v-show="yudingList.length > 0" class="check-box">
-      <div></div>
-        <div class="check-title">已选择<span ref="end" class="red"> {{yudingList.length}} </span>个，总粉丝数：
-        <span class="red">{{fansNums(yudingList)}}</span>万+
-          <Icon @click="detailShow" type="ios-arrow-up" class="ios-type" />
-        </div>
         <div>
-          <Button type="primary" class="button-ok" @click="next">立即绑定</Button>
+          <div class="check-title">已选择<span ref="end" class="red"> {{yudingList.length}} </span>个，总粉丝数：
+          <span class="red">{{fansNums(yudingList)}}</span>
+            <Icon @click="detailShow" type="ios-arrow-up" class="ios-type" />
+          </div>
+          <div style="margin-right: 20px">
+            <Button type="primary" class="button-ok" @click="next">立即预定</Button>
+          </div>
         </div>
       </div>
     </div>
@@ -184,17 +205,19 @@ import ViewBase from '@/util/ViewBase'
 import Header from './header.vue'
 import { cloneDeep } from 'lodash'
 import { titleMsgList, areaList, kolmsglist, addcollet, cancelcollect, delShopping,
-  allcollect, addShopIng, kolShoppingCar, delall } from '@/api/kolList.ts'
+  allcollect, addShopIng, kolShoppingCar, delall, updatetime } from '@/api/kolList.ts'
 import AreaModal from './areaModal.vue'
 import clickoutside from './directive'
 import { formatCurrency } from '@/fn/string'
 import Detail from './detail.vue'
+import moment from 'moment'
 import { animation } from '@/fn/self.ts'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { clean } from '@/fn/object.ts'
 import { getpersons, delcollect } from '@/api/mycollect.ts'
 import { kolList } from '@/api/collect.ts'
 import { findkol } from '@/api/shopping'
+import pagination from '@/components/page.vue'
 
 // 保持互斥
 const keepExclusion = <T extends any>(
@@ -210,6 +233,7 @@ const keepExclusion = <T extends any>(
     newHas && oldHas && setter(value.filter(it => it != aloneValue))
   }
 }
+const timeFormat = 'YYYY-MM-DD'
 const defaultForm: any = {
   channelCode: 'weibo',
   accountCategoryCode: 0,
@@ -225,7 +249,8 @@ const defaultForm: any = {
   components: {
     Header,
     AreaModal,
-    Detail
+    Detail,
+    pagination
   },
   directives: {
     clickoutside
@@ -265,6 +290,15 @@ export default class Main extends ViewBase {
   yudingList: any = []
   yudingListId: any = []
   kolIds: any = []
+  times: any = ''
+  ballsrc: any = ''
+
+  get pageList() {
+    return {
+      pageIndex: this.form.pageIndex,
+      pageSize: this.form.pageSize
+    }
+  }
 
   get columns() {
     const title = ['微博账号', '公众号/微信号', '抖音账号', '快手账号', '小红书账号', '全部账号', '全部账号']
@@ -290,7 +324,7 @@ export default class Main extends ViewBase {
       },
       {
         title: '粉丝画像',
-        align: 'center',
+        align: 'left',
         minWidth: 40,
         slot: 'flansFace'
       },
@@ -342,11 +376,35 @@ export default class Main extends ViewBase {
       },
       {
         title: '操作',
-        width: 90,
+        minWidth: 50,
         align: 'left',
         slot: 'action'
       }
     ]
+  }
+
+  formatnums(val: any, msg: any = '', errors: string = '-', id: number = 0) {
+    if (val == '0') {
+      return errors
+    }
+    const num = (val + '').split('.')
+    if (msg == '%') {
+      const numbers = formatCurrency(val, 2)
+       return `${numbers}${msg}`
+    }
+    if (num.length > 1) {
+      const numbers = formatCurrency(val, 2)
+      if (id == 1) {
+        return `￥${numbers}${msg}`
+      }
+      return `${numbers}${msg}`
+    } else {
+      const numbers = formatCurrency(val, 0)
+      if (id == 1) {
+        return `￥${numbers}${msg}`
+      }
+      return `${numbers}${msg}`
+    }
   }
 
   areabox(check: boolean) {
@@ -356,7 +414,13 @@ export default class Main extends ViewBase {
   }
 
   formatNum(data: any) {
-    return data ? formatCurrency(data, 0) : 0
+    if ((data + '').length > 4) {
+      return data ? formatCurrency(data / 10000, 2) + '万' : 0
+    } else if (data.length > 8) {
+      return data ? formatCurrency(data / 1000000000, 2) + '亿' : 0
+    } else {
+      return data ? formatCurrency(data, 0) : 0
+    }
   }
 
   created() {
@@ -394,6 +458,8 @@ export default class Main extends ViewBase {
         sexList,
         channelPriceList
       } } = await titleMsgList(this.title[this.type])
+      const time = await updatetime(this.title[this.type])
+      this.times = time.data ? moment(time.data * 1000).format(timeFormat) : '暂无'
       const data: any = await areaList({
         parentIds: 0,
         pageIndex: 1,
@@ -487,7 +553,8 @@ export default class Main extends ViewBase {
         const y = e.clientY
         const end: any  = this.$refs.end
         this.checkDetail = true
-        const left = end.getBoundingClientRect().left || window.screen.width / 3 + 100
+        this.ballsrc = row.image
+        const left = end.getBoundingClientRect().left || window.screen.width - 450
         const top = end.getBoundingClientRect().top || window.screen.availHeight - 120
         dom.style.cssText = `left: ${x }px; top: ${ y - 80}px; display: block`
         animation(dom, {
@@ -586,7 +653,7 @@ export default class Main extends ViewBase {
     this.$router.push({
       name: 'order-orderfill',
       params: {
-        code: this.$route.params.id || 'weibo'
+        code: this.title[this.type]
       }
     })
   }
@@ -602,6 +669,7 @@ export default class Main extends ViewBase {
     this.yudingList = val
     this.yudingListId = this.yudingList.map((it: any) => it.kolId)
     this.KolSeach()
+    this.kolinit()
   }
 
   // 粉丝数相加
@@ -611,7 +679,7 @@ export default class Main extends ViewBase {
     row.forEach((it: any) => {
       num += Number(it.fans)
     })
-    return num
+    return this.formatNum(num)
   }
 
   // kol列表
@@ -753,9 +821,6 @@ export default class Main extends ViewBase {
     width: 144px;
   }
   .button-ok {
-    position: absolute;
-    right: 20px;
-    bottom: 10px;
     width: 60px;
     height: 34px;
     font-size: 14px;
@@ -843,7 +908,7 @@ export default class Main extends ViewBase {
   img {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
+    border-radius: 58%;
   }
 }
 /deep/ .edit-input .ivu-form-item-content .ivu-input-wrapper input {
@@ -851,7 +916,7 @@ export default class Main extends ViewBase {
 }
 .list-table {
   border-radius: 5px;
-  width: 1146px;
+  min-width: 1146px;
   padding-left: 20px;
   padding-right: 20px;
   &::before {
@@ -861,10 +926,15 @@ export default class Main extends ViewBase {
     right: 0;
     height: 61px;
     border-radius: 5px 5px 0 0;
-    background: #f8f8f9;
+    background: #d5e7f2;
   }
   /deep/ .ivu-table-header {
     position: relative;
+    background: #d5e7f2;
+    th {
+      height: 61px;
+      background: #d5e7f2;
+    }
   }
   /deep/ .ivu-table-row {
     border-bottom: 2px solid rgba(255, 255, 255, .4);
@@ -883,13 +953,13 @@ export default class Main extends ViewBase {
     }
   }
   /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
   }
   /deep/ .ivu-table {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
   }
   /deep/ .ivu-table-row {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
     /deep/ td {
       background: rgba(0, 0, 0, 0);
     }
@@ -898,15 +968,27 @@ export default class Main extends ViewBase {
     color: #001f2c;
   }
   /deep/ .ivu-table-tip td {
-    margin-top: 50px;
+    background: rgba(0, 0, 0, 0);
+    padding-top: 60px;
   }
   /deep/ .ivu-table-cell {
     padding-right: 10px;
     padding-left: 10px;
   }
+  /deep/ .ivu-table-row-hover {
+    background: rgba(255, 255, 255, .4);
+  }
   .table-action {
     p {
       cursor: pointer;
+    }
+  }
+  .prices {
+    cursor: pointer;
+    p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   .table-name {
@@ -927,7 +1009,7 @@ export default class Main extends ViewBase {
     position: absolute;
     margin-left: 60px;
     z-index: 999;
-    margin-top: -130px;
+    margin-top: -120px;
   }
 }
 .btnCenter {
@@ -944,10 +1026,13 @@ export default class Main extends ViewBase {
   line-height: 80px;
   background: rgba(0, 0, 0, .6);
   display: flex;
+  justify-content: flex-end;
+  > div {
+    display: flex;
+  }
   .check-title {
     color: #fff;
     font-size: 18px;
-    margin-left: 30%;
   }
   .ios-type {
     cursor: pointer;
@@ -955,9 +1040,25 @@ export default class Main extends ViewBase {
     margin-left: 20px;
   }
   .button-ok {
-    margin-left: 100px;
+    margin-left: 30px;
     border-radius: 26px;
     .button-style(#fff, #f18d94);
+  }
+}
+/deep/ .page-list {
+  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+    color: #00202d;
+  }
+  .ivu-page-item {
+    a {
+      color: #00202d;
+    }
+  }
+  .ivu-page-item.ivu-page-item-active {
+    background: #00202d;
+    a {
+      color: #fff;
+    }
   }
 }
 </style>

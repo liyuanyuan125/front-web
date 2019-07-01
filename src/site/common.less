@@ -41,6 +41,7 @@
     background: @c-button;
   }
   /deep/ .ivu-select-selection {
+    background: rgba(255, 255, 255, .8);
     height: 40px;
     .ivu-select-input {
       height: 40px;
@@ -76,12 +77,16 @@
 
 .checkAll {
   cursor: pointer;
-  font-size: 12px;
+  font-size: 14px;
   color: #fff;
-  .colBg;
   padding: 0 30px 0 18px;
+  background: rgba(32, 67, 80, 1);
+  .check-line {
+    padding: 0 12px;
+  }
   span:last-child {
-    color: @c-link;
+    color: #4fa6bb;
+    font-size: 14px;
   }
 }
 

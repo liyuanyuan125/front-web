@@ -3,20 +3,23 @@
     <div slot="beforeSide">
       <router-link :to="{ name: 'film-movie', params: { id } }">
         <h2 class="figure-name">{{name}}</h2>
-        <img :src="figure" class="figure-img">
+        <Figure :src="figure" class="figure-img"/>
       </router-link>
     </div>
   </DetailLayout>
 </template>
+
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DetailLayout, { RouteItem } from '@/components/detailLayout'
+import Figure from '@/components/figure'
 import { getMovie } from './data'
 
 @Component({
   components: {
-    DetailLayout
+    DetailLayout,
+    Figure
   }
 })
 export default class Layout extends ViewBase {
@@ -57,14 +60,16 @@ export default class Layout extends ViewBase {
 .figure-name {
   position: absolute;
   top: 16px;
-  color: #00202e;
+  color: #fff;
   font-size: 24px;
   font-weight: normal;
 }
 
 .figure-img {
   width: 122px;
-  height: 122px;
+  height: auto;
+  min-height: 122px;
+  max-height: 220px;
   border: 1px solid #53c5df;
   border-radius: 6px;
 }

@@ -5,6 +5,21 @@
   background: #fff;
   width: 1px;
 }
+.film-max {
+  overflow: hidden;
+  max-height: 690px;
+}
+.arrow-box {
+  position: relative;
+  height: 30px;
+  .arrow {
+    position: absolute;
+    right: 20px;
+    font-size: 20px;
+    bottom: 4px;
+    cursor: pointer;
+  }
+}
 .plan-box {
   padding: 0 40px;
   .plan-message {
@@ -107,7 +122,7 @@
         opacity: .7;
       }
     }
-    .number {
+    .number, .onenumber {
       font-size: 30px;
       margin-top: 20px;
       color: @h-color;
@@ -116,6 +131,11 @@
       }
       /deep/ span::before {
         content: "≈";
+      }
+    }
+    .onenumber {
+      /deep/ span::after {
+        content: "";
       }
     }
   }

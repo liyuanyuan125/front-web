@@ -35,9 +35,8 @@
           <DatePicker
             format="yyyy-MM-dd HH:mm"
             v-model="form.publishTime"
-            :options="startDate"
             type="datetime"
-            placeholder="请选择"
+            placeholder="请选择执行时间"
             style="width: 300px"
           ></DatePicker>
         </FormItem>
@@ -92,7 +91,7 @@ export default class DlgEditCinema extends ViewBase {
     accountPhotoFileId: '',
     type: 0,
     summary: '',
-    publishTime: [],
+    publishTime: '',
     publishCategoryCode: '',
     provideProduct: ''
   }
@@ -103,7 +102,7 @@ export default class DlgEditCinema extends ViewBase {
 
   startDate: any = {
     disabledDate: (date: any) => {
-      return date && date.valueOf() < Date.now()
+      return date && date.valueOf() < Date.now() + 3600 * 1000 * 24
     }
   }
 

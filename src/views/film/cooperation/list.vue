@@ -31,8 +31,7 @@
           <div>
             <p>4</p>
             <p>
-              品牌上传资源
-              <br>使用照片
+              品牌上传<br>使用图片
             </p>
           </div>
         </li>
@@ -121,18 +120,21 @@
         <Row :gutter="10" v-if="done" type="flex" justify="start" class="res-row">
           <Col span="4" v-for="(item, index) in dataList" :key="index" class="res-col">
             <div class="res-item">
-              <router-link :to="{ name: 'film-movie', params: { id: item.movie_id}}">
+              <router-link target='_blank' :to="{ name: 'film-movie', params: { id: item.movie_id}}">
                 <div class="poster" >
                   <img :src="item.main_pic">
                 </div>
                 <div class="movtitle cut-text">{{item.name_cn}}</div>
-                <p class="movscore">{{handleFixed(item.jy_index)}}</p>
+                <p class="movscore" v-if=" form.sortBy === 'hots' "><i class="hots"></i><span>{{getItemValue(item)}}</span></p>
+                <p class="movscore" v-else-if=" form.sortBy === 'wantSeeCount' "><span>{{getItemValue(item)}}</span>人想看</p>
+                <p class="movscore" v-else-if=" form.sortBy === 'commentsScore' "><span>{{getItemValue(item)}}</span>分</p>
+                <p class="movscore" v-else ><span>{{getItemValue(item)}}</span></p>
               </router-link>
             </div>
           </Col>
         </Row>
-        <div v-else style="width: 100%; height: 400px; text-align: center">
-          <TinyLoading/>
+        <div v-else class="loading-box">
+          <TinyLoading />
         </div>
       </div>
       <Page
@@ -152,11 +154,10 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import moment from 'moment'
-import { formatTimestamp, formatTimes, formatNumber } from '@/util/validateRules'
 import { fetchList } from '@/api/filmCooperation'
-import DetailNavBar from './components/detailNavBar.vue'
 import TinyLoading from '@/components/TinyLoading.vue'
+import { dayOffset } from '@/util/date'
+import { percent, readableNumber, textList } from '@/util/dealData'
 
 const typeListMore: any[] = []
 
@@ -165,7 +166,7 @@ const typeListMore: any[] = []
     TinyLoading
   }
 })
-export default class Temporary extends ViewBase {
+export default class CooperationFilmList extends ViewBase {
   done = false
   filterShowMore = false
   filterShowMoreIcon = 'ios-arrow-down'
@@ -175,7 +176,7 @@ export default class Temporary extends ViewBase {
   form: any = {
     movieTypeCode: '',
     movieCategoryCode: '',
-    sortBy: '',
+    sortBy: 'wantSeeCount',
     pageIndex: 1,
     pageSize: 18,
     releaseStatus: 0
@@ -189,23 +190,23 @@ export default class Temporary extends ViewBase {
         text: '不限'
       },
       {
-        key: 1,
+        key: 3,
         text: '正在热映'
       },
       {
-        key: 2,
+        key: 4,
         text: '1个月内'
       },
       {
-        key: 3,
+        key: 5,
         text: '3个月内'
       },
       {
-        key: 4,
+        key: 6,
         text: '6个月内'
       },
       {
-        key: 5,
+        key: 7,
         text: '一年内'
       }
     ],
@@ -226,6 +227,14 @@ export default class Temporary extends ViewBase {
     // 排序选择
     sortBy: [
       {
+        key: 'wantSeeCount',
+        text: '想看人数'
+      },
+      {
+        key: 'commentsScore',
+        text: '口碑评分'
+      },
+      {
         key: '',
         text: '鲸娱指数'
       },
@@ -233,23 +242,33 @@ export default class Temporary extends ViewBase {
         key: 'hots',
         text: '实时热度'
       },
-      {
-        key: 'wantSeeCount',
-        text: '想看人数'
-      },
-      {
-        key: 'commentsScore',
-        text: '口碑评分'
-      }
     ]
   }
 
   async typeChangeHander4(index: number = 0) {}
 
   async fetchHandler() {
+    this.done = false
     const that: any = this
     const mockObj = {
       ...this.form
+    }
+    if ( mockObj.releaseStatus !== 3 &&  mockObj.releaseStatus !== 0 ) {
+      mockObj.beginDate = dayOffset(0)
+      switch ( mockObj.releaseStatus ) {
+        case 4:
+          mockObj.endDate = dayOffset(+30)
+          break
+        case 5:
+          mockObj.endDate = dayOffset(+90)
+          break
+        case 6:
+          mockObj.endDate = dayOffset(+120)
+          break
+        default:
+          mockObj.endDate = dayOffset(+365)
+      }
+      mockObj.releaseStatus = ''
     }
     try {
       const {
@@ -261,24 +280,35 @@ export default class Temporary extends ViewBase {
           totalCount
         }
       } = await fetchList({ ...mockObj })
-      this.dataList = movies.map((it: any) => {
-        return {
-          movie_id: it.movie_id,
-          name_cn: it.name_cn,
-          release_date: it.release_date,
-          main_pic: it.main_pic,
-          release_status: it.release_status,
-          jy_index: it.jy_index
+      if ( movies && movies.length > 0 ) {
+        this.dataList = movies.map((it: any) => {
+          return {
+            movie_id: it.movie_id,
+            name_cn: it.name_cn,
+            release_date: it.release_date,
+            main_pic: it.main_pic,
+            release_status: it.release_status,
+            jy_index: it.jy_index,
+            want_see: it.want_see,
+            hots: it.hots,
+            comments_score: it.comments_score
+          }
+        })
+        this.totalPages = totalCount
+        if ( this.dict.typeList.length === 1 ) {
+          const res = typeList.filter((it: any) => {
+            return it.controlStatus !== 0
+          })
+          this.dict.typeList.push( ...res )
         }
-      })
-      this.totalPages = totalCount
-      if ( this.dict.typeList.length === 1 ) {
-        this.dict.typeList.push( ...typeList )
+        if ( this.dict.categoryList.length === 1 ) {
+          const res = categoryList.filter((it: any) => {
+            return it.controlStatus !== 0
+          })
+          this.dict.categoryList.push( ...res )
+        }
+        that.done = true
       }
-      if ( this.dict.categoryList.length === 1 ) {
-        this.dict.categoryList.push( ...categoryList )
-      }
-      that.done = true
     } catch (ex) {
       this.handleError(ex)
     }
@@ -286,12 +316,25 @@ export default class Temporary extends ViewBase {
 
   handleChange() {
     this.form.moveTypeCode = 0
+    this.form.pageIndex = 1
     this.restHandler()
     this.fetchHandler()
   }
 
-  handleFixed(val: any) {
-    return val != 0 ? (val / 100).toFixed(2) : val
+  getItemValue(it: any) {
+    switch ( this.form.sortBy ) {
+      case 'hots':
+        return it.hots
+        break
+      case 'wantSeeCount':
+        return readableNumber(it.want_see)
+        break
+      case 'commentsScore':
+        return it.comments_score != 0 ? (it.comments_score / 10) : it.comments_score
+        break
+      default:
+        return it.jy_index != 0 ? (it.jy_index / 100).toFixed(2) : it.jy_index
+    }
   }
 
   restHandler() {
@@ -395,7 +438,7 @@ export default class Temporary extends ViewBase {
       opacity: 0.8;
       /deep/ .ivu-form-item-label {
         color: #fff;
-        padding: 6px 12px 10px 0;
+        padding: 6px 0 10px 0;
       }
       /deep/ .ivu-radio-group {
         .showMore.ivu-radio-wrapper-checked {
@@ -403,31 +446,31 @@ export default class Temporary extends ViewBase {
           font-weight: 400;
           background: none;
         }
-        /deep/ .ivu-radio-wrapper {
-          height: 28px;
-          line-height: 28px;
-          font-size: 14px;
-          box-shadow: none !important;
-          color: #cdd0d3;
-          border-radius: 3px;
-          background: none;
-          border: none;
-          margin-bottom: 10px;
-          &::before,
-          &::after {
-            display: none;
-          }
+      }
+      /deep/ .ivu-radio-wrapper {
+        height: 28px;
+        line-height: 28px;
+        font-size: 14px;
+        box-shadow: none !important;
+        color: #cdd0d3;
+        border-radius: 3px;
+        background: none;
+        border: none;
+        margin-bottom: 10px;
+        &::before,
+        &::after {
+          display: none;
         }
-        /deep/ .ivu-radio-wrapper-checked {
-          background-color: #82d1e4;
-          color: #00202d;
-          .ivu-radio-inner {
-            display: none;
-          }
-          &::before,
-          &::after {
-            display: none;
-          }
+      }
+      /deep/ .ivu-radio-wrapper-checked {
+        background-color: #82d1e4;
+        color: #00202d;
+        .ivu-radio-inner {
+          display: none;
+        }
+        &::before,
+        &::after {
+          display: none;
         }
       }
     }
@@ -437,39 +480,38 @@ export default class Temporary extends ViewBase {
       /deep/ .ivu-form-item {
         margin-bottom: 0;
       }
+      /deep/ .ivu-radio-wrapper {
+        height: 36px;
+        line-height: 36px;
+        font-size: 16px;
+        background: none;
+        border: none;
+        box-shadow: none !important;
+        color: #00202d;
+        border-radius: 0;
+        margin-right: 50px;
+        padding-left: 0;
+        padding-right: 0;
+        &::before,
+        &::after {
+          display: none;
+        }
+      }
       /deep/ .ivu-form-item-label {
         font-size: 16px;
+        padding: 10px 12px 10px 0;
+        color: #00202d;
       }
-      /deep/ .ivu-radio-group {
-        /deep/ .ivu-radio-wrapper {
-          height: 36px;
-          line-height: 36px;
-          font-size: 16px;
-          background: none;
-          border: none;
-          box-shadow: none !important;
-          color: #00202d;
-          border-radius: 0;
-          &::before,
-          &::after {
-            display: none;
-          }
+      /deep/ .ivu-radio-wrapper-checked {
+        color: #00202d;
+        border-bottom: 2px solid #00202d;
+        font-weight: 400;
+        .ivu-radio-inner {
+          display: none;
         }
-        /deep/ .ivu-form-item-label {
-          color: #00202d;
-          line-height: 35px;
-        }
-        /deep/ .ivu-radio-wrapper-checked {
-          color: #00202d;
-          border-bottom: 2px solid #00202d;
-          font-weight: 400;
-          .ivu-radio-inner {
-            display: none;
-          }
-          &::before,
-          &::after {
-            display: none;
-          }
+        &::before,
+        &::after {
+          display: none;
         }
       }
     }
@@ -486,8 +528,8 @@ export default class Temporary extends ViewBase {
           margin-bottom: 66px;
           .poster {
             img {
-              max-width: 168px;
-              max-height: 238px;
+              width: 168px;
+              height: 238px;
             }
           }
           .movtitle {
@@ -498,13 +540,32 @@ export default class Temporary extends ViewBase {
             overflow: hidden;
             text-overflow: ellipsis;
             width: 168px;
+            line-height: 36px;
             white-space: nowrap;
           }
           .movscore {
-            font-size: 24px;
+            color: #00202d;
+            display: flex;
+            flex-flow: row;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
             font-weight: 500;
-            color: rgba(0, 32, 45, 1);
-            line-height: 16px;
+            span {
+              color: #da6c70;
+              font-size: 24px;
+              font-weight: 500;
+              position: relative;
+              top: -4px;
+            }
+            i.hots {
+              display: inline-block;
+              width: 24px;
+              height: 24px;
+              background: url('./assets/images/hots.png') center center no-repeat;
+              position: relative;
+              top: -6px;
+            }
           }
         }
       }
@@ -541,5 +602,14 @@ export default class Temporary extends ViewBase {
 }
 .res-item {
   cursor: pointer;
+}
+.loading-box {
+  width: 100%;
+  height: 500px;
+  text-align: center;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
 }
 </style>

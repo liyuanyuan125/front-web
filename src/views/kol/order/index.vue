@@ -16,7 +16,7 @@
                   :value="item.key"
                 >{{item.text}}</Option>
               </Select>
-              <Input v-model='form.project' placeholder="输入项目名称模糊查询" />
+              <Input v-model='form.projectName' placeholder="输入项目名称模糊查询" />
               <Select v-model='form.brandId' filterable clearable placeholder="全部品牌">
                 <Option
                   v-for="item in allBrandSelect"
@@ -28,27 +28,25 @@
           </div>
             <div class="flex-box status-content">
                 <Tabs v-model="status" class="order-status-tab">
-                  <TabPane label="全部订单" key="0" name="" ></TabPane>
-                  <TabPane :label="auditStatu" key="2" name="2,3" ></TabPane>
-                  <TabPane :label="paymentStatu" key="4" name="4,8"></TabPane>
-                  <TabPane :label="sendOrderStatu" key="5" name="5" ></TabPane>
-                  <TabPane :label="carryOutStatu" key="6" name="6" ></TabPane>
-                  <TabPane :label="runningStatu" key="7" name="7" ></TabPane>
-                  <!-- <TabPane label="全部订单" key="0" ></TabPane> -->
-                  <!-- <TabPane :label="item.text" v-for="item in statusList" v-if="item.key < 9 && item.key != 1" :key="item.key"></TabPane> -->
+                  <TabPane label="全部订单" key="" name="" ></TabPane>
+                  <TabPane :label="countData.approvalSize ? `待审核(${countData.approvalSize})` : '待审核'" key="2" name="2,3" ></TabPane>
+                  <TabPane :label="countData.waitPaySize ? `待支付(${countData.waitPaySize})` : '待支付'" key="4" name="4,8"></TabPane>
+                  <TabPane :label="countData.distributorSize ? `派单中(${countData.distributorSize})` : '派单中' " key="5" name="5" ></TabPane>
+                  <TabPane :label="countData.waitExecuteSize ? `待执行(${countData.waitExecuteSize})` : '待执行' " key="6" name="6" ></TabPane>
+                  <TabPane :label="countData.execuTingSize ? `执行中(${countData.execuTingSize})` : '执行中'" key="7" name="7" ></TabPane>
                 </Tabs>
-                <Dropdown class="drop-down" @on-click="(id) => status=id">
+                <Dropdown class="drop-down"  v-if="total > 0" @on-click="(id) => status=id">
                     <span href="javascript:void(0)">其他<Icon type="ios-arrow-down"></Icon></span>
                     <DropdownMenu slot="list">
-                        <DropdownItem name="9" >已完成<i v-if="finishStatu">({{finishStatu}})</i></DropdownItem>
-                        <DropdownItem name="10" >已取消<i v-if="cancelStatu">({{cancelStatu}})</i></DropdownItem>
-                        <DropdownItem name="11" >派单失败<i v-if="failStatu">({{failStatu}})</i></DropdownItem>
-                        <!-- <DropdownItem v-for="item in statusRest" :name="item.key" :key="item.key">{{item.text}}</DropdownItem> -->
+                        <DropdownItem name="9" >{{countData.finishSize ? `已完成(${countData.finishSize})` : '已完成'}}</i></DropdownItem>
+                        <DropdownItem name="10" >{{countData.cancelSize ? `已取消(${countData.cancelSize})` : '已取消'}}</i></DropdownItem>
+                        <DropdownItem name="11" >{{countData.failSize ? `派单失败(${countData.failSize})` : '派单失败'}}</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
                 <Button type="primary" @click="$router.push({name: 'kol-applyTicket'})" class="apply-btn">申请发票</Button>
             </div>
             <div class="table-list">
+              <div class="demo-spin-article">
                 <ul>
                   <li class="list-li" v-for="item in list" :key = "item.id">
                     <Row>
@@ -57,7 +55,11 @@
                     </Row>
                     <Row class="li-col" type="flex" justify="center" align="middle">
                       <Col :span="5">
-                        <div class="order-title">{{item.projectName}}</div>
+                        <div class="order-title">
+                          <Tooltip max-width="200" transfer v-if='item.projectName != null' :content="item.projectName">
+                          <span>{{item.projectName}}</span>
+                          </Tooltip>
+                        </div>
                         <p class="brand-mark col_00202d flex-box" v-for="it in channelCodeList" v-if="it.key == item.channelCode">
                           <img src="~@/views/brand/assets/microblog.png" v-if="item.channelCode == 'weibo'" width="20" height="20" alt="alias" />
                           <img src="~@/views/brand/assets/quick.png" v-if="item.channelCode == 'kuaishou'" width="20" height="20" alt="alias" />
@@ -67,15 +69,18 @@
                         </p>
                       </Col>
                       <Col :span="7" class="flex-box">
-                        <img v-for="(item, index) in item.orderItemList" :src="item.accountPhotoUrl" v-if="index < 5" :key="index" alt="" class="li-img"/>
-                        <span class="img-num">等10个账号</span>
+                           <img v-for="(it, index) in item.orderItemList" :src="it.accountPhotoUrl" v-if="index < 5" :key="index" alt="" class="li-img"/>
+                           <span class="img-num" v-if="(item.orderItemList || []).length > 4">等{{(item.orderItemList || []).length}}个账号</span>
                       </Col>
                       <Col :span="6">
                         <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(item.totalFee)}}</em></p>
                         <p v-if="[5,6,7,8].includes(item.status)" class="col_00202d rest-order">部分支付 {{item.advanceFee}}</p>
                       </Col>
                       <Col :span="2" class="li-item-status">
-                        <span v-for="it in intStatusList" :key ="it.key" v-if="it.key == item.status">{{it.text}}</span>
+                        <span v-for="it in intStatusList" :key ="it.key" v-if="it.key == item.status">
+                          <i v-if="[2,3].includes(item.status)">待审核</i>
+                          <i v-else>{{it.text}}</i>
+                        </span>
                       </Col>
                       <Col :span="4" class="status-btn">
                       <!-- 状态 -->
@@ -90,22 +95,27 @@
                     </Row>
                   </li>
                 </ul>
-                <ul v-if ="list.length == 0" class="no-list-data">暂无数据</ul>
+                <ul v-if ="list.length == 0" class="no-list-data">{{list.length == 0 ? '暂无数据' : null}}</ul>
+                <Spin fix v-if="spinShow"></Spin>
+              </div>
                 <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
             </div>
         </div>
 
         <!-- 草稿 -->
-        <div v-else>
-          <ul class="table-list">
+        <div class="table-list" v-else>
+          <div class="demo-spin-article">
+            <ul>
               <li class="list-li" v-for="item in list" :key = "item.id">
                 <Row>
                   <Col :span="5"><span>订单号 {{item.orderNo}}</span></Col>
-                  <Col :span="7"><span>下单时间 {{item.createTime}}</span></Col>
+                  <Col :span="7"><span>创建时间 {{item.createTime}}</span></Col>
                 </Row>
                 <Row class="li-col" type="flex" justify="center" align="middle">
                   <Col :span="5">
-                    <div class="order-title">{{item.projectName}}</div>
+                    <div class="order-title"><Tooltip max-width="200" transfer v-if='item.projectName != null' :content="item.projectName">
+                          <span>{{item.projectName}}</span>
+                          </Tooltip></div>
                     <p class="brand-mark col_00202d flex-box" v-for="it in channelCodeList" v-if="it.key == item.channelCode">
                       <img src="~@/views/brand/assets/microblog.png" v-if="item.channelCode == 'weibo'" width="20" height="20" alt="alias" />
                       <img src="~@/views/brand/assets/quick.png" v-if="item.channelCode == 'kuaishou'" width="20" height="20" alt="alias" />
@@ -115,8 +125,8 @@
                     </p>
                   </Col>
                   <Col :span="7" class="flex-box">
-                    <img v-for="(item, index) in item.orderItemList" :src="item.accountPhotoUrl" v-if="index < 5" :key="index" alt="" class="li-img"/>
-                    <span class="img-num">等10个账号</span>
+                     <img v-for="(it, index) in item.orderItemList" :src="it.accountPhotoUrl" v-if="index < 5" :key="index" alt="" class="li-img"/>
+                     <span class="img-num" v-if="(item.orderItemList || []).length > 4">等{{(item.orderItemList || []).length}}个账号</span>
                   </Col>
                   <Col :span="8">
                     <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(item.totalFee)}}</em></p>
@@ -133,7 +143,9 @@
                 </Row>
               </li>
             </ul>
+            <Spin fix v-if="spinShow"></Spin>
             <ul v-if ="list.length == 0" class="no-list-data">暂无数据</ul>
+          </div>
         </div>
 
       </div>
@@ -150,6 +162,7 @@ import { getUser } from '@/store'
 import pagination from '@/components/page.vue'
 import moment from 'moment'
 import { toMap } from '@/fn/array'
+import { uniq, uniqBy } from 'lodash'
 import {
   orderList,
   orderBrand,
@@ -173,12 +186,14 @@ export default class Main extends ViewBase {
     pageIndex: 1,
     pageSize: 20
   }
-  form = {}
-
+  form = {
+    projectName: null
+  }
+  spinShow = false
   // 订单和草稿 默认0订单 1草稿
   orderTab = 0
   // 订单状态
-  status: any = null
+  status: any = ''
   cloneStatus: any = null
   // 全部推广平台
   channelCodeList = []
@@ -193,17 +208,6 @@ export default class Main extends ViewBase {
 
   list = []
   countData: any = {}
-  // draftList = []
-
-  // 状态数量展示
-  auditStatu = ''
-  paymentStatu = ''
-  sendOrderStatu = ''
-  carryOutStatu = ''
-  runningStatu = ''
-  finishStatu = ''
-  cancelStatu = ''
-  failStatu = ''
 
   // 定义数字格式
   formatNumber = formatNumber
@@ -214,38 +218,37 @@ export default class Main extends ViewBase {
     this.orderBrand()
   }
   async tableList() {
+    this.spinShow = true
     try {
-      if (this.status == 1) {
+      if (this.status == 1) { // 草稿
         this.pageList.pageSize = 300
       } else {
         this.pageList.pageSize = 20
       }
+      let projectName: any = this.form.projectName
+      projectName = projectName && projectName.startsWith('*') ? `\\${projectName}` : projectName
       const { data } = await orderList({
         ...this.pageList,
         ...this.form,
-        orderStatus: this.status
+        projectName,
+        orderStatus: this.status == 0 ? null : this.status
       })
-      this.countData = data
+      this.spinShow = false
+      this.countData = data || []
       this.list = (data.items || []).map((it: any) => {
         return {
           ...it,
-          createTime : moment(it.createTime).format(timeFormat)
+          orderItemList: uniqBy(it.orderItemList, 'kolId'), // 去重一个kol有两个任务
+          createTime: moment(it.createTime).format(timeFormat)
         }
       })
       this.total = data.totalCount || 0
       this.intStatusList = data.statusList
-
-      // 数量展示
-      this.auditStatu = data.approvalSize ? `待审核(${ data.approvalSize})` : '待审核'
-      this.paymentStatu = data.approvalSize ? `待支付(${ data.waitPaySize})` : '待支付'
-      this.sendOrderStatu = data.distributorSize ? `派单中(${ data.distributorSize})` : '派单中'
-      this.carryOutStatu = data.waitExecuteSize ? `待执行(${ data.waitExecuteSize})` : '待执行'
-      this.runningStatu = data.execuTingSize ? `执行中(${ data.execuTingSize})` : '执行中'
-      this.finishStatu = data.finishSize
-      this.cancelStatu = data.cancelSize
-      this.failStatu = data.failSize
     } catch (ex) {
-      this.handleError(ex)
+      this.spinShow = false
+      this.list = []
+      this.total = 0
+      // this.handleError(ex)
     }
   }
 
@@ -308,7 +311,7 @@ export default class Main extends ViewBase {
     // 若余额不足则提示”账号余额不足XXXX元“，请充值后再支付
     // 待支付首款
     if (item.status == 4) {
-    const firstPayment = (item.totalFee * 0.3).toFixed(2)
+    const firstPayment = (item.totalFee * 0.5).toFixed(2)
       await confirm(`是否支付首款金额${firstPayment}元`, {
         title: '支付KOL推广费用'
       })
@@ -365,7 +368,6 @@ export default class Main extends ViewBase {
 
 </script>
 <style lang='less' scoped>
-// @import '~@/site/common.less';
 @import './order.less';
 .order-monery {
   font-size: 20px;
@@ -388,6 +390,7 @@ export default class Main extends ViewBase {
   color: rgba(0, 32, 45, .5);
 }
 .table-list {
+  position: relative;
   background: rgba(255, 255, 255, .7);
   color: #222;
 }
@@ -517,6 +520,15 @@ export default class Main extends ViewBase {
 
 .order-title {
   font-size: 15px;
+  span {
+    overflow: hidden;
+    width: 150px;
+    height: 45px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 22px;
+  }
 }
 /deep/ .ivu-select-input {
   height: 40px;
@@ -525,5 +537,10 @@ export default class Main extends ViewBase {
 /deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
   height: 40px;
   line-height: 40px;
+}
+/deep/ .ivu-select-selection, /deep/ .ivu-input {
+  background: rgba(255, 255, 255, .8);
+  border-radius: 5px;
+  border: none;
 }
 </style>

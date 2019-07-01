@@ -275,12 +275,12 @@ export async function platform(query: any, id: number | string = '') {
  */
 export async function comment(query: any, id: number | string = '') {
   // 演示 临时参数 nxd 20190621
-  id = 2061
-  query = {
-    beginDate: 20170101,
-    endDate: 20190607,
-    channelCode: 'weibo'
-  }
+  // id = 2061
+  // query = {
+  //   beginDate: 20170101,
+  //   endDate: 20190607,
+  //   channelCode: 'weibo'
+  // }
   const res = await get(`/kol/accounts/${id}/comments`, query)
   return res
   return await mockGet(query, {

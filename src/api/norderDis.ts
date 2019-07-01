@@ -51,9 +51,10 @@ export async function queryDetail(id: number, data: any) {
 /**
  * 广告单 - 指定公司下的影院列表
  * @param data
+ * http://yapi.aiads-dev.com/project/128/interface/api/1526
  */
 export async function queryCinemaList(data: any) {
-  const res = await get('/theater/cinemas/query-for-company', data)
+  const res = await get('/theater/cinemas/query-for-current', data)
   return res
 }
 

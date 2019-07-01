@@ -47,8 +47,8 @@
             title="近7日评论分析"
             :more="{ name: 'kol-detail-comment', params: {id} }"
             :data="commentData"
+            :formatter="commentFormatter"
             class="comment-pane"
-            v-if="commentData"
           />
         </div>
 
@@ -76,7 +76,7 @@
         <div class="board-row" v-if="offerData">
           <OfferPane
             :title="offerData.title"
-            :price="offerData.price"
+            :priceList="offerData.priceList"
             class="offer-pane"
           />
         </div>
@@ -96,6 +96,7 @@ import HotPane from './components/hotPane.vue'
 import OpusPane from './components/opusPane.vue'
 import OfferPane from './components/offerPane.vue'
 import { getKol } from './data'
+import { readableThousands } from '@/util/dealData'
 
 @Component({
   components: {
@@ -135,10 +136,17 @@ export default class FigurePage extends ViewBase {
 
   offerData: any = null
 
+  commentFormatter({ seriesName, dataIndex }: any) {
+    const { name, value, trend } = this.commentData[dataIndex]
+    const inc = trend > 0 ? `(上升${trend}%)` : trend < 0 ? `(下降${-trend}%)` : ''
+    return `${seriesName}<br>${name}：${value}%${inc}`
+  }
+
   hotFormatter([{ dataIndex }]: any) {
     const { category } = this.hotData
     const { value, rank } = this.hotData.list[dataIndex]
-    return `综合热度：${value}` + (category ? `<br>${category}排名：${rank}` : '')
+    return `综合热度：${readableThousands(value)}`
+      + (category ? `<br>${category}排名：${readableThousands(rank)}` : '')
   }
 
   created() {
@@ -261,7 +269,7 @@ export default class FigurePage extends ViewBase {
 }
 
 .board-pane {
-  min-width: 580px;
+  width: 580px;
   margin-top: 19px;
 }
 

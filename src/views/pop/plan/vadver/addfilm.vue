@@ -15,6 +15,12 @@
         <span>{{it.text}}</span>
       </Checkbox>
     </CheckboxGroup>
+    <div class="flex-box search-border-left" style="width: 500px">
+      <Input v-model="form.name" placeholder="请输入影片名称进行搜索"/>
+      <Button type="primary" class="bth-search" @click="searchList">
+        <Icon type="ios-search" size="22"/>
+      </Button>
+    </div>
     <div class="reject-cinema">
       <div class="flex-box search-input">
       </div>
@@ -23,11 +29,11 @@
           <li @click="checkNum(it.id)" v-for="(it, index) in data" :key="index"
             :class="['film-item', !!checkId.includes(it.id + '') ? 'list-active' : '']">
             <div :class="['film-cover-box']">
-              <img :src="it.image ? it.image : defaultImg" onerror="defaultImg" class="film-cover">
+              <img :src="it.image ? it.image : defaultImg" :onerror="defaultImg" class="film-cover">
               <div>
                 <div class="film-title">{{it.nameCn}}</div>
                 <div class="film-time" style="margin-top: 10px">上映时间：{{formatDate(it.releaseDate)}}</div>
-                <div class="film-time">{{typeCinema(it.type)}}</div>
+                <div class="film-time">影片类型：{{typeCinema(it.type)}}</div>
                 <div class="film-time">导演: {{it.director.join(' / ')}}</div>
                 <div class="film-time">主演: {{it.actor.join(' / ')}}</div>
               </div>
@@ -64,7 +70,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { searchcinema } from '@/api/popPlan'
+import { searchcinema, moviefind } from '@/api/popPlan'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
@@ -91,6 +97,7 @@ export default class DlgEditCinema extends ViewBase {
   form: any = {
     pageIndex: 1,
     pageSize: 4,
+    name: '',
     types: [0]
   }
   idO: any = {}
@@ -105,6 +112,10 @@ export default class DlgEditCinema extends ViewBase {
   checkObj: any = []
 
   formatDate(data: any) {
+    const years = data + ''
+    if (data && years.length == 4) {
+      return `${(data + '').slice(0, 4)}年`
+    }
     return data
       ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(
           data + ''
@@ -148,19 +159,38 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
+  searchList() {
+    this.form.pageIndex = 1
+    this.seach()
+  }
+
   async seach() {
     try {
       const { data: {
-       items,
-       movieTypeList,
-       totalCount
-      } } = await searchcinema(clean({
-        ...this.form,
-        types: this.form.types[0] == 0 ? '' : this.form.types.join(',')
-      }))
-      this.data = items || []
+        items,
+        typeList,
+        totalCount,
+        movies
+        } } = await moviefind(clean({
+          ...this.form,
+          types: this.form.types[0] == 0 ? '' : this.form.types.join(',')
+        }))
+      // this.data = items || []
+      // this.total = totalCount
+      // this.movieTypeList = movieTypeList || []
+
+      this.data = (movies || []).map((it: any) => {
+        return {
+          ...it,
+          id: it.movie_id,
+          image: it.main_pic,
+          nameCn: it.name_cn,
+          releaseDate: it.release_date,
+          type: it.types
+        }
+      })
       this.total = totalCount
-      this.movieTypeList = movieTypeList || []
+      this.movieTypeList = typeList || []
       this.checkNum()
     } catch (ex) {
       this.handleError(ex)
@@ -186,18 +216,6 @@ export default class DlgEditCinema extends ViewBase {
   cancel() {
     (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
     this.showDlg = false
-  }
-
-  async cinemaseach() {
-    try {
-      const {
-        data: {
-
-        }
-      } = await searchcinema(this.form)
-    } catch (ex) {
-      this.handleError(ex)
-    }
   }
 
   async open() {
@@ -283,6 +301,7 @@ export default class DlgEditCinema extends ViewBase {
   @Watch('form.types', { deep: true })
   watchformTypes(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
+    this.form.pageIndex = 1
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.types = newValue
     })
@@ -308,6 +327,7 @@ export default class DlgEditCinema extends ViewBase {
     right: -20px;
     top: -20px;
     display: block;
+    box-sizing: border-box;
     width: 40px;
     height: 40px;
     background: #fff;
@@ -317,7 +337,7 @@ export default class DlgEditCinema extends ViewBase {
     &::before {
       content: "×";
       font-size: 34px;
-      line-height: 36px;
+      line-height: 40px;
       text-align: center;
     }
   }
@@ -393,12 +413,20 @@ export default class DlgEditCinema extends ViewBase {
       .film-title {
         font-size: 14px;
         height: 24px;
+        width: 146px;
         font-weight: 400;
         margin-left: 20px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
       .film-time {
         margin-left: 20px;
         height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 180px;
       }
       img {
         margin-left: 20px;
@@ -486,5 +514,26 @@ export default class DlgEditCinema extends ViewBase {
 .film-no {
   text-align: center;
   padding-top: 50px;
+}
+/deep/ .search-border-left {
+  input {
+    border-right: none;
+  }
+}
+.bth-search {
+  border-radius: 0 5px 5px 0;
+  .button-style(#fff, #00202d);
+}
+/deep/ .ivu-input,
+/deep/ .ivu-input-wrapper {
+  background: rgba(255, 255, 255, 0.4);
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  border-radius: 5px;
+  &::placeholder {
+    font-size: 14px;
+    color: #00202d;
+  }
 }
 </style>

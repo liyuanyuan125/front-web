@@ -1,11 +1,11 @@
 <template>
   <Modal v-model='showDlg'
-  title="是否拒绝该执行单"
+  title="是否拒绝?"
   :transfer='false'
   :width='720'
   :styles="{top: '30px'}"
   @on-cancel="cancel()">
-    <h3 class="refuse">是否拒绝该执行单?</h3>
+    <h3 class="refuse">是否拒绝?</h3>
     <Row v-if="data" class="refuse-body" style="margin-top: 20px">
       <Row>
         <Col :span="4">广告片名称</Col>
@@ -35,10 +35,10 @@
         <Col :span="4">目标场次</Col>
         <Col :span="7"><span>{{data.sceneCount}}</span></Col>
       </Row>
-      <Row>
+      <!-- <Row>
         <Col :span="4">投放类型</Col>
         <Col :span="7"><span>{{data.directionType == 1 ? '标准投放' : '单片投放'}}</span></Col>
-      </Row>
+      </Row> -->
       <Row style="margin-top: 24px">
         <Col :span="4">目标影片</Col>
         <Col :span="18"><span  v-if='data.targetMovies.length > 0' v-for='item in data.targetMovies'>《{{item.movieName}}》 </span><span v-if='data.targetMovies.length == 0'>暂无  </span></Col>
@@ -50,7 +50,7 @@
     </Row>
     <div slot="footer" class="foot">
       <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
-      <Button class="foot-button" type="primary" @click="refuseSubmit">拒绝执行</Button>
+      <Button class="foot-button" type="primary" :loading="refuseLoading" @click="refuseSubmit">拒绝执行</Button>
     </div>
   </Modal>
 </template>
@@ -68,6 +68,8 @@ export default class DlgEditCinema extends ViewBase {
   showDlg = true
   data: any = null
 
+  refuseLoading = false
+
   init(data: any) {
     this.data = data
     this.showDlg = true
@@ -82,11 +84,14 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   async refuseSubmit() {
+    this.refuseLoading = true
     try {
       const data = await refuse(this.data.id)
       this.$emit('refReload')
+      this.refuseLoading = false
     } catch (ex) {
       this.handleError(ex)
+      this.refuseLoading = false
     }
   }
 }

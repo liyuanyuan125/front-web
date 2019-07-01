@@ -8,7 +8,9 @@
       :mask-closable='false'
       >
       <div class="title">
-        <i @click="cancel"></i>>
+        <i class="cancel" @click="handleCancel"></i>
+        <p>编辑关联用户</p>
+      </div>
         <Row type="flex" justify="space-between">
           <Col :span="6">
             <Select v-model="form.areaCode" clearable>
@@ -43,7 +45,6 @@
           @on-change="handlepageChange"
           @on-page-size-change="handlePageSize"
         />
-      </div>
       <div slot="footer" class="btnCenter footer-bottom">
         <Button class="button-cancel" @click="handleCancel">取消</Button>
         <Button type="primary" class="button-ok" @click="handleOk">保存</Button>
@@ -167,9 +168,8 @@ export default class Change extends ViewBase {
 @import '~@/site/lib.less';
 /deep/ .ivu-modal-header {
   border-bottom: 0;
-  padding: 10px 13px;
+  display: none;
   background: #f9f9f9;
-  font-weight: none;
 }
 .title {
   border-radius: 5px 5px 0 0;
@@ -177,10 +177,10 @@ export default class Change extends ViewBase {
   margin-bottom: 10px;
   font-size: 30px;
   font-weight: 500;
-  background: #eee;
+  background: #fff;
   padding: 20px;
   color: #00202d;
-  i {
+  .cancel {
     position: absolute;
     right: -12px;
     top: -12px;
@@ -249,6 +249,16 @@ export default class Change extends ViewBase {
 /deep/ .ivu-cascader .ivu-input {
   height: 40px;
   line-height: 40px;
+}
+.button-ok {
+  width: 200px;
+  .button-style(#fff, #00202d);
+  border-radius: 25px;
+}
+.button-cancel {
+  width: 200px;
+  .button-style(#00202d, rgba(0, 0, 0, 0));
+  border-radius: 25px;
 }
 </style>
 

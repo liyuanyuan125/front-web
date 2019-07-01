@@ -4,12 +4,12 @@
  */
 import { get } from '@/fn/ajax'
 import { keyBy } from 'lodash'
-import { dayOffsetRange } from '@/util/date'
+import { dayOffsetRange, intToDate } from '@/util/date'
 import { Type } from './types'
 import { MapType } from '@/util/types'
 import moment from 'moment'
 import { groupBy } from 'lodash'
-import { percent } from '@/util/dealData'
+import { percent, readableNumber, textList } from '@/util/dealData'
 
 const urlMapStore = {
   // 品牌接口
@@ -37,19 +37,8 @@ const urlMapStore = {
   }
 }
 
-const cloudData = (title: string, color: string, words: string[]) => {
-  return {
-    title,
-    titleTips: '',
-    initDone: true,
-    foreColor: [color],
-    currentTypeIndex: 0,
-    dict1: [],
-    chartHeight: 100,
-    dataList: [
-      (words || []).map((name, i) => ({ name, value: Math.max(12, 20 - i) }))
-    ]
-  }
+const mapName = (list: Array<{ name: string }>) => {
+  return (list || []).map(it => it.name).slice(0, 3).join('/')
 }
 
 export default class FetchData {
@@ -91,13 +80,15 @@ export default class FetchData {
           finish,
 
           // TODO: 假设 bigFigure 是大图字段的名称，请根据实际情况进行更改
-          bigFigure,
+          headImgBigUrl,
 
-          positive: goodWords,
-          negative: badWords,
-
+          recommendMovies,
           movies,
-        }
+
+          hotWords,
+        },
+
+        movieTypeList,
       }
     } = await get(this.urlMap.home)
 
@@ -105,13 +96,12 @@ export default class FetchData {
 
     // 产品图片列表
     const imgList = imgsUrl || []
-    const figure = this.isItem ? imgList[0] : bigFigure
+    const bigFigure = this.isItem ? imgList[0] : headImgBigUrl
 
     const result = {
       item: {
         name,
         logoUrl,
-        figure,
         jyIndex,
         jyTrend,
         malePercent: percent(malePercent),
@@ -122,34 +112,53 @@ export default class FetchData {
         finish,
       },
 
+      bigFigure,
+
       commentData: [
         { name: '正面', value: percent(positive.rate, 1), color: '#ca7273' },
         { name: '中立', value: percent(neutral.rate, 1), color: '#f3d872' },
         { name: '负面', value: percent(passive.rate, 1), color: '#57b4c9' },
       ],
 
-      wordCloudGood: goodWords && goodWords.length > 0
-        ? cloudData('正面热词', '#ca7273', goodWords)
-        : null,
-
-      wordCloudBad: badWords && badWords.length > 0
-        ? cloudData('负面热词', '#57b4c9', badWords)
+      recommendList: recommendMovies && recommendMovies.length > 0
+        ? (recommendMovies as any[]).map(item => {
+          // 是否已上映，上映状态描述在 https://yapi.aiads-dev.com/project/161/interface/api/4974
+          const {
+            releaseStatus,
+            movieTypes,
+            directorPersonList,
+            actorPersonList,
+            custom,
+            customPredict,
+          } = item
+          const hasShow = releaseStatus >= 3
+          return {
+            ...item,
+            hasShow,
+            typeName: textList(movieTypeList, movieTypes).join('/'),
+            actorName: mapName(actorPersonList),
+            directorName: mapName(directorPersonList),
+            boxOffice: readableNumber(hasShow ? custom : customPredict),
+          }
+        })
         : null,
 
       hotFilmGroup: movies && movies.length > 0
         ? (() => {
-          const list = (movies as any[]).map(it => {
-            const mdate = moment(String(it.releaseDate))
+          const list = (movies as any[]).map(item => {
+            // 是否已上映，上映状态描述在 https://yapi.aiads-dev.com/project/161/interface/api/4974
+            const { releaseStatus, releaseDate, custom, customPredict } = item
+            const hasShow = releaseStatus >= 3
+            const mdate = intToDate(releaseDate)
             return {
-              ...it,
-              date: mdate.format('YYYY-MM-DD'),
-              month: mdate.month() + 1,
-              // 是否已上映，上映状态描述在 https://yapi.aiads-dev.com/project/161/interface/api/4974
-              hasShow: it.releaseStatus >= 3,
-              // 上映天数
-              showDays: moment.duration(moment.now() - Number(mdate)).days(),
+              ...item,
+              hasShow,
+              date: mdate && mdate.format('MM月DD日'),
+              month: mdate && mdate.month() + 1,
+              boxOffice: readableNumber(hasShow ? custom : customPredict),
             }
           })
+          .filter(item => item.date != null)
           const group = groupBy(list, 'month')
           const m = moment().month() + 1
           const ret = [m, m + 1, m + 2].map(it => ({
@@ -160,6 +169,8 @@ export default class FetchData {
           return ret
         })()
         : null,
+
+      bubbleList: hotWords
     }
 
     return result

@@ -13,6 +13,7 @@
     <dl  class="form dcp-download">
       <dt class="dl-title flex-box"><span>格式</span><em>下载链接</em></dt>
       <dd v-if="item.attachments" v-for="it in item.attachments" :key="it.id" class="dcp-dd-list flex-box">
+        <!-- <span>{{it.typeCode}}</span> -->
         <span  v-for="(ind, index) in typeList" :key="index" v-if="ind.key == it.typeCode ">{{ind.text}}</span>
         <a target="_blank" :href="it.fileUrl">{{it.fileUrl || '-'}}</a>
       </dd>

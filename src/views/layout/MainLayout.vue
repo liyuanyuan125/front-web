@@ -1,5 +1,5 @@
 <template>
-  <div class="site-layout">
+  <div class="site-layout" :style="layoutStyle">
     <header
       class="site-header flex-box"
       :style="headerStyle"
@@ -23,7 +23,7 @@
         </Button>
       </form>
 
-      <router-link :to="{}" class="cart-node">
+      <router-link :to="{ name: 'kol-shopping' }" class="cart-node">
         <i class="iconfont icon-cart"/>
         <span class="cart-count" v-if="cartCount > 0">{{cartCount}}</span>
       </router-link>
@@ -103,6 +103,8 @@ import event from '@/fn/event'
 import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
 import { devInfo } from '@/util/dev'
 import { usePosition } from '@/util/scroll'
+import { backImage, siderMenuActiveMap } from '@/store'
+import { RouteMetaBase } from '@/routes'
 
 let instance: any = null
 let viewName: string = 'default'
@@ -176,16 +178,23 @@ export default class MainLayout extends ViewBase {
     return result
   }
 
-  // 映射某些页面到 sider 菜单
-  siderActiveMap: any = {
-    // 'from-page-name': 'nav-name',
-  }
-
   get siderActiveName() {
-    const { name } = this.$route
+    const { name, meta } = this.$route
 
     if (name == null) {
       return
+    }
+
+    // 将 store 中的 activeMap 的优先级提到最高，以便可以动态改变
+    const activeMap = siderMenuActiveMap()!
+    if (name in activeMap) {
+      return activeMap[name]
+    }
+
+    // 若 meta 中明确指定了 siderMenu，则使用明确指定的
+    const { siderMenu } = (meta || {}) as RouteMetaBase
+    if (siderMenu) {
+      return siderMenu
     }
 
     // 若 name 在导航中，直接返回
@@ -202,9 +211,15 @@ export default class MainLayout extends ViewBase {
         return remain
       }
     }
+  }
 
-    // 最后的手段：硬编码映射关系
-    return this.siderActiveMap[name]
+  get layoutStyle() {
+    const image = backImage()
+    return {
+      backgroundImage: image
+        ? `url(${image})`
+        : null
+    }
   }
 
   // 沉浸式 header
@@ -235,7 +250,7 @@ export default class MainLayout extends ViewBase {
 
   keyword = ''
 
-  cartCount = 8
+  cartCount = 0
 
   hasNotice = true
 

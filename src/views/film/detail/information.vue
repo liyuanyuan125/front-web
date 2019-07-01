@@ -3,47 +3,67 @@
     <!-- 剧情简介 -->
    <Row class='de-info' >
       <Row class='title' >剧情简介</Row>
-      <Row style='margin-top: 20px;line-height:30px; color: #B3BCC0;'>&nbsp;&nbsp;{{summary}}<span v-if='info'>123...</span></Row>
+      <Row style='margin-top: 20px;line-height:30px; color: #B3BCC0;' :class="[ sumFlag == 0 ? 'activeClass' : '']">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{summary}}</Row>
       <!-- <div class='mores' style='text-align: right;margin-right: 30px;'@click='detailinfo' >展开全部<span></span></div> -->
       <div class="show-all" v-if="itemlist.summary.length > 200">
-        <span @click="sumToggle">{{sumTitle}}<Icon :class="{'sumDown': sumFlag == 0, 'sumUp': sumFlag == 1}" type="ios-arrow-down" size="25" /></span>
+        <span @click="sumToggle" >{{sumTitle}}<Icon :class="{'sumDown': sumFlag == 0, 'sumUp': sumFlag == 1}" type="ios-arrow-down" size="25" /></span>
       </div>
    </Row>
    <!-- 更多资料 -->
    <div class="more">
      <Row class='title'>更多资料</Row>
-     <Row class='row-bo'>
+     <Row class='row-bo' style='padding-bottom: 0px;'>
        <Col span='3' class='fo-bo'>对白语言</Col>
-       <Col span='20' class='fo-bos'>{{itemlist.languages == null ? '暂无' : itemlist.languages}}</Col>
+       <Col span='20' class='fo-bos'>
+         <em v-if='itemlist.languages == null'>暂无对白语言</em>
+       <div style='margin-bottom: 10px;' v-if='itemlist.languages != null' v-for='(items,index) in itemlist.languages'>{{items}}</div><br>
+       </Col>
      </Row>
-     <Row class='row-bo'>
-       <Col span='3' class='fo-bo'>国家 / 地区 </Col>
-       <Col span='20' class='fo-bos'>{{itemlist.countries == null ? '暂无' : itemlist.countries}}
-       <span v-if='itemlist.countries != null' v-for='(it,index) in itemlist.countryCodeList' :key='index'>
-         <em v-for='(its,index) in itemlist.countries' v-if='its == it.key'>{{it.text}}</em>
-       </span>
+     <Row class='row-bo' style='padding-top: 0px;padding-bottom: 0px'>
+       <Col span='3' class='fo-bo'>上映日期</Col>
+       <Col span='20' class='fo-bos'>
+         <em v-if='itemlist.releaseDates == null'>暂无</em>
+       <div style='margin-bottom: 10px;height: 20px;line-height: 20px;' v-if='itemlist.releaseDates != null' v-for='(items,index) in dataitemlist'>
+         <div class='nams' style='width: 21%;'>{{items.countryName}}&nbsp;&nbsp;{{items.countryNameEn}}</div>
+         <div class='nams' style='margin-left: 2%;'>-------------------------</div>
+         <div class='nams' style='margin-left: 4%;'>{{items.date}}</div>
+       </div><br>
+       <div class="show-alls" v-if="itemlist.releaseDates.length > 5">
+        <span @click="dataToggle">{{dataTitle}}<Icon :class="{'dataDown': dataFlag == 0, 'dataUp': dataFlag == 1}" type="ios-arrow-down" size="25" /></span>
+      </div>
+     </Col>
+       </Col>
+     </Row>
+     <Row class='row-bo' style='padding-top: 0px;'>
+       <Col span='3' class='fo-bo'>制作公司</Col>
+       <Col span='20' class='fo-bos'>
+       <em v-if='itemlist.companyMap.Production.length == 0'>暂无制作</em>
+       <div style='margin-bottom: 10px;' v-if='itemlist.companyMap.Production.length > 0' v-for='(items,index) in itemlist.companyMap.Production'>{{items.name}}</div><br>
      </Col>
      </Row>
-     <Row class='row-bo'>
-       <Col span='3' class='fo-bo'>上映 / 发行日期</Col>
-       <Col span='20' class='fo-bos'>{{itemlist.releaseDate == null ? '暂无' : releaseDate}}</Col>
-     </Row>
-     <Row class='row-bo'>
-       <Col span='3' class='fo-bo'>制作 / 发行</Col>
-       <Col span='20' class='fo-bos'><em v-if='itemlist.companyMap.Production.length == 0'>暂无制作</em>  <em v-if='itemlist.companyMap.Distributor.length == 0'>/暂无发行</em>
-       <em v-if='itemlist.companyMap.Production.length > 0' v-for='(items,index) in itemlist.companyMap.Production'>{{items.name + ' '}}</em> / <em v-if='itemlist.companyMap.Distributor.length > 0'>{{ itemlist.companyMap.Distributor[0].name}}</em></Col>
+     <Row class='row-bo' style='padding-top: 20px;'>
+       <Col span='3' class='fo-bo'>发行公司</Col>
+       <Col span='20' class='fo-bos'>
+       <em v-if='itemlist.companyMap.Distributor.length == 0'>暂无发行</em>
+       <div style='margin-bottom: 10px;' v-if='itemlist.companyMap.Distributor.length > 0' v-for='(items,index) in itemlist.companyMap.Distributor'>{{items.name}}</div><br></Col>
      </Row>
    </div>
    <!-- 图片 -->
    <div style='padding: 20px;'>
      <Row class='title' style='margin-bottom: 20px;'>图片(共{{imgUrl.length}}张)</Row>
       <transition-group name="list" tag="ul" class="loading-img">
-        <li class='desimg' v-for="img in imgList" :key="img.key"><img :src="img.img"/></li>
+        <!-- <li class='desimg' v-for="img in imgList" :key="img.key"><img :src="img.img"/></li> -->
+        <li class='desimg'@click='onView(img.img)' v-for="img in imgList" :key="img.key" :style="{
+          backgroundImage: `url(${img.img})`
+        }"></li>
       </transition-group>
-      <div class="show-all" v-if="imgUrl.length > 5">
+      <div class="show-all" v-if="imgUrl.length > 16">
         <span @click="handleToggle">{{tabShowTitle}}<Icon :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}" type="ios-arrow-down" size="25" /></span>
       </div>
    </div>
+   <Modal v-model="viewerShow" title="查看图片" width="500" height="500">
+      <img style="width: 100%;" :src="viewerImage" alt sizes srcset>
+    </Modal>
   </div>
 </template>
 
@@ -65,11 +85,21 @@ export default class Main extends ViewBase {
   info = false
   tabShowTitle = '展示全部'
   arrowFlag = 0
+
+  dataTitle = '展示全部'
+  dataFlag = 0
+  datalist: any = []
+  dataitemlist: any = []
+
   imgUrl = []
   imgList: any = []
   sumTitle = '展示全部'
   sumFlag = 0
   summary: any = ''
+
+  // 查看图片
+  viewerShow = false
+  viewerImage = ''
 
 
 
@@ -84,6 +114,12 @@ export default class Main extends ViewBase {
     this.info = true
   }
 
+  // 查看图片
+  onView(url: string) {
+    this.viewerImage = url
+    this.viewerShow = true
+  }
+
   handleToggle() {
     if (!this.arrowFlag) {
       this.arrowFlag = 1
@@ -92,7 +128,18 @@ export default class Main extends ViewBase {
     } else {
       this.arrowFlag = 0
       this.tabShowTitle = '展示全部'
-      this.imgList = this.imgUrl.slice(0, 4)
+      this.imgList = this.imgUrl.slice(0, 16)
+    }
+  }
+  dataToggle() {
+    if (!this.dataFlag) {
+      this.dataFlag = 1
+      this.dataTitle = '向上隐藏'
+      this.dataitemlist = this.itemlist.releaseDates
+    } else {
+      this.dataFlag = 0
+      this.dataTitle = '展示全部'
+      this.dataitemlist = this.itemlist.releaseDates.slice(0, 5)
     }
   }
   sumToggle() {
@@ -103,7 +150,7 @@ export default class Main extends ViewBase {
     } else {
       this.sumFlag = 0
       this.sumTitle = '展示全部'
-      this.summary = this.itemlist.summary.slice(0, 200)
+      this.summary = this.itemlist.summary.slice(0, 211)
     }
   }
   async search() {
@@ -118,8 +165,9 @@ export default class Main extends ViewBase {
           img: it,
         }
       })
-      this.imgList = this.imgUrl.slice(0, 4)
-      this.summary = this.itemlist.summary.slice(0, 200)
+      this.imgList = this.imgUrl.slice(0, 16)
+      this.dataitemlist = this.itemlist.releaseDates.slice(0, 5)
+      this.summary = this.itemlist.summary.slice(0, 211)
     } catch {
 
     } finally {
@@ -134,6 +182,12 @@ export default class Main extends ViewBase {
 .page {
   background: rgba(0, 32, 45, 0.8);
   border-radius: 5px;
+}
+.activeClass {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 .de-info {
   padding: 20px;
@@ -176,6 +230,7 @@ export default class Main extends ViewBase {
   color: #fff;
   line-height: 50px;
   font-size: 24px;
+  padding-left: 7px;
 }
 .mores {
   text-align: center;
@@ -198,6 +253,7 @@ export default class Main extends ViewBase {
   }
 }
 .desimg {
+  background-size: cover;
   img {
     width: 100%;
     height: 100%;
@@ -206,14 +262,16 @@ export default class Main extends ViewBase {
 .loading-img {
   display: flex;
   flex-wrap: wrap;
-  margin-left: -10px;
+  margin-left: -16px;
   margin-right: -10px;
   transition: all 2s;
   li {
-    width: 25%;
+    width: 22%;
     height: 180px;
     margin-bottom: 25px;
     padding: 0 4px;
+    background-size: cover;
+    margin-left: 2.7%;
     img {
       width: 100%;
       height: 100%;
@@ -221,9 +279,20 @@ export default class Main extends ViewBase {
   }
 }
 .show-all {
+  margin-top: 5px;
   text-align: center;
   font-size: 14px;
   color: #b3bcc0;
+  line-height: 30px;
+  span {
+    cursor: pointer;
+  }
+}
+.show-alls {
+  text-align: center;
+  font-size: 14px;
+  color: #b3bcc0;
+  line-height: 30px;
   span {
     cursor: pointer;
   }
@@ -243,6 +312,28 @@ export default class Main extends ViewBase {
   animation: arrowUp .5s both;
 }
 @keyframes arrowUp {
+  0% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+.dataDown {
+  animation: dataDown .5s both;
+}
+@keyframes dataDown {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+.dataUp {
+  animation: dataUp .5s both;
+}
+@keyframes dataUp {
   0% {
     transform: rotate(180deg);
   }
@@ -279,5 +370,8 @@ export default class Main extends ViewBase {
 
 .list-enter, .list-leave-to {
   opacity: 0;
+}
+.nams {
+  float: left;
 }
 </style>

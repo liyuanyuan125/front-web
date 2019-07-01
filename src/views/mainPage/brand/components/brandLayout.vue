@@ -38,6 +38,7 @@
           :to="{ name: 'pop-planlist-add', params: { id: 0 } }"
           class="button-put"
         >创建广告计划</Button>
+
         <ul class="plan-count-list">
           <li class="plan-count-item">
             <i>待付款</i>
@@ -54,43 +55,76 @@
         </ul>
       </Pane>
 
+      <Pane :title="recommendTitle" class="recommend-pane" v-if="recommendList">
+        <NavSwiper
+          :options="{
+            slidesPerView: 2
+          }"
+          class="recommend-swiper"
+        >
+          <swiper-slide
+            v-for="(it, i) in recommendList"
+            :key="it.id"
+            class="recommend-item"
+          >
+            <router-link
+              :to="{ name: 'film-movie', params: { id: it.id } }"
+              class="recommend-item-in"
+            >
+              <i class="recommend-no">{{i + 1}}</i>
+
+              <figure class="recommend-figure">
+                <img :src="it.movieMainPicUrl" class="recommend-img">
+              </figure>
+
+              <div class="recommend-main">
+                <div class="recommend-name text-omit">{{it.name}}</div>
+                <div class="recommend-type text-omit">{{it.runningTime}}分钟 - {{it.typeName}}</div>
+                <div class="recommend-director text-omit">导演：{{it.directorName}}</div>
+                <div class="recommend-actor text-omit">主演：{{it.actorName}}</div>
+                <div class="recommend-stats text-omit">
+                  {{it.hasShow ? '累计' : '预估'}}票房：<em>{{it.boxOffice}}</em>
+                </div>
+              </div>
+            </router-link>
+          </swiper-slide>
+        </NavSwiper>
+      </Pane>
+
       <Pane title="热门影片" class="film-pane" v-if="hotFilmGroup">
         <Tabs v-model="hotFilmTab">
-          <TabPane v-for="it in hotFilmGroup" :key="it.name" :name="it.name" :label="it.name">
-            <div class="film-wrap">
-              <ul class="film-list">
-                <li
-                  v-for="sub in it.list"
-                  :key="sub.id"
-                  class="film-item"
-                  :class="{'film-item-hot': sub.hasShow}"
+          <TabPane v-for="(it, i) in hotFilmGroup" :key="it.name" :name="it.name" :label="it.name">
+            <NavSwiper class="film-swiper">
+              <swiper-slide
+                v-for="sub in it.list"
+                :key="sub.id"
+                class="film-item"
+              >
+                <router-link
+                  :to="{ name: 'film-movie', params: { id: sub.id } }"
+                  class="film-item-in"
                 >
-                  <router-link
-                    :to="{ name: 'film-movie', params: { id: sub.id } }"
-                    class="film-item-in"
-                  >
-                    <figure class="film-figure">
-                      <img :src="sub.movieMainPic" class="film-img">
-                    </figure>
-                    <div class="film-main">
-                      <div class="film-name text-omit">{{sub.name}}</div>
-                      <div class="film-index">鲸娱指数：{{sub.jyIndex}}</div>
-                      <div class="film-date">{{sub.date}}上映</div>
-                      <div
-                        class="film-stats text-omit"
-                        v-if="sub.hasShow"
-                      >已上映{{sub.showDays}}天，累计{{sub.custom}}</div>
-                      <div class="film-stats text-omit" v-else>
-                        预估票房：
-                        <em>{{sub.customPredict}}</em>
-                      </div>
+                  <figure class="film-figure">
+                    <img :src="sub.movieMainPicUrl" class="film-img">
+                  </figure>
+                  <div class="film-main">
+                    <div class="film-name text-omit">{{sub.name}}</div>
+                    <div class="film-date">上映日期：{{sub.date}}</div>
+                    <div class="film-stats text-omit">
+                      {{sub.hasShow ? '累计' : '预估'}}票房：<em>{{sub.boxOffice}}</em>
                     </div>
-                  </router-link>
-                </li>
-              </ul>
-            </div>
+                  </div>
+                </router-link>
+              </swiper-slide>
+            </NavSwiper>
           </TabPane>
         </Tabs>
+
+        <Button
+          type="primary"
+          :to="{ name: 'pop-planlist-add', params: { id: 0 } }"
+          class="button-put"
+        >创建广告计划</Button>
       </Pane>
     </main>
   </Layout>
@@ -99,29 +133,27 @@
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import TrendChart from '@/components/trendChart'
-import BScroll from '@better-scroll/core'
-import ThrowPane from './throwPane.vue'
-import PieChart from './pieChart.vue'
-import WordCloud from '@/components/chartsGroup/wordCloud'
 import Layout from '../../components/layout.vue'
 import Pane from '../../components/pane.vue'
 import FansPane from '../../components/fansPane.vue'
 
-import { dayOffsetRange } from '@/util/date'
 import FetchData from './fetchData'
 import { Type } from './types'
 import { toThousands } from '@/util/dealData'
+
+import NavSwiper from './navSwiper.vue'
+import { swiperSlide } from 'vue-awesome-swiper'
+import { backImage } from '@/store'
+
+import moment from 'moment'
 
 @Component({
   components: {
     Layout,
     Pane,
     FansPane,
-    TrendChart,
-    ThrowPane,
-    PieChart,
-    WordCloud
+    NavSwiper,
+    swiperSlide
   },
 
   filters: {
@@ -143,98 +175,56 @@ export default class BrandLayout extends ViewBase {
 
   fetchData = new FetchData(this.type, this.id)
 
-  bubbleList: string[] = ['1', '2', '3', '4', '5', '6']
+  bubbleList: string[] = []
 
   item = {}
 
+  bigFigure: string | null = null
+
   commentData: any = null
 
-  // 产品导航所用
-  bscroll: BScroll | null = null
-
-  bscrollOn = false
-
-  // 广告投放数据
-  putting = []
+  recommendList: any = null
 
   hotFilmTab = ''
+
   hotFilmGroup: any = null
+
+  get recommendTitle() {
+    const year = moment().year()
+    return `${year}重点推荐影片`
+  }
 
   created() {
     this.init()
   }
 
+  beforeDestroy() {
+    backImage('')
+  }
+
   init() {
     this.initHome()
-    // 产品调整：不显示
-    // this.initTrend()
-    // 产品调整，暂时不显示品牌下的产品
-    // this.isBrand && this.initSub()
-    // this.initPutting()
   }
 
   async initHome() {
     const {
       item,
+      bigFigure,
       commentData,
-      hotFilmGroup
+      recommendList,
+      hotFilmGroup,
+      bubbleList
     } = await this.fetchData.getHome()
 
     this.item = item
+    this.bigFigure = bigFigure
     this.commentData = commentData
+    this.recommendList = recommendList
     this.hotFilmTab = (hotFilmGroup && hotFilmGroup[0].name) || ''
     this.hotFilmGroup = hotFilmGroup
-  }
+    this.bubbleList = bubbleList
 
-  // async initTrend() {
-  //   const list = await this.fetchData.lastDaysIndex()
-  //   this.trendList = list
-  // }
-
-  // async initSub() {
-  //   const list = await this.fetchData.getSubList()
-  //   this.subList = list
-  // }
-
-  // async initPutting() {
-  //   const list = await this.fetchData.getTrack()
-  //   this.putting = list
-  // }
-
-  mounted() {
-    // const subWrap = this.$refs.subWrap as HTMLElement
-    // if (subWrap != null) {
-    //   this.bscroll = new BScroll(subWrap, {
-    //     scrollX: true,
-    //     scrollY: false,
-    //     click: true,
-    //     momentum: false
-    //   })
-    //   this.$nextTick(() => {
-    //     this.bscrollOn = this.bscroll!.hasHorizontalScroll
-    //   })
-    // }
-  }
-
-  subPrev() {
-    this.subScroll(false)
-  }
-
-  subNext() {
-    this.subScroll(true)
-  }
-
-  subScroll(isNext: boolean) {
-    const bs = this.bscroll
-    if (bs == null) {
-      return
-    }
-    const subWrap = this.$refs.subWrap as HTMLElement
-    const width = subWrap.clientWidth
-    const dx = isNext ? -width : width
-    const xx = Math.min(Math.max(bs.x + dx, bs.maxScrollX), 0)
-    const toX = xx + (isNext ? -58 : 58)
-    bs.scrollTo(toX, 0, 300)
+    backImage(bigFigure || '')
   }
 
   @Watch('type')
@@ -258,6 +248,9 @@ export default class BrandLayout extends ViewBase {
 .main-content {
   width: 764px;
   margin-left: 74px;
+  > .pane-item:last-child {
+    border-radius: 0 0 6px 6px;
+  }
 }
 
 .header-bar {
@@ -438,59 +431,143 @@ export default class BrandLayout extends ViewBase {
   }
 }
 
+.recommend-pane {
+  position: relative;
+  margin-top: 6px;
+  min-height: 236px;
+}
+
+.recommend-swiper {
+  width: 666px;
+  margin: -8px auto 0;
+  /deep/ .swiper-container {
+    padding-top: 13px;
+  }
+}
+
+.recommend-item-in {
+  position: relative;
+  display: flex;
+  width: 250px;
+  height: 116px;
+  color: #fff;
+  font-size: 12px;
+  margin-left: 28px;
+}
+
+.recommend-no {
+  position: absolute;
+  top: -13px;
+  left: -13px;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  color: #fff;
+  border-radius: 50%;
+  background-color: #ca7273;
+  text-align: center;
+}
+
+.recommend-figure {
+  width: 81px;
+  height: 116px;
+}
+
+.recommend-img {
+  width: 100%;
+  height: 100%;
+}
+
+.recommend-main {
+  position: relative;
+  margin-left: 10px;
+  max-width: 158px;
+  line-height: 1.6;
+}
+
+.recommend-type {
+  margin-top: 5px;
+}
+
+.recommend-stats {
+  position: absolute;
+  left: 0;
+  bottom: 3px;
+  em {
+    color: #ca7273;
+  }
+}
+
 .film-pane {
   position: relative;
-  overflow: hidden;
   margin-top: 6px;
+  padding-bottom: 35px;
+
+  /deep/ .pane-head {
+    padding: 24px 0 6px;
+    margin: 0 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, .4);
+  }
+
   /deep/ .ivu-tabs {
     overflow: visible;
   }
+
   /deep/ .ivu-tabs-bar {
     position: absolute;
-    top: -35px;
-    left: 105px;
+    top: -29px;
+    right: -12px;
     color: #fff;
     border-bottom: 0;
     margin-bottom: 0;
   }
+
   /deep/ .ivu-tabs-tab {
-    padding: 0 8px;
+    padding: 2px 12px;
     line-height: 16px;
     font-size: 12px;
-    border-radius: 8px;
-    margin-right: 10px;
+    font-weight: 600;
+    margin-right: 42px;
   }
+
   /deep/ .ivu-tabs-tab-active {
-    color: #000;
-    background-color: #32c3e1;
+    color: #001f2c;
+    background-color: #fff;
   }
+
   /deep/ .ivu-tabs-ink-bar {
     display: none;
   }
+
+  .button-put {
+    position: static;
+    display: block;
+    margin: auto;
+  }
 }
 
-.film-wrap {
-  max-height: 520px;
-  overflow: auto;
+.film-swiper {
+  width: 666px;
+  margin: 22px auto 30px;
 }
 
 .film-list {
+  left: 18px;
   margin-top: 8px;
 }
 
 .film-item {
   position: relative;
-  margin: 0 0 26px 12px;
 }
 
 .film-item-in {
-  display: flex;
+  display: block;
   color: #fff;
 }
 
 .film-figure {
-  width: 78px;
-  height: 108px;
+  width: 82px;
+  height: 114px;
 }
 
 .film-img {
@@ -500,41 +577,17 @@ export default class BrandLayout extends ViewBase {
 
 .film-main {
   position: relative;
-  width: 152px;
-  margin: -8px 0 0 10px;
   font-size: 12px;
-  line-height: 2;
+  line-height: 1.8;
 }
 
 .film-name {
-  font-size: 16px;
+  margin-top: 8px;
 }
 
 .film-stats {
-  position: absolute;
-  left: 0;
-  bottom: -5px;
   em {
-    font-size: 16px;
-  }
-}
-
-.film-item-hot {
-  &::before {
-    content: '正在热映';
-    position: absolute;
-    top: 0;
-    left: 0;
-    line-height: 24px;
-    padding: 0 7px;
-    font-size: 14px;
-    text-align: center;
-    color: #fff;
-    background-color: #ff6d6d;
-  }
-
-  .film-stats {
-    color: #ff8400;
+    color: #ca7273;
   }
 }
 </style>

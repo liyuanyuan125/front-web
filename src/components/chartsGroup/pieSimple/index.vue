@@ -3,31 +3,28 @@
     <div style='text-align:center'>
       <div class='title-box'>
         <span v-if=" title !=='' ">{{title}}</span>
-        <Tooltip max-width="200"
-                 v-if=" titleTips !=='' "
-                 :content="titleTips">
+        <Tooltip max-width="200" v-if=" titleTips !=='' " :content="titleTips">
           <Icon type="md-help-circle" />
         </Tooltip>
       </div>
-      <RadioGroup size="small"
-                  v-if="dict1.length > 0"
-                  @on-change='currentTypeChange'
-                  v-model="currentIndex"
-                  type="button">
-        <Radio v-for="(item,index) in dict1"
-               :key="item.key"
-               :label="index">{{item.name}}</Radio>
+      <RadioGroup size="small" v-if="dict1.length > 0" @on-change='currentTypeChange' v-model="currentIndex" type="button">
+        <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.name}}</Radio>
       </RadioGroup>
-    </div>    
-    <Row type="flex"
-         justify="center" align="middle">
+    </div>
+
+    <Row type="flex" justify="center" align="middle">
       <Col :span="24">
-        <div ref="refChart"
-           v-if="initDone"
-           style="width: 100%; height: 400px"></div>
-        <div v-else class='loading-wp' style="width: 100%; height: 400px">
-            <TinyLoading  />
-          </div>
+
+      <div v-if="initDone && !noData">
+        <div ref="refChart" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
+      </div>
+
+      <div v-else-if="noData" class="nodata-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">暂无数据</div>
+
+      <div v-else class="loading-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
+        <TinyLoading />
+      </div>
+
       </Col>
     </Row>
   </div>
@@ -43,9 +40,14 @@ import {
   dottedLineStyle,
   yOption,
   xOption,
-  barThinStyle,
+  barThinStyle
 } from '../chartsOption'
 import { tooltipStyles } from '@/util/echarts'
+const tooltipsDefault = tooltipStyles({
+  trigger: 'item',
+  formatter: '{b} <br/> {c}%'
+})
+
 @Component({
   components: {
     TinyLoading
@@ -53,6 +55,7 @@ import { tooltipStyles } from '@/util/echarts'
 })
 // 简单饼图
 export default class PieSimple extends ViewBase {
+  @Prop({ type: Boolean, default: false }) noData?: boolean
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
@@ -61,6 +64,9 @@ export default class PieSimple extends ViewBase {
   @Prop({ type: Array, default: () => [] }) dict2!: any[]
   @Prop({ type: Array, default: () => [] }) color!: any[]
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
+  @Prop({ type: Number, default: 0 }) height?: number
+  @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
+
   currentIndex: number = this.currentTypeIndex
   currentTypeChange(index: number) {
     this.currentIndex = index
@@ -77,31 +83,26 @@ export default class PieSimple extends ViewBase {
       return
     }
     const chartData = this.dataList[this.currentIndex]
+
     const myChart = echarts.init(this.$refs.refChart as any)
 
     const chartSeries: any[] = []
-    // this.dict2.forEach((item, index) => {
-    //   chartSeries.push({
-    //     name: item.text,
-    //     value: 0
-    //   })
-    // })
-    // chartData.forEach((item: any, index: number) => {
-    //   chartSeries[item.key].value = item.data
-    // })
+
     const option: any = {
       color: this.color,
       ...pubOption,
-      tooltip : tooltipStyles({
-        trigger: 'item',
-        formatter: '{b} : {c}'
-      }),
+      tooltip: this.toolTip,
       series: [
         {
           name: this.title,
           type: 'pie',
           radius: '55%',
-          center: ['50%', '40%'],
+          center: ['50%', '50%'],
+          label: {
+            formatter: ' \n {b} \n {d}%',
+            fontSize: 18,
+            align: 'center'
+          },
           data: chartData,
           itemStyle: {
             emphasis: {
@@ -113,6 +114,7 @@ export default class PieSimple extends ViewBase {
         }
       ]
     }
+    // console.save(option, `${new Date()}.json`)
     myChart.setOption(option)
   }
   @Watch('initDone')
@@ -133,3 +135,14 @@ export default class PieSimple extends ViewBase {
   }
 }
 </script>
+<style lang="less" scoped>
+@import '~@/site/lib.less';
+.nodata-wp {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: #999;
+}
+</style>

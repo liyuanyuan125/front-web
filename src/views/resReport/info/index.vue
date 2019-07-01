@@ -1,49 +1,23 @@
 <template>
   <div class="effect-report-wp">
-    <BannerCard></BannerCard>
+    <!-- <BannerCard></BannerCard> -->
     <div class="search-pane">
       <SelectXadvertOrders :fetch="xadvertOrders" v-model="form.xadvertOrderId"></SelectXadvertOrders>
     </div>
     <TotalCard :data="totalData"></TotalCard>
     <ReportPane title="广告趋势分析">
       <div class="echarts-box">
-        <AreaBasic :initDone="chart1.initDone"
-                   :title="chart1.title"
-                   :dict1="chart1.dict1"
-                   :dict2="chart1.dict2"
-                   :toolTip="chart1.toolTip"
-                   :color="chart1.color"
-                   :dataList="chart1.dataList"
-                   :currentTypeIndex="chart1.currentTypeIndex"
-                   @typeChange="typeChangeHander1" />
+        <AreaBasic :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="chart1.toolTip" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" @typeChange="typeChangeHander1" />
       </div>
     </ReportPane>
     <ReportPane title="影片贡献度分析">
       <div class="echarts-box">
-        <BarXCategory :initDone="chart2.initDone"
-                   :title="chart2.title"
-                   :dict1="chart2.dict1"
-                   :dict2="chart2.dict2"
-                   :dict3="chart2.dict3"
-                   :toolTip="chart2.toolTip"
-                   :color="chart2.color"
-                   :dataList="chart2.dataList"
-                   :currentTypeIndex="chart2.currentTypeIndex"
-                   @typeChange="typeChangeHander2" />
+        <BarXCategory :initDone="chart2.initDone" :noData="chart2.noData" :title="chart2.title" :dict1="chart2.dict1" :dict2="chart2.dict2" :dict3="chart2.dict3" :toolTip="chart2.toolTip" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" @typeChange="typeChangeHander2" />
       </div>
     </ReportPane>
     <ReportPane title="影院贡献度分析">
       <div class="echarts-box">
-        <BarXCategory :initDone="chart3.initDone"
-                   :title="chart3.title"
-                   :dict1="chart3.dict1"
-                   :dict2="chart3.dict2"
-                   :dict3="chart3.dict3"
-                   :toolTip="chart3.toolTip"
-                   :color="chart3.color"
-                   :dataList="chart3.dataList"
-                   :currentTypeIndex="chart3.currentTypeIndex"
-                   @typeChange="typeChangeHander3" />
+        <BarXCategory :initDone="chart3.initDone" :noData="chart3.noData" :title="chart3.title" :dict1="chart3.dict1" :dict2="chart3.dict2" :dict3="chart3.dict3" :toolTip="chart3.toolTip" :color="chart3.color" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" @typeChange="typeChangeHander3" />
       </div>
     </ReportPane>
   </div>
@@ -106,7 +80,6 @@ const toolTip: any = {
   }
 })
 export default class Index extends ViewBase {
-
   form: any = {
     xadvertOrderId: 111
   }
@@ -184,10 +157,11 @@ export default class Index extends ViewBase {
     dict3: [],
     currentTypeIndex: 0,
     initDone: false,
+    noData: false,
     dataList: [
-      {type: 'bar', data: [], barMaxWidth: '20'},
-      {type: 'bar', data: [], barMaxWidth: '20'},
-      {type: 'bar', data: [], barMaxWidth: '20'}
+      { type: 'bar', data: [], barMaxWidth: '20' },
+      { type: 'bar', data: [], barMaxWidth: '20' },
+      { type: 'bar', data: [], barMaxWidth: '20' }
     ],
     color: ['#f3d872'],
     toolTip
@@ -216,10 +190,11 @@ export default class Index extends ViewBase {
     dict3: [],
     currentTypeIndex: 0,
     initDone: false,
+    noData: false,
     dataList: [
-      {type: 'bar', data: [], barMaxWidth: '20'},
-      {type: 'bar', data: [], barMaxWidth: '20'},
-      {type: 'bar', data: [], barMaxWidth: '20'}
+      { type: 'bar', data: [], barMaxWidth: '20' },
+      { type: 'bar', data: [], barMaxWidth: '20' },
+      { type: 'bar', data: [], barMaxWidth: '20' }
     ],
     color: ['#57B4C9'],
     toolTip
@@ -252,7 +227,7 @@ export default class Index extends ViewBase {
    * @param typeIndex 当前类别下标
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
-    if ( this.form.xadvertOrderId && this.form.xadvertOrderId !== '') {
+    if (this.form.xadvertOrderId && this.form.xadvertOrderId !== '') {
       const mockObj = {
         effectType: this.form.xadvertOrderId
       }
@@ -278,7 +253,7 @@ export default class Index extends ViewBase {
         this.totalData.personCountSum = personCountSum
         this.totalData.profitAmountSum = profitAmountSum
 
-        if ( orderReports && orderReports.length > 0 ) {
+        if (orderReports && orderReports.length > 0) {
           orderReports.forEach((item: any, index: number) => {
             this.chart1.dataList[0].date.push(item.date)
             this.chart1.dataList[1].date.push(item.date)
@@ -287,27 +262,34 @@ export default class Index extends ViewBase {
             this.chart1.dataList[1].data.push(item.showCount)
             this.chart1.dataList[2].data.push(item.personCount)
           })
+          this.chart1.initDone = true
+        } else {
+          this.chart1.initDone = true
         }
 
-        if ( movieProfits && movieProfits.length > 0 ) {
+        if ( movieProfits &&  movieProfits.length > 0 ) {
           movieProfits.forEach((item: any) => {
             this.chart2.dict3.push({
               text: item.name
             })
-            this.chart2.dataList[0].data.push( item.showCount )
+            this.chart2.dataList[0].data.push(item.showCount)
           })
-        }
 
-        if ( movieShows && movieShows.length > 0 ) {
-          movieShows.forEach((item: any) => {
-            this.chart2.dataList[1].data.push( item.showCount )
-          })
-        }
+          if (movieShows && movieShows.length > 0) {
+            movieShows.forEach((item: any) => {
+              this.chart2.dataList[1].data.push(item.showCount)
+            })
+          }
 
-        if ( moviePersons && moviePersons.length > 0 ) {
-          moviePersons.forEach((item: any) => {
-            this.chart2.dataList[2].data.push( item.showCount )
-          })
+          if (moviePersons && moviePersons.length > 0) {
+            moviePersons.forEach((item: any) => {
+              this.chart2.dataList[2].data.push(item.showCount)
+            })
+          }
+          this.chart2.initDone = true
+        } else {
+          this.chart2.initDone = true
+          this.chart2.noData = true
         }
 
         if ( cinemaProfits && cinemaProfits.length > 0 ) {
@@ -315,25 +297,26 @@ export default class Index extends ViewBase {
             this.chart3.dict3.push({
               text: item.name
             })
-            this.chart3.dataList[0].data.push( item.profitAmount )
+            this.chart3.dataList[0].data.push(item.profitAmount)
           })
-        }
 
-        if ( cinemaShows && cinemaShows.length > 0 ) {
-          cinemaShows.forEach((item: any) => {
-            this.chart3.dataList[1].data.push( item.showCount )
-          })
-        }
+          if (cinemaShows && cinemaShows.length > 0) {
+            cinemaShows.forEach((item: any) => {
+              this.chart3.dataList[1].data.push(item.showCount)
+            })
+          }
 
-        if ( cinemaPersons && cinemaPersons.length > 0 ) {
-          cinemaPersons.forEach((item: any) => {
-            this.chart3.dataList[2].data.push( item.personCount )
-          })
+          if (cinemaPersons && cinemaPersons.length > 0) {
+            cinemaPersons.forEach((item: any) => {
+              this.chart3.dataList[2].data.push(item.personCount)
+            })
+          }
+          this.chart3.initDone = true
+        } else {
+          this.chart3.initDone = true
+          this.chart3.noData = true
         }
         this.loading = false
-        this.chart1.initDone = true
-        this.chart2.initDone = true
-        this.chart3.initDone = true
       } catch (ex) {
         this.handleError(ex)
       }
@@ -360,7 +343,7 @@ export default class Index extends ViewBase {
   }
 
   @Watch('xadvertOrderId')
-  watchId(value: number|string) {
+  watchId(value: number | string) {
     this.getChartsData('', 0)
   }
 }

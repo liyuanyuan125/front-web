@@ -14,19 +14,19 @@
                   @on-change='currentTypeChange'
                   v-model="currentIndex"
                   type="button">
-        <Radio v-for="(item,index) in dict1"
+        <Radio v-for="(item,index) in dict1" v-show=" initDone "
                :key="item.key"
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <Row type="flex"
-         justify="center" align="middle">
+    <Row type="flex" justify="center" align="middle">
       <Col :span="24">
-        <div ref="refChart"
-           v-if="initDone"
-           :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
-        <div v-else class='loading-wp' :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
-            <TinyLoading  />
+        <div v-if="noData" class="nodata-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">暂无数据</div>
+        <div v-else-if=" initDone && !noData ">
+          <div ref="refChart" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
+        </div>
+        <div v-else class="loading-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
+          <TinyLoading />
         </div>
       </Col>
     </Row>
@@ -48,7 +48,7 @@ import {
 import { tooltipStyles } from '@/util/echarts'
 const tooltipsDefault = tooltipStyles({
     trigger:  'item',
-    formatter:  '{b} <br/> {c}'
+    formatter:  '{b} <br/> {c}%'
 })
 @Component({
   components: {
@@ -57,6 +57,7 @@ const tooltipsDefault = tooltipStyles({
 })
 // 嵌套环形图
 export default class PieNest extends ViewBase {
+  @Prop({ type: Boolean, default: false }) noData?: boolean
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title?: string
   @Prop({ type: String, default: '' }) titleTips?: string
@@ -101,11 +102,32 @@ export default class PieNest extends ViewBase {
         {
           name: ' ',
           type: 'pie',
+          avoidLabelOverlap: true,
+          minAngle: 25, // 最小的扇区角度
           radius: ['40%', '55%'],
           color: this.color,
           label: {
             normal: {
-              formatter: '{b|{b}}\n{d}%  ',
+              formatter(v: any) {
+                let text = Math.round(v.percent) + '%' + '' + v.name
+                if ( text.length <= 8 ) {
+                  return text
+                } else if (text.length > 8 && text.length <= 16) {
+                  return text = `${text.slice(0, 8)}\n${text.slice(8)}`
+                } else if (text.length > 16 && text.length <= 24) {
+                  return text = `${text.slice(0, 8)}\n${text.slice(8, 16)}\n${text.slice(16)}`
+                } else if (text.length > 24 && text.length <= 30) {
+                  return text = `${text.slice(0, 8)}\n${text.slice(8, 16)}\n${text.slice(16, 24)}\n${text.slice(24)}`
+                } else if (text.length > 30) {
+                  return text = `
+                    ${text.slice(0, 8)}
+                    \n${text.slice(8, 16)}
+                    \n${text.slice(16, 24)}
+                    \n${text.slice(24, 30)}
+                    \n${text.slice(30)}
+                  `
+                }
+              },
               borderWidth: 1,
               borderRadius: 4,
               rich: {
@@ -124,7 +146,7 @@ export default class PieNest extends ViewBase {
   }
   @Watch('initDone')
   watchInitDone(val: boolean) {
-    if (val) {
+    if (val && !(this.noData) ) {
       this.$nextTick(() => {
         this.resetOptions()
         this.updateCharts()
@@ -183,5 +205,13 @@ export default class PieNest extends ViewBase {
   flex-flow: row;
   align-items: center;
   justify-content: center;
+}
+.nodata-wp {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: #999;
 }
 </style>

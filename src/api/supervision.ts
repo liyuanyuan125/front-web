@@ -55,8 +55,8 @@ export async function querylist(query: any) {
 }
 
 // 获取影院列表
-export async function movielist() {
-  const res = await get(`/customer/cinemas` , {pageIndex: 1 , pageSize: 88888})
+export async function movielist(query: any) {
+  const res = await get(`/theater/cinemas/query-for-current` , query)
   return res
 }
 

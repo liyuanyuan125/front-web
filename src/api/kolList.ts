@@ -86,3 +86,11 @@ export async function delall(id: any) {
   const res = await del(`/kol/carts/clean/${id}`)
   return res
 }
+
+/**
+ * 获取更新时间
+ */
+export async function updatetime(id: any) {
+  const res = await get(`/kol/search/update-time`)
+  return res
+}

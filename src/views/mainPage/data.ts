@@ -3,20 +3,12 @@ import { at, keyBy, sumBy } from 'lodash'
 import { KeyText, MapType } from '@/util/types'
 import { slice } from '@/fn/object'
 import { dayOffsetRange } from '@/util/date'
-import { percent, dot } from '@/util/dealData'
+import { percent, dot, intDate, readableThousands, readableNumber } from '@/util/dealData'
 
 const getNames = (keys: string[], list: KeyText[]) => {
   const map = keyBy(list, 'key')
   const names = (keys || []).map((it: any) => dot(map[it], 'text') as string)
   return names
-}
-
-// 后端按照从上到下的排序，但前端按照球的大小排序
-const bubbleSort = [ 3, 1, 4, 0, 5, 2 ]
-
-const sortBubble = (tags: string[]) => {
-  const tagList = tags || []
-  return bubbleSort.map(i => tagList[i]).filter(it => it != null)
 }
 
 const monthDate = (date: number) => String(date).replace(/(\d{4})(\d{2})(\d{2})/, '$2-$3')
@@ -32,11 +24,12 @@ const hotData = (items: any[]) => {
   const list = (items || []).map(it => {
     const date = monthDate(it.date)
     const legends = (it.channels as any[] || [])
-    .map((sub, i) => {
+    .map(sub => {
       return {
         name: sub.name || hotChannelMap[sub.chanelCode] || sub.chanelCode,
-        no: `No.${sub.ranking}`,
+        no: sub.ranking ? `No.${sub.ranking}` : '-',
         inc: sub.trend,
+        incShow: readableThousands(Math.abs(sub.trend))
       }
     })
 
@@ -63,6 +56,7 @@ export async function getKol({
     data: {
       item: {
         name,
+        description,
         photo,
         jyIndex,
         ranking,
@@ -94,7 +88,7 @@ export async function getKol({
     icon: it.channelCode,
     name: dot(channelMap[it.channelCode], 'text'),
     percent: it.count * 100 / fansTotal,
-    count: it.count
+    count: readableNumber(it.count)
   }))
 
   const fansRate = keyBy(fans, 'k')
@@ -106,17 +100,17 @@ export async function getKol({
   }))
 
   const result = {
-    bubbleList: sortBubble(tags),
+    bubbleList: tags || [],
 
     basic: {
       id,
       name,
-      title: cate && cate.text,
+      title: description,
       figure: photo,
       rankNo: percent(jyIndex, 2),
       rankTitle: [
-        `全网排名：${ranking}`,
-        cate ? `${cate.text}：${categoryRanking}` : ''
+        `全网排名：${ranking || '-'}`,
+        cate ? `${cate.text}：${categoryRanking || '-'}` : ''
       ].filter(it => !!it).join('<br>')
     },
 
@@ -137,14 +131,36 @@ export async function getKol({
       }
     } : null,
 
-    commentData: comments && comments.length > 0 ? (() => {
+    commentData: (() => {
+      if (comments == null || comments.length == 0) {
+        return []
+      }
       const map = keyBy(comments, 'code')
-      return [
-        { name: '正面', value: percent(dot(map.positive, 'rate')), color: '#ca7273' },
-        { name: '中立', value: percent(dot(map.neutral, 'rate')), color: '#f3d872' },
-        { name: '负面', value: percent(dot(map.passive, 'rate')), color: '#57b4c9' },
+      const ret = [
+        {
+          name: '正面',
+          value: percent(dot(map.positive, 'rate')),
+          trend: +dot(map.positive, 'trend') || 0,
+          color: '#ca7273'
+        },
+
+        {
+          name: '中立',
+          value: percent(dot(map.neutral, 'rate')),
+          trend: +dot(map.neutral, 'trend') || 0,
+          color: '#f3d872'
+        },
+
+        {
+          name: '负面',
+          value: percent(dot(map.passive, 'rate')),
+          trend: +dot(map.passive, 'trend') || 0,
+          color: '#57b4c9'
+        },
       ]
-    })() : null,
+      const allZero = ret.every(it => it.value == 0)
+      return allZero ? [] : ret
+    })(),
 
     hotData: indexes && indexes.length > 0 ? (() => {
       const channelName = dot(channelMap[channel], 'text')
@@ -160,7 +176,7 @@ export async function getKol({
       })
       .filter((it: any) => it != null)
       return list.length > 0 ? {
-        title: `近30日${channelName}微博指数`,
+        title: `近30日${channelName}指数`,
         list,
         category: cate && cate.text
       } : null
@@ -178,14 +194,16 @@ export async function getKol({
       }
     }),
 
-    offerData: settlementPrices && settlementPrices.length > 0
-      ? {
-        title: '投放报价',
-        price: settlementPrices.map(({ categoryName, settlementPrice }: any) => {
-          return `${categoryName}：¥${settlementPrice} 起`
-        }).join('<br>')
-      }
-      : null
+    offerData: {
+      title: '投放报价',
+      priceList: (settlementPrices || []).map(({ categoryName, settlementPrice }: any) => {
+        const price = readableThousands(settlementPrice)
+        return {
+          name: categoryName,
+          value: price != '-' ? `¥${price} 起` : price
+        }
+      })
+    }
   }
 
   return result
@@ -205,7 +223,7 @@ export async function getMovie(id: number) {
       jyIndexSamePeriodRanking,
       trailers,
 
-      searchKeywords,
+      tags,
       fansPortrait,
 
       releaseStatus,
@@ -231,7 +249,7 @@ export async function getMovie(id: number) {
   const hasShow = releaseStatus >= 3
 
   const result = {
-    bubbleList: sortBubble(searchKeywords),
+    bubbleList: tags || [],
 
     basic: {
       id,
@@ -239,26 +257,29 @@ export async function getMovie(id: number) {
       subName: nameEn,
       figure: mainPic,
       rankNo: percent(jyIndex, 2),
-      rankTitle: `同档期：第${jyIndexSamePeriodRanking || 0}`,
+      rankTitle: `同档期：第${jyIndexSamePeriodRanking || '-'}`,
     },
 
     hasShow,
 
     movie: {
       preview: trailers && trailers[0],
-      director: dot(personMap, 'Director[0].name'),
-      type: getNames(types, typeList).join('/'),
-      date: releaseDate,
-      address: getNames(countries, countryCodeList).join('/')
+      director: dot(personMap, 'Director[0].name') || '-',
+      type: getNames(types, typeList).join('/') || '-',
+      date: intDate(releaseDate) || '-',
+      address: getNames(countries, countryCodeList).join('/') || '-'
     },
 
     actorData: {
       star: celebrityRating,
-      list: (dot(personMap, 'Actor') || []).slice(0, 3).map((it: any) => ({
-        id: it.id,
-        name: it.name,
-        avatar: it.headImg
-      })),
+      list: (dot(personMap, 'Actor') as any[] || [])
+        .filter(it => it != null)
+        .slice(0, 3)
+        .map((it: any) => ({
+          id: it.id,
+          name: it.name,
+          avatar: it.headImg
+        })),
       more: {
         name: 'film-detail-creator',
         params: { id }
@@ -272,13 +293,15 @@ export async function getMovie(id: number) {
 
     boxToday: {
       title: hasShow ? '今日实时票房' : '累计想看人数',
-      main: (hasShow ? boxofficeTodayCount : wantToSeeTotalCount) || 0,
-      sub: `同档期排名 ${(hasShow ? boxofficeTodayRanking : wantToSeeSamePeriodRanking) || 0}`,
+      main: hasShow
+        ? readableNumber(boxofficeTodayCount)
+        : readableThousands(wantToSeeTotalCount),
+      sub: `同档期排名 ${(hasShow ? boxofficeTodayRanking : wantToSeeSamePeriodRanking) || '-'}`,
     },
 
     boxTotal: {
       title: hasShow ? '累计票房' : '预估票房',
-      main: hasShow ? boxofficeTotalCount : predict
+      main: readableNumber(hasShow ? boxofficeTotalCount : predict)
     },
   }
 
@@ -317,12 +340,12 @@ export async function getVideoRise(id: number, hasShow = false) {
 }
 
 /**
- * 获取影片全网热度（暂定 60 天）
+ * 获取影片全网热度
  * https://yapi.aiads-dev.com/project/161/interface/api/4904
  * @param id 影片 id
  */
 export async function getVideoHot(id: number) {
-  const [beginDate, endDate] = dayOffsetRange(-60)
+  const [beginDate, endDate] = dayOffsetRange(-30)
   const {
     data: {
       items
@@ -367,7 +390,7 @@ export async function getFigure(id: number) {
   const titleList = getNames(titleKeys, professionList)
 
   const result = {
-    bubbleList: sortBubble(tags),
+    bubbleList: tags || [],
 
     basic: {
       id,
@@ -389,7 +412,7 @@ export async function getFigure(id: number) {
     opusData: movies && movies.length > 0 ? {
       list: (movies as any[]).map(it => ({
         title: it.name,
-        count: it.boxOffice + '亿'
+        count: readableNumber(it.boxOffice)
       })),
       more: {
         name: 'film-figure-detail-works',
@@ -409,14 +432,34 @@ export async function getFigure(id: number) {
       }
     } : null,
 
-    commentData: comments && comments.length > 0 ? (() => {
+    commentData: (() => {
+      if (comments == null || comments.length == 0) {
+        return []
+      }
       const map = keyBy(comments, 'code')
       return [
-        { name: '正面', value: +dot(map.positive, 'rate') || 0, color: '#ca7273' },
-        { name: '中立', value: +dot(map.neutral, 'rate') || 0, color: '#f3d872' },
-        { name: '负面', value: +dot(map.passive, 'rate') || 0, color: '#57b4c9' },
+        {
+          name: '正面',
+          value: +dot(map.positive, 'rate') || 0,
+          trend: +dot(map.positive, 'trend') || 0,
+          color: '#ca7273'
+        },
+
+        {
+          name: '中立',
+          value: +dot(map.neutral, 'rate') || 0,
+          trend: +dot(map.neutral, 'trend') || 0,
+          color: '#f3d872'
+        },
+
+        {
+          name: '负面',
+          value: +dot(map.passive, 'rate') || 0,
+          trend: +dot(map.passive, 'trend') || 0,
+          color: '#57b4c9'
+        },
       ]
-    })() : null,
+    })(),
   }
 
   return result
