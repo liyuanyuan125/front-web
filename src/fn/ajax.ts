@@ -32,6 +32,7 @@ const request = async (url: string, opts: object) => {
     baseURL: isAbs ? '' : ajaxBaseUrl,
     url,
     withCredentials: true,
+    timeout: 8000,
     ...opts,
   }
 
@@ -52,8 +53,10 @@ const request = async (url: string, opts: object) => {
         throw emit(error)
       }
     } else {
+      // TODO: 加上超时自动重新请求逻辑
       const msg = ex && ex.message || '未知错误'
-      throw emit({ code: 810, data: { ex }, msg })
+      const isTimeout = /timeout/.test(msg)
+      throw emit({ code: isTimeout ? 880 : 810, data: { ex }, msg })
     }
   }
 

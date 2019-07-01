@@ -218,6 +218,7 @@ export default class Uploader extends EventClass {
     form.append(fieldName, file, file.name)
 
     return post(postUrl, form, {
+      timeout: 0,
       onUploadProgress: (ev: ProgressEvent) => {
         this.emit('progress', ev)
       }

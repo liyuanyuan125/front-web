@@ -1,6 +1,6 @@
 <template>
   <div class="effect-report-wp">
-    <BannerCard></BannerCard>
+    <!-- <BannerCard></BannerCard> -->
     <div class="search-pane">
       <SelectXadvertOrders :fetch="xadvertOrders" v-model="form.xadvertOrderId"></SelectXadvertOrders>
     </div>

@@ -5,30 +5,46 @@
     <div v-if="status != 1" class="plan-result">
       <div class="result-top">
         <h3>效果预估</h3>
-        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【{{formatNums(item.needPayAmount)}}】时，您无需补缴任何款项</span>
+        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【
+          <span v-if="item.needPayAmount">
+            {{formatNums(item.needPayAmount)}}
+          </span>
+          <span v-else>
+            {{formatNums(item.estimateCostAmount)}}
+          </span>
+          】时，您无需补缴任何款项</span>
       </div>
       <Row class="precept" :gutter="16">
         <Col span="5" class="item">
           <div>
             <p class="title">曝光人次预估</p>
-            <p class="number">
+            <p v-if="item.estimatePersonCount && (item.estimatePersonCount + '').length > 4" class="number">
               <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 10000" />
+            </p>
+            <p class="onenumber" v-else>
+              <Number :flag="2"  :addNum="item.estimatePersonCount" />
             </p>
           </div>
         </Col>
         <Col span="5" class="item">
           <div>
             <p class="title">投放场次数预估</p>
-            <p class="number">
+            <p v-if="item.estimateShowCount && (item.estimateShowCount + '').length > 4" class="number">
               <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 10000" />
+            </p>
+            <p class="onenumber" v-else>
+              <Number :flag="2"  :addNum="item.estimateShowCount" />
             </p>
           </div>
         </Col>
         <Col span="5" class="item">
           <div>
             <p class="title">预估花费</p>
-            <p class="number">
+            <p v-if="item.estimateCostAmount && (item.estimateCostAmount + '').length > 4" class="number">
               <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 10000" />
+            </p>
+            <p class="onenumber" v-else>
+              <Number :flag="2"  :addNum="item.estimateCostAmount" />
             </p>
           </div>
         </Col>
@@ -83,8 +99,8 @@
           <div class="film-buttom">
             <dl style="margin-bottom: 15px">
               <dd>受众年龄：</dd>
-              <dt v-if="it.ageCodes && it.ageCodes.length > 0">
-                <span v-for="(item, index) in it.ageCodes" :key="item">{{ageTypeMap(item)}}
+              <dt v-if="it.ages && it.ages.length > 0">
+                <span v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}} {{item.text}}%
                   <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
                 </span>
               </dt>
@@ -118,7 +134,7 @@
             </dl>
             <dl @click="tages(2)" :class="tag=='2' ? 'dl-active' : ''">
               <dd>{{count.chainCount}}</dd>
-              <dt>覆盖影线</dt>
+              <dt>覆盖院线</dt>
             </dl>
             <dl @click="tages(3)" :class="tag=='3' ? 'dl-active' : ''">
               <dd>{{count.cityCount}}</dd>
@@ -506,7 +522,18 @@ export default class App extends ViewBase {
       this.status = data.item.status
       this.movieTypeList = data.movieTypeList || []
       this.deliveryCityTypeList = data.deliveryCityTypeList
-      this.planMovies = data.planMovies || []
+      this.planMovies = (data.planMovies || []).map((it: any) => {
+        const names = (it.ageCodes || []).map((items: any, ins: number) => {
+          return {
+            key: items,
+            text: (it.ageValues) ? it.ageValues[ins] : '-'
+          }
+        })
+        return {
+          ...it,
+          ages: names
+        }
+      })
     } catch (ex) {
       (this.$Spin as any).hide()
       this.handleError(ex)
