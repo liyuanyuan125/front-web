@@ -367,25 +367,29 @@ export default class Main extends ViewBase {
       const {
         data,
         data: {
-          item: {
-            rate,
-            dates,
-            keywords
-          }
+          item
         }
       } = await comment({ ...mockObj }, this.id)
+      if ( !item ) {
+        return
+      }
+      const rate = item.rate || null
+      const dates = item.dates || null
+      const keywords = item.keywords || null
 
-      for ( const k in rate ) {
-        if ( rate[k] ) {
-          const index = findIndex(this.dict.emotion, (it: any) => {
-            return it.name == k
-          })
-          this.chart1.dataList[0].push({
-            value: rate[k],
-            name: this.dict.emotion[index].text
-          })
+      if ( rate ) {
+        for ( const k in rate ) {
+          if ( rate[k] ) {
+            const index = findIndex(this.dict.emotion, (it: any) => {
+              return it.name == k
+            })
+            this.chart1.dataList[0].push({
+              value: rate[k],
+              name: this.dict.emotion[index].text
+            })
+          }
+          that.chart1.initDone = true
         }
-        that.chart1.initDone = true
       }
 
       if ( dates && dates.length > 0 ) {
@@ -404,26 +408,27 @@ export default class Main extends ViewBase {
         that.chart2.initDone = true
       }
 
-      if ( keywords[this.form.dayRangesKey].positive.length > 0 ) {
-        that.chart3.initDone = true
-        keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
-          that.chart3.dataList[0].push({
-            name: item,
-            value: Math.floor(Math.random() * 100 + 1)
+      if ( keywords ) {
+        if ( keywords[this.form.dayRangesKey].positive && keywords[this.form.dayRangesKey].positive.length > 0 ) {
+          that.chart3.initDone = true
+          keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
+            that.chart3.dataList[0].push({
+              name: item,
+              value: Math.floor(Math.random() * 100 + 1)
+            })
           })
-        })
-      }
+        }
 
-      if ( keywords[this.form.dayRangesKey].passive.length > 0 ) {
-        keywords[this.form.dayRangesKey].passive.forEach((item: any) => {
-          that.chart4.dataList[0].push({
-            name: item,
-            value: Math.floor(Math.random() * 100 + 1)
+        if ( keywords[this.form.dayRangesKey].passive && keywords[this.form.dayRangesKey].passive.length > 0 ) {
+          keywords[this.form.dayRangesKey].passive.forEach((item: any) => {
+            that.chart4.dataList[0].push({
+              name: item,
+              value: Math.floor(Math.random() * 100 + 1)
+            })
           })
-        })
-        that.chart4.initDone = true
-      }
-      
+          that.chart4.initDone = true
+        }
+      }      
     } catch (ex) {
       this.handleError(ex)
     }
