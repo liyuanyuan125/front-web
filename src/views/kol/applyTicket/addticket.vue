@@ -44,7 +44,7 @@
             </RadioGroup>
            </Col> -->
            <FormItem label="发票类型" prop="invoiceType">
-            <RadioGroup v-model="query.invoiceType" >
+            <RadioGroup v-model="query.invoiceType" @on-change='ass'>
               <Radio v-for="it in faType"  :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
             </RadioGroup>
           </FormItem>
@@ -233,6 +233,7 @@ import number from '@/components/number.vue'
     number
   }
 })
+
 export default class Main extends ViewBase {
   totalCount = 0
   query: any = {
@@ -260,6 +261,7 @@ export default class Main extends ViewBase {
     orderIds: [],
     orderNo: []
   }
+  aaa: any = 0
 
 
   list: any = []
@@ -283,6 +285,12 @@ export default class Main extends ViewBase {
     } else if (this.$route.params.key == '0') {
       this.detail()
     }
+  }
+
+  ass() {
+    this.aaa = this.query.invoiceType
+    ; (this.$refs.query as any).resetFields()
+    this.query.invoiceType = this.aaa
   }
 
   get rule() {
