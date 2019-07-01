@@ -115,7 +115,7 @@ export default class Master extends ViewBase {
   // 影片类型
   selList = [
     {key: 0, text: '按时间排序'},
-    {key: 1, text: '按鲸鱼指数排序'}
+    {key: 1, text: '按鲸娱指数排序'}
   ]
   // 影片类型筛选
   filmListSelect = [

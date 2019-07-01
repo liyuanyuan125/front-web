@@ -26,60 +26,65 @@
         :label="handleJoin(tab)"></TabPane>
       </Tabs>
       <!-- v-auth="'adordermanage.order#view'" -->
-      <ul class='itemul' >
-        <li v-for='(it,index) in itemlist' :key='index'>
-          <div class="table-header-title  flex-box">
-            <p><label>投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
-            <p><label>预估最大收益/(元)</label><em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em></p>
-          </div>
-          <Row class="table-content-list" type="flex" justify="center" align="middle">
-            <Col span="14">
-              <div class="flex-box col-order">
-                <p ><label>广告片名称</label><em>{{it.videoName}}</em></p>
-                <p  v-if="it.targetCinemas.length">
-                  <label>目标影院</label>
-                  <em>{{it.targetCinemas.length}}家</em> 
-                  <span class="query-status"  @click="edittarget(it.id, 1)" >查看</span></p>
-                <p v-else><label>目标影院</label><em>{{it.cinemaName}}</em></p>
+      <div class="spin-show-parent">
+        <div class="demo-spin-article">
+          <ul class='itemul' >
+            <li v-for='(it,index) in itemlist' :key='index'>
+              <div class="table-header-title  flex-box">
+                <p><label>投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
+                <p><label>预估最大收益/(元)</label><em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em></p>
               </div>
-              <div class="flex-box col-order">
-                <p><label>广告片规格</label><em>{{it.specification || 0}}s</em></p>
-                <p><label>目标影厅</label><em>{{it.hallsCount || '暂无'}}</em></p>
-              </div>
-              <div class="flex-box col-order">
-                <p><label>投放周期</label><em>{{it.cycle || 0}}天</em></p>
-                <p><label>目标场次</label><em>{{it.targetSession || '暂无'}}</em></p>
-              </div>
-              <div class="target-cinema">
-                <label>目标影片</label>
-                <div>
-                  <span  v-if='it.targetMovies.length > 0' v-for='item in it.targetMovies'>《{{item.movieName}}》</span>
-                  <span v-if='it.targetMovies.length == 0'>暂无 </span>
-                </div>
-              </div>
+              <Row class="table-content-list" type="flex" justify="center" align="middle">
+                <Col span="14">
+                  <div class="flex-box col-order">
+                    <p ><label>广告片名称</label><em>{{it.videoName}}</em></p>
+                    <p  v-if="it.targetCinemas.length">
+                      <label>目标影院</label>
+                      <em>{{it.targetCinemas.length}}家</em> 
+                      <span class="query-status"  @click="edittarget(it.id, 1)" >查看</span></p>
+                    <p v-else><label>目标影院</label><em>{{it.cinemaName}}</em></p>
+                  </div>
+                  <div class="flex-box col-order">
+                    <p><label>广告片规格</label><em>{{it.specification || 0}}s</em></p>
+                    <p><label>目标影厅</label><em>{{it.hallsCount || '暂无'}}</em></p>
+                  </div>
+                  <div class="flex-box col-order">
+                    <p><label>投放周期</label><em>{{it.cycle || 0}}天</em></p>
+                    <p><label>目标场次</label><em>{{it.targetSession || '暂无'}}</em></p>
+                  </div>
+                  <div class="target-cinema">
+                    <label>目标影片</label>
+                    <div>
+                      <span  v-if='it.targetMovies.length > 0' v-for='item in it.targetMovies'>《{{item.movieName}}》</span>
+                      <span v-if='it.targetMovies.length == 0'>暂无 </span>
+                    </div>
+                  </div>
 
-            </col>
-            <Col span="5">
-                 <div v-for="item in statusList" :key="item.key" v-if="item.key == it.status" class="statu-col" 
-                 :class="{'statu-col-error': item.key == 4 || item.key == 5}">{{item.text}}</div>
-            </col>
-            <Col span="5" class="text-center">
-            <!-- 待审核状态展示 -->
-                <div class="btn-sure-cancel" v-if="it.status == 1">
-                  <p><Button type="primary" @click="editReject(it.id)" class="operation-btn">确定接单</Button></p>
-                  <p><Button  @click="editRefuse(it)" class="operation-btn result-btn">拒绝接单</Button></p>
-                </div>
-                <div >
-                   <Button class=" operation-btn  query-detail-btn " :to="{ name: 'order-dispatch-details', params: { id: it.id } }" >查看详情</Button>
-                </div>
-            </col>
-          </Row>
-        </li>
-      </ul>
-      <ul class='no-order-list' v-if='itemlist.length == 0'> 暂无订单数据</ul>
-      <Page :total="totalCount"  v-if="totalCount>0" class="order-page-list" :current="pageIndex"
-      :page-size="pageSize"  show-total  show-elevator 
-       @on-change="handlepageChange"  @on-page-size-change="handlepageChange" />
+                </col>
+                <Col span="5">
+                    <div v-for="item in statusList" :key="item.key" v-if="item.key == it.status" class="statu-col" 
+                    :class="{'statu-col-error': item.key == 4 || item.key == 5}">{{item.text}}</div>
+                </col>
+                <Col span="5" class="text-center">
+                <!-- 待审核状态展示 -->
+                    <div class="btn-sure-cancel" v-if="it.status == 1">
+                      <p><Button type="primary" @click="editReject(it.id)" class="operation-btn">确定接单</Button></p>
+                      <p><Button  @click="editRefuse(it)" class="operation-btn result-btn">拒绝接单</Button></p>
+                    </div>
+                    <div >
+                      <Button class=" operation-btn  query-detail-btn " :to="{ name: 'order-dispatch-details', params: { id: it.id } }" >查看详情</Button>
+                    </div>
+                </col>
+              </Row>
+            </li>
+          </ul>
+          <ul class='no-order-list' v-if='itemlist.length == 0'> 暂无订单数据</ul>
+          <Spin fix v-if="spinShow"></Spin>
+          <Page :total="totalCount"  v-if="totalCount>0" class="order-page-list" :current="pageIndex"
+          :page-size="pageSize"  show-total  show-elevator 
+          @on-change="handlepageChange"  @on-page-size-change="handlepageChange" />
+        </div>
+      </div>
     </div>
 
      
@@ -118,6 +123,7 @@ export default class Main extends ViewBase {
   putDate = []
 
   loading = false
+  spinShow = false
 
   form: any = {
     beginDate: null,
@@ -203,6 +209,7 @@ export default class Main extends ViewBase {
   }
 
   async orderList() {
+    this.spinShow = true
     try {
       const {
         data: {
@@ -217,6 +224,7 @@ export default class Main extends ViewBase {
         ...this.form,
         videoName: this.videoName
       })
+      this.spinShow = false
       this.totalCount = totalCount
       // 处理空数组null转化为[]
       this.itemlist = (items || []).map( (item: any) => {
@@ -241,7 +249,8 @@ export default class Main extends ViewBase {
       })
       this.statusList = statusList
     } catch (ex) {
-       this.handleError(ex)
+      this.spinShow = false
+      this.handleError(ex)
     }
   }
 
@@ -297,7 +306,9 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/views/kol/less/common.less';
-
+.spin-show-parent {
+  position: relative;
+}
 .item-list-sel {
   width: 288px;
   margin-right: 20px;
@@ -322,6 +333,8 @@ export default class Main extends ViewBase {
   .no-order-list {
     margin-top: 40px;
     text-align: center;
+    font-size: 15px;
+    color: #fff;
   }
   .operation-btn {
     width: 105px;

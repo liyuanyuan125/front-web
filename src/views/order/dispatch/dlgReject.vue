@@ -14,7 +14,7 @@
           <Icon type="ios-search" size="22"/>
         </span>
       </div>
-      <Table  stripe @on-selection-change="check" :columns="columns" :data="tableDate">
+      <Table  stripe @on-selection-change="check" :loading="loading" :columns="columns" :data="tableDate">
         <template slot-scope="{ row }" slot="citys">
           {{row.citys}}
         </template>
@@ -39,7 +39,7 @@
     <div slot="footer" class="foot">
       <div>
         <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
-        <Button class="foot-button" type="primary" @click="handleSubmit">确定</Button>
+        <Button class="foot-button" :loading="sureLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </div>
   </Modal>
@@ -70,7 +70,8 @@ export default class DlgEditCinema extends ViewBase {
     pageIndex: 1,
     pageSize: 20,
   }
-
+  loading = false
+  sureLoading = false
   // page: any = []
   reject: any = {}
   name: any = []
@@ -143,6 +144,7 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   async seach() {
+    this.loading = true
     try {
       const {
         data: {
@@ -153,11 +155,12 @@ export default class DlgEditCinema extends ViewBase {
         ...this.dataForm,
         ...this.reject
       })
-
+      this.loading = false
       this.total = totalCount
       this.data = items || []
       this.$emit('ref')
     } catch (ex) {
+      this.loading = false
       this.handleError(ex)
     }
   }
@@ -186,14 +189,17 @@ export default class DlgEditCinema extends ViewBase {
       warning('请选择目标影院')
       return
     }
+    this.sureLoading = true
     try {
       const data = await reciveOrder({
         id: this.value.id,
         receiveCinemas: this.checkId
       })
       this.$emit('rejReload')
+      this.sureLoading = false
       this.cancel()
     } catch (ex) {
+      this.sureLoading = false
       this.handleError(ex)
     }
   }
@@ -261,5 +267,10 @@ export default class DlgEditCinema extends ViewBase {
 }
 .reject-cinema {
   min-height: 400px;
+}
+/deep/.ivu-table-body {
+  min-height: 400px;
+  max-height: 550px;
+  overflow: auto;
 }
 </style>

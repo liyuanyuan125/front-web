@@ -22,7 +22,7 @@
         <p><span v-for="it in item.movies" :key="it.id">《{{it.name}}》</span></p>
       </li>
     </ul>
-    <h2 class="nav-title">图片（{{imgList.length}}）</h2>
+    <h2 class="nav-title" v-if="imgList.length">图片（{{imgList.length}}）</h2>
     <ul name="list" v-if="imgList.length" tag="ul" class="loading-img">
       <li v-for="(img, index) in imgList" :key="index">
         <a class="img-list"><img :src="img" alt=""/></a>
