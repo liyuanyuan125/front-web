@@ -228,10 +228,10 @@ export default class Main extends ViewBase {
     .button-style(#00202d, #f9d85e);
   }
 }
-/deep/ .ivu-table-wrapper > .ivu-spin-fix {
-  background: rgba(0, 0, 0, 0);
-  border: none;
-}
+// /deep/ .ivu-table-wrapper > .ivu-spin-fix {
+//   background: rgba(0, 0, 0, 0);
+//   border: none;
+// }
 /deep/ .ivu-input-wrapper,
 /deep/ .ivu-input {
   background: rgba(255, 255, 255, 0.4);
