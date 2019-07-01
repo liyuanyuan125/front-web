@@ -315,7 +315,7 @@ export default class Promotion extends ViewBase {
         info('请选择广告片规格')
       }
       const { data } = await estimate({budgetAmount: val, specification: this.form.specification})
-      this.nums = formatCurrency(data.estimatePersonCount)
+      this.nums = formatCurrency(data.estimatePersonCount, 0)
     } catch (ex) {
       this.handleError(ex)
     }
