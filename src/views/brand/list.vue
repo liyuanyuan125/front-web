@@ -11,42 +11,47 @@
         <span class="col-third">状态</span>
         <span class="col-fourth">操作</span>
       </h2>
-      <ul class="ul-lists">
-        <li v-for="item in list" :key="item.id">
-          <router-link
-            :to="{ name: 'brand-home', params: { id: item.brandId } }"
-            class="col-first span-first"
-          >
-            <img :src="item.logo" class="logo">
-            <em>{{item.brandName}}</em>
-          </router-link>
+      <div class="spin-parent">
+        <div class="demo-spin-article">
+          <ul class="ul-lists">
+            <li v-for="item in list" :key="item.id">
+              <router-link
+                :to="{ name: 'brand-home', params: { id: item.brandId } }"
+                class="col-first span-first"
+              >
+                <img :src="item.logo" class="logo">
+                <em>{{item.brandName}}</em>
+              </router-link>
 
-          <span
-            class="col-second"
-            v-for="ite in tradeStatus"
-            :key="ite.key"
-            v-if="ite.key == item.tradeCode"
-          >{{ite.text}}</span>
+              <span
+                class="col-second"
+                v-for="ite in tradeStatus"
+                :key="ite.key"
+                v-if="ite.key == item.tradeCode"
+              >{{ite.text}}</span>
 
-          <span
-            class="col-third"
-            v-for="it in brandStatus"
-            :key="it.key"
-            v-if="it.key == item.status"
-          >{{it.text}}</span>
+              <span
+                class="col-third"
+                v-for="it in brandStatus"
+                :key="it.key"
+                v-if="it.key == item.status"
+              >{{it.text}}</span>
 
-          <span v-if="item.status == 15 && secondaryCode != 'daili'" class="col-fourth">
-            <img
-              src="./assets/add-icon.png"
-              width="20"
-              class="cursor"
-              @click="$router.push({name: 'brand-moredetail', params: {brandId: item.brandId}})"
-            >
-          </span>
-        </li>
-      </ul>
-      <ul class="no-data-list" v-if="list.length == 0">暂无数据</ul>
-      <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
+              <span v-if="item.status == 15 && secondaryCode != 'daili'" class="col-fourth">
+                <img
+                  src="./assets/add-icon.png"
+                  width="20"
+                  class="cursor"
+                  @click="$router.push({name: 'brand-moredetail', params: {brandId: item.brandId}})"
+                >
+              </span>
+            </li>
+          </ul>
+          <ul class="no-data-list" v-if="list.length == 0">暂无数据</ul>
+          <Spin fix v-if="spinShow"></Spin>
+        </div>
+        <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
+      </div>
     </div>
     <addBrand v-model="visibleBrand" v-if="visibleBrand" @updateBrand="updateBrand" />
   </div>
@@ -68,7 +73,7 @@ import { getUser } from '@/store'
 })
 export default class Main extends ViewBase {
   visibleBrand = false
-
+  spinShow = false
   total = 0
   pageList = {
     pageIndex: 1,
@@ -92,17 +97,20 @@ export default class Main extends ViewBase {
   }
 
   async tableList() {
+    this.spinShow = true
     try {
       const {
         data: { items, totalCount, brandRelationStatus, tradeCodeStatus }
       } = await brandList({
         ...this.pageList
       })
+      this.spinShow = false
       this.list = items || []
       this.total = totalCount
       this.brandStatus = brandRelationStatus || []
       this.tradeStatus = tradeCodeStatus || []
     } catch (ex) {
+      this.spinShow = false
       this.handleError(ex)
     }
   }
@@ -118,6 +126,9 @@ export default class Main extends ViewBase {
 </script>
 <style lang='less' scoped>
 @import '~@/views/brand/less/common.less';
+.spin-parent {
+  position: relative;
+}
 .select-dlg {
   /deep/ .ivu-select {
     width: 400px;
@@ -156,11 +167,11 @@ export default class Main extends ViewBase {
   color: #fff;
   padding: 0 40px;
   li {
-    padding: 20px 0;
     display: flex;
     align-items: center;
     border-bottom: solid 1px rgba(188, 226, 240, 0.56);
     font-size: 14px;
+    height: 120px;
     .span-first {
       display: flex;
       align-items: center;
@@ -168,7 +179,6 @@ export default class Main extends ViewBase {
     }
     .logo {
       width: 80px;
-      height: 80px;
       border-radius: 5px;
       margin-right: 20px;
     }

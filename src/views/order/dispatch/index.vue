@@ -2,7 +2,7 @@
   <div class="page order-home">
     <h2 class="order-nav">广告单</h2>
     <div class="order-list-title">
-      <p>以下广告单已经过平台审核，接单后需要按照广告单中要求投放的影片在您的影院进行排播;</p>
+      <p>以下广告单已经过平台审核，接单后需要按照广告单中要求投放的影片在您的影院进行排播</p>
       <p  v-if="cinemaList.length == 1">您当前影院为 {{cinemaList[0].shortName}}</p>
       <p  v-else>您当前共有 {{cinemaTotalCount}} 家影院的广告代理权</p>
     </div>
@@ -21,9 +21,18 @@
          <Button type="primary" @click="searchList" class="select-btn">搜索广告单</Button>
       </div>
 
-      <Tabs @on-click="handleTabs">
+      <!-- <Tabs @on-click="handleTabs">
         <TabPane v-for="tab in statusList" :key="tab.key" v-if="tab.key != 0 && tab.key != 8" 
         :label="handleJoin(tab)"></TabPane>
+      </Tabs> -->
+      <Tabs v-model="form.status" > 
+        <TabPane :label="orderCount.waiting ? `待接单(${orderCount.waiting})` : '待接单'"  name="1" ></TabPane>
+        <TabPane :label="orderCount.unexecute ? `待执行(${orderCount.unexecute})` : '待执行'"  name="2"></TabPane>
+        <TabPane :label="orderCount.beexecute ? `执行中(${orderCount.beexecute})` : '执行中'"  name="3"></TabPane>
+        <TabPane :label="orderCount.besettlement ? `待结算(${orderCount.besettlement})` : '待结算' "  name="6" ></TabPane>
+        <TabPane label="已拒绝"  name="4" ></TabPane>
+        <TabPane label="已失效"  name="5" ></TabPane>
+        <TabPane label="已完成"  name="7" ></TabPane>
       </Tabs>
       <!-- v-auth="'adordermanage.order#view'" -->
       <div class="spin-show-parent">
@@ -78,13 +87,13 @@
               </Row>
             </li>
           </ul>
-          <ul class='no-order-list' v-if='itemlist.length == 0'> 暂无订单数据</ul>
           <Spin fix v-if="spinShow"></Spin>
           <Page :total="totalCount"  v-if="totalCount>0" class="order-page-list" :current="pageIndex"
           :page-size="pageSize"  show-total  show-elevator 
           @on-change="handlepageChange"  @on-page-size-change="handlepageChange" />
         </div>
       </div>
+      <ul class='no-order-list' v-if='itemlist.length == 0'> 暂无订单数据</ul>
     </div>
 
      
@@ -130,7 +139,7 @@ export default class Main extends ViewBase {
     endDate: null,
     CinemaId: null,
     // videoName: null,
-    status: 1,
+    status: '1',
   }
   videoName = null
   // 广告片名称模糊查询
@@ -140,8 +149,8 @@ export default class Main extends ViewBase {
   cinemaList = []
   cinemaTotalCount = null
 
-  // 广告片名称
-  // advlistName = []
+  // 订单统计
+  orderCount: any = {}
 
   // 状态列表
   statusList: any = []
@@ -200,13 +209,13 @@ export default class Main extends ViewBase {
     this.refuseShow = false
     this.orderList()
   }
-  handleJoin(tab: any) {
-    if ('num' in tab) {
-      return `${tab.text}(${tab.num})`
-    } else {
-      return tab.text
-    }
-  }
+  // handleJoin(tab: any) {
+  //   if ('num' in tab) {
+  //     return `${tab.text}(${tab.num})`
+  //   } else {
+  //     return tab.text
+  //   }
+  // }
 
   async orderList() {
     this.spinShow = true
@@ -235,18 +244,19 @@ export default class Main extends ViewBase {
         }
       })
       // 处理订单统计
-      const order = orderCount
-      statusList.map( (item: any) => {
-        if (item.text == '待接单') {
-          item.num = order.waiting
-        } else if (item.text == '待执行') {
-          item.num = order.unexecute
-        } else if (item.text == '执行中') {
-          item.num = order.beexecute
-        } else if (item.text == '待结算') {
-          item.num = order.besettlement
-        }
-      })
+      this.orderCount = orderCount || {}
+      // const order = orderCount
+      // statusList.map( (item: any) => {
+      //   if (item.text == '待接单') {
+      //     item.num = order.waiting
+      //   } else if (item.text == '待执行') {
+      //     item.num = order.unexecute
+      //   } else if (item.text == '执行中') {
+      //     item.num = order.beexecute
+      //   } else if (item.text == '待结算') {
+      //     item.num = order.besettlement
+      //   }
+      // })
       this.statusList = statusList
     } catch (ex) {
       this.spinShow = false
@@ -254,9 +264,9 @@ export default class Main extends ViewBase {
     }
   }
 
-  handleTabs(id: number) {
-    this.form.status = id + 1
-  }
+  // handleTabs(id: number) {
+  //   this.form.status = id + 1
+  // }
 
   // 确定接单
   editReject(id: any) {
