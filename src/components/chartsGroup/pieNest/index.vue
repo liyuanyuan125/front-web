@@ -19,10 +19,10 @@
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <Row type="flex"
-         justify="center" align="middle">
+    <Row type="flex" justify="center" align="middle">
       <Col :span="24">
-        <div v-if="initDone">
+        <div v-if="noData" class="nodata-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">暂无数据</div>
+        <div v-else-if=" initDone && !noData ">
           <div ref="refChart" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
         </div>
         <div v-else class="loading-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
@@ -57,6 +57,7 @@ const tooltipsDefault = tooltipStyles({
 })
 // 嵌套环形图
 export default class PieNest extends ViewBase {
+  @Prop({ type: Boolean, default: false }) noData?: boolean
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title?: string
   @Prop({ type: String, default: '' }) titleTips?: string
@@ -145,7 +146,7 @@ export default class PieNest extends ViewBase {
   }
   @Watch('initDone')
   watchInitDone(val: boolean) {
-    if (val) {
+    if (val && !(this.noData) ) {
       this.$nextTick(() => {
         this.resetOptions()
         this.updateCharts()
@@ -204,5 +205,13 @@ export default class PieNest extends ViewBase {
   flex-flow: row;
   align-items: center;
   justify-content: center;
+}
+.nodata-wp {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: #999;
 }
 </style>

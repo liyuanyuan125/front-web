@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <div style='text-align:center'>
@@ -19,16 +18,16 @@
                :key="item.key"
                :label="index">{{item.name}}</Radio>
       </RadioGroup>
-    </div>
-    <Row type="flex"
-         justify="center" align="middle">
-      <Col :span="24"> 
-          <div ref="refChart"
-            v-if="initDone"
-            :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`" ></div>      
-          <div v-else class='loading-wp' :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
-            <TinyLoading  />
-          </div>
+    </div>    
+    <Row type="flex" justify="center" align="middle">
+      <Col :span="24">
+        <div v-if="noData" class="nodata-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">暂无数据</div>
+        <div v-else-if=" initDone && !noData ">
+          <div ref="refChart" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
+        </div>
+        <div v-else class="loading-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
+          <TinyLoading />
+        </div>
       </Col>
     </Row>
   </div>
@@ -58,6 +57,7 @@ const tooltipsDefault = tooltipStyles({
 })
 // x轴堆叠条形图
 export default class BarXCategoryStack extends ViewBase {
+  @Prop({ type: Boolean, default: false }) noData?: boolean
   @Prop({ type: Boolean, default: false }) initDone!: boolean
   @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) titleTips?: string
@@ -88,7 +88,9 @@ export default class BarXCategoryStack extends ViewBase {
     ) {
       return
     }
+    // debugger
     const myChart = echarts.init(this.$refs.refChart as any)
+    // debugger
     const option: any = {
       color: this.color,
       ...pubOption,
@@ -123,7 +125,7 @@ export default class BarXCategoryStack extends ViewBase {
   }
   @Watch('initDone')
   watchInitDone(val: boolean) {
-    if (val) {
+    if (val && !(this.noData) ) {
       this.$nextTick(() => {
         this.resetOptions()
         this.updateCharts()
@@ -139,3 +141,14 @@ export default class BarXCategoryStack extends ViewBase {
   }
 }
 </script>
+<style lang="less" scoped>
+@import '~@/site/lib.less';
+.nodata-wp {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: #999;
+}
+</style>

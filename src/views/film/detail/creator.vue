@@ -4,7 +4,7 @@
   	<div class='director '>
   		<Row class='title'>导演&nbsp;Director</Row>
   		<Row class='bai-w' v-for='(it,index) in person.Director' :key='index'>
-  			<Row  class='col-img'><img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt=""></Row>
+  			<Row  class='col-img'><img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? $store.state.defaultAvatar : it.headImg" alt=""></Row>
   			<Row class='r-h'>
   				<Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
   				<Row class='de-ro-two'>{{it.nameEn == null || it.nameEn == '' ? '暂无英文名' : it.nameEn}}</Row>
@@ -22,7 +22,7 @@
   		<Row  class='title'>演员&nbsp;Actor</Row>
   		<Row class='bai-w' v-for='(it,index) in actors' :key='index'>
   			<Row :span='2' class='col-img'>
-          <img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt="">
+          <img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? $store.state.defaultAvatar : it.headImg" alt="">
           <span v-if='it.jyIndex'>{{it.jyIndex / 100}}</span></Row>
   			<Row class='r-h'>
   				<Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
@@ -45,7 +45,7 @@
     <div class='director'>
       <Row  class='title'>编剧&nbsp;Writer</Row>
       <Row class='bai-w' v-for='(it,index) in person.Writer' :key='index'>
-        <Row :span='2' class='col-img'><img @click='jump(it.id)' :src="it.headImg == null || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt=""></Row>
+        <Row :span='2' class='col-img'><img @click='jump(it.id)' :src="it.headImg == null || it.headImg == '' ? $store.state.defaultAvatar : it.headImg" alt=""></Row>
         <Row class='r-h'>
           <Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
           <Row class='de-ro-two'>{{it.nameEn == null || it.nameEn == '' ? '暂无英文名' : it.nameEn}}</Row>
@@ -62,7 +62,7 @@
     <div class='zhipian'>
       <Row  class='title'>制片人&nbsp;Producer</Row>
       <Row class='bai-w' v-for='(it,index) in produced' :key='index'>
-        <Row :span='2' class='col-img'><img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2766636815,3165673923&fm=26&gp=0.jpg' : it.headImg" alt=""></Row>
+        <Row :span='2' class='col-img'><img @click='jump(it.id)' :src="it.headImg == null  || it.headImg == '' ? $store.state.defaultAvatar : it.headImg" alt=""></Row>
         <Row class='r-h'>
           <Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
           <Row class='de-ro-two'>{{it.nameEn == null || it.nameEn == '' ? '暂无英文名' : it.nameEn}}</Row>
