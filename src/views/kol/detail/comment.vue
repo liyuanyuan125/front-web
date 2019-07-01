@@ -376,7 +376,7 @@ export default class Main extends ViewBase {
     const mockObj = {
       beginDate: this.form.beginDate[0],
       endDate: this.form.beginDate[1],
-      ...this.form
+      channelCode: this.form.channelCode
     }
     const id = this.$route.params.id || ''
     try {
