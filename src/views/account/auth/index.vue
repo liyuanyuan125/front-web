@@ -284,13 +284,13 @@ export default class Main extends ViewBase {
     }
   }
   /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
   }
   /deep/ .ivu-table {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
   }
   /deep/ .ivu-table-row {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
     /deep/ td {
       color: #fff;
       background: rgba(0, 0, 0, 0);
@@ -300,13 +300,13 @@ export default class Main extends ViewBase {
     }
   }
   /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
   }
-  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
-    background: rgba(255, 255, 255, 0);
-  }
+  // /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
+  //   background: rgba(255, 255, 255, 0);
+  // }
   /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(0, 0, 0, 0);
   }
   /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
     span {
@@ -319,7 +319,7 @@ export default class Main extends ViewBase {
     line-height: 200px;
     /deep/ td {
       color: #fff;
-      background: rgba(255, 255, 255, 0);
+      background: rgba(0, 0, 0, 0);
     }
   }
 }
