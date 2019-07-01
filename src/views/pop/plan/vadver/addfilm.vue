@@ -327,6 +327,7 @@ export default class DlgEditCinema extends ViewBase {
     right: -20px;
     top: -20px;
     display: block;
+    box-sizing: border-box;
     width: 40px;
     height: 40px;
     background: #fff;
@@ -336,7 +337,7 @@ export default class DlgEditCinema extends ViewBase {
     &::before {
       content: "×";
       font-size: 34px;
-      line-height: 36px;
+      line-height: 40px;
       text-align: center;
     }
   }

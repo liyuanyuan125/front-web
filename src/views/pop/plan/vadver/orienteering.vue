@@ -570,12 +570,12 @@ export default class Orienteering extends ViewBase {
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.cinema = newValue
     })
-    keepExclusion(value, oldValue, 'top20', newValue => {
-      this.form.cinema = newValue
-    })
-    if (value[value.length] == -1) {
-      this.form.cinema = [-1]
-    }
+    // keepExclusion(value, oldValue, 'top20', newValue => {
+    //   this.form.cinema = newValue
+    // })
+    // if (value[value.length] == -1) {
+    //   this.form.cinema = [-1]
+    // }
     if (value.length == 0) {
       this.form.cinema = [0]
     }
