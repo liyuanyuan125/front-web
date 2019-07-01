@@ -51,10 +51,9 @@ export default class Layout extends ViewBase {
 
 .detail-layout {
   padding-top: 78px;
-}
-
-.detail-side-in {
-  border-radius: 6px 6px 0 0;
+  /deep/ .detail-side-in {
+    border-radius: 6px 6px 0 0;
+  }
 }
 
 .figure-name {
