@@ -37,8 +37,8 @@
                 <div class="film-buttom">
                   <dl style="margin-bottom: 15px">
                     <dd>受众年龄：</dd>
-                    <dt v-if="it.ageCodes && it.ageCodes.length > 0">
-                      <span v-for="(item, index) in it.ageCodes" :key="item">{{ageTypeMap(item)}}
+                    <dt v-if="it.ages && it.ages.length > 0">
+                      <span v-for="(item, index) in it.ages" :key="item.key">{{ageTypeMap(item.key)}}{{item.text || '-'}}%
                         <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
                       </span>
                     </dt>
@@ -368,7 +368,18 @@ export default class App extends ViewBase {
   async detail() {
     try {
       const { data } = await adverdetail(this.$route.params.setid)
-      this.filmList = data.planMovies || []
+      this.filmList = (data.planMovies || []).map((it: any) => {
+        const names = (it.ageCodes || []).map((items: any, ins: number) => {
+          return {
+            key: items,
+            text: it.ageValues[ins]
+          }
+        })
+        return {
+          ...it,
+          ages: names
+        }
+      })
       this.detaildata = data
       this.ageTypeList = data.ageTypeList || []
       this.movieTypeList = data.movieTypeList

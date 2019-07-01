@@ -11,24 +11,33 @@
         <Col span="5" class="item">
           <div>
             <p class="title">曝光人次预估</p>
-            <p class="number">
+            <p v-if="item.estimatePersonCount && (item.estimatePersonCount + '').length > 4" class="number">
               <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 10000" />
+            </p>
+            <p class="onenumber" v-else>
+              <Number :flag="2"  :addNum="item.estimatePersonCount" />
             </p>
           </div>
         </Col>
         <Col span="5" class="item">
           <div>
             <p class="title">投放场次数预估</p>
-            <p class="number">
+            <p v-if="item.estimateShowCount && (item.estimateShowCount + '').length > 4" class="number">
               <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 10000" />
+            </p>
+            <p class="onenumber" v-else>
+              <Number :flag="2"  :addNum="item.estimateShowCount" />
             </p>
           </div>
         </Col>
         <Col span="5" class="item">
           <div>
             <p class="title">预估花费</p>
-            <p class="number">
+            <p v-if="item.estimateCostAmount && (item.estimateCostAmount + '').length > 4" class="number">
               <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 10000" />
+            </p>
+            <p class="onenumber" v-else>
+              <Number :flag="2"  :addNum="item.estimateCostAmount" />
             </p>
           </div>
         </Col>
@@ -83,8 +92,8 @@
           <div class="film-buttom">
             <dl style="margin-bottom: 15px">
               <dd>受众年龄：</dd>
-              <dt v-if="it.ageCodes && it.ageCodes.length > 0">
-                <span v-for="(item, index) in it.ageCodes" :key="item">{{ageTypeMap(item)}}
+              <dt v-if="it.ages && it.ages.length > 0">
+                <span v-for="(item, index) in it.ages" :key="item.key">{{ageTypeMap(item.key)}} {{item.text || '-'}}%
                   <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
                 </span>
               </dt>
@@ -506,7 +515,18 @@ export default class App extends ViewBase {
       this.status = data.item.status
       this.movieTypeList = data.movieTypeList || []
       this.deliveryCityTypeList = data.deliveryCityTypeList
-      this.planMovies = data.planMovies || []
+      this.planMovies = (data.planMovies || []).map((it: any) => {
+        const names = (it.ageCodes || []).map((items: any, ins: number) => {
+          return {
+            key: items,
+            text: it.ageValues[ins]
+          }
+        })
+        return {
+          ...it,
+          ages: names
+        }
+      })
     } catch (ex) {
       (this.$Spin as any).hide()
       this.handleError(ex)

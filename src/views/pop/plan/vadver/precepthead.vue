@@ -5,24 +5,33 @@
         <Col span="5" class="item">
           <div>
             <p class="title">曝光人次预估</p>
-            <p class="number">
+            <p v-if="data.estimatePersonCount && (data.estimatePersonCount + '').length > 4" class="number">
               <Number :addNum="data.estimatePersonCount/10000" />
+            </p>
+            <p class="onenumber" v-else>
+              <Number :flag="2"  :addNum="data.estimatePersonCount" />
             </p>
           </div>
         </Col>
         <Col span="5" class="item">
           <div>
             <p class="title">投放场次数预估</p>
-            <p class="number">
+            <p class="number" v-if="data.estimateShowCount && (data.estimateShowCount + '').length > 4">
               <Number :addNum="data.estimateShowCount/10000" />
+            </p>
+            <p class="onenumber" v-else>
+              <Number :flag="2"  :addNum="data.estimateShowCount" />
             </p>
           </div>
         </Col>
         <Col span="5" class="item">
           <div>
             <p class="title">预估花费</p>
-            <p class="number">
+            <p v-if="data.estimateCostAmount && (data.estimateCostAmount + '').length > 4" class="number">
               <Number :addNum="data.estimateCostAmount/10000" />
+            </p>
+            <p class="onenumber" v-else>
+              <Number :flag="2"  :addNum="data.estimateCostAmount" />
             </p>
           </div>
           <div class="line-right"></div>
@@ -134,7 +143,7 @@ export default class App extends ViewBase {
       opacity: .8;
     }
   }
-  .number {
+  .number, .onenumber {
     font-size: 30px;
     margin-top: 20px;
     color: #fff;
@@ -148,6 +157,11 @@ export default class App extends ViewBase {
     }
     /deep/ span::before {
       content: "≈";
+    }
+  }
+  .onenumber {
+    /deep/ span::after {
+      content: "";
     }
   }
   .item-dl {
