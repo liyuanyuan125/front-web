@@ -14,7 +14,10 @@ const store = new Vuex.Store({
 
     // 左侧菜单选择 map
     siderMenuActiveMap: {
-    } as MapType<string | null>
+    } as MapType<string | null>,
+
+    /** 默认头像 */
+    defaultAvatar: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcq1fljqctg008ubl80.jpg'
   },
 
   mutations: {
@@ -64,5 +67,5 @@ export function siderMenuActiveMap(value?: MapType<string | null>) {
   store.commit('setSiderMenuActiveMap', newMap)
 }
 
-// 不导出，只导出包装后的函数
-// export default store
+
+export default store
