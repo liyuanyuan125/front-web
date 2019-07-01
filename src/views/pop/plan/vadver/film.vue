@@ -4,7 +4,7 @@
       <li v-for="(it, index) in inValue" :key="index"
             :class="['film-item']">
           <div :class="['film-cover-box']">
-            <span @click="del" class="del">×</span>
+            <span @click="del(it.id)" class="del">×</span>
             <img :src="it.image ? it.image : defaultImg" onerror="defaultImg" class="film-cover">
             <div>
               <div class="film-title">{{it.nameCn}}</div>

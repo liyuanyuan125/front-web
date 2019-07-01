@@ -73,7 +73,7 @@ export default class FetchList extends ViewBase {
   }
 
   @Watch('query', { deep: true })
-  watchKeyword(query: MapType<any>) {
+  watchQuery(query: MapType<any>) {
     this.queryData = {
       ...this.queryData,
       ...query
@@ -81,9 +81,9 @@ export default class FetchList extends ViewBase {
   }
 
   @Watch('queryData', { deep: true })
-  watchQuery() {
-    if (this.query.pageIndex == this.oldQuery.pageIndex) {
-      this.query.pageIndex = 1
+  watchQueryData() {
+    if (this.queryData.pageIndex == this.oldQuery.pageIndex) {
+      this.queryData.pageIndex = 1
     }
     this.fetchData()
   }

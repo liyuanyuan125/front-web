@@ -18,6 +18,7 @@ import { login } from '@/api/auth'
 import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 // import detail from './detail.vue'
+
 @Component
 export default class Main extends ViewBase {
   form = {
