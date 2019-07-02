@@ -60,7 +60,7 @@ export default class Information extends ViewBase {
   introduction: any = null
   moreText = '展示更多'
 
-  item = {}
+  item: any = {}
   imgUrl = []
   imgList: any = []
   personalList: any = []
