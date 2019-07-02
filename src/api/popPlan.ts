@@ -258,6 +258,24 @@ export async function getcalendars(query: any) {
 
 /**
  * @param  {any} query
+ * 获取客户下所关联的账号列表
+ */
+export async function getaccounts(query: any) {
+  const data = await get(`/customer/partners/accounts`, query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 获取品牌详情
+ */
+export async function accoutdetail(id: any) {
+  const data = await get(`/brand/brands/${id}`)
+  return data
+}
+
+/**
+ * @param  {any} query
  * 电影计划单搜索接口
  */
 export async function moviefind(query: any) {
