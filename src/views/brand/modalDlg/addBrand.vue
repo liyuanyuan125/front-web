@@ -123,4 +123,7 @@ export default class Main extends ViewBase {
 </script>
 <style lang='less' scoped>
 @import '~@/views/brand/less/common.less';
+.upload-box {
+  background: none;
+}
 </style>
