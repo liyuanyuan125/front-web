@@ -238,7 +238,7 @@ export default class Promotion extends ViewBase {
         if (new Date(value[0]).getDay() != 4) {
           callback(new Error('开始时间必须为周四'))
         }
-        if (new Date(value[1]).getDay() == 3) {
+        if (new Date(value[1]).getDay() != 3) {
           callback(new Error('结束时间必须为周3'))
         }
         const end: any = (new Date(value[1]) as any).getTime()
