@@ -86,7 +86,9 @@ export default class DetailLayout extends ViewBase {
 }
 
 .detail-main {
-  width: 1080px;
+  // width: 1080px;
   margin-left: 10px;
+  min-width: 980px;
+  width: 100%;
 }
 </style>
