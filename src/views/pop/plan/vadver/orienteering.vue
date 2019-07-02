@@ -9,6 +9,10 @@
           :label-width="0"
           class="edit-input forms"
         >
+        <!-- <Spin fix>
+            <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
+            <div>Loading</div>
+        </Spin> -->
           <h3 class="layout-titles">覆盖范围设置</h3>
           <Row>
             <Col :span="24">

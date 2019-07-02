@@ -60,7 +60,7 @@
         <li @click="filmdetail(it.movieId)" v-for="(it) in planMovies" :key="it.id"
           :class="['film-item']">
           <div class="film-top">
-            <img :src="it.image" class="film-cover">
+            <img :onerror="defaultImg" :src="it.image ? it.image : defaultImg" class="film-cover">
             <div style="position: relative">
               <p class="film-title" style="margin-bottom: 20px" :title="it.movieName">{{it.movieName}}</p>
               <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
@@ -75,33 +75,21 @@
 
           <div class="film-center">
             <p style="opacity: .7">受众性别</p>
-            <p style="margin-left: 20px" v-if="it.sexCodes == 'man'">男性</p>
-            <p style="margin-left: 20px" v-else-if="it.sexCodes == 'woman'">女性</p>
-            <p  style="margin-left: 20px" v-else>-</p>
-            <!-- <div class="file-sex-box">
-              <div>
-                <div class="file-sex-man" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.8 + 30}px`}">
-                  <img width="30px" height="30" src="../vadver/assets/man.png" alt="">
-                </div>
+            <div v-if="it.genders && it.genders.length > 0">
+              <div style="margin-left: 20px" :key="item.k" v-for="item in it.genders">
+                <p style="margin-bottom: 16px" v-if="item.k == 'F'">男<span class="ageitem-box">{{item.rate/100}}%</span></p>
+                <p style="margin-bottom: 16px" v-else>女<span class="ageitem-box">{{item.rate/100}}%</span></p>
               </div>
-              <span style="color: #57B4C9">男性：{{it.matching}}%</span>
             </div>
-            <div class="file-sex-box">
-              <div>
-                <div class="file-sex-woman" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.8 + 30}px`}">
-                  <img width="30px" height="30" src="../vadver/assets/woman.png" alt="">
-                </div>
-              </div>
-              <span style="color: #CA7273">女性：{{it.matching}}%</span>
-            </div> -->
+            <div v-else>-</div>
           </div>
 
           <div class="film-buttom">
             <dl style="margin-bottom: 15px">
               <dd>受众年龄：</dd>
               <dt v-if="it.ages && it.ages.length > 0">
-                <span v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}} {{item.text}}%
-                  <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
+                <span v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}}
+                  <span class="ageitem-box">{{item.text}}%</span>
                 </span>
               </dt>
               <dt v-else>-</dt>
@@ -414,6 +402,10 @@ export default class App extends ViewBase {
       ]
     }
 
+  }
+
+  get defaultImg() {
+    return 'this.src="' + require('../assets/error.png') + '"'
   }
 
   filmdetail(id: any) {

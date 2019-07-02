@@ -48,7 +48,7 @@
     </Form>
 
     <div>
-      <Table stripe :columns="columns" :data="tableDate" ref="selection">
+      <Table :loading="loading" stripe :columns="columns" :data="tableDate" ref="selection">
         <template ref="title" slot="header">
           <div v-auth="'promotion.ad-plan#delete'">
             <div class="top">
@@ -175,6 +175,7 @@ export default class Plan extends ViewBase {
     settlementStatus: '',
     name: ''
   }
+  loading: any = false
   checkId: any = []
   pageList = {
     pageIndex: 1,
@@ -222,6 +223,7 @@ export default class Plan extends ViewBase {
   }
 
   async tableList() {
+    this.loading = true
     const { data } = await planList(
       clean({
         ...this.form,
@@ -236,6 +238,7 @@ export default class Plan extends ViewBase {
     //     item._disabled = true
     //   }
     // }
+    this.loading = false
     this.tableDate = data.items
     this.totalCount = data.totalCount
   }
@@ -335,8 +338,8 @@ export default class Plan extends ViewBase {
   }
 
   async plandel(id: any) {
-    await confirm(`是否要删除广告计划`, {
-      title: '删除广告计划'
+    await confirm(`是否确定删除`, {
+      title: '删除广告计划?'
     })
     try {
       await delCheckPlanList(id)
@@ -368,9 +371,9 @@ export default class Plan extends ViewBase {
   }
 
   async deleteList() {
-    if (this.checkId.length) {
+    if (this.checkId.length > 0) {
       const ids: any = this.selectIds.map((item: any) => item.id) || []
-      await confirm('您确定要删除当前信息吗？')
+      await confirm('是否确定删除?')
       try {
         await delCheckPlanList(this.checkId.join(','))
         this.tableList()
@@ -378,7 +381,7 @@ export default class Plan extends ViewBase {
         this.handleError(ex)
       }
     } else {
-      this.showWaring('请选择你要删除的信息?')
+      this.showWaring('请选择广告计划')
     }
   }
 

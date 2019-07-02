@@ -481,7 +481,10 @@ export default class Promotion extends ViewBase {
       } else {
         this.form.budgetAmount = ''
         this.form.productId = data[0].productId
-        this.form.name = `[ ${data[0].name} ] [ ${data[0].customerName} ] [ ${data[0].productName} ]`
+        const name1 = data[0].name ? `[ ${data[0].name} ]` : ''
+        const customerName = data[0].customerName ? `[ ${data[0].customerName} ]` : ''
+        const productName = data[0].productName ? `[ ${data[0].productName} ]` : ''
+        this.form.name = `${name1}${customerName}${productName}`
       }
       this.steps = 1
     } else {
