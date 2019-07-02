@@ -10,24 +10,36 @@
     <div class='title-tip'>
       <Row style='font-size: 24px;line-height: 50px;font-weight: 500'>订单信息</Row>
     	<Row>
+        <Col :span='12' style='display:flex;'>
+          <div style='width: 15%;display: inline-block;'>项目名称：</div>
+          <div style='width: 80%;display: inline-block;'>{{item.projectName}}</div>
+        </Col>
+        <Col :span='12' style='display:flex;'>
+          <div style='width: 15%;display: inline-block;'>订单编号：</div>
+          <div style='width: 80%;display: inline-block;'>{{item.orderNo}}</div>
+        </Col>
+      </Row>
+      <Row>
+        <Col :span='12' style='display:flex;'>
+          <div style='width: 15%;display: inline-block;'>推广品牌：</div>
+          <div style='width: 80%;display: inline-block;'>{{item.brandName}}</div>
+        </Col>
        <Col :span='12' style='display:flex;'>
-        <div style='width: 13%;display: inline-block;'>项目名称：</div>
-        <div style='width: 80%;display: inline-block;'>{{item.projectName}}</div>
-      </Col>
-       <Col :span='12'>订单编号：{{item.orderNo}}</Col>
-      </Row>
-      <Row>
-       <Col :span='12'>推广品牌：{{item.brandName}}</Col>
-       <Col :span='12'>下单时间：{{item.createTime == null ? '暂无时间' : createTime}}</Col>
-      </Row>
-      <Row>
-       <Col :span='24'>推广产品：{{item.productName == null ? '暂无' : item.productName}}</Col>
-      </Row>
-      <Row>
-       <Col :span='24' class='conover' style='display: flex;'>
-       <div style='width: 7%;display: inline-block;'>推广内容：</div>
-       <div style='width: 80%;display: inline-block;'>{{item.content == null ? '暂无' : item.content}}</div>
+          <div style='width: 15%;display: inline-block;'>下单时间：</div>
+          <div style='width: 80%;display: inline-block;'>{{item.createTime == null ? '暂无时间' : createTime}}</div>
        </Col>
+      </Row>
+      <Row>
+        <Col :span='24' style='display:flex;'>
+          <div style='width: 7%;display: inline-block;'>推广产品：</div>
+          <div style='width: 80%;display: inline-block;'>{{item.productName == null ? '暂无' : item.productName}}</div>
+        </Col>
+      </Row>
+      <Row>
+        <Col :span='24' class='conover' style='display: flex;'>
+          <div style='width: 7%;display: inline-block;'>推广内容：</div>
+          <div style='width: 80%;display: inline-block;'>{{item.content == null ? '暂无' : item.content}}</div>
+        </Col>
       </Row>
     </div>
     <div class='body'>

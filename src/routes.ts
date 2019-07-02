@@ -915,7 +915,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/order/detail/:id',
     name: 'kol-order-detail',
     component: () => import('./views/kol/order/detail.vue'),
-    meta: emptyAuth,
+    meta:  {
+      ...emptyAuth,
+      title: '订单详情'
+    },
     props: idProps,
   },
 

@@ -492,6 +492,15 @@ export default class Main extends ViewBase {
     height: 40px;
   }
 }
+/deep/ .ivu-table-cell {
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-all;
+  box-sizing: border-box;
+}
 /deep/ .ivu-select-selection {
   height: 40px;
   background: rgba(255, 255, 255, 0.8);
