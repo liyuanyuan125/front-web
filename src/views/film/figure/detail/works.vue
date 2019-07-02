@@ -43,14 +43,14 @@
           <dl>
             <dd v-for="(list, index) in tableList" :key="index">
               <i class="year-tag" v-if="list.year">{{list.year}}</i>
-              <i class="year-tag" v-else>+{{list.jyIndex}}</i>
+              <i class="year-tag" v-else>{{handleJy(list.jyIndex)}}</i>
               <div class="pic-item flex-box" v-for="it in list.items">
                 <a :href="it.videoUrl" class="img" >
                   <i class="nowing" v-if="it.status == 3"><img src="~@/views/film/assets/hotShow.png" width="48px" alt="alias" /></i>
                   <img :src="it.poster" class="img-item" />
                 </a>
                 <div class="text-right">
-                  <h3 class="title-grade"><span>{{it.name}}</span><em>{{it.jyIndex}}</em></h3>
+                  <h3 class="title-grade"><span>{{it.name}}</span><em>{{handleJy(it.jyIndex)}}</em></h3>
                   <h4 class="person-identity"><span v-for="(item, index) in it.professions" :key="index"> {{handleProfession(item)}} </span></h4>
                   <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" :key="index">{{item.name}}</em></p>
                   <p class="com-col">主演：<em class="em-actor" v-for="(item, index) in it.actors" v-if="index < 2" :key="index">{{item.name}} </em></p>
@@ -251,6 +251,10 @@ export default class Master extends ViewBase {
     return profess[0].text
   }
 
+  handleJy(jy: number) {
+    return (jy / 100).toFixed(2)
+  }
+
   handleMoive(it: any) {
     let item: any = null
     for (item of this.movieTypes) {
@@ -313,6 +317,7 @@ h2, h3, h4 {
         height: 240px;
         overflow: hidden;
         margin: 0 auto;
+        background: #fff;
         span {
           position: absolute;
           bottom: 5px;
@@ -380,7 +385,7 @@ h2, h3, h4 {
         position: relative;
         font-size: 14px;
         .year-tag {
-          width: 56px;
+          width: 60px;
           height: 26px;
           line-height: 26px;
           position: absolute;
