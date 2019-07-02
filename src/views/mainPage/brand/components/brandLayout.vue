@@ -79,7 +79,10 @@
 
               <div class="recommend-main">
                 <div class="recommend-name text-omit">{{it.name}}</div>
-                <div class="recommend-type text-omit">{{it.runningTime}}分钟 - {{it.typeName}}</div>
+                <div class="recommend-type text-omit">
+                  <span v-if="it.runningTime > 0">{{it.runningTime}}分钟 -</span>
+                  {{it.typeName}}
+                </div>
                 <div class="recommend-director text-omit">导演：{{it.directorName}}</div>
                 <div class="recommend-actor text-omit">主演：{{it.actorName}}</div>
                 <div class="recommend-stats text-omit">
