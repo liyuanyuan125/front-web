@@ -269,7 +269,7 @@ export async function getMovie(id: number) {
       director: dot(personMap, 'Director[0].name') || '-',
       type: getNames(types, typeList).join('/') || '-',
       date: intDate(releaseDate) || '-',
-      address: getNames(countries, countryCodeList).join('/') || '-'
+      address: (countries || []).join('/') || '-'
     },
 
     actorData: {
