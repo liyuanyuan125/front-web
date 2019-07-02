@@ -32,7 +32,6 @@ const request = async (url: string, opts: object) => {
     baseURL: isAbs ? '' : ajaxBaseUrl,
     url,
     withCredentials: true,
-    timeout: 8000,
     ...opts,
   }
 

@@ -24,7 +24,7 @@
                 v-for="item in movieList"
                 :key="item.id"
                 :value="item.id"
-              >{{item.name}}</Option>
+              >{{item.shortName}}</Option>
             </Select>
           </Col>
         </Col>

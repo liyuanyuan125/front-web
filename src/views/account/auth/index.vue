@@ -275,7 +275,7 @@ export default class Main extends ViewBase {
   min-height: 280px;
   position: relative;
   margin: 20px 0;
-  /deep/ .ivu-table-header th {
+  .ivu-table-header th {
     height: 60px;
     background: rgba(0, 32, 45, 0.8);
     color: #fff;
@@ -284,13 +284,13 @@ export default class Main extends ViewBase {
       font-size: 14px;
     }
   }
-  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
+  .ivu-table-column-center, .ivu-table-column-left {
     background: #204350;
   }
-  /deep/ .ivu-table {
+  .ivu-table {
     background: #204350;
   }
-  /deep/ .ivu-table-row {
+  .ivu-table-row {
     background: #204350;
     td {
       color: #fff;
@@ -300,25 +300,25 @@ export default class Main extends ViewBase {
       }
     }
   }
-  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
+  .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
     background: #204350;
   }
   // /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
   //   background: rgba(255, 255, 255, 0);
   // }
-  /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+  .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
     background: #204350;
   }
-  /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
+  .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
     span {
       color: #fff;
       font-size: 14px;
     }
   }
 
-  /deep/ .ivu-table-tip {
+  .ivu-table-tip {
     line-height: 200px;
-    /deep/ td {
+    td {
       color: #fff;
       background: #204350;
     }
