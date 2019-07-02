@@ -184,6 +184,7 @@ export default class Main extends ViewBase {
     this.moneyList = []
     this.orderno = []
     this.sum = 0
+
     for (const i in this.list) {
         if ( 1 == 1 ) {
           for (const j in this.orderids) {
@@ -198,6 +199,15 @@ export default class Main extends ViewBase {
       this.moneyList.forEach((ele: any) => {
         this.sum += (Number(ele) * 100)
       })
+
+    if (this.orderids.length != this.list.length) {
+      // this.indeterminate = true
+      this.checkAll = false
+    }
+    if (this.orderids.length == this.list.length) {
+      // this.indeterminate = false
+      this.checkAll = true
+    }
   }
 }
 
