@@ -71,7 +71,7 @@
           <div class="text-right">
             <h3 class="title-grade"><span>{{it.name}}({{it.releaseYear}})</span></h3>
             <h4 class="person-identity"><span v-for="(item, index) in it.professions" :key="index"> {{handleProfession(item)}} </span></h4>
-            <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" :key="index">{{item.name}}</em></p>
+            <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" v-if="index < 5" :key="index">{{item.name}} </em></p>
             <p class="com-col">类型：<em class="em-actor" v-for="(item, index) in it.types" :key="index">{{handleMoive(item)}}<i v-if="it.types.length-1 != index"> / </i></em></p>
             <p class="com-col">{{formatConversion(it.release)}} {{it.releaseCountry}}上映</p>
           </div>
