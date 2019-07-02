@@ -1,50 +1,48 @@
 
 <template>
   <div>
-    <div style='text-align:center'>
-      <div class='title-box'>
+    <div style="text-align:center">
+      <div class="title-box">
         <span v-if=" title !=='' ">{{title}}</span>
-        <Tooltip max-width="200"
-                 v-if=" titleTips !=='' "
-                 :content="titleTips">
+        <Tooltip max-width="200" v-if=" titleTips !=='' " :content="titleTips">
           <Icon type="md-help-circle" />
         </Tooltip>
       </div>
-      <RadioGroup size="small"
-                  class='nav'
-                  v-if="dict1.length > 0 && initDone"
-                  @on-change='currentTypeChange'
-                  v-model="currentIndex"
-                  type="button">
-        <Radio v-for="(item,index) in dict1"
-               :key="item.key"
-               :label="index">{{item.text}}</Radio>
+      <RadioGroup
+        size="small"
+        class="nav"
+        v-if="dict1.length > 0 && initDone"
+        @on-change="currentTypeChange"
+        v-model="currentIndex"
+        type="button"
+      >
+        <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.text}}</Radio>
       </RadioGroup>
     </div>
-    <Row type="flex"
-         justify="center"
-         align="middle">
+
+    <Row type="flex" justify="center" align="middle">
       <Col :span="24">
         <div v-if="initDone">
-          <div ref="refChart" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
+          <div ref="refChart" class="chart-wrap" :style="`height: ${height}px`"></div>
         </div>
-        <div v-else class="loading-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
+        <div
+          v-else
+          class="loading-wp chart-loading"
+          :style="`height: ${height}px`"
+        >
           <TinyLoading />
         </div>
       </Col>
     </Row>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
 import { tooltipStyles } from '@/util/echarts'
-const tooltipsDefault = tooltipStyles({
-  trigger: 'item',
-  formatter: '{b} <br/> {c}'
-})
 import {
   pubOption,
   seriesOption,
@@ -53,6 +51,12 @@ import {
   xOption,
   barThinStyle
 } from '../chartsOption'
+
+const tooltipsDefault = tooltipStyles({
+  trigger: 'item',
+  formatter: '{b} <br/> {c}'
+})
+
 @Component({
   components: {
     TinyLoading
@@ -61,24 +65,36 @@ import {
 // 基础面积图
 export default class AreaBasic extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
+
   @Prop({ type: String, default: '' }) title!: string
+
   @Prop({ type: String, default: '' }) titleTips?: string
+
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
+
   @Prop({ type: Array, default: () => [] }) dict1!: any[]
+
   @Prop({ type: Array, default: () => [] }) dict2!: any[]
+
   @Prop({ type: Array, default: () => ['#00B6CC'] }) color!: string[]
+
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
-  @Prop({ type: Number, default: 0 }) height?: number
+
+  @Prop({ type: Number, default: 400 }) height!: number
+
   @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
 
   currentIndex: number = this.currentTypeIndex
+
   currentTypeChange(index: number) {
     this.currentIndex = index
     this.$emit('typeChange', index)
   }
+
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
   }
+
   // 接口没调
   updateCharts() {
     if (
@@ -124,13 +140,16 @@ export default class AreaBasic extends ViewBase {
             // shadowColor: this.color[this.currentIndex],
             // opacity: 0.4,
             normal: {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                    offset: 0,
-                    color: 'rgba(0,182,204, 1)'
-                }, {
-                    offset: 1,
-                    color: ' rgba(0,182,204, 0.2)'
-                }])
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  offset: 0,
+                  color: 'rgba(0,182,204, 1)'
+                },
+                {
+                  offset: 1,
+                  color: ' rgba(0,182,204, 0.2)'
+                }
+              ])
             }
           }
         }
@@ -139,6 +158,7 @@ export default class AreaBasic extends ViewBase {
     // console.save(option, `${new Date()}.json`)
     myChart.setOption(option)
   }
+
   @Watch('initDone')
   watchInitDone(val: boolean) {
     if (val) {
@@ -148,6 +168,7 @@ export default class AreaBasic extends ViewBase {
       })
     }
   }
+
   @Watch('currentTypeIndex')
   watchcurrentTypeIndex(newIndex: any, oldIndex: any) {
     if (newIndex !== oldIndex) {
@@ -157,8 +178,10 @@ export default class AreaBasic extends ViewBase {
   }
 }
 </script>
+
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+
 /deep/ .ivu-radio-group {
   .ivu-radio-wrapper {
     background: none;
@@ -182,6 +205,7 @@ export default class AreaBasic extends ViewBase {
     }
   }
 }
+
 .nav {
   .ivu-radio-wrapper {
     height: 60px;
@@ -195,10 +219,27 @@ export default class AreaBasic extends ViewBase {
     border-bottom: 2px solid #fff;
   }
 }
+
 .loading-wp {
   display: flex;
   flex-flow: row;
   align-items: center;
   justify-content: center;
+}
+
+.chart-wrap,
+.chart-loading {
+  width: 100%;
+}
+
+.chart-wrap:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &::before {
+    content: '暂无数据';
+    font-size: 18px;
+    color: #999;
+  }
 }
 </style>
