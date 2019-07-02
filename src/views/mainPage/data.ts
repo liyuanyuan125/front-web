@@ -224,7 +224,7 @@ export async function getMovie(id: number) {
       trailers,
 
       tags,
-      fansPortrait,
+      genders,
 
       releaseStatus,
       boxofficeTodayCount,
@@ -247,6 +247,8 @@ export async function getMovie(id: number) {
 
   // 是否已上映，上映状态描述在 https://yapi.aiads-dev.com/project/161/interface/api/4974
   const hasShow = releaseStatus >= 3
+
+  const genderMap = keyBy(genders, 'gender')
 
   const result = {
     bubbleList: tags || [],
@@ -287,8 +289,8 @@ export async function getMovie(id: number) {
     },
 
     fansRate: {
-      man: percent(dot(fansPortrait, 'male')),
-      woman: percent(dot(fansPortrait, 'female')),
+      man: percent(dot(genderMap, '1.rate') * 100, 2),
+      woman: percent(dot(genderMap, '2.rate') * 100, 2),
     },
 
     boxToday: {
