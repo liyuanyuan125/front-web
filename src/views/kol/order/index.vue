@@ -16,7 +16,7 @@
                   :value="item.key"
                 >{{item.text}}</Option>
               </Select>
-              <Input v-model='form.projectName' placeholder="输入项目名称模糊查询" />
+              <Input v-model='projectName' placeholder="输入项目名称模糊查询"  @on-enter="searchList" />
               <Select v-model='form.brandId' filterable clearable placeholder="全部品牌">
                 <Option
                   v-for="item in allBrandSelect"
@@ -27,7 +27,7 @@
               <Button type="primary" class="search" @click="searchList">查询</Button>
           </div>
             <div class="flex-box status-content">
-                <Tabs v-model="status" class="order-status-tab">
+                <Tabs v-model="form.orderStatus" class="order-status-tab">
                   <TabPane label="全部订单" key="" name="" ></TabPane>
                   <TabPane :label="countData.approvalSize ? `待审核(${countData.approvalSize})` : '待审核'" key="2" name="2,3" ></TabPane>
                   <TabPane :label="countData.waitPaySize ? `待支付(${countData.waitPaySize})` : '待支付'" key="4" name="4,8"></TabPane>
@@ -35,7 +35,7 @@
                   <TabPane :label="countData.waitExecuteSize ? `待执行(${countData.waitExecuteSize})` : '待执行' " key="6" name="6" ></TabPane>
                   <TabPane :label="countData.execuTingSize ? `执行中(${countData.execuTingSize})` : '执行中'" key="7" name="7" ></TabPane>
                 </Tabs>
-                <Dropdown class="drop-down"  v-if="total > 0" @on-click="(id) => status=id">
+                <Dropdown class="drop-down" @on-click="(id) => form.orderStatus=id">
                     <span href="javascript:void(0)">其他<Icon type="ios-arrow-down"></Icon></span>
                     <DropdownMenu slot="list">
                         <DropdownItem name="9" >{{countData.finishSize ? `已完成(${countData.finishSize})` : '已完成'}}</i></DropdownItem>
@@ -48,7 +48,7 @@
             <div class="table-list">
               <div class="demo-spin-article">
                 <ul>
-                  <li class="list-li" v-for="item in list" :key = "item.id">
+                  <li class="list-li" v-for="item in list" v-if="item.status != 1" :key = "item.id">
                     <Row>
                       <Col :span="5"><span>订单号 {{item.orderNo}}</span></Col>
                       <Col :span="7"><span>下单时间 {{item.createTime}}</span></Col>
@@ -69,11 +69,12 @@
                         </p>
                       </Col>
                       <Col :span="7" class="flex-box">
-                           <img v-for="(it, index) in item.orderItemList" :src="it.accountPhotoUrl" v-if="index < 5" :key="index" alt="" class="li-img"/>
+                           <img v-for="(it, index) in item.orderItemList" 
+                           :src="it.accountPhotoUrl == null || it.accountPhotoUrl == '' ? $store.state.defaultAvatar : it.accountPhotoUrl" v-if="index < 5" :key="index" alt="" class="li-img"/>
                            <span class="img-num" v-if="(item.orderItemList || []).length > 4">等{{(item.orderItemList || []).length}}个账号</span>
                       </Col>
                       <Col :span="6">
-                        <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(item.totalFee)}}</em></p>
+                        <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(item.confirmFee)}}</em></p>
                         <p v-if="[5,6,7,8].includes(item.status)" class="col_00202d rest-order">部分支付 {{item.advanceFee}}</p>
                       </Col>
                       <Col :span="2" class="li-item-status">
@@ -129,7 +130,7 @@
                      <span class="img-num" v-if="(item.orderItemList || []).length > 4">等{{(item.orderItemList || []).length}}个账号</span>
                   </Col>
                   <Col :span="8">
-                    <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(item.totalFee)}}</em></p>
+                    <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(item.confirmFee)}}</em></p>
                     <!-- <p v-if="[5,6,7,8].includes(item.status)" class="col_00202d rest-order">部分支付 {{item.advanceFee}}</p> -->
                   </Col>
                   <!-- <Col :span="2" class="li-item-status">
@@ -186,14 +187,15 @@ export default class Main extends ViewBase {
     pageIndex: 1,
     pageSize: 20
   }
-  form = {
-    projectName: null
+  projectName = null
+  form: any = {
+    orderStatus: null
   }
   spinShow = false
   // 订单和草稿 默认0订单 1草稿
   orderTab = 0
   // 订单状态
-  status: any = ''
+  // status: any = ''
   cloneStatus: any = null
   // 全部推广平台
   channelCodeList = []
@@ -220,18 +222,18 @@ export default class Main extends ViewBase {
   async tableList() {
     this.spinShow = true
     try {
-      if (this.status == 1) { // 草稿
+      if (this.form.orderStatus == 1) { // 草稿
         this.pageList.pageSize = 300
       } else {
         this.pageList.pageSize = 20
       }
-      let projectName: any = this.form.projectName
+      let projectName: any = this.projectName
       projectName = projectName && projectName.startsWith('*') ? `\\${projectName}` : projectName
       const { data } = await orderList({
         ...this.pageList,
         ...this.form,
         projectName,
-        orderStatus: this.status == 0 ? null : this.status
+        orderStatus: this.form.orderStatus == 0 ? null : this.form.orderStatus
       })
       this.spinShow = false
       this.countData = data || []
@@ -276,6 +278,7 @@ export default class Main extends ViewBase {
     this.pageList.pageIndex = 1
     this.tableList()
   }
+
   // 删除订单
   async handleDel(id: any) {
     await confirm('删除后将无法恢复，是否确定删除', {
@@ -311,9 +314,12 @@ export default class Main extends ViewBase {
     // 若余额不足则提示”账号余额不足XXXX元“，请充值后再支付
     // 待支付首款
     if (item.status == 4) {
-    const firstPayment = (item.totalFee * 0.5).toFixed(2)
-      await confirm(`是否支付首款金额${firstPayment}元`, {
-        title: '支付KOL推广费用'
+    const firstPayment = (item.confirmFee * 0.5).toFixed(2)
+      await confirm(`*整单金额分为两次支付*，<br />
+      ①首付款：订单金额的50%，支付后派单    ②尾款：待任务完成后支付剩余金额。<br />
+      是否支付首款金额${firstPayment}元?`, {
+        title: '支付KOL推广费用',
+        width: 540
       })
       try {
         const { data } = await firstPaymentList({
@@ -326,8 +332,10 @@ export default class Main extends ViewBase {
       }
     } else if (item.status == 8) {
       // 尾款金额 = 订单金额 - 首付款（部分付款
-      const restPayment = item.totalFee - item.advanceFee
-      await confirm(`是否支付尾款金额${restPayment}元`)
+      const restPayment = item.confirmFee - item.advanceFee
+      await confirm(`是否支付尾款金额${restPayment}元, <br /> 尾款金额=订单金额${item.confirmFee} 减去 首付款${item.advanceFee}`, {
+        title: '支付KOL推广费用'
+      })
       try {
         await restPaymentList({
           restFee: restPayment,
@@ -355,14 +363,15 @@ export default class Main extends ViewBase {
     this.pageList.pageIndex = size
     this.tableList()
   }
-  @Watch('status')
+  @Watch('form', {deep: true})
   watchStatus(val: number) {
+    this.pageList.pageIndex = 1
     this.tableList()
   }
   @Watch('orderTab')
   watchOrderTab() {
     this.list = []
-    this.status = this.orderTab == 0 ? null : 1
+    this.form.orderStatus = this.orderTab == 0 ? null : 1
   }
 }
 

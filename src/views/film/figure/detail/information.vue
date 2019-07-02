@@ -7,7 +7,11 @@
       <li><span>出生地：</span><span>{{item.country || '-'}},{{item.province || '-'}}</span></li>
       <li><span>体重: {{item.weight || '-'}}</span></li>
     </ul>
-    <div class="personal-text">{{item.introduction}}</div>
+    <div class="personal-text">
+      <!-- {{handleSub(item.introduction)}} -->
+      {{introduction}}
+      <span class="text-more" @click="handleMore" v-if="isMore">{{moreText}}</span>
+    </div>
     <h2 class="nav-title">人物关系</h2>
     <ul class="personal-relation">
       <li v-for="item in personalList" :key="item.id">
@@ -50,7 +54,13 @@ export default class Information extends ViewBase {
   tabShowTitle = '展示全部'
   arrowFlag = 0
 
-  item = {}
+  // 是否显示更多
+  isMore = false
+  isTagMore = true
+  introduction: any = null
+  moreText = '展示更多'
+
+  item: any = {}
   imgUrl = []
   imgList: any = []
   personalList: any = []
@@ -59,8 +69,9 @@ export default class Information extends ViewBase {
   get formatConversion() {
     return formatConversion
   }
-  mounted() {
-    this.tableList()
+  async mounted() {
+    await this.tableList()
+    await this.handleSub()
   }
 
   async tableList() {
@@ -87,9 +98,33 @@ export default class Information extends ViewBase {
       this.handleError(ex)
     }
   }
+
   handleProfess(code: any) {
     const item = this.professionsList.find((it: any) => code == it.key)
     return item.text
+  }
+  handleSub() {
+    const text = this.item.introduction
+    if (text) {
+      if (text.length > 720) {
+        this.isMore = true
+        this.introduction = text.substr(0, 720) + '.......'
+      } else {
+        this.isMore = false
+        this.introduction = text
+      }
+    }
+  }
+  handleMore() {
+    if (this.isTagMore) {
+      this.introduction = this.item.introduction
+      this.moreText = '收起'
+      this.isTagMore = false
+    } else {
+      this.introduction = this.item.introduction.substr(0, 720) + '.......'
+      this.moreText = '展示更多'
+      this.isTagMore = true
+    }
   }
   handleToggle() {
     if (!this.arrowFlag) {
@@ -166,6 +201,11 @@ export default class Information extends ViewBase {
     padding: 15px 0 25px;
     border-bottom: solid 1px rgba(79, 166, 187, .5);
     margin-bottom: 30px;
+    .text-more {
+      cursor: pointer;
+      color: #57b4c9;
+      padding-left: 20px;
+    }
   }
   .personal-relation {
     display: flex;

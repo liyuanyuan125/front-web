@@ -48,7 +48,7 @@
             已选择 {{orderids.length}} 个订单
           </Col>
           <Col :span="7">
-            发票总额：<span>¥{{sum}}</span>
+            发票总额：<span>¥{{sum / 100}}</span>
           </Col>
           <Col :span="3"> <p class='down' @click='down()'>下一步</p> </Col>
         </div>
@@ -196,7 +196,7 @@ export default class Main extends ViewBase {
       }
       // this.sum = 0
       this.moneyList.forEach((ele: any) => {
-        this.sum += Number(ele)
+        this.sum += (Number(ele) * 100)
       })
   }
 }
