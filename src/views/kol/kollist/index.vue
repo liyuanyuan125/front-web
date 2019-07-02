@@ -944,37 +944,37 @@ export default class Main extends ViewBase {
   margin: 0;
   min-height: 240px;
   position: initial !important;
-  /deep/ .ivu-table-header th {
+  .ivu-table-header th {
     height: 60px;
     line-height: 60px;
     span {
       font-size: 14px;
     }
   }
-  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
+  .ivu-table-column-center, .ivu-table-column-left {
     background: rgba(0, 0, 0, 0);
   }
-  /deep/ .ivu-table {
+  .ivu-table {
     background: rgba(0, 0, 0, 0);
   }
-  /deep/ .ivu-table-row {
+  .ivu-table-row {
     background: rgba(0, 0, 0, 0);
-    /deep/ td {
+    td {
       background: rgba(0, 0, 0, 0);
     }
   }
-  /deep/ .ivu-table-tbody {
+  .ivu-table-tbody {
     color: #001f2c;
   }
-  /deep/ .ivu-table-tip td {
+  .ivu-table-tip td {
     background: rgba(0, 0, 0, 0);
     padding-top: 60px;
   }
-  /deep/ .ivu-table-cell {
+  .ivu-table-cell {
     padding-right: 10px;
     padding-left: 10px;
   }
-  /deep/ .ivu-table-row-hover {
+  .ivu-table-row-hover {
     background: rgba(255, 255, 255, .4);
   }
   .table-action {

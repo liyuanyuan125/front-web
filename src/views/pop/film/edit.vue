@@ -4,7 +4,7 @@
       <p>平台映前广告计费标准最小时长单位为15s，为节省您的广告投放成本，请准确设置广告片时长规格；时长规格不得低于广告片实际时长 广告片通过审核后，
       平台会统一为您进行转码为影院可播放的格式；转码费用标准为【3,000.00元/15s】</p>
     </div>
-     <Form :model="form" ref="dataform" :rules="rule" :label-width="120" class="jyd-form">
+     <Form :model="form" ref="dataform" :rules="rule" :label-width="120" class="jyd-form film-edit">
        <div class="item-center">
         <FormItem  label="名称" prop="name">
           <Input v-model="form.name" placeholder="请输入广告片名称"  :maxlength="30" ></Input>
@@ -266,5 +266,10 @@ export default class Main extends ViewBase {
       width: 460px;
     }
   }
+}
+.film-edit {
+  background: rgba(255, 255, 255, .3);
+  border: solid 1px #fff;
+  margin-top: 48px;
 }
 </style>

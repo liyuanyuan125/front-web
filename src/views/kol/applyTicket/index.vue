@@ -41,13 +41,13 @@
         </CheckboxGroup >
         <div class='lis' v-if='this.list.length == 0'>暂无开票申请</div>
         <div class='bot-sha'>
-          <Col :span="10">
+          <Col :span="8">
             <Checkbox  :indeterminate="indeterminate" :value="checkAll"  @click.prevent.native="handleCheckAll">全选</Checkbox>
           </Col>
           <Col :span="3">
             已选择 {{orderids.length}} 个订单
           </Col>
-          <Col :span="5">
+          <Col :span="7">
             发票总额：<span>¥{{sum}}</span>
           </Col>
           <Col :span="3"> <p class='down' @click='down()'>下一步</p> </Col>
