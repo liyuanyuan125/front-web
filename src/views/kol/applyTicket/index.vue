@@ -89,7 +89,7 @@ export default class Main extends ViewBase {
   list: any = []
   data: any = {}
   checkAll: any = false
-  indeterminate: any = true
+  indeterminate: any = false
   sum: any = 0
   codeList: any = []
   moneyList: any = []
