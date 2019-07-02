@@ -29,18 +29,41 @@
 
                 <div class="film-center">
                   <p style="opacity: .7">受众性别: </p>
-                  <p style="margin-left: 20px" v-if="it.sexCodes == 'man'">男性</p>
-                  <p style="margin-left: 20px" v-else-if="it.sexCodes == 'woman'">女性</p>
-                  <p  style="margin-left: 20px" v-else>-</p>
+                  <div v-if="it.genders && it.genders.length > 0">
+                    <div style="margin-left: 20px" :key="item.k" v-for="item in it.genders">
+                      <p style="margin-bottom: 16px" v-if="item.k == 'F'">男<span class="ageitem-box">{{item.rate/100}}%</span></p>
+                      <p style="margin-bottom: 16px" v-else>女<span class="ageitem-box">{{item.rate/100}}%</span></p>
+                    </div>
+                  </div>
+                  <div v-else>-</div>
+                  <!-- <p style="margin-left: 20px" v-else-if="it.sexCodes == 'woman'">女性</p>
+                  <p style="margin-left: 20px" v-else>-</p> -->
+                  <!-- <div class="file-sex-box">
+                    <div>
+                      <div class="file-sex-man" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.8 + 30}px`}">
+                        <img width="30px" height="30" src="../vadver/assets/man.png" alt="">
+                      </div>
+                    </div>
+                    <span style="color: #57B4C9">男性：{{it.matching}}%</span>
+                  </div>
+                  <div class="file-sex-box">
+                    <div>
+                      <div class="file-sex-woman" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.8 + 30}px`}">
+                        <img width="30px" height="30" src="../vadver/assets/woman.png" alt="">
+                      </div>
+                    </div>
+                    <span style="color: #CA7273">女性：{{it.matching}}%</span>
+                  </div> -->
                 </div>
 
                 <div class="film-buttom">
                   <dl style="margin-bottom: 15px">
                     <dd>受众年龄：</dd>
                     <dt v-if="it.ages && it.ages.length > 0">
-                      <span v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}}{{item.text}}%
-                        <span v-if="it.ageCodes.length > 0 && index != it.ageCodes.length - 1" style="margin: 0px 4px">/  </span>
-                      </span>
+                      <p :style="index != (it.ages.length -1) ? 'margin-bottom: 15px' : ''"
+                        v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}}
+                        <span class="ageitem-box">{{item.text}}%</span>
+                      </p>
                     </dt>
                     <dt v-else>-</dt>
                   </dl>
@@ -627,7 +650,7 @@ export default class App extends ViewBase {
 }
 .film-max {
   overflow: hidden;
-  max-height: 690px;
+  max-height: 740px;
 }
 .arrow-box {
   position: relative;
@@ -645,6 +668,16 @@ export default class App extends ViewBase {
   margin-top: 15px;
   margin-bottom: 10px;
   position: relative;
+  .ageitem-box {
+    display: inline-block;
+    padding: 2px 26px;
+    background: #00202d;
+    color: #fff;
+    width: 100px;
+    height: 30px;
+    line-height: 32px;
+    border-radius: 22px;
+  }
   .film-item {
     width: 32%;
     margin-bottom: 20px;
@@ -665,8 +698,7 @@ export default class App extends ViewBase {
       }
       div {
         margin-left: 20px;
-        height: 30px;
-        line-height: 30px;
+        height: 40px;
         flex: 1;
       }
       p {
