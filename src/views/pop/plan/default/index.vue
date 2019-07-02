@@ -88,9 +88,10 @@
             <dl style="margin-bottom: 15px">
               <dd>受众年龄：</dd>
               <dt v-if="it.ages && it.ages.length > 0">
-                <span v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}}
+                <p :style="index != (it.ages.length -1) ? 'margin-bottom: 15px' : ''"
+                   v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}}
                   <span class="ageitem-box">{{item.text}}%</span>
-                </span>
+                </p>
               </dt>
               <dt v-else>-</dt>
             </dl>

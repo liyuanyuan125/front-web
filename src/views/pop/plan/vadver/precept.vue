@@ -36,37 +36,21 @@
                     </div>
                   </div>
                   <div v-else>-</div>
-                  <!-- <p style="margin-left: 20px" v-else-if="it.sexCodes == 'woman'">女性</p>
-                  <p style="margin-left: 20px" v-else>-</p> -->
-                  <!-- <div class="file-sex-box">
-                    <div>
-                      <div class="file-sex-man" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.8 + 30}px`}">
-                        <img width="30px" height="30" src="../vadver/assets/man.png" alt="">
-                      </div>
-                    </div>
-                    <span style="color: #57B4C9">男性：{{it.matching}}%</span>
-                  </div>
-                  <div class="file-sex-box">
-                    <div>
-                      <div class="file-sex-woman" :style="{width: `${it.matching * 0.7 + 20}px`, height: `${it.matching * 0.8 + 30}px`}">
-                        <img width="30px" height="30" src="../vadver/assets/woman.png" alt="">
-                      </div>
-                    </div>
-                    <span style="color: #CA7273">女性：{{it.matching}}%</span>
-                  </div> -->
                 </div>
 
                 <div class="film-buttom">
                   <dl style="margin-bottom: 15px">
                     <dd>受众年龄：</dd>
                     <dt v-if="it.ages && it.ages.length > 0">
-                      <p :style="index != (it.ages.length -1) ? 'margin-bottom: 15px' : ''"
-                        v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}}
+                      <div :style="index != (it.ages.length -1) ? 'margin-bottom: 15px' : ''"
+                        v-for="(item, index) in it.ages" :key="index" >
+                        <span>{{ageTypeMap(item.key)}}</span>
                         <span class="ageitem-box">{{item.text}}%</span>
-                      </p>
+                      </div>
                     </dt>
                     <dt v-else>-</dt>
                   </dl>
+
                   <dl>
                     <dd>投放周期：</dd>
                     <dt>{{formatDate(it.beginDate)}} 至 {{formatDate(it.endDate)}}</dt>
@@ -183,7 +167,7 @@
           <div class="btn-center">
             <Button type="default" class="button-ok btn-next" @click="back('dataform')"><img width="16px" src="./assets/next.png" /> 返回上一步</Button>
             <Button type="primary" class="button-ok btn-save" @click="next('dataform')">保存投放方案</Button>
-            <Button type="default" class="button-ok btn-export" @click="exportadver" ><img width="16px" src="./assets/export.png" /> 导出投放方案</Button>
+            <!-- <Button type="default" class="button-ok btn-export" @click="exportadver" ><img width="16px" src="./assets/export.png" /> 导出投放方案</Button> -->
             <Button type="default" class="button-ok btn-collect" @click="collectpeo">联系商务</Button>
           </div>
         </Form>  
@@ -779,6 +763,7 @@ export default class App extends ViewBase {
       margin-bottom: 15px;
       dl {
         display: flex;
+        flex-wrap: wrap;
         dd {
           color: rgba(0, 32, 45);
           opacity: .7;
@@ -786,6 +771,9 @@ export default class App extends ViewBase {
         dt {
           margin-left: 10px;
           color: rgba(0, 32, 45);
+        }
+        .ages-box {
+          display: block;
         }
       }
     }
