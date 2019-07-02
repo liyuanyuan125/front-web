@@ -454,12 +454,11 @@ export default class Orienteering extends ViewBase {
         })
       )
       ; (this.$Spin as any).show()
-      let settime: any = null
       this.recommend = false
-      settime = setInterval(() => {
+      this.settime = setInterval(() => {
         if (this.recommend) {
           (this.$Spin as any).hide()
-          clearInterval(settime)
+          clearInterval(this.settime)
           // if (this.loadingitem.item.movieCustom == 1) {
           //   if ( this.loadingitem.movies.length > 0 ) {
           //     this.$emit('input', {
@@ -527,8 +526,12 @@ export default class Orienteering extends ViewBase {
   async loddding() {
     try {
       const {
+        data,
         data: { item, planMovies, movies }
       } = await adverdetail(this.value.setid)
+      if ( data.code == '401') {
+        clearInterval(this.settime)
+      }
       this.recommend = item.recommend
       this.planMovies = planMovies
       this.loadingitem = {
