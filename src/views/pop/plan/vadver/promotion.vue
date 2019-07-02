@@ -232,6 +232,15 @@ export default class Promotion extends ViewBase {
         callback(new Error('请选择投放排期'))
       } else {
         const begin: any = (new Date(value[0]) as any).getTime()
+        if ((begin - new Date().getTime()) <= 0 ) {
+          callback(new Error('投放时间必须大于当前时间'))
+        }
+        if (new Date(value[0]).getDay() != 4) {
+          callback(new Error('开始时间必须为周四'))
+        }
+        if (new Date(value[1]).getDay() == 3) {
+          callback(new Error('结束时间必须为周3'))
+        }
         const end: any = (new Date(value[1]) as any).getTime()
         const flag = (end - begin) / 86400000 % 7
         if (flag == 6) {
