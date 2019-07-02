@@ -22,7 +22,7 @@
               params: { id: id }
             }"
             class="button-apply"
-          >立即申请</router-link>
+          >申请合作</router-link>
         </BasicPane>
       </div>
 
