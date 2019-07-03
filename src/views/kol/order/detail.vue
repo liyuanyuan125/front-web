@@ -100,7 +100,7 @@
         </ul>
       </div>
       <div class='all'>
-        订单总额： <span>￥<Number :addNum='item.totalFee'></Number></span>
+        订单总额： <span>￥<Number :addNum='item.confirmFee'></Number></span>
       </div>
     </div>
     <div class='body' style='padding-left: 30px;'>
