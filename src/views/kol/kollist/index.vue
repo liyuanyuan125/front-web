@@ -93,7 +93,7 @@
           <template slot-scope="{ row }" slot="flansFace">
             <div>
               <p class="flans-box" style="width: 80px">
-                <span>男性：</span>  
+                <span>男性：</span>
                 <span v-if="row.maleFans">{{formatnums(row.maleFans, '%')}}</span>
                 <span v-else>-</span>
               </p>
@@ -104,7 +104,7 @@
               </p>
               <div>
                 <a @click="viewArea(row.areaId, row.id)" >查看地域</a>
-                <AreaModal 
+                <AreaModal
                   :style="tabledataid.includes(row.id) ? 'margin-top: -300px' : ''"
                   v-show="handleShow"
                   v-clickoutside="handleClose"
@@ -159,7 +159,7 @@
                 <Icon type="ios-checkmark-circle" style="font-size: 17px; color: #CA7273;" />
                 已加入
               </p>
-              <p style="margin-top: 5px" v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)" 
+              <p style="margin-top: 5px" v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)"
               @click="collects(acount == 1 ? row.id : row.accountDataId)">
                 <Icon type="md-heart" style="font-size: 17px;color: #001F2C; opacity: .3" />
                 收藏
@@ -300,7 +300,7 @@ export default class Main extends ViewBase {
   kolIds: any = []
   times: any = ''
   ballsrc: any = ''
-  tabledataid: any = []
+  tabledataid: any[] = []
 
   get pageList() {
     return {
