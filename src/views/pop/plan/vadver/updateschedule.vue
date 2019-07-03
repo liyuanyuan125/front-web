@@ -105,6 +105,7 @@ export default class DlgEditCinema extends ViewBase {
         end: this.form.endDate
       }
       this.$emit('done', uplist)
+      this.cancel()
     } catch (ex) {
       this.handleError(ex)
     }

@@ -11,7 +11,7 @@
               <div class="film-time" style="margin-top: 10px"><span class="time-right">上映时间：</span>{{formatDate(it.releaseDate)}}</div>
               <div class="film-time timer">
                 <span class="time-right">投放排期</span>
-                <span>{{formatDate(datetime.beg)}}至{{formatDate(datetime.ends)}}</span>
+                <span>{{formatDate(beg)}}至{{formatDate(ends)}}</span>
               </div>
             </div>
           </div>
@@ -22,7 +22,7 @@
         </div>
       </li>
     </ul>
-    <AddCFilmModel ref="addCinemaModel" :date="scheduletime" :cinemaend = "incinematype" :addData="inValue" @done="columndata" />
+    <AddCFilmModel v-if="flags" ref="addCinemaModel" :date="scheduletime" :cinemaend = "incinematype" :addData="inValue" @done="columndata" />
   </div>
 </template>
 
@@ -57,6 +57,7 @@ export default class ComponentMain extends ViewBase {
 
   @Prop() incinematype: any
 
+  flags = false
   beg = this.begin
   ends = this.end
 
@@ -73,7 +74,7 @@ export default class ComponentMain extends ViewBase {
   }
 
   onAdd() {
-    this.addShow = true
+    this.flags = true
     this.$nextTick(() => {
       (this.$refs.addCinemaModel as any).init(this.inValue, this.scheduletime)
     })
@@ -85,7 +86,8 @@ export default class ComponentMain extends ViewBase {
 
   columndata(val: any, date: any) {
     this.inValue = val
-
+    this.beg = date.begin
+    this.ends = date.end
   }
 
   onSet(id: number) {
@@ -130,6 +132,17 @@ export default class ComponentMain extends ViewBase {
     })
     this.$emit('input', val)
   }
+
+  @Watch('begin', { deep: true })
+  watchBegin(val: any) {
+    this.beg = val
+  }
+
+  @Watch('end', { deep: true })
+  watchEnd(val: any) {
+    this.ends = val
+  }
+
 }
 </script>
 

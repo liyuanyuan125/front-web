@@ -10,7 +10,7 @@
           </h3>
           <div class="item-top">
             <ul class="film-list" :class="[ !arrowloding ? 'film-max' : '']" v-if="filmList.length > 0">
-              <li @click="filmdetail(it.movieId)" v-for="(it) in filmList" :key="it.id"
+              <li @click="filmdetail(it.movieId)" v-for="(it, index) in filmList" :key="index"
                 :class="['film-item']">
                 <div class="film-top">
                   <img :src="it.image ? it.image : defaultImg" :onerror="defaultImg" class="film-cover">
@@ -30,7 +30,7 @@
                 <div class="film-center">
                   <p style="opacity: .7">受众性别: </p>
                   <div v-if="it.genders && it.genders.length > 0">
-                    <div style="margin-left: 20px" :key="item.k" v-for="item in it.genders">
+                    <div style="margin-left: 20px" :key="index" v-for="(item, index) in it.genders">
                       <p style="margin-bottom: 16px" v-if="item.k == 'F'">男<span class="ageitem-box">{{item.rate/100}}%</span></p>
                       <p style="margin-bottom: 16px" v-else>女<span class="ageitem-box">{{item.rate/100}}%</span></p>
                     </div>
@@ -134,20 +134,6 @@
                       {{formatNums(row.estimatePersonCount, 1)}}
                     </template>
                   </Table>
-
-                  <!-- <Table height="320" style="display: none" ref="table" :loading="loading"  stripe :columns="columns" :data="tableDate1">
-                    <template v-if="tag == 1" slot-scope="{ row }" slot="citys">
-                      {{row.provinceName}} {{row.cityName}} {{row.countyName}}
-                    </template>
-
-                    <template slot-scope="{ row }" slot="estimateShowCount">
-                      {{formatNums(row.estimateShowCount)}}
-                    </template>
-
-                    <template slot-scope="{ row }" slot="estimatePersonCount">
-                      {{formatNums(row.estimatePersonCount)}}
-                    </template>
-                  </Table> -->
 
                   <Page :total="total" v-if="total>0" class="btnCenter"
                     :current="pageIndex"

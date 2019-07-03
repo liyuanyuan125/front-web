@@ -285,11 +285,6 @@ export default class Orienteering extends ViewBase {
 
   created() {
     this.init()
-    // this.$Spin.show({
-    //   render: (hh: any) => {
-    //     return
-    //   }
-    // })
   }
 
   updatetime(val: any) {
