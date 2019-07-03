@@ -203,6 +203,18 @@ export function xlsl({
   if (type == 1) {
     header.forEach((it: any, index: number) => {
       const ind = brr[index]
+      dataInfo[`${ind}1`].s = {
+        fill: {
+          fgColor: {rgb: '3388FF'},
+        },
+        font: {
+          name: '宋体',
+          color: {rgb: '000000'},
+        },
+        alignment: {
+          horizontal: 'center'
+        }
+      }
       dataInfo[`${ind}${data.length}`].s = {
         fill: {
           fgColor: {rgb: '239B56'},
@@ -215,6 +227,38 @@ export function xlsl({
           horizontal: 'center'
         }
       }
+      data.forEach((its: any, insd: any) => {
+        if (its[0] == '序号') {
+          dataInfo[`${ind}${insd + 1}`].s = {
+            fill: {
+              fgColor: {rgb: '3388FF'},
+            },
+            font: {
+              name: '宋体',
+              color: {rgb: '000000'},
+            },
+            alignment: {
+              horizontal: 'center'
+            }
+          }
+        }
+      })
+      data.forEach((its: any, insd: any) => {
+        if (its[0] == '小计') {
+          dataInfo[`${ind}${insd + 1}`].s = {
+            fill: {
+              fgColor: {rgb: '239B56'},
+            },
+            font: {
+              name: '宋体',
+              color: {rgb: '000000'},
+            },
+            alignment: {
+              horizontal: 'center'
+            }
+          }
+        }
+      })
     })
   } else {
     header.forEach((it: any, index: number) => {
