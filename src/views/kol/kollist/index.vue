@@ -300,7 +300,7 @@ export default class Main extends ViewBase {
   kolIds: any = []
   times: any = ''
   ballsrc: any = ''
-  tabledataid = []
+  tabledataid: any = []
 
   get pageList() {
     return {

@@ -11,7 +11,7 @@
               <div class="film-time" style="margin-top: 10px"><span class="time-right">上映时间：</span>{{formatDate(it.releaseDate)}}</div>
               <div class="film-time timer">
                 <span class="time-right">投放排期</span>
-                <span>{{formatDate(begin)}}至{{formatDate(end)}}</span>
+                <span>{{formatDate(beg)}}至{{formatDate(ends)}}</span>
               </div>
             </div>
           </div>
@@ -22,7 +22,7 @@
         </div>
       </li>
     </ul>
-    <AddCFilmModel ref="addCinemaModel" :cinemaend = "incinematype" :addData="inValue" @done="columndata" />
+    <AddCFilmModel ref="addCinemaModel" :date="scheduletime" :cinemaend = "incinematype" :addData="inValue" @done="columndata" />
   </div>
 </template>
 
@@ -57,15 +57,25 @@ export default class ComponentMain extends ViewBase {
 
   @Prop() incinematype: any
 
+  beg = this.begin
+  ends = this.end
+
   inValue: any[] = this.value
   addShow =  false
 
   form: any = {}
 
+  get scheduletime() {
+    return {
+      begin: this.begin,
+      end: this.end
+    }
+  }
+
   onAdd() {
     this.addShow = true
     this.$nextTick(() => {
-      (this.$refs.addCinemaModel as any).init(this.inValue)
+      (this.$refs.addCinemaModel as any).init(this.inValue, this.scheduletime)
     })
   }
 
@@ -73,7 +83,7 @@ export default class ComponentMain extends ViewBase {
     return 'this.src="' + require('../assets/error.png') + '"'
   }
 
-  columndata(val: any) {
+  columndata(val: any, date: any) {
     this.inValue = val
   }
 

@@ -282,3 +282,22 @@ export async function moviefind(query: any) {
   const data = await get(`/movie/search/xadvert`, query)
   return data
 }
+
+/**
+ * @param  {any} query
+ * 检查影片是否在投放周期内
+ */
+export async function moviedate(query: any) {
+  const data = await get(`/xadvert/v1/plans/check-movie-date`, query)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 更新广告计划投放档期
+ */
+export async function updatedates(query: any) {
+  const data = await post(`/xadvert/v1/plans/change-delivery-cycle`, query)
+  return data
+}
+
