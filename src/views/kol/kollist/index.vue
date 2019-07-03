@@ -116,13 +116,13 @@
           </template>
           <template slot-scope="{ row }" slot="like">
             <div>
-              <span v-if="row.avgAttitudesCount">{{formatnums(row.avgAttitudesCount, 'w+')}}</span>
+              <span v-if="row.avgAttitudesCount">{{formatnums(row.avgAttitudesCount / 10000, 'w+')}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="transmit">
             <div>
-              <span v-if="row.avgRepostsCount">{{formatnums(row.avgRepostsCount, 'w+')}}</span>
+              <span v-if="row.avgRepostsCount">{{formatnums(row.avgRepostsCount / 10000, 'w+')}}</span>
               <span v-else>-</span>
             </div>
           </template>
