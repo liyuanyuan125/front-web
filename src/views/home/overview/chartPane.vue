@@ -3,7 +3,7 @@
     <ul class="legend-list">
       <li v-for="(it, i) in data.legends" :key="i" class="legend-item">
         <div class="legend-name">{{it.name}}</div>
-        <div class="legend-value">{{it.value}}</div>
+        <div class="legend-value">{{it.value || '-'}}</div>
       </li>
     </ul>
 
@@ -19,7 +19,12 @@
       >
         <a class="chart-nav">{{it.title}}</a>
         <div class="chart-wrap" v-if="nav == i">
-          <ECharts :options="it.chart" auto-resize class="chart"/>
+          <ECharts
+            :options="it.chart"
+            class="chart"
+            auto-resize
+            v-if="it.chart"
+          />
         </div>
       </li>
     </ul>
@@ -67,6 +72,10 @@ export default class ChartPane extends Vue {
 
   get chartList() {
     const list = this.data.charts.map(it => {
+      if ((it.list || []).length == 0) {
+        return { title: it.title, chart: null }
+      }
+
       const chart = {
         tooltip: tooltipStyles({
           // trigger: 'axis',
@@ -146,6 +155,7 @@ export default class ChartPane extends Vue {
           }
         ]
       }
+
       return { title: it.title, chart }
     })
     return list
@@ -212,6 +222,18 @@ export default class ChartPane extends Vue {
   width: 100%;
   height: calc(100% - 90px - 15px);
   box-sizing: border-box;
+
+  &:empty {
+    &::before {
+      content: '暂无数据';
+      display: flex;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 18px;
+    }
+  }
 }
 
 .chart {

@@ -1,5 +1,10 @@
 <template>
   <div class="plan-box">
+    <Spin v-if="spinshow" fix>
+      <img style="width: 200px" src="./assets/ad.gif"> 
+      <Progress :percent="spins" status="active" />
+      <p style="font-size: 30px; color: #3959A8">{{spins}}%</p>
+    </Spin>
     <Row>
       <Col>
         <Form
@@ -181,6 +186,8 @@ import {
 import { clean } from '@/fn/object.ts'
 import City from '@/components/citySelectDialog'
 import { info } from '@/ui/modal'
+import jsxReactToVue from '@/util/jsxReactToVue'
+
 // 保持互斥
 const keepExclusion = <T>(
   value: T[],
@@ -212,6 +219,7 @@ export default class Orienteering extends ViewBase {
   topCitysId = []
   beginDate = ''
   endDate = ''
+  spins = 0
   planMovies: any = null
   form: any = {
     name: '',
@@ -220,6 +228,7 @@ export default class Orienteering extends ViewBase {
     age: [0],
     type: [0]
   }
+  spinshow = false
   warehouseId: any = []
   warehouseLisst: any = []
   loadingitem: any = {}
@@ -276,6 +285,11 @@ export default class Orienteering extends ViewBase {
 
   created() {
     this.init()
+    // this.$Spin.show({
+    //   render: (hh: any) => {
+    //     return
+    //   }
+    // })
   }
 
   formatDate(data: any) {
@@ -453,11 +467,12 @@ export default class Orienteering extends ViewBase {
                 })
         })
       )
-      ; (this.$Spin as any).show()
+      this.spins = 0
+      this.spinshow = true
       this.recommend = false
       this.settime = setInterval(() => {
         if (this.recommend) {
-          (this.$Spin as any).hide()
+          this.spins = 100
           clearInterval(this.settime)
           // if (this.loadingitem.item.movieCustom == 1) {
           //   if ( this.loadingitem.movies.length > 0 ) {
@@ -478,6 +493,7 @@ export default class Orienteering extends ViewBase {
           //     }
           //   }
           // } else {
+          this.spinshow = false
             if (this.planMovies && this.planMovies.length > 0) {
               this.$emit('input', {
                 id: 2,
@@ -503,7 +519,7 @@ export default class Orienteering extends ViewBase {
         }
       }, 3000)
     } catch (ex) {
-      (this.$Spin as any).hide()
+      this.spinshow = false
       clearInterval(this.settime)
       this.handleError(ex)
     }
@@ -530,7 +546,13 @@ export default class Orienteering extends ViewBase {
         data: { item, planMovies, movies }
       } = await adverdetail(this.value.setid)
       if ( data.code == '401') {
+        this.spinshow = false
         clearInterval(this.settime)
+      }
+      if (this.spins > 80) {
+        this.spins = 99
+      } else {
+        this.spins += 20
       }
       this.recommend = item.recommend
       this.planMovies = planMovies
@@ -906,5 +928,17 @@ export default class Orienteering extends ViewBase {
     color: #00202d;
     overflow: hidden;
   }
+}
+/deep/ .ivu-spin-fix {
+  position: fixed;
+}
+/deep/ .ivu-progress-inner {
+  background: #fec52f;
+}
+/deep/ .ivu-progress-text-inner {
+  display: none;
+}
+/deep/ .ivu-progress-bg {
+  background: #3959a8;
 }
 </style>

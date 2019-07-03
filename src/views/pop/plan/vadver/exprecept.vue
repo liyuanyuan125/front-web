@@ -23,7 +23,7 @@ export default class Dates extends ViewBase {
 
   down() {
     const tHeader = ['影片名称', '上映日期', '影片类型', '投放开始日期',
-      '投放结束日期', '投放周期']
+      '投放结束日期', '投放周期', '', '']
     const merges: any = []
      xlsl({
       title: [],
@@ -59,6 +59,8 @@ export default class Dates extends ViewBase {
           it.beginDate ? this.formatDate(it.beginDate) : '',
           it.endDate ? this.formatDate(it.endDate) : '',
           it.endDate ? this.days(it.beginDate, it.endDate) : '',
+          '',
+          ''
         ]
       }))
       this.tableDate1.push([
@@ -67,8 +69,28 @@ export default class Dates extends ViewBase {
         '',
         '',
         '',
+        '',
+        '',
         ''
-      ])
+      ], ['', '', '', '', '', '', '', ''])
+      this.tableDate1.push(['序号', '省份', '地区', '影院名称',
+      '院线归属', '预估投放场次', '预估曝光人次', '详细地址'])
+      let indexs = 0
+      this.tableDate1.push(...(data.planCinemas.map((it: any, index: number) => {
+        if (it.num != -1) {
+          indexs += 1
+        }
+        return [
+          it.num == -1 ? '小计' : indexs,
+          it.provinceNname || '',
+          it.cityName  || '',
+          it.cinemaName  || '',
+          it.chainName  || '',
+          it.showCount  || 0,
+          it.personCount  || 0,
+          it.address  || ''
+        ]
+      })))
     } catch (ex) {
       this.handleError(ex)
     }
