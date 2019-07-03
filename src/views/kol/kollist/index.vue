@@ -8,7 +8,7 @@
           <FormItem label="账号类别"  class="form-item-type">
             <RadioGroup  v-model="form.accountCategoryCode" class="item-radio-top">
               <Radio :disabled="acount==2" class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio :disabled="acount==2" v-for="it in accountList" :key="it.key" :label="it.key"
+              <Radio v-if="it.controlStatus != 2" :disabled="acount==2" v-for="it in accountList" :key="it.key" :label="it.key"
                 class="check-item">{{it.text}}</Radio>
             </RadioGroup>
           </FormItem>
@@ -70,8 +70,9 @@
           <template slot-scope="{ row }" slot="name">
             <div class="table-name">
               <div class="to-detail" @click="$router.push({ name: 'kol-figure', params: { id: row.kolId, channel: row.channelCode }})">
-                <img width="30px" height="30px" :src="row.image" alt="">
-                 <span>{{row.name}}</span>
+                <img v-if="acount == 1" width="30px" height="30px" :src="row.image" alt="">
+                <img v-else width="30px" height="30px" :src="row.headerUrl" alt="">
+                <span>{{row.name}}</span>
               </div>
             </div>
           </template>
@@ -126,7 +127,7 @@
             </div>
           </template>
           <template slot-scope="{ row }" slot="price">
-            <div v-if="row.price.length > 0">
+            <div v-if="row.price && row.price.length > 0">
               <Tooltip placement="top">
                 <div class="prices">
                   <p v-for="it in row.price" :key="it.key" style="margin-top: 5px">
@@ -187,7 +188,8 @@
         <div>
           <div class="check-title">已选择<span ref="end" class="red"> {{yudingList.length}} </span>个，总粉丝数：
           <span class="red">{{fansNums(yudingList)}}</span>
-            <Icon @click="detailShow" type="ios-arrow-up" class="ios-type" />
+            <Icon @click="detailShow" v-if="detailflag" type="ios-arrow-up" class="ios-type" />
+            <Icon @click="detailhide" v-else type="ios-arrow-down" />
           </div>
           <div style="margin-right: 20px">
             <Button type="primary" class="button-ok" @click="next">立即预定</Button>
@@ -258,6 +260,7 @@ const defaultForm: any = {
 export default class Main extends ViewBase {
   time = 0
   type: any = 0
+  detailflag = true
   total = 0
   areaId = 0
   areaIdshow = -1
@@ -341,7 +344,7 @@ export default class Main extends ViewBase {
         align: 'left',
         slot: 'discuss',
         key: 'avgCommentsCount',
-        sortable: 'custom',
+        sortable: this.acount == 1 ? 'custom' : ''
       },
       {
         title: '平均点赞数',
@@ -659,9 +662,15 @@ export default class Main extends ViewBase {
 
   // 购物车显示
   detailShow() {
+    this.detailflag = false
     this.$nextTick(() => {
       (this.$refs.detailbox as any).init(this.yudingList)
     })
+  }
+
+  detailhide() {
+    (this.$refs.detailbox as any).flags()
+    this.detailflag = true
   }
 
   checkDetailSet(val: any) {
