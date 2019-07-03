@@ -11,7 +11,7 @@
               <div class="film-time" style="margin-top: 10px"><span class="time-right">上映时间：</span>{{formatDate(it.releaseDate)}}</div>
               <div class="film-time timer">
                 <span class="time-right">投放排期</span>
-                <span>{{formatDate(beg)}}至{{formatDate(ends)}}</span>
+                <span>{{formatDate(datetime.beg)}}至{{formatDate(ends)}}</span>
               </div>
             </div>
           </div>
@@ -85,6 +85,7 @@ export default class ComponentMain extends ViewBase {
 
   columndata(val: any, date: any) {
     this.inValue = val
+
   }
 
   onSet(id: number) {

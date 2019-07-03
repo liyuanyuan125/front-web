@@ -653,14 +653,15 @@ export default class App extends ViewBase {
   margin-bottom: 10px;
   position: relative;
   .ageitem-box {
+    margin-left: 8px;
     display: inline-block;
-    padding: 2px 26px;
+    padding: 0 26px;
     background: #00202d;
     color: #fff;
     width: 100px;
-    height: 30px;
-    line-height: 32px;
-    border-radius: 22px;
+    height: 22px;
+    line-height: 20px;
+    border-radius: 20px;
   }
   .film-item {
     width: 32%;
