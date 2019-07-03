@@ -1,5 +1,5 @@
 import { get } from '@/fn/ajax'
-import { percent, intDate, textList, dot } from '@/util/dealData'
+import { percent, intDate, textList, dot, readableNumber, readableThousands } from '@/util/dealData'
 import store from '@/store'
 
 const { defaultAvatar } = store.state
@@ -73,12 +73,15 @@ export async function searchFilm({
   const result = {
     list: (movies as any[] || []).map(it => {
       const { director, actor, release_date, types } = it
+      const yearRank = readableThousands(it.year_box_office_rank)
       return {
         ...it,
         directorName: (director || []).join('、'),
         actorName: (actor || []).join('、'),
         pubDate: intDate(release_date),
-        typeName: textList(types, typeList).join('、')
+        typeName: textList(types, typeList).join('、'),
+        totalBoxOffice: readableNumber(it.total_box_office),
+        yearBoxOfficeRank: it.year_box_office_rank > 0 ? `No.${yearRank}` : yearRank
       }
     }),
     total: totalCount || 0,
