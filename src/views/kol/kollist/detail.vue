@@ -1,6 +1,6 @@
 <template>
   <div v-if="showDlg">
-    <div class="detail-fix" @click="flags">
+    <div class="detail-fix">
     </div>
     <div class="detail-modeal">
       <div class="table-action" @click.stop="flag">
@@ -341,7 +341,7 @@ export default class DlgEditCinema extends ViewBase {
   position: fixed;
   left: 120px;
   right: 0;
-  bottom: 0;
+  bottom: 80px;
   height: 300px;
   background: #fff;
   z-index: 998;
@@ -402,7 +402,7 @@ export default class DlgEditCinema extends ViewBase {
   top: 0;
   left: 120px;
   right: 0;
-  bottom: 0;
+  bottom: 80px;
   background: rgba(0, 0, 0, .6);
   z-index: 991;
 }

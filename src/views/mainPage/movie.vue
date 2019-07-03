@@ -1,6 +1,6 @@
 <template>
   <Layout :bubbleList="bubbleList" :class="bigFigure ? 'layout-big-figure' : ''">
-    <div class="main-content flex-box">
+    <div class="main-content flex-box" :class="`main-content-${status}`">
       <div
         class="big-figure"
         :style="{
@@ -22,7 +22,7 @@
               params: { id: id }
             }"
             class="button-apply"
-          >立即申请</router-link>
+          >申请合作</router-link>
         </BasicPane>
       </div>
 
@@ -90,6 +90,7 @@ import HotPane from './components/hotPane.vue'
 import TextPane from './components/textPane.vue'
 import { getMovie, getVideoRise, getVideoHot } from './data'
 import { readableThousands } from '@/util/dealData'
+import { MovieStatus } from '@/util/types'
 
 @Component({
   components: {
@@ -109,6 +110,8 @@ export default class MoviePage extends ViewBase {
   basic: any = null
 
   hasShow = false
+
+  status = 0 as MovieStatus
 
   bigFigure = ''
 
@@ -145,6 +148,7 @@ export default class MoviePage extends ViewBase {
       bubbleList,
       basic,
       hasShow,
+      status,
       movie,
       actorData,
       fansRate,
@@ -155,6 +159,7 @@ export default class MoviePage extends ViewBase {
     this.bubbleList = bubbleList
     this.basic = basic
     this.hasShow = hasShow
+    this.status = status
     this.movie = movie
     this.actorData = actorData
     this.fansRate = fansRate
@@ -184,8 +189,49 @@ export default class MoviePage extends ViewBase {
   position: relative;
   justify-content: space-between;
   padding-right: 80px;
+
   /deep/ .brand-list {
     padding-right: 42px;
+  }
+
+  /deep/ .rank-zone {
+    padding-bottom: 19px;
+  }
+
+  /deep/ .rank-title {
+    display: none;
+  }
+
+  /deep/ .box-today {
+    .main-text {
+      position: relative;
+      top: 14px;
+    }
+
+    .sub-text {
+      visibility: hidden;
+    }
+  }
+}
+
+.main-content-2,
+.main-content-3 {
+  /deep/ .rank-zone {
+    padding-bottom: 14px;
+  }
+
+  /deep/ .rank-title {
+    display: block;
+  }
+
+  /deep/ .box-today {
+    .main-text {
+      top: 0;
+    }
+
+    .sub-text {
+      visibility: visible;
+    }
   }
 }
 

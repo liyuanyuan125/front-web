@@ -1,6 +1,6 @@
 import { get } from '@/fn/ajax'
 import { at, keyBy, sumBy } from 'lodash'
-import { KeyText, MapType } from '@/util/types'
+import { KeyText, MapType, MovieStatus } from '@/util/types'
 import { slice } from '@/fn/object'
 import { dayOffsetRange } from '@/util/date'
 import { percent, dot, intDate, readableThousands, readableNumber } from '@/util/dealData'
@@ -247,6 +247,7 @@ export async function getMovie(id: number) {
 
   // 是否已上映，上映状态描述在 https://yapi.aiads-dev.com/project/161/interface/api/4974
   const hasShow = releaseStatus >= 3
+  const status = (releaseStatus || 0) as MovieStatus
 
   const genderMap = keyBy(genders, 'gender')
 
@@ -263,13 +264,14 @@ export async function getMovie(id: number) {
     },
 
     hasShow,
+    status,
 
     movie: {
       preview: trailers && trailers[0],
       director: dot(personMap, 'Director[0].name') || '-',
       type: getNames(types, typeList).join('/') || '-',
       date: intDate(releaseDate) || '-',
-      address: getNames(countries, countryCodeList).join('/') || '-'
+      address: (countries || []).join('/') || '-'
     },
 
     actorData: {
@@ -298,7 +300,8 @@ export async function getMovie(id: number) {
       main: hasShow
         ? readableNumber(boxofficeTodayCount)
         : readableThousands(wantToSeeTotalCount),
-      sub: `同档期排名 ${(hasShow ? boxofficeTodayRanking : wantToSeeSamePeriodRanking) || '-'}`,
+      sub: (status == MovieStatus.coming ? '同档期' : '')
+        + `排名 ${(hasShow ? boxofficeTodayRanking : wantToSeeSamePeriodRanking) || '-'}`,
     },
 
     boxTotal: {
