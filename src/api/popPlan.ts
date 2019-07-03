@@ -261,7 +261,7 @@ export async function getcalendars(query: any) {
  * 获取客户下所关联的账号列表
  */
 export async function getaccounts(query: any) {
-  const data = await get(`/customer/partners/accounts`, query)
+  const data = await get(`/customer/partners/${query.partnerId}`)
   return data
 }
 

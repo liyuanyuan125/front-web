@@ -42,33 +42,18 @@
                     <Select v-if="!setadver" :disabled="!setadver" v-model="form.customerId" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.customerId" :key="index">{{ item.customerName }}</Option>
                     </Select>
-                    <Select v-else v-model="query.customerId" filterable clearable>
-                      <Option v-for="(item, index) in accountList" :value="item.customerId" :key="index">{{ item.customerName }}</Option>
-                    </Select>
+                    <div v-else>
+                      <customerList v-model="query.customerId" ref="refCust" />
+                    </div>
                   </FormItem>
                 </Col>
                 <Col :span="6">
-                  <FormItem label="品牌:" :labelWidth='60'>
+                  <FormItem label="品牌:" :labelWidth='56'>
                     <Select v-if="!setadver" :disabled="!setadver" v-model="form.brandId" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.brandId" :key="index">{{ item.brandName }}</Option>
                     </Select>
                     <div v-else>
-                      <Select 
-                      v-model='query.brandid'  
-                      clearable
-                      filterable
-                      remote
-                      :loading="loading"
-                      :remote-method="remoteMethod"
-                      @on-clear="productlist = []"
-                      >
-                        <Option
-                          v-for="item in productlist"
-                          :key="item.id"
-                          :value="item.id"
-                          :label="item.name"
-                        >{{item.name}}</Option>
-                      </Select>
+                      <brandList v-model="query.brandId"  ref="refBrand" />
                     </div>
                   </FormItem>
                 </Col>
@@ -78,7 +63,7 @@
                       <Option v-for="(item, index) in adverList" :value="item.productId" :key="index">{{ item.productName }}</Option>
                     </Select>
                     <Select v-else v-model="query.productId" filterable clearable>
-                      <Option v-for="(item, index) in branidlist" :value="item.productId" :key="index">{{ item.name }}</Option>
+                      <Option v-for="(item, index) in branidlist" :value="item.id" :key="index">{{ item.name }}</Option>
                     </Select>
                   </FormItem>
                 </Col>
@@ -134,11 +119,17 @@ import { info } from '@/ui/modal'
 import { productsList,
   brandsList } from '@/api/shopping'
 import { getUser } from '@/store'
+import customerList from '@/components/selectList/customerList.vue'
+import brandList from '@/components/selectList/brandList.vue'
+import productList from '@/components/selectList/productList.vue'
 
 const timeFormat = 'YYYYMMDD'
 @Component({
   components: {
     weekDatePicker,
+    customerList,
+    brandList,
+    productList
   }
 })
 export default class Promotion extends ViewBase {
@@ -158,9 +149,9 @@ export default class Promotion extends ViewBase {
   }
   query: any = {
     specification: null,
-    customerId: null,
-    productId: null,
-    brandid: null,
+    brandId: null,
+    customerId: 0,
+    productId: 0,
   }
   accountList: any = [] // 客户聊表
   specificationList: any = [] // 规格列表
@@ -274,61 +265,25 @@ export default class Promotion extends ViewBase {
 
   created() {
     this.init()
-    this.getaccount()
     this.creSpecificationList()
   }
 
-  // 获取所有的品牌
-  async remoteMethod(querys: any) {
-    try {
-      if (querys) {
-        this.loading = true
-        const {
-          data: { items }
-        } = await brandsList({
-          name: querys,
-          pageIndex: 1,
-          pageSize: 400
-        })
-        this.productlist = items || []
-      }
-      this.loading = false
-    } catch (ex) {
-      this.handleError(ex)
-      this.loading = false
-    }
-  }
-
   // 获取所有的产品
-  async seachproction() {
+  async seachproction(val: any) {
     try {
+      this.branidlist = []
       const {
         data: { items }
       } = await productsList({
-        brandId: this.query.brandid,
+        brandId: val,
         pageIndex: 1,
         pageSize: 400
       })
       this.branidlist = items || []
+      this.query.productId = ''
     } catch (ex) {
       this.handleError(ex)
     } finally {
-    }
-  }
-
-  // 获取客户
-
-  async getaccount() {
-    try {
-      const id = getUser()!.id
-      const { data } = await getaccounts({
-        pageIndex: 1,
-        pageSize: 99999,
-        partnerId: id
-      })
-      this.accountList = data.accountList || []
-    } catch (ex) {
-
     }
   }
 
@@ -374,11 +329,11 @@ export default class Promotion extends ViewBase {
       if (!data.item.videoId) {
         this.setadver = true
         this.pername = data.item.name
-        this.query.brandid = data.item.brandId
-        data.item.brandId ? this.seachs(data.item.brandId) : ''
-        this.query.specification = data.item.specification
-        this.query.customerId = data.item.customerId
-        this.query.productId = data.item.productId
+        this.query.brandId = data.item.brandId || ''
+        // data.item.brandId ? this.seachs(data.item.brandId) : ''
+        this.query.specification = data.item.specification || ''
+        this.query.customerId = data.item.customerId || ''
+        this.query.productId = data.item.productId || ''
       } else {
         this.form.name = data.item.name
         this.form.specification = data.item.specification
@@ -424,8 +379,7 @@ export default class Promotion extends ViewBase {
         const query = this.setadver ? {
           ...this.form,
           ...this.query,
-          brandId: this.query.brandid,
-          brandid: ''
+          brandId: this.query.brandId,
         } : { ...this.form }
         const data = await createdDraft(clean({
           ...query,
@@ -509,11 +463,10 @@ export default class Promotion extends ViewBase {
     }
   }
 
-  @Watch('query.brandid')
-  watchqueryBrandid(val: any) {
-    this.query.productId = null
+  @Watch('query.brandId')
+  watchqueryBrandId(val: any) {
     if (val) {
-      this.seachproction()
+      this.seachproction(val)
     }
   }
 
@@ -523,14 +476,15 @@ export default class Promotion extends ViewBase {
       let braname = ''
       let productname = ''
       let accountname = ''
-      if (val.brandid && this.productlist.length > 0) {
-        braname = this.productlist.filter((it: any) => val.brandid == it.id)[0].name
+      if (val.brandId) {
+        braname = (this.$refs.refBrand as any).queryBrandName()
+        // braname = this.productlist.filter((it: any) => val.brandId == it.id)[0].name
       }
       if (val.productId && this.branidlist.length > 0) {
         productname = this.branidlist.filter((it: any) => val.productId == it.id)[0].name
       }
-      if (val.customerId && this.accountList.length > 0) {
-        accountname = this.accountList.filter((it: any) => val.customerId == it.id)[0].name
+      if (val.customerId) {
+        accountname = (this.$refs.refCust as any).queryCustName()
       }
       this.pername = `${accountname}${braname}${productname}`
     } else {
