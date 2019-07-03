@@ -81,7 +81,7 @@
                 <p style="margin-bottom: 16px" v-else>女<span class="ageitem-box">{{item.rate/100}}%</span></p>
               </div>
             </div>
-            <div v-else>-</div>
+            <div style="margin-left: 20px; margin-top: 10px" v-else>-</div>
           </div>
 
           <div class="film-buttom">
@@ -93,7 +93,7 @@
                   <span class="ageitem-box">{{item.text}}%</span>
                 </p>
               </dt>
-              <dt v-else>-</dt>
+              <dt style="margin-left: 20px; margin-top: 10px" v-else>-</dt>
             </dl>
             <dl>
               <dd>投放周期：</dd>
