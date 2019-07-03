@@ -478,13 +478,16 @@ export default class Promotion extends ViewBase {
       let accountname = ''
       if (val.brandId) {
         braname = (this.$refs.refBrand as any).queryBrandName()
+        braname = braname ? `[${braname}]` : ''
         // braname = this.productlist.filter((it: any) => val.brandId == it.id)[0].name
       }
       if (val.productId && this.branidlist.length > 0) {
         productname = this.branidlist.filter((it: any) => val.productId == it.id)[0].name
+        productname = productname ? `[${productname}]` : ''
       }
       if (val.customerId) {
         accountname = (this.$refs.refCust as any).queryCustName()
+        accountname = accountname ? `[${accountname}]` : ''
       }
       this.pername = `${accountname}${braname}${productname}`
     } else {
@@ -546,10 +549,10 @@ export default class Promotion extends ViewBase {
     background: #00202d;
     height: 57px;
     border-radius: 5px;
-    /deep/ .ivu-input-wrapper {
+    .ivu-input-wrapper {
       margin-top: 7px;
     }
-    /deep/ .ivu-input-wrapper, .ivu-input {
+    .ivu-input-wrapper, .ivu-input {
       background: #00202d;
       height: 47px;
       border: 0;
