@@ -1,7 +1,7 @@
 <template>
   <div class="plan-box">
     <Spin v-if="spinshow" fix>
-      <img src="./assets/ad.gif"> 
+      <img style="width: 200px" src="./assets/ad.gif"> 
       <Progress :percent="spins" status="active" />
       <p style="font-size: 30px; color: #3959A8">{{spins}}%</p>
     </Spin>

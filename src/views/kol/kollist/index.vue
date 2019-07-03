@@ -92,19 +92,25 @@
           </template>
           <template slot-scope="{ row }" slot="flansFace">
             <div>
-              <p class="flans-box">
+              <p class="flans-box" style="width: 80px">
                 <span>男性：</span>  
                 <span v-if="row.maleFans">{{formatnums(row.maleFans, '%')}}</span>
                 <span v-else>-</span>
               </p>
-              <p class="flans-box">
+              <p class="flans-box" style="width: 80px">
                 <span>女性：</span>
                 <span v-if="row.femaleFans">{{formatnums(row.femaleFans, '%')}}</span>
                 <span v-else>-</span>
               </p>
               <div>
                 <a @click="viewArea(row.areaId, row.id)" >查看地域</a>
-                <AreaModal v-show="handleShow" v-clickoutside="handleClose" v-if="row.id == areaIdshow" class="flans-modeal" :id="row.id" />
+                <AreaModal 
+                  :style="tabledataid.includes(row.id) ? 'margin-top: -300px' : ''"
+                  v-show="handleShow"
+                  v-clickoutside="handleClose"
+                  v-if="row.id == areaIdshow"
+                  class="flans-modeal"
+                  :id="row.id" />
               </div>
             </div>
           </template>
@@ -294,6 +300,7 @@ export default class Main extends ViewBase {
   kolIds: any = []
   times: any = ''
   ballsrc: any = ''
+  tabledataid = []
 
   get pageList() {
     return {
@@ -603,6 +610,9 @@ export default class Main extends ViewBase {
         channelTypeCode: this.type + 4
       })
       this.tabledata = data.items || []
+      this.tabledataid = [
+        this.tabledata.length > 0 ? this.tabledata[this.tabledata.length - 1].id : ''
+      ]
     } catch (ex) {
       this.handleError(ex)
     }
@@ -710,6 +720,9 @@ export default class Main extends ViewBase {
         totalCount
       }} = await kolmsglist(query)
       this.tabledata = items || []
+      this.tabledataid = [
+        this.tabledata.length > 0 ? this.tabledata[this.tabledata.length - 1].id : ''
+      ]
       this.total = totalCount
       this.loading = false
     } catch (ex) {
@@ -767,7 +780,7 @@ export default class Main extends ViewBase {
   width: 150px;
 }
 .kol-page {
-  padding: 0 30px;
+  padding: 0 30px 40px 30px;
 }
 .kol-title {
   text-align: center;
@@ -1015,9 +1028,8 @@ export default class Main extends ViewBase {
 
   .flans-modeal {
     position: absolute;
-    margin-left: 60px;
+    margin-left: -160px;
     z-index: 999;
-    margin-top: -120px;
   }
 }
 .btnCenter {
