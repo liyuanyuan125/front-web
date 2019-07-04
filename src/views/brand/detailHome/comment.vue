@@ -158,7 +158,7 @@ export default class Temporary extends ViewBase {
   }
 
   keywordQuery: any = {
-    keyword: '大家',
+    keyword: '',
     pageIndex: 0,
     pageSize: 10
   }
@@ -291,21 +291,21 @@ export default class Temporary extends ViewBase {
           name: '正面',
           type: 'bar',
           stack: 'totalCount',
-          barMaxWidth: '20',
+          barWidth: '20',
           data: []
         },
         {
           name: '负面',
           type: 'bar',
           stack: 'totalCount',
-          barMaxWidth: '20',
+          barWidth: '20',
           data: []
         },
         {
           name: '中性',
           type: 'bar',
           stack: 'totalCount',
-          barMaxWidth: '20',
+          barWidth: '20',
           data: []
         }
       ],
@@ -314,21 +314,21 @@ export default class Temporary extends ViewBase {
           name: '正面',
           type: 'bar',
           stack: 'totalCount',
-          barMaxWidth: '20',
+          barWidth: '20',
           data: []
         },
         {
           name: '负面',
           type: 'bar',
           stack: 'totalCount',
-          barMaxWidth: '20',
+          barWidth: '20',
           data: []
         },
         {
           name: '中性',
           type: 'bar',
           stack: 'totalCount',
-          barMaxWidth: '20',
+          barWidth: '20',
           data: []
         }
       ]
@@ -459,6 +459,10 @@ export default class Temporary extends ViewBase {
           }
         }
         this.chart1.initDone = true
+        this.chart1.noData = false
+      } else {
+        this.chart1.initDone = true
+        this.chart1.noData = true
       }
 
       if ( items && items.length > 0 ) {
@@ -466,15 +470,16 @@ export default class Temporary extends ViewBase {
           //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
           // trend 新增 index:0 | count 累计 index:1
           const { date, neutral, passive, positive } = item
-          that.chart2.xAxis.push( date )
-          that.chart2.dataList[0][0].data.push(item.positive.trend)
-          that.chart2.dataList[0][1].data.push(item.passive.trend)
-          that.chart2.dataList[0][2].data.push(item.neutral.trend)
-          that.chart2.dataList[1][0].data.push(item.positive.count)
-          that.chart2.dataList[1][1].data.push(item.passive.count)
-          that.chart2.dataList[1][2].data.push(item.neutral.count)
+          this.chart2.xAxis.push( date )
+          this.chart2.dataList[0][0].data.push(item.positive.trend)
+          this.chart2.dataList[0][1].data.push(item.passive.trend)
+          this.chart2.dataList[0][2].data.push(item.neutral.trend)
+          this.chart2.dataList[1][0].data.push(item.positive.count)
+          this.chart2.dataList[1][1].data.push(item.passive.count)
+          this.chart2.dataList[1][2].data.push(item.neutral.count)
         })
-        that.chart2.initDone = true
+        this.chart2.initDone = true
+        this.chart2.noData = false
       } else {
         this.chart2.initDone = true
         this.chart2.noData = true
@@ -483,22 +488,28 @@ export default class Temporary extends ViewBase {
       if ( keyWords && keyWords[this.form.dayRangesKey] ) {
         if ( keyWords[this.form.dayRangesKey].positive ) {
           keyWords[this.form.dayRangesKey].positive.forEach((item: any) => {
-            that.chart3.dataList[0].push({
+            this.chart3.dataList[0].push({
               name: item,
               value: Math.floor(Math.random() * 100 + 1)
             })
           })
-          that.chart3.initDone = true
+          this.chart3.initDone = true
         }
         if ( keyWords[this.form.dayRangesKey].negative ) {
           keyWords[this.form.dayRangesKey].negative.forEach((item: any) => {
-            that.chart4.dataList[0].push({
+            this.chart4.dataList[0].push({
               name: item,
               value: Math.floor(Math.random() * 100 + 1)
             })
           })
-          that.chart4.initDone = true
+          this.chart4.initDone = true
         }
+      } else {
+        // 组件待增加状态
+        // this.chart3.initDone = true
+        // this.chart3.noData = true
+        // this.chart4.initDone = true
+        // this.chart4.noData = true
       }
     } catch (ex) {
       this.handleError(ex)

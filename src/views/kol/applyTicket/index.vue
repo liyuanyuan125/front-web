@@ -5,7 +5,7 @@
         <CheckboxGroup v-model='orderids' class='chacks'>
           <Row class='nav-title'>
             <Col span='5'>已完成订单数量： {{data.finishedCount}}</Col>
-            <Col span='14'>合计支付金额：<span>￥{{data.payTotalFee}}</span></Col>
+            <Col span='14'>合计支付金额：<span>￥{{data.payTotalFee}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;有退款：<span>￥{{data.refundTotalFee}}</span></Col>
             <div span='5' style='text-align: right;' @click='his()'>查看开票历史</div>
           </Row>
           <Checkbox  class="list-li" v-for="(item , index) in list" :key = "index" :value="item.id" :label="item.id">
@@ -34,6 +34,7 @@
               </Col>
               <Col :span="8">
                 <p >实付金额：<span style='font-size: 20px;font-weight: 500'>¥{{item.totalFee}}</span></p>
+                <p v-if='item.refundFee != 0'>有退款：<span style='font-size: 20px;font-weight: 500'>¥{{item.refundFee}}</span></p>
               </Col>
               <Col :span="3" class="status-btn" @click.prevent.native='view(item.id)'> 详情 </Col>
             </Row>
@@ -74,6 +75,7 @@ import moment from 'moment'
 import { slice, clean } from '@/fn/object'
 import { warning , success, toast } from '@/ui/modal'
 import { uniq, uniqBy } from 'lodash'
+import Decimal from 'decimal.js'
 
 
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
@@ -89,10 +91,16 @@ export default class Main extends ViewBase {
   list: any = []
   data: any = {}
   checkAll: any = false
-  indeterminate: any = true
+  indeterminate: any = false
+  // 总金额
   sum: any = 0
+  // 选中的退款金额总和
+  refundsum: any = 0
   codeList: any = []
+  // 金额数组
   moneyList: any = []
+  // 选中的金额数组
+  refundmoney: any = []
   orderids: any = []
   orderno: any = []
 
@@ -183,12 +191,16 @@ export default class Main extends ViewBase {
   watchMoneyList() {
     this.moneyList = []
     this.orderno = []
+    this.refundmoney = []
     this.sum = 0
+    this.refundsum = 0
+
     for (const i in this.list) {
         if ( 1 == 1 ) {
           for (const j in this.orderids) {
             if (this.list[i].id == this.orderids[j]) {
               this.moneyList.push(this.list[i].totalFee)
+              this.refundmoney.push(this.list[i].refundFee)
               this.orderno.push(this.list[i].orderNo)
             }
           }
@@ -196,8 +208,23 @@ export default class Main extends ViewBase {
       }
       // this.sum = 0
       this.moneyList.forEach((ele: any) => {
-        this.sum += (Number(ele) * 100)
+        // this.sum += (Number(ele) * 100)
+        this.sum = new Decimal(this.sum).plus(ele)
       })
+      // 总金额减去退款金额
+      this.refundmoney.forEach((ele: any) => {
+        // this.sum -= (Number(ele) * 100)
+        this.sum = new Decimal(this.sum).minus(ele)
+      })
+
+    if (this.orderids.length != this.list.length) {
+      // this.indeterminate = true
+      this.checkAll = false
+    }
+    if (this.orderids.length == this.list.length) {
+      // this.indeterminate = false
+      this.checkAll = true
+    }
   }
 }
 

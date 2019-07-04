@@ -1,5 +1,10 @@
 <template>
   <div class="plan-box">
+    <Spin v-if="spinshow" fix>
+      <img style="width: 200px" src="./assets/ad.gif"> 
+      <Progress :percent="spins" status="active" />
+      <p style="font-size: 30px; color: #3959A8">{{spins}}%</p>
+    </Spin>
     <Row>
       <Col>
         <Form
@@ -137,7 +142,7 @@
             </FormItem>
           </h3>
           <div class="item-top" style="margin-top: 50px" v-show="movieCustom != 0">
-            <Film v-model="numsList" :begin="beginDate" :end="endDate" @donefilm="timerfilm"/>
+            <Film v-model="numsList" :begin="beginDate" :end="endDate" @donetime="updatetime" @donefilm="timerfilm"/>
           </div>
 
           <div class="btn-center">
@@ -181,6 +186,8 @@ import {
 import { clean } from '@/fn/object.ts'
 import City from '@/components/citySelectDialog'
 import { info } from '@/ui/modal'
+import jsxReactToVue from '@/util/jsxReactToVue'
+
 // 保持互斥
 const keepExclusion = <T>(
   value: T[],
@@ -212,6 +219,7 @@ export default class Orienteering extends ViewBase {
   topCitysId = []
   beginDate = ''
   endDate = ''
+  spins = 0
   planMovies: any = null
   form: any = {
     name: '',
@@ -220,6 +228,7 @@ export default class Orienteering extends ViewBase {
     age: [0],
     type: [0]
   }
+  spinshow = false
   warehouseId: any = []
   warehouseLisst: any = []
   loadingitem: any = {}
@@ -276,6 +285,11 @@ export default class Orienteering extends ViewBase {
 
   created() {
     this.init()
+  }
+
+  updatetime(val: any) {
+    this.beginDate = val.begin
+    this.endDate = val.end
   }
 
   formatDate(data: any) {
@@ -453,13 +467,13 @@ export default class Orienteering extends ViewBase {
                 })
         })
       )
-      ; (this.$Spin as any).show()
-      let settime: any = null
+      this.spins = 20
+      this.spinshow = true
       this.recommend = false
-      settime = setInterval(() => {
+      this.settime = setInterval(() => {
         if (this.recommend) {
-          (this.$Spin as any).hide()
-          clearInterval(settime)
+          this.spins = 100
+          clearInterval(this.settime)
           // if (this.loadingitem.item.movieCustom == 1) {
           //   if ( this.loadingitem.movies.length > 0 ) {
           //     this.$emit('input', {
@@ -479,32 +493,36 @@ export default class Orienteering extends ViewBase {
           //     }
           //   }
           // } else {
+          setTimeout(() => {
+            this.spinshow = false
             if (this.planMovies && this.planMovies.length > 0) {
-              this.$emit('input', {
-                id: 2,
-                setid: this.$route.params.setid
-              })
-              if (this.$route.name == 'pop-planlist-add') {
-                this.$router.push({
-                  name: 'pop-planlist-add',
-                  params: { id: '2', setid: this.$route.params.setid  }
+                this.$emit('input', {
+                  id: 2,
+                  setid: this.$route.params.setid
                 })
+                if (this.$route.name == 'pop-planlist-add') {
+                  this.$router.push({
+                    name: 'pop-planlist-add',
+                    params: { id: '2', setid: this.$route.params.setid  }
+                  })
+                } else {
+                  this.$router.push({
+                    name: 'pop-planlist-edit',
+                    params: { id: '2', setid: this.$route.params.setid  }
+                  })
+                }
               } else {
-                this.$router.push({
-                  name: 'pop-planlist-edit',
-                  params: { id: '2', setid: this.$route.params.setid  }
-                })
+                info('非常抱歉，暂未找到匹配项；请尝试扩大定向范围或投放排期范围')
               }
-            } else {
-              info('非常抱歉，暂未找到匹配项；请尝试扩大定向范围或投放排期范围')
-            }
+            }, 500)
+            this.spins = 0
           // }
         } else {
           this.loddding()
         }
       }, 3000)
     } catch (ex) {
-      (this.$Spin as any).hide()
+      this.spinshow = false
       clearInterval(this.settime)
       this.handleError(ex)
     }
@@ -527,8 +545,18 @@ export default class Orienteering extends ViewBase {
   async loddding() {
     try {
       const {
+        data,
         data: { item, planMovies, movies }
       } = await adverdetail(this.value.setid)
+      if ( data.code == '401') {
+        this.spinshow = false
+        clearInterval(this.settime)
+      }
+      if (this.spins >= 80) {
+        this.spins = 99
+      } else {
+        this.spins += 20
+      }
       this.recommend = item.recommend
       this.planMovies = planMovies
       this.loadingitem = {
@@ -903,5 +931,17 @@ export default class Orienteering extends ViewBase {
     color: #00202d;
     overflow: hidden;
   }
+}
+/deep/ .ivu-spin-fix {
+  position: fixed;
+}
+/deep/ .ivu-progress-inner {
+  background: #fec52f;
+}
+/deep/ .ivu-progress-text-inner {
+  display: none;
+}
+/deep/ .ivu-progress-bg {
+  background: #3959a8;
 }
 </style>

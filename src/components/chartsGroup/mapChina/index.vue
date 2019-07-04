@@ -1,37 +1,31 @@
 <template>
   <div>
-    <div style='text-align:center'>
-      <div class='title-box'>
+    <div style="text-align:center">
+      <div class="title-box">
         <span v-if=" title !=='' ">{{title}}</span>
-        <Tooltip max-width="200"
-                 v-if=" titleTips !=='' "
-                 :content="titleTips">
+        <Tooltip max-width="200" v-if=" titleTips !=='' " :content="titleTips">
           <Icon type="md-help-circle" />
         </Tooltip>
       </div>
-      <RadioGroup size="small"
-                  v-if="dict1.length > 0"
-                  @on-change='currentTypeChange'
-                  v-model="currentIndex"
-                  type="button">
-        <Radio v-for="(item,index) in dict1"
-               :key="item.key"
-               :label="index">{{item.name}}</Radio>
+      <RadioGroup
+        size="small"
+        v-if="dict1.length > 0"
+        @on-change="currentTypeChange"
+        v-model="currentIndex"
+        type="button"
+      >
+        <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <Row type="flex"
-         justify="center" align="middle">
-      <Col :span="24">
-        <div ref="refChart"
-           v-if="initDone"
-           style="width: 100%; height: 400px"></div>
-        <div v-else class='loading-wp' style="width: 100%; height: 400px">
-            <TinyLoading  />
-          </div>
-      </Col>
+    <Row type="flex" justify="center" align="middle">
+      <div ref="refChart" v-if="initDone" class="chart-wrap"></div>
+      <div v-else class="loading-wp chart-loading">
+        <TinyLoading />
+      </div>
     </Row>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -54,22 +48,34 @@ import {
 // 中国地图
 export default class MapChina extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
+
   @Prop({ type: String, default: '' }) title!: string
+
   @Prop({ type: String, default: '' }) titleTips?: string
+
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
+
   @Prop({ type: Number, default: 0 }) max!: number
+
   @Prop({ type: Array, default: () => [] }) dict1!: any[]
+
   @Prop({ type: Array, default: () => [] }) dict2!: any[]
+
   @Prop({ type: Array, default: () => [] }) color!: any[]
+
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
+
   currentIndex: number = this.currentTypeIndex
+
   currentTypeChange(index: number) {
     this.currentIndex = index
     this.$emit('typeChange', index)
   }
+
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
   }
+
   updateCharts() {
     if (
       !this.dataList[this.currentIndex] ||
@@ -142,6 +148,7 @@ export default class MapChina extends ViewBase {
     }
     myChart.setOption(option)
   }
+
   @Watch('initDone')
   watchInitDone(val: boolean) {
     if (val) {
@@ -151,6 +158,7 @@ export default class MapChina extends ViewBase {
       })
     }
   }
+
   @Watch('currentTypeIndex')
   watchcurrentTypeIndex(newIndex: any, oldIndex: any) {
     if (newIndex !== oldIndex) {
@@ -160,3 +168,22 @@ export default class MapChina extends ViewBase {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.chart-wrap,
+.chart-loading {
+  width: 100%;
+  height: 400px;
+}
+
+.chart-wrap:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &::before {
+    content: '暂无数据';
+    font-size: 18px;
+    color: #999;
+  }
+}
+</style>

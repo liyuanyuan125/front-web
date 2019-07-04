@@ -8,16 +8,19 @@
               <DetailNavBar titleText="统计周期">
                 <div slot="item">
                   <RadioGroup
-                      class='nav'
-                      style="margin-right:15px"
-                      @on-change="handleChange"
-                      v-model="form.dayRangesKey"
-                      size="large"
-                      type="button">
-                    <Radio v-for="(item) in dict.dayRanges"
-                           :key="item.key"
-                           :disabled="item.disabled"
-                           :label="item.key">{{item.text}}</Radio>
+                    class="nav"
+                    style="margin-right:15px"
+                    @on-change="handleChange"
+                    v-model="form.dayRangesKey"
+                    size="large"
+                    type="button"
+                  >
+                    <Radio
+                      v-for="(item) in dict.dayRanges"
+                      :key="item.key"
+                      :disabled="item.disabled"
+                      :label="item.key"
+                    >{{item.text}}</Radio>
                   </RadioGroup>
 
                   <DatePicker
@@ -33,60 +36,80 @@
             </Col>
           </Row>
         </div>
+
         <div class="content">
           <Row type="flex" justify="space-between">
             <Col :span="24">
               <div class="chart-wp">
                 <!-- 累计和增加 -->
-                <!-- <RadioGroup size="small" class="grand-total"  @on-change='currentTypeChange'
-                        v-model="currentIndex"  type="button">
-                  <Radio v-for="(item,index) in grandTotal"
-                        :key="item.key"
-                        :label="index">{{item.name}}</Radio>
+                <!-- <RadioGroup
+                  size="small"
+                  class="grand-total"
+                  @on-change="currentTypeChange"
+                  v-model="currentIndex"
+                  type="button"
+                >
+                  <Radio
+                    v-for="(item,index) in grandTotal"
+                    :key="item.key"
+                    :label="index"
+                  >{{item.name}}</Radio>
                 </RadioGroup> -->
                 <!-- 观影title -->
-                <RadioGroup size="small" class="watch-film" @on-change="handleWatchFilm"
-                        v-model="filmIndex"  type="button">
-                  <Radio v-for="(item,index) in watchFilm"
-                        :key="item.key"
-                        :label="item.key">{{item.text}}</Radio>
+                <RadioGroup
+                  size="small"
+                  class="watch-film"
+                  @on-change="handleWatchFilm"
+                  v-model="filmIndex"
+                  type="button"
+                >
+                  <Radio
+                    v-for="(item,index) in watchFilm"
+                    :key="item.key"
+                    :label="item.key"
+                  >{{item.text}}</Radio>
                 </RadioGroup>
 
-                <AreaBasic :initDone="chart1.initDone"
-                    v-if="filmIndex == 'watchNum'"
-                    :title="chart1.title"
-                    :dict1="chart1.dict1"
-                    :dict2="chart1.dict2"
-                    :toolTip="chart1.toolTip"
-                    :height="chart1.height"
-                    :color="chart1.color"
-                    :dataList="chart1.dataList"
-                    :currentTypeIndex="chart1.currentTypeIndex" />
+                <AreaBasic
+                  :initDone="chart1.initDone"
+                  v-if="filmIndex == 'watchNum'"
+                  :title="chart1.title"
+                  :dict1="chart1.dict1"
+                  :dict2="chart1.dict2"
+                  :toolTip="chart1.toolTip"
+                  :height="chart1.height"
+                  :color="chart1.color"
+                  :dataList="chart1.dataList"
+                  :currentTypeIndex="chart1.currentTypeIndex"
+                />
 
-                <AreaBasic :initDone="chart2.initDone"
-                    v-if="filmIndex == 'movieNum'"
-                    :title="chart2.title"
-                    :dict1="chart2.dict1"
-                    :dict2="chart2.dict2"
-                    :toolTip="chart2.toolTip"
-                    :height="chart2.height"
-                    :color="chart2.color"
-                    :dataList="chart2.dataList"
-                    :currentTypeIndex="chart2.currentTypeIndex" />
+                <AreaBasic
+                  :initDone="chart2.initDone"
+                  v-if="filmIndex == 'movieNum'"
+                  :title="chart2.title"
+                  :dict1="chart2.dict1"
+                  :dict2="chart2.dict2"
+                  :toolTip="chart2.toolTip"
+                  :height="chart2.height"
+                  :color="chart2.color"
+                  :dataList="chart2.dataList"
+                  :currentTypeIndex="chart2.currentTypeIndex"
+                />
 
-                    <!-- @typeChange='typeChangeHander' -->
-                    <BarxCategoryStack :initDone="chart3.initDone"
-                      v-if="filmIndex == 'wantNum'"
-                      :title='chart3.title'
-                      :dict1="chart3.dict1"
-                      :dict2="chart3.dict2"
-                      :xAxis="chart3.xAxis"
-                      :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})"
-                      :color="chart3.color"
-                      :dataList="chart3.dataList"
-                      :currentTypeIndex="chart3.currentTypeIndex"
-                       />
-              </div> 
+                <!-- @typeChange='typeChangeHander' -->
+                <BarxCategoryStack
+                  :initDone="chart3.initDone"
+                  v-if="filmIndex == 'wantNum'"
+                  :title="chart3.title"
+                  :dict1="chart3.dict1"
+                  :dict2="chart3.dict2"
+                  :xAxis="chart3.xAxis"
+                  :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})"
+                  :color="chart3.color"
+                  :dataList="chart3.dataList"
+                  :currentTypeIndex="chart3.currentTypeIndex"
+                />
+              </div>
             </Col>
           </Row>
         </div>
@@ -108,11 +131,12 @@ import {
 } from '@/util/validateRules'
 import DetailNavBar from './components/detailNavBar.vue'
 import { trend } from '@/api/kolDetailMoreInfo'
-import {movieView, wanttosee, MovieStatus} from '@/api/filmPersonDetail'
+import { movieView, wanttosee, MovieStatus } from '@/api/filmPersonDetail'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import AreaBasicView from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
 import { tooltipStyles } from '@/util/echarts'
+
 const timeFormat = 'YYYYMMDD'
 const toolTip: any = {
   borderWidth: 1,
@@ -161,10 +185,14 @@ const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
 })
 export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
+
   tooltipStyles = tooltipStyles
+
   // 上映状态
   releaseStatus: any = null
+
   releaseDate: any = null
+
   releaseEndDate: any = null
 
   // 新增和累计
@@ -178,14 +206,16 @@ export default class Main extends ViewBase {
       name: '累计'
     }
   ]
+
   currentIndex = 0
 
   // 观影人数
   filmIndex = 'watchNum'
+
   watchFilm: any = [
-    {key: 'watchNum', text: '观影人数'},
-    {key: 'movieNum', text: '影片票房'},
-    {key: 'wantNum', text: '想看人数' }
+    { key: 'watchNum', text: '观影人数' },
+    { key: 'movieNum', text: '影片票房' },
+    { key: 'wantNum', text: '想看人数' }
   ]
 
   form: any = {
@@ -195,6 +225,7 @@ export default class Main extends ViewBase {
 
   // 提交日期初始化
   formBeginDate: any = null
+
   formEndDate: any = null
 
   dict: any = {
@@ -221,6 +252,7 @@ export default class Main extends ViewBase {
       }
     ]
   }
+
   // 观影人数
   chart1: any = {
     title: '',
@@ -229,10 +261,11 @@ export default class Main extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color:  ['#00b6cc'],
+    color: ['#00b6cc'],
     height: 450,
     toolTip
   }
+
   // 影片票房
   chart2: any = {
     title: '',
@@ -241,10 +274,11 @@ export default class Main extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color:  ['#00b6cc'],
+    color: ['#00b6cc'],
     height: 450,
     toolTip
   }
+
   // 想看人数
   chart3: any = {
     title: '',
@@ -320,16 +354,19 @@ export default class Main extends ViewBase {
   get formatConversion() {
     return formatConversion
   }
+
   comInitDone() {
     this.chart1.initDone = false
     this.chart2.initDone = false
     this.chart3.initDone = false
   }
+
   async handleWatchFilm(val: any) {
     this.filmIndex = val
     this.comInitDone()
     this.resetData()
-    if (this.filmIndex == 'wantNum') { // 想看
+    if (this.filmIndex == 'wantNum') {
+      // 想看
       await this.wanttoseeList()
     } else if (this.filmIndex == 'watchNum') {
       await this.watchFilmList()
@@ -337,11 +374,13 @@ export default class Main extends ViewBase {
       await this.watchFilmList()
     }
   }
+
   mounted() {
     this.formBeginDate = this.beginDate(this.form.dayRangesKey)
     this.formEndDate = this.endDate()
     this.movieStatus()
   }
+
   // 观影人数 影片票房
   async watchFilmList() {
     const mockObj = {
@@ -349,13 +388,13 @@ export default class Main extends ViewBase {
       endDate: this.formEndDate
     }
 
-    const id = this.id  // this.id  55184
+    const id = this.id // this.id  55184
     try {
       const { data } = await movieView({ ...mockObj }, id)
       // 取出 票神boxoffice 观看view数据
       const items = data || []
       // 放置后台数据顺序错乱
-      items.sort((a: any, b: any) => a.date - b.date )
+      items.sort((a: any, b: any) => a.date - b.date)
       const date: any[] = [] // 存放日期
 
       if (items && items.length > 0) {
@@ -409,7 +448,6 @@ export default class Main extends ViewBase {
       }
       this.chart1.initDone = true
       this.chart2.initDone = true
-
     } catch (ex) {
       this.handleError(ex)
     }
@@ -421,21 +459,25 @@ export default class Main extends ViewBase {
       beginDate: this.formBeginDate,
       endDate: this.formEndDate
     }
-    const id = this.id  // this.id  55184
+    const id = this.id // this.id  55184
     try {
-      const { data: {items, channelCodeList} } =  await wanttosee({ ...mockObj }, id)
+      const {
+        data: { items, channelCodeList }
+      } = await wanttosee({ ...mockObj }, id)
       if (items && items.length > 0) {
         // sort 后台日期数据不准
         items.sort((a: any, b: any) => {
           return a.date - b.date
         })
         const date: any = [] // 日期
-        const dataTrend: any = { // 新增
+        const dataTrend: any = {
+          // 新增
           douban: [],
           maoyan: [],
           taopiaopiao: []
         }
-        const dataCount: any = { // 累计
+        const dataCount: any = {
+          // 累计
           douban: [],
           maoyan: [],
           taopiaopiao: []
@@ -482,7 +524,10 @@ export default class Main extends ViewBase {
           this.formEndDate = this.endDate()
         } else if (this.releaseStatus == 4) {
           this.form.dayRangesKey = ''
-          this.form.beginDate = [formatConversion(data.releaseDate), formatConversion(data.releaseEndDate)]
+          this.form.beginDate = [
+            formatConversion(data.releaseDate),
+            formatConversion(data.releaseEndDate)
+          ]
 
           this.formBeginDate = data.releaseDate
           this.formEndDate = data.releaseEndDate
@@ -493,29 +538,41 @@ export default class Main extends ViewBase {
       this.handleError(ex)
     }
   }
+
   currentTypeChange(index: number = 0) {
-    if (this.filmIndex == 'watchNum') { // 观影人数
+    if (this.filmIndex == 'watchNum') {
+      // 观影人数
       this.chart1.currentTypeIndex = index
     } else if (this.filmIndex == 'movieNum') {
       this.chart2.currentTypeIndex = index
-    } else if (this.filmIndex == 'wantNum') { // 想看人数
+    } else if (this.filmIndex == 'wantNum') {
+      // 想看人数
       this.chart3.currentTypeIndex = index
     }
   }
+
   /**
    * 根据筛选返回起始日期，影人、影片、kol字段名未统一
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
    */
   beginDate(dayRangesKey: string) {
-    switch ( dayRangesKey ) {
-      case 'yesterday' :
-        return moment(new Date()).add(-1, 'days').format(timeFormat)
-      case 'thirtyDay' :
-        return moment(new Date()).add(-30, 'days').format(timeFormat)
-      case 'ninetyDay' :
-        return moment(new Date()).add(-90, 'days').format(timeFormat)
-      default :
-        return moment(new Date()).add(-7, 'days').format(timeFormat)
+    switch (dayRangesKey) {
+      case 'yesterday':
+        return moment(new Date())
+          .add(-1, 'days')
+          .format(timeFormat)
+      case 'thirtyDay':
+        return moment(new Date())
+          .add(-30, 'days')
+          .format(timeFormat)
+      case 'ninetyDay':
+        return moment(new Date())
+          .add(-90, 'days')
+          .format(timeFormat)
+      default:
+        return moment(new Date())
+          .add(-7, 'days')
+          .format(timeFormat)
     }
   }
 
@@ -529,12 +586,14 @@ export default class Main extends ViewBase {
     this.form.beginDate = []
     this.formBeginDate = this.beginDate(this.form.dayRangesKey)
     this.formEndDate = this.endDate()
-    if (this.filmIndex == 'wantNum') { // 想看
+    if (this.filmIndex == 'wantNum') {
+      // 想看
       this.wanttoseeList()
     } else {
       this.watchFilmList()
     }
   }
+
   handleChangePic(val: any) {
     this.comInitDone()
 
@@ -543,13 +602,15 @@ export default class Main extends ViewBase {
     if (val[0]) {
       this.formBeginDate = formatConversion(val[0], 2)
       this.formEndDate = formatConversion(val[1], 2)
-      if (this.filmIndex == 'wantNum') { // 想看
+      if (this.filmIndex == 'wantNum') {
+        // 想看
         this.wanttoseeList()
       } else {
         this.watchFilmList()
       }
     }
   }
+
   resetData() {
     this.chart1.dataList = []
     this.chart2.dataList = []
@@ -560,10 +621,12 @@ export default class Main extends ViewBase {
 <style lang='less' scoped>
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
+
 .grand-total {
   display: block;
   padding: 30px 0 0 50px;
 }
+
 .watch-film {
   display: block;
   text-align: center;

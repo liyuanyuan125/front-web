@@ -13,11 +13,11 @@
         <p v-if="item.pubDate">上映时间：{{item.pubDate}}</p>
         <p v-if="item.typeName">主演：{{item.typeName}}</p>
       </div>
-      <div class="line-box">累计票房：{{item.total_box_office}}</div>
+      <div class="line-box">累计票房：{{item.totalBoxOffice}}</div>
     </main>
     <aside class="side1">
       <div class="line year"><em>{{item.year_box}}</em></div>
-      <div class="line year-box">年度票房榜：<em>No.{{item.year_box_office_rank}}</em></div>
+      <div class="line year-box">年度票房榜：<em>{{item.yearBoxOfficeRank}}</em></div>
     </aside>
     <aside class="side2">
       <div class="line jy-index">鲸鱼指数：<em>{{item.jy_index / 100}}</em></div>

@@ -127,7 +127,7 @@
                 <div class="movtitle cut-text">{{item.name_cn}}</div>
                 <p class="movscore" v-if=" form.sortBy === 'hots' "><i class="hots"></i><span>{{getItemValue(item)}}</span></p>
                 <p class="movscore" v-else-if=" form.sortBy === 'wantSeeCount' "><span>{{getItemValue(item)}}</span>人想看</p>
-                <p class="movscore" v-else-if=" form.sortBy === 'commentsScore' "><span>{{getItemValue(item)}}</span>分</p>
+                <p class="movscore" v-else-if=" form.sortBy === 'commentsScore' "><span>{{getItemValue(item)}}</span></p>
                 <p class="movscore" v-else ><span>{{getItemValue(item)}}</span></p>
               </router-link>
             </div>
@@ -330,7 +330,7 @@ export default class CooperationFilmList extends ViewBase {
         return readableNumber(it.want_see)
         break
       case 'commentsScore':
-        return it.comments_score != 0 ? (it.comments_score / 10) : it.comments_score
+        return it.comments_score === 0 ? '-' : (it.comments_score / 10)
         break
       default:
         return it.jy_index != 0 ? (it.jy_index / 100).toFixed(2) : it.jy_index

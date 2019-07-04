@@ -9,7 +9,7 @@
           </FormItem>
         </Col>
       </Row>
-      <!-- <Date v-model="form.advertime" /> -->
+
       <Row>
         <Col span="14" offset="3">
           <Row>
@@ -28,30 +28,42 @@
               </Row>
               <Row class="adver-detail" :gutter="10">
                 <Col :span="7">
-                  <FormItem style="margin-left: 3px" label="广告片规格:" prop="specification" :labelWidth='100'>
-                    <Select :disabled="!setadver" v-model="form.specification" filterable clearable>
+                  <FormItem style="margin-left: 3px" label="广告片规格:" :labelWidth='100'>
+                    <Select v-if="!setadver" :disabled="!setadver" v-model="form.specification" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.specification" :key="index">{{ item.specification }}</Option>
+                    </Select>
+                    <Select v-else v-model="query.specification"  clearable filterable>
+                      <Option v-for="(item, index) in specificationList" :value="item.id" :key="index">{{ item.name }}</Option>
                     </Select>
                   </FormItem>
                 </Col>
                 <Col :span="5">
-                  <FormItem label="客户:" :labelWidth='50' prop="customerId">
-                    <Select :disabled="!setadver" v-model="form.customerId" filterable clearable>
+                  <FormItem label="客户:" :labelWidth='50'>
+                    <Select v-if="!setadver" :disabled="!setadver" v-model="form.customerId" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.customerId" :key="index">{{ item.customerName }}</Option>
                     </Select>
+                    <div v-else>
+                      <customerList v-model="query.customerId" ref="refCust" />
+                    </div>
                   </FormItem>
                 </Col>
                 <Col :span="6">
-                  <FormItem label="品牌:" :labelWidth='60' prop="brandId">
-                    <Select :disabled="!setadver" v-model="form.brandId" filterable clearable>
+                  <FormItem label="品牌:" :labelWidth='56'>
+                    <Select v-if="!setadver" :disabled="!setadver" v-model="form.brandId" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.brandId" :key="index">{{ item.brandName }}</Option>
                     </Select>
+                    <div v-else>
+                      <brandList v-model="query.brandId"  ref="refBrand" />
+                    </div>
                   </FormItem>
                 </Col>
                 <Col :span="6">
-                  <FormItem label="产品:" :labelWidth='60' prop="productId">
-                    <Select :disabled="!setadver" v-model="form.productId" filterable clearable>
+                  <FormItem label="产品:" :labelWidth='60'>
+                    <Select v-if="!setadver" :disabled="!setadver" v-model="form.productId" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.productId" :key="index">{{ item.productName }}</Option>
+                    </Select>
+                    <Select v-else v-model="query.productId" filterable clearable>
+                      <Option v-for="(item, index) in branidlist" :value="item.id" :key="index">{{ item.name }}</Option>
                     </Select>
                   </FormItem>
                 </Col>
@@ -71,7 +83,7 @@
               <Row>
                 <Col :span="12" style="padding-left: 0px" class="adver-schedule">
                   <FormItem label="推广预算:" :labelWidth='100' prop="budgetAmount">
-                    <Input :disabled="!form.specification" v-model="form.budgetAmount" placeholder="请输入"></Input>
+                    <Input v-model="form.budgetAmount" placeholder="请输入"></Input>
                     <span class="hint">万元 </span>
                   </FormItem>
                 </Col>
@@ -97,18 +109,27 @@
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { advertising, estimate, createdDraft, adverdetail } from '@/api/popPlan.ts'
+import { advertising, estimate, createdDraft, adverdetail, getaccounts, accoutdetail } from '@/api/popPlan.ts'
 import { formatCurrency } from '@/fn/string.ts'
 import { clean } from '@/fn/object.ts'
 import weekDatePicker from '@/components/weekDatePicker/weekDatePicker.vue'
 import moment, { relativeTimeRounding } from 'moment'
 import { info } from '@/ui/modal'
 // import Date from './date.vue'
+import { productsList,
+  brandsList } from '@/api/shopping'
+import { getUser } from '@/store'
+import customerList from '@/components/selectList/customerList.vue'
+import brandList from '@/components/selectList/brandList.vue'
+import productList from '@/components/selectList/productList.vue'
 
 const timeFormat = 'YYYYMMDD'
 @Component({
   components: {
     weekDatePicker,
+    customerList,
+    brandList,
+    productList
   }
 })
 export default class Promotion extends ViewBase {
@@ -126,6 +147,15 @@ export default class Promotion extends ViewBase {
     brandId: null,
     advertime: []
   }
+  query: any = {
+    specification: null,
+    brandId: null,
+    customerId: 0,
+    productId: 0,
+  }
+  accountList: any = [] // 客户聊表
+  specificationList: any = [] // 规格列表
+  loading: any = false
   steps: any = 1
   planID: any = ''
   length = 0
@@ -134,10 +164,18 @@ export default class Promotion extends ViewBase {
   nums: any = 0
   times: any = new Date().getTime()
   pername: any = ''
+  productlist: any = []
+  branidlist: any = []
 
   startDate: any = {
     disabledDate: (dates: any) => {
       return dates && dates.valueOf() < this.times
+    }
+  }
+
+  creSpecificationList() {
+    for ( let i = 1 ; i < 41; i ++) {
+      this.specificationList.push({id: i * 15, name: i * 15})
     }
   }
 
@@ -184,8 +222,17 @@ export default class Promotion extends ViewBase {
       if (value[0] == '') {
         callback(new Error('请选择投放排期'))
       } else {
-        const begin: any = (value[0] as any).getTime()
-        const end: any = (value[1] as any).getTime()
+        const begin: any = (new Date(value[0]) as any).getTime()
+        if ((begin - new Date().getTime()) <= 0 ) {
+          callback(new Error('投放时间必须大于当前时间'))
+        }
+        if (new Date(value[0]).getDay() != 4) {
+          callback(new Error('开始时间必须为周四'))
+        }
+        if (new Date(value[1]).getDay() != 3) {
+          callback(new Error('结束时间必须为周3'))
+        }
+        const end: any = (new Date(value[1]) as any).getTime()
         const flag = (end - begin) / 86400000 % 7
         if (flag == 6) {
           callback()
@@ -207,15 +254,6 @@ export default class Promotion extends ViewBase {
       specification: [
         { required: true, type: 'number', message: '不能为空', trigger: 'change' }
       ],
-      customerId: [
-        { required: true, type: 'number', message: '不能为空', trigger: 'change' }
-      ],
-      productId: [
-        { required: true, type: 'number', message: '不能为空', trigger: 'change' }
-      ],
-      brandId: [
-        { required: true, type: 'number', message: '不能为空', trigger: 'change' }
-      ],
       advertime: [
         {
           validator: msgtime,
@@ -227,6 +265,26 @@ export default class Promotion extends ViewBase {
 
   created() {
     this.init()
+    this.creSpecificationList()
+  }
+
+  // 获取所有的产品
+  async seachproction(val: any) {
+    try {
+      this.branidlist = []
+      const {
+        data: { items }
+      } = await productsList({
+        brandId: val,
+        pageIndex: 1,
+        pageSize: 400
+      })
+      this.branidlist = items || []
+      this.query.productId = ''
+    } catch (ex) {
+      this.handleError(ex)
+    } finally {
+    }
   }
 
   async init() {
@@ -245,6 +303,20 @@ export default class Promotion extends ViewBase {
     }
   }
 
+  async seachs(id: any) {
+    try {
+      const { data } = await accoutdetail(id)
+      this.productlist = data.item ? [
+        {
+          id: data.item.id,
+          name: data.item.name
+        }
+      ] : []
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
   async seach() {
     if (!this.$route.params.setid) {
       (this.$Spin as any).hide()
@@ -252,18 +324,23 @@ export default class Promotion extends ViewBase {
     }
     try {
       const { data } = await adverdetail(this.$route.params.setid)
-      this.form.specification = data.item.specification
       this.form.budgetAmount = (data.item.budgetAmount / 10000) + ''
-      this.form.customerId = data.item.customerId
-      this.form.productId = data.item.productId
-      this.form.brandId = data.item.brandId
       this.steps = 2
       if (!data.item.videoId) {
         this.setadver = true
         this.pername = data.item.name
+        this.query.brandId = data.item.brandId || ''
+        // data.item.brandId ? this.seachs(data.item.brandId) : ''
+        this.query.specification = data.item.specification || ''
+        this.query.customerId = data.item.customerId || ''
+        this.query.productId = data.item.productId || ''
       } else {
         this.form.name = data.item.name
+        this.form.specification = data.item.specification
         this.form.videoId = data.item.videoId
+        this.form.customerId = data.item.customerId
+        this.form.productId = data.item.productId
+        this.form.brandId = data.item.brandId
       }
       const begin: any = this.formatDate(data.item.beginDate)
       const end: any = this.formatDate(data.item.endDate)
@@ -279,6 +356,7 @@ export default class Promotion extends ViewBase {
     return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
 
+  // 下一步
   async next(dataform: any) {
     try {
       const volid = await (this.$refs[dataform] as any).validate()
@@ -288,19 +366,28 @@ export default class Promotion extends ViewBase {
             info('请输入广告计划名称')
             return
           }
+          if (!this.query.specification) {
+            info('请选择广告片规格')
+            return
+          }
         } else {
           if (this.form.name.length == 0) {
             info('请输入广告计划名称')
             return
           }
         }
-        const data = await createdDraft(clean({
+        const query = this.setadver ? {
           ...this.form,
+          ...this.query,
+          brandId: this.query.brandId,
+        } : { ...this.form }
+        const data = await createdDraft(clean({
+          ...query,
           name: this.setadver ? this.pername : this.form.name,
           videoId: this.setadver ? '' : this.form.videoId,
           id: this.$route.params.setid ? this.$route.params.setid : '',
           advertime: '',
-          specification: this.form.specification ?  this.form.specification + '' : '',
+          specification: this.setadver ? this.query.specification + '' : this.form.specification + '',
           budgetAmount: Number(this.form.budgetAmount * 10000)}))
         if (!this.$route.params.setid) {
           this.$router.push({
@@ -323,12 +410,14 @@ export default class Promotion extends ViewBase {
     }
   }
 
+  // 获取金钱
   async getnums(val: any) {
     try {
-      if (!this.form.specification) {
+      const price = this.setadver ? this.query.specification : this.form.specification
+      if (!price) {
         info('请选择广告片规格')
       }
-      const { data } = await estimate({budgetAmount: val, specification: this.form.specification})
+      const { data } = await estimate({budgetAmount: val, specification: price })
       this.nums = formatCurrency(data.estimatePersonCount, 0)
     } catch (ex) {
       this.handleError(ex)
@@ -346,7 +435,10 @@ export default class Promotion extends ViewBase {
       } else {
         this.form.budgetAmount = ''
         this.form.productId = data[0].productId
-        this.form.name = `[ ${data[0].name} ] [ ${data[0].customerName} ] [ ${data[0].productName} ]`
+        const name1 = data[0].name ? `[ ${data[0].name} ]` : ''
+        const customerName = data[0].customerName ? `[ ${data[0].customerName} ]` : ''
+        const productName = data[0].productName ? `[ ${data[0].productName} ]` : ''
+        this.form.name = `${name1}${customerName}${productName}`
       }
       this.steps = 1
     } else {
@@ -368,6 +460,38 @@ export default class Promotion extends ViewBase {
       this.getnums(val * 10000)
     } else {
       this.nums = 0
+    }
+  }
+
+  @Watch('query.brandId')
+  watchqueryBrandId(val: any) {
+    if (val) {
+      this.seachproction(val)
+    }
+  }
+
+  @Watch('query', {deep: true})
+  watchQuery(val: any) {
+    if (this.steps == 1) {
+      let braname = ''
+      let productname = ''
+      let accountname = ''
+      if (val.brandId) {
+        braname = (this.$refs.refBrand as any).queryBrandName()
+        braname = braname ? `[${braname}]` : ''
+        // braname = this.productlist.filter((it: any) => val.brandId == it.id)[0].name
+      }
+      if (val.productId && this.branidlist.length > 0) {
+        productname = this.branidlist.filter((it: any) => val.productId == it.id)[0].name
+        productname = productname ? `[${productname}]` : ''
+      }
+      if (val.customerId) {
+        accountname = (this.$refs.refCust as any).queryCustName()
+        accountname = accountname ? `[${accountname}]` : ''
+      }
+      this.pername = `${accountname}${braname}${productname}`
+    } else {
+      this.steps = 1
     }
   }
 
@@ -425,10 +549,10 @@ export default class Promotion extends ViewBase {
     background: #00202d;
     height: 57px;
     border-radius: 5px;
-    /deep/ .ivu-input-wrapper {
+    .ivu-input-wrapper {
       margin-top: 7px;
     }
-    /deep/ .ivu-input-wrapper, .ivu-input {
+    .ivu-input-wrapper, .ivu-input {
       background: #00202d;
       height: 47px;
       border: 0;

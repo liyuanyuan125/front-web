@@ -45,7 +45,11 @@
        <Col span='3' class='fo-bo'>发行公司</Col>
        <Col span='20' class='fo-bos'>
        <em v-if='itemlist.companyMap.Distributor.length == 0'>暂无发行</em>
-       <div style='margin-bottom: 10px;' v-if='itemlist.companyMap.Distributor.length > 0' v-for='(items,index) in itemlist.companyMap.Distributor'>{{items.name}}</div><br></Col>
+       <div style='margin-bottom: 10px;' v-if='itemlist.companyMap.Distributor.length > 0' v-for='(items,index) in faitemlist'>{{items.name}}</div><br>
+        <div class="show-alls" v-if="itemlist.companyMap.Distributor.length > 5">
+        <span @click="faToggle">{{faTitle}}<Icon :class="{'faDown': faFlag == 0, 'faUp': faFlag == 1}" type="ios-arrow-down" size="25" /></span>
+      </div>
+       </Col>
      </Row>
    </div>
    <!-- 图片 -->
@@ -90,6 +94,11 @@ export default class Main extends ViewBase {
   dataFlag = 0
   datalist: any = []
   dataitemlist: any = []
+
+  faTitle = '展示全部'
+  faFlag = 0
+  falist: any = []
+  faitemlist: any = []
 
   imgUrl = []
   imgList: any = []
@@ -142,6 +151,17 @@ export default class Main extends ViewBase {
       this.dataitemlist = this.itemlist.releaseDates.slice(0, 5)
     }
   }
+  faToggle() {
+    if (!this.faFlag) {
+      this.faFlag = 1
+      this.faTitle = '向上隐藏'
+      this.faitemlist = this.itemlist.companyMap.Distributor
+    } else {
+      this.faFlag = 0
+      this.faTitle = '展示全部'
+      this.faitemlist = this.itemlist.companyMap.Distributor.slice(0, 5)
+    }
+  }
   sumToggle() {
     if (!this.sumFlag) {
       this.sumFlag = 1
@@ -167,6 +187,7 @@ export default class Main extends ViewBase {
       })
       this.imgList = this.imgUrl.slice(0, 16)
       this.dataitemlist = this.itemlist.releaseDates.slice(0, 5)
+      this.faitemlist = this.itemlist.companyMap.Distributor.slice(0, 5)
       this.summary = this.itemlist.summary.slice(0, 211)
     } catch {
 

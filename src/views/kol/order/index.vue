@@ -168,6 +168,7 @@ import pagination from '@/components/page.vue'
 import moment from 'moment'
 import { toMap } from '@/fn/array'
 import { uniq, uniqBy } from 'lodash'
+import Decimal from 'decimal.js'
 import {
   orderList,
   orderBrand,
@@ -336,7 +337,8 @@ export default class Main extends ViewBase {
       }
     } else if (item.status == 8) {
       // 尾款金额 = 订单金额 - 首付款（部分付款
-      const restPayment = item.confirmFee - item.advanceFee
+      const restPayment = new Decimal(item.confirmFee).minus(item.advanceFee)
+      // const restPayment = item.confirmFee - item.advanceFee
       await confirm(`是否支付尾款金额${restPayment}元, <br /> 尾款金额=订单金额${item.confirmFee} 减去 首付款${item.advanceFee}`, {
         title: '支付KOL推广费用'
       })
