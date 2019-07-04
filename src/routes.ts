@@ -787,7 +787,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 第三方 - 效果报表
   {
-    path: '/reseport/effect-report-third',
+    path: '/reseport/effect-report-third/:id',
     name: 'effect-report-third',
     component: () => import('./views/resReport/effectReportThird/index.vue'),
     meta: unauth,
