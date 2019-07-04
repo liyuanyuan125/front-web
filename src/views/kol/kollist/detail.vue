@@ -358,7 +358,7 @@ export default class DlgEditCinema extends ViewBase {
   }
   /deep/ .ivu-table-wrapper {
     margin: 0;
-    /deep/ .ivu-table-header th {
+    .ivu-table-header th {
       height: 60px;
       background: #000;
       color: #fff;
@@ -367,7 +367,7 @@ export default class DlgEditCinema extends ViewBase {
         font-size: 14px;
       }
     }
-    /deep/ .ivu-table-cell {
+    .ivu-table-cell {
       padding-right: 10px;
       padding-left: 10px;
     }
