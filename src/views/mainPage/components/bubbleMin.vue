@@ -36,9 +36,9 @@ export default class BubbleMin extends Vue {
 
 .bubble-min {
   position: absolute;
-  background-color: fade(#fff, 30);
+  background-color: fade(#fff, 15);
   border-radius: 100%;
-  animation: gulu 10s linear infinite both;
+  animation: gulu 20s linear infinite both;
 }
 
 .bubble-min:nth-child(1) {
@@ -46,7 +46,7 @@ export default class BubbleMin extends Vue {
   left: 33px;
   width: 96px;
   height: 96px;
-  animation-duration: 12s;
+  animation-duration: 22s;
 }
 
 .bubble-min:nth-child(2) {
@@ -61,7 +61,7 @@ export default class BubbleMin extends Vue {
   left: 531px;
   width: 62px;
   height: 62px;
-  animation-duration: 8s;
+  animation-duration: 18s;
 }
 
 .bubble-min:nth-child(4) {

@@ -142,7 +142,7 @@
             </FormItem>
           </h3>
           <div class="item-top" style="margin-top: 50px" v-show="movieCustom != 0">
-            <Film v-model="numsList" :begin="beginDate" :end="endDate" @donefilm="timerfilm"/>
+            <Film v-model="numsList" :begin="beginDate" :end="endDate" @donetime="updatetime" @donefilm="timerfilm"/>
           </div>
 
           <div class="btn-center">
@@ -285,11 +285,11 @@ export default class Orienteering extends ViewBase {
 
   created() {
     this.init()
-    // this.$Spin.show({
-    //   render: (hh: any) => {
-    //     return
-    //   }
-    // })
+  }
+
+  updatetime(val: any) {
+    this.beginDate = val.begin
+    this.endDate = val.end
   }
 
   formatDate(data: any) {
