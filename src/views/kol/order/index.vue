@@ -74,7 +74,11 @@
                            <span class="img-num" v-if="(item.orderItemList || []).length > 4">等{{(item.orderItemList || []).length}}个账号</span>
                       </Col>
                       <Col :span="6">
-                        <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(item.confirmFee)}}</em></p>
+                        <p class="col_00202d">订单金额
+                          <em class="order-monery" v-if="[2,3].includes(item.status)">￥{{formatNumber(item.totalFee)}}</em>
+                           <em class="order-monery" v-else-if="item.status == 9">￥{{formatNumber(item.advanceFee+item.restFee)}}</em>
+                          <em v-else class="order-monery">￥{{formatNumber(item.confirmFee)}}</em>
+                          </p>
                         <p v-if="[5,6,7,8].includes(item.status)" class="col_00202d rest-order">部分支付 {{item.advanceFee}}</p>
                       </Col>
                       <Col :span="2" class="li-item-status">

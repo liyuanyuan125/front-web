@@ -38,12 +38,12 @@
             <Col :span="24">
               <div class="chart-wp">
                 <!-- 累计和增加 -->
-                <RadioGroup size="small" class="grand-total"  @on-change='currentTypeChange'
+                <!-- <RadioGroup size="small" class="grand-total"  @on-change='currentTypeChange'
                         v-model="currentIndex"  type="button">
                   <Radio v-for="(item,index) in grandTotal"
                         :key="item.key"
                         :label="index">{{item.name}}</Radio>
-                </RadioGroup>
+                </RadioGroup> -->
                 <!-- 观影title -->
                 <RadioGroup size="small" class="watch-film" @on-change="handleWatchFilm"
                         v-model="filmIndex"  type="button">
