@@ -141,6 +141,9 @@ export default class Main extends ViewBase {
       this.seach()
       return
     }
+    if (new Date().getDay() == 4) {
+      this.seach()
+    }
   }
 
   async remoteMethod(querys: any) {
@@ -189,7 +192,9 @@ export default class Main extends ViewBase {
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
       // this.seach()
-    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
+    } else if (
+      new Date().getDay() == 1 || new Date().getDay() == 2 ||
+      new Date().getDay() == 3 || new Date().getDay() == 4 ) {
       this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
       const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
       const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
@@ -213,7 +218,9 @@ export default class Main extends ViewBase {
       this.startTime -= this.datanum
       this.endTime -= this.datanum
       this.seach()
-    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
+    } else if (
+      new Date().getDay() == 1 || new Date().getDay() == 2 ||
+      new Date().getDay() == 3 || new Date().getDay() == 4 ) {
       this.weekDate = [new Date(this.startTime -= this.datanum), new Date(this.endTime -= this.datanum)]
       const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
       const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
@@ -238,7 +245,9 @@ export default class Main extends ViewBase {
       this.startTime += this.datanum
       this.endTime += this.datanum
       this.seach()
-    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
+    } else if (
+      new Date().getDay() == 1 || new Date().getDay() == 2 ||
+      new Date().getDay() == 3 || new Date().getDay() == 4 ) {
       this.weekDate = [new Date(this.startTime += this.datanum), new Date(this.endTime += this.datanum)]
       const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
       const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
