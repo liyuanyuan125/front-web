@@ -158,7 +158,7 @@ export default class Main extends ViewBase {
       // })
       const index: any = 'tic' + Math.floor(Math.random() * 1000 + 1)
       sessionStorage.setItem(`${index}`, JSON.stringify({
-        totalTaxFee: this.sum ,
+        totalTaxFee: this.sum / 100 ,
         order_ids : this.orderids ,
         order_no : this.orderno
       }))
