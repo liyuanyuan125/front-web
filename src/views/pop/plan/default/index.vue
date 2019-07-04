@@ -76,7 +76,7 @@
           <div class="film-center">
             <p style="opacity: .7">受众性别</p>
             <div v-if="it.genders && it.genders.length > 0">
-              <div style="margin-left: 20px" :key="item.k" v-for="item in it.genders">
+              <div style="margin-left: 20px" :key="item.k" v-for="(item, index) in it.genders">
                 <p style="margin-bottom: 16px" v-if="index == 0">
                   <span v-if="item.k=='F'">男性</span>
                   <span v-else>女性</span>
