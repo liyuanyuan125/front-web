@@ -31,8 +31,11 @@
                   <p style="opacity: .7">受众性别: </p>
                   <div v-if="it.genders && it.genders.length > 0">
                     <div style="margin-left: 20px" :key="index" v-for="(item, index) in it.genders">
-                      <p style="margin-bottom: 16px" v-if="item.k == 'F'">男<span class="ageitem-box">{{item.rate/100}}%</span></p>
-                      <p style="margin-bottom: 16px" v-else>女<span class="ageitem-box">{{item.rate/100}}%</span></p>
+                      <p style="margin-bottom: 16px" v-if="index == 0">
+                        <span v-if="item.k=='F'">男性</span>
+                        <span v-else>女性</span>
+                        <span class="ageitem-box">{{item.rate/100}}%</span>
+                      </p>
                     </div>
                   </div>
                   <div v-else>-</div>
@@ -373,6 +376,9 @@ export default class App extends ViewBase {
           ages: names
         }
       })
+      // const geners = this.filmList.genders.length > 0 ? [this.filmList.genders.sort((a: any, b: any) => {
+      //   return a.rate - b.rate
+      // })[0]] : []
       this.detaildata = data
       this.ageTypeList = data.ageTypeList || []
       this.movieTypeList = data.movieTypeList
