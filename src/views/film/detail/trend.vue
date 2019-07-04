@@ -42,7 +42,7 @@
             <Col :span="24">
               <div class="chart-wp">
                 <!-- 累计和增加 -->
-                <RadioGroup
+                <!-- <RadioGroup
                   size="small"
                   class="grand-total"
                   @on-change="currentTypeChange"
@@ -54,7 +54,7 @@
                     :key="item.key"
                     :label="index"
                   >{{item.name}}</Radio>
-                </RadioGroup>
+                </RadioGroup> -->
                 <!-- 观影title -->
                 <RadioGroup
                   size="small"

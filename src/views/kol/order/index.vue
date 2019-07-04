@@ -74,7 +74,11 @@
                            <span class="img-num" v-if="(item.orderItemList || []).length > 4">等{{(item.orderItemList || []).length}}个账号</span>
                       </Col>
                       <Col :span="6">
-                        <p class="col_00202d">订单金额 <em class="order-monery">￥{{formatNumber(item.confirmFee)}}</em></p>
+                        <p class="col_00202d">订单金额
+                          <em class="order-monery" v-if="[2,3].includes(item.status)">￥{{formatNumber(item.totalFee)}}</em>
+                           <em class="order-monery" v-else-if="item.status == 9">￥{{formatNumber(item.advanceFee+item.restFee)}}</em>
+                          <em v-else class="order-monery">￥{{formatNumber(item.confirmFee)}}</em>
+                          </p>
                         <p v-if="[5,6,7,8].includes(item.status)" class="col_00202d rest-order">部分支付 {{item.advanceFee}}</p>
                       </Col>
                       <Col :span="2" class="li-item-status">
@@ -164,6 +168,7 @@ import pagination from '@/components/page.vue'
 import moment from 'moment'
 import { toMap } from '@/fn/array'
 import { uniq, uniqBy } from 'lodash'
+import Decimal from 'decimal.js'
 import {
   orderList,
   orderBrand,
@@ -332,7 +337,8 @@ export default class Main extends ViewBase {
       }
     } else if (item.status == 8) {
       // 尾款金额 = 订单金额 - 首付款（部分付款
-      const restPayment = item.confirmFee - item.advanceFee
+      const restPayment = new Decimal(item.confirmFee).minus(item.advanceFee)
+      // const restPayment = item.confirmFee - item.advanceFee
       await confirm(`是否支付尾款金额${restPayment}元, <br /> 尾款金额=订单金额${item.confirmFee} 减去 首付款${item.advanceFee}`, {
         title: '支付KOL推广费用'
       })

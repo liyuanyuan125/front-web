@@ -14,11 +14,6 @@
                 <i class="iconfont icon-qiye" slot="prefix" />
               </Input>
             </FormItem>
-            <FormItem prop="adress" >
-              <Input v-model="form.adress" placeholder="企业所在地">
-                <i class="iconfont icon-suozaidi" slot="prefix" />
-              </Input>
-            </FormItem>
             <FormItem prop="name" >
               <Input  v-model="form.name" placeholder="联系人姓名">
                 <i class="iconfont icon-lianxiren" slot="prefix" />
@@ -28,6 +23,10 @@
               <Input  v-model="form.tel" placeholder="联系电话">
                 <i class="iconfont icon-lianxidianhua" slot="prefix" />
               </Input>
+            </FormItem>
+            <FormItem prop="area" >
+               <AreaSelect v-model="form.area" :max-level="2" no-self/>
+               <i class="iconfont icon-suozaidi" slot="prefix" />
             </FormItem>
             <FormItem prop="info" class="text-area">
               <Input type="textarea"  v-model="form.info" :rows="3" placeholder="请简单备注您的需求"></Input>
@@ -45,10 +44,12 @@ import { login } from '@/api/auth'
 import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
+import AreaSelect from '@/components/areaSelect'
 @Component({
-    components: {
-        loginLayout
-    }
+  components: {
+    loginLayout,
+    AreaSelect
+  }
 })
 export default class Main extends ViewBase {
   form = {
@@ -69,7 +70,7 @@ export default class Main extends ViewBase {
 
   rules = {
     companyName: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
-    adress: [{ required: true, message: '请输入地址', trigger: 'blur' }],
+    area: [{ required: true, message: '请输入地址', trigger: 'blur' }],
     name: [{ required: true, message: '请输入联系人姓名', trigger: 'blur' }],
     tel: [{ required: true, message: '请输入联系人电话', trigger: 'blur' }],
     info: [{ required: true, message: '请输入备注', trigger: 'blur' }],

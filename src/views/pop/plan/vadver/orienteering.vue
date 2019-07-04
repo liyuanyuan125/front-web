@@ -467,7 +467,7 @@ export default class Orienteering extends ViewBase {
                 })
         })
       )
-      this.spins = 0
+      this.spins = 20
       this.spinshow = true
       this.recommend = false
       this.settime = setInterval(() => {
@@ -493,26 +493,29 @@ export default class Orienteering extends ViewBase {
           //     }
           //   }
           // } else {
-          this.spinshow = false
+          setTimeout(() => {
+            this.spinshow = false
             if (this.planMovies && this.planMovies.length > 0) {
-              this.$emit('input', {
-                id: 2,
-                setid: this.$route.params.setid
-              })
-              if (this.$route.name == 'pop-planlist-add') {
-                this.$router.push({
-                  name: 'pop-planlist-add',
-                  params: { id: '2', setid: this.$route.params.setid  }
+                this.$emit('input', {
+                  id: 2,
+                  setid: this.$route.params.setid
                 })
+                if (this.$route.name == 'pop-planlist-add') {
+                  this.$router.push({
+                    name: 'pop-planlist-add',
+                    params: { id: '2', setid: this.$route.params.setid  }
+                  })
+                } else {
+                  this.$router.push({
+                    name: 'pop-planlist-edit',
+                    params: { id: '2', setid: this.$route.params.setid  }
+                  })
+                }
               } else {
-                this.$router.push({
-                  name: 'pop-planlist-edit',
-                  params: { id: '2', setid: this.$route.params.setid  }
-                })
+                info('非常抱歉，暂未找到匹配项；请尝试扩大定向范围或投放排期范围')
               }
-            } else {
-              info('非常抱歉，暂未找到匹配项；请尝试扩大定向范围或投放排期范围')
-            }
+            }, 500)
+            this.spins = 0
           // }
         } else {
           this.loddding()
@@ -549,7 +552,7 @@ export default class Orienteering extends ViewBase {
         this.spinshow = false
         clearInterval(this.settime)
       }
-      if (this.spins > 80) {
+      if (this.spins >= 80) {
         this.spins = 99
       } else {
         this.spins += 20
