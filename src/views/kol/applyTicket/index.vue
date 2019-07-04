@@ -75,6 +75,7 @@ import moment from 'moment'
 import { slice, clean } from '@/fn/object'
 import { warning , success, toast } from '@/ui/modal'
 import { uniq, uniqBy } from 'lodash'
+import Decimal from 'decimal.js'
 
 
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
@@ -158,7 +159,7 @@ export default class Main extends ViewBase {
       // })
       const index: any = 'tic' + Math.floor(Math.random() * 1000 + 1)
       sessionStorage.setItem(`${index}`, JSON.stringify({
-        totalTaxFee: this.sum / 100 ,
+        totalTaxFee: this.sum ,
         order_ids : this.orderids ,
         order_no : this.orderno
       }))
@@ -207,11 +208,13 @@ export default class Main extends ViewBase {
       }
       // this.sum = 0
       this.moneyList.forEach((ele: any) => {
-        this.sum += (Number(ele) * 100)
+        // this.sum += (Number(ele) * 100)
+        this.sum = new Decimal(this.sum).plus(ele)
       })
       // 总金额减去退款金额
       this.refundmoney.forEach((ele: any) => {
-        this.sum -= (Number(ele) * 100)
+        // this.sum -= (Number(ele) * 100)
+        this.sum = new Decimal(this.sum).minus(ele)
       })
 
     if (this.orderids.length != this.list.length) {
