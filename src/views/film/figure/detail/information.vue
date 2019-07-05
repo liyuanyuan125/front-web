@@ -26,16 +26,20 @@
         <p><span v-for="it in item.movies" :key="it.id">《{{it.name}}》</span></p>
       </li>
     </ul>
-    <h2 class="nav-title" v-if="imgList.length">图片（{{imgList.length}}）</h2>
-    <ul name="list" v-if="imgList.length" tag="ul" class="loading-img">
-      <li v-for="(img, index) in imgList" :key="index">
+    <div class="nav-title img-toggle" v-if="imgList.length">图片（{{imgList.length}}）
+      <div class="show-all" v-if="imgList.length > 15">
+        <span @click="handleToggle">
+          {{tabShowTitle}}
+          <Icon :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}" type="ios-arrow-down" size="25" />
+          
+          </span>
+      </div>
+    </div>
+    <ul name="list" v-if="mapImgList.length" tag="ul" class="loading-img">
+      <li v-for="(img, index) in mapImgList" :key="index" v-if="img">
         <a class="img-list"><img :src="img" alt=""/></a>
       </li>
     </ul>
-
-    <!-- <div class="show-all" v-if="imgUrl.length > 5">
-      <span @click="handleToggle">{{tabShowTitle}}<Icon :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}" type="ios-arrow-down" size="25" /></span>
-    </div> -->
   </div>
 </template>
 
@@ -44,6 +48,7 @@ import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { personIntro } from '@/api/filmPersonDetail'
 import {formatConversion} from '@/util/validateRules'
+import { cloneDeep } from 'lodash'
 // import { swiper, swiperSlide } from 'vue-awesome-swiper'
 // import 'swiper/dist/css/swiper.css'
 
@@ -61,8 +66,9 @@ export default class Information extends ViewBase {
   moreText = '展示更多'
 
   item: any = {}
-  imgUrl = []
+  mapImgList: any = []
   imgList: any = []
+
   personalList: any = []
   professionsList: any[] = []
 
@@ -81,6 +87,8 @@ export default class Information extends ViewBase {
       this.item = item || null
       this.imgList = item && item.images || []
       this.professionsList = professions
+      const list = cloneDeep(this.imgList)
+      this.mapImgList = list.length > 15 ? list.slice(0, 15) : list
       // 合并数据
       item ?  this.personalList.push({
           title: '合作过最多的导演',
@@ -127,14 +135,15 @@ export default class Information extends ViewBase {
     }
   }
   handleToggle() {
+    const list = cloneDeep(this.imgList)
     if (!this.arrowFlag) {
       this.arrowFlag = 1
       this.tabShowTitle = '向上隐藏'
-      this.imgList = this.imgUrl
+      this.mapImgList = list
     } else {
       this.arrowFlag = 0
       this.tabShowTitle = '展示全部'
-      this.imgList = this.imgUrl.slice(0, 5)
+      this.mapImgList = list.slice(0, 15)
     }
   }
 }
@@ -155,6 +164,7 @@ export default class Information extends ViewBase {
   font-weight: normal;
   margin-bottom: 30px;
   color: #fff;
+  position: relative;
 }
 .personal-information {
   background: rgba(0, 32, 45, .9);
@@ -256,13 +266,16 @@ export default class Information extends ViewBase {
       }
     }
   }
-  .show-all {
-    text-align: center;
-    font-size: 14px;
-    color: #b3bcc0;
-    span {
-      cursor: pointer;
-    }
+}
+.show-all {
+  text-align: center;
+  font-size: 14px;
+  color: #b3bcc0;
+  position: absolute;
+  right: 0;
+  top: 6px;
+  span {
+    cursor: pointer;
   }
 }
 .arrowDown {

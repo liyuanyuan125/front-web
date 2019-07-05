@@ -338,8 +338,8 @@ export async function getVideoRise(id: number, hasShow = false) {
   }
 
   const result = hasShow
-    ? dealList(data, 'view.count')
-    : dealList(data.items, 'count')
+    ? dealList(data, 'view.trend')
+    : dealList(data.items, 'trend')
 
   return result
 }

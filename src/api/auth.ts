@@ -32,3 +32,11 @@ export async function getUserInfo() {
   const res = await post('/auth/infos')
   return res
 }
+
+/**
+ * 添加留言
+ */
+export async function getBoards(data: any) {
+  const res = await post('/customer/message-boards', data)
+  return res
+}
