@@ -60,6 +60,7 @@
             :title="hasShow ? '近7日观影人次' : '近7日新增想看'"
             :data="riseData"
             :more="{ name: 'film-detail-trend', params: {id} }"
+            :formatter="riseFormatter"
             class="active-fans-pane"
           />
         </div>
@@ -129,9 +130,14 @@ export default class MoviePage extends ViewBase {
 
   hotData: any[] = []
 
+  riseFormatter({ dataIndex }: any) {
+    const { date, value } = this.riseData[dataIndex - 1]
+    return `${date}<br>${readableThousands(value)}`
+  }
+
   hotFormatter([{ dataIndex }]: any) {
-    const { value, rank } = this.hotData[dataIndex]
-    return `综合热度：${readableThousands(value)}<br>排名：${readableThousands(rank)}`
+    const { date, value, rank } = this.hotData[dataIndex]
+    return `${date}<br>综合热度：${readableThousands(value)}<br>排名：${readableThousands(rank)}`
   }
 
   created() {
