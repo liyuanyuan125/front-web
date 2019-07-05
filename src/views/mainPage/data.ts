@@ -1,9 +1,12 @@
 import { get } from '@/fn/ajax'
-import { at, keyBy, sumBy } from 'lodash'
+import { keyBy, sumBy } from 'lodash'
 import { KeyText, MapType, MovieStatus } from '@/util/types'
 import { slice } from '@/fn/object'
 import { dayOffsetRange } from '@/util/date'
 import { percent, dot, intDate, readableThousands, readableNumber } from '@/util/dealData'
+import store from '@/store'
+
+const { defaultAvatar } = store.state
 
 const getNames = (keys: string[], list: KeyText[]) => {
   const map = keyBy(list, 'key')
@@ -261,7 +264,8 @@ export async function getMovie(id: number) {
     basic: {
       id,
       name,
-      subName: nameEn,
+      // 产品要去，如果英文名与 name 一致，则不显示
+      subName: nameEn == name ? '' : nameEn,
       figure: mainPic,
       rankNo: percent(jyIndex, 2),
       rankTitle: `同档期：第${jyIndexSamePeriodRanking || '-'}`,
@@ -286,7 +290,7 @@ export async function getMovie(id: number) {
         .map((it: any) => ({
           id: it.id,
           name: it.name,
-          avatar: it.headImg
+          avatar: it.headImg || defaultAvatar
         })),
       more: {
         name: 'film-detail-creator',
