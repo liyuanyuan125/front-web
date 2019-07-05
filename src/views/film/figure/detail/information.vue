@@ -2,7 +2,7 @@
   <div class="personal-information">
     <h2 class="nav-title">人物简介</h2>
     <ul class="personal-mes">
-      <li><span>出生日期：</span><span>{{formatConversion(item.birthday) || '-'}}</span></li>
+      <li><span>出生日期：</span><span>{{intDate(item.birthday) || '-'}}</span></li>
       <li> <span>身高: {{item.height || '-'}}</span> </li>
       <li><span>出生地：</span><span>{{item.country || '-'}},{{item.province || '-'}}</span></li>
       <li><span>体重: {{item.weight || '-'}}</span></li>
@@ -47,7 +47,7 @@
 import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { personIntro } from '@/api/filmPersonDetail'
-import {formatConversion} from '@/util/validateRules'
+import { intDate } from '@/util/dealData'
 import { cloneDeep } from 'lodash'
 // import { swiper, swiperSlide } from 'vue-awesome-swiper'
 // import 'swiper/dist/css/swiper.css'
@@ -72,8 +72,8 @@ export default class Information extends ViewBase {
   personalList: any = []
   professionsList: any[] = []
 
-  get formatConversion() {
-    return formatConversion
+  get intDate() {
+    return intDate
   }
   async mounted() {
     await this.tableList()
