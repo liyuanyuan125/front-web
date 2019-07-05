@@ -1,7 +1,7 @@
 <template>
   <div class="plan-box">
     <Spin v-if="spinshow" fix>
-      <img style="width: 200px" src="./assets/ad.gif"> 
+      <img style="width: 200px" src="./assets/ad.gif">
       <Progress :percent="spins" status="active" />
       <p style="font-size: 30px; color: #3959A8">{{spins}}%</p>
     </Spin>
@@ -78,7 +78,7 @@
                 <FormItem class="item-top form-item-type">
                   <RadioGroup v-model="form.sex" class="item-radio-top">
                     <Radio  style="width: 220px" class="check-item form-item-first" :label="0">不限</Radio>
-                    <Radio 
+                    <Radio
                       v-if="it.key != 'unknow'"
                       style="width: 220px; height: 70px;"
                       v-for="it in sexList"
@@ -514,8 +514,8 @@ export default class Orienteering extends ViewBase {
               } else {
                 info('非常抱歉，暂未找到匹配项；请尝试扩大定向范围或投放排期范围')
               }
+              this.spins = 0
             }, 500)
-            this.spins = 0
           // }
         } else {
           this.loddding()

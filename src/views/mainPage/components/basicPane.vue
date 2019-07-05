@@ -492,8 +492,9 @@ export default class BasicPane extends Vue {
 }
 
 .actor-img {
-  width: 68px;
-  height: 68px;
+  // 解决样式串的问题
+  width: 68px !important;
+  height: 68px !important;
   border-radius: 50%;
   overflow: hidden;
 }
