@@ -1,5 +1,9 @@
 <template>
-  <Layout :bubbleList="bubbleList" class="layout">
+  <Layout
+    :bubbleList="bubbleList"
+    :bubbleLink="{ name: 'brand-homedetail-comment', params: { id } }"
+    class="layout"
+  >
     <main class="main-content">
       <div class="header-bar">
         <h3 class="item-title">{{item.name}}</h3>
