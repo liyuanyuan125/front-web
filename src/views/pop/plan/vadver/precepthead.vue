@@ -182,6 +182,7 @@ export default class App extends ViewBase {
       opacity: .8;
     }
     dt {
+      flex: 1;
       margin-left: 10px;
       color: #fff;
       overflow: hidden;
