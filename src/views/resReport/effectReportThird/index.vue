@@ -385,7 +385,7 @@ export default class Index extends ViewBase {
   }
 
   async created() {
-    this.init(this.planId)
+    this.init(this.$route.params.id)
   }
 
   async init(id: any) {
