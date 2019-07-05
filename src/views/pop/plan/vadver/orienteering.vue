@@ -122,7 +122,7 @@
             </FormItem>
           </h3>
           <div v-show="movieCustom == 0">
-            <Film v-model="numsList" :begin="beginDate" :end="endDate" />
+            <Film v-model="numsList" @donefilm="timerfilm" :begin="beginDate" :end="endDate" />
           </div>
           <div class="item-top" v-show="movieCustom != 0">
             <div ref="types">
@@ -283,6 +283,10 @@ export default class Orienteering extends ViewBase {
     this.init()
   }
 
+  timerfilm(val: any) {
+    this.numsList = val
+  }
+
   formatDate(data: any) {
     return data ? moment(data).format(timeFormat) : '暂无'
   }
@@ -321,10 +325,6 @@ export default class Orienteering extends ViewBase {
     }
   }
 
-  timerfilm(val: any) {
-    this.timers = val
-  }
-
   renders(val: any) {
     this.citys(val.deliveryCityTypes)
     this.sexs()
@@ -335,7 +335,7 @@ export default class Orienteering extends ViewBase {
 
   movieCustoms() {
     if (this.item.movieCustom == 1) {
-      this.movieCustom = 1
+      this.movieCustom = 0
       this.numsList = (this.movies || []).map((it: any) => {
         return {
           id: it.id,
@@ -417,7 +417,7 @@ export default class Orienteering extends ViewBase {
 
   async next(dataform: any) {
     const timers = Object.keys(this.timers)
-    if (this.movieCustom != 0 && this.numsList.length == 0) {
+    if (this.numsList.length == 0) {
       confirm('请选择影片')
       return
     }
@@ -444,10 +444,10 @@ export default class Orienteering extends ViewBase {
           ].filter((it: any) => {
             return it.text != 0
           }),
-          movieCustom: this.movieCustom == 0 && this.numsList.length > 0 ? 1 : 0,
+          movieCustom: this.numsList.length > 0 ? 1 : 0,
           customDeliveryCities: this.cityCustom == 0 ? '' : this.citysId,
           deliveryMovies:
-            this.movieCustom == 1
+            this.numsList.length == 0
               ? ''
               : this.numsList.map((it: any) => {
                   return {

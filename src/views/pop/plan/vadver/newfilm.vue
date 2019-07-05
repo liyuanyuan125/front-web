@@ -270,7 +270,7 @@ export default class DlgEditCinema extends ViewBase {
   watchCheckObj(val: any) {
     this.checkId = uniq(this.checkId)
     const checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
-    this.$emit('done', [...checkObj])
+    this.$emit('donefilm', [...checkObj])
   }
 
   @Watch('value', { deep: true})
