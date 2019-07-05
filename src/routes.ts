@@ -1084,7 +1084,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         component: () => import('./views/kol/detail/fans.vue'),
         meta: {
           ...emptyAuth,
-          title: 'emptyAuth'
+          title: '粉丝画像'
         },
         props: idProps,
       },
