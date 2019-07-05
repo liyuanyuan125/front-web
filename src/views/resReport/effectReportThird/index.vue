@@ -400,10 +400,6 @@ export default class Index extends ViewBase {
           gradeCodes,
           planStatus,
           movieTypes,
-          report: {
-            lastModifyTime,
-            dates
-          }
         }
       } = await getPlansReport(id)
       // const name = getName( plan.status, planStatus)
@@ -416,12 +412,12 @@ export default class Index extends ViewBase {
       this.bannerData = {
         item0: a + '~' + b,
         item1: sum,
-        item5: formatYell(lastModifyTime),
+        item5: report == null ? '暂无' : formatYell(report.lastModifyTime),
         item6: plan.name
       }
       this.totalData = {
-        item0: report.viewCount,
-        item1: report.scheduleCount,
+        item0: report == null ? '-' : report.viewCount,
+        item1: report == null ? '-' : report.scheduleCount,
       }
       if ( cinemas && cinemas.length > 0 ) {
         this.cinemasData.totalCount = cinemas.length
@@ -475,7 +471,7 @@ export default class Index extends ViewBase {
           })
         })
       }
-      dates.forEach((item: any, index: number) => {
+      report == null ? this.tableData.data = [] : report.dates.forEach((item: any, index: number) => {
         this.chart1.dataList[0].data.push(item.viewCount)
         this.chart1.dataList[1].data.push(item.scheduleCount)
         this.chart1.dataList[2].data.push(item.cost)
