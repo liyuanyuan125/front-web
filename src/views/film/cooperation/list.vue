@@ -46,68 +46,72 @@
     <div class="filter-box">
       <Form :model="form" label-position="left" class="edit-input" :label-width="100">
         <Row type="flex" class="filtertop" justify="space-between">
-          <FormItem label="上映时间：">
-            <RadioGroup
-              class="nav"
-              @on-change="handleChange"
-              v-model="form.releaseStatus"
-              size="large"
-              type="button"
-            >
-              <Radio
-                v-for="(item) in dict.timeSelected"
-                :key="item.key"
-                :disabled="item.disabled"
-                :label="item.key"
-              >{{item.text}}</Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="影片类型：">
-            <RadioGroup
-              class="nav"
-              @on-change="handleChange"
-              v-model="form.movieTypeCode"
-              size="large"
-              type="button"
-            >
-              <Radio
-                v-for="(item) in dict.typeList"
-                :key="item.key"
-                :label="item.key"
-              >{{item.text}}</Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="影片量级：">
-            <RadioGroup
-              @on-change="handleChange"
-              v-model="form.movieCategoryCode"
-              size="large"
-              type="button"
-            >
-              <Radio
-                v-for="(item) in dict.categoryList"
-                :key="item.key"
-                :label="item.key"
-              >{{item.text}}</Radio>
-            </RadioGroup>
-          </FormItem>
+          <Col :span="24">
+            <FormItem label="上映时间:">
+              <RadioGroup
+                class="nav"
+                @on-change="handleChange"
+                v-model="form.releaseStatus"
+                size="large"
+                type="button"
+              >
+                <Radio
+                  v-for="(item) in dict.timeSelected"
+                  :key="item.key"
+                  :disabled="item.disabled"
+                  :label="item.key"
+                >{{item.text}}</Radio>
+              </RadioGroup>
+            </FormItem>
+            <FormItem label="影片类型:">
+              <RadioGroup
+                class="nav"
+                @on-change="handleChange"
+                v-model="form.movieTypeCode"
+                size="large"
+                type="button"
+              >
+                <Radio
+                  v-for="(item) in dict.typeList"
+                  :key="item.key"
+                  :label="item.key"
+                >{{item.text}}</Radio>
+              </RadioGroup>
+            </FormItem>
+            <FormItem label="影片量级:">
+              <RadioGroup
+                @on-change="handleChange"
+                v-model="form.movieCategoryCode"
+                size="large"
+                type="button"
+              >
+                <Radio
+                  v-for="(item) in dict.categoryList"
+                  :key="item.key"
+                  :label="item.key"
+                >{{item.text}}</Radio>
+              </RadioGroup>
+            </FormItem>
+          </Col>
         </Row>
         <Row type="flex" justify="space-between" class="filterbottom">
-          <FormItem label="排序方式：">
-            <RadioGroup
-              class="nav"
-              @on-change="handleChange"
-              v-model="form.sortBy"
-              size="large"
-              type="button"
-            >
-              <Radio
-                v-for="(item) in dict.sortBy"
-                :key="item.key"
-                :label="item.key"
-              >{{item.text}}</Radio>
-            </RadioGroup>
-          </FormItem>
+          <Col :span="24">
+            <FormItem label="排序方式:">
+              <RadioGroup
+                class="nav"
+                @on-change="handleChange"
+                v-model="form.sortBy"
+                size="large"
+                type="button"
+              >
+                <Radio
+                  v-for="(item) in dict.sortBy"
+                  :key="item.key"
+                  :label="item.key"
+                >{{item.text}}</Radio>
+              </RadioGroup>
+            </FormItem>
+          </Col>
         </Row>
       </Form>
     </div>
@@ -164,35 +168,27 @@ const typeListMore: any[] = []
 })
 export default class CooperationFilmList extends ViewBase {
   done = false
-
   filterShowMore = false
-
   filterShowMoreIcon = 'ios-arrow-down'
-
   filterShowMoreText = '更多'
-
   selectdTime: string = ''
-
   totalPages: number = 0
-
   form: any = {
     movieTypeCode: '',
     movieCategoryCode: '',
     sortBy: 'wantSeeCount',
     pageIndex: 1,
     pageSize: 18,
-    releaseStatus: 3
+    releaseStatus: 0
   }
-
   dataList: any[] = []
-
   dict = {
     // 上映时间
     timeSelected: [
-      // {
-      //   key: 0,
-      //   text: '不限'
-      // },
+      {
+        key: 0,
+        text: '不限'
+      },
       {
         key: 3,
         text: '正在热映'
