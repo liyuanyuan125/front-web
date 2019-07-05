@@ -15,27 +15,6 @@
            <Col v-if='this.$route.params.edit == "0" ' class='fa-m' :span='12'>发票总额：  <span style='font-size: 23px;'>￥<number :addNum='Number(this.list.totalTaxFee)' /></span></Col>
            <Col v-if='this.$route.params.key == "0" ' class='fa-m' :span='12'>发票总额：  <span style='font-size: 23px;'>￥<number :addNum='Number(this.money)' /></span></Col>
          </Row>
-         <Row style='margin-top: 10px;'><span class='bx'>*</span>
-          <!--  <Col :span='4' style='margin-top: 5px;width: 100px；'>发票内容：</Col>
-           <Col :span='6'>
-             <Select v-model="query.itemCode" placeholder="发票内容" filterable
-                clearable class="component" >
-                <Option v-for="it in faList" :key="it.key" :value="it.key"
-                  :label="it.text" class="flex-box">
-                  <span>{{it.text}}</span>
-                </Option>
-              </Select>
-           </Col> -->
-           <FormItem label="发票内容" prop="itemCode">
-            <Select v-model="query.itemCode" placeholder="发票内容" filterable
-                clearable class="component" >
-                <Option v-for="it in faList" :key="it.key" :value="it.key"
-                  :label="it.text" class="flex-box">
-                  <span>{{it.text}}</span>
-                </Option>
-              </Select>
-           </FormItem>
-         </Row>
          <Row style='margin-top: 16px;'><span class='bx'>*</span>
            <!-- <Col :span='4' style='margin-top: 5px;width: 100px；'>发票类型</Col>
            <Col :span='20'>
@@ -62,6 +41,27 @@
             </RadioGroup>
           </FormItem>
           </Row>
+          <Row style='margin-top: 10px;'><span class='bx'>*</span>
+          <!--  <Col :span='4' style='margin-top: 5px;width: 100px；'>发票内容：</Col>
+           <Col :span='6'>
+             <Select v-model="query.itemCode" placeholder="发票内容" filterable
+                clearable class="component" >
+                <Option v-for="it in faList" :key="it.key" :value="it.key"
+                  :label="it.text" class="flex-box">
+                  <span>{{it.text}}</span>
+                </Option>
+              </Select>
+           </Col> -->
+           <FormItem label="发票内容" prop="itemCode">
+            <Select v-model="query.itemCode" placeholder="发票内容" filterable
+                clearable class="component" >
+                <Option v-for="it in faList" :key="it.key" :value="it.key"
+                  :label="it.text" class="flex-box">
+                  <span>{{it.text}}</span>
+                </Option>
+              </Select>
+           </FormItem>
+         </Row>
           <Row style='margin-top: 19px;'><span class='bx'>*</span>
            <!-- <Col :span='4' style='margin-top: 5px;'>发票抬头
            </Col>
