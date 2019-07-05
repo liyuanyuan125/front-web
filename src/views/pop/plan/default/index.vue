@@ -112,7 +112,7 @@
       </div>
     </div>
 
-    <div v-if="status != 1" class="plan-cinema-num">
+    <div v-if="item.recommend" class="plan-cinema-num">
       <div class="result-top">
         <h3>覆盖范围</h3>
         <span class="custom" @click="exportData">导出影院</span>
@@ -447,6 +447,8 @@ export default class App extends ViewBase {
   tages(id: any) {
     this.tag = id
     this.name = ''
+    this.pageIndex = 1
+    this.pageSize = 6
     this.seach()
   }
 
@@ -605,7 +607,9 @@ export default class App extends ViewBase {
   async cinemfind() {
     try {
       const { data } = await getcinemas(this.$route.params.id, {
-        name: this.name
+        name: this.name,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -617,7 +621,9 @@ export default class App extends ViewBase {
   async provienfind() {
     try {
       const { data } = await getprovinces(this.$route.params.id, {
-        name: this.name
+        name: this.name,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -629,7 +635,9 @@ export default class App extends ViewBase {
   async cityfind() {
     try {
       const { data } = await getcities(this.$route.params.id, {
-        name: this.name
+        name: this.name,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -641,7 +649,9 @@ export default class App extends ViewBase {
   async chainsfind() {
     try {
       const { data } = await getchains(this.$route.params.id, {
-        name: this.name
+        name: this.name,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount

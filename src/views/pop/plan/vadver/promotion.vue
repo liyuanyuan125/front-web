@@ -663,6 +663,9 @@ export default class Promotion extends ViewBase {
       color: #00202d;
     }
   }
+  /deep/ .ivu-input-wrapper {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
   /deep/ .ivu-input {
     border: 0;
   }
