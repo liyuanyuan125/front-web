@@ -69,7 +69,7 @@
             <h4 class="person-identity"><span v-for="(item, index) in it.professions" :key="index"> {{handleProfession(item)}} </span></h4>
             <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" :key="index">{{item}}</em></p>
             <p class="com-col">类型：<em class="em-actor" v-for="(item, index) in it.types" :key="index">{{handleMoive(item)}}<i v-if="it.types.length-1 != index"> / </i></em></p>
-            <p class="com-col">{{formatConversion(it.release)}} {{it.releaseCountry}}上映</p>
+            <p class="com-col">{{intDate(it.release)}} {{it.releaseCountry}}上映</p>
           </div>
         </div>
       </div>
@@ -82,7 +82,8 @@
 import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import {personMovies, topList } from '@/api/filmPersonDetail'
-import { getTodayDate, formatConversion } from '@/util/validateRules'
+import { getTodayDate } from '@/util/validateRules'
+import { intDate } from '@/util/dealData'
 
 
 @Component
@@ -123,8 +124,8 @@ export default class Master extends ViewBase {
   // 鲸鱼指数排序
   jyList: any = []
 
-  get formatConversion() {
-    return formatConversion
+  get intDate() {
+    return intDate
   }
 
   mounted() {
