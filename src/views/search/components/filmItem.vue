@@ -6,7 +6,7 @@
     <img :src="item.main_pic" class="item-img">
     <main class="item-main">
       <h4 class="line line-name">{{item.name_cn}}</h4>
-      <div class="line line-sub">{{item.name_en}}</div>
+      <div class="line line-sub" v-if="item.name_en != item.name_cn">{{item.name_en}}</div>
       <div class="line-info">
         <p v-if="item.directorName">导演：{{item.directorName}}</p>
         <p v-if="item.actorName">主演：{{item.actorName}}</p>
@@ -73,6 +73,10 @@ export default class FilmItem extends ViewBase {
 .line em {
   font-size: 22px;
   font-weight: 500;
+}
+
+.line-name + .line-info {
+  margin-top: 15px;
 }
 
 .line-box {

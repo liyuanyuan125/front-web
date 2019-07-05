@@ -65,7 +65,7 @@ import Uploader from '@/util/Uploader'
 import Film from './film.vue'
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 const uploader = new Uploader({
-  filePostUrl: '/xadvert/v1/third-monitors/upload-cinemas',
+  filePostUrl: '/xadvert/third-monitors/upload-cinemas',
   fileFieldName: 'file',
 })
 

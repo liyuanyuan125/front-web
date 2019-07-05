@@ -115,6 +115,8 @@ export default class NavSwiper extends ViewBase {
     opacity: .5;
     background-color: rgba(0, 0, 0, .3);
     cursor: not-allowed;
+    // 产品说，隐藏
+    display: none;
   }
 }
 

@@ -17,7 +17,7 @@ const store = new Vuex.Store({
     } as MapType<string | null>,
 
     /** 默认头像 */
-    defaultAvatar: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcq1fljqctg008ubl80.jpg'
+    defaultAvatar: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkfh16ilkin0008001b0.png'
   },
 
   mutations: {

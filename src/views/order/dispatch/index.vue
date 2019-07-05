@@ -9,7 +9,7 @@
     <div class="order-content">
       <div class="order-form jyd-form flex-box">
          <DatePicker type="daterange" class="item-list-sel" style="width: 250px"  v-model='putDate'  @on-change="handleChange"  placeholder="开始日期和结束日期" ></DatePicker>
-         <Select v-model='form.cinemald' class="item-list-sel" style="width: 250px" 
+         <Select v-model='form.cinemaId' class="item-list-sel" style="width: 250px" 
           filterable clearable
           remote
           :loading="loading"
@@ -137,7 +137,7 @@ export default class Main extends ViewBase {
   form: any = {
     beginDate: null,
     endDate: null,
-    cinemald: null,
+    cinemaId: null,
     // videoName: null,
     status: '1',
   }

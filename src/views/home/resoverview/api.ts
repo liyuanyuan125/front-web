@@ -28,7 +28,7 @@ export async function getStats() {
         moviePendingDownload
       }
     }
-  } = await get('/xadvert/v1/plans/statistics')
+  } = await get('/xadvert/plans/statistics')
   const result = {
     balance,
 

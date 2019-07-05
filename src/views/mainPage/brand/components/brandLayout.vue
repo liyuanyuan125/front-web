@@ -1,5 +1,9 @@
 <template>
-  <Layout :bubbleList="bubbleList" class="layout">
+  <Layout
+    :bubbleList="bubbleList"
+    :bubbleLink="{ name: 'brand-homedetail-comment', params: { id } }"
+    class="layout"
+  >
     <main class="main-content">
       <div class="header-bar">
         <h3 class="item-title">{{item.name}}</h3>
@@ -95,7 +99,7 @@
       </Pane>
 
       <Pane title="热门影片" class="film-pane" v-if="hotFilmGroup">
-        <Tabs v-model="hotFilmTab">
+        <Tabs v-model="hotFilmTab" :animated="false">
           <TabPane v-for="(it, i) in hotFilmGroup" :key="it.name" :name="it.name" :label="it.name">
             <NavSwiper class="film-swiper">
               <swiper-slide

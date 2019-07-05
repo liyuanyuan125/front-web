@@ -1,5 +1,9 @@
 <template>
-  <Layout :bubbleList="bubbleList" :class="bigFigure ? 'layout-big-figure' : ''">
+  <Layout
+    :bubbleList="bubbleList"
+    :bubbleLink="{ name: 'film-figure-detail-comment', params: { id } }"
+    :class="bigFigure ? 'layout-big-figure' : ''"
+  >
     <div class="main-content flex-box">
       <div
         class="big-figure"

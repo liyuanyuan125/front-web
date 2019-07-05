@@ -6,7 +6,7 @@ import { mockGet, tid, title20, dateRange } from './mock'
  * @param data
  */
 export async function planList(data: any) {
-  const res = await get('/xadvert/v1/plans', data)
+  const res = await get('/xadvert/plans', data)
   return res
 }
 
@@ -15,7 +15,7 @@ export async function planList(data: any) {
  * @param data
  */
 export async function delCheckPlanList(query: any) {
-  const res = await del(`/xadvert/v1/plans?ids=${query}`)
+  const res = await del(`/xadvert/plans?ids=${query}`)
   return res
 }
 
@@ -33,7 +33,7 @@ export async function relevanceVideo(data: any) {
  * @param data
  */
 export async function setVideo(id: any, query: any) {
-  const res = await post(`/xadvert/v1/plans/${id}/video`, query)
+  const res = await post(`/xadvert/plans/${id}/video`, query)
   return res
 }
 
@@ -147,7 +147,7 @@ export async function dateMockList(data: any) {
  * 确认方案
  */
 export async function sureEdit(id: any) {
-  const res = await post(`/xadvert/v1/plans/${id}/confirm`)
+  const res = await post(`/xadvert/plans/${id}/confirm`)
   return res
 }
 
@@ -155,6 +155,6 @@ export async function sureEdit(id: any) {
  * 确认草稿方案
  */
 export async function surecaogao(id: any) {
-  const res = await post(`/xadvert/v1/plans/${id}/confirm-draft`)
+  const res = await post(`/xadvert/plans/${id}/confirm-draft`)
   return res
 }
