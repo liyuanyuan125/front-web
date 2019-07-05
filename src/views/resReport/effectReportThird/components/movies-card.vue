@@ -43,7 +43,7 @@
                   <ul>
                     <li v-for="(it, i) in item.userPortrait.ages"
                         :key="i">
-                      <AgeBar :value="(it.value)/100"
+                      <AgeBar :value="(it.value)"
                               :name="it.key"
                               :isMax="it.isMax"></AgeBar>
                     </li>
