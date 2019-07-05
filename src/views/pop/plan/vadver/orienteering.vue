@@ -73,36 +73,30 @@
           <h3 class="layout-titles" style="margin-top: 45px">受众偏好</h3>
           <Row class="item-top item-three">
             <Col :span="24" class="flex">
-              <Col :span="6" class="three-left">
+              <Col :span="7" class="three-left">
                 <div class="orient-title">受众性别</div>
                 <FormItem class="item-top form-item-type">
                   <RadioGroup v-model="form.sex" class="item-radio-top">
-                    <Radio  style="width: 220px" class="check-item form-item-first" :label="0">不限</Radio>
+                    <Radio  style="width: 250px" class="check-item form-item-first" :label="0">不限</Radio>
                     <Radio 
                       v-if="it.key != 'unknow'"
-                      style="width: 220px; height: 70px;"
+                      style="width: 116px; height: 40px; float: left;"
                       v-for="it in sexList"
                       :key="it.key"
                       :label="it.key"
                       class="check-item check-icon"
                     >
-                      <div v-if="it.text == '男'">
-                        <i class="check-man"></i>
-                      </div>
-                      <div v-else>
-                        <i class="check-woman"></i>
-                      </div>
                       <span>{{it.text}}</span>
                     </Radio>
                   </RadioGroup>
                 </FormItem>
               </Col>
 
-              <Col :span="6" class="three-left">
+              <Col :span="17" class="three-right">
                 <div class="orient-title">受众年龄</div>
                 <FormItem class="item-top form-item-type">
                   <CheckboxGroup v-model="form.age" class="item-radio-top">
-                    <Checkbox  style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
+                    <Checkbox  style="width: 100%" class="check-item form-item-first" :label="0">不限</Checkbox>
                     <Checkbox
                       style="100px"
                       v-for="it in ageList"
@@ -117,20 +111,6 @@
               </Col>
 
               <Col :span="12">
-                <div ref="types">
-                  <div class="orient-title">影片类型</div>
-                  <FormItem :labelWidth="0" class="item-top form-item-type">
-                    <CheckboxGroup v-model="form.type" class="item-radio-top">
-                      <Checkbox  style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
-                      <Checkbox
-                        v-for="it in typeList"
-                        :key="it.key"
-                        :label="it.key"
-                        class="check-item"
-                      >{{it.text}}</Checkbox>
-                    </CheckboxGroup>
-                  </FormItem>
-                </div>
               </Col>
             </Col>
           </Row>
@@ -141,8 +121,24 @@
               <Tags v-model="movieCustom" :tagMess="movieList"/>
             </FormItem>
           </h3>
-          <div class="item-top" style="margin-top: 50px" v-show="movieCustom != 0">
-            <Film v-model="numsList" :begin="beginDate" :end="endDate" @donetime="updatetime" @donefilm="timerfilm"/>
+          <div v-show="movieCustom == 0">
+            <Film v-model="numsList" :begin="beginDate" :end="endDate" />
+          </div>
+          <div class="item-top" v-show="movieCustom != 0">
+            <div ref="types">
+              <FormItem :labelWidth="0" class="item-top form-item-type">
+                <CheckboxGroup v-model="form.type" class="item-radio-top">
+                  <Checkbox  style="width: 100px" class="check-item form-item-first" :label="0">不限</Checkbox>
+                  <Checkbox
+                    v-for="it in typeList"
+                    :key="it.key"
+                    :label="it.key"
+                    class="check-item"
+                  >{{it.text}}</Checkbox>
+                </CheckboxGroup>
+              </FormItem>
+            </div>
+            <!-- <Film v-model="numsList" :begin="beginDate" :end="endDate" @donetime="updatetime" @donefilm="timerfilm"/> -->
           </div>
 
           <div class="btn-center">
@@ -172,7 +168,7 @@ import Tags from '../tag.vue'
 import { cinemaFind } from '@/api/popPlan.ts'
 import { confirm, toast } from '@/ui/modal'
 import moment from 'moment'
-import Film from './film.vue'
+import Film from './newfilm.vue'
 import Chain from '@/components/cityMap/CityMap.vue'
 import {
   getTwodetail,
@@ -256,11 +252,11 @@ export default class Orienteering extends ViewBase {
   movieList = [
     {
       label: 0,
-      name: '系统智能匹配'
+      name: '影片定向'
     },
     {
       label: 1,
-      name: '自定义影片'
+      name: '类型定向'
     }
   ]
   cinemaList = [
@@ -285,11 +281,6 @@ export default class Orienteering extends ViewBase {
 
   created() {
     this.init()
-  }
-
-  updatetime(val: any) {
-    this.beginDate = val.begin
-    this.endDate = val.end
   }
 
   formatDate(data: any) {
@@ -440,7 +431,7 @@ export default class Orienteering extends ViewBase {
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
-              text: this.form.type.join(';')
+              text: this.cityCustom == 0 ? 0 : this.form.type.join(';')
             },
             {
               tagTypeCode: 'PLAN_GROUP_AGE',
@@ -453,10 +444,10 @@ export default class Orienteering extends ViewBase {
           ].filter((it: any) => {
             return it.text != 0
           }),
-          movieCustom: this.movieCustom,
+          movieCustom: this.movieCustom == 0 && this.numsList.length > 0 ? 1 : 0,
           customDeliveryCities: this.cityCustom == 0 ? '' : this.citysId,
           deliveryMovies:
-            this.movieCustom == 0
+            this.movieCustom == 1
               ? ''
               : this.numsList.map((it: any) => {
                   return {
@@ -467,6 +458,7 @@ export default class Orienteering extends ViewBase {
                 })
         })
       )
+
       this.spins = 20
       this.spinshow = true
       this.recommend = false
@@ -474,25 +466,6 @@ export default class Orienteering extends ViewBase {
         if (this.recommend) {
           this.spins = 100
           clearInterval(this.settime)
-          // if (this.loadingitem.item.movieCustom == 1) {
-          //   if ( this.loadingitem.movies.length > 0 ) {
-          //     this.$emit('input', {
-          //       id: 2,
-          //       setid: this.$route.params.setid
-          //     })
-          //     if (this.$route.name == 'pop-planlist-add') {
-          //       this.$router.push({
-          //         name: 'pop-planlist-add',
-          //         params: { id: '2', setid: this.$route.params.setid  }
-          //       })
-          //     } else {
-          //       this.$router.push({
-          //         name: 'pop-planlist-edit',
-          //         params: { id: '2', setid: this.$route.params.setid  }
-          //       })
-          //     }
-          //   }
-          // } else {
           setTimeout(() => {
             this.spinshow = false
             if (this.planMovies && this.planMovies.length > 0) {
@@ -568,6 +541,8 @@ export default class Orienteering extends ViewBase {
       //   setid: this.$route.params.setid
       // })
     } catch (ex) {
+      this.spinshow = false
+      clearInterval(this.settime)
     }
   }
 
@@ -733,6 +708,9 @@ export default class Orienteering extends ViewBase {
     border-right: 2px solid;
     border-image: linear-gradient(to top, #fff 0%, rgba(0, 0, 0, 0) 80%) 10;
   }
+  .three-right {
+    padding-right: 20px;
+  }
 }
 .adv-left {
   width: 500px;
@@ -755,7 +733,6 @@ export default class Orienteering extends ViewBase {
 }
 .orient-title {
   text-align: center;
-  margin-bottom: 30px;
 }
 .hint {
   position: absolute;

@@ -185,7 +185,7 @@
         show-elevator
         @on-change="sizeChangeHandle"
         @on-page-size-change="currentChangeHandle"/> -->
-        <pagination :pageList="pageList" :total="total" @uplist="KolSeach"></pagination>
+        <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
       </div>
       <Detail ref='detailbox' v-model="type" @done="checkDetailSet" />
     </div>
@@ -302,11 +302,9 @@ export default class Main extends ViewBase {
   ballsrc: any = ''
   tabledataid: any[] = []
 
-  get pageList() {
-    return {
-      pageIndex: this.form.pageIndex,
-      pageSize: this.form.pageSize
-    }
+  pageList = {
+    pageIndex: 1,
+    pageSize: 10
   }
 
   get columns() {
@@ -420,6 +418,11 @@ export default class Main extends ViewBase {
     if ( this.acount == 1) {
       this.areaShow = check
     }
+  }
+
+  uplist(size: any) {
+    this.pageList.pageIndex = size
+    this.KolSeach()
   }
 
   formatNum(data: any) {
@@ -706,6 +709,7 @@ export default class Main extends ViewBase {
     // await delall('weibo')
     const query = clean({
       ...this.form,
+      ...this.pageList,
       accountCategoryCode: this.form.accountCategoryCode == 0 ? '' : this.form.accountCategoryCode,
       fansRangCode: this.form.fansRangCode == 0 ? '' : this.form.fansRangCode,
       sex: this.form.sex == -1 ? '' : this.form.sex,
@@ -741,6 +745,7 @@ export default class Main extends ViewBase {
 
   @Watch('form', { deep: true })
   watchForm(value: any) {
+    this.pageList.pageIndex = 1
     this.KolSeach()
   }
 
