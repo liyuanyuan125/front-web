@@ -14,22 +14,22 @@
                 <i class="iconfont icon-qiye" slot="prefix" />
               </Input>
             </FormItem>
-            <FormItem prop="name" >
-              <Input  v-model="form.name" placeholder="联系人姓名">
+            <FormItem prop="contactName" >
+              <Input  v-model="form.contactName" placeholder="联系人姓名">
                 <i class="iconfont icon-lianxiren" slot="prefix" />
               </Input>
             </FormItem>
-            <FormItem prop="tel">
-              <Input  v-model="form.tel" placeholder="联系电话">
+            <FormItem prop="contactTel">
+              <Input  v-model="form.contactTel" placeholder="联系电话" :maxlength="11">
                 <i class="iconfont icon-lianxidianhua" slot="prefix" />
               </Input>
             </FormItem>
             <FormItem prop="area" >
-               <AreaSelect v-model="form.area" :max-level="2" no-self/>
+               <AreaSelect v-model="form.area" ref="areas"  :max-level="2" no-self/>
                <i class="iconfont icon-suozaidi" slot="prefix" />
             </FormItem>
-            <FormItem prop="info" class="text-area">
-              <Input type="textarea"  v-model="form.info" :rows="3" placeholder="请简单备注您的需求"></Input>
+            <FormItem prop="remark" class="text-area">
+              <Input type="textarea"  v-model="form.remark" :rows="3" placeholder="请简单备注您的需求"></Input>
             </FormItem>
             <Button type="primary" html-type="submit" class="submit" long :disabled="submitDisabled">提交申请</Button>
           </Form>
@@ -38,9 +38,9 @@
 </template>
 
 <script lang='ts'>
-import { Component } from 'vue-property-decorator'
+import { Component, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { login } from '@/api/auth'
+import { login, getBoards } from '@/api/auth'
 import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
@@ -52,28 +52,26 @@ import AreaSelect from '@/components/areaSelect'
   }
 })
 export default class Main extends ViewBase {
-  form = {
+  form: any = {
     companyName: '',
-    adress: '',
-    name: '',
-    tel: '',
-    info: ''
+    area: [],
+    provinceId: 0,
+    provinceName: '',
+    cityId: 0,
+    cityName: '',
+    contactName: '',
+    contactTel: '',
+    remark: ''
   }
-  nameError = ''
-  emailError = ''
-  passwordError = ''
-
-//   captchaImg = ''
-//   captchaCodeError = ''
 
   submitDisabled = false
 
   rules = {
     companyName: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
-    area: [{ required: true, message: '请输入地址', trigger: 'blur' }],
+    area: [{ required: true, type: 'array', message: '所在地不能为空', trigger: 'change' }],
     name: [{ required: true, message: '请输入联系人姓名', trigger: 'blur' }],
-    tel: [{ required: true, message: '请输入联系人电话', trigger: 'blur' }],
-    info: [{ required: true, message: '请输入备注', trigger: 'blur' }],
+    contactTel: [{ required: true, message: '请输入联系人电话', trigger: 'blur' }],
+    remark: [{ required: true, message: '请输入备注', trigger: 'blur' }],
     // captchaCode: [{ required: true, message: '请输入图片验证码', trigger: 'blur' }]
   }
 
@@ -83,42 +81,43 @@ export default class Main extends ViewBase {
     if (!valid) {
       return
     }
-
-    this.emailError = ''
-    this.passwordError = ''
-
     this.submitDisabled = true
+    // provinceId provinceName, cityId, cityName
+    const dataList = (this.$refs.areas as any).data
+    let provinceName = null
+    let cityName = null
 
-    // try {
-    //   const postData = { ...this.form }
-    //   const { data } = await login(postData)
-    //   setUserByData({
-    //     ...data,
-    //     systemCode: postData.systemCode
-    //   })
-
-    //   this.$router.push({ name: 'home' })
-    // } catch (ex) {
-    //   ((this as any)[`onLogin${ex.code}`] || this.handleError).call(this, ex)
-    //   this.resetCaptcha()
-    // } finally {
-    //   this.submitDisabled = false
-    // }
+    dataList.map( (item: any) => {
+      if (item.value == this.form.provinceId) {
+        provinceName = item.label
+        item.children.map((it: any) => {
+          if (it.value == this.form.cityId) {
+            cityName = item.label
+          }
+        })
+      }
+    })
+    try {
+      const { data } = await getBoards({
+        ...this.form,
+        provinceName,
+        cityName
+      })
+      this.$router.push({name: 'applyhome'})
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
-
-  onLogin9006201() {
-    this.emailError = '账号不存在'
-  }
-
-  onLogin10002(ex: any) {
-    this.handleError(ex)
+  @Watch('form.area', { deep: true })
+  watchArea(val: number[]) {
+    this.form.provinceId = val[0]
+    this.form.cityId = val[1]
   }
 }
 </script>
 
 <style lang='less' scoped>
 @import '~@/site/lib.less';
-// @import '~@/site/login.less';
 @import '~@/assets/iconFont/iconfont.css';
 
 .main-wrap {

@@ -628,6 +628,7 @@ export default class Main extends ViewBase {
 }
 
 .watch-film {
+  padding-top: 30px;
   display: block;
   text-align: center;
 }
