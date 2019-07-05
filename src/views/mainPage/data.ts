@@ -11,6 +11,8 @@ const getNames = (keys: string[], list: KeyText[]) => {
   return names
 }
 
+const fullDate = (date: number) => String(date).replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')
+
 const monthDate = (date: number) => String(date).replace(/(\d{4})(\d{2})(\d{2})/, '$2-$3')
 
 const hotChannelMap: MapType = {
@@ -22,7 +24,8 @@ const hotChannelMap: MapType = {
 
 const hotData = (items: any[]) => {
   const list = (items || []).map(it => {
-    const date = monthDate(it.date)
+    const date = fullDate(it.date)
+    const mdate = monthDate(it.date)
     const legends = (it.channels as any[] || [])
     .map(sub => {
       return {
@@ -34,8 +37,9 @@ const hotData = (items: any[]) => {
     })
 
     return {
-      name: date,
+      name: mdate,
       value: it.count,
+      date,
       rank: it.ranking,
       legends,
     }
@@ -329,10 +333,13 @@ export async function getVideoRise(id: number, hasShow = false) {
   })
 
   const dealList = (list: any[], path: string) => {
-    const ret = (list || []).map(it => {
+    const ret = (list || [])
+    .sort((a, b) => a.date - b.date)
+    .map(it => {
       const name = monthDate(it.date)
       const value = dot(it, path) || 0
-      return { name, value }
+      const date = fullDate(it.date)
+      return { name, value, date }
     })
     return ret
   }
