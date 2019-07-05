@@ -48,7 +48,7 @@ import { mockGet, tid, title20, typeInt, dateRange } from './mock'
 
 // 上刊列表
 export async function queryList(query: any) {
-  const res = await get('/xadvert/v1/upper-shelfs' , query)
+  const res = await get('/xadvert/upper-shelfs' , query)
   return res
 }
 
@@ -60,26 +60,26 @@ export async function movielist(query: any) {
 
 // 获取默认影院id
 export async function getcinid() {
-  const res = await get('/xadvert/v1/upper-shelfs/default-cinema')
+  const res = await get('/xadvert/upper-shelfs/default-cinema')
   return res
 }
 
 
 // 单个设置上刊状态
 export async function oneover(id: any , query: any) {
-  const res = await put( `/xadvert/v1/upper-shelfs/${id}/setup` , query)
+  const res = await put( `/xadvert/upper-shelfs/${id}/setup` , query)
   return res
 }
 
 // 单个设置下刊状态
 export async function oneout(id: any , query: any) {
-  const res = await put(`/xadvert/v1/upper-shelfs/${id}/cannel` , query)
+  const res = await put(`/xadvert/upper-shelfs/${id}/cannel` , query)
   return res
 }
 
 // 批量设置上刊状态
 export async function allover(query: any) {
-  const res = await put(`/xadvert/v1/upper-shelfs/batch` , query)
+  const res = await put(`/xadvert/upper-shelfs/batch` , query)
   return res
 }
 

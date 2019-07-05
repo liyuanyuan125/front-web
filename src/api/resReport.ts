@@ -19,7 +19,7 @@ export async function effectStatistics(query: any) {
  * @param query
  */
 export async function trend(query: any) {
-  const res = await get(`/xadvert/v1/orders/2/report` , query)
+  const res = await get(`/xadvert/orders/2/report` , query)
   return res
   return await mockGet(query, {
     item: {
@@ -147,7 +147,7 @@ export async function trend(query: any) {
  * @param data
  */
 export async function xadvertOrders(data: any) {
-  const res = await get('/xadvert/v1/orders', data)
+  const res = await get('/xadvert/orders', data)
   return res
   return await mockGet(data, {
     items: [
