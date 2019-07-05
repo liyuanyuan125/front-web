@@ -14,8 +14,6 @@ import ECharts from 'vue-echarts'
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/component/tooltip'
 
-import { readableThousands } from '@/util/dealData'
-
 // :initOptions="{ renderer: 'svg' }"
 // import 'zrender/lib/svg/svg'
 
@@ -47,12 +45,14 @@ export default class BarPane extends Vue {
 
   @Prop({ type: [Object, String], default: null }) more!: RawLocation
 
+  // https://www.echartsjs.com/option.html#tooltip.formatter
+  @Prop({ type: [String, Function], default: '{a} <br>{b} : {c}' })
+  formatter!: string | ((data: any) => string)
+
   chartData: any = {
     tooltip: tooltipStyles({
       trigger: 'item',
-      formatter({ value }: any) {
-        return readableThousands(value)
-      }
+      formatter: this.formatter
     }),
 
     xAxis: {

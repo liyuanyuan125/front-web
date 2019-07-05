@@ -1,81 +1,55 @@
 <template>
-  <Modal v-model='showDlg'
-  :transfer='false'
-  :width='770'
-  :closable='false'
-  :mask-closable='false'
-  :styles="{top: '30px'}">
-    <div class="title">
-      <h3>选择影片</h3>
-      <i @click="cancel"></i>
-    </div>
-    <CheckboxGroup v-model="form.types" class="item-radio-top">
-      <Checkbox style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
-      <Checkbox class="check-item" v-for="it in movieTypeList" :key="it.key" :label="it.key" >
-        <span>{{it.text}}</span>
-      </Checkbox>
-    </CheckboxGroup>
-    <div class="reject-cinema">
-      <div class="flex-box search-input">
-      </div>
-      <div class="detail">
-        <ul class="film-list" v-if="data.length > 0">
-          <li @click="checkNum(it.id)" v-for="(it, index) in data" :key="index"
-            :class="['film-item', !!checkId.includes(it.id + '') ? 'list-active' : '']">
-            <div :class="['film-cover-box']">
-              <img :src="it.image ? it.image : 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg'"   class="film-cover">
-              <div style='width: 60%;'>
-                
-                <Tooltip  max-width="200" transfer :content="it.nameCn">
-                    <div class="film-title">{{it.nameCn}}</div></Tooltip>
-                <div class="film-time">上映时间：{{it.releaseDate}}</div>
-                <div class="film-time">
-                  <span>{{typelists(movieTypeList, it.type)}}</span>
-                  <!-- <span v-for='(its, index) in movieTypeList' :key='index'>
-                    <span v-for='(itsem, index) in it.type' :key='index' v-if='its.key == itsem'>{{its.text + ' '}}</span>
-                  </span> -->
-                </div>
-                <Tooltip  max-width="200" transfer :content="it.director.join(' / ')">
-                    <div class="film-time">导演: {{it.director.join(' / ')}}</div></Tooltip>
-                <Tooltip  max-width="200" transfer :content="it.actor.join(' / ')">
-                    <div class="film-time">主演: {{it.actor.join(' / ')}}</div></Tooltip>
-              </div>
+  <div class="reject-cinema">
+    <div class="detail">
+    <ul class="film-list" v-if="data.length > 0">
+        <li @click="checkNum(it.id, it)" v-for="(it, index) in data" :key="index"
+        :class="['film-item', !!checkId.includes(it.id + '') ? 'list-active' : '']">
+        <div :class="['film-cover-box']">
+            <img :src="it.image ? it.image : defaultImg" :onerror="defaultImg" class="film-cover">
+            <div>
+            <div class="film-title">{{it.nameCn}}</div>
+            <div class="film-time" style="margin-top: 10px">上映时间：{{formatDate(it.releaseDate)}}</div>
+            <div class="film-time">影片类型：{{typeCinema(it.type)}}</div>
+            <div class="film-time">导演: {{it.director.join(' / ')}}</div>
+            <div class="film-time">主演: {{it.actor.join(' / ')}}</div>
             </div>
-          </li>
-        </ul>
-       </div>
-       <div class="check-films">
-         <span @click="checkAll">
-          <Checkbox :disabled="data.length > 0 ? false : true" v-model="checkboxall">全选</Checkbox>
-          已选择 {{checkObj.length}} 个
-         </span>
-       </div>
-        <Page :total="total" v-if="total>0" class="btnCenter"
-          :current="form.pageIndex"
-          :page-size="form.pageSize"
-          :page-size-opts="[4, 8, 16, 24]"
-          show-total
-          show-sizer
-          show-elevator
-          @on-change="sizeChangeHandle"
-          @on-page-size-change="currentChangeHandle"/>
+        </div>
+        </li>
+    </ul>
+    <div class="film-no" v-else>
+        <span>暂无影片</span>
     </div>
-    <div slot="footer" class="foot">
-        <Button class="foot-cancel-button default-btn" type="info" @click="cancel">取消</Button>
-        <Button class="foot-button open-button" type="primary" @click="open">确定</Button>
     </div>
-  </Modal>
+    <div class="check-films">
+        <span>
+        <Checkbox @on-change="checkAll" :disabled="data.length > 0 ? false : true" v-model="checkboxall">全选</Checkbox>
+        已选择 {{checkObj.length}} 个
+        </span>
+    </div>
+    <!-- <updateschedule ref="updatetime" @done="updatetime" /> -->
+    <Page :total="total" v-if="total>0" class="btnCenter"
+        :current="form.pageIndex"
+        :page-size="form.pageSize"
+        :page-size-opts="[4, 8, 16, 24]"
+        show-total
+        show-sizer
+        show-elevator
+        @on-change="sizeChangeHandle"
+        @on-page-size-change="currentChangeHandle"/>
+  </div>
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { searchcinema } from '@/api/popPlan'
+import { searchcinema, moviefind, moviedate, updatedates } from '@/api/popPlan'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
-import { toast, warning } from '@/ui/modal.ts'
+import { toast, warning, confirm } from '@/ui/modal.ts'
 import moment from 'moment'
 import { uniq, uniqBy } from 'lodash'
+import updateschedule from './updateschedule.vue'
+
 const timeFormat = 'YYYY-MM-DD'
 const keepExclusion = <T>(
   value: T[],
@@ -90,14 +64,24 @@ const keepExclusion = <T>(
     newHas && oldHas && setter(value.filter(it => it != aloneValue))
   }
 }
-@Component
+@Component({
+  components: {
+    updateschedule
+  }
+})
 export default class DlgEditCinema extends ViewBase {
+
+  @Prop() value: any
+
+  @Prop() begin: any
+
+  @Prop() end: any
+
   showDlg = false
   total = 0
   form: any = {
     pageIndex: 1,
     pageSize: 4,
-    types: [0]
   }
   idO: any = {}
   checks: any = {}
@@ -109,14 +93,24 @@ export default class DlgEditCinema extends ViewBase {
   data: any = []
   checkId: any = []
   checkObj: any = []
+
   formatDate(data: any) {
-    return data ? moment(data).format(timeFormat) : '暂无'
+    const years = data + ''
+    if (data && years.length == 4) {
+      return `${(data + '').slice(0, 4)}年`
+    }
+    return data
+      ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(
+          data + ''
+        ).substr(6, 2)}`
+      : '暂无'
+  }
+
+  created() {
+    this.seach()
   }
 
   async init(type: any) {
-    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
-    this.loading = true
-    this.showDlg = true
     this.checks = {}
     if (type.length > 0) {
       this.checkObj = [...type]
@@ -135,25 +129,47 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
+  typeCinema(type: any) {
+    type = type || []
+    const maps = this.movieTypeList.filter((it: any) => {
+      return type.includes(it.key)
+    })
+    if (maps.length > 0) {
+      return maps.map((it: any) => {
+        return it.text
+      }).join(' / ')
+    } else {
+      return '暂无'
+    }
+  }
+
+  searchList() {
+    this.form.pageIndex = 1
+    this.seach()
+  }
+
   async seach() {
     try {
       const { data: {
-       items,
-       movieTypeList,
-       totalCount
-      } } = await searchcinema(clean({
-        ...this.form,
-        types: this.form.types[0] == 0 ? '' : this.form.types.join(',')
-      }))
-      this.data = (items || []).map((it: any) => {
+        items,
+        typeList,
+        totalCount,
+        movies
+        } } = await moviefind(clean({
+          ...this.form,
+        }))
+      this.data = (movies || []).map((it: any) => {
         return {
           ...it,
-          releaseDate : String(it.releaseDate).slice(0, 4) + '-' +
-          String(it.releaseDate).slice(4, 6) + '-' + String(it.releaseDate).slice(6, 8)
+          id: it.movie_id,
+          image: it.main_pic,
+          nameCn: it.name_cn,
+          releaseDate: it.release_date,
+          type: it.types
         }
       })
       this.total = totalCount
-      this.movieTypeList = movieTypeList || []
+      this.movieTypeList = typeList || []
       this.checkNum()
     } catch (ex) {
       this.handleError(ex)
@@ -166,9 +182,9 @@ export default class DlgEditCinema extends ViewBase {
     this.seach()
   }
 
-  // get defaultImg() {
-  //   return 'this.src="' + require('http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg') + '"'
-  // }
+  get defaultImg() {
+    return 'this.src="' + require('../assets/error.png') + '"'
+  }
 
   // 当前页
   currentChangeHandle(val: any) {
@@ -177,53 +193,19 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   cancel() {
-    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
     this.showDlg = false
   }
 
-  async cinemaseach() {
+  async checkAll(flag: any) {
     try {
-      const {
-        data: {
-
-        }
-      } = await searchcinema(this.form)
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
-
-  async open() {
-    try {
-      this.checkId = uniq(this.checkId)
-      this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
-      this.$emit('done', [...this.checkObj])
-      toast('操作成功')
-      this.cancel()
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
-
-  typelists(val: any, type: any) {
-    const maps: any = []
-    ; (val || []).forEach((item: any) => {
-      if (item) {
-        (type || []).forEach((it: any) => {
-          if (item.key == it) {
-            maps.push(item.text)
-          }
-        })
-      }
-    })
-    return maps.join(' / ')
-  }
-
-  checkAll() {
-    this.$nextTick(() => {
       const id = this.data.map((it: any) => it.id)
       this.idO = {}
-      if (this.checkboxall) {
+      if (flag) {
+        await moviedate({
+          ids: id.join(','),
+          beginDate: this.begin,
+          endDate: this.end
+        })
         id.forEach((it: any) => {
           this.idO[it] = true
         })
@@ -236,31 +218,64 @@ export default class DlgEditCinema extends ViewBase {
         ...this.checks,
         ...this.idO
       }
-    })
+    } catch (ex) {
+      this.checkboxall = false
+      this.handleError(ex)
+    }
   }
 
-  checkNum(id?: any) {
-    this.checks[id] = !this.checks[id] ? true : false
-    this.checkId = []
-    let ids = this.data.map((it: any) => it.id)
-    for (const i in this.checks) {
-      if (this.checks[i]) {
-        this.checkId.push(i)
+  async checkNum(id?: any) {
+    try {
+      if (id) {
+        await moviedate({
+          ids: id,
+          beginDate: this.begin,
+          endDate: this.end
+        })
+      }
+      this.checks[id] = !this.checks[id] ? true : false
+      this.checkId = []
+      let ids = this.data.map((it: any) => it.id)
+      for (const i in this.checks) {
+        if (this.checks[i]) {
+          this.checkId.push(i)
+        }
+      }
+      const nums = this.data.filter((it: any) => {
+        return this.checkId.includes(it.id + '')
+      })
+      this.checkObj.push(...nums)
+      this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
+      this.checkId.forEach((it: any) => {
+        ids = ids.filter((item: any) => item && item != it)
+      })
+      if (this.data.length > 0) {
+        this.checkboxall = ids.length > 0 ? false : true
+      } else {
+        this.checkboxall = false
+      }
+    } catch (ex) {
+      const checksid = this.checkId.filter((it: any) => !!it)
+      if (checksid.length == 0) {
+        await confirm(`是否根据影片上映日期，同步修改广告计划投放排期`, {
+          title: '修改档期'
+        })
+      } else {
+        this.handleError(ex)
       }
     }
-    const nums = this.data.filter((it: any) => {
-      return this.checkId.includes(it.id + '')
-    })
-    this.checkObj.push(...nums)
-    this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
-    this.checkId.forEach((it: any) => {
-      ids = ids.filter((item: any) => item != it)
-    })
-    if (this.data.length > 0) {
-      this.checkboxall = ids.length > 0 ? false : true
-    } else {
-      this.checkboxall = false
-    }
+  }
+
+  @Watch('checkObj', { deep: true})
+  watchCheckObj(val: any) {
+    this.checkId = uniq(this.checkId)
+    const checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
+    this.$emit('done', [...checkObj])
+  }
+
+  @Watch('value', { deep: true})
+  watchValue(val: any) {
+    this.init(val)
   }
 
   @Watch('checks', {deep: true})
@@ -290,6 +305,7 @@ export default class DlgEditCinema extends ViewBase {
   @Watch('form.types', { deep: true })
   watchformTypes(value: number[], oldValue: number[]) {
     // 不限与其他项互斥
+    this.form.pageIndex = 1
     keepExclusion(value, oldValue, 0, newValue => {
       this.form.types = newValue
     })
@@ -315,6 +331,7 @@ export default class DlgEditCinema extends ViewBase {
     right: -20px;
     top: -20px;
     display: block;
+    box-sizing: border-box;
     width: 40px;
     height: 40px;
     background: #fff;
@@ -324,7 +341,7 @@ export default class DlgEditCinema extends ViewBase {
     &::before {
       content: "×";
       font-size: 34px;
-      line-height: 36px;
+      line-height: 40px;
       text-align: center;
     }
   }
@@ -354,7 +371,7 @@ export default class DlgEditCinema extends ViewBase {
 }
 @cancel-color: rgba(59, 152, 255, 1);
 .detail {
-  max-height: 500px;
+  min-height: 200px;
   overflow: auto;
   margin-top: 16px;
   margin-left: 20px;
@@ -377,7 +394,7 @@ export default class DlgEditCinema extends ViewBase {
   margin-top: 10px;
 }
 .reject-cinema {
-  min-height: 400px;
+  min-height: 200px;
 }
 .film-list {
   display: flex;
@@ -386,7 +403,7 @@ export default class DlgEditCinema extends ViewBase {
   margin-bottom: 20px;
   margin-right: 20px;
   .film-item {
-    width: 48%;
+    width: calc(50% - 20px);
     height: 179px;
     padding-bottom: 5px;
     margin-bottom: 30px;
@@ -400,11 +417,12 @@ export default class DlgEditCinema extends ViewBase {
       .film-title {
         font-size: 14px;
         height: 24px;
+        width: 146px;
         font-weight: 400;
         margin-left: 20px;
         overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
+        text-overflow: ellipsis;
       }
       .film-time {
         margin-left: 20px;
@@ -412,6 +430,7 @@ export default class DlgEditCinema extends ViewBase {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        width: 180px;
       }
       img {
         margin-left: 20px;
@@ -440,7 +459,7 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
   .film-item:nth-child(2n-1) {
-    margin-right: 3.4%;
+    margin-right: 40px;
   }
   .film-name,
   .film-tags {
@@ -496,21 +515,8 @@ export default class DlgEditCinema extends ViewBase {
   .button-style(#fff, #00202d);
   border-radius: 25px;
 }
-.types::after {
-  content: '/';
-  display: inline-block;
-}
-.type-box:only-child .types:not(:last-of-type)::after {
-  content: '';
-  display: inline-block;
-}
-/deep/ .ivu-tooltip {
-  width: 100%;
-  display: inline-block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  height: 24px;
-  line-height: 24px;
+.film-no {
+  text-align: center;
+  padding-top: 50px;
 }
 </style>
