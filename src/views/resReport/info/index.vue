@@ -22,6 +22,7 @@
     </ReportPane>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -31,8 +32,9 @@ import BannerCard from './components/banner-card.vue'
 import TotalCard from './components/total-card.vue'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
-import { trend, xadvertOrders } from '@/api/resReport'
+import { getTrend, xadvertOrders } from '@/api/resReport'
 import SelectXadvertOrders from './components/x-select-xadvertOrders.vue'
+
 const toolTip: any = {
   borderWidth: 1,
   borderColor: 'rgba(0, 0, 0, .8)',
@@ -248,7 +250,8 @@ export default class Index extends ViewBase {
               cinemaPersons
             }
           }
-        } = await trend({ ...mockObj })
+        } = await getTrend(10, { ...mockObj })
+        // TODO: xadvertOrderId 与 id 是不是重复的？？
         this.totalData.showCountSum = showCountSum
         this.totalData.personCountSum = personCountSum
         this.totalData.profitAmountSum = profitAmountSum
