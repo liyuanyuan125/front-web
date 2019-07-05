@@ -85,7 +85,10 @@
               </Col>
               <Col :span='3' class='li-ti-col ss'><span v-for='(item,index) in publishCategoryList' :key='index' v-if='item.key == it.publishCategoryCode'>{{item.text}}</span>
               <span v-if='it.publishCategoryCode == null'>暂无</span></Col>
-              <Col :span='3' class='li-ti-col ss'>￥<span v-if='item.status == 2 || item.status == 3'>{{it.salePrice}}</span> <span v-if='item.status != 2 || item.status != 3'>{{it.confirmPrice}}</span></Col>
+              <Col :span='3' class='li-ti-col ss'>
+              ￥<span v-if='item.status == 2 || item.status == 3'>{{it.salePrice}}</span>
+               <span v-if='item.status != 2 && item.status != 3'>{{it.confirmPrice}}</span>
+              </Col>
               <Col :span='3' class='li-ti-col ss'>{{it.publishTime}}</Col>
               <Col :span='4' class='li-ti-col ss'>
               <span v-if='it.content == null'>暂无</span>

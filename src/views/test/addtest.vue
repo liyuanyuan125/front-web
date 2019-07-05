@@ -28,7 +28,9 @@
 			<div class='te-l'>投放影院</div>
 		</div>
 		<div class='dis'>
-			<div>请上传一份包含影院专资编码数据的xls文件，如上传错误，请下载模板<span>【影院数据模板.xls】</span></div>
+			<div>请上传一份包含影院专资编码数据的xls文件，如上传错误，请下载模板
+        <a href="http://aiads-file.oss-cn-beijing.aliyuncs.com/MISC/MISC/bkfh2gilkin0008001bg.xls" :download='"http://aiads-file.oss-cn-beijing.aliyuncs.com/MISC/MISC/bkfh2gilkin0008001bg.xls"'>【影院数据模板.xls】</a>
+      </div>
 
 			<Form class="create-form form-item"   enctype="multipart/form-data" ref="form"
       :label-width="120">上传文件

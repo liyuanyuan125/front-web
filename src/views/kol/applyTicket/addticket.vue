@@ -411,7 +411,7 @@ export default class Main extends ViewBase {
   }
 
   async ok(dataForms: any) {
-    this.query.itemCode = Number(this.query.itemCode)
+    // this.query.itemCode = Number(this.query.itemCode)
     const myThis: any = this
    myThis.$refs[dataForms].validate(async ( valid: any ) => {
       if (valid) {
