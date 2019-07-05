@@ -24,12 +24,21 @@
             :class="['film-item', !!checkId.includes(it.id + '') ? 'list-active' : '']">
             <div :class="['film-cover-box']">
               <img :src="it.image ? it.image : 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg'"   class="film-cover">
-              <div>
-                <div class="film-title">{{it.nameCn}}</div>
-                <div class="film-time" style="margin-top: 10px">上映时间：{{formatDate(it.releaseDate)}}</div>
-                <div class="film-time">{{it.type.join(' / ')}}</div>
-                <div class="film-time">导演: {{it.director.join(' / ')}}</div>
-                <div class="film-time">主演: {{it.actor.join(' / ')}}</div>
+              <div style='width: 60%;'>
+                
+                <Tooltip  max-width="200" transfer :content="it.nameCn">
+                    <div class="film-title">{{it.nameCn}}</div></Tooltip>
+                <div class="film-time">上映时间：{{it.releaseDate}}</div>
+                <div class="film-time">
+                  <span>{{typelists(movieTypeList, it.type)}}</span>
+                  <!-- <span v-for='(its, index) in movieTypeList' :key='index'>
+                    <span v-for='(itsem, index) in it.type' :key='index' v-if='its.key == itsem'>{{its.text + ' '}}</span>
+                  </span> -->
+                </div>
+                <Tooltip  max-width="200" transfer :content="it.director.join(' / ')">
+                    <div class="film-time">导演: {{it.director.join(' / ')}}</div></Tooltip>
+                <Tooltip  max-width="200" transfer :content="it.actor.join(' / ')">
+                    <div class="film-time">主演: {{it.actor.join(' / ')}}</div></Tooltip>
               </div>
             </div>
           </li>
@@ -136,7 +145,13 @@ export default class DlgEditCinema extends ViewBase {
         ...this.form,
         types: this.form.types[0] == 0 ? '' : this.form.types.join(',')
       }))
-      this.data = items || []
+      this.data = (items || []).map((it: any) => {
+        return {
+          ...it,
+          releaseDate : String(it.releaseDate).slice(0, 4) + '-' +
+          String(it.releaseDate).slice(4, 6) + '-' + String(it.releaseDate).slice(6, 8)
+        }
+      })
       this.total = totalCount
       this.movieTypeList = movieTypeList || []
       this.checkNum()
@@ -188,6 +203,20 @@ export default class DlgEditCinema extends ViewBase {
     } catch (ex) {
       this.handleError(ex)
     }
+  }
+
+  typelists(val: any, type: any) {
+    const maps: any = []
+    ; (val || []).forEach((item: any) => {
+      if (item) {
+        (type || []).forEach((it: any) => {
+          if (item.key == it) {
+            maps.push(item.text)
+          }
+        })
+      }
+    })
+    return maps.join(' / ')
   }
 
   checkAll() {
@@ -357,7 +386,7 @@ export default class DlgEditCinema extends ViewBase {
   margin-bottom: 20px;
   margin-right: 20px;
   .film-item {
-    width: calc(50% - 20px);
+    width: 48%;
     height: 179px;
     padding-bottom: 5px;
     margin-bottom: 30px;
@@ -373,10 +402,16 @@ export default class DlgEditCinema extends ViewBase {
         height: 24px;
         font-weight: 400;
         margin-left: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       .film-time {
         margin-left: 20px;
         height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       img {
         margin-left: 20px;
@@ -405,7 +440,7 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
   .film-item:nth-child(2n-1) {
-    margin-right: 40px;
+    margin-right: 3.4%;
   }
   .film-name,
   .film-tags {
@@ -460,5 +495,22 @@ export default class DlgEditCinema extends ViewBase {
 .open-button {
   .button-style(#fff, #00202d);
   border-radius: 25px;
+}
+.types::after {
+  content: '/';
+  display: inline-block;
+}
+.type-box:only-child .types:not(:last-of-type)::after {
+  content: '';
+  display: inline-block;
+}
+/deep/ .ivu-tooltip {
+  width: 100%;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 24px;
+  line-height: 24px;
 }
 </style>
