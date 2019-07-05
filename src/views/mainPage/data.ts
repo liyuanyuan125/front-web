@@ -268,7 +268,8 @@ export async function getMovie(id: number) {
       subName: nameEn == name ? '' : nameEn,
       figure: mainPic,
       rankNo: percent(jyIndex, 2),
-      rankTitle: `同档期：第${jyIndexSamePeriodRanking || '-'}`,
+      // TODO: 产品逻辑：计算不准确，隐藏
+      // rankTitle: `同档期：第${jyIndexSamePeriodRanking || '-'}`,
     },
 
     hasShow,
@@ -308,8 +309,12 @@ export async function getMovie(id: number) {
       main: hasShow
         ? readableNumber(boxofficeTodayCount)
         : readableThousands(wantToSeeTotalCount),
-      sub: (status == MovieStatus.coming ? '同档期' : '')
-        + `排名 ${(hasShow ? boxofficeTodayRanking : wantToSeeSamePeriodRanking) || '-'}`,
+      // sub: (status == MovieStatus.coming ? '同档期' : '')
+      //   + `排名 ${(hasShow ? boxofficeTodayRanking : wantToSeeSamePeriodRanking) || '-'}`,
+      // TODO: 当影片“即将上映”状态时，想看人数的同档期排名 暂时隐藏
+      sub: status == MovieStatus.coming
+        ? ''
+        : `排名 ${(hasShow ? boxofficeTodayRanking : wantToSeeSamePeriodRanking) || '-'}`,
     },
 
     boxTotal: {
