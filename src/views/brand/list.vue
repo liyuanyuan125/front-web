@@ -23,21 +23,22 @@
                 <em>{{item.brandName}}</em>
               </router-link>
 
-              <span
-                class="col-second"
+              <div class="col-second">
+              <span 
                 v-for="ite in tradeStatus"
                 :key="ite.key"
                 v-if="ite.key == item.tradeCode"
               >{{ite.text}}</span>
-
+              </div>
+              <div class="col-third">
               <span
-                class="col-third"
                 v-for="it in brandStatus"
                 :key="it.key"
                 v-if="it.key == item.status"
               >{{it.text}}</span>
-
-              <span v-if="item.status == 15 && secondaryCode != 'daili'" class="col-fourth">
+              </div>
+              <div class="col-fourth">
+              <span v-if="item.status == 15 && secondaryCode != 'daili'" >
                 <img
                   src="./assets/add-icon.png"
                   width="20"
@@ -45,6 +46,7 @@
                   @click="$router.push({name: 'brand-moredetail', params: {brandId: item.brandId}})"
                 >
               </span>
+              </div>
             </li>
           </ul>
           <ul class="no-data-list" v-if="list.length == 0">暂无数据</ul>
