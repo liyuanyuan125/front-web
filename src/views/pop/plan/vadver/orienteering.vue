@@ -514,8 +514,8 @@ export default class Orienteering extends ViewBase {
               } else {
                 info('非常抱歉，暂未找到匹配项；请尝试扩大定向范围或投放排期范围')
               }
+              this.spins = 0
             }, 500)
-            this.spins = 0
           // }
         } else {
           this.loddding()
