@@ -44,9 +44,14 @@
             v-for="(it, i) in brandList"
             :key="i"
             class="brand-item"
-            @click="gotoRoute({ name: 'brand-home', params: { id: it.id } })"
           >
-            <img :src="it.logo" class="brand-img">
+            <router-link
+              :to="{ name: 'brand-home', params: { id: it.id } }"
+              class="brand-item-in"
+              target="_blank"
+            >
+              <Figure :src="it.logo"/>
+            </router-link>
           </li>
         </ul>
       </li>
@@ -73,11 +78,13 @@ import { capitalize } from 'lodash'
 import { MapType } from '@/util/types'
 import { RawLocation } from 'vue-router'
 import { dayOffsetRange } from '@/util/date'
+import Figure from '@/components/figure'
 
 @Component({
   components: {
     numAdd,
-    ChartPane
+    ChartPane,
+    Figure
   }
 })
 export default class Overview extends ViewBase {
@@ -356,9 +363,16 @@ export default class Overview extends ViewBase {
   cursor: pointer;
 }
 
-.brand-img {
+.brand-item-in {
+  display: inline-block;
   width: 62px;
-  height: 60px;
+  height: 62px;
+  /deep/ .figure-component {
+    display: flex !important;
+  }
+  /deep/ .figure-img {
+    object-fit: contain !important;
+  }
 }
 
 .page-title-chart {
