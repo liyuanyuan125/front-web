@@ -122,8 +122,8 @@ export async function getKol({
     },
 
     fansRate: {
-      man: percent(dot(fansRate.male, 'r')),
-      woman: percent(dot(fansRate.female, 'r')),
+      man: percent(dot(fansRate.male, 'r'), 2),
+      woman: percent(dot(fansRate.female, 'r'), 2),
     },
 
     fansList,
@@ -421,8 +421,8 @@ export async function getFigure(id: number) {
     bigFigure: headImgBig,
 
     fansRate: {
-      man: parseFloat(dot(fans, '男')),
-      woman: parseFloat(dot(fans, '女'))
+      man: percent(parseFloat(dot(fans, '男')) * 100, 2),
+      woman: percent(parseFloat(dot(fans, '女')) * 100, 2)
     },
 
     opusData: movies && movies.length > 0 ? {
