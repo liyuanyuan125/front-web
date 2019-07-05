@@ -95,7 +95,7 @@
       </Pane>
 
       <Pane title="热门影片" class="film-pane" v-if="hotFilmGroup">
-        <Tabs v-model="hotFilmTab">
+        <Tabs v-model="hotFilmTab" :animated="false">
           <TabPane v-for="(it, i) in hotFilmGroup" :key="it.name" :name="it.name" :label="it.name">
             <NavSwiper class="film-swiper">
               <swiper-slide
