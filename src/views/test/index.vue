@@ -18,6 +18,14 @@
 	      :columns="columns"
 	      :data="list"
 	    >
+      <template slot-scope="{ row }" slot="name">
+            <div style="text-align:center;cursor: pointer;">
+              <router-link
+            :to="{path:'/reseport/effect-report-third/' + row.id }"
+            tag="span"
+          >{{row.name}}</router-link>&nbsp;&nbsp;&nbsp;
+            </div>
+          </template>
 	      <template slot-scope="{ row }" slot="action">
             <div style="text-align:center;cursor: pointer;">
               <router-link
@@ -72,7 +80,7 @@ export default class Main extends ViewBase {
   list: any = []
 
   columns = [
-    { title: '名称', key: 'name', align: 'center' },
+    { title: '名称', slot: 'name', align: 'center'},
     {
       title: '曝光人次',
       key: 'viewTotalCount',
