@@ -44,7 +44,7 @@
                   <div class="icon-img">
                     <Tooltip content="审核中"> <img v-if="item.status == 1"  src="../assets/audit-icon.png" class="img-wid" /></Tooltip>
                     <Tooltip content="审核拒绝"><img v-if="item.status == 5" src="../assets/reject-icon.png" class="img-wid" /></Tooltip>
-                    <Tooltip content="支付"><img v-if="item.status == 2" src="../assets/pay-icon.png" class="img-wid" /></Tooltip>
+                    <Tooltip content="待支付"><img v-if="item.status == 2" src="../assets/pay-icon.png" class="img-wid" /></Tooltip>
                     <Tooltip content="转码中"><img v-if="item.status == 3"  src="../assets/transing-icon.png" class="img-wid" /></Tooltip>
                     <Tooltip content="点击编辑"><img v-if="item.status == 1 || item.status == 5" src="../assets/edit-icon.png" 
                     @click="$router.push({name: 'pop-film-edit', params: {id: item.id}})" class="img-wid" /></Tooltip>

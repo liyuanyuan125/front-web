@@ -26,6 +26,7 @@ export default class Main extends ViewBase {
     position: absolute;
     left: 37px;
     top: 31px;
+    z-index: 999;
   }
 }
 </style>

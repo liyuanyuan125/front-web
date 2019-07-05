@@ -84,7 +84,7 @@ export default class MoreCinemasDlg extends ViewBase {
       const {
         data: { items, totalCount }
       } = await cinemasReport(id, {...this.form})
-      this.data = items.map((it: any) => {
+      this.data = (items || []).map((it: any) => {
         return {
           name: it.name,
           viewCount: it.viewCount,

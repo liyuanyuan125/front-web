@@ -3,6 +3,7 @@ import home from '@/views/home.vue'
 import login from '@/views/portal/login/index.vue'
 import loginIndex from '@/views/portal/login/loginIndex.vue'
 import apply from '@/views/portal/login/apply.vue'
+import applyHome from '@/views/portal/login/applyHome.vue'
 import register from '@/views/portal/register.vue'
 import registerComplete from '@/views/portal/registerComplete.vue'
 import activeEmail from '@/views/portal/activeEmail.vue'
@@ -168,6 +169,12 @@ const singleRoutes: RouteConfigEnhance[] = [
     path: '/apply',
     name: 'apply',
     component: apply,
+    meta: unauth
+  },
+  {
+    path: '/applyhome',
+    name: 'applyhome',
+    component: applyHome,
     meta: unauth
   },
 
