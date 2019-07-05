@@ -13,7 +13,7 @@
          <Row style='margin-top: 10px;'>
             <Row class='sbg'>
               <Col>发票内容：<span v-for='(it , index) in faList' :key='index' v-if='list.itemCode == it.key'>{{it.text}}</span></Col>
-              <Col>发票总额：<span>{{list.totalTaxFee}}</span></Col>
+              <Col>发票总额：<span>￥{{list.totalTaxFee}}</span></Col>
               <Col>发票类型：<span v-for='(it , index) in faType' :key='index' v-if='list.invoiceType == it.key'>{{it.text}}</span></Col>
               <Col>发票抬头：<span>{{list.name}}</span></Col>
               <Col>税号：{{list.taxId}}</Col>
