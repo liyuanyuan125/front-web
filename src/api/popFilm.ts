@@ -6,7 +6,7 @@ import { get , post , put, del } from '@/fn/ajax'
  * @param data
  */
 export async function dataList(data: any) {
-    const res = await get('xadvert/v1/videos', data)
+    const res = await get('xadvert/videos', data)
     return res
 }
 /**
@@ -14,7 +14,7 @@ export async function dataList(data: any) {
  * @param data
  */
 export async function delList(data: any) {
-    const res = await del('/xadvert/v1/videos', data)
+    const res = await del('/xadvert/videos', data)
     return res
 }
 /**
@@ -30,7 +30,7 @@ export async function popCancel(id: any) {
  * @param data
  */
 export async function popPayment(id: any) {
-    const res = await put(`/xadvert/v1/videos/${id}/pay`)
+    const res = await put(`/xadvert/videos/${id}/pay`)
     return res
 }
 
@@ -39,7 +39,7 @@ export async function popPayment(id: any) {
  * @param data
  */
 export async function editPop(data: any, id: any) {
-    const res = await put(`/xadvert/v1/videos/${id}`, data)
+    const res = await put(`/xadvert/videos/${id}`, data)
     return res
 }
 /**
@@ -47,7 +47,7 @@ export async function editPop(data: any, id: any) {
  * @param data
  */
 export async function createPop(data: any) {
-    const res = await post('/xadvert/v1/videos', data)
+    const res = await post('/xadvert/videos', data)
     return res
 }
 /**
@@ -55,7 +55,7 @@ export async function createPop(data: any) {
  * @param data
  */
 export async function detailPop(id: any) {
-    const res = await get(`/xadvert/v1/videos/${id}`)
+    const res = await get(`/xadvert/videos/${id}`)
     return res
 }
 
@@ -64,7 +64,7 @@ export async function detailPop(id: any) {
  * @param specification 广告片规格
  */
 export async function transFee(data: any) {
-    const res = await get(`/xadvert/v1/videos/trans-fee`, data)
+    const res = await get(`/xadvert/videos/trans-fee`, data)
     return res
 }
 

@@ -58,7 +58,7 @@ export async function fansList(query: any) {
 
 // 查询广告片列表(含分页)
 export async function advertising(query: any) {
-  const data = await get('/xadvert/v1/videos', query)
+  const data = await get('/xadvert/videos', query)
   return data
 }
 
@@ -81,7 +81,7 @@ export async function getRegionList() {
  * 广告计划详情
  */
 export async function adverdetail(id: any) {
-  const data = await get(`/xadvert/v1/plans/${id}`)
+  const data = await get(`/xadvert/plans/${id}`)
   return data
 }
 
@@ -90,7 +90,7 @@ export async function adverdetail(id: any) {
  * 创建广告计划-推广设置
  */
 export async function createdDraft(query: any) {
-  const data = await post('/xadvert/v1/plans/create/draft', query)
+  const data = await post('/xadvert/plans/create/draft', query)
   return data
 }
 

@@ -1,5 +1,9 @@
 <template>
-  <Layout :bubbleList="bubbleList" :class="bigFigure ? 'layout-big-figure' : ''">
+  <Layout
+    :bubbleList="bubbleList"
+    :bubbleLink="{ name: 'kol-detail-comment', params: { id } }"
+    :class="bigFigure ? 'layout-big-figure' : ''"
+  >
     <div class="main-content flex-box">
       <div
         class="big-figure"
@@ -37,7 +41,7 @@
             title="粉丝画像"
             :man="fansRate.man"
             :woman="fansRate.woman"
-            :more="{ name: 'kol-detail-fans', params: {id} }"
+            :more="{ name: 'kol-detail-fans', params: { id } }"
             class="fans-pane"
             v-if="fansRate"
           />
@@ -45,7 +49,7 @@
 
           <PiePane
             title="近7日评论分析"
-            :more="{ name: 'kol-detail-comment', params: {id} }"
+            :more="{ name: 'kol-detail-comment', params: { id } }"
             :data="commentData"
             :formatter="commentFormatter"
             class="comment-pane"
@@ -56,7 +60,7 @@
           <HotPane
             :title="hotData.title"
             :data="hotData.list"
-            :more="{ name: 'kol-detail-platform', params: {id} }"
+            :more="{ name: 'kol-detail-platform', params: { id } }"
             :formatter="hotFormatter"
             class="hot-pane"
             v-if="hotData"

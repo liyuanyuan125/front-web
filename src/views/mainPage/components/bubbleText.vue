@@ -1,13 +1,15 @@
 <template>
   <div class="bubble-text-list">
     <div v-for="(it, i) in sortList" :key="i" class="bubble-text">
-      <div class="bubble-text-in">{{it}}</div>
+      <router-link :to="link" class="bubble-text-in" v-if="link">{{it}}</router-link>
+      <div class="bubble-text-in" v-else>{{it}}</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { RawLocation } from 'vue-router'
 
 // 后端按照从上到下的排序，但前端按照球的大小排序
 const bubbleSort = [ 3, 1, 4, 0, 5, 2 ]
@@ -15,6 +17,8 @@ const bubbleSort = [ 3, 1, 4, 0, 5, 2 ]
 @Component
 export default class BubbleText extends Vue {
   @Prop({ type: Array, default: () => [] }) list!: string[]
+
+  @Prop({ type: [ Object, String ], default: null }) link!: RawLocation
 
   get sortList() {
     const textList = this.list || []
