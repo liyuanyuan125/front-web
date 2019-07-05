@@ -96,9 +96,9 @@
                 <div class="orient-title">受众年龄</div>
                 <FormItem class="item-top form-item-type">
                   <CheckboxGroup v-model="form.age" class="item-radio-top">
-                    <Checkbox  style="width: 100%" class="check-item form-item-first" :label="0">不限</Checkbox>
+                    <Checkbox  style="width: 670px" class="check-item form-item-first" :label="0">不限</Checkbox>
                     <Checkbox
-                      style="100px"
+                      style="width: calc(100%/6 -18px)"
                       v-for="it in ageList"
                       :key="it.key"
                       :label="it.key"
@@ -122,7 +122,7 @@
             </FormItem>
           </h3>
           <div v-show="movieCustom == 0">
-            <Film v-model="numsList" @donefilm="timerfilm" :begin="beginDate" :end="endDate" />
+            <Film v-if="typeList.length > 0" v-model="numsList" @donefilm="timerfilm" :begin="beginDate" :end="endDate" />
           </div>
           <div class="item-top" v-show="movieCustom != 0">
             <div ref="types">
@@ -313,7 +313,6 @@ export default class Orienteering extends ViewBase {
         this.movies = movies
         this.renders(item)
       }
-
       this.cityList = data.deliveryCityTypeList
       this.cinemastatusList = data.cinemaList
       this.sexList = data.tags[2].values || []
@@ -431,7 +430,7 @@ export default class Orienteering extends ViewBase {
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
-              text: this.cityCustom == 0 ? 0 : this.form.type.join(';')
+              text: this.form.type.join(';')
             },
             {
               tagTypeCode: 'PLAN_GROUP_AGE',
@@ -536,10 +535,6 @@ export default class Orienteering extends ViewBase {
         item,
         movies
       }
-      // this.$emit('input', {
-      //   id: 2,
-      //   setid: this.$route.params.setid
-      // })
     } catch (ex) {
       this.spinshow = false
       clearInterval(this.settime)
