@@ -17,14 +17,16 @@
               <Col>发票类型：<span v-for='(it , index) in faType' :key='index' v-if='list.invoiceType == it.key'>{{it.text}}</span></Col>
               <Col>发票抬头：<span>{{list.name}}</span></Col>
               <Col>税号：{{list.taxId}}</Col>
-              <Col>地址/电话：{{list.address}} / {{list.telphone}}</Col>
-              <Col>开户行/账号：{{list.accountBank}} / {{list.accountNumber}}</Col>
+              <Col>地址：{{adsoen}}&nbsp;&nbsp; {{list.address}}</Col>
+               
+              <Col>电话：{{list.telphone}}</Col>
+              <Col>开户行/账号：{{list.accountBank}} &nbsp;&nbsp;&nbsp; {{list.accountNumber}}</Col>
               <Col><Tooltip   max-width="200" transfer :content="list.memo">
                     <div class="film-time">备注：{{list.memo}}</div></Tooltip></Col>
             </Row>
             <Row class='sbg' style='margin-left: 4%;'>
               <Col>申请时间：{{applyTime}}</Col>
-              <Col>邮寄地址：{{list.addressDetail}}</Col>
+              <Col>邮寄地址：{{adstwo}}&nbsp;&nbsp; {{list.addressDetail}}</Col>
               <Col>联系人：{{list.contact == null ? '暂无联系人' : list.contact}}</Col>
               <Col>联系电话：{{list.contactTelphone}}</Col>
               <Col><Tooltip   max-width="200" transfer :content="list.comment">
@@ -80,7 +82,8 @@ import {
   editticket,
   addticket,
   itemlist,
-  histories
+  histories,
+  viewcity
 } from '@/api/ticket'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { toMap } from '@/fn/array'
@@ -120,6 +123,14 @@ export default class Main extends ViewBase {
   items: any = []
   billingTime: any = ''
   applyTime: any = ''
+  proone: any = ''
+  cityone: any = ''
+  cunone: any = ''
+  protwo: any = ''
+  citytwo: any = ''
+  cuntwo: any = ''
+  adsoen: any = ''
+  adstwo: any = ''
 
 
   mounted() {
@@ -143,6 +154,7 @@ export default class Main extends ViewBase {
         this.item = (data.items || []).map((it: any) => {
           return {
             ...it,
+            orderItemList: uniqBy(it.orderItemList, 'kolId'), // 去重一个kol有两个任务
             createTime: moment(it.createTime).format(timeFormat)
           }
         })
@@ -150,10 +162,39 @@ export default class Main extends ViewBase {
         this.item = (data.items || []).map((it: any) => {
           return {
             ...it,
+            orderItemList: uniqBy(it.orderItemList, 'kolId'), // 去重一个kol有两个任务
             createTime: moment(it.createTime).format(timeFormat)
           }
         }).slice(0 , 5)
       }
+      const proone = await viewcity(data.provinceId)
+      const cityone = await viewcity(data.cityId)
+      const cunone = await viewcity(data.countyId)
+      const protwo = await viewcity(data.contactProvinceId)
+      const citytwo = await viewcity(data.contactCityId)
+      const cuntwo = await viewcity(data.contactCountyId)
+      this.proone = (proone.data || []).map((it: any) => {
+        return it.nameCn
+      })
+      this.cityone = (cityone.data || []).map((it: any) => {
+        return it.nameCn
+      })
+      this.cunone = (cunone.data || []).map((it: any) => {
+        return it.nameCn
+      })
+      this.protwo = (protwo.data || []).map((it: any) => {
+        return it.nameCn
+      })
+      this.citytwo = (citytwo.data || []).map((it: any) => {
+        return it.nameCn
+      })
+      this.cuntwo = (cuntwo.data || []).map((it: any) => {
+        return it.nameCn
+      })
+
+      this.adsoen = this.proone + '/' + this.cityone + '/' + this.cunone
+      this.adstwo = this.protwo + '/' + this.citytwo + '/' + this.cuntwo
+
     } catch (ex) {
       this.handleError(ex)
     } finally {
@@ -196,7 +237,7 @@ export default class Main extends ViewBase {
 }
 .sbg {
   width: 48%;
-  height: 235px;
+  height: 256px;
   float: left;
   background: rgba(255, 255, 255, 0.4);
   border: 1px solid #fff;
