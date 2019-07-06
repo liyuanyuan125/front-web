@@ -5,10 +5,10 @@
             :class="['film-item']">
           <div :class="['film-cover-box']">
             <span @click="del" class="del">×</span>
-            <img :src="it.image ? it.image : 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg'"  class="film-cover">
+            <img :src="it.main_pic ? it.main_pic : 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg'"  class="film-cover">
             <div>
-              <div class="film-title">{{it.nameCn}}</div>
-              <div class="film-time" style="margin-top: 10px"><span class="time-right">上映时间：</span>{{formatDate(it.releaseDate)}}</div>
+              <div class="film-title">{{it.name_cn}}</div>
+              <div class="film-time" style="margin-top: 10px"><span class="time-right">上映时间：</span>{{formatDate(it.release_date)}}</div>
               <div class="film-time timer">
                 <span class="time-right">投放排期</span>
                 <span>{{formatDate(begin)}}至{{formatDate(end)}}</span>

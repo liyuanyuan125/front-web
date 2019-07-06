@@ -4,36 +4,34 @@
       <Card class="detailmore-card">
         <div slot="title">
           <Row type="flex" justify="space-between">
-            <Col :span="24">
-              <DetailNavBar titleText="统计周期">
-                <div slot="item">
-                  <RadioGroup
-                    class="nav"
-                    style="margin-right:15px"
-                    @on-change="handleChange"
-                    v-model="form.dayRangesKey"
-                    size="large"
-                    type="button"
-                  >
-                    <Radio
-                      v-for="(item) in dict.dayRanges"
-                      :key="item.key"
-                      :disabled="item.disabled"
-                      :label="item.key"
-                    >{{item.text}}</Radio>
-                  </RadioGroup>
+            <DetailNavBar titleText="统计周期">
+              <div slot="item">
+                <RadioGroup
+                  class="nav"
+                  style="margin-right:15px"
+                  @on-change="handleChange"
+                  v-model="form.dayRangesKey"
+                  size="large"
+                  type="button"
+                >
+                  <Radio
+                    v-for="(item) in dict.dayRanges"
+                    :key="item.key"
+                    :disabled="item.disabled"
+                    :label="item.key"
+                  >{{item.text}}</Radio>
+                </RadioGroup>
 
-                  <DatePicker
-                    type="daterange"
-                    v-model="form.beginDate"
-                    @on-change="handleChangePic"
-                    placement="bottom-end"
-                    placeholder="自定义时间段"
-                    style="width: 200px"
-                  ></DatePicker>
-                </div>
-              </DetailNavBar>
-            </Col>
+                <DatePicker
+                  type="daterange"
+                  v-model="form.beginDate"
+                  @on-change="handleChangePic"
+                  placement="bottom-end"
+                  placeholder="自定义时间段"
+                  style="width: 200px"
+                ></DatePicker>
+              </div>
+            </DetailNavBar>
           </Row>
         </div>
 
@@ -70,31 +68,33 @@
                   >{{item.text}}</Radio>
                 </RadioGroup>
 
-                <AreaBasic
-                  :initDone="chart1.initDone"
-                  v-if="filmIndex == 'watchNum'"
-                  :title="chart1.title"
-                  :dict1="chart1.dict1"
-                  :dict2="chart1.dict2"
-                  :toolTip="chart1.toolTip"
-                  :height="chart1.height"
-                  :color="chart1.color"
-                  :dataList="chart1.dataList"
-                  :currentTypeIndex="chart1.currentTypeIndex"
-                />
+                <div class="area-basic-wrap" v-if="filmIndex == 'watchNum'">
+                  <AreaBasic
+                    :initDone="chart1.initDone"
+                    :title="chart1.title"
+                    :dict1="chart1.dict1"
+                    :dict2="chart1.dict2"
+                    :toolTip="chart1.toolTip"
+                    :height="chart1.height"
+                    :color="chart1.color"
+                    :dataList="chart1.dataList"
+                    :currentTypeIndex="chart1.currentTypeIndex"
+                  />
+                </div>
 
-                <AreaBasic
-                  :initDone="chart2.initDone"
-                  v-if="filmIndex == 'movieNum'"
-                  :title="chart2.title"
-                  :dict1="chart2.dict1"
-                  :dict2="chart2.dict2"
-                  :toolTip="chart2.toolTip"
-                  :height="chart2.height"
-                  :color="chart2.color"
-                  :dataList="chart2.dataList"
-                  :currentTypeIndex="chart2.currentTypeIndex"
-                />
+                <div class="area-basic-wrap" v-if="filmIndex == 'movieNum'">
+                  <AreaBasic
+                    :initDone="chart2.initDone"
+                    :title="chart2.title"
+                    :dict1="chart2.dict1"
+                    :dict2="chart2.dict2"
+                    :toolTip="chart2.toolTip"
+                    :height="chart2.height"
+                    :color="chart2.color"
+                    :dataList="chart2.dataList"
+                    :currentTypeIndex="chart2.currentTypeIndex"
+                  />
+                </div>
 
                 <!-- @typeChange='typeChangeHander' -->
                 <BarxCategoryStack
@@ -631,5 +631,9 @@ export default class Main extends ViewBase {
   padding-top: 30px;
   display: block;
   text-align: center;
+}
+
+.area-basic-wrap {
+  padding: 0 20px 0 10px;
 }
 </style>
