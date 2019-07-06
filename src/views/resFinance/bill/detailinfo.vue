@@ -1,69 +1,63 @@
 <template>
-	<div class='page'>
-		<div  class='items-title'>
-			<img  src="./assets/info2.png" alt="">
-		</div>
-		<Row class='title'>
-			<Col class='title-col' :span='4'>
-				<img src="./assets/out.png" alt="">
-			</Col>
-		</Row>
-		<div  class='items'>
-			<img  src="./assets/list2.png" alt="">
-		</div>
-	</div>
+  <div class="page">
+    <div class="items-title">
+      <img src="./assets/info2.png" alt />
+    </div>
+    <Row class="title">
+      <Col class="title-col" :span="4">
+        <img src="./assets/out.png" alt />
+      </Col>
+    </Row>
+    <div class="items">
+      <img src="./assets/list2.png" alt />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { Component , Watch} from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { toMap } from '@/fn/array'
-import { confirm , toast , info} from '@/ui/modal'
+import { confirm, toast, info } from '@/ui/modal'
 
-
-
+@Component
 export default class Main extends ViewBase {
-  async jump() {
-  }
+  jump() {}
 }
-
-
-
 </script>
 
-
 <style lang="less" scoped>
-  .title {
+.title {
+  height: 46px;
+  margin-top: 15px;
+  .title-col {
     height: 46px;
-    margin-top: 15px;
-    .title-col {
-      height: 46px;
-      float: right;
-      img {
-        width: 86%;
-        height: 89%;
-      }
-    }
-  }
-  .items {
-    height: 860px;
-    margin-top: 10px;
-    cursor: pointer;
+    float: right;
     img {
-      width: 100%;
-      height: 100%;
+      width: 86%;
+      height: 89%;
     }
   }
-  .items-title {
-    height: 81px;
-    margin-top: 10px;
-    cursor: pointer;
-    img {
-      width: 100%;
-      height: 100%;
-    }
+}
+.items {
+  height: 860px;
+  margin-top: 10px;
+  cursor: pointer;
+  img {
+    width: 100%;
+    height: 100%;
   }
+}
+.items-title {
+  height: 81px;
+  margin-top: 10px;
+  cursor: pointer;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
 </style>
 
 
