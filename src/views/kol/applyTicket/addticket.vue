@@ -13,7 +13,7 @@
          <Row>
            <Col class='fa-m' :span='12'>开票方： <span>北京智能广宣有限公司</span></Col>
            <Col v-if='this.$route.params.edit == "0" ' class='fa-m' :span='12'>发票总额：  <span style='font-size: 23px;'>￥<number :addNum='Number(this.list.totalTaxFee)' /></span></Col>
-           <Col v-if='this.$route.params.key == "0" ' class='fa-m' :span='12'>发票总额：  <span style='font-size: 23px;'>￥<number :addNum='Number(this.money)' /></span></Col>
+           <Col v-if='this.$route.params.key == "0" ' class='fa-m' :span='12'>发票总额：  <span style='font-size: 23px;'>￥{{formatNumber(this.money)}}</span></Col>
          </Row>
          <Row style='margin-top: 16px;'><span class='bx'>*</span>
            <!-- <Col :span='4' style='margin-top: 5px;width: 100px；'>发票类型</Col>
@@ -226,6 +226,7 @@ import { slice, clean } from '@/fn/object'
 import { warning , success, toast } from '@/ui/modal'
 import AreaSelect from '@/components/areaSelect'
 import number from '@/components/number.vue'
+import { formatNumber } from '@/util/validateRules'
 
 @Component({
   components: {
@@ -276,6 +277,8 @@ export default class Main extends ViewBase {
 
   money: any =  0
 
+  viewnum: any = false
+
   // detailList: any = {}
 
   mounted() {
@@ -285,6 +288,10 @@ export default class Main extends ViewBase {
     } else if (this.$route.params.key == '0') {
       this.detail()
     }
+  }
+
+  get formatNumber() {
+    return formatNumber
   }
 
   ass() {
@@ -365,6 +372,7 @@ export default class Main extends ViewBase {
       this.faType = data.invoiceTypeList
       this.taiType = data.customerTypeList
       this.money = data.totalTaxFee
+      this.viewnum = true
       this.query.itemCode = data.itemCode,
       this.query.totalTaxFee = data.totalTaxFee,
       this.query.invoiceType = data.invoiceType,
@@ -375,6 +383,7 @@ export default class Main extends ViewBase {
       this.query.provinceId = data.provinceId,
       this.query.cityId   = data.cityId,
       this.query.countyId = data.countyId,
+      this.area = [data.provinceId , data.cityId , data.countyId]
       this.query.address = data.address,
       this.query.accountBank = data.accountBank,
       this.query.accountNumber = data.accountNumber,
@@ -384,6 +393,7 @@ export default class Main extends ViewBase {
       this.query.contactProvinceId = data.contactProvinceId,
       this.query.contactCityId = data.contactCityId,
       this.query.contactCountyId = data.contactCountyId,
+      this.areas = [data.contactProvinceId , data.contactCityId , data.contactCountyId]
       this.query.addressDetail = data.addressDetail,
       this.query.comment = data.comment,
       this.query.orderIds = (data.items || []).map((it: any) => {
