@@ -234,7 +234,7 @@ export default class Plan extends ViewBase {
       settlementTime: null,
       settlementUser: 0,
       specification: 15,
-      status: 1,
+      status: 11,
       videoId: 273,
       videoLogo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bka7cktjqctg008ubkq0.png',
       videoName: '示例广告片',
