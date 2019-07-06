@@ -1584,6 +1584,43 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     },
   },
 
+  // 资源方 - 财务信息 - 对账单管理
+  {
+    path: '/resFinance/Bill',
+    name: 'resFinance-Bill',
+    component: () => import('./views/resFinance/Bill/index.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      authIsMenu: true,
+      title: '对账单管理',
+    },
+  },
+  // 资源方 - 财务信息 - 对账单管理 - 查看详情
+  {
+    path: '/resFinance/Bill/detail',
+    name: 'resFinance-Bill-detail',
+    component: () => import('./views/resFinance/Bill/detail.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      authIsMenu: true,
+      title: '查看详情',
+    },
+  },
+  // 资源方 - 财务信息 - 对账单管理 - 明细
+  {
+    path: '/resFinance/Bill/info',
+    name: 'resFinance-Bill-info',
+    component: () => import('./views/resFinance/Bill/detailinfo.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      authIsMenu: true,
+      title: '明细',
+    },
+  },
+
 
   // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
   {
