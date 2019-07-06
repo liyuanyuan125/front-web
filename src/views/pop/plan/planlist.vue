@@ -235,7 +235,7 @@ export default class Plan extends ViewBase {
     { title: '计划状态', slot: 'status' },
     { title: '操作', slot: 'operation', width: 150, align: 'left' }
   ]
-  tableDate = []
+  tableDate: any = []
   single = false
 
   get formatTimes() {
