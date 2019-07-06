@@ -31,4 +31,10 @@ export async function histories(query: any) {
 }
 
 
+// 查看省市区
+export async function viewcity(ids: any) {
+  const res = await get(`/basis/districts/${ids}`)
+  return res
+}
+
 
