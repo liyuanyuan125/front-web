@@ -866,6 +866,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  // 示例，没有实际用处
+  {
+    path: '/message',
+    name: 'message',
+    component: () => import('./views/message/index.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '消息中心',
+    },
+  },
 
   // 示例，没有实际用处
   {
@@ -1590,8 +1601,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'resFinance-bill',
     component: () => import('./views/resFinance/bill/index.vue'),
     meta: {
-      authKey: '',
-      authAction: '',
+      authKey: 'financeManage.bill',
+      authAction: 'EMPTY',
       authIsMenu: true,
       title: '对账单管理',
     },
@@ -1604,7 +1615,6 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: '',
       authAction: '',
-      authIsMenu: true,
       title: '查看详情',
     },
   },
@@ -1616,11 +1626,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: '',
       authAction: '',
-      authIsMenu: true,
       title: '明细',
     },
   },
-
 
   // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
   {
