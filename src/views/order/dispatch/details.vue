@@ -22,11 +22,12 @@
                     <em>{{targetCinemaLength}}家</em> 
                     <span class="query-status"  @click="edittarget(list.id, 1)" >查看</span></p>
               <p v-else><label>目标影院：</label><em>{{list.cinemaName || '暂无'}}</em></p>
-              <p><label>目标场次</label>{{list.sceneCount || '暂无'}} </p>
+              <p><label>目标人次</label>{{list.estimatePersonCount || '暂无'}}人</p>
+              <!-- <p><label>目标场次</label>{{list.sceneCount || '暂无'}} </p> -->
           </Col>
           <Col :span="8">
               <p><label>广告片规格</label>{{list.specification || 0}}s </p>
-              <p><label>目标影厅</label>{{list.hallsCount || '暂无'}} </p>
+              <!-- <p><label>目标影厅</label>{{list.hallsCount || '暂无'}} </p> -->
           </Col>
         </Row>
       </div>
@@ -41,7 +42,7 @@
             <span v-if="it.beginDate && it.endDate">{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</span>
             <span v-else>暂无</span>
           </p></Col>
-          <Col :span="8"><p><label>投放周期</label>{{it.cycle || 0}}天 </p></Col>
+          <!-- <Col :span="8"><p><label>投放周期</label>{{it.cycle || 0}}天 </p></Col> -->
         </Row>
       </div>
     </div>

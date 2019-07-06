@@ -5,6 +5,11 @@ import { KeyTextControlStatus, KeyText } from '@/util/types'
 import moment from 'moment'
 import { keyBy, at } from 'lodash'
 
+const isZero = (n: number | string | null) => {
+  const num = parseInt(n as string, 10)
+  return isNaN(num) || num == 0
+}
+
 /**
  * 将数字 0 以及字符串 '0' 作为空串，其他保留原值
  * @param val 值
@@ -129,8 +134,17 @@ export function filterItemInList(
  * @param rate 万分比率值
  * @param digits 保留位数，默认为 0
  */
-export function percent(rate: number, digits = 0) {
+export function percent(rate: number | null, digits = 0) {
   return +((rate || 0) / 100).toFixed(digits)
+}
+
+/**
+ * 加工鲸鱼指数
+ * @param index 指数数据
+ * @param digits 保留位数，默认为 2
+ */
+export function jyIndex(index: number | null, digits = 2) {
+  return isZero(index) ? '-' : percent(index, digits)
 }
 
 /**
@@ -168,11 +182,6 @@ export function textList(list: KeyText[], keys: Array<(string | number)>) {
  */
 export function dot(object: any, path: string) {
   return at(object, path)[0]
-}
-
-const isZero = (n: number | string) => {
-  const num = parseInt(n as string, 10)
-  return isNaN(num) || num == 0
 }
 
 const WAN = 10000

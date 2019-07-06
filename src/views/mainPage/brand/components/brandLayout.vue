@@ -372,7 +372,7 @@ export default class BrandLayout extends ViewBase {
     padding-left: 80px;
     background-position: 119px top;
     .fans-rate {
-      left: 52px;
+      left: 32px;
     }
   }
 
@@ -380,13 +380,14 @@ export default class BrandLayout extends ViewBase {
     padding-right: 80px;
     background-position: 37px top;
     .fans-rate {
-      right: 52px;
+      right: 32px;
     }
   }
 
   /deep/ .fans-rate {
     position: absolute;
     top: 8px;
+    width: 80px;
     margin-top: 0;
   }
 }

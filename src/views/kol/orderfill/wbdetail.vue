@@ -19,7 +19,7 @@
       >
         <FormItem label="广告位" prop="publishCategoryCode">
           <RadioGroup v-model="form.publishCategoryCode">
-            <Radio v-for="it in statuslist" :key="it.key" :label="it.key">{{it.text}}</Radio>
+            <Radio :disabled="!pricelist.includes(it.key)" v-for="it in statuslist" :key="it.key" :label="it.key">{{it.text}}</Radio>
           </RadioGroup>
         </FormItem>
 
@@ -94,6 +94,7 @@ export default class DlgEditCinema extends ViewBase {
   }
   kolid: any = null
   statuslist: any = []
+  pricelist: any = []
 
   get rule() {
     const validator = ( rules: any, value: any, callback: any) => {
@@ -120,11 +121,12 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
-  async init(statuslist: any, id: any, kolid: any, orderItemList?: any) {
+  async init(statuslist: any, id: any, kolid: any, pricelist: any, orderItemList?: any) {
     (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
     this.statuslist = statuslist
     this.numId = id
     this.kolid = kolid
+    this.pricelist = (pricelist || []).map((it: any) => Number(it.categoryCode))
     this.showDlg = true
     if (orderItemList) {
       this.form.publishCategoryCode = Number(orderItemList.publishCategoryCode)
