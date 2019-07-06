@@ -121,10 +121,11 @@
                   <img :src="item.main_pic">
                 </div>
                 <div class="movtitle cut-text">{{item.name_cn}}</div>
-                <p class="movscore" v-if=" form.sortBy === 'hots' "><i class="hots"></i><span>{{getItemValue(item)}}</span></p>
-                <p class="movscore" v-else-if=" form.sortBy === 'wantSeeCount' "><span>{{getItemValue(item)}}</span>人想看</p>
-                <p class="movscore" v-else-if=" form.sortBy === 'commentsScore' "><span>{{getItemValue(item)}}</span></p>
-                <p class="movscore" v-else ><span>{{getItemValue(item)}}</span></p>
+                <p class="movscore" v-if=" form.sortBy === 'hots' ">
+                  <i class="hots"></i>
+                  <span>{{getItemValue(item)}}</span>
+                </p>
+                <p class="movscore" v-html="getItemValue(item)" v-else></p>
               </router-link>
             </div>
           </Col>
@@ -153,7 +154,7 @@ import ViewBase from '@/util/ViewBase'
 import { fetchList } from '@/api/filmCooperation'
 import TinyLoading from '@/components/TinyLoading.vue'
 import { dayOffset } from '@/util/date'
-import { percent, readableNumber, textList } from '@/util/dealData'
+import { percent, readableNumber, readableThousands, textList } from '@/util/dealData'
 
 const typeListMore: any[] = []
 
@@ -328,16 +329,17 @@ export default class CooperationFilmList extends ViewBase {
   getItemValue(it: any) {
     switch ( this.form.sortBy ) {
       case 'hots':
-        return it.hots
-        break
+        return readableThousands(it.hots)
       case 'wantSeeCount':
-        return readableNumber(it.want_see)
-        break
+        const see = readableNumber(it.want_see)
+        return see == '-' ? '-' : `<span>${see}</span>人想看`
       case 'commentsScore':
-        return it.comments_score === 0 ? '-' : (it.comments_score / 10)
-        break
+        return it.comments_score == 0
+          ? '-'
+          : `<span>${(it.comments_score / 10).toFixed(1)}</span>分`
       default:
-        return it.jy_index != 0 ? (it.jy_index / 100).toFixed(2) : it.jy_index
+        const jyIndex = it.jy_index != 0 ? (it.jy_index / 100).toFixed(2) : it.jy_index
+        return `<span>${jyIndex}</span>`
     }
   }
 
@@ -555,7 +557,7 @@ export default class CooperationFilmList extends ViewBase {
             align-items: center;
             font-size: 16px;
             font-weight: 500;
-            span {
+            /deep/ span {
               color: #da6c70;
               font-size: 24px;
               font-weight: 500;

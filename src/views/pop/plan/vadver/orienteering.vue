@@ -416,10 +416,10 @@ export default class Orienteering extends ViewBase {
 
   async next(dataform: any) {
     const timers = Object.keys(this.timers)
-    if (this.numsList.length == 0) {
-      confirm('请选择影片')
-      return
-    }
+    // if (this.numsList.length == 0) {
+    //   confirm('请选择影片')
+    //   return
+    // }
     try {
       await direction(
         clean({
