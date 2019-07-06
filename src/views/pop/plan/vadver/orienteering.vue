@@ -96,16 +96,17 @@
                 <div class="orient-title">受众年龄</div>
                 <FormItem class="item-top form-item-type">
                   <CheckboxGroup v-model="form.age" class="item-radio-top">
-                    <Checkbox  style="width: 670px" class="check-item form-item-first" :label="0">不限</Checkbox>
-                    <Checkbox
-                      style="width: calc(100%/6 -18px)"
-                      v-for="it in ageList"
-                      :key="it.key"
-                      :label="it.key"
-                      class="check-item"
-                    >
-                      <span>{{it.text}}</span>
-                    </Checkbox>
+                    <Checkbox  style="width: 100%" class="check-item form-item-first" :label="0">不限</Checkbox>
+                    <div class="check-box">
+                      <Checkbox
+                        v-for="it in ageList"
+                        :key="it.key"
+                        :label="it.key"
+                        class="check-item"
+                      >
+                        <span>{{it.text}}</span>
+                      </Checkbox>
+                    </div>
                   </CheckboxGroup>
                 </FormItem>
               </Col>
@@ -776,7 +777,26 @@ export default class Orienteering extends ViewBase {
 .form-item-first:first-child {
   margin-bottom: 20px;
 }
-
+.check-box {
+  display: flex;
+  .check-item {
+    position: relative;
+    top: 3px;
+    flex: 1;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 4px;
+    text-align: center;
+    margin-right: 15px;
+    font-size: 14px;
+    color: #00202d;
+    border: 1px solid #fff;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    user-select: none;
+    .check-ra;
+  }
+}
 .check-item {
   position: relative;
   top: 3px;
