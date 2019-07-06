@@ -11,7 +11,8 @@
   				<Row class='de-ro-thr'>代表作品<br> <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;'>
+    white-space: nowrap;
+    width: 80%;margin-left: 8.5%'>
            <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name + ' '}}》</em></span></div></Row>
   			</Row>
   		</Row>
@@ -31,7 +32,7 @@
            <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;'>
+    white-space: nowrap;width: 80%;margin-left: 8.5%'>
            <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name + ' '}}》</em></span></div>
             </Row>
   			</Row>
@@ -52,7 +53,7 @@
           <Row class='de-ro-thr'>代表作品<br> <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;'>
+    white-space: nowrap;width: 80%;margin-left: 8.5%'>
            <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name + ' '}}》</em></span></div></Row>
         </Row>
       </Row>
@@ -69,7 +70,7 @@
           <Row class='de-ro-thr'>代表作品<br> <span  v-if='it.movies == null'>暂无</span>
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;'>
+    white-space: nowrap;width: 80%;margin-left: 8.5%'>
            <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name + ' '}}》</em></span></div></Row>
         </Row>
       </Row>
