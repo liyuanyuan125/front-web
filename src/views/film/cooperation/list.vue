@@ -154,7 +154,7 @@ import ViewBase from '@/util/ViewBase'
 import { fetchList } from '@/api/filmCooperation'
 import TinyLoading from '@/components/TinyLoading.vue'
 import { dayOffset } from '@/util/date'
-import { percent, readableNumber, readableThousands, textList } from '@/util/dealData'
+import { percent, readableNumber, readableThousands, textList, jyIndex } from '@/util/dealData'
 
 const typeListMore: any[] = []
 
@@ -338,8 +338,8 @@ export default class CooperationFilmList extends ViewBase {
           ? '-'
           : `<span>${(it.comments_score / 10).toFixed(1)}</span>分`
       default:
-        const jyIndex = it.jy_index != 0 ? (it.jy_index / 100).toFixed(2) : it.jy_index
-        return `<span>${jyIndex}</span>`
+        const index = jyIndex(it.jy_index)
+        return `<span>${index}</span>`
     }
   }
 
