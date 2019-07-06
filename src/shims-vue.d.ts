@@ -48,7 +48,7 @@ declare module 'quill-image-resize-module' {
 }
 
 interface VarType {
-  env: string
+  env: 'dev' | 'qas' | 'stg' | 'prd'
   baseUrl: string
   ajaxBaseUrl: string
 }

@@ -100,7 +100,15 @@
             </dl>
             <dl>
               <dd>投放周期：</dd>
-              <dt>{{formatDate(it.beginDate)}} 至 {{formatDate(it.endDate)}}</dt>
+              <dt>
+                <p v-if="it.status > 9">
+                  <span>{{formatDate(it.beginDate)}}</span>至
+                  <span>{{formatDate(it.endDate)}}</span>
+                </p>
+                <p v-else>
+                  <span>开始于{{formatDate(it.beginDate)}}</span>
+                </p>
+              </dt>
             </dl>
           </div>
         </li>
@@ -204,7 +212,7 @@
           <Col :span="10"><span>{{item.videoName}}</span></Col>
         </Row>
         <Row :gutter="16">
-          <Col :span="2"><span>投放排期:</span></Col>
+          <Col :span="2"><span>投放周期:</span></Col>
           <Col :span="10"><span>{{formatDate(item.beginDate)}} 至 {{formatDate(item.endDate)}}</span></Col>
           <Col :span="2"><span>客户:</span></Col>
           <Col :span="10"><span>{{item.customerName}}</span></Col>
