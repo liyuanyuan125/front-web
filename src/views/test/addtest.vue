@@ -18,6 +18,7 @@
 			<Col :span='8'>
 				<span>投放排期</span>&nbsp;&nbsp;
 				 <DatePicker type="daterange" @on-change="dateChange" placement="bottom-end" placeholder="投放排期" class="input" style="width: 300px"></DatePicker>
+      
 			</Col>
 		</Row>
 		 <div class='t-title'>
@@ -381,9 +382,9 @@ export default class Main extends ViewBase {
   overflow-y: hidden;
   background: rgba(32, 67, 80, 1);
 }
-/deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
-  color: #fff;
-}
+// /deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
+//   color: #fff;
+// }
 /deep/ .ivu-table-wrapper {
   margin: 30px 0 0;
   border: none;
