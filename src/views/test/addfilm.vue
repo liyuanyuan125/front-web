@@ -20,17 +20,17 @@
       </div>
       <div class="detail">
         <ul class="film-list" v-if="data.length > 0">
-          <li @click="checkNum(it.id)" v-for="(it, index) in data" :key="index"
-            :class="['film-item', !!checkId.includes(it.id + '') ? 'list-active' : '']">
+          <li @click="checkNum(it.movie_id)" v-for="(it, index) in data" :key="index"
+            :class="['film-item', !!checkId.includes(it.movie_id + '') ? 'list-active' : '']">
             <div :class="['film-cover-box']">
-              <img :src="it.image ? it.image : 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg'"   class="film-cover">
+              <img :src="it.main_pic ? it.main_pic : 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg'"   class="film-cover">
               <div style='width: 60%;'>
                 
-                <Tooltip  max-width="200" transfer :content="it.nameCn">
-                    <div class="film-title">{{it.nameCn}}</div></Tooltip>
-                <div class="film-time">上映时间：{{it.releaseDate}}</div>
+                <Tooltip  max-width="200" transfer :content="it.name_cn">
+                    <div class="film-title">{{it.name_cn}}</div></Tooltip>
+                <div class="film-time">上映时间：{{it.release_date}}</div>
                 <div class="film-time">
-                  <span>{{typelists(movieTypeList, it.type)}}</span>
+                  <span>{{typelists(movieTypeList, it.types)}}</span>
                   <!-- <span v-for='(its, index) in movieTypeList' :key='index'>
                     <span v-for='(itsem, index) in it.type' :key='index' v-if='its.key == itsem'>{{its.text + ' '}}</span>
                   </span> -->
@@ -70,7 +70,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { searchcinema } from '@/api/popPlan'
+import { searchcinema } from '@/api/testlist'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
@@ -120,7 +120,7 @@ export default class DlgEditCinema extends ViewBase {
     this.checks = {}
     if (type.length > 0) {
       this.checkObj = [...type]
-      this.checkId = this.checkObj.map((it: any) => it.id)
+      this.checkId = this.checkObj.map((it: any) => it.movie_id)
       this.checkId.forEach((it: any) => {
         this.checks[it] = true
       })
@@ -138,22 +138,22 @@ export default class DlgEditCinema extends ViewBase {
   async seach() {
     try {
       const { data: {
-       items,
-       movieTypeList,
+       movies,
+       typeList,
        totalCount
       } } = await searchcinema(clean({
         ...this.form,
         types: this.form.types[0] == 0 ? '' : this.form.types.join(',')
       }))
-      this.data = (items || []).map((it: any) => {
+      this.data = (movies || []).map((it: any) => {
         return {
           ...it,
-          releaseDate : String(it.releaseDate).slice(0, 4) + '-' +
-          String(it.releaseDate).slice(4, 6) + '-' + String(it.releaseDate).slice(6, 8)
+          release_date : String(it.release_date).slice(0, 4) + '-' +
+          String(it.release_date).slice(4, 6) + '-' + String(it.release_date).slice(6, 8)
         }
       })
       this.total = totalCount
-      this.movieTypeList = movieTypeList || []
+      this.movieTypeList = typeList || []
       this.checkNum()
     } catch (ex) {
       this.handleError(ex)
@@ -221,7 +221,7 @@ export default class DlgEditCinema extends ViewBase {
 
   checkAll() {
     this.$nextTick(() => {
-      const id = this.data.map((it: any) => it.id)
+      const id = this.data.map((it: any) => it.movie_id)
       this.idO = {}
       if (this.checkboxall) {
         id.forEach((it: any) => {
@@ -242,14 +242,14 @@ export default class DlgEditCinema extends ViewBase {
   checkNum(id?: any) {
     this.checks[id] = !this.checks[id] ? true : false
     this.checkId = []
-    let ids = this.data.map((it: any) => it.id)
+    let ids = this.data.map((it: any) => it.movie_id)
     for (const i in this.checks) {
       if (this.checks[i]) {
         this.checkId.push(i)
       }
     }
     const nums = this.data.filter((it: any) => {
-      return this.checkId.includes(it.id + '')
+      return this.checkId.includes(it.movie_id + '')
     })
     this.checkObj.push(...nums)
     this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
@@ -266,7 +266,7 @@ export default class DlgEditCinema extends ViewBase {
   @Watch('checks', {deep: true})
   watchChecks(val: any) {
     this.checkId = []
-    let id = this.data.map((it: any) => it.id)
+    let id = this.data.map((it: any) => it.movie_id)
     for (const i in val) {
       if (val[i]) {
         this.checkId.push(i)
@@ -276,7 +276,7 @@ export default class DlgEditCinema extends ViewBase {
       id = id.filter((item: any) => item == it)
     })
     const nums = this.data.filter((it: any) => {
-      return this.checkId.includes(it.id + '')
+      return this.checkId.includes(it.movie_id + '')
     })
     this.checkObj.push(...nums)
     this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))

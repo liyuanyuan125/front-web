@@ -63,3 +63,8 @@ export async function reportcities(planMonitorId: any) {
 }
 
 
+// 影片搜索接口
+export async function searchcinema(query: any) {
+  const res = await get(`/movie/search/xadvert` , query)
+  return res
+}

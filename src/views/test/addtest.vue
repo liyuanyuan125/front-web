@@ -168,9 +168,9 @@ export default class Main extends ViewBase {
       // this.query.deliveryMovies.push(this.numsList)
       this.query.deliveryMovies = (this.numsList || []).map((it: any) => {
         return {
-          movieId: it.movieId,
-          beginDate: it.beginDate,
-          endDate: it.endDate
+          movieId: it.movie_id,
+          beginDate: this.query.beginDate,
+          endDate: this.query.endDate
         }
       })
     } else {
