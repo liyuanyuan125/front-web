@@ -114,6 +114,7 @@ export async function getKol({
       name,
       title: description,
       figure: photo,
+      jyTip: '在一定周期内的KOL综合表现，由作品表现，平台粉丝数，口碑，全网资讯量及讨论，搜索等互动量加权计算得出',
       rankNo: percent(jyIndex, 2),
       rankTitle: [
         `全网排名：${ranking || '-'}`,
@@ -267,6 +268,7 @@ export async function getMovie(id: number) {
       // 产品要去，如果英文名与 name 一致，则不显示
       subName: nameEn == name ? '' : nameEn,
       figure: mainPic,
+      jyTip: '在一定周期内的影片综合表现，由想看数/票房，口碑，全网资讯量及讨论，搜索等互动量加权计算得出',
       rankNo: percent(jyIndex, 2),
       // TODO: 产品逻辑：计算不准确，隐藏
       // rankTitle: `同档期：第${jyIndexSamePeriodRanking || '-'}`,
@@ -419,6 +421,7 @@ export async function getFigure(id: number) {
       subName: nameEn,
       title: titleList.join('/'),
       figure: headImgSmall,
+      jyTip: '在一定周期内的影人综合表现，由作品表现、专业评价、口碑，粉丝数、全网资讯量及讨论，搜索等互动量加权计算得出',
       rankNo: percent(jyIndex, 2),
       rankTitle: tip,
     },

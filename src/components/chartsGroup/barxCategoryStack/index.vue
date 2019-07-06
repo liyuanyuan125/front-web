@@ -7,27 +7,25 @@
           <Icon type="md-help-circle" />
         </Tooltip>
       </div>
-      <RadioGroup
-        size="small"
-        v-if="dict1.length > 0 && dataList"
-        @on-change="currentTypeChange"
-        v-model="currentIndex"
-        type="button"
-      >
+      <RadioGroup size="small" v-if="dict1.length > 0 && dataList" @on-change="currentTypeChange" v-model="currentIndex" type="button">
         <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
     <div class="content-wrap">
       <div v-if="initDone" ref="refChart" class="chart-wrap"></div>
-      <div v-show="!initDone" class="chart-loading"><TinyLoading/></div>
+      <div v-show="!initDone" class="chart-loading">
+        <TinyLoading />
+      </div>
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
+import { find } from 'lodash'
 import {
   pubOption,
   seriesOption,
@@ -37,10 +35,12 @@ import {
   barThinStyle
 } from '../chartsOption'
 import { tooltipStyles } from '@/util/echarts'
+
 const tooltipsDefault = tooltipStyles({
   trigger: 'item',
   formatter: '{b} <br/> {c}'
 })
+
 @Component({
   components: {
     TinyLoading
@@ -49,16 +49,27 @@ const tooltipsDefault = tooltipStyles({
 // x轴堆叠条形图
 export default class BarXCategoryStack extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
+
   @Prop({ type: String, default: '' }) title!: string
+
   @Prop({ type: String, default: '' }) titleTips?: string
+
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
+
   @Prop({ type: Array, default: () => [] }) dict1!: any[]
+
   @Prop({ type: Array, default: () => [] }) dict2!: any[]
+
   @Prop({ type: Array, default: () => [] }) xAxis!: any[]
+
   @Prop({ type: Array, default: () => [] }) color!: any[]
+
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
+
   @Prop({ type: Function, default: () => {} }) fn?: any
+
   @Prop({ type: Number, default: 0 }) height?: number
+
   @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
 
   currentIndex: number = this.currentTypeIndex
@@ -78,26 +89,29 @@ export default class BarXCategoryStack extends ViewBase {
   updateCharts() {
     const chartData: any[] = this.dataList[this.currentIndex] || []
 
+    if (chartData.length == 0) {
+      return
+    } else if (chartData.length > 0) {
+      const res = find(chartData, 'data').data
+      if (res && res.length === 0) {
+        return
+      }
+    }
+
     const chartEl = this.$refs.refChart as HTMLDivElement
 
     echarts.dispose(chartEl)
     chartEl.innerHTML = ''
-
-    if ( chartData.length == 0 ) {
-      return
-    } else {
-      // 需要判断分类的数据
-    }
 
     const myChart = echarts.init(chartEl)
 
     // 数据过多对width处理
     let _width = '20'
     const dataLen = this.dataList[0][0].data.length
-    if ( this.dict1 && (this.dict1.length > 1) && dataLen && dataLen > 7 ) {
-      if ( dataLen > 30 && dataLen < 100 ) {
+    if (this.dict1 && this.dict1.length > 1 && dataLen && dataLen > 7) {
+      if (dataLen > 30 && dataLen < 100) {
         _width = '3'
-      } else if ( dataLen > 7 && dataLen < 30 ) {
+      } else if (dataLen > 7 && dataLen < 30) {
         _width = '10'
       } else {
         _width = '20'
@@ -132,25 +146,25 @@ export default class BarXCategoryStack extends ViewBase {
           const i1 = parseInt(v.seriesIndex, 0) // 正面、负面、中性 索引
           const i3 = parseInt(v.dataIndex, 0) // 当前数据索引
           let infos = `
-            <p style="background-color: ${ this.color[0] }; margin: 3px 0;">
-              ${ this.dict1.length > 1 ? this.dict1[this.currentIndex].name : '' }
-              ${ this.dict2[0].text }：${ this.dataList[this.currentIndex][0].data[i3] }
+            <p style="background-color: ${this.color[0]}; margin: 3px 0;">
+              ${this.dict1.length > 1 ? this.dict1[this.currentIndex].name : ''}
+              ${this.dict2[0].text}：${this.dataList[this.currentIndex][0].data[i3]}
             </p>
           `
-          if ( this.dict2.length > 1 ) {
+          if (this.dict2.length > 1) {
             infos = ''
             this.dict2.forEach((it: any, i: number) => {
               infos += `
                 <p style="background-color: ${this.color[i]}; margin: 3px 0;">
-                  ${ this.dict1.length > 1 ? this.dict1[this.currentIndex].name : '' }
-                  ${ this.dict2[i].text }：${ this.dataList[this.currentIndex][i].data[i3] }
+                  ${this.dict1.length > 1 ? this.dict1[this.currentIndex].name : ''}
+                  ${this.dict2[i].text}：${this.dataList[this.currentIndex][i].data[i3]}
                 </p>
               `
             })
           }
           return `
-            <p>${ this.xAxis[i3] }</p>
-            ${ infos }
+            <p>${this.xAxis[i3]}</p>
+            ${infos}
           `
         }
       },
@@ -212,6 +226,7 @@ export default class BarXCategoryStack extends ViewBase {
       myChart.on('click', this.fn)
     }
   }
+
   @Watch('initDone')
   watchInitDone(val: boolean) {
     if (val) {
@@ -221,6 +236,7 @@ export default class BarXCategoryStack extends ViewBase {
       })
     }
   }
+
   @Watch('currentTypeIndex')
   watchcurrentTypeIndex(newIndex: any, oldIndex: any) {
     if (newIndex !== oldIndex) {
@@ -230,6 +246,7 @@ export default class BarXCategoryStack extends ViewBase {
   }
 }
 </script>
+
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 .content-wrap {
