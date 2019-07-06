@@ -112,7 +112,7 @@
 
         <template slot="operation" slot-scope="{row}">
           <div class="operation-btn">
-            <div v-if="row.ids == 1">
+            <div v-if="row.ids">
               <span class="edit-btn" @click="findId(row.ids)">查看效果报表</span>
             </div>
             <div v-else>
