@@ -866,6 +866,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  // 消息中心
+  {
+    path: '/message',
+    name: 'message',
+    component: () => import('./views/message/index.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '消息中心',
+    },
+  },
 
   // 示例，没有实际用处
   {
@@ -1584,6 +1595,40 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     },
   },
 
+  // 资源方 - 财务信息 - 对账单管理
+  {
+    path: '/resFinance/bill',
+    name: 'resFinance-bill',
+    component: () => import('./views/resFinance/bill/index.vue'),
+    meta: {
+      authKey: 'financeManage.bill',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+      title: '对账单管理',
+    },
+  },
+  // 资源方 - 财务信息 - 对账单管理 - 查看详情
+  {
+    path: '/resFinance/bill/detail',
+    name: 'resFinance-bill-detail',
+    component: () => import('./views/resFinance/bill/detail.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '查看详情',
+    },
+  },
+  // 资源方 - 财务信息 - 对账单管理 - 明细
+  {
+    path: '/resFinance/bill/info',
+    name: 'resFinance-bill-info',
+    component: () => import('./views/resFinance/bill/detailinfo.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '明细',
+    },
+  },
 
   // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
   {
