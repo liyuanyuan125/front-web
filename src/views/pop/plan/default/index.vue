@@ -292,7 +292,7 @@ const timeFormat = 'YYYY-MM-DD'
     Xlsx
   }
 })
-export default class App extends ViewBase {
+export default class Apps extends ViewBase {
   filmList: any = []
   tag = 1
   pageIndex = 1

@@ -8,6 +8,7 @@
       <div class="title">
         <i @click="cancel"></i>
         <p>{{!!value.item.videoId ? '修改广告片' : '关联广告片'}}</p>
+        <p class="title-box">仅支持选择审核已通过的广告片</p>
         <Form ref="forms" :model="form" style="margin-top: 30px" :rules="rules" :label-width="100">
           <!-- <FormItem label="已关联广告片" class="item-top">
             <div class="relvanMess">
@@ -196,7 +197,7 @@ export default class Relevan extends ViewBase {
 .title {
   border-radius: 5px 5px 0 0;
   text-align: center;
-  font-size: 30px;
+  font-size: 16px;
   font-weight: 500;
   padding: 20px;
   color: #00202d;
@@ -218,6 +219,11 @@ export default class Relevan extends ViewBase {
       line-height: 24px;
       text-align: center;
     }
+  }
+  .title-box {
+    height: 45px;
+    background: rgba(0, 32, 45, 1);
+    border-radius: 5px;
   }
 }
 
