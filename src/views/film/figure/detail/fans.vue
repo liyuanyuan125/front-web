@@ -257,13 +257,13 @@ export default class Temporary extends ViewBase {
       const cityList = (cities as any[] || []).sort((a, b) => a.v - b.v)
 
       let [min, max] = [0, 0]
-      const provinceData = provinceList.map(({ v, k }: any) => {
+      const provinceData = provinceList.map(({ v, k }) => {
         v = parseInt(v, 0)
         max = max < v ? v : max
         min = min > v ? v : min
         return { name: k, value: v }
       })
-      const cityData = cityList.map(({ v, k }: any) => {
+      const cityData = cityList.map(({ v, k }) => {
         return {
           name: k,
           value: typeof v === 'number' ? v : parseInt(v, 0)

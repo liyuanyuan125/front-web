@@ -1,35 +1,48 @@
 
 <template>
-  <div>
-    <div style='text-align:center'>
-      <div class='title-box'>
+  <div class="bar-x-category">
+    <div style="text-align:center" class="chart-head">
+      <div class="title-box">
         <span v-if=" title !=='' ">{{title}}</span>
         <Tooltip max-width="200" v-if=" titleTips !=='' " :content="titleTips">
           <Icon type="md-help-circle" />
         </Tooltip>
       </div>
-      <RadioGroup size="small" v-if="dict1.length > 0" @on-change='currentTypeChange' v-model="currentIndex" type="button">
+      <RadioGroup
+        size="small"
+        v-if="dict1.length > 0"
+        @on-change="currentTypeChange"
+        v-model="currentIndex"
+        type="button"
+      >
         <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
 
-    <Row type="flex" justify="center" align="middle">
+    <Row type="flex" justify="center" align="middle" class="chart-content">
       <Col :span="24">
+        <div v-if="initDone && !noData">
+          <div ref="refChart" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
+        </div>
 
-      <div v-if="initDone && !noData">
-        <div ref="refChart" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
-      </div>
+        <div
+          v-else-if="noData"
+          class="nodata-wp"
+          :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"
+        >暂无数据</div>
 
-      <div v-else-if="noData" class="nodata-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">暂无数据</div>
-
-      <div v-else class="loading-wp" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
-        <TinyLoading />
-      </div>
-
+        <div
+          v-else
+          class="loading-wp"
+          :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"
+        >
+          <TinyLoading />
+        </div>
       </Col>
     </Row>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -147,6 +160,7 @@ export default class BarXCategory extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+
 /deep/ .ivu-radio-group {
   .ivu-radio-wrapper {
     background: none;
@@ -197,5 +211,9 @@ export default class BarXCategory extends ViewBase {
   align-items: center;
   font-size: 18px;
   color: #999;
+}
+
+.chart-content {
+  padding: 0 20px 0 10px;
 }
 </style>
