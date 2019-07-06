@@ -878,6 +878,18 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     },
   },
 
+  // 消息中心
+  {
+    path: '/message/info',
+    name: 'message-info',
+    component: () => import('./views/message/info.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '消息详情',
+    },
+  },
+
   // 示例，没有实际用处
   {
     path: '/about',
