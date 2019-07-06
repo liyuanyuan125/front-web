@@ -71,22 +71,29 @@
               <span v-else>ID:{{row.id}}</span>
             </p>
             <div>
-              <img :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
+              <img v-if="!row.ids" :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
+              <img v-else src="./assets/mock.png" :onerror="defaultImg" width="90px" height="90px">
+
               <div>
                 <h3>{{row.name}}</h3>
                 <span>{{row.videoName}}&nbsp;&nbsp;{{row.customerName}}&nbsp;&nbsp;{{row.specification||0 }}s</span>
-                <p v-if="!row.videoId && row.id != 0" @click="relevanceAdv(row, 1)">关联广告片</p>
-                <p v-if="row.videoId && row.id != 0" @click="relevanceAdv(row, 2)">修改广告片</p>
+                <div v-if="!row.ids">
+                  <p v-if="!row.videoId && row.id != 0" @click="relevanceAdv(row, 1)">关联广告片</p>
+                  <p v-if="row.videoId && row.id != 0" @click="relevanceAdv(row, 2)">修改广告片</p>
+                </div>
               </div>
             </div>
           </div>
         </template>
         <template slot="date" slot-scope="{row}">
-          <p>
+          <p v-if="row.status > 9">
             <span>{{formatDate(row.beginDate)}}</span>至
             <span>{{formatDate(row.endDate)}}</span>
           </p>
-          <p style="margin-top: 10px">{{days(row.beginDate, row.endDate)}}天</p>
+          <p v-else>
+            <span>开始于{{formatDate(row.beginDate)}}</span>
+          </p>
+          <!-- <p style="margin-top: 10px">{{days(row.beginDate, row.endDate)}}天</p> -->
         </template>
 
         <template slot="settlementStatus" slot-scope="{row}">
@@ -100,7 +107,6 @@
         <template slot="status" slot-scope="{row}">
           <p
             class="red"
-            style="margin-top: 10px"
           >{{data.statusList.filter((it) => it.key == row.status)[0].text}}</p>
         </template>
 
@@ -198,39 +204,45 @@ export default class Plan extends ViewBase {
   selectIds = []
   checkboxall = false
 
-  mockadver: any = {
-    endDate: 20190626,
-    beginDate: 20190620,
-    estimateCostAmount: 7014,
-    estimatePersonCount: 7014,
-    estimateShowCount: 571,
-    freezeAmount: 50000,
-    ids: 1,
-    movieCustom: 1,
-    name: '[ 示例 ]精准映前广告投放计划',
-    needPayAmount: null,
-    payName: null,
-    payTime: null,
-    payUser: 0,
-    productId: 158,
-    productName: null,
-    recommend: true,
-    refundAmount: null,
-    reportUpdateTime: null,
-    settlementAmount: null,
-    settlementName: null,
-    settlementStatus: 0,
-    settlementTime: null,
-    settlementUser: 0,
-    specification: 15,
-    status: 1,
-    videoId: 273,
-    videoLogo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bka7cktjqctg008ubkq0.png',
-    videoName: '示例广告片',
+  get mockadver() {
+    let ids = 173
+    if (VAR.env == 'prd') {
+      ids = 104
+    }
+    return {
+      endDate: 20190626,
+      beginDate: 20190620,
+      estimateCostAmount: 7014,
+      estimatePersonCount: 7014,
+      estimateShowCount: 571,
+      freezeAmount: 50000,
+      ids,
+      movieCustom: 1,
+      name: '[ 示例 ]精准映前广告投放计划',
+      needPayAmount: null,
+      payName: null,
+      payTime: null,
+      payUser: 0,
+      productId: 158,
+      productName: null,
+      recommend: true,
+      refundAmount: null,
+      reportUpdateTime: null,
+      settlementAmount: null,
+      settlementName: null,
+      settlementStatus: 0,
+      settlementTime: null,
+      settlementUser: 0,
+      specification: 15,
+      status: 1,
+      videoId: 273,
+      videoLogo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bka7cktjqctg008ubkq0.png',
+      videoName: '示例广告片',
+    }
   }
   columns = [
     { title: '广告', key: 'id', minWidth: 170, slot: 'msg' },
-    { title: '投放周期', slot: 'date' },
+    { title: '投放排期', slot: 'date' },
     { title: '款项清算', slot: 'settlementStatus', align: 'center' },
     { title: '计划状态', slot: 'status' },
     { title: '操作', slot: 'operation', width: 150, align: 'left' }

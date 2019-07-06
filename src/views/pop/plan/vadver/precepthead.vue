@@ -46,8 +46,16 @@
             <dt>{{data.videoName}}</dt>
           </dl>
           <dl>
-            <dd>投放排期</dd>
-            <dt>{{formatDate(data.beginDate)}}至{{formatDate(data.endDate)}}</dt>
+            <dd>投放周期</dd>
+            <dt>
+              <p v-if="data.status > 9">
+                <span>{{formatDate(data.beginDate)}}</span>至
+                <span>{{formatDate(data.endDate)}}</span>
+              </p>
+              <p v-else>
+                <span>开始于{{formatDate(data.beginDate)}}</span>
+              </p>
+            </dt>
           </dl>
         </Col>
         <Col span="3" class="item item-dl">

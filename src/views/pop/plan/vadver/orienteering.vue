@@ -76,19 +76,21 @@
               <Col :span="7" class="three-left">
                 <div class="orient-title">受众性别</div>
                 <FormItem class="item-top form-item-type">
-                  <RadioGroup v-model="form.sex" class="item-radio-top">
-                    <Radio  style="width: 250px" class="check-item form-item-first" :label="0">不限</Radio>
-                    <Radio 
-                      v-if="it.key != 'unknow'"
-                      style="width: 116px; height: 40px; float: left;"
-                      v-for="it in sexList"
-                      :key="it.key"
-                      :label="it.key"
-                      class="check-item check-icon"
-                    >
-                      <span>{{it.text}}</span>
-                    </Radio>
-                  </RadioGroup>
+                  <div class="age-box">
+                    <RadioGroup v-model="form.sex" class="item-radio-top">
+                      <Radio  style="width: 250px" class="check-item form-item-first" :label="0">不限</Radio>
+                      <Radio 
+                        v-if="it.key != 'unknow'"
+                        style="width: 116px; height: 40px; float: left;"
+                        v-for="it in sexList"
+                        :key="it.key"
+                        :label="it.key"
+                        class="check-item check-icon"
+                      >
+                        <span>{{it.text}}</span>
+                      </Radio>
+                    </RadioGroup>
+                  </div>
                 </FormItem>
               </Col>
 
@@ -935,5 +937,16 @@ export default class Orienteering extends ViewBase {
 }
 /deep/ .ivu-progress-bg {
   background: #3959a8;
+}
+.age-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /deep/ .ivu-radio-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }
 </style>
