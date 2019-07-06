@@ -33,9 +33,9 @@ import Pane from './pane.vue'
 export default class FansPane extends Vue {
   @Prop({ type: String, default: '' }) title!: string
 
-  @Prop({ type: Number, default: 50 }) man!: number
+  @Prop({ type: Number, default: 0 }) man!: number
 
-  @Prop({ type: Number, default: 50 }) woman!: number
+  @Prop({ type: Number, default: 0 }) woman!: number
 
   @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
 
