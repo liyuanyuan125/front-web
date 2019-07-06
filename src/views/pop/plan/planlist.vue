@@ -66,16 +66,17 @@
         <template slot="msg" slot-scope="{row, index}">
           <div class="msg-box">
             <p>
-              <Checkbox v-model="checks[row.id]" :key="index"></Checkbox>
-              ID: {{row.id}}
+              <Checkbox v-if="!row.ids" v-model="checks[row.id]" :key="index"></Checkbox>
+              <span v-if="row.ids">ID: {{row.ids}}</span>
+              <span v-else>ID:{{row.id}}</span>
             </p>
             <div>
               <img :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
               <div>
                 <h3>{{row.name}}</h3>
                 <span>{{row.videoName}}&nbsp;&nbsp;{{row.customerName}}&nbsp;&nbsp;{{row.specification||0 }}s</span>
-                <p v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</p>
-                <p v-if="row.videoId" @click="relevanceAdv(row, 2)">修改广告片</p>
+                <p v-if="!row.videoId && row.id != 0" @click="relevanceAdv(row, 1)">关联广告片</p>
+                <p v-if="row.videoId && row.id != 0" @click="relevanceAdv(row, 2)">修改广告片</p>
               </div>
             </div>
           </div>
@@ -105,29 +106,34 @@
 
         <template slot="operation" slot-scope="{row}">
           <div class="operation-btn">
-            <div v-if="row.status == 1 || row.status == 2">
-              <p @click="plandetail(row.id)">详情</p>
-              <p @click="plandEdit(row.id)">编辑</p>
-              <p @click="plandel(row.id)">删除</p>
+            <div v-if="row.ids == 1">
+              <span class="edit-btn" @click="findId(row.ids)">查看效果报表</span>
             </div>
-            <div v-if="row.status == 3 || row.status == 4">
-              <span class="edit-btn" v-if="row.status == 3" @click="sure(row.id)">确认方案</span>
-              <span class="edit-btn" v-if="row.status == 4" @click="pay(row.companyId, row.freezeAmount, row.id)">立即缴费</span>
-              <div class="adver-edit">
+            <div v-else>
+              <div v-if="row.status == 1 || row.status == 2">
                 <p @click="plandetail(row.id)">详情</p>
-                <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
+                <p @click="plandEdit(row.id)">编辑</p>
                 <p @click="plandel(row.id)">删除</p>
               </div>
-            </div>
-            <div v-if="(row.status > 4 && row.status < 8) || row.status == 12 ">
-              <div class="adver-edit">
-                <p @click="plandetail(row.id)">详情</p>
+              <div v-if="row.status == 3 || row.status == 4">
+                <span class="edit-btn" v-if="row.status == 3" @click="sure(row.id)">确认方案</span>
+                <span class="edit-btn" v-if="row.status == 4" @click="pay(row.companyId, row.freezeAmount, row.id)">立即缴费</span>
+                <div class="adver-edit">
+                  <p @click="plandetail(row.id)">详情</p>
+                  <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
+                  <p @click="plandel(row.id)">删除</p>
+                </div>
               </div>
-            </div>
-            <div v-if="row.status >= 8 && row.status < 12 ">
-              <span class="edit-btn" @click="findId(row.id)">查看效果报表</span>
-              <div class="adver-edit">
-                <p @click="plandetail(row.id)">详情</p>
+              <div v-if="(row.status > 4 && row.status < 8) || row.status == 12 ">
+                <div class="adver-edit">
+                  <p @click="plandetail(row.id)">详情</p>
+                </div>
+              </div>
+              <div v-if="row.status >= 8 && row.status < 12 ">
+                <span class="edit-btn" @click="findId(row.id)">查看效果报表</span>
+                <div class="adver-edit">
+                  <p @click="plandetail(row.id)">详情</p>
+                </div>
               </div>
             </div>
           </div>
@@ -192,6 +198,36 @@ export default class Plan extends ViewBase {
   selectIds = []
   checkboxall = false
 
+  mockadver: any = {
+    endDate: 20190626,
+    beginDate: 20190620,
+    estimateCostAmount: 7014,
+    estimatePersonCount: 7014,
+    estimateShowCount: 571,
+    freezeAmount: 50000,
+    ids: 1,
+    movieCustom: 1,
+    name: '[ 示例 ]精准映前广告投放计划',
+    needPayAmount: null,
+    payName: null,
+    payTime: null,
+    payUser: 0,
+    productId: 158,
+    productName: null,
+    recommend: true,
+    refundAmount: null,
+    reportUpdateTime: null,
+    settlementAmount: null,
+    settlementName: null,
+    settlementStatus: 0,
+    settlementTime: null,
+    settlementUser: 0,
+    specification: 15,
+    status: 1,
+    videoId: 273,
+    videoLogo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bka7cktjqctg008ubkq0.png',
+    videoName: '示例广告片',
+  }
   columns = [
     { title: '广告', key: 'id', minWidth: 170, slot: 'msg' },
     { title: '投放周期', slot: 'date' },
@@ -239,7 +275,8 @@ export default class Plan extends ViewBase {
     //   }
     // }
     this.loading = false
-    this.tableDate = data.items
+    this.tableDate = (data.items || [])
+    this.tableDate.unshift(this.mockadver)
     this.totalCount = data.totalCount
   }
 
@@ -375,7 +412,7 @@ export default class Plan extends ViewBase {
       const ids: any = this.selectIds.map((item: any) => item.id) || []
       await confirm('是否确定删除?')
       try {
-        await delCheckPlanList(this.checkId.join(','))
+        await delCheckPlanList(this.checkId.filter((item: any) => item != 'undefined').join(','))
         this.tableList()
       } catch (ex) {
         this.handleError(ex)
