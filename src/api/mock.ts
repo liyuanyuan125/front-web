@@ -6,29 +6,29 @@ const ajaxOpts = {
 }
 
 const mockData = (mockOpts: any) => {
-  if (VAR.env === 'dev') {
-    return { code: 0, data: Mock.mock(mockOpts), msg: '' }
-  }
-  throw { code: 870, msg: '非开发环境不能使用模拟数据' }
+  // if (VAR.env === 'dev') {
+  return { code: 0, data: Mock.mock(mockOpts), msg: '' }
+  // }
+  // throw { code: 870, msg: '非开发环境不能使用模拟数据' }
 }
 
 export async function mockGet(data: any, mockOpts: any) {
-  await get('/mock/40/demo/femock', data, ajaxOpts)
+  // await get('/mock/40/demo/femock', data, ajaxOpts)
   return mockData(mockOpts)
 }
 
 export async function mockPost(data: any, mockOpts: any) {
-  await post('/mock/40/demo/femock', data, ajaxOpts)
+  // await post('/mock/40/demo/femock', data, ajaxOpts)
   return mockData(mockOpts)
 }
 
 export async function mockPut(data: any, mockOpts: any) {
-  await put('/mock/40/demo/femock', data, ajaxOpts)
+  // await put('/mock/40/demo/femock', data, ajaxOpts)
   return mockData(mockOpts)
 }
 
 export async function mockDel(data: any, mockOpts: any) {
-  await del('/mock/40/demo/femock', data, ajaxOpts)
+  // await del('/mock/40/demo/femock', data, ajaxOpts)
   return mockData(mockOpts)
 }
 
