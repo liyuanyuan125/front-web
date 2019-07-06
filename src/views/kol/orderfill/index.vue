@@ -106,12 +106,12 @@
         </template>
         <template style="marin-top: 100px" slot-scope="{ row, coulum, index }" slot="action">
           <div v-if="row.orderItemList" class="action">
-            <p @click="set(index, row.channelDataId, row.orderItemList)">修改</p>
+            <p @click="set(index, row.channelDataId, row.priceList, row.orderItemList)">修改</p>
             <p @click="del(index)">删除</p>
             <p @click="add(index)">追加</p>
           </div>
           <div v-else class="action">
-            <p @click="set(index, row.channelDataId)">
+            <p @click="set(index, row.channelDataId, row.priceList)">
               <span>设置任务</span>
             </p>
             <p @click="del(index)">
@@ -379,7 +379,7 @@ export default class Main extends ViewBase {
     this.tableDate = this.tableDate.map((it: any, index: number) => {
       const orderItemList: any = it.publishCategoryCode ?  {
           publishCategoryCode: it.publishCategoryCode ? it.publishCategoryCode : '',
-          pictureFileIds: it.pictureFileIds ? it.pictureFileIds : [],
+          pictureFileIds: it.fileUrlList ? it.fileUrlList : [],
           publishTime: it.publishTime ? new Date(it.publishTime) : '',
           content: it.content ? it.content : '',
           orderItemId: it.orderItemId ? it.orderItemId : '',
@@ -525,10 +525,10 @@ export default class Main extends ViewBase {
     }
   }
 
-  set(id: any, kolid: any, orderItemList: any) {
+  set(id: any, kolid: any, pricelist: any, orderItemList: any) {
     this.comloading = true
     this.$nextTick(() => {
-      (this.$refs.detailbox as any).init(this.statusList, id, kolid, orderItemList )
+      (this.$refs.detailbox as any).init(this.statusList, id, kolid, pricelist, orderItemList )
     })
   }
 
@@ -569,7 +569,7 @@ export default class Main extends ViewBase {
 
   fanscount(val: any) {
     let fans = 0
-    val.forEach((it: any) => {
+    uniqBy(val, 'kolId').forEach((it: any) => {
       fans += Number(it.fans || 0)
     })
     return formatCurrency(fans / 10000)

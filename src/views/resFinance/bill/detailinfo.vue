@@ -25,7 +25,6 @@ import { confirm , toast , info} from '@/ui/modal'
 
 export default class Main extends ViewBase {
   async jump() {
-    // this.$router.push({ name : 'resFinance-Bill-detail' })
   }
 }
 
