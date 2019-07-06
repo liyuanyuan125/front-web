@@ -65,7 +65,7 @@ import Uploader from '@/util/Uploader'
 import Film from './film.vue'
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 const uploader = new Uploader({
-  filePostUrl: '/xadvert/v1/third-monitors/upload-cinemas',
+  filePostUrl: '/xadvert/third-monitors/upload-cinemas',
   fileFieldName: 'file',
 })
 
@@ -168,9 +168,9 @@ export default class Main extends ViewBase {
       // this.query.deliveryMovies.push(this.numsList)
       this.query.deliveryMovies = (this.numsList || []).map((it: any) => {
         return {
-          movieId: it.movieId,
-          beginDate: it.beginDate,
-          endDate: it.endDate
+          movieId: it.movie_id,
+          beginDate: this.query.beginDate,
+          endDate: this.query.endDate
         }
       })
     } else {

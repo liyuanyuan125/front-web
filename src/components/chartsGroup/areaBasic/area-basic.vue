@@ -110,6 +110,7 @@ export default class AreaBasic extends ViewBase {
       color: this.color[this.currentIndex],
       ...pubOption,
       tooltip: this.toolTip,
+
       xAxis: {
         type: 'category',
         boundaryGap: false,
@@ -120,6 +121,7 @@ export default class AreaBasic extends ViewBase {
           }
         }
       },
+
       yAxis: {
         type: 'value',
         axisLabel: {
@@ -128,6 +130,16 @@ export default class AreaBasic extends ViewBase {
           }
         }
       },
+
+      grid: {
+        left: '2%',
+        right: '35px',
+        bottom: '20%',
+        containLabel: true,
+        show: false,
+        borderWidth: 0
+      },
+
       series: [
         {
           data: chartData.data,

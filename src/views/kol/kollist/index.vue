@@ -301,6 +301,8 @@ export default class Main extends ViewBase {
   times: any = ''
   ballsrc: any = ''
   tabledataid: any[] = []
+  desckey = ''
+  desc = ''
 
   pageList = {
     pageIndex: 1,
@@ -520,8 +522,11 @@ export default class Main extends ViewBase {
 
   async sortTable(column: any) {
     if (column.order == 'desc') { // 降序
+        this.desckey = column.key
+        this.desc = 'desc'
         this.KolSeach(column.key, 'desc')
     } else {
+      this.desc = ''
       this.KolSeach(column.key, '')
     }
   }
@@ -715,8 +720,8 @@ export default class Main extends ViewBase {
       sex: this.form.sex == -1 ? '' : this.form.sex,
       priceRangCode: this.form.priceRangCode == 0 ? '' : this.form.priceRangCode,
       areaIds: this.area == 0 && this.form.areaIds.join(',') == 0 ? '' : this.form.areaIds.join(','),
-      sortBy: key,
-      order
+      sortBy: this.desckey,
+      order: this.desc
     })
     try {
       const { data: {

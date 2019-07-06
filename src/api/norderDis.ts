@@ -17,7 +17,7 @@ export async function querylist(query: any) {
  * @param data
  */
 export async function queryOrderList(data: any) {
-  const res = await get('/xadvert/v1/orders', data)
+  const res = await get('/xadvert/orders', data)
   return res
 }
 
@@ -26,7 +26,7 @@ export async function queryOrderList(data: any) {
  * @param id
  */
 export async function refuse(id: number) {
-  const res = await put(`/xadvert/v1/orders/${id}/refuse`)
+  const res = await put(`/xadvert/orders/${id}/refuse`)
   return res
 }
 
@@ -35,7 +35,7 @@ export async function refuse(id: number) {
  * @param  data
  */
 export async function reciveOrder(data: any) {
-  const res = await put('/xadvert/v1/orders/receive', data)
+  const res = await put('/xadvert/orders/receive', data)
   return res
 }
 
@@ -44,7 +44,7 @@ export async function reciveOrder(data: any) {
  * @param  data
  */
 export async function queryDetail(id: number, data: any) {
-  const res = await get(`/xadvert/v1/orders/${id}/target-cinemas`, data)
+  const res = await get(`/xadvert/orders/${id}/target-cinemas`, data)
   return res
 }
 
@@ -63,7 +63,7 @@ export async function queryCinemaList(data: any) {
  * @param data
  */
 export async function queryVideoName(data: any) {
-  const res = await get('/xadvert/v1/orders/video-name', data)
+  const res = await get('/xadvert/orders/video-name', data)
   return res
 }
 
@@ -72,7 +72,7 @@ export async function queryVideoName(data: any) {
  * @param id
  */
 export async function orderDetail(id: any) {
-  const res = await get(`/xadvert/v1/orders/${id}`)
+  const res = await get(`/xadvert/orders/${id}`)
   return res
 }
 
@@ -81,7 +81,7 @@ export async function orderDetail(id: any) {
  * @param data
  */
 export async function receiveCinemaList(id: any, data: any) {
-  const res = await get(`/xadvert/v1/orders/${id}/receive-cinemas`, data)
+  const res = await get(`/xadvert/orders/${id}/receive-cinemas`, data)
   return res
 }
 

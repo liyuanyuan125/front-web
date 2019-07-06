@@ -47,7 +47,15 @@
           </dl>
           <dl>
             <dd>投放排期</dd>
-            <dt>{{formatDate(data.beginDate)}}至{{formatDate(data.endDate)}}</dt>
+            <dt>
+              <p v-if="data.status > 9">
+                <span>{{formatDate(data.beginDate)}}</span>至
+                <span>{{formatDate(data.endDate)}}</span>
+              </p>
+              <p v-else>
+                <span>开始于{{formatDate(data.beginDate)}}</span>
+              </p>
+            </dt>
           </dl>
         </Col>
         <Col span="3" class="item item-dl">
@@ -60,7 +68,7 @@
             <dt>{{data.specification}}s</dt>
           </dl>
           <dl>
-            <dd>投放周期</dd>
+            <dd>已投天数</dd>
             <dt>{{days(data.beginDate, data.endDate)}}天</dt>
           </dl>
         </Col>
@@ -81,6 +89,7 @@ import ViewBase from '@/util/ViewBase'
 import Number from '@/components/number.vue'
 import moment from 'moment'
 import { adverdetail } from '@/api/popPlan.ts'
+import { datarange } from '@/fn/duration.ts'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
@@ -108,8 +117,9 @@ export default class App extends ViewBase {
   }
 
   days(begin: any, end: any) {
-    const time = new Date(this.formatDate(end)).getTime() - new Date(this.formatDate(begin)).getTime()
-    return time / (3600 * 24 * 1000) + 1
+    // const time = new Date(this.formatDate(end)).getTime() - new Date(this.formatDate(begin)).getTime()
+    return datarange(begin, end)
+    // return time / (3600 * 24 * 1000) + 1
   }
 
   formatDate(data: any) {

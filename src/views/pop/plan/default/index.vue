@@ -99,8 +99,16 @@
               <dt style="margin-left: 20px; margin-top: 10px" v-else>-</dt>
             </dl>
             <dl>
-              <dd>投放周期：</dd>
-              <dt>{{formatDate(it.beginDate)}} 至 {{formatDate(it.endDate)}}</dt>
+              <dd>投放排期：</dd>
+              <dt>
+                <p v-if="it.status > 9">
+                  <span>{{formatDate(it.beginDate)}}</span>至
+                  <span>{{formatDate(it.endDate)}}</span>
+                </p>
+                <p v-else>
+                  <span>开始于{{formatDate(it.beginDate)}}</span>
+                </p>
+              </dt>
             </dl>
           </div>
         </li>
@@ -112,7 +120,7 @@
       </div>
     </div>
 
-    <div v-if="status != 1" class="plan-cinema-num">
+    <div v-if="item.recommend" class="plan-cinema-num">
       <div class="result-top">
         <h3>覆盖范围</h3>
         <span class="custom" @click="exportData">导出影院</span>
@@ -204,7 +212,7 @@
           <Col :span="10"><span>{{item.videoName}}</span></Col>
         </Row>
         <Row :gutter="16">
-          <Col :span="2"><span>投放排期:</span></Col>
+          <Col :span="2"><span>投放周期:</span></Col>
           <Col :span="10"><span>{{formatDate(item.beginDate)}} 至 {{formatDate(item.endDate)}}</span></Col>
           <Col :span="2"><span>客户:</span></Col>
           <Col :span="10"><span>{{item.customerName}}</span></Col>
@@ -292,7 +300,7 @@ const timeFormat = 'YYYY-MM-DD'
     Xlsx
   }
 })
-export default class App extends ViewBase {
+export default class Apps extends ViewBase {
   filmList: any = []
   tag = 1
   pageIndex = 1
@@ -447,6 +455,8 @@ export default class App extends ViewBase {
   tages(id: any) {
     this.tag = id
     this.name = ''
+    this.pageIndex = 1
+    this.pageSize = 6
     this.seach()
   }
 
@@ -605,7 +615,9 @@ export default class App extends ViewBase {
   async cinemfind() {
     try {
       const { data } = await getcinemas(this.$route.params.id, {
-        name: this.name
+        name: this.name,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -617,7 +629,9 @@ export default class App extends ViewBase {
   async provienfind() {
     try {
       const { data } = await getprovinces(this.$route.params.id, {
-        name: this.name
+        name: this.name,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -629,7 +643,9 @@ export default class App extends ViewBase {
   async cityfind() {
     try {
       const { data } = await getcities(this.$route.params.id, {
-        name: this.name
+        name: this.name,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -641,7 +657,9 @@ export default class App extends ViewBase {
   async chainsfind() {
     try {
       const { data } = await getchains(this.$route.params.id, {
-        name: this.name
+        name: this.name,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount

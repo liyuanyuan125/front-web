@@ -3,7 +3,7 @@ import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
 
 // 分页查询三方检测列表
 export async function thirdMonitors(query: any) {
-    const res = await get('/xadvert/v1/plans', query)
+    const res = await get('/xadvert/plans', query)
     return res
     return await mockGet(query, {
         items: [
@@ -149,7 +149,7 @@ export async function thirdMonitors(query: any) {
  * https://yapi.aiads-dev.com/project/139/interface/api/2009
  */
 export async function plans(query: any) {
-    const res = await get('/xadvert/v1/plans', query)
+    const res = await get('/xadvert/plans', query)
     return res
     return await mockGet(query, {
         plan: {
@@ -460,7 +460,7 @@ export async function plans(query: any) {
   */
 
   export async function cinemasReport(id: string = '', query: any = {}) {
-    const res = await get(`/xadvert/v1/third-plans/${id}/report/cinemas`, query)
+    const res = await get(`/xadvert/third-plans/${id}/report/cinemas`, query)
     return res
     // return await mockGet(id, {
     //     'items|10': [
@@ -483,7 +483,7 @@ export async function plans(query: any) {
  * https://yapi.aiads-dev.com/project/139/interface/api/4749
  */
 export async function citiesReport(id: string = '', query: any = {}) {
-    const res = await get(`/xadvert/v1/third-plans/${id}/report/cities`, query)
+    const res = await get(`/xadvert/third-plans/${id}/report/cities`, query)
     return res
     // return await mockGet(id, {
     //     'items|10': [
@@ -681,7 +681,7 @@ export async function popPlans(data: any) {
  * @param id
  */
  export async function getPlansReport(id: any) {
-    const res = await get(`/xadvert/v1/third-plans/${id}/report`)
+    const res = await get(`/xadvert/third-plans/${id}/report`)
     return res
     // return await mockGet(id, {
     //   plan: {

@@ -16,7 +16,7 @@
                     :currentTypeIndex="chart1.currentTypeIndex"
                     @typeChange="typeChangeHander1" />
         </div>
-      </ReportPane>      
+      </ReportPane>
       <DetailTableCard :data="tableData"></DetailTableCard>
     </div>
     <div>
@@ -54,6 +54,7 @@ import MoreMoviesDlg from './components/more-movies-dlg.vue'
 import { getPlansReport } from '@/api/effectReport'
 import { findIndex, at, keyBy } from 'lodash'
 import { KeyText } from '@/util/types'
+import { datarange, formatDate } from '@/fn/duration.ts'
 
 const getName = (key: string, list: any[]) => {
   const i: number = findIndex( list, (it: any) => {
@@ -367,14 +368,10 @@ export default class Index extends ViewBase {
 
   created() {
     const id = parseInt(this.$route.params.id, 0)
-    // 173 演示数据id
-    if ( id ) {
-      this.planId = id
-      this.init(id)
-    } else {
-      this.planId = 173
-      this.init(173)
-    }
+      // TODO: 线上演示 id 为 104，其他环境 173
+      || (VAR.env == 'prd' ? 104 : 173)
+    this.planId = id
+    this.init(id)
   }
 
   async init(id: number = -1) {
@@ -397,8 +394,8 @@ export default class Index extends ViewBase {
         const name = getName( plan.status, planStatus )
 
         this.bannerData = {
-          item0: `${plan.beginDate} ~ ${plan.endDate}`,
-          item1: plan.cycle,
+          item0: `${formatDate(plan.beginDate)} ~ ${formatDate(plan.endDate)}`,
+          item1: datarange(plan.beginDate, plan.endDate),
           item2: plan.videoName,
           item3: plan.specification,
           item4: getName( plan.status, planStatus),

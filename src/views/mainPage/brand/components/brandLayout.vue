@@ -1,5 +1,9 @@
 <template>
-  <Layout :bubbleList="bubbleList" class="layout">
+  <Layout
+    :bubbleList="bubbleList"
+    :bubbleLink="{ name: 'brand-homedetail-comment', params: { id } }"
+    class="layout"
+  >
     <main class="main-content">
       <div class="header-bar">
         <h3 class="item-title">{{item.name}}</h3>
@@ -39,20 +43,22 @@
           class="button-put"
         >创建广告计划</Button>
 
-        <ul class="plan-count-list">
-          <li class="plan-count-item">
-            <i>待付款</i>
-            <em>{{item.unpay}}</em>
-          </li>
-          <li class="plan-count-item">
-            <i>进行中</i>
-            <em>{{item.onexecute}}</em>
-          </li>
-          <li class="plan-count-item">
-            <i>已完成</i>
-            <em>{{item.finish}}</em>
-          </li>
-        </ul>
+        <router-link :to="{ name: 'pop-planlist' }" class="plan-count-wrap">
+          <ul class="plan-count-list">
+            <li class="plan-count-item">
+              <i>待付款</i>
+              <em>{{item.unpay}}</em>
+            </li>
+            <li class="plan-count-item">
+              <i>进行中</i>
+              <em>{{item.onexecute}}</em>
+            </li>
+            <li class="plan-count-item">
+              <i>已完成</i>
+              <em>{{item.finish}}</em>
+            </li>
+          </ul>
+        </router-link>
       </Pane>
 
       <Pane :title="recommendTitle" class="recommend-pane" v-if="recommendList">
@@ -401,6 +407,10 @@ export default class BrandLayout extends ViewBase {
   font-size: 14px;
   border-radius: 88px;
   .button-style(#fff, #ca7273);
+}
+
+.plan-count-wrap {
+  color: #fff;
 }
 
 .plan-count-list {

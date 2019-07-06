@@ -11,7 +11,7 @@
       <div class="cell">
         <ul>
           <li><i class="icon-1"></i><span class="name">投放排期</span><span>{{data.item0}}</span></li>
-          <li><i class="icon-4"></i><span class="name">投放周期</span><span>{{data.item1}}天</span></li>
+          <li><i class="icon-4"></i><span class="name">已投天数</span><span>{{data.item1}}天</span></li>
         </ul>
       </div>
       <div class="cell">
@@ -32,12 +32,17 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { datarange, formatDate } from '@/fn/duration.ts'
 
 @Component({
   components: {}
 })
 export default class BannerCard extends Vue {
   @Prop({ type: Object, default: () => ({}) }) data!: any
+
+  days(begin: any, end: any) {
+    datarange(begin, end)
+  }
 
   selectPlan() {
     this.$emit('selectPlan')

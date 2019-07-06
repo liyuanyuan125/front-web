@@ -76,19 +76,21 @@
               <Col :span="7" class="three-left">
                 <div class="orient-title">受众性别</div>
                 <FormItem class="item-top form-item-type">
-                  <RadioGroup v-model="form.sex" class="item-radio-top">
-                    <Radio  style="width: 250px" class="check-item form-item-first" :label="0">不限</Radio>
-                    <Radio 
-                      v-if="it.key != 'unknow'"
-                      style="width: 116px; height: 40px; float: left;"
-                      v-for="it in sexList"
-                      :key="it.key"
-                      :label="it.key"
-                      class="check-item check-icon"
-                    >
-                      <span>{{it.text}}</span>
-                    </Radio>
-                  </RadioGroup>
+                  <div class="age-box">
+                    <RadioGroup v-model="form.sex" class="item-radio-top">
+                      <Radio  style="width: 250px" class="check-item form-item-first" :label="0">不限</Radio>
+                      <Radio 
+                        v-if="it.key != 'unknow'"
+                        style="width: 116px; height: 40px; float: left;"
+                        v-for="it in sexList"
+                        :key="it.key"
+                        :label="it.key"
+                        class="check-item check-icon"
+                      >
+                        <span>{{it.text}}</span>
+                      </Radio>
+                    </RadioGroup>
+                  </div>
                 </FormItem>
               </Col>
 
@@ -97,15 +99,16 @@
                 <FormItem class="item-top form-item-type">
                   <CheckboxGroup v-model="form.age" class="item-radio-top">
                     <Checkbox  style="width: 100%" class="check-item form-item-first" :label="0">不限</Checkbox>
-                    <Checkbox
-                      style="100px"
-                      v-for="it in ageList"
-                      :key="it.key"
-                      :label="it.key"
-                      class="check-item"
-                    >
-                      <span>{{it.text}}</span>
-                    </Checkbox>
+                    <div class="check-box">
+                      <Checkbox
+                        v-for="it in ageList"
+                        :key="it.key"
+                        :label="it.key"
+                        class="check-item"
+                      >
+                        <span>{{it.text}}</span>
+                      </Checkbox>
+                    </div>
                   </CheckboxGroup>
                 </FormItem>
               </Col>
@@ -122,7 +125,7 @@
             </FormItem>
           </h3>
           <div v-show="movieCustom == 0">
-            <Film v-model="numsList" :begin="beginDate" :end="endDate" />
+            <Film v-if="typeList.length > 0" v-model="numsList" @donefilm="timerfilm" :begin="beginDate" :end="endDate" />
           </div>
           <div class="item-top" v-show="movieCustom != 0">
             <div ref="types">
@@ -283,6 +286,10 @@ export default class Orienteering extends ViewBase {
     this.init()
   }
 
+  timerfilm(val: any) {
+    this.numsList = val
+  }
+
   formatDate(data: any) {
     return data ? moment(data).format(timeFormat) : '暂无'
   }
@@ -309,7 +316,6 @@ export default class Orienteering extends ViewBase {
         this.movies = movies
         this.renders(item)
       }
-
       this.cityList = data.deliveryCityTypeList
       this.cinemastatusList = data.cinemaList
       this.sexList = data.tags[2].values || []
@@ -319,10 +325,6 @@ export default class Orienteering extends ViewBase {
     } catch (ex) {
       this.handleError('系统错误，请重新尝试！')
     }
-  }
-
-  timerfilm(val: any) {
-    this.timers = val
   }
 
   renders(val: any) {
@@ -335,7 +337,7 @@ export default class Orienteering extends ViewBase {
 
   movieCustoms() {
     if (this.item.movieCustom == 1) {
-      this.movieCustom = 1
+      this.movieCustom = 0
       this.numsList = (this.movies || []).map((it: any) => {
         return {
           id: it.id,
@@ -417,10 +419,10 @@ export default class Orienteering extends ViewBase {
 
   async next(dataform: any) {
     const timers = Object.keys(this.timers)
-    if (this.movieCustom != 0 && this.numsList.length == 0) {
-      confirm('请选择影片')
-      return
-    }
+    // if (this.numsList.length == 0) {
+    //   confirm('请选择影片')
+    //   return
+    // }
     try {
       await direction(
         clean({
@@ -431,7 +433,7 @@ export default class Orienteering extends ViewBase {
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
-              text: this.cityCustom == 0 ? 0 : this.form.type.join(';')
+              text: this.form.type.join(';')
             },
             {
               tagTypeCode: 'PLAN_GROUP_AGE',
@@ -444,10 +446,10 @@ export default class Orienteering extends ViewBase {
           ].filter((it: any) => {
             return it.text != 0
           }),
-          movieCustom: this.movieCustom == 0 && this.numsList.length > 0 ? 1 : 0,
+          movieCustom: this.numsList.length > 0 ? 1 : 0,
           customDeliveryCities: this.cityCustom == 0 ? '' : this.citysId,
           deliveryMovies:
-            this.movieCustom == 1
+            this.numsList.length == 0
               ? ''
               : this.numsList.map((it: any) => {
                   return {
@@ -536,10 +538,6 @@ export default class Orienteering extends ViewBase {
         item,
         movies
       }
-      // this.$emit('input', {
-      //   id: 2,
-      //   setid: this.$route.params.setid
-      // })
     } catch (ex) {
       this.spinshow = false
       clearInterval(this.settime)
@@ -781,7 +779,26 @@ export default class Orienteering extends ViewBase {
 .form-item-first:first-child {
   margin-bottom: 20px;
 }
-
+.check-box {
+  display: flex;
+  .check-item {
+    position: relative;
+    top: 3px;
+    flex: 1;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 4px;
+    text-align: center;
+    margin-right: 15px;
+    font-size: 14px;
+    color: #00202d;
+    border: 1px solid #fff;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    user-select: none;
+    .check-ra;
+  }
+}
 .check-item {
   position: relative;
   top: 3px;
@@ -920,5 +937,16 @@ export default class Orienteering extends ViewBase {
 }
 /deep/ .ivu-progress-bg {
   background: #3959a8;
+}
+.age-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /deep/ .ivu-radio-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }
 </style>

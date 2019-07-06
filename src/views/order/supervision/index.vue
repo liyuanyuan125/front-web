@@ -176,7 +176,7 @@ export default class Main extends ViewBase {
 
   reloadSearch() {
     this.seach()
-    this.seachchg()
+    // this.seachchg()
   }
 
   // 上传文件

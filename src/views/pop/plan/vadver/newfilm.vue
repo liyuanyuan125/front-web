@@ -107,7 +107,7 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   created() {
-    this.seach()
+    this.init(this.value)
   }
 
   async init(type: any) {
@@ -255,14 +255,7 @@ export default class DlgEditCinema extends ViewBase {
         this.checkboxall = false
       }
     } catch (ex) {
-      const checksid = this.checkId.filter((it: any) => !!it)
-      if (checksid.length == 0) {
-        await confirm(`是否根据影片上映日期，同步修改广告计划投放排期`, {
-          title: '修改档期'
-        })
-      } else {
-        this.handleError(ex)
-      }
+      this.handleError(ex)
     }
   }
 
@@ -270,13 +263,14 @@ export default class DlgEditCinema extends ViewBase {
   watchCheckObj(val: any) {
     this.checkId = uniq(this.checkId)
     const checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
-    this.$emit('done', [...checkObj])
+    // console.log(checkObj, val)
+    this.$emit('input', [...val])
   }
 
-  @Watch('value', { deep: true})
-  watchValue(val: any) {
-    this.init(val)
-  }
+  // @Watch('value', { deep: true})
+  // watchValue(val: any) {
+  //   this.init(val)
+  // }
 
   @Watch('checks', {deep: true})
   watchChecks(val: any) {
