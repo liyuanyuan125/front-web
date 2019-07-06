@@ -866,7 +866,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 示例，没有实际用处
+  // 消息中心
   {
     path: '/message',
     name: 'message',
