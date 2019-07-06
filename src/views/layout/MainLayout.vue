@@ -28,10 +28,10 @@
         <span class="cart-count" v-if="cartCount > 0">{{cartCount}}</span>
       </router-link>
 
-      <!-- <router-link :to="{}" class="notice-node">
+      <router-link :to="{ name: 'message' }" class="notice-node">
         <i class="iconfont icon-notice"/>
         <span class="notice-count" v-if="hasNotice"></span>
-      </router-link> -->
+      </router-link>
 
       <div class="user-box flex-box">
         <Dropdown placement="bottom-end" class="switcher" @on-click="onSwitcherClick">

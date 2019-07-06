@@ -16,7 +16,7 @@
                     :currentTypeIndex="chart1.currentTypeIndex"
                     @typeChange="typeChangeHander1" />
         </div>
-      </ReportPane>      
+      </ReportPane>
       <DetailTableCard :data="tableData"></DetailTableCard>
     </div>
     <div>
@@ -368,14 +368,10 @@ export default class Index extends ViewBase {
 
   created() {
     const id = parseInt(this.$route.params.id, 0)
-    // 173 演示数据id
-    if ( id ) {
-      this.planId = id
-      this.init(id)
-    } else {
-      this.planId = 173
-      this.init(173)
-    }
+      // TODO: 线上演示 id 为 104，其他环境 173
+      || (VAR.env == 'prd' ? 104 : 173)
+    this.planId = id
+    this.init(id)
   }
 
   async init(id: number = -1) {

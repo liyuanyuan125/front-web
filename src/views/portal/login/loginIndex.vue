@@ -4,7 +4,7 @@
           <div class="tablist">
             <p class="systerm">
               <span :class="{active: form.systemCode == 'ads'}" @click="form.systemCode = 'ads'">广告主</span>
-              <span :class="{active: form.systemCode == 'resource'}" @click="form.systemCode = 'resource'">资源方</span>
+              <span :class="{active: form.systemCode == 'resource'}" @click="form.systemCode = 'resource'">影城</span>
             </p>
           </div>
           <Form :model="form" :rules="rules" ref="form"

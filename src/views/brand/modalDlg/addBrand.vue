@@ -106,7 +106,7 @@ export default class Main extends ViewBase {
         brandName: list.name,
         brandEnName: list.enName
       })
-      this.value = false
+      this.visibleBrand = false
       this.$emit('updateBrand')
       // this.tableList()
     } catch (ex) {
