@@ -41,7 +41,7 @@
             <li v-for='(it,index) in itemlist' :key='index'>
               <div class="table-header-title  flex-box">
                 <p><label>投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
-                <p><label>预估最大收益/(元)</label><em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em></p>
+                <p><label>可得佣金/(元)</label><em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em></p>
               </div>
               <Row class="table-content-list" type="flex" justify="center" align="middle">
                 <Col span="14">
@@ -55,11 +55,13 @@
                   </div>
                   <div class="flex-box col-order">
                     <p><label>广告片规格</label><em>{{it.specification || 0}}s</em></p>
-                    <p><label>目标影厅</label><em>{{it.hallsCount || '暂无'}}</em></p>
+                    <p><label>目标人次</label><em>{{it.estimatePersonCount || 0}}人</em></p>
+                    <!-- <em><label>目标场次</label><em>{{it.targetSession || '暂无'}}</em></p> -->
+                    <!-- <em><label>目标影厅</label><em>{{it.hallsCount || '暂无'}}</em></p> -->
                   </div>
                   <div class="flex-box col-order">
-                    <p><label>投放周期</label><em>{{it.cycle || 0}}天</em></p>
-                    <p><label>目标场次</label><em>{{it.targetSession || '暂无'}}</em></p>
+                    <!-- <em><label>投放周期</label><em>{{it.cycle || 0}}天</em></p> -->
+                    
                   </div>
                   <div class="target-cinema">
                     <label>目标影片</label>
