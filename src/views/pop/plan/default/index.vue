@@ -99,7 +99,7 @@
               <dt style="margin-left: 20px; margin-top: 10px" v-else>-</dt>
             </dl>
             <dl>
-              <dd>投放周期：</dd>
+              <dd>投放排期：</dd>
               <dt>
                 <p v-if="it.status > 9">
                   <span>{{formatDate(it.beginDate)}}</span>至

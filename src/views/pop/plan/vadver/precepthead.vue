@@ -46,7 +46,7 @@
             <dt>{{data.videoName}}</dt>
           </dl>
           <dl>
-            <dd>投放周期</dd>
+            <dd>投放排期</dd>
             <dt>
               <p v-if="data.status > 9">
                 <span>{{formatDate(data.beginDate)}}</span>至
@@ -68,7 +68,7 @@
             <dt>{{data.specification}}s</dt>
           </dl>
           <dl>
-            <dd>投放周期</dd>
+            <dd>已投天数</dd>
             <dt>{{days(data.beginDate, data.endDate)}}天</dt>
           </dl>
         </Col>
@@ -89,6 +89,7 @@ import ViewBase from '@/util/ViewBase'
 import Number from '@/components/number.vue'
 import moment from 'moment'
 import { adverdetail } from '@/api/popPlan.ts'
+import { datarange } from '@/fn/duration.ts'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
@@ -116,8 +117,9 @@ export default class App extends ViewBase {
   }
 
   days(begin: any, end: any) {
-    const time = new Date(this.formatDate(end)).getTime() - new Date(this.formatDate(begin)).getTime()
-    return time / (3600 * 24 * 1000) + 1
+    // const time = new Date(this.formatDate(end)).getTime() - new Date(this.formatDate(begin)).getTime()
+    return datarange(begin, end)
+    // return time / (3600 * 24 * 1000) + 1
   }
 
   formatDate(data: any) {
