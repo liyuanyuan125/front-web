@@ -28,6 +28,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
+import { find } from 'lodash'
 import {
   pubOption,
   seriesOption,
@@ -78,16 +79,19 @@ export default class BarXCategoryStack extends ViewBase {
   updateCharts() {
     const chartData: any[] = this.dataList[this.currentIndex] || []
 
+    if ( chartData.length == 0 ) {
+      return
+    } else if ( chartData.length > 0 ) {
+      const res = find( chartData, 'data' ).data
+      if ( res && res.length === 0 ) {
+        return
+      }
+    }
+
     const chartEl = this.$refs.refChart as HTMLDivElement
 
     echarts.dispose(chartEl)
     chartEl.innerHTML = ''
-
-    if ( chartData.length == 0 ) {
-      return
-    } else {
-      // 需要判断分类的数据
-    }
 
     const myChart = echarts.init(chartEl)
 
