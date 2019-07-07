@@ -16,7 +16,7 @@ build:
     - testing
     - release
   script:
-    - yarn && yarn lint && yarn build
+    - yarn config get registry && yarn && yarn lint && yarn build
   artifacts:
     paths:
       - dist
