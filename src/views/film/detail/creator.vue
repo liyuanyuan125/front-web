@@ -14,7 +14,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 80%;margin-left: 8.5%'> -->
-          <Poptip v-else trigger="hover" content="content">
+          <Poptip v-else word-wrap width="230"  trigger="hover" content="content">
               <div style='overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;'>
@@ -47,7 +47,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;width: 80%;margin-left: 8.5%'>
            <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span></div> -->
-           <Poptip v-else trigger="hover" content="content">
+           <Poptip v-else word-wrap width="230"  trigger="hover" content="content">
               <div style='overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;'>
@@ -79,7 +79,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;width: 80%;margin-left: 8.5%'>
            <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span></div> -->
-           <Poptip v-else trigger="hover" content="content">
+           <Poptip v-else word-wrap width="230"  trigger="hover" content="content">
               <div  style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;'>
@@ -108,7 +108,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;width: 80%;margin-left: 8.5%'>
            <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span></div> -->
-           <Poptip v-else trigger="hover" content="content">
+           <Poptip v-else word-wrap width="230"  trigger="hover" content="content">
               <div style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;'>
@@ -394,5 +394,22 @@ export default class Main extends ViewBase {
   text-overflow: ellipsis;
   white-space: nowrap;
   height: 25px;
+}
+/deep/ .ivu-poptip-popper[x-placement^="top"] .ivu-poptip-arrow::after {
+  content: "";
+  bottom: 1px;
+  margin-left: -7px;
+  border-bottom-width: 0;
+  border-top-width: 7px;
+  border-top-color: #000;
+}
+/deep/ .ivu-poptip-inner {
+  width: 100%;
+  background-color: #000;
+  background-clip: padding-box;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  color: #fff;
+  border-radius: 7px;
 }
 </style>
