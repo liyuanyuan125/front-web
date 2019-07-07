@@ -29,7 +29,7 @@
             </FormItem>
              <Row class="login-etc">
               <Col span="10">
-               <Checkbox v-model="toLogin">七日内免登录</Checkbox>
+               <Checkbox v-model="form.remember">七日内免登录</Checkbox>
               </Col>
               <Col align="right" span="10" offset="4">
                 <router-link :to="{name: 'resetpwd'}"><span class="forgot">忘记密码?</span></router-link>
@@ -45,23 +45,24 @@
 <script lang='ts'>
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { login } from '@/api/auth'
+import { login, LoginData } from '@/api/auth'
 import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
+
 @Component({
     components: {
         loginLayout
     }
 })
 export default class Main extends ViewBase {
-  toLogin = true
-  form = {
+  form: LoginData = {
     systemCode: 'ads',
     email: '',
     password: '',
     captchaId: '',
-    captchaCode: ''
+    captchaCode: '',
+    remember: true
   }
 
   emailError = ''
