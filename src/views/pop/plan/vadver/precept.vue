@@ -31,8 +31,8 @@
                   <p style="opacity: .7">受众性别: </p>
                   <div v-if="it.genders && it.genders.length > 0">
                     <div style="margin-left: 20px" :key="index" v-for="(item, index) in it.genders">
-                      <p style="margin-bottom: 10px" v-if="item.k == 'F'">男<span class="ageitem-box">{{item.rate/100}}%</span></p>
-                      <p style="margin-bottom: 10px" v-else>女<span class="ageitem-box">{{item.rate/100}}%</span></p>
+                      <p style="margin-bottom: 10px" v-if="item.k == 'F'">女<span class="ageitem-box">{{item.rate/100}}%</span></p>
+                      <p style="margin-bottom: 10px" v-else>男<span class="ageitem-box">{{item.rate/100}}%</span></p>
                     </div>
                   </div>
                   <div v-else>-</div>
