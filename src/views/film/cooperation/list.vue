@@ -113,7 +113,7 @@
     </div>
     <div class="res-box">
       <div class="res-list">
-        <Row :gutter="10" v-if="done" type="flex" justify="start" class="res-row">
+        <Row :gutter="10" v-if="done && hasData" type="flex" justify="start" class="res-row">
           <Col span="4" v-for="(item, index) in dataList" :key="index" class="res-col">
             <div class="res-item">
               <router-link target='_blank' :to="{ name: 'film-movie', params: { id: item.movie_id}}">
@@ -130,11 +130,15 @@
             </div>
           </Col>
         </Row>
-        <div v-else class="loading-box">
+        <div v-else-if="!done" class="loading-box">
           <TinyLoading />
+        </div>        
+        <div v-else class="noData-box">
+          暂无数据
         </div>
       </div>
       <Page
+        v-if="hasData && done"
         class="info-page"
         :total="totalPages"
         :current="form.pageIndex"
@@ -164,7 +168,9 @@ const typeListMore: any[] = []
   }
 })
 export default class CooperationFilmList extends ViewBase {
-  done = false
+  done: boolean = false
+
+  hasData: boolean = false
 
   filterShowMore = false
 
@@ -254,6 +260,8 @@ export default class CooperationFilmList extends ViewBase {
 
   async fetchHandler() {
     this.done = false
+    this.hasData = false
+
     const that: any = this
     const mockObj = {
       ...this.form
@@ -277,14 +285,34 @@ export default class CooperationFilmList extends ViewBase {
     }
     try {
       const {
-        data: {
-          movies,
-          categoryList,
-          typeList,
-          totalPages,
-          totalCount
-        }
+        data
       } = await fetchList({ ...mockObj })
+
+      const categoryList = data.categoryList || null
+      const typeList = data.typeList || null
+      const totalPages = data.totalPages || null
+      const totalCount = data.totalCount || null
+
+      if ( this.dict.typeList.length === 1 ) {
+        const res = typeList.filter((it: any) => {
+          return it.controlStatus !== 0
+        })
+        this.dict.typeList.push( ...res )
+      }
+      if ( this.dict.categoryList.length === 1 ) {
+        const res = categoryList.filter((it: any) => {
+          return it.controlStatus !== 0
+        })
+        this.dict.categoryList.push( ...res )
+      }
+
+      const movies = data.movies || null
+      if ( !movies || movies.length === 0 ) {
+        this.done = true
+        this.hasData = false
+        return
+      }
+
       if ( movies && movies.length > 0 ) {
         this.dataList = movies.map((it: any) => {
           return {
@@ -300,20 +328,9 @@ export default class CooperationFilmList extends ViewBase {
           }
         })
         this.totalPages = totalCount
-        if ( this.dict.typeList.length === 1 ) {
-          const res = typeList.filter((it: any) => {
-            return it.controlStatus !== 0
-          })
-          this.dict.typeList.push( ...res )
-        }
-        if ( this.dict.categoryList.length === 1 ) {
-          const res = categoryList.filter((it: any) => {
-            return it.controlStatus !== 0
-          })
-          this.dict.categoryList.push( ...res )
-        }
-        that.done = true
       }
+      that.done = true
+      that.hasData = true
     } catch (ex) {
       this.handleError(ex)
     }
@@ -617,5 +634,16 @@ export default class CooperationFilmList extends ViewBase {
   flex-flow: row;
   justify-content: center;
   align-items: center;
+}
+.noData-box {
+  width: 100%;
+  height: 500px;
+  text-align: center;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: #999;
 }
 </style>
