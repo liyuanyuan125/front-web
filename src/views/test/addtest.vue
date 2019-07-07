@@ -128,6 +128,10 @@ export default class Main extends ViewBase {
     // this.seach()
   }
 
+  formatDate(data: any) {
+    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
+  }
+
 
   async seach() {
     try {
@@ -143,7 +147,13 @@ export default class Main extends ViewBase {
         this.query.beginDate = items.data.item.beginDate,
         this.query.endDate = items.data.item.endDate,
         this.query.cinemaCodes = items.data.item.deliveryCinemas,
-        this.query.deliveryMovies = items.data.item.deliveryMovies
+        this.query.deliveryMovies = (items.data.movies || []).map((it: any) => {
+          return {
+            ...it,
+            main_pic : it.mainPic,
+            release_date: this.formatDate(it.releaseDate)
+          }
+        })
         // this.numsList = items.data.item.deliveryMovies
       }
       this.numsList = this.query.deliveryMovies

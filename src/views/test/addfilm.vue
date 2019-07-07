@@ -43,6 +43,9 @@
             </div>
           </li>
         </ul>
+        <div class="film-no" v-else>
+          <span>暂无影片</span>
+        </div>
        </div>
        <div class="check-films">
          <span @click="checkAll">
@@ -196,7 +199,7 @@ export default class DlgEditCinema extends ViewBase {
   async open() {
     try {
       this.checkId = uniq(this.checkId)
-      this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
+      this.checkObj = uniqBy(this.checkObj, 'movie_id').filter((it: any) => this.checkId.includes(it.movie_id + ''))
       this.$emit('done', [...this.checkObj])
       toast('操作成功')
       this.cancel()
@@ -221,14 +224,14 @@ export default class DlgEditCinema extends ViewBase {
 
   checkAll() {
     this.$nextTick(() => {
-      const id = this.data.map((it: any) => it.movie_id)
+      const movieid = this.data.map((it: any) => it.movie_id)
       this.idO = {}
       if (this.checkboxall) {
-        id.forEach((it: any) => {
+        movieid.forEach((it: any) => {
           this.idO[it] = true
         })
       } else {
-        id.forEach((it: any) => {
+        movieid.forEach((it: any) => {
           this.idO[it] = false
         })
       }
@@ -239,8 +242,8 @@ export default class DlgEditCinema extends ViewBase {
     })
   }
 
-  checkNum(id?: any) {
-    this.checks[id] = !this.checks[id] ? true : false
+  checkNum(movieid?: any) {
+    this.checks[movieid] = !this.checks[movieid] ? true : false
     this.checkId = []
     let ids = this.data.map((it: any) => it.movie_id)
     for (const i in this.checks) {
@@ -252,7 +255,7 @@ export default class DlgEditCinema extends ViewBase {
       return this.checkId.includes(it.movie_id + '')
     })
     this.checkObj.push(...nums)
-    this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
+    this.checkObj = uniqBy(this.checkObj, 'movie_id').filter((it: any) => this.checkId.includes(it.movie_id + ''))
     this.checkId.forEach((it: any) => {
       ids = ids.filter((item: any) => item != it)
     })
@@ -266,22 +269,22 @@ export default class DlgEditCinema extends ViewBase {
   @Watch('checks', {deep: true})
   watchChecks(val: any) {
     this.checkId = []
-    let id = this.data.map((it: any) => it.movie_id)
+    let movieid = this.data.map((it: any) => it.movie_id)
     for (const i in val) {
       if (val[i]) {
         this.checkId.push(i)
       }
     }
     this.checkId.forEach((it: any) => {
-      id = id.filter((item: any) => item == it)
+      movieid = movieid.filter((item: any) => item == it)
     })
     const nums = this.data.filter((it: any) => {
       return this.checkId.includes(it.movie_id + '')
     })
     this.checkObj.push(...nums)
-    this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
+    this.checkObj = uniqBy(this.checkObj, 'movie_id').filter((it: any) => this.checkId.includes(it.movie_id + ''))
     if (this.data.length > 0) {
-      this.checkboxall = id.length > 0 ? false : true
+      this.checkboxall = movieid.length > 0 ? false : true
     } else {
       this.checkboxall = false
     }
