@@ -124,8 +124,8 @@ export default class Main extends ViewBase {
   }
 
 
-  timerfilm() {
-    // this.seach()
+  timerfilm(val: any) {
+    this.numsList = val
   }
 
   formatDate(data: any) {
@@ -142,14 +142,15 @@ export default class Main extends ViewBase {
         this.itemdata = items.data.item.name
         this.query.name = items.data.item.name
         this.query.customerId = items.data.item.customerId,
-        this.query.brandId = items.data.item.brandId,
-        this.query.productId = items.data.item.productId,
+        this.query.brandId = items.data.item.brandId == 0 ? null : items.data.item.brandId,
+        this.query.productId = items.data.item.productId == 0 ? null : items.data.item.productId,
         this.query.beginDate = items.data.item.beginDate,
         this.query.endDate = items.data.item.endDate,
         this.query.cinemaCodes = items.data.item.deliveryCinemas,
         this.query.deliveryMovies = (items.data.movies || []).map((it: any) => {
           return {
             ...it,
+            name_cn: it.name,
             main_pic : it.mainPic,
             release_date: this.formatDate(it.releaseDate)
           }
@@ -175,31 +176,31 @@ export default class Main extends ViewBase {
        return
       }
     }
-    if (this.numsList.length > 0) {
+    // if (this.numsList.length > 0) {
       // this.query.deliveryMovies.push(this.numsList)
       this.query.deliveryMovies = (this.numsList || []).map((it: any) => {
         return {
-          movieId: it.movie_id,
+          movieId: it.movie_id ? it.movie_id : it.id,
           beginDate: this.query.beginDate,
           endDate: this.query.endDate
         }
       })
-    } else {
-      this.query.deliveryMovies = (this.numsList || []).map((it: any) => {
-        return {
-          movieId: it.movieId,
-          beginDate: it.beginDate,
-          endDate: it.endDate
-        }
-      })
-      // this.query.deliveryMovies = [
-      // 	{
-      //     movieId: 55165,
-      //     beginDate: 20120202,
-      //     endDate: 20120203
-      //   }
-      // ]
-    }
+    // } else {
+    //   this.query.deliveryMovies = (this.numsList || []).map((it: any) => {
+    //     return {
+    //       movieId: it.movieId,
+    //       beginDate: it.beginDate,
+    //       endDate: it.endDate
+    //     }
+    //   })
+    //   // this.query.deliveryMovies = [
+    //   // 	{
+    //   //     movieId: 55165,
+    //   //     beginDate: 20120202,
+    //   //     endDate: 20120203
+    //   //   }
+    //   // ]
+    // }
 
     if (this.file == null) {
       // TODO: 如果文件是必选的，提示选择文件
