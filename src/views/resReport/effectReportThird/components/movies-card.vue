@@ -15,7 +15,7 @@
                 <dd>
                   <div class="dsc-box">
                     <h5 class="name">{{item.name}}</h5>
-                    <div class="score">时光评分：{{item.score}}</div>
+                    <div class="score">鲸鱼指数：{{item.score}}</div>
                     <div class="time">{{item.time}}上映</div>
                     <div class="type">{{item.type}}</div>
                   </div>
