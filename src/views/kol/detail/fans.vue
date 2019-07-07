@@ -36,7 +36,6 @@
                   <div class="chart-wp" style="margin-right:10px">
                     <Pie
                       :initDone="chart1.initDone"
-                      :noData="chart1.noData"
                       :title="chart1.title"
                       :dict1="chart1.dict1"
                       :dict2="chart1.dict2"
@@ -50,7 +49,6 @@
                   <div class="chart-wp">
                     <BarXCategory
                       :initDone="chart2.initDone"
-                      :noData="chart2.noData"
                       :title="chart2.title"
                       :dict1="chart2.dict1"
                       :dict3="chart2.dict3"
@@ -150,7 +148,6 @@ export default class Temporary extends ViewBase {
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
-    noData: false,
     dataList: [],
     color: ['#00B6CC', '#DA6C70']
   }
@@ -161,7 +158,6 @@ export default class Temporary extends ViewBase {
     dict2: [],
     dict3: [],
     currentTypeIndex: 0,
-    initDone: false,
     noData: false,
     dataList: [],
     color: ['#00B6CC']
@@ -221,13 +217,24 @@ export default class Temporary extends ViewBase {
 
     try {
       const {
-        data,
-        data: {
-          channelList,
-          item: { ages, cities, provinces, fans }
-        }
+        data
       } = await fanslist(id, this.pageQuery)
-      this.channelList = channelList
+
+      this.channelList = ( data.channelList ) ? data.channelList : null
+
+      const item = data.item || null
+      if ( !item ) {
+        this.chart1.initDone = true
+        this.chart2.initDone = true
+        this.chart3.initDone = true
+        this.chart4.initDone = true
+        return
+      }
+      const ages = item.ages || null
+      const cities = item.cities || null
+      const provinces = item.provinces || null
+      const fans = item.fans || null
+
       if (fans && fans.length > 0) {
         this.chart1.dataList[this.chart1.currentTypeIndex] = fans.map((it: any) => {
           return {
@@ -242,10 +249,6 @@ export default class Temporary extends ViewBase {
         //   {name: '男', value: malePercent},
         //   {name: '女', value: femalePercent},
         // ]
-        this.chart1.initDone = true
-      } else {
-        this.chart1.initDone = true
-        this.chart1.noData = true
       }
 
       if (ages && ages.length > 0) {
@@ -260,11 +263,6 @@ export default class Temporary extends ViewBase {
           })
           this.chart2.dataList[this.chart2.currentTypeIndex].data.push(r / 100)
         })
-        // console.log(this.chart2.dict3)
-        this.chart2.initDone = true
-      } else {
-        this.chart2.initDone = true
-        this.chart2.noData = true
       }
 
       const provinceList = (provinces as any[] || []).sort((a, b) => a.rate - b.rate)
@@ -290,10 +288,13 @@ export default class Temporary extends ViewBase {
       this.chart3.min = min
       this.chart3.max = max
       this.chart3.dataList[this.chart3.currentTypeIndex] = provinceData
-      this.chart3.initDone = true
 
       this.chart4.dataList[0] = provinceData
       this.chart4.dataList[1] = cityData
+
+      this.chart1.initDone = true
+      this.chart2.initDone = true
+      this.chart3.initDone = true
       this.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)

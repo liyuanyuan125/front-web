@@ -1,16 +1,18 @@
 import { get, post } from '@/fn/ajax'
 
-interface LoginData {
+export interface LoginData {
   systemCode: string
   email: string
   password: string
   captchaId: string
   captchaCode: string
+  remember: boolean
 }
 
 /**
  * 登录
  * @param data 提交数据
+ * https://yapi.aiads-dev.com/project/112/interface/api/1019
  */
 export async function login(data: LoginData) {
   const res = await post('/auth/login', data)
