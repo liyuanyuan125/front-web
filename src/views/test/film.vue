@@ -34,6 +34,7 @@ import AddCFilmModel from './addfilm.vue'
 import Img from '@/components/imagePreviewer/ImagePreviewer.vue'
 import moment from 'moment'
 import weekDatePicker from '@/components/weekDatePicker/weekDatePicker.vue'
+import { uniq, uniqBy } from 'lodash'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component ({
@@ -74,7 +75,10 @@ export default class ComponentMain extends ViewBase {
   // }
 
   columndata(val: any) {
-    this.inValue = val
+    val.forEach((it: any) => {
+      this.inValue.push(it)
+    })
+    this.inValue = uniqBy(this.inValue, 'id')
   }
 
   onSet(id: number) {
@@ -96,7 +100,7 @@ export default class ComponentMain extends ViewBase {
 
   @Watch('form', {deep: true})
   watchForm(val: any) {
-    this.$emit('donefilm', val)
+    this.$emit('donefilm', this.inValue)
   }
 
   @Watch('inValue', { deep: true })
