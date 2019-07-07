@@ -109,11 +109,8 @@
     white-space: nowrap;width: 80%;margin-left: 8.5%'>
            <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span></div> -->
            <Poptip v-else word-wrap width="230"  trigger="hover" content="content">
-              <div style='    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;'>
+              <div style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>
                 <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span>
-
               </div>
                <div class="api" slot="content">
                  <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span>
@@ -122,7 +119,7 @@
          </Row>
         </Row>
       </Row>
-      <div v-if='produced.length == 0'>暂无制片人</div>
+      <div class="empty-box" v-if='produced.length == 0'>暂无制片人</div>
     </div>
   </div>
 </template>
@@ -132,14 +129,15 @@ import {Component, Watch, Prop} from 'vue-property-decorator'
 import UploadButton, { SuccessEvent } from '@/views/order/components/UploadButton.vue'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { queryList , mains } from '@/api/filmorder'
+import { queryList, mains } from '@/api/filmorder'
 import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
 import WeekDatePicker from '@/components/weekDatePicker'
 import { confirm , toast } from '@/ui/modal'
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
+
 @Component
-export default class Main extends ViewBase {
+export default class Creator extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
   sumTitle = '展示全部'
   sumFlag = 0
@@ -411,5 +409,9 @@ export default class Main extends ViewBase {
   white-space: nowrap;
   color: #fff;
   border-radius: 7px;
+}
+
+.zhipian .empty-box {
+  padding-bottom: 38px;
 }
 </style>
