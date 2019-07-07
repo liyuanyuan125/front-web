@@ -8,12 +8,12 @@
         <Row>
           <Col span="8">
               <p><label>广告片名称</label>{{list.videoName || '暂无'}} </p>
-              <p><label>投放周期</label>{{list.cycle || 0}}天</p>
+              <!-- <p><label>投放周期</label>{{list.cycle || 0}}天</p> -->
               <p><label>投放排期</label>{{formatConversion(list.beginDate)}} ~ {{formatConversion(list.endDate)}}</p>
           </Col>
           <Col span="8">
               <p>
-                <label>预估最大收益</label>
+                <label>可得佣金/(元)</label>
                 <span v-if="list.estimateRevenue" class="max-pofit">{{formatNumber(list.estimateRevenue)}}</span>
                 <span v-else>暂无</span>
               </p>
@@ -22,11 +22,12 @@
                     <em>{{targetCinemaLength}}家</em> 
                     <span class="query-status"  @click="edittarget(list.id, 1)" >查看</span></p>
               <p v-else><label>目标影院：</label><em>{{list.cinemaName || '暂无'}}</em></p>
-              <p><label>目标人次</label>{{list.estimatePersonCount || '暂无'}}人</p>
+              
               <!-- <p><label>目标场次</label>{{list.sceneCount || '暂无'}} </p> -->
           </Col>
           <Col :span="8">
               <p><label>广告片规格</label>{{list.specification || 0}}s </p>
+              <p><label>目标人次</label>{{list.estimatePersonCount || '暂无'}}人</p>
               <!-- <p><label>目标影厅</label>{{list.hallsCount || '暂无'}} </p> -->
           </Col>
         </Row>
