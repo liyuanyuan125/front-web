@@ -3,57 +3,40 @@
     <div style='text-align:center'>
       <div class='title-box'>
         <span v-if=" title !=='' ">{{title}}</span>
-        <Tooltip max-width="200"
-                 v-if=" titleTips !=='' "
-                 :content="titleTips">
+        <Tooltip max-width="200" v-if=" titleTips !=='' " :content="titleTips">
           <Icon type="md-help-circle" />
         </Tooltip>
       </div>
-      <Row type="flex"
-           justify="space-between"
-           v-if="dict1.length > 0"
-           class="areaExtra-type-selectbox">
-        <Col v-for="(item,index) in dict1"
-             span="6"
-             :key="item.key"
-             :label="index">
-        <div class="wp"
-             @click="currentTypeChange(item.key)">
-          <div :class="['inner', currentIndex === item.key ? '' : 'noBorder']"
-               :style="{ 'border-color':color[item.key] }">
+      <Row type="flex" justify="space-between" v-if="dict1.length > 0" class="areaExtra-type-selectbox">
+        <Col v-for="(item,index) in dict1" span="6" :key="item.key" :label="index">
+        <div class="wp" @click="currentTypeChange(item.key)">
+          <div :class="['inner', currentIndex === item.key ? '' : 'noBorder']" :style="{ 'border-color':color[item.key] }">
             <div class="content name-box">
               <i :style="`backgroundImage: url(${ icons[cName2PicName(item.text)] })`"></i>{{item.text}}</div>
             <div class="chart">
-              <div :ref="'type-'+index"
-                   style="width: 100%; height: 100px"></div>
+              <div :ref="'type-'+index" style="width: 100%; height: 100px"></div>
             </div>
           </div>
         </div>
         </Col>
       </Row>
     </div>
-    <Row type="flex"
-         justify="center"
-         align="middle">
-      <Col :span="24">
-      <div ref="refChart"
-           v-if="initDone"
-           :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
-      <div v-else
-           class='loading-wp'
-           :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`">
+    <div class="content-wrap">
+      <div v-if="initDone" ref="refChart" class="chart-wrap"></div>
+      <div v-show="!initDone" class="chart-loading">
         <TinyLoading />
       </div>
-      </Col>
-    </Row>
+    </div>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
 import { tooltipStyles } from '@/util/echarts'
+import { find } from 'lodash'
 const tooltipsDefault = tooltipStyles({
   trigger: 'item',
   formatter: '{b} <br/> {c}'
@@ -72,16 +55,25 @@ import {
     TinyLoading
   }
 })
-export default class AreaBasic extends ViewBase {
+export default class AreaBasicExtra extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
+
   @Prop({ type: String, default: '' }) title!: string
+
   @Prop({ type: String, default: '' }) titleTips?: string
+
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
+
   @Prop({ type: Array, default: () => [] }) dict1!: any[]
+
   @Prop({ type: Array, default: () => [] }) dict2!: any[]
+
   @Prop({ type: Array, default: () => [] }) color!: any[]
+
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
+
   @Prop({ type: Number, default: 0 }) height?: number
+
   @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
 
   icons = {
@@ -123,15 +115,20 @@ export default class AreaBasic extends ViewBase {
 
   // 接口没调
   updateCharts() {
-    if (
-      !this.dataList[this.currentIndex] ||
-      this.dataList[this.currentIndex].length < 1
-    ) {
+    const chartData: any = this.dataList[this.currentIndex] || {}
+
+    if ( chartData.data.length == 0 || chartData.date.length == 0) {
       return
     }
 
-    const chartData = this.dataList[this.currentIndex]
-    const myChart = echarts.init(this.$refs.refChart as any)
+
+    const chartEl = this.$refs.refChart as HTMLDivElement
+
+    echarts.dispose(chartEl)
+    chartEl.innerHTML = ''
+
+    const myChart = echarts.init(chartEl)
+
     const option: any = {
       color: this.color[this.currentIndex],
       legend: {
@@ -150,10 +147,7 @@ export default class AreaBasic extends ViewBase {
         borderWidth: 1,
         borderColor: 'rgba(0, 0, 0, .8)',
         backgroundColor: 'rgba(0, 0, 0, .8)',
-        padding: [
-          7,
-          10
-        ],
+        padding: [7, 10],
         textStyle: {
           color: '#fff',
           fontSize: 12,
@@ -228,11 +222,13 @@ export default class AreaBasic extends ViewBase {
       refs.push(refArr[0])
       options.push({
         color: '',
-        grid: [{
-          show: true,
-          borderWidth: 0,
-          shadowBlur: 2
-        }],
+        grid: [
+          {
+            show: true,
+            borderWidth: 0,
+            shadowBlur: 2
+          }
+        ],
         xAxis: {
           show: false,
           type: 'category',
@@ -242,11 +238,13 @@ export default class AreaBasic extends ViewBase {
           show: false,
           type: 'value'
         },
-        series: [{
-          data: [],
-          type: 'line',
-          smooth: true
-        }]
+        series: [
+          {
+            data: [],
+            type: 'line',
+            smooth: true
+          }
+        ]
       })
     })
     this.dataList.forEach((item: any, index: number) => {
@@ -279,6 +277,7 @@ export default class AreaBasic extends ViewBase {
   }
 }
 </script>
+
 <style lang="less" scoped>
 /deep/ .areaExtra-type-selectbox {
   .wp {
@@ -313,5 +312,31 @@ export default class AreaBasic extends ViewBase {
       border-color: rgba(0, 32, 45, 0.6) !important;
     }
   }
+}
+.content-wrap {
+  position: relative;
+  width: 100%;
+  height: 400px;
+}
+.chart-wrap {
+  width: 100%;
+  height: 400px;
+}
+.chart-wrap:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &::before {
+    content: '暂无数据';
+    font-size: 18px;
+    color: #999;
+  }
+}
+.chart-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
 }
 </style>

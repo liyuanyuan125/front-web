@@ -205,16 +205,10 @@ export default class Main extends ViewBase {
     const id = this.id
     try {
       const {
-        data,
-        data: {
-          items: {
-            date,
-            count
-          },
-          items
-        },
+        data
       } = await trend({ ...mockObj }, id)
-      if (items && items.length > 0) {
+      const items = data.items || null
+      if ( items && items.length > 0 ) {
         this.chart2.dict1 = items[0].channels.map((it: any, index: number) => {
           return {
             text: it.name + '指数',
@@ -235,9 +229,9 @@ export default class Main extends ViewBase {
             this.chart2.dataList[i].date.push(it.date)
           })
         })
-        this.chart1.initDone = true
-        this.chart2.initDone = true
       }
+      this.chart1.initDone = true
+      this.chart2.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
