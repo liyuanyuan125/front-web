@@ -2,9 +2,9 @@
   <div>
     <Row>
       <Col span="24">
-      <Form label-position="left" :label-width="100">
-        <Card class="detailmore-card">
-          <!-- <div slot="title">
+        <Form label-position="left" :label-width="100">
+          <Card class="detailmore-card">
+            <!-- <div slot="title">
             <Row type="flex"
                  justify="space-between"
                  align="middle">
@@ -27,48 +27,86 @@
                         type="primary">查看匹配度</Button></router-link>
               </Col>
             </Row>
-          </div> -->
-          <div class="content">
-            <Row type="flex" justify="space-between">
-              <Col :span="12">
-              <div class='chart-wp' style='margin-right:10px'>
-                <Pie :initDone="chart1.initDone" :noData="chart1.noData" :title='chart1.title' :dict1="chart1.dict1" :dict2="chart1.dict2" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
-              </div>
-              </Col>
-              <Col :span="12">
-              <div class='chart-wp'>
-                <BarXCategory :initDone="chart2.initDone" :noData="chart2.noData" :title='chart2.title' :dict1="chart2.dict1" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" />
-              </div>
-              </Col>
-            </Row>
-            <Row type="flex" justify="space-between" style='margin-top:10px'>
-              <Col :span="12">
-              <div class='chart-wp borderRadius' style='margin-right:10px; height:460px'>
-                <MapChina :initDone="chart3.initDone" :title="chart3.title" :dict1="chart3.dict1" :dict2="chart3.dict2" :color="chart3.color" :max="chart3.max" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" />
-              </div>
-              </Col>
-              <Col :span="12">
-              <div class='chart-wp' style='height:460px'>
-                <BarYCategory :initDone="chart4.initDone" :title="chart4.title" :dict1="chart4.dict1" :dict2="chart4.dict2" :color="chart4.color" :dataList="chart4.dataList" :currentTypeIndex="chart4.currentTypeIndex" @typeChange='typeChangeHander4' />
-              </div>
-              </Col>
-            </Row>
-          </div>
-        </Card>
-      </Form>
+            </div>-->
+            <div class="content">
+              <Row type="flex" justify="space-between" class="chart-group">
+                <Col :span="12" class="chart-item">
+                  <div class="chart-wp fans-sex-pane" style="margin-right:10px">
+                    <Pie
+                      :initDone="chart1.initDone"
+                      :noData="chart1.noData"
+                      :title="chart1.title"
+                      :dict1="chart1.dict1"
+                      :dict2="chart1.dict2"
+                      :color="chart1.color"
+                      :dataList="chart1.dataList"
+                      :currentTypeIndex="chart1.currentTypeIndex"
+                    />
+                  </div>
+                </Col>
+                <Col :span="12" class="chart-item">
+                  <div class="chart-wp fans-age-pane">
+                    <BarXCategory
+                      :initDone="chart2.initDone"
+                      :noData="chart2.noData"
+                      :title="chart2.title"
+                      :dict1="chart2.dict1"
+                      :dict3="chart2.dict3"
+                      :color="chart2.color"
+                      :dataList="chart2.dataList"
+                      :currentTypeIndex="chart2.currentTypeIndex"
+                    />
+                  </div>
+                </Col>
+              </Row>
+
+              <Row type="flex" justify="space-between" class="chart-group" style="margin-top:10px">
+                <Col :span="12" class="chart-item">
+                  <div class="chart-wp fans-province-pane" style="margin-right:10px; height:460px">
+                    <MapChina
+                      :initDone="chart3.initDone"
+                      :title="chart3.title"
+                      :dict1="chart3.dict1"
+                      :dict2="chart3.dict2"
+                      :color="chart3.color"
+                      :max="chart3.max"
+                      :dataList="chart3.dataList"
+                      :currentTypeIndex="chart3.currentTypeIndex"
+                    />
+                  </div>
+                </Col>
+                <Col :span="12" class="chart-item">
+                  <div class="chart-wp fans-city-pane" style="height:460px">
+                    <BarYCategory
+                      :initDone="chart4.initDone"
+                      :title="chart4.title"
+                      :dict1="chart4.dict1"
+                      :dict2="chart4.dict2"
+                      :color="chart4.color"
+                      :dataList="chart4.dataList"
+                      :currentTypeIndex="chart4.currentTypeIndex"
+                      @typeChange="typeChangeHander4"
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </div>
+          </Card>
+        </Form>
       </Col>
     </Row>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { fans, brands } from '@/api/brandfans'
 import DetailNavBar from './components/detailNavBar.vue'
-import BarXCategory from '@/components/chartsGroup/barXCategory/'
-import MapChina from '@/components/chartsGroup/mapChina/'
-import Pie from '@/components/chartsGroup/pieSimple/'
-import BarYCategory from '@/components/chartsGroup/barYCategory/'
+import BarXCategory from '@/components/chartsGroup/barXCategory'
+import MapChina from '@/components/chartsGroup/mapChina'
+import Pie from '@/components/chartsGroup/pieSimple'
+import BarYCategory from '@/components/chartsGroup/barYCategory'
 
 @Component({
   components: {
@@ -81,9 +119,11 @@ import BarYCategory from '@/components/chartsGroup/barYCategory/'
 })
 export default class Temporary extends ViewBase {
   form: any = {}
+
   pageQuery: any = {
     brandId: ''
   }
+
   dict: any = {
     brandList: [],
     genders: [
@@ -101,6 +141,7 @@ export default class Temporary extends ViewBase {
       }
     ]
   }
+
   chart1: any = {
     title: '粉丝男女分布',
     dict1: [],
@@ -111,6 +152,7 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['#00B6CC', '#DA6C70']
   }
+
   chart2: any = {
     title: '粉丝年龄分布',
     dict1: [],
@@ -122,6 +164,7 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['#00B6CC']
   }
+
   chart3: any = {
     title: '省份分布',
     dict1: [],
@@ -132,6 +175,7 @@ export default class Temporary extends ViewBase {
     color: ['#ff9933', '#169bd5'],
     max: 100000
   }
+
   chart4: any = {
     title: '城市分粉丝量TOP10',
     dict1: [
@@ -150,7 +194,9 @@ export default class Temporary extends ViewBase {
     dataList: [],
     color: ['#ff9933', '#169bd5']
   }
+
   brandsLoading = false
+
   brands = []
 
   async typeChangeHander4(index: number = 0) {
@@ -159,6 +205,7 @@ export default class Temporary extends ViewBase {
     }
     this.chart4.currentTypeIndex = index
   }
+
   /**
    * 加载图表数据
    * @param chart 图表名 (因为接口返回全部数据，暂时不用)
@@ -175,7 +222,8 @@ export default class Temporary extends ViewBase {
           item: { femalePercent, malePercent, ages, citys, provinces }
         }
       } = await fans(id)
-      if ( femalePercent && malePercent ) {
+
+      if (femalePercent && malePercent) {
         this.chart1.dataList[this.chart1.currentTypeIndex] = [
           { name: '男', value: malePercent / 100 },
           { name: '女', value: femalePercent / 100 }
@@ -204,45 +252,39 @@ export default class Temporary extends ViewBase {
         this.chart2.noData = true
       }
 
-      if (provinces && provinces.length > 0) {
-        let [min, max] = [0, 0]
-        provinces.forEach(({ count, name }: any) => {
-          count = parseInt(count, 0)
-          max = max < count ? count : max
-          min = min > count ? count : min
-          this.chart3.dataList[this.chart3.currentTypeIndex].push({
-            name: name.substr(0, name.length - 1),
-            value: count / 100
-          })
-          this.chart4.dataList[0].push({
-            name: name.substr(0, name.length - 1),
-            value: count / 100
-          })
-        })
-        this.chart3.min = min
-        this.chart3.max = max
-        this.chart3.initDone = true
-        this.chart4.initDone = true
-      }
-      if (citys && citys.length > 0) {
-        // cities.map((it: any) => {
-        //   this.chart4.dataList[1].push({
-        //     name: it.name,
-        //     value: typeof it.count === 'number' ? it.count : parseInt(it.count, 0)
-        //   })
-        // })
-        citys.forEach(({ count, name }: any) => {
-          this.chart4.dataList[1].push({
-            name,
-            value: typeof count === 'number' ? count / 100 : parseInt(count, 0) / 100
-          })
-        })
-        this.chart4.initDone = true
-      }
+      const provinceList = (provinces as any[] || []).sort((a, b) => a.count - b.count)
+      const cityList = (citys as any[] || []).sort((a, b) => a.count - b.count)
+
+      let [min, max] = [0, 0]
+      const provinceData = provinceList.map(({ count, name }) => {
+        count = parseInt(count, 0)
+        max = max < count ? count : max
+        min = min > count ? count : min
+        return {
+          name: name.substr(0, name.length - 1),
+          value: count / 100
+        }
+      })
+      const cityData = cityList.map(({ count, name }) => {
+        return {
+          name,
+          value: typeof count === 'number' ? count / 100 : parseInt(count, 0) / 100
+        }
+      })
+
+      this.chart3.min = min
+      this.chart3.max = max
+      this.chart3.dataList[this.chart3.currentTypeIndex] = provinceData
+      this.chart3.initDone = true
+
+      this.chart4.dataList[0] = provinceData
+      this.chart4.dataList[1] = cityData
+      this.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
   }
+
   async remoteBrands(query: string) {
     if (query !== '') {
       this.brandsLoading = true
@@ -273,6 +315,7 @@ export default class Temporary extends ViewBase {
       this.brands = []
     }
   }
+
   async brandsFetch() {
     const mockObj = {
       name: 'a',
@@ -285,9 +328,11 @@ export default class Temporary extends ViewBase {
       this.handleError(ex)
     }
   }
+
   mounted() {
     this.initHandler()
   }
+
   async initHandler() {
     if (this.chart1.dict1.length > 0) {
       this.chart1.dict1.map((item: any, index: number) => {
@@ -322,6 +367,7 @@ export default class Temporary extends ViewBase {
     }
     await this.getChartsData('', 0)
   }
+
   resetData() {
     this.chart1.dataList.forEach((item: any[]) => {
       item.splice(0, item.length)
@@ -339,7 +385,35 @@ export default class Temporary extends ViewBase {
   }
 }
 </script>
+
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
+
+.content {
+  margin-top: -10px;
+}
+
+.chart-group {
+  &:first-child {
+    .chart-item {
+      &:first-child .chart-wp {
+        border-radius: 6px 0 0 0;
+      }
+      &:last-child .chart-wp {
+        border-radius: 0 6px 0 0;
+      }
+    }
+  }
+  &:last-child {
+    .chart-item {
+      &:first-child .chart-wp {
+        border-radius: 0 0 0 6px;
+      }
+      &:last-child .chart-wp {
+        border-radius: 0 0 6px 0;
+      }
+    }
+  }
+}
 </style>

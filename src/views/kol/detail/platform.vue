@@ -58,7 +58,8 @@
                     :height="chart1.height"
                     :color="chart1.color"
                     :dataList="chart1.dataList"
-                    :currentTypeIndex="chart1.currentTypeIndex" />
+                    :currentTypeIndex="chart1.currentTypeIndex"
+                    @typeChange='typeChangeHander' />
               </div>
             </Col>
           </Row>
@@ -170,6 +171,10 @@ export default class Main extends ViewBase {
     toolTip
   }
 
+  typeChangeHander(index: number = 0) {
+    this.chart1.currentTypeIndex = index
+  }
+
   /**
    * 加载图表数据
    * @param chart 图表名 (因为接口返回全部数据，暂时不用)
@@ -177,6 +182,7 @@ export default class Main extends ViewBase {
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const mockObj = {
+      channelCode: this.form.channelCode,
       beginDate: this.beginDate(this.form.dayRangesKey),
       endDate: this.endDate()
     }
@@ -190,28 +196,29 @@ export default class Main extends ViewBase {
         },
       } = await platform({ ...mockObj }, id)
       this.dict.channelList = channelList
+      // 接口缺少枚举，本地写死
       this.chart1.dict1 = [
         {
           key: 'dau',
-          text: '日活跃',
+          name: '日活跃',
         }, {
           key: 'likeCount',
-          text: '点赞数',
+          name: '点赞数',
         }, {
           key: 'commentCount',
-          text: '评论数',
+          name: '评论数',
         }, {
           key: 'playCount',
-          text: '播放数',
+          name: '播放数',
         }, {
           key: 'readCount',
-          text: '阅读数',
+          name: '阅读数',
         }, {
           key: 'forwardCount',
-          text: '转发数',
+          name: '转发数',
         }, {
           key: 'shareCount',
-          text: '分享数',
+          name: '分享数',
         }
       ]
       // 临时过滤 nxd 20190621
@@ -258,7 +265,7 @@ export default class Main extends ViewBase {
     }
   }
 
-  getIndex(key: string) {
+  getIndex( key: string ) {
     return findIndex(this.chart1.dict1, (it: any) => {
       return it.key === key
     })

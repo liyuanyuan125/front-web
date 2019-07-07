@@ -101,14 +101,14 @@ export default class MapChina extends ViewBase {
         },
         seriesIndex: [1],
         inRange: {
-          color: ['#009ac2', '#fff']
+          color: ['#fff', '#009ac2']
         },
         calculable: true
       },
       geo: {
         // 这个是重点配置区
         map: 'china', // 表示中国地图
-        roam: true,
+        // roam: true,
         label: {
           normal: {
             show: false, // 是否显示对应地名
