@@ -154,7 +154,7 @@ export default class PieNest extends ViewBase {
   }
   @Watch('initDone')
   watchInitDone(val: boolean) {
-    if (val) { } ) {
+    if (val) {
       this.$nextTick(() => {
         this.resetOptions()
         this.updateCharts()
