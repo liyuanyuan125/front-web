@@ -139,17 +139,17 @@ export default class Index extends ViewBase {
     dict1: [
       {
         text: 'profitAmount',
-        name: '收益',
+        name: '收益金额',
         key: 0
       },
       {
         text: 'showCount',
-        name: '场次',
+        name: '播放场次',
         key: 1
       },
       {
         text: 'personCount',
-        name: '人次',
+        name: '覆盖人次',
         key: 2
       }
     ],
@@ -179,17 +179,17 @@ export default class Index extends ViewBase {
     dict1: [
       {
         text: 'movieProfits',
-        name: '收益',
+        name: '收益金额',
         key: 0
       },
       {
         text: 'movieShows',
-        name: '场次',
+        name: '播放场次',
         key: 1
       },
       {
         text: 'moviePersons',
-        name: '人次',
+        name: '覆盖人次',
         key: 2
       }
     ],
@@ -212,17 +212,17 @@ export default class Index extends ViewBase {
     dict1: [
       {
         text: 'movieProfits',
-        name: '收益',
+        name: '收益金额',
         key: 0
       },
       {
         text: 'movieShows',
-        name: '场次',
+        name: '播放场次',
         key: 1
       },
       {
         text: 'moviePersons',
-        name: '人次',
+        name: '覆盖人次',
         key: 2
       }
     ],
@@ -295,7 +295,9 @@ export default class Index extends ViewBase {
         this.totalData.profitAmountSum = profitAmountSum
 
         if (orderReports && orderReports.length > 0) {
-          orderReports.forEach((item: any, index: number) => {
+          (orderReports as any[])
+          .sort((a, b) => a.date - b.date)
+          .forEach((item: any, index: number) => {
             const date = intDate(item.date)
             this.chart1.dataList[0].date.push(date)
             this.chart1.dataList[1].date.push(date)
