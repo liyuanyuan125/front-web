@@ -439,13 +439,11 @@ export default class Temporary extends ViewBase {
     const id = this.$route.params.id || ''
     try {
       const {
-        data,
-        data: {
-          rate,
-          keyWords,
-          items,
-        }
+        data
       } = await comment({ ...mockObj }, id)
+      const items = data.items || null
+      const rate =  data.rate || null
+      const keyWords = data.keyWords || null
       if ( rate && rate.neutral && rate.passive && rate.positive ) {
         for ( const k in rate ) {
           if ( rate[k] ) {
@@ -458,12 +456,7 @@ export default class Temporary extends ViewBase {
             })
           }
         }
-        this.chart1.initDone = true
-        this.chart1.noData = false
-      } else {
-        this.chart1.initDone = true
-        this.chart1.noData = true
-      }
+      } 
 
       if ( items && items.length > 0 ) {
         items.forEach((item: any, index: number) => {
@@ -478,13 +471,7 @@ export default class Temporary extends ViewBase {
           this.chart2.dataList[1][1].data.push(item.passive.count)
           this.chart2.dataList[1][2].data.push(item.neutral.count)
         })
-        this.chart2.initDone = true
-        this.chart2.noData = false
-      } else {
-        this.chart2.initDone = true
-        this.chart2.noData = true
-      }
-
+      } 
       if ( keyWords && keyWords[this.form.dayRangesKey] ) {
         if ( keyWords[this.form.dayRangesKey].positive ) {
           keyWords[this.form.dayRangesKey].positive.forEach((item: any) => {
@@ -493,7 +480,6 @@ export default class Temporary extends ViewBase {
               value: Math.floor(Math.random() * 100 + 1)
             })
           })
-          this.chart3.initDone = true
         }
         if ( keyWords[this.form.dayRangesKey].negative ) {
           keyWords[this.form.dayRangesKey].negative.forEach((item: any) => {
@@ -502,15 +488,12 @@ export default class Temporary extends ViewBase {
               value: Math.floor(Math.random() * 100 + 1)
             })
           })
-          this.chart4.initDone = true
         }
-      } else {
-        // 组件待增加状态
-        // this.chart3.initDone = true
-        // this.chart3.noData = true
-        // this.chart4.initDone = true
-        // this.chart4.noData = true
       }
+      this.chart1.initDone = true
+      this.chart2.initDone = true
+      this.chart3.initDone = true
+      this.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
@@ -537,7 +520,7 @@ export default class Temporary extends ViewBase {
     ? moment(new Date()).add(-1, 'days').format(timeFormat)
     : moment(new Date()).format(timeFormat)
   }
-  
+
   async handleChange() {
     this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
     this.form.beginDate[1] = this.endDate()

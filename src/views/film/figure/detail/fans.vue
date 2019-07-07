@@ -210,12 +210,16 @@ export default class Temporary extends ViewBase {
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     try {
       const {
-        data,
-        data: {
-          item: { genders, ages, cities, provinces }
-        }
+        data
       } = await fans(this.id)
-      if (genders && genders.length > 0) {
+
+      const item = data.item || null
+      const genders = item.genders || null
+      const ages = item.ages || null
+      const provinces = item.provinces || null
+      const cities = item.cities || null
+
+      if ( genders && genders.length > 0 ) {
         this.chart1.dict2 = data.genders.filter(({ key, text }: any) => {
           return text !== '未知' || key !== 0
         })
@@ -229,10 +233,6 @@ export default class Temporary extends ViewBase {
             }
           }
         )
-        this.chart1.initDone = true
-      } else {
-        this.chart1.initDone = true
-        this.chart1.noData = true
       }
 
       if (ages && ages.length > 0) {
@@ -247,10 +247,6 @@ export default class Temporary extends ViewBase {
           })
           this.chart2.dataList[this.chart2.currentTypeIndex].data.push(v)
         })
-        this.chart2.initDone = true
-      } else {
-        this.chart2.initDone = true
-        this.chart2.noData = true
       }
 
       const provinceList = (provinces as any[] || []).sort((a, b) => a.v - b.v)
@@ -277,6 +273,10 @@ export default class Temporary extends ViewBase {
 
       this.chart4.dataList[0] = provinceData
       this.chart4.dataList[1] = cityData
+
+      this.chart1.initDone = true
+      this.chart2.initDone = true
+      this.chart3.initDone = true
       this.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
