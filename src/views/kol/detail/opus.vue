@@ -93,13 +93,13 @@ export default class Opus extends ViewBase {
 
   mounted() {
     this.tableList()
-    this.querySelectList()
+    // this.querySelectList()
   }
 
   async tableList() {
     try {
       const {
-        data: { items, totalCount, sortByList }
+        data: { items, totalCount, sortByList, channelList }
       } = await opusList({
         ...this.form,
         ...this.pageList,
@@ -115,22 +115,23 @@ export default class Opus extends ViewBase {
       })
       this.total = totalCount
       this.selectOption = sortByList || []
+      this.platformList = channelList || []
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
   // 获取推广平台
-  async querySelectList() {
-    try {
-      const {
-        data: { channelCodeList }
-      } = await querySelectList()
-      this.platformList = channelCodeList
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
+  // async querySelectList() {
+  //   try {
+  //     const {
+  //       data: { channelCodeList }
+  //     } = await querySelectList()
+  //     this.platformList = channelCodeList
+  //   } catch (ex) {
+  //     this.handleError(ex)
+  //   }
+  // }
 
   handleSlice(text: string) {
     if (!text) {
