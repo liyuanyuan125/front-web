@@ -32,7 +32,6 @@
               <div class="chart-wp sex-chart" style="margin-right:10px">
                 <Pie
                   :initDone="chart1.initDone"
-                  :noData="chart1.noData"
                   :title="chart1.title"
                   :dict1="chart1.dict1"
                   :dict2="chart1.dict2"
@@ -46,7 +45,6 @@
               <div class="chart-wp age-chart">
                 <BarXCategory
                   :initDone="chart2.initDone"
-                  :noData="chart2.noData"
                   :title="chart2.title"
                   :dict1="chart2.dict1"
                   :dict3="chart2.dict3"
@@ -145,7 +143,6 @@ export default class Temporary extends ViewBase {
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
-    noData: false,
     dataList: [],
     color: ['#00B6CC', '#DA6C70']
   }
@@ -157,7 +154,6 @@ export default class Temporary extends ViewBase {
     dict3: [],
     currentTypeIndex: 0,
     initDone: false,
-    noData: false,
     dataList: [],
     color: ['#00B6CC']
   }
@@ -214,6 +210,13 @@ export default class Temporary extends ViewBase {
       } = await fans(this.id)
 
       const item = data.item || null
+      if ( !item ) {
+        this.chart1.initDone = true
+        this.chart2.initDone = true
+        this.chart3.initDone = true
+        this.chart4.initDone = true
+        return
+      }
       const genders = item.genders || null
       const ages = item.ages || null
       const provinces = item.provinces || null

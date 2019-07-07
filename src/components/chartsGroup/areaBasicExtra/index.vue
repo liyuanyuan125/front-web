@@ -134,14 +134,6 @@ export default class AreaBasicExtra extends ViewBase {
         show: false,
         y: 'bottom'
       },
-      grid: {
-        left: '2%',
-        right: '2%',
-        bottom: '20%',
-        containLabel: true,
-        show: false,
-        borderWidth: 0
-      },
       tooltip: {
         borderWidth: 1,
         borderColor: 'rgba(0, 0, 0, .8)',
