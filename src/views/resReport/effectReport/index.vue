@@ -213,17 +213,17 @@ export default class Index extends ViewBase {
     title: '',
     dict1: [
       {
-        name: 'name0',
+        name: '曝光人次',
         text: '曝光人次',
         key: 0
       },
       {
-        name: 'name1',
+        name: '曝光场次',
         text: '曝光场次',
         key: 1
       },
       {
-        name: 'name2',
+        name: '支出金额',
         text: '支出金额',
         key: 2
       }
@@ -274,17 +274,17 @@ export default class Index extends ViewBase {
       title: '',
       dict1: [
         {
-          name: 'name0',
+          name: '曝光人次',
           text: '曝光人次',
           key: 0
         },
         {
-          name: 'name1',
+          name: '曝光场次',
           text: '曝光场次',
           key: 1
         },
         {
-          name: 'name2',
+          name: '支出金额',
           text: '支出金额',
           key: 2
         }
@@ -443,8 +443,9 @@ export default class Index extends ViewBase {
               movieId: it.movieId,
               poster: it.poster,
               name: it.name,
-              score: it.score,
-              time: it.release,
+              score: it.score == null ? '-' : it.score,
+              time: String(it.release).slice(0, 4) + '-' + String(it.release).slice(4, 6)
+            + '-' + String(it.release).slice(6, 8),
               type: getNames(it.types, movieTypes).join(' / ') + '（中国大陆）',
               viewCount: it.viewCount, // 曝光人次
               scheduleCount: it.scheduleCount, // 曝光场次
@@ -472,7 +473,8 @@ export default class Index extends ViewBase {
             this.chart1.dataList[1].date.push(item.date)
             this.chart1.dataList[2].date.push(item.date)
             this.tableData.data.push({
-              date: item.date,
+              date: String(item.date).slice(0, 4) + '-' +
+          String(item.date).slice(4, 6) + '-' + String(item.date).slice(6, 8) ,
               viewCount: item.viewCount,
               scheduleCount: item.scheduleCount,
               cost: parseInt(item.cost, 0) / 100  // 单位为'分'

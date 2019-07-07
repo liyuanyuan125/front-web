@@ -165,60 +165,54 @@ export default class Main extends ViewBase {
     const id = this.id
     try {
       const {
-        data
+       data: {
+         items,
+         channelList
+       }
       } = await trend({ ...mockObj }, id)
 
-      if ( !data.channelList || !data.items) {
+      if ( !channelList || !items) {
         this.chart1.initDone = true
         this.chart2.initDone = true
         return
       }
 
-      const items = data.items || null
-      const channelList = data.channelList || null
+      if (items && items.length > 0) {
+        let item: any = null
+        if ( this.form.dayRangesKey != 'yesterday') {
+           item = items.slice(1)
+        } else {
+          item = items
+        }
 
-      if ( items && items.length > 0 && channelList.length > 0 ) {
-        const item = items
-        // if (this.form.dayRangesKey != 'yesterday') {
-        //   item = items.slice(1)
-        // } else {
-        //   item = items
-        // }
-
-        const msgcode = items[0].channels.map((it: any) => {
+        // 取出记录中所包含的渠道（平台）key
+        const msgcode = item[0].channels.map((it: any) => {
           return it.code
         })
-
-        this.chart2.dict1 = channelList
-          .filter((it: any, index: number) => {
-            return msgcode.includes(it.key)
-          })
-          .map((its: any, index: number) => {
-            return {
-              text: its.text + '指数',
-              key: index
-            }
-          })
-
-        items.forEach((it: any) => {
+        // 过滤有效的渠道枚举，排除掉无效但却接口返回的枚举数据
+        this.chart2.dict1 = channelList.filter((it: any, index: number) => {
+           return msgcode.includes(it.key)
+        }).map((its: any, index: number) => {
+          return {
+            text: its.text + '指数',
+            key: index
+          }
+        })
+        items[0].channels.forEach((it: any) => {
           this.chart2.dataList.push({
             data: [],
             date: []
           })
         })
-
-        const chartDate: any = []
-        const chartData: any = []
-        // console.log( items , 'itemsitemsitemsitemsitemsitems') // bug
+        const date: any = []
+        const data: any = []
         items.forEach((it: any, index: number) => {
-          chartDate.push(it.date)
-          chartData.push(it.count)
+          date.push(it.date)
+          data.push(it.count)
           this.chart1.dataList[0] = {
-            date: chartDate,
-            data: chartData
+            date,
+            data
           }
-          // this.chart1.dataList[0].date.push(it.date)
-          // this.chart1.dataList[0].data.push(it.count)
           it.channels.forEach((channelItem: any, i: number) => {
             this.chart2.dataList[i].data.push(channelItem.count)
             this.chart2.dataList[i].date.push(it.date)

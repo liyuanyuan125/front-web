@@ -76,6 +76,8 @@ export default class AreaBasicExtra extends ViewBase {
 
   @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
 
+  fixColor: string[] = ['#ff0000', '#3fb23f', '#0099cc', '#cc6600']
+
   icons = {
     weibo: require('../../../assets/icon/weibo.png'),
     wechat: require('../../../assets/icon/wechat.png'),
@@ -228,7 +230,7 @@ export default class AreaBasicExtra extends ViewBase {
       const refArr = this.$refs[`type-${index}`] as any
       refs.push(refArr[0])
       options.push({
-        color: '',
+        color: this.color[index],
         grid: [
           {
             show: true,
@@ -254,14 +256,18 @@ export default class AreaBasicExtra extends ViewBase {
         ]
       })
     })
-    this.dataList.forEach((item: any, index: number) => {
-      options[index].color = this.color[index]
-      options[index].xAxis.data = item.date
-      options[index].series[0].data = item.data
-    })
-    this.dataList.forEach((item: any, index: number) => {
-      echarts.init(refs[index]).setOption(options[index])
-    })
+
+    // console.log( this.dataList , 'dataListdataListdataListdataList')
+    if ( this.dataList && this.dataList.length > 0 ) {
+      this.dataList.forEach((item: any, index: number) => {
+        // options[index].color = this.color[index]
+        options[index].xAxis.data = item.date
+        options[index].series[0].data = item.data
+      })
+      this.dataList.forEach((item: any, index: number) => {
+        echarts.init(refs[index]).setOption(options[index])
+      })
+    }
   }
 
   @Watch('initDone')

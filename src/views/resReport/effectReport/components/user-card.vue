@@ -21,7 +21,7 @@
               <div class="user-pane-head">
                 <h6>线级分布</h6>
               </div>
-              <div class="user-pane-body">
+              <div class="user-pane-body" style='margin-top: -100px;'>
                 <PieNest :initDone="cityLevel.initDone" :dict1="cityLevel.dict1" :dict2="cityLevel.dict2" :height="cityLevel.height" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})" :color="cityLevel.color" :dataList="cityLevel.dataList" :currentTypeIndex="cityLevel.currentTypeIndex" />
               </div>
             </div>
@@ -29,7 +29,7 @@
               <div class="user-pane-head">
                 <h6>年龄分布</h6>
               </div>
-              <div class="user-pane-body">
+              <div class="user-pane-body" style='margin-top: -48px;'>
                 <BarXCategory :initDone="ageData.initDone" :noData="ageData.noData" :dict1="ageData.dict1" :dict3="ageData.dict3" :color="ageData.color" :height="ageData.height" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})" :dataList="ageData.dataList" :currentTypeIndex="ageData.currentTypeIndex" />
               </div>
             </div>
