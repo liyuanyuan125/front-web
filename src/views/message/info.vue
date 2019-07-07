@@ -1,10 +1,11 @@
 <template>
   <div class="page">
     <div class='all'>
-    	<span>全部标为已读</span>
+    	<span class='left'  @click='back'>< &nbsp;返回列表</span>
+    	<span class='right'>全部标为已读</span>
     </div>
-    <div  class='list' style='padding: 28px;cursor: pointer;'>
-    	<img @click='jump()' style='width: 100%;height: 100%;' src="./assets/list.png" alt="">
+    <div class='list' style='padding: 28px;cursor: pointer;'>
+    	<img style='width: 100%;height: 100%;' src="./assets/info.png" alt="">
     </div>
   </div>
 </template>
@@ -15,8 +16,8 @@ import ViewBase from '@/util/ViewBase'
 
 @Component
 export default class MessagePage extends ViewBase {
-  jump() {
-    this.$router.push({ name: 'message-info' })
+  back() {
+    this.$router.go(-1)
   }
 }
 </script>
@@ -27,7 +28,19 @@ export default class MessagePage extends ViewBase {
 }
 .all {
   height: 30px;
-  span {
+  .left {
+    float: left;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 400;
+    margin-left: 2%;
+    line-height: 30px;
+    cursor: pointer;
+    // &:before {
+    //   content: "<";
+    // }
+  }
+  .right {
     display: block;
     width: 138px;
     height: 30px;

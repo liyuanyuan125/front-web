@@ -156,6 +156,10 @@ export default class BarYCategory extends ViewBase {
   height: 400px;
 }
 
+.chart-wrap {
+  padding: 0 20px 0 10px;
+}
+
 .chart-wrap:empty {
   display: flex;
   align-items: center;

@@ -21,7 +21,7 @@
       <div class="zone rank-zone effect-lightning">
         <div class="rank-label">
           鲸娱指数
-          <Tooltip content="鲸娱指数"/>
+          <Tooltip :content="item.jyTip" v-if="item.jyTip"/>
         </div>
         <div class="rank-no">{{item.rankNo}}</div>
         <div class="rank-title" v-html="item.rankTitle">{{item.rankTitle}}</div>
@@ -33,7 +33,7 @@
       >
         <h4 class="zone-head flex-box">
           <em class="flex-1">主要作品</em>
-          <router-link :to="opusData.more" v-if="opusData.more">更多 &gt;</router-link>
+          <router-link :to="opusData.more" class="more-link" v-if="opusData.more">更多 &gt;</router-link>
         </h4>
         <ul class="opus-list">
           <li
@@ -52,7 +52,7 @@
       >
         <h4 class="zone-head flex-box">
           <em class="flex-1">粉丝平台分布（人）</em>
-          <!-- <router-link :to="{}">更多 &gt;</router-link> -->
+          <!-- <router-link :to="{}" class="more-link">更多 &gt;</router-link> -->
         </h4>
         <ul class="fans-list">
           <li
@@ -100,7 +100,7 @@
           <em class="flex-1">
             演员阵容：<Star :value="actorData.star" readonly v-if="actorData.star > 0"/>
           </em>
-          <router-link :to="actorData.more">更多 &gt;</router-link>
+          <router-link :to="actorData.more" class="more-link">更多 &gt;</router-link>
         </h4>
         <ul class="actor-list">
           <li
@@ -129,7 +129,7 @@
       >
         <h4 class="brand-head flex-box">
           <em class="flex-1">合作过的品牌</em>
-          <router-link :to="brandData.more" v-if="brandData.more">更多 &gt;</router-link>
+          <router-link :to="brandData.more" class="more-link" v-if="brandData.more">更多 &gt;</router-link>
         </h4>
         <ul class="brand-list">
           <li
@@ -285,12 +285,12 @@ export default class BasicPane extends Vue {
   padding: 14px 0 50px;
   box-shadow: 0 -3px #53c5df;
   background-color: rgba(0, 31, 44, .6);
+}
 
-  a {
-    color: #ddd;
-    &:hover {
-      color: #f3d872;
-    }
+.more-link {
+  color: #53c5df;
+  &:hover {
+    opacity: .88;
   }
 }
 
@@ -415,10 +415,14 @@ export default class BasicPane extends Vue {
   width: 146px;
   height: 32px;
   line-height: 32px;
+  color: #fff;
   background-color: #001f2c;
   border-radius: 88px;
   text-align: center;
   margin: 8px auto 0;
+  &:hover {
+    opacity: .88;
+  }
 }
 
 .fans-list {

@@ -18,6 +18,7 @@
 			<Col :span='8'>
 				<span>投放排期</span>&nbsp;&nbsp;
 				 <DatePicker type="daterange" @on-change="dateChange" placement="bottom-end" placeholder="投放排期" class="input" style="width: 300px"></DatePicker>
+      
 			</Col>
 		</Row>
 		 <div class='t-title'>
@@ -127,6 +128,10 @@ export default class Main extends ViewBase {
     // this.seach()
   }
 
+  formatDate(data: any) {
+    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
+  }
+
 
   async seach() {
     try {
@@ -142,7 +147,13 @@ export default class Main extends ViewBase {
         this.query.beginDate = items.data.item.beginDate,
         this.query.endDate = items.data.item.endDate,
         this.query.cinemaCodes = items.data.item.deliveryCinemas,
-        this.query.deliveryMovies = items.data.item.deliveryMovies
+        this.query.deliveryMovies = (items.data.movies || []).map((it: any) => {
+          return {
+            ...it,
+            main_pic : it.mainPic,
+            release_date: this.formatDate(it.releaseDate)
+          }
+        })
         // this.numsList = items.data.item.deliveryMovies
       }
       this.numsList = this.query.deliveryMovies
@@ -381,9 +392,9 @@ export default class Main extends ViewBase {
   overflow-y: hidden;
   background: rgba(32, 67, 80, 1);
 }
-/deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
-  color: #fff;
-}
+// /deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
+//   color: #fff;
+// }
 /deep/ .ivu-table-wrapper {
   margin: 30px 0 0;
   border: none;

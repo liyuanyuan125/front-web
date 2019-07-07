@@ -8,95 +8,95 @@ import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
  */
 export async function platform(query: any, id: number | string = '') {
   // 演示 临时参数 nxd 20190621
-  id = '2061'
+  // id = '2061'
   // 演示 临时参数 nxd 20190621
-  query = {
-    beginDate: '20160520',
-    endDate: '20190620',
-    channelCode: 'weibo'
-  }
-  // const res = await get(`kol/accounts/${id}/trends`, query)
-  // return res
+  // query = {
+  //   beginDate: '20160520',
+  //   endDate: '20190620',
+  //   channelCode: 'weibo'
+  // }
+  const res = await get(`kol/accounts/${id}/trends`, query)
+  return res
   return await mockGet(query, {
     items: [
-      {
-        id: tid,
-        kolId: tid,
-        channelCode: 'weibo',
-        date: 20190602,
-        dau: tid,
-        likeCount: tid,
-        commentCount: tid,
-        playCount: tid,
-        readCount: tid,
-        forwardCount: tid,
-        shareCount: tid
-      },
-      {
-        id: tid,
-        kolId: tid,
-        channelCode: 'weibo',
-        date: 20190603,
-        dau: tid,
-        likeCount: tid,
-        commentCount: tid,
-        playCount: tid,
-        readCount: tid,
-        forwardCount: tid,
-        shareCount: tid
-      },
-      {
-        id: tid,
-        kolId: tid,
-        channelCode: 'weibo',
-        date: 20190604,
-        dau: tid,
-        likeCount: tid,
-        commentCount: tid,
-        playCount: tid,
-        readCount: tid,
-        forwardCount: tid,
-        shareCount: tid
-      },
-      {
-        id: tid,
-        kolId: tid,
-        channelCode: 'wechat',
-        date: 20190602,
-        dau: tid,
-        likeCount: tid,
-        commentCount: tid,
-        playCount: tid,
-        readCount: tid,
-        forwardCount: tid,
-        shareCount: tid
-      },
-      {
-        id: tid,
-        kolId: tid,
-        channelCode: 'douyin',
-        date: 20190602,
-        dau: tid,
-        likeCount: tid,
-        commentCount: tid,
-        playCount: tid,
-        readCount: tid,
-        forwardCount: tid,
-        shareCount: tid
-      },
-      {
-        id: tid,
-        kolId: tid,
-        channelCode: 'kuaishou',
-        date: 20190602,
-        dau: tid,
-        likeCount: tid,
-        commentCount: tid,
-        playCount: tid,
-        readCount: tid,
-        forwardCount: tid,
-        shareCount: tid
-      }
+      // {
+      //   id: tid,
+      //   kolId: tid,
+      //   channelCode: 'weibo',
+      //   date: 20190602,
+      //   dau: tid,
+      //   likeCount: tid,
+      //   commentCount: tid,
+      //   playCount: tid,
+      //   readCount: tid,
+      //   forwardCount: tid,
+      //   shareCount: tid
+      // },
+      // {
+      //   id: tid,
+      //   kolId: tid,
+      //   channelCode: 'weibo',
+      //   date: 20190603,
+      //   dau: tid,
+      //   likeCount: tid,
+      //   commentCount: tid,
+      //   playCount: tid,
+      //   readCount: tid,
+      //   forwardCount: tid,
+      //   shareCount: tid
+      // },
+      // {
+      //   id: tid,
+      //   kolId: tid,
+      //   channelCode: 'weibo',
+      //   date: 20190604,
+      //   dau: tid,
+      //   likeCount: tid,
+      //   commentCount: tid,
+      //   playCount: tid,
+      //   readCount: tid,
+      //   forwardCount: tid,
+      //   shareCount: tid
+      // },
+      // {
+      //   id: tid,
+      //   kolId: tid,
+      //   channelCode: 'wechat',
+      //   date: 20190602,
+      //   dau: tid,
+      //   likeCount: tid,
+      //   commentCount: tid,
+      //   playCount: tid,
+      //   readCount: tid,
+      //   forwardCount: tid,
+      //   shareCount: tid
+      // },
+      // {
+      //   id: tid,
+      //   kolId: tid,
+      //   channelCode: 'douyin',
+      //   date: 20190602,
+      //   dau: tid,
+      //   likeCount: tid,
+      //   commentCount: tid,
+      //   playCount: tid,
+      //   readCount: tid,
+      //   forwardCount: tid,
+      //   shareCount: tid
+      // },
+      // {
+      //   id: tid,
+      //   kolId: tid,
+      //   channelCode: 'kuaishou',
+      //   date: 20190602,
+      //   dau: tid,
+      //   likeCount: tid,
+      //   commentCount: tid,
+      //   playCount: tid,
+      //   readCount: tid,
+      //   forwardCount: tid,
+      //   shareCount: tid
+      // }
     ],
     channelList: [
       {
@@ -434,8 +434,8 @@ export async function comment(query: any, id: number | string = '') {
  * @param data
  */
 export async function matching(query: any) {
-  // const res = await get('/xadvert/plans/effectStatistics' , query)
-  // return res
+  const res = await get('/xadvert/plans/effectStatistics' , query)
+  return res
   return await mockGet(query, {
     chart1: {
       dataList: [{
@@ -615,8 +615,8 @@ export async function matching(query: any) {
  * @param data
  */
 export async function fans(query: any) {
-  // const res = await get('/xadvert/plans/effectStatistics' , query)
-  // return res
+  const res = await get('/xadvert/plans/effectStatistics' , query)
+  return res
   return await mockGet(query, {
     chart1: {
       dataList: [{

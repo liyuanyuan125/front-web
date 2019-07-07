@@ -1,6 +1,5 @@
-
 <template>
-  <div>
+  <div class="area-basic">
     <div style="text-align:center">
       <div class="title-box">
         <span v-if=" title !=='' ">{{title}}</span>
@@ -8,32 +7,16 @@
           <Icon type="md-help-circle" />
         </Tooltip>
       </div>
-      <RadioGroup
-        size="small"
-        class="nav"
-        v-if="dict1.length > 0 && initDone"
-        @on-change="currentTypeChange"
-        v-model="currentIndex"
-        type="button"
-      >
-        <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.text}}</Radio>
+      <RadioGroup size="small" v-if="dict1.length > 0 && dataList" @on-change="currentTypeChange" v-model="currentIndex" type="button">
+        <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-
-    <Row type="flex" justify="center" align="middle">
-      <Col :span="24">
-        <div v-if="initDone">
-          <div ref="refChart" class="chart-wrap" :style="`height: ${height}px`"></div>
-        </div>
-        <div
-          v-else
-          class="loading-wp chart-loading"
-          :style="`height: ${height}px`"
-        >
-          <TinyLoading />
-        </div>
-      </Col>
-    </Row>
+    <div class="content-wrap">
+      <div v-if="initDone" ref="refChart" class="chart-wrap"></div>
+      <div v-show="!initDone" class="chart-loading">
+        <TinyLoading />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -42,7 +25,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
-import { tooltipStyles } from '@/util/echarts'
+import { find } from 'lodash'
 import {
   pubOption,
   seriesOption,
@@ -51,6 +34,7 @@ import {
   xOption,
   barThinStyle
 } from '../chartsOption'
+import { tooltipStyles } from '@/util/echarts'
 
 const tooltipsDefault = tooltipStyles({
   trigger: 'item',
@@ -87,6 +71,9 @@ export default class AreaBasic extends ViewBase {
   currentIndex: number = this.currentTypeIndex
 
   currentTypeChange(index: number) {
+    if (!this.initDone) {
+      return
+    }
     this.currentIndex = index
     this.$emit('typeChange', index)
   }
@@ -97,15 +84,24 @@ export default class AreaBasic extends ViewBase {
 
   // 接口没调
   updateCharts() {
-    if (
-      !this.dataList[this.currentIndex] ||
-      this.dataList[this.currentIndex].length < 1
-    ) {
+    const chartData: any = this.dataList[this.currentIndex] || {}
+
+    if (chartData.length == 0) {
       return
+    } else if (chartData.length > 0) {
+      const res = find(chartData, 'data').data
+      if (res && res.length === 0) {
+        return
+      }
     }
 
-    const chartData = this.dataList[this.currentIndex]
-    const myChart = echarts.init(this.$refs.refChart as any)
+    const chartEl = this.$refs.refChart as HTMLDivElement
+
+    echarts.dispose(chartEl)
+    chartEl.innerHTML = ''
+
+    const myChart = echarts.init(chartEl)
+
     const option: any = {
       color: this.color[this.currentIndex],
       ...pubOption,
@@ -194,56 +190,15 @@ export default class AreaBasic extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 
-/deep/ .ivu-radio-group {
-  .ivu-radio-wrapper {
-    background: none;
-    border: none;
-    box-shadow: none !important;
-    color: #cdd0d3;
-    &::before,
-    &::after {
-      display: none;
-    }
-  }
-  /deep/ .ivu-radio-wrapper-checked {
-    color: #fff;
-    border-bottom: 2px solid #fff;
-    .ivu-radio-inner {
-      display: none;
-    }
-    &::before,
-    &::after {
-      display: none;
-    }
-  }
-}
-
-.nav {
-  .ivu-radio-wrapper {
-    height: 60px;
-    padding: 0;
-    line-height: 60px;
-    margin: 0 10px;
-    border-radius: 0 !important;
-  }
-  .ivu-radio-wrapper-checked {
-    color: #fff;
-    border-bottom: 2px solid #fff;
-  }
-}
-
-.loading-wp {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  justify-content: center;
-}
-
-.chart-wrap,
-.chart-loading {
+.content-wrap {
+  position: relative;
   width: 100%;
+  height: 400px;
 }
-
+.chart-wrap {
+  width: 100%;
+  height: 400px;
+}
 .chart-wrap:empty {
   display: flex;
   align-items: center;
@@ -253,5 +208,12 @@ export default class AreaBasic extends ViewBase {
     font-size: 18px;
     color: #999;
   }
+}
+.chart-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
 }
 </style>

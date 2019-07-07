@@ -22,8 +22,8 @@ export async function getBrands(query: any) {
  * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
  */
 export async function fans(id: number = 0) {
-  // const res = await get(`/person/${id}/fans`)
-  // return res
+  const res = await get(`/person/${id}/fans`)
+  return res
   return await mockGet({}, {
     item: {
       totalCount: 83724,
@@ -99,135 +99,10 @@ export async function fans(id: number = 0) {
       }
     ]
   })
-  return await mockGet({}, {
-    chart1: {
-      dataList: [{
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }],
-      coverCinema: 8,
-      advertAmount: 1069.0,
-      coverPeople: 856,
-      coverScene: 92,
-      effectTypeList: [{
-        text: '男',
-        key: 0
-      }, {
-        text: '女',
-        key: 1
-      }]
-    },
-    chart2: {
-      dataList: [{
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 4
-      }],
-      effectTypeList: [{
-        text: '19岁及以下',
-        key: 0
-      }, {
-        text: '20-29岁',
-        key: 1
-      }, {
-        text: '30-29岁',
-        key: 2
-      }, {
-        text: '40-49岁',
-        key: 3
-      }, {
-        text: '50岁及以上',
-        key: 4
-      }]
-    },
-    chart3: {
-      dataList: [{
-        itemName: '广东',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '北京',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '江苏',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '广东',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        itemName: '江苏省',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        itemName: '浙江省',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }],
-      effectTypeList: [{
-        text: 'Papi酱',
-        key: 0
-      }, {
-        text: '奔驰',
-        key: 1
-      }]
-    },
-    chart4: {
-      dataList: [{
-        itemName: '重庆',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '上海',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '天津',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '广东',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        itemName: '厦门',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        itemName: '浙江省',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }],
-      effectTypeList: [{
-        key: 0,
-        name: '省份'
-      },
-      {
-        key: 1,
-        name: '城市'
-      }]
-    }
-  })
 }
 
 /**
- * kol对比
+ * kol对比 待联调
  * @param data
  * @description http://yapi.aiads-dev.com/project/144/interface/api/4953
  * 2061   3898, 5173, 5178, 5203, 5937, 7884, 8386, 11571, 13299,

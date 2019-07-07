@@ -104,8 +104,8 @@ export default class FetchData {
         logoUrl,
         jyIndex,
         jyTrend,
-        malePercent: percent(malePercent),
-        femalePercent: percent(femalePercent),
+        malePercent: percent(malePercent, 2),
+        femalePercent: percent(femalePercent, 2),
 
         unpay,
         onexecute,

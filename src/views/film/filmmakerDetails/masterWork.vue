@@ -89,7 +89,7 @@ import { intDate } from '@/util/dealData'
 @Component
 export default class Master extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
-  // 时间排序0，鲸鱼排序1
+  // 时间排序0，鲸娱排序1
   timeSort = 0
   tableList: any = []
 
@@ -111,7 +111,7 @@ export default class Master extends ViewBase {
   // 影片类型
   selList = [
     {key: 0, text: '按时间排序'},
-    {key: 1, text: '按鲸鱼指数排序'}
+    {key: 1, text: '按鲸娱指数排序'}
   ]
   // 影片类型筛选
   filmListSelect = [
@@ -121,7 +121,7 @@ export default class Master extends ViewBase {
   ]
   // 上映时间排序
   filmList: any = []
-  // 鲸鱼指数排序
+  // 鲸娱指数排序
   jyList: any = []
 
   get intDate() {
@@ -223,7 +223,7 @@ export default class Master extends ViewBase {
       this.filmList = filmList
       this.tableList = this.filmList
 
-      // 根据鲸鱼指数排成二维数组
+      // 根据鲸娱指数排成二维数组
       const jyList: any[] = []
       item2.map((item: any) => {
         const findIndex = jyList.findIndex((jy: any) => Math.floor(jy.jyIndex) == Math.floor(item.jyIndex))

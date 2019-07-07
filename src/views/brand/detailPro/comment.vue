@@ -60,7 +60,6 @@
               <Col :span="12">
                 <div class='chart-wp'>
                   <BarxCategoryStack :initDone="chart2.initDone"
-                  :noData="chart2.noData"
                                   :title='chart2.title'
                                   :dict1="chart2.dict1"
                                   :dict2="chart2.dict2"
@@ -228,7 +227,6 @@ export default class Temporary extends ViewBase {
     xAxis: [],
     currentTypeIndex: 0,
     initDone: false,
-    noData: false,
     dataList: [
       [
         {
@@ -364,10 +362,6 @@ export default class Temporary extends ViewBase {
           that.chart2.dataList[1][2].data.push(item.neutral.count)
         })
         this.chart2.initDone = true
-        this.chart2.noData = false
-      } else {
-        this.chart2.initDone = true
-        this.chart2.noData = true
       }
 
       if ( keyWords && keyWords[this.form.dayRangesKey] ) {
