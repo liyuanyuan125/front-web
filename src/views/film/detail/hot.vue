@@ -224,15 +224,11 @@ export default class Main extends ViewBase {
       const {
         data,
         data: {
-          items: {
-            date,
-            count
-          },
-          items,
           channelCodeList
         },
       } = await trend({ ...mockObj }, id)
-      if (items && items.length > 0) {
+      const items = data.items || null
+      if ( items && items.length > 0 ) {
         this.chart2.dict1 = items[0].channels.map((it: any, index: number) => {
           return {
             text: getName(it.chanelCode, channelCodeList) + '指数',
@@ -279,7 +275,9 @@ export default class Main extends ViewBase {
   }
 
   endDate() {
-    return moment(new Date()).format(timeFormat)
+    return ( this.form.dayRangesKey == 'yesterday' )
+    ? moment(new Date()).add(-1, 'days').format(timeFormat)
+    : moment(new Date()).format(timeFormat)
   }
 
   async handleChange() {
