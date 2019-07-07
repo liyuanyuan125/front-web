@@ -128,7 +128,7 @@ export default class Main extends ViewBase {
           this.query.cinemaId = cinid.data.cinemaId
           this.remoteMethod(cinid.data.cinemaName)
         }
-    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
+    if (new Date().getDay() == 5 || new Date().getDay() == 6) {
       this.weekDate = [
       new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
       new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
@@ -142,6 +142,16 @@ export default class Main extends ViewBase {
       return
     }
     if (new Date().getDay() == 4) {
+      this.seach()
+    }
+    if (new Date().getDay() == 0) {
+      this.weekDate = [
+      new Date(this.startTime + (24 * 60 * 60 * 1000 * 1)) ,
+      new Date(this.endTime + (24 * 60 * 60 * 1000 * 1))]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
       this.seach()
     }
   }

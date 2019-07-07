@@ -134,14 +134,6 @@ export default class AreaBasicExtra extends ViewBase {
         show: false,
         y: 'bottom'
       },
-      grid: {
-        left: '2%',
-        right: '2%',
-        bottom: '20%',
-        containLabel: true,
-        show: false,
-        borderWidth: 0
-      },
       tooltip: {
         borderWidth: 1,
         borderColor: 'rgba(0, 0, 0, .8)',
@@ -178,14 +170,30 @@ export default class AreaBasicExtra extends ViewBase {
         }
       },
       xAxis: {
-        ...xOption,
+        type: 'category',
         boundaryGap: false,
-        data: chartData.date
+        data: chartData.date,
+        axisLabel: {
+          textStyle: {
+            color: '#fff'
+          }
+        }
       },
       yAxis: {
         type: 'value',
-        ...dottedLineStyle,
-        ...yOption
+        axisLabel: {
+          textStyle: {
+            color: '#fff'
+          }
+        }
+      },
+      grid: {
+        left: '2%',
+        right: '35px',
+        bottom: '20%',
+        containLabel: true,
+        show: false,
+        borderWidth: 0
       },
       series: [
         {
