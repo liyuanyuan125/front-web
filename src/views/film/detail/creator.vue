@@ -8,12 +8,25 @@
   			<Row class='r-h'>
   				<Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
   				<Row class='de-ro-two'>{{it.nameEn == null || it.nameEn == '' ? '暂无英文名' : it.nameEn}}</Row>
-  				<Row class='de-ro-thr'>代表作品<br> <span  v-if='it.movies == null'>暂无</span>
+  				<Row class='de-ro-thr'>代表作品<br> <span class='tipspan'  v-if='it.movies == null'>暂无</span>
+            <!-- <Tooltip   max-width="200" transfer :content="list.comment">
            <div style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 80%;margin-left: 8.5%'>
-           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name + ' '}}》</em></span></div></Row>
+    width: 80%;margin-left: 8.5%'> -->
+          <Poptip v-else word-wrap width="230"  trigger="hover" content="content">
+              <div style='overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;'>
+                <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span>
+
+              </div>
+               <div class="api" slot="content">
+                 <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span>
+               </div>
+          </Poptip>
+           <!-- <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span></div></Tooltip> -->
+         </Row>
   			</Row>
   		</Row>
       <div v-if='person.Director.length == 0'>暂无导演</div>
@@ -29,11 +42,22 @@
   				<Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
   				<Row class='de-ro-two'>{{it.nameEn == null || it.nameEn == '' ? '暂无英文名' : it.nameEn}}</Row>
   				<Row class='de-ro-thr'>代表作品<br>
-           <span  v-if='it.movies == null'>暂无</span>
-           <div style='    overflow: hidden;
+           <span class='tipspan'  v-if='it.movies == null'>暂无</span>
+           <!-- <div style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;width: 80%;margin-left: 8.5%'>
-           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name + ' '}}》</em></span></div>
+           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span></div> -->
+           <Poptip v-else word-wrap width="230"  trigger="hover" content="content">
+              <div style='overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;'>
+                <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span>
+
+              </div>
+               <div class="api" slot="content">
+                 <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span>
+               </div>
+          </Poptip>
             </Row>
   			</Row>
   		</Row>
@@ -50,11 +74,23 @@
         <Row class='r-h'>
           <Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
           <Row class='de-ro-two'>{{it.nameEn == null || it.nameEn == '' ? '暂无英文名' : it.nameEn}}</Row>
-          <Row class='de-ro-thr'>代表作品<br> <span  v-if='it.movies == null'>暂无</span>
-           <div style='    overflow: hidden;
+          <Row class='de-ro-thr'>代表作品<br> <span class='tipspan'  v-if='it.movies == null'>暂无</span>
+           <!-- <div style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;width: 80%;margin-left: 8.5%'>
-           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name + ' '}}》</em></span></div></Row>
+           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span></div> -->
+           <Poptip v-else word-wrap width="230"  trigger="hover" content="content">
+              <div  style='    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;'>
+                <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span>
+
+              </div>
+               <div class="api" slot="content">
+                 <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span>
+               </div>
+          </Poptip>
+         </Row>
         </Row>
       </Row>
       <div class="empty-box" v-if='person.Writer.length == 0'>暂无编剧</div>
@@ -67,11 +103,23 @@
         <Row class='r-h'>
           <Row class='de-ro' @click='jump(it.id)'>{{it.name == null || it.name == '' ? '暂无中文名' : it.name}}&nbsp;</Row>
           <Row class='de-ro-two'>{{it.nameEn == null || it.nameEn == '' ? '暂无英文名' : it.nameEn}}</Row>
-          <Row class='de-ro-thr'>代表作品<br> <span  v-if='it.movies == null'>暂无</span>
-           <div style='    overflow: hidden;
+          <Row class='de-ro-thr'>代表作品<br> <span class='tipspan'  v-if='it.movies == null'>暂无</span>
+           <!-- <div style='    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;width: 80%;margin-left: 8.5%'>
-           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name + ' '}}》</em></span></div></Row>
+           <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span></div> -->
+           <Poptip v-else word-wrap width="230"  trigger="hover" content="content">
+              <div style='    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;'>
+                <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span>
+
+              </div>
+               <div class="api" slot="content">
+                 <span v-if='it.movies != null' v-for='(its,index) in it.movies'><em>《{{its.name}}》</em></span>
+               </div>
+          </Poptip>
+         </Row>
         </Row>
       </Row>
       <div v-if='produced.length == 0'>暂无制片人</div>
@@ -324,5 +372,44 @@ export default class Main extends ViewBase {
   margin-top: 20px;
   color: fade(#fff, 60);
   text-indent: 8px;
+}
+/deep/ .ivu-poptip {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 85%;
+  cursor: pointer;
+}
+/deep/ .ivu-poptip-rel {
+  display: inline-block;
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 85%;
+}
+.tipspan {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 25px;
+}
+/deep/ .ivu-poptip-popper[x-placement^="top"] .ivu-poptip-arrow::after {
+  content: "";
+  bottom: 1px;
+  margin-left: -7px;
+  border-bottom-width: 0;
+  border-top-width: 7px;
+  border-top-color: #000;
+}
+/deep/ .ivu-poptip-inner {
+  width: 100%;
+  background-color: #000;
+  background-clip: padding-box;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  color: #fff;
+  border-radius: 7px;
 }
 </style>

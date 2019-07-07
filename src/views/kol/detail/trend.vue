@@ -5,62 +5,30 @@
         <div slot="title">
           <Row type="flex" justify="space-between">
             <Col :span="24">
-              <DetailNavBar titleText="统计周期">
-                <div slot="item">
-                  <RadioGroup
-                      class='nav'
-                      style="margin-right:15px"
-                      @on-change="handleChange"
-                      v-model="form.dayRangesKey"
-                      size="large"
-                      type="button">
-                    <Radio v-for="(item) in dict.dayRanges"
-                           :key="item.key"
-                           :disabled="item.disabled"
-                           :label="item.key">{{item.text}}</Radio>
-                  </RadioGroup>
-                  <DatePicker
-                    type="daterange"
-                    v-model="form.beginDate"
-                    @on-change="handleChange"
-                    placement="bottom-end"
-                    placeholder="自定义时间段"
-                  ></DatePicker>
-                </div>
-              </DetailNavBar>
+            <DetailNavBar titleText="统计周期">
+              <div slot="item">
+                <RadioGroup class='nav' style="margin-right:15px" @on-change="handleChange" v-model="form.dayRangesKey" size="large" type="button">
+                  <Radio v-for="(item) in dict.dayRanges" :key="item.key" :disabled="item.disabled" :label="item.key">{{item.text}}</Radio>
+                </RadioGroup>
+                <DatePicker type="daterange" v-model="form.beginDate" @on-change="handleChange" placement="bottom-end" placeholder="自定义时间段"></DatePicker>
+              </div>
+            </DetailNavBar>
             </Col>
           </Row>
         </div>
         <div class="content">
           <Row type="flex" justify="space-between">
             <Col :span="24">
-              <div class="chart-wp">
-                <AreaBasic :initDone="chart1.initDone"
-                    :title="chart1.title"
-                    :dict1="chart1.dict1"
-                    :dict2="chart1.dict2"
-                    :toolTip="chart1.toolTip"
-                    :height="chart1.height"
-                    :color="chart1.color"
-                    :dataList="chart1.dataList"
-                    :currentTypeIndex="chart1.currentTypeIndex" />
-              </div>
+            <div class="chart-wp">
+              <AreaBasic :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="chart1.toolTip" :height="chart1.height" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
+            </div>
             </Col>
           </Row>
           <Row type="flex" justify="space-between">
             <Col :span="24">
-              <div class="chart-wp borderRadius">
-                <AreaBasicxtra
-                  :initDone="chart2.initDone"
-                  :title="chart2.title"
-                  :dict1="chart2.dict1"
-                  :dict2="chart2.dict2"
-                  :color="chart2.color"
-                  :dataList="chart2.dataList"
-                  :currentTypeIndex="chart2.currentTypeIndex"
-                  @typeChange="typeChangeHander2" 
-                />
-              </div>
+            <div class="chart-wp borderRadius">
+              <AreaBasicxtra :initDone="chart2.initDone" :title="chart2.title" :dict1="chart2.dict1" :dict2="chart2.dict2" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" @typeChange="typeChangeHander2" />
+            </div>
             </Col>
           </Row>
         </div>
@@ -73,11 +41,7 @@
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import {
-  formatTimestamp,
-  formatTimes,
-  formatNumber
-} from '@/util/validateRules'
+import { formatTimestamp, formatTimes, formatNumber } from '@/util/validateRules'
 import DetailNavBar from './components/detailNavBar.vue'
 import { trend } from '@/api/kolDetailMoreInfo'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
@@ -201,44 +165,57 @@ export default class Main extends ViewBase {
     const id = this.id
     try {
       const {
-       data: {
-         items,
-         channelList
-       }
+        data
       } = await trend({ ...mockObj }, id)
-      if (items && items.length > 0) {
-        let item: any = null
-        if ( this.form.dayRangesKey != 'yesterday') {
-           item = items.slice(1)
-        } else {
-          item = items
-        }
 
-        const msgcode = item[0].channels.map((it: any) => {
+      if ( !data.channelList || !data.items) {
+        this.chart1.initDone = true
+        this.chart2.initDone = true
+        return
+      }
+
+      const items = data.items || null
+      const channelList = data.channelList || null
+
+      if ( items && items.length > 0 && channelList.length > 0 ) {
+        const item = items
+        // if (this.form.dayRangesKey != 'yesterday') {
+        //   item = items.slice(1)
+        // } else {
+        //   item = items
+        // }
+
+        const msgcode = items[0].channels.map((it: any) => {
           return it.code
         })
-        this.chart2.dict1 = channelList.filter((it: any, index: number) => {
-           return msgcode.includes(it.key)
-        }).map((its: any, index: number) => {
-          return {
-            text: its.text + '指数',
-            key: index
-          }
-        })
+
+        this.chart2.dict1 = channelList
+          .filter((it: any, index: number) => {
+            return msgcode.includes(it.key)
+          })
+          .map((its: any, index: number) => {
+            return {
+              text: its.text + '指数',
+              key: index
+            }
+          })
+
         items.forEach((it: any) => {
           this.chart2.dataList.push({
             data: [],
             date: []
           })
         })
-        const date: any = []
-        const data: any = []
+
+        const chartDate: any = []
+        const chartData: any = []
+        // console.log( items , 'itemsitemsitemsitemsitemsitems') // bug
         items.forEach((it: any, index: number) => {
-          date.push(it.date)
-          data.push(it.count)
+          chartDate.push(it.date)
+          chartData.push(it.count)
           this.chart1.dataList[0] = {
-            date,
-            data
+            date: chartDate,
+            data: chartData
           }
           // this.chart1.dataList[0].date.push(it.date)
           // this.chart1.dataList[0].data.push(it.count)
@@ -260,20 +237,30 @@ export default class Main extends ViewBase {
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
    */
   beginDate(dayRangesKey: string) {
-    switch ( dayRangesKey ) {
-      case 'yesterday' :
-        return moment(new Date()).add(-1, 'days').format(timeFormat)
-      case 'thirtyDay' :
-        return moment(new Date()).add(-30, 'days').format(timeFormat)
-      case 'ninetyDay' :
-        return moment(new Date()).add(-90, 'days').format(timeFormat)
-      default :
-        return moment(new Date()).add(-7, 'days').format(timeFormat)
+    switch (dayRangesKey) {
+      case 'yesterday':
+        return moment(new Date())
+          .add(-1, 'days')
+          .format(timeFormat)
+      case 'thirtyDay':
+        return moment(new Date())
+          .add(-30, 'days')
+          .format(timeFormat)
+      case 'ninetyDay':
+        return moment(new Date())
+          .add(-90, 'days')
+          .format(timeFormat)
+      default:
+        return moment(new Date())
+          .add(-7, 'days')
+          .format(timeFormat)
     }
   }
 
   endDate() {
-    return moment(new Date()).format(timeFormat)
+    return ( this.form.dayRangesKey == 'yesterday' )
+    ? moment(new Date()).add(-1, 'days').format(timeFormat)
+    : moment(new Date()).format(timeFormat)
   }
 
   async handleChange() {
