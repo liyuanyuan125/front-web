@@ -231,19 +231,14 @@ export default class Index extends ViewBase {
     title: '',
     dict1: [
       {
-        name: 'name0',
+        name: '曝光人次',
         text: '曝光人次',
         key: 0
       },
       {
-        name: 'name1',
+        name: '曝光场次',
         text: '曝光场次',
         key: 1
-      },
-      {
-        name: 'name2',
-        text: '',
-        key: 2
       }
     ],
     dict2: [],
@@ -292,19 +287,14 @@ export default class Index extends ViewBase {
       title: '',
       dict1: [
         {
-          name: 'name0',
+          name: '曝光人次',
           text: '曝光人次',
           key: 0
         },
         {
-          name: 'name1',
+          name: '曝光场次',
           text: '曝光场次',
           key: 1
-        },
-        {
-          name: 'name2',
-          text: '',
-          key: 2
         }
       ],
       dict2: [],
@@ -452,7 +442,7 @@ export default class Index extends ViewBase {
             movieId: it.movieId,
             poster: it.poster,
             name: it.name,
-            score: it.score,
+            score: it.score == null ? '-' : it.score,
             time: String(it.release).slice(0, 4) + '-' + String(it.release).slice(4, 6)
             + '-' + String(it.release).slice(6, 8),
             type: getNames(it.types, this.typelist).join(' / ') + '（中国大陆）',
