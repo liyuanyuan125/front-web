@@ -623,7 +623,7 @@ export default class App extends ViewBase {
 }
 .film-max {
   overflow: hidden;
-  max-height: 810px;
+  max-height: 890px;
 }
 .arrow-box {
   position: relative;
