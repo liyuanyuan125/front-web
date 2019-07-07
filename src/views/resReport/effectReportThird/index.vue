@@ -186,7 +186,7 @@ export default class Index extends ViewBase {
       movieId: 0,
       poster: 'http://img5.mtime.cn/mt/2019/05/31/163639.93224012_1280X720X2.jpg',
       name: '攀登者',
-      score: '时光评分：8.6',
+      score: '鲸鱼指数：8.6',
       time: '2019-09-30上映',
       type: '剧情／冒险（中国大陆）',
       viewCount: '67789', // 曝光人次
