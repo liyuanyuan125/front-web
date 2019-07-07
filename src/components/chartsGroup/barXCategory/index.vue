@@ -1,45 +1,22 @@
-
 <template>
-  <div class="bar-x-category">
-    <div style="text-align:center" class="chart-head">
+  <div>
+    <div style="text-align:center">
       <div class="title-box">
         <span v-if=" title !=='' ">{{title}}</span>
         <Tooltip max-width="200" v-if=" titleTips !=='' " :content="titleTips">
           <Icon type="md-help-circle" />
         </Tooltip>
       </div>
-      <RadioGroup
-        size="small"
-        v-if="dict1.length > 0"
-        @on-change="currentTypeChange"
-        v-model="currentIndex"
-        type="button"
-      >
+      <RadioGroup size="small" v-if="dict1.length > 0 && dataList" @on-change="currentTypeChange" v-model="currentIndex" type="button">
         <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-
-    <Row type="flex" justify="center" align="middle" class="chart-content">
-      <Col :span="24">
-        <div v-if="initDone && !noData">
-          <div ref="refChart" :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"></div>
-        </div>
-
-        <div
-          v-else-if="noData"
-          class="nodata-wp"
-          :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"
-        >暂无数据</div>
-
-        <div
-          v-else
-          class="loading-wp"
-          :style="`width: 100%; height:${ (height > 0) ? height : 400 }px`"
-        >
-          <TinyLoading />
-        </div>
-      </Col>
-    </Row>
+    <div class="content-wrap">
+      <div v-if="initDone" ref="refChart" class="chart-wrap"></div>
+      <div v-show="!initDone" class="chart-loading">
+        <TinyLoading />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -49,10 +26,7 @@ import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
 import { tooltipStyles } from '@/util/echarts'
-const tooltipsDefault = tooltipStyles({
-  trigger: 'item',
-  formatter: '{b} <br/> {c}%'
-})
+import { find } from 'lodash'
 import {
   pubOption,
   seriesOption,
@@ -62,42 +36,66 @@ import {
   barThinStyle
 } from '../chartsOption'
 
+const tooltipsDefault = tooltipStyles({
+  trigger: 'item',
+  formatter: '{b} <br/> {c}%'
+})
+
 @Component({
   components: {
     TinyLoading
   }
 })
 export default class BarXCategory extends ViewBase {
-  @Prop({ type: Boolean, default: false }) noData?: boolean
   @Prop({ type: Boolean, default: false }) initDone!: boolean
+
   @Prop({ type: String, default: '' }) title?: string
+
   @Prop({ type: String, default: '' }) titleTips?: string
+
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
+
   @Prop({ type: Array, default: () => [] }) dict1!: any[]
+
   @Prop({ type: Array, default: () => [] }) dict2!: any[]
+
   @Prop({ type: Array, default: () => [] }) dict3!: any[]
+
   @Prop({ type: Array, default: () => [] }) color!: any[]
+
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
+
   @Prop({ type: Number, default: 0 }) height?: number
+
   @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
 
   currentIndex: number = this.currentTypeIndex
+
   currentTypeChange(index: number) {
+    if (!this.initDone) {
+      return
+    }
     this.currentIndex = index
     this.$emit('typeChange', index)
   }
+
   resetOptions() {
     this.currentIndex = this.currentTypeIndex
   }
+
   updateCharts() {
-    if (
-      !this.dataList[this.currentIndex] ||
-      this.dataList[this.currentIndex].length < 1
-    ) {
+    const chartData: any = this.dataList[this.currentIndex] || {}
+
+    if ( !chartData || chartData.length === 0 ) {
       return
     }
-    const chartData = this.dataList[this.currentIndex]
-    const myChart = echarts.init(this.$refs.refChart as any)
+
+    const chartEl = this.$refs.refChart as HTMLDivElement
+
+    echarts.dispose(chartEl)
+    chartEl.innerHTML = ''
+
+    const myChart = echarts.init(chartEl)
 
     const option: any = {
       color: this.color,
@@ -197,23 +195,31 @@ export default class BarXCategory extends ViewBase {
     border-bottom: 2px solid #fff;
   }
 }
-.loading-wp {
+
+.content-wrap {
+  position: relative;
+  width: 100%;
+  height: 400px;
+}
+.chart-wrap {
+  width: 100%;
+  height: 400px;
+}
+.chart-wrap:empty {
   display: flex;
-  flex-flow: row;
   align-items: center;
   justify-content: center;
+  &::before {
+    content: '暂无数据';
+    font-size: 18px;
+    color: #999;
+  }
 }
-
-.nodata-wp {
-  display: flex;
-  flex-flow: row;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  color: #999;
-}
-
-.chart-content {
-  padding: 0 20px 0 10px;
+.chart-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
 }
 </style>

@@ -32,6 +32,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import TinyLoading from '@/components/TinyLoading.vue'
 import echarts from 'echarts'
+import { tooltipStyles } from '@/util/echarts'
 import {
   pubOption,
   seriesOption,
@@ -41,6 +42,11 @@ import {
   barThinStyle,
   barItemStyleColor
 } from '../chartsOption'
+
+const tooltipsDefault = tooltipStyles({
+  trigger: 'item',
+  formatter: '{b} <br/> {c}%'
+})
 
 @Component({
   components: {
@@ -62,6 +68,8 @@ export default class BarYCategory extends ViewBase {
   @Prop({ type: Array, default: () => [] }) color!: any[]
 
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
+
+  @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
 
   currentIndex = this.currentTypeIndex
 
@@ -100,6 +108,7 @@ export default class BarYCategory extends ViewBase {
     const option: any = {
       color: this.color,
       ...pubOption,
+      tooltip: this.toolTip,
       yAxis: {
         ...yOption,
         splitLine: { show: false },
@@ -113,7 +122,8 @@ export default class BarYCategory extends ViewBase {
         splitLine: { show: false },
         splitArea: { show: false },
         axisLine: { show: false },
-        axisTick: { show: false }
+        axisTick: { show: false },
+        show: false
       },
       series: [
         {
@@ -148,7 +158,6 @@ export default class BarYCategory extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-@import '~@/site/detailmore.less';
 
 .chart-wrap,
 .chart-loading {
