@@ -26,7 +26,8 @@ export default class Main extends ViewBase {
     email: '',
     password: '',
     captchaId: '',
-    captchaCode: ''
+    captchaCode: '',
+    remember: true,
   }
 
   emailError = ''

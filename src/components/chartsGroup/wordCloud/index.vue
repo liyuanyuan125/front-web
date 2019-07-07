@@ -45,6 +45,23 @@ import {
   barThinStyle
 } from '../chartsOption'
 
+/**********************************************************************************
+ * NOTE: 2019-07-07 EDIT BY ZHANGPENG
+ * 为了快速上线，对该组件，进行了破坏性修改：
+ *  dataList 里的 value 会被抛弃，改为从开头到结尾，固定大小递减
+ **********************************************************************************/
+
+const minSize = 12
+const maxSize = 88
+
+// 计算出 size 列表
+const makeSizeList = (list: any[]) => {
+  const count = list.length
+  const step = count > 1 ? (maxSize - minSize) / (count - 1) : 0
+  const result = list.map((it, i) => Math.max(maxSize - step * i, minSize))
+  return result
+}
+
 @Component({
   components: {
     TinyLoading
@@ -54,11 +71,17 @@ import {
 // https://github.com/timdream/wordcloud2.js/blob/gh-pages/API.md
 export default class WordCloudChart extends ViewBase {
   @Prop({ type: Boolean, default: false }) initDone!: boolean
+
   @Prop({ type: String, default: '' }) title!: string
+
   @Prop({ type: String, default: '' }) titleTips?: string
+
   @Prop({ type: Number, default: 0 }) currentTypeIndex!: number
+
   @Prop({ type: Array, default: () => [] }) dict1!: any[]
+
   @Prop({ type: Array, default: () => [] }) color!: any[]
+
   @Prop({ type: Array, default: () => [] }) dataList!: any[]
 
   /** 前景色列表 */
@@ -99,9 +122,13 @@ export default class WordCloudChart extends ViewBase {
     }
     const ele = this.$refs.refChart as any
     // [['foo', 12], ['bar', 6]]
-    const mocklist = this.dataList[this.currentIndex].map(
+    const dlist = this.dataList[this.currentIndex] || []
+    const sizeList = makeSizeList(dlist)
+    const mocklist = dlist.map(
       (item: any, index: number) => {
-        return [item.name, item.value]
+        const size = sizeList[index]
+        return [item.name, size]
+        // return [item.name, item.value]
       }
     )
     const option: any = {
