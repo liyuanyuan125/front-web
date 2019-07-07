@@ -4,7 +4,7 @@
       <li v-for="(it, index) in inValue" :key="index"
             :class="['film-item']">
           <div :class="['film-cover-box']">
-            <span @click="del" class="del">×</span>
+            <span @click="del(it.id ? it.id : it.movie_id , index)" class="del">×</span>
             <img :src="it.main_pic ? it.main_pic : 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg'"  class="film-cover">
             <div>
               <div class="film-title">{{it.name_cn}}</div>
@@ -66,7 +66,7 @@ export default class ComponentMain extends ViewBase {
   onAdd() {
     this.addShow = true
     this.$nextTick(() => {
-      (this.$refs.addCinemaModel as any).init(this.inValue)
+      (this.$refs.addCinemaModel as any).init()
     })
   }
 
@@ -76,9 +76,13 @@ export default class ComponentMain extends ViewBase {
 
   columndata(val: any) {
     val.forEach((it: any) => {
-      this.inValue.push(it)
+      if ((this.inValue || []).map((its: any) => {
+              return its.id ? its.id : its.movie_id
+            }).indexOf(it.movie_id)   == -1 ) {
+
+          this.inValue.push(it)
+      }
     })
-    this.inValue = uniqBy(this.inValue, 'id')
   }
 
   onSet(id: number) {
@@ -88,8 +92,7 @@ export default class ComponentMain extends ViewBase {
     return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
 
-  async del(id: number) {
-    const index = this.inValue.findIndex(it => it.id == id)
+  async del(id: any , index: any) {
     this.inValue.splice(index, 1)
   }
 

@@ -9,6 +9,9 @@
       <h3>选择影片</h3>
       <i @click="cancel"></i>
     </div>
+    <Row>
+      <Input v-model='form.name' enter-button placeholder="请输入影片名称" style="width: 300px" />
+    </Row>
     <CheckboxGroup v-model="form.types" class="item-radio-top">
       <Checkbox style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
       <Checkbox class="check-item" v-for="it in movieTypeList" :key="it.key" :label="it.key" >
@@ -98,6 +101,7 @@ export default class DlgEditCinema extends ViewBase {
   showDlg = false
   total = 0
   form: any = {
+    name: '',
     pageIndex: 1,
     pageSize: 4,
     types: [0]
@@ -116,26 +120,27 @@ export default class DlgEditCinema extends ViewBase {
     return data ? moment(data).format(timeFormat) : '暂无'
   }
 
-  async init(type: any) {
+  async init() {
     (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
     this.loading = true
     this.showDlg = true
     this.checks = {}
-    if (type.length > 0) {
-      this.checkObj = [...type]
-      this.checkId = this.checkObj.map((it: any) => it.movie_id)
-      this.checkId.forEach((it: any) => {
-        this.checks[it] = true
-      })
-      this.seach()
-    } else {
-      this.checkObj = []
-      this.checkId = []
-      this.checkId.forEach((it: any) => {
-        this.checks[it] = true
-      })
-      this.seach()
-    }
+    this.seach()
+    // if (type.length > 0) {
+    //   this.checkObj = [...type]
+    //   this.checkId = this.checkObj.map((it: any) => it.movie_id)
+    //   this.checkId.forEach((it: any) => {
+    //     this.checks[it] = true
+    //   })
+    //   this.seach()
+    // } else {
+    //   this.checkObj = []
+    //   this.checkId = []
+    //   this.checkId.forEach((it: any) => {
+    //     this.checks[it] = true
+    //   })
+    //   this.seach()
+    // }
   }
 
   async seach() {
@@ -228,11 +233,11 @@ export default class DlgEditCinema extends ViewBase {
       this.idO = {}
       if (this.checkboxall) {
         movieid.forEach((it: any) => {
-          this.idO[it] = true
+          this.idO[it] = false
         })
       } else {
         movieid.forEach((it: any) => {
-          this.idO[it] = false
+          this.idO[it] = true
         })
       }
       this.checks = {
@@ -299,6 +304,11 @@ export default class DlgEditCinema extends ViewBase {
     if (value.length == 0) {
       this.form.types = [0]
     }
+    this.seach()
+  }
+
+  @Watch('form.name', { deep: true })
+  watchformName(value: any) {
     this.seach()
   }
 }
@@ -515,5 +525,12 @@ export default class DlgEditCinema extends ViewBase {
   white-space: nowrap;
   height: 24px;
   line-height: 24px;
+}
+/deep/ .ivu-input {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  border: 1px solid #000 !important;
+  margin-bottom: 20px;
 }
 </style>
