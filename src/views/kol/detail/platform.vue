@@ -189,13 +189,10 @@ export default class Main extends ViewBase {
     const id = this.id
     try {
       const {
-        data,
-        data: {
-          items,
-          channelList
-        },
+        data
       } = await platform({ ...mockObj }, id)
-      this.dict.channelList = channelList
+
+      this.dict.channelList = ( data.channelList ) ? data.channelList : null
       // 接口缺少枚举，本地写死
       this.chart1.dict1 = [
         {
@@ -221,10 +218,17 @@ export default class Main extends ViewBase {
           name: '分享数',
         }
       ]
-      // 临时过滤 nxd 20190621
+
+      const items = data.items || null
+
+      if ( !items ) {
+        this.chart1.initDone = true
+        return
+      }
       const res = items.filter((it: any) => {
         return it.channelCode === this.form.channelCode
       })
+
       this.chart1.dataList = this.chart1.dict1.map((it: any) => {
         return {
           data: [],

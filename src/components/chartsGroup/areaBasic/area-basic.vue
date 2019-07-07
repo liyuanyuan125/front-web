@@ -84,6 +84,9 @@ export default class AreaBasic extends ViewBase {
 
   // 接口没调
   updateCharts() {
+    if ( !this.dataList || this.dataList.length === 0 ) {
+      return
+    }
     const chartData: any = this.dataList[this.currentIndex] || {}
 
     if ( chartData.data.length == 0 || chartData.date.length == 0) {
