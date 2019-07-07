@@ -117,10 +117,9 @@ export default class AreaBasicExtra extends ViewBase {
   updateCharts() {
     const chartData: any = this.dataList[this.currentIndex] || {}
 
-    if ( chartData.data.length == 0 || chartData.date.length == 0) {
+    if ( !chartData.data || chartData.data.length == 0 || chartData.date.length == 0) {
       return
     }
-
 
     const chartEl = this.$refs.refChart as HTMLDivElement
 
