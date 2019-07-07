@@ -2,49 +2,83 @@
   <div class="personal-information">
     <h2 class="nav-title">人物简介</h2>
     <ul class="personal-mes">
-      <li><span>出生日期：</span><span>{{intDate(item.birthday) || '-'}}</span></li>
-      <li> <span>身高: {{item.height || '-'}}</span> </li>
-      <li><span>出生地：</span><span>{{item.country || '-'}},{{item.province || '-'}}</span></li>
-      <li><span>体重: {{item.weight || '-'}}</span></li>
+      <li>
+        <span>出生日期：</span>
+        <span>{{intDate(item.birthday) || '-'}}</span>
+      </li>
+      <li>
+        <span>身高: {{item.height || '-'}}</span>
+      </li>
+      <li>
+        <span>出生地：</span>
+        <span>{{item.country || '-'}},{{item.province || '-'}}</span>
+      </li>
+      <li>
+        <span>体重: {{item.weight || '-'}}</span>
+      </li>
     </ul>
+
     <div class="personal-text">
       <!-- {{handleSub(item.introduction)}} -->
       {{introduction}}
       <span class="text-more" @click="handleMore" v-if="isMore">{{moreText}}</span>
     </div>
+
     <h2 class="nav-title">人物关系</h2>
     <ul class="personal-relation">
       <li v-for="item in personalList" :key="item.id">
         <p class="per-title font_16">{{item.title}}</p>
         <p class="head-img">
-          <a class=""><img :src="item.headImg == '' || item.headImg == null ? $store.state.defaultAvatar : item.headImg" /></a>
+          <a class>
+            <img
+              :src="item.headImg == '' || item.headImg == null ? $store.state.defaultAvatar : item.headImg"
+            />
+          </a>
         </p>
         <p class="per-name font_18">{{item.name || '-'}}</p>
         <p class="per-englist font_18">{{item.nameEn || '-'}}</p>
-        <p><span v-for="(it, index) in item.professions" :key="index">{{handleProfess(it.code)}}<em v-if="item.professions.length-1 != index"> / </em></span></p>
-        <p>代表作品</p>
-        <p><span v-for="it in item.movies" :key="it.id">《{{it.name}}》</span></p>
-      </li>
-    </ul>
-    <div class="nav-title img-toggle" v-if="imgList.length">图片（{{imgList.length}}）
-      <div class="show-all" v-if="imgList.length > 15">
-        <span @click="handleToggle">
-          {{tabShowTitle}}
-          <Icon :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}" type="ios-arrow-down" size="25" />
-          
+        <p>
+          <span v-for="(it, index) in item.professions" :key="index">
+            {{handleProfess(it.code)}}
+            <em v-if="item.professions.length-1 != index">/</em>
           </span>
-      </div>
-    </div>
-    <ul name="list" v-if="mapImgList.length" tag="ul" class="loading-img">
-      <li v-for="(img, index) in mapImgList" :key="index" v-if="img">
-        <a class="img-list"><img :src="img" alt=""/></a>
+        </p>
+        <p>代表作品</p>
+        <p>
+          <span v-for="it in item.movies" :key="it.id">《{{it.name}}》</span>
+        </p>
       </li>
     </ul>
+
+    <div class="nav-title img-toggle" v-if="imgList.length">
+      图片（{{imgList.length}}）
+    </div>
+
+    <div class="photo-list-wrap">
+      <ul name="list" tag="ul" class="loading-img" v-if="mapImgList.length">
+        <li v-for="(img, index) in mapImgList" :key="index" v-if="img">
+          <a class="img-list">
+            <img :src="img" alt />
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="show-all" v-if="imgList.length > 15">
+      <span @click="handleToggle">
+        {{tabShowTitle}}
+        <Icon
+          :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}"
+          type="ios-arrow-down"
+          size="25"
+        />
+      </span>
+    </div>
   </div>
 </template>
 
 <script lang='ts'>
-import {Component, Prop} from 'vue-property-decorator'
+import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { personIntro } from '@/api/filmPersonDetail'
 import { intDate } from '@/util/dealData'
@@ -83,25 +117,33 @@ export default class Information extends ViewBase {
   async tableList() {
     const id = this.id // 107028
     try {
-      const { data: { item, professions} } = await personIntro(id)
+      const {
+        data: { item, professions }
+      } = await personIntro(id)
       this.item = item || null
-      this.imgList = item && item.images || []
+      this.imgList = (item && item.images) || []
       this.professionsList = professions
       const list = cloneDeep(this.imgList)
       this.mapImgList = list.length > 15 ? list.slice(0, 15) : list
       // 合并数据
-      item ?  this.personalList.push({
-          title: '合作过最多的导演',
-          ...item.directorPartner
-        }) : null
-      item ? this.personalList.push({
-          title: '合作过最多的男演员',
-          ...item.malePartner
-        }) : null
-      item ? this.personalList.push({
-          title: '合作过最多的女演员',
-          ...item.femalePartner
-        }) : null
+      item
+        ? this.personalList.push({
+            title: '合作过最多的导演',
+            ...item.directorPartner
+          })
+        : null
+      item
+        ? this.personalList.push({
+            title: '合作过最多的男演员',
+            ...item.malePartner
+          })
+        : null
+      item
+        ? this.personalList.push({
+            title: '合作过最多的女演员',
+            ...item.femalePartner
+          })
+        : null
     } catch (ex) {
       this.handleError(ex)
     }
@@ -111,6 +153,7 @@ export default class Information extends ViewBase {
     const item = this.professionsList.find((it: any) => code == it.key)
     return item.text
   }
+
   handleSub() {
     const text = this.item.introduction
     if (text) {
@@ -123,6 +166,7 @@ export default class Information extends ViewBase {
       }
     }
   }
+
   handleMore() {
     if (this.isTagMore) {
       this.introduction = this.item.introduction
@@ -134,6 +178,7 @@ export default class Information extends ViewBase {
       this.isTagMore = true
     }
   }
+
   handleToggle() {
     const list = cloneDeep(this.imgList)
     if (!this.arrowFlag) {
@@ -147,8 +192,8 @@ export default class Information extends ViewBase {
     }
   }
 }
-
 </script>
+
 <style lang='less' scoped>
 .font_16 {
   font-size: 16px;
@@ -159,6 +204,7 @@ export default class Information extends ViewBase {
 .font_18 {
   font-size: 18px;
 }
+
 .nav-title {
   font-size: 24px;
   font-weight: normal;
@@ -166,8 +212,9 @@ export default class Information extends ViewBase {
   color: #fff;
   position: relative;
 }
+
 .personal-information {
-  background: rgba(0, 32, 45, .9);
+  background: rgba(0, 32, 45, 0.9);
   border-radius: 0 0 5px 5px;
   padding: 35px 40px;
   color: #fff;
@@ -203,13 +250,14 @@ export default class Information extends ViewBase {
       }
     }
   }
+
   .personal-text {
     text-indent: 2rem;
     font-size: 14px;
     line-height: 26px;
     text-align: justify;
     padding: 15px 0 25px;
-    border-bottom: solid 1px rgba(79, 166, 187, .5);
+    border-bottom: solid 1px rgba(79, 166, 187, 0.5);
     margin-bottom: 30px;
     .text-more {
       cursor: pointer;
@@ -220,7 +268,7 @@ export default class Information extends ViewBase {
   .personal-relation {
     display: flex;
     flex-wrap: wrap;
-    border-bottom: solid 1px rgba(79, 166, 187, .5);
+    border-bottom: solid 1px rgba(79, 166, 187, 0.5);
     margin-bottom: 30px;
     li {
       width: 33.3%;
@@ -267,20 +315,20 @@ export default class Information extends ViewBase {
     }
   }
 }
+
 .show-all {
   text-align: center;
   font-size: 14px;
   color: #b3bcc0;
-  position: absolute;
-  right: 0;
-  top: 6px;
   span {
     cursor: pointer;
   }
 }
+
 .arrowDown {
-  animation: arrowDown .5s both;
+  animation: arrowDown 0.5s both;
 }
+
 @keyframes arrowDown {
   0% {
     transform: rotate(0);
@@ -289,9 +337,11 @@ export default class Information extends ViewBase {
     transform: rotate(180deg);
   }
 }
+
 .arrowUp {
-  animation: arrowUp .5s both;
+  animation: arrowUp 0.5s both;
 }
+
 @keyframes arrowUp {
   0% {
     transform: rotate(180deg);
@@ -300,12 +350,14 @@ export default class Information extends ViewBase {
     transform: rotate(0);
   }
 }
+
 // 进入过度transition
 .list-enter-active {
   transition: all 1s;
 }
 
-.list-enter, .list-leave-to {
+.list-enter,
+.list-leave-to {
   opacity: 0;
 }
 </style>

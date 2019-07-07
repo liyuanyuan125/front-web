@@ -365,12 +365,15 @@ export default class Main extends ViewBase {
     }
     try {
       const {
-        data,
-        data: {
-          item
-        }
+        data
       } = await comment({ ...mockObj }, this.id)
+
+      const item = data.item || null
       if ( !item ) {
+        this.chart1.initDone = true
+        this.chart2.initDone = true
+        this.chart3.initDone = true
+        this.chart4.initDone = true
         return
       }
       const rate = item.rate || null
@@ -388,7 +391,6 @@ export default class Main extends ViewBase {
               name: this.dict.emotion[index].text
             })
           }
-          that.chart1.initDone = true
         }
       }
 
@@ -405,7 +407,6 @@ export default class Main extends ViewBase {
           that.chart2.dataList[1][1].data.push(item.passive.count)
           that.chart2.dataList[1][2].data.push(item.neutral.count)
         })
-        that.chart2.initDone = true
       }
 
       if ( keywords ) {
@@ -426,9 +427,12 @@ export default class Main extends ViewBase {
               value: Math.floor(Math.random() * 100 + 1)
             })
           })
-          that.chart4.initDone = true
         }
       }      
+      this.chart1.initDone = true
+      this.chart2.initDone = true
+      this.chart3.initDone = true
+      this.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
@@ -452,7 +456,9 @@ export default class Main extends ViewBase {
   }
 
   endDate() {
-    return moment(new Date()).format(timeFormat)
+    return ( this.form.dayRangesKey == 'yesterday' )
+    ? moment(new Date()).add(-1, 'days').format(timeFormat)
+    : moment(new Date()).format(timeFormat)
   }
 
   async handleChange() {
@@ -527,11 +533,11 @@ export default class Main extends ViewBase {
     }
     try {
       const {
-        data,
-        data: {
-          items
-        }
+        data
       } = await keywordComment({ ...mockObj }, this.id)
+
+      const items = data.items || null
+
       this.tableData = []
       if (items && items.length > 0 ) {
         items.map((it: any, index: number) => {
