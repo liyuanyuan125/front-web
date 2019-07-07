@@ -259,11 +259,12 @@ export default class Temporary extends ViewBase {
       let [min, max] = [0, 0]
       const provinceData = provinceList.map(({ count, name }) => {
         count = parseInt(count, 0)
-        max = max < count ? count : max
-        min = min > count ? count : min
+        const value = count / 100
+        max = max < value ? value : max
+        min = min > value ? value : min
         return {
           name: name.substr(0, name.length - 1),
-          value: count / 100
+          value
         }
       })
       const cityData = cityList.map(({ count, name }) => {

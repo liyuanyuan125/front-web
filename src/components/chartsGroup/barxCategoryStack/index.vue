@@ -154,10 +154,12 @@ export default class BarXCategoryStack extends ViewBase {
           if (this.dict2.length > 1) {
             infos = ''
             this.dict2.forEach((it: any, i: number) => {
+              const vv = this.dataList[this.currentIndex][i].data[i3]
+              const value = vv == null ? '-' : vv
               infos += `
                 <p style="background-color: ${this.color[i]}; margin: 3px 0;">
                   ${this.dict1.length > 1 ? this.dict1[this.currentIndex].name : ''}
-                  ${this.dict2[i].text}：${this.dataList[this.currentIndex][i].data[i3]}
+                  ${this.dict2[i].text}：${value}
                 </p>
               `
             })
