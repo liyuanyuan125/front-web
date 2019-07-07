@@ -71,6 +71,8 @@ import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import { getTrend, xadvertOrders } from '@/api/resReport'
 import SelectXadvertOrders from './components/x-select-xadvertOrders.vue'
 
+import { intDate } from '@/util/dealData'
+
 const toolTip: any = {
   borderWidth: 1,
   borderColor: 'rgba(0, 0, 0, .8)',
@@ -136,18 +138,18 @@ export default class Index extends ViewBase {
     title: '',
     dict1: [
       {
-        name: 'profitAmount',
-        text: '收益',
+        text: 'profitAmount',
+        name: '收益',
         key: 0
       },
       {
-        name: 'showCount',
-        text: '场次',
+        text: 'showCount',
+        name: '场次',
         key: 1
       },
       {
-        name: 'personCount',
-        text: '人次',
+        text: 'personCount',
+        name: '人次',
         key: 2
       }
     ],
@@ -294,9 +296,10 @@ export default class Index extends ViewBase {
 
         if (orderReports && orderReports.length > 0) {
           orderReports.forEach((item: any, index: number) => {
-            this.chart1.dataList[0].date.push(item.date)
-            this.chart1.dataList[1].date.push(item.date)
-            this.chart1.dataList[2].date.push(item.date)
+            const date = intDate(item.date)
+            this.chart1.dataList[0].date.push(date)
+            this.chart1.dataList[1].date.push(date)
+            this.chart1.dataList[2].date.push(date)
             this.chart1.dataList[0].data.push(item.profitAmount)
             this.chart1.dataList[1].data.push(item.showCount)
             this.chart1.dataList[2].data.push(item.personCount)
