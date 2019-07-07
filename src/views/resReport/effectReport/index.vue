@@ -310,6 +310,7 @@ export default class Index extends ViewBase {
       height: 350,
       toolTip
     }
+
     this.cinemasData = {
       totalCount: 0,
       viewRate: {
@@ -325,6 +326,7 @@ export default class Index extends ViewBase {
         data: []
       }
     }
+
     this.moreMovieData = []
     this.moviesData = []
     this.moviesTotal = 0
@@ -378,17 +380,18 @@ export default class Index extends ViewBase {
     this.initDone = false
     try {
       const {
-        data: {
-          plan,
-          report,
-          movies,
-          cinemas,
-          user,
-          gradeCodes,
-          planStatus,
-          movieTypes
-        }
+        data
       } = await getPlansReport(id)
+
+       const plan = data.plan || null
+       const report = data.report || null
+       const movies = data.movies || null
+       const cinemas = data.cinemas || null
+       const user = data.user || null
+       const gradeCodes = data.gradeCodes || null
+       const planStatus = data.planStatus || null
+       const movieTypes = data.movieTypes || null
+
       if ( report && report.lastModifyTime ) {
         const dates = report.dates
         const name = getName( plan.status, planStatus )
@@ -411,6 +414,9 @@ export default class Index extends ViewBase {
 
         if ( cinemas && cinemas.length > 0 ) {
           this.cinemasData.totalCount = cinemas.length
+
+          const res = cinemas.slice(0, 10)
+
           cinemas.slice(0, 10).forEach((it: any, index: number) => {
             this.cinemasData.viewRate.data.push({
               name: it.name,
