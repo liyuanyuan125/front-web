@@ -381,15 +381,21 @@ export default class Main extends ViewBase {
     const id = this.$route.params.id || ''
     try {
       const {
-        data,
-        data: {
-          items,
-          rate,
-          commentKeyword,
-          channelList
-        }
+        data
       } = await comment({ ...mockObj }, id)
-      if ( !items ) { return }
+
+      if ( !data.items ) { 
+        this.chart1.initDone = true
+        this.chart2.initDone = true
+        this.chart3.initDone = true
+        this.chart4.initDone = true
+        return
+      }
+
+      const items = data.items || null
+      const channelList = data.channelList || null
+      const rate = data.rate || null
+      const commentKeyword = data.commentKeyword || null
       
       if (channelList && channelList.length > 0) {
         this.dict.channelList = channelList
@@ -406,7 +412,6 @@ export default class Main extends ViewBase {
               name: this.dict.emotionList[index].text
             })
           }
-          that.chart1.initDone = true
         }
       }
 
@@ -423,8 +428,8 @@ export default class Main extends ViewBase {
           that.chart2.dataList[1][1].data.push(item.passive.count)
           that.chart2.dataList[1][2].data.push(item.neutral.count)
         })
-        that.chart2.initDone = true
       }
+
       if ( commentKeyword ) {
         if ( commentKeyword[this.form.dayRangesKey].positive && commentKeyword[this.form.dayRangesKey].positive.length > 0 ) {
           commentKeyword[this.form.dayRangesKey].positive.forEach((item: any) => {
@@ -433,7 +438,6 @@ export default class Main extends ViewBase {
               value: Math.floor(Math.random() * 100 + 1)
             })
           })
-          that.chart3.initDone = true
         }
         if ( commentKeyword[this.form.dayRangesKey].negative && commentKeyword[this.form.dayRangesKey].negative.length > 0 ) {
           commentKeyword[this.form.dayRangesKey].negative.forEach((item: any) => {
@@ -442,9 +446,12 @@ export default class Main extends ViewBase {
               value: Math.floor(Math.random() * 100 + 1)
             })
           })
-          that.chart4.initDone = true
         }
       }
+      that.chart1.initDone = true
+      that.chart2.initDone = true
+      that.chart3.initDone = true
+      that.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
