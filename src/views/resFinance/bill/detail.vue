@@ -31,10 +31,10 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 .title {
-  height: 46px;
+  // height: 46px;
   margin-top: 15px;
   .title-col {
-    height: 46px;
+    // height: 46px;
     img {
       width: 73%;
       height: 83%;
@@ -42,7 +42,7 @@ export default class Main extends ViewBase {
   }
 }
 .items {
-  height: 653px;
+  // height: 653px;
   margin-top: 10px;
   cursor: pointer;
   img {
@@ -51,7 +51,7 @@ export default class Main extends ViewBase {
   }
 }
 .items-title {
-  height: 81px;
+  // height: 81px;
   margin-top: 10px;
   cursor: pointer;
   img {
