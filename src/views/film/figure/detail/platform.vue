@@ -166,7 +166,7 @@ export default class Main extends ViewBase {
    * 根据筛选返回起始日期，影人、影片、kol字段名未统一
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
    */
-  beginDate(dayRangesKey: string) {
+  beginDate(dayRangesKey: string = this.form.dayRangesKey) {
     switch (dayRangesKey) {
       case 'yesterday':
         return moment(new Date())
@@ -180,7 +180,7 @@ export default class Main extends ViewBase {
         return moment(new Date())
           .add(-90, 'days')
           .format(timeFormat)
-      default:
+      case 'last_7_day':
         return moment(new Date())
           .add(-7, 'days')
           .format(timeFormat)
@@ -204,8 +204,8 @@ export default class Main extends ViewBase {
   }
 
   resetData() {
-    this.chart1.dataList.data = []
-    this.chart1.dataList.date = []
+    this.chart1.dataList[0].data = []
+    this.chart1.dataList[0].date = []
   }
 }
 </script>
