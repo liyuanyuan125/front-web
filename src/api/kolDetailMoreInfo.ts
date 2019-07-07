@@ -752,11 +752,11 @@ export async function fans(query: any) {
  * @description http://yapi.aiads-dev.com/project/144/interface/api/4569
  */
  export async function trend(query: any, id: number | string = '') {
-  query = {
-    beginDate: query.beginDate,
-    endDate: query.endDate,
-    channelCode: 'weibo'
-  }
+  // query = {
+  //   beginDate: query.beginDate,
+  //   endDate: query.endDate,
+  //   channelCode: 'weibo'
+  // }
   const res = await get(`/kol/accounts/${id}/indexes` , query)
   return res
   return await mockGet(query, {
