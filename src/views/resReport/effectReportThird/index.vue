@@ -480,7 +480,8 @@ export default class Index extends ViewBase {
         this.chart1.dataList[1].date.push(item.date)
         this.chart1.dataList[2].date.push(item.date)
         this.tableData.data.push({
-          date: item.date,
+          date: String(item.date).slice(0, 4) + '-' +
+          String(item.date).slice(4, 6) + '-' + String(item.date).slice(6, 8) ,
           viewCount: item.viewCount,
           scheduleCount: item.scheduleCount,
           cost: item.cost

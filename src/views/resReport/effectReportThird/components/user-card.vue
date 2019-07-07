@@ -23,7 +23,7 @@
               <div class="user-pane-head">
                 <h6>线级分布</h6>
               </div>
-              <div class="user-pane-body">
+              <div class="user-pane-body" style='margin-top: -100px;'>
                 <PieNest :initDone="cityLevel.initDone"
                          :dict1="cityLevel.dict1"
                          :dict2="cityLevel.dict2"
@@ -39,7 +39,7 @@
               <div class="user-pane-head">
                 <h6>年龄分布</h6>
               </div>
-              <div class="user-pane-body">
+              <div class="user-pane-body" style='margin-top: -48px;'>
                 <BarXCategory :initDone="ageData.initDone"
                               :dict1="ageData.dict1"
                               :dict3="ageData.dict3"
