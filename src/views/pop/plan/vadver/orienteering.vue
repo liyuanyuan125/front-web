@@ -1,7 +1,7 @@
 <template>
   <div class="plan-box">
     <Spin v-if="spinshow" fix>
-      <img style="width: 200px" src="./assets/ad.gif">
+      <img style="width: 200px" src="./assets/doing.gif">
       <Progress :percent="spins" status="active" />
       <p style="font-size: 30px; color: #3959A8">{{spins}}%</p>
     </Spin>
@@ -79,7 +79,7 @@
                   <div class="age-box">
                     <RadioGroup v-model="form.sex" class="item-radio-top">
                       <Radio  style="width: 250px" class="check-item form-item-first" :label="0">不限</Radio>
-                      <Radio 
+                      <Radio
                         v-if="it.key != 'unknow'"
                         style="width: 116px; height: 40px; float: left;"
                         v-for="it in sexList"
