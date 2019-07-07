@@ -468,7 +468,9 @@ export default class Main extends ViewBase {
   }
 
   endDate() {
-    return moment(new Date()).format(timeFormat)
+    return ( this.form.dayRangesKey == 'yesterday' )
+    ? moment(new Date()).add(-1, 'days').format(timeFormat)
+    : moment(new Date()).format(timeFormat)
   }
 
   async handleChange() {
