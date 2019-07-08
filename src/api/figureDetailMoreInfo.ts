@@ -374,10 +374,10 @@ export async function fans(id: string|number = '') {
  */
  export async function dau(query: any, id: number | string = '') {
   // 演示 临时参数 nxd 20190621
-  query = {
-    beginDate: '20160520',
-    endDate: '20190620'
-  }
+  // query = {
+  //   beginDate: '20160520',
+  //   endDate: '20190620'
+  // }
   const res = await get(`/person/${id}/dau`, query)
   return res
   return await mockGet({}, {
@@ -701,10 +701,10 @@ export async function matching(query: any) {
  * @description http://yapi.aiads-dev.com/project/146/interface/api/4560
  */
 export async function trend(query: any, id: number | string = '') {
-  query = {
-    beginDate: '20160520',
-    endDate: '20190620'
-  }
+  // query = {
+  //   beginDate: '20160520',
+  //   endDate: '20190620'
+  // }
   const res = await get(`/person/${id}/hot` , query)
   return res
   return await mockGet(query, {

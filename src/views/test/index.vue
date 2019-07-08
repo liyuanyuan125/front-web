@@ -90,6 +90,13 @@ export default class Main extends ViewBase {
       title: '包含影院数',
       key: 'deliveryCinemas',
       align: 'center',
+      render: (hh: any, { row: { deliveryCinemas } }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        const html = deliveryCinemas.length
+        return <span>{html}</span>
+        /* tslint:enable */
+      }
     },
     {
       title: '投放排期',

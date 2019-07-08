@@ -30,10 +30,10 @@
           :dict1="chart2.dict1"
           :dict2="chart2.dict2"
           :dict3="chart2.dict3"
-          :toolTip="chart2.toolTip"
           :color="chart2.color"
           :dataList="chart2.dataList"
           :currentTypeIndex="chart2.currentTypeIndex"
+          axisLabelFormatter="{value}"
           @typeChange="typeChangeHander2"
         />
       </div>
@@ -52,6 +52,7 @@
           :color="chart3.color"
           :dataList="chart3.dataList"
           :currentTypeIndex="chart3.currentTypeIndex"
+          axisLabelFormatter="{value}"
           @typeChange="typeChangeHander3"
         />
       </div>
@@ -70,7 +71,7 @@ import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import { getTrend, xadvertOrders } from '@/api/resReport'
 import SelectXadvertOrders from './components/x-select-xadvertOrders.vue'
-
+import { tooltipStyles } from '@/util/echarts'
 import { intDate } from '@/util/dealData'
 
 const toolTip: any = {
@@ -123,6 +124,8 @@ export default class Index extends ViewBase {
   form: any = {
     xadvertOrderId: 111
   }
+
+  tooltipStyles = tooltipStyles
 
   xadvertOrders = xadvertOrders
 
