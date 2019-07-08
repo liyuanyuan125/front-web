@@ -9,7 +9,7 @@
               <span v-if="item.boxOfficeRanking">影史票房NO.{{item.boxOfficeRanking}}</span>
               <img v-if="item.status == 3" src="~@/views/film/assets/hotShow.png" width="48px" alt="alias" class="hot"/>
           </p>
-          <p class="title-year">{{spliceName(item.name)}}({{item.release}})</p>
+          <p class="title-year" :title="item.name">{{spliceName(item.name)}}({{item.release}})</p>
           <p>
             <span v-for="(it, index) in item.types" :key="index" v-if="!!handleMoive(it)">{{handleMoive(it)}}
               <em v-if="item.types.length-1 != index"> / </em>
@@ -88,8 +88,8 @@ import ViewBase from '@/util/ViewBase'
 import {personMovies, topList } from '@/api/filmPersonDetail'
 import { getTodayDate, formatConversion } from '@/util/validateRules'
 import { intDate } from '@/util/dealData'
-import { cloneDeep } from 'lodash'
 import { readableNumber } from '@/util/dealData'
+import { cloneDeep, union, difference } from 'lodash'
 
 
 @Component
@@ -139,7 +139,6 @@ export default class Master extends ViewBase {
   }
 
   async mounted() {
-    // getWorks(370093)
     this.topCountList()
     this.list()
   }
@@ -277,7 +276,7 @@ export default class Master extends ViewBase {
 <style lang='less' scoped>
 .move-title {
   display: block;
-  flex: 1;
+  padding-right: 5px;
 }
 h2, h3, h4 {
   font-weight: normal;
@@ -438,6 +437,7 @@ h2, h3, h4 {
     padding-left: 15px;
     .title-grade {
       padding-top: 10px;
+      height: 85px;
       span {
         padding-right: 25px;
       }

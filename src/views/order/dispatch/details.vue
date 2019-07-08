@@ -13,7 +13,7 @@
           </Col>
           <Col span="8">
               <p>
-                <label>可得佣金(元)</label>
+                <label>广告收益(元)</label>
                 <span v-if="list.estimateRevenue" class="max-pofit">{{formatNumber(list.estimateRevenue)}}</span>
                 <span v-else>暂无</span>
               </p>
