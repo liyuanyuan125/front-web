@@ -311,9 +311,10 @@ export default class Main extends ViewBase {
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const that: any = this
     const mockObj = {
-      beginDate: this.form.beginDate[0],
-      endDate: this.form.beginDate[1],
+      beginDate: this.beginDate(this.form.dayRangesKey),
+      endDate: this.endDate()
     }
+    console.log( mockObj,'mockObjmockObjmockObjmockObjmockObjmockObjmockObjmockObjmockObjmockObj')
     try {
       const {
         data

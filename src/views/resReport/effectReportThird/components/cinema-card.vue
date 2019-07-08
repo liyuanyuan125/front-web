@@ -6,11 +6,11 @@
          href="javascript:;">查看数据</a>
     </template>
     <div class="cinema-list-wp">
-      <dl v-if=" data.viewRate.data && data.viewRate.data.length > 0 ">
+      <dl v-if=" viewRateSortData && viewRateSortData.length > 0 ">
         <dt>{{data.viewRate.listName}}</dt>
         <dd>
           <ul class="cinema-list">
-            <li v-for=" (item, index) in data.viewRate.data"
+            <li v-for=" (item, index) in viewRateSortData"
                 :key="index">
               <div class="cinema-list-item-inner">
                 <span>{{item.name}}</span>
@@ -21,11 +21,11 @@
         </dd>
       </dl>
 
-      <dl v-if=" data.scheduleRate.data && data.scheduleRate.data.length > 0 ">
+      <dl v-if=" scheduleRateSortData && scheduleRateSortData.length > 0 ">
         <dt>{{data.scheduleRate.listName}}</dt>
         <dd>
           <ul class="cinema-list">
-            <li v-for=" (item, index) in data.scheduleRate.data"
+            <li v-for=" (item, index) in scheduleRateSortData"
                 :key="index">
               <div class="cinema-list-item-inner">
                 <span>{{item.name}}</span>
@@ -72,6 +72,18 @@ export default class CinemaCard extends Vue {
     return `覆盖影院（ ${this.data.totalCount}家 ）`
   }
 
+  get viewRateSortData() {
+    return ( this.data.viewRate.data.length > 0 ) ? this.data.viewRate.data.sort((a: any, b: any) => {
+      return b.count - a.count
+    }) : this.data.viewRate.data
+  }
+
+  get scheduleRateSortData() {
+    return ( this.data.scheduleRate.data.length > 0 ) ? this.data.scheduleRate.data.sort((a: any, b: any) => {
+      return b.count - a.count
+    }) : this.data.scheduleRate.data
+  }
+
   moreFnHandle() {
     this.$emit('showMore')
   }
@@ -114,6 +126,14 @@ export default class CinemaCard extends Vue {
         font-size: 14px;
         font-weight: 400;
         color: rgba(255, 255, 255, 1);
+      }
+      span:first-child {
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+        width: 320px;
+        display: inline-block;
+        .cut-text();
       }
       .cinema-list-item-inner {
         display: flex;

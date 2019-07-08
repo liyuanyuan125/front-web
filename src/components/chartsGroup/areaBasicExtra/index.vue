@@ -76,6 +76,8 @@ export default class AreaBasicExtra extends ViewBase {
 
   @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
 
+  fixColor: string[] = ['rgba(255, 0, 0, ', 'rgba(63, 178, 63,', 'rgba(0, 153, 204,', 'rgba(204, 102, 0,']
+
   icons = {
     weibo: require('../../../assets/icon/weibo.png'),
     wechat: require('../../../assets/icon/wechat.png'),
@@ -204,8 +206,18 @@ export default class AreaBasicExtra extends ViewBase {
             width: 1
           },
           areaStyle: {
-            shadowColor: this.color[this.currentIndex],
-            opacity: 0.4
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  offset: 0,
+                  color: `${this.fixColor[this.currentIndex]} 1)`
+                },
+                {
+                  offset: 1,
+                  color: `${this.fixColor[this.currentIndex]} 0.2)`
+                }
+              ])
+            }
           }
         }
       ]
@@ -228,7 +240,7 @@ export default class AreaBasicExtra extends ViewBase {
       const refArr = this.$refs[`type-${index}`] as any
       refs.push(refArr[0])
       options.push({
-        color: '',
+        color: this.color[index],
         grid: [
           {
             show: true,
@@ -249,19 +261,25 @@ export default class AreaBasicExtra extends ViewBase {
           {
             data: [],
             type: 'line',
-            smooth: true
+            smooth: true,
+            showSymbol: false
           }
         ]
       })
     })
-    this.dataList.forEach((item: any, index: number) => {
-      options[index].color = this.color[index]
-      options[index].xAxis.data = item.date
-      options[index].series[0].data = item.data
-    })
-    this.dataList.forEach((item: any, index: number) => {
-      echarts.init(refs[index]).setOption(options[index])
-    })
+
+
+    if ( this.dataList && this.dataList.length > 0 ) {
+      this.dataList.forEach((item: any, index: number) => {
+        options[index].xAxis.data = item.date
+        options[index].series[0].data = item.data
+      })
+      this.dataList.forEach((item: any, index: number) => {
+        echarts.init(refs[index]).setOption(options[index])
+      })
+    }
+
+    // console.save(options[0], `${new Date()}.json`)
   }
 
   @Watch('initDone')

@@ -301,8 +301,8 @@ export default class Main extends ViewBase {
   times: any = ''
   ballsrc: any = ''
   tabledataid: any[] = []
-  desckey = ''
-  desc = ''
+  desckey = 'followersCount'
+  desc = 'desc'
 
   pageList = {
     pageIndex: 1,
@@ -329,7 +329,8 @@ export default class Main extends ViewBase {
         minWidth: 40,
         key: 'followersCount',
         slot: 'flansNumber',
-        sortable: this.acount == 1 ? 'custom' : ''
+        sortable: this.acount == 1 ? 'custom' : '',
+        sortType: 'desc'
       },
       {
         title: '粉丝画像',
