@@ -486,18 +486,18 @@ export default class Main extends ViewBase {
         items.map((it: any) => {
           date.push(formatConversion(it.date))
           it.channels.map((code: any) => {
-            dataTrend[code.chanelCode].push(code.trend)
-            dataCount[code.chanelCode].push(code.count)
+            dataTrend[code.chanelCode].push(code.trend || 0)
+            dataCount[code.chanelCode].push(code.count || 0)
           })
         })
         this.chart3.xAxis = date
-        this.chart3.dataList[0][0].data = dataTrend.maoyan
-        this.chart3.dataList[0][1].data = dataTrend.taopiaopiao
-        this.chart3.dataList[0][2].data = dataTrend.douban
+        this.chart3.dataList[0][0].data = dataTrend.maoyan || 0
+        this.chart3.dataList[0][1].data = dataTrend.taopiaopiao || 0
+        this.chart3.dataList[0][2].data = dataTrend.douban || 0
 
-        this.chart3.dataList[1][0].data = dataCount.maoyan
-        this.chart3.dataList[1][1].data = dataCount.taopiaopiao
-        this.chart3.dataList[1][2].data = dataCount.douban
+        this.chart3.dataList[1][0].data = dataCount.maoyan || 0
+        this.chart3.dataList[1][1].data = dataCount.taopiaopiao || 0
+        this.chart3.dataList[1][2].data = dataCount.douban || 0
       }
       this.chart3.initDone = true
     } catch (ex) {
