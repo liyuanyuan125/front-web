@@ -130,7 +130,7 @@
       <div class="check-box">
         <p style="margin-left: 4px">
           共
-          <b>{{setadever.length}}</b> 个账号
+          <b>{{mapset(setadever)}}</b> 个账号
           <span style="margin-left: 10px">共</span><b>{{setadever.length}}</b> 个任务 
           <span style="margin-left: 10px">粉丝合计</span>
           <b class="red">{{fanscount(setadever)}}</b>万
@@ -291,6 +291,13 @@ export default class Main extends ViewBase {
 
   mounted() {
     this.init()
+  }
+
+  mapset(val: any) {
+    if (val.length == 0) {
+      return 0
+    }
+    return uniqBy(val, 'kolid').length
   }
 
   uplist(val: any) {

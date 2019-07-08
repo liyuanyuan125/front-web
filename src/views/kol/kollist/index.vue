@@ -128,7 +128,7 @@
           </template>
           <template slot-scope="{ row }" slot="transmit">
             <div>
-              <span v-if="row.avgRepostsCount">{{formatnumber(row.avgRepostsCount)}}</span>
+              <span v-if="row.avgShareCount">{{formatnumber(row.avgShareCount)}}</span>
               <span v-else>-</span>
             </div>
           </template>
@@ -366,7 +366,7 @@ export default class Main extends ViewBase {
         title: '平均转发数',
         align: 'left',
         minWidth: 51,
-        key: 'avgRepostsCount',
+        key: 'avgShareCount',
         slot: 'transmit',
         sortable: this.acount == 1 ? 'custom' : ''
       },
@@ -698,9 +698,14 @@ export default class Main extends ViewBase {
 
   checkDetailSet(val: any) {
     this.yudingList = val
+    if (this.acount == 1) {
+      this.KolSeach()
+      this.kolinit()
+    } else {
+      this.collectinit()
+      this.kolinit()
+    }
     this.yudingListId = this.yudingList.map((it: any) => it.kolId)
-    this.KolSeach()
-    this.kolinit()
   }
 
   // 粉丝数相加
