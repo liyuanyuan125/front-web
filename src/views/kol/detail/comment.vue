@@ -392,11 +392,13 @@ export default class Main extends ViewBase {
         return
       }
 
-      const items = data.items || null
+      let items = data.items || null
       const channelList = data.channelList || null
       const rate = data.rate || null
       const commentKeyword = data.commentKeyword || null
-      
+      if ( items ) {
+        items = (data.items as any[] || []).sort((a, b) => a.date - b.date)
+      }
       if (channelList && channelList.length > 0) {
         this.dict.channelList = channelList
       }
