@@ -90,7 +90,7 @@
             <span v-if="row.followersCount">{{formatnumber(row.followersCount)}}</span>
             <span v-else>-</span>
           </template>
-          <template slot-scope="{ row }" slot="flansFace">
+          <template slot-scope="{ row, index }" slot="flansFace">
             <div>
               <p class="flans-box" style="width: 80px">
                 <span>男性：</span>
@@ -105,7 +105,10 @@
               <div>
                 <a @click="viewArea(row.areaId, row.id)" >查看地域</a>
                 <AreaModal
-                  :style="tabledataid.includes(row.id) ? 'margin-top: -300px' : ''"
+                  :style="
+                  acount == 1 ? index + 1 == tabledata.length ? 'margin-top: -300px' : ''
+                  : index == 0 ? 'margin-top: -300px' : ''
+                  "
                   v-show="handleShow"
                   v-clickoutside="handleClose"
                   v-if="row.id == areaIdshow"
