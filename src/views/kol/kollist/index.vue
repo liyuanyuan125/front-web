@@ -82,12 +82,12 @@
           </template>
           <template slot-scope="{ row }" slot="read">
             <div>
-              <span v-if="row.avgReadCount">{{formatnums(row.avgReadCount/10000, '万')}}</span>
+              <span v-if="row.avgReadCount">{{formatnumber(row.avgReadCount)}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="flansNumber">
-            <span v-if="row.followersCount">{{formatNum(row.followersCount)}}</span>
+            <span v-if="row.followersCount">{{formatnumber(row.followersCount)}}</span>
             <span v-else>-</span>
           </template>
           <template slot-scope="{ row }" slot="flansFace">
@@ -116,19 +116,19 @@
           </template>
           <template slot-scope="{ row }" slot="discuss">
             <div>
-              <span v-if="row.avgCommentsCount">{{formatnums(row.avgCommentsCount)}}</span>
+              <span v-if="row.avgCommentsCount">{{formatnumber(row.avgCommentsCount)}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="like">
             <div>
-              <span v-if="row.avgAttitudesCount">{{formatnums(row.avgAttitudesCount / 10000, '万')}}</span>
+              <span v-if="row.avgAttitudesCount">{{formatnumber(row.avgAttitudesCount)}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="transmit">
             <div>
-              <span v-if="row.avgRepostsCount">{{formatnums(row.avgRepostsCount / 10000, '万')}}</span>
+              <span v-if="row.avgRepostsCount">{{formatnumber(row.avgRepostsCount)}}</span>
               <span v-else>-</span>
             </div>
           </template>
@@ -225,7 +225,7 @@ import { getpersons, delcollect } from '@/api/mycollect.ts'
 import { kolList } from '@/api/collect.ts'
 import { findkol } from '@/api/shopping'
 import pagination from '@/components/page.vue'
-
+import { readableNumber } from '@/util/dealData.ts'
 // 保持互斥
 const keepExclusion = <T extends any>(
   value: T[],
@@ -391,6 +391,10 @@ export default class Main extends ViewBase {
         slot: 'action'
       }
     ]
+  }
+
+  formatnumber(val: any) {
+    return readableNumber(val)
   }
 
   formatnums(val: any, msg: any = '', errors: string = '-', id: number = 0) {
