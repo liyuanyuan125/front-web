@@ -41,7 +41,7 @@
             <li v-for='(it,index) in itemlist' :key='index'>
               <div class="table-header-title  flex-box">
                 <p><label>投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
-                <p><label>可得佣金(元)</label><em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em></p>
+                <p><label>广告收益(元)</label><em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em></p>
               </div>
               <Row class="table-content-list" type="flex" justify="center" align="middle">
                 <Col span="14">
