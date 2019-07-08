@@ -82,7 +82,7 @@
           </template>
           <template slot-scope="{ row }" slot="read">
             <div>
-              <span v-if="row.avgReadCount">{{formatnums(row.avgReadCount, 'w+')}}</span>
+              <span v-if="row.avgReadCount">{{formatnums(row.avgReadCount/10000, '万')}}</span>
               <span v-else>-</span>
             </div>
           </template>
@@ -122,13 +122,13 @@
           </template>
           <template slot-scope="{ row }" slot="like">
             <div>
-              <span v-if="row.avgAttitudesCount">{{formatnums(row.avgAttitudesCount / 10000, 'w+')}}</span>
+              <span v-if="row.avgAttitudesCount">{{formatnums(row.avgAttitudesCount / 10000, '万')}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="transmit">
             <div>
-              <span v-if="row.avgRepostsCount">{{formatnums(row.avgRepostsCount / 10000, 'w+')}}</span>
+              <span v-if="row.avgRepostsCount">{{formatnums(row.avgRepostsCount / 10000, '万')}}</span>
               <span v-else>-</span>
             </div>
           </template>
