@@ -5,13 +5,13 @@
         <h3 class="name">
           <em>{{item.name}}</em>
           <Icon
-            :type="followedIn ? 'md-heart' : 'md-heart-outline'"
+            :type="hasFav ? 'md-heart' : 'md-heart-outline'"
             class="heart"
             :class="{
-              'heart-on': followedIn,
-              'follow-effect': followEffect
+              'heart-on': hasFav,
+              'fav-effect': favEffect
             }"
-            @click="follow"
+            @click="toggleFav"
           />
         </h3>
         <sub class="sub-name" v-if="item.subName">{{item.subName}}</sub>
@@ -154,7 +154,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { RawLocation } from 'vue-router'
 import VideoPreviewer from '@/components/videoPreviewer'
 import Star from '@/components/star'
@@ -230,7 +230,11 @@ export interface Item {
 export default class BasicPane extends Vue {
   @Prop({ type: Object, default: () => ({}) }) item!: Item
 
-  @Prop({ type: Boolean, default: false }) followed!: boolean
+  /** 收藏获取函数 */
+  @Prop({ type: Function }) favGet!: (id: number) => Promise<boolean>
+
+  /** 收藏设置函数 */
+  @Prop({ type: Function }) favSet!: (id: number, doAdd: boolean) => Promise<any>
 
   @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
 
@@ -244,9 +248,9 @@ export default class BasicPane extends Vue {
 
   @Prop({ type: Object, default: null }) actorData!: ActorData
 
-  followedIn = this.followed
+  hasFav = false
 
-  followEffect = false
+  favEffect = false
 
   get movieList() {
     const movie = this.movie || {}
@@ -259,10 +263,25 @@ export default class BasicPane extends Vue {
     return list.filter(it => !!it.value)
   }
 
-  follow() {
-    this.followedIn = !this.followedIn
-    this.followEffect = true
-    setTimeout(() => this.followEffect = false, 500)
+  async initFav() {
+    const hasFav = this.favGet != null ? await this.favGet(this.item.id) : false
+    this.hasFav = hasFav
+  }
+
+  async toggleFav() {
+    this.hasFav = !this.hasFav
+    this.playFavEffect()
+    this.favSet != null && await this.favSet(this.item.id, this.hasFav)
+  }
+
+  playFavEffect() {
+    this.favEffect = true
+    setTimeout(() => this.favEffect = false, 500)
+  }
+
+  @Watch('item.id')
+  watchItemId(id: number) {
+    id > 0 && this.initFav()
   }
 }
 </script>
@@ -357,7 +376,7 @@ export default class BasicPane extends Vue {
   }
 }
 
-.follow-effect {
+.fav-effect {
   animation: dongdong 300ms ease-in-out;
 }
 
