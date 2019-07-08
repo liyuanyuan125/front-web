@@ -56,7 +56,7 @@
                 <!-- 观影title -->
                 <RadioGroup
                   size="small"
-                  class="watch-film"
+                  class="nav watch-film"
                   @on-change="handleWatchFilm"
                   v-model="filmIndex"
                   type="button"
@@ -136,6 +136,7 @@ import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import AreaBasicView from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack/'
 import { tooltipStyles } from '@/util/echarts'
+import { cloneDeep } from 'lodash'
 
 const timeFormat = 'YYYYMMDD'
 const toolTip: any = {
@@ -468,7 +469,7 @@ export default class Main extends ViewBase {
       const items = data.items || null
 
       if (items && items.length > 0) {
-        // sort 后台日期数据不准
+        // sort 调整后台日期数据顺序
         items.sort((a: any, b: any) => {
           return a.date - b.date
         })
@@ -486,8 +487,19 @@ export default class Main extends ViewBase {
           taopiaopiao: []
         }
         // 观影总人数 对应页面是累计，趋势是每日新增
+        const douban = {chanelCode: 'douban', count: 0, ranking: null, trend: 0}
+        const maoyan = {chanelCode: 'maoyan', count: 0, ranking: null, trend: 0}
+        const taopiaopiao = {chanelCode: 'taopiaopiao', count: 0, ranking: null, trend: 0}
         items.map((it: any) => {
           date.push(formatConversion(it.date))
+          const cloneIt = cloneDeep(it.channels)
+          if (cloneIt.length < 3) {
+            cloneIt.map((clo: any) => {
+              clo.chanelCode == 'douban' ? null : it.channels.push(douban)
+              clo.chanelCode == 'maoyan' ? null : it.channels.push(maoyan)
+              clo.chanelCode == 'taopiaopiao' ? null : it.channels.push(taopiaopiao)
+            })
+          }
           it.channels.map((code: any) => {
             dataTrend[code.chanelCode].push(code.trend || 0)
             dataCount[code.chanelCode].push(code.count || 0)
@@ -626,6 +638,14 @@ export default class Main extends ViewBase {
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
 
+.detailmore-card {
+  .watch-film {
+    .ivu-radio-wrapper {
+      height: 40px;
+      line-height: 40px;
+    }
+  }
+}
 .grand-total {
   display: block;
   padding: 30px 0 0 50px;
