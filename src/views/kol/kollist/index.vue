@@ -82,7 +82,7 @@
           </template>
           <template slot-scope="{ row }" slot="read">
             <div>
-              <span v-if="row.avgReadCount">{{formatnums(row.avgReadCount, 'w+')}}</span>
+              <span v-if="row.avgReadCount">{{formatnums(row.avgReadCount)}}</span>
               <span v-else>-</span>
             </div>
           </template>
