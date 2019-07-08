@@ -376,11 +376,11 @@ export default class Promotion extends ViewBase {
             return
           }
         }
-        const query = this.setadver ? {
+        const query = this.setadver ? clean({
           ...this.form,
           ...this.query,
           brandId: this.query.brandId,
-        } : { ...this.form }
+        }) : clean({ ...this.form })
         const data = await createdDraft(clean({
           ...query,
           name: this.setadver ? this.pername : this.form.name,
@@ -388,7 +388,7 @@ export default class Promotion extends ViewBase {
           id: this.$route.params.setid ? this.$route.params.setid : '',
           advertime: '',
           specification: this.setadver ? this.query.specification + '' : this.form.specification + '',
-          budgetAmount: Number(this.form.budgetAmount * 10000)}))
+          budgetAmount: Number(this.form.budgetAmount * 10000)}, [0]))
         if (!this.$route.params.setid) {
           this.$router.push({
             name: 'pop-planlist-add',

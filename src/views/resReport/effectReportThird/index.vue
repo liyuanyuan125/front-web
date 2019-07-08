@@ -181,33 +181,7 @@ export default class Index extends ViewBase {
 
   moviesTotal: number = 0
 
-  moviesData: any[] = [
-    /* {
-      movieId: 0,
-      poster: 'http://img5.mtime.cn/mt/2019/05/31/163639.93224012_1280X720X2.jpg',
-      name: '攀登者',
-      score: '时光评分：8.6',
-      time: '2019-09-30上映',
-      type: '剧情／冒险（中国大陆）',
-      viewCount: '67789', // 曝光人次
-      scheduleCount: '33333', // 曝光场次
-      viewRate: '40', // 曝光人次占比
-      userPortrait: {
-        ages: [
-          {
-            key: '0~20岁',
-            value: 50
-          },
-          {
-            key: '20~50岁',
-            value: 30
-          }
-        ],
-        male: 20,
-        female: 80
-      }
-    } */
-  ]
+  moviesData: any[] = []
 
   moreMovieData: any[] = []
 
@@ -231,19 +205,14 @@ export default class Index extends ViewBase {
     title: '',
     dict1: [
       {
-        name: 'name0',
+        name: '曝光人次',
         text: '曝光人次',
         key: 0
       },
       {
-        name: 'name1',
+        name: '曝光场次',
         text: '曝光场次',
         key: 1
-      },
-      {
-        name: 'name2',
-        text: '',
-        key: 2
       }
     ],
     dict2: [],
@@ -292,19 +261,14 @@ export default class Index extends ViewBase {
       title: '',
       dict1: [
         {
-          name: 'name0',
+          name: '曝光人次',
           text: '曝光人次',
           key: 0
         },
         {
-          name: 'name1',
+          name: '曝光场次',
           text: '曝光场次',
           key: 1
-        },
-        {
-          name: 'name2',
-          text: '',
-          key: 2
         }
       ],
       dict2: [],
@@ -452,7 +416,7 @@ export default class Index extends ViewBase {
             movieId: it.movieId,
             poster: it.poster,
             name: it.name,
-            score: it.score,
+            score: it.score == null ? '-' : it.score,
             time: String(it.release).slice(0, 4) + '-' + String(it.release).slice(4, 6)
             + '-' + String(it.release).slice(6, 8),
             type: getNames(it.types, this.typelist).join(' / ') + '（中国大陆）',
@@ -480,7 +444,8 @@ export default class Index extends ViewBase {
         this.chart1.dataList[1].date.push(item.date)
         this.chart1.dataList[2].date.push(item.date)
         this.tableData.data.push({
-          date: item.date,
+          date: String(item.date).slice(0, 4) + '-' +
+          String(item.date).slice(4, 6) + '-' + String(item.date).slice(6, 8) ,
           viewCount: item.viewCount,
           scheduleCount: item.scheduleCount,
           cost: item.cost
@@ -500,8 +465,8 @@ export default class Index extends ViewBase {
         }
         this.userData = {
           sex: {
-            male: parseInt(user.male, 0),
-            female: parseInt(user.female, 0)
+            male: user.male,
+            female: user.female
           },
           cityData: user.cities.map((item: any) => {
             return {

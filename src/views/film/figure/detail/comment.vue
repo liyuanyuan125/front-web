@@ -1,109 +1,60 @@
-
 <template>
   <div>
     <Row>
       <Col span="24">
-      <Form label-position="left"
-            :label-width="100">
-        <Card class="detailmore-card">
-          <div slot="title">
-            <Row type="flex" justify="space-between" align="middle">
-              <Col :span="17">
-                <DetailNavBar titleText='统计周期'>
-                  <div slot='item'>
-                    <RadioGroup class='nav'
-                              @on-change="handleChange"
-                              v-model="form.dayRangesKey"
-                              size="large"
-                              type="button">
-                    <Radio v-for="(item) in dict.dayRanges"
-                           :key="item.key"
-                           :disabled="item.disabled"
-                           :label="item.key">{{item.text}}</Radio>
-                  </RadioGroup>
+        <Form label-position="left" :label-width="100">
+          <Card class="detailmore-card">
+            <div slot="title">
+              <Row type="flex" justify="space-between" align="middle">
+                <Col :span="17">
+                  <DetailNavBar titleText='统计周期'>
+                    <div slot='item'>
+                      <RadioGroup class='nav' @on-change="handleChange" v-model="form.dayRangesKey" size="large" type="button">
+                        <Radio v-for="(item) in dict.dayRanges" :key="item.key" :disabled="item.disabled" :label="item.key">{{item.text}}</Radio></RadioGroup>
+                    </div>
+                  </DetailNavBar>
+                </Col>
+              </Row>
+            </div>
+            <div class="content">
+              <Row type="flex" justify="space-between">
+                <Col :span="12">
+                  <div class='chart-wp' style='margin-right:10px'>
+                    <PieNest :initDone="chart1.initDone" :title='chart1.title' :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" /></div>
+                </Col>
+                <Col :span="12">
+                  <div class='chart-wp'>
+                    <BarxCategoryStack :initDone="chart2.initDone" :title='chart2.title' :dict1="chart2.dict1" :dict2="chart2.dict2" :xAxis="chart2.xAxis" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" @typeChange='typeChangeHander' /></div>
+                </Col>
+              </Row>
+              <Row type="flex" justify="space-between" style='margin-top:10px'>
+                <Col :span="12">
+                  <div class='chart-wp borderRadius' style='margin-right:10px'>
+                    <WordCloud :initDone="chart3.initDone" :title='chart3.title' :dict1="chart3.dict1" :color="chart3.color" :dataList="chart3.dataList" @keyChange='keyChangeHandle' :currentTypeIndex="chart3.currentTypeIndex" /></div>
+                </Col>
+                <Col :span="12">
+                  <div class='chart-wp borderRadius'>
+                    <WordCloud :initDone="chart4.initDone" :title='chart4.title' :dict1="chart4.dict1" :color="chart4.color" :dataList="chart4.dataList" @keyChange='keyChangeHandle' :currentTypeIndex="chart4.currentTypeIndex" /></div>
+                </Col>
+              </Row>
+              <Row v-if="tableData.length > 0" type="flex" justify="space-between" style='margin-top:10px'>
+                <Col :span="24">
+                  <div class='chart-wp keyword-box borderRadius'>
+                    <div class="keyword-title">提及到“{{keywordQuery.keyword}}”的热门评论</div>
+                    <div class="table-box">
+                      <Table stripe ref="table" :columns="tableColumns" :loading="tableLoading" :data="tableData"></Table>
+                    </div>
                   </div>
-                </DetailNavBar>
-              </Col>
-            </Row>
-          </div>
-          <div class="content">
-            <Row type="flex" justify="space-between">
-              <Col :span="12">
-                <div class='chart-wp' style='margin-right:10px'>
-                  <PieNest :initDone="chart1.initDone"
-                         :title='chart1.title'
-                         :dict1="chart1.dict1"
-                         :dict2="chart1.dict2"
-                        :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})"
-                         :color="chart1.color"
-                         :dataList="chart1.dataList"
-                         :currentTypeIndex="chart1.currentTypeIndex" />
-                </div>
-              </Col>
-              <Col :span="12">
-                <div class='chart-wp'>
-                  <BarxCategoryStack :initDone="chart2.initDone"
-                                  :title='chart2.title'
-                                  :dict1="chart2.dict1"
-                                  :dict2="chart2.dict2"
-                                  :xAxis="chart2.xAxis"
-                                  :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})"
-                                  :color="chart2.color"
-                                  :dataList="chart2.dataList"
-                                  :currentTypeIndex="chart2.currentTypeIndex"
-                                  @typeChange='typeChangeHander' />
-                </div>
-              </Col>
-            </Row>
-            <Row type="flex" justify="space-between" style='margin-top:10px'>
-              <Col :span="12">
-                <div class='chart-wp borderRadius' style='margin-right:10px'>
-                  <WordCloud :initDone="chart3.initDone"
-                           :title='chart3.title'
-                           :dict1="chart3.dict1"
-                           :color="chart3.color"
-                           :dataList="chart3.dataList"
-                           @keyChange='keyChangeHandle'
-                           :currentTypeIndex="chart3.currentTypeIndex" />
-                </div>
-              </Col>
-              <Col :span="12">
-                <div class='chart-wp borderRadius'>
-                  <WordCloud :initDone="chart4.initDone"
-                           :title='chart4.title'
-                           :dict1="chart4.dict1"
-                           :color="chart4.color"
-                           :dataList="chart4.dataList"
-                           @keyChange='keyChangeHandle'
-                           :currentTypeIndex="chart4.currentTypeIndex" />
-                </div>
-              </Col>
-            </Row>
-            
-            <Row v-if="tableData.length > 0" type="flex" justify="space-between" style='margin-top:10px'>
-              <Col :span="24">
-                <div class='chart-wp keyword-box borderRadius'>
-                  <div class="keyword-title">
-                    提及到“{{keywordQuery.keyword}}”的热门评论
-                  </div>
-                  <div class="table-box">
-                    <Table stripe
-                      ref="table"
-                      :columns="tableColumns"
-                      :loading="tableLoading"  
-                      :data="tableData"></Table>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-
-          </div>
-        </Card>
-      </Form>
+                </Col>
+              </Row>
+            </div>
+          </Card>
+        </Form>
       </Col>
     </Row>
   </div>
 </template>
+
 <script lang="tsx">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -360,17 +311,21 @@ export default class Main extends ViewBase {
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const that: any = this
     const mockObj = {
-      beginDate: this.form.beginDate[0],
-      endDate: this.form.beginDate[1],
+      beginDate: this.beginDate(this.form.dayRangesKey),
+      endDate: this.endDate()
     }
+    console.log( mockObj,'mockObjmockObjmockObjmockObjmockObjmockObjmockObjmockObjmockObjmockObj')
     try {
       const {
-        data,
-        data: {
-          item
-        }
+        data
       } = await comment({ ...mockObj }, this.id)
+
+      const item = data.item || null
       if ( !item ) {
+        this.chart1.initDone = true
+        this.chart2.initDone = true
+        this.chart3.initDone = true
+        this.chart4.initDone = true
         return
       }
       const rate = item.rate || null
@@ -388,7 +343,6 @@ export default class Main extends ViewBase {
               name: this.dict.emotion[index].text
             })
           }
-          that.chart1.initDone = true
         }
       }
 
@@ -405,7 +359,6 @@ export default class Main extends ViewBase {
           that.chart2.dataList[1][1].data.push(item.passive.count)
           that.chart2.dataList[1][2].data.push(item.neutral.count)
         })
-        that.chart2.initDone = true
       }
 
       if ( keywords ) {
@@ -426,9 +379,12 @@ export default class Main extends ViewBase {
               value: Math.floor(Math.random() * 100 + 1)
             })
           })
-          that.chart4.initDone = true
         }
       }      
+      this.chart1.initDone = true
+      this.chart2.initDone = true
+      this.chart3.initDone = true
+      this.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
@@ -452,7 +408,9 @@ export default class Main extends ViewBase {
   }
 
   endDate() {
-    return moment(new Date()).format(timeFormat)
+    return ( this.form.dayRangesKey == 'yesterday' )
+    ? moment(new Date()).add(-1, 'days').format(timeFormat)
+    : moment(new Date()).format(timeFormat)
   }
 
   async handleChange() {
@@ -527,11 +485,11 @@ export default class Main extends ViewBase {
     }
     try {
       const {
-        data,
-        data: {
-          items
-        }
+        data
       } = await keywordComment({ ...mockObj }, this.id)
+
+      const items = data.items || null
+
       this.tableData = []
       if (items && items.length > 0 ) {
         items.map((it: any, index: number) => {
@@ -563,6 +521,7 @@ export default class Main extends ViewBase {
   }
 }
 </script>
+
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';

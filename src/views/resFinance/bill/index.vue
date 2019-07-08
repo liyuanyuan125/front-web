@@ -9,16 +9,16 @@
       </Col>
     </Row>
     <div class="items">
-      <img @click="jump()" src="./assets/2019-03.png" alt />
-    </div>
-    <div class="items">
-      <img @click="jump()" src="./assets/2019-04.png" alt />
+      <img @click="jump()" src="./assets/2019-06.png" alt />
     </div>
     <div class="items">
       <img @click="jump()" src="./assets/2019-05.png" alt />
     </div>
     <div class="items">
-      <img @click="jump()" src="./assets/2019-06.png" alt />
+      <img @click="jump()" src="./assets/2019-04.png" alt />
+    </div>
+    <div class="items">
+      <img @click="jump()" src="./assets/2019-03.png" alt />
     </div>
   </div>
 </template>

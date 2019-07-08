@@ -84,6 +84,9 @@ export default class AreaBasic extends ViewBase {
 
   // 接口没调
   updateCharts() {
+    if ( !this.dataList || this.dataList.length === 0 ) {
+      return
+    }
     const chartData: any = this.dataList[this.currentIndex] || {}
 
     if ( chartData.data.length == 0 || chartData.date.length == 0) {
@@ -210,5 +213,32 @@ export default class AreaBasic extends ViewBase {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 9;
+}
+
+/deep/ .ivu-radio-group {
+  /deep/ .ivu-radio-wrapper {
+    background: none;
+    border: none;
+    box-shadow: none !important;
+    color: #cdd0d3;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 0 !important;
+    padding: 0;
+    margin: 0 10px;
+    &::before, &::after {
+      display: none;
+    }
+  }
+  /deep/ .ivu-radio-wrapper-checked {
+    color: #fff;
+    border-bottom: 2px solid #fff;
+    .ivu-radio-inner {
+      display: none;
+    }
+    &::before, &::after {
+      display: none;
+    }
+  }
 }
 </style>

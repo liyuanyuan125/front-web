@@ -63,7 +63,7 @@
                 >
                   <Radio
                     v-for="(item,index) in watchFilm"
-                    :key="item.key"
+                    :key="index"
                     :label="item.key"
                   >{{item.text}}</Radio>
                 </RadioGroup>
@@ -462,8 +462,11 @@ export default class Main extends ViewBase {
     const id = this.id // this.id  55184
     try {
       const {
-        data: { items, channelCodeList }
+        data
       } = await wanttosee({ ...mockObj }, id)
+
+      const items = data.items || null
+
       if (items && items.length > 0) {
         // sort 后台日期数据不准
         items.sort((a: any, b: any) => {
@@ -509,9 +512,9 @@ export default class Main extends ViewBase {
     const id = this.id
     try {
       const { data } = await MovieStatus(id)
-      this.releaseStatus = data.releaseStatus // 上映状态
-      this.releaseDate = data.releaseDate
-      this.releaseEndDate = data.releaseEndDate
+      this.releaseStatus = data.releaseStatus || null // 上映状态
+      this.releaseDate = data.releaseDate || null
+      this.releaseEndDate = data.releaseEndDate || null
       // 假如是0,1,2 展示想看人数， 3-4展示观影人数，4 下映展示出上映时间和下映时间
       if (this.releaseStatus < 3) {
         this.filmIndex = 'wantNum'
@@ -528,7 +531,6 @@ export default class Main extends ViewBase {
             formatConversion(data.releaseDate),
             formatConversion(data.releaseEndDate)
           ]
-
           this.formBeginDate = data.releaseDate
           this.formEndDate = data.releaseEndDate
         }
@@ -577,7 +579,9 @@ export default class Main extends ViewBase {
   }
 
   endDate() {
-    return moment(new Date()).format(timeFormat)
+    return ( this.form.dayRangesKey == 'yesterday' )
+    ? moment(new Date()).add(-1, 'days').format(timeFormat)
+    : moment(new Date()).format(timeFormat)
   }
 
   async handleChange() {

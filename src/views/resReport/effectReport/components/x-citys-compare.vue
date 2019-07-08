@@ -8,7 +8,7 @@
                   class="percent"
                   stroke-color="#36D2E5"
                   hide-info />
-        <span>{{item.percent}}</span>
+        <span>{{item.percent}}%</span>
       </li>
     </ul>
   </div>

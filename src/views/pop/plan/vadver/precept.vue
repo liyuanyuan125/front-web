@@ -31,11 +31,8 @@
                   <p style="opacity: .7">受众性别: </p>
                   <div v-if="it.genders && it.genders.length > 0">
                     <div style="margin-left: 20px" :key="index" v-for="(item, index) in it.genders">
-                      <p style="margin-bottom: 16px" v-if="index == 0">
-                        <span v-if="item.k=='F'">男性</span>
-                        <span v-else>女性</span>
-                        <span class="ageitem-box">{{item.rate/100}}%</span>
-                      </p>
+                      <p style="margin-bottom: 10px" v-if="item.k == 'F'">女<span class="ageitem-box">{{item.rate/100}}%</span></p>
+                      <p style="margin-bottom: 10px" v-else>男<span class="ageitem-box">{{item.rate/100}}%</span></p>
                     </div>
                   </div>
                   <div v-else>-</div>
@@ -626,7 +623,7 @@ export default class App extends ViewBase {
 }
 .film-max {
   overflow: hidden;
-  max-height: 810px;
+  max-height: 890px;
 }
 .arrow-box {
   position: relative;

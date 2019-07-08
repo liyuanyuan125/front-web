@@ -7,17 +7,54 @@
     <TotalCard :data="totalData"></TotalCard>
     <ReportPane title="广告趋势分析">
       <div class="echarts-box">
-        <AreaBasic :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="chart1.toolTip" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" @typeChange="typeChangeHander1" />
+        <AreaBasic
+          :initDone="chart1.initDone"
+          :title="chart1.title"
+          :dict1="chart1.dict1"
+          :dict2="chart1.dict2"
+          :toolTip="chart1.toolTip"
+          :color="chart1.color"
+          :dataList="chart1.dataList"
+          :currentTypeIndex="chart1.currentTypeIndex"
+          @typeChange="typeChangeHander1"
+        />
       </div>
     </ReportPane>
+
     <ReportPane title="影片贡献度分析">
       <div class="echarts-box">
-        <BarXCategory :initDone="chart2.initDone" :noData="chart2.noData" :title="chart2.title" :dict1="chart2.dict1" :dict2="chart2.dict2" :dict3="chart2.dict3" :toolTip="chart2.toolTip" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" @typeChange="typeChangeHander2" />
+        <BarXCategory
+          :initDone="chart2.initDone"
+          :noData="chart2.noData"
+          :title="chart2.title"
+          :dict1="chart2.dict1"
+          :dict2="chart2.dict2"
+          :dict3="chart2.dict3"
+          :color="chart2.color"
+          :dataList="chart2.dataList"
+          :currentTypeIndex="chart2.currentTypeIndex"
+          axisLabelFormatter="{value}"
+          @typeChange="typeChangeHander2"
+        />
       </div>
     </ReportPane>
+
     <ReportPane title="影院贡献度分析">
       <div class="echarts-box">
-        <BarXCategory :initDone="chart3.initDone" :noData="chart3.noData" :title="chart3.title" :dict1="chart3.dict1" :dict2="chart3.dict2" :dict3="chart3.dict3" :toolTip="chart3.toolTip" :color="chart3.color" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" @typeChange="typeChangeHander3" />
+        <BarXCategory
+          :initDone="chart3.initDone"
+          :noData="chart3.noData"
+          :title="chart3.title"
+          :dict1="chart3.dict1"
+          :dict2="chart3.dict2"
+          :dict3="chart3.dict3"
+          :toolTip="chart3.toolTip"
+          :color="chart3.color"
+          :dataList="chart3.dataList"
+          :currentTypeIndex="chart3.currentTypeIndex"
+          axisLabelFormatter="{value}"
+          @typeChange="typeChangeHander3"
+        />
       </div>
     </ReportPane>
   </div>
@@ -34,6 +71,8 @@ import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import { getTrend, xadvertOrders } from '@/api/resReport'
 import SelectXadvertOrders from './components/x-select-xadvertOrders.vue'
+import { tooltipStyles } from '@/util/echarts'
+import { intDate } from '@/util/dealData'
 
 const toolTip: any = {
   borderWidth: 1,
@@ -86,6 +125,8 @@ export default class Index extends ViewBase {
     xadvertOrderId: 111
   }
 
+  tooltipStyles = tooltipStyles
+
   xadvertOrders = xadvertOrders
 
   loading: boolean = false
@@ -100,18 +141,18 @@ export default class Index extends ViewBase {
     title: '',
     dict1: [
       {
-        name: 'profitAmount',
-        text: '收益',
+        text: 'profitAmount',
+        name: '收益金额',
         key: 0
       },
       {
-        name: 'showCount',
-        text: '场次',
+        text: 'showCount',
+        name: '播放场次',
         key: 1
       },
       {
-        name: 'personCount',
-        text: '人次',
+        text: 'personCount',
+        name: '覆盖人次',
         key: 2
       }
     ],
@@ -141,17 +182,17 @@ export default class Index extends ViewBase {
     dict1: [
       {
         text: 'movieProfits',
-        name: '收益',
+        name: '收益金额',
         key: 0
       },
       {
         text: 'movieShows',
-        name: '场次',
+        name: '播放场次',
         key: 1
       },
       {
         text: 'moviePersons',
-        name: '人次',
+        name: '覆盖人次',
         key: 2
       }
     ],
@@ -174,17 +215,17 @@ export default class Index extends ViewBase {
     dict1: [
       {
         text: 'movieProfits',
-        name: '收益',
+        name: '收益金额',
         key: 0
       },
       {
         text: 'movieShows',
-        name: '场次',
+        name: '播放场次',
         key: 1
       },
       {
         text: 'moviePersons',
-        name: '人次',
+        name: '覆盖人次',
         key: 2
       }
     ],
@@ -257,10 +298,13 @@ export default class Index extends ViewBase {
         this.totalData.profitAmountSum = profitAmountSum
 
         if (orderReports && orderReports.length > 0) {
-          orderReports.forEach((item: any, index: number) => {
-            this.chart1.dataList[0].date.push(item.date)
-            this.chart1.dataList[1].date.push(item.date)
-            this.chart1.dataList[2].date.push(item.date)
+          (orderReports as any[])
+          .sort((a, b) => a.date - b.date)
+          .forEach((item: any, index: number) => {
+            const date = intDate(item.date)
+            this.chart1.dataList[0].date.push(date)
+            this.chart1.dataList[1].date.push(date)
+            this.chart1.dataList[2].date.push(date)
             this.chart1.dataList[0].data.push(item.profitAmount)
             this.chart1.dataList[1].data.push(item.showCount)
             this.chart1.dataList[2].data.push(item.personCount)
@@ -270,12 +314,12 @@ export default class Index extends ViewBase {
           this.chart1.initDone = true
         }
 
-        if ( movieProfits &&  movieProfits.length > 0 ) {
+        if (movieProfits && movieProfits.length > 0) {
           movieProfits.forEach((item: any) => {
             this.chart2.dict3.push({
               text: item.name
             })
-            this.chart2.dataList[0].data.push(item.showCount)
+            this.chart2.dataList[0].data.push(item.profitAmount)
           })
 
           if (movieShows && movieShows.length > 0) {
@@ -286,7 +330,7 @@ export default class Index extends ViewBase {
 
           if (moviePersons && moviePersons.length > 0) {
             moviePersons.forEach((item: any) => {
-              this.chart2.dataList[2].data.push(item.showCount)
+              this.chart2.dataList[2].data.push(item.personCount)
             })
           }
           this.chart2.initDone = true
@@ -295,7 +339,7 @@ export default class Index extends ViewBase {
           this.chart2.noData = true
         }
 
-        if ( cinemaProfits && cinemaProfits.length > 0 ) {
+        if (cinemaProfits && cinemaProfits.length > 0) {
           cinemaProfits.forEach((item: any) => {
             this.chart3.dict3.push({
               text: item.name

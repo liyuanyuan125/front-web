@@ -69,6 +69,10 @@ export default class BarXCategory extends ViewBase {
 
   @Prop({ type: Object, default: () => ({ ...tooltipsDefault }) }) toolTip?: any
 
+  @Prop({ type: String, default: '{value} %' }) axisLabelFormatter?: string
+
+  // formatter: '{value} %'
+
   currentIndex: number = this.currentTypeIndex
 
   currentTypeChange(index: number) {
@@ -117,7 +121,7 @@ export default class BarXCategory extends ViewBase {
       yAxis: {
         ...yOption,
         axisLabel: {
-          formatter: '{value} %'
+          formatter: `${this.axisLabelFormatter}`
         },
         axisLine: {
           show: false,
