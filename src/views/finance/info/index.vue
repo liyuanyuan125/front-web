@@ -167,23 +167,23 @@ import { slice, clean } from '@/fn/object'
 import { warning , success, toast , info } from '@/ui/modal'
 
 // 获取当前登录用户信息
-const user: any = getUser()!
+// const user: any = getUser()!
 
 const makeMap = (list: any[]) => toMap(list, 'id', 'name')
 const timeFormat = 'YYYY-MM-DD'
 
-const dataForm = {
-  accountNumber: '',
-  accountName: '',
-  amount: null,
-  remittanceDate: null,
-  contactPhone: '',
-  remark: '',
-  receipts: [],
-  receipt: '',
-  companyId: user.companyId,
-  companyName: user.companyName
-}
+// const dataForm = {
+//   accountNumber: '',
+//   accountName: '',
+//   amount: null,
+//   remittanceDate: null,
+//   contactPhone: '',
+//   remark: '',
+//   receipts: [],
+//   receipt: '',
+//   companyId: user.companyId,
+//   companyName: user.companyName
+// }
 
 @Component({
   components: {
@@ -193,10 +193,24 @@ const dataForm = {
 })
 export default class Main extends ViewBase {
   //   user : any = getUser()
+  user: any = getUser()!
   dataFormget = {
-    companyId: user.companyId,
+    companyId: this.user.companyId,
     pageIndex: 1,
     pageSize: 10
+  }
+
+  dataForm: any = {
+    accountNumber: '',
+    accountName: '',
+    amount: null,
+    remittanceDate: null,
+    contactPhone: '',
+    remark: '',
+    receipts: [],
+    receipt: '',
+    companyId: this.user.companyId,
+    companyName: this.user.companyName
   }
 
 
@@ -234,14 +248,15 @@ export default class Main extends ViewBase {
   availableAmount: any = ''
   freezeAmount: any = ''
   newend: any = ''
+  qqq: any = false
 
   // 查看图片
   viewerShow = false
   viewerImage = ''
 
-  dataForm: any = { ...dataForm }
+  // dataForm: any = { ...dataForm }
 
-  columns4 = [
+    columns4 = [
     { title: '充值ID', key: 'id', align: 'center', width: 70, },
     {
       title: '申请时间',
@@ -383,7 +398,6 @@ export default class Main extends ViewBase {
     }
   ]
 
-  async init() {}
 
   addNumber(number: any) {
     this.newend = ''
@@ -426,9 +440,8 @@ export default class Main extends ViewBase {
 
   created() {
     // this.getUser()
-    this.userList = user
+    this.userList = this.user
     this.seach()
-    this.init()
   }
 
   // 每页数
@@ -475,7 +488,7 @@ export default class Main extends ViewBase {
       this.total = totalCount
       this.approvalStatusList = approvalStatusList
       // 财产信息
-      const res = await moneyList(user.companyId)
+      const res = await moneyList(this.user.companyId)
       this.datamoney = res.data
       // if (this.datamoney.balance == null) {
       //   this.balance = 0
@@ -546,7 +559,7 @@ export default class Main extends ViewBase {
       }
 
       // 银行卡信息
-      const { data } = await defaultList(user.companyId)
+      const { data } = await defaultList(this.user.companyId)
       this.defaultdata = data // accountSplice
       this.accountSplice = data.accountNumber
         ? data.accountNumber.replace(/(\d{4})(?=\d)/g, '$1 ')
