@@ -45,6 +45,7 @@ import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
 import AreaSelect from '@/components/areaSelect'
+
 @Component({
   components: {
     loginLayout,
@@ -69,12 +70,11 @@ export default class Main extends ViewBase {
   rules = {
     companyName: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
     area: [{ required: true, type: 'array', message: '所在地不能为空', trigger: 'change' }],
-    name: [{ required: true, message: '请输入联系人姓名', trigger: 'blur' }],
+    contactName: [{ required: true, message: '请输入联系人姓名', trigger: 'blur' }],
     contactTel: [{ required: true, message: '请输入联系人电话', trigger: 'blur' }],
     remark: [{ required: true, message: '请输入备注', trigger: 'blur' }],
     // captchaCode: [{ required: true, message: '请输入图片验证码', trigger: 'blur' }]
   }
-
 
   async submit() {
     const valid = await (this.$refs.form as any).validate()
