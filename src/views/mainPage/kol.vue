@@ -19,6 +19,8 @@
           :brandData="brandData"
           :fansList="fansList"
           :more="{ name: 'kol-detail-platform', params: { id } }"
+          :favGet="favGet"
+          :favSet="favSet"
         />
       </div>
 
@@ -100,6 +102,7 @@ import HotPane from './components/hotPane.vue'
 import OpusPane from './components/opusPane.vue'
 import OfferPane from './components/offerPane.vue'
 import { getKol } from './data'
+import { kolHasFav, kolSetFav } from './fav'
 import { readableThousands } from '@/util/dealData'
 
 @Component({
@@ -139,6 +142,10 @@ export default class FigurePage extends ViewBase {
   opusData: any = null
 
   offerData: any = null
+
+  favGet = kolHasFav
+
+  favSet = kolSetFav
 
   commentFormatter({ seriesName, dataIndex }: any) {
     const { name, value, trend } = this.commentData[dataIndex]
