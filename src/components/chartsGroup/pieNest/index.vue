@@ -117,6 +117,7 @@ export default class PieNest extends ViewBase {
           label: {
             normal: {
               formatter(v: any) {
+                return v.percent + '%' + ` ` + v.name
                 let text = Math.round(v.percent) + '%' + '' + v.name
                 if ( text.length <= 8 ) {
                   return text
@@ -150,6 +151,7 @@ export default class PieNest extends ViewBase {
         }
       ]
     }
+    // console.save(option, `${new Date()}.json`)
     myChart.setOption(option)
   }
   @Watch('initDone')
