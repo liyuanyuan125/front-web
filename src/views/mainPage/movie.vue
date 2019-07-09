@@ -15,6 +15,8 @@
           :movie="movie"
           :actorData="actorData"
           :more="{ name: 'film-detail-information', params: { id } }"
+          :favGet="favGet"
+          :favSet="favSet"
         >
           <router-link
             :to="{
@@ -90,6 +92,7 @@ import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
 import TextPane from './components/textPane.vue'
 import { getMovie, getVideoRise, getVideoHot } from './data'
+import { movieHasFav, movieSetFav } from './fav'
 import { readableThousands } from '@/util/dealData'
 import { MovieStatus } from '@/util/types'
 
@@ -129,6 +132,10 @@ export default class MoviePage extends ViewBase {
   riseData: any = null
 
   hotData: any[] = []
+
+  favGet = movieHasFav
+
+  favSet = movieSetFav
 
   riseFormatter({ dataIndex }: any) {
     const { date, value } = this.riseData[dataIndex - 1]

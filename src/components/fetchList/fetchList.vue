@@ -28,6 +28,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { MapType } from '@/util/types'
 import { Fetch } from './types'
+import { isEqual } from 'lodash'
 
 @Component
 export default class FetchList extends ViewBase {
@@ -100,6 +101,10 @@ export default class FetchList extends ViewBase {
 
   @Watch('queryData', { deep: true })
   watchQueryData() {
+    const noChange = isEqual(this.queryData, this.oldQuery)
+    if (noChange) {
+      return
+    }
     if (this.queryData.pageIndex == this.oldQuery.pageIndex) {
       this.queryData.pageIndex = 1
     }

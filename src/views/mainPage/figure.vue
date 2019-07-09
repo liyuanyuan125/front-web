@@ -19,6 +19,8 @@
           :opusData="opusData"
           :brandData="brandData"
           :more="{ name: 'film-figure-detail-information', params: { id } }"
+          :favGet="favGet"
+          :favSet="favSet"
         />
       </div>
 
@@ -76,6 +78,7 @@ import PiePane from './components/piePane.vue'
 import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
 import { getFigure, getFigureActiveFans, getFigureHot } from './data'
+import { figureHasFav, figureSetFav } from './fav'
 import { readableThousands } from '@/util/dealData'
 
 @Component({
@@ -108,6 +111,10 @@ export default class FigurePage extends ViewBase {
   activeFansData: any = null
 
   hotData: any[] = []
+
+  favGet = figureHasFav
+
+  favSet = figureSetFav
 
   commentFormatter({ seriesName, dataIndex }: any) {
     const { name, value, trend } = this.commentData[dataIndex]
