@@ -67,7 +67,6 @@ import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
 import { decodeRoute } from '@/util/base64Route'
-import qs from 'qs'
 
 @Component({
   components: {
