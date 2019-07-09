@@ -50,7 +50,7 @@ export interface User {
 }
 
 const KEY_USER = 'user@www.jydata.com'
-const KEY_TOKEN = 'X-API-TOKEN-FRONT'
+const KEY_TOKEN = 'token'
 
 let theUser: User | null = null
 
