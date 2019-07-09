@@ -7,54 +7,19 @@
     <TotalCard :data="totalData"></TotalCard>
     <ReportPane title="广告趋势分析">
       <div class="echarts-box">
-        <AreaBasic
-          :initDone="chart1.initDone"
-          :title="chart1.title"
-          :dict1="chart1.dict1"
-          :dict2="chart1.dict2"
-          :toolTip="chart1.toolTip"
-          :color="chart1.color"
-          :dataList="chart1.dataList"
-          :currentTypeIndex="chart1.currentTypeIndex"
-          @typeChange="typeChangeHander1"
-        />
+        <AreaBasic :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="chart1.toolTip" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" @typeChange="typeChangeHander1" />
       </div>
     </ReportPane>
 
     <ReportPane title="影片贡献度分析">
       <div class="echarts-box">
-        <BarXCategory
-          :initDone="chart2.initDone"
-          :noData="chart2.noData"
-          :title="chart2.title"
-          :dict1="chart2.dict1"
-          :dict2="chart2.dict2"
-          :dict3="chart2.dict3"
-          :color="chart2.color"
-          :dataList="chart2.dataList"
-          :currentTypeIndex="chart2.currentTypeIndex"
-          axisLabelFormatter="{value}"
-          @typeChange="typeChangeHander2"
-        />
+        <BarXCategory :initDone="chart2.initDone" :noData="chart2.noData" :title="chart2.title" :dict1="chart2.dict1" :dict2="chart2.dict2" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" axisLabelFormatter="{value}" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b} <br /> {c}'})" @typeChange="typeChangeHander2" />
       </div>
     </ReportPane>
 
     <ReportPane title="影院贡献度分析">
       <div class="echarts-box">
-        <BarXCategory
-          :initDone="chart3.initDone"
-          :noData="chart3.noData"
-          :title="chart3.title"
-          :dict1="chart3.dict1"
-          :dict2="chart3.dict2"
-          :dict3="chart3.dict3"
-          :toolTip="chart3.toolTip"
-          :color="chart3.color"
-          :dataList="chart3.dataList"
-          :currentTypeIndex="chart3.currentTypeIndex"
-          axisLabelFormatter="{value}"
-          @typeChange="typeChangeHander3"
-        />
+        <BarXCategory :initDone="chart3.initDone" :noData="chart3.noData" :title="chart3.title" :dict1="chart3.dict1" :dict2="chart3.dict2" :dict3="chart3.dict3" :toolTip="chart3.toolTip" :color="chart3.color" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" axisLabelFormatter="{value}" @typeChange="typeChangeHander3" />
       </div>
     </ReportPane>
   </div>
@@ -173,7 +138,7 @@ export default class Index extends ViewBase {
         date: []
       }
     ],
-    color: ['#CA7273'],
+    color: ['#57B4C9'],
     toolTip
   }
 
@@ -275,23 +240,27 @@ export default class Index extends ViewBase {
         effectType: this.form.xadvertOrderId
       }
       try {
-        const {
-          data,
-          data: {
-            item: {
-              showCountSum,
-              personCountSum,
-              profitAmountSum,
-              orderReports,
-              movieProfits,
-              movieShows,
-              moviePersons,
-              cinemaProfits,
-              cinemaShows,
-              cinemaPersons
-            }
-          }
-        } = await getTrend(10, { ...mockObj })
+        const { data } = await getTrend(10, { ...mockObj })
+
+        const items = data.item || null
+        if (!items) {
+          this.chart1.initDone = true
+          this.chart2.initDone = true
+          this.chart3.initDone = true
+          return
+        }
+
+        const showCountSum = items.showCountSum || null
+        const personCountSum = items.personCountSum || null
+        const profitAmountSum = items.profitAmountSum || null
+        const orderReports = items.orderReports || null
+        const movieProfits = items.movieProfits || null
+        const movieShows = items.movieShows || null
+        const moviePersons = items.moviePersons || null
+        const cinemaProfits = items.cinemaProfits || null
+        const cinemaShows = items.cinemaShows || null
+        const cinemaPersons = items.cinemaPersons || null
+
         // TODO: xadvertOrderId 与 id 是不是重复的？？
         this.totalData.showCountSum = showCountSum
         this.totalData.personCountSum = personCountSum
@@ -299,19 +268,16 @@ export default class Index extends ViewBase {
 
         if (orderReports && orderReports.length > 0) {
           (orderReports as any[])
-          .sort((a, b) => a.date - b.date)
-          .forEach((item: any, index: number) => {
-            const date = intDate(item.date)
-            this.chart1.dataList[0].date.push(date)
-            this.chart1.dataList[1].date.push(date)
-            this.chart1.dataList[2].date.push(date)
-            this.chart1.dataList[0].data.push(item.profitAmount)
-            this.chart1.dataList[1].data.push(item.showCount)
-            this.chart1.dataList[2].data.push(item.personCount)
-          })
-          this.chart1.initDone = true
-        } else {
-          this.chart1.initDone = true
+            .sort((a, b) => a.date - b.date)
+            .forEach((item: any, index: number) => {
+              const date = intDate(item.date)
+              this.chart1.dataList[0].date.push(date)
+              this.chart1.dataList[1].date.push(date)
+              this.chart1.dataList[2].date.push(date)
+              this.chart1.dataList[0].data.push(item.profitAmount)
+              this.chart1.dataList[1].data.push(item.showCount)
+              this.chart1.dataList[2].data.push(item.personCount)
+            })
         }
 
         if (movieProfits && movieProfits.length > 0) {
@@ -333,10 +299,6 @@ export default class Index extends ViewBase {
               this.chart2.dataList[2].data.push(item.personCount)
             })
           }
-          this.chart2.initDone = true
-        } else {
-          this.chart2.initDone = true
-          this.chart2.noData = true
         }
 
         if (cinemaProfits && cinemaProfits.length > 0) {
@@ -358,11 +320,11 @@ export default class Index extends ViewBase {
               this.chart3.dataList[2].data.push(item.personCount)
             })
           }
-          this.chart3.initDone = true
-        } else {
-          this.chart3.initDone = true
-          this.chart3.noData = true
         }
+
+        this.chart1.initDone = true
+        this.chart2.initDone = true
+        this.chart3.initDone = true
         this.loading = false
       } catch (ex) {
         this.handleError(ex)
@@ -395,6 +357,7 @@ export default class Index extends ViewBase {
   }
 }
 </script>
+
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 .search-pane {
@@ -405,5 +368,17 @@ export default class Index extends ViewBase {
   margin-bottom: 20px;
 }
 </style>
-
+<style lang="less" >
+.echarts-box .ivu-radio-group-button .ivu-radio-wrapper {
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border-color: #fff !important;
+  height: 35px !important;
+  line-height: 35px !important;
+  margin: 0 10px !important;
+}
+.echarts-box .ivu-radio-group-button .ivu-radio-wrapper-checked:hover {
+  color: #fff !important;
+}
+</style>
 

@@ -74,3 +74,79 @@ export async function kolHasFav(id: number) {
 export async function kolSetFav(id: number, doAdd: boolean) {
   (doAdd ? addFav : delFav)(id, ChannelType.kol)
 }
+
+/**
+ * 获取影人收藏列表
+ * https://yapi.aiads-dev.com/project/94/interface/api/5002
+ */
+export async function figureFavList() {
+  const {
+    data: {
+      items
+    }
+  } = await get('/customer/favorites/persons')
+
+  const list = (items as any[] || []).map(it => ({
+    ...it,
+    id: it.personId
+  }))
+
+  return list
+}
+
+/**
+ * 影人是否已收藏
+ * @param id 影人 id
+ */
+export async function figureHasFav(id: number) {
+  const list = await figureFavList()
+  const item = list.find(it => it.id == id)
+  return item != null
+}
+
+/**
+ * 影人添加或取消收藏
+ * @param id 影人 id
+ * @param doAdd 是否添加收藏
+ */
+export async function figureSetFav(id: number, doAdd: boolean) {
+  (doAdd ? addFav : delFav)(id, ChannelType.figure)
+}
+
+/**
+ * 获取影片收藏列表
+ * https://yapi.aiads-dev.com/project/94/interface/api/4995
+ */
+export async function movieFavList() {
+  const {
+    data: {
+      items
+    }
+  } = await get('/customer/favorites/movies')
+
+  const list = (items as any[] || []).map(it => ({
+    ...it,
+    id: it.movieId
+  }))
+
+  return list
+}
+
+/**
+ * 影片是否已收藏
+ * @param id 影片 id
+ */
+export async function movieHasFav(id: number) {
+  const list = await movieFavList()
+  const item = list.find(it => it.id == id)
+  return item != null
+}
+
+/**
+ * 影片添加或取消收藏
+ * @param id 影片 id
+ * @param doAdd 是否添加收藏
+ */
+export async function movieSetFav(id: number, doAdd: boolean) {
+  (doAdd ? addFav : delFav)(id, ChannelType.movie)
+}

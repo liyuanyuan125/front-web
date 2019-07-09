@@ -8,7 +8,7 @@
          </Row>
          <Row style='margin-top: 10px;'>
            <Col :span='12'>发票信息</Col>
-           <Col :span='12' style='padding-left: 2%;'>发票信息</Col>
+           <Col :span='12' style='padding-left: 2%;'>申请信息</Col>
          </Row>
          <Row style='margin-top: 10px;'>
             <Row class='sbg'>
