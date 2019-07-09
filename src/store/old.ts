@@ -171,7 +171,7 @@ export function hasLogin() {
  */
 export function logout() {
   const host = location.hostname
-  const fullHost = location.hostname.replace(/^(www\.)?/, '.')
+  const fullHost = host.replace(/^(www\.)?/, '.')
   const hostList = [ host, fullHost ]
   hostList.forEach(domain => {
     cookie.remove(KEY_TOKEN, { domain, path: '/' })
