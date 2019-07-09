@@ -63,7 +63,7 @@ export const pubOption = {
   },
   grid: {
     left: '2%',
-    right: '2%',
+    right: '6%',
     bottom: '20%',
     containLabel: true,
     show: false,

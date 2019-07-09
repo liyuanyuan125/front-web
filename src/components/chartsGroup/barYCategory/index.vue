@@ -132,7 +132,7 @@ export default class BarYCategory extends ViewBase {
           label: {
             normal: {
               show: true,
-              formatter: '{b} {c}%',
+              formatter: '{c}%',
               position: 'right'
             }
           },
