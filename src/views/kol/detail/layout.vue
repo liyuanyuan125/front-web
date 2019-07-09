@@ -8,6 +8,7 @@
     </div>
   </DetailLayout>
 </template>
+
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -28,7 +29,7 @@ export default class Layout extends ViewBase {
     { title: '概览', route: 'kol-figure' },
     { title: '运营情况', route: 'kol-detail-platform' },
     { title: '热度趋势', route: 'kol-detail-trend' },
-    { title: '投放价格', route: 'kol-detail-price' },
+    // { title: '投放价格', route: 'kol-detail-price' },
     { title: '粉丝画像', route: 'kol-detail-fans' },
     { title: '口碑评论', route: 'kol-detail-comment' },
     { title: '主要作品', route: 'kol-detail-opus' },
