@@ -49,13 +49,8 @@ export interface User {
   perms: string[]
 }
 
-const KEY_USER = 'user@www.aiads.com'
-const KEY_TOKEN = 'X-API-TOKEN'
-
-const COOKIE_OPTIONS = {
-  path: '/',
-  domain: location.hostname === 'localhost' ? '' : '.aiads.com',
-}
+const KEY_USER = 'user@www.jydata.com'
+const KEY_TOKEN = 'X-API-TOKEN-FRONT'
 
 let theUser: User | null = null
 
@@ -175,7 +170,13 @@ export function hasLogin() {
  * 退出
  */
 export function logout() {
-  cookie.remove(KEY_TOKEN, COOKIE_OPTIONS)
+  const host = location.hostname
+  const fullHost = location.hostname.replace(/^(www\.)?/, '.')
+  const hostList = [ host, fullHost ]
+  hostList.forEach(domain => {
+    cookie.remove(KEY_TOKEN, { domain, path: '/' })
+  })
+
   delete localStorage[KEY_USER]
 
   // 清除权限缓存
