@@ -201,7 +201,7 @@
             <Icon @click="detailhide" v-else type="ios-arrow-down" />
           </div>
           <div style="margin-right: 20px">
-            <Button type="primary" class="button-ok" @click="next">立即预定</Button>
+            <!-- <Button type="primary" class="button-ok" @click="next">立即预定</Button> -->
           </div>
         </div>
       </div>
