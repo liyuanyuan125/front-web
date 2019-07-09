@@ -154,20 +154,20 @@
           </template>
           <template slot-scope="{ row }" slot="action">
             <div class="table-action">
-              <p v-if="!yudingListId.includes(row.kolId)" @click="debounce(row, $event, 1000)">
+              <!-- <p v-if="!yudingListId.includes(row.kolId)" @click="debounce(row, $event, 1000)">
                 <Icon type="md-add-circle" style=" font-size: 17px; color: #001F2C; opacity: .3" />
                 加入投放
               </p>
               <p v-else @click="cancelShop(row.id)">
                 <Icon type="ios-checkmark-circle" style="font-size: 17px; color: #CA7273;" />
                 已加入
-              </p>
-              <p style="margin-top: 5px" v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)"
+              </p> -->
+              <p style="margin-top: 0px" v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)"
               @click="collects(acount == 1 ? row.id : row.accountDataId)">
                 <Icon type="md-heart" style="font-size: 17px;color: #001F2C; opacity: .3" />
                 收藏
               </p>
-              <p style="margin-top: 5px" v-else @click="cancelcollects(acount == 1 ? row.id : row.accountDataId)">
+              <p style="margin-top: 0px" v-else @click="cancelcollects(acount == 1 ? row.id : row.accountDataId)">
                 <Icon type="md-heart" style="font-size: 17px; color: #CA7273" />
                 已收藏
               </p>
@@ -201,7 +201,7 @@
             <Icon @click="detailhide" v-else type="ios-arrow-down" />
           </div>
           <div style="margin-right: 20px">
-            <Button type="primary" class="button-ok" @click="next">立即预定</Button>
+            <!-- <Button type="primary" class="button-ok" @click="next">立即预定</Button> -->
           </div>
         </div>
       </div>
