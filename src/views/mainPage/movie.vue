@@ -24,6 +24,7 @@
               params: { id: id }
             }"
             class="button-apply"
+            v-if="joinStatus == 2"
           >申请合作</router-link>
         </BasicPane>
       </div>
@@ -117,6 +118,9 @@ export default class MoviePage extends ViewBase {
 
   status = 0 as MovieStatus
 
+  // 0 未知，1 关闭，2 开启
+  joinStatus = 0
+
   bigFigure = ''
 
   movie: any = null
@@ -162,6 +166,7 @@ export default class MoviePage extends ViewBase {
       basic,
       hasShow,
       status,
+      joinStatus,
       movie,
       actorData,
       fansRate,
@@ -173,6 +178,7 @@ export default class MoviePage extends ViewBase {
     this.basic = basic
     this.hasShow = hasShow
     this.status = status
+    this.joinStatus = joinStatus
     this.movie = movie
     this.actorData = actorData
     this.fansRate = fansRate
