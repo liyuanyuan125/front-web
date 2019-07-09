@@ -50,7 +50,7 @@ export interface User {
 }
 
 const KEY_USER = 'user@www.aiads.com'
-const KEY_TOKEN = 'X-API-TOKEN'
+const KEY_TOKEN = 'X-API-TOKEN-FRONT'
 
 const COOKIE_OPTIONS = {
   path: '/',
