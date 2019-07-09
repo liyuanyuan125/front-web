@@ -217,151 +217,127 @@ export async function keywordComment(query: any, id: number | string = '') {
  * @param id id
  * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
  */
-export async function fans(id: string|number = '') {
+export async function fans(id: string | number = '') {
   // 演示 临时参数 nxd 20190621
   // id = '375284'
   const res = await get(`/person/${id}/fans`)
   return res
   return await mockGet({}, {
     item: {
-      totalCount: 288200,
+      totalCount: 28822,
       genders: [
-        // {
-        //     gender: 1,
-        //     rate: '31.40'
-        // },
-        // {
-        //     gender: 2,
-        //     rate: '68.60'
-        // }
+        {
+          gender: 1,
+          rate: '10.00'
+        },
+        {
+          gender: 2,
+          rate: '90.00'
+        }
       ],
       ages: [
-          {
-              v: '20.10',
-              k: '0-17岁'
-          },
-          {
-              v: '45.94',
-              k: '18-24岁'
-          },
-          {
-              v: '19.77',
-              k: '25-29岁'
-          },
-          {
-              v: '10.24',
-              k: '30-39岁'
-          },
-          {
-              v: '2.62',
-              k: '40-49岁'
-          },
-          {
-              v: '0.41',
-              k: '50-59岁'
-          },
-          {
-              v: '0.92',
-              k: '60岁以上'
-          }
+        {
+          v: '22.22',
+          k: '0-17岁'
+        },
+        {
+          v: '45.94',
+          k: '18-24岁'
+        },
+        {
+          v: '19.77',
+          k: '25-29岁'
+        },
+        {
+          v: '10.24',
+          k: '30-39岁'
+        },
+        {
+          v: '2.62',
+          k: '40-49岁'
+        },
+        {
+          v: '0.41',
+          k: '50-59岁'
+        },
+        {
+          v: '0.92',
+          k: '60岁以上'
+        }
       ],
       cities: [
-          {
-              v: '8.09',
-              k: '上海'
-          },
-          {
-              v: '6.45',
-              k: '北京'
-          },
-          {
-              v: '8.09',
-              k: '广州'
-          },
-          {
-              v: '6.45',
-              k: '杭州'
-          },
-          {
-              v: '8.09',
-              k: '深圳'
-          },
-          {
-              v: '6.45',
-              k: '南京'
-          },
-          {
-              v: '8.09',
-              k: '重庆'
-          },
-          {
-              v: '6.45',
-              k: '成都'
-          },
-          {
-              v: '8.09',
-              k: '武汉'
-          },
-          {
-              v: '6.45',
-              k: '苏州'
-          }
+        {
+          v: '8.09',
+          k: '上海市'
+        },
+        {
+          v: '6.45',
+          k: '北京市'
+        },
+        {
+          v: '8.09',
+          k: '广州市'
+        },
+        {
+          v: '6.45',
+          k: '杭州市'
+        },
+        {
+          v: '8.09',
+          k: '深圳市'
+        },
+        {
+          v: '6.45',
+          k: '南京市'
+        },
+        {
+          v: '8.09',
+          k: '重庆市'
+        },
+        {
+          v: '6.45',
+          k: '成都市'
+        },
+        {
+          v: '8.09',
+          k: '武汉市'
+        },
+        {
+          v: '6.45',
+          k: '苏州'
+        },
+        {
+          v: '88.80',
+          k: '菏泽市'
+        }
       ],
       provinces: [
-          {
-              v: '8.99',
-              k: '广东'
-          },
-          {
-              v: '7.17',
-              k: '山东'
-          },
-          {
-              v: '5.06',
-              k: '江苏'
-          },
-          {
-              v: '4.03',
-              k: '北京'
-          },
-          {
-              v: '4.36',
-              k: '浙江'
-          },
-          {
-              v: '4.09',
-              k: '河南'
-          },
-          {
-              v: '3.51',
-              k: '四川'
-          },
-          {
-              v: '3.27',
-              k: '河北'
-          },
-          {
-              v: '2.97',
-              k: '辽宁'
-          },
-          {
-              v: '2.68',
-              k: '安徽'
-          }
+        {
+          v: '8.99',
+          k: '广东省'
+        },
+        {
+          v: '7.17',
+          k: '山东省'
+        },
+        {
+          v: '17.17',
+          k: '北京市'
+        }
       ]
     },
     genders: [
       {
-          key: 0,
-          text: '未知'
+        key: 0,
+        text: '未知'
       },
       {
-          key: 1,
-          text: '男'
+        key: 1,
+        text: '男'
       },
       {
-          key: 2,
-          text: '女'
+        key: 2,
+        text: '女'
       }
     ]
   })
@@ -372,7 +348,7 @@ export async function fans(id: string|number = '') {
  * @param id id
  * @description http://yapi.aiads-dev.com/project/146/interface/api/4542
  */
- export async function dau(query: any, id: number | string = '') {
+export async function dau(query: any, id: number | string = '') {
   // 演示 临时参数 nxd 20190621
   // query = {
   //   beginDate: '20160520',
@@ -382,134 +358,134 @@ export async function fans(id: string|number = '') {
   return res
   return await mockGet({}, {
     items: [
-        {
-            data: 20190520,
-            count: 7262
-        },
-        {
-            data: 20190521,
-            count: 2313
-        },
-        {
-            data: 20190522,
-            count: 564
-        },
-        {
-            data: 20190523,
-            count: 67674
-        },
-        {
-            data: 20190524,
-            count: 234
-        },
-        {
-            data: 20190525,
-            count: 5452
-        },
-        {
-            data: 20190526,
-            count: 9387
-        },
-        {
-            data: 20190527,
-            count: 761
-        },
-        {
-            data: 20190528,
-            count: 716
-        },
-        {
-            data: 20190529,
-            count: 982
-        },
-        {
-            data: 20190530,
-            count: 777
-        },
-        {
-            data: 20190531,
-            count: 19881
-        },
-        {
-            data: 20190601,
-            count: 3445
-        },
-        {
-            data: 20190602,
-            count: 3445
-        },
-        {
-            data: 20190603,
-            count: 3445
-        },
-        {
-            data: 20190604,
-            count: 3445
-        },
-        {
-            data: 20190605,
-            count: 3445
-        },
-        {
-            data: 20190606,
-            count: 3445
-        },
-        {
-            data: 20190607,
-            count: 3445
-        },
-        {
-            data: 20190608,
-            count: 3445
-        },
-        {
-            data: 20190609,
-            count: 3445
-        },
-        {
-            data: 20190610,
-            count: 3445
-        },
-        {
-            data: 20190611,
-            count: 3445
-        },
-        {
-            data: 20190612,
-            count: 3445
-        },
-        {
-            data: 20190613,
-            count: 3445
-        },
-        {
-            data: 20190614,
-            count: 3445
-        },
-        {
-            data: 20190615,
-            count: 3445
-        },
-        {
-            data: 20190616,
-            count: 3445
-        },
-        {
-            data: 20190617,
-            count: 3445
-        },
-        {
-            data: 20190618,
-            count: 3445
-        },
-        {
-            data: 20190619,
-            count: 3445
-        },
-        {
-            data: 20190620,
-            count: 7262
-        }
+      {
+        data: 20190520,
+        count: 7262
+      },
+      {
+        data: 20190521,
+        count: 2313
+      },
+      {
+        data: 20190522,
+        count: 564
+      },
+      {
+        data: 20190523,
+        count: 67674
+      },
+      {
+        data: 20190524,
+        count: 234
+      },
+      {
+        data: 20190525,
+        count: 5452
+      },
+      {
+        data: 20190526,
+        count: 9387
+      },
+      {
+        data: 20190527,
+        count: 761
+      },
+      {
+        data: 20190528,
+        count: 716
+      },
+      {
+        data: 20190529,
+        count: 982
+      },
+      {
+        data: 20190530,
+        count: 777
+      },
+      {
+        data: 20190531,
+        count: 19881
+      },
+      {
+        data: 20190601,
+        count: 3445
+      },
+      {
+        data: 20190602,
+        count: 3445
+      },
+      {
+        data: 20190603,
+        count: 3445
+      },
+      {
+        data: 20190604,
+        count: 3445
+      },
+      {
+        data: 20190605,
+        count: 3445
+      },
+      {
+        data: 20190606,
+        count: 3445
+      },
+      {
+        data: 20190607,
+        count: 3445
+      },
+      {
+        data: 20190608,
+        count: 3445
+      },
+      {
+        data: 20190609,
+        count: 3445
+      },
+      {
+        data: 20190610,
+        count: 3445
+      },
+      {
+        data: 20190611,
+        count: 3445
+      },
+      {
+        data: 20190612,
+        count: 3445
+      },
+      {
+        data: 20190613,
+        count: 3445
+      },
+      {
+        data: 20190614,
+        count: 3445
+      },
+      {
+        data: 20190615,
+        count: 3445
+      },
+      {
+        data: 20190616,
+        count: 3445
+      },
+      {
+        data: 20190617,
+        count: 3445
+      },
+      {
+        data: 20190618,
+        count: 3445
+      },
+      {
+        data: 20190619,
+        count: 3445
+      },
+      {
+        data: 20190620,
+        count: 7262
+      }
     ]
   })
 }
@@ -705,7 +681,7 @@ export async function trend(query: any, id: number | string = '') {
   //   beginDate: '20160520',
   //   endDate: '20190620'
   // }
-  const res = await get(`/person/${id}/hot` , query)
+  const res = await get(`/person/${id}/hot`, query)
   return res
   return await mockGet(query, {
     items: [

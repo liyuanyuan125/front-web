@@ -83,9 +83,19 @@ export default class MapChina extends ViewBase {
     ) {
       return
     }
-    const chartData = this.dataList[this.currentIndex]
+    const data = this.dataList[this.currentIndex]
     const myChart = echarts.init(this.$refs.refChart as any)
-
+    const chartData = data.map((it: any) => {
+      return {
+        name: it.name.split('市')
+            .join('')
+            .split('省')
+            .join('')
+            .split('省')
+            .join(''),
+        value: it.value
+      }
+    })
     echarts.registerMap('china', china as any)
     const option: any = {
       ...pubOption,
