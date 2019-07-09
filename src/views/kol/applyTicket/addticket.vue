@@ -227,6 +227,8 @@ import { warning , success, toast } from '@/ui/modal'
 import AreaSelect from '@/components/areaSelect'
 import number from '@/components/number.vue'
 import { formatNumber } from '@/util/validateRules'
+import { uniq, uniqBy } from 'lodash'
+import Decimal from 'decimal.js'
 
 @Component({
   components: {
@@ -371,10 +373,10 @@ export default class Main extends ViewBase {
       })
       this.faType = data.invoiceTypeList
       this.taiType = data.customerTypeList
-      this.money = data.totalTaxFee
+      this.money = new Decimal(data.orderTotalFee).minus(data.refundTotalFee)
       this.viewnum = true
       this.query.itemCode = data.itemCode,
-      this.query.totalTaxFee = data.totalTaxFee,
+      this.query.totalTaxFee = new Decimal(data.orderTotalFee).minus(data.refundTotalFee),
       this.query.invoiceType = data.invoiceType,
       this.query.customerType = data.customerType,
       this.query.name = data.name,
