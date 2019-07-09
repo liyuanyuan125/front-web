@@ -129,10 +129,19 @@ export default class BarYCategory extends ViewBase {
         {
           ...barThinStyle,
           ...barItemStyleColor,
+          label: {
+            normal: {
+              show: true,
+              formatter: '{c}%',
+              position: 'right'
+            }
+          },
           data: seriesData.v
         }
       ]
     }
+    // nxd
+    // console.save(option, `${new Date()}.json`)
     myChart.setOption(option)
   }
 

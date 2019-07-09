@@ -14,12 +14,10 @@ export async function getStats() {
     data: {
       item: {
         balance,
-
         videoUnapproval,
         videoPay,
         videoTrans,
         videoCompleted,
-
         planOnexecute,
         planUnapproval,
         kolOnexecute,
@@ -82,7 +80,7 @@ export async function queryReport({
     legends: [
       { name: '广告花费／¥', value: expendSum },
       { name: '覆盖人次', value: personCountSum },
-      { name: '覆盖影院数', value: cinemaCountSum },
+      // { name: '覆盖影院数', value: cinemaCountSum },
       { name: '覆盖场次数', value: showCountSum },
     ],
 
@@ -98,10 +96,10 @@ export async function queryReport({
         list: makeReportList(planResults, 'personCount')
       },
 
-      {
-        title: '覆盖影院',
-        list: makeReportList(planResults, it => (it.cinemas || []).length)
-      },
+      // {
+      //   title: '覆盖影院',
+      //   list: makeReportList(planResults, it => (it.cinemas || []).length)
+      // },
 
       {
         title: '覆盖场次',

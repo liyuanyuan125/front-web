@@ -7,7 +7,7 @@
       </li>
     </ul>
     <template slot="head-side">
-      <Button type="primary" class="offer-button">加入投放</Button>
+      <!-- <Button type="primary" class="offer-button">加入投放</Button> -->
     </template>
   </Pane>
 </template>
