@@ -2,7 +2,7 @@
 import '@/util/hooks'
 
 import Vue from 'vue'
-import Router from 'vue-router'
+import Router, { Route } from 'vue-router'
 
 // iView
 import iView from 'iview'
@@ -24,6 +24,8 @@ import store, { hasLogin, hasRoutePerm } from './store'
 import routes from './routes'
 import { devError, devWarn } from './util/dev'
 
+import { encodeRoute } from '@/util/base64Route'
+
 // iview 配置
 Vue.use(iView, { locale })
 
@@ -31,6 +33,17 @@ iView.LoadingBar.config({
   color: '#fe8135',
   width: 6
 })
+
+const getLoginRoute = (route: Route) => {
+  return route.name == 'login'
+    ? route
+    : {
+      name: 'login',
+      query: {
+        ret: encodeRoute(route)
+      }
+    }
+}
 
 // 路由配置
 Vue.use(Router)
@@ -40,7 +53,8 @@ const router = new Router({ mode: 'history', routes })
 router.beforeEach(async (to, from, next) => {
   iView.LoadingBar.start()
   if (!to.meta.unauth && !hasLogin()) {
-    next({ name: 'login' })
+    const login = getLoginRoute(to)
+    next(login)
   } else {
     const has = await hasRoutePerm(to)
     event.emit('route-perm', { has, to, from })
@@ -62,7 +76,8 @@ Vue.config.productionTip = false
 // 采用低优先级监听 ajax*** 事件，以便其他地方可以拦截取消
 event.on({
   ajax401() {
-    router.push({ name: 'login' })
+    const login = getLoginRoute(router.currentRoute)
+    router.push(login)
   },
 
   ajax403() {
