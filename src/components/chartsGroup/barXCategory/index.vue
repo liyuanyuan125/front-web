@@ -116,7 +116,13 @@ export default class BarXCategory extends ViewBase {
         },
         data: this.dict3.map((item: any) => {
           return item.text
-        })
+        }),
+        // todo 20190709 文字超出限定数目就旋转展示
+        // axisLabel : {// 坐标轴刻度标签的相关设置。
+        //   interval: 0,
+        //   rotate: '-45'
+        // },
+        // nameLocation: 'end'
       },
       yAxis: {
         ...yOption,
@@ -138,6 +144,7 @@ export default class BarXCategory extends ViewBase {
       },
       series: chartData
     }
+    // debugger
     // console.save(option, `${new Date()}.json`)
     myChart.setOption(option)
   }
