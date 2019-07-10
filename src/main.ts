@@ -21,10 +21,11 @@ import event from './fn/event'
 import { alert } from './ui/modal'
 import store, { hasLogin, hasRoutePerm } from './store'
 
-import routes from './routes'
+import routes, { RouteMetaBase } from './routes'
 import { devError, devWarn } from './util/dev'
 
 import { encodeRoute } from '@/util/base64Route'
+import { setPageTitle } from '@/util/browser'
 
 // iview 配置
 Vue.use(iView, { locale })
@@ -38,11 +39,9 @@ const getLoginRoute = (route: Route) => {
   return route.name == 'login'
     ? route
     : {
-      name: 'login',
-      query: {
-        ret: encodeRoute(route)
+        name: 'login',
+        query: route.name != 'home' ? { ret: encodeRoute(route) } : {}
       }
-    }
 }
 
 // 路由配置
@@ -65,6 +64,12 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach((to, from) => {
   iView.LoadingBar.finish()
   window.scrollTo(0, 0)
+  const meta = to.meta as RouteMetaBase
+  const pageTitle = meta && meta.pageTitle
+  if (pageTitle !== false) {
+    const title = typeof pageTitle === 'function' ? pageTitle(to) : pageTitle
+    setPageTitle(title)
+  }
 })
 
 // 全局注册一些常用组件
@@ -74,16 +79,19 @@ Vue.config.productionTip = false
 
 // 全局事件监听
 // 采用低优先级监听 ajax*** 事件，以便其他地方可以拦截取消
-event.on({
-  ajax401() {
-    const login = getLoginRoute(router.currentRoute)
-    router.push(login)
-  },
+event.on(
+  {
+    ajax401() {
+      const login = getLoginRoute(router.currentRoute)
+      router.push(login)
+    },
 
-  ajax403() {
-    alert('权限不足')
+    ajax403() {
+      alert('权限不足')
+    }
   },
-}, false)
+  false
+)
 
 new Vue({
   store,

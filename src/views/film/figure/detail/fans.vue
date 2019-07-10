@@ -151,7 +151,7 @@ export default class Temporary extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: ['#ff9933', '#169bd5']
+    color: []
   }
 
   brandsLoading = false
@@ -216,12 +216,13 @@ export default class Temporary extends ViewBase {
         })
       }
 
+      // 影人粉丝，省市数据返回占比，无需除100 xd 20190710
       const provinceList = ((provinces as any[]) || []).sort((a, b) => a.v - b.v)
       const cityList = ((cities as any[]) || []).sort((a, b) => a.v - b.v)
 
       let [min, max] = [0, 0]
       const provinceData = provinceList.map(({ v, k }) => {
-        v = parseInt(v, 0)
+        v = parseFloat(v)
         max = max < v ? v : max
         min = min > v ? v : min
         return { name: k, value: v }
@@ -229,17 +230,16 @@ export default class Temporary extends ViewBase {
       const cityData = cityList.map(({ v, k }) => {
         return {
           name: k,
-          value: typeof v === 'number' ? v : parseInt(v, 0)
+          value: typeof v === 'number' ? v : parseFloat(v)
         }
       })
 
       this.chart3.min = min
       this.chart3.max = max
       this.chart3.dataList[this.chart3.currentTypeIndex] = provinceData
-      this.chart3.initDone = true
 
-      this.chart4.dataList[0] = provinceData
-      this.chart4.dataList[1] = cityData
+      this.chart4.dataList[0] = provinceData.length > 10 ? provinceData.slice(0 , 10) : provinceData
+      this.chart4.dataList[1] = cityData.length > 10 ? cityData.slice(0 , 10) : cityData
 
       this.chart1.initDone = true
       this.chart2.initDone = true

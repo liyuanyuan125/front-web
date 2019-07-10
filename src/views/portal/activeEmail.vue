@@ -12,7 +12,7 @@
           placeholder="请输入包含大小写的英文字母与数字的组合，8-16 位"
         ></Input>
       </FormItem>
-      <FormItem label="确认密码" prop="secondPass">
+      <FormItem label="重置密码" prop="secondPass">
         <Input
           v-model="form.secondPass"
           type="password"

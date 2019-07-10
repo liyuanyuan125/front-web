@@ -153,6 +153,7 @@ import { toThousands } from '@/util/dealData'
 import NavSwiper from './navSwiper.vue'
 import { swiperSlide } from 'vue-awesome-swiper'
 import { backImage } from '@/store'
+import { setPageTitle } from '@/util/browser'
 
 import moment from 'moment'
 
@@ -234,6 +235,8 @@ export default class BrandLayout extends ViewBase {
     this.bubbleList = bubbleList
 
     backImage(bigFigure || '')
+
+    setPageTitle(`${item.name}-鲸娱数据`)
   }
 
   @Watch('type')

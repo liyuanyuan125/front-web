@@ -21,9 +21,10 @@ export default class Layout extends ViewBase {
 
   routeList: RouteItem[] = [
     { title: '首页', route: 'brand-item' },
-    { title: '用户画像', route: 'brand-detailpro-fans' },
-    { title: '口碑评论', route: 'brand-detailpro-comment' },
-    { title: '全网热度', route: 'brand-detailpro-trend' },
+    // { title: '用户画像', route: 'brand-detailpro-fans' },
+    // { title: '口碑评论', route: 'brand-detailpro-comment' },
+    // { title: '全网热度', route: 'brand-detailpro-trend' },
+    // 产品需求暂时不开发，页面移除 xd 20190710
   ]
 
   name = 'Papi酱'

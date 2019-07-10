@@ -296,7 +296,7 @@ export async function comment(query: any, id: string = '') {
 /**
  * fans
  * @param id id
- * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
+ * @description http://yapi.aiads-dev.com/project/152/interface/api/4046
  */
 export async function fans(id: string = '') {
   const res = await get(`/brand/brands/${id}/portrait`)
