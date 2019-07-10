@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class='all'>
-    	<span class='left'  @click='back'>< &nbsp;返回列表</span>
+    	<span class='left'  @click='back'><i></i> &nbsp;返回列表</span>
     	<span class='right'>全部标为已读</span>
     </div>
     <div class='list' style='padding: 28px;cursor: pointer;'>
@@ -28,17 +28,26 @@ export default class MessagePage extends ViewBase {
 }
 .all {
   height: 30px;
+  padding: 28px;
   .left {
     float: left;
     color: #fff;
     font-size: 18px;
     font-weight: 400;
-    margin-left: 2%;
     line-height: 30px;
     cursor: pointer;
-    // &:before {
-    //   content: "<";
-    // }
+    i {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-left: 2px solid #fff;
+      border-top: 2px solid #fff;
+      transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);     /* IE 9 */
+      -moz-transform: rotate(-45deg);    /* Firefox */
+      -webkit-transform: rotate(-45deg); /* Safari 和 Chrome */
+      -o-transform: rotate(-45deg);  /* Opera */
+    }
   }
   .right {
     display: block;
@@ -50,7 +59,6 @@ export default class MessagePage extends ViewBase {
     text-align: center;
     line-height: 30px;
     float: right;
-    margin-right: 15px;
     cursor: pointer;
   }
 }
