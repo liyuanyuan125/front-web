@@ -305,7 +305,7 @@ export default class Plan extends ViewBase {
 
   findId(id: any) {
     this.$router.push({ name: 'effect-report', params: {
-      id
+      step: id
     }})
   }
 
@@ -332,14 +332,14 @@ export default class Plan extends ViewBase {
 
   planDefault(id: any, status: any) {
     if (status == '1' || status == '3' || status == '9' || status == '10') {
-      this.$router.push({ name: 'pop-planlist-default', params: { id } })
+      this.$router.push({ name: 'pop-planlist-default', params: { step: id } })
     } else {
-      this.$router.push({ name: 'pop-planlist-defaultpayment', params: { id } })
+      this.$router.push({ name: 'pop-planlist-defaultpayment', params: { step: id } })
     }
   }
 
   planEdit(id: any) {
-    this.$router.push({ name: 'pop-planlist-add', params: { id } })
+    this.$router.push({ name: 'pop-planlist-add', params: { step: id } })
   }
 
   checkAll() {
@@ -375,14 +375,14 @@ export default class Plan extends ViewBase {
   plandetail(id: any) {
     this.$router.push({
       name: 'pop-planlist-default',
-      params: { id }
+      params: { step: id }
     })
   }
 
   plandEdit(id: any) {
     this.$router.push({
       name: 'pop-planlist-edit',
-      params: { id: '0', setid: id }
+      params: { step: '0', setid: id }
     })
   }
 
