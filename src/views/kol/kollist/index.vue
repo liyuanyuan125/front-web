@@ -26,7 +26,7 @@
                 <div slot="content">
                     <span>免费用户暂不支持筛选</span>
                 </div>
-              </Tooltip> 
+              </Tooltip>
             </RadioGroup>
           </FormItem>
           <FormItem label="地域分布"  class="form-item-type">
@@ -37,7 +37,7 @@
               <div slot="content">
                     <span>免费用户暂不支持筛选</span>
                 </div>
-              </Tooltip> 
+              </Tooltip>
             </RadioGroup>
           </FormItem>
           <div v-if="areaShow" class="area-box">
@@ -57,7 +57,7 @@
                 <div slot="content">
                     <span>免费用户暂不支持筛选</span>
                 </div>
-              </Tooltip> 
+              </Tooltip>
             </RadioGroup>
           </FormItem>
           <FormItem label="受众性别"  class="form-item-type">
@@ -69,7 +69,7 @@
                 <div slot="content">
                     <span>免费用户暂不支持筛选</span>
                 </div>
-              </Tooltip> 
+              </Tooltip>
             </RadioGroup>
           </FormItem>
         </div>
@@ -214,6 +214,7 @@
         @on-change="sizeChangeHandle"
         @on-page-size-change="currentChangeHandle"/> -->
         <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
+        <div class="free-user-tip">免费用户仅可查看2页</div>
       </div>
       <Detail ref='detailbox' v-model="type" @done="checkDetailSet" />
     </div>
@@ -1131,5 +1132,12 @@ export default class Main extends ViewBase {
       color: #fff;
     }
   }
+}
+
+.free-user-tip {
+  position: relative;
+  top: -30px;
+  color: #999;
+  text-align: center;
 }
 </style>
