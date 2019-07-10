@@ -150,12 +150,26 @@ export const barThinStyle = {
 export const barItemStyleColor = {
   itemStyle: {
     normal: {
+
+      barBorderRadius: 5,
       // 随机显示
       // color(d: any) {return '#' + Math.floor(Math.random() * (256 * 256 * 256 - 1)).toString(16)}
       // 定制显示（按顺序）
       color: (params: any) => {
-        const colorList = [   '#08667A', '#00B6CC', '#FAD85E', '#DA6C70', ]
-        return colorList[params.dataIndex]
+        const color = [
+          '#DA6C70',
+          '#D0BF6B',
+          '#00B6CC',
+          '#0a5b6b',
+          '#0a5b6b',
+          '#0a5b6b',
+          '#0a5b6b',
+          '#0a5b6b',
+          '#0a5b6b',
+          '#0a5b6b'
+        ]
+        const _color = color.reverse()
+        return _color[params.dataIndex]
       }
     }
   }
