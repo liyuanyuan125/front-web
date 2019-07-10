@@ -15,6 +15,9 @@ import ViewBase from '@/util/ViewBase'
 import DetailLayout, { RouteItem } from '@/components/detailLayout'
 import Figure from '@/components/figure'
 import { getKol } from './data'
+import { Route } from 'vue-router'
+import { RouteMetaBase } from '@/routes'
+import { setPageTitle } from '@/util/browser'
 
 @Component({
   components: {
@@ -40,10 +43,21 @@ export default class Layout extends ViewBase {
 
   figure = ''
 
+  get pageTitle() {
+    const meta = this.$route.meta as RouteMetaBase
+    const title = meta && meta.pageTitle || meta.title || ''
+    return `${this.name}${title}-鲸娱数据`
+  }
+
   async created() {
     const { name, figure } = await getKol({ id: this.id, channel: 'weibo' })
     this.name = name
     this.figure = figure
+  }
+
+  @Watch('pageTitle', { immediate: true })
+  watchPageTitle() {
+    setPageTitle(this.pageTitle)
   }
 }
 </script>

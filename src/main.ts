@@ -21,10 +21,11 @@ import event from './fn/event'
 import { alert } from './ui/modal'
 import store, { hasLogin, hasRoutePerm } from './store'
 
-import routes from './routes'
+import routes, { RouteMetaBase } from './routes'
 import { devError, devWarn } from './util/dev'
 
 import { encodeRoute } from '@/util/base64Route'
+import { setPageTitle } from '@/util/browser'
 
 // iview 配置
 Vue.use(iView, { locale })
@@ -63,6 +64,12 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach((to, from) => {
   iView.LoadingBar.finish()
   window.scrollTo(0, 0)
+  const meta = to.meta as RouteMetaBase
+  const pageTitle = meta && meta.pageTitle
+  if (pageTitle !== false) {
+    const title = typeof pageTitle === 'function' ? pageTitle(to) : pageTitle
+    setPageTitle(title)
+  }
 })
 
 // 全局注册一些常用组件

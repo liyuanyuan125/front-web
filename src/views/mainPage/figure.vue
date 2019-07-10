@@ -80,6 +80,7 @@ import HotPane from './components/hotPane.vue'
 import { getFigure, getFigureActiveFans, getFigureHot } from './data'
 import { figureHasFav, figureSetFav } from './fav'
 import { readableThousands } from '@/util/dealData'
+import { setPageTitle } from '@/util/browser'
 
 @Component({
   components: {
@@ -155,6 +156,8 @@ export default class FigurePage extends ViewBase {
     this.opusData = opusData
     this.brandData = brandData
     this.commentData = commentData
+
+    setPageTitle(`${basic.name}-鲸娱数据`)
   }
 
   async initActiveFans() {
