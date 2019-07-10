@@ -812,16 +812,18 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   // 第三方 - 效果报表
   {
     path: '/reseport/effect-report-third/:id',
-    name: 'effect-report-third',
+    name: 'test-report-third',
     component: () => import('./views/resReport/effectReportThird/index.vue'),
     meta: {
       authKey: '',
       authAction: '',
+      authIsMenu: true,
       title() {
         return '监测报告'
       }
     }
   },
+
 
   // TODO: 下面的两个先不做了
 
@@ -1598,6 +1600,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       title: '新建第三方监测',
     },
   },
+
 
   // 资源方 - 财务信息 - 对账单管理
   {
