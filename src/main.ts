@@ -38,11 +38,9 @@ const getLoginRoute = (route: Route) => {
   return route.name == 'login'
     ? route
     : {
-      name: 'login',
-      query: {
-        ret: encodeRoute(route)
+        name: 'login',
+        query: route.name != 'home' ? { ret: encodeRoute(route) } : {}
       }
-    }
 }
 
 // 路由配置
@@ -74,16 +72,19 @@ Vue.config.productionTip = false
 
 // 全局事件监听
 // 采用低优先级监听 ajax*** 事件，以便其他地方可以拦截取消
-event.on({
-  ajax401() {
-    const login = getLoginRoute(router.currentRoute)
-    router.push(login)
-  },
+event.on(
+  {
+    ajax401() {
+      const login = getLoginRoute(router.currentRoute)
+      router.push(login)
+    },
 
-  ajax403() {
-    alert('权限不足')
+    ajax403() {
+      alert('权限不足')
+    }
   },
-}, false)
+  false
+)
 
 new Vue({
   store,
