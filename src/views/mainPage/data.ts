@@ -250,6 +250,9 @@ export async function getMovie(id: number) {
       countryCodeList,
 
       celebrityRating,
+
+      // 0 未知，1 关闭，2 开启
+      joinStatus,
     }
   } = await get(`/movie/${id}`)
 
@@ -276,6 +279,7 @@ export async function getMovie(id: number) {
 
     hasShow,
     status,
+    joinStatus,
 
     movie: {
       preview: trailers && trailers[0],
