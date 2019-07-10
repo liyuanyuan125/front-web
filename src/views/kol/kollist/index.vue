@@ -7,22 +7,37 @@
         <div class="check-detail">
           <FormItem label="账号类别"  class="form-item-type">
             <RadioGroup  v-model="form.accountCategoryCode" class="item-radio-top">
-              <Radio :disabled="acount==2" class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio v-if="it.controlStatus != 2" :disabled="acount==2" v-for="it in accountList" :key="it.key" :label="it.key"
-                class="check-item">{{it.text}}</Radio>
+              <Tooltip trigger="hover"  content="content">
+                <Radio :disabled="acount==2" class="check-item form-item-first" :label="0">不限</Radio>
+                <Radio :disabled="true" v-if="it.controlStatus != 2"  v-for="it in accountList" :key="it.key" :label="it.key"
+                  class="check-item">{{it.text}}</Radio>
+                <div slot="content">
+                    <span>免费用户暂不支持筛选</span>
+                </div>
+              </Tooltip>
             </RadioGroup>
           </FormItem>
           <FormItem label="粉丝数量"  class="form-item-type">
             <RadioGroup  v-model="form.fansRangCode" class="item-radio-top">
+              <Tooltip trigger="hover"  content="content">
               <Radio :disabled="acount==2" class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio :disabled="acount==2" v-for="it in fansList" :key="it.key" :label="it.key"
+              <Radio :disabled="true" v-for="it in fansList" :key="it.key" :label="it.key"
                 class="check-item">{{it.text}}</Radio>
+                <div slot="content">
+                    <span>免费用户暂不支持筛选</span>
+                </div>
+              </Tooltip>
             </RadioGroup>
           </FormItem>
           <FormItem label="地域分布"  class="form-item-type">
             <RadioGroup  v-model="area" class="item-radio-top">
               <Radio :disabled="acount==2" @click.native="areabox(false)" class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio :disabled="acount==2" @click.native="areabox(true)" class="check-item" :label='1'>指定区域</Radio>
+              <Tooltip trigger="hover"  content="content">
+              <Radio :disabled="true" @click.native="areabox(true)" class="check-item" :label='1'>指定区域</Radio>
+              <div slot="content">
+                    <span>免费用户暂不支持筛选</span>
+                </div>
+              </Tooltip>
             </RadioGroup>
           </FormItem>
           <div v-if="areaShow" class="area-box">
@@ -36,15 +51,25 @@
           <FormItem label="价格区间"  class="form-item-type">
             <RadioGroup  v-model="form.priceRangCode" class="item-radio-top">
               <Radio :disabled="acount==2" class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio :disabled="acount==2" v-for="it in priceList" :key="it.key" :label="it.key"
+              <Tooltip trigger="hover"  content="content">
+              <Radio :disabled="true" v-for="it in priceList" :key="it.key" :label="it.key"
                 class="check-item">{{it.text}}</Radio>
+                <div slot="content">
+                    <span>免费用户暂不支持筛选</span>
+                </div>
+              </Tooltip>
             </RadioGroup>
           </FormItem>
           <FormItem label="受众性别"  class="form-item-type">
             <RadioGroup  v-model="form.sex" class="item-radio-top">
               <Radio :disabled="acount==2" class="check-item form-item-first" :label="-1">不限</Radio>
-              <Radio :disabled="acount==2" v-for="it in sexList" :key="it.key" :label="it.key"
+              <Tooltip trigger="hover"  content="content">
+              <Radio :disabled="true" v-for="it in sexList" :key="it.key" :label="it.key"
                 class="check-item">{{it.text}}</Radio>
+                <div slot="content">
+                    <span>免费用户暂不支持筛选</span>
+                </div>
+              </Tooltip>
             </RadioGroup>
           </FormItem>
         </div>
@@ -189,6 +214,7 @@
         @on-change="sizeChangeHandle"
         @on-page-size-change="currentChangeHandle"/> -->
         <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
+        <div class="free-user-tip">免费用户仅可查看2页</div>
       </div>
       <Detail ref='detailbox' v-model="type" @done="checkDetailSet" />
     </div>
@@ -1106,5 +1132,12 @@ export default class Main extends ViewBase {
       color: #fff;
     }
   }
+}
+
+.free-user-tip {
+  position: relative;
+  top: -30px;
+  color: #999;
+  text-align: center;
 }
 </style>

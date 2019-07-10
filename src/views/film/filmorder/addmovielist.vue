@@ -97,15 +97,18 @@
                 <Col :span='6' class='sxsd'>自有线上推广资源</Col>
                 <Col :span='3'>
                   <!-- <Tag v-mode='dataForm.lines' :tagMess = 'line' :nus = '2'/> -->
-                  <div style='margin-bottom: 18px;' @click="active2(item.key)" :class="['tag', val == item.key ? 'activeClass' : '']" v-for="item in online" :key="item.key">
+                  <CheckboxGroup v-model="dataForm.online" >
+                    <Checkbox   v-for="item in online" :key='item.key' :value='item.id' :label="item.key" class="check-item tag" style='margin-bottom: 18px;'>{{item.text}}</Checkbox>
+                  </CheckboxGroup>
+                  <!-- <div style='margin-bottom: 18px;' @click="active2(item.key)" :class="['tag', val == item.key ? 'activeClass' : '']" v-for="item in online" :key="item.key">
                     {{item.text}}
-                  </div>
+                  </div> -->
                 </Col>
                 <Col :span='8'>
                   <!-- <Row class='add-row' v-for='(item , index) in line' :key='index'>
                     <Col :span='24' :key='index'><Input @on-focus='chgindex2(item.key)' v-model="dataForm.s + item.key" class="inp-style" :key='key' :placeholder='item.text'/></Col>
                   </Row> -->
-                  <Row class='add-row'>
+                  <!-- <Row class='add-row'>
                     <Col :span='24'><Input @on-focus='chgindex2(1)' v-model="dataForm.wechat" class="inp-style" placeholder="可选填，输入微信公众号"/></Col>
                   </Row>
                   <Row class='add-row'>
@@ -113,6 +116,15 @@
                   </Row>
                   <Row class='add-row'>
                     <Col :span='24'><Input @on-focus='chgindex2(3)' v-model="dataForm.guang" class="inp-style" placeholder="可选填，输入官网地址"/></Col>
+                  </Row> -->
+                  <Row class='add-row'>
+                    <Col :span='24'><Input v-model="dataForm.wechat" class="inp-style" placeholder="可选填，输入微信公众号"/></Col>
+                  </Row>
+                  <Row class='add-row'>
+                    <Col :span='24'><Input v-model="dataForm.weibo" class="inp-style" placeholder="可选填，输入微博号"/></Col>
+                  </Row>
+                  <Row class='add-row'>
+                    <Col :span='24'><Input v-model="dataForm.guang" class="inp-style" placeholder="可选填，输入官网地址"/></Col>
                   </Row>
                 </Col>
 
@@ -207,6 +219,7 @@ export default class Main extends ViewBase {
           }
       ]
     },
+    online: [],
     lines: [],
     haibao: [],
     s1 : '1',
