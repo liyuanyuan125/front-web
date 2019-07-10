@@ -1569,6 +1569,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     },
     props: idProps,
     children: [
+      /* 产品需求暂时不开发，页面移除 xd 20190710
       // 产品 - 详情页 - 用户画像
       {
         path: 'fans',
@@ -1601,7 +1602,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
           title: '全网热度'
         },
         props: idProps,
-      },
+      }, */
     ]
   },
 
