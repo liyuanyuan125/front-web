@@ -61,7 +61,7 @@ export interface SystemType {
 /** 系统列表 */
 export const systemList: SystemType[] = [
   { code: 'ads', name: '广告主' },
-  { code: 'resource', name: '资源方' },
+  { code: 'resource', name: '影城' },
 ]
 
 /** 权限操作 */
