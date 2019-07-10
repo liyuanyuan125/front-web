@@ -392,16 +392,16 @@ export default class Promotion extends ViewBase {
         if (!this.$route.params.setid) {
           this.$router.push({
             name: 'pop-planlist-add',
-            params: { id: '1', setid: data.data  }
+            params: { step: '1', setid: data.data  }
           })
         } else {
           this.$router.push({
             name: 'pop-planlist-edit',
-            params: { id: '1', setid: data.data  }
+            params: { step: '1', setid: data.data  }
           })
         }
         this.$emit('input', {
-          id: 1,
+          step: 1,
           setid: data.data
         })
       }

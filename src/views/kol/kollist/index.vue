@@ -534,7 +534,7 @@ export default class Main extends ViewBase {
         this.desc = 'desc'
         this.KolSeach(column.key, 'desc')
     } else {
-      this.desc = ''
+      this.desc = 'asc'
       this.KolSeach(column.key, '')
     }
   }
