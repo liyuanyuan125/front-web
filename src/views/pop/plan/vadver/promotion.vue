@@ -573,6 +573,10 @@ export default class Promotion extends ViewBase {
 /deep/ .ivu-form-item-label {
   text-align: right;
 }
+/deep/ .ivu-select-input[disabled] {
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+}
 .adver-detail {
   background: rgba(0, 32, 45, 0);
   /deep/ .ivu-select-selection,
