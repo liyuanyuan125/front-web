@@ -96,6 +96,7 @@ import { getMovie, getVideoRise, getVideoHot } from './data'
 import { movieHasFav, movieSetFav } from './fav'
 import { readableThousands } from '@/util/dealData'
 import { MovieStatus } from '@/util/types'
+import { setPageTitle } from '@/util/browser'
 
 @Component({
   components: {
@@ -187,6 +188,8 @@ export default class MoviePage extends ViewBase {
 
     // 拿到 hasShow 后，再调用 initRise
     this.initRise()
+
+    setPageTitle(`${basic.name}-鲸娱数据`)
   }
 
   async initRise() {
