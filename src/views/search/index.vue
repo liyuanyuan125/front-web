@@ -95,6 +95,7 @@ import KolItem from './components/kolItem.vue'
 import SimilarPane from './components/similarPane.vue'
 import HotPane from './components/hotPane.vue'
 import { searchFigure, searchFilm, searchKol } from './data'
+import { setPageTitle } from '@/util/browser'
 
 // 搜索类型，分别为：影人、影片、kol
 type Type = 'figure' | 'film' | 'kol'
@@ -141,6 +142,11 @@ export default class SearchPage extends ViewBase {
     hotList: []
   }
 
+  get pageTitle() {
+    const { label } = this.typeList.find(it => it.name == this.typeOn)!
+    return `搜索：${this.keyword} ${label} -鲸娱数据`
+  }
+
   async fetchFigure(query: any) {
     const data = await searchFigure(query)
 
@@ -173,6 +179,11 @@ export default class SearchPage extends ViewBase {
     const route =
       type == 'figure' ? { name: 'search' } : { name: 'search', params: { type } }
     this.$router.push(route)
+  }
+
+  @Watch('pageTitle', { immediate: true })
+  watchPageTitle() {
+    setPageTitle(this.pageTitle)
   }
 }
 </script>

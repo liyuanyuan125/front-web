@@ -1,45 +1,62 @@
 <template>
   <loginLayout>
-      <div class="main-wrap">
-          <div class="tablist">
-            <p class="systerm">
-              <span :class="{active: form.systemCode == 'ads'}" @click="form.systemCode = 'ads'">广告主</span>
-              <span :class="{active: form.systemCode == 'resource'}" @click="form.systemCode = 'resource'">影城</span>
-            </p>
-          </div>
-          <Form :model="form" :rules="rules" ref="form"
-            @submit.native.prevent="submit" novalidate>
-            <FormItem prop="email" :error="emailError">
-              <Input type="email" v-model="form.email" placeholder="请输入邮箱">
-                <i class="iconfont icon-youxiang" slot="prefix" />
-              </Input>
-            </FormItem>
-            <FormItem prop="password" :error="passwordError">
-              <Input type="password" autocomplete="off" v-model="form.password" placeholder="请输入密码" :maxlength="16">
-                 <i class="iconfont icon-mima" slot="prefix" size="20" />
-              </Input>
-            </FormItem>
-            <FormItem prop="captchaCode" :error="captchaCodeError">
-              <div class="captcha-wrap">
-                <Input class="captcha" type="text" v-model="form.captchaCode"
-                  placeholder="请输入右图验证码"/>
-                <img :src="captchaImg" v-if="captchaImg" class="captcha-img"
-                  title="点击更换" @click="changeCaptcha">
-              </div>
-            </FormItem>
-             <Row class="login-etc">
-              <Col span="10">
-               <Checkbox v-model="form.remember">七日内免登录</Checkbox>
-              </Col>
-              <Col align="right" span="10" offset="4">
-                <router-link :to="{name: 'resetpwd'}"><span class="forgot">忘记密码?</span></router-link>
-              </Col>
-            </Row>
-            <Button type="primary" html-type="submit" class="submit" long :disabled="submitDisabled">登录</Button>
-            <div class="to-apply">还没有账户？<router-link :to="{name: 'apply'}">申请加入</router-link></div>
-          </Form>
+    <div class="main-wrap">
+      <div class="tablist">
+        <p class="systerm">
+          <span :class="{active: form.systemCode == 'ads'}" @click="form.systemCode = 'ads'">广告主</span>
+          <span
+            :class="{active: form.systemCode == 'resource'}"
+            @click="form.systemCode = 'resource'"
+          >影城</span>
+        </p>
       </div>
-    </loginLayout>
+      <Form :model="form" :rules="rules" ref="form" @submit.native.prevent="submit" novalidate>
+        <FormItem prop="email" :error="emailError">
+          <Input type="email" v-model="form.email" placeholder="请输入邮箱">
+            <i class="iconfont icon-youxiang" slot="prefix" />
+          </Input>
+        </FormItem>
+        <FormItem prop="password" :error="passwordError">
+          <Input
+            type="password"
+            autocomplete="off"
+            v-model="form.password"
+            placeholder="请输入密码"
+            :maxlength="16"
+          >
+            <i class="iconfont icon-mima" slot="prefix" size="20" />
+          </Input>
+        </FormItem>
+        <FormItem prop="captchaCode" :error="captchaCodeError">
+          <div class="captcha-wrap">
+            <Input class="captcha" type="text" v-model="form.captchaCode" placeholder="请输入右图验证码" />
+            <img
+              :src="captchaImg"
+              v-if="captchaImg"
+              class="captcha-img"
+              title="点击更换"
+              @click="changeCaptcha"
+            />
+          </div>
+        </FormItem>
+        <Row class="login-etc">
+          <Col span="10">
+            <Checkbox v-model="form.remember">七日内免登录</Checkbox>
+          </Col>
+          <Col align="right" span="10" offset="4">
+            <router-link :to="{name: 'resetpwd'}">
+              <span class="forgot">忘记密码?</span>
+            </router-link>
+          </Col>
+        </Row>
+        <Button type="primary" html-type="submit" class="submit" long :disabled="submitDisabled">登录</Button>
+        <div class="to-apply">
+          还没有账户？
+          <router-link :to="{name: 'apply'}">申请加入</router-link>
+        </div>
+      </Form>
+    </div>
+  </loginLayout>
 </template>
 
 <script lang='ts'>
@@ -49,11 +66,12 @@ import { login, LoginData } from '@/api/auth'
 import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
+import { decodeRoute } from '@/util/base64Route'
 
 @Component({
-    components: {
-        loginLayout
-    }
+  components: {
+    loginLayout
+  }
 })
 export default class Main extends ViewBase {
   form: LoginData = {
@@ -125,7 +143,9 @@ export default class Main extends ViewBase {
         systemCode: postData.systemCode
       })
 
-      this.$router.push({ name: 'home' })
+      const { ret = '' } = this.$route.query || {}
+      const route = ret && decodeRoute(ret as string) || { name: 'home' }
+      this.$router.push(route)
     } catch (ex) {
       ((this as any)[`onLogin${ex.code}`] || this.handleError).call(this, ex)
       this.resetCaptcha()

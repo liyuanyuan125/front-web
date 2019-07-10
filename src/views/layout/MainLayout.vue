@@ -23,10 +23,10 @@
         </Button>
       </form>
 
-      <router-link :to="{ name: 'kol-shopping' }" class="cart-node">
+      <!-- <router-link :to="{ name: 'kol-shopping' }" class="cart-node">
         <i class="iconfont icon-cart"/>
         <span class="cart-count" v-if="cartCount > 0">{{cartCount}}</span>
-      </router-link>
+      </router-link> -->
 
       <router-link :to="{ name: 'message' }" class="notice-node">
         <i class="iconfont icon-notice"/>

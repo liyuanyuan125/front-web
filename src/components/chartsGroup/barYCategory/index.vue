@@ -84,7 +84,7 @@ export default class BarYCategory extends ViewBase {
 
   updateCharts() {
     const chartData: any[] = this.dataList[this.currentIndex] || []
-
+    // chartData = chartData.reverse() // 排序问题，组件内翻转 nxd20190710
     const chartEl = this.$refs.refChart as HTMLDivElement
 
     echarts.dispose(chartEl)
@@ -129,10 +129,19 @@ export default class BarYCategory extends ViewBase {
         {
           ...barThinStyle,
           ...barItemStyleColor,
+          label: {
+            normal: {
+              show: true,
+              formatter: '{c}%',
+              position: 'right'
+            }
+          },
           data: seriesData.v
         }
       ]
     }
+    // nxd
+    // console.save(option, `${new Date()}.json`)
     myChart.setOption(option)
   }
 

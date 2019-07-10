@@ -5,24 +5,13 @@
         <div slot="title">
           <Row type="flex" justify="space-between" align="middle">
             <Col :span="17">
-              <DetailNavBar titleText="统计周期">
-                <div slot="item">
-                  <RadioGroup
-                    class="nav"
-                    @on-change="handleChange"
-                    v-model="form.dayRangesKey"
-                    size="large"
-                    type="button"
-                  >
-                    <Radio
-                      v-for="(item) in dict.dayRanges"
-                      :key="item.key"
-                      :disabled="item.disabled"
-                      :label="item.key"
-                    >{{item.text}}</Radio>
-                  </RadioGroup>
-                </div>
-              </DetailNavBar>
+            <DetailNavBar titleText="统计周期">
+              <div slot="item">
+                <RadioGroup class="nav" @on-change="handleChange" v-model="form.dayRangesKey" size="large" type="button">
+                  <Radio v-for="(item) in dict.dayRanges" :key="item.key" :disabled="item.disabled" :label="item.key">{{item.text}}</Radio>
+                </RadioGroup>
+              </div>
+            </DetailNavBar>
             </Col>
             <!--  <Col :span="7" style="text-align:right">
               平台
@@ -45,89 +34,39 @@
         <div class="content">
           <Row type="flex" justify="space-between" class="chart-group">
             <Col :span="12" class="chart-item">
-              <div class="chart-wp" style="margin-right:10px">
-                <PieNest
-                  :initDone="chart1.initDone"
-                  :noData="chart1.noData"
-                  :title="chart1.title"
-                  :dict1="chart1.dict1"
-                  :dict2="chart1.dict2"
-                  :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})"
-                  :color="chart1.color"
-                  :dataList="chart1.dataList"
-                  :currentTypeIndex="chart1.currentTypeIndex"
-                />
-              </div>
+            <div class="chart-wp" style="margin-right:10px">
+              <PieNest :initDone="chart1.initDone" :noData="chart1.noData" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
+            </div>
             </Col>
 
             <Col :span="12" class="chart-item">
-              <div class="chart-wp">
-                <BarxCategoryStack
-                  :initDone="chartNature.initDone"
-                  :noData="chartNature.noData"
-                  :title="chartNature.title"
-                  :dict1="chartNature.dict1"
-                  :dict2="chartNature.dict2"
-                  :xAxis="chartNature.xAxis"
-                  :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})"
-                  :color="chartNature.color"
-                  :dataList="chartNature.dataList"
-                  :currentTypeIndex="chartNature.currentTypeIndex"
-                  @typeChange="typeChangeHander"
-                />
-              </div>
+            <div class="chart-wp">
+              <BarxCategoryStack :initDone="chartNature.initDone" :noData="chartNature.noData" :title="chartNature.title" :dict1="chartNature.dict1" :dict2="chartNature.dict2" :xAxis="chartNature.xAxis" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})" :color="chartNature.color" :dataList="chartNature.dataList" :currentTypeIndex="chartNature.currentTypeIndex" @typeChange="typeChangeHander" />
+            </div>
             </Col>
           </Row>
 
           <Row type="flex" justify="space-between" class="chart-group" style="margin-top:10px">
             <Col :span="12" class="chart-item">
-              <div class="chart-wp borderRadius" style="margin-right:10px;cursor: pointer;">
-                <WordCloud
-                  :initDone="chart3.initDone"
-                  :title="chart3.title"
-                  :dict1="chart3.dict1"
-                  :color="chart3.color"
-                  :dataList="chart3.dataList"
-                  @keyChange="keyChangeHandle"
-                  :currentTypeIndex="chart3.currentTypeIndex"
-                />
-              </div>
+            <div class="chart-wp borderRadius" style="margin-right:10px;cursor: pointer;">
+              <WordCloud :initDone="chart3.initDone" :title="chart3.title" :dict1="chart3.dict1" :color="chart3.color" :dataList="chart3.dataList" @keyChange="keyChangeHandle" :currentTypeIndex="chart3.currentTypeIndex" />
+            </div>
             </Col>
             <Col :span="12" class="chart-item">
-              <div class="chart-wp borderRadius" style="cursor: pointer">
-                <WordCloud
-                  :initDone="chart4.initDone"
-                  :title="chart4.title"
-                  :dict1="chart4.dict1"
-                  :color="chart4.color"
-                  :dataList="chart4.dataList"
-                  @keyChange="keyChangeHandle"
-                  :currentTypeIndex="chart4.currentTypeIndex"
-                />
-              </div>
+            <div class="chart-wp borderRadius" style="cursor: pointer">
+              <WordCloud :initDone="chart4.initDone" :title="chart4.title" :dict1="chart4.dict1" :color="chart4.color" :dataList="chart4.dataList" @keyChange="keyChangeHandle" :currentTypeIndex="chart4.currentTypeIndex" />
+            </div>
             </Col>
           </Row>
 
-          <Row
-            v-if="tableData.length > 0"
-            type="flex"
-            justify="space-between"
-            class="chart-group"
-            style="margin-top:10px"
-          >
+          <Row v-if="tableData.length > 0" type="flex" justify="space-between" class="chart-group" style="margin-top:10px">
             <Col :span="24" class="chart-item">
-              <div class="chart-wp keyword-box borderRadius">
-                <div class="keyword-title">提及到“{{keywordQuery.keyword}}”的热门评论</div>
-                <div class="table-box">
-                  <Table
-                    stripe
-                    ref="table"
-                    :columns="tableColumns"
-                    :loading="tableLoading"
-                    :data="tableData"
-                  ></Table>
-                </div>
+            <div class="chart-wp keyword-box borderRadius">
+              <div class="keyword-title">提及到“{{keywordQuery.keyword}}”的热门评论</div>
+              <div class="table-box">
+                <Table stripe ref="table" :columns="tableColumns" :loading="tableLoading" :data="tableData"></Table>
               </div>
+            </div>
             </Col>
           </Row>
         </div>
@@ -147,7 +86,7 @@ import { dayRanges, comment, codelist, keywordComment } from '@/api/brandfans'
 import PieNest from '@/components/chartsGroup/pieNest'
 import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack'
 import WordCloud from '@/components/chartsGroup/wordCloud'
-import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
+import DetailNavBar from './components/detailNavBar.vue'
 import { tooltipStyles } from '@/util/echarts'
 import { intDate, dot } from '@/util/dealData'
 
@@ -470,7 +409,7 @@ export default class Temporary extends ViewBase {
     try {
       const { data } = await comment({ ...mockObj }, id)
 
-      const items = (data.items as any[] || []).sort((a, b) => a.date - b.date)
+      const items = ((data.items as any[]) || []).sort((a, b) => a.date - b.date)
       const rate = data.rate || null
       const keyWords = data.keyWords || null
 
@@ -760,6 +699,11 @@ export default class Temporary extends ViewBase {
     font-weight: 500;
     color: rgba(255, 255, 255, 1);
     padding: 25px 25px 0 0;
+  }
+  /deep/ .ivu-table-wrapper {
+    /deep/ .ivu-table-cell > div {
+      line-height: 28px;
+    }
   }
 }
 </style>

@@ -12,8 +12,9 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import DetailLayout, { RouteItem } from '@/components/detailLayout'
-
 import { getBrand } from './data'
+import { RouteMetaBase } from '@/routes'
+import { setPageTitle } from '@/util/browser'
 
 @Component({
   components: {
@@ -34,10 +35,21 @@ export default class Layout extends ViewBase {
 
   figure = ''
 
+  get pageTitle() {
+    const meta = this.$route.meta as RouteMetaBase
+    const title = meta && meta.pageTitle || meta.title || ''
+    return `${this.name}${title}-鲸娱数据`
+  }
+
   async created() {
     const { name, figure } = await getBrand(this.id)
     this.name = name
     this.figure = figure
+  }
+
+  @Watch('pageTitle', { immediate: true })
+  watchPageTitle() {
+    setPageTitle(this.pageTitle)
   }
 }
 </script>

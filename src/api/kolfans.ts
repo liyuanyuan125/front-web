@@ -179,7 +179,7 @@ export async function comment(query: any, id: string = '') {
 /**
  * fans
  * @param id id
- * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
+ * @description http://yapi.aiads-dev.com/project/144/interface/api/4596
  */
 export async function fanslist(id: string = '' , query: any) {
   const res = await get(`/kol/accounts/${id}/fans-portrait` , query)

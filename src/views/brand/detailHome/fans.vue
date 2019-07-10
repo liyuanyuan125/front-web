@@ -215,6 +215,7 @@ export default class Temporary extends ViewBase {
       const {
         data
       } = await fans(id)
+
       const item = data.item || null
       if ( !item ) {
         this.chart1.initDone = true
@@ -258,7 +259,7 @@ export default class Temporary extends ViewBase {
 
       let [min, max] = [0, 0]
       const provinceData = provinceList.map(({ count, name }) => {
-        count = parseInt(count, 0)
+        count = parseFloat(count)
         const value = count / 100
         max = max < value ? value : max
         min = min > value ? value : min
@@ -267,10 +268,11 @@ export default class Temporary extends ViewBase {
           value
         }
       })
+
       const cityData = cityList.map(({ count, name }) => {
         return {
           name,
-          value: typeof count === 'number' ? count / 100 : parseInt(count, 0) / 100
+          value: typeof count === 'number' ? count / 100 : parseFloat(count) / 100
         }
       })
 
@@ -278,8 +280,8 @@ export default class Temporary extends ViewBase {
       this.chart3.max = max
       this.chart3.dataList[this.chart3.currentTypeIndex] = provinceData
 
-      this.chart4.dataList[0] = provinceData
-      this.chart4.dataList[1] = cityData
+      this.chart4.dataList[0] = provinceData.length > 10 ? provinceData.slice(0 , 10) : provinceData
+      this.chart4.dataList[1] = cityData.length > 10 ? cityData.slice(0 , 10) : cityData
 
       this.chart1.initDone = true
       this.chart2.initDone = true

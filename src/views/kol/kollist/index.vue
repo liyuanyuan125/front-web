@@ -90,7 +90,7 @@
             <span v-if="row.followersCount">{{formatnumber(row.followersCount)}}</span>
             <span v-else>-</span>
           </template>
-          <template slot-scope="{ row }" slot="flansFace">
+          <template slot-scope="{ row, index }" slot="flansFace">
             <div>
               <p class="flans-box" style="width: 80px">
                 <span>男性：</span>
@@ -105,7 +105,10 @@
               <div>
                 <a @click="viewArea(row.areaId, row.id)" >查看地域</a>
                 <AreaModal
-                  :style="tabledataid.includes(row.id) ? 'margin-top: -300px' : ''"
+                  :style="
+                  acount == 1 ? index + 1 == tabledata.length ? 'margin-top: -300px' : ''
+                  : index == 0 ? 'margin-top: -300px' : ''
+                  "
                   v-show="handleShow"
                   v-clickoutside="handleClose"
                   v-if="row.id == areaIdshow"
@@ -128,7 +131,7 @@
           </template>
           <template slot-scope="{ row }" slot="transmit">
             <div>
-              <span v-if="row.avgRepostsCount">{{formatnumber(row.avgRepostsCount)}}</span>
+              <span v-if="row.avgShareCount">{{formatnumber(row.avgShareCount)}}</span>
               <span v-else>-</span>
             </div>
           </template>
@@ -151,20 +154,20 @@
           </template>
           <template slot-scope="{ row }" slot="action">
             <div class="table-action">
-              <p v-if="!yudingListId.includes(row.kolId)" @click="debounce(row, $event, 1000)">
+              <!-- <p v-if="!yudingListId.includes(row.kolId)" @click="debounce(row, $event, 1000)">
                 <Icon type="md-add-circle" style=" font-size: 17px; color: #001F2C; opacity: .3" />
                 加入投放
               </p>
               <p v-else @click="cancelShop(row.id)">
                 <Icon type="ios-checkmark-circle" style="font-size: 17px; color: #CA7273;" />
                 已加入
-              </p>
-              <p style="margin-top: 5px" v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)"
+              </p> -->
+              <p style="margin-top: 0px" v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)"
               @click="collects(acount == 1 ? row.id : row.accountDataId)">
                 <Icon type="md-heart" style="font-size: 17px;color: #001F2C; opacity: .3" />
                 收藏
               </p>
-              <p style="margin-top: 5px" v-else @click="cancelcollects(acount == 1 ? row.id : row.accountDataId)">
+              <p style="margin-top: 0px" v-else @click="cancelcollects(acount == 1 ? row.id : row.accountDataId)">
                 <Icon type="md-heart" style="font-size: 17px; color: #CA7273" />
                 已收藏
               </p>
@@ -198,7 +201,7 @@
             <Icon @click="detailhide" v-else type="ios-arrow-down" />
           </div>
           <div style="margin-right: 20px">
-            <Button type="primary" class="button-ok" @click="next">立即预定</Button>
+            <!-- <Button type="primary" class="button-ok" @click="next">立即预定</Button> -->
           </div>
         </div>
       </div>
@@ -366,7 +369,7 @@ export default class Main extends ViewBase {
         title: '平均转发数',
         align: 'left',
         minWidth: 51,
-        key: 'avgRepostsCount',
+        key: 'avgShareCount',
         slot: 'transmit',
         sortable: this.acount == 1 ? 'custom' : ''
       },
@@ -698,9 +701,14 @@ export default class Main extends ViewBase {
 
   checkDetailSet(val: any) {
     this.yudingList = val
+    if (this.acount == 1) {
+      this.KolSeach()
+      this.kolinit()
+    } else {
+      this.collectinit()
+      this.kolinit()
+    }
     this.yudingListId = this.yudingList.map((it: any) => it.kolId)
-    this.KolSeach()
-    this.kolinit()
   }
 
   // 粉丝数相加
