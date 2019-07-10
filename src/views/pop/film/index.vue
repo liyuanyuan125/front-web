@@ -33,7 +33,8 @@
           <li v-for="item in tableDate " :key="item.id">
             <div class="flex-box inner">
               <div class="left-item"  @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">
-                <img :src="item.logo" class="img" :onerror="defaultImg" />
+                <img v-if="item.logo" :src="item.logo" class="img" />
+                <img v-else src="./assets/default-img.png"  class="img"/>
               </div>
               
               <div class="right-item">

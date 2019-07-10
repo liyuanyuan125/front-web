@@ -569,7 +569,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 推广管理 - 广告计划 - 创建广告计划
   {
-    path: '/pop/planlist/add/:id?/:setid?',
+    path: '/pop/planlist/add/:step?/:setid?',
     name: 'pop-planlist-add',
     component: () => import('./views/pop/plan/index.vue'),
     meta: {
@@ -582,7 +582,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
   {
-    path: '/pop/planlist/edit/:id/:setid',
+    path: '/pop/planlist/edit/:step/:setid',
     name: 'pop-planlist-edit',
     component: () => import('./views/pop/plan/index.vue'),
     meta: {
