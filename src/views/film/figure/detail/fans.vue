@@ -221,7 +221,7 @@ export default class Temporary extends ViewBase {
 
       let [min, max] = [0, 0]
       const provinceData = provinceList.map(({ v, k }) => {
-        v = parseInt(v, 0)
+        // v = parseInt(v, 0)
         max = max < v ? v : max
         min = min > v ? v : min
         return { name: k, value: v }
@@ -229,7 +229,8 @@ export default class Temporary extends ViewBase {
       const cityData = cityList.map(({ v, k }) => {
         return {
           name: k,
-          value: typeof v === 'number' ? v : parseInt(v, 0)
+          // value: typeof v === 'number' ? v : parseInt(v, 0)
+          value: v
         }
       })
 
