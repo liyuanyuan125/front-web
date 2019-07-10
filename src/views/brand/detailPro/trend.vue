@@ -79,7 +79,7 @@ import {
   formatTimes,
   formatNumber
 } from '@/util/validateRules'
-import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
+import DetailNavBar from './components/detailNavBar.vue'
 import { trend } from '@/api/kolDetailMoreInfo'
 import AreaBasic from '@/components/chartsGroup/areaBasic/'
 import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
