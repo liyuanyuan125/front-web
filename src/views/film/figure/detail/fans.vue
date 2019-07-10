@@ -216,8 +216,9 @@ export default class Temporary extends ViewBase {
         })
       }
 
-      const provinceList = ((provinces as any[]) || []).sort((a, b) => b.v - a.v)
-      const cityList = ((cities as any[]) || []).sort((a, b) => b.v - a.v)
+      // 影人粉丝，省市数据返回占比，无需除100 xd 20190710
+      const provinceList = ((provinces as any[]) || []).sort((a, b) => a.v - b.v)
+      const cityList = ((cities as any[]) || []).sort((a, b) => a.v - b.v)
 
       let [min, max] = [0, 0]
       const provinceData = provinceList.map(({ v, k }) => {
@@ -236,7 +237,6 @@ export default class Temporary extends ViewBase {
       this.chart3.min = min
       this.chart3.max = max
       this.chart3.dataList[this.chart3.currentTypeIndex] = provinceData
-      this.chart3.initDone = true
 
       this.chart4.dataList[0] = provinceData.length > 10 ? provinceData.slice(0 , 10) : provinceData
       this.chart4.dataList[1] = cityData.length > 10 ? cityData.slice(0 , 10) : cityData

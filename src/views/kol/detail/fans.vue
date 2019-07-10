@@ -270,7 +270,7 @@ export default class Temporary extends ViewBase {
 
       let [min, max] = [0, 0]
       const provinceData = provinceList.map(({ rate, name }) => {
-        rate = parseInt(rate, 0)
+        rate = parseFloat(rate) / 100
         max = max < rate ? rate : max
         min = min > rate ? rate : min
         return {
@@ -281,7 +281,7 @@ export default class Temporary extends ViewBase {
       const cityData = cityList.map(({ rate, name }) => {
         return {
           name,
-          value: typeof rate === 'number' ? rate : parseInt(rate, 0)
+          value: typeof rate === 'number' ? rate / 100 : parseFloat(rate) / 100
         }
       })
 

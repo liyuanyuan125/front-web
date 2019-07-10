@@ -84,7 +84,6 @@ import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import MapChina from '@/components/chartsGroup/mapChina/'
 import Pie from '@/components/chartsGroup/pieSimple/'
 import PieNest from '@/components/chartsGroup/pieNest/'
-import BarYCategory from '@/components/chartsGroup/barYCategory/'
 import { toMap } from '@/fn/array'
 import { findIndex } from 'lodash'
 
@@ -101,7 +100,6 @@ const getName = (key: string, list: any[]) => {
     BarXCategory,
     Pie,
     MapChina,
-    BarYCategory,
     DetailNavBar,
     PieNest
   }
