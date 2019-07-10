@@ -863,6 +863,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'customer-manage',
       authAction: 'view',
+      title: '查看客户详情',
     }
   },
 
