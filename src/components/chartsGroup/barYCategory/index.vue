@@ -84,7 +84,7 @@ export default class BarYCategory extends ViewBase {
 
   updateCharts() {
     const chartData: any[] = this.dataList[this.currentIndex] || []
-
+    // chartData = chartData.reverse() // 排序问题，组件内翻转 nxd20190710
     const chartEl = this.$refs.refChart as HTMLDivElement
 
     echarts.dispose(chartEl)
@@ -132,7 +132,7 @@ export default class BarYCategory extends ViewBase {
           label: {
             normal: {
               show: true,
-              formatter: '{b} {c}%',
+              formatter: '{c}%',
               position: 'right'
             }
           },

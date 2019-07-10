@@ -104,6 +104,7 @@ import OfferPane from './components/offerPane.vue'
 import { getKol } from './data'
 import { kolHasFav, kolSetFav } from './fav'
 import { readableThousands } from '@/util/dealData'
+import { setPageTitle } from '@/util/browser'
 
 @Component({
   components: {
@@ -206,6 +207,8 @@ export default class FigurePage extends ViewBase {
     this.hotData = hotData
     this.opusData = opusData
     this.offerData = offerData
+
+    setPageTitle(`${basic.name}-鲸娱数据`)
   }
 
   @Watch('channel')

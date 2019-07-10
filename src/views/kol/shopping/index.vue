@@ -96,7 +96,7 @@
             </li>
           </ul>
           <div>
-            <Button class="default-btn" v-if="sum > 0" @click="reserve">立即预定</Button>
+            <!-- <Button class="default-btn" v-if="sum > 0" @click="reserve">立即预定</Button> -->
           </div>
         </div>
       </div>

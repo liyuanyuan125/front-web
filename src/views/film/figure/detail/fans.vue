@@ -29,60 +29,26 @@
         <div class="content">
           <Row type="flex" justify="space-between">
             <Col :span="12">
-              <div class="chart-wp sex-chart" style="margin-right:10px">
-                <Pie
-                  :initDone="chart1.initDone"
-                  :title="chart1.title"
-                  :dict1="chart1.dict1"
-                  :dict2="chart1.dict2"
-                  :color="chart1.color"
-                  :dataList="chart1.dataList"
-                  :currentTypeIndex="chart1.currentTypeIndex"
-                />
-              </div>
+            <div class="chart-wp sex-chart" style="margin-right:10px">
+              <Pie :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
+            </div>
             </Col>
             <Col :span="12">
-              <div class="chart-wp age-chart">
-                <BarXCategory
-                  :initDone="chart2.initDone"
-                  :title="chart2.title"
-                  :dict1="chart2.dict1"
-                  :dict3="chart2.dict3"
-                  :color="chart2.color"
-                  :dataList="chart2.dataList"
-                  :currentTypeIndex="chart2.currentTypeIndex"
-                />
-              </div>
+            <div class="chart-wp age-chart">
+              <BarXCategory :initDone="chart2.initDone" :title="chart2.title" :dict1="chart2.dict1" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" />
+            </div>
             </Col>
           </Row>
           <Row type="flex" justify="space-between" style="margin-top:10px">
             <Col :span="12">
-              <div class="chart-wp province-chart" style="margin-right:10px; height:460px">
-                <MapChina
-                  :initDone="chart3.initDone"
-                  :title="chart3.title"
-                  :dict1="chart3.dict1"
-                  :dict2="chart3.dict2"
-                  :color="chart3.color"
-                  :max="chart3.max"
-                  :dataList="chart3.dataList"
-                  :currentTypeIndex="chart3.currentTypeIndex"
-                />
-              </div>
+            <div class="chart-wp province-chart" style="margin-right:10px; height:460px">
+              <MapChina :initDone="chart3.initDone" :title="chart3.title" :dict1="chart3.dict1" :dict2="chart3.dict2" :color="chart3.color" :max="chart3.max" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" />
+            </div>
             </Col>
             <Col :span="12">
-              <div class="chart-wp city-chart" style="height:460px">
-                <BarYCategory
-                  :initDone="chart4.initDone"
-                  :title="chart4.title"
-                  :dict1="chart4.dict1"
-                  :dict2="chart4.dict2"
-                  :color="chart4.color"
-                  :dataList="chart4.dataList"
-                  :currentTypeIndex="chart4.currentTypeIndex"
-                  @typeChange="typeChangeHander4"
-                />
-              </div>
+            <div class="chart-wp city-chart" style="height:460px">
+              <BarYCategory :initDone="chart4.initDone" :title="chart4.title" :dict1="chart4.dict1" :dict2="chart4.dict2" :color="chart4.color" :dataList="chart4.dataList" :currentTypeIndex="chart4.currentTypeIndex" @typeChange="typeChangeHander4" />
+            </div>
             </Col>
           </Row>
         </div>
@@ -185,7 +151,7 @@ export default class Temporary extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: ['#ff9933', '#169bd5']
+    color: []
   }
 
   brandsLoading = false
@@ -205,12 +171,10 @@ export default class Temporary extends ViewBase {
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     try {
-      const {
-        data
-      } = await fans(this.id)
+      const { data } = await fans(this.id)
 
       const item = data.item || null
-      if ( !item ) {
+      if (!item) {
         this.chart1.initDone = true
         this.chart2.initDone = true
         this.chart3.initDone = true
@@ -222,7 +186,7 @@ export default class Temporary extends ViewBase {
       const provinces = item.provinces || null
       const cities = item.cities || null
 
-      if ( genders && genders.length > 0 ) {
+      if (genders && genders.length > 0) {
         this.chart1.dict2 = data.genders.filter(({ key, text }: any) => {
           return text !== '未知' || key !== 0
         })
@@ -252,12 +216,13 @@ export default class Temporary extends ViewBase {
         })
       }
 
-      const provinceList = (provinces as any[] || []).sort((a, b) => a.v - b.v)
-      const cityList = (cities as any[] || []).sort((a, b) => a.v - b.v)
+      // 影人粉丝，省市数据返回占比，无需除100 xd 20190710
+      const provinceList = ((provinces as any[]) || []).sort((a, b) => a.v - b.v)
+      const cityList = ((cities as any[]) || []).sort((a, b) => a.v - b.v)
 
       let [min, max] = [0, 0]
       const provinceData = provinceList.map(({ v, k }) => {
-        v = parseInt(v, 0)
+        v = parseFloat(v)
         max = max < v ? v : max
         min = min > v ? v : min
         return { name: k, value: v }
@@ -265,17 +230,16 @@ export default class Temporary extends ViewBase {
       const cityData = cityList.map(({ v, k }) => {
         return {
           name: k,
-          value: typeof v === 'number' ? v : parseInt(v, 0)
+          value: typeof v === 'number' ? v : parseFloat(v)
         }
       })
 
       this.chart3.min = min
       this.chart3.max = max
       this.chart3.dataList[this.chart3.currentTypeIndex] = provinceData
-      this.chart3.initDone = true
 
-      this.chart4.dataList[0] = provinceData
-      this.chart4.dataList[1] = cityData
+      this.chart4.dataList[0] = provinceData.length > 10 ? provinceData.slice(0 , 10) : provinceData
+      this.chart4.dataList[1] = cityData.length > 10 ? cityData.slice(0 , 10) : cityData
 
       this.chart1.initDone = true
       this.chart2.initDone = true

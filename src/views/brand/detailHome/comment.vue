@@ -86,7 +86,7 @@ import { dayRanges, comment, codelist, keywordComment } from '@/api/brandfans'
 import PieNest from '@/components/chartsGroup/pieNest'
 import BarxCategoryStack from '@/components/chartsGroup/barxCategoryStack'
 import WordCloud from '@/components/chartsGroup/wordCloud'
-import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
+import DetailNavBar from './components/detailNavBar.vue'
 import { tooltipStyles } from '@/util/echarts'
 import { intDate, dot } from '@/util/dealData'
 

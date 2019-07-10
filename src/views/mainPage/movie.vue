@@ -24,6 +24,7 @@
               params: { id: id }
             }"
             class="button-apply"
+            v-if="joinStatus == 2"
           >申请合作</router-link>
         </BasicPane>
       </div>
@@ -95,6 +96,7 @@ import { getMovie, getVideoRise, getVideoHot } from './data'
 import { movieHasFav, movieSetFav } from './fav'
 import { readableThousands } from '@/util/dealData'
 import { MovieStatus } from '@/util/types'
+import { setPageTitle } from '@/util/browser'
 
 @Component({
   components: {
@@ -116,6 +118,9 @@ export default class MoviePage extends ViewBase {
   hasShow = false
 
   status = 0 as MovieStatus
+
+  // 0 未知，1 关闭，2 开启
+  joinStatus = 0
 
   bigFigure = ''
 
@@ -162,6 +167,7 @@ export default class MoviePage extends ViewBase {
       basic,
       hasShow,
       status,
+      joinStatus,
       movie,
       actorData,
       fansRate,
@@ -173,6 +179,7 @@ export default class MoviePage extends ViewBase {
     this.basic = basic
     this.hasShow = hasShow
     this.status = status
+    this.joinStatus = joinStatus
     this.movie = movie
     this.actorData = actorData
     this.fansRate = fansRate
@@ -181,6 +188,8 @@ export default class MoviePage extends ViewBase {
 
     // 拿到 hasShow 后，再调用 initRise
     this.initRise()
+
+    setPageTitle(`${basic.name}-鲸娱数据`)
   }
 
   async initRise() {
