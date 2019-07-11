@@ -136,7 +136,7 @@ export default class Temporary extends ViewBase {
   }
 
   chart4: any = {
-    title: '城市分粉丝量TOP10',
+    title: '地域分布TOP10',
     dict1: [
       {
         key: 0,
