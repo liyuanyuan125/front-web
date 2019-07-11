@@ -818,9 +818,12 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       authIsMenu: true,
-      title() {
-        return '监测报告'
-      }
+      title: '监测报告',
+      breadcrumbs: [
+        { label: '映前广告管理' },
+        { label: '第三方监测', route: { name: 'test' } },
+        { label: '监测报告' }
+      ]
     }
   },
 
