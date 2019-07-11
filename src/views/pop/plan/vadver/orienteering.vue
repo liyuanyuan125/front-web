@@ -472,18 +472,18 @@ export default class Orienteering extends ViewBase {
             this.spinshow = false
             if (this.planMovies && this.planMovies.length > 0) {
                 this.$emit('input', {
-                  id: 2,
+                  step: 2,
                   setid: this.$route.params.setid
                 })
                 if (this.$route.name == 'pop-planlist-add') {
                   this.$router.push({
                     name: 'pop-planlist-add',
-                    params: { id: '2', setid: this.$route.params.setid  }
+                    params: { step: '2', setid: this.$route.params.setid  }
                   })
                 } else {
                   this.$router.push({
                     name: 'pop-planlist-edit',
-                    params: { id: '2', setid: this.$route.params.setid  }
+                    params: { step: '2', setid: this.$route.params.setid  }
                   })
                 }
               } else {
@@ -549,18 +549,18 @@ export default class Orienteering extends ViewBase {
 
   back(dataform: any) {
     this.$emit('input', {
-      id: 0,
+      step: 0,
       setid: this.$route.params.setid
     })
     if (this.$route.name == 'pop-planlist-add') {
       this.$router.push({
         name: 'pop-planlist-add',
-        params: { id: '0', setid: this.$route.params.setid  }
+        params: { step: '0', setid: this.$route.params.setid  }
       })
     } else {
       this.$router.push({
         name: 'pop-planlist-edit',
-        params: { id: '0', setid: this.$route.params.setid  }
+        params: { step: '0', setid: this.$route.params.setid  }
       })
     }
   }

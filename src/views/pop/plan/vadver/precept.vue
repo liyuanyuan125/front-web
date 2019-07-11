@@ -304,7 +304,7 @@ export default class App extends ViewBase {
     this.$router.push({
       name: 'film-movie',
       params: {
-        id
+        step: id
       }
     })
   }
@@ -478,18 +478,18 @@ export default class App extends ViewBase {
       //   planRecommed: { ...this.commendata }
       // })
       this.$emit('input', {
-        id: 3,
+        step: 3,
         setid: this.$route.params.setid
       })
       if (this.$route.name == 'pop-planlist-add') {
           this.$router.push({
             name: 'pop-planlist-add',
-            params: { id: '3', setid: this.$route.params.setid  }
+            params: { step: '3', setid: this.$route.params.setid  }
           })
         } else {
           this.$router.push({
             name: 'pop-planlist-edit',
-            params: { id: '3', setid: this.$route.params.setid  }
+            params: { step: '3', setid: this.$route.params.setid  }
           })
         }
     } catch (ex) {
@@ -541,7 +541,7 @@ export default class App extends ViewBase {
 
   back(dataform: any) {
     this.$emit('input', {
-      id: 1,
+      step: 1,
       setid: this.$route.params.setid
     })
     // if (this.$route.name == 'pop-planlist-add') {
@@ -552,7 +552,7 @@ export default class App extends ViewBase {
     // } else {
     this.$router.push({
       name: 'pop-planlist-edit',
-      params: { id: '1', setid: this.$route.params.setid  }
+      params: { step: '1', setid: this.$route.params.setid  }
     })
     // }
   }
@@ -623,7 +623,7 @@ export default class App extends ViewBase {
 }
 .film-max {
   overflow: hidden;
-  max-height: 890px;
+  max-height: 880px;
 }
 .arrow-box {
   position: relative;

@@ -2,14 +2,14 @@
   <div class="app">
     <ul class="step">
       <li v-for="(item, index) in step" :key="item.id"
-        :class="[(value.id) >= item.id ? 'active' : '', (value.id * 1 + 1) < item.id  ? 'default' : '']"
+        :class="[(value.step) >= item.id ? 'active' : '', (value.step * 1 + 1) < item.id  ? 'default' : '']"
       >
-        <span :class="[(value.id) >= item.id ? 'actve-span' : '', (value.id)  < item.id ? 'default-span' : '']" v-if="index!=3"></span>
+        <span :class="[(value.step) >= item.id ? 'actve-span' : '', (value.step)  < item.id ? 'default-span' : '']" v-if="index!=3"></span>
       </li>
     </ul>
     <ul class="step-text">
-      <li v-for="(item) in step" :key="item.id" :class="[(value.id) >= item.id ? 'active' : '',
-        (value.id * 1 + 1) < item.id  ? 'default' : '']">
+      <li v-for="(item) in step" :key="item.id" :class="[(value.step) >= item.id ? 'active' : '',
+        (value.step * 1 + 1) < item.id  ? 'default' : '']">
         {{item.key}}
       </li>
     </ul>

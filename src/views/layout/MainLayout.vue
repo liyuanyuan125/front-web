@@ -16,12 +16,12 @@
 
       <div class="flex-1"></div>
 
-      <form class="search-form flex-mid" @submit.prevent="search">
+      <!-- <form class="search-form flex-mid" @submit.prevent="search">
         <input type="search" v-model="keyword" placeholder="搜索" class="search-input">
         <Button html-type="submit" class="search-submit">
           <i class="iconfont icon-search"/>
         </Button>
-      </form>
+      </form> -->
 
       <!-- <router-link :to="{ name: 'kol-shopping' }" class="cart-node">
         <i class="iconfont icon-cart"/>
