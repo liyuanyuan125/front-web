@@ -375,7 +375,7 @@ export default class Plan extends ViewBase {
   plandetail(id: any) {
     this.$router.push({
       name: 'pop-planlist-default',
-      params: { step: id }
+      params: { id }
     })
   }
 
