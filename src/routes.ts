@@ -723,19 +723,6 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     },
   },
 
-  // 资源方 - 广告单管理 - 下刊管理
-   {
-    path: '/order/nextissue',
-    name: 'order-nextissue',
-    component: () => import('./views/order/nextissue/index.vue'),
-    meta: {
-      authKey: '',
-      authAction: 'EMPTY',
-      authIsMenu: true,
-      pageTitle: '下刊管理-鲸娱数据',
-    },
-  },
-
   // 资源方 - 广告单管理 - 监播管理
    {
     path: '/order/supervision',

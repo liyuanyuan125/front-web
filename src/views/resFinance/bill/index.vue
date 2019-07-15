@@ -47,8 +47,6 @@ export default class Main extends ViewBase {
   // userList: any = {}
   // 显示图片
   viewimg: any = false
-  // 不显示图片
-  noviewimg: any = false
 
   query: any = {
     year: 1,
@@ -124,10 +122,6 @@ export default class Main extends ViewBase {
       this.viewimg = false
     }
   }
-
-  // jump() {
-  //   this.$router.push({ name: 'resFinance-bill-detail' })
-  // }
 }
 </script>
 
