@@ -8,33 +8,52 @@
         <img src="./assets/month.png">
       </Col>
     </Row>
-    <div class="items">
+    <div v-if='viewimg' class="items">
       <img @click="jump()" src="./assets/2019-06.png" alt />
     </div>
-    <div class="items">
+    <div v-if='viewimg' class="items">
       <img @click="jump()" src="./assets/2019-05.png" alt />
     </div>
-    <div class="items">
+    <div v-if='viewimg' class="items">
       <img @click="jump()" src="./assets/2019-04.png" alt />
     </div>
-    <div class="items">
+    <div v-if='viewimg' class="items">
       <img @click="jump()" src="./assets/2019-03.png" alt />
     </div>
+    <div v-if='!viewimg' class='nos'>暂无对账单管理数据</div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { getUser } from '@/store'
 import moment from 'moment'
 import { toMap } from '@/fn/array'
 import { confirm, toast, info } from '@/ui/modal'
 
 @Component
 export default class Main extends ViewBase {
-  jump() {
-    this.$router.push({ name: 'resFinance-bill-detail' })
+  // 查看用户信息
+  user: any = getUser()!
+  // userList: any = {}
+  // 显示图片
+  viewimg: any = false
+  // 不显示图片
+  noviewimg: any = false
+
+  mounted() {
+    const corpIds: any = VAR.env == 'prd' ? [642, 644] : [120]
+    if (corpIds.indexOf(this.user.companyId) != -1) {
+      this.viewimg = true
+    } else {
+      this.viewimg = false
+    }
   }
+
+  // jump() {
+  //   this.$router.push({ name: 'resFinance-bill-detail' })
+  // }
 }
 </script>
 
@@ -59,5 +78,12 @@ export default class Main extends ViewBase {
     width: 100%;
     height: 100%;
   }
+}
+.nos {
+  height: 30px;
+  text-align: center;
+  color: #fff;
+  font-size: 16px;
+  line-height: 30px;
 }
 </style>
