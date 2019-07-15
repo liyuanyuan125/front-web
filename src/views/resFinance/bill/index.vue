@@ -17,18 +17,19 @@
       </Col>
     </Row>
     <div v-if='viewimg && (query.mounth == 6 || query.mounth == 0)' class="items">
-      <img src="./assets/2019-06.png" alt />
+      <img src="./assets/2019-06.png" alt='' />
     </div>
     <div v-if='viewimg && (query.mounth == 5 || query.mounth == 0)' class="items">
-      <img src="./assets/2019-05.png" alt />
+      <img src="./assets/2019-05.png" alt='' />
     </div>
     <div v-if='viewimg && (query.mounth == 4 || query.mounth == 0)' class="items">
-      <img src="./assets/2019-04.png" alt />
+      <img src="./assets/2019-04.png" alt='' />
     </div>
     <div v-if='viewimg && (query.mounth == 3 || query.mounth == 0)' class="items">
-      <img src="./assets/2019-03.png" alt />
+      <img src="./assets/2019-03.png" alt='' />
     </div>
-    <div v-if='!viewimg || query.mounth != 3 || query.mounth != 4 || query.mounth != 5 || query.mounth != 6 || query.mounth != 0' class='nos'>暂无对账单管理数据</div>
+    <div v-if='!viewimg || query.mounth != 3 || query.mounth != 4 || query.mounth != 5 || query.mounth != 6 || query.mounth != 0' class='nos'>暂无对账单管理数据
+    </div>
   </div>
 </template>
 
