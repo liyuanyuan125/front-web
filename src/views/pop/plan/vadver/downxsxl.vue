@@ -41,7 +41,7 @@ export default class Dates extends ViewBase {
     try {
       const { data } = await exportId(this.id)
       let indexs = 0
-      this.tableDate1 = (data.planCinemas.map((it: any, index: number) => {
+      this.tableDate1 = ((data.planCinemas || []).map((it: any, index: number) => {
         if (it.num != -1) {
           indexs += 1
         }
