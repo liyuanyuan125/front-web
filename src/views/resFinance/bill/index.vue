@@ -28,7 +28,7 @@
     <div v-if='viewimg && (query.mounth == 3 || query.mounth == 0)' class="items">
       <img @click="jump()" src="./assets/2019-03.png" alt />
     </div>
-    <div v-if='!viewimg || (query.mounth != 3 || query.mounth != 4 || query.mounth != 5 || query.mounth != 6 || query.mounth != 0 || query.mounth != 3)' class='nos'>暂无对账单管理数据</div>
+    <div v-if='!viewimg || (query.mounth != 3 || query.mounth != 4 || query.mounth != 5 || query.mounth != 6 || query.mounth != 0)' class='nos'>暂无对账单管理数据</div>
   </div>
 </template>
 
