@@ -69,14 +69,34 @@
                 </Col>
               </Row>
             </Col>
-            <Col span="12">
+            <Col span="24">
               <Row class="adver-detail">
-                <FormItem label="投放排期:" class="timer" :labelWidth='100' prop="advertime">
-                  <DatePicker v-model="form.advertime"
-                    :options="startDate"
-                    type="daterange" placement="bottom-end" placeholder="请选择日期" ></DatePicker>
-                  <!-- <weekDatePicker  style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker> -->
-                </FormItem>
+                <Col :span="10">
+                  <FormItem label="投放排期:" class="timer" :labelWidth='100' prop="beginDate">
+                    <DatePicker type="date" 
+                      :options="startDate"
+                      v-model="form.beginDate"
+                      placeholder="开始时间" style="width: 200px"></DatePicker>
+                    <!-- <DatePicker v-model="form.advertime"
+                      :options="startDate"
+                      type="daterange" placement="bottom-end" placeholder="请选择日期" ></DatePicker> -->
+                    <!-- <weekDatePicker  style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker> -->
+                  </FormItem>
+                </Col>
+                <Col :span="1"><p style="text-align: center;margin-top: 8px;font-size: 16px;">至</p></Col>
+                <Col :span="10">
+                  <FormItem class="timer" :labelWidth='10' prop="endDate">
+                    <DatePicker type="date"
+                      :options="endDate"
+                      v-model="form.endDate"
+                      placeholder="结束时间" style="width: 200px"></DatePicker>
+                    <!-- <DatePicker v-model="form.advertime"
+                      :options="startDate"
+                      type="daterange" placement="bottom-end" placeholder="请选择日期" ></DatePicker> -->
+                    <!-- <weekDatePicker  style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker> -->
+                  </FormItem>
+                </Col>
+                
               </Row>
             </Col>
             <Col span="24">
@@ -93,7 +113,6 @@
                   </div>
                 </Col>
               </Row>
-              
             </Col>
           </Row>
         </Col>
@@ -137,15 +156,14 @@ export default class Promotion extends ViewBase {
   setadver: any = false
   form: any = {
     name: '',
-    beginDate: '',
-    endDate: '',
+    beginDate: null,
+    endDate: null,
     budgetAmount: '',
     videoId: null,
     specification: null,
     customerId: null,
     productId: null,
     brandId: null,
-    advertime: []
   }
   query: any = {
     specification: null,
@@ -169,7 +187,22 @@ export default class Promotion extends ViewBase {
 
   startDate: any = {
     disabledDate: (dates: any) => {
-      return dates && dates.valueOf() < this.times
+      if (this.form.endDate) {
+        const time = new Date(this.form.beginDate)
+        return dates && dates.valueOf() < this.times || dates.getDay() != 4 ||
+        dates.valueOf() > time
+      }
+      return dates && dates.valueOf() < this.times || dates.getDay() != 4
+    }
+  }
+
+  endDate: any = {
+    disabledDate: (dates: any) => {
+      let time = this.times + 7 * 86400000
+      if (this.form.beginDate) {
+        time = new Date(this.form.beginDate)
+      }
+      return dates && dates.valueOf() < time || dates.getDay() != 3
     }
   }
 
@@ -254,11 +287,11 @@ export default class Promotion extends ViewBase {
       specification: [
         { required: true, type: 'number', message: '不能为空', trigger: 'change' }
       ],
-      advertime: [
-        {
-          validator: msgtime,
-          trigger: 'change'
-        }
+      beginDate: [
+        { required: true, type: 'date', message: '不能为空', trigger: 'change' }
+      ],
+      endDate: [
+        { required: true, type: 'date', message: '不能为空', trigger: 'change' }
       ]
     }
   }
@@ -329,11 +362,11 @@ export default class Promotion extends ViewBase {
       if (!data.item.videoId) {
         this.setadver = true
         this.pername = data.item.name
-        this.query.brandId = data.item.brandId || ''
+        this.query.brandId = data.item.brandId || 0
         // data.item.brandId ? this.seachs(data.item.brandId) : ''
         this.query.specification = data.item.specification || ''
-        this.query.customerId = data.item.customerId || ''
-        this.query.productId = data.item.productId || ''
+        this.query.customerId = data.item.customerId || 0
+        this.query.productId = data.item.productId || 0
       } else {
         this.form.name = data.item.name
         this.form.specification = data.item.specification
@@ -342,10 +375,10 @@ export default class Promotion extends ViewBase {
         this.form.productId = data.item.productId
         this.form.brandId = data.item.brandId
       }
-      const begin: any = this.formatDate(data.item.beginDate)
-      const end: any = this.formatDate(data.item.endDate)
-      this.form.advertime = [begin,
-        end]
+      const begin: any = new Date(this.formatDate(data.item.beginDate))
+      const end: any = new Date(this.formatDate(data.item.endDate))
+      this.form.beginDate = begin
+      this.form.endDate = end
     } catch (ex) {
       this.handleError(ex)
     }
@@ -379,6 +412,8 @@ export default class Promotion extends ViewBase {
         const query = this.setadver ? clean({
           ...this.form,
           ...this.query,
+          beginDate: moment(this.form.beginDate).format(timeFormat),
+          endDate: moment(this.form.endDate).format(timeFormat),
           brandId: this.query.brandId,
         }) : clean({ ...this.form })
         const data = await createdDraft(clean({
@@ -386,7 +421,6 @@ export default class Promotion extends ViewBase {
           name: this.setadver ? this.pername : this.form.name,
           videoId: this.setadver ? '' : this.form.videoId,
           id: this.$route.params.setid ? this.$route.params.setid : '',
-          advertime: '',
           specification: this.setadver ? this.query.specification + '' : this.form.specification + '',
           budgetAmount: Number(this.form.budgetAmount * 10000)}, [0]))
         if (!this.$route.params.setid) {
@@ -443,13 +477,6 @@ export default class Promotion extends ViewBase {
       this.steps = 1
     } else {
       this.form.name = ''
-    }
-  }
-  @Watch('form.advertime', {deep: true})
-  watchformAdvertime(val: any) {
-    if (val.length > 0) {
-      this.form.beginDate = moment(val[0]).format(timeFormat)
-      this.form.endDate = moment(val[1]).format(timeFormat)
     }
   }
 

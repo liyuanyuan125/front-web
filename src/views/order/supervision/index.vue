@@ -38,6 +38,28 @@
             <span @click='seachchgdown'>下周&nbsp;></span>
         </Col>
       </Row>
+      <!-- <Row>
+        <li class='li-item'>
+            <row>
+              <Col span='3'>通投</Col>
+              <Col span='2'>50s</Col>
+              <Col span='19'>
+                <row>
+                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
+                  
+                  <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
+                  <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
+                    <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
+                    <router-link style='color: #00202D;margin-left: 25px;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,10)}}...</router-link>
+                  </Tooltip>
+                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+                  ({{item.videoLength}}s)
+                  </Col>
+                </row>
+              </Col>
+            </row>
+          </li>
+      </Row> -->
       <div style=' margin-top: 15px; '>
       	<Row class='li-title'>
           <Col span='3' >影片名称</Col>
