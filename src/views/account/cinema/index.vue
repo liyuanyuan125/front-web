@@ -171,6 +171,7 @@ export default class Main extends ViewBase {
         cinemaId: id,
         contactTel: this.editTel
       })
+      this.editIndex = -1
       this.seachList()
     } catch (ex) {
       this.handleError(ex)

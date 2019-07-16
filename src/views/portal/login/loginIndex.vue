@@ -67,6 +67,7 @@ import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
 import { decodeRoute } from '@/util/base64Route'
+import { info } from '@/ui/modal'
 
 @Component({
   components: {
@@ -158,8 +159,10 @@ export default class Main extends ViewBase {
     this.emailError = '账号不存在'
   }
 
-  onLogin10002(ex: any) {
-    this.handleError(ex)
+  async onLogin10002(ex: any) {
+    await info('温馨提示：请务必核实您的账号角色，正确选择广告主或影城身份', {
+      title: '账号或密码错误'
+    })
   }
 
   onLogin10006() {
