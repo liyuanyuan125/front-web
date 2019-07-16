@@ -314,7 +314,6 @@ export default class Main extends ViewBase {
       beginDate: this.beginDate(this.form.dayRangesKey),
       endDate: this.endDate()
     }
-    console.log( mockObj,'mockObjmockObjmockObjmockObjmockObjmockObjmockObjmockObjmockObjmockObj')
     try {
       const {
         data
@@ -494,7 +493,7 @@ export default class Main extends ViewBase {
       if (items && items.length > 0 ) {
         items.map((it: any, index: number) => {
           this.tableData.push({
-            index: this.indexNumber(index),
+            index: index + 1,
             highLightWords: it.highLightWords,
             content: it.content,
             favorCount: it.favorCount, // 赞同数
@@ -557,6 +556,20 @@ export default class Main extends ViewBase {
   }
   /deep/ .ivu-table-body {
     background: none;
+    /deep/ .ivu-table-row {
+      /deep/ .ivu-table-column-left {
+        /deep/ .ivu-table-cell {
+          div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            em {
+              color: red;
+            }
+          }
+        }
+      }
+    }
   }
   /deep/ .ivu-table-tip {
     overflow-x: auto;
