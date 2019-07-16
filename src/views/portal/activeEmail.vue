@@ -89,6 +89,7 @@ export default class Main extends ViewBase {
         ticket: this.ticket
       })
       toast('已激活成功')
+      this.$router.push({ name: 'login' })
     } catch (ex) {
       this.handleError(ex)
     }

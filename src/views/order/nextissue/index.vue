@@ -1,25 +1,33 @@
 <template>
   <div class="page">
-    <div class='t-title'>监播管理</div>
+    <div class='t-title'>下刊管理</div>
     <div class='title-tip'>
-    	请按照影片在下方列表中上传广告监播视频,</br>
-要求露出所包含的全部广告视频以及对应的影片片头信息、格式为 mp4
+    	本功能只展示需要提前（紧急）下刊的广告单;未在本页面展示的广告单，请统一在每周的周三进行批量下刊操作</br>
+    	图例 “&nbsp;<div class='img-w1'></div>&nbsp;” ，表示需要下刊，请在影院的TMS广告排播系统中移除对应的广告片，然后再点击该图标即可设为“已下刊”</br>
+		图例 “&nbsp;<div class='img-w2'></div>&nbsp;” ，表示已下刊，点击可设为“未下刊”
     </div>
     <div class='body'>
       <Row class='row-ul'>
-       <Col span='6' class='data'><WeekDatePicker class='data-s' v-model="weekDate"/></Col>
+       <Col span='6' class='data'> <Date-picker
+                  type="date"
+                  v-model="query.remittanceDate"
+                  on-change="selectTime"
+                  placeholder="选择日期"
+                  class="inp-style-center"
+                ></Date-picker></Col>
         <Col :span="10">
           <Col style='margin-left: 12px;' span="14">
             <Select 
-            v-model='query.cinemaId'  
-            clearable
-            filterable  
-            placeholder="请输入影院名称/专资编码查询" 
-            remote
-            :loading="loading"
-            :remote-method="remoteMethod"
-            @on-clear="movieList = []"
-            @on-change="seachs">
+             class='sels' 
+             v-model='query.cinemaId'  
+             clearable
+             filterable
+             placeholder="请输入影院名称/专资编码查询" 
+             remote
+             :loading="loading"
+             :remote-method="remoteMethod"
+             @on-clear="movieList = []"
+             @on-change="seachs">
               <Option
                 v-for="item in movieList"
                 :key="item.id"
@@ -28,65 +36,38 @@
             </Select>
           </Col>
         </Col>
-        <Col span='8' class='chb'>
-          <!-- <RadioGroup v-model='chgkey.status' type="button" @on-change='seachchg'>
-              <Radio v-for='(it,index) in timechg' :key='it.key' :value='it.key' :label='it.key'>{{it.name}}</Radio>
-            </RadioGroup> -->
-            <!-- <span v-model='chgkey.status' v-for='(it,index) in timechg' :key='index' :value='it.key' @click='seachchg' :label='it.key'>{{it.name}}</span> -->
+        <!-- <Col span='8' class='chb'>
             <span @click='seachchgup'><&nbsp;上周</span>
             <span @click='seachchg'>本周</span>
             <span @click='seachchgdown'>下周&nbsp;></span>
-        </Col>
+        </Col> -->
       </Row>
-      <!-- <Row>
-        <li class='li-item'>
-            <row>
-              <Col span='3'>通投</Col>
-              <Col span='2'>50s</Col>
-              <Col span='19'>
-                <row>
-                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
-                  
-                  <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
-                  <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
-                    <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
-                    <router-link style='color: #00202D;margin-left: 25px;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,10)}}...</router-link>
-                  </Tooltip>
-                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
-                  ({{item.videoLength}}s)
-                  </Col>
-                </row>
-              </Col>
-            </row>
-          </li>
-      </Row> -->
-      <div style=' margin-top: 15px; '>
+      <div style='margin-top: 15px;'>
       	<Row class='li-title'>
-          <Col span='3' >影片名称</Col>
-          <Col span='2' >总投放时长</Col>
-          <Col span='14'>广告列表</Col>
-          <Col span='5' style='text-align: center;'>监播视频</Col>
+          <Col :span='3'>影片名称</Col>
+          <Col :span='2' >总投放时长</Col>
+          <Col :span='15'>广告列表</Col>
+          <div :span='2' @click="allover(5)" style='color: #57b4c9;cursor: pointer;font-size: 12px;float:right;'>一键设置为已下刊</div>
         </Row>
         <ul class='itemul'>
         	<li class='li-item' v-for='(it,index) in itemlist' :key='index'>
         		<row>
         			<Col span='3'>{{it.movieName}}</Col>
-        			<Col span='2' >{{it.videoTotalLength}}s</Col>
-        			<Col span='14'>
+        			<Col span='2'>{{it.videoTotalLength}}s</Col>
+        			<Col span='19'>
         				<row>
-                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
-                    <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                    <router-link style='color: #00202D;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,7)}}...</router-link>
-                  </Tooltip>
-                <router-link style='color: #00202D;' tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
-                  ({{item.videoLength}}s)
-                  </Col>
-                </row>
+        					<Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
+                  
+                  <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
+                  <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
+        					  <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
+						        <router-link style='color: #00202D;margin-left: 25px;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,10)}}...</router-link>
+						      </Tooltip>
+							  <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+						      ({{item.videoLength}}s)
+        					</Col>
+        				</row>
         			</Col>
-        			<Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' ><UploadButton @success="onUploadSuccess($event, it.id)">上传</UploadButton></Col>
-              <Col span='5' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
-              <Col span='5' v-if='it.status == 3' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div></Col>
-              <Col span='5' v-if='it.status == 4' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
         		</row>
         	</li>
           <li v-if='itemlist.length == 0' style='text-align: center;line-height: 50px;'>暂无数据</li>
@@ -97,40 +78,39 @@
 </template>
 
 <script lang="ts">
-import { Component , Watch } from 'vue-property-decorator'
+import { Component , Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { querylist ,  getcinid , addvideo , delvideo , movielist } from '@/api/supervision'
+import { queryList ,   getcinid , oneover , oneout , allover , movielist } from '@/api/lastissue'
+import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
-import UploadButton, { SuccessEvent } from '../components/UploadButton.vue'
 import WeekDatePicker from '@/components/weekDatePicker'
-import { confirm , toast , info } from '@/ui/modal'
+import { confirm , toast , info} from '@/ui/modal'
 
 
 const timeFormat = 'YYYY-MM-DD'
 
+
 @Component({
   components: {
-    UploadButton,
     WeekDatePicker
   }
 })
 export default class Main extends ViewBase {
-
   startTime: any = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000
   endTime: any = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1
   datanum: any = 24 * 60 * 60 * 1000 * 7 // 一周的时间戳
-
   weekDate = [new Date(this.startTime), new Date(this.endTime)]
-
   sd = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
   ed = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-
   query: any = {
     cinemaId: null,
+    remittanceDate: null,
     beginDate: this.sd[0] + this.sd[1] + this.sd[2],
     endDate: this.ed[0] + this.ed[1] + this.ed[2],
   }
+
+
 
   movieList: any = []
   loading = false
@@ -139,20 +119,22 @@ export default class Main extends ViewBase {
 
   itemlist: any = []
 
-
+  objArray: any = []
+  deArray: any = []
+  idsArray: any = []
 
   async mounted() {
     // this.asd = true
     // this.remoteMethod('')
     const cinid = await getcinid()
-    if (cinid.data.cinemaId == 0) {
-      info('当前用户下没有关联影院')
-      return
-      // this.query.cinemaId = cinid.data.cinemaId
-    } else {
-      this.query.cinemaId = cinid.data.cinemaId
-      this.remoteMethod(cinid.data.cinemaName)
-    }
+
+        if (cinid.data.cinemaId == 0) {
+          info('当前用户没有关联影院')
+          this.query.cinemaId = cinid.data.cinemaId
+        } else {
+          this.query.cinemaId = cinid.data.cinemaId
+          this.remoteMethod(cinid.data.cinemaName)
+        }
     if (new Date().getDay() == 5 || new Date().getDay() == 6) {
       this.weekDate = [
       new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
@@ -207,41 +189,12 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
-  reloadSearch() {
-    this.seach()
-    // this.seachchg()
-  }
+  // reloadSearch() {
+  //   this.seach()
+  //   this.seachchg()
+  // }
 
-  // 上传文件
-  async onUploadSuccess({ files }: SuccessEvent, id: number) {
-    // console.log(files)
-      try {
-        await addvideo (id , {
-                        fileName: files[0].clientName,
-                        fileId: files[0].fileId
-                      })
-        this.$Message.success({
-          content: `更改成功`,
-        })
-        this.reloadSearch()
-      } catch (ex) {
-        this.handleError(ex)
-      }
-  }
-
-  async dels(id: any) {
-    try {
-        await delvideo (id)
-        this.$Message.success({
-          content: `删除视频成功`,
-        })
-        this.reloadSearch()
-      } catch (ex) {
-        this.handleError(ex)
-      }
-  }
-
-  // 本周
+ // 本周
   seachchg() {
     /***参数都是以周一为基准的***/
     this.startTime = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000  // 本周的开始时间
@@ -352,28 +305,84 @@ export default class Main extends ViewBase {
     return s
   }
 
+  async allover(id: any) {
+    this.objArray = ((await queryList(this.query)).data.items || []).map((it: any , index: any) => {
+        return {
+          id: it.id,
+          con: (it.details || []).map((item: any) => {
+            return item.orderId
+          })
+        }
+    })
+    this.deArray = []
+    for (const key in  this.objArray) {
+      if (1 == 1) {
+        for (const j in  this.objArray[key].con) {
+          if (1 == 1) {
+            this.deArray.push({id : this.objArray[key].id , orderId : this.objArray[key].con[j]})
+          }
+        }
+      }
+    }
+
+    // for (let i = 0 ;  i < this.objArray.length ; i++ ) {
+    //   for (let j = 0 ; j < this.objArray[i].length ; j++) {
+    //     this.deArray.push(this.objArray[i][j])
+    //   }
+    // }
+    // this.deArray = (this.deArray || []).map((it: any) => {
+    //   return it.videoId
+    // })
+
+    try {
+      await  confirm('是否确认将该影院所有广告状态设为已排？')
+      await allover(this.deArray)
+      this.$Message.success({
+        content: `修改成功`,
+      })
+      this.seach()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  // 修改状态
+  async change(id: any , status: number , orderid: any) {
+    try {
+      if (status == 1) {
+        await confirm('您确定修改当前状态信息吗？')
+        await oneover (id, {orderId : orderid})
+        this.$Message.success({
+          content: `更改成功`,
+        })
+        this.seach()
+      } else if (status == 2) {
+        await confirm('您确定修改当前状态信息吗？')
+        await oneout (id, {orderId : orderid})
+        this.$Message.success({
+          content: `更改成功`,
+        })
+        this.seach()
+      }
+    } catch (ex) {
+    }
+  }
+
   async seach() {
     try {
-
       // 影院列表
       // const movieList = await movielist()
       // this.movieList = movieList.data.items
       // if (this.asd == true) {
       //   // 获取默认影院id
-      //   const cinid = await getcinid()
-      //   if (cinid.data.cinemaId == 0) {
-      //     info('当前用户下没有关联影院')
-      //     this.query.cinemaId = cinid.data.cinemaId
-      //   } else {
-      //     this.query.cinemaId = cinid.data.cinemaId
-      //     this.remoteMethod(cinid.data.cinemaName)
-      //   }
+
       // }
       if (this.query.cinemaId == undefined) {
         info('请选择影院')
         return
       }
-      const datalist = await querylist(this.query)
+      // 获取上刊列表
+      const datalist = await queryList(this.query)
       this.itemlist = datalist.data.items
       this.asd = false
 
@@ -385,10 +394,12 @@ export default class Main extends ViewBase {
 
   // @Watch('query', {deep: true})
   // watchQuery() {
+  //   // if (this.asd == false) {
   //   if (this.query.cinemaId == null) {
   //     return
   //   }
   //   this.seach()
+  //   // }
   // }
 
   @Watch('weekDate', {deep: true})
@@ -430,6 +441,22 @@ export default class Main extends ViewBase {
   padding: 35px 0 35px 30px;
   border-radius: 5px 0 0 0;
   opacity: 0.9;
+  .img-w1 {
+    display: inline-block;
+    width: 17px;
+    height: 16px;
+    background: url('./assets/wait.png');
+    background-size: cover;
+    margin-left: 2px;
+  }
+  .img-w2 {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url('./assets/over.png');
+    background-size: cover;
+    margin-left: 2px;
+  }
 }
 .body {
   width: 100%;
@@ -456,49 +483,36 @@ export default class Main extends ViewBase {
   color: #00202d;
   padding: 0 10px 0 10px;
   height: 40px;
-  background: #c2d6e3;
   line-height: 40px;
   font-size: 14px;
+  background: #c2d6e3;
 }
 .li-item {
   color: #00202d;
   padding: 0 10px 0 10px;
   line-height: 40px;
   font-size: 14px;
-  background: #abcbdd;
+  background: #abc8d9;
   border-bottom: 1px solid rgba(255, 255, 255, 0.26);
   .imgs1 {
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 1px solid #ccc;
-    background: url('./assets/wait.png');
-    background-size: cover;
-    margin-right: 2px;
-    position: absolute;
-    top: 10px;
-  }
-  .imgs2 {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 1px solid #ccc;
+    width: 17px;
+    height: 17px;
     background: url('./assets/over.png');
     background-size: cover;
     margin-right: 2px;
     position: absolute;
-    top: 10px;
+    top: 12px;
   }
-  .imgs3 {
+  .imgs2 {
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 1px solid #ccc;
-    background: url('./assets/dels.png');
+    width: 17px;
+    height: 16px;
+    background: url('./assets/wait.png');
     background-size: cover;
     margin-right: 2px;
     position: absolute;
-    top: 10px;
+    top: 12px;
   }
 }
 .data {
@@ -511,18 +525,6 @@ export default class Main extends ViewBase {
   margin-top: 4px;
   margin-left: 15%;
   font-size: 14px;
-}
-/deep/ .ivu-btn:hover {
-  color: #000;
-  border-color: #f2f2f2;
-  background: #f2f2f2;
-}
-/deep/ .ivu-btn {
-  border-color: #f2f2f2;
-  background: #f2f2f2;
-}
-/deep/ .ivu-btn:focus {
-  box-shadow: 0;
 }
 /deep/ .ivu-select-selection {
   height: 40px;
