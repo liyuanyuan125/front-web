@@ -415,7 +415,10 @@ export default class Promotion extends ViewBase {
           beginDate: moment(this.form.beginDate).format(timeFormat),
           endDate: moment(this.form.endDate).format(timeFormat),
           brandId: this.query.brandId,
-        }) : clean({ ...this.form })
+        }) : clean({ ...this.form,
+                     beginDate: moment(this.form.beginDate).format(timeFormat),
+                     endDate: moment(this.form.endDate).format(timeFormat)
+        })
         const data = await createdDraft(clean({
           ...query,
           name: this.setadver ? this.pername : this.form.name,
