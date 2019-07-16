@@ -1,37 +1,39 @@
 <template>
   <loginLayout>
-      <div class="main-wrap">
+      <div class="main-wrap ">
           <div class="tablist">
-            <p class="systerm flex-box">
+            <p class="systerm">
                 <span>申请加入</span>
-                <em>已有账户？<router-link :to="{name: 'tologin'}">立即登录</router-link></em>
             </p>
           </div>
           <Form :model="form" :rules="rules" ref="form"
             @submit.native.prevent="submit" novalidate>
             <FormItem prop="companyName">
-              <Input v-model="form.companyName" placeholder="企业名称">
-                <i class="iconfont icon-qiye" slot="prefix" />
+              <Input v-model="form.companyName" autocomplete="off" placeholder="企业名称">
+                <i class="iconfont icon-qiye" slot="prefix"><font></font></i>
               </Input>
             </FormItem>
             <FormItem prop="contactName" >
               <Input  v-model="form.contactName" placeholder="联系人姓名">
-                <i class="iconfont icon-lianxiren" slot="prefix" />
+                <i class="iconfont icon-lianxiren" slot="prefix"><font></font></i>
               </Input>
             </FormItem>
             <FormItem prop="contactTel">
               <Input  v-model="form.contactTel" placeholder="联系电话" :maxlength="11">
-                <i class="iconfont icon-lianxidianhua" slot="prefix" />
+                <i class="iconfont icon-lianxidianhua" slot="prefix"><font></font></i>
               </Input>
             </FormItem>
             <FormItem prop="area" >
                <AreaSelect v-model="form.area" ref="areas"  :max-level="2" no-self/>
-               <i class="iconfont icon-suozaidi" slot="prefix" />
+               <i class="iconfont icon-suozaidi" slot="prefix"><font></font></i>
             </FormItem>
             <FormItem prop="remark" class="text-area">
               <Input type="textarea"  v-model="form.remark" :rows="3" placeholder="请简单备注您的需求"></Input>
             </FormItem>
             <Button type="primary" html-type="submit" class="submit" long :disabled="submitDisabled">提交申请</Button>
+            <p class="to-apply">
+               已有账户？<router-link :to="{name: 'tologin'}">立即登录</router-link>
+            </p>
           </Form>
       </div>
     </loginLayout>
@@ -45,11 +47,13 @@ import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
 import AreaSelect from '@/components/areaSelect'
+import DisableAutoFill from '@/components/DisableAutoFill.vue'
 
 @Component({
   components: {
     loginLayout,
-    AreaSelect
+    AreaSelect,
+    DisableAutoFill
   }
 })
 export default class Main extends ViewBase {
@@ -119,94 +123,42 @@ export default class Main extends ViewBase {
 <style lang='less' scoped>
 @import '~@/site/lib.less';
 @import '~@/assets/iconFont/iconfont.css';
-
+@import './common.less';
 .main-wrap {
-  width: 450px;
-  background: #fff;
-  padding: 23px 40px 20px;
-  border-radius: 4px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -55%);
-  .tablist {
-    width: 100%;
-    margin-bottom: 20px;
-    .systerm {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      span {
-        font-size: 23px;
-      }
-      em {
-        font-size: 15px;
-      }
-    }
-  }
-  /deep/ input {
-    outline: none;
-    height: 48px;
-    font-size: 15px;
-    border-radius: 10px;
-    border: solid 1px #d0d0d0;
-    &:last-child {
-      padding-left: 16px;
-    }
-    &::placeholder {
-      color: #4a506a;
-    }
-  }
-  /deep/ .ivu-input-with-prefix {
-    padding-left: 40px;
-  }
-  /deep/ .ivu-input-prefix {
-    width: 33px;
-    text-align: right;
-    i {
-      line-height: 48px;
-      font-size: 19px;
-      color: #4a506a;
-    }
-  }
-  /deep/ .ivu-checkbox-wrapper {
-    font-size: 15px;
-  }
+  padding-top: 0;
+  padding-bottom: 30px;
 }
-.submit {
-  border-radius: 25px;
-  height: 47px;
-  background: #4561d7;
-  font-size: 17px;
-  color: #fff;
+.systerm {
+  font-size: 31px;
+  padding: 31px 0 5px;
   text-align: center;
-  border: none;
 }
-.captcha-wrap {
-  position: relative;
-  width: 100%;
+/deep/ .ivu-cascader {
+  .ivu-input {
+    padding-left: 11px;
+  }
 }
-.captcha-img {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  height: 41px;
-  border-left: 1px solid @c-border;
-  cursor: pointer;
+/deep/ .ivu-cascader-arrow {
+  font-size: 22px;
+  color: #fff;
 }
-// /deep/ .ivu-form-item{
-//   margin-bottom: 20px;
-// }
 /deep/ .text-area {
+  overflow: hidden;
   textarea.ivu-input {
+    color: #fff;
+    border: none;
+    background: rgba(16, 23, 44, .6);
     border-radius: 10px;
-    border: solid 1px #d0d0d0;
     padding-left: 12px;
     &::placeholder {
-      color: #4a506a;
+      color: #fff;
     }
   }
 }
+.to-apply {
+  padding-top: 18px;
+}
+
 @media screen and(max-height: 600px) {
   .main-wrap {
     position: absolute;
