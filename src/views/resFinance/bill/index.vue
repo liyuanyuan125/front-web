@@ -155,6 +155,7 @@ export default class Main extends ViewBase {
   color: #fff;
   font-size: 16px;
   line-height: 30px;
+  margin-top: 150px;
 }
 /deep/ .ivu-select-selection {
   height: 40px;
