@@ -150,6 +150,7 @@ export default class Main extends ViewBase {
     background: rgba(16, 23, 44, .6);
     border-radius: 10px;
     padding-left: 12px;
+    font-size: 15px;
     &::placeholder {
       color: #fff;
     }
