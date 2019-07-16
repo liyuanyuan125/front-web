@@ -125,7 +125,7 @@ export async function platform(query: any, id: number | string = '') {
  * @param id id
  * @description http://yapi.aiads-dev.com/project/146/interface/api/4542
  */
- export async function dau(query: any, id: number | string = '') {
+export async function dau(query: any, id: number | string = '') {
   // 演示 临时参数 nxd 20190621
   query = {
     beginDate: '20160520',
@@ -135,134 +135,134 @@ export async function platform(query: any, id: number | string = '') {
   return res
   return await mockGet({}, {
     items: [
-        {
-            data: 20190520,
-            count: 7262
-        },
-        {
-            data: 20190521,
-            count: 2313
-        },
-        {
-            data: 20190522,
-            count: 564
-        },
-        {
-            data: 20190523,
-            count: 67674
-        },
-        {
-            data: 20190524,
-            count: 234
-        },
-        {
-            data: 20190525,
-            count: 5452
-        },
-        {
-            data: 20190526,
-            count: 9387
-        },
-        {
-            data: 20190527,
-            count: 761
-        },
-        {
-            data: 20190528,
-            count: 716
-        },
-        {
-            data: 20190529,
-            count: 982
-        },
-        {
-            data: 20190530,
-            count: 777
-        },
-        {
-            data: 20190531,
-            count: 19881
-        },
-        {
-            data: 20190601,
-            count: 3445
-        },
-        {
-            data: 20190602,
-            count: 3445
-        },
-        {
-            data: 20190603,
-            count: 3445
-        },
-        {
-            data: 20190604,
-            count: 3445
-        },
-        {
-            data: 20190605,
-            count: 3445
-        },
-        {
-            data: 20190606,
-            count: 3445
-        },
-        {
-            data: 20190607,
-            count: 3445
-        },
-        {
-            data: 20190608,
-            count: 3445
-        },
-        {
-            data: 20190609,
-            count: 3445
-        },
-        {
-            data: 20190610,
-            count: 3445
-        },
-        {
-            data: 20190611,
-            count: 3445
-        },
-        {
-            data: 20190612,
-            count: 3445
-        },
-        {
-            data: 20190613,
-            count: 3445
-        },
-        {
-            data: 20190614,
-            count: 3445
-        },
-        {
-            data: 20190615,
-            count: 3445
-        },
-        {
-            data: 20190616,
-            count: 3445
-        },
-        {
-            data: 20190617,
-            count: 3445
-        },
-        {
-            data: 20190618,
-            count: 3445
-        },
-        {
-            data: 20190619,
-            count: 3445
-        },
-        {
-            data: 20190620,
-            count: 7262
-        }
+      {
+        data: 20190520,
+        count: 7262
+      },
+      {
+        data: 20190521,
+        count: 2313
+      },
+      {
+        data: 20190522,
+        count: 564
+      },
+      {
+        data: 20190523,
+        count: 67674
+      },
+      {
+        data: 20190524,
+        count: 234
+      },
+      {
+        data: 20190525,
+        count: 5452
+      },
+      {
+        data: 20190526,
+        count: 9387
+      },
+      {
+        data: 20190527,
+        count: 761
+      },
+      {
+        data: 20190528,
+        count: 716
+      },
+      {
+        data: 20190529,
+        count: 982
+      },
+      {
+        data: 20190530,
+        count: 777
+      },
+      {
+        data: 20190531,
+        count: 19881
+      },
+      {
+        data: 20190601,
+        count: 3445
+      },
+      {
+        data: 20190602,
+        count: 3445
+      },
+      {
+        data: 20190603,
+        count: 3445
+      },
+      {
+        data: 20190604,
+        count: 3445
+      },
+      {
+        data: 20190605,
+        count: 3445
+      },
+      {
+        data: 20190606,
+        count: 3445
+      },
+      {
+        data: 20190607,
+        count: 3445
+      },
+      {
+        data: 20190608,
+        count: 3445
+      },
+      {
+        data: 20190609,
+        count: 3445
+      },
+      {
+        data: 20190610,
+        count: 3445
+      },
+      {
+        data: 20190611,
+        count: 3445
+      },
+      {
+        data: 20190612,
+        count: 3445
+      },
+      {
+        data: 20190613,
+        count: 3445
+      },
+      {
+        data: 20190614,
+        count: 3445
+      },
+      {
+        data: 20190615,
+        count: 3445
+      },
+      {
+        data: 20190616,
+        count: 3445
+      },
+      {
+        data: 20190617,
+        count: 3445
+      },
+      {
+        data: 20190618,
+        count: 3445
+      },
+      {
+        data: 20190619,
+        count: 3445
+      },
+      {
+        data: 20190620,
+        count: 7262
+      }
     ]
   })
 }
@@ -290,83 +290,83 @@ export async function comment(query: any, id: number | string = '') {
       passive: tid
     },
     commentKeyword: {
-        kolId: 2061,
-        channelCode: 'weibo',
-        yesterday: {
-            positive: [
-                '才华',
-                '美丽',
-                '正能量',
-                '古灵精怪'
-            ],
-            negative: [
-                '负面',
-                '怨气',
-                '消极',
-                '负分'
-            ]
-        },
-        sevenDay: {
-            positive: [
-                '才华',
-                '美丽',
-                '正能量',
-                '古灵精怪'
-            ],
-            negative: [
-                '负面',
-                '怨气',
-                '消极',
-                '负分'
-            ]
-        },
-        thirtyDay: {
-            positive: [
-                '才华',
-                '美丽',
-                '正能量',
-                '古灵精怪'
-            ],
-            negative: [
-                '负面',
-                '怨气',
-                '消极',
-                '负分'
-            ]
-        },
-        ninetyDay: {
-            positive: [
-                '才华',
-                '美丽',
-                '正能量',
-                '古灵精怪'
-            ],
-            negative: [
-                '负面',
-                '怨气',
-                '消极',
-                '负分'
-            ]
-        },
-        updateTime: '2019-06-18T10:14:16.958'
+      kolId: 2061,
+      channelCode: 'weibo',
+      yesterday: {
+        positive: [
+          '才华',
+          '美丽',
+          '正能量',
+          '古灵精怪'
+        ],
+        negative: [
+          '负面',
+          '怨气',
+          '消极',
+          '负分'
+        ]
+      },
+      sevenDay: {
+        positive: [
+          '才华',
+          '美丽',
+          '正能量',
+          '古灵精怪'
+        ],
+        negative: [
+          '负面',
+          '怨气',
+          '消极',
+          '负分'
+        ]
+      },
+      thirtyDay: {
+        positive: [
+          '才华',
+          '美丽',
+          '正能量',
+          '古灵精怪'
+        ],
+        negative: [
+          '负面',
+          '怨气',
+          '消极',
+          '负分'
+        ]
+      },
+      ninetyDay: {
+        positive: [
+          '才华',
+          '美丽',
+          '正能量',
+          '古灵精怪'
+        ],
+        negative: [
+          '负面',
+          '怨气',
+          '消极',
+          '负分'
+        ]
+      },
+      updateTime: '2019-06-18T10:14:16.958'
     },
     channelList: [
-        {
-            text: '微博',
-            key: 'weibo'
-        },
-        {
-            text: '微信',
-            key: 'wechat'
-        },
-        {
-            text: '抖音',
-            key: 'douyin'
-        },
-        {
-            text: '快手',
-            key: 'kuaishou'
-        }
+      {
+        text: '微博',
+        key: 'weibo'
+      },
+      {
+        text: '微信',
+        key: 'wechat'
+      },
+      {
+        text: '抖音',
+        key: 'douyin'
+      },
+      {
+        text: '快手',
+        key: 'kuaishou'
+      }
     ],
     items: [
       {
@@ -434,7 +434,7 @@ export async function comment(query: any, id: number | string = '') {
  * @param data
  */
 export async function matching(query: any) {
-  const res = await get('/xadvert/plans/effectStatistics' , query)
+  const res = await get('/xadvert/plans/effectStatistics', query)
   return res
   return await mockGet(query, {
     chart1: {
@@ -615,7 +615,7 @@ export async function matching(query: any) {
  * @param data
  */
 export async function fans(query: any) {
-  const res = await get('/xadvert/plans/effectStatistics' , query)
+  const res = await get('/xadvert/plans/effectStatistics', query)
   return res
   return await mockGet(query, {
     chart1: {
@@ -751,13 +751,13 @@ export async function fans(query: any) {
  * @param data
  * @description http://yapi.aiads-dev.com/project/144/interface/api/4569
  */
- export async function trend(query: any, id: number | string = '') {
+export async function trend(query: any, id: number | string = '') {
   // query = {
   //   beginDate: query.beginDate,
   //   endDate: query.endDate,
   //   channelCode: 'weibo'
   // }
-  const res = await get(`/kol/accounts/${id}/indexes` , query)
+  const res = await get(`/kol/accounts/${id}/indexes`, query)
   return res
   return await mockGet(query, {
     // no
@@ -772,14 +772,6 @@ export async function fans(query: any) {
  * @description http://yapi.aiads-dev.com/project/144/interface/api/4960
  */
 export async function keywordComment(query: any, id: number | string = '') {
-  // 演示 临时参数 nxd 20190621
-  // id = '558'
-  // query = {
-  //   keyword: '大家',
-  //   pageIndex: 1,
-  //   pageSize: 10,
-  //   channelCode: 'weibo'
-  // }
   const res = await get(`/kol/accounts/${id}/hot-comment`, query)
   return res
   return await mockGet(query, {
