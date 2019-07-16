@@ -145,7 +145,8 @@ export default class Main extends ViewBase {
 
         if (cinid.data.cinemaId == 0) {
           info('当前用户没有关联影院')
-          this.query.cinemaId = cinid.data.cinemaId
+          return
+          // this.query.cinemaId = cinid.data.cinemaId
         } else {
           this.query.cinemaId = cinid.data.cinemaId
           this.remoteMethod(cinid.data.cinemaName)
