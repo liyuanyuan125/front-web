@@ -274,7 +274,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'home-resoverview',
     component: () => import('./views/resReport/info/index.vue'),
     meta: {
-      authKey: 'data-report',
+      // authKey: 'data-report',
+      authKey: 'resource.index',
       authAction: 'EMPTY',
       breadcrumbs: [{ label: '首页' }],
       pageTitle: '鲸娱数据：全网精准娱乐营销平台'
