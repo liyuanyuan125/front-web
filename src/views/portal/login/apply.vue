@@ -9,7 +9,7 @@
           <Form :model="form" :rules="rules" ref="form"
             @submit.native.prevent="submit" novalidate>
             <FormItem prop="companyName">
-              <Input v-model="form.companyName" autocomplete="off" placeholder="企业名称">
+              <Input v-model="form.companyName" placeholder="企业名称">
                 <i class="iconfont icon-qiye" slot="prefix"><font></font></i>
               </Input>
             </FormItem>
