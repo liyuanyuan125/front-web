@@ -732,6 +732,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: 'EMPTY',
       authIsMenu: true,
+      title: '下刊管理',
       pageTitle: '下刊管理-鲸娱数据',
     },
   },

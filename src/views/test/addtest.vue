@@ -343,7 +343,7 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-page-item-active {
   border-color: #eee;
-  background: #eee !important;
+  background: #00202d !important;
   border-radius: 50%;
   color: #fff;
   width: 30px;
@@ -464,16 +464,22 @@ export default class Main extends ViewBase {
   margin-left: 20px;
 }
 /deep/ .ivu-input-prefix i {
-  font-size: 16px;
+  font-size: 17px;
   line-height: 32px;
   color: #808695;
   margin-top: 5px;
 }
 /deep/ .ivu-input-suffix i {
-  font-size: 16px;
+  font-size: 17px;
   line-height: 32px;
   color: #808695;
   margin-top: 4px;
+}
+/deep/ .ivu-select-arrow {
+  font-size: 17px;
+}
+/deep/ .ivu-page-item-active:hover a, .ivu-page-item-active a {
+  color: #fff;
 }
 </style>
 
