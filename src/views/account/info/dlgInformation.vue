@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Modal v-model="value.visibleInforma" title="变更账号信息" width="800">
+    <Modal v-model="value.visibleInforma" title="变更账号信息" width="700">
       <div class="digtext">
         说明：如有需要可对以下账号信息进行变更，账号变更申请提交后将由平台进行审核，
         账号变更期间不会影响账号的正常使用。
@@ -41,8 +41,8 @@
         </FormItem>
       </Form>
       <div slot="footer" class="btnCenter">
-        <Button class="button-cancel" @click="value.visibleInforma = false">取消</Button>
-        <Button type="primary" class="button-ok" @click="changeData('form')">变更数据</Button>
+        <Button class="button-cancel ok" @click="value.visibleInforma = false">取消</Button>
+        <Button type="primary" class="button-ok ok" @click="changeData('form')">变更数据</Button>
       </div>
     </Modal>
   </div>
@@ -165,7 +165,7 @@ export default class Change extends ViewBase {
 /deep/ .ivu-modal-header {
   border-bottom: 0;
   padding: 10px 13px;
-  background: #f9f9f9;
+  // background: #f9f9f9;
 }
 /deep/ .ivu-modal-body {
   font-size: 14px;
@@ -186,11 +186,46 @@ export default class Change extends ViewBase {
 .item-type {
   margin-top: 3px;
 }
+.ok {
+  width: 200px;
+  height: 50px;
+  background: rgba(0, 32, 45, 1);
+  border-radius: 25px;
+  color: #fff;
+  border: 0;
+}
 /deep/ .ivu-modal-footer {
   padding-bottom: 30px;
 }
 /deep/ .ivu-checkbox + span {
   margin-left: 3px;
+}
+/deep/.ivu-modal-header-inner {
+  text-align: center;
+  line-height: 38px;
+  height: 30px;
+}
+/deep/ .ivu-modal-close {
+  z-index: 1;
+  font-size: 12px;
+  position: absolute;
+  right: -16px;
+  top: -13px;
+  overflow: hidden;
+  cursor: pointer;
+  background: rgba(0, 32, 45, 1);
+  border-radius: 50%;
+  color: #fff;
+}
+/deep/ .ivu-modal-close .ivu-icon-ios-close {
+  font-size: 31px;
+  color: #fff;
+  transition: color 0.2s ease;
+  position: relative;
+  top: 1px;
+}
+/deep/ .ivu-modal-close .ivu-icon-ios-close:hover {
+  color: #fff;
 }
 </style>
 
