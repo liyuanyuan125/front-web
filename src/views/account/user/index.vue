@@ -107,8 +107,8 @@ export default class Main extends ViewBase {
   columns = [
     { type: 'selection', width: 30,  align: 'center' },
     { title: '联系人', key: 'name', minWidth: 50},
-    { title: '登录邮箱', width: 160,  key: 'email'},
-    { title: '手机号码', key: 'mobile', minWidth: 90 },
+    { title: '登录邮箱', minWidth: 110,  key: 'email'},
+    { title: '手机号码', key: 'mobile',  },
     {  title: '权限角色',   slot: 'roleId', minWidth: 100 },
     { title: '状态',  slot: 'statusCode', minWidth: 40 },
     { title: '上次登录时间',  slot: 'lastLoginTime', minWidth: 100 },

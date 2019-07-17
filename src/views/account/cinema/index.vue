@@ -12,8 +12,18 @@
     <div class="list-box">
       <div class="list-table">
         <Table stripe  :loading="tableLoading" :columns="columns4" :data="cinemaData">
+          <template slot="contactTel" slot-scope="{row, index}">
+            <div v-if="editIndex === index"  class="input-tel">
+              <Input  v-model="editTel" style="width: 160px" :maxlength="11" @on-blur="handleBlur(row.id)"/>
+            </div>
+
+            <Tooltip v-else content="点击可编辑" placement="right" class="contact-tel" >
+              <span @click="handleEditTel(row, index)" >{{row.contactTel ? row.contactTel : '点击设置'}}</span>
+            </Tooltip>
+
+          </template>
           <template slot-scope="{row}" slot="action">
-            <a v-auth="'account-manage.managecinema#view'" @click="toDetail( row.id)" class="operation" >详情</a>
+            <a v-auth="'account-manage.managecinema#view'" @click="toDetail(row.id)" class="operation" >详情</a>
           </template>
         </Table>
         <Page :total="total" v-if="total>0" class="btnCenter"
@@ -34,9 +44,11 @@
 <script lang="tsx">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinmeaList } from '@/api/cinema'
+import { cinmeaList, editCompanyTel } from '@/api/cinema'
 import { clean } from '@/fn/object'
 import jsxReactToVue from '@/util/jsxReactToVue'
+import { validataTel } from '@/util/validateRules'
+import { info } from '@/ui/modal'
 
 @Component
 export default class Main extends ViewBase {
@@ -45,11 +57,13 @@ export default class Main extends ViewBase {
     pageIndex: 1,
     pageSize: 10,
   }
+
   query = ''
   total = 0
   cinemaData: any = []
   loading = false
   tableLoading = false
+
   options: any = []
   columns4 = [
     { title: '省份', key: 'provinceName', align: 'center' },
@@ -66,6 +80,7 @@ export default class Main extends ViewBase {
     {
       title: '影院名称',
       key: 'name',
+      minWidth: 110,
       align: 'center'
     },
     {
@@ -79,11 +94,22 @@ export default class Main extends ViewBase {
       align: 'center'
     },
     {
+      title: '上下刊短信通知手机号',
+      slot: 'contactTel',
+      minWidth: 130,
+      align: 'center',
+    },
+    {
       title: '操作',
       align: 'center',
       slot: 'action'
     }
   ]
+
+  // 编辑通讯手机号
+  // isEditTel = false
+  editIndex = -1
+  editTel = ''
 
   mounted() {
     this.seach()
@@ -125,9 +151,32 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
-  // querySet(query: any) {
-  //   this.query = ''
-  // }
+  handleEditTel(row: any, index: number) {
+    this.editIndex = index
+    this.editTel = row.contactTel
+  }
+
+  async handleBlur(id: number) {
+    const msg = validataTel(this.editTel)
+    if (!this.editTel) {
+      await info('手机号不能为空')
+      return
+    }
+    if (msg) {
+      await info(msg)
+      return
+    }
+    try {
+      const { data } = await editCompanyTel({
+        cinemaId: id,
+        contactTel: this.editTel
+      })
+      this.editIndex = -1
+      this.seachList()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
 }
 </script>
 
@@ -142,21 +191,8 @@ export default class Main extends ViewBase {
   display: flex;
   justify-content: center;
   padding: 10px 0;
-}
-.plan-title {
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #fff;
-  .adver-tiele {
-    color: #fff;
-    font-size: 24px;
-    font-weight: normal;
-  }
-}
-/deep/ .ivu-input-wrapper {
-  width: 400px;
-  .ivu-input {
-    width: 400px;
+  /deep/ .ivu-input {
+    // width: 400px;
     line-height: 40px;
     font-size: 14px;
     height: 40px;
@@ -168,5 +204,27 @@ export default class Main extends ViewBase {
     }
   }
 }
-
+.plan-title {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #fff;
+  .adver-tiele {
+    color: #fff;
+    font-size: 24px;
+    font-weight: normal;
+  }
+}
+.contact-tel {
+  cursor: pointer;
+  padding: 10px 15px;
+}
+.input-tel {
+  /deep/ .ivu-input-wrapper {
+    .ivu-input {
+      background: rgba(255, 255, 255, 0.4);
+      width: 100%;
+      color: #fff;
+    }
+  }
+}
 </style>

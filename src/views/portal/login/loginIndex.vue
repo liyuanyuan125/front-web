@@ -3,17 +3,14 @@
     <div class="main-wrap">
       <div class="tablist">
         <p class="systerm">
-          <span :class="{active: form.systemCode == 'ads'}" @click="form.systemCode = 'ads'">广告主</span>
-          <span
-            :class="{active: form.systemCode == 'resource'}"
-            @click="form.systemCode = 'resource'"
-          >影城</span>
+          <span :class="{active: form.systemCode == 'ads'}" @click="form.systemCode = 'ads'">我是广告主</span>
+          <span :class="{active: form.systemCode == 'resource'}" @click="form.systemCode = 'resource'" >我是影城</span>
         </p>
       </div>
       <Form :model="form" :rules="rules" ref="form" @submit.native.prevent="submit" novalidate>
         <FormItem prop="email" :error="emailError">
           <Input type="email" v-model="form.email" placeholder="请输入邮箱">
-            <i class="iconfont icon-youxiang" slot="prefix" />
+            <i class="iconfont icon-youxiang" slot="prefix"><font></font></i>
           </Input>
         </FormItem>
         <FormItem prop="password" :error="passwordError">
@@ -24,12 +21,14 @@
             placeholder="请输入密码"
             :maxlength="16"
           >
-            <i class="iconfont icon-mima" slot="prefix" size="20" />
+            <i class="iconfont icon-mima" slot="prefix" size="20"><font></font></i>
           </Input>
         </FormItem>
         <FormItem prop="captchaCode" :error="captchaCodeError">
           <div class="captcha-wrap">
-            <Input class="captcha" type="text" v-model="form.captchaCode" placeholder="请输入右图验证码" />
+            <Input class="captcha" type="text" v-model="form.captchaCode" placeholder="请输入右图验证码" >
+             <i class="iconfont icon-yanzhengma" slot="prefix" size="20"><font></font></i>
+            </Input>
             <img
               :src="captchaImg"
               v-if="captchaImg"
@@ -49,9 +48,8 @@
             </router-link>
           </Col>
         </Row>
-        <Button type="primary" html-type="submit" class="submit" long :disabled="submitDisabled">登录</Button>
-        <div class="to-apply">
-          还没有账户？
+        <Button type="primary" html-type="submit" class="submit" long :disabled="submitDisabled">账号登录</Button>
+        <div class="to-apply">还没有账户？
           <router-link :to="{name: 'apply'}">申请加入</router-link>
         </div>
       </Form>
@@ -67,6 +65,7 @@ import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
 import { decodeRoute } from '@/util/base64Route'
+import { info } from '@/ui/modal'
 
 @Component({
   components: {
@@ -158,8 +157,10 @@ export default class Main extends ViewBase {
     this.emailError = '账号不存在'
   }
 
-  onLogin10002(ex: any) {
-    this.handleError(ex)
+  async onLogin10002(ex: any) {
+    await info('温馨提示：请务必核实您的账号角色，正确选择广告主或影城身份', {
+      title: '账号或密码错误'
+    })
   }
 
   onLogin10006() {
@@ -170,101 +171,66 @@ export default class Main extends ViewBase {
 
 <style lang='less' scoped>
 @import '~@/site/lib.less';
-// @import '~@/site/login.less';
 @import '~@/assets/iconFont/iconfont.css';
+@import './common.less';
+
+.systerm {
+  text-align: center;
+  span {
+    font-size: 23px;
+    color: #2f6af9;
+    cursor: pointer;
+    &.active {
+      color: #fff;
+      padding-bottom: 5px;
+      border-bottom: solid 1px #fff;
+    }
+    &:nth-child(1) {
+      margin-right: 65px;
+    }
+  }
+}
 .main-wrap {
-  width: 450px;
-  background: #fff;
-  padding: 50px 40px 45px;
-  border-radius: 4px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -55%);
-  .tablist {
-    width: 100%;
-    margin-bottom: 30px;
-    .systerm {
-      span {
-        font-size: 23px;
-        color: #000;
-        cursor: pointer;
-        &.active {
-          color: #4561d7;
-          padding-bottom: 6px;
-          border-bottom: solid 3px #4561d7;
-        }
-        &:nth-child(1) {
-          margin-right: 30px;
-        }
-      }
-    }
-  }
-  /deep/ input {
-    outline: none;
-    height: 48px;
-    font-size: 15px;
-    border-radius: 10px;
-    border: solid 1px #d0d0d0;
-    &:last-child {
-      padding-left: 16px;
-    }
-    &::placeholder {
-      color: #4a506a;
-    }
-  }
-  /deep/ .ivu-input-with-prefix {
-    padding-left: 40px;
-  }
-  /deep/ .ivu-input-prefix {
-    width: 33px;
-    text-align: right;
-    i {
-      line-height: 48px;
-      font-size: 19px;
-      color: #4a506a;
-    }
-  }
-  /deep/ .ivu-checkbox-wrapper {
-    font-size: 15px;
-  }
+  padding-top: 44px;
+  padding-bottom: 70px;
   .login-etc {
     font-size: 15px;
-    color: #4561d7;
+    color: #fff;
+    .forgot {
+      color: #fff;
+    }
   }
 }
-.to-apply {
-  font-size: 15px;
-}
-.submit {
-  border-radius: 25px;
-  height: 47px;
-  background: #4561d7;
-  font-size: 17px;
-  color: #fff;
-  text-align: center;
-  border: none;
-  margin: 35px 0 14px;
-}
 
+.submit {
+  margin: 29px 0 22px;
+}
 .captcha-wrap {
   position: relative;
   width: 100%;
 }
 .captcha-img {
   position: absolute;
-  top: 3px;
-  right: 3px;
-  height: 41px;
-  border-left: 1px solid @c-border;
+  top: 6px;
+  right: 8px;
+  height: 38px;
+  border-radius: 5px;
   cursor: pointer;
+}
+/deep/ .ivu-checkbox-inner {
+  border: none;
+  outline: none;
+  background-color: #10172c;
+  width: 19px;
+  height: 19px;
+  &::after {
+    width: 6px;
+    height: 12px;
+    left: 6px;
+  }
 }
 @media screen and(max-height: 600px) {
   .main-wrap {
-    width: 450px;
-    background: #fff;
-    padding: 50px 40px 45px;
-    border-radius: 4px;
     position: absolute;
     left: 50%;
     top: 50%;

@@ -254,7 +254,8 @@ export default class Main extends ViewBase {
     {
       title: '序号',
       key: 'index',
-      align: 'center'
+      align: 'center',
+      width: 70
     },
     {
       title: '内容',
@@ -262,7 +263,6 @@ export default class Main extends ViewBase {
       align: 'left',
       render: (hh: any, { row }: any) => {
         /* tslint:disable */
-
         const h = jsxReactToVue(hh)
         return <div class="wenben" v-html={row.highLightWords}></div>
         /* tslint:disable */
@@ -271,12 +271,14 @@ export default class Main extends ViewBase {
     {
       title: '赞同',
       key: 'favorCount',
-      align: 'center'
+      align: 'center',
+      width: 100
     },
     {
       title: '回复',
       key: 'replyCount',
-      align: 'center'
+      align: 'center',
+      width: 100
     },
     {
       title: '来源内容',
@@ -523,7 +525,7 @@ export default class Main extends ViewBase {
       if (items && items.length > 0) {
         items.map((it: any, index: number) => {
           this.tableData.push({
-            index: this.indexNumber(index),
+            index: index + 1,
             highLightWords: it.highlightContent,
             content: it.content,
             favorCount: it.favorCount, // 赞同数
@@ -585,6 +587,20 @@ export default class Main extends ViewBase {
   }
   /deep/ .ivu-table-body {
     background: none;
+    /deep/ .ivu-table-row {
+      /deep/ .ivu-table-column-left {
+        /deep/ .ivu-table-cell {
+          div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            em {
+              color: red;
+            }
+          }
+        }
+      }
+    }
   }
   /deep/ .ivu-table-tip {
     overflow-x: auto;
