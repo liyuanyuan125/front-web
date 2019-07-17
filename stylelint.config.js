@@ -11,5 +11,6 @@ module.exports = {
     'no-descending-specificity': null,
     'declaration-empty-line-before': null,
     'declaration-block-semicolon-newline-after': null,
+    'block-no-empty': null
   }
 }

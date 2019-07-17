@@ -1,21 +1,19 @@
 <template>
   <div class="city-select-pane">
     <div class="city-fast-row" v-if="fastList.length > 0">
-      <label class="city-row-label">快速选择：</label>
-      <div class="city-fast-list">
+      <div class="check-box">
         <Checkbox
           v-for="it in fastList"
           :key="it.key"
           v-model="it.checked"
           :indeterminate="it.indeterminate"
-          class="city-fast-item"
+          class="check-item"
           @on-change="fastChange(it, $event)"
         >{{it.text}}</Checkbox>
       </div>
     </div>
 
     <div class="city-filter-row" v-if="cellData">
-      <label class="city-row-label">查询：</label>
       <Select v-model="city" filterable clearable class="city-filter">
         <Option
           v-for="item in cityList"
@@ -25,14 +23,11 @@
       </Select>
     </div>
 
-    <table class="city-table" v-if="cellData">
-      <tr v-for="(row, i) in cellData" :key="i">
-        <component
+    <div class="city-table" v-if="cellData">
+      <div v-for="(row, i) in cellData" style="display: flex" :key="i">
+        <div
           v-for="cell in row"
           :key="cell.uqid"
-          :is="cell.type == 'region' ? 'th' : 'td'"
-          :rowspan="cell.rowspan"
-          :colspan="cell.colspan"
         >
           <component
             :is="cell.type == 'province' ? 'dropdown' : 'span'"
@@ -51,31 +46,33 @@
                   && cell.data.id == hightlightCityId
               }"
             >
-              <Checkbox
-                v-model="cell.checked"
-                :indeterminate="cell.indeterminate"
-                @on-change="cellCheckChange(cell)"
-                class="city-check">
-                <span class="city-name">{{cell.label}}</span>
-                <em
-                  class="city-count"
-                  :class="{
-                    'city-count-show': cell.selectedCityIds.length > 0
-                      && cell.type == 'province'
-                  }"
-                >({{cell.selectedCityIds.length}})</em>
-              </Checkbox>
-
-              <div
-                class="cell-pull-handle"
-                @click="cell.dropdownOpen = !cell.dropdownOpen"
-                v-if="cell.type == 'province'"
-              >
-                <Icon
-                  type="ios-arrow-down"
-                  class="cell-pull-icon"
-                  v-if="cell.type == 'province'"
-                />
+              <div class="check-box">
+                <Checkbox
+                  v-model="cell.checked"
+                  :indeterminate="cell.indeterminate"
+                  @on-change="cellCheckChange(cell)"
+                  class="check-item">
+                  <span class="city-name">{{cell.label}}</span>
+                  <em
+                    class="city-count"
+                    :class="{
+                      'city-count-show': cell.selectedCityIds.length > 0
+                        && cell.type == 'province'
+                    }"
+                  >({{cell.selectedCityIds.length}})</em>
+                  
+                  <div
+                    class="cell-pull-handle"
+                    @click.prevent="cell.dropdownOpen = !cell.dropdownOpen"
+                    v-if="cell.type == 'province'"
+                  >
+                    <Icon
+                      type="ios-arrow-down"
+                      class="cell-pull-icon"
+                      v-if="cell.type == 'province'"
+                    />
+                  </div>
+                </Checkbox>
               </div>
             </span>
 
@@ -111,9 +108,9 @@
               </div>
             </DropdownMenu>
           </component>
-        </component>
-      </tr>
-    </table>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -564,19 +561,62 @@ export default class CitySelectPane extends ViewBase {
 @import '~@/site/lib.less';
 
 .city-select-pane {
-  user-select: none;
 }
 
 .city-filter {
   width: 188px;
 }
 
+.check-ra {
+  /deep/ .ivu-checkbox {
+    display: none;
+  }
+  /deep/&.ivu-checkbox-wrapper-checked {
+    color: #fff;
+    background-color: #00202d;
+    border: 1px solid #00202d;
+    &::after {
+      content: '\2713';
+      color: #fff;
+      position: absolute;
+      right: -8px;
+      top: -8px;
+      border: 1px solid #00202d;
+      background: #00202d;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 16px;
+    }
+  }
+}
+.check-box {
+  display: flex;
+  .check-item {
+    position: relative;
+    min-width: 120px;
+    max-width: 200px;
+    top: 3px;
+    flex: 1;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 4px;
+    text-align: center;
+    margin-right: 15px;
+    font-size: 14px;
+    color: #00202d;
+    border: 1px solid #fff;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    // user-select: none;
+    .check-ra;
+  }
+}
 .city-table {
   margin-top: 20px;
-  border-collapse: collapse;
-  th, td {
-    border: 1px solid #e8e8e8;
-  }
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .cell-inner,
@@ -610,9 +650,11 @@ export default class CitySelectPane extends ViewBase {
   position: relative;
   flex: 1;
   min-width: 28px;
+  margin-top: -20px;
   cursor: pointer;
   &:hover .cell-pull-icon {
     color: @c-button;
+
     .theme-resource & {
       color: @c-button-resource;
     }
@@ -677,9 +719,12 @@ export default class CitySelectPane extends ViewBase {
     margin-right: 0;
   }
 }
+</style>
+
+<style lang="less">
 .city-select-pane-transfer[data-transfer=true] {
   max-height: 666px;
   padding: 0;
-  user-select: none;
+  // user-select: none;
 }
 </style>
