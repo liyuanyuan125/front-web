@@ -397,17 +397,23 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-page-item-active {
   border-color: #eee;
-  background: #eee !important;
+  background: #00202d !important;
   border-radius: 50%;
   color: #fff;
   width: 30px;
   height: 30px;
 }
+/deep/ .ivu-page-item-active:hover a {
+  color: #fff;
+}
+/deep/ .ivu-page-item-active a {
+  color: #fff;
+}
 /deep/ .ivu-page-item {
   border: 0;
   display: inline-block;
   vertical-align: middle;
-  // background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -445,6 +451,9 @@ export default class Main extends ViewBase {
   color: #00202d;
 }
 /deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
+  color: #00202d;
+}
+/deep/ .ivu-page-total {
   color: #00202d;
 }
 </style>

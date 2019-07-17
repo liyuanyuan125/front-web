@@ -8,8 +8,10 @@
         </p>
       </div>
       <Form :model="form" :rules="rules" ref="form" @submit.native.prevent="submit" novalidate>
+        <DisableAutoFill />
         <FormItem prop="email" :error="emailError">
-          <Input type="email" v-model="form.email" placeholder="请输入邮箱">
+          <Input type="email" v-model="form.email" autocomplete="off" disableautocomplete
+           placeholder="请输入邮箱">
             <i class="iconfont icon-youxiang" slot="prefix"><font></font></i>
           </Input>
         </FormItem>
@@ -66,10 +68,12 @@ import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
 import { decodeRoute } from '@/util/base64Route'
 import { info } from '@/ui/modal'
+import DisableAutoFill from '@/components/DisableAutoFill.vue'
 
 @Component({
   components: {
-    loginLayout
+    loginLayout,
+    DisableAutoFill
   }
 })
 export default class Main extends ViewBase {
@@ -157,9 +161,13 @@ export default class Main extends ViewBase {
     this.emailError = '账号不存在'
   }
 
-  async onLogin10002(ex: any) {
-    await info('温馨提示：请务必核实您的账号角色，正确选择广告主或影城身份', {
-      title: '账号或密码错误'
+  onLogin10002() {
+    this.passwordError = '密码错误'
+  }
+
+  async onLogin10008(ex: any) {
+    await info('请核实您的账号角色，正确选择广告主或影城身份', {
+      title: '温馨提示'
     })
   }
 

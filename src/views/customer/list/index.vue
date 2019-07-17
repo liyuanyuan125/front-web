@@ -303,6 +303,10 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-select-input {
   margin-top: 3px;
+  color: #00202d;
+  &::-webkit-input-placeholder {
+    color: #00202d;
+  }
 }
 /deep/ .ivu-input {
   border-radius: 5px 0  0 5px;
@@ -381,7 +385,7 @@ export default class Main extends ViewBase {
   border: 0;
   display: inline-block;
   vertical-align: middle;
-  background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -393,6 +397,30 @@ export default class Main extends ViewBase {
   cursor: pointer;
   font-weight: 500;
   transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 24px;
+  color: #00202d;
+}
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 24px;
+  color: #00202d;
 }
 /deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
   color: #00202d;

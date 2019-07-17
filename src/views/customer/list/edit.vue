@@ -158,6 +158,7 @@ export default class Main extends ViewBase {
   color: rgba(179, 188, 192, 1);
   font-size: 15px;
   font-size: 400;
+  border-radius: 5px 5px 0 0;
   span {
     font-size: 16px;
     font-weight: 400;
@@ -178,6 +179,7 @@ export default class Main extends ViewBase {
 .from {
   background: rgba(0, 32, 45, 0.8);
   padding: 30px 0 60px 30px;
+  border-radius: 0 0 5px 5px;
 }
 .sumbit-button {
   margin-top: 80px;

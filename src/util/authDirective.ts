@@ -24,3 +24,37 @@ Vue.directive('auth', {
     }
   }
 })
+
+// 全局自定义图片加载是否成功，如果加载失败则加载指定默认图
+// //aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncsr5uomr0008001o0.png
+// //aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncstluomr0008001og.png
+Vue.directive('real-img', async (el: any, binding: any) => {
+  const imgURL: any = binding.value
+  const defaultURL = el.getAttribute('default-img')
+  if (imgURL) {
+      const exist: any = await imageIsExist(imgURL)
+      if (exist) {
+        el.setAttribute('src', imgURL)
+      } else {
+        if (defaultURL) {
+          el.setAttribute('src', defaultURL)
+        }
+      }
+  }
+})
+
+// 检测图片是否存在
+const imageIsExist = (url: any) => {
+  return new Promise((resolve: any) => {
+      let img: any = new Image()
+      img.onload =  () => {
+        resolve(true)
+        img = null
+      }
+      img.onerror = () => {
+          resolve(false)
+          img = null
+      }
+      img.src = url
+  })
+}
