@@ -61,9 +61,9 @@
                   <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
         					  <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
-						        <router-link style='color: #00202D;margin-left: 25px;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,10)}}...</router-link>
+						        <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: it.id }}">{{item.videoName.slice(0,10)}}...</router-link>
 						      </Tooltip>
-							  <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+							  <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.id }}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
 						      ({{item.videoLength}}s)
         					</Col>
         				</row>
@@ -105,7 +105,7 @@ export default class Main extends ViewBase {
   ed = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
   query: any = {
     cinemaId: null,
-    remittanceDate: null,
+    remittanceDate: new Date(),
     beginDate: this.sd[0] + this.sd[1] + this.sd[2],
     endDate: this.ed[0] + this.ed[1] + this.ed[2],
   }
@@ -335,7 +335,7 @@ export default class Main extends ViewBase {
     // })
 
     try {
-      await  confirm('是否确认将该影院所有广告状态设为已排？')
+      await  confirm('是否确认将该影院所有广告状态设为下刊？')
       await allover(this.deArray)
       this.$Message.success({
         content: `修改成功`,
@@ -515,12 +515,12 @@ export default class Main extends ViewBase {
     top: 12px;
   }
 }
-.data {
-  height: 40px;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 5px;
-  border: 1px solid rgba(255, 255, 255, 1);
-}
+// .data {
+//   height: 40px;
+//   background: rgba(255, 255, 255, 0.8);
+//   border-radius: 5px;
+//   border: 1px solid rgba(255, 255, 255, 1);
+// }
 .data-s {
   margin-top: 4px;
   margin-left: 15%;
@@ -534,5 +534,29 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-select-input {
   margin-top: 3px;
+}
+/deep/ .ivu-date-picker {
+  width: 100%;
+}
+/deep/ .ivu-input {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 1);
+  &::-webkit-input-placeholder {
+    color: rgba(136, 136, 136, 1);
+  }
+}
+/deep/ .ivu-input-prefix i {
+  font-size: 16px;
+  line-height: 32px;
+  color: #808695;
+  margin-top: 5px;
+}
+/deep/ .ivu-input-suffix i {
+  font-size: 16px;
+  line-height: 32px;
+  color: #808695;
+  margin-top: 4px;
 }
 </style>

@@ -1,6 +1,5 @@
 <template>
   <div class="page home-bg as">
-     <!-- <h2 class="layout-nav-title">财务信息 > 充值记录</h2> -->
     <div class="flex-box">
       <form class="form item-top" @submit.prevent="seach">
         <em style='color: #fff;display: inline-block;'>充值状态</em>
@@ -8,21 +7,9 @@
           <Option v-for="it in approvalStatusList" :key="it.key" :value="it.key"
             :label="it.text">{{it.text}}</Option>
         </Select>
-        <!-- <Button type="primary" @click="seach" class="button-ok">查询</Button> -->
       </form>
     </div>
-    <!-- <div class='tiao'>
-      当前共有记录<span style='color:#222'>&nbsp;&nbsp;{{total}}条</span>
-      <span style='float: right; margin-right: 2.5%;'>当前结果共项&nbsp;&nbsp;第{{currentsize}}页/共{{dataForm.pageSize}}页</span>
-    </div> -->
     <Table ref="selection"  class="tables" :loading="tableLoading" :columns="columns4" :data="tableData"></Table>
-    <!-- <Page v-if="total>0" class="btnCenter"
-      :current="dataForm.pageIndex"
-      :page-size="dataForm.pageSize"
-      show-sizer
-      show-elevator
-      @on-change="sizeChangeHandle"
-      @on-page-size-change="currentChangeHandle"/> -->
       <Page
       :total="total"
       v-if="total>0"
@@ -30,7 +17,6 @@
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
       show-total
-      show-elevator
       @on-change="sizeChangeHandle"
       @on-page-size-change="currentChangeHandle"
     />
@@ -53,16 +39,16 @@ import moment from 'moment'
 import { slice, clean } from '@/fn/object'
 
 // 获取当前登录用户信息
-const user: any = getUser()!
+// const user: any = getUser()!
 
 const makeMap = (list: any[]) => toMap(list, 'id', 'name')
 const timeFormat = 'YYYY-MM-DD'
 
 @Component
 export default class Main extends ViewBase {
-//   user : any = getUser()
+  user: any = getUser()
   dataForm = {
-    companyId: user.companyId,
+    companyId: this.user.companyId,
     status: null,
     pageIndex: 1,
     pageSize: 10,
@@ -212,7 +198,7 @@ export default class Main extends ViewBase {
   ]
 
   created() {
-    this.userList = user
+    this.userList = this.user
     this.seach()
   }
 
@@ -294,24 +280,6 @@ export default class Main extends ViewBase {
 .as {
   background: rgba(255, 255, 255, 0);
 }
-.tiao {
-  width: 100%;
-  line-height: 31px;
-  padding-left: 20px;
-  padding-top: 20px;
-  // font-weight: bold;
-}
-.colBg {
-  font-size: 14px;
-  height: 50px;
-  line-height: 50px;
-  padding: 0 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  background: @c-head-bg;
-}
 .page {
   height: 100%;
   font-size: 14px;
@@ -368,47 +336,6 @@ export default class Main extends ViewBase {
   /deep/ .item-top {
     padding-left: 20px;
   }
-  .table-box {
-    div {
-      display: inline-block;
-    }
-    background: rgba(249, 249, 249, 1);
-    border-radius: 2px 2px 0  0;
-    height: 50px;
-    text-align: center;
-    line-height: 50px;
-    font-size: 14px;
-  }
-  .table-left-title {
-    float: left;
-    padding-left: 1.2%;
-    color: #222;
-  }
-  .table-right-title {
-    float: right;
-    padding-right: 1.2%;
-    color: #2481d7;
-    cursor: pointer;
-  }
-  .userTitle {
-    .colBg;
-    .addUser {
-      width: 140px;
-      height: 40px;
-      line-height: 40px;
-      display: block;
-      text-align: center;
-      color: #fff;
-      cursor: pointer;
-      background: @c-button;
-    }
-  }
-  .tableTotal {
-    padding: 0 30px 20px;
-    display: flex;
-    justify-content: space-between;
-    color: #989898;
-  }
   .tables {
     margin: 20px;
     /deep/ .status-3 {
@@ -428,64 +355,6 @@ export default class Main extends ViewBase {
         content: '-';
       }
     }
-  }
-  .fince-list {
-    .fince-list-big {
-      width: 32%;
-      display: inline-block;
-      height: 160px;
-      background: rgba(255, 248, 242, 1);
-      border-radius: 2px;
-      margin-left: 1%;
-      margin-bottom: 12px;
-      .fince-list-acc {
-        width: 100%;
-        font-size: 36px;
-        font-weight: 400;
-        color: rgba(254, 129, 53, 1);
-        line-height: 36px;
-        text-align: center;
-        margin-top: 50px;
-      }
-      .fince-list-accd {
-        width: 100%;
-        font-size: 36px;
-        font-weight: 400;
-        color: rgba(254, 129, 53, 1);
-        line-height: 36px;
-        text-align: center;
-        margin-top: 50px;
-      }
-      .fince-list-sm {
-        width: 100%;
-        height: 14px;
-        font-size: 14px;
-        font-weight: 400;
-        color: rgba(136, 136, 136, 1);
-        line-height: 14px;
-        text-align: center;
-        margin-top: 20px;
-      }
-    }
-  }
-  .add-row {
-    padding-left: 30px;
-    padding-right: 40px;
-  }
-  .inp-style {
-    width: 97%;
-    border: 1px solid rgba(210, 210, 210, 1);
-    border-radius: 2px;
-  }
-  .inp-style-center {
-    width: 95%;
-    border: 1px solid rgba(210, 210, 210, 1);
-    border-radius: 2px;
-  }
-  .inp-style-tex {
-    width: 98.5%;
-    border: 1px solid rgba(210, 210, 210, 1);
-    border-radius: 2px;
   }
   /deep/ .ivu-btn {
     font-size: 14px;
@@ -545,26 +414,31 @@ export default class Main extends ViewBase {
 /deep/ .btnCenter {
   text-align: center;
   height: 100px;
-  background: rgba(32, 67, 80, 1);
   margin: 0 20px 0 20px;
   line-height: 100px;
   color: #fff;
 }
 /deep/ .ivu-page-prev {
   border: 0;
-  background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
 }
 /deep/ .ivu-page-next {
   border: 0;
-  background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
 }
 /deep/ .ivu-page-item-active {
   border-color: #eee;
-  background: #eee !important;
+  background: #00202d !important;
   border-radius: 50%;
   color: #fff;
   width: 30px;
   height: 30px;
+}
+/deep/ .ivu-page-item-active:hover a {
+  color: #fff;
+}
+/deep/ .ivu-page-item-active a {
+  color: #fff;
 }
 /deep/ .ivu-page-item {
   border: 0;
@@ -605,6 +479,12 @@ export default class Main extends ViewBase {
   white-space: nowrap;
   padding-left: 8px;
   padding-right: 24px;
+  color: #00202d;
+}
+/deep/ .ivu-table {
+  border-radius: 5px;
+}
+/deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
   color: #00202d;
 }
 </style>

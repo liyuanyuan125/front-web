@@ -37,7 +37,7 @@
         </Col>
       </Row>
       <!-- <Row>
-        <li class='li-item'>
+        <li class='li-item' v-for='(it,index) in normallist' :key='index'>
             <row>
               <Col span='3'>通投</Col>
               <Col span='2'>50s</Col>
@@ -57,6 +57,7 @@
               </Col>
             </row>
           </li>
+          <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div>
       </Row> -->
       <div style='margin-top: 15px;'>
       	<Row class='li-title'>
@@ -77,16 +78,16 @@
                   <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
         					  <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
-						        <router-link style='color: #00202D;margin-left: 25px;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,10)}}...</router-link>
+						        <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">{{item.videoName.slice(0,10)}}...</router-link>
 						      </Tooltip>
-							  <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+							  <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
 						      ({{item.videoLength}}s)
         					</Col>
         				</row>
         			</Col>
         		</row>
         	</li>
-          <li v-if='itemlist.length == 0' style='text-align: center;line-height: 50px;'>暂无数据</li>
+          <li v-if='itemlist.length == 0' style='text-align: center;line-height: 50px;'>暂无影片数据</li>
         </ul>
       </div>
     </div>
@@ -133,6 +134,7 @@ export default class Main extends ViewBase {
 
 
   itemlist: any = []
+  normallist: any = []
 
   objArray: any = []
   deArray: any = []
@@ -400,6 +402,7 @@ export default class Main extends ViewBase {
       // 获取上刊列表
       const datalist = await queryList(this.query)
       this.itemlist = datalist.data.items
+      this.normallist = datalist.data.normal == null ? [] : datalist.data.normal
       this.asd = false
 
     } catch (ex) {
