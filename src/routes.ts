@@ -888,7 +888,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       },
       title(route) {
         const id = route.params.id
-        return id ? '客户管理 - 编辑信息' : '客户管理 - 添加信息'
+        return id ? '客户管理 > 编辑信息' : '客户管理 > 添加信息'
       },
       pageTitle(route) {
         return route.params.id ? '编辑客户信息-鲸娱数据' : '新建客户信息-鲸娱数据'
