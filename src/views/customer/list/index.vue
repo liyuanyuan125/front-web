@@ -1,9 +1,10 @@
 <template>
   <div class="page home-bg as">
-    <h3 class="userTitle title" style='border-bottom: 0;margin-bottom: 15px;'>
+    <h3 class="userTitle title" style='margin: 0 20px 15px 20px;'>
       <span class="nav-top-title"></span>
       <Button  class="btn-new but" type="primary" v-auth="'customer-manage#create'" @click="addUser">
-        <Icon type="ios-add" size="27"/>新建客户
+        <!-- <Icon type="ios-add" size="27"/> -->
+         +&nbsp;&nbsp;新建客户
       </Button>
     </h3>
 
@@ -53,7 +54,6 @@
       :current="form.pageIndex"
       :page-size="form.pageSize"
       show-total
-      show-elevator
       @on-change="handlepageChange"
       @on-page-size-change="handlePageSize"
     />
@@ -235,7 +235,7 @@ export default class Main extends ViewBase {
     }
   }
   .form {
-    padding: 0 30px;
+    padding: 0 10%;
     .ivu-form-item {
       /deep/ .ivu-form-item-label {
         font-size: 14px;
@@ -303,6 +303,10 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-select-input {
   margin-top: 3px;
+  color: #00202d;
+  &::-webkit-input-placeholder {
+    color: #00202d;
+  }
 }
 /deep/ .ivu-input {
   border-radius: 5px 0  0 5px;
@@ -348,32 +352,40 @@ export default class Main extends ViewBase {
 /deep/ .btnCenter {
   text-align: center;
   height: 100px;
-  background: rgba(32, 67, 80, 1);
   margin: 0 20px 0 20px;
   line-height: 100px;
   color: #fff;
 }
+/deep/ .ivu-page-total {
+  color: #00202d;
+}
 /deep/ .ivu-page-prev {
   border: 0;
-  background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
 }
 /deep/ .ivu-page-next {
   border: 0;
-  background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
 }
 /deep/ .ivu-page-item-active {
   border-color: #eee;
-  background: #eee !important;
+  background: #00202d !important;
   border-radius: 50%;
   color: #fff;
   width: 30px;
   height: 30px;
 }
+/deep/ .ivu-page-item-active:hover a {
+  color: #fff;
+}
+/deep/ .ivu-page-item-active a {
+  color: #fff;
+}
 /deep/ .ivu-page-item {
   border: 0;
   display: inline-block;
   vertical-align: middle;
-  background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -409,5 +421,14 @@ export default class Main extends ViewBase {
   padding-left: 8px;
   padding-right: 24px;
   color: #00202d;
+}
+/deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
+  color: #00202d;
+}
+/deep/ .ivu-col-span-7 {
+  width: 32.5%;
+}
+/deep/ .ivu-table {
+  border-radius: 5px;
 }
 </style>

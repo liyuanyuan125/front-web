@@ -39,7 +39,7 @@
         </Col>
       </Row>
       <!-- <Row>
-        <li class='li-item'>
+        <li class='li-item' v-for='(it,index) in normallist' :key='index'>
             <row>
               <Col span='3'>通投</Col>
               <Col span='2'>50s</Col>
@@ -59,6 +59,7 @@
               </Col>
             </row>
           </li>
+          <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div>
       </Row> -->
       <div style=' margin-top: 15px; '>
       	<Row class='li-title'>
@@ -76,9 +77,9 @@
         				<row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                    <router-link style='color: #00202D;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,7)}}...</router-link>
+                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">{{item.videoName.slice(0,7)}}...</router-link>
                   </Tooltip>
-                <router-link style='color: #00202D;' tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
+                <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
@@ -138,6 +139,8 @@ export default class Main extends ViewBase {
 
 
   itemlist: any = []
+  normallist: any = []
+
 
 
 
@@ -375,6 +378,7 @@ export default class Main extends ViewBase {
       }
       const datalist = await querylist(this.query)
       this.itemlist = datalist.data.items
+      this.normallist = datalist.data.normal == null ? [] : datalist.data.normal
       this.asd = false
 
     } catch (ex) {

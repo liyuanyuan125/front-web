@@ -38,7 +38,7 @@
               </div>
               
               <div class="right-item">
-                <p class="name">{{item.name}}</p>
+                <p class="name" @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">{{item.name}}</p>
                 <p class="brand-name">{{item.brandName || item.productName}}</p>
                 <div class="item-icon">
                   <span>{{transformSpecif(item.specification)}}</span>
@@ -236,6 +236,7 @@ export default class Main extends ViewBase {
         }
         .brand-name {
           // word-break: break-all;
+          height: 22px;
           padding-bottom: 7px;
           max-width: 150px;
           overflow: hidden;

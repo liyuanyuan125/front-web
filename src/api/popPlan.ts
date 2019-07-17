@@ -301,3 +301,12 @@ export async function updatedates(query: any) {
   return data
 }
 
+/**
+ * @param  {any} query
+ * 更新广告计划投放档期
+ */
+export async function xlspost(id: any, query: any) {
+  const data = await post(`/xadvert/plans/${id}/import-cinemas`, query)
+  return data
+}
+

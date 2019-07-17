@@ -44,7 +44,7 @@ export default class CitysCompare extends ViewBase {
         font-weight: 400;
         color: rgba(255, 255, 255);
         line-height: 14px;
-        min-width: 47px;
+        min-width: 60px;
         text-align: left;
       }
       span:last-child {

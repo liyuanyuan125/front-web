@@ -658,6 +658,7 @@ export default class Main extends ViewBase {
       this.tabledataid = [
         this.tabledata.length > 0 ? this.tabledata[this.tabledata.length - 1].id : ''
       ]
+      this.total = data.totalCount
     } catch (ex) {
       this.handleError(ex)
     }
@@ -683,6 +684,7 @@ export default class Main extends ViewBase {
         channelType: this.type + 4,
         dataIdList: [id]
       })
+      this.collectinit()
       this.kolinit()
     } catch (ex) {
       this.handleError(ex)
