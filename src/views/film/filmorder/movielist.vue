@@ -403,6 +403,12 @@ export default class Main extends ViewBase {
   width: 30px;
   height: 30px;
 }
+/deep/ .ivu-page-item-active:hover a {
+  color: #fff;
+}
+/deep/ .ivu-page-item-active a {
+  color: #fff;
+}
 /deep/ .ivu-page-item {
   border: 0;
   display: inline-block;
@@ -445,6 +451,9 @@ export default class Main extends ViewBase {
   color: #00202d;
 }
 /deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
+  color: #00202d;
+}
+/deep/ .ivu-page-total {
   color: #00202d;
 }
 </style>
