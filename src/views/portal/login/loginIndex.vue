@@ -157,9 +157,13 @@ export default class Main extends ViewBase {
     this.emailError = '账号不存在'
   }
 
-  async onLogin10002(ex: any) {
-    await info('温馨提示：请务必核实您的账号角色，正确选择广告主或影城身份', {
-      title: '账号或密码错误'
+  onLogin10002() {
+    this.passwordError = '密码错误'
+  }
+
+  async onLogin10008(ex: any) {
+    await info('请核实您的账号角色，正确选择广告主或影城身份', {
+      title: '温馨提示'
     })
   }
 
