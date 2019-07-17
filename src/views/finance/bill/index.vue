@@ -1,6 +1,6 @@
 <template>
   <div class="page home-bg as">
-    <div class="layout-title nav-top-title">资金账单</div>
+    <div style='color: #00202D' class="layout-title nav-top-title">资金账单</div>
     <Form :model="form" label-position="left" class="edit-input" :label-width="100">
       <FormItem label="账单日期">
         <DatePicker type="daterange" v-model="beginDate" @on-change="handleChange" 
@@ -37,7 +37,7 @@
       </template>
     </Table>
     <Page  :total="total"  class="btnCenter page-list" :current="pageIndex" 
-      :page-size="pageSize" show-total show-elevator @on-change="handlepageChange"
+      :page-size="pageSize" show-total @on-change="handlepageChange"
       @on-page-size-change="handlePageSize"/>
   </div>
 </template>
@@ -215,6 +215,13 @@
   border: 0;
   padding: 0;
 }
+/deep/ .ivu-select-input {
+  margin-top: 3px;
+  color: #00202d;
+  &::-webkit-input-placeholder {
+    color: #00202d;
+  }
+}
 /deep/ .ivu-input {
   border-radius: 5px 0 0 5px;
   height: 40px;
@@ -259,27 +266,28 @@
 /deep/ .btnCenter {
   text-align: center;
   height: 100px;
-  background: rgba(32, 67, 80, 1);
+  // background: rgba(32, 67, 80, 1);
   margin: 0 20px 0 20px;
   line-height: 100px;
   color: #fff;
 }
 /deep/ .ivu-page-prev {
   border: 0;
-  background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
 }
 /deep/ .ivu-page-next {
   border: 0;
-  background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
 }
 /deep/ .ivu-page-item-active {
   border-color: #eee;
-  background: #eee !important;
+  background: #00202d !important;
   border-radius: 50%;
+  color: #fff;
   width: 30px;
   height: 30px;
-  color: rgb(32, 67, 80, 1);
 }
+
 /deep/ .ivu-page-item {
   border: 0;
   display: inline-block;
