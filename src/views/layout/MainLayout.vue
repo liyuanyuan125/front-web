@@ -643,4 +643,10 @@ export default class MainLayout extends ViewBase {
 .menu-item-report {
   display: none;
 }
+.theme-resource {
+  .menu-item-home,
+  .menu-item-resfinance-info {
+    display: none;
+  }
+}
 </style>

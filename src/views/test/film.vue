@@ -10,7 +10,7 @@
               <div class="film-title">{{it.name_cn}}</div>
               <div class="film-time" style="margin-top: 10px"><span class="time-right">上映时间：</span>{{it.release_date}}</div>
               <div class="film-time timer">
-                <span class="time-right">投放排期</span>
+                <span class="time-right">投放排期：</span>
                 <span>{{formatDate(begin)}}至{{formatDate(end)}}</span>
               </div>
             </div>
@@ -18,7 +18,7 @@
       </li>
       <li class="add-item" @click="onAdd" v-if="!type">
         <div>
-          <Icon type="md-add" /><span>添加影片</span>
+          <span>+&nbsp;&nbsp;添加影片</span>
         </div>
       </li>
     </ul>
@@ -155,16 +155,17 @@ export default class ComponentMain extends ViewBase {
       }
       .del {
         display: block;
-        content: '\2716';
+        content: "\2716";
         cursor: pointer;
-        color: #fff;
-        font-size: 18px;
+        color: #00202d;
+        font-weight: bold;
+        font-size: 19px;
         position: absolute;
         right: -8px;
         top: -38px;
-        border: 1px solid #00202d;
-        background: #00202d;
-        width: 18px;
+        border: 1px solid #fff;
+        background: #fff;
+        width: 17px;
         height: 18px;
         border-radius: 50%;
         text-align: center;

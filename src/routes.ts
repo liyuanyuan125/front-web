@@ -274,7 +274,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'home-resoverview',
     component: () => import('./views/resReport/info/index.vue'),
     meta: {
-      authKey: 'data-report',
+      // authKey: 'data-report',
+      authKey: 'index',
       authAction: 'EMPTY',
       breadcrumbs: [{ label: '首页' }],
       pageTitle: '鲸娱数据：全网精准娱乐营销平台'
@@ -732,6 +733,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: 'EMPTY',
       authIsMenu: true,
+      title: '下刊管理',
       pageTitle: '下刊管理-鲸娱数据',
     },
   },
@@ -886,7 +888,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       },
       title(route) {
         const id = route.params.id
-        return id ? '客户管理 - 编辑信息' : '客户管理 - 添加信息'
+        return id ? '编辑客户信息' : '添加客户信息'
       },
       pageTitle(route) {
         return route.params.id ? '编辑客户信息-鲸娱数据' : '新建客户信息-鲸娱数据'

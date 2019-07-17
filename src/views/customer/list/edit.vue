@@ -167,7 +167,7 @@ export default class Main extends ViewBase {
 }
 .item-account-email {
   /deep/ .ivu-form-item-label {
-    padding-left: 0;
+    // padding-left: 0;
   }
 }
 .login-email {
@@ -263,5 +263,12 @@ export default class Main extends ViewBase {
   padding-left: 8px;
   padding-right: 24px;
   color: #00202d;
+}
+/deep/ .ivu-select-disabled .ivu-select-selection .ivu-select-arrow {
+  color: #808695;
+  font-size: 17px;
+}
+/deep/ .ivu-select-arrow {
+  font-size: 17px;
 }
 </style>
