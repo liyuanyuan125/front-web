@@ -292,7 +292,7 @@
   border: 0;
   display: inline-block;
   vertical-align: middle;
-  background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -307,6 +307,30 @@
   a {
     color: #fff;
   }
+}
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 24px;
+  color: #00202d;
+}
+/deep/ .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 24px;
+  color: #00202d;
 }
 </style>
 

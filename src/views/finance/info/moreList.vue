@@ -17,7 +17,6 @@
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
       show-total
-      show-elevator
       @on-change="sizeChangeHandle"
       @on-page-size-change="currentChangeHandle"
     />
@@ -40,16 +39,16 @@ import moment from 'moment'
 import { slice, clean } from '@/fn/object'
 
 // 获取当前登录用户信息
-const user: any = getUser()!
+// const user: any = getUser()!
 
 const makeMap = (list: any[]) => toMap(list, 'id', 'name')
 const timeFormat = 'YYYY-MM-DD'
 
 @Component
 export default class Main extends ViewBase {
-//   user : any = getUser()
+  user: any = getUser()
   dataForm = {
-    companyId: user.companyId,
+    companyId: this.user.companyId,
     status: null,
     pageIndex: 1,
     pageSize: 10,
@@ -199,7 +198,7 @@ export default class Main extends ViewBase {
   ]
 
   created() {
-    this.userList = user
+    this.userList = this.user
     this.seach()
   }
 
@@ -281,17 +280,6 @@ export default class Main extends ViewBase {
 .as {
   background: rgba(255, 255, 255, 0);
 }
-// .colBg {
-//   font-size: 14px;
-//   height: 50px;
-//   line-height: 50px;
-//   padding: 0 30px;
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   margin-bottom: 20px;
-//   background: @c-head-bg;
-// }
 .page {
   height: 100%;
   font-size: 14px;
@@ -348,34 +336,6 @@ export default class Main extends ViewBase {
   /deep/ .item-top {
     padding-left: 20px;
   }
-  // .table-box {
-  //   div {
-  //     display: inline-block;
-  //   }
-  //   background: rgba(249, 249, 249, 1);
-  //   border-radius: 2px 2px 0  0;
-  //   height: 50px;
-  //   text-align: center;
-  //   line-height: 50px;
-  //   font-size: 14px;
-  // }
-  // .table-left-title {
-  //   float: left;
-  //   padding-left: 1.2%;
-  //   color: #222;
-  // }
-  // .table-right-title {
-  //   float: right;
-  //   padding-right: 1.2%;
-  //   color: #2481d7;
-  //   cursor: pointer;
-  // }
-  // .tableTotal {
-  //   padding: 0 30px 20px;
-  //   display: flex;
-  //   justify-content: space-between;
-  //   color: #989898;
-  // }
   .tables {
     margin: 20px;
     /deep/ .status-3 {
@@ -396,64 +356,6 @@ export default class Main extends ViewBase {
       }
     }
   }
-  // .fince-list {
-  //   .fince-list-big {
-  //     width: 32%;
-  //     display: inline-block;
-  //     height: 160px;
-  //     background: rgba(255, 248, 242, 1);
-  //     border-radius: 2px;
-  //     margin-left: 1%;
-  //     margin-bottom: 12px;
-  //     .fince-list-acc {
-  //       width: 100%;
-  //       font-size: 36px;
-  //       font-weight: 400;
-  //       color: rgba(254, 129, 53, 1);
-  //       line-height: 36px;
-  //       text-align: center;
-  //       margin-top: 50px;
-  //     }
-  //     .fince-list-accd {
-  //       width: 100%;
-  //       font-size: 36px;
-  //       font-weight: 400;
-  //       color: rgba(254, 129, 53, 1);
-  //       line-height: 36px;
-  //       text-align: center;
-  //       margin-top: 50px;
-  //     }
-  //     .fince-list-sm {
-  //       width: 100%;
-  //       height: 14px;
-  //       font-size: 14px;
-  //       font-weight: 400;
-  //       color: rgba(136, 136, 136, 1);
-  //       line-height: 14px;
-  //       text-align: center;
-  //       margin-top: 20px;
-  //     }
-  //   }
-  // }
-  // .add-row {
-  //   padding-left: 30px;
-  //   padding-right: 40px;
-  // }
-  // .inp-style {
-  //   width: 97%;
-  //   border: 1px solid rgba(210, 210, 210, 1);
-  //   border-radius: 2px;
-  // }
-  // .inp-style-center {
-  //   width: 95%;
-  //   border: 1px solid rgba(210, 210, 210, 1);
-  //   border-radius: 2px;
-  // }
-  // .inp-style-tex {
-  //   width: 98.5%;
-  //   border: 1px solid rgba(210, 210, 210, 1);
-  //   border-radius: 2px;
-  // }
   /deep/ .ivu-btn {
     font-size: 14px;
     height: 40px;

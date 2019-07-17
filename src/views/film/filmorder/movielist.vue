@@ -407,7 +407,7 @@ export default class Main extends ViewBase {
   border: 0;
   display: inline-block;
   vertical-align: middle;
-  // background: rgba(32, 67, 80, 1);
+  background: rgba(255, 255, 255, 0);
   border-radius: 50%;
   width: 30px;
   height: 30px;
