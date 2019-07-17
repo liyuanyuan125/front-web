@@ -50,7 +50,7 @@ export default class BannerCard extends Vue {
   min-height: 400px;
   border-radius: 5px;
   .banner-box {
-    min-height: 280px;
+    min-height: 316px;
     flex-flow: column;
     justify-content: center;
     align-items: flex-start;

@@ -21,8 +21,8 @@
               <div class="user-pane-head">
                 <h6>线级分布</h6>
               </div>
-              <div class="user-pane-body" style='margin-top: -100px;'>
-                <PieNest :initDone="cityLevel.initDone" :dict1="cityLevel.dict1" :dict2="cityLevel.dict2" :height="cityLevel.height" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})" :color="cityLevel.color" :dataList="cityLevel.dataList" :currentTypeIndex="cityLevel.currentTypeIndex" />
+              <div class="user-pane-body" >
+                <PieNest :initDone="cityLevel.initDone" :dict1="cityLevel.dict1" :dict2="cityLevel.dict2" :height="cityLevel.height" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b} : {c}'})" :color="cityLevel.color" :dataList="cityLevel.dataList" :currentTypeIndex="cityLevel.currentTypeIndex" />
               </div>
             </div>
             <div class="user-pane-group" style="width: 100%; margin-top: 10px; height: 380px; border-radius:0px 0px 0px 5px;">
@@ -98,8 +98,8 @@ export default class UserCard extends Vue {
       currentTypeIndex: 0,
       initDone: this.cityLevelInitDone,
       dataList: [this.data.cityLevelData],
-      color: ['#29cfe4', '#ff8b92', '#f5d44e'],
-      height: 200
+      color: ['#29cfe4', '#ff8b92', '#f5d44e', '#A3D5E6'],
+      height: 210
     }
   }
 

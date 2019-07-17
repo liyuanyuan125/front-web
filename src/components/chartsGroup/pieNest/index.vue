@@ -11,8 +11,8 @@
         <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <div class="content-wrap">
-      <div v-if="initDone" ref="refChart" class="chart-wrap"></div>
+    <div class="content-wrap" :style="`height:${ (height > 0) ? height : 400 }px`">
+      <div v-if="initDone" ref="refChart" class="chart-wrap" :style="`height:${ (height > 0) ? height : 400 }px`"></div>
       <div v-show="!initDone" class="chart-loading">
         <TinyLoading />
       </div>
