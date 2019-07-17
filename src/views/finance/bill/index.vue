@@ -227,6 +227,9 @@
   height: 40px;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 1);
+  &::-webkit-input-placeholder {
+    color: #00202d;
+  }
 }
 /deep/ .ivu-table th, /deep/ .ivu-table-header {
   background: rgba(0, 32, 45, 0.8);
@@ -255,9 +258,6 @@
   overflow-x: auto;
   overflow-y: hidden;
   background: rgba(32, 67, 80, 1);
-}
-/deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
-  color: #fff;
 }
 /deep/ .ivu-table-wrapper {
   margin: 30px 20px 0;
@@ -331,6 +331,18 @@
   padding-left: 8px;
   padding-right: 24px;
   color: #00202d;
+}
+/deep/ .ivu-input-prefix i {
+  font-size: 17px;
+  line-height: 32px;
+  color: #808695;
+  margin-top: 5px;
+}
+/deep/ .ivu-input-suffix i {
+  font-size: 17px;
+  line-height: 32px;
+  color: #808695;
+  margin-top: 4px;
 }
 </style>
 
