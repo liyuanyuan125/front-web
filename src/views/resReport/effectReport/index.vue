@@ -60,7 +60,7 @@ const getName = (key: string, list: any[]) => {
   const i: number = findIndex( list, (it: any) => {
     return key === it.key
   })
-  const res: string = list[i].text
+  const res: string = list[i].text || ''
   return res
 }
 const dot = (object: any, path: string) => at(object, path)[0]
@@ -502,19 +502,19 @@ export default class Index extends ViewBase {
           }
           this.userData = {
             sex: {
-              male: user.male,
-              female: user.female
+              male: parseFloat(user.male),
+              female: parseFloat(user.female)
             },
             cityData: user.cities.map((item: any) => {
               return {
                 cityName: item.k,
-                percent: parseInt(item.v, 0)
+                percent: parseFloat(item.v)
               }
             }),
             cityLevelData: user.grades.map((it: any) => {
               return {
                 name: getName(it.k, gradeCodes),
-                value: parseInt(it.v, 0)
+                value: parseFloat(it.v)
               }
             }),
             ageData: _ageData || {}

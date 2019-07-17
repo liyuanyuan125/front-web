@@ -21,7 +21,7 @@
                 <FormItem :labelWidth="0" class="item-top form-item-type">
                   <Tags v-model="cityCustom" :tagMess="areaList"/>
                 </FormItem>
-                <div class="item-top check-cinem" v-if="cityCustom == 0">
+                <!-- <div class="item-top check-cinem" v-if="cityCustom == 0">
                   <FormItem :labelWidth="0">
                     <CheckboxGroup v-model="form.cinema" class="item-radio-top">
                       <div style="margin-bottom: 30px">
@@ -58,13 +58,38 @@
                       </div>
                     </CheckboxGroup>
                   </FormItem>
-                </div>
-                <div class="item-top" v-else>
-                  <div @click="visible = true" class="set-city">
+                </div> -->
+                <div class="item-top" v-if="cityCustom == 1">
+                  <!-- <div @click="visible = true" class="set-city">
                     共{{citysId.length}}个城市
                     <span>设置</span>
-                  </div>
+                  </div> -->
                   <City @ok="onCitySelectOk" v-model="visible" :cityIds.sync="citysId" :topCityIds="warehouseId"></City>
+                </div>
+                <div v-else class="xls-box">
+                  <p class="title">注（请先下载影院数据表，编辑为仅包含自己目标投放影院的“.xls”格式文件，
+                    然后再导入；请勿修改表格格式，否则将导入失败）</p>
+                  <FormItem :labelWidth="0"  class="item-top form-item-type">
+                    <div class="set-film">
+                      可选影院：
+                      <span>影院数据.xls</span>
+                      <a src='https://fapi.aiads-dev.com/xadvert/plans/export-cinemas' download='影院数据' style="margin-left: 20px;cursor: pointer;">下载</a>
+                    </div>
+                  </FormItem>
+                  <FormItem style="margin-left: 30px" :labelWidth="0"  class="form-item-type">
+                    <div class="set-film">
+                      目标影院：
+                      <label class="upload-film">
+                        <span>选取文件</span>
+                        <input type="file" style="display: none" accept="application/vnd.ms-excel" @change="filmchange"/>
+                      </label>
+                      <span v-if='!xlsname'>未选择文件</span>
+                      <span v-else>
+                        {{xlsname}}
+                      </span>
+                      <p>成功识别 {{xlslength}} 家影院</p>
+                    </div>
+                  </FormItem>
                 </div>
               </Row>
             </Col>
@@ -168,11 +193,13 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Tags from '../tag.vue'
-import { cinemaFind } from '@/api/popPlan.ts'
+import { cinemaFind, xlspost } from '@/api/popPlan.ts'
 import { confirm, toast } from '@/ui/modal'
 import moment from 'moment'
 import Film from './newfilm.vue'
 import Chain from '@/components/cityMap/CityMap.vue'
+import Xlsx from './dowmxsxl.vue'
+import { post } from '@/fn/ajax'
 import {
   getTwodetail,
   warehouse,
@@ -183,7 +210,7 @@ import {
   getRecommend
 } from '@/api/popPlan.ts'
 import { clean } from '@/fn/object.ts'
-import City from '@/components/citySelectDialog'
+import City from '@/components/adverCity'
 import { info } from '@/ui/modal'
 import jsxReactToVue from '@/util/jsxReactToVue'
 
@@ -213,6 +240,7 @@ const timeFormats = 'YYYYMMDD'
 })
 export default class Orienteering extends ViewBase {
   @Prop() value!: any
+  xlsname: any = ''
   visible = false
   citysId = []
   topCitysId = []
@@ -244,12 +272,12 @@ export default class Orienteering extends ViewBase {
 
   areaList = [
     {
-      label: 0,
-      name: '快速选择'
+      label: 1,
+      name: '按城市设置'
     },
     {
-      label: 1,
-      name: '自定义城市列表'
+      label: 2,
+      name: '按影院设置'
     }
   ]
   movieList = [
@@ -281,7 +309,7 @@ export default class Orienteering extends ViewBase {
   typeList: any = []
   cinemaDetail: any = []
   citiesList: any = []
-
+  xlslength = 0
   created() {
     this.init()
   }
@@ -545,6 +573,22 @@ export default class Orienteering extends ViewBase {
   }
 
   onCitySelectOk({ fastList }: any) {
+  }
+
+  async filmchange(ev: Event) {
+    try {
+      const files: any = (ev.target as HTMLInputElement).files
+      if (files == null || files.length === 0) {
+        return
+      }
+      const form: any = new FormData
+      this.xlsname = files[0].name
+      form.append('file', files[0])
+      const { data } = await xlspost(this.$route.params.setid, form)
+      this.xlslength = (data || []).length
+    } catch (ex) {
+
+    }
   }
 
   back(dataform: any) {
@@ -938,6 +982,16 @@ export default class Orienteering extends ViewBase {
 /deep/ .ivu-progress-bg {
   background: #3959a8;
 }
+.btn-export {
+  width: 150px;
+  height: 40px;
+  border: 1px solid fff;
+  .button-style(#00202d, rgba(255, 255, 255, .3));
+  border-radius: 5px;
+  img {
+    vertical-align: middle;
+  }
+}
 .age-box {
   display: flex;
   align-items: center;
@@ -947,6 +1001,36 @@ export default class Orienteering extends ViewBase {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+  }
+}
+.xls-box {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  border: 1px solid #fff;
+  margin: 0 30px;
+  .title {
+    margin-left: 30px;
+    font-size: 16px;
+    color: rgba(0, 32, 45, 1);
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  .set-film {
+    font-size: 16px;
+    color: rgba(0, 32, 45, 1);
+  }
+  .upload-film {
+    font-size: 16px;
+    span {
+      .button-style(#fff, #00202d);
+      display: inline-block;
+      width: 100px;
+      height: 31px;
+      text-align: center;
+      line-height: 31px;
+      border-radius: 16px;
+      margin-left: 10px;
+    }
   }
 }
 </style>
