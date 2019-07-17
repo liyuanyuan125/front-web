@@ -209,23 +209,28 @@ export default class Change extends ViewBase {
   z-index: 1;
   font-size: 12px;
   position: absolute;
-  right: -16px;
-  top: -13px;
+  right: -17px;
+  top: -18px;
   overflow: hidden;
   cursor: pointer;
-  background: rgba(0, 32, 45, 1);
+  background: #fff;
   border-radius: 50%;
+  border: 2px solid #00202d;
   color: #fff;
+  width: 30px;
+  height: 30px;
 }
 /deep/ .ivu-modal-close .ivu-icon-ios-close {
-  font-size: 31px;
-  color: #fff;
-  transition: color 0.2s ease;
+  font-size: 30px;
+  font-weight: bold;
+  color: #00202d;
+  transition: color .2s ease;
   position: relative;
-  top: 1px;
+  top: -1px;
+  left: -2px;
 }
 /deep/ .ivu-modal-close .ivu-icon-ios-close:hover {
-  color: #fff;
+  color: #00202d;
 }
 </style>
 
