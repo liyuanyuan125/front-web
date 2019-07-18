@@ -21,7 +21,7 @@
                 <FormItem :labelWidth="0" class="item-top form-item-type">
                   <Tags v-model="cityCustom" :tagMess="areaList"/>
                 </FormItem>
-                <div class="item-top" v-if="cityCustom == 1">
+                <div class="item-top" v-if="cityCustom == 0">
                   <!-- <div @click="visible = true" class="set-city">
                     共{{citysId.length}}个城市
                     <span>设置</span>
@@ -216,7 +216,7 @@ export default class Orienteering extends ViewBase {
   movies: any = []
   timers: any = {}
   numsList: any = []
-  cityCustom: number = 1
+  cityCustom: number = 0
   movieCustom: number = 0
   cinemaType: number = 0
   settime: any = null
