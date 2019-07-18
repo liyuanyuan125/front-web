@@ -64,7 +64,7 @@
                 >({{cell.selectedCityIds.length}})</em>
                 <div
                   class="cell-pull-handle"
-                  @click="cell.dropdownOpen = !cell.dropdownOpen"
+                  @click.prevent="cell.dropdownOpen = !cell.dropdownOpen"
                   v-if="cell.type == 'province'"
                 >
                   <Icon
@@ -223,7 +223,7 @@ const provinceCityIds = (provinceList: AreaItemSubList[]) => {
 }
 
 const cellData = (list: RegionSubList[], {
-  chunkSize = 6,
+  chunkSize = 5,
   cityChunkSize = 3
 } = {}) => {
   const chunkList = chunkData(list, chunkSize)
@@ -595,18 +595,18 @@ export default class CitySelectPane extends ViewBase {
 
 .city-count {
   display: inline-block;
-  min-width: 24px;
+  min-width: 2px;
   visibility: hidden;
 }
 
 .city-count-show {
+  min-width: 2px;
   visibility: visible;
 }
 
 .cell-pull-handle {
-  position: relative;
-  flex: 1;
-  min-width: 28px;
+  display: inline-block;
+  min-width: 14px;
   cursor: pointer;
   margin-top: -20px;
   &:hover .cell-pull-icon {
@@ -725,7 +725,6 @@ th {
       position: absolute;
       right: -8px;
       top: -8px;
-      border: 1px solid #00202d;
       background: #00202d;
       width: 18px;
       height: 18px;
@@ -742,6 +741,7 @@ th {
 }
 /deep/ .ivu-select-input {
   line-height: 36px;
+  height: 32px;
   &::placeholder {
     line-height: 36px;
   }
