@@ -58,8 +58,7 @@
       <ul name="list" tag="ul" class="loading-img" v-if="mapImgList.length">
         <li v-for="(img, index) in mapImgList" :key="index">
           <a class="img-list">
-            <img :src="img" v-real-img="img"
-            default-img = "http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncstluomr0008001og.png" />
+            <img :src="img" v-real-img="img" />
           </a>
         </li>
       </ul>

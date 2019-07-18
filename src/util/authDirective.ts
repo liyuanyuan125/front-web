@@ -30,7 +30,12 @@ Vue.directive('auth', {
 // //aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncstluomr0008001og.png
 Vue.directive('real-img', async (el: any, binding: any) => {
   const imgURL: any = binding.value
-  const defaultURL = el.getAttribute('default-img')
+  // const defaultURL = el.getAttribute('default-img') // 手动传
+  const defaultURL = 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncstluomr0008001og.png'
+  if (!imgURL) {
+    el.setAttribute('src', defaultURL)
+    return
+  }
   if (imgURL) {
       const exist: any = await imageIsExist(imgURL)
       if (exist) {
