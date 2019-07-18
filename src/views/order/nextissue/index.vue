@@ -111,15 +111,15 @@ export default class Main extends ViewBase {
   idsArray: any = []
 
   async mounted() {
-    const cinid = await getcinid()
+    // const cinid = await getcinid()
 
-    if (cinid.data.cinemaId == 0) {
-      info('当前用户没有关联影院')
-      this.query.cinemaId = cinid.data.cinemaId
-    } else {
-      this.query.cinemaId = cinid.data.cinemaId
-      this.remoteMethod(cinid.data.cinemaName)
-    }
+    // if (cinid.data.cinemaId == 0) {
+    //   info('当前用户没有关联影院')
+    //   this.query.cinemaId = cinid.data.cinemaId
+    // } else {
+    //   this.query.cinemaId = cinid.data.cinemaId
+    //   this.remoteMethod(cinid.data.cinemaName)
+    // }
 
     this.query.offDate = new Date()
     this.seach()
@@ -199,10 +199,7 @@ export default class Main extends ViewBase {
 
   async seach() {
     try {
-      if (this.query.cinemaId == undefined) {
-        info('请选择影院')
-        return
-      }
+
       // console.log(this.query.offDate)
       if (this.query.offDate == '') {
         return
@@ -213,6 +210,22 @@ export default class Main extends ViewBase {
         const a  = moment(this.query.offDate.getTime()).format(timeFormat).split('-')
         this.query.offDate = a[0] + a[1] + a[2]
       }
+      // 获取默认影院
+      const cinid = await getcinid(this.query.offDate)
+
+      if (cinid.data.cinemaId == 0) {
+        info('当前用户没有关联影院')
+        this.query.cinemaId = cinid.data.cinemaId
+      } else {
+        this.query.cinemaId = cinid.data.cinemaId
+        this.remoteMethod(cinid.data.cinemaName)
+      }
+
+      if (this.query.cinemaId == undefined) {
+        info('请选择影院')
+        return
+      }
+
       // const a  = moment(this.query.offDate.getTime()).format(timeFormat).split('-')
       // this.query.offDate = a[0] + a[1] + a[2]
       // 获取上刊列表
