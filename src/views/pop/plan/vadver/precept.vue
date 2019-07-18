@@ -5,7 +5,9 @@
         <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
           <PreceptHead v-model="deatilItem"/>
           <h3 class="layout-titles">投放影片
-              <span class="item-detail">优先投放 {{filmList.length}} 部</span>
+              <span class="item-detail">投放周期内热映的重点参考影片TOP{{filmList.length}},
+                最终投放以各地影院排片为准
+              </span>
               <!-- <span class="custom">自定义投放电影</span> -->
           </h3>
           <div class="item-top">
@@ -373,6 +375,7 @@ export default class App extends ViewBase {
           ages: names
         }
       })
+      this.filmList = this.filmList.slice(0, 3)
       // const geners = this.filmList.genders.length > 0 ? [this.filmList.genders.sort((a: any, b: any) => {
       //   return a.rate - b.rate
       // })[0]] : []
@@ -579,7 +582,6 @@ export default class App extends ViewBase {
   margin-top: 46px;
   .item-detail {
     display: inline-block;
-    width: 100px;
     font-size: 14px;
     margin-left: 20px;
   }

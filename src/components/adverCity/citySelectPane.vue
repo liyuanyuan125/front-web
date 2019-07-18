@@ -1,13 +1,13 @@
 <template>
   <div class="city-select-pane">
     <div class="city-fast-row" v-if="fastList.length > 0">
-      <div class="check-box">
+      <div class="city-fast-list">
         <Checkbox
           v-for="it in fastList"
           :key="it.key"
           v-model="it.checked"
           :indeterminate="it.indeterminate"
-          class="check-item"
+          class="city-fast-item check-item"
           @on-change="fastChange(it, $event)"
         >{{it.text}}</Checkbox>
       </div>
@@ -23,11 +23,14 @@
       </Select>
     </div>
 
-    <div class="city-table" v-if="cellData">
-      <div v-for="(row, i) in cellData" style="display: flex" :key="i">
-        <div
+    <table class="city-table" v-if="cellData">
+      <tr v-for="(row, i) in cellData" :key="i">
+        <component
           v-for="cell in row"
           :key="cell.uqid"
+          :is="cell.type == 'region' ? 'th' : 'td'"
+          :rowspan="cell.rowspan"
+          :colspan="cell.colspan"
         >
           <component
             :is="cell.type == 'province' ? 'dropdown' : 'span'"
@@ -46,34 +49,31 @@
                   && cell.data.id == hightlightCityId
               }"
             >
-              <div class="check-box">
-                <Checkbox
-                  v-model="cell.checked"
-                  :indeterminate="cell.indeterminate"
-                  @on-change="cellCheckChange(cell)"
-                  class="check-item">
-                  <span class="city-name">{{cell.label}}</span>
-                  <em
-                    class="city-count"
-                    :class="{
-                      'city-count-show': cell.selectedCityIds.length > 0
-                        && cell.type == 'province'
-                    }"
-                  >({{cell.selectedCityIds.length}})</em>
-                  
-                  <div
-                    class="cell-pull-handle"
-                    @click.prevent="cell.dropdownOpen = !cell.dropdownOpen"
+              <Checkbox
+                v-model="cell.checked"
+                :indeterminate="cell.indeterminate"
+                @on-change="cellCheckChange(cell)"
+                class="city-check check-item">
+                <span class="city-name">{{cell.label}}</span>
+                <em
+                  class="city-count"
+                  :class="{
+                    'city-count-show': cell.selectedCityIds.length > 0
+                      && cell.type == 'province'
+                  }"
+                >({{cell.selectedCityIds.length}})</em>
+                <div
+                  class="cell-pull-handle"
+                  @click="cell.dropdownOpen = !cell.dropdownOpen"
+                  v-if="cell.type == 'province'"
+                >
+                  <Icon
+                    type="ios-arrow-down"
+                    class="cell-pull-icon"
                     v-if="cell.type == 'province'"
-                  >
-                    <Icon
-                      type="ios-arrow-down"
-                      class="cell-pull-icon"
-                      v-if="cell.type == 'province'"
-                    />
-                  </div>
-                </Checkbox>
-              </div>
+                  />
+                </div>
+              </Checkbox>
             </span>
 
             <DropdownMenu
@@ -108,9 +108,12 @@
               </div>
             </DropdownMenu>
           </component>
-        </div>
-      </div>
-    </div>
+        </component>
+      </tr>
+    </table>
+    <p>
+      已选： {{model.length}}
+    </p>
   </div>
 </template>
 
@@ -220,7 +223,7 @@ const provinceCityIds = (provinceList: AreaItemSubList[]) => {
 }
 
 const cellData = (list: RegionSubList[], {
-  chunkSize = 4,
+  chunkSize = 6,
   cityChunkSize = 3
 } = {}) => {
   const chunkList = chunkData(list, chunkSize)
@@ -561,62 +564,16 @@ export default class CitySelectPane extends ViewBase {
 @import '~@/site/lib.less';
 
 .city-select-pane {
+  user-select: none;
 }
 
 .city-filter {
   width: 188px;
 }
 
-.check-ra {
-  /deep/ .ivu-checkbox {
-    display: none;
-  }
-  /deep/&.ivu-checkbox-wrapper-checked {
-    color: #fff;
-    background-color: #00202d;
-    border: 1px solid #00202d;
-    &::after {
-      content: '\2713';
-      color: #fff;
-      position: absolute;
-      right: -8px;
-      top: -8px;
-      border: 1px solid #00202d;
-      background: #00202d;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      text-align: center;
-      line-height: 16px;
-    }
-  }
-}
-.check-box {
-  display: flex;
-  .check-item {
-    position: relative;
-    min-width: 120px;
-    max-width: 200px;
-    top: 3px;
-    flex: 1;
-    height: 40px;
-    line-height: 40px;
-    border-radius: 4px;
-    text-align: center;
-    margin-right: 15px;
-    font-size: 14px;
-    color: #00202d;
-    border: 1px solid #fff;
-    margin-bottom: 20px;
-    background: rgba(255, 255, 255, 0.3);
-    // user-select: none;
-    .check-ra;
-  }
-}
 .city-table {
   margin-top: 20px;
-  display: flex;
-  flex-wrap: wrap;
+  border-collapse: collapse;
 }
 
 .cell-inner,
@@ -650,17 +607,26 @@ export default class CitySelectPane extends ViewBase {
   position: relative;
   flex: 1;
   min-width: 28px;
-  margin-top: -20px;
   cursor: pointer;
+  margin-top: -20px;
   &:hover .cell-pull-icon {
     color: @c-button;
-
     .theme-resource & {
       color: @c-button-resource;
     }
   }
 }
 
+th[rowspan='2'] {
+  position: relative;
+  .cell-label {
+    top: -30px;
+    font-weight: 400;
+  }
+}
+th {
+  font-weight: 400;
+}
 .cell-pull-icon {
   position: absolute;
   top: 0;
@@ -719,12 +685,65 @@ export default class CitySelectPane extends ViewBase {
     margin-right: 0;
   }
 }
-</style>
-
-<style lang="less">
 .city-select-pane-transfer[data-transfer=true] {
   max-height: 666px;
   padding: 0;
-  // user-select: none;
+  user-select: none;
+}
+.check-item {
+  position: relative;
+  min-width: 130px;
+  top: 3px;
+  flex: 1;
+  height: 40px;
+  line-height: 30px;
+  border-radius: 4px;
+  text-align: center;
+  margin-right: 15px;
+  font-size: 14px;
+  color: #00202d;
+  border: 1px solid #fff;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  user-select: none;
+  .check-ra;
+}
+.check-ra {
+  /deep/ .ivu-checkbox {
+    display: none;
+  }
+  /deep/ .ivu-radio {
+    display: none;
+  }
+  /deep/&.ivu-checkbox-wrapper-checked {
+    color: #fff;
+    background-color: #00202d;
+    border: 1px solid #00202d;
+    &::after {
+      content: '\2713';
+      color: #fff;
+      position: absolute;
+      right: -8px;
+      top: -8px;
+      border: 1px solid #00202d;
+      background: #00202d;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 16px;
+    }
+  }
+}
+.city-fast-list {
+  .check-item {
+    line-height: 40px;
+  }
+}
+/deep/ .ivu-select-input {
+  line-height: 36px;
+  &::placeholder {
+    line-height: 36px;
+  }
 }
 </style>

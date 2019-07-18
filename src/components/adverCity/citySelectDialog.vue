@@ -1,5 +1,7 @@
 <template>
+  <div>
     <CitySelectPane class="citybox" @ok="onOk" v-model="cityIdsModel" :topCityIds="topCityIds" ref="citySelectPane"/>
+  </div>
 </template>
 
 <script lang="ts">
@@ -44,6 +46,11 @@ export default class CitySelectDialog extends ViewBase {
   watchValue(value: boolean) {
     this.model = value
     value && (this.cityIdsModel = this.cityIds)
+  }
+
+  @Watch('cityIdsModel', { deep: true} )
+  watchCityIdsModel(val: any) {
+    this.$emit('update:cityIds', this.cityIdsModel)
   }
 
   @Watch('model')
