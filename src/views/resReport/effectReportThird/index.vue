@@ -59,8 +59,8 @@ const getName = (key: string, list: any[]) => {
   const i: number = findIndex( list, (it: any) => {
     return key === it.key
   })
-  // const res: string = list[i].text || ''
-  // return res
+  const res: string = list[i].text || ''
+  return res
 }
 const dot = (object: any, path: string) => at(object, path)[0]
 const getNames = (keys: string[], list: KeyText[]) => {
@@ -380,6 +380,7 @@ export default class Index extends ViewBase {
         item5: report == null ? '暂无' : formatYell(report.lastModifyTime),
         item6: plan.name
       }
+
       this.totalData = {
         item0: report == null ? '-' : report.viewCount,
         item1: report == null ? '-' : report.scheduleCount,
