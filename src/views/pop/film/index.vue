@@ -39,7 +39,7 @@
               
               <div class="right-item">
                 <p class="name" @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">{{item.name}}</p>
-                <p class="brand-name">{{item.brandName || item.productName}}</p>
+                <p class="brand-name" @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">{{item.brandName || item.productName}}</p>
                 <div class="item-icon">
                   <span>{{transformSpecif(item.specification)}}</span>
                   <div class="icon-img">

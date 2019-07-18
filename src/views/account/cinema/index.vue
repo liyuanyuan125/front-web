@@ -55,7 +55,7 @@ export default class Main extends ViewBase {
   dataForm = {
     searchKey: '',
     pageIndex: 1,
-    pageSize: 10,
+    pageSize: 3,
   }
 
   query = ''
@@ -172,7 +172,7 @@ export default class Main extends ViewBase {
         contactTel: this.editTel
       })
       this.editIndex = -1
-      this.seachList()
+      this.seach()
     } catch (ex) {
       this.handleError(ex)
     }
