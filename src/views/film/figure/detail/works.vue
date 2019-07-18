@@ -69,7 +69,7 @@
             <img :src="it.poster" class="img-item" />
           </a>
           <div class="text-right">
-            <h3 class="title-grade"><span>{{it.name}}({{it.releaseYear}})</span></h3>
+            <h3 class="title-grade right-item-grade"><span>{{it.name}}({{it.releaseYear}})</span></h3>
             <h4 class="person-identity"><span v-for="(item, index) in it.professions" :key="index"> {{handleProfession(item)}} </span></h4>
             <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" v-if="index < 5" :key="index">{{item.name}} </em></p>
             <p class="com-col">类型：<em class="em-actor" v-for="(item, index) in it.types" :key="index">{{handleMoive(item)}}<i v-if="it.types.length-1 != index"> / </i></em></p>
@@ -299,7 +299,7 @@ h2, h3, h4 {
     margin-left: -10px;
     margin-right: -10px;
     li {
-      width: 25%;
+      width: 20%;
       padding: 0 10px;
       text-align: center;
       color: #fff;
@@ -422,6 +422,8 @@ h2, h3, h4 {
     position: relative;
     display: block;
     width: 140px;
+    height: 190px;
+    overflow: hidden;
     .img-item {
       width: 140px;
     }
@@ -451,6 +453,9 @@ h2, h3, h4 {
         text-align: center;
         border-radius: 2px;
       }
+    }
+    .right-item-grade {
+      height: 65px;
     }
     .person-identity {
       padding-top: 17px;
