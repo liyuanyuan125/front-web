@@ -203,11 +203,18 @@ export default class Main extends ViewBase {
         info('请选择影院')
         return
       }
+      // console.log(this.query.offDate)
       if (this.query.offDate == '') {
         return
       }
-      const a  = moment(this.query.offDate.getTime()).format(timeFormat).split('-')
-      this.query.offDate = a[0] + a[1] + a[2]
+      if (this.query.offDate.length == 8) {
+        this.query.offDate = this.query.offDate
+      } else {
+        const a  = moment(this.query.offDate.getTime()).format(timeFormat).split('-')
+        this.query.offDate = a[0] + a[1] + a[2]
+      }
+      // const a  = moment(this.query.offDate.getTime()).format(timeFormat).split('-')
+      // this.query.offDate = a[0] + a[1] + a[2]
       // 获取上刊列表
       const datalist = await queryList(this.query)
       this.itemlist = datalist.data.items
