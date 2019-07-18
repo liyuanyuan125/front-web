@@ -72,7 +72,7 @@
             </p>
             <div>
               <img v-if="!row.ids" :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
-              <img v-else src="./assets/mock.png" :onerror="defaultImg" width="90px" height="90px">
+              <img v-else src="./assets/error.png" :onerror="defaultImg" width="90px" height="90px">
 
               <div>
                 <h3>{{row.name}}</h3>
