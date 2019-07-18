@@ -16,8 +16,8 @@ export async function movielist(query: any) {
 }
 
 // 获取默认影院id
-export async function getcinid() {
-  const res = await get('/xadvert/upper-shelfs/default-cinema')
+export async function getcinid(offDate: any) {
+  const res = await get(`/xadvert/off-shelfs/default-cinema/${offDate}`)
   return res
 }
 
