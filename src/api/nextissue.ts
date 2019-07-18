@@ -34,7 +34,7 @@ export async function oneout(query: any) {
   return res
 }
 
-// 批量设置上刊状态
+// 批量设置下刊状态
 export async function allover(query: any) {
   const res = await put(`/xadvert/off-shelfs/batch` , query)
   return res
