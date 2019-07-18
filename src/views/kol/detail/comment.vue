@@ -452,22 +452,18 @@ export default class Main extends ViewBase {
   async handleChange() {
     this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
     this.form.beginDate[1] = this.endDate()
-    this.chart2.initDone = false
-    this.chart1.initDone = false
-    this.chart3.initDone = false
-    this.chart4.initDone = false
-    this.resetData()
-    await this.getChartsData('', 0)
+    await this.initHandler()
   }
 
-  created() {
+  async created() {
     this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
     this.form.beginDate[1] = this.endDate()
     // this.dayRangesFetch() // 本地写死，暂时取消
-    this.initHandler()
+    await this.initHandler()
   }
 
   async initHandler() {
+    this.resetData()
     if (this.chart1.dict1.length > 0) {
       this.chart1.dict1.map((item: any, index: number) => {
         this.chart1.dataList.push([])
@@ -495,6 +491,10 @@ export default class Main extends ViewBase {
   }
 
   resetData() {
+    this.chart2.initDone = false
+    this.chart1.initDone = false
+    this.chart3.initDone = false
+    this.chart4.initDone = false
     this.chart1.dataList[0] = []
     this.chart2.xAxis = []
     this.chart2.dataList.forEach((item: any) => {
@@ -502,12 +502,8 @@ export default class Main extends ViewBase {
         it.data = []
       })
     })
-    this.chart3.dataList.forEach((item: any) => {
-      item = []
-    })
-    this.chart4.dataList.forEach((item: any) => {
-      item = []
-    })
+    this.chart3.dataList = []
+    this.chart4.dataList = []
   }
 
   async getKeywordList(key?: string) {

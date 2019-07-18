@@ -151,6 +151,7 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
+
   async allover(id: any) {
     try {
       await  confirm('是否确认将该影院所有广告状态设为下刊？')
@@ -200,6 +201,9 @@ export default class Main extends ViewBase {
     try {
       if (this.query.cinemaId == undefined) {
         info('请选择影院')
+        return
+      }
+      if (this.query.offDate == '') {
         return
       }
       const a  = moment(this.query.offDate.getTime()).format(timeFormat).split('-')
