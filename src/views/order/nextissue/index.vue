@@ -152,29 +152,19 @@ export default class Main extends ViewBase {
   }
 
   async allover(id: any) {
-    this.objArray = ((await queryList(this.query)).data.items || []).map((it: any , index: any) => {
-        return {
-          id: it.id,
-          con: (it.details || []).map((item: any) => {
-            return item.orderId
-          })
-        }
-    })
-    this.deArray = []
-    for (const key in  this.objArray) {
-      if (1 == 1) {
-        for (const j in  this.objArray[key].con) {
-          if (1 == 1) {
-            this.deArray.push({id : this.objArray[key].id , orderId : this.objArray[key].con[j]})
-          }
-        }
-      }
-    }
-
-
     try {
       await  confirm('是否确认将该影院所有广告状态设为下刊？')
-      await allover(this.deArray)
+      // console.log(String(this.query.offDate).length)
+      if (this.query.offDate.length == 8) {
+        this.query.offDate = this.query.offDate
+      } else {
+        const a  = moment(this.query.offDate.getTime()).format(timeFormat).split('-')
+        this.query.offDate = a[0] + a[1] + a[2]
+      }
+      await allover({
+        offDate: Number(this.query.offDate),
+        cinemaId: this.query.cinemaId
+      })
       this.$Message.success({
         content: `修改成功`,
       })
