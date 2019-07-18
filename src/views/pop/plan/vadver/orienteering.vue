@@ -21,21 +21,21 @@
                 <FormItem :labelWidth="0" class="item-top form-item-type">
                   <Tags v-model="cityCustom" :tagMess="areaList"/>
                 </FormItem>
-                <div class="item-top" v-if="cityCustom == 1">
+                <div class="item-top" v-show="cityCustom == 1">
                   <!-- <div @click="visible = true" class="set-city">
                     共{{citysId.length}}个城市
                     <span>设置</span>
                   </div> -->
                   <City v-if='cityfalse' @ok="onCitySelectOk" v-model="visible" :cityIds.sync="citysId" :topCityIds="warehouseId"></City>
                 </div>
-                <div v-else class="xls-box">
+                <div v-show="cityCustom != 1" class="xls-box">
                   <p class="title">注（请先下载影院数据表，编辑为仅包含自己目标投放影院的“.xls”格式文件，
                     然后再导入；请勿修改表格格式，否则将导入失败）</p>
                   <FormItem :labelWidth="0"  class="item-top form-item-type">
                     <div class="set-film">
                       可选影院：
                       <span>影院数据.xls</span>
-                      <a src='/xadvert/plans/export-cinemas' download='影院数据' style="margin-left: 20px;cursor: pointer;">下载</a>
+                      <a :src='herf' download='影院数据' style="margin-left: 20px;cursor: pointer;">下载</a>
                     </div>
                   </FormItem>
                   <FormItem style="margin-left: 30px" :labelWidth="0"  class="form-item-type">
@@ -118,7 +118,7 @@
           </div>
           <div v-show='movieCustom == 0'>
             <div class='all-box'>
-              系统将自动为您安排投放周期内所有的场次进
+              系统将自动为您安排投放周期内所有的场次进行投放
             </div>
           </div>
 
@@ -160,7 +160,8 @@ import {
   direction,
   searchcinema,
   adverdetail,
-  getRecommend
+  getRecommend,
+  downcinema
 } from '@/api/popPlan.ts'
 import { clean } from '@/fn/object.ts'
 import City from '@/components/adverCity'
@@ -264,6 +265,11 @@ export default class Orienteering extends ViewBase {
   cinemaDetail: any = []
   citiesList: any = []
   xlslid = []
+
+  get herf() {
+    return `${VAR.ajaxBaseUrl}/xadvert/plans/export-cinemas`
+  }
+
   mounted() {
     this.init()
   }
