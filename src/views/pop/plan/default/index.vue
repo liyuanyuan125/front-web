@@ -243,7 +243,7 @@
                   <span>共{{(headerValue.deliveryCinemas || []).length}}个
                     <b style="margin-left: 5px"></b> 
                   </span>
-                  <a v-if='(headerValue.deliveryCinemas || []).length > 0' style='font-size: 18px' :src='herf' download='影院数据' >下载</a>
+                  <a v-if='(headerValue.deliveryCinemas || []).length > 0' style='font-size: 18px' :href='herf' download='影院数据' >下载</a>
                 </div>
               </Col>
             </Row>

@@ -35,7 +35,7 @@
                     <div class="set-film">
                       可选影院：
                       <span>影院数据.xls</span>
-                      <a :src='herf' download='影院数据' style="margin-left: 20px;cursor: pointer;">下载</a>
+                      <a :href='herf' download='影院数据' style="margin-left: 20px;cursor: pointer;">下载</a>
                     </div>
                   </FormItem>
                   <FormItem style="margin-left: 30px" :labelWidth="0"  class="form-item-type">
