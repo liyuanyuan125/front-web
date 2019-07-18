@@ -72,7 +72,7 @@
             </p>
             <div>
               <img v-if="!row.ids" :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
-              <img v-else src="./assets/mock.png" :onerror="defaultImg" width="90px" height="90px">
+              <img v-else src="./assets/error.png" :onerror="defaultImg" width="90px" height="90px">
 
               <div>
                 <h3>{{row.name}}</h3>
@@ -236,7 +236,7 @@ export default class Plan extends ViewBase {
       specification: 15,
       status: 11,
       videoId: 273,
-      videoLogo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bka7cktjqctg008ubkq0.png',
+      videoLogo: this.defaultImg,
       videoName: '示例广告片',
     }
   }

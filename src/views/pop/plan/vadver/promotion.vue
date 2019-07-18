@@ -180,11 +180,11 @@ export default class Promotion extends ViewBase {
   customerName = ''
   adverList: any = []
   nums: any = 0
-  times: any = new Date().getTime()
+  times: any = new Date().getTime() - 86400000
   pername: any = ''
   productlist: any = []
   branidlist: any = []
-
+  moneystep = 1
   startDate: any = {
     disabledDate: (dates: any) => {
       if (this.form.endDate) {
@@ -198,7 +198,7 @@ export default class Promotion extends ViewBase {
 
   endDate: any = {
     disabledDate: (dates: any) => {
-      let time = this.times + 7 * 86400000
+      let time = this.times
       if (this.form.beginDate) {
         time = new Date(this.form.beginDate)
       }
@@ -355,7 +355,12 @@ export default class Promotion extends ViewBase {
       (this.$Spin as any).hide()
       return
     }
+    (this.$Spin as any).hide()
+    if (this.moneystep == 2) {
+      return
+    }
     try {
+      this.moneystep = 2
       const { data } = await adverdetail(this.$route.params.setid)
       this.form.budgetAmount = (data.item.budgetAmount / 10000) + ''
       this.steps = 2
@@ -382,7 +387,6 @@ export default class Promotion extends ViewBase {
     } catch (ex) {
       this.handleError(ex)
     }
-    (this.$Spin as any).hide()
   }
 
   formatDate(data: any) {
