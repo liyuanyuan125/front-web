@@ -41,8 +41,7 @@ export default class Main extends ViewBase {
         } = await this.fetch({ ...mockObj })
 
         const list = items.filter((it: any) => {
-          return it.status
-          //  == 3 || it.status == 6 || it.status == 7
+          return it.status == 3 || it.status == 6 || it.status == 7
         })
 
         this.dataList = list.map((it: any) => {
