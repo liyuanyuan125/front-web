@@ -180,7 +180,7 @@ export default class Promotion extends ViewBase {
   customerName = ''
   adverList: any = []
   nums: any = 0
-  times: any = new Date().getTime()
+  times: any = new Date().getTime() - 86400000
   pername: any = ''
   productlist: any = []
   branidlist: any = []
@@ -198,7 +198,7 @@ export default class Promotion extends ViewBase {
 
   endDate: any = {
     disabledDate: (dates: any) => {
-      let time = this.times + 7 * 86400000
+      let time = this.times
       if (this.form.beginDate) {
         time = new Date(this.form.beginDate)
       }
