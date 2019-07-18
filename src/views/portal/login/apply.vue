@@ -146,10 +146,10 @@ export default class Main extends ViewBase {
   textarea.ivu-input {
     color: #fff;
     border: none;
-    background: rgba(16, 23, 44, .6);
+    background: #10172c;
     border-radius: 10px;
     padding-left: 12px;
-    font-size: 15px;
+    font-size: 14px;
     &::placeholder {
       color: #fff;
     }

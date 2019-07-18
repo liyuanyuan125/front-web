@@ -11,7 +11,7 @@
        <Col span='6' class='data'> <Date-picker
                   type="date"
                   v-model="query.offDate"
-                  on-change="selectTime"
+                  @on-change="seachs"
                   placeholder="选择日期"
                   class="inp-style-center"
                 ></Date-picker></Col>
@@ -94,7 +94,7 @@ const timeFormat = 'YYYY-MM-DD'
 export default class Main extends ViewBase {
   query: any = {
     cinemaId: null,
-    offDate: new Date(),
+    offDate: null,
   }
 
 
@@ -121,7 +121,7 @@ export default class Main extends ViewBase {
       this.remoteMethod(cinid.data.cinemaName)
     }
 
-
+    this.query.offDate = new Date()
     this.seach()
   }
 
@@ -189,14 +189,14 @@ export default class Main extends ViewBase {
     try {
       if (status == 1) {
         await confirm('您确定修改当前状态信息吗？')
-        await oneover (id, {orderId : orderid})
+        await oneover ({id, orderId : orderid})
         this.$Message.success({
           content: `更改成功`,
         })
         this.seach()
       } else if (status == 2) {
         await confirm('您确定修改当前状态信息吗？')
-        await oneout (id, {orderId : orderid})
+        await oneout ({id, orderId : orderid})
         this.$Message.success({
           content: `更改成功`,
         })
@@ -212,6 +212,8 @@ export default class Main extends ViewBase {
         info('请选择影院')
         return
       }
+      const a  = moment(this.query.offDate.getTime()).format(timeFormat).split('-')
+      this.query.offDate = a[0] + a[1] + a[2]
       // 获取上刊列表
       const datalist = await queryList(this.query)
       this.itemlist = datalist.data.items
