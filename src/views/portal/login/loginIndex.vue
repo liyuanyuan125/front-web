@@ -8,7 +8,6 @@
         </p>
       </div>
       <Form :model="form" :rules="rules" ref="form" @submit.native.prevent="submit" novalidate>
-        <!-- <DisableAutoFill /> -->
         <FormItem prop="email" :error="emailError">
           <Input type="email" v-model="form.email" class="some-class" autocomplete="off" disableautocomplete
            placeholder="请输入邮箱">
@@ -69,12 +68,10 @@ import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
 import { decodeRoute } from '@/util/base64Route'
 import { info } from '@/ui/modal'
-import DisableAutoFill from '@/components/DisableAutoFill.vue'
 
 @Component({
   components: {
-    loginLayout,
-    DisableAutoFill
+    loginLayout
   }
 })
 export default class Main extends ViewBase {

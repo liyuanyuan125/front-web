@@ -1,9 +1,12 @@
 <template>
-  <div class="activeEmail">
-    <Form :model="form" ref="form" :rules="rules" label-position="left" class="edit-input" :label-width="100">
-      <h3 class="logo">
-        <img src="~@/assets/site/logo.png" @click="toLogin">
-      </h3>
+<loginLayout >
+  <div class="main-wrap">
+    <div class="tablist">
+      <p class="systerm">
+          <span>激活邮箱</span>
+      </p>
+    </div>
+    <Form :model="form" ref="form" :rules="rules" label-position="top">
       <FormItem label="密码" prop="firstPass" class="item-top">
         <Input
           v-model="form.firstPass"
@@ -22,9 +25,10 @@
       </FormItem>
     </Form>
     <div class="btnCenter">
-      <button class="button-ok addSumbit" @click="handleInforma">激活邮箱</button>
+      <Button type="primary" long class="submit" @click="handleInforma">激活邮箱</Button>
     </div>
   </div>
+  </loginLayout>
 </template>
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
@@ -32,8 +36,13 @@ import ViewBase from '@/util/ViewBase'
 import { activeEmailSumbit } from '@/api/user'
 import { confirm, toast } from '@/ui/modal'
 import { validatePassword } from '@/util/validateRules'
+import loginLayout from './login/loginLayout.vue'
 
-@Component
+@Component({
+  components: {
+    loginLayout
+  }
+})
 export default class Main extends ViewBase {
   ticket = ''
 
@@ -98,17 +107,20 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-.activeEmail {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -55%);
-  .logo {
-    text-align: center;
-    padding-bottom: 60px;
-  }
+@import './login/common.less';
+.main-wrap {
+  padding-top: 40px;
+  padding-bottom: 60px;
 }
-.addSumbit {
-  margin-top: 70px;
+.systerm {
+  font-size: 31px;
+  padding: 31px 0 5px;
+  text-align: center;
+}
+/deep/ .ivu-form {
+  .ivu-form-item-label {
+    font-size: 16px;
+    color: #fff;
+  }
 }
 </style>
