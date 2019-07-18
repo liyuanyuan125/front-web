@@ -380,6 +380,7 @@ export default class Index extends ViewBase {
         item5: report == null ? '暂无' : formatYell(report.lastModifyTime),
         item6: plan.name
       }
+
       this.totalData = {
         item0: report == null ? '-' : report.viewCount,
         item1: report == null ? '-' : report.scheduleCount,
