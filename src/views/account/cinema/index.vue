@@ -55,7 +55,7 @@ export default class Main extends ViewBase {
   dataForm = {
     searchKey: '',
     pageIndex: 1,
-    pageSize: 3,
+    pageSize: 20,
   }
 
   query = ''
