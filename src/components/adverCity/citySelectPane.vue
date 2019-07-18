@@ -1,21 +1,19 @@
 <template>
   <div class="city-select-pane">
     <div class="city-fast-row" v-if="fastList.length > 0">
-      <label class="city-row-label">快速选择：</label>
       <div class="city-fast-list">
         <Checkbox
           v-for="it in fastList"
           :key="it.key"
           v-model="it.checked"
           :indeterminate="it.indeterminate"
-          class="city-fast-item"
+          class="city-fast-item check-item"
           @on-change="fastChange(it, $event)"
         >{{it.text}}</Checkbox>
       </div>
     </div>
 
     <div class="city-filter-row" v-if="cellData">
-      <label class="city-row-label">查询：</label>
       <Select v-model="city" filterable clearable class="city-filter">
         <Option
           v-for="item in cityList"
@@ -55,7 +53,7 @@
                 v-model="cell.checked"
                 :indeterminate="cell.indeterminate"
                 @on-change="cellCheckChange(cell)"
-                class="city-check">
+                class="city-check check-item">
                 <span class="city-name">{{cell.label}}</span>
                 <em
                   class="city-count"
@@ -64,19 +62,18 @@
                       && cell.type == 'province'
                   }"
                 >({{cell.selectedCityIds.length}})</em>
-              </Checkbox>
-
-              <div
-                class="cell-pull-handle"
-                @click="cell.dropdownOpen = !cell.dropdownOpen"
-                v-if="cell.type == 'province'"
-              >
-                <Icon
-                  type="ios-arrow-down"
-                  class="cell-pull-icon"
+                <div
+                  class="cell-pull-handle"
+                  @click="cell.dropdownOpen = !cell.dropdownOpen"
                   v-if="cell.type == 'province'"
-                />
-              </div>
+                >
+                  <Icon
+                    type="ios-arrow-down"
+                    class="cell-pull-icon"
+                    v-if="cell.type == 'province'"
+                  />
+                </div>
+              </Checkbox>
             </span>
 
             <DropdownMenu
@@ -114,6 +111,9 @@
         </component>
       </tr>
     </table>
+    <p>
+      已选： {{model.length}}
+    </p>
   </div>
 </template>
 
@@ -223,7 +223,7 @@ const provinceCityIds = (provinceList: AreaItemSubList[]) => {
 }
 
 const cellData = (list: RegionSubList[], {
-  chunkSize = 4,
+  chunkSize = 6,
   cityChunkSize = 3
 } = {}) => {
   const chunkList = chunkData(list, chunkSize)
@@ -574,9 +574,6 @@ export default class CitySelectPane extends ViewBase {
 .city-table {
   margin-top: 20px;
   border-collapse: collapse;
-  th, td {
-    border: 1px solid #e8e8e8;
-  }
 }
 
 .cell-inner,
@@ -611,6 +608,7 @@ export default class CitySelectPane extends ViewBase {
   flex: 1;
   min-width: 28px;
   cursor: pointer;
+  margin-top: -20px;
   &:hover .cell-pull-icon {
     color: @c-button;
     .theme-resource & {
@@ -619,6 +617,16 @@ export default class CitySelectPane extends ViewBase {
   }
 }
 
+th[rowspan='2'] {
+  position: relative;
+  .cell-label {
+    top: -30px;
+    font-weight: 400;
+  }
+}
+th {
+  font-weight: 400;
+}
 .cell-pull-icon {
   position: absolute;
   top: 0;
@@ -681,5 +689,61 @@ export default class CitySelectPane extends ViewBase {
   max-height: 666px;
   padding: 0;
   user-select: none;
+}
+.check-item {
+  position: relative;
+  min-width: 130px;
+  top: 3px;
+  flex: 1;
+  height: 40px;
+  line-height: 30px;
+  border-radius: 4px;
+  text-align: center;
+  margin-right: 15px;
+  font-size: 14px;
+  color: #00202d;
+  border: 1px solid #fff;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  user-select: none;
+  .check-ra;
+}
+.check-ra {
+  /deep/ .ivu-checkbox {
+    display: none;
+  }
+  /deep/ .ivu-radio {
+    display: none;
+  }
+  /deep/&.ivu-checkbox-wrapper-checked {
+    color: #fff;
+    background-color: #00202d;
+    border: 1px solid #00202d;
+    &::after {
+      content: '\2713';
+      color: #fff;
+      position: absolute;
+      right: -8px;
+      top: -8px;
+      border: 1px solid #00202d;
+      background: #00202d;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 16px;
+    }
+  }
+}
+.city-fast-list {
+  .check-item {
+    line-height: 40px;
+  }
+}
+/deep/ .ivu-select-input {
+  line-height: 36px;
+  &::placeholder {
+    line-height: 36px;
+  }
 }
 </style>

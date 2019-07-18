@@ -10,7 +10,7 @@
       <Row class='row-ul'>
        <Col span='6' class='data'> <Date-picker
                   type="date"
-                  v-model="query.remittanceDate"
+                  v-model="query.offDate"
                   on-change="selectTime"
                   placeholder="选择日期"
                   class="inp-style-center"
@@ -36,11 +36,6 @@
             </Select>
           </Col>
         </Col>
-        <!-- <Col span='8' class='chb'>
-            <span @click='seachchgup'><&nbsp;上周</span>
-            <span @click='seachchg'>本周</span>
-            <span @click='seachchgdown'>下周&nbsp;></span>
-        </Col> -->
       </Row>
       <div style='margin-top: 15px;'>
       	<Row class='li-title'>
@@ -81,7 +76,7 @@
 import { Component , Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { queryList ,   getcinid , oneover , oneout , allover , movielist } from '@/api/lastissue'
+import { queryList ,   getcinid , oneover , oneout , allover , movielist } from '@/api/nextissue'
 import { toMap } from '@/fn/array'
 import { formatTimestamp } from '@/util/validateRules'
 import WeekDatePicker from '@/components/weekDatePicker'
@@ -97,17 +92,9 @@ const timeFormat = 'YYYY-MM-DD'
   }
 })
 export default class Main extends ViewBase {
-  startTime: any = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000
-  endTime: any = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1
-  datanum: any = 24 * 60 * 60 * 1000 * 7 // 一周的时间戳
-  weekDate = [new Date(this.startTime), new Date(this.endTime)]
-  sd = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-  ed = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
   query: any = {
     cinemaId: null,
-    remittanceDate: new Date(),
-    beginDate: this.sd[0] + this.sd[1] + this.sd[2],
-    endDate: this.ed[0] + this.ed[1] + this.ed[2],
+    offDate: new Date(),
   }
 
 
@@ -124,43 +111,18 @@ export default class Main extends ViewBase {
   idsArray: any = []
 
   async mounted() {
-    // this.asd = true
-    // this.remoteMethod('')
     const cinid = await getcinid()
 
-        if (cinid.data.cinemaId == 0) {
-          info('当前用户没有关联影院')
-          this.query.cinemaId = cinid.data.cinemaId
-        } else {
-          this.query.cinemaId = cinid.data.cinemaId
-          this.remoteMethod(cinid.data.cinemaName)
-        }
-    if (new Date().getDay() == 5 || new Date().getDay() == 6) {
-      this.weekDate = [
-      new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
-      new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
-      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-      this.query.beginDate = a[0] + a[1] + a[2]
-      this.query.endDate = b[0] + b[1] + b[2]
-      this.seach()
-    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
-      this.seach()
-      return
+    if (cinid.data.cinemaId == 0) {
+      info('当前用户没有关联影院')
+      this.query.cinemaId = cinid.data.cinemaId
+    } else {
+      this.query.cinemaId = cinid.data.cinemaId
+      this.remoteMethod(cinid.data.cinemaName)
     }
-    if (new Date().getDay() == 4) {
-      this.seach()
-    }
-    if (new Date().getDay() == 0) {
-      this.weekDate = [
-      new Date(this.startTime + (24 * 60 * 60 * 1000 * 1)) ,
-      new Date(this.endTime + (24 * 60 * 60 * 1000 * 1))]
-      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-      this.query.beginDate = a[0] + a[1] + a[2]
-      this.query.endDate = b[0] + b[1] + b[2]
-      this.seach()
-    }
+
+
+    this.seach()
   }
 
   async remoteMethod(querys: any) {
@@ -189,122 +151,6 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
-  // reloadSearch() {
-  //   this.seach()
-  //   this.seachchg()
-  // }
-
- // 本周
-  seachchg() {
-    /***参数都是以周一为基准的***/
-    this.startTime = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000  // 本周的开始时间
-    this.endTime = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1 // 本周的结束时间
-
-    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
-      this.weekDate = [
-      new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
-      new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
-      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-      this.query.beginDate = a[0] + a[1] + a[2]
-      this.query.endDate = b[0] + b[1] + b[2]
-      // this.seach()
-    } else if (
-      new Date().getDay() == 1 || new Date().getDay() == 2 ||
-      new Date().getDay() == 3 || new Date().getDay() == 4 ) {
-      this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
-      const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
-      const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
-      this.query.beginDate = a[0] + a[1] + a[2]
-      this.query.endDate = b[0] + b[1] + b[2]
-      // this.seach()
-    }
-  }
-  // 上周
-  seachchgup() {
-    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
-      let ss = this.startTime + (24 * 60 * 60 * 1000 * 7)
-      let ee = this.endTime + (24 * 60 * 60 * 1000 * 7)
-      this.weekDate = [
-      new Date(ss -= this.datanum ) ,
-      new Date(ee -= this.datanum)]
-      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-      this.query.beginDate = a[0] + a[1] + a[2]
-      this.query.endDate = b[0] + b[1] + b[2]
-      this.startTime -= this.datanum
-      this.endTime -= this.datanum
-      this.seach()
-    } else if (
-      new Date().getDay() == 1 || new Date().getDay() == 2 ||
-      new Date().getDay() == 3 || new Date().getDay() == 4 ) {
-      this.weekDate = [new Date(this.startTime -= this.datanum), new Date(this.endTime -= this.datanum)]
-      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-      const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-      this.query.beginDate = a[0] + a[1] + a[2]
-      this.query.endDate = b[0] + b[1] + b[2]
-      this.seach()
-    }
-  }
-
-  // 下周
-  seachchgdown() {
-    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
-      let ss = this.startTime + (24 * 60 * 60 * 1000 * 7)
-      let ee = this.endTime + (24 * 60 * 60 * 1000 * 7)
-      this.weekDate = [
-      new Date(ss += this.datanum ) ,
-      new Date(ee += this.datanum)]
-      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-      this.query.beginDate = a[0] + a[1] + a[2]
-      this.query.endDate = b[0] + b[1] + b[2]
-      this.startTime += this.datanum
-      this.endTime += this.datanum
-      this.seach()
-    } else if (
-      new Date().getDay() == 1 || new Date().getDay() == 2 ||
-      new Date().getDay() == 3 || new Date().getDay() == 4 ) {
-      this.weekDate = [new Date(this.startTime += this.datanum), new Date(this.endTime += this.datanum)]
-      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-      const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-      this.query.beginDate = a[0] + a[1] + a[2]
-      this.query.endDate = b[0] + b[1] + b[2]
-      this.seach()
-     }
-  }
-
-  getTime(n: any) {
-    const now = new Date()
-    let year = now.getFullYear()
-    // 因为月份是从0开始的,所以获取这个月的月份数要加1才行
-    let month = now.getMonth() + 1
-    let date = now.getDate()
-    const day = now.getDay()
-
-    if (day !== 0 ) {
-        n = n + ( day - 1 )
-    } else {
-        n = n + day
-    }
-    if ( day ) {
-        // 这个判断是为了解决跨年的问题
-        if (month > 1) {
-            month = month
-        } else {  // 这个判断是为了解决跨年的问题,月份是从0开始的
-            year = year - 1
-            month = 12
-        }
-    }
-
-    now.setDate( now.getDate() - n )
-    year = now.getFullYear()
-    month = now.getMonth() + 1
-    date = now.getDate()
-    const s = year + '-' + ( month < 10 ? ('0' + month ) : month ) + '-' + (date < 10 ? ('0' + date ) : date )
-    return s
-  }
-
   async allover(id: any) {
     this.objArray = ((await queryList(this.query)).data.items || []).map((it: any , index: any) => {
         return {
@@ -325,14 +171,6 @@ export default class Main extends ViewBase {
       }
     }
 
-    // for (let i = 0 ;  i < this.objArray.length ; i++ ) {
-    //   for (let j = 0 ; j < this.objArray[i].length ; j++) {
-    //     this.deArray.push(this.objArray[i][j])
-    //   }
-    // }
-    // this.deArray = (this.deArray || []).map((it: any) => {
-    //   return it.videoId
-    // })
 
     try {
       await  confirm('是否确认将该影院所有广告状态设为下刊？')
@@ -370,13 +208,6 @@ export default class Main extends ViewBase {
 
   async seach() {
     try {
-      // 影院列表
-      // const movieList = await movielist()
-      // this.movieList = movieList.data.items
-      // if (this.asd == true) {
-      //   // 获取默认影院id
-
-      // }
       if (this.query.cinemaId == undefined) {
         info('请选择影院')
         return
@@ -391,28 +222,6 @@ export default class Main extends ViewBase {
     } finally {
     }
   }
-
-  // @Watch('query', {deep: true})
-  // watchQuery() {
-  //   // if (this.asd == false) {
-  //   if (this.query.cinemaId == null) {
-  //     return
-  //   }
-  //   this.seach()
-  //   // }
-  // }
-
-  @Watch('weekDate', {deep: true})
-  watchWeekDate() {
-    const aa = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-    const bb = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-    this.query.beginDate =  aa[0] + aa[1] + aa[2]
-    this.query.endDate =  bb[0] + bb[1] + bb[2]
-    // if (this.asd == false) {
-      this.seach()
-    // }
-  }
-
 }
 </script>
 

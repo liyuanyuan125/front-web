@@ -9,7 +9,7 @@
           <Form :model="form" :rules="rules" ref="form"
             @submit.native.prevent="submit" novalidate>
             <FormItem prop="companyName">
-              <Input v-model="form.companyName" autocomplete="off" placeholder="企业名称">
+              <Input type="text" v-model="form.companyName" autocomplete="off" disableautocomplete placeholder="企业名称">
                 <i class="iconfont icon-qiye" slot="prefix"><font></font></i>
               </Input>
             </FormItem>
@@ -47,13 +47,12 @@ import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
 import AreaSelect from '@/components/areaSelect'
-import DisableAutoFill from '@/components/DisableAutoFill.vue'
+
 
 @Component({
   components: {
     loginLayout,
     AreaSelect,
-    DisableAutoFill
   }
 })
 export default class Main extends ViewBase {

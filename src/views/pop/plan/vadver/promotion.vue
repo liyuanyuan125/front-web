@@ -184,7 +184,7 @@ export default class Promotion extends ViewBase {
   pername: any = ''
   productlist: any = []
   branidlist: any = []
-
+  moneystep = 1
   startDate: any = {
     disabledDate: (dates: any) => {
       if (this.form.endDate) {
@@ -355,7 +355,12 @@ export default class Promotion extends ViewBase {
       (this.$Spin as any).hide()
       return
     }
+    (this.$Spin as any).hide()
+    if (this.moneystep == 2) {
+      return
+    }
     try {
+      this.moneystep = 2
       const { data } = await adverdetail(this.$route.params.setid)
       this.form.budgetAmount = (data.item.budgetAmount / 10000) + ''
       this.steps = 2
@@ -382,7 +387,6 @@ export default class Promotion extends ViewBase {
     } catch (ex) {
       this.handleError(ex)
     }
-    (this.$Spin as any).hide()
   }
 
   formatDate(data: any) {

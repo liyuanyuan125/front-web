@@ -370,7 +370,7 @@ a.button-ok {
   background: rgba(159, 208, 219, 1);
 }
 /deep/ .ivu-table-wrapper {
-  margin: 20px 55px 20px;
+  margin: 20px 30px 20px;
   border: none;
 }
 /deep/ .ivu-table-tip {

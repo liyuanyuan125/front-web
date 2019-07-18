@@ -57,7 +57,7 @@
         <span>效果不足时允许系统投放更多影片确保曝光效果</span>
       </div>
       <ul class="film-list" :class="[ !arrowloding ? 'film-max' : '']" v-if="planMovies.length > 0">
-        <li @click="filmdetail(it.movieId)" v-for="(it) in planMovies" :key="it.id"
+        <li @click="filmdetail(it.movieId)" v-for="(it) in planMovies" :key="it.movieId"
           :class="['film-item']">
           <div class="film-top">
             <img :onerror="defaultImg" :src="it.image ? it.image : defaultImg" class="film-cover">
@@ -206,7 +206,7 @@
           <Col :span="2"><span>计划名称:</span></Col>
           <Col :span="10"><span>{{item.name}}</span></Col>
           <Col :span="2"><span>广告片:</span></Col>
-          <Col :span="10"><span>{{item.videoName}}</span></Col>
+          <Col :span="10"><span>{{item.videoName || '暂无'}}</span></Col>
         </Row>
         <Row :gutter="16">
           <Col :span="2"><span>投放周期:</span></Col>
@@ -223,36 +223,37 @@
         <Row :gutter="16" style="height: 126px">
           <Col :span="2"><span>定向设置:</span></Col>
           <Col :span="22">
-            <Row :gutter="16">
+            <Row :gutter="16" v-if="headerValue.cityCustom">
               <Col :span="2"><span>覆盖城市</span></Col>
-              <Col :span="10">
-                <div v-if="headerValue.cityCustom">
+              <Col :span="20">
+                <div>
                   <span>共{{length}}个
-                    <b style="margin-left: 5px">|</b> 
+                    <!-- <b style="margin-left: 5px">|</b>  -->
                   </span>
-                  <span style="margin-left: 5px" v-for="it in citynums" :key="it.sort">{{it.gradeName}}
+                  <!-- <span style="margin-left: 5px" v-for="it in citynums" :key="it.sort">{{it.gradeName}}
                     <b style="margin-left: 5px">|</b> 
-                  </span>
+                  </span> -->
                 </div>
-                <div v-else>
-                  <span v-if="headerValue.allNation">全国</span>
-                  <p v-else>
-                    <span>
-                      {{citys(headerValue.deliveryCityTypes)}}
-                    </span>
-                  </p>
+              </Col>
+            </Row>
+            <Row  :gutter="16" v-else>
+              <Col :span="2"><span>覆盖影院</span></Col>
+              <Col :span="10">
+                <div>
+                  <span>共{{(headerValue.deliveryCinemas || []).length}}个
+                    <b style="margin-left: 5px"></b> 
+                  </span>
+                  <a v-if='(headerValue.deliveryCinemas || []).length > 0' style='font-size: 18px' :src='downsrc' download='影院数据' >下载</a>
                 </div>
               </Col>
             </Row>
             <Row :gutter="16">
               <Col :span="2"><span>受众性别</span></Col>
-              <Col :span="6">
+              <Col :span="9">
                 <span>{{sexs(headerValue)}}</span>
               </Col>
               <Col :span="2"><span>受众年龄</span></Col>
-              <Col :span="6"><span>{{ages(headerValue)}}</span></Col>
-              <Col :span="2"><span>影片类型</span></Col>
-              <Col :span="6"><span>{{types(headerValue)}}</span></Col>
+              <Col :span="10"><span>{{ages(headerValue)}}</span></Col>
             </Row>
           </Col>
         </Row>
@@ -260,10 +261,10 @@
           <Col :span="2"><span>影片定向:</span></Col>
           <Col :span="10">
             <span v-if="item.movieCustom == 1">
-              自定义影片
+              全部影片通投
             </span>
             <span v-else>
-              系统智能匹配
+              影片定向
             </span>
           </Col>
         </Row>
@@ -280,7 +281,7 @@ import Number from '@/components/number.vue'
 import { orienteering, adverdetail, getcinemas, getchains,
   getcities, getprovinces } from '@/api/popPlan.ts'
 import { toMap } from '@/fn/array.ts'
-import { uniq } from 'lodash'
+import { uniq, uniqBy } from 'lodash'
 import { formatCurrency } from '@/fn/string.ts'
 import moment from 'moment'
 import Header from './header.vue'
@@ -332,6 +333,10 @@ export default class Apps extends ViewBase {
     } else {
       return false
     }
+  }
+
+  get downsrc() {
+    return `/xadvert/plans/${this.$route.params.id}/export-cinemas`
   }
 
   get columns() {
@@ -505,12 +510,14 @@ export default class Apps extends ViewBase {
         ...data.item
       }
       this.length = (data.cities || []).length
-      const citynums = uniq((data.cities || []).map((it: any) => {
+      const citylength = ['票仓城市Top10', '一线城市', '二线城市', '三线城市', '四线城市', '五线城市']
+      const citynums = uniqBy((data.cities || []), 'gradeName').map((it: any) => {
+        const index = citylength.findIndex((item: any) => item == it.grade)
         return {
           gradeName: it.gradeName,
-          sort: it.sort
+          sort: index
         }
-      }))
+      })
       this.citynums = citynums.sort((a: any, b: any) => {
         return a.sort - b.sort
       })
@@ -534,9 +541,10 @@ export default class Apps extends ViewBase {
         })
         return {
           ...it,
-          ages: names
+          ages: (names || []).slice(0, 2),
         }
       })
+      this.planMovies = this.planMovies.slice(0, 3)
     } catch (ex) {
       (this.$Spin as any).hide()
       this.handleError(ex)

@@ -56,9 +56,10 @@
 
     <div class="photo-list-wrap">
       <ul name="list" tag="ul" class="loading-img" v-if="mapImgList.length">
-        <li v-for="(img, index) in mapImgList" :key="index" v-if="img">
+        <li v-for="(img, index) in mapImgList" :key="index">
           <a class="img-list">
-            <img :src="img" alt />
+            <img :src="img" v-real-img="img"
+            default-img = "http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncstluomr0008001og.png" />
           </a>
         </li>
       </ul>
@@ -83,8 +84,6 @@ import ViewBase from '@/util/ViewBase'
 import { personIntro } from '@/api/filmPersonDetail'
 import { intDate } from '@/util/dealData'
 import { cloneDeep } from 'lodash'
-// import { swiper, swiperSlide } from 'vue-awesome-swiper'
-// import 'swiper/dist/css/swiper.css'
 
 @Component
 export default class Information extends ViewBase {
