@@ -8,13 +8,14 @@
         </p>
       </div>
       <Form :model="form" :rules="rules" ref="form" @submit.native.prevent="submit" novalidate>
-        <DisableAutoFill />
+        <!-- <DisableAutoFill /> -->
         <FormItem prop="email" :error="emailError">
-          <Input type="email" v-model="form.email" autocomplete="off" disableautocomplete
+          <Input type="email" v-model="form.email" class="some-class" autocomplete="off" disableautocomplete
            placeholder="请输入邮箱">
             <i class="iconfont icon-youxiang" slot="prefix"><font></font></i>
           </Input>
         </FormItem>
+        <!--  readonly onfocus="this.removeAttribute('readonly');" -->
         <FormItem prop="password" :error="passwordError">
           <Input
             type="password"
@@ -237,6 +238,7 @@ export default class Main extends ViewBase {
     left: 6px;
   }
 }
+
 @media screen and(max-height: 600px) {
   .main-wrap {
     position: absolute;

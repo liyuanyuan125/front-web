@@ -15,14 +15,14 @@
   /deep/ input {
     outline: none;
     height: 50px;
-    font-size: 15px;
+    font-size: 14px;
     border-radius: 10px;
-    background: rgba(16, 23, 44, .6);
+    background: #10172C;
     border: none;
     color: #fff;
-    box-shadow: 0 0 0px 1000px rgba(16, 23, 44, .6) inset;
     &::placeholder {
       color: #fff;
+      font-size: 14px;
     }
   }
   /deep/ .ivu-input-with-prefix {
@@ -45,7 +45,7 @@
     }
   }
   /deep/ .ivu-checkbox-wrapper {
-    font-size: 15px;
+    font-size: 14px;
   }
 }
 
@@ -76,4 +76,41 @@
 
 /deep/ .ivu-form-item-error-tip {
   color: #ff6259;
+}
+
+/*Change text in autofill textbox*/
+// /deep/ input:-webkit-autofill {
+//   // box-shadow: 0 0 0 30px #10172C inset !important;
+//   -webkit-text-fill-color: #fff !important;
+//   font-size: 14px !important ;
+// }
+/* Change the white to any color ;) */
+// /deep/ input:-webkit-autofill,
+// /deep/ input:-webkit-autofill:hover, 
+// /deep/ input:-webkit-autofill:focus, 
+// /deep/ input:-webkit-autofill:active  {
+//   box-shadow: 0 0 0 1500px #10172C inset !important;
+//   font-size: 14px !important;
+// }
+
+@keyframes autofill {
+  to {
+    color: #fff;
+    background: #10172C;
+    font-size: 14px;
+  }
+}
+@-webkit-keyframes autofill {
+  to {
+    color: #fff;
+    background: #10172C;
+    font-size: 14px;
+  }
+}
+
+/deep/ input:-webkit-autofill {
+  -webkit-animation-name: autofill;
+  animation-name: autofill;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
 }
