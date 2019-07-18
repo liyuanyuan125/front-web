@@ -21,7 +21,7 @@
                 <FormItem :labelWidth="0" class="item-top form-item-type">
                   <Tags v-model="cityCustom" :tagMess="areaList"/>
                 </FormItem>
-                <div class="item-top" v-if="cityCustom == 0">
+                <div class="item-top" v-if="cityCustom == 1">
                   <!-- <div @click="visible = true" class="set-city">
                     共{{citysId.length}}个城市
                     <span>设置</span>
@@ -216,7 +216,7 @@ export default class Orienteering extends ViewBase {
   movies: any = []
   timers: any = {}
   numsList: any = []
-  cityCustom: number = 0
+  cityCustom: number = 1
   movieCustom: number = 0
   cinemaType: number = 0
   settime: any = null
@@ -285,7 +285,6 @@ export default class Orienteering extends ViewBase {
       } = await adverdetail(this.value.setid)
       const datas = await warehouse()
       this.warehouseLisst = datas.data || []
-      this.cityCustom = item.cityCustom || 0
       this.citiesList = cities || []
       this.citysId = (this.citiesList || []).map((it: any) => it.id)
       this.warehouseId = (datas.data || []).map((it: any) => it.cityId)
@@ -293,6 +292,7 @@ export default class Orienteering extends ViewBase {
       this.endDate = item.endDate
       this.tags = tags
       if (this.$route.name == 'pop-planlist-edit') {
+        this.cityCustom = item.cityCustom || 0
         this.deliveryCityTypeList = deliveryCityTypeList
         this.item = item
         this.movies = movies
