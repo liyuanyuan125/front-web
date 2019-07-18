@@ -61,13 +61,7 @@
           <p class="title-p">名称：{{item.name}}</p>
         </div> -->
       </div>
-      <Page :total="total" v-if="total>0" class="btnCenter"
-        :current="pageList.pageIndex"
-        :page-size="pageList.pageSize"
-        :page-size-opts="[10, 20, 50, 100]"
-        show-sizer
-        @on-change="sizeChangeHandle"
-        @on-page-size-change="currentChangeHandle"/>
+      <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
       <div slot="footer" class="foot btnCenter footer-btn">
         <Button class="button-cancel foot-cancel-button" @click="cancel">取消</Button>
         <Button type="primary" class="button-ok foot-button" @click="handleSumbit">确认</Button>
@@ -120,6 +114,11 @@ export default class Relevan extends ViewBase {
         }
       }
     ]
+  }
+
+  uplist(size: any) {
+    this.pageList.pageIndex = size
+    this.init()
   }
 
   async init() {
@@ -196,10 +195,10 @@ export default class Relevan extends ViewBase {
     this.value.visible = false
   }
 
-  uplist(size: any) {
-    this.pageList.pageIndex = size
-    this.queryReleList()
-  }
+  // uplist(size: any) {
+  //   this.pageList.pageIndex = size
+  //   this.queryReleList()
+  // }
 
   async queryReleList() {
     try {
@@ -420,6 +419,22 @@ export default class Relevan extends ViewBase {
       border-radius: 50%;
       text-align: center;
       line-height: 16px;
+    }
+  }
+}
+/deep/ .page-list {
+  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+    color: #00202d;
+  }
+  .ivu-page-item {
+    a {
+      color: #00202d;
+    }
+  }
+  .ivu-page-item.ivu-page-item-active {
+    background: #00202d;
+    a {
+      color: #fff;
     }
   }
 }

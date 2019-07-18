@@ -15,14 +15,14 @@
   /deep/ input {
     outline: none;
     height: 50px;
-    font-size: 15px;
+    font-size: 14px;
     border-radius: 10px;
     background: rgba(16, 23, 44, .6);
     border: none;
     color: #fff;
-    box-shadow: 0 0 0px 1000px rgba(16, 23, 44, .6) inset;
     &::placeholder {
       color: #fff;
+      font-size: 14px;
     }
   }
   /deep/ .ivu-input-with-prefix {
@@ -45,7 +45,7 @@
     }
   }
   /deep/ .ivu-checkbox-wrapper {
-    font-size: 15px;
+    font-size: 14px;
   }
 }
 
@@ -76,4 +76,26 @@
 
 /deep/ .ivu-form-item-error-tip {
   color: #ff6259;
+}
+
+@keyframes autofill {
+  to {
+    color: #fff;
+    background: rgba(16,23,44,0.6);
+    font-size: 14px;
+  }
+}
+@-webkit-keyframes autofill {
+  to {
+    color: #fff;
+    background:rgba(16, 23, 44, .6);
+    font-size: 14px;
+  }
+}
+
+/deep/ input:-webkit-autofill {
+  -webkit-animation-name: autofill;
+  animation-name: autofill;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
 }
