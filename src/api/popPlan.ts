@@ -310,3 +310,12 @@ export async function xlspost(id: any, query: any) {
   return data
 }
 
+/**
+ * @param  {any} query
+ * 导出影院
+ */
+export async function downcinema(id: any, query: any) {
+  const data = await get(`/xadvert/plans/export-cinemas`)
+  return data
+}
+

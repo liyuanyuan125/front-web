@@ -243,7 +243,7 @@
                   <span>共{{(headerValue.deliveryCinemas || []).length}}个
                     <b style="margin-left: 5px"></b> 
                   </span>
-                  <a v-if='(headerValue.deliveryCinemas || []).length > 0' style='font-size: 18px' :src='downsrc' download='影院数据' >下载</a>
+                  <a v-if='(headerValue.deliveryCinemas || []).length > 0' style='font-size: 18px' :src='herf' download='影院数据' >下载</a>
                 </div>
               </Col>
             </Row>
@@ -490,6 +490,10 @@ export default class Apps extends ViewBase {
     return this.ageTypeList.filter((it: any) => {
       return vals.includes(it.key)
     }).map((it: any) => it.text).join(' | ')
+  }
+
+  get herf() {
+    return `${VAR.ajaxBaseUrl}/xadvert/plans/${this.$route.params.id}/export-cinemas`
   }
 
   movieMap(val: any) {
