@@ -145,7 +145,7 @@ export default class Main extends ViewBase {
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const mockObj = {
-      channelCode: this.form.channelCode,
+      channelCode: this.form.channelCode || 'weibo',
       beginDate: this.beginDate(this.form.dayRangesKey),
       endDate: this.endDate()
     }
