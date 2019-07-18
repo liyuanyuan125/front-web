@@ -35,7 +35,10 @@
                     <div class="set-film">
                       可选影院：
                       <span>影院数据.xls</span>
-                      <a :href='herf' download='影院数据' style="margin-left: 20px;cursor: pointer;">下载</a>
+                      <a :href='herf' download='影院数据' class='down-xls' style="margin-left: 40px;cursor: pointer;">
+                        下载
+                        <img src='./assets/down.png' />
+                      </a>
                     </div>
                   </FormItem>
                   <FormItem style="margin-left: 30px" :labelWidth="0"  class="form-item-type">
@@ -43,9 +46,9 @@
                       目标影院：
                       <label class="upload-film">
                         <span>选取文件</span>
-                        <input type="file" style="display: none" accept="application/vnd.ms-excel" @change="filmchange"/>
+                        <input ref='downinput' type="file" style="display: none" accept="application/vnd.ms-excel" @change="filmchange"/>
                       </label>
-                      <span v-if='!xlsname'>未选择文件</span>
+                      <span v-if='!xlsname' style="margin-left: 20px;">未选择文件</span>
                       <span v-else>
                         {{xlsname}}
                       </span>
@@ -151,7 +154,6 @@ import { confirm, toast } from '@/ui/modal'
 import moment from 'moment'
 import Film from './newfilm.vue'
 import Chain from '@/components/cityMap/CityMap.vue'
-import Xlsx from './dowmxsxl.vue'
 import { post } from '@/fn/ajax'
 import {
   getTwodetail,
@@ -551,8 +553,9 @@ export default class Orienteering extends ViewBase {
       const { data } = await xlspost(this.$route.params.setid, form)
       this.xlslid = data || []
     } catch (ex) {
-
+      this.handleError(ex)
     }
+    (this.$refs.downinput as any).value = ''
   }
 
   back(dataform: any) {
@@ -666,15 +669,14 @@ export default class Orienteering extends ViewBase {
     background-color: #00202d;
     border: 1px solid #00202d;
     &::after {
-      content: '\2713';
-      color: #fff;
+      content: '';
       position: absolute;
-      right: -8px;
-      top: -8px;
-      border: 1px solid #00202d;
-      background: #00202d;
-      width: 18px;
-      height: 18px;
+      right: -18px;
+      top: -18px;
+      background: url(./assets/sure.png);
+      width: 36px;
+      height: 36px;
+      background-size: 36px;
       border-radius: 50%;
       text-align: center;
       line-height: 16px;
@@ -685,15 +687,15 @@ export default class Orienteering extends ViewBase {
     background-color: #00202d;
     border: 1px solid #00202d;
     &::after {
-      content: '\2713';
-      color: #fff;
+      content: '';
       position: absolute;
-      right: -8px;
-      top: -8px;
-      border: 1px solid #00202d;
-      background: #00202d;
-      width: 18px;
-      height: 18px;
+      right: -18px;
+      top: -18px;
+      background: url(./assets/sure.png);
+      width: 36px;
+      height: 36px;
+      border: 0;
+      background-size: 36px;
       border-radius: 50%;
       text-align: center;
       line-height: 16px;
@@ -733,6 +735,9 @@ export default class Orienteering extends ViewBase {
   margin-left: 30px;
   font-size: 18px;
   margin-top: 20px;
+}
+/deep/ .ivu-checkbox-checked .ivu-checkbox-inner {
+  background: #00202d;
 }
 .hint {
   position: absolute;
@@ -1002,5 +1007,15 @@ export default class Orienteering extends ViewBase {
   line-height: 150px;
   font-size: 18px;
   height: 150px;
+}
+.down-xls {
+  color: #00202d;
+  &:hover {
+    color: #00202d;
+  }
+  img {
+    width: 18px;
+    vertical-align: middle;
+  }
 }
 </style>

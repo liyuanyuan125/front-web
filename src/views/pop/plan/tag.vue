@@ -53,15 +53,14 @@ export default class Main extends ViewBase {
     border: 1px solid #00202d;
     position: relative;
     &::after {
-      content: '\2713';
-      color: #fff;
+      content: '';
       position: absolute;
-      right: -8px;
-      top: -8px;
-      border: 1px solid #00202d;
-      background: #00202d;
-      width: 18px;
-      height: 18px;
+      right: -16px;
+      top: -16px;
+      background: url(./vadver/assets/sure.png);
+      width: 36px;
+      height: 36px;
+      background-size: 36px;
       border-radius: 50%;
       text-align: center;
       line-height: 16px;

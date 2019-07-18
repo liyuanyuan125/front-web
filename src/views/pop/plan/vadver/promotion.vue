@@ -1,5 +1,6 @@
 <template>
   <div class="">
+    <div class='pages'></div>
     <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="form">
       <Row>
         <Col span="14" offset="3" class="adver-name select-adv-type">
@@ -779,6 +780,16 @@ export default class Promotion extends ViewBase {
 }
 /deep/ .ivu-form-item-required .ivu-form-item-label::before {
   margin-right: 0;
+}
+.pages {
+  background: url(./assets/step1.jpg) no-repeat;
+  position: fixed;
+  left: 100px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin-top: -30px;
+  background-size: 100%;
 }
 </style>
 

@@ -77,8 +77,10 @@
             <p style="opacity: .7">受众性别</p>
             <div v-if="it.genders && it.genders.length > 0">
               <div style="margin-left: 20px" :key="index" v-for="(item, index) in it.genders">
-                <p style="margin-bottom: 10px" v-if="item.k == 'F'">女<span class="ageitem-box">{{item.rate/100}}%</span></p>
-                <p style="margin-bottom: 10px" v-else>男<span class="ageitem-box">{{item.rate/100}}%</span></p>
+                <p style="margin-bottom: 10px" v-if="item.k == 'F'">女<span class="ageitem-box"
+                :style="{width: 60 + (item.rate/100) + 'px'}">{{item.rate/100}}%</span></p>
+                <p style="margin-bottom: 10px" v-else>男<span class="ageitem-box"
+                :style="{width: 60 + (item.rate/100) + 'px'}">{{item.rate/100}}%</span></p>
               </div>
             </div>
             <div v-else>-</div>
@@ -90,7 +92,8 @@
               <dt v-if="it.ages && it.ages.length > 0">
                 <p :style="index != (it.ages.length -1) ? 'margin-bottom: 15px' : ''"
                    v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}}
-                  <span class="ageitem-box">{{item.text}}%</span>
+                  <span class="ageitem-box"
+                  :style="{width: 60 + (item.text/1) + 'px'}">{{item.text}}%</span>
                 </p>
               </dt>
               <dt style="margin-left: 20px; margin-top: 10px" v-else>-</dt>
@@ -121,6 +124,7 @@
       <div class="result-top">
         <h3>覆盖范围</h3>
         <span class="custom" @click="exportData">导出影院</span>
+        <Xlsx  ref="down" :id="$route.params.id" />
       </div>
       <div class="cinema-box">
         <div class="cinema-right">
@@ -182,16 +186,7 @@
               </template>
             </Table>
 
-            <Page :total="total" v-if="total>0" class="btnCenter"
-              :current="pageIndex"
-              :page-size="pageSize"
-              :page-size-opts="[6, 20, 50, 100]"
-              show-total
-              show-sizer
-              show-elevator
-              :transfer = "true"
-              @on-change="sizeChangeHandle"
-              @on-page-size-change="currentChangeHandle"/>
+            <pagination :pageList="pageList" :total="total" @uplist="uplists"></pagination>
           </div>
         </div>
       </div>
@@ -270,7 +265,7 @@
         </Row>
       </Row>
     </div>
-    <Xlsx v-if="status != 1" ref="down" :id="$route.params.id" />
+    
   </div>
 </template>
 
@@ -287,6 +282,7 @@ import moment from 'moment'
 import Header from './header.vue'
 import Exportfile from '../vadver/exportfile.vue'
 import Xlsx from '../vadver/downxsxl.vue'
+import pagination from '@/components/page.vue'
 
 const statusMap =  (list: any[]) => toMap(list, 'code', 'text')
 const timeFormat = 'YYYY-MM-DD'
@@ -295,7 +291,8 @@ const timeFormat = 'YYYY-MM-DD'
     Number,
     Header,
     Exportfile,
-    Xlsx
+    Xlsx,
+    pagination
   }
 })
 export default class Apps extends ViewBase {
@@ -318,6 +315,11 @@ export default class Apps extends ViewBase {
     chainCount: '',
     provinceCount: '',
     cityCount: ''
+  }
+
+  pageList = {
+    pageIndex: 1,
+    pageSize: 6
   }
   ageTypeList: any = []
   tags: any = []
@@ -422,6 +424,11 @@ export default class Apps extends ViewBase {
     return 'this.src="' + require('../assets/error.png') + '"'
   }
 
+  uplists(size: any) {
+    this.pageList.pageIndex = size
+    this.seach()
+  }
+
   filmdetail(id: any) {
     this.$router.push({
       name: 'film-movie',
@@ -457,8 +464,8 @@ export default class Apps extends ViewBase {
   tages(id: any) {
     this.tag = id
     this.name = ''
-    this.pageIndex = 1
-    this.pageSize = 6
+    this.pageList.pageIndex = 1
+    this.pageList.pageSize = 6
     this.seach()
   }
 
@@ -558,13 +565,13 @@ export default class Apps extends ViewBase {
 
   // 每页数
   sizeChangeHandle(val: any) {
-    this.pageIndex = val
+    this.pageList.pageIndex = val
     this.seach()
   }
 
   // 当前页
   currentChangeHandle(val: any) {
-    this.pageSize = val
+    this.pageList.pageSize = val
     this.seach()
   }
 
@@ -625,8 +632,8 @@ export default class Apps extends ViewBase {
     try {
       const { data } = await getcinemas(this.$route.params.id, {
         name: this.name,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -639,8 +646,8 @@ export default class Apps extends ViewBase {
     try {
       const { data } = await getprovinces(this.$route.params.id, {
         name: this.name,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -653,8 +660,8 @@ export default class Apps extends ViewBase {
     try {
       const { data } = await getcities(this.$route.params.id, {
         name: this.name,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -667,8 +674,8 @@ export default class Apps extends ViewBase {
     try {
       const { data } = await getchains(this.$route.params.id, {
         name: this.name,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount

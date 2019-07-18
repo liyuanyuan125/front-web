@@ -94,7 +94,7 @@ import { datarange } from '@/fn/duration.ts'
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
-    Number
+    Number,
   }
 })
 export default class App extends ViewBase {
@@ -207,6 +207,7 @@ export default class App extends ViewBase {
   height: 81px;
   top: 30px;
   right: 40px;
+  opacity: .3;
   background: #fff;
 }
 </style>
