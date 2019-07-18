@@ -22,21 +22,21 @@ export async function getcinid() {
 }
 
 
-// 单个设置上刊状态
-export async function oneover(id: any , query: any) {
-  const res = await put( `/xadvert/upper-shelfs/${id}/setup` , query)
+// 单个设置下刊状态
+export async function oneover(query: any) {
+  const res = await put( `/xadvert/off-shelfs/setup` , query)
   return res
 }
 
 // 单个设置下刊状态
-export async function oneout(id: any , query: any) {
-  const res = await put(`/xadvert/upper-shelfs/${id}/cannel` , query)
+export async function oneout(query: any) {
+  const res = await put(`/xadvert/off-shelfs/cancel` , query)
   return res
 }
 
 // 批量设置上刊状态
 export async function allover(query: any) {
-  const res = await put(`/xadvert/upper-shelfs/batch` , query)
+  const res = await put(`/xadvert/off-shelfs/batch` , query)
   return res
 }
 
