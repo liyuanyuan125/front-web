@@ -84,7 +84,12 @@
           <span class="content-set">平均数量以近90天的内容计算</span>
           <span class="content-set">数据更新日期{{times}}</span>
           <FormItem  class="form-name">
-            <Input :disabled="acount == 2" style="width: 300px" v-model="form.name" suffix="ios-search" :placeholder="nameList[type]" />
+            <div class="flex-box search-border-left" style="width: 100%">
+              <Input :disabled="acount == 2" style="width: 250px" v-model="form.name" :placeholder="nameList[type]"/>
+              <Button type="primary" class="bth-search" >
+                <Icon type="ios-search" size="22"/>
+              </Button>
+            </div>
           </FormItem>
         </div>
       </Form>
@@ -97,7 +102,7 @@
               <div class="to-detail" @click="$router.push({ name: 'kol-figure', params: { id: row.kolId, channel: row.channelCode }})">
                 <img v-if="acount == 1" width="30px" height="30px" :src="row.image" alt="">
                 <img v-else width="30px" height="30px" :src="row.headerUrl" alt="">
-                <span>{{row.name}}</span>
+                <span style='font-weight: bold'>{{row.name}}</span>
               </div>
             </div>
           </template>
@@ -852,7 +857,7 @@ export default class Main extends ViewBase {
   margin-left: 30px;
 }
 .check-detail {
-  background: rgba(0, 31, 44, .6);
+  background: rgba(0, 31, 44, .8);
   padding-top: 20px;
   /deep/ .ivu-form-item-label {
     color: #fff;
@@ -881,7 +886,7 @@ export default class Main extends ViewBase {
   left: 0;
   right: 40px;
   overflow: auto;
-  background: rgba(255, 255, 255, .9);
+  background: rgba(255, 255, 255, .7);
   border-radius: 5px;
 }
 .area-box {
@@ -931,15 +936,18 @@ export default class Main extends ViewBase {
     position: absolute;
     right: -25px;
     top: -8px;
+    /deep/ .ivu-input,
+    /deep/ .ivu-input-wrapper {
+      border-radius: 5px 0 0 5px;
+      .ivu-icon-ios-search {
+        margin-top: -2px;
+      }
+    }
     /deep/ .ivu-input {
       background: rgba(255, 255, 255, .8);
       &::placeholder {
         color: #001f2c;
       }
-    }
-    /deep/ .ivu-input-suffix i {
-      font-size: 24px;
-      line-height: 40px;
     }
   }
 }
@@ -985,9 +993,6 @@ export default class Main extends ViewBase {
     height: 100%;
     border-radius: 58%;
   }
-}
-/deep/ .edit-input .ivu-form-item-content .ivu-input-wrapper input {
-  border-radius: 5px;
 }
 .list-table {
   border-radius: 5px;
@@ -1049,9 +1054,6 @@ export default class Main extends ViewBase {
   .ivu-table-cell {
     padding-right: 10px;
     padding-left: 10px;
-  }
-  .ivu-table-row-hover {
-    background: rgba(255, 255, 255, .4);
   }
   .table-action {
     p {
@@ -1141,5 +1143,14 @@ export default class Main extends ViewBase {
   top: -30px;
   color: #999;
   text-align: center;
+}
+/deep/ .search-border-left {
+  input {
+    border-right: none;
+  }
+}
+.bth-search {
+  border-radius: 0 5px 5px 0;
+  .button-style(#fff, #00202d);
 }
 </style>
