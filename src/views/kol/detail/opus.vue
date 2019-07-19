@@ -17,8 +17,10 @@
       <div class="item" v-for="(item, index) in list" :key="index">
         <div class="item-inner flex-box">
           <a :href="item.url" target="_blank" class="video-url" >
-            <i></i>
-            <img :src="item.coverPic" alt="" class="img" />
+            <!-- 按钮 -->
+            <i v-if="item.url"></i>
+            <img :src="item.coverPic" alt="" class="img"
+            v-real-img="item.coverPic" />
           </a>
           <div class="inner-right">
             <p class="title" :title="item.title">{{handleSlice(item.title)}}</p>
