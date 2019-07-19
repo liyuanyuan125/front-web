@@ -9,7 +9,7 @@
 
     <div class="query-select">
       <Tabs class="" v-model="form.sortBy">
-        <TabPane v-for="item in selectOption" :key="item.key" :label="item.text"></TabPane>
+        <TabPane v-for="item in selectOption" :key="item.key" :value="item.key" :label="item.text"></TabPane>
       </Tabs>
     </div>
 
@@ -74,11 +74,8 @@ export default class Opus extends ViewBase {
   // 排序
   selectOption = []
 
-  list = []
+  list: any = []
 
-  // get defaultImg() {
-  //   return `this.src = '${defaultImg}'`
-  // }
   get roleNumber() {
     return roleNumber
   }
@@ -96,7 +93,6 @@ export default class Opus extends ViewBase {
         sortBy: this.form.sortBy + 1,
         id: this.id,
       })
-      // this.list = items || []
       this.list = (items || []).map((it: any) => {
         return {
           ...it,
@@ -104,7 +100,7 @@ export default class Opus extends ViewBase {
         }
       })
       this.total = totalCount
-      this.selectOption = sortByList
+      this.selectOption = sortByList || []
     } catch (ex) {
       this.handleError(ex)
     }
@@ -121,6 +117,7 @@ export default class Opus extends ViewBase {
   }
 
   handleSlice(text: string) {
+    if (!text) {return}
     return text.length > 15 ? text.substring(0, 15) + '.....' : text
   }
 
