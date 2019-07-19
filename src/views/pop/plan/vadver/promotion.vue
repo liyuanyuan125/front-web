@@ -314,7 +314,7 @@ export default class Promotion extends ViewBase {
         pageSize: 400
       })
       this.branidlist = items || []
-      if (this.step == 1) {
+      if (step == 1) {
         this.query.productId = null
       }
     } catch (ex) {
