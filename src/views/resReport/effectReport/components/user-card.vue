@@ -30,7 +30,7 @@
                 <h6>年龄分布</h6>
               </div>
               <div class="user-pane-body" style='margin-top: -48px;'>
-                <BarXCategory :initDone="ageData.initDone" :noData="ageData.noData" :dict1="ageData.dict1" :dict3="ageData.dict3" :color="ageData.color" :height="ageData.height" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})" :dataList="ageData.dataList" :currentTypeIndex="ageData.currentTypeIndex" />
+                <BarXCategory :initDone="ageData.initDone" :noData="ageData.noData" :dict1="ageData.dict1" :dict3="ageData.dict3" :color="ageData.color" :height="ageData.height" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}: {c}%'})" :dataList="ageData.dataList" :currentTypeIndex="ageData.currentTypeIndex" />
               </div>
             </div>
           </div>
