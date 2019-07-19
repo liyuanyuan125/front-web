@@ -69,6 +69,7 @@ const getNames = (keys: string[], list: KeyText[]) => {
   const names = (keys || []).map((it: any) => dot(map[it], 'text') as string)
   return names
 }
+
 const toolTip: any = {
   borderWidth: 1,
   borderColor: 'rgba(0, 0, 0, .8)',
@@ -371,7 +372,7 @@ export default class Index extends ViewBase {
   created() {
     const id = parseInt(this.$route.params.id, 0)
       // TODO: 线上演示 id 为 104，其他环境 173
-      || (VAR.env == 'prd' ? 104 : 173)
+      || (VAR.env == 'prd' ? -1 : 173)
     this.planId = id
     this.init(id)
   }
@@ -406,10 +407,14 @@ export default class Index extends ViewBase {
           item6: plan.name
         }
 
+        const viewCount = report.viewCount || null
+        const scheduleCount = report.scheduleCount || null
+        const cost = report.cost || null
+
         this.totalData = {
-          item0: report.viewCount,
-          item1: report.scheduleCount,
-          item2: parseInt(report.cost, 0) / 100 // 单位为'分'
+          item0: viewCount,
+          item1: scheduleCount,
+          item2: (typeof cost === 'number') ? ( parseFloat(report.cost) / 100 ) : cost // 单位为'分'
         }
 
         if ( cinemas && cinemas.length > 0 ) {
