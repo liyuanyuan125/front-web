@@ -303,7 +303,7 @@ export default class Promotion extends ViewBase {
   }
 
   // 获取所有的产品
-  async seachproction(val: any) {
+  async seachproction(val: any, step: any) {
     try {
       this.branidlist = []
       const {
@@ -314,7 +314,9 @@ export default class Promotion extends ViewBase {
         pageSize: 400
       })
       this.branidlist = items || []
-      this.query.productId = ''
+      if (step == 1) {
+        this.query.productId = null
+      }
     } catch (ex) {
       this.handleError(ex)
     } finally {
@@ -372,7 +374,7 @@ export default class Promotion extends ViewBase {
         // data.item.brandId ? this.seachs(data.item.brandId) : ''
         this.query.specification = data.item.specification || ''
         this.query.customerId = data.item.customerId || 0
-        this.query.productId = data.item.productId || 0
+        this.query.productId = data.item.productId || null
       } else {
         this.form.name = data.item.name
         this.form.specification = data.item.specification
@@ -501,7 +503,11 @@ export default class Promotion extends ViewBase {
   @Watch('query.brandId')
   watchqueryBrandId(val: any) {
     if (val) {
-      this.seachproction(val)
+      this.seachproction(val, this.steps)
+    } else {
+      if (this.steps == 1) {
+        this.query.productId = null
+      }
     }
   }
 

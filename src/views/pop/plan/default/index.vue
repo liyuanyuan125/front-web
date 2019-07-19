@@ -698,4 +698,21 @@ export default class Apps extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import './index.less';
+/deep/ .page-list {
+  padding: 0;
+  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+    color: #00202d;
+  }
+  .ivu-page-item {
+    a {
+      color: #00202d;
+    }
+  }
+  .ivu-page-item.ivu-page-item-active {
+    background: #00202d;
+    a {
+      color: #fff;
+    }
+  }
+}
 </style>

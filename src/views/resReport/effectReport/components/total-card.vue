@@ -4,21 +4,24 @@
       <ul>
         <li>
           <h6>曝光人次</h6>
-          <p>
+          <p v-if="data.item0">
             <numAdd :addNum="data.item0"></numAdd>
           </p>
+          <p v-else> - </p>
         </li>
         <li>
           <h6>曝光场次</h6>
-          <p>
+          <p v-if="data.item1">
             <numAdd :addNum="data.item1"></numAdd>
           </p>
+          <p v-else> - </p>
         </li>
         <li>
           <h6>支出金额</h6>
-          <p>
+          <p v-if="data.item2">
             ¥ <numAdd :addNum="data.item2"></numAdd>
           </p>
+          <p v-else> - </p>
         </li>
       </ul>
     </div>
