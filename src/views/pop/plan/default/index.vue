@@ -238,7 +238,7 @@
                   <span>共{{(headerValue.deliveryCinemas || []).length}}个
                     <b style="margin-left: 5px"></b> 
                   </span>
-                  <a v-if='(headerValue.deliveryCinemas || []).length > 0' style='font-size: 18px' :href='herf' download='影院数据' >下载</a>
+                  <a v-if='(headerValue.deliveryCinemas || []).length > 0' style='font-size: 18px' :href='herf' download='影院数据' >影院数据</a>
                 </div>
               </Col>
             </Row>
@@ -256,10 +256,10 @@
           <Col :span="2"><span>影片定向:</span></Col>
           <Col :span="10">
             <span v-if="item.movieCustom == 1">
-              全部影片通投
+              自定义影片
             </span>
             <span v-else>
-              影片定向
+              全部影片通投
             </span>
           </Col>
         </Row>
