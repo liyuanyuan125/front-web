@@ -689,7 +689,7 @@ export default class Apps extends ViewBase {
   edit() {
     this.$router.push({
       name: 'pop-planlist-edit',
-      params: {id: '0', setid: this.headerValue.id}
+      params: {step: '0', setid: this.headerValue.id}
     })
   }
 }
