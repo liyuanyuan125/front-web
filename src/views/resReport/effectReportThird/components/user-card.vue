@@ -97,7 +97,7 @@ export default class UserCard extends Vue {
       currentTypeIndex: 0,
       initDone: this.cityLevelInitDone,
       dataList: [this.data.cityLevelData],
-      color: ['#29cfe4', '#ff8b92', '#f5d44e', '#A3D5E6'],
+      color: ['#29cfe4', '#ff8b92', '#f5d44e', '#A3D5E6', 'b8e986', 'a400a4'],
       height: 210
     }
   }
