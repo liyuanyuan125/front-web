@@ -35,11 +35,11 @@
     <div v-if="value.status == 4" class="plan-message">
       <p>以下为平台专业投放人员为您提供的投放方案，确认后您只需缴纳
       <p>¥
-        <span v-if="value.needPayAmount">
-          {{formatNums(value.needPayAmount / 10000)}}
+        <span v-if="value.needPayAmount || value.needPayAmount == 0">
+          {{formatNums(value.needPayAmount)}}
         </span>
         <span v-else>
-          {{formatNums(value.estimateCostAmount / 10000)}}
+          {{formatNums(value.estimateCostAmount)}}
         </span>为保证金即可开始投放，投放结束后保证金剩余余额将退还到您的账户</p>
       <span style="margin-top: 20px">如对方案有任何疑问请点击“ 联系商务 ” </span>
       <span style="margin-bottom: 20px">请确认无误后点击下方“ 立即缴费 ”按钮</span>

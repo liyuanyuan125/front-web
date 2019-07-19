@@ -6,7 +6,7 @@
       <div class="result-top">
         <h3>效果预估</h3>
         <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【
-          <span v-if="item.needPayAmount">
+          <span v-if="item.needPayAmount || item.needPayAmount == 0 ">
             {{formatNums(item.needPayAmount)}}
           </span>
           <span v-else>
