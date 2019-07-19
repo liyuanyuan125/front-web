@@ -553,5 +553,9 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-select-input {
   margin-top: 3px;
+  color: #00202d;
+  &::-webkit-input-placeholder {
+    color: #00202d;
+  }
 }
 </style>
