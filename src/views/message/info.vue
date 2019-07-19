@@ -1,7 +1,7 @@
 <template>
   <div class="message-info-page">
     <div class='top-wrap'>
-      <a class="back-link" href="javascript:;" @click="back"> < 返回列表 </a>
+      <a class="back-link" href="javascript:;" @click="back"> &lt; 返回列表 </a>
       <a class="read-all-button" @click="readAllHandler">全部标为已读</a>
     </div>
     <div class='message-info-wrap'>
