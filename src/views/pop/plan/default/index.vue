@@ -5,14 +5,16 @@
     <div v-if="status != 1" class="plan-result">
       <div class="result-top">
         <h3>效果预估</h3>
-        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【
-          <span v-if="item.needPayAmount">
+        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准。
+          <!-- 最终支出费用超出【
+          <span v-if="item.needPayAmount || item.needPayAmount == 0 ">
             {{formatNums(item.needPayAmount)}}
           </span>
           <span v-else>
             {{formatNums(item.estimateCostAmount)}}
           </span>
-          】时，您无需补缴任何款项</span>
+          】时，您无需补缴任何款项 -->
+        </span>
       </div>
       <Row class="precept" :gutter="16">
         <Col span="5" class="item">
@@ -238,7 +240,7 @@
                   <span>共{{(headerValue.deliveryCinemas || []).length}}个
                     <b style="margin-left: 5px"></b> 
                   </span>
-                  <a v-if='(headerValue.deliveryCinemas || []).length > 0' style='font-size: 18px' :href='herf' download='影院数据' >下载</a>
+                  <a v-if='(headerValue.deliveryCinemas || []).length > 0' style='font-size: 18px' :href='herf' download='影院数据' >影院数据</a>
                 </div>
               </Col>
             </Row>
@@ -256,10 +258,10 @@
           <Col :span="2"><span>影片定向:</span></Col>
           <Col :span="10">
             <span v-if="item.movieCustom == 1">
-              全部影片通投
+              自定义影片
             </span>
             <span v-else>
-              影片定向
+              全部影片通投
             </span>
           </Col>
         </Row>
@@ -687,7 +689,7 @@ export default class Apps extends ViewBase {
   edit() {
     this.$router.push({
       name: 'pop-planlist-edit',
-      params: {id: '0', setid: this.headerValue.id}
+      params: {step: '0', setid: this.headerValue.id}
     })
   }
 }
@@ -696,4 +698,21 @@ export default class Apps extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import './index.less';
+/deep/ .page-list {
+  padding: 0;
+  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+    color: #00202d;
+  }
+  .ivu-page-item {
+    a {
+      color: #00202d;
+    }
+  }
+  .ivu-page-item.ivu-page-item-active {
+    background: #00202d;
+    a {
+      color: #fff;
+    }
+  }
+}
 </style>

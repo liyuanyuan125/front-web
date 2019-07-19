@@ -244,7 +244,7 @@ export default class Orienteering extends ViewBase {
     },
     {
       label: 1,
-      name: '影片定向'
+      name: '自定义影片'
     }
   ]
   cinemaList = [

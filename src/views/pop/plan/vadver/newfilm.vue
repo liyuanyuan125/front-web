@@ -160,7 +160,7 @@ export default class DlgEditCinema extends ViewBase {
         totalCount,
         movies
         } } = await moviefind(clean({
-          ...this.form,
+          ...this.pageList,
         }))
       this.data = (movies || []).map((it: any) => {
         return {
