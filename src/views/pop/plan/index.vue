@@ -1,5 +1,5 @@
 <template>
-  <div ref="page" class>
+  <div ref="page">
     <Row style="overflow:hidden">
       <Col span="22" offset="3">
         <StepTime v-model="step"/>
@@ -95,6 +95,6 @@ export default class App extends ViewBase {
   right: 0;
   top: 0;
   bottom: -20px;
-  background-size: cover;
+  background-size: 100%;
 }
 </style>

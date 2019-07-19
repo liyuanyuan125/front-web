@@ -84,6 +84,7 @@
     h3 {
       font-size: 24px;
       margin-right: 10px;
+      color: #fff;
     }
     span {
       font-size: 16px;
@@ -147,11 +148,11 @@
       margin-bottom: 10px;
       .ageitem-box {
         display: inline-block;
-        padding: 2px 26px;
+        padding: 2px 24px;
         margin-left: 8px;
         background: #00202d;
         color: #fff;
-        width: 100px;
+        width: 80px;
         height: 22px;
         line-height: 20px;
         border-radius: 22px;
@@ -284,6 +285,7 @@
       .cinema-right {
         display: flex;
         width: 100%;
+        overflow-x: hidden;
         dl {
           width: 156px;
           height: 118px;
@@ -299,7 +301,7 @@
             font-size: 30px;
             width: 100%;
             text-align: center;
-            color: rgba(0, 32, 45, 1);
+            color: rgba(0, 32, 45, 0.6);
             line-height: 30px;
             margin-top: 30px;
             margin-bottom: 10px;
@@ -307,11 +309,14 @@
           dt {
             text-align: center;
             font-size: 16px;
-            color: #00202d;
+            color: rgba(0, 32, 45, 0.6);
           }
         }
         .dl-active {
           border-right: 0;
+          dd, dt {
+            color: #00202d;
+          }
         }
         .dl-active::after {
           content: '';
@@ -423,7 +428,7 @@
   border-radius: 5px;
   min-height: 280px;
   position: relative;
-  /deep/ .ivu-table-header th {
+  .ivu-table-header th {
     height: 60px;
     background: rgba(255, 255, 255, 0.3);
     color: #00202d;
@@ -432,15 +437,15 @@
       font-size: 14px;
     }
   }
-  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
+  .ivu-table-column-center, .ivu-table-column-left {
     background: rgba(255, 255, 255, 0);
   }
-  /deep/ .ivu-table {
+  .ivu-table {
     background: rgba(255, 255, 255, 0);
   }
-  /deep/ .ivu-table-row {
+  .ivu-table-row {
     background: rgba(255, 255, 255, 0);
-    /deep/ td {
+    td {
       color: #00202d;
       background: rgba(0, 0, 0, 0);
       a {
@@ -449,27 +454,30 @@
     }
     border-bottom: 2px solid rgba(255, 255, 255, .5);
   }
-  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
+  .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
     background: rgba(255, 255, 255, 0);
   }
-  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
+  .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
     background: rgba(255, 255, 255, 0);
   }
-  /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+  .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
     background: rgba(255, 255, 255, 0);
   }
-  /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
+  .ivu-table-body .ivu-table-column-center, .ivu-table-body .ivu-table-column-left {
     span {
       color: #00202d;
       font-size: 14px;
     }
   }
 
-  /deep/ .ivu-table-tip {
+  .ivu-table-tip {
     line-height: 200px;
-    /deep/ td {
+    td {
       color: #00202d;
       background: rgba(255, 255, 255, 0);
     }
   }
+}
+/deep/ .ivu-input-suffix {
+  .button-style(#fff, #00202d);
 }

@@ -66,11 +66,11 @@ export default class MoreCinemasDlg extends ViewBase {
       key: 'scheduleCount',
       align: 'center'
     },
-    {
-      title: '支出金额',
-      key: 'cost',
-      align: 'center'
-    }
+    // {
+    //   title: '支出金额',
+    //   key: 'cost',
+    //   align: 'center'
+    // }
   ]
 
   data: any[] = []

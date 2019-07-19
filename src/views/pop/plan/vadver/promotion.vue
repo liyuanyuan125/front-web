@@ -1,5 +1,6 @@
 <template>
   <div class="">
+    <div class='pages'></div>
     <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="form">
       <Row>
         <Col span="14" offset="3" class="adver-name select-adv-type">
@@ -180,11 +181,11 @@ export default class Promotion extends ViewBase {
   customerName = ''
   adverList: any = []
   nums: any = 0
-  times: any = new Date().getTime()
+  times: any = new Date().getTime() - 86400000
   pername: any = ''
   productlist: any = []
   branidlist: any = []
-
+  moneystep = 1
   startDate: any = {
     disabledDate: (dates: any) => {
       if (this.form.endDate) {
@@ -198,7 +199,7 @@ export default class Promotion extends ViewBase {
 
   endDate: any = {
     disabledDate: (dates: any) => {
-      let time = this.times + 7 * 86400000
+      let time = this.times
       if (this.form.beginDate) {
         time = new Date(this.form.beginDate)
       }
@@ -302,7 +303,7 @@ export default class Promotion extends ViewBase {
   }
 
   // 获取所有的产品
-  async seachproction(val: any) {
+  async seachproction(val: any, step: any) {
     try {
       this.branidlist = []
       const {
@@ -313,7 +314,9 @@ export default class Promotion extends ViewBase {
         pageSize: 400
       })
       this.branidlist = items || []
-      this.query.productId = ''
+      if (step == 1) {
+        this.query.productId = null
+      }
     } catch (ex) {
       this.handleError(ex)
     } finally {
@@ -355,7 +358,12 @@ export default class Promotion extends ViewBase {
       (this.$Spin as any).hide()
       return
     }
+    (this.$Spin as any).hide()
+    if (this.moneystep == 2) {
+      return
+    }
     try {
+      this.moneystep = 2
       const { data } = await adverdetail(this.$route.params.setid)
       this.form.budgetAmount = (data.item.budgetAmount / 10000) + ''
       this.steps = 2
@@ -366,7 +374,7 @@ export default class Promotion extends ViewBase {
         // data.item.brandId ? this.seachs(data.item.brandId) : ''
         this.query.specification = data.item.specification || ''
         this.query.customerId = data.item.customerId || 0
-        this.query.productId = data.item.productId || 0
+        this.query.productId = data.item.productId || null
       } else {
         this.form.name = data.item.name
         this.form.specification = data.item.specification
@@ -382,7 +390,6 @@ export default class Promotion extends ViewBase {
     } catch (ex) {
       this.handleError(ex)
     }
-    (this.$Spin as any).hide()
   }
 
   formatDate(data: any) {
@@ -496,7 +503,11 @@ export default class Promotion extends ViewBase {
   @Watch('query.brandId')
   watchqueryBrandId(val: any) {
     if (val) {
-      this.seachproction(val)
+      this.seachproction(val, this.steps)
+    } else {
+      if (this.steps == 1) {
+        this.query.productId = null
+      }
     }
   }
 
@@ -775,6 +786,16 @@ export default class Promotion extends ViewBase {
 }
 /deep/ .ivu-form-item-required .ivu-form-item-label::before {
   margin-right: 0;
+}
+.pages {
+  background: url(./assets/step1.jpg) no-repeat;
+  position: fixed;
+  left: 100px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin-top: -30px;
+  background-size: 100%;
 }
 </style>
 

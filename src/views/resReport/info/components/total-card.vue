@@ -2,19 +2,19 @@
   <div class="total-wp">
     <div class="total-box">
       <ul>
-        <li>
+        <li v-if="data.showCountSum" >
           <h6>总播放场次</h6>
           <p>
             <numAdd :addNum="data.showCountSum"></numAdd>场
           </p>
         </li>
-        <li>
+        <li v-if="data.personCountSum" >
           <h6>总覆盖人次</h6>
           <p>
             <numAdd :addNum="data.personCountSum"></numAdd>
           </p>
         </li>
-        <li>
+        <li v-if="data.profitAmountSum" >
           <h6>总收益</h6>
           <p>
             ￥<numAdd :addNum="data.profitAmountSum"></numAdd>

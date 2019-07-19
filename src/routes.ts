@@ -922,15 +922,16 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     },
   },
 
-  // 消息中心
+  // 消息中心 - 消息详情
   {
-    path: '/message/info',
+    path: '/message/info/:id',
     name: 'message-info',
     component: () => import('./views/message/info.vue'),
     meta: {
       authKey: '',
       authAction: '',
       title: '消息详情',
+      pageTitle: '消息详情-消息中心-鲸娱数据',
     },
   },
 

@@ -25,12 +25,10 @@
         </FormItem> -->
         <FormItem :labelWidth="0">
           <div class="flex-box search-borde">
-            <Input v-model="form.name" suffix="ios-search" placeholder="请输入广告片名称" />
-            <!-- <Input v-model="form.name" placeholder="请输入广告片名称"/>
-            <Button type="primary" class="bth-search" @click="searchList">
-              <Icon type="ios-search" size="22"/>
-            </Button> -->
-            <Checkbox style="width: 180px; margin-left: 20px" v-model="single">隐藏不可用广告片</Checkbox>
+            <Input v-model="form.name" placeholder="请输入广告片名称" />
+              <img class='seach-img' src='../assets/seach.png'/>
+            </Input>
+            <Checkbox style="width: 180px; margin: 3px 0 0 20px " v-model="single">隐藏不可用广告片</Checkbox>
           </div>
         </FormItem>
       </Form>
@@ -61,13 +59,7 @@
           <p class="title-p">名称：{{item.name}}</p>
         </div> -->
       </div>
-      <Page :total="total" v-if="total>0" class="btnCenter"
-        :current="pageList.pageIndex"
-        :page-size="pageList.pageSize"
-        :page-size-opts="[10, 20, 50, 100]"
-        show-sizer
-        @on-change="sizeChangeHandle"
-        @on-page-size-change="currentChangeHandle"/>
+      <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
       <div slot="footer" class="foot btnCenter footer-btn">
         <Button class="button-cancel foot-cancel-button" @click="cancel">取消</Button>
         <Button type="primary" class="button-ok foot-button" @click="handleSumbit">确认</Button>
@@ -120,6 +112,11 @@ export default class Relevan extends ViewBase {
         }
       }
     ]
+  }
+
+  uplist(size: any) {
+    this.pageList.pageIndex = size
+    this.init()
   }
 
   async init() {
@@ -196,10 +193,10 @@ export default class Relevan extends ViewBase {
     this.value.visible = false
   }
 
-  uplist(size: any) {
-    this.pageList.pageIndex = size
-    this.queryReleList()
-  }
+  // uplist(size: any) {
+  //   this.pageList.pageIndex = size
+  //   this.queryReleList()
+  // }
 
   async queryReleList() {
     try {
@@ -233,6 +230,7 @@ export default class Relevan extends ViewBase {
 }
 /deep/ .ivu-input-wrapper,
 /deep/ .ivu-input {
+  position: relative;
   background: rgba(255, 255, 255, 0.4);
   height: 40px;
   line-height: 40px;
@@ -242,6 +240,13 @@ export default class Relevan extends ViewBase {
     font-size: 14px;
     color: #00202d;
   }
+}
+.seach-img {
+  position: absolute;
+  top: 8px;
+  left: 330px;
+  height: 20px;
+  user-select: none;
 }
 .title {
   border-radius: 5px 5px 0 0;
@@ -296,7 +301,7 @@ export default class Relevan extends ViewBase {
 .foot {
   text-align: center;
   height: 60px;
-  margin-top: 20px;
+  margin-top: -20px;
   .foot-button {
     width: 103px;
     height: 38px;
@@ -408,18 +413,34 @@ export default class Relevan extends ViewBase {
   }
   .img-active {
     &::after {
-      content: '\2713';
+      content: '';
       color: #00202d;
       position: absolute;
       left: 8px;
       top: 8px;
-      border: 1px solid #fff;
-      width: 18px;
-      height: 18px;
-      background: #fff;
-      border-radius: 50%;
-      text-align: center;
-      line-height: 16px;
+      background: url(../assets/sure.png);
+      background-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+/deep/ .ivu-checkbox-checked .ivu-checkbox-inner {
+  background: #00202d;
+}
+/deep/ .page-list {
+  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+    color: #00202d;
+  }
+  .ivu-page-item {
+    a {
+      color: #00202d;
+    }
+  }
+  .ivu-page-item.ivu-page-item-active {
+    background: #00202d;
+    a {
+      color: #fff;
     }
   }
 }

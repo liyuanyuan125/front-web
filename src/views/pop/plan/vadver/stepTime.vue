@@ -4,12 +4,12 @@
       <li v-for="(item, index) in step" :key="item.id"
         :class="[(value.step) >= item.id ? 'active' : '', (value.step * 1 + 1) < item.id  ? 'default' : '']"
       >
+        <img class='step-img' v-if='value.step >= item.id' src='./assets/sure.png' />
         <span :class="[(value.step) >= item.id ? 'actve-span' : '', (value.step)  < item.id ? 'default-span' : '']" v-if="index!=3"></span>
       </li>
     </ul>
     <ul class="step-text">
-      <li v-for="(item) in step" :key="item.id" :class="[(value.step) >= item.id ? 'active' : '',
-        (value.step * 1 + 1) < item.id  ? 'default' : '']">
+      <li v-for="(item) in step" :key="item.id" :class="[(value.step) >= item.id ? 'active' : '']">
         {{item.key}}
       </li>
     </ul>
@@ -45,6 +45,8 @@ export default class App extends ViewBase {
   to { background-size: 100%; }
 }
 .app {
+  position: relative;
+  z-index: 11;
   .step {
     display: flex;
     cursor: default;
@@ -66,7 +68,7 @@ export default class App extends ViewBase {
         border-radius: 50%;
         text-align: center;
         line-height: 40px;
-        font-size: 24px;
+        font-size: 32px;
         background: #fff;
         box-shadow: 0 5px 9px 1px rgba(0, 0, 0, 0.33);
       }
@@ -95,7 +97,7 @@ export default class App extends ViewBase {
         border-radius: 50%;
         text-align: center;
         border: 2px solid #fff;
-        opacity: .4;
+        opacity: .5;
         line-height: 40px;
         font-size: 24px;
         background: rgba(0, 0, 0, 0);
@@ -103,13 +105,19 @@ export default class App extends ViewBase {
       }
     }
     .default-span {
-      opacity: .4;
+      opacity: .5;
+    }
+    .step-img {
+      position: absolute;
+      top: -5px;
+      height: 60px;
+      z-index: 999;
+      left: -6px;
     }
     .active {
       &::before {
-        content: '\2713';
-        color: #fff;
-        background: rgba(0, 32, 45, 1);
+        content: '';
+        background: rgba(0, 0, 0, 0);
         box-shadow: 0 5px 9px 1px rgba(0, 0, 0, 0.33);
       }
     }
@@ -122,7 +130,7 @@ export default class App extends ViewBase {
       color: #fff;
     }
     .default {
-      opacity: .4;
+      opacity: .5;
     }
     .active {
       color: rgba(0, 32, 45, 1);

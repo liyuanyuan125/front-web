@@ -5,14 +5,16 @@
     <div v-if="status != 1" class="plan-result">
       <div class="result-top">
         <h3>效果预估</h3>
-        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准，最终支出费用超出【
-          <span v-if="item.needPayAmount">
+        <span>以下为预估效果，仅供参考；实际效果以全网最终上报专资数据为准。
+          <!-- 最终支出费用超出【
+          <span v-if="item.needPayAmount || item.needPayAmount == 0 ">
             {{formatNums(item.needPayAmount)}}
           </span>
           <span v-else>
             {{formatNums(item.estimateCostAmount)}}
           </span>
-          】时，您无需补缴任何款项</span>
+          】时，您无需补缴任何款项 -->
+        </span>
       </div>
       <Row class="precept" :gutter="16">
         <Col span="5" class="item">
@@ -57,7 +59,7 @@
         <span>效果不足时允许系统投放更多影片确保曝光效果</span>
       </div>
       <ul class="film-list" :class="[ !arrowloding ? 'film-max' : '']" v-if="planMovies.length > 0">
-        <li @click="filmdetail(it.movieId)" v-for="(it) in planMovies" :key="it.id"
+        <li @click="filmdetail(it.movieId)" v-for="(it) in planMovies" :key="it.movieId"
           :class="['film-item']">
           <div class="film-top">
             <img :onerror="defaultImg" :src="it.image ? it.image : defaultImg" class="film-cover">
@@ -77,8 +79,10 @@
             <p style="opacity: .7">受众性别</p>
             <div v-if="it.genders && it.genders.length > 0">
               <div style="margin-left: 20px" :key="index" v-for="(item, index) in it.genders">
-                <p style="margin-bottom: 10px" v-if="item.k == 'F'">女<span class="ageitem-box">{{item.rate/100}}%</span></p>
-                <p style="margin-bottom: 10px" v-else>男<span class="ageitem-box">{{item.rate/100}}%</span></p>
+                <p style="margin-bottom: 10px" v-if="item.k == 'F'">女<span class="ageitem-box"
+                :style="{width: 60 + (item.rate/100) + 'px'}">{{item.rate/100}}%</span></p>
+                <p style="margin-bottom: 10px" v-else>男<span class="ageitem-box"
+                :style="{width: 60 + (item.rate/100) + 'px'}">{{item.rate/100}}%</span></p>
               </div>
             </div>
             <div v-else>-</div>
@@ -90,7 +94,8 @@
               <dt v-if="it.ages && it.ages.length > 0">
                 <p :style="index != (it.ages.length -1) ? 'margin-bottom: 15px' : ''"
                    v-for="(item, index) in it.ages" :key="index">{{ageTypeMap(item.key)}}
-                  <span class="ageitem-box">{{item.text}}%</span>
+                  <span class="ageitem-box"
+                  :style="{width: 60 + (item.text/1) + 'px'}">{{item.text}}%</span>
                 </p>
               </dt>
               <dt style="margin-left: 20px; margin-top: 10px" v-else>-</dt>
@@ -121,6 +126,7 @@
       <div class="result-top">
         <h3>覆盖范围</h3>
         <span class="custom" @click="exportData">导出影院</span>
+        <Xlsx  ref="down" :id="$route.params.id" />
       </div>
       <div class="cinema-box">
         <div class="cinema-right">
@@ -182,16 +188,7 @@
               </template>
             </Table>
 
-            <Page :total="total" v-if="total>0" class="btnCenter"
-              :current="pageIndex"
-              :page-size="pageSize"
-              :page-size-opts="[6, 20, 50, 100]"
-              show-total
-              show-sizer
-              show-elevator
-              :transfer = "true"
-              @on-change="sizeChangeHandle"
-              @on-page-size-change="currentChangeHandle"/>
+            <pagination :pageList="pageList" :total="total" @uplist="uplists"></pagination>
           </div>
         </div>
       </div>
@@ -206,7 +203,7 @@
           <Col :span="2"><span>计划名称:</span></Col>
           <Col :span="10"><span>{{item.name}}</span></Col>
           <Col :span="2"><span>广告片:</span></Col>
-          <Col :span="10"><span>{{item.videoName}}</span></Col>
+          <Col :span="10"><span>{{item.videoName || '暂无'}}</span></Col>
         </Row>
         <Row :gutter="16">
           <Col :span="2"><span>投放周期:</span></Col>
@@ -223,36 +220,37 @@
         <Row :gutter="16" style="height: 126px">
           <Col :span="2"><span>定向设置:</span></Col>
           <Col :span="22">
-            <Row :gutter="16">
+            <Row :gutter="16" v-if="headerValue.cityCustom">
               <Col :span="2"><span>覆盖城市</span></Col>
-              <Col :span="10">
-                <div v-if="headerValue.cityCustom">
+              <Col :span="20">
+                <div>
                   <span>共{{length}}个
-                    <b style="margin-left: 5px">|</b> 
+                    <!-- <b style="margin-left: 5px">|</b>  -->
                   </span>
-                  <span style="margin-left: 5px" v-for="it in citynums" :key="it.sort">{{it.gradeName}}
+                  <!-- <span style="margin-left: 5px" v-for="it in citynums" :key="it.sort">{{it.gradeName}}
                     <b style="margin-left: 5px">|</b> 
-                  </span>
+                  </span> -->
                 </div>
-                <div v-else>
-                  <span v-if="headerValue.allNation">全国</span>
-                  <p v-else>
-                    <span>
-                      {{citys(headerValue.deliveryCityTypes)}}
-                    </span>
-                  </p>
+              </Col>
+            </Row>
+            <Row  :gutter="16" v-else>
+              <Col :span="2"><span>覆盖影院</span></Col>
+              <Col :span="10">
+                <div>
+                  <span>共{{(headerValue.deliveryCinemas || []).length}}个
+                    <b style="margin-left: 5px"></b> 
+                  </span>
+                  <a v-if='(headerValue.deliveryCinemas || []).length > 0' style='font-size: 18px' :href='herf' download='影院数据' >影院数据</a>
                 </div>
               </Col>
             </Row>
             <Row :gutter="16">
               <Col :span="2"><span>受众性别</span></Col>
-              <Col :span="6">
+              <Col :span="9">
                 <span>{{sexs(headerValue)}}</span>
               </Col>
               <Col :span="2"><span>受众年龄</span></Col>
-              <Col :span="6"><span>{{ages(headerValue)}}</span></Col>
-              <Col :span="2"><span>影片类型</span></Col>
-              <Col :span="6"><span>{{types(headerValue)}}</span></Col>
+              <Col :span="10"><span>{{ages(headerValue)}}</span></Col>
             </Row>
           </Col>
         </Row>
@@ -263,13 +261,13 @@
               自定义影片
             </span>
             <span v-else>
-              系统智能匹配
+              全部影片通投
             </span>
           </Col>
         </Row>
       </Row>
     </div>
-    <Xlsx v-if="status != 1" ref="down" :id="$route.params.id" />
+    
   </div>
 </template>
 
@@ -280,12 +278,13 @@ import Number from '@/components/number.vue'
 import { orienteering, adverdetail, getcinemas, getchains,
   getcities, getprovinces } from '@/api/popPlan.ts'
 import { toMap } from '@/fn/array.ts'
-import { uniq } from 'lodash'
+import { uniq, uniqBy } from 'lodash'
 import { formatCurrency } from '@/fn/string.ts'
 import moment from 'moment'
 import Header from './header.vue'
 import Exportfile from '../vadver/exportfile.vue'
 import Xlsx from '../vadver/downxsxl.vue'
+import pagination from '@/components/page.vue'
 
 const statusMap =  (list: any[]) => toMap(list, 'code', 'text')
 const timeFormat = 'YYYY-MM-DD'
@@ -294,7 +293,8 @@ const timeFormat = 'YYYY-MM-DD'
     Number,
     Header,
     Exportfile,
-    Xlsx
+    Xlsx,
+    pagination
   }
 })
 export default class Apps extends ViewBase {
@@ -318,6 +318,11 @@ export default class Apps extends ViewBase {
     provinceCount: '',
     cityCount: ''
   }
+
+  pageList = {
+    pageIndex: 1,
+    pageSize: 6
+  }
   ageTypeList: any = []
   tags: any = []
   deliveryCityTypeList: any = []
@@ -332,6 +337,10 @@ export default class Apps extends ViewBase {
     } else {
       return false
     }
+  }
+
+  get downsrc() {
+    return `/xadvert/plans/${this.$route.params.id}/export-cinemas`
   }
 
   get columns() {
@@ -417,6 +426,11 @@ export default class Apps extends ViewBase {
     return 'this.src="' + require('../assets/error.png') + '"'
   }
 
+  uplists(size: any) {
+    this.pageList.pageIndex = size
+    this.seach()
+  }
+
   filmdetail(id: any) {
     this.$router.push({
       name: 'film-movie',
@@ -452,8 +466,8 @@ export default class Apps extends ViewBase {
   tages(id: any) {
     this.tag = id
     this.name = ''
-    this.pageIndex = 1
-    this.pageSize = 6
+    this.pageList.pageIndex = 1
+    this.pageList.pageSize = 6
     this.seach()
   }
 
@@ -487,6 +501,10 @@ export default class Apps extends ViewBase {
     }).map((it: any) => it.text).join(' | ')
   }
 
+  get herf() {
+    return `${VAR.ajaxBaseUrl}/xadvert/plans/${this.$route.params.id}/export-cinemas`
+  }
+
   movieMap(val: any) {
     if (!val) {
       return '-'
@@ -505,12 +523,14 @@ export default class Apps extends ViewBase {
         ...data.item
       }
       this.length = (data.cities || []).length
-      const citynums = uniq((data.cities || []).map((it: any) => {
+      const citylength = ['票仓城市Top10', '一线城市', '二线城市', '三线城市', '四线城市', '五线城市']
+      const citynums = uniqBy((data.cities || []), 'gradeName').map((it: any) => {
+        const index = citylength.findIndex((item: any) => item == it.grade)
         return {
           gradeName: it.gradeName,
-          sort: it.sort
+          sort: index
         }
-      }))
+      })
       this.citynums = citynums.sort((a: any, b: any) => {
         return a.sort - b.sort
       })
@@ -534,9 +554,10 @@ export default class Apps extends ViewBase {
         })
         return {
           ...it,
-          ages: names
+          ages: (names || []).slice(0, 2),
         }
       })
+      this.planMovies = this.planMovies.slice(0, 3)
     } catch (ex) {
       (this.$Spin as any).hide()
       this.handleError(ex)
@@ -546,13 +567,13 @@ export default class Apps extends ViewBase {
 
   // 每页数
   sizeChangeHandle(val: any) {
-    this.pageIndex = val
+    this.pageList.pageIndex = val
     this.seach()
   }
 
   // 当前页
   currentChangeHandle(val: any) {
-    this.pageSize = val
+    this.pageList.pageSize = val
     this.seach()
   }
 
@@ -613,8 +634,8 @@ export default class Apps extends ViewBase {
     try {
       const { data } = await getcinemas(this.$route.params.id, {
         name: this.name,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -627,8 +648,8 @@ export default class Apps extends ViewBase {
     try {
       const { data } = await getprovinces(this.$route.params.id, {
         name: this.name,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -641,8 +662,8 @@ export default class Apps extends ViewBase {
     try {
       const { data } = await getcities(this.$route.params.id, {
         name: this.name,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -655,8 +676,8 @@ export default class Apps extends ViewBase {
     try {
       const { data } = await getchains(this.$route.params.id, {
         name: this.name,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -668,7 +689,7 @@ export default class Apps extends ViewBase {
   edit() {
     this.$router.push({
       name: 'pop-planlist-edit',
-      params: {id: '0', setid: this.headerValue.id}
+      params: {step: '0', setid: this.headerValue.id}
     })
   }
 }
@@ -677,4 +698,21 @@ export default class Apps extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import './index.less';
+/deep/ .page-list {
+  padding: 0;
+  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+    color: #00202d;
+  }
+  .ivu-page-item {
+    a {
+      color: #00202d;
+    }
+  }
+  .ivu-page-item.ivu-page-item-active {
+    background: #00202d;
+    a {
+      color: #fff;
+    }
+  }
+}
 </style>

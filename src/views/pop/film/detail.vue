@@ -20,12 +20,12 @@
     </dl>
 
     <div class="form detail-inner">
-      <p><label>名称：</label><em>{{item.name}}</em></p>
-      <p><label>客户：</label><em>{{item.customerName}}</em></p>
-      <p><label>品牌：</label><em>{{item.brandName}}</em></p>
-      <p><label>产品：</label><em>{{item.productName}}</em></p>
+      <p><label>名称：</label><em>{{item.name || '-'}}</em></p>
+      <p><label>客户：</label><em>{{item.customerName || '-'}}</em></p>
+      <p><label>品牌：</label><em>{{item.brandName || '-'}}</em></p>
+      <p><label>产品：</label><em>{{item.productName || '-'}}</em></p>
       <p><label>广告片时长规格：</label><em>{{item.specification}}s</em></p>
-      <p><label>广告片下载地址：</label><em>{{item.srcFileUrl}}</em></p>
+      <p><label>广告片下载地址：</label><em>{{item.srcFileUrl || '-'}}</em></p>
 
       <div class="create-submit-btn">
          <Button v-if="status != 4" v-auth="'promotion.ad-video#edit'" type="primary" 

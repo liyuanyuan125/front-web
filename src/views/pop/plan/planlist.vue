@@ -236,7 +236,7 @@ export default class Plan extends ViewBase {
       specification: 15,
       status: 11,
       videoId: 273,
-      videoLogo: '//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bka7cktjqctg008ubkq0.png',
+      videoLogo: this.defaultImg,
       videoName: '示例广告片',
     }
   }
@@ -267,7 +267,7 @@ export default class Plan extends ViewBase {
   }
 
   get defaultImg() {
-    return 'this.src="' + require('./assets/error.png') + '"'
+    return 'this.src="' + require('./assets/mock.png') + '"'
   }
 
   async tableList() {
@@ -525,10 +525,13 @@ export default class Plan extends ViewBase {
   /deep/ .ivu-input,
   /deep/ .ivu-input-wrapper {
     border-radius: 5px 0 0 5px;
+    .ivu-icon-ios-search {
+      margin-top: -2px;
+    }
   }
   /deep/ .ivu-select-selection {
-    /deep/ .ivu-icon {
-      padding-right: 5px;
+    .ivu-select-arrow {
+      margin-right: 10px;
     }
   }
   /deep/ .ivu-select-placeholder,
@@ -626,9 +629,6 @@ export default class Plan extends ViewBase {
   }
   .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
     background: rgba(255, 255, 255, 0.5);
-  }
-  .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
-    background: rgba(0, 0, 0, 0);
   }
   .ivu-table-body .ivu-table-column-center,
   .ivu-table-body .ivu-table-column-left {
@@ -753,6 +753,9 @@ export default class Plan extends ViewBase {
       margin-top: 10px;
     }
   }
+}
+/deep/ .ivu-checkbox-checked .ivu-checkbox-inner {
+  background: #00202d;
 }
 </style>
 

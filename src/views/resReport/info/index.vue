@@ -87,7 +87,7 @@ const toolTip: any = {
 })
 export default class Index extends ViewBase {
   form: any = {
-    xadvertOrderId: 111
+    xadvertOrderId: 10
   }
 
   tooltipStyles = tooltipStyles
@@ -235,15 +235,13 @@ export default class Index extends ViewBase {
    * @param typeIndex 当前类别下标
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
-    if (this.form.xadvertOrderId && this.form.xadvertOrderId !== '') {
-      const mockObj = {
-        effectType: this.form.xadvertOrderId
-      }
+    this.resetData()
+    if ( this.form.xadvertOrderId && this.form.xadvertOrderId !== '' ) {
       try {
-        const { data } = await getTrend(10, { ...mockObj })
+        const { data } = await getTrend(this.form.xadvertOrderId)
 
         const items = data.item || null
-        if (!items) {
+        if ( !items || items.length === 0 ) {
           this.chart1.initDone = true
           this.chart2.initDone = true
           this.chart3.initDone = true
@@ -335,10 +333,6 @@ export default class Index extends ViewBase {
   }
 
   async handleChange() {
-    this.loading = true
-    this.chart1.initDone = false
-    this.chart2.initDone = false
-    this.chart3.initDone = false
     this.resetData()
     await this.getChartsData('', 0)
   }
@@ -348,11 +342,40 @@ export default class Index extends ViewBase {
   }
 
   resetData() {
-    this.chart1.dataList = []
+    this.loading = true
+    this.chart1.initDone = false
+    this.chart2.initDone = false
+    this.chart3.initDone = false
+    this.chart1.dataList = [
+      {
+        data: [],
+        date: []
+      },
+      {
+        data: [],
+        date: []
+      },
+      {
+        data: [],
+        date: []
+      }
+    ]
+    this.chart2.dict3 = []
+    this.chart2.dataList = [
+      { type: 'bar', data: [], barMaxWidth: '20' },
+      { type: 'bar', data: [], barMaxWidth: '20' },
+      { type: 'bar', data: [], barMaxWidth: '20' }
+    ]
+    this.chart3.dict3 = []
+    this.chart3.dataList = [
+      { type: 'bar', data: [], barMaxWidth: '20' },
+      { type: 'bar', data: [], barMaxWidth: '20' },
+      { type: 'bar', data: [], barMaxWidth: '20' }
+    ]
   }
 
-  @Watch('xadvertOrderId')
-  watchId(value: number | string) {
+  @Watch('form.xadvertOrderId')
+  watchId(value: number) {
     this.getChartsData('', 0)
   }
 }

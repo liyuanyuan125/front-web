@@ -5,7 +5,9 @@
         <Form :model="form" ref="dataform" label-position="left" :rules="rule" :label-width="100" class="edit-input forms">
           <PreceptHead v-model="deatilItem"/>
           <h3 class="layout-titles">投放影片
-              <span class="item-detail">优先投放 {{filmList.length}} 部</span>
+              <span class="item-detail">投放周期内热映的重点参考影片TOP{{filmList.length}},
+                最终投放以各地影院排片为准
+              </span>
               <!-- <span class="custom">自定义投放电影</span> -->
           </h3>
           <div class="item-top">
@@ -31,8 +33,11 @@
                   <p style="opacity: .7">受众性别: </p>
                   <div v-if="it.genders && it.genders.length > 0">
                     <div style="margin-left: 20px" :key="index" v-for="(item, index) in it.genders">
-                      <p style="margin-bottom: 10px" v-if="item.k == 'F'">女<span class="ageitem-box">{{item.rate/100}}%</span></p>
-                      <p style="margin-bottom: 10px" v-else>男<span class="ageitem-box">{{item.rate/100}}%</span></p>
+                      <p style="margin-bottom: 10px" v-if="item.k == 'F'">女<span class="ageitem-box" 
+                      :style="{width: 60 + (item.rate/100) + 'px'}">{{item.rate/100}}%</span></p>
+                      <p style="margin-bottom: 10px" v-else>男<span class="ageitem-box"
+                      :style="{width: 60 + (item.rate/100) + 'px'}"
+                      >{{item.rate/100}}%</span></p>
                     </div>
                   </div>
                   <div v-else>-</div>
@@ -45,7 +50,9 @@
                       <div :style="index != (it.ages.length -1) ? 'margin-bottom: 15px' : ''"
                         v-for="(item, index) in it.ages" :key="index" >
                         <span>{{ageTypeMap(item.key)}}</span>
-                        <span class="ageitem-box">{{item.text}}%</span>
+                        <span class="ageitem-box"
+                          :style="{width: 60 + (item.text * 1) + 'px'}"
+                        >{{item.text}}%</span>
                       </div>
                     </dt>
                     <dt v-else>-</dt>
@@ -135,16 +142,7 @@
                     </template>
                   </Table>
 
-                  <Page :total="total" v-if="total>0" class="btnCenter"
-                    :current="pageIndex"
-                    :page-size="pageSize"
-                    :page-size-opts="[6, 12, 20, 50]"
-                    show-total
-                    show-sizer
-                    show-elevator
-                    :transfer = "true"
-                    @on-change="sizeChangeHandle"
-                    @on-page-size-change="currentChangeHandle"/>
+                  <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
                 </div>
               </div>
             </div>
@@ -177,6 +175,7 @@ import { formatCurrency } from '@/fn/string.ts'
 import Precept from './exprecept.vue'
 import Xlsx from './downxsxl.vue'
 import Collect from '../planlistmodel/collect.vue'
+import pagination from '@/components/page.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
@@ -185,7 +184,8 @@ const timeFormat = 'YYYY-MM-DD'
     Precept,
     PrecepFilm,
     Xlsx,
-    Collect
+    Collect,
+    pagination
   }
 })
 export default class App extends ViewBase {
@@ -209,6 +209,10 @@ export default class App extends ViewBase {
   movieTypeList: any = []
   ageTypeList: any = []
   arrowloding: any = false
+  pageList = {
+    pageIndex: 1,
+    pageSize: 4
+  }
 
   get columns() {
     const tag = ['影院名称', '影院名称', '城市名称', '省份名称']
@@ -300,6 +304,11 @@ export default class App extends ViewBase {
     }
   }
 
+  uplist(size: any) {
+    this.pageList.pageIndex = size
+    this.seach()
+  }
+
   filmdetail(id: any) {
     this.$router.push({
       name: 'film-movie',
@@ -373,6 +382,7 @@ export default class App extends ViewBase {
           ages: names
         }
       })
+      this.filmList = this.filmList.slice(0, 3)
       // const geners = this.filmList.genders.length > 0 ? [this.filmList.genders.sort((a: any, b: any) => {
       //   return a.rate - b.rate
       // })[0]] : []
@@ -388,13 +398,13 @@ export default class App extends ViewBase {
 
   // 每页数
   sizeChangeHandle(val: any) {
-    this.pageIndex = val
+    this.pageList.pageIndex = val
     this.seach()
   }
 
   // 当前页
   currentChangeHandle(val: any) {
-    this.pageSize = val
+    this.pageList.pageSize = val
     this.seach()
   }
 
@@ -414,8 +424,8 @@ export default class App extends ViewBase {
     try {
       const { data } = await getcinemas(this.$route.params.setid, {
         name: this.form.name,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -432,8 +442,8 @@ export default class App extends ViewBase {
     try {
       const { data } = await getprovinces(this.$route.params.setid, {
         name: this.form.name,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -446,8 +456,8 @@ export default class App extends ViewBase {
     try {
       const { data } = await getcities(this.$route.params.setid, {
         name: this.form.name,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -460,8 +470,8 @@ export default class App extends ViewBase {
     try {
       const { data } = await getchains(this.$route.params.setid, {
         name: this.form.name,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize
       })
       this.tableDate = data.items || []
       this.total = data.totalCount
@@ -534,8 +544,8 @@ export default class App extends ViewBase {
   tags(id: any) {
     this.tag = id
     this.form.name = ''
-    this.pageIndex = 1
-    this.pageSize = 6
+    this.pageList.pageIndex = 1
+    this.pageList.pageSize = 6
     this.seach()
   }
 
@@ -574,12 +584,12 @@ export default class App extends ViewBase {
 .layout-titles {
   font-size: 24px;
   font-weight: 500;
-  color: rgba(0, 32, 46, 1);
+  color: #fff;
   margin-left: 30px;
   margin-top: 46px;
   .item-detail {
+    color: #26344b;
     display: inline-block;
-    width: 100px;
     font-size: 14px;
     margin-left: 20px;
   }
@@ -591,6 +601,7 @@ export default class App extends ViewBase {
     height: 37px;
     line-height: 37px;
     text-align: center;
+    color: #26344b;
     background: rgba(240, 245, 248, 1);
     border-radius: 19px;
     opacity: 0.6181;
@@ -644,10 +655,11 @@ export default class App extends ViewBase {
   .ageitem-box {
     margin-left: 8px;
     display: inline-block;
-    padding: 0 26px;
+    padding: 0 24px;
     background: #00202d;
+    text-align: center;
     color: #fff;
-    width: 100px;
+    width: 80px;
     height: 22px;
     line-height: 20px;
     border-radius: 20px;
@@ -793,7 +805,7 @@ export default class App extends ViewBase {
         font-size: 30px;
         width: 100%;
         text-align: center;
-        color: rgba(0, 32, 45, 1);
+        color: rgba(0, 32, 45, 0.6);
         line-height: 30px;
         margin-top: 30px;
         margin-bottom: 10px;
@@ -801,11 +813,14 @@ export default class App extends ViewBase {
       dt {
         text-align: center;
         font-size: 16px;
-        color: #00202d;
+        color: rgba(0, 32, 45, 0.6);
       }
     }
     .dl-active {
       border-right: 0;
+      dd, dt {
+        color: #00202d;
+      }
     }
     .dl-active::after {
       content: '';
@@ -926,7 +941,7 @@ export default class App extends ViewBase {
   border-radius: 5px;
   min-height: 280px;
   position: relative;
-  /deep/ .ivu-table-header th {
+  .ivu-table-header th {
     height: 60px;
     background: rgba(255, 255, 255, 0.3);
     color: #00202d;
@@ -935,15 +950,15 @@ export default class App extends ViewBase {
       font-size: 14px;
     }
   }
-  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
+  .ivu-table-column-center, .ivu-table-column-left {
     background: rgba(255, 255, 255, 0);
   }
-  /deep/ .ivu-table {
+  .ivu-table {
     background: rgba(255, 255, 255, 0);
   }
-  /deep/ .ivu-table-row {
+  .ivu-table-row {
     background: rgba(255, 255, 255, 0);
-    /deep/ td {
+    td {
       color: #00202d;
       background: rgba(0, 0, 0, 0);
       a {
@@ -952,27 +967,52 @@ export default class App extends ViewBase {
     }
     border-bottom: 2px solid rgba(255, 255, 255, .5);
   }
-  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
+  .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
     background: rgba(255, 255, 255, 0);
   }
-  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
+  .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
     background: rgba(255, 255, 255, 0);
   }
-  /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+  .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
     background: rgba(255, 255, 255, 0);
   }
-  /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
+  .ivu-table-body .ivu-table-column-center, .ivu-table-body .ivu-table-column-left {
     span {
       color: #00202d;
       font-size: 14px;
     }
   }
 
-  /deep/ .ivu-table-tip {
+  .ivu-table-tip {
     line-height: 200px;
-    /deep/ td {
+    td {
       color: #00202d;
       background: rgba(255, 255, 255, 0);
+    }
+  }
+}
+/deep/ .ivu-checkbox-checked .ivu-checkbox-inner {
+  background: #fff;
+  &::after {
+    border: 2px solid #00202d;
+    border-top: 0;
+    border-left: 0;
+  }
+}
+/deep/ .page-list {
+  padding: 0;
+  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+    color: #00202d;
+  }
+  .ivu-page-item {
+    a {
+      color: #00202d;
+    }
+  }
+  .ivu-page-item.ivu-page-item-active {
+    background: #00202d;
+    a {
+      color: #fff;
     }
   }
 }

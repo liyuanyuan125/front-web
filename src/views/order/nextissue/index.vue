@@ -11,7 +11,7 @@
        <Col span='6' class='data'> <Date-picker
                   type="date"
                   v-model="query.offDate"
-                  on-change="selectTime"
+                  @on-change="seachs"
                   placeholder="选择日期"
                   class="inp-style-center"
                 ></Date-picker></Col>
@@ -27,7 +27,7 @@
              :loading="loading"
              :remote-method="remoteMethod"
              @on-clear="movieList = []"
-             @on-change="seachs">
+             @on-change="aes">
               <Option
                 v-for="item in movieList"
                 :key="item.id"
@@ -94,7 +94,7 @@ const timeFormat = 'YYYY-MM-DD'
 export default class Main extends ViewBase {
   query: any = {
     cinemaId: null,
-    offDate: new Date(),
+    offDate: null,
   }
 
 
@@ -109,19 +109,20 @@ export default class Main extends ViewBase {
   objArray: any = []
   deArray: any = []
   idsArray: any = []
+  aaa: any = 0
 
   async mounted() {
-    const cinid = await getcinid()
+    // const cinid = await getcinid()
 
-    if (cinid.data.cinemaId == 0) {
-      info('当前用户没有关联影院')
-      this.query.cinemaId = cinid.data.cinemaId
-    } else {
-      this.query.cinemaId = cinid.data.cinemaId
-      this.remoteMethod(cinid.data.cinemaName)
-    }
+    // if (cinid.data.cinemaId == 0) {
+    //   info('当前用户没有关联影院')
+    //   this.query.cinemaId = cinid.data.cinemaId
+    // } else {
+    //   this.query.cinemaId = cinid.data.cinemaId
+    //   this.remoteMethod(cinid.data.cinemaName)
+    // }
 
-
+    this.query.offDate = new Date()
     this.seach()
   }
 
@@ -145,36 +146,27 @@ export default class Main extends ViewBase {
 
 
   seachs() {
+    this.aaa = this.query.cinemaId
     if (this.query.cinemaId == undefined) {
       return
     }
     this.seach()
   }
 
+
   async allover(id: any) {
-    this.objArray = ((await queryList(this.query)).data.items || []).map((it: any , index: any) => {
-        return {
-          id: it.id,
-          con: (it.details || []).map((item: any) => {
-            return item.orderId
-          })
-        }
-    })
-    this.deArray = []
-    for (const key in  this.objArray) {
-      if (1 == 1) {
-        for (const j in  this.objArray[key].con) {
-          if (1 == 1) {
-            this.deArray.push({id : this.objArray[key].id , orderId : this.objArray[key].con[j]})
-          }
-        }
-      }
-    }
-
-
     try {
       await  confirm('是否确认将该影院所有广告状态设为下刊？')
-      await allover(this.deArray)
+      if (this.query.offDate.length == 8) {
+        this.query.offDate = this.query.offDate
+      } else {
+        const a  = moment(this.query.offDate.getTime()).format(timeFormat).split('-')
+        this.query.offDate = a[0] + a[1] + a[2]
+      }
+      await allover({
+        offDate: Number(this.query.offDate),
+        cinemaId: this.query.cinemaId
+      })
       this.$Message.success({
         content: `修改成功`,
       })
@@ -189,14 +181,14 @@ export default class Main extends ViewBase {
     try {
       if (status == 1) {
         await confirm('您确定修改当前状态信息吗？')
-        await oneover (id, {orderId : orderid})
+        await oneover ({id, orderId : orderid})
         this.$Message.success({
           content: `更改成功`,
         })
         this.seach()
       } else if (status == 2) {
         await confirm('您确定修改当前状态信息吗？')
-        await oneout (id, {orderId : orderid})
+        await oneout ({id, orderId : orderid})
         this.$Message.success({
           content: `更改成功`,
         })
@@ -206,14 +198,74 @@ export default class Main extends ViewBase {
     }
   }
 
-  async seach() {
+  async aes() {
+    if (this.query.cinemaId == undefined) {
+      this.query.cinemaId = this.aaa
+    }
     try {
+
+      if (this.query.offDate == '') {
+        return
+      }
+      if (String(this.query.offDate).length == 8) {
+        this.query.offDate = this.query.offDate
+      } else {
+
+        const a  = moment(this.query.offDate.getTime()).format(timeFormat).split('-')
+        this.query.offDate = a[0] + a[1] + a[2]
+      }
+      const data = this.query.offDate
+
       if (this.query.cinemaId == undefined) {
         info('请选择影院')
         return
       }
+
       // 获取上刊列表
-      const datalist = await queryList(this.query)
+      const datalist = await queryList({cinemaId: this.query.cinemaId, offDate: data})
+      this.itemlist = datalist.data.items
+      this.asd = false
+
+    } catch (ex) {
+      this.handleError(ex)
+    } finally {
+    }
+  }
+
+  async seach() {
+    try {
+
+      if (this.query.offDate == '') {
+        return
+      }
+      if (String(this.query.offDate).length == 8) {
+        this.query.offDate = this.query.offDate
+      } else {
+
+        const a  = moment(this.query.offDate.getTime()).format(timeFormat).split('-')
+        this.query.offDate = a[0] + a[1] + a[2]
+      }
+      const data = this.query.offDate
+      // 获取默认影院
+      // if (this.query.cinemaId != this.query.cinemaId) {
+        const cinid = await getcinid(this.query.offDate)
+
+        if (cinid.data.cinemaId == 0) {
+          info('当前用户没有关联影院')
+          this.query.cinemaId = cinid.data.cinemaId
+        } else {
+          this.query.cinemaId = cinid.data.cinemaId
+          this.remoteMethod(cinid.data.cinemaName)
+        }
+      // }
+
+      if (this.query.cinemaId == undefined) {
+        info('请选择影院')
+        return
+      }
+
+      // 获取上刊列表
+      const datalist = await queryList({cinemaId: this.query.cinemaId, offDate: data})
       this.itemlist = datalist.data.items
       this.asd = false
 
@@ -343,6 +395,10 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-select-input {
   margin-top: 3px;
+  color: #00202d;
+  &::-webkit-input-placeholder {
+    color: #00202d;
+  }
 }
 /deep/ .ivu-date-picker {
   width: 100%;

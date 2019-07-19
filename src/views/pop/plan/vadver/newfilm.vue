@@ -27,15 +27,7 @@
         </span>
     </div>
     <!-- <updateschedule ref="updatetime" @done="updatetime" /> -->
-    <Page :total="total" v-if="total>0" class="btnCenter"
-        :current="form.pageIndex"
-        :page-size="form.pageSize"
-        :page-size-opts="[4, 8, 16, 24]"
-        show-total
-        show-sizer
-        show-elevator
-        @on-change="sizeChangeHandle"
-        @on-page-size-change="currentChangeHandle"/>
+    <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
   </div>
 </template>
 
@@ -49,6 +41,7 @@ import { toast, warning, confirm } from '@/ui/modal.ts'
 import moment from 'moment'
 import { uniq, uniqBy } from 'lodash'
 import updateschedule from './updateschedule.vue'
+import pagination from '@/components/page.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 const keepExclusion = <T>(
@@ -66,7 +59,8 @@ const keepExclusion = <T>(
 }
 @Component({
   components: {
-    updateschedule
+    updateschedule,
+    pagination
   }
 })
 export default class DlgEditCinema extends ViewBase {
@@ -94,6 +88,11 @@ export default class DlgEditCinema extends ViewBase {
   checkId: any = []
   checkObj: any = []
 
+  pageList = {
+    pageIndex: 1,
+    pageSize: 4
+  }
+
   formatDate(data: any) {
     const years = data + ''
     if (data && years.length == 4) {
@@ -104,6 +103,11 @@ export default class DlgEditCinema extends ViewBase {
           data + ''
         ).substr(6, 2)}`
       : '暂无'
+  }
+
+  uplist(size: any) {
+    this.pageList.pageIndex = size
+    this.seach()
   }
 
   created() {
@@ -156,7 +160,7 @@ export default class DlgEditCinema extends ViewBase {
         totalCount,
         movies
         } } = await moviefind(clean({
-          ...this.form,
+          ...this.pageList,
         }))
       this.data = (movies || []).map((it: any) => {
         return {
@@ -438,15 +442,14 @@ export default class DlgEditCinema extends ViewBase {
     position: relative;
     color: #fff;
     &::after {
-      content: '\2713';
-      color: #fff;
+      content: '';
       position: absolute;
-      right: -8px;
-      top: -8px;
-      border: 1px solid #00202d;
-      background: #00202d;
-      width: 18px;
-      height: 18px;
+      right: -16px;
+      top: -16px;
+      background: url(./assets/sure.png);
+      width: 36px;
+      height: 36px;
+      background-size: 36px;
       border-radius: 50%;
       text-align: center;
       line-height: 16px;
@@ -493,7 +496,7 @@ export default class DlgEditCinema extends ViewBase {
   }
 }
 .check-films {
-  margin-left: 10px;
+  margin-left: 20px;
   margin-bottom: 20px;
 }
 .default-btn {
@@ -512,5 +515,22 @@ export default class DlgEditCinema extends ViewBase {
 .film-no {
   text-align: center;
   padding-top: 50px;
+}
+/deep/ .page-list {
+  padding: 0;
+  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+    color: #00202d;
+  }
+  .ivu-page-item {
+    a {
+      color: #00202d;
+    }
+  }
+  .ivu-page-item.ivu-page-item-active {
+    background: #00202d;
+    a {
+      color: #fff;
+    }
+  }
 }
 </style>

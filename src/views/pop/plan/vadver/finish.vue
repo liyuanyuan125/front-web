@@ -2,7 +2,7 @@
   <div class="plan-box" v-if="item">
     <h3 class="title">计划创建完毕，等待资源确认</h3>
     <div class="audit">
-      平台会由专业映前投放专家对您的广告计划进行调整,请耐心等待。
+      平台会由专业映前投放专家对您的广告计划进行调整，请耐心等待，或联系商务人员
     </div>
     <div class="finish-detail">
       <dl>
@@ -29,7 +29,7 @@
             <Number :flag="2"  :addNum="item.estimatePersonCount" />
           </p>
         <dt>
-          <img src="./assets/renqun.png" width="73" height="66px"/>
+          <img src="./assets/renqun.png" width="100" height="66px"/>
         </dt>
       </dl>
       <dl>
@@ -131,15 +131,16 @@ export default class Apps extends ViewBase {
 @import '~@/site/lib.less';
 
 .plan-box {
-  margin: 0 40px;
+  margin: 0 30px;
 }
 .title {
   text-align: center;
-  font-size: 26px;
+  font-size: 30px;
   margin-top: 40px;
 }
 .audit {
   text-align: center;
+  font-size: 18px;
   margin-top: 32px;
   margin-bottom: 32px;
 }
@@ -149,11 +150,13 @@ export default class Apps extends ViewBase {
 }
 .btn-save {
   width: 200px;
+  font-weight: 500;
   .button-style(#fff, #00202d);
   border-radius: 25px;
 }
 .btn-next {
   width: 200px;
+  font-weight: 500;
   .button-style(#00202d, rgba(0, 0, 0, 0));
   vertical-align: middle;
   border-radius: 25px;
