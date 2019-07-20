@@ -3,9 +3,9 @@
     <div class="banner-box flex-box">
       <p>第三方检测报告</p>
       <h1>{{data.item6}}</h1>
-      <a href="javascript:;"
+      <!-- <a href="javascript:;"
          class="show-more-link"
-         @click="selectPlan">查看其它计划</a>
+         @click="selectPlan">查看其它计划</a> -->
     </div>
     <div class="dsc-box">
       <div class="cell">
@@ -50,7 +50,7 @@ export default class BannerCard extends Vue {
   min-height: 400px;
   border-radius: 5px;
   .banner-box {
-    min-height: 280px;
+    min-height: 316px;
     flex-flow: column;
     justify-content: center;
     align-items: flex-start;

@@ -21,6 +21,9 @@
           <p>
             <label>总座数量</label> {{items.seatCount}}
           </p>
+           <p>
+            <label style="width: 160px">上下刊短信通知手机号 </label> {{items.contactTel || '-'}}
+          </p>
         </Col>
       </Row>
     </div>

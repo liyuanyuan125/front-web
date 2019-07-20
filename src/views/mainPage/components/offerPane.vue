@@ -7,7 +7,7 @@
       </li>
     </ul>
     <template slot="head-side">
-      <Button type="primary" class="offer-button">加入投放</Button>
+      <!-- <Button type="primary" class="offer-button">加入投放</Button> -->
     </template>
   </Pane>
 </template>
@@ -37,12 +37,25 @@ export default class OfferPane extends Vue {
 }
 
 .offer-list {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   font-size: 14px;
   padding: 0 30px 30px;
   list-style: disc inside;
   line-height: 2;
+  &:empty {
+    height: 98px;
+    &::before {
+      content: '暂无报价';
+      position: absolute;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 18px;
+      color: #999;
+    }
+  }
 }
 
 .offer-item {

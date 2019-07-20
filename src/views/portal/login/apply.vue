@@ -1,212 +1,164 @@
 <template>
   <loginLayout>
-      <div class="main-wrap">
+      <div class="main-wrap ">
           <div class="tablist">
-            <p class="systerm flex-box">
+            <p class="systerm">
                 <span>申请加入</span>
-                <em>已有账户？<router-link :to="{name: 'tologin'}">立即登录</router-link></em>
             </p>
           </div>
           <Form :model="form" :rules="rules" ref="form"
             @submit.native.prevent="submit" novalidate>
             <FormItem prop="companyName">
-              <Input v-model="form.companyName" placeholder="企业名称">
-                <i class="iconfont icon-qiye" slot="prefix" />
+              <Input type="text" v-model="form.companyName" autocomplete="off" disableautocomplete placeholder="企业名称">
+                <i class="iconfont icon-qiye" slot="prefix"><font></font></i>
               </Input>
             </FormItem>
-            <FormItem prop="adress" >
-              <Input v-model="form.adress" placeholder="企业所在地">
-                <i class="iconfont icon-suozaidi" slot="prefix" />
+            <FormItem prop="contactName" >
+              <Input  v-model="form.contactName" placeholder="联系人姓名">
+                <i class="iconfont icon-lianxiren" slot="prefix"><font></font></i>
               </Input>
             </FormItem>
-            <FormItem prop="name" >
-              <Input  v-model="form.name" placeholder="联系人姓名">
-                <i class="iconfont icon-lianxiren" slot="prefix" />
+            <FormItem prop="contactTel">
+              <Input  v-model="form.contactTel" placeholder="联系电话" :maxlength="11">
+                <i class="iconfont icon-lianxidianhua" slot="prefix"><font></font></i>
               </Input>
             </FormItem>
-            <FormItem prop="tel">
-              <Input  v-model="form.tel" placeholder="联系电话">
-                <i class="iconfont icon-lianxidianhua" slot="prefix" />
-              </Input>
+            <FormItem prop="area" >
+               <AreaSelect v-model="form.area" ref="areas"  :max-level="2" no-self/>
+               <i class="iconfont icon-suozaidi" slot="prefix"><font></font></i>
             </FormItem>
-            <FormItem prop="info" class="text-area">
-              <Input type="textarea"  v-model="form.info" :rows="3" placeholder="请简单备注您的需求"></Input>
+            <FormItem prop="remark" class="text-area">
+              <Input type="textarea"  v-model="form.remark" :rows="3" placeholder="请简单备注您的需求"></Input>
             </FormItem>
             <Button type="primary" html-type="submit" class="submit" long :disabled="submitDisabled">提交申请</Button>
+            <p class="to-apply">
+               已有账户？<router-link :to="{name: 'tologin'}">立即登录</router-link>
+            </p>
           </Form>
       </div>
     </loginLayout>
 </template>
 
 <script lang='ts'>
-import { Component } from 'vue-property-decorator'
+import { Component, Watch} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { login } from '@/api/auth'
+import { login, getBoards } from '@/api/auth'
 import setUserByData from '@/util/setUserByData'
 import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
+import AreaSelect from '@/components/areaSelect'
+
+
 @Component({
-    components: {
-        loginLayout
-    }
+  components: {
+    loginLayout,
+    AreaSelect,
+  }
 })
 export default class Main extends ViewBase {
-  form = {
+  form: any = {
     companyName: '',
-    adress: '',
-    name: '',
-    tel: '',
-    info: ''
+    area: [],
+    provinceId: 0,
+    provinceName: '',
+    cityId: 0,
+    cityName: '',
+    contactName: '',
+    contactTel: '',
+    remark: ''
   }
-  nameError = ''
-  emailError = ''
-  passwordError = ''
-
-//   captchaImg = ''
-//   captchaCodeError = ''
 
   submitDisabled = false
 
   rules = {
     companyName: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
-    adress: [{ required: true, message: '请输入地址', trigger: 'blur' }],
-    name: [{ required: true, message: '请输入联系人姓名', trigger: 'blur' }],
-    tel: [{ required: true, message: '请输入联系人电话', trigger: 'blur' }],
-    info: [{ required: true, message: '请输入备注', trigger: 'blur' }],
+    area: [{ required: true, type: 'array', message: '所在地不能为空', trigger: 'change' }],
+    contactName: [{ required: true, message: '请输入联系人姓名', trigger: 'blur' }],
+    contactTel: [{ required: true, message: '请输入联系人电话', trigger: 'blur' }],
+    remark: [{ required: true, message: '请输入备注', trigger: 'blur' }],
     // captchaCode: [{ required: true, message: '请输入图片验证码', trigger: 'blur' }]
   }
-
 
   async submit() {
     const valid = await (this.$refs.form as any).validate()
     if (!valid) {
       return
     }
-
-    this.emailError = ''
-    this.passwordError = ''
-
     this.submitDisabled = true
+    // provinceId provinceName, cityId, cityName
+    const dataList = (this.$refs.areas as any).data
+    let provinceName = null
+    let cityName = null
 
-    // try {
-    //   const postData = { ...this.form }
-    //   const { data } = await login(postData)
-    //   setUserByData({
-    //     ...data,
-    //     systemCode: postData.systemCode
-    //   })
-
-    //   this.$router.push({ name: 'home' })
-    // } catch (ex) {
-    //   ((this as any)[`onLogin${ex.code}`] || this.handleError).call(this, ex)
-    //   this.resetCaptcha()
-    // } finally {
-    //   this.submitDisabled = false
-    // }
+    dataList.map( (item: any) => {
+      if (item.value == this.form.provinceId) {
+        provinceName = item.label
+        item.children.map((it: any) => {
+          if (it.value == this.form.cityId) {
+            cityName = item.label
+          }
+        })
+      }
+    })
+    try {
+      const { data } = await getBoards({
+        ...this.form,
+        provinceName,
+        cityName
+      })
+      this.$router.push({name: 'login'})
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
-
-  onLogin9006201() {
-    this.emailError = '账号不存在'
-  }
-
-  onLogin10002(ex: any) {
-    this.handleError(ex)
+  @Watch('form.area', { deep: true })
+  watchArea(val: number[]) {
+    this.form.provinceId = val[0]
+    this.form.cityId = val[1]
   }
 }
 </script>
 
 <style lang='less' scoped>
 @import '~@/site/lib.less';
-// @import '~@/site/login.less';
 @import '~@/assets/iconFont/iconfont.css';
-
+@import './common.less';
 .main-wrap {
-  width: 450px;
-  background: #fff;
-  padding: 23px 40px 20px;
-  border-radius: 4px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -55%);
-  .tablist {
-    width: 100%;
-    margin-bottom: 20px;
-    .systerm {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      span {
-        font-size: 23px;
-      }
-      em {
-        font-size: 15px;
-      }
-    }
-  }
-  /deep/ input {
-    outline: none;
-    height: 48px;
-    font-size: 15px;
-    border-radius: 10px;
-    border: solid 1px #d0d0d0;
-    &:last-child {
-      padding-left: 16px;
-    }
-    &::placeholder {
-      color: #4a506a;
-    }
-  }
-  /deep/ .ivu-input-with-prefix {
-    padding-left: 40px;
-  }
-  /deep/ .ivu-input-prefix {
-    width: 33px;
-    text-align: right;
-    i {
-      line-height: 48px;
-      font-size: 19px;
-      color: #4a506a;
-    }
-  }
-  /deep/ .ivu-checkbox-wrapper {
-    font-size: 15px;
-  }
+  padding-top: 0;
+  padding-bottom: 30px;
 }
-.submit {
-  border-radius: 25px;
-  height: 47px;
-  background: #4561d7;
-  font-size: 17px;
-  color: #fff;
+.systerm {
+  font-size: 31px;
+  padding: 31px 0 5px;
   text-align: center;
-  border: none;
 }
-.captcha-wrap {
-  position: relative;
-  width: 100%;
+/deep/ .ivu-cascader {
+  .ivu-input {
+    padding-left: 11px;
+  }
 }
-.captcha-img {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  height: 41px;
-  border-left: 1px solid @c-border;
-  cursor: pointer;
+/deep/ .ivu-cascader-arrow {
+  font-size: 22px;
+  color: #fff;
 }
-// /deep/ .ivu-form-item{
-//   margin-bottom: 20px;
-// }
 /deep/ .text-area {
+  overflow: hidden;
   textarea.ivu-input {
+    color: #fff;
+    border: none;
+    background: rgba(16, 23, 44, .6);
     border-radius: 10px;
-    border: solid 1px #d0d0d0;
     padding-left: 12px;
+    font-size: 14px;
     &::placeholder {
-      color: #4a506a;
+      color: #fff;
     }
   }
 }
+.to-apply {
+  padding-top: 18px;
+}
+
 @media screen and(max-height: 600px) {
   .main-wrap {
     position: absolute;

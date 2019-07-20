@@ -38,147 +38,265 @@ export async function dayRanges(query: any = { beginDate: 20191212, endDate: 201
  * @param query 起止时间
  * @param id id
  * @description https://yapi.aiads-dev.com/project/146/interface/api/4533
- * @deprecated 缺少数据，重置日期 http://fapi.aiads-dev.com/person/107028/comments?beginDate=20170112&endDate=20191212
  */
 export async function comment(query: any, id: string = '') {
   const res = await get(`/brand/brands/${id}/comment`, query)
   return res
   return await mockGet(query, {
-    emotion: [
-      {
-        key: 'positive',
-        text: '正面'
-      },
-      {
-        key: 'passive',
-        text: '负面'
-      },
-      {
-        key: 'neutral',
-        text: '中性'
-      }
-    ],
-    dayRanges: [
-      {
-        key: 'yesterday',
-        text: '昨日'
-      },
-      {
-        key: 'last_7_day',
-        text: '最近7天'
-      },
-      {
-        key: 'last_30_day',
-        text: '最近30天'
-      },
-      {
-        key: 'last_90_day',
-        text: '最近90天'
-      }
-    ],
-    item: {
-      totalCount: tid,
-      rate: {
-        neutral: tid,
-        positive: tid,
-        passive: tid
-      },
-      keywords: {
-        yesterday: {
-          // 可能没有value 接口无返回
-          // 'positive|6': [
-          //   {
-          //     name: typeTitle(3, 10),
-          //     value: Math.floor(Math.random() * 100 + 1)
-          //   },
-          // ],
-          'positive|6': [
-            title20
-          ],
-          'passive|6': [
-            title20
-          ]
-        },
-        last_90_day: {
-          'positive|6': [
-            title20
-          ],
-          'passive|6': [
-            title20
-          ]
-        },
-        last_7_day: {
-          'positive|6': [
-            title20
-          ],
-          'passive|6': [
-            title20
-          ]
-        },
-        last_30_day: {
-          'positive|6': [
-            title20
-          ],
-          'passive|6': [
-            title20
-          ]
-        }
-      },
-      dates: [
-        {
-          date: 20190101,
-          positive: {
-            count: tid,
-            trend: tid
-          },
-          passive: {
-            count: tid,
-            trend: tid
-          },
-          neutral: {
-            count: tid,
-            trend: tid
-          }
-        },
-        {
-          date: 20190102,
-          positive: {
-            count: tid,
-            trend: tid
-          },
-          passive: {
-            count: tid,
-            trend: tid
-          },
-          neutral: {
-            count: tid,
-            trend: tid
-          }
-        },
-        {
-          date: 20190103,
-          positive: {
-            count: tid,
-            trend: tid
-          },
-          passive: {
-            count: tid,
-            trend: tid
-          },
-          neutral: {
-            count: tid,
-            trend: tid
-          }
-        }
-      ]
+    rate: {
+      neutral: '4001',
+      positive: '0.4009',
+      passive: '0.1990'
     },
+    keyWords: {
+        yesterDay: {
+            positive: [
+                '支持',
+                '心所向',
+                '喜欢',
+                '大爱',
+                '放心',
+                '尊贵',
+                '很棒',
+                '改进',
+                '希望',
+                '豪华',
+                '驰之以恒',
+                '点赞',
+                '不错',
+                '一起'
+            ],
+            negative: [
+                '出事',
+                '倒霉',
+                '店大欺客',
+                '效率',
+                '不办事',
+                '不守信',
+                '强制',
+                '烂了',
+                '真香',
+                '不信'
+            ]
+        },
+        ninetyDay: {
+            positive: [
+                '支持',
+                '心所向',
+                '放心',
+                '尊贵',
+                '很棒',
+                '官方',
+                '驰之以恒',
+                '点赞',
+                '不错',
+                '一起',
+                '服务'
+            ],
+            negative: [
+                '漏油',
+                '维权',
+                '店大欺客',
+                '金融服务费',
+                '被堵',
+                '强制',
+                '收费',
+                '利之星',
+                '4S店',
+                '西安',
+                '罚款',
+                '曝光',
+                '真香',
+                '不信'
+            ]
+        },
+        sevenDay: {
+            positive: [
+                '服务公约',
+                '支持',
+                '心所向',
+                '放心',
+                '尊贵',
+                '很棒',
+                '官方',
+                '驰之以恒',
+                '点赞',
+                '不错',
+                '一起'
+            ],
+            negative: [
+                '出事',
+                '倒霉',
+                '店大欺客',
+                '效率',
+                '不办事',
+                '不守信',
+                '黑心',
+                '曝光',
+                '强制',
+                '收费',
+                '4S店',
+                '北京'
+            ]
+        },
+        thirtyDay: {
+            positive: [
+                '心所向',
+                '喜欢',
+                '服务公约',
+                '上海',
+                '车展',
+                '大爱',
+                '放心',
+                '尊贵',
+                '点赞',
+                '不错',
+                '一起'
+            ],
+            negative: [
+                '漏油',
+                '维权',
+                '店大欺客',
+                '金融服务费',
+                '被堵',
+                '强制收费',
+                '4S店',
+                '利之星',
+                '罚款',
+                '曝光',
+                '北京'
+            ]
+        }
+    },
+    items: [
+        {
+            date: 20190709,
+            positive: {
+                count: 229454,
+                trend: 1515
+            },
+            passive: {
+                count: 170924,
+                trend: 909
+            },
+            neutral: {
+                count: 142331,
+                trend: 606
+            }
+        },
+        {
+            date: 20190708,
+            positive: {
+                count: 227939,
+                trend: 1595
+            },
+            passive: {
+                count: 170015,
+                trend: 956
+            },
+            neutral: {
+                count: 141725,
+                trend: 638
+            }
+        },
+        {
+            date: 20190707,
+            positive: {
+                count: 226344,
+                trend: 1184
+            },
+            passive: {
+                count: 169059,
+                trend: 845
+            },
+            neutral: {
+                count: 141087,
+                trend: 789
+            }
+        },
+        {
+            date: 20190706,
+            positive: {
+                count: 225160,
+                trend: 1509
+            },
+            passive: {
+                count: 168214,
+                trend: 1078
+            },
+            neutral: {
+                count: 140298,
+                trend: 1005
+            }
+        },
+        {
+            date: 20190705,
+            positive: {
+                count: 223651,
+                trend: 1337
+            },
+            passive: {
+                count: 167136,
+                trend: 955
+            },
+            neutral: {
+                count: 139293,
+                trend: 891
+            }
+        },
+        {
+            date: 20190704,
+            positive: {
+                count: 222314,
+                trend: 1273
+            },
+            passive: {
+                count: 166181,
+                trend: 909
+            },
+            neutral: {
+                count: 138402,
+                trend: 848
+            }
+        },
+        {
+            date: 20190703,
+            positive: {
+                count: 221041,
+                trend: 1339
+            },
+            passive: {
+                count: 165272,
+                trend: 956
+            },
+            neutral: {
+                count: 137554,
+                trend: 893
+            }
+        },
+        {
+            date: 20190702,
+            positive: {
+                count: 219702,
+                trend: 1124
+            },
+            passive: {
+                count: 164316,
+                trend: 803
+            },
+            neutral: {
+                count: 136661,
+                trend: 750
+            }
+        }
+    ]
   })
 }
 
 /**
  * fans
  * @param id id
- * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
+ * @description http://yapi.aiads-dev.com/project/152/interface/api/4046
  */
 export async function fans(id: string = '') {
   const res = await get(`/brand/brands/${id}/portrait`)
@@ -573,11 +691,11 @@ export async function brands(query: any) {
  */
  export async function trend(query: any, id: number | string = '') {
   // 演示 临时参数 nxd 20190621
-  id = '10121'
-  query = {
-    beginDate: '20160520',
-    endDate: '20190620'
-  }
+  // id = '10121'
+  // query = {
+  //   beginDate: '20160520',
+  //   endDate: '20190620'
+  // }
   const res = await get(`/brand/brands/${id}/index`, query)
   return res
   return await mockGet({}, {

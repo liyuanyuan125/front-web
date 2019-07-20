@@ -1,5 +1,9 @@
 <template>
-  <Layout :bubbleList="bubbleList" class="layout">
+  <Layout
+    :bubbleList="bubbleList"
+    :bubbleLink="{ name: 'brand-homedetail-comment', params: { id } }"
+    class="layout"
+  >
     <main class="main-content">
       <div class="header-bar">
         <h3 class="item-title">{{item.name}}</h3>
@@ -39,20 +43,22 @@
           class="button-put"
         >创建广告计划</Button>
 
-        <ul class="plan-count-list">
-          <li class="plan-count-item">
-            <i>待付款</i>
-            <em>{{item.unpay}}</em>
-          </li>
-          <li class="plan-count-item">
-            <i>进行中</i>
-            <em>{{item.onexecute}}</em>
-          </li>
-          <li class="plan-count-item">
-            <i>已完成</i>
-            <em>{{item.finish}}</em>
-          </li>
-        </ul>
+        <router-link :to="{ name: 'pop-planlist' }" class="plan-count-wrap">
+          <ul class="plan-count-list">
+            <li class="plan-count-item">
+              <i>待付款</i>
+              <em>{{item.unpay}}</em>
+            </li>
+            <li class="plan-count-item">
+              <i>进行中</i>
+              <em>{{item.onexecute}}</em>
+            </li>
+            <li class="plan-count-item">
+              <i>已完成</i>
+              <em>{{item.finish}}</em>
+            </li>
+          </ul>
+        </router-link>
       </Pane>
 
       <Pane :title="recommendTitle" class="recommend-pane" v-if="recommendList">
@@ -79,7 +85,10 @@
 
               <div class="recommend-main">
                 <div class="recommend-name text-omit">{{it.name}}</div>
-                <div class="recommend-type text-omit">{{it.runningTime}}分钟 - {{it.typeName}}</div>
+                <div class="recommend-type text-omit">
+                  <span v-if="it.runningTime > 0">{{it.runningTime}}分钟 -</span>
+                  {{it.typeName}}
+                </div>
                 <div class="recommend-director text-omit">导演：{{it.directorName}}</div>
                 <div class="recommend-actor text-omit">主演：{{it.actorName}}</div>
                 <div class="recommend-stats text-omit">
@@ -92,7 +101,7 @@
       </Pane>
 
       <Pane title="热门影片" class="film-pane" v-if="hotFilmGroup">
-        <Tabs v-model="hotFilmTab">
+        <Tabs v-model="hotFilmTab" :animated="false">
           <TabPane v-for="(it, i) in hotFilmGroup" :key="it.name" :name="it.name" :label="it.name">
             <NavSwiper class="film-swiper">
               <swiper-slide
@@ -144,6 +153,7 @@ import { toThousands } from '@/util/dealData'
 import NavSwiper from './navSwiper.vue'
 import { swiperSlide } from 'vue-awesome-swiper'
 import { backImage } from '@/store'
+import { setPageTitle } from '@/util/browser'
 
 import moment from 'moment'
 
@@ -225,6 +235,8 @@ export default class BrandLayout extends ViewBase {
     this.bubbleList = bubbleList
 
     backImage(bigFigure || '')
+
+    setPageTitle(`${item.name}-鲸娱数据`)
   }
 
   @Watch('type')
@@ -363,7 +375,7 @@ export default class BrandLayout extends ViewBase {
     padding-left: 80px;
     background-position: 119px top;
     .fans-rate {
-      left: 52px;
+      left: 32px;
     }
   }
 
@@ -371,13 +383,14 @@ export default class BrandLayout extends ViewBase {
     padding-right: 80px;
     background-position: 37px top;
     .fans-rate {
-      right: 52px;
+      right: 32px;
     }
   }
 
   /deep/ .fans-rate {
     position: absolute;
     top: 8px;
+    width: 80px;
     margin-top: 0;
   }
 }
@@ -398,6 +411,10 @@ export default class BrandLayout extends ViewBase {
   font-size: 14px;
   border-radius: 88px;
   .button-style(#fff, #ca7273);
+}
+
+.plan-count-wrap {
+  color: #fff;
 }
 
 .plan-count-list {

@@ -1,20 +1,24 @@
 <template>
   <div class="bubble-text-list">
     <div v-for="(it, i) in sortList" :key="i" class="bubble-text">
-      <div class="bubble-text-in">{{it}}</div>
+      <router-link :to="link" class="bubble-text-in" v-if="link">{{it}}</router-link>
+      <div class="bubble-text-in" v-else>{{it}}</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { RawLocation } from 'vue-router'
 
-// 后端按照从上到下的排序，但前端按照球的大小排序
-const bubbleSort = [ 3, 1, 4, 0, 5, 2 ]
+// 按照产品的逻辑排序
+const bubbleSort = [ 2, 0, 4, 1, 3, 5 ]
 
 @Component
 export default class BubbleText extends Vue {
   @Prop({ type: Array, default: () => [] }) list!: string[]
+
+  @Prop({ type: [ Object, String ], default: null }) link!: RawLocation
 
   get sortList() {
     const textList = this.list || []
@@ -73,13 +77,16 @@ export default class BubbleText extends Vue {
 }
 
 .bubble-text:nth-child(1) {
-  top: 460px;
-  left: 538px;
+  top: 158px;
+  left: 519px;
   animation-duration: 10s;
   .bubble-text-in {
-    width: 124px;
-    height: 124px;
-    background-color: fade(#255184, 70);
+    width: 84px;
+    height: 84px;
+    line-height: 20px;
+    background-color: fade(#00b0c6, 90);
+    font-size: 16px;
+    padding: 0 12px;
   }
 }
 
@@ -95,6 +102,30 @@ export default class BubbleText extends Vue {
 }
 
 .bubble-text:nth-child(3) {
+  top: 362px;
+  left: 620px;
+  .bubble-text-in {
+    width: 72px;
+    height: 72px;
+    line-height: 18px;
+    background-color: fade(#4b87d0, 80);
+    font-size: 14px;
+    padding: 0 10px;
+  }
+}
+
+.bubble-text:nth-child(4) {
+  top: 460px;
+  left: 538px;
+  animation-duration: 10s;
+  .bubble-text-in {
+    width: 124px;
+    height: 124px;
+    background-color: fade(#255184, 70);
+  }
+}
+
+.bubble-text:nth-child(5) {
   top: 572px;
   left: 534px;
   .bubble-text-in {
@@ -106,23 +137,10 @@ export default class BubbleText extends Vue {
   }
 }
 
-.bubble-text:nth-child(4) {
-  top: 158px;
-  left: 519px;
-  .bubble-text-in {
-    width: 84px;
-    height: 84px;
-    line-height: 20px;
-    background-color: fade(#00b0c6, 90);
-    font-size: 16px;
-    padding: 0 12px;
-  }
-  animation-duration: 10s;
-}
-
-.bubble-text:nth-child(5) {
+.bubble-text:nth-child(6) {
   top: 700px;
   left: 427px;
+  animation-duration: 12s;
   .bubble-text-in {
     width: 80px;
     height: 80px;
@@ -130,20 +148,6 @@ export default class BubbleText extends Vue {
     background-color: fade(#57b4ca, 90);
     font-size: 16px;
     padding: 0 12px;
-  }
-  animation-duration: 12s;
-}
-
-.bubble-text:nth-child(6) {
-  top: 362px;
-  left: 620px;
-  .bubble-text-in {
-    width: 72px;
-    height: 72px;
-    line-height: 18px;
-    background-color: fade(#4b87d0, 80);
-    font-size: 14px;
-    padding: 0 10px;
   }
 }
 </style>

@@ -811,11 +811,6 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
 
-"@types/qs@^6.5.1":
-  version "6.5.3"
-  resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.5.3.tgz#1c3b71b091eaeaf5924538006b7f70603ce63d38"
-  integrity sha512-Jugo5V/1bS0fRhy2z8+cUAHEyWOATaz4rbyLVvcFs7+dXp5HfwpEwzF1Q11bB10ApUqHf+yTauxI0UXQDwGrbA==
-
 "@types/quill@^2.0.2":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@types/quill/-/quill-2.0.2.tgz#38c8b03157ec95d83f557890039ecd650548d1a7"
@@ -2995,6 +2990,11 @@ decamelize@^1.1.0, decamelize@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
   integrity sha1-9lNNFRSCabIDUue+4m9QH5oZEpA=
+
+decimal.js@^10.2.0:
+  version "10.2.0"
+  resolved "https://registry.npm.taobao.org/decimal.js/download/decimal.js-10.2.0.tgz#39466113a9e036111d02f82489b5fd6b0b5ed231"
+  integrity sha1-OUZhE6ngNhEdAvgkibX9awte0jE=
 
 decode-uri-component@^0.2.0:
   version "0.2.0"
@@ -8781,6 +8781,18 @@ unist-util-visit@^1.1.0:
   integrity sha512-AvGNk7Bb//EmJZyhtRUnNMEpId/AZ5Ph/KUpTI09WHQuDZHKovQ1oEv3mfmKpWKtoMzyMC4GLBm1Zy5k12fjIw==
   dependencies:
     unist-util-visit-parents "^2.0.0"
+
+universal-base64@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npm.taobao.org/universal-base64/download/universal-base64-2.1.0.tgz#511af92b3a07340fc2647036045aadb3bedcc320"
+  integrity sha1-URr5KzoHNA/CZHA2BFqts77cwyA=
+
+universal-base64url@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/universal-base64url/download/universal-base64url-1.1.0.tgz#9407e9acc3d3b9c3c39abd200bfa09cf13621782"
+  integrity sha1-lAfprMPTucPDmr0gC/oJzxNiF4I=
+  dependencies:
+    universal-base64 "^2.1.0"
 
 universalify@^0.1.0:
   version "0.1.2"

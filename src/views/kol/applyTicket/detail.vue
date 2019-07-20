@@ -8,29 +8,34 @@
          </Row>
          <Row style='margin-top: 10px;'>
            <Col :span='12'>发票信息</Col>
-           <Col :span='12' style='padding-left: 2%;'>发票信息</Col>
+           <Col :span='12' style='padding-left: 2%;'>申请信息</Col>
          </Row>
          <Row style='margin-top: 10px;'>
             <Row class='sbg'>
               <Col>发票内容：<span v-for='(it , index) in faList' :key='index' v-if='list.itemCode == it.key'>{{it.text}}</span></Col>
+              <Col>发票总额：<span>￥{{list.totalTaxFee}}</span></Col>
               <Col>发票类型：<span v-for='(it , index) in faType' :key='index' v-if='list.invoiceType == it.key'>{{it.text}}</span></Col>
               <Col>发票抬头：<span>{{list.name}}</span></Col>
               <Col>税号：{{list.taxId}}</Col>
-              <Col>地址/电话：{{list.address}} / {{list.telphone}}</Col>
-              <Col>开户行/账号：{{list.accountBank}} / {{list.accountNumber}}</Col>
-              <Col>备注：{{list.memo}}</Col>
+              <Col>地址：{{adsoen}}&nbsp;&nbsp; {{list.address}}</Col>
+               
+              <Col>电话：{{list.telphone}}</Col>
+              <Col>开户行/账号：{{list.accountBank}} &nbsp;&nbsp;&nbsp; {{list.accountNumber}}</Col>
+              <Col><Tooltip   max-width="200" transfer :content="list.memo">
+                    <div class="film-time">备注：{{list.memo}}</div></Tooltip></Col>
             </Row>
             <Row class='sbg' style='margin-left: 4%;'>
               <Col>申请时间：{{applyTime}}</Col>
-              <Col>邮寄地址：{{list.addressDetail}}</Col>
+              <Col>邮寄地址：{{adstwo}}&nbsp;&nbsp; {{list.addressDetail}}</Col>
               <Col>联系人：{{list.contact == null ? '暂无联系人' : list.contact}}</Col>
               <Col>联系电话：{{list.contactTelphone}}</Col>
-              <Col>留言：{{list.comment}}</Col>
+              <Col><Tooltip   max-width="200" transfer :content="list.comment">
+                    <div class="film-time">留言：{{list.comment == '' || list.comment == null ? '暂无留言' : list.comment}}</div></Tooltip></Col>
             </Row>
          </Row>
          <Row style='margin-top: 20px;line-height: 35px;height: 35px;'>快递信息</Row>
          <Row class='fb' style='padding: 10px 20px;'>
-           <Col :span='8'>开票日期：{{billingTime == null ? '暂无开票日期' : billingTime}}</Col>
+           <Col :span='8'>开票日期：{{list.billingTime == null ? '暂无开票日期' : billingTime}}</Col>
            <Col :span='8'>快递公司：{{list.expressCompany == null ? '暂无快递公司' : list.expressCompany}}</Col>
            <Col :span='8'>快递单号：{{list.expressNo == null ? '暂无快递单号' : list.expressNo}}</Col>
          </Row>
@@ -56,6 +61,7 @@
               </Col>
               <Col :span="8">
                 <p >实付金额：<span style='font-size: 20px;font-weight: 500'>¥{{item.totalFee}}</span></p>
+                <p v-if='item.refundFee != 0'>有退款：<span style='font-size: 20px;font-weight: 500'>¥{{item.refundFee}}</span></p>
               </Col>
               <Col :span="3" class="status-btn" @click.prevent.native='view(item.id)'> 详情 </Col>
             </Row>
@@ -76,7 +82,8 @@ import {
   editticket,
   addticket,
   itemlist,
-  histories
+  histories,
+  viewcity
 } from '@/api/ticket'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { toMap } from '@/fn/array'
@@ -116,6 +123,14 @@ export default class Main extends ViewBase {
   items: any = []
   billingTime: any = ''
   applyTime: any = ''
+  proone: any = ''
+  cityone: any = ''
+  cunone: any = ''
+  protwo: any = ''
+  citytwo: any = ''
+  cuntwo: any = ''
+  adsoen: any = ''
+  adstwo: any = ''
 
 
   mounted() {
@@ -139,6 +154,7 @@ export default class Main extends ViewBase {
         this.item = (data.items || []).map((it: any) => {
           return {
             ...it,
+            orderItemList: uniqBy(it.orderItemList, 'kolId'), // 去重一个kol有两个任务
             createTime: moment(it.createTime).format(timeFormat)
           }
         })
@@ -146,10 +162,39 @@ export default class Main extends ViewBase {
         this.item = (data.items || []).map((it: any) => {
           return {
             ...it,
+            orderItemList: uniqBy(it.orderItemList, 'kolId'), // 去重一个kol有两个任务
             createTime: moment(it.createTime).format(timeFormat)
           }
         }).slice(0 , 5)
       }
+      const proone = await viewcity(data.provinceId)
+      const cityone = await viewcity(data.cityId)
+      const cunone = await viewcity(data.countyId)
+      const protwo = await viewcity(data.contactProvinceId)
+      const citytwo = await viewcity(data.contactCityId)
+      const cuntwo = await viewcity(data.contactCountyId)
+      this.proone = (proone.data || []).map((it: any) => {
+        return it.nameCn
+      })
+      this.cityone = (cityone.data || []).map((it: any) => {
+        return it.nameCn
+      })
+      this.cunone = (cunone.data || []).map((it: any) => {
+        return it.nameCn
+      })
+      this.protwo = (protwo.data || []).map((it: any) => {
+        return it.nameCn
+      })
+      this.citytwo = (citytwo.data || []).map((it: any) => {
+        return it.nameCn
+      })
+      this.cuntwo = (cuntwo.data || []).map((it: any) => {
+        return it.nameCn
+      })
+
+      this.adsoen = this.proone + '/' + this.cityone + '/' + this.cunone
+      this.adstwo = this.protwo + '/' + this.citytwo + '/' + this.cuntwo
+
     } catch (ex) {
       this.handleError(ex)
     } finally {
@@ -192,7 +237,7 @@ export default class Main extends ViewBase {
 }
 .sbg {
   width: 48%;
-  height: 210px;
+  height: 256px;
   float: left;
   background: rgba(255, 255, 255, 0.4);
   border: 1px solid #fff;
@@ -287,5 +332,20 @@ export default class Main extends ViewBase {
   height: 35px;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 1);
+}
+/deep/ .ivu-tooltip {
+  width: 100%;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 24px;
+  line-height: 24px;
+}
+.film-time {
+  height: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

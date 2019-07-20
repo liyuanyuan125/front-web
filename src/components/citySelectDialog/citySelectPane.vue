@@ -613,7 +613,6 @@ export default class CitySelectPane extends ViewBase {
   cursor: pointer;
   &:hover .cell-pull-icon {
     color: @c-button;
-
     .theme-resource & {
       color: @c-button-resource;
     }
@@ -678,9 +677,6 @@ export default class CitySelectPane extends ViewBase {
     margin-right: 0;
   }
 }
-</style>
-
-<style lang="less">
 .city-select-pane-transfer[data-transfer=true] {
   max-height: 666px;
   padding: 0;

@@ -32,19 +32,19 @@
             <Row type="flex" justify="space-between">
               <Col :span="12">
               <div class='chart-wp' style='margin-right:10px;'>
-                <Pie :initDone="chart1.initDone" :noData="chart1.noData" :title='chart1.title' :dict1="chart1.dict1" :dict2="chart1.dict2" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
+                <Pie :initDone="chart1.initDone" :title='chart1.title' :dict1="chart1.dict1" :dict2="chart1.dict2" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
               </div>
               </Col>
               <Col :span="12">
               <div class='chart-wp' style=''>
-                <BarXCategory :initDone="chart2.initDone" :noData="chart2.noData" :title='chart2.title' :dict1="chart2.dict1" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" />
+                <BarXCategory :initDone="chart2.initDone" :title='chart2.title' :dict1="chart2.dict1" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" />
               </div>
               </Col>
             </Row>
             <Row type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="12">
               <div class='chart-wp borderRadius' style='margin-right:10px;'>
-                <BarXCategory :initDone="chart3.initDone" :noData="chart3.noData" :title='chart3.title' :dict1="chart3.dict1" :dict3="chart3.dict3" :color="chart3.color" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" />
+                <BarXCategory :initDone="chart3.initDone" :title='chart3.title' :dict1="chart3.dict1" :dict3="chart3.dict3" :color="chart3.color" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" />
               </div>
               </Col>
               <Col :span="12">
@@ -79,12 +79,11 @@
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { fans, brands, film } from '@/api/filmfans'
-import DetailNavBar from '@/views/film/figure/detailMoreInfo/components/detailNavBar.vue'
+import DetailNavBar from './components/detailNavBar.vue'
 import BarXCategory from '@/components/chartsGroup/barXCategory/'
 import MapChina from '@/components/chartsGroup/mapChina/'
 import Pie from '@/components/chartsGroup/pieSimple/'
 import PieNest from '@/components/chartsGroup/pieNest/'
-import BarYCategory from '@/components/chartsGroup/barYCategory/'
 import { toMap } from '@/fn/array'
 import { findIndex } from 'lodash'
 
@@ -101,7 +100,6 @@ const getName = (key: string, list: any[]) => {
     BarXCategory,
     Pie,
     MapChina,
-    BarYCategory,
     DetailNavBar,
     PieNest
   }
@@ -135,7 +133,6 @@ export default class Temporary extends ViewBase {
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
-    noData: false,
     dataList: [],
     color: ['#00B6CC', '#DA6C70']
   }
@@ -146,7 +143,6 @@ export default class Temporary extends ViewBase {
     dict3: [],
     currentTypeIndex: 0,
     initDone: false,
-    noData: false,
     dataList: [],
     color: ['#00B6CC']
   }
@@ -157,7 +153,6 @@ export default class Temporary extends ViewBase {
     dict3: [],
     currentTypeIndex: 0,
     initDone: false,
-    noData: false,
     dataList: [],
     color: ['#D0BF6B']
   }
@@ -237,18 +232,17 @@ export default class Temporary extends ViewBase {
 
     try {
       const {
-        data,
-        data: {
-          genders,
-          ages,
-          cityLevels,
-          shoppingTypes,
-          movieTypes,
-          educations,
-          jobs,
-          genderCodeList
-        }
+        data
       } = await fans(id)
+
+      const genders = data.genders || null
+      const ages = data.ages || null
+      const cityLevels = data.cityLevels || null
+      const shoppingTypes = data.shoppingTypes || null
+      const movieTypes = data.movieTypes || null
+      const educations = data.educations || null
+      const jobs = data.jobs || null
+      const genderCodeList = data.genderCodeList || null
 
       if ( genders && genders.length > 0 ) {
         genders.forEach((it: any) => {
@@ -270,10 +264,6 @@ export default class Temporary extends ViewBase {
             })
           }
         })
-        this.chart1.initDone = true
-      } else {
-        this.chart1.initDone = true
-        this.chart1.noData = true
       }
 
       if (ages && ages.length > 0) {
@@ -288,10 +278,6 @@ export default class Temporary extends ViewBase {
           })
           this.chart2.dataList[this.chart2.currentTypeIndex].data.push(v)
         })
-        this.chart2.initDone = true
-      } else {
-        this.chart2.initDone = true
-        this.chart2.noData = true
       }
 
       if ( cityLevels && cityLevels.length > 0 ) {
@@ -306,10 +292,6 @@ export default class Temporary extends ViewBase {
           })
           this.chart3.dataList[this.chart3.currentTypeIndex].data.push(v)
         })
-        this.chart3.initDone = true
-      } else {
-        this.chart3.initDone = true
-        this.chart3.noData = true
       }
 
       if (shoppingTypes && shoppingTypes.length > 0) {
@@ -321,7 +303,6 @@ export default class Temporary extends ViewBase {
             }
           }
         )
-        this.chart4.initDone = true
       }
 
       if (movieTypes && movieTypes.length > 0) {
@@ -333,7 +314,6 @@ export default class Temporary extends ViewBase {
             }
           }
         )
-        this.chart5.initDone = true
       }
 
       if (educations && educations.length > 0) {
@@ -345,7 +325,6 @@ export default class Temporary extends ViewBase {
             }
           }
         )
-        this.chart6.initDone = true
       }
 
       if (jobs && jobs.length > 0) {
@@ -355,8 +334,16 @@ export default class Temporary extends ViewBase {
             value: it.v
           }
         })
-        this.chart7.initDone = true
       }
+
+      this.chart1.initDone = true
+      this.chart2.initDone = true
+      this.chart3.initDone = true
+      this.chart4.initDone = true
+      this.chart5.initDone = true
+      this.chart6.initDone = true
+      this.chart7.initDone = true
+
     } catch (ex) {
       this.handleError(ex)
     }

@@ -42,5 +42,7 @@ export default class Figure extends Vue {
 .figure-img {
   width: 100%;
   min-height: 100%;
+  line-height: 1;
+  vertical-align: top;
 }
 </style>

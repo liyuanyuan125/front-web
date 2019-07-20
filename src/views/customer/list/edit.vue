@@ -158,6 +158,7 @@ export default class Main extends ViewBase {
   color: rgba(179, 188, 192, 1);
   font-size: 15px;
   font-size: 400;
+  border-radius: 5px 5px 0 0;
   span {
     font-size: 16px;
     font-weight: 400;
@@ -167,7 +168,7 @@ export default class Main extends ViewBase {
 }
 .item-account-email {
   /deep/ .ivu-form-item-label {
-    padding-left: 0;
+    // padding-left: 0;
   }
 }
 .login-email {
@@ -178,6 +179,7 @@ export default class Main extends ViewBase {
 .from {
   background: rgba(0, 32, 45, 0.8);
   padding: 30px 0 60px 30px;
+  border-radius: 0 0 5px 5px;
 }
 .sumbit-button {
   margin-top: 80px;
@@ -263,5 +265,12 @@ export default class Main extends ViewBase {
   padding-left: 8px;
   padding-right: 24px;
   color: #00202d;
+}
+/deep/ .ivu-select-disabled .ivu-select-selection .ivu-select-arrow {
+  color: #808695;
+  font-size: 17px;
+}
+/deep/ .ivu-select-arrow {
+  font-size: 17px;
 }
 </style>

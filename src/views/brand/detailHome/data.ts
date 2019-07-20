@@ -12,7 +12,7 @@ export async function getBrand(id: number) {
         logoUrl,
       }
     }
-  } = await get(`/brand/brands/${id}/home01`)
+  } = await get(`/brand/brands/${id}/home`)
 
   const result = {
     name,

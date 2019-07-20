@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <Row>
-      <Col span="24">
-      <Form label-position="left" :label-width="100">
-        <Card class="detailmore-card">
-          <!-- <div slot="title">
+  <div class="fans-box">
+    <Form label-position="left" :label-width="100">
+      <Card class="detailmore-card">
+        <!-- <div slot="title">
             <Row type="flex"
                  justify="space-between"
                  align="middle">
@@ -27,48 +25,47 @@
                         type="primary">查看匹配度</Button></router-link>
               </Col>
             </Row>
-          </div> 演示临时关闭 nxd 20190621  -->
-          <div class="content">
-            <Row type="flex" justify="space-between">
-              <Col :span="12">
-              <div class='chart-wp' style='margin-right:10px'>
-                <Pie :initDone="chart1.initDone" :noData="chart1.noData" :title='chart1.title' :dict1="chart1.dict1" :dict2="chart1.dict2" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
-              </div>
-              </Col>
-              <Col :span="12">
-              <div class='chart-wp'>
-                <BarXCategory :initDone="chart2.initDone" :noData="chart2.noData" :title='chart2.title' :dict1="chart2.dict1" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" />
-              </div>
-              </Col>
-            </Row>
-            <Row type="flex" justify="space-between" style='margin-top:10px'>
-              <Col :span="12">
-              <div class='chart-wp borderRadius' style='margin-right:10px; height:460px'>
-                <MapChina :initDone="chart3.initDone" :title="chart3.title" :dict1="chart3.dict1" :dict2="chart3.dict2" :color="chart3.color" :max="chart3.max" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" />
-              </div>
-              </Col>
-              <Col :span="12">
-              <div class='chart-wp' style='height:460px'>
-                <BarYCategory :initDone="chart4.initDone" :title="chart4.title" :dict1="chart4.dict1" :dict2="chart4.dict2" :color="chart4.color" :dataList="chart4.dataList" :currentTypeIndex="chart4.currentTypeIndex" @typeChange='typeChangeHander4' />
-              </div>
-              </Col>
-            </Row>
-          </div>
-        </Card>
-      </Form>
-      </Col>
-    </Row>
+        </div> 演示临时关闭 nxd 20190621-->
+        <div class="content">
+          <Row type="flex" justify="space-between">
+            <Col :span="12">
+            <div class="chart-wp sex-chart" style="margin-right:10px">
+              <Pie :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
+            </div>
+            </Col>
+            <Col :span="12">
+            <div class="chart-wp age-chart">
+              <BarXCategory :initDone="chart2.initDone" :title="chart2.title" :dict1="chart2.dict1" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" />
+            </div>
+            </Col>
+          </Row>
+          <Row type="flex" justify="space-between" style="margin-top:10px">
+            <Col :span="12">
+            <div class="chart-wp province-chart" style="margin-right:10px; height:460px">
+              <MapChina :initDone="chart3.initDone" :title="chart3.title" :dict1="chart3.dict1" :dict2="chart3.dict2" :color="chart3.color" :max="chart3.max" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" />
+            </div>
+            </Col>
+            <Col :span="12">
+            <div class="chart-wp city-chart" style="height:460px">
+              <BarYCategory :initDone="chart4.initDone" :title="chart4.title" :dict1="chart4.dict1" :dict2="chart4.dict2" :color="chart4.color" :dataList="chart4.dataList" :currentTypeIndex="chart4.currentTypeIndex" @typeChange="typeChangeHander4" />
+            </div>
+            </Col>
+          </Row>
+        </div>
+      </Card>
+    </Form>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { fans, brands } from '@/api/figureDetailMoreInfo'
 import DetailNavBar from './components/detailNavBar.vue'
-import BarXCategory from '@/components/chartsGroup/barXCategory/'
-import MapChina from '@/components/chartsGroup/mapChina/'
-import Pie from '@/components/chartsGroup/pieSimple/'
-import BarYCategory from '@/components/chartsGroup/barYCategory/'
+import BarXCategory from '@/components/chartsGroup/barXCategory'
+import MapChina from '@/components/chartsGroup/mapChina'
+import Pie from '@/components/chartsGroup/pieSimple'
+import BarYCategory from '@/components/chartsGroup/barYCategory'
 
 @Component({
   components: {
@@ -81,10 +78,13 @@ import BarYCategory from '@/components/chartsGroup/barYCategory/'
 })
 export default class Temporary extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
+
   form: any = {}
+
   pageQuery: any = {
     brandId: ''
   }
+
   dict: any = {
     brandList: [],
     genders: [
@@ -102,16 +102,17 @@ export default class Temporary extends ViewBase {
       }
     ]
   }
+
   chart1: any = {
     title: '粉丝男女分布',
     dict1: [],
     dict2: [],
     currentTypeIndex: 0,
     initDone: false,
-    noData: false,
     dataList: [],
     color: ['#00B6CC', '#DA6C70']
   }
+
   chart2: any = {
     title: '粉丝年龄分布',
     dict1: [],
@@ -119,10 +120,10 @@ export default class Temporary extends ViewBase {
     dict3: [],
     currentTypeIndex: 0,
     initDone: false,
-    noData: false,
     dataList: [],
     color: ['#00B6CC']
   }
+
   chart3: any = {
     title: '省份分布',
     dict1: [],
@@ -133,8 +134,9 @@ export default class Temporary extends ViewBase {
     color: ['#ff9933', '#169bd5'],
     max: 100000
   }
+
   chart4: any = {
-    title: '城市分粉丝量TOP10',
+    title: '地域分布TOP10',
     dict1: [
       {
         key: 0,
@@ -149,8 +151,9 @@ export default class Temporary extends ViewBase {
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
-    color: ['#ff9933', '#169bd5']
+    color: []
   }
+
   brandsLoading = false
   brands = []
 
@@ -160,6 +163,7 @@ export default class Temporary extends ViewBase {
     }
     this.chart4.currentTypeIndex = index
   }
+
   /**
    * 加载图表数据
    * @param chart 图表名 (因为接口返回全部数据，暂时不用)
@@ -167,12 +171,21 @@ export default class Temporary extends ViewBase {
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     try {
-      const {
-        data,
-        data: {
-          item: { genders, ages, cities, provinces }
-        }
-      } = await fans(this.id)
+      const { data } = await fans(this.id)
+
+      const item = data.item || null
+      if (!item) {
+        this.chart1.initDone = true
+        this.chart2.initDone = true
+        this.chart3.initDone = true
+        this.chart4.initDone = true
+        return
+      }
+      const genders = item.genders || null
+      const ages = item.ages || null
+      const provinces = item.provinces || null
+      const cities = item.cities || null
+
       if (genders && genders.length > 0) {
         this.chart1.dict2 = data.genders.filter(({ key, text }: any) => {
           return text !== '未知' || key !== 0
@@ -187,10 +200,6 @@ export default class Temporary extends ViewBase {
             }
           }
         )
-        this.chart1.initDone = true
-      } else {
-        this.chart1.initDone = true
-        this.chart1.noData = true
       }
 
       if (ages && ages.length > 0) {
@@ -205,45 +214,42 @@ export default class Temporary extends ViewBase {
           })
           this.chart2.dataList[this.chart2.currentTypeIndex].data.push(v)
         })
-        this.chart2.initDone = true
-      } else {
-        this.chart2.initDone = true
-        this.chart2.noData = true
       }
 
-      if (provinces && provinces.length > 0) {
-        let [min, max] = [0, 0]
-        provinces.forEach(({ v, k }: any) => {
-          v = parseInt(v, 0)
-          max = max < v ? v : max
-          min = min > v ? v : min
-          this.chart3.dataList[this.chart3.currentTypeIndex].push({
-            name: k,
-            value: v
-          })
-          this.chart4.dataList[0].push({
-            name: k,
-            value: v
-          })
-        })
-        this.chart3.min = min
-        this.chart3.max = max
-        this.chart3.initDone = true
-        this.chart4.initDone = true
-      }
-      if (cities && cities.length > 0) {
-        cities.forEach(({ v, k }: any) => {
-          this.chart4.dataList[1].push({
-            name: k,
-            value: typeof v === 'number' ? v : parseInt(v, 0)
-          })
-        })
-        this.chart4.initDone = true
-      }
+      // 影人粉丝，省市数据返回占比，无需除100 xd 20190710
+      const provinceList = ((provinces as any[]) || []).sort((a, b) => a.v - b.v)
+      const cityList = ((cities as any[]) || []).sort((a, b) => a.v - b.v)
+
+      let [min, max] = [0, 0]
+      const provinceData = provinceList.map(({ v, k }) => {
+        v = parseFloat(v)
+        max = max < v ? v : max
+        min = min > v ? v : min
+        return { name: k, value: v }
+      })
+      const cityData = cityList.map(({ v, k }) => {
+        return {
+          name: k,
+          value: typeof v === 'number' ? v : parseFloat(v)
+        }
+      })
+
+      this.chart3.min = min
+      this.chart3.max = max
+      this.chart3.dataList[this.chart3.currentTypeIndex] = provinceData
+
+      this.chart4.dataList[0] = provinceData.length > 10 ? provinceData.slice(0 , 10) : provinceData
+      this.chart4.dataList[1] = cityData.length > 10 ? cityData.slice(0 , 10) : cityData
+
+      this.chart1.initDone = true
+      this.chart2.initDone = true
+      this.chart3.initDone = true
+      this.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
   }
+
   async remoteBrands(query: string) {
     if (query !== '') {
       this.brandsLoading = true
@@ -274,6 +280,7 @@ export default class Temporary extends ViewBase {
       this.brands = []
     }
   }
+
   async brandsFetch() {
     const mockObj = {
       name: 'a',
@@ -286,9 +293,11 @@ export default class Temporary extends ViewBase {
       this.handleError(ex)
     }
   }
+
   mounted() {
     this.initHandler()
   }
+
   async initHandler() {
     if (this.chart1.dict1.length > 0) {
       this.chart1.dict1.map((item: any, index: number) => {
@@ -323,6 +332,7 @@ export default class Temporary extends ViewBase {
     }
     await this.getChartsData('', 0)
   }
+
   resetData() {
     this.chart1.dataList.forEach((item: any[]) => {
       item.splice(0, item.length)
@@ -340,7 +350,32 @@ export default class Temporary extends ViewBase {
   }
 }
 </script>
+
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import '~@/site/detailmore.less';
+
+.fans-box {
+  margin-top: -10px;
+}
+
+.sex-chart {
+  border-radius: 6px 0 0 0;
+}
+
+.age-chart {
+  border-radius: 0 6px 0 0;
+}
+
+.province-chart {
+  border-radius: 0 0 0 6px;
+}
+
+.city-chart {
+  border-radius: 0 0 6px 0;
+  /deep/ .chart-wrap:empty::before {
+    position: relative;
+    top: -25px;
+  }
+}
 </style>

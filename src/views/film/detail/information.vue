@@ -6,7 +6,7 @@
       <Row style='margin-top: 20px;line-height:30px; color: #B3BCC0;' :class="[ sumFlag == 0 ? 'activeClass' : '']">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{summary}}</Row>
       <!-- <div class='mores' style='text-align: right;margin-right: 30px;'@click='detailinfo' >展开全部<span></span></div> -->
       <div class="show-all" v-if="itemlist.summary.length > 200">
-        <span @click="sumToggle" >{{sumTitle}}<Icon :class="{'sumDown': sumFlag == 0, 'sumUp': sumFlag == 1}" type="ios-arrow-down" size="25" /></span>
+        <span @click="sumToggle" >{{sumTitle}}<Icon :class="{'sumDown': sumFlag == 1, 'sumUp': sumFlag == 0}" type="ios-arrow-down" size="25" /></span>
       </div>
    </Row>
    <!-- 更多资料 -->
@@ -29,7 +29,7 @@
          <div class='nams' style='margin-left: 4%;'>{{items.date}}</div>
        </div><br>
        <div class="show-alls" v-if="itemlist.releaseDates.length > 5">
-        <span @click="dataToggle">{{dataTitle}}<Icon :class="{'dataDown': dataFlag == 0, 'dataUp': dataFlag == 1}" type="ios-arrow-down" size="25" /></span>
+        <span @click="dataToggle">{{dataTitle}}<Icon :class="{'dataDown': dataFlag == 1, 'dataUp': dataFlag == 0}" type="ios-arrow-down" size="25" /></span>
       </div>
      </Col>
        </Col>
@@ -45,7 +45,11 @@
        <Col span='3' class='fo-bo'>发行公司</Col>
        <Col span='20' class='fo-bos'>
        <em v-if='itemlist.companyMap.Distributor.length == 0'>暂无发行</em>
-       <div style='margin-bottom: 10px;' v-if='itemlist.companyMap.Distributor.length > 0' v-for='(items,index) in itemlist.companyMap.Distributor'>{{items.name}}</div><br></Col>
+       <div style='margin-bottom: 10px;' v-if='itemlist.companyMap.Distributor.length > 0' v-for='(items,index) in faitemlist'>{{items.name}}</div><br>
+        <div class="show-alls" v-if="itemlist.companyMap.Distributor.length > 5">
+        <span @click="faToggle">{{faTitle}}<Icon :class="{'faDown': faFlag == 1, 'faUp': faFlag == 0}" type="ios-arrow-down" size="25" /></span>
+      </div>
+       </Col>
      </Row>
    </div>
    <!-- 图片 -->
@@ -57,8 +61,8 @@
           backgroundImage: `url(${img.img})`
         }"></li>
       </transition-group>
-      <div class="show-all" v-if="imgUrl.length > 16">
-        <span @click="handleToggle">{{tabShowTitle}}<Icon :class="{'arrowDown': arrowFlag == 0, 'arrowUp': arrowFlag == 1}" type="ios-arrow-down" size="25" /></span>
+      <div class="show-all" v-if="imgUrl.length > 20">
+        <span @click="handleToggle">{{tabShowTitle}}<Icon :class="{'arrowDown': arrowFlag == 1, 'arrowUp': arrowFlag == 0}" type="ios-arrow-down" size="25" /></span>
       </div>
    </div>
    <Modal v-model="viewerShow" title="查看图片" width="500" height="500">
@@ -90,6 +94,11 @@ export default class Main extends ViewBase {
   dataFlag = 0
   datalist: any = []
   dataitemlist: any = []
+
+  faTitle = '展示全部'
+  faFlag = 0
+  falist: any = []
+  faitemlist: any = []
 
   imgUrl = []
   imgList: any = []
@@ -128,7 +137,7 @@ export default class Main extends ViewBase {
     } else {
       this.arrowFlag = 0
       this.tabShowTitle = '展示全部'
-      this.imgList = this.imgUrl.slice(0, 16)
+      this.imgList = this.imgUrl.slice(0, 20)
     }
   }
   dataToggle() {
@@ -140,6 +149,17 @@ export default class Main extends ViewBase {
       this.dataFlag = 0
       this.dataTitle = '展示全部'
       this.dataitemlist = this.itemlist.releaseDates.slice(0, 5)
+    }
+  }
+  faToggle() {
+    if (!this.faFlag) {
+      this.faFlag = 1
+      this.faTitle = '向上隐藏'
+      this.faitemlist = this.itemlist.companyMap.Distributor
+    } else {
+      this.faFlag = 0
+      this.faTitle = '展示全部'
+      this.faitemlist = this.itemlist.companyMap.Distributor.slice(0, 5)
     }
   }
   sumToggle() {
@@ -165,8 +185,9 @@ export default class Main extends ViewBase {
           img: it,
         }
       })
-      this.imgList = this.imgUrl.slice(0, 16)
+      this.imgList = this.imgUrl.slice(0, 20)
       this.dataitemlist = this.itemlist.releaseDates.slice(0, 5)
+      this.faitemlist = this.itemlist.companyMap.Distributor.slice(0, 5)
       this.summary = this.itemlist.summary.slice(0, 211)
     } catch {
 
@@ -266,7 +287,7 @@ export default class Main extends ViewBase {
   margin-right: -10px;
   transition: all 2s;
   li {
-    width: 22%;
+    width: 17%;
     height: 180px;
     margin-bottom: 25px;
     padding: 0 4px;

@@ -9,7 +9,7 @@
               <span v-if="item.boxOfficeRanking">影史票房NO.{{item.boxOfficeRanking}}</span>
               <img v-if="item.status == 3" src="~@/views/film/assets/hotShow.png" width="48px" alt="alias" class="hot"/>
           </p>
-          <p class="title-year">{{spliceName(item.name)}}({{item.release}})</p>
+          <p class="title-year" :title="item.name">{{spliceName(item.name)}}({{item.release}})</p>
           <p>
             <span v-for="(it, index) in item.types" :key="index" v-if="!!handleMoive(it)">{{handleMoive(it)}}
               <em v-if="item.types.length-1 != index"> / </em>
@@ -52,8 +52,8 @@
                 <div class="text-right">
                   <h3 class="title-grade"><span>{{it.name}}</span><em>{{handleJy(it.jyIndex)}}</em></h3>
                   <h4 class="person-identity"><span v-for="(item, index) in it.professions" :key="index"> {{handleProfession(item)}} </span></h4>
-                  <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" :key="index">{{item.name}}</em></p>
-                  <p class="com-col">主演：<em class="em-actor" v-for="(item, index) in it.actors" v-if="index < 2" :key="index">{{item.name}} </em></p>
+                  <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" :key="index">{{item.name}}&nbsp;&nbsp;</em></p>
+                  <p class="com-col">主演：<em class="em-actor" v-for="(item, index) in it.actors" v-if="index < 2" :key="index">{{item.name}}&nbsp;&nbsp;</em></p>
                 </div>
               </div>
             </dd>
@@ -69,11 +69,11 @@
             <img :src="it.poster" class="img-item" />
           </a>
           <div class="text-right">
-            <h3 class="title-grade"><span>{{it.name}}({{it.releaseYear}})</span></h3>
+            <h3 class="title-grade right-item-grade"><span>{{it.name}}({{it.releaseYear}})</span></h3>
             <h4 class="person-identity"><span v-for="(item, index) in it.professions" :key="index"> {{handleProfession(item)}} </span></h4>
-            <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" :key="index">{{item.name}}</em></p>
+            <p class="com-col">导演：<em class="em-actor" v-for="(item, index) in it.directors" v-if="index < 5" :key="index">{{item.name}} </em></p>
             <p class="com-col">类型：<em class="em-actor" v-for="(item, index) in it.types" :key="index">{{handleMoive(item)}}<i v-if="it.types.length-1 != index"> / </i></em></p>
-            <p class="com-col">{{formatConversion(it.release)}} {{it.releaseCountry}}上映</p>
+            <p class="com-col">{{intDate(it.release)}} {{it.releaseCountry}}上映</p>
           </div>
         </div>
       </div>
@@ -87,14 +87,15 @@ import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import {personMovies, topList } from '@/api/filmPersonDetail'
 import { getTodayDate, formatConversion } from '@/util/validateRules'
-import { cloneDeep } from 'lodash'
+import { intDate } from '@/util/dealData'
 import { readableNumber } from '@/util/dealData'
+import { cloneDeep, union, difference } from 'lodash'
 
 
 @Component
 export default class Master extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
-  // 时间排序0，鲸鱼排序1
+  // 时间排序0，鲸娱排序1
   timeSort = 0
   tableList: any = []
 
@@ -126,11 +127,11 @@ export default class Master extends ViewBase {
   ]
   // 上映时间排序
   filmList: any = []
-  // 鲸鱼指数排序
+  // 鲸娱指数排序
   jyList: any = []
 
-  get formatConversion() {
-    return formatConversion
+  get intDate() {
+    return intDate
   }
 
   get readableNumber() {
@@ -138,7 +139,6 @@ export default class Master extends ViewBase {
   }
 
   async mounted() {
-    // getWorks(370093)
     this.topCountList()
     this.list()
   }
@@ -224,7 +224,7 @@ export default class Master extends ViewBase {
       this.filmList = filmList
       this.tableList = this.filmList
 
-      // 根据鲸鱼指数排成二维数组
+      // 根据鲸娱指数排成二维数组
       const jyList: any[] = []
       item2.map((item: any) => {
         const findIndex = jyList.findIndex((jy: any) => Math.floor(jy.jyIndex) == Math.floor(item.jyIndex))
@@ -276,7 +276,7 @@ export default class Master extends ViewBase {
 <style lang='less' scoped>
 .move-title {
   display: block;
-  flex: 1;
+  padding-right: 5px;
 }
 h2, h3, h4 {
   font-weight: normal;
@@ -299,7 +299,7 @@ h2, h3, h4 {
     margin-left: -10px;
     margin-right: -10px;
     li {
-      width: 25%;
+      width: 20%;
       padding: 0 10px;
       text-align: center;
       color: #fff;
@@ -422,6 +422,8 @@ h2, h3, h4 {
     position: relative;
     display: block;
     width: 140px;
+    height: 190px;
+    overflow: hidden;
     .img-item {
       width: 140px;
     }
@@ -437,6 +439,7 @@ h2, h3, h4 {
     padding-left: 15px;
     .title-grade {
       padding-top: 10px;
+      height: 85px;
       span {
         padding-right: 25px;
       }
@@ -450,6 +453,9 @@ h2, h3, h4 {
         text-align: center;
         border-radius: 2px;
       }
+    }
+    .right-item-grade {
+      height: 65px;
     }
     .person-identity {
       padding-top: 17px;

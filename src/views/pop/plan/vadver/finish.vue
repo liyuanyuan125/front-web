@@ -2,7 +2,7 @@
   <div class="plan-box" v-if="item">
     <h3 class="title">计划创建完毕，等待资源确认</h3>
     <div class="audit">
-      平台会由专业映前投放专家对您的广告计划进行调整,请耐心等待。
+      平台会由专业映前投放专家对您的广告计划进行调整，请耐心等待，或联系商务人员
     </div>
     <div class="finish-detail">
       <dl>
@@ -21,21 +21,40 @@
       </dl>
       <dl>
         <dd>曝光人次预估</dd>
-        <dt><Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/10000 : 0" />万</dt>
         <dt>
-          <img src="./assets/renqun.png" width="73" height="66px"/>
+           <p v-if="!!item.estimatePersonCount && (item.estimatePersonCount + '').length > 4">
+            <Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/10000 : 0" />万
+          </p>
+          <p v-else>
+            <Number :flag="2"  :addNum="item.estimatePersonCount" />
+          </p>
+        <dt>
+          <img src="./assets/renqun.png" width="100" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>投放场次数预估</dd>
-        <dt><Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/10000 : 0" />万</dt>
+        <dt>
+          <p v-if="!!item.estimateShowCount && item.estimateShowCount.length > 4">
+            <Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/10000 : 0" />万
+          </p>
+          <p v-else>
+              <Number :flag="2"  :addNum="item.estimateShowCount" />
+          </p>
+        </dt>
         <dt>
           <img src="./assets/toufangfangan.png" width="73" height="66px"/>
         </dt>
       </dl>
       <dl>
         <dd>预估花费</dd>
-        <dt><Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount/10000 : 0" />万</dt>
+        <dt>
+          <p v-if="!!item.estimateCostAmount && (item.estimateCostAmount + '').length > 4">
+            <Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount/10000 : 0" />万
+          </p>
+          <p v-else>
+            <Number :flag="2"  :addNum="item.estimateCostAmount" />
+          </p>
         <dt>
           <img src="./assets/qian-2.png" width="73" height="66px"/>
         </dt>
@@ -86,20 +105,14 @@ export default class Apps extends ViewBase {
 
   back() {
     this.$emit('input', {
-      id: 2,
+      step: 2,
       setid: this.$route.params.setid
     })
-    if (this.$route.name == 'pop-planlist-add') {
-      this.$router.push({
-        name: 'pop-planlist-add',
-        params: { id: '2', setid: this.$route.params.setid  }
-      })
-    } else {
-      this.$router.push({
-        name: 'pop-planlist-edit',
-        params: { id: '2', setid: this.$route.params.setid  }
-      })
-    }
+
+    this.$router.push({
+      name: 'pop-planlist-edit',
+      params: { step: '2', setid: this.$route.params.setid  }
+    })
   }
   async next() {
     try {
@@ -118,15 +131,16 @@ export default class Apps extends ViewBase {
 @import '~@/site/lib.less';
 
 .plan-box {
-  margin: 0 40px;
+  margin: 0 30px;
 }
 .title {
   text-align: center;
-  font-size: 26px;
+  font-size: 30px;
   margin-top: 40px;
 }
 .audit {
   text-align: center;
+  font-size: 18px;
   margin-top: 32px;
   margin-bottom: 32px;
 }
@@ -136,11 +150,13 @@ export default class Apps extends ViewBase {
 }
 .btn-save {
   width: 200px;
+  font-weight: 500;
   .button-style(#fff, #00202d);
   border-radius: 25px;
 }
 .btn-next {
   width: 200px;
+  font-weight: 500;
   .button-style(#00202d, rgba(0, 0, 0, 0));
   vertical-align: middle;
   border-radius: 25px;

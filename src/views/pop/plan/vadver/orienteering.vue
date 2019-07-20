@@ -1,5 +1,10 @@
 <template>
   <div class="plan-box">
+    <Spin v-if="spinshow" fix>
+      <img style="width: 200px" src="./assets/doing.gif">
+      <Progress :percent="spins" status="active" />
+      <p style="font-size: 30px; color: #3959A8">{{spins}}%</p>
+    </Spin>
     <Row>
       <Col>
         <Form
@@ -16,50 +21,40 @@
                 <FormItem :labelWidth="0" class="item-top form-item-type">
                   <Tags v-model="cityCustom" :tagMess="areaList"/>
                 </FormItem>
-                <div class="item-top check-cinem" v-if="cityCustom == 0">
-                  <FormItem :labelWidth="0">
-                    <CheckboxGroup v-model="form.cinema" class="item-radio-top">
-                      <div style="margin-bottom: 30px">
-                        <Checkbox
-                          style="width: 180px"
-                          class="check-item form-item-first"
-                          :label="0"
-                        >全国</Checkbox>
-                        <Checkbox
-                          style="margin-left: 18px;width: 180px"
-                          v-for="(it, index) in cityList"
-                          v-if="index == 0"
-                          :key="it.key"
-                          :label="it.key"
-                          class="check-item form-item-first"
-                        >{{it.text}}
-                        <Poptip trigger="hover" title="票仓城市top10" content="content">
-                          <img v-if="!form.cinema.includes(it.key)" width="20px" style="vertical-align:middle" src="./assets/question.png" />
-                          <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
-                          <div class="api" slot="content">
-                            <div class="city-show">
-                              <span v-for="it in warehouseLisst" :key="it.cityId">{{it.cityName}}</span>
-                            </div>
-                          </div>
-                        </Poptip>
-                        </Checkbox>
-                        <Checkbox
-                          v-for="(it, index) in cityList"
-                          v-if="index > 0"
-                          :key="it.key"
-                          :label="it.key"
-                          class="check-item"
-                        >{{it.text}}</Checkbox>
-                      </div>
-                    </CheckboxGroup>
-                  </FormItem>
-                </div>
-                <div class="item-top" v-else>
-                  <div @click="visible = true" class="set-city">
+                <div class="item-top" v-show="cityCustom == 1">
+                  <!-- <div @click="visible = true" class="set-city">
                     共{{citysId.length}}个城市
                     <span>设置</span>
-                  </div>
-                  <City @ok="onCitySelectOk" v-model="visible" :cityIds.sync="citysId" :topCityIds="warehouseId"></City>
+                  </div> -->
+                  <City v-if='cityfalse' @ok="onCitySelectOk" v-model="visible" :cityIds.sync="citysId" :topCityIds="warehouseId"></City>
+                </div>
+                <div v-show="cityCustom != 1" class="xls-box">
+                  <p class="title">注（请先下载影院数据表，编辑为仅包含自己目标投放影院的“.xls”格式文件，
+                    然后再导入；请勿修改表格格式，否则将导入失败）</p>
+                  <FormItem :labelWidth="0"  class="item-top form-item-type">
+                    <div class="set-film">
+                      可选影院：
+                      <span>影院数据.xls</span>
+                      <a :href='herf' download='影院数据' class='down-xls' style="margin-left: 40px;cursor: pointer;">
+                        下载
+                        <img src='./assets/down.png' />
+                      </a>
+                    </div>
+                  </FormItem>
+                  <FormItem style="margin-left: 30px" :labelWidth="0"  class="form-item-type">
+                    <div class="set-film">
+                      目标影院：
+                      <label class="upload-film">
+                        <span>选取文件</span>
+                        <input ref='downinput' type="file" style="display: none" accept="application/vnd.ms-excel" @change="filmchange"/>
+                      </label>
+                      <span v-if='!xlsname' style="margin-left: 20px;">未选择文件</span>
+                      <span v-else>
+                        {{xlsname}}
+                      </span>
+                      <p style="margin-left: 90px; margin-top: 20px">成功识别 {{xlslid.length}} 家影院</p>
+                    </div>
+                  </FormItem>
                 </div>
               </Row>
             </Col>
@@ -68,76 +63,66 @@
           <h3 class="layout-titles" style="margin-top: 45px">受众偏好</h3>
           <Row class="item-top item-three">
             <Col :span="24" class="flex">
-              <Col :span="6" class="three-left">
+              <Col :span="7" class="title-box">
                 <div class="orient-title">受众性别</div>
                 <FormItem class="item-top form-item-type">
-                  <RadioGroup v-model="form.sex" class="item-radio-top">
-                    <Radio  style="width: 220px" class="check-item form-item-first" :label="0">不限</Radio>
-                    <Radio 
-                      v-if="it.key != 'unknow'"
-                      style="width: 220px; height: 70px;"
-                      v-for="it in sexList"
-                      :key="it.key"
-                      :label="it.key"
-                      class="check-item check-icon"
-                    >
-                      <div v-if="it.text == '男'">
-                        <i class="check-man"></i>
-                      </div>
-                      <div v-else>
-                        <i class="check-woman"></i>
-                      </div>
-                      <span>{{it.text}}</span>
-                    </Radio>
-                  </RadioGroup>
-                </FormItem>
-              </Col>
-
-              <Col :span="6" class="three-left">
-                <div class="orient-title">受众年龄</div>
-                <FormItem class="item-top form-item-type">
-                  <CheckboxGroup v-model="form.age" class="item-radio-top">
-                    <Checkbox  style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
-                    <Checkbox
-                      style="100px"
-                      v-for="it in ageList"
-                      :key="it.key"
-                      :label="it.key"
-                      class="check-item"
-                    >
-                      <span>{{it.text}}</span>
-                    </Checkbox>
-                  </CheckboxGroup>
-                </FormItem>
-              </Col>
-
-              <Col :span="12">
-                <div ref="types">
-                  <div class="orient-title">影片类型</div>
-                  <FormItem :labelWidth="0" class="item-top form-item-type">
-                    <CheckboxGroup v-model="form.type" class="item-radio-top">
-                      <Checkbox  style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
-                      <Checkbox
-                        v-for="it in typeList"
+                  <div class="age-box">
+                    <RadioGroup v-model="form.sex" class="item-radio-top">
+                      <Radio  style="width: 250px" class="check-item form-item-first" :label="0">不限</Radio>
+                      <Radio
+                        v-if="it.key != 'unknow'"
+                        style="width: 116px; height: 40px; float: left;"
+                        v-for="it in sexList"
                         :key="it.key"
                         :label="it.key"
-                        class="check-item"
-                      >{{it.text}}</Checkbox>
+                        class="check-item check-icon"
+                      >
+                        <span>{{it.text}}</span>
+                      </Radio>
+                    </RadioGroup>
+                  </div>
+                </FormItem>
+              </Col>
+
+              <Col :span="17">
+                <div class="title-box" style='margin-left: 20px'>
+                  <div class="orient-title">受众年龄</div>
+                  <FormItem class="item-top form-item-type">
+                    <CheckboxGroup v-model="form.age" class="item-radio-top">
+                      <Checkbox  style="width: 250px" class="check-item form-item-first" :label="0">不限</Checkbox>
+                      <div class="check-box">
+                        <Checkbox
+                          v-for="it in ageList"
+                          :key="it.key"
+                          :label="it.key"
+                          class="check-item"
+                        >
+                          <span>{{it.text}}</span>
+                        </Checkbox>
+                      </div>
                     </CheckboxGroup>
                   </FormItem>
                 </div>
+              </Col>
+
+              <Col :span="12">
               </Col>
             </Col>
           </Row>
 
           <h3 class="layout-titles">
             影片定向
-            <FormItem :labelWidth="0" class="item-top cinema-position form-item-type">
+          </h3>
+           <FormItem :labelWidth="0" class="item-top cinema-position form-item-type">
               <Tags v-model="movieCustom" :tagMess="movieList"/>
             </FormItem>
-          </h3>
-          <div class="item-top" style="margin-top: 50px" v-show="movieCustom != 0">
-            <Film v-model="numsList" :begin="beginDate" :end="endDate" @donefilm="timerfilm"/>
+          <div v-show="movieCustom != 0">
+            <Film v-if="typeList.length > 0" v-model="numsList" @donefilm="timerfilm" :begin="beginDate" :end="endDate" />
+          </div>
+          <div v-show='movieCustom == 0'>
+            <div class='all-box'>
+              系统将自动为您安排投放周期内所有的场次进行投放
+            </div>
           </div>
 
           <div class="btn-center">
@@ -164,11 +149,12 @@
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import Tags from '../tag.vue'
-import { cinemaFind } from '@/api/popPlan.ts'
+import { cinemaFind, xlspost } from '@/api/popPlan.ts'
 import { confirm, toast } from '@/ui/modal'
 import moment from 'moment'
-import Film from './film.vue'
+import Film from './newfilm.vue'
 import Chain from '@/components/cityMap/CityMap.vue'
+import { post } from '@/fn/ajax'
 import {
   getTwodetail,
   warehouse,
@@ -176,11 +162,14 @@ import {
   direction,
   searchcinema,
   adverdetail,
-  getRecommend
+  getRecommend,
+  downcinema
 } from '@/api/popPlan.ts'
 import { clean } from '@/fn/object.ts'
-import City from '@/components/citySelectDialog'
+import City from '@/components/adverCity'
 import { info } from '@/ui/modal'
+import jsxReactToVue from '@/util/jsxReactToVue'
+
 // 保持互斥
 const keepExclusion = <T>(
   value: T[],
@@ -207,11 +196,14 @@ const timeFormats = 'YYYYMMDD'
 })
 export default class Orienteering extends ViewBase {
   @Prop() value!: any
+  xlsname: any = ''
   visible = false
   citysId = []
   topCitysId = []
   beginDate = ''
   endDate = ''
+  cityfalse = false
+  spins = 0
   planMovies: any = null
   form: any = {
     name: '',
@@ -220,13 +212,14 @@ export default class Orienteering extends ViewBase {
     age: [0],
     type: [0]
   }
+  spinshow = false
   warehouseId: any = []
   warehouseLisst: any = []
   loadingitem: any = {}
   movies: any = []
   timers: any = {}
   numsList: any = []
-  cityCustom: number = 0
+  cityCustom: number = 1
   movieCustom: number = 0
   cinemaType: number = 0
   settime: any = null
@@ -236,18 +229,18 @@ export default class Orienteering extends ViewBase {
 
   areaList = [
     {
-      label: 0,
-      name: '快速选择'
+      label: 1,
+      name: '按城市设置'
     },
     {
-      label: 1,
-      name: '自定义城市列表'
+      label: 0,
+      name: '按影院设置'
     }
   ]
   movieList = [
     {
       label: 0,
-      name: '系统智能匹配'
+      name: '全部影片通投'
     },
     {
       label: 1,
@@ -273,9 +266,18 @@ export default class Orienteering extends ViewBase {
   typeList: any = []
   cinemaDetail: any = []
   citiesList: any = []
+  xlslid = []
 
-  created() {
+  get herf() {
+    return `${VAR.ajaxBaseUrl}/xadvert/plans/export-cinemas`
+  }
+
+  mounted() {
     this.init()
+  }
+
+  timerfilm(val: any) {
+    this.numsList = val
   }
 
   formatDate(data: any) {
@@ -291,7 +293,6 @@ export default class Orienteering extends ViewBase {
       } = await adverdetail(this.value.setid)
       const datas = await warehouse()
       this.warehouseLisst = datas.data || []
-      this.cityCustom = item.cityCustom || 0
       this.citiesList = cities || []
       this.citysId = (this.citiesList || []).map((it: any) => it.id)
       this.warehouseId = (datas.data || []).map((it: any) => it.cityId)
@@ -299,25 +300,25 @@ export default class Orienteering extends ViewBase {
       this.endDate = item.endDate
       this.tags = tags
       if (this.$route.name == 'pop-planlist-edit') {
+        this.cityCustom = item.cityCustom || 0
         this.deliveryCityTypeList = deliveryCityTypeList
         this.item = item
         this.movies = movies
         this.renders(item)
       }
-
+      // this.citysId = item.customDeliveryCities || []
+      this.xlslid = item.deliveryCinemas || []
       this.cityList = data.deliveryCityTypeList
+      this.movieCustom = item.movieCustom
       this.cinemastatusList = data.cinemaList
       this.sexList = data.tags[2].values || []
       this.ageList = data.tags[1].values || []
       this.typeList = data.tags[0].values || []
       this.cinemaDetail = data.items || []
+      this.cityfalse = true
     } catch (ex) {
       this.handleError('系统错误，请重新尝试！')
     }
-  }
-
-  timerfilm(val: any) {
-    this.timers = val
   }
 
   renders(val: any) {
@@ -330,7 +331,7 @@ export default class Orienteering extends ViewBase {
 
   movieCustoms() {
     if (this.item.movieCustom == 1) {
-      this.movieCustom = 1
+      this.movieCustom = 0
       this.numsList = (this.movies || []).map((it: any) => {
         return {
           id: it.id,
@@ -411,9 +412,13 @@ export default class Orienteering extends ViewBase {
   }
 
   async next(dataform: any) {
-    const timers = Object.keys(this.timers)
-    if (this.movieCustom != 0 && this.numsList.length == 0) {
-      confirm('请选择影片')
+    // const timers = Object.keys(this.timers)
+    if (this.cityCustom == 0 && this.xlslid.length == 0) {
+      confirm('请设置目标影院')
+      return
+    }
+    if (this.movieCustom == 1 && this.numsList.length == 0) {
+      confirm('最少选择一个影片')
       return
     }
     try {
@@ -421,13 +426,7 @@ export default class Orienteering extends ViewBase {
         clean({
           planId: this.$route.params.setid,
           cityCustom: this.cityCustom,
-          allNation: this.form.cinema[0] == 0 ? 1 : 0,
-          deliveryCityTypes: this.cityCustom == 0 ? this.form.cinema : '',
           deliveryGroups: [
-            {
-              tagTypeCode: 'MOVIE_TYPE',
-              text: this.form.type.join(';')
-            },
             {
               tagTypeCode: 'PLAN_GROUP_AGE',
               text: this.form.age.join(';')
@@ -439,8 +438,10 @@ export default class Orienteering extends ViewBase {
           ].filter((it: any) => {
             return it.text != 0
           }),
+          allNation: 1,
           movieCustom: this.movieCustom,
-          customDeliveryCities: this.cityCustom == 0 ? '' : this.citysId,
+          customDeliveryCities: this.cityCustom == 1 ? this.citysId : '' ,
+          customDeliveryCinemas: this.cityCustom == 0 ? this.xlslid : '' ,
           deliveryMovies:
             this.movieCustom == 0
               ? ''
@@ -453,58 +454,44 @@ export default class Orienteering extends ViewBase {
                 })
         })
       )
-      ; (this.$Spin as any).show()
-      let settime: any = null
+
+      this.spins = 20
+      this.spinshow = true
       this.recommend = false
-      settime = setInterval(() => {
+      this.settime = setInterval(() => {
         if (this.recommend) {
-          (this.$Spin as any).hide()
-          clearInterval(settime)
-          // if (this.loadingitem.item.movieCustom == 1) {
-          //   if ( this.loadingitem.movies.length > 0 ) {
-          //     this.$emit('input', {
-          //       id: 2,
-          //       setid: this.$route.params.setid
-          //     })
-          //     if (this.$route.name == 'pop-planlist-add') {
-          //       this.$router.push({
-          //         name: 'pop-planlist-add',
-          //         params: { id: '2', setid: this.$route.params.setid  }
-          //       })
-          //     } else {
-          //       this.$router.push({
-          //         name: 'pop-planlist-edit',
-          //         params: { id: '2', setid: this.$route.params.setid  }
-          //       })
-          //     }
-          //   }
-          // } else {
+          this.spins = 100
+          clearInterval(this.settime)
+          setTimeout(() => {
+            this.spinshow = false
             if (this.planMovies && this.planMovies.length > 0) {
-              this.$emit('input', {
-                id: 2,
-                setid: this.$route.params.setid
-              })
-              if (this.$route.name == 'pop-planlist-add') {
-                this.$router.push({
-                  name: 'pop-planlist-add',
-                  params: { id: '2', setid: this.$route.params.setid  }
+                this.$emit('input', {
+                  step: 2,
+                  setid: this.$route.params.setid
                 })
+                if (this.$route.name == 'pop-planlist-add') {
+                  this.$router.push({
+                    name: 'pop-planlist-add',
+                    params: { step: '2', setid: this.$route.params.setid  }
+                  })
+                } else {
+                  this.$router.push({
+                    name: 'pop-planlist-edit',
+                    params: { step: '2', setid: this.$route.params.setid  }
+                  })
+                }
               } else {
-                this.$router.push({
-                  name: 'pop-planlist-edit',
-                  params: { id: '2', setid: this.$route.params.setid  }
-                })
+                info('非常抱歉，暂未找到匹配项；请尝试扩大定向范围或投放排期范围')
               }
-            } else {
-              info('非常抱歉，暂未找到匹配项；请尝试扩大定向范围或投放排期范围')
-            }
+              this.spins = 0
+            }, 500)
           // }
         } else {
           this.loddding()
         }
       }, 3000)
     } catch (ex) {
-      (this.$Spin as any).hide()
+      this.spinshow = false
       clearInterval(this.settime)
       this.handleError(ex)
     }
@@ -527,39 +514,64 @@ export default class Orienteering extends ViewBase {
   async loddding() {
     try {
       const {
+        data,
         data: { item, planMovies, movies }
       } = await adverdetail(this.value.setid)
+      if ( data.code == '401') {
+        this.spinshow = false
+        clearInterval(this.settime)
+      }
+      if (this.spins >= 80) {
+        this.spins = 99
+      } else {
+        this.spins += 20
+      }
       this.recommend = item.recommend
       this.planMovies = planMovies
       this.loadingitem = {
         item,
         movies
       }
-      // this.$emit('input', {
-      //   id: 2,
-      //   setid: this.$route.params.setid
-      // })
     } catch (ex) {
+      this.spinshow = false
+      clearInterval(this.settime)
     }
   }
 
   onCitySelectOk({ fastList }: any) {
   }
 
+  async filmchange(ev: Event) {
+    try {
+      const files: any = (ev.target as HTMLInputElement).files
+      if (files == null || files.length === 0) {
+        return
+      }
+      const form: any = new FormData
+      this.xlsname = files[0].name
+      form.append('file', files[0])
+      const { data } = await xlspost(this.$route.params.setid, form)
+      this.xlslid = data || []
+    } catch (ex) {
+      this.handleError(ex)
+    }
+    (this.$refs.downinput as any).value = ''
+  }
+
   back(dataform: any) {
     this.$emit('input', {
-      id: 0,
+      step: 0,
       setid: this.$route.params.setid
     })
     if (this.$route.name == 'pop-planlist-add') {
       this.$router.push({
         name: 'pop-planlist-add',
-        params: { id: '0', setid: this.$route.params.setid  }
+        params: { step: '0', setid: this.$route.params.setid  }
       })
     } else {
       this.$router.push({
         name: 'pop-planlist-edit',
-        params: { id: '0', setid: this.$route.params.setid  }
+        params: { step: '0', setid: this.$route.params.setid  }
       })
     }
   }
@@ -620,6 +632,7 @@ export default class Orienteering extends ViewBase {
 @import '~@/site/lib.less';
 .item-top {
   margin-left: 30px;
+  margin-right: 30px;
 }
 .plan-box {
   margin: 0 40px;
@@ -627,9 +640,9 @@ export default class Orienteering extends ViewBase {
 .layout-titles {
   font-size: 24px;
   font-weight: 500;
-  color: rgba(0, 32, 46, 1);
+  color: #fff;
   margin-left: 30px;
-  margin-bottom: 43px;
+  margin-bottom: 23px;
 }
 .set-city {
   font-size: 18px;
@@ -656,15 +669,14 @@ export default class Orienteering extends ViewBase {
     background-color: #00202d;
     border: 1px solid #00202d;
     &::after {
-      content: '\2713';
-      color: #fff;
+      content: '';
       position: absolute;
-      right: -8px;
-      top: -8px;
-      border: 1px solid #00202d;
-      background: #00202d;
-      width: 18px;
-      height: 18px;
+      right: -18px;
+      top: -18px;
+      background: url(./assets/sure.png);
+      width: 36px;
+      height: 36px;
+      background-size: 36px;
       border-radius: 50%;
       text-align: center;
       line-height: 16px;
@@ -675,15 +687,15 @@ export default class Orienteering extends ViewBase {
     background-color: #00202d;
     border: 1px solid #00202d;
     &::after {
-      content: '\2713';
-      color: #fff;
+      content: '';
       position: absolute;
-      right: -8px;
-      top: -8px;
-      border: 1px solid #00202d;
-      background: #00202d;
-      width: 18px;
-      height: 18px;
+      right: -18px;
+      top: -18px;
+      background: url(./assets/sure.png);
+      width: 36px;
+      height: 36px;
+      border: 0;
+      background-size: 36px;
       border-radius: 50%;
       text-align: center;
       line-height: 16px;
@@ -692,18 +704,12 @@ export default class Orienteering extends ViewBase {
 }
 .check-cinem {
   margin-top: 30px;
-  border-bottom: 1px solid #fff;
 }
 .item-three {
   margin-bottom: 80px;
-  border-bottom: 1px solid #fff;
   .flex {
     display: flex;
     flex-wrap: wrap;
-  }
-  .three-left {
-    border-right: 2px solid;
-    border-image: linear-gradient(to top, #fff 0%, rgba(0, 0, 0, 0) 80%) 10;
   }
 }
 .adv-left {
@@ -726,8 +732,12 @@ export default class Orienteering extends ViewBase {
   }
 }
 .orient-title {
-  text-align: center;
-  margin-bottom: 30px;
+  margin-left: 30px;
+  font-size: 18px;
+  margin-top: 20px;
+}
+/deep/ .ivu-checkbox-checked .ivu-checkbox-inner {
+  background: #00202d;
 }
 .hint {
   position: absolute;
@@ -776,7 +786,26 @@ export default class Orienteering extends ViewBase {
 .form-item-first:first-child {
   margin-bottom: 20px;
 }
-
+.check-box {
+  display: flex;
+  .check-item {
+    position: relative;
+    top: 3px;
+    flex: 1;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 4px;
+    text-align: center;
+    margin-right: 15px;
+    font-size: 14px;
+    color: #00202d;
+    border: 1px solid #fff;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    user-select: none;
+    .check-ra;
+  }
+}
 .check-item {
   position: relative;
   top: 3px;
@@ -835,10 +864,7 @@ export default class Orienteering extends ViewBase {
   }
 }
 .cinema-position {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: -66px;
+  margin: -20px 30px 20px;
 }
 .chain {
   transform: scale(0.75);
@@ -902,6 +928,94 @@ export default class Orienteering extends ViewBase {
     width: 80px;
     color: #00202d;
     overflow: hidden;
+  }
+}
+/deep/ .ivu-spin-fix {
+  position: fixed;
+}
+/deep/ .ivu-progress-inner {
+  background: #fec52f;
+}
+/deep/ .ivu-progress-text-inner {
+  display: none;
+}
+/deep/ .ivu-progress-bg {
+  background: #3959a8;
+}
+.btn-export {
+  width: 150px;
+  height: 40px;
+  border: 1px solid fff;
+  .button-style(#00202d, rgba(255, 255, 255, .3));
+  border-radius: 5px;
+  img {
+    vertical-align: middle;
+  }
+}
+.age-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /deep/ .ivu-radio-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+.xls-box {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  border: 1px solid #fff;
+  margin: 0 30px;
+  .title {
+    margin-left: 30px;
+    font-size: 16px;
+    color: rgba(0, 32, 45, 1);
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  .set-film {
+    font-size: 16px;
+    color: rgba(0, 32, 45, 1);
+  }
+  .upload-film {
+    font-size: 16px;
+    span {
+      .button-style(#fff, #00202d);
+      display: inline-block;
+      width: 100px;
+      height: 31px;
+      text-align: center;
+      line-height: 31px;
+      border-radius: 16px;
+      margin-left: 10px;
+    }
+  }
+}
+.title-box {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  border: 1px solid #fff;
+}
+.all-box {
+  margin: 0 30px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid #fff;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 150px;
+  font-size: 18px;
+  height: 150px;
+}
+.down-xls {
+  color: #00202d;
+  &:hover {
+    color: #00202d;
+  }
+  img {
+    width: 18px;
+    vertical-align: middle;
   }
 }
 </style>

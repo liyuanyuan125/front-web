@@ -8,22 +8,37 @@
         <div class="check-detail">
           <FormItem label="账号类别"  class="form-item-type">
             <RadioGroup  v-model="form.accountCategoryCode" class="item-radio-top">
-              <Radio :disabled="acount==2" class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio :disabled="acount==2" v-for="it in accountList" :key="it.key" :label="it.key"
-                class="check-item">{{it.text}}</Radio>
+              <Tooltip trigger="hover"  content="content">
+                <Radio :disabled="acount==2" class="check-item form-item-first" :label="0">不限</Radio>
+                <Radio :disabled="true" v-if="it.controlStatus != 2"  v-for="it in accountList" :key="it.key" :label="it.key"
+                  class="check-item">{{it.text}}</Radio>
+                <div slot="content">
+                    <span>免费用户暂不支持筛选</span>
+                </div>
+              </Tooltip>
             </RadioGroup>
           </FormItem>
           <FormItem label="粉丝数量"  class="form-item-type">
             <RadioGroup  v-model="form.fansRangCode" class="item-radio-top">
+              <Tooltip trigger="hover"  content="content">
               <Radio :disabled="acount==2" class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio :disabled="acount==2" v-for="it in fansList" :key="it.key" :label="it.key"
+              <Radio :disabled="true" v-for="it in fansList" :key="it.key" :label="it.key"
                 class="check-item">{{it.text}}</Radio>
+                <div slot="content">
+                    <span>免费用户暂不支持筛选</span>
+                </div>
+              </Tooltip>
             </RadioGroup>
           </FormItem>
           <FormItem label="地域分布"  class="form-item-type">
             <RadioGroup  v-model="area" class="item-radio-top">
               <Radio :disabled="acount==2" @click.native="areabox(false)" class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio :disabled="acount==2" @click.native="areabox(true)" class="check-item" :label='1'>指定区域</Radio>
+              <Tooltip trigger="hover"  content="content">
+              <Radio :disabled="true" @click.native="areabox(true)" class="check-item" :label='1'>指定区域</Radio>
+              <div slot="content">
+                    <span>免费用户暂不支持筛选</span>
+                </div>
+              </Tooltip>
             </RadioGroup>
           </FormItem>
           <div v-if="areaShow" class="area-box">
@@ -37,15 +52,25 @@
           <FormItem label="价格区间"  class="form-item-type">
             <RadioGroup  v-model="form.priceRangCode" class="item-radio-top">
               <Radio :disabled="acount==2" class="check-item form-item-first" :label="0">不限</Radio>
-              <Radio :disabled="acount==2" v-for="it in priceList" :key="it.key" :label="it.key"
+              <Tooltip trigger="hover"  content="content">
+              <Radio :disabled="true" v-for="it in priceList" :key="it.key" :label="it.key"
                 class="check-item">{{it.text}}</Radio>
+                <div slot="content">
+                    <span>免费用户暂不支持筛选</span>
+                </div>
+              </Tooltip>
             </RadioGroup>
           </FormItem>
           <FormItem label="受众性别"  class="form-item-type">
             <RadioGroup  v-model="form.sex" class="item-radio-top">
               <Radio :disabled="acount==2" class="check-item form-item-first" :label="-1">不限</Radio>
-              <Radio :disabled="acount==2" v-for="it in sexList" :key="it.key" :label="it.key"
+              <Tooltip trigger="hover"  content="content">
+              <Radio :disabled="true" v-for="it in sexList" :key="it.key" :label="it.key"
                 class="check-item">{{it.text}}</Radio>
+                <div slot="content">
+                    <span>免费用户暂不支持筛选</span>
+                </div>
+              </Tooltip>
             </RadioGroup>
           </FormItem>
         </div>
@@ -60,7 +85,12 @@
           <span class="content-set">平均数量以近90天的内容计算</span>
           <span class="content-set">数据更新日期{{times}}</span>
           <FormItem  class="form-name">
-            <Input :disabled="acount == 2" style="width: 300px" v-model="form.name" suffix="ios-search" :placeholder="nameList[type]" />
+            <div class="flex-box search-border-left" style="width: 100%">
+              <Input :disabled="acount == 2" style="width: 250px" v-model="form.name" :placeholder="nameList[type]"/>
+              <Button type="primary" class="bth-search" >
+                <Icon type="ios-search" size="22"/>
+              </Button>
+            </div>
           </FormItem>
         </div>
       </Form>
@@ -71,8 +101,9 @@
           <template slot-scope="{ row }" slot="name">
             <div class="table-name">
               <div class="to-detail" @click="$router.push({ name: 'kol-figure', params: { id: row.kolId, channel: row.channelCode }})">
-                <img width="30px" height="30px" :src="row.image" alt="">
-                 <span>{{row.name}}</span>
+                <img v-if="acount == 1" width="30px" height="30px" :src="row.image" alt="">
+                <img v-else width="30px" height="30px" :src="row.headerUrl" alt="">
+                <span style='font-weight: bold'>{{row.name}}</span>
               </div>
             </div>
           </template>
@@ -82,52 +113,61 @@
           </template>
           <template slot-scope="{ row }" slot="read">
             <div>
-              <span v-if="row.avgReadCount">{{formatnums(row.avgReadCount, 'w+')}}</span>
+              <span v-if="row.avgReadCount">{{formatnumber(row.avgReadCount)}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="flansNumber">
-            <span v-if="row.followersCount">{{formatNum(row.followersCount)}}</span>
+            <span v-if="row.followersCount">{{formatnumber(row.followersCount)}}</span>
             <span v-else>-</span>
           </template>
-          <template slot-scope="{ row }" slot="flansFace">
+          <template slot-scope="{ row, index }" slot="flansFace">
             <div>
-              <p class="flans-box">
-                <span>男性：</span>  
+              <p class="flans-box" style="width: 80px">
+                <span>男性：</span>
                 <span v-if="row.maleFans">{{formatnums(row.maleFans, '%')}}</span>
                 <span v-else>-</span>
               </p>
-              <p class="flans-box">
+              <p class="flans-box" style="width: 80px">
                 <span>女性：</span>
                 <span v-if="row.femaleFans">{{formatnums(row.femaleFans, '%')}}</span>
                 <span v-else>-</span>
               </p>
               <div>
                 <a @click="viewArea(row.areaId, row.id)" >查看地域</a>
-                <AreaModal v-show="handleShow" v-clickoutside="handleClose" v-if="row.id == areaIdshow" class="flans-modeal" :id="row.id" />
+                <AreaModal
+                  :style="
+                  acount == 1 ? index + 1 == tabledata.length ? 'margin-top: -300px' : ''
+                  : index == 0 ? 'margin-top: -300px' : ''
+                  "
+                  v-show="handleShow"
+                  v-clickoutside="handleClose"
+                  v-if="row.id == areaIdshow"
+                  class="flans-modeal"
+                  :id="row.id" />
               </div>
             </div>
           </template>
           <template slot-scope="{ row }" slot="discuss">
             <div>
-              <span v-if="row.avgCommentsCount">{{formatnums(row.avgCommentsCount)}}</span>
+              <span v-if="row.avgCommentsCount">{{formatnumber(row.avgCommentsCount)}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="like">
             <div>
-              <span v-if="row.avgAttitudesCount">{{formatnums(row.avgAttitudesCount, 'w+')}}</span>
+              <span v-if="row.avgAttitudesCount">{{formatnumber(row.avgAttitudesCount)}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="transmit">
             <div>
-              <span v-if="row.avgRepostsCount">{{formatnums(row.avgRepostsCount, 'w+')}}</span>
+              <span v-if="row.avgShareCount">{{formatnumber(row.avgShareCount)}}</span>
               <span v-else>-</span>
             </div>
           </template>
           <template slot-scope="{ row }" slot="price">
-            <div v-if="row.price.length > 0">
+            <div v-if="row.price && row.price.length > 0">
               <Tooltip placement="top">
                 <div class="prices">
                   <p v-for="it in row.price" :key="it.key" style="margin-top: 5px">
@@ -145,20 +185,20 @@
           </template>
           <template slot-scope="{ row }" slot="action">
             <div class="table-action">
-              <p v-if="!yudingListId.includes(row.kolId)" @click="debounce(row, $event, 1000)">
+              <!-- <p v-if="!yudingListId.includes(row.kolId)" @click="debounce(row, $event, 1000)">
                 <Icon type="md-add-circle" style=" font-size: 17px; color: #001F2C; opacity: .3" />
                 加入投放
               </p>
               <p v-else @click="cancelShop(row.id)">
                 <Icon type="ios-checkmark-circle" style="font-size: 17px; color: #CA7273;" />
                 已加入
-              </p>
-              <p style="margin-top: 5px" v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)" 
+              </p> -->
+              <p style="margin-top: 0px" v-if="!kolIds.includes(acount == 1 ? row.id : row.accountDataId)"
               @click="collects(acount == 1 ? row.id : row.accountDataId)">
                 <Icon type="md-heart" style="font-size: 17px;color: #001F2C; opacity: .3" />
                 收藏
               </p>
-              <p style="margin-top: 5px" v-else @click="cancelcollects(acount == 1 ? row.id : row.accountDataId)">
+              <p style="margin-top: 0px" v-else @click="cancelcollects(acount == 1 ? row.id : row.accountDataId)">
                 <Icon type="md-heart" style="font-size: 17px; color: #CA7273" />
                 已收藏
               </p>
@@ -179,7 +219,8 @@
         show-elevator
         @on-change="sizeChangeHandle"
         @on-page-size-change="currentChangeHandle"/> -->
-        <pagination :pageList="pageList" :total="total" @uplist="KolSeach"></pagination>
+        <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
+        <div class="free-user-tip">免费用户仅可查看2页</div>
       </div>
       <Detail ref='detailbox' v-model="type" @done="checkDetailSet" />
     </div>
@@ -188,10 +229,11 @@
         <div>
           <div class="check-title">已选择<span ref="end" class="red"> {{yudingList.length}} </span>个，总粉丝数：
           <span class="red">{{fansNums(yudingList)}}</span>
-            <Icon @click="detailShow" type="ios-arrow-up" class="ios-type" />
+            <Icon @click="detailShow" v-if="detailflag" type="ios-arrow-up" class="ios-type" />
+            <Icon @click="detailhide" v-else type="ios-arrow-down" />
           </div>
           <div style="margin-right: 20px">
-            <Button type="primary" class="button-ok" @click="next">立即预定</Button>
+            <!-- <Button type="primary" class="button-ok" @click="next">立即预定</Button> -->
           </div>
         </div>
       </div>
@@ -218,7 +260,7 @@ import { getpersons, delcollect } from '@/api/mycollect.ts'
 import { kolList } from '@/api/collect.ts'
 import { findkol } from '@/api/shopping'
 import pagination from '@/components/page.vue'
-
+import { readableNumber } from '@/util/dealData.ts'
 // 保持互斥
 const keepExclusion = <T extends any>(
   value: T[],
@@ -259,6 +301,7 @@ const defaultForm: any = {
 export default class Main extends ViewBase {
   time = 0
   type: any = 0
+  detailflag = true
   total = 0
   areaId = 0
   areaIdshow = -1
@@ -292,12 +335,13 @@ export default class Main extends ViewBase {
   kolIds: any = []
   times: any = ''
   ballsrc: any = ''
+  tabledataid: any[] = []
+  desckey = 'followersCount'
+  desc = 'desc'
 
-  get pageList() {
-    return {
-      pageIndex: this.form.pageIndex,
-      pageSize: this.form.pageSize
-    }
+  pageList = {
+    pageIndex: 1,
+    pageSize: 10
   }
 
   get columns() {
@@ -320,7 +364,8 @@ export default class Main extends ViewBase {
         minWidth: 40,
         key: 'followersCount',
         slot: 'flansNumber',
-        sortable: this.acount == 1 ? 'custom' : ''
+        sortable: this.acount == 1 ? 'custom' : '',
+        sortType: 'desc'
       },
       {
         title: '粉丝画像',
@@ -342,7 +387,7 @@ export default class Main extends ViewBase {
         align: 'left',
         slot: 'discuss',
         key: 'avgCommentsCount',
-        sortable: 'custom',
+        sortable: this.acount == 1 ? 'custom' : ''
       },
       {
         title: '平均点赞数',
@@ -356,7 +401,7 @@ export default class Main extends ViewBase {
         title: '平均转发数',
         align: 'left',
         minWidth: 51,
-        key: 'avgRepostsCount',
+        key: 'avgShareCount',
         slot: 'transmit',
         sortable: this.acount == 1 ? 'custom' : ''
       },
@@ -381,6 +426,10 @@ export default class Main extends ViewBase {
         slot: 'action'
       }
     ]
+  }
+
+  formatnumber(val: any) {
+    return readableNumber(val)
   }
 
   formatnums(val: any, msg: any = '', errors: string = '-', id: number = 0) {
@@ -411,6 +460,11 @@ export default class Main extends ViewBase {
     if ( this.acount == 1) {
       this.areaShow = check
     }
+  }
+
+  uplist(size: any) {
+    this.pageList.pageIndex = size
+    this.KolSeach()
   }
 
   formatNum(data: any) {
@@ -508,8 +562,14 @@ export default class Main extends ViewBase {
 
   async sortTable(column: any) {
     if (column.order == 'desc') { // 降序
+        this.desckey = column.key
+        this.desc = 'desc'
         this.KolSeach(column.key, 'desc')
+    } else if (column.order == 'normal') {
+      this.desc = 'desc'
+      this.KolSeach(column.key, '')
     } else {
+      this.desc = 'asc'
       this.KolSeach(column.key, '')
     }
   }
@@ -601,6 +661,10 @@ export default class Main extends ViewBase {
         channelTypeCode: this.type + 4
       })
       this.tabledata = data.items || []
+      this.tabledataid = [
+        this.tabledata.length > 0 ? this.tabledata[this.tabledata.length - 1].id : ''
+      ]
+      this.total = data.totalCount
     } catch (ex) {
       this.handleError(ex)
     }
@@ -626,6 +690,7 @@ export default class Main extends ViewBase {
         channelType: this.type + 4,
         dataIdList: [id]
       })
+      this.collectinit()
       this.kolinit()
     } catch (ex) {
       this.handleError(ex)
@@ -660,16 +725,27 @@ export default class Main extends ViewBase {
 
   // 购物车显示
   detailShow() {
+    this.detailflag = false
     this.$nextTick(() => {
       (this.$refs.detailbox as any).init(this.yudingList)
     })
   }
 
+  detailhide() {
+    (this.$refs.detailbox as any).flags()
+    this.detailflag = true
+  }
+
   checkDetailSet(val: any) {
     this.yudingList = val
+    if (this.acount == 1) {
+      this.KolSeach()
+      this.kolinit()
+    } else {
+      this.collectinit()
+      this.kolinit()
+    }
     this.yudingListId = this.yudingList.map((it: any) => it.kolId)
-    this.KolSeach()
-    this.kolinit()
   }
 
   // 粉丝数相加
@@ -688,13 +764,14 @@ export default class Main extends ViewBase {
     // await delall('weibo')
     const query = clean({
       ...this.form,
+      ...this.pageList,
       accountCategoryCode: this.form.accountCategoryCode == 0 ? '' : this.form.accountCategoryCode,
       fansRangCode: this.form.fansRangCode == 0 ? '' : this.form.fansRangCode,
       sex: this.form.sex == -1 ? '' : this.form.sex,
       priceRangCode: this.form.priceRangCode == 0 ? '' : this.form.priceRangCode,
       areaIds: this.area == 0 && this.form.areaIds.join(',') == 0 ? '' : this.form.areaIds.join(','),
-      sortBy: key,
-      order
+      sortBy: this.desckey,
+      order: this.desc
     })
     try {
       const { data: {
@@ -702,6 +779,9 @@ export default class Main extends ViewBase {
         totalCount
       }} = await kolmsglist(query)
       this.tabledata = items || []
+      this.tabledataid = [
+        this.tabledata.length > 0 ? this.tabledata[this.tabledata.length - 1].id : ''
+      ]
       this.total = totalCount
       this.loading = false
     } catch (ex) {
@@ -720,6 +800,7 @@ export default class Main extends ViewBase {
 
   @Watch('form', { deep: true })
   watchForm(value: any) {
+    this.pageList.pageIndex = 1
     this.KolSeach()
   }
 
@@ -759,7 +840,7 @@ export default class Main extends ViewBase {
   width: 150px;
 }
 .kol-page {
-  padding: 0 30px;
+  padding: 0 30px 40px 30px;
 }
 .kol-title {
   text-align: center;
@@ -777,7 +858,7 @@ export default class Main extends ViewBase {
   margin-left: 30px;
 }
 .check-detail {
-  background: rgba(0, 31, 44, .6);
+  background: rgba(0, 31, 44, .8);
   padding-top: 20px;
   /deep/ .ivu-form-item-label {
     color: #fff;
@@ -806,7 +887,7 @@ export default class Main extends ViewBase {
   left: 0;
   right: 40px;
   overflow: auto;
-  background: rgba(255, 255, 255, .9);
+  background: rgba(255, 255, 255, .7);
   border-radius: 5px;
 }
 .area-box {
@@ -856,15 +937,18 @@ export default class Main extends ViewBase {
     position: absolute;
     right: -25px;
     top: -8px;
+    /deep/ .ivu-input,
+    /deep/ .ivu-input-wrapper {
+      border-radius: 5px 0 0 5px;
+      .ivu-icon-ios-search {
+        margin-top: -2px;
+      }
+    }
     /deep/ .ivu-input {
       background: rgba(255, 255, 255, .8);
       &::placeholder {
         color: #001f2c;
       }
-    }
-    /deep/ .ivu-input-suffix i {
-      font-size: 24px;
-      line-height: 40px;
     }
   }
 }
@@ -911,9 +995,6 @@ export default class Main extends ViewBase {
     border-radius: 58%;
   }
 }
-/deep/ .edit-input .ivu-form-item-content .ivu-input-wrapper input {
-  border-radius: 5px;
-}
 .list-table {
   border-radius: 5px;
   min-width: 1146px;
@@ -945,38 +1026,35 @@ export default class Main extends ViewBase {
   margin: 0;
   min-height: 240px;
   position: initial !important;
-  /deep/ .ivu-table-header th {
+  .ivu-table-header th {
     height: 60px;
     line-height: 60px;
     span {
       font-size: 14px;
     }
   }
-  /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
+  .ivu-table-column-center, .ivu-table-column-left {
     background: rgba(0, 0, 0, 0);
   }
-  /deep/ .ivu-table {
+  .ivu-table {
     background: rgba(0, 0, 0, 0);
   }
-  /deep/ .ivu-table-row {
+  .ivu-table-row {
     background: rgba(0, 0, 0, 0);
-    /deep/ td {
+    td {
       background: rgba(0, 0, 0, 0);
     }
   }
-  /deep/ .ivu-table-tbody {
+  .ivu-table-tbody {
     color: #001f2c;
   }
-  /deep/ .ivu-table-tip td {
+  .ivu-table-tip td {
     background: rgba(0, 0, 0, 0);
     padding-top: 60px;
   }
-  /deep/ .ivu-table-cell {
+  .ivu-table-cell {
     padding-right: 10px;
     padding-left: 10px;
-  }
-  /deep/ .ivu-table-row-hover {
-    background: rgba(255, 255, 255, .4);
   }
   .table-action {
     p {
@@ -1007,9 +1085,8 @@ export default class Main extends ViewBase {
 
   .flans-modeal {
     position: absolute;
-    margin-left: 60px;
+    margin-left: -160px;
     z-index: 999;
-    margin-top: -120px;
   }
 }
 .btnCenter {
@@ -1060,5 +1137,21 @@ export default class Main extends ViewBase {
       color: #fff;
     }
   }
+}
+
+.free-user-tip {
+  position: relative;
+  top: -30px;
+  color: #999;
+  text-align: center;
+}
+/deep/ .search-border-left {
+  input {
+    border-right: none;
+  }
+}
+.bth-search {
+  border-radius: 0 5px 5px 0;
+  .button-style(#fff, #00202d);
 }
 </style>

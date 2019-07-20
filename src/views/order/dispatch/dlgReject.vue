@@ -141,6 +141,27 @@ export default class DlgEditCinema extends ViewBase {
 
   mounted() {
     this.seach()
+    this.listall()
+  }
+
+  async listall() {
+    try {
+      const {
+        data: {
+          items,
+          totalCount
+        }
+      } = await queryDetail(this.value.id, {
+        ...this.reject,
+        pageIndex: 1,
+        pageSize: 200000,
+      })
+      this.checkId = (items || []).map((it: any) => {
+        return it.id
+      })
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
   async seach() {

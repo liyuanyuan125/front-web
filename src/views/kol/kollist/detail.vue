@@ -1,6 +1,6 @@
 <template>
   <div v-if="showDlg">
-    <div class="detail-fix" @click="flags">
+    <div class="detail-fix">
     </div>
     <div class="detail-modeal">
       <div class="table-action" @click.stop="flag">
@@ -341,7 +341,7 @@ export default class DlgEditCinema extends ViewBase {
   position: fixed;
   left: 120px;
   right: 0;
-  bottom: 0;
+  bottom: 80px;
   height: 300px;
   background: #fff;
   z-index: 998;
@@ -358,7 +358,7 @@ export default class DlgEditCinema extends ViewBase {
   }
   /deep/ .ivu-table-wrapper {
     margin: 0;
-    /deep/ .ivu-table-header th {
+    .ivu-table-header th {
       height: 60px;
       background: #000;
       color: #fff;
@@ -367,7 +367,7 @@ export default class DlgEditCinema extends ViewBase {
         font-size: 14px;
       }
     }
-    /deep/ .ivu-table-cell {
+    .ivu-table-cell {
       padding-right: 10px;
       padding-left: 10px;
     }
@@ -402,7 +402,7 @@ export default class DlgEditCinema extends ViewBase {
   top: 0;
   left: 120px;
   right: 0;
-  bottom: 0;
+  bottom: 80px;
   background: rgba(0, 0, 0, .6);
   z-index: 991;
 }

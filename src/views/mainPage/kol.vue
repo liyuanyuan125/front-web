@@ -1,5 +1,9 @@
 <template>
-  <Layout :bubbleList="bubbleList" :class="bigFigure ? 'layout-big-figure' : ''">
+  <Layout
+    :bubbleList="bubbleList"
+    :bubbleLink="{ name: 'kol-detail-comment', params: { id } }"
+    :class="bigFigure ? 'layout-big-figure' : ''"
+  >
     <div class="main-content flex-box">
       <div
         class="big-figure"
@@ -15,6 +19,8 @@
           :brandData="brandData"
           :fansList="fansList"
           :more="{ name: 'kol-detail-platform', params: { id } }"
+          :favGet="favGet"
+          :favSet="favSet"
         />
       </div>
 
@@ -37,7 +43,7 @@
             title="粉丝画像"
             :man="fansRate.man"
             :woman="fansRate.woman"
-            :more="{ name: 'kol-detail-fans', params: {id} }"
+            :more="{ name: 'kol-detail-fans', params: { id } }"
             class="fans-pane"
             v-if="fansRate"
           />
@@ -45,7 +51,7 @@
 
           <PiePane
             title="近7日评论分析"
-            :more="{ name: 'kol-detail-comment', params: {id} }"
+            :more="{ name: 'kol-detail-comment', params: { id } }"
             :data="commentData"
             :formatter="commentFormatter"
             class="comment-pane"
@@ -56,7 +62,7 @@
           <HotPane
             :title="hotData.title"
             :data="hotData.list"
-            :more="{ name: 'kol-detail-platform', params: {id} }"
+            :more="{ name: 'kol-detail-platform', params: { id } }"
             :formatter="hotFormatter"
             class="hot-pane"
             v-if="hotData"
@@ -96,7 +102,9 @@ import HotPane from './components/hotPane.vue'
 import OpusPane from './components/opusPane.vue'
 import OfferPane from './components/offerPane.vue'
 import { getKol } from './data'
+import { kolHasFav, kolSetFav } from './fav'
 import { readableThousands } from '@/util/dealData'
+import { setPageTitle } from '@/util/browser'
 
 @Component({
   components: {
@@ -135,6 +143,10 @@ export default class FigurePage extends ViewBase {
   opusData: any = null
 
   offerData: any = null
+
+  favGet = kolHasFav
+
+  favSet = kolSetFav
 
   commentFormatter({ seriesName, dataIndex }: any) {
     const { name, value, trend } = this.commentData[dataIndex]
@@ -195,6 +207,8 @@ export default class FigurePage extends ViewBase {
     this.hotData = hotData
     this.opusData = opusData
     this.offerData = offerData
+
+    setPageTitle(`${basic.name}-鲸娱数据`)
   }
 
   @Watch('channel')

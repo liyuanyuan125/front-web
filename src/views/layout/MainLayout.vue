@@ -16,22 +16,22 @@
 
       <div class="flex-1"></div>
 
-      <form class="search-form flex-mid" @submit.prevent="search">
+      <!-- <form class="search-form flex-mid" @submit.prevent="search">
         <input type="search" v-model="keyword" placeholder="搜索" class="search-input">
         <Button html-type="submit" class="search-submit">
           <i class="iconfont icon-search"/>
         </Button>
-      </form>
+      </form> -->
 
-      <router-link :to="{ name: 'kol-shopping' }" class="cart-node">
+      <!-- <router-link :to="{ name: 'kol-shopping' }" class="cart-node">
         <i class="iconfont icon-cart"/>
         <span class="cart-count" v-if="cartCount > 0">{{cartCount}}</span>
-      </router-link>
+      </router-link> -->
 
-      <!-- <router-link :to="{}" class="notice-node">
+      <router-link :to="{ name: 'message' }" class="notice-node">
         <i class="iconfont icon-notice"/>
         <span class="notice-count" v-if="hasNotice"></span>
-      </router-link> -->
+      </router-link>
 
       <div class="user-box flex-box">
         <Dropdown placement="bottom-end" class="switcher" @on-click="onSwitcherClick">
@@ -642,5 +642,11 @@ export default class MainLayout extends ViewBase {
 // TODO: 临时隐藏
 .menu-item-report {
   display: none;
+}
+.theme-resource {
+  .menu-item-home,
+  .menu-item-resfinance-info {
+    display: none;
+  }
 }
 </style>

@@ -52,7 +52,7 @@ export default class DetailTableCard extends Vue {
 .table-box {
   border-radius: 5px;
   padding: 25px 0;
-  min-height: 445px;
+  min-height: 470px;
   /deep/ .ivu-table th,
   /deep/ .ivu-table-header {
     background: rgba(0, 32, 45, 0.8);

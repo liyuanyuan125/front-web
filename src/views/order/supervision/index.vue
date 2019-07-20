@@ -24,7 +24,7 @@
                 v-for="item in movieList"
                 :key="item.id"
                 :value="item.id"
-              >{{item.name}}</Option>
+              >{{item.shortName}}</Option>
             </Select>
           </Col>
         </Col>
@@ -38,6 +38,29 @@
             <span @click='seachchgdown'>下周&nbsp;></span>
         </Col>
       </Row>
+      <!-- <Row>
+        <li class='li-item' v-for='(it,index) in normallist' :key='index'>
+            <row>
+              <Col span='3'>通投</Col>
+              <Col span='2'>50s</Col>
+              <Col span='19'>
+                <row>
+                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
+                  
+                  <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
+                  <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
+                    <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
+                    <router-link style='color: #00202D;margin-left: 25px;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,10)}}...</router-link>
+                  </Tooltip>
+                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+                  ({{item.videoLength}}s)
+                  </Col>
+                </row>
+              </Col>
+            </row>
+          </li>
+          <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div>
+      </Row> -->
       <div style=' margin-top: 15px; '>
       	<Row class='li-title'>
           <Col span='3' >影片名称</Col>
@@ -54,9 +77,9 @@
         				<row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                    <router-link style='color: #00202D;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,7)}}...</router-link>
+                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">{{item.videoName.slice(0,7)}}...</router-link>
                   </Tooltip>
-                <router-link style='color: #00202D;' tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
+                <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
@@ -116,6 +139,8 @@ export default class Main extends ViewBase {
 
 
   itemlist: any = []
+  normallist: any = []
+
 
 
 
@@ -125,12 +150,13 @@ export default class Main extends ViewBase {
     const cinid = await getcinid()
     if (cinid.data.cinemaId == 0) {
       info('当前用户下没有关联影院')
-      this.query.cinemaId = cinid.data.cinemaId
+      return
+      // this.query.cinemaId = cinid.data.cinemaId
     } else {
       this.query.cinemaId = cinid.data.cinemaId
       this.remoteMethod(cinid.data.cinemaName)
     }
-    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
+    if (new Date().getDay() == 5 || new Date().getDay() == 6) {
       this.weekDate = [
       new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
       new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
@@ -142,6 +168,19 @@ export default class Main extends ViewBase {
     } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
       this.seach()
       return
+    }
+    if (new Date().getDay() == 4) {
+      this.seach()
+    }
+    if (new Date().getDay() == 0) {
+      this.weekDate = [
+      new Date(this.startTime + (24 * 60 * 60 * 1000 * 1)) ,
+      new Date(this.endTime + (24 * 60 * 60 * 1000 * 1))]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.seach()
     }
   }
 
@@ -173,7 +212,7 @@ export default class Main extends ViewBase {
 
   reloadSearch() {
     this.seach()
-    this.seachchg()
+    // this.seachchg()
   }
 
   // 上传文件
@@ -220,7 +259,9 @@ export default class Main extends ViewBase {
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
       // this.seach()
-    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
+    } else if (
+      new Date().getDay() == 1 || new Date().getDay() == 2 ||
+      new Date().getDay() == 3 || new Date().getDay() == 4 ) {
       this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
       const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
       const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
@@ -244,7 +285,9 @@ export default class Main extends ViewBase {
       this.startTime -= this.datanum
       this.endTime -= this.datanum
       this.seach()
-    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
+    } else if (
+      new Date().getDay() == 1 || new Date().getDay() == 2 ||
+      new Date().getDay() == 3 || new Date().getDay() == 4 ) {
       this.weekDate = [new Date(this.startTime -= this.datanum), new Date(this.endTime -= this.datanum)]
       const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
       const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
@@ -269,7 +312,9 @@ export default class Main extends ViewBase {
       this.startTime += this.datanum
       this.endTime += this.datanum
       this.seach()
-    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
+    } else if (
+      new Date().getDay() == 1 || new Date().getDay() == 2 ||
+      new Date().getDay() == 3 || new Date().getDay() == 4 ) {
       this.weekDate = [new Date(this.startTime += this.datanum), new Date(this.endTime += this.datanum)]
       const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
       const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
@@ -333,6 +378,7 @@ export default class Main extends ViewBase {
       }
       const datalist = await querylist(this.query)
       this.itemlist = datalist.data.items
+      this.normallist = datalist.data.normal == null ? [] : datalist.data.normal
       this.asd = false
 
     } catch (ex) {
@@ -490,5 +536,9 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-select-input {
   margin-top: 3px;
+  color: #00202d;
+  &::-webkit-input-placeholder {
+    color: #00202d;
+  }
 }
 </style>

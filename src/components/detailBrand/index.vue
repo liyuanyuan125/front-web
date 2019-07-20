@@ -1,85 +1,78 @@
 <template>
-  <div class="detail-brand com-modal" v-if="list">
-      <div class="com-modal-title brand-list">
-        <span>合作品牌</span>
+  <div class="detail-brand com-modal">
+    <div class="com-modal-title brand-list">
+        <span>合作品牌({{list.length}})</span>
+        <em v-for="item in typeList" :key="item.key" >{{item.text}}({{item.num}})</em>
       </div>
       <div class="video-list">
-          <div class="list-col" v-for="item in list.items" :key ="item.id">
-              <h3><em>{{item.tag}}</em><span>{{item.title}}</span></h3>
-              <a :href="item.videoUrl" class="video-img" target="_blank"><img :src="item.imgUrl" class="top-img"/>
-              <!-- <i class="video-long">2:01</i> -->
-              </a>
+          <div class="list-col" v-for="item in list" :key ="item.id">
+              <h3 class="flex-box"><img :src="item.logo" width="30" height="30" /><span>{{item.name}}</span></h3>
+              <img :src="item.logo" class="top-img"/>
+              <em class="video-long" v-for="it in trades" :key="it.key" v-if="it.key == item.tradeCode">{{it.text}}</em>
               <h4 :title="item.description">{{item.description}}</h4> 
           </div>
       </div>
+      <div class="no-data-list" v-if="list.length == 0">暂无数据</div>
   </div>
 </template>
 
 <script lang='ts'>
 import {Component, Prop} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { AjaxResult } from './type'
-import { brandList } from '@/api/kolDetails'
+import { forEach } from 'lodash'
 
 @Component
 export default class Main extends ViewBase {
-    // 请求接口 加载列表的请求函数
-    @Prop({ type: Object }) value?: any
+  @Prop({ type: Function, required: true }) fetch!: any
+  @Prop({ type: Number, required: true}) id!: number
 
-    list = {
-      title: '合作品牌',
-      tab: [{key: 0, text: '全部', num: 8}, {key: 1, text: '运动', num: 5}, { key: 2, text: '奢侈品', num: 5}],
-      items: [
-        {
-          id: 1,
-          imgUrl: 'http://img5.mtime.cn/pi/2017/12/26/112527.39995952_220X220.jpg',
-          tag: '运动',
-          title: 'New Balance 新百伦',
-          description: 'papi酱演绎积家手表新广告，袒露内心的另一面,袒露内心的另一面',
-          videoUrl: 'http://www.365yg.com/i6690490835806617611/#mid=1610946690248711'
-        },
-        {
-          id: 2,
-          imgUrl: 'http://img5.mtime.cn/pi/2017/12/26/112527.39995952_220X220.jpg',
-          tag: '运动',
-          title: 'New Balance 新百伦',
-          description: 'papi酱演绎积家手表新广告，',
-          videoUrl: 'https://www.baidu.com'
-        },
-        {
-          id: 3,
-          imgUrl: 'http://img5.mtime.cn/pi/2017/12/26/112527.39995952_220X220.jpg',
-          tag: '运动',
-          title: 'New Balance 新百伦',
-          description: 'papi酱演绎积家手表新广告，袒露内心的另一面,袒露内心的另一面',
-          videoUrl: 'https://www.baidu.com'
-        },
-        {
-          id: 4,
-          imgUrl: 'http://img5.mtime.cn/pi/2017/12/26/112448.37214612_220X220.jpg',
-          tag: '运动',
-          title: 'New Balance 新百伦',
-          description: 'papi酱演绎积家手表新广告，袒露内心的另一面,袒露内心的另一面',
-          videoUrl: 'https://www.baidu.com'
-        },
-      ],
-      total: 10
-    }
+  list: any = [] // items
+  typeList: any[] = [] // 集合
+  trades: any = [] // code枚举
 
-    async mounted() {
-      const {items, brandCategoryList} = this.value
-    }
+  async mounted() {
+    const {items, trades} = await this.fetch(this.id)
+    this.list = items || []
+    this.trades = trades || []
 
-    handleTab(item: any) {
-      return item.num ? `${item.text} ${item.num}` : item.text
-    }
+     // 合并出现次数
+    const typeList: any[] = []
+    forEach((items || []), (it: any) => {
+      forEach((trades || []), (code: any) => {
+        if (it.tradeCode == code.key) {
+          // 假如typeList中的key已经存在， num则需要++
+          const ant = typeList.findIndex((a: any) => a.key == code.key)
+          if (ant != -1) {
+            typeList[ant].num++
+            return
+          }
+          typeList.push({
+            text: code.text,
+            key: code.key,
+            num: 1
+          })
+        }
+      })
+    })
+
+    this.typeList = typeList
+  }
 }
 
 </script>
 <style lang='less' scoped>
 @import '~@/views/kol/less/common.less';
+.no-data-list {
+  font-size: 15px;
+  color: #fff;
+  text-align: center;
+}
 .brand-list {
   padding-left: 30px;
+  em {
+    font-size: 12px;
+    padding-left: 14px;
+  }
 }
 .video-list {
   display: flex;
@@ -93,11 +86,16 @@ export default class Main extends ViewBase {
     padding: 0 30px;
     margin-bottom: 30px;
     color: #fff;
+    position: relative;
     h3 {
       padding-bottom: 20px;
-      text-align: center;
       font-size: 18px;
       font-weight: 0;
+      justify-content: center;
+      img {
+        border-radius: 50%;
+        margin-right: 10px;
+      }
     }
     h4 {
       padding: 0 10px;
@@ -117,9 +115,9 @@ export default class Main extends ViewBase {
     }
     .video-long {
       position: absolute;
-      right: 8px;
-      bottom: 8px;
-      width: 46px;
+      right: 35px;
+      bottom: 10px;
+      padding: 0 10px;
       text-align: center;
       height: 26px;
       line-height: 26px;

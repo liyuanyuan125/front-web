@@ -14,6 +14,8 @@ import ViewBase from '@/util/ViewBase'
 import DetailLayout, { RouteItem } from '@/components/detailLayout'
 import Figure from '@/components/figure'
 import { getFigure } from './data'
+import { RouteMetaBase } from '@/routes'
+import { setPageTitle } from '@/util/browser'
 
 @Component({
   components: {
@@ -39,10 +41,21 @@ export default class Layout extends ViewBase {
 
   figure = ''
 
+  get pageTitle() {
+    const meta = this.$route.meta as RouteMetaBase
+    const title = meta && meta.pageTitle || meta.title || ''
+    return `${this.name}${title}-鲸娱数据`
+  }
+
   async created() {
     const { name, figure } = await getFigure(this.id)
     this.name = name
     this.figure = figure
+  }
+
+  @Watch('pageTitle', { immediate: true })
+  watchPageTitle() {
+    setPageTitle(this.pageTitle)
   }
 }
 </script>
@@ -52,10 +65,9 @@ export default class Layout extends ViewBase {
 
 .detail-layout {
   padding-top: 78px;
-}
-
-.detail-side-in {
-  border-radius: 6px 6px 0 0;
+  /deep/ .detail-side-in {
+    border-radius: 6px 6px 0 0;
+  }
 }
 
 .figure-name {

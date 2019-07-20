@@ -33,18 +33,19 @@
           <li v-for="item in tableDate " :key="item.id">
             <div class="flex-box inner">
               <div class="left-item"  @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">
-                <img :src="item.logo" class="img" :onerror="defaultImg" />
+                <img v-if="item.logo" :src="item.logo" class="img" />
+                <img v-else src="./assets/default-img.png"  class="img"/>
               </div>
               
               <div class="right-item">
-                <p class="name">{{item.name}}</p>
-                <p class="brand-name">{{item.brandName || item.productName}}</p>
+                <p class="name" @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">{{item.name}}</p>
+                <p class="brand-name" @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">{{item.brandName || item.productName}}</p>
                 <div class="item-icon">
                   <span>{{transformSpecif(item.specification)}}</span>
                   <div class="icon-img">
                     <Tooltip content="审核中"> <img v-if="item.status == 1"  src="../assets/audit-icon.png" class="img-wid" /></Tooltip>
                     <Tooltip content="审核拒绝"><img v-if="item.status == 5" src="../assets/reject-icon.png" class="img-wid" /></Tooltip>
-                    <Tooltip content="支付"><img v-if="item.status == 2" src="../assets/pay-icon.png" class="img-wid" /></Tooltip>
+                    <Tooltip content="待支付"><img v-if="item.status == 2" src="../assets/pay-icon.png" class="img-wid" /></Tooltip>
                     <Tooltip content="转码中"><img v-if="item.status == 3"  src="../assets/transing-icon.png" class="img-wid" /></Tooltip>
                     <Tooltip content="点击编辑"><img v-if="item.status == 1 || item.status == 5" src="../assets/edit-icon.png" 
                     @click="$router.push({name: 'pop-film-edit', params: {id: item.id}})" class="img-wid" /></Tooltip>
@@ -235,6 +236,7 @@ export default class Main extends ViewBase {
         }
         .brand-name {
           // word-break: break-all;
+          height: 22px;
           padding-bottom: 7px;
           max-width: 150px;
           overflow: hidden;

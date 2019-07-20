@@ -4,7 +4,7 @@ import { mockGet, typeTitle, tid, title20, dateRange } from './mock'
 // 分页查询三方检测列表
 // 待整理
 export async function thirdMonitors(query: any) {
-    const res = await get('/xadvert/v1/plans', query)
+    const res = await get('/xadvert/plans', query)
     return res
     return await mockGet(query, {
         items: [
@@ -150,7 +150,7 @@ export async function thirdMonitors(query: any) {
  * https://yapi.aiads-dev.com/project/139/interface/api/2009
  */
 export async function getPlans(query: any) {
-    const res = await get('/xadvert/v1/plans', query)
+    const res = await get('/xadvert/plans', query)
     return res
     return await mockGet(query, {
         'items|3': [
@@ -524,7 +524,7 @@ export async function getPlans(query: any) {
  */
 
 export async function cinemasReport(id: string = '', query: any = {}) {
-    const res = await get(`xadvert/v1/plans/${id}/report/cinemas`, query)
+    const res = await get(`xadvert/plans/${id}/report/cinemas`, query)
     return res
     return await mockGet(id, {
         'items|10': [
@@ -547,7 +547,7 @@ export async function cinemasReport(id: string = '', query: any = {}) {
  * https://yapi.aiads-dev.com/project/139/interface/api/4749
  */
 export async function citiesReport(id: string = '', query: any = {}) {
-    const res = await get(`xadvert/v1/plans/${id}/report/cities`, query)
+    const res = await get(`xadvert/plans/${id}/report/cities`, query)
     return res
     return await mockGet(id, {
         'items|10': [
@@ -715,7 +715,7 @@ export async function searchPartners(data: any) {
  */
 export async function searchPlans(data: any) {
     data.statusList = '6,7,8,9'
-    const res = await get('/xadvert/v1/plans', data)
+    const res = await get('/xadvert/plans', data)
     return res
     return await mockGet(data, {
         items: [
@@ -1103,7 +1103,7 @@ export async function searchPlans(data: any) {
 export async function getPlansReport(id: number | string = -1) {
     // 演示 临时参数 nxd 20190621
     // id = '173'
-    const res = await get(`xadvert/v1/plans/${id}/report`)
+    const res = await get(`xadvert/plans/${id}/report`)
     return res
     return await mockGet(id, {
         plan: {

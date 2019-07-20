@@ -1,12 +1,12 @@
 <template>
   <div class="login-home">
     <content class="content">
-      <img src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcpcgljqctg008ubl7g.png" class="login-logo"/>
+      <img
+        src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcpcgljqctg008ubl7g.png"
+        class="login-logo"
+      />
       <p class="login-title">全网精准娱乐营销平台</p>
-      <Button type="primary" :to="{name: 'tologin'}"  class="login-but">登 录 / 注 册</Button>
-      <!-- <Button type="primary"  class="login-but">
-        <router-link tag="span" to="tologin">登 录</router-link> / <router-link tag="span" to="register">注 册</router-link>
-      </Button> -->
+      <Button type="primary" :to="toLoginUrl" class="login-but">登 录 / 注 册</Button>
     </content>
   </div>
 </template>
@@ -14,100 +14,15 @@
 <script lang='ts'>
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { login } from '@/api/auth'
-import setUserByData from '@/util/setUserByData'
-import { getCaptchaImage } from '@/api/captcha'
-// import detail from './detail.vue'
 
 @Component
-export default class Main extends ViewBase {
-  form = {
-    systemCode: 'ads',
-    email: '',
-    password: '',
-    captchaId: '',
-    captchaCode: ''
-  }
-
-  emailError = ''
-  passwordError = ''
-
-  captchaImg = ''
-  captchaCodeError = ''
-
-  submitDisabled = false
-
-  rules = {
-    email: [
-      { required: true, message: '请输入你的邮箱', trigger: 'blur' },
-      { type: 'email', message: '邮箱格式有误', trigger: 'blur' }
-    ],
-    password: [
-      { required: true, message: '请输入你的密码', trigger: 'blur' },
-      {
-        type: 'string',
-        min: 6,
-        message: '密码的个数不能少于6位',
-        trigger: 'blur'
-      }
-    ],
-    captchaCode: [{ required: true, message: '请输入图片验证码', trigger: 'blur' }]
-  }
-
-  async changeCaptcha() {
-    const { id, img } = await getCaptchaImage()
-    this.form.captchaId = id
-    this.captchaImg = img
-  }
-
-  async resetCaptcha() {
-    this.form.captchaCode = ''
-    this.changeCaptcha()
-  }
-
-  created() {
-    this.changeCaptcha()
-  }
-
-  async submit() {
-    const valid = await (this.$refs.form as any).validate()
-    if (!valid) {
-      return
+export default class Login extends ViewBase {
+  get toLoginUrl() {
+    const query = this.$route.query || {}
+    return  {
+      name: 'tologin',
+      query
     }
-
-    this.emailError = ''
-    this.passwordError = ''
-    this.captchaCodeError = ''
-
-    this.submitDisabled = true
-
-    try {
-      const postData = { ...this.form }
-      const { data } = await login(postData)
-      setUserByData({
-        ...data,
-        systemCode: postData.systemCode
-      })
-
-      this.$router.push({ name: 'home' })
-    } catch (ex) {
-      ((this as any)[`onLogin${ex.code}`] || this.handleError).call(this, ex)
-      this.resetCaptcha()
-    } finally {
-      this.submitDisabled = false
-    }
-  }
-
-  onLogin9006201() {
-    this.emailError = '账号不存在'
-  }
-
-  onLogin10002(ex: any) {
-    this.handleError(ex)
-  }
-
-  onLogin10006() {
-    this.captchaCodeError = '验证码错误'
   }
 }
 </script>
@@ -188,5 +103,4 @@ export default class Main extends ViewBase {
     }
   }
 }
-
 </style>

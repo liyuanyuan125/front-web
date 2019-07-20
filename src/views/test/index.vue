@@ -18,6 +18,14 @@
 	      :columns="columns"
 	      :data="list"
 	    >
+      <template slot-scope="{ row }" slot="name">
+            <div style="text-align:center;cursor: pointer;">
+              <router-link
+            :to="{path:'/reseport/effect-report-third/' + row.id }"
+            tag="span"
+          >{{row.name}}</router-link>&nbsp;&nbsp;&nbsp;
+            </div>
+          </template>
 	      <template slot-scope="{ row }" slot="action">
             <div style="text-align:center;cursor: pointer;">
               <router-link
@@ -72,7 +80,7 @@ export default class Main extends ViewBase {
   list: any = []
 
   columns = [
-    { title: '名称', key: 'name', align: 'center' },
+    { title: '名称', slot: 'name', align: 'center'},
     {
       title: '曝光人次',
       key: 'viewTotalCount',
@@ -82,6 +90,13 @@ export default class Main extends ViewBase {
       title: '包含影院数',
       key: 'deliveryCinemas',
       align: 'center',
+      render: (hh: any, { row: { deliveryCinemas } }: any) => {
+        /* tslint:disable */
+        const h = jsxReactToVue(hh)
+        const html = deliveryCinemas.length
+        return <span>{html}</span>
+        /* tslint:enable */
+      }
     },
     {
       title: '投放排期',
@@ -181,7 +196,7 @@ export default class Main extends ViewBase {
     text-align: center;
     line-height: 47px;
     margin-top: 6px;
-    font-size: 22px;
+    font-size: 20px;
     cursor: pointer;
   }
 }
@@ -217,10 +232,13 @@ export default class Main extends ViewBase {
   background: rgba(255, 255, 255, 0.8);
   border-radius: 5px 0 0 5px;
   border: 1px solid rgba(255, 255, 255, 1);
+  &::-webkit-input-placeholder {
+    color: #00202d;
+  }
 }
 /deep/ .ivu-input-search {
   cursor: pointer;
-  padding: 0 16px !important;
+  padding: 0 10px !important;
   color: #fff !important;
   border-color: #000 !important;
   position: relative;
@@ -228,6 +246,9 @@ export default class Main extends ViewBase {
   height: 40px;
   background: rgba(0, 32, 45, 1) !important;
   border-radius: 5px;
+}
+/deep/ .ivu-input-search i {
+  font-size: 27px;
 }
 /deep/ .button-text {
   margin: 0 3px;
@@ -258,16 +279,23 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-page-item-active {
   border-color: #eee;
-  background: #eee !important;
+  background: #00202d !important;
   border-radius: 50%;
   color: #fff;
   width: 30px;
   height: 30px;
 }
+/deep/ .ivu-page-item-active:hover a {
+  color: #fff;
+}
+/deep/ .ivu-page-item-active a {
+  color: #fff;
+}
 /deep/ .ivu-page-item {
   border: 0;
   display: inline-block;
   vertical-align: middle;
+  background: rgba(255, 255, 255, 0);
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -309,11 +337,14 @@ export default class Main extends ViewBase {
   background: rgba(32, 67, 80, 1);
 }
 /deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
-  color: #fff;
+  color: #00202d;
 }
 /deep/ .ivu-table-wrapper {
   margin: 30px 0 0;
   border: none;
+}
+/deep/ .ivu-page-total {
+  color: #00202d;
 }
 </style>
 

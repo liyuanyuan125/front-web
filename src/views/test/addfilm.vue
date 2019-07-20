@@ -9,6 +9,9 @@
       <h3>选择影片</h3>
       <i @click="cancel"></i>
     </div>
+    <Row>
+      <Input v-model='form.name' enter-button placeholder="请输入影片名称" style="width: 300px" />
+    </Row>
     <CheckboxGroup v-model="form.types" class="item-radio-top">
       <Checkbox style="width: 220px" class="check-item form-item-first" :label="0">不限</Checkbox>
       <Checkbox class="check-item" v-for="it in movieTypeList" :key="it.key" :label="it.key" >
@@ -20,20 +23,32 @@
       </div>
       <div class="detail">
         <ul class="film-list" v-if="data.length > 0">
-          <li @click="checkNum(it.id)" v-for="(it, index) in data" :key="index"
-            :class="['film-item', !!checkId.includes(it.id + '') ? 'list-active' : '']">
+          <li @click="checkNum(it.movie_id)" v-for="(it, index) in data" :key="index"
+            :class="['film-item', !!checkId.includes(it.movie_id + '') ? 'list-active' : '']">
             <div :class="['film-cover-box']">
-              <img :src="it.image ? it.image : 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg'"   class="film-cover">
-              <div>
-                <div class="film-title">{{it.nameCn}}</div>
-                <div class="film-time" style="margin-top: 10px">上映时间：{{formatDate(it.releaseDate)}}</div>
-                <div class="film-time">{{it.type.join(' / ')}}</div>
-                <div class="film-time">导演: {{it.director.join(' / ')}}</div>
-                <div class="film-time">主演: {{it.actor.join(' / ')}}</div>
+              <img :src="it.main_pic ? it.main_pic : 'http://img31.mtime.cn/ph/1473/1213473/1213473_290X440X4.jpg'"   class="film-cover">
+              <div style='width: 60%;'>
+                
+                <Tooltip  max-width="200" transfer :content="it.name_cn">
+                    <div class="film-title">{{it.name_cn}}</div></Tooltip>
+                <div class="film-time">上映时间：{{it.release_date}}</div>
+                <div class="film-time">
+                  <span>{{typelists(movieTypeList, it.types)}}</span>
+                  <!-- <span v-for='(its, index) in movieTypeList' :key='index'>
+                    <span v-for='(itsem, index) in it.type' :key='index' v-if='its.key == itsem'>{{its.text + ' '}}</span>
+                  </span> -->
+                </div>
+                <Tooltip  max-width="200" transfer :content="it.director.join(' / ')">
+                    <div class="film-time">导演: {{it.director.join(' / ')}}</div></Tooltip>
+                <Tooltip  max-width="200" transfer :content="it.actor.join(' / ')">
+                    <div class="film-time">主演: {{it.actor.join(' / ')}}</div></Tooltip>
               </div>
             </div>
           </li>
         </ul>
+        <div class="film-no" v-else>
+          <span>暂无影片</span>
+        </div>
        </div>
        <div class="check-films">
          <span @click="checkAll">
@@ -61,7 +76,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { searchcinema } from '@/api/popPlan'
+import { searchcinema } from '@/api/testlist'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
@@ -86,6 +101,7 @@ export default class DlgEditCinema extends ViewBase {
   showDlg = false
   total = 0
   form: any = {
+    name: '',
     pageIndex: 1,
     pageSize: 4,
     types: [0]
@@ -104,41 +120,48 @@ export default class DlgEditCinema extends ViewBase {
     return data ? moment(data).format(timeFormat) : '暂无'
   }
 
-  async init(type: any) {
+  async init() {
     (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
     this.loading = true
     this.showDlg = true
     this.checks = {}
-    if (type.length > 0) {
-      this.checkObj = [...type]
-      this.checkId = this.checkObj.map((it: any) => it.id)
-      this.checkId.forEach((it: any) => {
-        this.checks[it] = true
-      })
-      this.seach()
-    } else {
-      this.checkObj = []
-      this.checkId = []
-      this.checkId.forEach((it: any) => {
-        this.checks[it] = true
-      })
-      this.seach()
-    }
+    this.seach()
+    // if (type.length > 0) {
+    //   this.checkObj = [...type]
+    //   this.checkId = this.checkObj.map((it: any) => it.movie_id)
+    //   this.checkId.forEach((it: any) => {
+    //     this.checks[it] = true
+    //   })
+    //   this.seach()
+    // } else {
+    //   this.checkObj = []
+    //   this.checkId = []
+    //   this.checkId.forEach((it: any) => {
+    //     this.checks[it] = true
+    //   })
+    //   this.seach()
+    // }
   }
 
   async seach() {
     try {
       const { data: {
-       items,
-       movieTypeList,
+       movies,
+       typeList,
        totalCount
       } } = await searchcinema(clean({
         ...this.form,
         types: this.form.types[0] == 0 ? '' : this.form.types.join(',')
       }))
-      this.data = items || []
+      this.data = (movies || []).map((it: any) => {
+        return {
+          ...it,
+          release_date : String(it.release_date).slice(0, 4) + '-' +
+          String(it.release_date).slice(4, 6) + '-' + String(it.release_date).slice(6, 8)
+        }
+      })
       this.total = totalCount
-      this.movieTypeList = movieTypeList || []
+      this.movieTypeList = typeList || []
       this.checkNum()
     } catch (ex) {
       this.handleError(ex)
@@ -181,7 +204,7 @@ export default class DlgEditCinema extends ViewBase {
   async open() {
     try {
       this.checkId = uniq(this.checkId)
-      this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
+      this.checkObj = uniqBy(this.checkObj, 'movie_id').filter((it: any) => this.checkId.includes(it.movie_id + ''))
       this.$emit('done', [...this.checkObj])
       toast('操作成功')
       this.cancel()
@@ -190,17 +213,31 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
+  typelists(val: any, type: any) {
+    const maps: any = []
+    ; (val || []).forEach((item: any) => {
+      if (item) {
+        (type || []).forEach((it: any) => {
+          if (item.key == it) {
+            maps.push(item.text)
+          }
+        })
+      }
+    })
+    return maps.join(' / ')
+  }
+
   checkAll() {
     this.$nextTick(() => {
-      const id = this.data.map((it: any) => it.id)
+      const movieid = this.data.map((it: any) => it.movie_id)
       this.idO = {}
       if (this.checkboxall) {
-        id.forEach((it: any) => {
-          this.idO[it] = true
+        movieid.forEach((it: any) => {
+          this.idO[it] = false
         })
       } else {
-        id.forEach((it: any) => {
-          this.idO[it] = false
+        movieid.forEach((it: any) => {
+          this.idO[it] = true
         })
       }
       this.checks = {
@@ -210,20 +247,20 @@ export default class DlgEditCinema extends ViewBase {
     })
   }
 
-  checkNum(id?: any) {
-    this.checks[id] = !this.checks[id] ? true : false
+  checkNum(movieid?: any) {
+    this.checks[movieid] = !this.checks[movieid] ? true : false
     this.checkId = []
-    let ids = this.data.map((it: any) => it.id)
+    let ids = this.data.map((it: any) => it.movie_id)
     for (const i in this.checks) {
       if (this.checks[i]) {
         this.checkId.push(i)
       }
     }
     const nums = this.data.filter((it: any) => {
-      return this.checkId.includes(it.id + '')
+      return this.checkId.includes(it.movie_id + '')
     })
     this.checkObj.push(...nums)
-    this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
+    this.checkObj = uniqBy(this.checkObj, 'movie_id').filter((it: any) => this.checkId.includes(it.movie_id + ''))
     this.checkId.forEach((it: any) => {
       ids = ids.filter((item: any) => item != it)
     })
@@ -237,22 +274,22 @@ export default class DlgEditCinema extends ViewBase {
   @Watch('checks', {deep: true})
   watchChecks(val: any) {
     this.checkId = []
-    let id = this.data.map((it: any) => it.id)
+    let movieid = this.data.map((it: any) => it.movie_id)
     for (const i in val) {
       if (val[i]) {
         this.checkId.push(i)
       }
     }
     this.checkId.forEach((it: any) => {
-      id = id.filter((item: any) => item == it)
+      movieid = movieid.filter((item: any) => item == it)
     })
     const nums = this.data.filter((it: any) => {
-      return this.checkId.includes(it.id + '')
+      return this.checkId.includes(it.movie_id + '')
     })
     this.checkObj.push(...nums)
-    this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
+    this.checkObj = uniqBy(this.checkObj, 'movie_id').filter((it: any) => this.checkId.includes(it.movie_id + ''))
     if (this.data.length > 0) {
-      this.checkboxall = id.length > 0 ? false : true
+      this.checkboxall = movieid.length > 0 ? false : true
     } else {
       this.checkboxall = false
     }
@@ -267,6 +304,11 @@ export default class DlgEditCinema extends ViewBase {
     if (value.length == 0) {
       this.form.types = [0]
     }
+    this.seach()
+  }
+
+  @Watch('form.name', { deep: true })
+  watchformName(value: any) {
     this.seach()
   }
 }
@@ -357,7 +399,7 @@ export default class DlgEditCinema extends ViewBase {
   margin-bottom: 20px;
   margin-right: 20px;
   .film-item {
-    width: calc(50% - 20px);
+    width: 48%;
     height: 179px;
     padding-bottom: 5px;
     margin-bottom: 30px;
@@ -373,10 +415,16 @@ export default class DlgEditCinema extends ViewBase {
         height: 24px;
         font-weight: 400;
         margin-left: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       .film-time {
         margin-left: 20px;
         height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       img {
         margin-left: 20px;
@@ -405,7 +453,7 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
   .film-item:nth-child(2n-1) {
-    margin-right: 40px;
+    margin-right: 3.4%;
   }
   .film-name,
   .film-tags {
@@ -460,5 +508,29 @@ export default class DlgEditCinema extends ViewBase {
 .open-button {
   .button-style(#fff, #00202d);
   border-radius: 25px;
+}
+.types::after {
+  content: '/';
+  display: inline-block;
+}
+.type-box:only-child .types:not(:last-of-type)::after {
+  content: '';
+  display: inline-block;
+}
+/deep/ .ivu-tooltip {
+  width: 100%;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 24px;
+  line-height: 24px;
+}
+/deep/ .ivu-input {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  border: 1px solid #000 !important;
+  margin-bottom: 20px;
 }
 </style>

@@ -32,7 +32,8 @@ export default class TextPane extends Vue {
 @import '~@/site/lib.less';
 
 .text-pane {
-  min-height: 118px;
+  // 加 import 是为了解决串样式问题
+  min-height: 124px !important;
 }
 
 .text-pane-in {

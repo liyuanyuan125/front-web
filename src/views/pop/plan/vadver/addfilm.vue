@@ -26,7 +26,7 @@
       </div>
       <div class="detail">
         <ul class="film-list" v-if="data.length > 0">
-          <li @click="checkNum(it.id)" v-for="(it, index) in data" :key="index"
+          <li @click="checkNum(it.id, it)" v-for="(it, index) in data" :key="index"
             :class="['film-item', !!checkId.includes(it.id + '') ? 'list-active' : '']">
             <div :class="['film-cover-box']">
               <img :src="it.image ? it.image : defaultImg" :onerror="defaultImg" class="film-cover">
@@ -45,11 +45,12 @@
         </div>
        </div>
        <div class="check-films">
-         <span @click="checkAll">
-          <Checkbox :disabled="data.length > 0 ? false : true" v-model="checkboxall">全选</Checkbox>
+         <span>
+          <Checkbox @on-change="checkAll" :disabled="data.length > 0 ? false : true" v-model="checkboxall">全选</Checkbox>
           已选择 {{checkObj.length}} 个
          </span>
        </div>
+        <updateschedule ref="updatetime" @done="updatetime" />
         <Page :total="total" v-if="total>0" class="btnCenter"
           :current="form.pageIndex"
           :page-size="form.pageSize"
@@ -61,21 +62,23 @@
           @on-page-size-change="currentChangeHandle"/>
     </div>
     <div slot="footer" class="foot">
-        <Button class="foot-cancel-button default-btn" type="info" @click="cancel">取消</Button>
-        <Button class="foot-button open-button" type="primary" @click="open">确定</Button>
+      <Button class="foot-cancel-button default-btn" type="info" @click="cancel">取消</Button>
+      <Button class="foot-button open-button" type="primary" @click="open">确定</Button>
     </div>
   </Modal>
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { searchcinema, moviefind } from '@/api/popPlan'
+import { searchcinema, moviefind, moviedate, updatedates } from '@/api/popPlan'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
-import { toast, warning } from '@/ui/modal.ts'
+import { toast, warning, confirm } from '@/ui/modal.ts'
 import moment from 'moment'
 import { uniq, uniqBy } from 'lodash'
+import updateschedule from './updateschedule.vue'
+
 const timeFormat = 'YYYY-MM-DD'
 const keepExclusion = <T>(
   value: T[],
@@ -90,8 +93,13 @@ const keepExclusion = <T>(
     newHas && oldHas && setter(value.filter(it => it != aloneValue))
   }
 }
-@Component
+@Component({
+  components: {
+    updateschedule
+  }
+})
 export default class DlgEditCinema extends ViewBase {
+  date: any = {}
   showDlg = false
   total = 0
   form: any = {
@@ -123,10 +131,11 @@ export default class DlgEditCinema extends ViewBase {
       : '暂无'
   }
 
-  async init(type: any) {
+  async init(type: any, data: any) {
     (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: hidden'
     this.loading = true
     this.showDlg = true
+    this.date = data
     this.checks = {}
     if (type.length > 0) {
       this.checkObj = [...type]
@@ -159,6 +168,10 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
+  updatetime(val: any) {
+    this.date = val
+  }
+
   searchList() {
     this.form.pageIndex = 1
     this.seach()
@@ -175,10 +188,6 @@ export default class DlgEditCinema extends ViewBase {
           ...this.form,
           types: this.form.types[0] == 0 ? '' : this.form.types.join(',')
         }))
-      // this.data = items || []
-      // this.total = totalCount
-      // this.movieTypeList = movieTypeList || []
-
       this.data = (movies || []).map((it: any) => {
         return {
           ...it,
@@ -222,7 +231,7 @@ export default class DlgEditCinema extends ViewBase {
     try {
       this.checkId = uniq(this.checkId)
       this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
-      this.$emit('done', [...this.checkObj])
+      this.$emit('done', [...this.checkObj], this.date)
       toast('操作成功')
       this.cancel()
     } catch (ex) {
@@ -230,11 +239,16 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
-  checkAll() {
-    this.$nextTick(() => {
+  async checkAll(flag: any) {
+    try {
       const id = this.data.map((it: any) => it.id)
       this.idO = {}
-      if (this.checkboxall) {
+      if (flag) {
+        await moviedate({
+          ids: id.join(','),
+          beginDate: this.date.begin,
+          endDate: this.date.end
+        })
         id.forEach((it: any) => {
           this.idO[it] = true
         })
@@ -247,30 +261,54 @@ export default class DlgEditCinema extends ViewBase {
         ...this.checks,
         ...this.idO
       }
-    })
+    } catch (ex) {
+      this.checkboxall = false
+      this.handleError(ex)
+    }
   }
 
-  checkNum(id?: any) {
-    this.checks[id] = !this.checks[id] ? true : false
-    this.checkId = []
-    let ids = this.data.map((it: any) => it.id)
-    for (const i in this.checks) {
-      if (this.checks[i]) {
-        this.checkId.push(i)
+  async checkNum(id?: any) {
+    try {
+      if (id) {
+        await moviedate({
+          ids: id,
+          beginDate: this.date.begin,
+          endDate: this.date.end
+        })
       }
-    }
-    const nums = this.data.filter((it: any) => {
-      return this.checkId.includes(it.id + '')
-    })
-    this.checkObj.push(...nums)
-    this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
-    this.checkId.forEach((it: any) => {
-      ids = ids.filter((item: any) => item != it)
-    })
-    if (this.data.length > 0) {
-      this.checkboxall = ids.length > 0 ? false : true
-    } else {
-      this.checkboxall = false
+      this.checks[id] = !this.checks[id] ? true : false
+      this.checkId = []
+      let ids = this.data.map((it: any) => it.id)
+      for (const i in this.checks) {
+        if (this.checks[i]) {
+          this.checkId.push(i)
+        }
+      }
+      const nums = this.data.filter((it: any) => {
+        return this.checkId.includes(it.id + '')
+      })
+      this.checkObj.push(...nums)
+      this.checkObj = uniqBy(this.checkObj, 'id').filter((it: any) => this.checkId.includes(it.id + ''))
+      this.checkId.forEach((it: any) => {
+        ids = ids.filter((item: any) => item != it)
+      })
+      if (this.data.length > 0) {
+        this.checkboxall = ids.length > 0 ? false : true
+      } else {
+        this.checkboxall = false
+      }
+    } catch (ex) {
+      const checksid = this.checkId.filter((it: any) => !!it)
+      if (checksid.length == 0) {
+        await confirm(`是否根据影片上映日期，同步修改广告计划投放排期`, {
+          title: '修改档期'
+        })
+        this.$nextTick(() => {
+          (this.$refs.updatetime as any).init(this.date)
+        })
+      } else {
+        this.handleError(ex)
+      }
     }
   }
 

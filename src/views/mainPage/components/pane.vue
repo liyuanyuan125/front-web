@@ -46,10 +46,9 @@ export default class Pane extends Vue {
 }
 
 .more-link {
-  color: #fff;
-  opacity: 0.6;
+  color: #53c5df;
   &:hover {
-    color: #f3d872;
+    opacity: .88;
   }
 }
 

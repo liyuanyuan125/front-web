@@ -3,23 +3,17 @@
     <ul class="legend-list">
       <li v-for="(it, i) in data.legends" :key="i" class="legend-item">
         <div class="legend-name">{{it.name}}</div>
-        <div class="legend-value">{{it.value}}</div>
+        <div class="legend-value">{{it.value || '-'}}</div>
       </li>
     </ul>
 
     <ul class="chart-list">
-      <li
-        v-for="(it, i) in chartList"
-        :key="i"
-        class="chart-item"
-        :class="{
+      <li v-for="(it, i) in chartList" :key="i" class="chart-item" :class="{
           'chart-item-on': nav == i
-        }"
-        @click="nav = i"
-      >
+        }" @click="nav = i">
         <a class="chart-nav">{{it.title}}</a>
         <div class="chart-wrap" v-if="nav == i">
-          <ECharts :options="it.chart" auto-resize class="chart"/>
+          <ECharts :options="it.chart" class="chart" auto-resize v-if="it.chart" />
         </div>
       </li>
     </ul>
@@ -67,6 +61,10 @@ export default class ChartPane extends Vue {
 
   get chartList() {
     const list = this.data.charts.map(it => {
+      if ((it.list || []).length == 0) {
+        return { title: it.title, chart: null }
+      }
+
       const chart = {
         tooltip: tooltipStyles({
           // trigger: 'axis',
@@ -78,11 +76,11 @@ export default class ChartPane extends Vue {
           axisLine: {
             lineStyle: {
               color: '#3191aa',
-              opacity: .5,
+              opacity: 0.5
             }
           },
           axisTick: false,
-          axisLabel,
+          axisLabel
         },
 
         yAxis: {
@@ -98,12 +96,12 @@ export default class ChartPane extends Vue {
           splitLine: {
             lineStyle: {
               color: '#3191aa',
-              opacity: .5,
-              type: 'dashed',
+              opacity: 0.5,
+              type: 'dashed'
             }
           },
           axisLabel,
-          splitNumber: 4,
+          splitNumber: 4
         },
 
         grid: {
@@ -140,17 +138,17 @@ export default class ChartPane extends Vue {
                     offset: 1,
                     color: 'rgba(218, 108, 112, 0)'
                   }
-                ],
+                ]
               }
-            },
+            }
           }
         ]
       }
+
       return { title: it.title, chart }
     })
     return list
   }
-
 }
 </script>
 
@@ -169,11 +167,18 @@ export default class ChartPane extends Vue {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 24.375%;
+  // width: 24.375%;
   height: 120px;
-  background-color: rgba(0, 32, 45, .8);
+  background-color: rgba(0, 32, 45, 0.8);
+  flex: 1;
+  margin: 0 5px;
 }
-
+.legend-item:first-child {
+  margin-left: 0;
+}
+.legend-item:last-child {
+  margin-right: 0;
+}
 .legend-value {
   font-size: 30px;
 }
@@ -183,7 +188,7 @@ export default class ChartPane extends Vue {
   display: flex;
   min-height: 525px;
   border-radius: 0 0 5px 5px;
-  background-color: rgba(0, 32, 45, .8);
+  background-color: rgba(0, 32, 45, 0.8);
   margin-top: 10px;
   padding: 34px 40px;
   box-sizing: border-box;
@@ -212,6 +217,18 @@ export default class ChartPane extends Vue {
   width: 100%;
   height: calc(100% - 90px - 15px);
   box-sizing: border-box;
+
+  &:empty {
+    &::before {
+      content: '暂无数据';
+      display: flex;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 18px;
+    }
+  }
 }
 
 .chart {

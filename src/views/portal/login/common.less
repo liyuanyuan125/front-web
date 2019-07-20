@@ -1,0 +1,101 @@
+.main-wrap {
+  width: 450px;
+  background: linear-gradient(180deg, rgba(107, 129, 167, 0) 0%, rgba(107, 129, 167, .1) 54%, rgba(107, 129, 167, .5) 100%);
+  padding: 23px 40px 20px;
+  border-radius: 4px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -55%);
+  .tablist {
+    width: 100%;
+    margin-bottom: 20px;
+    color: #fff; 
+  }
+  /deep/ input {
+    outline: none;
+    height: 50px;
+    font-size: 14px;
+    border-radius: 10px;
+    background: rgba(16, 23, 44, .6);
+    border: none;
+    color: #fff;
+    &::placeholder {
+      color: #fff;
+      font-size: 14px;
+    }
+  }
+  /deep/ .ivu-input-with-prefix {
+    padding-left: 54px;
+  }
+  /deep/ .ivu-input-prefix {
+    width: auto;
+    padding-left: 12px;
+    i {
+      line-height: 50px;
+      font-size: 20px;
+      color: #fff;
+      font {
+        display: inline-block;
+        width: 1px;
+        height: 15px;
+        background: #fff;
+        margin-left: 10px;
+      }
+    }
+  }
+  /deep/ .ivu-checkbox-wrapper {
+    font-size: 14px;
+  }
+}
+
+.submit {
+  border-radius: 25px;
+  height: 47px;
+  background: #2f6af9;
+  font-size: 17px;
+  color: #fff;
+  text-align: center;
+  border: none;
+  border: solid 1px #5587ff;
+  &:hover {
+    background: #4561d7;
+  }
+}
+
+.to-apply {
+  font-size: 15px;
+  color: #fff;
+  text-align: center;
+  a {
+    color: #fff;
+    padding-bottom: 2px;
+    border-bottom: solid 1px #fff;
+  }
+}
+
+/deep/ .ivu-form-item-error-tip {
+  color: #ff6259;
+}
+
+@keyframes autofill {
+  to {
+    color: #fff;
+    background: rgba(16,23,44,0.6);
+    font-size: 14px;
+  }
+}
+@-webkit-keyframes autofill {
+  to {
+    color: #fff;
+    background:rgba(16, 23, 44, .6);
+    font-size: 14px;
+  }
+}
+
+/deep/ input:-webkit-autofill {
+  -webkit-animation-name: autofill;
+  animation-name: autofill;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}

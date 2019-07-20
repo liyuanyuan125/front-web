@@ -5,13 +5,13 @@
         <h3 class="name">
           <em>{{item.name}}</em>
           <Icon
-            :type="followedIn ? 'md-heart' : 'md-heart-outline'"
+            :type="hasFav ? 'md-heart' : 'md-heart-outline'"
             class="heart"
             :class="{
-              'heart-on': followedIn,
-              'follow-effect': followEffect
+              'heart-on': hasFav,
+              'fav-effect': favEffect
             }"
-            @click="follow"
+            @click="toggleFav"
           />
         </h3>
         <sub class="sub-name" v-if="item.subName">{{item.subName}}</sub>
@@ -21,7 +21,7 @@
       <div class="zone rank-zone effect-lightning">
         <div class="rank-label">
           鲸娱指数
-          <Tooltip content="鲸娱指数"/>
+          <Tooltip :content="item.jyTip" v-if="item.jyTip"/>
         </div>
         <div class="rank-no">{{item.rankNo}}</div>
         <div class="rank-title" v-html="item.rankTitle">{{item.rankTitle}}</div>
@@ -33,7 +33,7 @@
       >
         <h4 class="zone-head flex-box">
           <em class="flex-1">主要作品</em>
-          <router-link :to="opusData.more" v-if="opusData.more">更多 &gt;</router-link>
+          <router-link :to="opusData.more" class="more-link" v-if="opusData.more">更多 &gt;</router-link>
         </h4>
         <ul class="opus-list">
           <li
@@ -52,7 +52,7 @@
       >
         <h4 class="zone-head flex-box">
           <em class="flex-1">粉丝平台分布（人）</em>
-          <!-- <router-link :to="{}">更多 &gt;</router-link> -->
+          <!-- <router-link :to="{}" class="more-link">更多 &gt;</router-link> -->
         </h4>
         <ul class="fans-list">
           <li
@@ -100,7 +100,7 @@
           <em class="flex-1">
             演员阵容：<Star :value="actorData.star" readonly v-if="actorData.star > 0"/>
           </em>
-          <router-link :to="actorData.more">更多 &gt;</router-link>
+          <router-link :to="actorData.more" class="more-link">更多 &gt;</router-link>
         </h4>
         <ul class="actor-list">
           <li
@@ -129,7 +129,7 @@
       >
         <h4 class="brand-head flex-box">
           <em class="flex-1">合作过的品牌</em>
-          <router-link :to="brandData.more" v-if="brandData.more">更多 &gt;</router-link>
+          <router-link :to="brandData.more" class="more-link" v-if="brandData.more">更多 &gt;</router-link>
         </h4>
         <ul class="brand-list">
           <li
@@ -154,7 +154,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { RawLocation } from 'vue-router'
 import VideoPreviewer from '@/components/videoPreviewer'
 import Star from '@/components/star'
@@ -230,7 +230,11 @@ export interface Item {
 export default class BasicPane extends Vue {
   @Prop({ type: Object, default: () => ({}) }) item!: Item
 
-  @Prop({ type: Boolean, default: false }) followed!: boolean
+  /** 收藏获取函数 */
+  @Prop({ type: Function }) favGet!: (id: number) => Promise<boolean>
+
+  /** 收藏设置函数 */
+  @Prop({ type: Function }) favSet!: (id: number, doAdd: boolean) => Promise<any>
 
   @Prop({ type: [ Object, String ], default: null }) more!: RawLocation
 
@@ -244,9 +248,9 @@ export default class BasicPane extends Vue {
 
   @Prop({ type: Object, default: null }) actorData!: ActorData
 
-  followedIn = this.followed
+  hasFav = false
 
-  followEffect = false
+  favEffect = false
 
   get movieList() {
     const movie = this.movie || {}
@@ -259,10 +263,25 @@ export default class BasicPane extends Vue {
     return list.filter(it => !!it.value)
   }
 
-  follow() {
-    this.followedIn = !this.followedIn
-    this.followEffect = true
-    setTimeout(() => this.followEffect = false, 500)
+  async initFav() {
+    const hasFav = this.favGet != null ? await this.favGet(this.item.id) : false
+    this.hasFav = hasFav
+  }
+
+  async toggleFav() {
+    this.hasFav = !this.hasFav
+    this.playFavEffect()
+    this.favSet != null && await this.favSet(this.item.id, this.hasFav)
+  }
+
+  playFavEffect() {
+    this.favEffect = true
+    setTimeout(() => this.favEffect = false, 500)
+  }
+
+  @Watch('item.id')
+  watchItemId(id: number) {
+    id > 0 && this.initFav()
   }
 }
 </script>
@@ -285,12 +304,12 @@ export default class BasicPane extends Vue {
   padding: 14px 0 50px;
   box-shadow: 0 -3px #53c5df;
   background-color: rgba(0, 31, 44, .6);
+}
 
-  a {
-    color: #ddd;
-    &:hover {
-      color: #f3d872;
-    }
+.more-link {
+  color: #53c5df;
+  &:hover {
+    opacity: .88;
   }
 }
 
@@ -357,7 +376,7 @@ export default class BasicPane extends Vue {
   }
 }
 
-.follow-effect {
+.fav-effect {
   animation: dongdong 300ms ease-in-out;
 }
 
@@ -415,10 +434,14 @@ export default class BasicPane extends Vue {
   width: 146px;
   height: 32px;
   line-height: 32px;
+  color: #fff;
   background-color: #001f2c;
   border-radius: 88px;
   text-align: center;
   margin: 8px auto 0;
+  &:hover {
+    opacity: .88;
+  }
 }
 
 .fans-list {
@@ -492,8 +515,9 @@ export default class BasicPane extends Vue {
 }
 
 .actor-img {
-  width: 68px;
-  height: 68px;
+  // 解决样式串的问题
+  width: 68px !important;
+  height: 68px !important;
   border-radius: 50%;
   overflow: hidden;
 }

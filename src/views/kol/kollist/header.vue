@@ -60,7 +60,7 @@ export default class App extends ViewBase {
 <style lang="less" scoped>
 @color: #3b98ff;
 .page {
-  background: rgba(0, 31, 44, .8);
+  background: rgba(0, 31, 44, .9);
 }
 .page ul {
   height: 69px;
@@ -93,7 +93,7 @@ export default class App extends ViewBase {
 .active {
   width: 70px;
   height: 2px;
-  background: @color;
+  background: #fff;
   margin-left: 40px;
   transition: transform 0.3s ease-in-out;
 }

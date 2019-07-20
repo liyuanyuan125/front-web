@@ -16,7 +16,7 @@
                     :currentTypeIndex="chart1.currentTypeIndex"
                     @typeChange="typeChangeHander1" />
         </div>
-      </ReportPane>      
+      </ReportPane>
       <DetailTableCard :data="tableData"></DetailTableCard>
     </div>
     <div>
@@ -54,12 +54,13 @@ import MoreMoviesDlg from './components/more-movies-dlg.vue'
 import { getPlansReport } from '@/api/effectReport'
 import { findIndex, at, keyBy } from 'lodash'
 import { KeyText } from '@/util/types'
+import { datarange, formatDate } from '@/fn/duration.ts'
 
 const getName = (key: string, list: any[]) => {
   const i: number = findIndex( list, (it: any) => {
     return key === it.key
   })
-  const res: string = list[i].text
+  const res: string = list[i].text || ''
   return res
 }
 const dot = (object: any, path: string) => at(object, path)[0]
@@ -68,6 +69,7 @@ const getNames = (keys: string[], list: KeyText[]) => {
   const names = (keys || []).map((it: any) => dot(map[it], 'text') as string)
   return names
 }
+
 const toolTip: any = {
   borderWidth: 1,
   borderColor: 'rgba(0, 0, 0, .8)',
@@ -129,8 +131,10 @@ export default class Index extends ViewBase {
 
   bannerData: any = {}
 
+  // 汇总摘要
   totalData: any = {}
 
+  // 数据明细
   tableData: any = {
     columns: [
       { title: '时间', key: 'date', align: 'center' },
@@ -160,8 +164,10 @@ export default class Index extends ViewBase {
     ]
   }
 
+  // 影片总数
   moviesTotal: number = 0
 
+  // 影片列表
   moviesData: any[] = [
     /* {
       movieId: 0,
@@ -190,8 +196,10 @@ export default class Index extends ViewBase {
     } */
   ]
 
+  // 更多影片 弹窗
   moreMovieData: any[] = []
 
+  // 影院
   cinemasData: any = {
     totalCount: 0,
     viewRate: {
@@ -208,21 +216,22 @@ export default class Index extends ViewBase {
     }
   }
 
+  // 数据趋势 图表
   chart1: any = {
     title: '',
     dict1: [
       {
-        name: 'name0',
+        name: '曝光人次',
         text: '曝光人次',
         key: 0
       },
       {
-        name: 'name1',
+        name: '曝光场次',
         text: '曝光场次',
         key: 1
       },
       {
-        name: 'name2',
+        name: '支出金额',
         text: '支出金额',
         key: 2
       }
@@ -249,6 +258,7 @@ export default class Index extends ViewBase {
     toolTip
   }
 
+  // 用户画像
   userData: any = {
     sex: {},
     cityData: [],
@@ -273,17 +283,17 @@ export default class Index extends ViewBase {
       title: '',
       dict1: [
         {
-          name: 'name0',
+          name: '曝光人次',
           text: '曝光人次',
           key: 0
         },
         {
-          name: 'name1',
+          name: '曝光场次',
           text: '曝光场次',
           key: 1
         },
         {
-          name: 'name2',
+          name: '支出金额',
           text: '支出金额',
           key: 2
         }
@@ -309,6 +319,7 @@ export default class Index extends ViewBase {
       height: 350,
       toolTip
     }
+
     this.cinemasData = {
       totalCount: 0,
       viewRate: {
@@ -324,6 +335,7 @@ export default class Index extends ViewBase {
         data: []
       }
     }
+
     this.moreMovieData = []
     this.moviesData = []
     this.moviesTotal = 0
@@ -367,38 +379,35 @@ export default class Index extends ViewBase {
 
   created() {
     const id = parseInt(this.$route.params.id, 0)
-    // 173 演示数据id
-    if ( id ) {
-      this.planId = id
-      this.init(id)
-    } else {
-      this.planId = 173
-      this.init(173)
-    }
+      // TODO: 线上演示 id 为 104，其他环境 173
+      || (VAR.env == 'prd' ? -1 : 173)
+    this.planId = id
+    this.init(id)
   }
 
   async init(id: number = -1) {
     this.initDone = false
     try {
       const {
-        data: {
-          plan,
-          report,
-          movies,
-          cinemas,
-          user,
-          gradeCodes,
-          planStatus,
-          movieTypes
-        }
+        data
       } = await getPlansReport(id)
+
+       const plan = data.plan || null
+       const report = data.report || null
+       const movies = data.movies || null
+       const cinemas = data.cinemas || null
+       const user = data.user || null
+       const gradeCodes = data.gradeCodes || null
+       const planStatus = data.planStatus || null
+       const movieTypes = data.movieTypes || null
+
       if ( report && report.lastModifyTime ) {
         const dates = report.dates
         const name = getName( plan.status, planStatus )
 
         this.bannerData = {
-          item0: `${plan.beginDate} ~ ${plan.endDate}`,
-          item1: plan.cycle,
+          item0: `${formatDate(plan.beginDate)} ~ ${formatDate(plan.endDate)}`,
+          item1: datarange(plan.beginDate, plan.endDate),
           item2: plan.videoName,
           item3: plan.specification,
           item4: getName( plan.status, planStatus),
@@ -406,14 +415,23 @@ export default class Index extends ViewBase {
           item6: plan.name
         }
 
+        const viewCount = report.viewCount || null
+        const scheduleCount = report.scheduleCount || null
+        const cost = report.cost || null
+
+        // 汇总摘要
         this.totalData = {
-          item0: report.viewCount,
-          item1: report.scheduleCount,
-          item2: parseInt(report.cost, 0) / 100 // 单位为'分'
+          item0: viewCount,
+          item1: scheduleCount,
+          item2: (typeof cost === 'number') ? ( parseFloat(report.cost) / 100 ) : cost // 单位为'分'
         }
 
+        // 影院
         if ( cinemas && cinemas.length > 0 ) {
           this.cinemasData.totalCount = cinemas.length
+
+          const res = cinemas.slice(0, 10)
+
           cinemas.slice(0, 10).forEach((it: any, index: number) => {
             this.cinemasData.viewRate.data.push({
               name: it.name,
@@ -430,6 +448,7 @@ export default class Index extends ViewBase {
           })
         }
 
+        // 影片
         if ( movies && movies.length > 0 ) {
           this.moviesTotal = movies.length
           movies.forEach((item: any) => {
@@ -446,8 +465,9 @@ export default class Index extends ViewBase {
               movieId: it.movieId,
               poster: it.poster,
               name: it.name,
-              score: it.score,
-              time: it.release,
+              score: it.score == null ? '-' : it.score,
+              time: String(it.release).slice(0, 4) + '-' + String(it.release).slice(4, 6)
+            + '-' + String(it.release).slice(6, 8),
               type: getNames(it.types, movieTypes).join(' / ') + '（中国大陆）',
               viewCount: it.viewCount, // 曝光人次
               scheduleCount: it.scheduleCount, // 曝光场次
@@ -466,6 +486,7 @@ export default class Index extends ViewBase {
           })
         }
 
+        // 数据趋势 图表
         if ( dates && dates.length > 0 ) {
           dates.forEach((item: any, index: number) => {
             this.chart1.dataList[0].data.push(item.viewCount)
@@ -475,7 +496,8 @@ export default class Index extends ViewBase {
             this.chart1.dataList[1].date.push(item.date)
             this.chart1.dataList[2].date.push(item.date)
             this.tableData.data.push({
-              date: item.date,
+              date: String(item.date).slice(0, 4) + '-' +
+          String(item.date).slice(4, 6) + '-' + String(item.date).slice(6, 8) ,
               viewCount: item.viewCount,
               scheduleCount: item.scheduleCount,
               cost: parseInt(item.cost, 0) / 100  // 单位为'分'
@@ -484,6 +506,7 @@ export default class Index extends ViewBase {
           this.chart1.initDone = true
         }
 
+        // 用户画像
         if ( user && user.ages && user.ages.length > 0 ) {
           const _ageData: any = {
             age: [],
@@ -497,19 +520,19 @@ export default class Index extends ViewBase {
           }
           this.userData = {
             sex: {
-              male: parseInt(user.male, 0),
-              female: parseInt(user.female, 0)
+              male: parseFloat(user.male),
+              female: parseFloat(user.female)
             },
             cityData: user.cities.map((item: any) => {
               return {
                 cityName: item.k,
-                percent: parseInt(item.v, 0)
+                percent: parseFloat(item.v)
               }
             }),
             cityLevelData: user.grades.map((it: any) => {
               return {
                 name: getName(it.k, gradeCodes),
-                value: parseInt(it.v, 0)
+                value: parseFloat(it.v)
               }
             }),
             ageData: _ageData || {}

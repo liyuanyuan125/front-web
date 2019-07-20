@@ -179,7 +179,7 @@ export async function comment(query: any, id: string = '') {
 /**
  * fans
  * @param id id
- * @description http://yapi.aiads-dev.com/project/146/interface/api/4524
+ * @description http://yapi.aiads-dev.com/project/144/interface/api/4596
  */
 export async function fanslist(id: string = '' , query: any) {
   const res = await get(`/kol/accounts/${id}/fans-portrait` , query)
@@ -258,131 +258,6 @@ export async function fanslist(id: string = '' , query: any) {
         text: '女'
       }
     ]
-  })
-  return await mockGet({}, {
-    chart1: {
-      dataList: [{
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }],
-      coverCinema: 8,
-      advertAmount: 1069.0,
-      coverPeople: 856,
-      coverScene: 92,
-      effectTypeList: [{
-        text: '男',
-        key: 0
-      }, {
-        text: '女',
-        key: 1
-      }]
-    },
-    chart2: {
-      dataList: [{
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 2
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 3
-      }, {
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 4
-      }],
-      effectTypeList: [{
-        text: '19岁及以下',
-        key: 0
-      }, {
-        text: '20-29岁',
-        key: 1
-      }, {
-        text: '30-29岁',
-        key: 2
-      }, {
-        text: '40-49岁',
-        key: 3
-      }, {
-        text: '50岁及以上',
-        key: 4
-      }]
-    },
-    chart3: {
-      dataList: [{
-        itemName: '广东',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '北京',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '江苏',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '广东',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        itemName: '江苏省',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        itemName: '浙江省',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }],
-      effectTypeList: [{
-        text: 'Papi酱',
-        key: 0
-      }, {
-        text: '奔驰',
-        key: 1
-      }]
-    },
-    chart4: {
-      dataList: [{
-        itemName: '重庆',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '上海',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '天津',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 0
-      }, {
-        itemName: '广东',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        itemName: '厦门',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }, {
-        itemName: '浙江省',
-        data: Math.floor(Math.random() * 100 + 1),
-        key: 1
-      }],
-      effectTypeList: [{
-        key: 0,
-        name: '省份'
-      },
-      {
-        key: 1,
-        name: '城市'
-      }]
-    }
   })
 }
 

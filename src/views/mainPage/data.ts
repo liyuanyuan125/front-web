@@ -1,15 +1,20 @@
 import { get } from '@/fn/ajax'
-import { at, keyBy, sumBy } from 'lodash'
-import { KeyText, MapType } from '@/util/types'
+import { keyBy, sumBy } from 'lodash'
+import { KeyText, MapType, MovieStatus } from '@/util/types'
 import { slice } from '@/fn/object'
 import { dayOffsetRange } from '@/util/date'
 import { percent, dot, intDate, readableThousands, readableNumber } from '@/util/dealData'
+import store from '@/store'
+
+const { defaultAvatar } = store.state
 
 const getNames = (keys: string[], list: KeyText[]) => {
   const map = keyBy(list, 'key')
   const names = (keys || []).map((it: any) => dot(map[it], 'text') as string)
   return names
 }
+
+const fullDate = (date: number) => String(date).replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')
 
 const monthDate = (date: number) => String(date).replace(/(\d{4})(\d{2})(\d{2})/, '$2-$3')
 
@@ -22,7 +27,8 @@ const hotChannelMap: MapType = {
 
 const hotData = (items: any[]) => {
   const list = (items || []).map(it => {
-    const date = monthDate(it.date)
+    const date = fullDate(it.date)
+    const mdate = monthDate(it.date)
     const legends = (it.channels as any[] || [])
     .map(sub => {
       return {
@@ -34,8 +40,9 @@ const hotData = (items: any[]) => {
     })
 
     return {
-      name: date,
+      name: mdate,
       value: it.count,
+      date,
       rank: it.ranking,
       legends,
     }
@@ -107,6 +114,7 @@ export async function getKol({
       name,
       title: description,
       figure: photo,
+      jyTip: '在一定周期内的KOL综合表现，由作品表现，平台粉丝数，口碑，全网资讯量及讨论，搜索等互动量加权计算得出',
       rankNo: percent(jyIndex, 2),
       rankTitle: [
         `全网排名：${ranking || '-'}`,
@@ -115,8 +123,8 @@ export async function getKol({
     },
 
     fansRate: {
-      man: percent(dot(fansRate.male, 'r')),
-      woman: percent(dot(fansRate.female, 'r')),
+      man: percent(dot(fansRate.male, 'r'), 2),
+      woman: percent(dot(fansRate.female, 'r'), 2),
     },
 
     fansList,
@@ -224,7 +232,7 @@ export async function getMovie(id: number) {
       trailers,
 
       tags,
-      fansPortrait,
+      genders,
 
       releaseStatus,
       boxofficeTodayCount,
@@ -242,11 +250,17 @@ export async function getMovie(id: number) {
       countryCodeList,
 
       celebrityRating,
+
+      // 0 未知，1 关闭，2 开启
+      joinStatus,
     }
   } = await get(`/movie/${id}`)
 
   // 是否已上映，上映状态描述在 https://yapi.aiads-dev.com/project/161/interface/api/4974
   const hasShow = releaseStatus >= 3
+  const status = (releaseStatus || 0) as MovieStatus
+
+  const genderMap = keyBy(genders, 'gender')
 
   const result = {
     bubbleList: tags || [],
@@ -254,20 +268,25 @@ export async function getMovie(id: number) {
     basic: {
       id,
       name,
-      subName: nameEn,
+      // 产品要去，如果英文名与 name 一致，则不显示
+      subName: nameEn == name ? '' : nameEn,
       figure: mainPic,
+      jyTip: '在一定周期内的影片综合表现，由想看数/票房，口碑，全网资讯量及讨论，搜索等互动量加权计算得出',
       rankNo: percent(jyIndex, 2),
-      rankTitle: `同档期：第${jyIndexSamePeriodRanking || '-'}`,
+      // TODO: 产品逻辑：计算不准确，隐藏
+      // rankTitle: `同档期：第${jyIndexSamePeriodRanking || '-'}`,
     },
 
     hasShow,
+    status,
+    joinStatus,
 
     movie: {
       preview: trailers && trailers[0],
       director: dot(personMap, 'Director[0].name') || '-',
       type: getNames(types, typeList).join('/') || '-',
       date: intDate(releaseDate) || '-',
-      address: getNames(countries, countryCodeList).join('/') || '-'
+      address: (countries || []).join('/') || '-'
     },
 
     actorData: {
@@ -278,7 +297,7 @@ export async function getMovie(id: number) {
         .map((it: any) => ({
           id: it.id,
           name: it.name,
-          avatar: it.headImg
+          avatar: it.headImg || defaultAvatar
         })),
       more: {
         name: 'film-detail-creator',
@@ -287,8 +306,8 @@ export async function getMovie(id: number) {
     },
 
     fansRate: {
-      man: percent(dot(fansPortrait, 'male')),
-      woman: percent(dot(fansPortrait, 'female')),
+      man: percent(dot(genderMap, '1.rate') * 100, 2),
+      woman: percent(dot(genderMap, '2.rate') * 100, 2),
     },
 
     boxToday: {
@@ -296,7 +315,12 @@ export async function getMovie(id: number) {
       main: hasShow
         ? readableNumber(boxofficeTodayCount)
         : readableThousands(wantToSeeTotalCount),
-      sub: `同档期排名 ${(hasShow ? boxofficeTodayRanking : wantToSeeSamePeriodRanking) || '-'}`,
+      // sub: (status == MovieStatus.coming ? '同档期' : '')
+      //   + `排名 ${(hasShow ? boxofficeTodayRanking : wantToSeeSamePeriodRanking) || '-'}`,
+      // TODO: 当影片“即将上映”状态时，想看人数的同档期排名 暂时隐藏
+      sub: status == MovieStatus.coming
+        ? ''
+        : `排名 ${(hasShow ? boxofficeTodayRanking : wantToSeeSamePeriodRanking) || '-'}`,
     },
 
     boxTotal: {
@@ -324,17 +348,20 @@ export async function getVideoRise(id: number, hasShow = false) {
   })
 
   const dealList = (list: any[], path: string) => {
-    const ret = (list || []).map(it => {
+    const ret = (list || [])
+    .sort((a, b) => a.date - b.date)
+    .map(it => {
       const name = monthDate(it.date)
       const value = dot(it, path) || 0
-      return { name, value }
+      const date = fullDate(it.date)
+      return { name, value, date }
     })
     return ret
   }
 
   const result = hasShow
-    ? dealList(data, 'view.count')
-    : dealList(data.items, 'count')
+    ? dealList(data, 'view.trend')
+    : dealList(data.items, 'trend')
 
   return result
 }
@@ -398,6 +425,7 @@ export async function getFigure(id: number) {
       subName: nameEn,
       title: titleList.join('/'),
       figure: headImgSmall,
+      jyTip: '在一定周期内的影人综合表现，由作品表现、专业评价、口碑，粉丝数、全网资讯量及讨论，搜索等互动量加权计算得出',
       rankNo: percent(jyIndex, 2),
       rankTitle: tip,
     },
@@ -405,8 +433,8 @@ export async function getFigure(id: number) {
     bigFigure: headImgBig,
 
     fansRate: {
-      man: parseFloat(dot(fans, '男')),
-      woman: parseFloat(dot(fans, '女'))
+      man: percent(parseFloat(dot(fans, '男')) * 100, 2),
+      woman: percent(parseFloat(dot(fans, '女')) * 100, 2)
     },
 
     opusData: movies && movies.length > 0 ? {

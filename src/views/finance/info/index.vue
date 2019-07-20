@@ -6,7 +6,7 @@
     </div> -->
     <div class="fince"  v-auth="'financial-manage.info#viewsummary'">
       <h3 class="userTitle">
-        <span style="color:#fff;" class="nav-top-title">账户总览</span>
+        <span style="color:#00202D;" class="nav-top-title">账户总览</span>
       </h3>
       <div class="fince-list">
         <div class="fince-list-big">
@@ -73,7 +73,7 @@
                 </div>
               </FormItem>
             </Col>
-            <Col span="12">
+            <Col span="9" style='margin-left: 9%;'>
               <FormItem label="汇款底单" prop="receipts">
                 <Upload v-model="dataForm.receipts" multiple :maxCount="1" accept="image/*"/>
                 <span class='is'>格式为jpg/jpeg/png，大小不超过5M的图片</span>
@@ -81,12 +81,12 @@
             </Col>
           </Row>
           <Row class="add-row">
-            <Col span="12">
+            <Col span="9">
               <FormItem label="银行账号" prop="accountNumber">
                 <Input v-model="dataForm.accountNumber" class="inp-style" placeholder="请输入汇款银行账号"/>
               </FormItem>
             </Col>
-            <Col span="12">
+            <Col span="9" style='margin-left: 19%'>
               <FormItem label="充值金额" prop="amount">
                 <Input v-model="dataForm.amount" class="inp-style" placeholder="请输入充值金额"/>
               </FormItem>
@@ -137,7 +137,7 @@
             </Col>
           </Row>
         </Form>
-        <div class='btnq' style="text-align: center">
+        <div class='btnq' style="text-align: center;font-weight: 500">
           <Button class='but'  v-auth="'financial-manage.info#submit'" type="primary" @click="dataFormSubmit('dataForm')">提交充值申请</Button>
         </div>
       </div>
@@ -167,23 +167,23 @@ import { slice, clean } from '@/fn/object'
 import { warning , success, toast , info } from '@/ui/modal'
 
 // 获取当前登录用户信息
-const user: any = getUser()!
+// const user: any = getUser()!
 
 const makeMap = (list: any[]) => toMap(list, 'id', 'name')
 const timeFormat = 'YYYY-MM-DD'
 
-const dataForm = {
-  accountNumber: '',
-  accountName: '',
-  amount: null,
-  remittanceDate: null,
-  contactPhone: '',
-  remark: '',
-  receipts: [],
-  receipt: '',
-  companyId: user.companyId,
-  companyName: user.companyName
-}
+// const dataForm = {
+//   accountNumber: '',
+//   accountName: '',
+//   amount: null,
+//   remittanceDate: null,
+//   contactPhone: '',
+//   remark: '',
+//   receipts: [],
+//   receipt: '',
+//   companyId: user.companyId,
+//   companyName: user.companyName
+// }
 
 @Component({
   components: {
@@ -193,10 +193,24 @@ const dataForm = {
 })
 export default class Main extends ViewBase {
   //   user : any = getUser()
+  user: any = getUser()!
   dataFormget = {
-    companyId: user.companyId,
+    companyId: this.user.companyId,
     pageIndex: 1,
     pageSize: 10
+  }
+
+  dataForm: any = {
+    accountNumber: '',
+    accountName: '',
+    amount: null,
+    remittanceDate: null,
+    contactPhone: '',
+    remark: '',
+    receipts: [],
+    receipt: '',
+    companyId: this.user.companyId,
+    companyName: this.user.companyName
   }
 
 
@@ -234,14 +248,15 @@ export default class Main extends ViewBase {
   availableAmount: any = ''
   freezeAmount: any = ''
   newend: any = ''
+  qqq: any = false
 
   // 查看图片
   viewerShow = false
   viewerImage = ''
 
-  dataForm: any = { ...dataForm }
+  // dataForm: any = { ...dataForm }
 
-  columns4 = [
+    columns4 = [
     { title: '充值ID', key: 'id', align: 'center', width: 70, },
     {
       title: '申请时间',
@@ -383,7 +398,6 @@ export default class Main extends ViewBase {
     }
   ]
 
-  async init() {}
 
   addNumber(number: any) {
     this.newend = ''
@@ -426,9 +440,8 @@ export default class Main extends ViewBase {
 
   created() {
     // this.getUser()
-    this.userList = user
+    this.userList = this.user
     this.seach()
-    this.init()
   }
 
   // 每页数
@@ -475,7 +488,7 @@ export default class Main extends ViewBase {
       this.total = totalCount
       this.approvalStatusList = approvalStatusList
       // 财产信息
-      const res = await moneyList(user.companyId)
+      const res = await moneyList(this.user.companyId)
       this.datamoney = res.data
       // if (this.datamoney.balance == null) {
       //   this.balance = 0
@@ -546,7 +559,7 @@ export default class Main extends ViewBase {
       }
 
       // 银行卡信息
-      const { data } = await defaultList(user.companyId)
+      const { data } = await defaultList(this.user.companyId)
       this.defaultdata = data // accountSplice
       this.accountSplice = data.accountNumber
         ? data.accountNumber.replace(/(\d{4})(?=\d)/g, '$1 ')
@@ -662,7 +675,7 @@ export default class Main extends ViewBase {
     div {
       display: inline-block;
     }
-    background: rgba(32, 67, 80, 1);
+    background: #062e41;
     height: 60px;
     text-align: center;
     line-height: 60px;
@@ -765,7 +778,7 @@ export default class Main extends ViewBase {
         height: 14px;
         font-size: 14px;
         font-weight: 400;
-        color: rgba(136, 136, 136, 1);
+        color: #fff;
         line-height: 14px;
         text-align: center;
         margin-top: 40px;
@@ -786,7 +799,7 @@ export default class Main extends ViewBase {
     width: 98.5%;
   }
   .hui-div {
-    width: 83%;
+    width: 75%;
     height: 225px;
     background: url('./../images/bank.png');
     border-radius: 6px;
@@ -1032,12 +1045,7 @@ export default class Main extends ViewBase {
   padding-right: 24px;
   color: #00202d;
 }
-// /deep/.ivu-tooltip-rel {
-//   display: inline-block;
-//   position: relative;
-//   width: inherit;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-//   white-space: nowrap;
-// }
+/deep/ .ivu-col-span-9 {
+  width: 40.3%;
+}
 </style>

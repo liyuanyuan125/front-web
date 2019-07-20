@@ -61,7 +61,7 @@ export interface SystemType {
 /** 系统列表 */
 export const systemList: SystemType[] = [
   { code: 'ads', name: '广告主' },
-  { code: 'resource', name: '资源方' },
+  { code: 'resource', name: '影城' },
 ]
 
 /** 权限操作 */
@@ -86,4 +86,25 @@ export interface PermPage {
   actions: PermAction[]
   /** 子级页面 */
   subPages: PermPage[]
+}
+
+/**
+ * 电影发布状态
+ * https://yapi.aiads-dev.com/project/161/interface/api/4974
+ */
+export enum MovieStatus {
+  /** 未知 */
+  unknown = 0,
+
+  /** 未上映 */
+  unshow = 1,
+
+  /** 即将上映 */
+  coming = 2,
+
+  /** 正在上映 */
+  onshow = 3,
+
+  /** 已下映 */
+  down = 4,
 }

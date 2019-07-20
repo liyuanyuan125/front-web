@@ -15,7 +15,7 @@ const urlMapStore = {
   // 品牌接口
   brand: {
     // https://yapi.aiads-dev.com/project/152/interface/api/4030
-    home: (id: number) => `/brand/brands/${id}/home01`,
+    home: (id: number) => `/brand/brands/${id}/home`,
 
     // https://yapi.aiads-dev.com/project/152/interface/api/4054
     index: (id: number) => `/brand/brands/${id}/index`,
@@ -104,8 +104,8 @@ export default class FetchData {
         logoUrl,
         jyIndex,
         jyTrend,
-        malePercent: percent(malePercent),
-        femalePercent: percent(femalePercent),
+        malePercent: percent(malePercent, 2),
+        femalePercent: percent(femalePercent, 2),
 
         unpay,
         onexecute,

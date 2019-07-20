@@ -18,6 +18,7 @@
 			<Col :span='8'>
 				<span>投放排期</span>&nbsp;&nbsp;
 				 <DatePicker type="daterange" @on-change="dateChange" placement="bottom-end" placeholder="投放排期" class="input" style="width: 300px"></DatePicker>
+      
 			</Col>
 		</Row>
 		 <div class='t-title'>
@@ -28,7 +29,9 @@
 			<div class='te-l'>投放影院</div>
 		</div>
 		<div class='dis'>
-			<div>请上传一份包含影院专资编码数据的xls文件，如上传错误，请下载模板<span>【影院数据模板.xls】</span></div>
+			<div>请上传一份包含影院专资编码数据的xls文件，如上传错误，请下载模板
+        <a href="http://aiads-file.oss-cn-beijing.aliyuncs.com/MISC/MISC/bkfh2gilkin0008001bg.xls" :download='"http://aiads-file.oss-cn-beijing.aliyuncs.com/MISC/MISC/bkfh2gilkin0008001bg.xls"'>【影院数据模板.xls】</a>
+      </div>
 
 			<Form class="create-form form-item"   enctype="multipart/form-data" ref="form"
       :label-width="120">上传文件
@@ -63,7 +66,7 @@ import Uploader from '@/util/Uploader'
 import Film from './film.vue'
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 const uploader = new Uploader({
-  filePostUrl: '/xadvert/v1/third-monitors/upload-cinemas',
+  filePostUrl: '/xadvert/third-monitors/upload-cinemas',
   fileFieldName: 'file',
 })
 
@@ -121,8 +124,12 @@ export default class Main extends ViewBase {
   }
 
 
-  timerfilm() {
-    // this.seach()
+  timerfilm(val: any) {
+    this.numsList = val
+  }
+
+  formatDate(data: any) {
+    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
 
 
@@ -135,12 +142,19 @@ export default class Main extends ViewBase {
         this.itemdata = items.data.item.name
         this.query.name = items.data.item.name
         this.query.customerId = items.data.item.customerId,
-        this.query.brandId = items.data.item.brandId,
-        this.query.productId = items.data.item.productId,
+        this.query.brandId = items.data.item.brandId == 0 ? null : items.data.item.brandId,
+        this.query.productId = items.data.item.productId == 0 ? null : items.data.item.productId,
         this.query.beginDate = items.data.item.beginDate,
         this.query.endDate = items.data.item.endDate,
         this.query.cinemaCodes = items.data.item.deliveryCinemas,
-        this.query.deliveryMovies = items.data.item.deliveryMovies
+        this.query.deliveryMovies = (items.data.movies || []).map((it: any) => {
+          return {
+            ...it,
+            name_cn: it.name,
+            main_pic : it.mainPic,
+            release_date: this.formatDate(it.releaseDate)
+          }
+        })
         // this.numsList = items.data.item.deliveryMovies
       }
       this.numsList = this.query.deliveryMovies
@@ -162,31 +176,31 @@ export default class Main extends ViewBase {
        return
       }
     }
-    if (this.numsList.length > 0) {
+    // if (this.numsList.length > 0) {
       // this.query.deliveryMovies.push(this.numsList)
       this.query.deliveryMovies = (this.numsList || []).map((it: any) => {
         return {
-          movieId: it.movieId,
-          beginDate: it.beginDate,
-          endDate: it.endDate
+          movieId: it.movie_id ? it.movie_id : it.id,
+          beginDate: this.query.beginDate,
+          endDate: this.query.endDate
         }
       })
-    } else {
-      this.query.deliveryMovies = (this.numsList || []).map((it: any) => {
-        return {
-          movieId: it.movieId,
-          beginDate: it.beginDate,
-          endDate: it.endDate
-        }
-      })
-      // this.query.deliveryMovies = [
-      // 	{
-      //     movieId: 55165,
-      //     beginDate: 20120202,
-      //     endDate: 20120203
-      //   }
-      // ]
-    }
+    // } else {
+    //   this.query.deliveryMovies = (this.numsList || []).map((it: any) => {
+    //     return {
+    //       movieId: it.movieId,
+    //       beginDate: it.beginDate,
+    //       endDate: it.endDate
+    //     }
+    //   })
+    //   // this.query.deliveryMovies = [
+    //   // 	{
+    //   //     movieId: 55165,
+    //   //     beginDate: 20120202,
+    //   //     endDate: 20120203
+    //   //   }
+    //   // ]
+    // }
 
     if (this.file == null) {
       // TODO: 如果文件是必选的，提示选择文件
@@ -329,7 +343,7 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-page-item-active {
   border-color: #eee;
-  background: #eee !important;
+  background: #00202d !important;
   border-radius: 50%;
   color: #fff;
   width: 30px;
@@ -379,9 +393,9 @@ export default class Main extends ViewBase {
   overflow-y: hidden;
   background: rgba(32, 67, 80, 1);
 }
-/deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
-  color: #fff;
-}
+// /deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
+//   color: #fff;
+// }
 /deep/ .ivu-table-wrapper {
   margin: 30px 0 0;
   border: none;
@@ -450,16 +464,22 @@ export default class Main extends ViewBase {
   margin-left: 20px;
 }
 /deep/ .ivu-input-prefix i {
-  font-size: 16px;
+  font-size: 17px;
   line-height: 32px;
   color: #808695;
   margin-top: 5px;
 }
 /deep/ .ivu-input-suffix i {
-  font-size: 16px;
+  font-size: 17px;
   line-height: 32px;
   color: #808695;
   margin-top: 4px;
+}
+/deep/ .ivu-select-arrow {
+  font-size: 17px;
+}
+/deep/ .ivu-page-item-active:hover a, .ivu-page-item-active a {
+  color: #fff;
 }
 </style>
 

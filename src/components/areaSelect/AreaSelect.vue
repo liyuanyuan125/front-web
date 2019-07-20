@@ -1,5 +1,5 @@
 <template>
-  <Cascader v-model="inner" :data="data" :load-data="loadData" :clearable="clearable"
+  <Cascader v-model="inner"  :data="data" :load-data="loadData" :clearable="clearable"
     class="area-select" :render-format="format" ref="ui"></Cascader>
 </template>
 

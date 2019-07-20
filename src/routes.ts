@@ -3,6 +3,7 @@ import home from '@/views/home.vue'
 import login from '@/views/portal/login/index.vue'
 import loginIndex from '@/views/portal/login/loginIndex.vue'
 import apply from '@/views/portal/login/apply.vue'
+import applyHome from '@/views/portal/login/applyHome.vue'
 import register from '@/views/portal/register.vue'
 import registerComplete from '@/views/portal/registerComplete.vue'
 import activeEmail from '@/views/portal/activeEmail.vue'
@@ -59,9 +60,14 @@ export type GetBreadcrumb = (route: Route) => Breadcrumb[]
 // tslint:disable-next-line:no-empty-interface
 export interface RouteMetaBase {
   /**
-   * 页面标题
+   * 标题
    */
   title?: string | ((route: Route) => string)
+
+  /**
+   * 页面标题，当明确设置为 false 时，不进行自动推断（页面内自己通过编码决定页面标题）
+   */
+  pageTitle?: false | string | ((route: Route) => string)
 
   /**
    * 明确的面包屑导航，若不提供，则自动判断，若不需要，设置为 []
@@ -170,6 +176,12 @@ const singleRoutes: RouteConfigEnhance[] = [
     component: apply,
     meta: unauth
   },
+  {
+    path: '/applyhome',
+    name: 'applyhome',
+    component: applyHome,
+    meta: unauth
+  },
 
   // 激活邮箱
   {
@@ -240,7 +252,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/home/overview/index.vue'),
     meta: {
       ...emptyAuth,
-      breadcrumbs: [{ label: '首页' }]
+      breadcrumbs: [{ label: '首页' }],
+      pageTitle: '鲸娱数据：全网精准娱乐营销平台',
     }
   },
 
@@ -261,9 +274,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'home-resoverview',
     component: () => import('./views/resReport/info/index.vue'),
     meta: {
-      authKey: 'data-report',
+      // authKey: 'data-report',
+      authKey: 'index',
       authAction: 'EMPTY',
-      breadcrumbs: [{ label: '首页' }]
+      breadcrumbs: [{ label: '首页' }],
+      pageTitle: '鲸娱数据：全网精准娱乐营销平台'
     }
   },
 
@@ -274,7 +289,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/search/index.vue'),
     meta: {
       ...emptyAuth,
-      breadcrumbs: [{ label: '搜索' }]
+      breadcrumbs: [{ label: '搜索' }],
+      pageTitle: false,
     },
     props: true,
   },
@@ -288,6 +304,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.info',
       authAction: 'view',
       authIsMenu: true,
+      pageTitle: '账号信息-鲸娱数据'
     }
   },
 
@@ -324,6 +341,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.users',
       authAction: 'viewList',
       authIsMenu: true,
+      pageTitle: '用户管理-鲸娱数据'
     }
   },
 
@@ -335,9 +353,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.users',
       authAction: 'create',
-      title() {
-        return '添加子用户'
-      }
+      title: '添加子用户',
+      pageTitle: '添加子账号-鲸娱数据',
     }
   },
 
@@ -349,9 +366,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.users',
       authAction: 'edit',
-      title() {
-        return '编辑子用户'
-      }
+      title: '编辑子用户',
+      pageTitle: '编辑子账号-鲸娱数据'
     }
   },
 
@@ -363,7 +379,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.users',
       authAction: 'view',
-      title: '查看'
+      title: '查看',
+      pageTitle: '查看子账号详情-鲸娱数据'
     }
   },
 
@@ -387,6 +404,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.roles',
       authAction: 'viewList',
       authIsMenu: true,
+      pageTitle: '权限管理-鲸娱数据'
     }
   },
 
@@ -404,6 +422,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       title(route) {
         const id = route.params.id
         return id ? '编辑' : '添加'
+      },
+      pageTitle({ params: { id } }) {
+        return id ? '编辑权限角色-鲸娱数据' : '新建权限角色-鲸娱数据'
       }
     }
   },
@@ -416,9 +437,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.roles',
       authAction: 'view',
-      title() {
-        return '查看'
-      }
+      title: '查看',
+      pageTitle: '查看权限角色-鲸娱数据',
     },
   },
 
@@ -431,6 +451,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.managecinema',
       authAction: 'viewList',
       authIsMenu: true,
+      pageTitle: '影院管理-鲸娱数据'
     }
   },
 
@@ -442,9 +463,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.managecinema',
       authAction: 'view',
-      title() {
-        return '查看'
-      }
+      title: '查看',
     }
   },
 
@@ -457,6 +476,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.changePassword',
       authAction: 'EMPTY',
       authIsMenu: true,
+      pageTitle: '修改密码-鲸娱数据',
     }
   },
 
@@ -469,6 +489,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'financial-manage.info',
       authAction: 'viewSummary',
       authIsMenu: true,
+      pageTitle: '财务信息-鲸娱数据'
     }
   },
 
@@ -480,9 +501,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'financial-manage.info',
       authAction: 'viewList',
-      title() {
-        return '更多充值记录'
-      }
+      title: '更多充值记录',
     }
   },
 
@@ -495,6 +514,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'financial-manage.bill',
       authAction: 'view',
       authIsMenu: true,
+      pageTitle: '资金账单-鲸娱数据'
     }
   },
 
@@ -507,6 +527,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'promotion.ad-plan',
       authAction: 'viewList',
       authIsMenu: true,
+      pageTitle: '广告计划-鲸娱数据',
     }
   },
 
@@ -520,9 +541,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'promotion.ad-plan',
       authAction: 'view',
-      title() {
-        return '详情'
-      }
+      title: '详情'
     }
   },
 
@@ -551,29 +570,27 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 推广管理 - 广告计划 - 创建广告计划
   {
-    path: '/pop/planlist/add/:id?/:setid?',
+    path: '/pop/planlist/add/:step?/:setid?',
     name: 'pop-planlist-add',
     component: () => import('./views/pop/plan/index.vue'),
     meta: {
       authKey: 'promotion.ad-plan',
       authAction: 'edit',
-      title() {
-        return '创建'
-      }
+      title: '创建',
+      pageTitle: '创建广告计划-鲸娱数据',
     }
   },
 
   // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
   {
-    path: '/pop/planlist/edit/:id/:setid',
+    path: '/pop/planlist/edit/:step/:setid',
     name: 'pop-planlist-edit',
     component: () => import('./views/pop/plan/index.vue'),
     meta: {
       authKey: 'promotion.ad-plan',
       authAction: 'edit',
-      title() {
-        return '编辑'
-      }
+      title: '编辑',
+      pageTitle: '编辑广告计划-鲸娱数据',
     }
   },
 
@@ -607,7 +624,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'promotion.ad-video',
       authAction: 'viewList',
       authIsMenu: true,
-      title: ''
+      title: '',
+      pageTitle: '广告片-鲸娱数据',
     }
   },
 
@@ -624,7 +642,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction(route) {
         const id = parseInt(route.params.id, 10) || 0
         return id > 0 ? 'edit' : 'create'
-      }
+      },
+      pageTitle({ params }) {
+        return params.id as any > 0 ? '编辑广告片-鲸娱数据' : '新建广告片-鲸娱数据'
+      },
     }
   },
 
@@ -649,6 +670,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'adOrderManage.order',
       authAction: 'view',
       authIsMenu: true,
+      pageTitle: '映前广告单列表-鲸娱数据',
     }
   },
   // 资源方-广告单-广告详情
@@ -660,9 +682,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: 'view',
       authIsMenu: true,
-      title() {
-        return '详情'
-      }
+      title: '详情',
+      pageTitle: '映前广告单详情-鲸娱数据'
     }
   },
 
@@ -699,6 +720,21 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'adOrderManage.issue',
       authAction: 'EMPTY',
       authIsMenu: true,
+      pageTitle: '上刊管理-鲸娱数据',
+    },
+  },
+
+  // 资源方 - 广告单管理 - 下刊管理
+   {
+    path: '/order/nextissue',
+    name: 'order-nextissue',
+    component: () => import('./views/order/nextissue/index.vue'),
+    meta: {
+      authKey: '',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+      title: '下刊管理',
+      pageTitle: '下刊管理-鲸娱数据',
     },
   },
 
@@ -711,6 +747,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'adOrderManage.supervision',
       authAction: 'EMPTY',
       authIsMenu: true,
+      pageTitle: '监播管理-鲸娱数据',
     },
   },
 
@@ -758,6 +795,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'financeManage.info',
       authAction: 'viewSummary',
       authIsMenu: true,
+      pageTitle: '财务信息-鲸娱数据',
     }
   },
 
@@ -775,23 +813,35 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 效果报表
   {
-    path: '/reseport/effect-report/:id',
+    path: '/reseport/effect-report/:id?',
     name: 'effect-report',
     component: () => import('./views/resReport/effectReport/index.vue'),
     meta: {
       authKey: 'promotion.report',
       authAction: 'EMPTY',
-      authIsMenu: true
+      authIsMenu: true,
+      pageTitle: '映前广告效果报告-鲸娱数据',
     },
   },
 
   // 第三方 - 效果报表
   {
-    path: '/reseport/effect-report-third',
-    name: 'effect-report-third',
+    path: '/reseport/effect-report-third/:id',
+    name: 'test-report-third',
     component: () => import('./views/resReport/effectReportThird/index.vue'),
-    meta: unauth,
+    meta: {
+      authKey: '',
+      authAction: '',
+      authIsMenu: true,
+      title: '监测报告',
+      breadcrumbs: [
+        { label: '映前广告管理' },
+        { label: '第三方监测', route: { name: 'test' } },
+        { label: '监测报告' }
+      ]
+    }
   },
+
 
   // TODO: 下面的两个先不做了
 
@@ -821,6 +871,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'customer-manage',
       authAction: 'viewList',
       authIsMenu: true,
+      pageTitle: '客户管理-鲸娱数据',
     }
   },
 
@@ -837,7 +888,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       },
       title(route) {
         const id = route.params.id
-        return id ? '客户管理 - 编辑信息' : '客户管理 - 添加信息'
+        return id ? '编辑客户信息' : '添加客户信息'
+      },
+      pageTitle(route) {
+        return route.params.id ? '编辑客户信息-鲸娱数据' : '新建客户信息-鲸娱数据'
       }
     }
   },
@@ -850,9 +904,36 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'customer-manage',
       authAction: 'view',
+      title: '查看客户详情',
+      pageTitle: '查看客户详情-鲸娱数据',
     }
   },
 
+  // 消息中心
+  {
+    path: '/message',
+    name: 'message',
+    component: () => import('./views/message/index.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '消息中心',
+      pageTitle: '消息中心-鲸娱数据',
+    },
+  },
+
+  // 消息中心 - 消息详情
+  {
+    path: '/message/info/:id',
+    name: 'message-info',
+    component: () => import('./views/message/info.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '消息详情',
+      pageTitle: '消息详情-消息中心-鲸娱数据',
+    },
+  },
 
   // 示例，没有实际用处
   {
@@ -885,6 +966,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'kol.order',
       authAction: 'EMPTY',
       authIsMenu: true,
+      title: 'KOL推广订单列表',
+      pageTitle: 'KOL推广订单列表-鲸娱数据'
     }
   },
 
@@ -904,9 +987,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: '',
       authAction: '',
-      title() {
-        return '购物车'
-      }
+      title: '购物车',
+      pageTitle: '购物车-鲸娱数据'
     }
   },
 
@@ -915,7 +997,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     path: '/kol/order/detail/:id',
     name: 'kol-order-detail',
     component: () => import('./views/kol/order/detail.vue'),
-    meta: emptyAuth,
+    meta:  {
+      ...emptyAuth,
+      title: '订单详情',
+      pageTitle: 'KOL推广详情-鲸娱数据'
+    },
     props: idProps,
   },
 
@@ -948,7 +1034,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/applyTicket/index.vue'),
     meta: {
       ...emptyAuth,
-      title: '申请发票列表'
+      title: '申请发票列表',
+      pageTitle: '申请开票-鲸娱数据',
     },
   },
 
@@ -959,7 +1046,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/applyTicket/addticket.vue'),
     meta: {
       ...emptyAuth,
-      title: '申请发票填写页'
+      title: '申请发票填写页',
+      pageTitle: '新建开票申请-鲸娱数据'
     },
   },
 
@@ -970,7 +1058,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/applyTicket/ticketHis.vue'),
     meta: {
       ...emptyAuth,
-      title: '查看开票历史'
+      title: '查看开票历史',
+      pageTitle: '开票历史-鲸娱数据'
     },
   },
 
@@ -981,7 +1070,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/kol/applyTicket/detail.vue'),
     meta: {
       ...emptyAuth,
-      title: '查看开票详情'
+      title: '查看开票详情',
+      pageTitle: '开票详情-鲸娱数据'
     },
   },
 
@@ -994,6 +1084,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'kol.list',
       authAction: 'EMPTY',
       authIsMenu: true,
+      pageTitle: 'KOL列表-鲸娱数据',
     }
   },
 
@@ -1005,7 +1096,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       ...emptyAuth,
       immersionHeader: true,
-      title: 'KOL详情页'
+      title: 'KOL详情页',
+      pageTitle: false,
     },
     props: ({ params: { id, channel } }: Route) => {
       return {
@@ -1068,7 +1160,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         component: () => import('./views/kol/detail/fans.vue'),
         meta: {
           ...emptyAuth,
-          title: 'emptyAuth'
+          title: '粉丝画像'
         },
         props: idProps,
       },
@@ -1132,7 +1224,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       ...emptyAuth,
       immersionHeader: true,
-      title: '影片详情页'
+      title: '影片详情页',
+      pageTitle: false,
     },
     props: idProps,
   },
@@ -1225,6 +1318,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       ...emptyAuth,
       immersionHeader: true,
       title: '影人详情页',
+      pageTitle: false,
     },
     props: idProps,
   },
@@ -1339,6 +1433,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'film-cooperation.list',
       authAction: 'EMPTY',
       authIsMenu: true,
+      pageTitle: '影片列表-鲸娱数据'
     }
   },
 
@@ -1351,8 +1446,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'film-cooperation.order',
       authAction: 'EMPTY',
       authIsMenu: true,
+      pageTitle: '影片合作订单-鲸娱数据'
     },
   },
+
   // 影片 - 影片合作订单列表添加
   {
     path: '/film/filmorder/addmovielist/:id',
@@ -1361,11 +1458,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: '',
       authAction: '',
-      title() {
-        return '影片合作订单添加'
-      }
+      title: '影片合作订单添加',
+      pageTitle: '申请影片合作-鲸娱数据'
     },
   },
+
   // 影片 - 影片合作订单详情
   {
     path: '/film/filmorder/movielist/detail/:id',
@@ -1374,9 +1471,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: '',
       authAction: '',
-      title() {
-        return '影片合作订单详情'
-      }
+      title: '影片合作订单详情',
+      pageTitle: '影片合作详情-鲸娱数据'
     },
   },
 
@@ -1388,9 +1484,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: '',
       authAction: '',
-      title() {
-        return '订单填写'
-      }
+      title: '订单填写',
+      pageTitle: '新建KOL推广-鲸娱数据',
     },
   },
   // kol - 我的收藏
@@ -1416,7 +1511,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       title: '品牌',
-      siderMenu: 'brand-list'
+      siderMenu: 'brand-list',
+      pageTitle: false,
     },
     props: idProps,
   },
@@ -1485,52 +1581,6 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     })
   },
 
-  // 品牌 - 产品 - 详情页
-  {
-    path: '/brand/detailpro/:id',
-    name: 'brand-detailpro-layout',
-    component: () => import('./views/brand/detailPro/layout.vue'),
-    meta: {
-      ...emptyAuth,
-    },
-    props: idProps,
-    children: [
-      // 产品 - 详情页 - 用户画像
-      {
-        path: 'fans',
-        name: 'brand-detailpro-fans',
-        component: () => import('./views/brand/detailPro/fans.vue'),
-        meta: {
-          ...emptyAuth,
-          title: '用户画像'
-        },
-        props: idProps,
-      },
-      // 产品 - 详情页 - 口碑评论
-      {
-        path: 'comment',
-        name: 'brand-detailpro-comment',
-        component: () => import('./views/brand/detailPro/comment.vue'),
-        meta: {
-          ...emptyAuth,
-          title: '口碑评论'
-        },
-        props: idProps,
-      },
-      // 产品 - 详情页 - 全网热度
-      {
-        path: 'trend',
-        name: 'brand-detailpro-trend',
-        component: () => import('./views/brand/detailPro/trend.vue'),
-        meta: {
-          ...emptyAuth,
-          title: '全网热度'
-        },
-        props: idProps,
-      },
-    ]
-  },
-
    // [直客] 品牌管理（详情页）登录判断
    {
     path: '/brand/list',
@@ -1541,6 +1591,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: 'EMPTY',
       authIsMenu: true,
       title: '品牌管理',
+      pageTitle: '品牌列表-鲸娱数据'
     }
   },
 
@@ -1553,6 +1604,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'promotion.evaluate',
       authAction: 'EMPTY',
       authIsMenu: true,
+      pageTitle: '映前广告第三方监测-鲸娱数据',
     },
   },
   // 第三方监测 - 新建/编辑
@@ -1568,6 +1620,44 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     },
   },
 
+
+  // 资源方 - 财务信息 - 对账单管理
+  {
+    path: '/resFinance/bill',
+    name: 'resFinance-bill',
+    component: () => import('./views/resFinance/bill/index.vue'),
+    meta: {
+      authKey: 'financeManage.bill',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+      title: '对账单管理',
+      pageTitle: '对账单列表-鲸娱数据'
+    },
+  },
+  // 资源方 - 财务信息 - 对账单管理 - 查看详情
+  {
+    path: '/resFinance/bill/detail',
+    name: 'resFinance-bill-detail',
+    component: () => import('./views/resFinance/bill/detail.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '查看详情',
+      pageTitle: '对账单详情-鲸娱数据',
+    },
+  },
+  // 资源方 - 财务信息 - 对账单管理 - 明细
+  {
+    path: '/resFinance/bill/info',
+    name: 'resFinance-bill-info',
+    component: () => import('./views/resFinance/bill/detailinfo.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      title: '明细',
+      pageTitle: '对账单明细-鲸娱数据',
+    },
+  },
 
   // 品牌列表（有多个品牌则默认跳转品牌列表）登录判断
   {

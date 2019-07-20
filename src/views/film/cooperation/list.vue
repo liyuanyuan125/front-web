@@ -46,78 +46,74 @@
     <div class="filter-box">
       <Form :model="form" label-position="left" class="edit-input" :label-width="100">
         <Row type="flex" class="filtertop" justify="space-between">
-          <Col :span="24">
-            <FormItem label="上映时间:">
-              <RadioGroup
-                class="nav"
-                @on-change="handleChange"
-                v-model="form.releaseStatus"
-                size="large"
-                type="button"
-              >
-                <Radio
-                  v-for="(item) in dict.timeSelected"
-                  :key="item.key"
-                  :disabled="item.disabled"
-                  :label="item.key"
-                >{{item.text}}</Radio>
-              </RadioGroup>
-            </FormItem>
-            <FormItem label="影片类型:">
-              <RadioGroup
-                class="nav"
-                @on-change="handleChange"
-                v-model="form.movieTypeCode"
-                size="large"
-                type="button"
-              >
-                <Radio
-                  v-for="(item) in dict.typeList"
-                  :key="item.key"
-                  :label="item.key"
-                >{{item.text}}</Radio>
-              </RadioGroup>
-            </FormItem>
-            <FormItem label="影片量级:">
-              <RadioGroup
-                @on-change="handleChange"
-                v-model="form.movieCategoryCode"
-                size="large"
-                type="button"
-              >
-                <Radio
-                  v-for="(item) in dict.categoryList"
-                  :key="item.key"
-                  :label="item.key"
-                >{{item.text}}</Radio>
-              </RadioGroup>
-            </FormItem>
-          </Col>
+          <FormItem label="上映时间：">
+            <RadioGroup
+              class="nav"
+              @on-change="handleChange"
+              v-model="form.releaseStatus"
+              size="large"
+              type="button"
+            >
+              <Radio
+                v-for="(item) in dict.timeSelected"
+                :key="item.key"
+                :disabled="item.disabled"
+                :label="item.key"
+              >{{item.text}}</Radio>
+            </RadioGroup>
+          </FormItem>
+          <FormItem label="影片类型：">
+            <RadioGroup
+              class="nav"
+              @on-change="handleChange"
+              v-model="form.movieTypeCode"
+              size="large"
+              type="button"
+            >
+              <Radio
+                v-for="(item) in dict.typeList"
+                :key="item.key"
+                :label="item.key"
+              >{{item.text}}</Radio>
+            </RadioGroup>
+          </FormItem>
+          <FormItem label="影片量级：">
+            <RadioGroup
+              @on-change="handleChange"
+              v-model="form.movieCategoryCode"
+              size="large"
+              type="button"
+            >
+              <Radio
+                v-for="(item) in dict.categoryList"
+                :key="item.key"
+                :label="item.key"
+              >{{item.text}}</Radio>
+            </RadioGroup>
+          </FormItem>
         </Row>
         <Row type="flex" justify="space-between" class="filterbottom">
-          <Col :span="24">
-            <FormItem label="排序方式:">
-              <RadioGroup
-                class="nav"
-                @on-change="handleChange"
-                v-model="form.sortBy"
-                size="large"
-                type="button"
-              >
-                <Radio
-                  v-for="(item) in dict.sortBy"
-                  :key="item.key"
-                  :label="item.key"
-                >{{item.text}}</Radio>
-              </RadioGroup>
-            </FormItem>
-          </Col>
+          <FormItem label="排序方式：">
+            <RadioGroup
+              class="nav"
+              @on-change="handleChange"
+              v-model="form.sortBy"
+              size="large"
+              type="button"
+            >
+              <Radio
+                v-for="(item) in dict.sortBy"
+                :key="item.key"
+                :label="item.key"
+              >{{item.text}}</Radio>
+            </RadioGroup>
+          </FormItem>
         </Row>
       </Form>
     </div>
     <div class="res-box">
       <div class="res-list">
-        <Row :gutter="10" v-if="done" type="flex" justify="start" class="res-row">
+        <Row :gutter="10" v-if="done && hasData" type="flex" justify="start" class="res-row">
           <Col span="4" v-for="(item, index) in dataList" :key="index" class="res-col">
             <div class="res-item">
               <router-link target='_blank' :to="{ name: 'film-movie', params: { id: item.movie_id}}">
@@ -125,19 +121,24 @@
                   <img :src="item.main_pic">
                 </div>
                 <div class="movtitle cut-text">{{item.name_cn}}</div>
-                <p class="movscore" v-if=" form.sortBy === 'hots' "><i class="hots"></i><span>{{getItemValue(item)}}</span></p>
-                <p class="movscore" v-else-if=" form.sortBy === 'wantSeeCount' "><span>{{getItemValue(item)}}</span>人想看</p>
-                <p class="movscore" v-else-if=" form.sortBy === 'commentsScore' "><span>{{getItemValue(item)}}</span>分</p>
-                <p class="movscore" v-else ><span>{{getItemValue(item)}}</span></p>
+                <p class="movscore" v-if=" form.sortBy === 'hots' ">
+                  <i class="hots"></i>
+                  <span>{{getItemValue(item)}}</span>
+                </p>
+                <p class="movscore" v-html="getItemValue(item)" v-else></p>
               </router-link>
             </div>
           </Col>
         </Row>
-        <div v-else class="loading-box">
+        <div v-else-if="!done" class="loading-box">
           <TinyLoading />
+        </div>        
+        <div v-else class="noData-box">
+          暂无数据
         </div>
       </div>
       <Page
+        v-if="hasData && done"
         class="info-page"
         :total="totalPages"
         :current="form.pageIndex"
@@ -157,7 +158,7 @@ import ViewBase from '@/util/ViewBase'
 import { fetchList } from '@/api/filmCooperation'
 import TinyLoading from '@/components/TinyLoading.vue'
 import { dayOffset } from '@/util/date'
-import { percent, readableNumber, textList } from '@/util/dealData'
+import { percent, readableNumber, readableThousands, textList, jyIndex } from '@/util/dealData'
 
 const typeListMore: any[] = []
 
@@ -167,28 +168,38 @@ const typeListMore: any[] = []
   }
 })
 export default class CooperationFilmList extends ViewBase {
-  done = false
+  done: boolean = false
+
+  hasData: boolean = false
+
   filterShowMore = false
+
   filterShowMoreIcon = 'ios-arrow-down'
+
   filterShowMoreText = '更多'
+
   selectdTime: string = ''
+
   totalPages: number = 0
+
   form: any = {
     movieTypeCode: '',
     movieCategoryCode: '',
     sortBy: 'wantSeeCount',
     pageIndex: 1,
     pageSize: 18,
-    releaseStatus: 0
+    releaseStatus: 3
   }
+
   dataList: any[] = []
+
   dict = {
     // 上映时间
     timeSelected: [
-      {
-        key: 0,
-        text: '不限'
-      },
+      // {
+      //   key: 0,
+      //   text: '不限'
+      // },
       {
         key: 3,
         text: '正在热映'
@@ -249,6 +260,8 @@ export default class CooperationFilmList extends ViewBase {
 
   async fetchHandler() {
     this.done = false
+    this.hasData = false
+
     const that: any = this
     const mockObj = {
       ...this.form
@@ -272,14 +285,34 @@ export default class CooperationFilmList extends ViewBase {
     }
     try {
       const {
-        data: {
-          movies,
-          categoryList,
-          typeList,
-          totalPages,
-          totalCount
-        }
+        data
       } = await fetchList({ ...mockObj })
+
+      const categoryList = data.categoryList || null
+      const typeList = data.typeList || null
+      const totalPages = data.totalPages || null
+      const totalCount = data.totalCount || null
+
+      if ( this.dict.typeList.length === 1 ) {
+        const res = typeList.filter((it: any) => {
+          return it.controlStatus !== 0
+        })
+        this.dict.typeList.push( ...res )
+      }
+      if ( this.dict.categoryList.length === 1 ) {
+        const res = categoryList.filter((it: any) => {
+          return it.controlStatus !== 0
+        })
+        this.dict.categoryList.push( ...res )
+      }
+
+      const movies = data.movies || null
+      if ( !movies || movies.length === 0 ) {
+        this.done = true
+        this.hasData = false
+        return
+      }
+
       if ( movies && movies.length > 0 ) {
         this.dataList = movies.map((it: any) => {
           return {
@@ -295,20 +328,9 @@ export default class CooperationFilmList extends ViewBase {
           }
         })
         this.totalPages = totalCount
-        if ( this.dict.typeList.length === 1 ) {
-          const res = typeList.filter((it: any) => {
-            return it.controlStatus !== 0
-          })
-          this.dict.typeList.push( ...res )
-        }
-        if ( this.dict.categoryList.length === 1 ) {
-          const res = categoryList.filter((it: any) => {
-            return it.controlStatus !== 0
-          })
-          this.dict.categoryList.push( ...res )
-        }
-        that.done = true
       }
+      that.done = true
+      that.hasData = true
     } catch (ex) {
       this.handleError(ex)
     }
@@ -324,16 +346,17 @@ export default class CooperationFilmList extends ViewBase {
   getItemValue(it: any) {
     switch ( this.form.sortBy ) {
       case 'hots':
-        return it.hots
-        break
+        return readableThousands(it.hots)
       case 'wantSeeCount':
-        return readableNumber(it.want_see)
-        break
+        const see = readableNumber(it.want_see)
+        return see == '-' ? '-' : `<span>${see}</span>人想看`
       case 'commentsScore':
-        return it.comments_score != 0 ? (it.comments_score / 10) : it.comments_score
-        break
+        return it.comments_score == 0
+          ? '-'
+          : `<span>${(it.comments_score / 10).toFixed(1)}</span>分`
       default:
-        return it.jy_index != 0 ? (it.jy_index / 100).toFixed(2) : it.jy_index
+        const index = jyIndex(it.jy_index)
+        return `<span>${index}</span>`
     }
   }
 
@@ -551,7 +574,7 @@ export default class CooperationFilmList extends ViewBase {
             align-items: center;
             font-size: 16px;
             font-weight: 500;
-            span {
+            /deep/ span {
               color: #da6c70;
               font-size: 24px;
               font-weight: 500;
@@ -611,5 +634,16 @@ export default class CooperationFilmList extends ViewBase {
   flex-flow: row;
   justify-content: center;
   align-items: center;
+}
+.noData-box {
+  width: 100%;
+  height: 500px;
+  text-align: center;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: #999;
 }
 </style>

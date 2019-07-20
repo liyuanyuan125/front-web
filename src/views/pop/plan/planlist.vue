@@ -48,7 +48,7 @@
     </Form>
 
     <div>
-      <Table stripe :columns="columns" :data="tableDate" ref="selection">
+      <Table :loading="loading" stripe :columns="columns" :data="tableDate" ref="selection">
         <template ref="title" slot="header">
           <div v-auth="'promotion.ad-plan#delete'">
             <div class="top">
@@ -66,26 +66,34 @@
         <template slot="msg" slot-scope="{row, index}">
           <div class="msg-box">
             <p>
-              <Checkbox v-model="checks[row.id]" :key="index"></Checkbox>
-              ID: {{row.id}}
+              <Checkbox v-if="!row.ids" v-model="checks[row.id]" :key="index"></Checkbox>
+              <span v-if="row.ids">ID: {{row.ids}}</span>
+              <span v-else>ID:{{row.id}}</span>
             </p>
             <div>
-              <img :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
+              <img v-if="!row.ids" :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
+              <img v-else src="./assets/mock.png" :onerror="defaultImg" width="90px" height="90px">
+
               <div>
                 <h3>{{row.name}}</h3>
                 <span>{{row.videoName}}&nbsp;&nbsp;{{row.customerName}}&nbsp;&nbsp;{{row.specification||0 }}s</span>
-                <p v-if="!row.videoId" @click="relevanceAdv(row, 1)">关联广告片</p>
-                <p v-if="row.videoId" @click="relevanceAdv(row, 2)">修改广告片</p>
+                <div v-if="!row.ids">
+                  <p v-if="!row.videoId && row.id != 0" @click="relevanceAdv(row, 1)">关联广告片</p>
+                  <p v-if="row.videoId && row.id != 0" @click="relevanceAdv(row, 2)">修改广告片</p>
+                </div>
               </div>
             </div>
           </div>
         </template>
         <template slot="date" slot-scope="{row}">
-          <p>
+          <p v-if="row.status > 9">
             <span>{{formatDate(row.beginDate)}}</span>至
             <span>{{formatDate(row.endDate)}}</span>
           </p>
-          <p style="margin-top: 10px">{{days(row.beginDate, row.endDate)}}天</p>
+          <p v-else>
+            <span>开始于{{formatDate(row.beginDate)}}</span>
+          </p>
+          <!-- <p style="margin-top: 10px">{{days(row.beginDate, row.endDate)}}天</p> -->
         </template>
 
         <template slot="settlementStatus" slot-scope="{row}">
@@ -99,35 +107,39 @@
         <template slot="status" slot-scope="{row}">
           <p
             class="red"
-            style="margin-top: 10px"
           >{{data.statusList.filter((it) => it.key == row.status)[0].text}}</p>
         </template>
 
         <template slot="operation" slot-scope="{row}">
           <div class="operation-btn">
-            <div v-if="row.status == 1 || row.status == 2">
-              <p @click="plandetail(row.id)">详情</p>
-              <p @click="plandEdit(row.id)">编辑</p>
-              <p @click="plandel(row.id)">删除</p>
+            <div v-if="row.ids">
+              <span class="edit-btn" @click="findId(row.ids)">查看效果报表</span>
             </div>
-            <div v-if="row.status == 3 || row.status == 4">
-              <span class="edit-btn" v-if="row.status == 3" @click="sure(row.id)">确认方案</span>
-              <span class="edit-btn" v-if="row.status == 4" @click="pay(row.companyId, row.freezeAmount, row.id)">立即缴费</span>
-              <div class="adver-edit">
+            <div v-else>
+              <div v-if="row.status == 1 || row.status == 2">
                 <p @click="plandetail(row.id)">详情</p>
-                <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
+                <p @click="plandEdit(row.id)">编辑</p>
                 <p @click="plandel(row.id)">删除</p>
               </div>
-            </div>
-            <div v-if="(row.status > 4 && row.status < 8) || row.status == 12 ">
-              <div class="adver-edit">
-                <p @click="plandetail(row.id)">详情</p>
+              <div v-if="row.status == 3 || row.status == 4">
+                <span class="edit-btn" v-if="row.status == 3" @click="sure(row.id)">确认方案</span>
+                <span class="edit-btn" v-if="row.status == 4" @click="pay(row.companyId, row.freezeAmount, row.id)">立即缴费</span>
+                <div class="adver-edit">
+                  <p @click="plandetail(row.id)">详情</p>
+                  <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
+                  <p @click="plandel(row.id)">删除</p>
+                </div>
               </div>
-            </div>
-            <div v-if="row.status >= 8 && row.status < 12 ">
-              <span class="edit-btn" @click="findId(row.id)">查看效果报表</span>
-              <div class="adver-edit">
-                <p @click="plandetail(row.id)">详情</p>
+              <div v-if="(row.status > 4 && row.status < 8) || row.status == 12 ">
+                <div class="adver-edit">
+                  <p @click="plandetail(row.id)">详情</p>
+                </div>
+              </div>
+              <div v-if="row.status >= 8 && row.status < 12 ">
+                <span class="edit-btn" @click="findId(row.id)">查看效果报表</span>
+                <div class="adver-edit">
+                  <p @click="plandetail(row.id)">详情</p>
+                </div>
               </div>
             </div>
           </div>
@@ -175,6 +187,7 @@ export default class Plan extends ViewBase {
     settlementStatus: '',
     name: ''
   }
+  loading: any = false
   checkId: any = []
   pageList = {
     pageIndex: 1,
@@ -191,14 +204,50 @@ export default class Plan extends ViewBase {
   selectIds = []
   checkboxall = false
 
+  get mockadver() {
+    let ids = 173
+    if (VAR.env == 'prd') {
+      ids = 104
+    }
+    return {
+      endDate: 20190626,
+      beginDate: 20190620,
+      estimateCostAmount: 7014,
+      estimatePersonCount: 7014,
+      estimateShowCount: 571,
+      freezeAmount: 50000,
+      ids,
+      movieCustom: 1,
+      name: '[ 示例 ]精准映前广告投放计划',
+      needPayAmount: null,
+      payName: null,
+      payTime: null,
+      payUser: 0,
+      productId: 158,
+      productName: null,
+      recommend: true,
+      refundAmount: null,
+      reportUpdateTime: null,
+      settlementAmount: null,
+      settlementName: null,
+      settlementStatus: 0,
+      settlementTime: null,
+      settlementUser: 0,
+      specification: 15,
+      status: 11,
+      videoId: 273,
+      videoLogo: this.defaultImg,
+      videoName: '示例广告片',
+    }
+  }
   columns = [
     { title: '广告', key: 'id', minWidth: 170, slot: 'msg' },
-    { title: '投放周期', slot: 'date' },
+    { title: '投放排期', slot: 'date' },
     { title: '款项清算', slot: 'settlementStatus', align: 'center' },
     { title: '计划状态', slot: 'status' },
     { title: '操作', slot: 'operation', width: 150, align: 'left' }
   ]
-  tableDate = []
+  tableDate: any = []
   single = false
 
   get formatTimes() {
@@ -218,10 +267,11 @@ export default class Plan extends ViewBase {
   }
 
   get defaultImg() {
-    return 'this.src="' + require('./assets/error.png') + '"'
+    return 'this.src="' + require('./assets/mock.png') + '"'
   }
 
   async tableList() {
+    this.loading = true
     const { data } = await planList(
       clean({
         ...this.form,
@@ -236,7 +286,9 @@ export default class Plan extends ViewBase {
     //     item._disabled = true
     //   }
     // }
-    this.tableDate = data.items
+    this.loading = false
+    this.tableDate = (data.items || [])
+    this.tableDate.unshift(this.mockadver)
     this.totalCount = data.totalCount
   }
 
@@ -253,7 +305,7 @@ export default class Plan extends ViewBase {
 
   findId(id: any) {
     this.$router.push({ name: 'effect-report', params: {
-      id
+      step: id
     }})
   }
 
@@ -280,14 +332,14 @@ export default class Plan extends ViewBase {
 
   planDefault(id: any, status: any) {
     if (status == '1' || status == '3' || status == '9' || status == '10') {
-      this.$router.push({ name: 'pop-planlist-default', params: { id } })
+      this.$router.push({ name: 'pop-planlist-default', params: { step: id } })
     } else {
-      this.$router.push({ name: 'pop-planlist-defaultpayment', params: { id } })
+      this.$router.push({ name: 'pop-planlist-defaultpayment', params: { step: id } })
     }
   }
 
   planEdit(id: any) {
-    this.$router.push({ name: 'pop-planlist-add', params: { id } })
+    this.$router.push({ name: 'pop-planlist-add', params: { step: id } })
   }
 
   checkAll() {
@@ -330,13 +382,13 @@ export default class Plan extends ViewBase {
   plandEdit(id: any) {
     this.$router.push({
       name: 'pop-planlist-edit',
-      params: { id: '0', setid: id }
+      params: { step: '0', setid: id }
     })
   }
 
   async plandel(id: any) {
-    await confirm(`是否要删除广告计划`, {
-      title: '删除广告计划'
+    await confirm(`是否确定删除`, {
+      title: '删除广告计划?'
     })
     try {
       await delCheckPlanList(id)
@@ -368,17 +420,17 @@ export default class Plan extends ViewBase {
   }
 
   async deleteList() {
-    if (this.checkId.length) {
+    if (this.checkId.length > 0) {
       const ids: any = this.selectIds.map((item: any) => item.id) || []
-      await confirm('您确定要删除当前信息吗？')
+      await confirm('是否确定删除?')
       try {
-        await delCheckPlanList(this.checkId.join(','))
+        await delCheckPlanList(this.checkId.filter((item: any) => item != 'undefined').join(','))
         this.tableList()
       } catch (ex) {
         this.handleError(ex)
       }
     } else {
-      this.showWaring('请选择你要删除的信息?')
+      this.showWaring('请选择广告计划')
     }
   }
 
@@ -473,10 +525,13 @@ export default class Plan extends ViewBase {
   /deep/ .ivu-input,
   /deep/ .ivu-input-wrapper {
     border-radius: 5px 0 0 5px;
+    .ivu-icon-ios-search {
+      margin-top: -2px;
+    }
   }
   /deep/ .ivu-select-selection {
-    /deep/ .ivu-icon {
-      padding-right: 5px;
+    .ivu-select-arrow {
+      margin-right: 10px;
     }
   }
   /deep/ .ivu-select-placeholder,
@@ -546,7 +601,7 @@ export default class Plan extends ViewBase {
   border-radius: 5px;
   min-height: 280px;
   position: relative;
-  /deep/ .ivu-table-header th {
+  .ivu-table-header th {
     height: 60px;
     background: #000;
     color: #fff;
@@ -555,31 +610,28 @@ export default class Plan extends ViewBase {
       font-size: 14px;
     }
   }
-  /deep/ .ivu-table-column-center,
-  /deep/ .ivu-table-column-left {
+  .ivu-table-column-center,
+  .ivu-table-column-left {
     background: rgba(0, 0, 0, 0);
   }
-  /deep/ .ivu-table {
+  .ivu-table {
     background: rgba(0, 0, 0, 0);
   }
-  /deep/ .ivu-table-row {
+  .ivu-table-row {
     background: rgba(255, 255, 255, 0.8);
-    /deep/ td {
+    td {
       height: 200px;
       color: #00202d;
     }
   }
-  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
+  .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
     background: rgba(0, 0, 0, 0);
   }
-  /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
+  .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
     background: rgba(255, 255, 255, 0.5);
   }
-  /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
-    background: rgba(0, 0, 0, 0);
-  }
-  /deep/ .ivu-table-body .ivu-table-column-center,
-  /deep/ .ivu-table-body .ivu-table-column-left {
+  .ivu-table-body .ivu-table-column-center,
+  .ivu-table-body .ivu-table-column-left {
     span {
       color: #444;
       font-size: 14px;
@@ -701,6 +753,9 @@ export default class Plan extends ViewBase {
       margin-top: 10px;
     }
   }
+}
+/deep/ .ivu-checkbox-checked .ivu-checkbox-inner {
+  background: #00202d;
 }
 </style>
 

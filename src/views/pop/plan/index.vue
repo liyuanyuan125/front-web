@@ -1,5 +1,5 @@
 <template>
-  <div ref="page" class>
+  <div ref="page">
     <Row style="overflow:hidden">
       <Col span="22" offset="3">
         <StepTime v-model="step"/>
@@ -31,7 +31,7 @@ import StepTime from './vadver/stepTime.vue'
 })
 export default class App extends ViewBase {
   step = {
-    id: 0,
+    step: 0,
     setid: ''
   }
   currentTab: any = Promotion
@@ -41,10 +41,10 @@ export default class App extends ViewBase {
 
   init() {
     const step: any = this.$route.params
-    if (!step.id) {
+    if (!step.step) {
       this.$router.push({
         name: 'pop-planlist-add',
-        params: { id: '0' }
+        params: { step: '0' }
       })
     } else {
       this.step = step
@@ -54,8 +54,8 @@ export default class App extends ViewBase {
   @Watch('step', { deep: true })
   watchStep(val: any) {
     (this.$refs.page as HTMLDivElement).scrollTop = 0
-    const id = Number(this.step.id)
-    switch (id) {
+    const step = Number(this.step.step)
+    switch (step) {
       case 0:
         // this.currentTab = Orienteering
         this.currentTab = Promotion
@@ -95,6 +95,6 @@ export default class App extends ViewBase {
   right: 0;
   top: 0;
   bottom: -20px;
-  background-size: cover;
+  background-size: 100%;
 }
 </style>

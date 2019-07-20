@@ -1,6 +1,6 @@
 <template>
   <Layout :bubbleList="bubbleList" :class="bigFigure ? 'layout-big-figure' : ''">
-    <div class="main-content flex-box">
+    <div class="main-content flex-box" :class="`main-content-${status}`">
       <div
         class="big-figure"
         :style="{
@@ -15,6 +15,8 @@
           :movie="movie"
           :actorData="actorData"
           :more="{ name: 'film-detail-information', params: { id } }"
+          :favGet="favGet"
+          :favSet="favSet"
         >
           <router-link
             :to="{
@@ -22,7 +24,8 @@
               params: { id: id }
             }"
             class="button-apply"
-          >立即申请</router-link>
+            v-if="joinStatus == 2"
+          >申请合作</router-link>
         </BasicPane>
       </div>
 
@@ -60,6 +63,7 @@
             :title="hasShow ? '近7日观影人次' : '近7日新增想看'"
             :data="riseData"
             :more="{ name: 'film-detail-trend', params: {id} }"
+            :formatter="riseFormatter"
             class="active-fans-pane"
           />
         </div>
@@ -89,7 +93,10 @@ import BarPane from './components/barPane.vue'
 import HotPane from './components/hotPane.vue'
 import TextPane from './components/textPane.vue'
 import { getMovie, getVideoRise, getVideoHot } from './data'
+import { movieHasFav, movieSetFav } from './fav'
 import { readableThousands } from '@/util/dealData'
+import { MovieStatus } from '@/util/types'
+import { setPageTitle } from '@/util/browser'
 
 @Component({
   components: {
@@ -110,6 +117,11 @@ export default class MoviePage extends ViewBase {
 
   hasShow = false
 
+  status = 0 as MovieStatus
+
+  // 0 未知，1 关闭，2 开启
+  joinStatus = 0
+
   bigFigure = ''
 
   movie: any = null
@@ -126,9 +138,18 @@ export default class MoviePage extends ViewBase {
 
   hotData: any[] = []
 
+  favGet = movieHasFav
+
+  favSet = movieSetFav
+
+  riseFormatter({ dataIndex }: any) {
+    const { date, value } = this.riseData[dataIndex - 1]
+    return `${date}<br>${readableThousands(value)}`
+  }
+
   hotFormatter([{ dataIndex }]: any) {
-    const { value, rank } = this.hotData[dataIndex]
-    return `综合热度：${readableThousands(value)}<br>排名：${readableThousands(rank)}`
+    const { date, value, rank } = this.hotData[dataIndex]
+    return `${date}<br>综合热度：${readableThousands(value)}<br>排名：${readableThousands(rank)}`
   }
 
   created() {
@@ -145,6 +166,8 @@ export default class MoviePage extends ViewBase {
       bubbleList,
       basic,
       hasShow,
+      status,
+      joinStatus,
       movie,
       actorData,
       fansRate,
@@ -155,6 +178,8 @@ export default class MoviePage extends ViewBase {
     this.bubbleList = bubbleList
     this.basic = basic
     this.hasShow = hasShow
+    this.status = status
+    this.joinStatus = joinStatus
     this.movie = movie
     this.actorData = actorData
     this.fansRate = fansRate
@@ -163,6 +188,8 @@ export default class MoviePage extends ViewBase {
 
     // 拿到 hasShow 后，再调用 initRise
     this.initRise()
+
+    setPageTitle(`${basic.name}-鲸娱数据`)
   }
 
   async initRise() {
@@ -184,8 +211,49 @@ export default class MoviePage extends ViewBase {
   position: relative;
   justify-content: space-between;
   padding-right: 80px;
+
   /deep/ .brand-list {
     padding-right: 42px;
+  }
+
+  /deep/ .rank-zone {
+    padding-bottom: 19px;
+  }
+
+  /deep/ .rank-title {
+    display: none;
+  }
+
+  /deep/ .box-today {
+    .main-text {
+      position: relative;
+      top: 14px;
+    }
+
+    .sub-text {
+      visibility: hidden;
+    }
+  }
+}
+
+.main-content-2,
+.main-content-3 {
+  /deep/ .rank-zone {
+    padding-bottom: 14px;
+  }
+
+  /deep/ .rank-title {
+    display: block;
+  }
+
+  /deep/ .box-today {
+    .main-text {
+      top: 0;
+    }
+
+    .sub-text {
+      visibility: visible;
+    }
   }
 }
 

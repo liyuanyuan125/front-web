@@ -15,7 +15,7 @@
             style="width: 400px"
             placeholder="请输入品牌模糊查询"
           >
-            <Option v-for="item in brandList" :value="item.id">{{item.name}}</Option>
+            <Option v-for="item in brandList" :key="item.id" :value="item.id">{{item.name}}</Option>
           </Select>
         </FormItem>
         <FormItem label="上传图片" prop="fileIds">
@@ -106,7 +106,7 @@ export default class Main extends ViewBase {
         brandName: list.name,
         brandEnName: list.enName
       })
-      this.value = false
+      this.visibleBrand = false
       this.$emit('updateBrand')
       // this.tableList()
     } catch (ex) {

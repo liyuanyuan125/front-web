@@ -3,112 +3,63 @@
   <div>
     <Row>
       <Col span="24">
-      <Form label-position="left"
-            :label-width="100">
+      <Form label-position="left" :label-width="100">
         <Card class="detailmore-card">
           <div slot="title">
             <Row type="flex" justify="space-between" align="middle">
               <Col :span="17">
-                <DetailNavBar titleText='统计周期'>
-                  <div slot='item'>
-                    <RadioGroup class='nav'
-                              @on-change="handleChange"
-                              v-model="form.dayRangesKey"
-                              size="large"
-                              type="button">
-                    <Radio v-for="(item) in dict.dayRanges"
-                           :key="item.key"
-                           :disabled="item.disabled"
-                           :label="item.key">{{item.text}}</Radio>
+              <DetailNavBar titleText='统计周期'>
+                <div slot='item'>
+                  <RadioGroup class='nav' @on-change="handleChange" v-model="form.dayRangesKey" size="large" type="button">
+                    <Radio v-for="(item) in dict.dayRanges" :key="item.key" :disabled="item.disabled" :label="item.key">{{item.text}}</Radio>
                   </RadioGroup>
-                  </div>
-                </DetailNavBar>
+                </div>
+              </DetailNavBar>
               </Col>
               <Col :span="7" style="text-align: right; color: #fff">
-                平台
-                <Select
-                  v-model="form.channelCode"
-                  clearable
-                  @on-change="handleChange"
-                  style="width:150px; text-align:left"
-                >
-                  <Option
-                    v-for="(item) in dict.channelList"
-                    :key="item.key"
-                    :value="item.key"
-                  >{{item.text}}</Option>
-                </Select>
+              平台
+              <Select v-model="form.channelCode" clearable @on-change="handleChange" style="width:150px; text-align:left">
+                <Option v-for="(item) in dict.channelList" :key="item.key" :value="item.key">{{item.text}}</Option>
+              </Select>
               </Col>
             </Row>
           </div>
           <div class="content">
             <Row type="flex" justify="space-between">
               <Col :span="12">
-                <div class='chart-wp' style='margin-right:10px'>
-                  <PieNest :initDone="chart1.initDone"
-                         :title='chart1.title'
-                         :dict1="chart1.dict1"
-                         :dict2="chart1.dict2"
-                        :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})"
-                         :color="chart1.color"
-                         :dataList="chart1.dataList"
-                         :currentTypeIndex="chart1.currentTypeIndex" />
-                </div>
+              <div class='chart-wp' style='margin-right:10px'>
+                <PieNest :initDone="chart1.initDone" :title='chart1.title' :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
+              </div>
               </Col>
               <Col :span="12">
-                <div class='chart-wp'>
-                  <BarxCategoryStack :initDone="chart2.initDone"
-                                  :title='chart2.title'
-                                  :dict1="chart2.dict1"
-                                  :dict2="chart2.dict2"
-                                  :xAxis="chart2.xAxis"
-                                  :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})"
-                                  :color="chart2.color"
-                                  :dataList="chart2.dataList"
-                                  :currentTypeIndex="chart2.currentTypeIndex"
-                                  @typeChange='typeChangeHander' />
-                </div>
+              <div class='chart-wp'>
+                <BarxCategoryStack :initDone="chart2.initDone" :title='chart2.title' :dict1="chart2.dict1" :dict2="chart2.dict2" :xAxis="chart2.xAxis" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" @typeChange='typeChangeHander' />
+              </div>
               </Col>
             </Row>
             <Row type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="12">
-                <div class='chart-wp borderRadius' style='margin-right:10px'>
-                  <WordCloud :initDone="chart3.initDone"
-                           :title='chart3.title'
-                           :dict1="chart3.dict1"
-                           :color="chart3.color"
-                           :dataList="chart3.dataList"
-                           @keyChange='keyChangeHandle'
-                           :currentTypeIndex="chart3.currentTypeIndex" />
-                </div>
+              <div class='chart-wp borderRadius' style='margin-right:10px'>
+                <WordCloud :initDone="chart3.initDone" :title='chart3.title' :dict1="chart3.dict1" :color="chart3.color" :dataList="chart3.dataList" @keyChange='keyChangeHandle' :currentTypeIndex="chart3.currentTypeIndex" />
+              </div>
               </Col>
               <Col :span="12">
-                <div class='chart-wp borderRadius'>
-                  <WordCloud :initDone="chart4.initDone"
-                           :title='chart4.title'
-                           :dict1="chart4.dict1"
-                           :color="chart4.color"
-                           :dataList="chart4.dataList"
-                           @keyChange='keyChangeHandle'
-                           :currentTypeIndex="chart4.currentTypeIndex" />
-                </div>
+              <div class='chart-wp borderRadius'>
+                <WordCloud :initDone="chart4.initDone" :title='chart4.title' :dict1="chart4.dict1" :color="chart4.color" :dataList="chart4.dataList" @keyChange='keyChangeHandle' :currentTypeIndex="chart4.currentTypeIndex" />
+              </div>
               </Col>
             </Row>
-            
+
             <Row v-if="tableData.length > 0" type="flex" justify="space-between" style='margin-top:10px'>
               <Col :span="24">
-                <div class='chart-wp keyword-box borderRadius'>
-                  <div class="keyword-title">
-                    提及到“{{keywordQuery.keyword}}”的热门评论
-                  </div>
-                  <div class="table-box">
-                    <Table stripe
-                      ref="table"
-                      :columns="tableColumns"
-                      :loading="tableLoading"  
-                      :data="tableData"></Table>
-                  </div>
+              <div class='chart-wp keyword-box borderRadius'>
+                <div class="keyword-title">
+                  提及到“{{keywordQuery.keyword}}”的热门评论
                 </div>
+                <div class="table-box">
+                  <Table stripe ref="table" :columns="tableColumns" :loading="tableLoading" :data="tableData"></Table>
+                </div>
+              </div>
               </Col>
             </Row>
 
@@ -273,7 +224,7 @@ export default class Main extends ViewBase {
           type: 'bar',
           stack: 'totalCount',
           data: []
-        },
+        }
       ]
     ],
     color: colors
@@ -303,7 +254,8 @@ export default class Main extends ViewBase {
     {
       title: '序号',
       key: 'index',
-      align: 'center'
+      align: 'center',
+      width: 70
     },
     {
       title: '内容',
@@ -312,21 +264,21 @@ export default class Main extends ViewBase {
       render: (hh: any, { row }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        return (
-          <div v-html={row.highLightWords}></div>
-        )
+        return <div class="wenben" v-html={row.highLightWords}></div>
         /* tslint:disable */
       }
     },
     {
       title: '赞同',
       key: 'favorCount',
-      align: 'center'
+      align: 'center',
+      width: 100
     },
     {
       title: '回复',
       key: 'replyCount',
-      align: 'center'
+      align: 'center',
+      width: 100
     },
     {
       title: '来源内容',
@@ -345,7 +297,8 @@ export default class Main extends ViewBase {
       title: '评论时间',
       key: 'commentDate',
       align: 'center'
-    }]
+    }
+  ]
 
   tableData: any[] = []
 
@@ -380,24 +333,30 @@ export default class Main extends ViewBase {
     }
     const id = this.$route.params.id || ''
     try {
-      const {
-        data,
-        data: {
-          items,
-          rate,
-          commentKeyword,
-          channelList
-        }
-      } = await comment({ ...mockObj }, id)
-      if ( !items ) { return }
-      
+      const { data } = await comment({ ...mockObj }, id)
+
+      if (!data.items) {
+        this.chart1.initDone = true
+        this.chart2.initDone = true
+        this.chart3.initDone = true
+        this.chart4.initDone = true
+        return
+      }
+
+      let items = data.items || null
+      const channelList = data.channelList || null
+      const rate = data.rate || null
+      const commentKeyword = data.commentKeyword || null
+      if (items) {
+        items = ((data.items as any[]) || []).sort((a, b) => a.date - b.date)
+      }
       if (channelList && channelList.length > 0) {
         this.dict.channelList = channelList
       }
-      
-      if ( rate ) {
-        for ( const k in rate ) {
-          if ( rate[k] ) {
+
+      if (rate) {
+        for (const k in rate) {
+          if (rate[k]) {
             const index = findIndex(this.dict.emotionList, (it: any) => {
               return it.key == k
             })
@@ -406,16 +365,15 @@ export default class Main extends ViewBase {
               name: this.dict.emotionList[index].text
             })
           }
-          that.chart1.initDone = true
         }
       }
 
-      if ( items && items.length > 0 ) {
+      if (items && items.length > 0) {
         items.forEach((item: any, index: number) => {
           //  positive 正面 index:0 | passive 负面 index:1 | neutral 中性 indxe:2
           // trend 新增 index:0 | count 累计 index:1
           const { date, neutral, passive, positive } = item
-          that.chart2.xAxis.push( date )
+          that.chart2.xAxis.push(date)
           that.chart2.dataList[0][0].data.push(item.positive.trend)
           that.chart2.dataList[0][1].data.push(item.passive.trend)
           that.chart2.dataList[0][2].data.push(item.neutral.trend)
@@ -423,28 +381,36 @@ export default class Main extends ViewBase {
           that.chart2.dataList[1][1].data.push(item.passive.count)
           that.chart2.dataList[1][2].data.push(item.neutral.count)
         })
-        that.chart2.initDone = true
       }
-      if ( commentKeyword ) {
-        if ( commentKeyword[this.form.dayRangesKey].positive && commentKeyword[this.form.dayRangesKey].positive.length > 0 ) {
+
+      if (commentKeyword) {
+        if (
+          commentKeyword[this.form.dayRangesKey].positive &&
+          commentKeyword[this.form.dayRangesKey].positive.length > 0
+        ) {
           commentKeyword[this.form.dayRangesKey].positive.forEach((item: any) => {
             that.chart3.dataList[0].push({
               name: item,
               value: Math.floor(Math.random() * 100 + 1)
             })
           })
-          that.chart3.initDone = true
         }
-        if ( commentKeyword[this.form.dayRangesKey].negative && commentKeyword[this.form.dayRangesKey].negative.length > 0 ) {
+        if (
+          commentKeyword[this.form.dayRangesKey].negative &&
+          commentKeyword[this.form.dayRangesKey].negative.length > 0
+        ) {
           commentKeyword[this.form.dayRangesKey].negative.forEach((item: any) => {
             that.chart4.dataList[0].push({
               name: item,
               value: Math.floor(Math.random() * 100 + 1)
             })
           })
-          that.chart4.initDone = true
         }
       }
+      that.chart1.initDone = true
+      that.chart2.initDone = true
+      that.chart3.initDone = true
+      that.chart4.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
@@ -455,41 +421,49 @@ export default class Main extends ViewBase {
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
    */
   beginDate(dayRangesKey: string) {
-    switch ( dayRangesKey ) {
-      case 'yesterday' :
-        return moment(new Date()).add(-1, 'days').format(timeFormat)
-      case 'thirtyDay' :
-        return moment(new Date()).add(-30, 'days').format(timeFormat)
-      case 'ninetyDay' :
-        return moment(new Date()).add(-90, 'days').format(timeFormat)
-      default :
-        return moment(new Date()).add(-7, 'days').format(timeFormat)
+    switch (dayRangesKey) {
+      case 'yesterday':
+        return moment(new Date())
+          .add(-1, 'days')
+          .format(timeFormat)
+      case 'thirtyDay':
+        return moment(new Date())
+          .add(-30, 'days')
+          .format(timeFormat)
+      case 'ninetyDay':
+        return moment(new Date())
+          .add(-90, 'days')
+          .format(timeFormat)
+      default:
+        return moment(new Date())
+          .add(-7, 'days')
+          .format(timeFormat)
     }
   }
 
   endDate() {
-    return moment(new Date()).format(timeFormat)
+    return this.form.dayRangesKey == 'yesterday'
+      ? moment(new Date())
+          .add(-1, 'days')
+          .format(timeFormat)
+      : moment(new Date()).format(timeFormat)
   }
 
   async handleChange() {
     this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
     this.form.beginDate[1] = this.endDate()
-    this.chart2.initDone = false
-    this.chart1.initDone = false
-    this.chart3.initDone = false
-    this.chart4.initDone = false
-    this.resetData()
-    await this.getChartsData('', 0)
+    await this.initHandler()
   }
 
-  created() {
+  async created() {
     this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
     this.form.beginDate[1] = this.endDate()
     // this.dayRangesFetch() // 本地写死，暂时取消
-    this.initHandler()
+    await this.initHandler()
   }
 
   async initHandler() {
+    this.resetData()
     if (this.chart1.dict1.length > 0) {
       this.chart1.dict1.map((item: any, index: number) => {
         this.chart1.dataList.push([])
@@ -517,6 +491,10 @@ export default class Main extends ViewBase {
   }
 
   resetData() {
+    this.chart2.initDone = false
+    this.chart1.initDone = false
+    this.chart3.initDone = false
+    this.chart4.initDone = false
     this.chart1.dataList[0] = []
     this.chart2.xAxis = []
     this.chart2.dataList.forEach((item: any) => {
@@ -524,32 +502,26 @@ export default class Main extends ViewBase {
         it.data = []
       })
     })
-    this.chart3.dataList.forEach((item: any) => {
-      item = []
-    })
-    this.chart4.dataList.forEach((item: any) => {
-      item = []
-    })
+    this.chart3.dataList = []
+    this.chart4.dataList = []
   }
 
-  async getKeywordList( key?: string ) {
+  async getKeywordList(key?: string) {
     const that: any = this
     const mockObj = {
-      keyWord: (key == '') ? this.keywordQuery.keyword : key,
+      keyWord: key == '' ? this.keywordQuery.keyword : key,
       channelCode: this.form.channelCode
     }
     const id = this.id
     try {
       const {
         data,
-        data: {
-          items
-        }
+        data: { items }
       } = await keywordComment({ ...mockObj }, id)
-      if (items && items.length > 0 ) {
+      if (items && items.length > 0) {
         items.map((it: any, index: number) => {
           this.tableData.push({
-            index: this.indexNumber(index),
+            index: index + 1,
             highLightWords: it.highlightContent,
             content: it.content,
             favorCount: it.favorCount, // 赞同数
@@ -567,7 +539,7 @@ export default class Main extends ViewBase {
   }
 
   indexNumber(index: number): string {
-    return index+'1'
+    return index + '1'
   }
 
   keyChangeHandle(item: any) {
@@ -611,6 +583,20 @@ export default class Main extends ViewBase {
   }
   /deep/ .ivu-table-body {
     background: none;
+    /deep/ .ivu-table-row {
+      /deep/ .ivu-table-column-left {
+        /deep/ .ivu-table-cell {
+          div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            em {
+              color: red;
+            }
+          }
+        }
+      }
+    }
   }
   /deep/ .ivu-table-tip {
     overflow-x: auto;
@@ -642,6 +628,11 @@ export default class Main extends ViewBase {
     font-weight: 500;
     color: rgba(255, 255, 255, 1);
     padding: 0 25px;
+  }
+  /deep/ .ivu-table-wrapper {
+    /deep/ .ivu-table-cell > div {
+      line-height: 28px;
+    }
   }
 }
 </style>

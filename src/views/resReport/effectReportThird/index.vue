@@ -5,18 +5,9 @@
     <div class="flex-box">
       <ReportPane title="数据趋势">
         <div class="echarts-box">
-          <AreaBasic :initDone="chart1.initDone"
-                    :title="chart1.title"
-                    :dict1="chart1.dict1"
-                    :dict2="chart1.dict2"
-                    :toolTip="chart1.toolTip"
-                    :height="chart1.height"
-                    :color="chart1.color"
-                    :dataList="chart1.dataList"
-                    :currentTypeIndex="chart1.currentTypeIndex"
-                    @typeChange="typeChangeHander1" />
+          <AreaBasic :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="chart1.toolTip" :height="chart1.height" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" @typeChange="typeChangeHander1" />
         </div>
-      </ReportPane>      
+      </ReportPane>
       <DetailTableCard :data="tableData"></DetailTableCard>
     </div>
     <div>
@@ -34,6 +25,7 @@
     <SelectPlanDlg ref="selectPlanDlg" @update="updateHandle"></SelectPlanDlg>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -56,10 +48,10 @@ import { findIndex, at, keyBy } from 'lodash'
 import { KeyText } from '@/util/types'
 
 const getName = (key: string, list: any[]) => {
-  const i: number = findIndex( list, (it: any) => {
+  const i: number = findIndex(list, (it: any) => {
     return key === it.key
   })
-  const res: string = list[i].text
+  const res: string = list[i].text || ''
   return res
 }
 const dot = (object: any, path: string) => at(object, path)[0]
@@ -68,6 +60,7 @@ const getNames = (keys: string[], list: KeyText[]) => {
   const names = (keys || []).map((it: any) => dot(map[it], 'text') as string)
   return names
 }
+
 const toolTip: any = {
   borderWidth: 1,
   borderColor: 'rgba(0, 0, 0, .8)',
@@ -127,8 +120,10 @@ export default class Index extends ViewBase {
 
   bannerData: any = {}
 
+  // 汇总摘要
   totalData: any = {}
 
+  // 数据明细
   tableData: any = {
     columns: [
       { title: '时间', key: 'date', align: 'center' },
@@ -154,63 +149,41 @@ export default class Index extends ViewBase {
   }
 
   typelist: any = [
-    {controlStatus: 1, text: '儿童', key: 'Kids'},
-    {controlStatus: 1, text: '历史', key: 'History'},
-    {controlStatus: 1, text: '纪录片', key: 'Documentary'},
-    {controlStatus: 1, text: '战争', key: 'War'},
-    {controlStatus: 1, text: '戏曲', key: 'Opera'},
-    {controlStatus: 1, text: '音乐', key: 'Music'},
-    {controlStatus: 1, text: '歌舞', key: 'Musical'},
-    {controlStatus: 1, text: '犯罪', key: 'Crime'},
-    {controlStatus: 1, text: '传记', key: 'Biography'},
-    {controlStatus: 1, text: '青春', key: 'Youth'},
-    {controlStatus: 1, text: '奇幻', key: 'Fantasy'},
-    {controlStatus: 1, text: '短片', key: 'Short'},
-    {controlStatus: 1, text: '惊悚', key: 'Thriller'},
-    {controlStatus: 1, text: '冒险', key: 'Adventure'},
-    {controlStatus: 1, text: '科幻', key: 'Sci-Fi'},
-    {controlStatus: 1, text: '动作', key: 'Action'},
-    {controlStatus: 1, text: '家庭', key: 'Family'},
-    {controlStatus: 1, text: '动画', key: 'Animation'},
-    {controlStatus: 1, text: '励志', key: 'Encouragement'},
-    {controlStatus: 1, text: '喜剧', key: 'Comedy'},
-    {controlStatus: 1, text: '悬疑', key: 'Mystery'},
-    {controlStatus: 1, text: '爱情', key: 'Romance'},
-    {controlStatus: 1, text: '剧情', key: 'Drama'}
+    { controlStatus: 1, text: '儿童', key: 'Kids' },
+    { controlStatus: 1, text: '历史', key: 'History' },
+    { controlStatus: 1, text: '纪录片', key: 'Documentary' },
+    { controlStatus: 1, text: '战争', key: 'War' },
+    { controlStatus: 1, text: '戏曲', key: 'Opera' },
+    { controlStatus: 1, text: '音乐', key: 'Music' },
+    { controlStatus: 1, text: '歌舞', key: 'Musical' },
+    { controlStatus: 1, text: '犯罪', key: 'Crime' },
+    { controlStatus: 1, text: '传记', key: 'Biography' },
+    { controlStatus: 1, text: '青春', key: 'Youth' },
+    { controlStatus: 1, text: '奇幻', key: 'Fantasy' },
+    { controlStatus: 1, text: '短片', key: 'Short' },
+    { controlStatus: 1, text: '惊悚', key: 'Thriller' },
+    { controlStatus: 1, text: '冒险', key: 'Adventure' },
+    { controlStatus: 1, text: '科幻', key: 'Sci-Fi' },
+    { controlStatus: 1, text: '动作', key: 'Action' },
+    { controlStatus: 1, text: '家庭', key: 'Family' },
+    { controlStatus: 1, text: '动画', key: 'Animation' },
+    { controlStatus: 1, text: '励志', key: 'Encouragement' },
+    { controlStatus: 1, text: '喜剧', key: 'Comedy' },
+    { controlStatus: 1, text: '悬疑', key: 'Mystery' },
+    { controlStatus: 1, text: '爱情', key: 'Romance' },
+    { controlStatus: 1, text: '剧情', key: 'Drama' }
   ]
 
+  // 影片总数
   moviesTotal: number = 0
 
-  moviesData: any[] = [
-    /* {
-      movieId: 0,
-      poster: 'http://img5.mtime.cn/mt/2019/05/31/163639.93224012_1280X720X2.jpg',
-      name: '攀登者',
-      score: '时光评分：8.6',
-      time: '2019-09-30上映',
-      type: '剧情／冒险（中国大陆）',
-      viewCount: '67789', // 曝光人次
-      scheduleCount: '33333', // 曝光场次
-      viewRate: '40', // 曝光人次占比
-      userPortrait: {
-        ages: [
-          {
-            key: '0~20岁',
-            value: 50
-          },
-          {
-            key: '20~50岁',
-            value: 30
-          }
-        ],
-        male: 20,
-        female: 80
-      }
-    } */
-  ]
+  // 影片列表
+  moviesData: any[] = []
 
+  // 更多影片 弹窗
   moreMovieData: any[] = []
 
+  // 影院
   cinemasData: any = {
     totalCount: 0,
     viewRate: {
@@ -227,23 +200,19 @@ export default class Index extends ViewBase {
     }
   }
 
+  // 数据趋势 图表
   chart1: any = {
     title: '',
     dict1: [
       {
-        name: 'name0',
+        name: '曝光人次',
         text: '曝光人次',
         key: 0
       },
       {
-        name: 'name1',
+        name: '曝光场次',
         text: '曝光场次',
         key: 1
-      },
-      {
-        name: 'name2',
-        text: '',
-        key: 2
       }
     ],
     dict2: [],
@@ -263,11 +232,12 @@ export default class Index extends ViewBase {
         date: []
       }
     ],
-    color: ['#CA7273'],
+    color: ['#00B6CC'],
     height: 350,
     toolTip
   }
 
+  // 用户画像
   userData: any = {
     sex: {},
     cityData: [],
@@ -292,19 +262,14 @@ export default class Index extends ViewBase {
       title: '',
       dict1: [
         {
-          name: 'name0',
+          name: '曝光人次',
           text: '曝光人次',
           key: 0
         },
         {
-          name: 'name1',
+          name: '曝光场次',
           text: '曝光场次',
           key: 1
-        },
-        {
-          name: 'name2',
-          text: '',
-          key: 2
         }
       ],
       dict2: [],
@@ -385,7 +350,8 @@ export default class Index extends ViewBase {
   }
 
   async created() {
-    this.init(this.planId)
+    this.planId = Number(this.$route.params.id)
+    this.init(this.$route.params.id)
   }
 
   async init(id: any) {
@@ -399,31 +365,39 @@ export default class Index extends ViewBase {
           user,
           gradeCodes,
           planStatus,
-          movieTypes,
-          report: {
-            lastModifyTime,
-            dates
-          }
+          movieTypes
         }
       } = await getPlansReport(id)
       // const name = getName( plan.status, planStatus)
-      const a = String(plan.beginDate).slice(0, 4) + '-' + String(plan.beginDate).slice(4, 6)
-      + '-' + String(plan.beginDate).slice(6, 8)
-      const b = String(plan.endDate).slice(0, 4) + '-' + String(plan.endDate).slice(4, 6)
-      + '-' + String(plan.endDate).slice(6, 8)
-      const sum = ((new Date(b).getTime() + (16 * 60 * 60 * 1000))
-        - (new Date(a).getTime() - (8 * 60 * 60 * 1000))) / (24 * 60 * 60 * 1000)
+      const a =
+        String(plan.beginDate).slice(0, 4) +
+        '-' +
+        String(plan.beginDate).slice(4, 6) +
+        '-' +
+        String(plan.beginDate).slice(6, 8)
+      const b =
+        String(plan.endDate).slice(0, 4) +
+        '-' +
+        String(plan.endDate).slice(4, 6) +
+        '-' +
+        String(plan.endDate).slice(6, 8)
+      const sum =
+        (new Date(b).getTime() +
+          16 * 60 * 60 * 1000 -
+          (new Date(a).getTime() - 8 * 60 * 60 * 1000)) /
+        (24 * 60 * 60 * 1000)
       this.bannerData = {
         item0: a + '~' + b,
         item1: sum,
-        item5: formatYell(lastModifyTime),
+        item5: report == null ? '暂无' : formatYell(report.lastModifyTime),
         item6: plan.name
       }
+
       this.totalData = {
-        item0: report.viewCount,
-        item1: report.scheduleCount,
+        item0: report == null ? '-' : report.viewCount,
+        item1: report == null ? '-' : report.scheduleCount
       }
-      if ( cinemas && cinemas.length > 0 ) {
+      if (cinemas && cinemas.length > 0) {
         this.cinemasData.totalCount = cinemas.length
         cinemas.slice(0, 10).forEach((it: any, index: number) => {
           this.cinemasData.viewRate.data.push({
@@ -440,14 +414,14 @@ export default class Index extends ViewBase {
           })
         })
       }
-      if ( movies && movies.length > 0 ) {
+      if (movies && movies.length > 0) {
         this.moviesTotal = movies.length
         movies.forEach((item: any) => {
           this.moreMovieData.push({
             name: item.name,
             viewCount: item.viewCount, // 曝光人次
             viewRate: item.viewRate, // 曝光人次占比
-            scheduleCount: `￥${item.scheduleCount}`// 曝光场次
+            scheduleCount: `￥${item.scheduleCount}` // 曝光场次
           })
         })
         movies.slice(0, 3).forEach((it: any) => {
@@ -455,9 +429,13 @@ export default class Index extends ViewBase {
             movieId: it.movieId,
             poster: it.poster,
             name: it.name,
-            score: it.score,
-            time: String(it.release).slice(0, 4) + '-' + String(it.release).slice(4, 6)
-            + '-' + String(it.release).slice(6, 8),
+            score: it.score == null ? '-' : it.score,
+            time:
+              String(it.release).slice(0, 4) +
+              '-' +
+              String(it.release).slice(4, 6) +
+              '-' +
+              String(it.release).slice(6, 8),
             type: getNames(it.types, this.typelist).join(' / ') + '（中国大陆）',
             viewCount: it.viewCount, // 曝光人次
             scheduleCount: it.scheduleCount, // 曝光场次
@@ -475,27 +453,34 @@ export default class Index extends ViewBase {
           })
         })
       }
-      dates.forEach((item: any, index: number) => {
-        this.chart1.dataList[0].data.push(item.viewCount)
-        this.chart1.dataList[1].data.push(item.scheduleCount)
-        this.chart1.dataList[2].data.push(item.cost)
-        this.chart1.dataList[0].date.push(item.date)
-        this.chart1.dataList[1].date.push(item.date)
-        this.chart1.dataList[2].date.push(item.date)
-        this.tableData.data.push({
-          date: item.date,
-          viewCount: item.viewCount,
-          scheduleCount: item.scheduleCount,
-          cost: item.cost
-        })
-      })
+      report == null
+        ? (this.tableData.data = [])
+        : report.dates.forEach((item: any, index: number) => {
+            this.chart1.dataList[0].data.push(item.viewCount)
+            this.chart1.dataList[1].data.push(item.scheduleCount)
+            this.chart1.dataList[2].data.push(item.cost)
+            this.chart1.dataList[0].date.push(item.date)
+            this.chart1.dataList[1].date.push(item.date)
+            this.chart1.dataList[2].date.push(item.date)
+            this.tableData.data.push({
+              date:
+                String(item.date).slice(0, 4) +
+                '-' +
+                String(item.date).slice(4, 6) +
+                '-' +
+                String(item.date).slice(6, 8),
+              viewCount: item.viewCount,
+              scheduleCount: item.scheduleCount,
+              cost: item.cost
+            })
+          })
       this.chart1.initDone = true
       if (user) {
         const _ageData: any = {
           age: [],
           data: []
         }
-        if (user.ages.length > 0 ) {
+        if (user.ages.length > 0) {
           user.ages.forEach((it: any) => {
             _ageData.age.push(it.k)
             _ageData.data.push(it.v)
@@ -503,19 +488,19 @@ export default class Index extends ViewBase {
         }
         this.userData = {
           sex: {
-            male: parseInt(user.male, 0),
-            female: parseInt(user.female, 0)
+            male: parseFloat(user.male),
+            female: parseFloat(user.female)
           },
           cityData: user.cities.map((item: any) => {
             return {
               cityName: item.k,
-              percent: parseInt(item.v, 0)
+              percent: parseFloat(item.v)
             }
           }),
           cityLevelData: user.grades.map((it: any) => {
             return {
               name: getName(it.k, gradeCodes),
-              value: parseInt(it.v, 0)
+              value: parseFloat(it.v)
             }
           }),
           ageData: _ageData || {}

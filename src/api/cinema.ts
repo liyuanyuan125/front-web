@@ -40,3 +40,14 @@ export async function queryAll(query: any = {}) {
   const res = get('/theater/cinemas', query)
   return res
 }
+
+/**
+ * 编辑公司绑定影院的联系电话
+ * @param query 查询参数
+ * http://yapi.aiads-dev.com/project/94/interface/api/5324
+ */
+export async function editCompanyTel(query: any = {}) {
+  const res = put('/customer/company-cinemas', query)
+  return res
+}
+

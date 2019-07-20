@@ -11,7 +11,8 @@ import { brandList } from '@/api/brandList'
 
 const routeMap = {
   ads: 'home-overview',
-  resource: 'home-resoverview'
+  resource: 'order-dispatch',
+  // resource: 'home-resoverview'
 }
 
 @Component

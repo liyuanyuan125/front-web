@@ -50,7 +50,7 @@ import { mockGet, tid, title20, typeInt, dateRange } from './mock'
 
 // 监播
 export async function querylist(query: any) {
-  const res = await get('/xadvert/v1/play-monitors' , query)
+  const res = await get('/xadvert/play-monitors' , query)
   return res
 }
 
@@ -62,19 +62,19 @@ export async function movielist(query: any) {
 
 // 获取默认影院id
 export async function getcinid() {
-  const res = await get(`/xadvert/v1/play-monitors/default-cinema`)
+  const res = await get(`/xadvert/play-monitors/default-cinema`)
   return res
 }
 
 
 // 上传视频
 export async function addvideo(id: any , query: any) {
-  const res = await put(`/xadvert/v1/play-monitors/${id}/upload` , query)
+  const res = await put(`/xadvert/play-monitors/${id}/upload` , query)
   return res
 }
 
 // 删除视频
 export async function delvideo(id: any) {
-  const res = await put(`/xadvert/v1/play-monitors/${id}/delete`)
+  const res = await put(`/xadvert/play-monitors/${id}/delete`)
   return res
 }
