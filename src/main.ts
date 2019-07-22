@@ -15,17 +15,18 @@ import '@/util/authDirective'
 // 全局组件
 import LazyInput from '@/components/LazyInput'
 
-import app from './app.vue'
-import event from './fn/event'
+import app from '@/app.vue'
+import event from '@/fn/event'
 
-import { alert } from './ui/modal'
-import store, { hasLogin, hasRoutePerm } from './store'
+import { alert } from '@/ui/modal'
+import store, { hasLogin, hasRoutePerm } from '@/store'
 
-import routes, { RouteMetaBase } from './routes'
-import { devError, devWarn } from './util/dev'
+import routes, { RouteMetaBase } from '@/routes'
+import { devError, devWarn } from '@/util/dev'
 
 import { encodeRoute } from '@/util/base64Route'
 import { setPageTitle } from '@/util/browser'
+import { show403 } from '@/util/auth'
 
 // iview 配置
 Vue.use(iView, { locale })
@@ -56,7 +57,7 @@ router.beforeEach(async (to, from, next) => {
     next(login)
   } else {
     const has = await hasRoutePerm(to)
-    event.emit('route-perm', { has, to, from })
+    show403(!has)
     next()
   }
 })

@@ -38,6 +38,7 @@
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { citiesReport } from '@/api/effectReport'
+import { toThousands } from '@/util/dealData'
 
 @Component({
   components: {}
@@ -94,7 +95,8 @@ export default class MoreCinemasDlg extends ViewBase {
           name: it.name,
           viewCount: it.viewCount,
           scheduleCount: it.scheduleCount,
-          cost: parseInt(it.cost, 0)  // 单位为'分'
+          cost: toThousands( parseFloat(it.cost) / 100 ), // 单位为'分' 格式化金额
+          originalCost: parseFloat(it.cost) / 100 // 用于导出内容，iview导出带逗号的字段有bug
         }
       })
       this.totalCount = totalCount
@@ -106,11 +108,14 @@ export default class MoreCinemasDlg extends ViewBase {
 
   exportData() {
     (this.$refs.table as any).exportCsv({
-        filename: '城市数据',
-        // nxd todo
-        // original: false,
-        // data: [{
-        // }]
+      filename: '城市数据',
+      columns: this.columns,
+      data: this.data.map((it: any, index: number) => {
+        return {
+          ...it,
+          cost: it.originalCost
+        }
+      })
     })
   }
 
