@@ -490,21 +490,21 @@ export default class Main extends ViewBase {
         const douban = {chanelCode: 'douban', count: 0, ranking: null, trend: 0}
         const maoyan = {chanelCode: 'maoyan', count: 0, ranking: null, trend: 0}
         const taopiaopiao = {chanelCode: 'taopiaopiao', count: 0, ranking: null, trend: 0}
-        items.map((it: any) => {
+        items.map((it: any, index: number) => {
           date.push(formatConversion(it.date))
-          const cloneIt = cloneDeep(it.channels)
-          if (cloneIt.length < 3) {
-            cloneIt.map((clo: any) => {
-              clo.chanelCode == 'douban' ? null : it.channels.push(douban)
-              clo.chanelCode == 'maoyan' ? null : it.channels.push(maoyan)
-              clo.chanelCode == 'taopiaopiao' ? null : it.channels.push(taopiaopiao)
-            })
-          }
+          const isTao = it.channels.findIndex((col: any) => col.chanelCode == 'taopiaopiao')
+          const isDou = it.channels.findIndex((col: any) => col.chanelCode == 'douban')
+          const isMao = it.channels.findIndex((col: any) => col.chanelCode == 'maoyan')
+          isTao == -1 ? it.channels.push(taopiaopiao) : null
+          isDou == -1 ? it.channels.push(douban) : null
+          isMao == -1 ? it.channels.push(maoyan) : null
+
           it.channels.map((code: any) => {
             dataTrend[code.chanelCode].push(code.trend || 0)
             dataCount[code.chanelCode].push(code.count || 0)
           })
         })
+
         this.chart3.xAxis = date
         this.chart3.dataList[0][0].data = dataTrend.maoyan || 0
         this.chart3.dataList[0][1].data = dataTrend.taopiaopiao || 0
