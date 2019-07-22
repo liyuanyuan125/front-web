@@ -799,11 +799,11 @@ th {
   }
 }
 .film-max {
-  max-height: 100px;
+  max-height: 110px;
 }
 .arrow-box {
   position: absolute;
-  bottom: 3px;
+  bottom: 17px;
   right: 40px;
 }
 /deep/ .ivu-select-input {
