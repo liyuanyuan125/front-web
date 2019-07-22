@@ -156,6 +156,33 @@ interface FastItem extends KeyText {
   indeterminate: boolean
 }
 
+// const keepExclusion = <T>(
+//   value: T[],
+//   oldValue: T[],
+//   aloneValue: any,
+//   setter: (newValue: T[]) => any
+// ) => {
+//   const allKey = value.filter((it: any) => it.checked)
+//   if (allKey.length > 1) {
+//     const newValue = value.filter((it: any) => it.checked).map((item: any) => item.key)
+//     const oldkey = (oldValue || []).filter((it: any) => it.checked).map((item: any) => item.key)
+//     const newHas = newValue.includes(aloneValue)
+//     const oldHas = oldkey.includes(aloneValue)
+//     // console.log(oldkey, oldHas, newHas)
+//     // newHas && setter((value || []).map((it: any) => {
+//     //   return {
+//     //     ...it,
+//     //     checked: it.key == aloneValue  ? true : false
+//     //   }
+//     // }))
+//     newHas && oldHas && setter((value || []).map((it: any) => {
+//       return {
+//         ...it,
+//         checked: it.key == aloneValue  ? false : it.key
+//       }
+//     }))
+//   }
+// }
 // 过滤掉脏数据
 const filterDirty = (list: RegionSubList[]) => {
   const regionList = list
@@ -412,6 +439,9 @@ export default class CitySelectPane extends ViewBase {
         { key: 'top', text: '票仓城市Top10', cityIds: this.topCityIds, checked: false, indeterminate: false },
         ...gradeList
       ]
+      if (this.value.length == 0) {
+        this.model = [...this.allCityIds]
+      }
       this.updateFast()
     } catch (ex) {
       this.handleError(ex)
@@ -549,7 +579,9 @@ export default class CitySelectPane extends ViewBase {
   }
 
   @Watch('fastList', { deep: true })
-  watchFastList(list: FastItem[]) {
+  watchFastList(list: FastItem[], oldlist: FastItem[]) {
+    // const flag = oldlist[0] ? oldlist[0].checked : false
+    // console.log(flag, list[0].checked)
     const uncheckedItem = this.lastUncheckedFastItem
     this.lastUncheckedFastItem = null
 
@@ -562,6 +594,7 @@ export default class CitySelectPane extends ViewBase {
     }
 
     // 如果全国被选择，则排斥其他选项
+
     if (list[0].checked) {
       this.fastList.forEach((it, i) => i > 0 && (it.checked = false))
       this.model = this.allCityIds
