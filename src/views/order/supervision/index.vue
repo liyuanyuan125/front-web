@@ -38,29 +38,30 @@
             <span @click='seachchgdown'>下周&nbsp;></span>
         </Col>
       </Row>
-      <!-- <Row>
-        <li class='li-item' v-for='(it,index) in normallist' :key='index'>
+      <Row style='margin-top: 15px;'>
+        <li class='li-item' v-if='normallist.length != 0'>
             <row>
               <Col span='3'>通投</Col>
-              <Col span='2'>50s</Col>
-              <Col span='19'>
+              <Col span='2' >{{normallist.videoTotalLength}}s</Col>
+              <Col span='14'>
                 <row>
-                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
-                  
-                  <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
-                  <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
-                    <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
-                    <router-link style='color: #00202D;margin-left: 25px;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,10)}}...</router-link>
+                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in normallist.details' :key='index'>
+                    <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
+                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">{{item.videoName.slice(0,7)}}...</router-link>
                   </Tooltip>
-                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+                <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
               </Col>
+              <Col span='5' style='text-align: center;cursor: pointer;' v-if='normallist.status == 1' ><UploadButton @success="onUploadSuccess($event, normallist.id)">上传</UploadButton></Col>
+              <Col span='5' v-if='normallist.status == 2' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
+              <Col span='5' v-if='normallist.status == 3' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 3' class='imgs2'></div></Col>
+              <Col span='5' v-if='normallist.status == 4' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
             </row>
           </li>
-          <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div>
-      </Row> -->
+          <!-- <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div> -->
+      </Row>
       <div style=' margin-top: 15px; '>
       	<Row class='li-title'>
           <Col span='3' >影片名称</Col>
@@ -413,6 +414,7 @@ export default class Main extends ViewBase {
 .page {
   padding-left: 30px;
   padding-right: 40px;
+  list-style: none;
 }
 .t-title {
   width: 100%;
