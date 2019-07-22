@@ -438,7 +438,7 @@ export async function getFigure(id: number) {
     },
 
     opusData: movies && movies.length > 0 ? {
-      list: (movies as any[]).map(it => ({
+      list: (movies as any[]).slice(0, 5).map(it => ({
         title: it.name,
         count: readableNumber(it.boxOffice)
       })),
