@@ -412,6 +412,7 @@ export default class CitySelectPane extends ViewBase {
         { key: 'top', text: '票仓城市Top10', cityIds: this.topCityIds, checked: false, indeterminate: false },
         ...gradeList
       ]
+      this.model = [...this.allCityIds]
       this.updateFast()
     } catch (ex) {
       this.handleError(ex)
