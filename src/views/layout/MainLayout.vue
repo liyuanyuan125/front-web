@@ -109,7 +109,7 @@ import { RouteMetaBase } from '@/routes'
 let instance: any = null
 let viewName: string = 'default'
 
-event.on('route-perm', ({ has, to, from }: any) => {
+event.on('route-perm', ({ has }: any) => {
   viewName = has ? 'default' : '403'
   instance && (instance.viewName = viewName)
 })
