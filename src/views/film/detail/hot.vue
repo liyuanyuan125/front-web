@@ -111,7 +111,7 @@ export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
   form: any = {
-    dayRangesKey: 'last_7_day'
+    dayRangesKey: 'last_30_day'
   }
 
   dict: any = {
