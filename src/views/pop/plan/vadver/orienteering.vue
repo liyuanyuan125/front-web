@@ -237,7 +237,7 @@ export default class Orienteering extends ViewBase {
   timers: any = {}
   numsList: any = []
   cityCustom: number = 1
-  movieCustom: number = 0
+  movieCustom: number = 1
   cinemaType: number = 0
   settime: any = null
   deliveryCityTypeList: any = []
@@ -256,12 +256,12 @@ export default class Orienteering extends ViewBase {
   ]
   movieList = [
     {
-      label: 0,
-      name: '按类型定向'
-    },
-    {
       label: 1,
       name: '自定义影片'
+    },
+    {
+      label: 0,
+      name: '按类型定向'
     }
   ]
   cinemaList = [
