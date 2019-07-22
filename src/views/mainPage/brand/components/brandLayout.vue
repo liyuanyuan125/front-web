@@ -149,13 +149,13 @@ import FansPane from '../../components/fansPane.vue'
 import FetchData from './fetchData'
 import { Type } from './types'
 import { toThousands } from '@/util/dealData'
-
+import moment from 'moment'
 import NavSwiper from './navSwiper.vue'
 import { swiperSlide } from 'vue-awesome-swiper'
 import { backImage } from '@/store'
 import { setPageTitle } from '@/util/browser'
-
-import moment from 'moment'
+import event from '@/fn/event'
+import { show403 } from '@/util/auth'
 
 @Component({
   components: {
@@ -217,26 +217,33 @@ export default class BrandLayout extends ViewBase {
   }
 
   async initHome() {
-    const {
-      item,
-      bigFigure,
-      commentData,
-      recommendList,
-      hotFilmGroup,
-      bubbleList
-    } = await this.fetchData.getHome()
+    try {
+      const {
+        item,
+        bigFigure,
+        commentData,
+        recommendList,
+        hotFilmGroup,
+        bubbleList
+      } = await this.fetchData.getHome()
 
-    this.item = item
-    this.bigFigure = bigFigure
-    this.commentData = commentData
-    this.recommendList = recommendList
-    this.hotFilmTab = (hotFilmGroup && hotFilmGroup[0].name) || ''
-    this.hotFilmGroup = hotFilmGroup
-    this.bubbleList = bubbleList
+      this.item = item
+      this.bigFigure = bigFigure
+      this.commentData = commentData
+      this.recommendList = recommendList
+      this.hotFilmTab = (hotFilmGroup && hotFilmGroup[0].name) || ''
+      this.hotFilmGroup = hotFilmGroup
+      this.bubbleList = bubbleList
 
-    backImage(bigFigure || '')
+      backImage(bigFigure || '')
 
-    setPageTitle(`${item.name}-鲸娱数据`)
+      setPageTitle(`${item.name}-鲸娱数据`)
+    } catch (ex) {
+      if (ex && ex.code == 403) {
+        ex.handled = true
+        show403(true)
+      }
+    }
   }
 
   @Watch('type')

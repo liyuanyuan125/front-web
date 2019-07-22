@@ -1,7 +1,8 @@
 <template>
-  <div class="city-select-pane">
+  <div class="city-select-pane" :class="[ !arrowloding ? 'film-max' : '']">
     <div class="city-fast-row" v-if="fastList.length > 0">
       <div class="city-fast-list">
+
         <Checkbox
           v-for="it in fastList"
           :key="it.key"
@@ -9,11 +10,24 @@
           :indeterminate="it.indeterminate"
           class="city-fast-item check-item"
           @on-change="fastChange(it, $event)"
-        >{{it.text}}</Checkbox>
+        >
+          <span v-if="it.key == 'top'" > {{it.text}}
+            <Poptip trigger="hover" title="票仓城市top10" content="content">
+              <img v-if="!it.key == 'top' && it.check == true" width="20px" style="vertical-align:middle" src="./assets/question.png" />
+              <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
+              <div class="api" slot="content">
+                <div class="city-show">
+                  <span v-for="it in warehouseLisst" :key="it.cityId">{{it.cityName}}</span>
+                </div>
+              </div>
+            </Poptip>
+          </span>
+          <span v-else>{{it.text}}</span>
+        </Checkbox>
       </div>
     </div>
 
-    <div class="city-filter-row" v-if="cellData">
+    <div v-show="arrowloding" class="city-filter-row" v-if="cellData">
       <Select v-model="city" filterable clearable class="city-filter">
         <Option
           v-for="item in cityList"
@@ -23,7 +37,7 @@
       </Select>
     </div>
 
-    <table class="city-table" v-if="cellData">
+    <table v-show="arrowloding"  class="city-table" v-if="cellData">
       <tr v-for="(row, i) in cellData" :key="i">
         <component
           v-for="cell in row"
@@ -111,9 +125,13 @@
         </component>
       </tr>
     </table>
-    <p>
+    <p v-show="arrowloding" >
       已选： {{model.length}}
     </p>
+    <div class="arrow-box">
+      <div @click="arrowloding = true" v-if="!arrowloding" class="arrow">展开<Icon type="ios-arrow-forward" ></Icon></div>
+      <div @click="arrowloding = false" v-if="arrowloding" class="arrow">收起<Icon type="ios-arrow-up" /></div>
+    </div>
   </div>
 </template>
 
@@ -138,6 +156,33 @@ interface FastItem extends KeyText {
   indeterminate: boolean
 }
 
+// const keepExclusion = <T>(
+//   value: T[],
+//   oldValue: T[],
+//   aloneValue: any,
+//   setter: (newValue: T[]) => any
+// ) => {
+//   const allKey = value.filter((it: any) => it.checked)
+//   if (allKey.length > 1) {
+//     const newValue = value.filter((it: any) => it.checked).map((item: any) => item.key)
+//     const oldkey = (oldValue || []).filter((it: any) => it.checked).map((item: any) => item.key)
+//     const newHas = newValue.includes(aloneValue)
+//     const oldHas = oldkey.includes(aloneValue)
+//     // console.log(oldkey, oldHas, newHas)
+//     // newHas && setter((value || []).map((it: any) => {
+//     //   return {
+//     //     ...it,
+//     //     checked: it.key == aloneValue  ? true : false
+//     //   }
+//     // }))
+//     newHas && oldHas && setter((value || []).map((it: any) => {
+//       return {
+//         ...it,
+//         checked: it.key == aloneValue  ? false : it.key
+//       }
+//     }))
+//   }
+// }
 // 过滤掉脏数据
 const filterDirty = (list: RegionSubList[]) => {
   const regionList = list
@@ -340,6 +385,8 @@ export default class CitySelectPane extends ViewBase {
   /** 票仓城市 Top20 城市 ids */
   @Prop({ type: Array, default: () => [] }) topCityIds!: number[]
 
+  @Prop() warehouseLisst!: any
+
   model: number[] = []
 
   list: RegionSubList[] = []
@@ -352,6 +399,7 @@ export default class CitySelectPane extends ViewBase {
 
   fastList: FastItem[] = []
 
+  arrowloding = false
   lastUncheckedFastItem: FastItem | null = null
 
   get cityList() {
@@ -388,9 +436,12 @@ export default class CitySelectPane extends ViewBase {
       const gradeList = getGradeList(this.list)
       this.fastList = [
         { key: 'all', text: '全国', cityIds: [], checked: false, indeterminate: false },
-        { key: 'top', text: '票仓城市Top20', cityIds: this.topCityIds, checked: false, indeterminate: false },
+        { key: 'top', text: '票仓城市Top10', cityIds: this.topCityIds, checked: false, indeterminate: false },
         ...gradeList
       ]
+      if (this.value.length == 0) {
+        this.model = [...this.allCityIds]
+      }
       this.updateFast()
     } catch (ex) {
       this.handleError(ex)
@@ -528,7 +579,9 @@ export default class CitySelectPane extends ViewBase {
   }
 
   @Watch('fastList', { deep: true })
-  watchFastList(list: FastItem[]) {
+  watchFastList(list: FastItem[], oldlist: FastItem[]) {
+    // const flag = oldlist[0] ? oldlist[0].checked : false
+    // console.log(flag, list[0].checked)
     const uncheckedItem = this.lastUncheckedFastItem
     this.lastUncheckedFastItem = null
 
@@ -541,6 +594,7 @@ export default class CitySelectPane extends ViewBase {
     }
 
     // 如果全国被选择，则排斥其他选项
+
     if (list[0].checked) {
       this.fastList.forEach((it, i) => i > 0 && (it.checked = false))
       this.model = this.allCityIds
@@ -739,11 +793,29 @@ th {
     line-height: 40px;
   }
 }
+.film-max {
+  max-height: 100px;
+}
+.arrow-box {
+  position: absolute;
+  bottom: 20px;
+  right: 40px;
+}
 /deep/ .ivu-select-input {
   line-height: 36px;
   height: 32px;
   &::placeholder {
     line-height: 36px;
+  }
+}
+.city-show {
+  display: flex;
+  flex-wrap: wrap;
+  width: 320px;
+  span {
+    width: 80px;
+    color: #00202d;
+    overflow: hidden;
   }
 }
 </style>

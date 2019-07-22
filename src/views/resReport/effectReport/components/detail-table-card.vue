@@ -1,15 +1,10 @@
 <template>
   <ReportPane :title="title">
     <template slot="more">
-      <a @click="exportData"
-         class="more-link"
-         href="javascript:;"><span class="downloadIcon"></span>下载表格</a>
+      <a @click="exportData" class="more-link" href="javascript:;"><span class="downloadIcon"></span>下载表格</a>
     </template>
     <div class="table-box">
-      <Table stripe
-              ref="table"
-             :columns="data.columns"
-             :data="data.data"></Table>
+      <Table stripe ref="table" :columns="data.columns" :data="data.data"></Table>
     </div>
   </ReportPane>
 </template>
@@ -32,7 +27,14 @@ export default class DetailTableCard extends Vue {
 
   exportData() {
     (this.$refs.table as any).exportCsv({
-        filename: 'filename'
+      filename: '数据明细',
+      columns: this.data.columns,
+      data: this.data.data.map((it: any, index: number) => {
+        return {
+          ...it,
+          cost: it.originalCost
+        }
+      })
     })
   }
 }
@@ -52,7 +54,8 @@ export default class DetailTableCard extends Vue {
 .table-box {
   border-radius: 5px;
   padding: 25px 0;
-  min-height: 470px;
+  height: 470px;
+  overflow-y: auto;
   /deep/ .ivu-table th,
   /deep/ .ivu-table-header {
     background: rgba(0, 32, 45, 0.8);

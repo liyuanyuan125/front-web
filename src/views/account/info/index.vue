@@ -2,80 +2,80 @@
   <div class="page home-bg as">
     <com-statu :statuCode="displayStatus" v-if="displayStatus != 5"></com-statu>
     <div class="content">
-      <div class='bs'>
+      <div class="bs">
         <h3 class="layout-title">登录信息</h3>
         <Row class="text-rows">
           <Col :span="12">
             <p>
-              <label class='hui'>账号类型</label>
+              <label class="hui">账号类型</label>
               {{accountType}}
             </p>
             <p>
-              <label class='hui'>账号ID</label>
+              <label class="hui">账号ID</label>
               {{account.id}}
             </p>
             <p>
-              <label class='hui'>登录邮箱</label>
+              <label class="hui">登录邮箱</label>
               {{account.email}}
             </p>
           </Col>
         </Row>
       </div>
-      <div  class='bs'>
-      <h3 class="layout-title">公司信息</h3>
-      <Row class="text-rows">
-        <Col :span="12">
-          <p>
-            <label class='hui'>公司名称</label>
-            {{company.name}}
-          </p>
-          <p>
-            <label class='hui'>公司所在地</label>
-            {{company.provinceName}} / {{company.cityName}}
-          </p>
-        </Col>
-        <Col :span="12">
-          <p>
-            <label class='hui'>联系人</label>
-            {{account.name}}
-          </p>
-          <p>
-            <label class='hui'>手机号码</label>
-            {{account.mobile}}
-          </p>
-          <p>
-            <label class='hui'>邮箱</label>
-            {{company.email}}
-          </p>
-        </Col>
-      </Row>
+      <div class="bs">
+        <h3 class="layout-title">公司信息</h3>
+        <Row class="text-rows">
+          <Col :span="12">
+            <p>
+              <label class="hui">公司名称</label>
+              {{company.name}}
+            </p>
+            <p>
+              <label class="hui">公司所在地</label>
+              {{company.provinceName}} / {{company.cityName}}
+            </p>
+          </Col>
+          <Col :span="12">
+            <p>
+              <label class="hui">联系人</label>
+              {{account.name}}
+            </p>
+            <p>
+              <label class="hui">手机号码</label>
+              {{account.mobile}}
+            </p>
+            <p>
+              <label class="hui">邮箱</label>
+              {{company.email}}
+            </p>
+          </Col>
+        </Row>
       </div>
-      <div  class='bs'>
-      <h3 class="layout-title">开户信息</h3>
-      <Row class="text-rows">
-        <Col :span="24">
-          <p>
-            <label class='hui'>资质类型</label>
-            {{queryTypeList(company.qualificationType)}}
-          </p>
-          <p>
-            <label class='hui'>资质编号</label>
-            {{company.qualificationCode}}
-          </p>
-          <p class="flex-box">
-            <label class='hui'>资质图片</label>
-            <em class="flex-box">
-              <ImagePreviewer
-                v-for="(item, i) in company.images"
-                :key="i"
-                :url="item.url"
-                class="qualification-image"
-              />
-            </em>
-          </p>
-        </Col>
-      </Row>
-    </div>
+      <div class="bs">
+        <h3 class="layout-title">开户信息</h3>
+        <Row class="text-rows">
+          <Col :span="24">
+            <p>
+              <label class="hui">资质类型</label>
+              {{queryTypeList(company.qualificationType)}}
+            </p>
+            <p>
+              <label class="hui">资质编号</label>
+              {{company.qualificationCode}}
+            </p>
+            <p class="flex-box">
+              <label class="hui">资质图片</label>
+              <em class="flex-box">
+                <ImagePreviewer
+                  v-for="(item, i) in company.images"
+                  :key="i"
+                  :url="item.url"
+                  class="qualification-image"
+                />
+              </em>
+            </p>
+          </Col>
+        </Row>
+      </div>
     </div>
 
     <!-- 审核以通过 displayStatus == 3  -->
@@ -83,20 +83,36 @@
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" disabled-hover></Table>
       <div class="btnCenter sumbit-button">
-        <Button v-auth="'account-manage.info#edit'" type="primary" class="button-ok button-offset bok"
-          :to="{ name: 'account-info-accedit' }">修改信息</Button>
-        <Button v-auth="'account-manage.info#change'" type="primary" class="button-ok bok" 
-        @click="handleInforma">变更账号</Button>
+        <Button
+          v-auth="'account-manage.info#edit'"
+          type="primary"
+          class="button-ok button-offset bok"
+          :to="{ name: 'account-info-accedit' }"
+        >修改信息</Button>
+        <Button
+          v-auth="'account-manage.info#change'"
+          type="primary"
+          class="button-ok bok"
+          @click="handleInforma"
+        >变更账号</Button>
       </div>
     </div>
 
     <div class="btnCenter sumbit-button" v-else>
-      <Button v-auth="'account-manage.info#edit'" type="primary" class="button-ok bok"
-        :to="{ name: 'account-info-edit' }">修改信息</Button>
+      <Button
+        v-auth="'account-manage.info#edit'"
+        type="primary"
+        class="button-ok bok"
+        :to="{ name: 'account-info-edit' }"
+      >修改信息</Button>
     </div>
 
     <dlgChange v-model="queryDetail" v-if="queryDetail.visibleMess"></dlgChange>
-    <dlgInforma v-model="informa" v-if="informa.visibleInforma" @updataChangeList="updataChangeList"></dlgInforma>
+    <dlgInforma
+      v-model="informa"
+      v-if="informa.visibleInforma"
+      @updataChangeList="updataChangeList"
+    ></dlgInforma>
   </div>
 </template>
 
@@ -133,12 +149,15 @@ export default class Main extends ViewBase {
     visibleMess: false,
     changelist: {}
   }
+
   // 审核后修改公司信息
   informa = {
     visibleInforma: false,
     dataList: []
   }
+
   qualificationTypeList = []
+
   column = [
     { title: '变更编号', key: 'id' },
     { title: '账号变更提交时间', key: 'timeName' },
@@ -151,7 +170,8 @@ export default class Main extends ViewBase {
         return (
           <a
             on-click={this.beforeChange.bind(this, row.changeBefore)}
-            class="detail-list">
+            class="detail-list"
+          >
             点击查看
           </a>
         )
@@ -165,9 +185,7 @@ export default class Main extends ViewBase {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         return (
-          <a
-            on-click={this.afterChange.bind(this, row.changeEnd)}
-            class="detail-list">
+          <a on-click={this.afterChange.bind(this, row.changeEnd)} class="detail-list">
             点击查看
           </a>
         )
@@ -237,9 +255,9 @@ export default class Main extends ViewBase {
         }
       })
     })
-    this.accountType =
-      array.length > 1 ? `${array[0]} / ${array[1]}` : array.toString()
+    this.accountType = array.length > 1 ? `${array[0]} / ${array[1]}` : array.toString()
   }
+
   queryTypeList(val: any) {
     // 查询资质类型
     let list: any = this.qualificationTypeList
@@ -292,16 +310,19 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+
 .as {
   background: rgba(255, 255, 255, 0);
   padding: 20px 30px 0 30px;
 }
+
 .stateContent {
   padding: 50px 0 50px 60px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background: rgba(255, 255, 255, 0.3);
 }
+
 .layout-title {
   background: rgba(255, 255, 255, 0);
   font-size: 24px;
@@ -309,18 +330,22 @@ export default class Main extends ViewBase {
   color: rgba(0, 32, 45, 1);
   margin-top: 10px;
 }
+
 .bs {
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-top: 30px;
   background: rgba(255, 255, 255, 0.3);
 }
+
 .hui {
   color: rgba(0, 32, 45, 0.7);
 }
+
 .detail-list {
   color: #2481d7;
 }
+
 .sumbit-button {
   padding: 30px 0 50px;
 }
@@ -333,12 +358,14 @@ export default class Main extends ViewBase {
 a.button-ok {
   line-height: 37px;
 }
+
 .accountList {
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-top: 30px;
   background: rgba(255, 255, 255, 0.3);
 }
+
 .bok {
   width: 200px;
   height: 50px;
@@ -346,7 +373,9 @@ a.button-ok {
   border-radius: 25px;
   color: #fff;
 }
-/deep/ .ivu-table th, /deep/ .ivu-table-header {
+
+/deep/ .ivu-table th,
+/deep/ .ivu-table-header {
   background: rgba(216, 236, 240, 1);
   height: 40px;
   line-height: 40px;
@@ -354,6 +383,7 @@ a.button-ok {
   font-size: 15px;
   font-weight: 400;
 }
+
 /deep/ .ivu-table td {
   background: rgba(159, 208, 219, 1);
   transition: background-color 0.2s ease-in-out;
@@ -363,16 +393,20 @@ a.button-ok {
   height: 50px;
   line-height: 50px;
 }
+
 /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
   background: rgba(159, 208, 219, 1);
 }
+
 /deep/ .ivu-table-body {
   background: rgba(159, 208, 219, 1);
 }
+
 /deep/ .ivu-table-wrapper {
   margin: 20px 30px 20px;
   border: none;
 }
+
 /deep/ .ivu-table-tip {
   overflow-x: auto;
   overflow-y: hidden;

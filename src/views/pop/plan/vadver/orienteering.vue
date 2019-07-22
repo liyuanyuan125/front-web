@@ -26,7 +26,7 @@
                     共{{citysId.length}}个城市
                     <span>设置</span>
                   </div> -->
-                  <City v-if='cityfalse' @ok="onCitySelectOk" v-model="visible" :cityIds.sync="citysId" :topCityIds="warehouseId"></City>
+                  <City :warehouseLisst='warehouseLisst' v-if='cityfalse' @ok="onCitySelectOk" v-model="visible" :cityIds.sync="citysId" :topCityIds="warehouseId"></City>
                 </div>
                 <div v-show="cityCustom != 1" class="xls-box">
                   <p class="title">注（请先下载影院数据表，编辑为仅包含自己目标投放影院的“.xls”格式文件，
@@ -119,11 +119,28 @@
           <div v-show="movieCustom != 0">
             <Film v-if="typeList.length > 0" v-model="numsList" @donefilm="timerfilm" :begin="beginDate" :end="endDate" />
           </div>
-          <div v-show='movieCustom == 0'>
+          <div class="title-box item-top" v-show="movieCustom == 0">
+            <div ref="types">
+              <FormItem :labelWidth="0" class="item-top form-item-type">
+                <CheckboxGroup v-model="form.type" class="item-radio-top">
+                  <Checkbox  style="width: 100px" class="check-item form-item-first" :label="0">不限</Checkbox>
+                  <Checkbox
+                    v-for="it in typeList"
+                    :key="it.key"
+                    :label="it.key"
+                    class="check-item"
+                  >{{it.text}}</Checkbox>
+                </CheckboxGroup>
+              </FormItem>
+            </div>
+            <!-- <Film v-model="numsList" :begin="beginDate" :end="endDate" @donetime="updatetime" @donefilm="timerfilm"/> -->
+          </div>
+
+          <!-- <div v-show='movieCustom == 0'>
             <div class='all-box'>
               系统将自动为您安排投放周期内所有的场次进行投放
             </div>
-          </div>
+          </div> -->
 
           <div class="btn-center">
             <Button
@@ -220,7 +237,7 @@ export default class Orienteering extends ViewBase {
   timers: any = {}
   numsList: any = []
   cityCustom: number = 1
-  movieCustom: number = 0
+  movieCustom: number = 1
   cinemaType: number = 0
   settime: any = null
   deliveryCityTypeList: any = []
@@ -239,12 +256,12 @@ export default class Orienteering extends ViewBase {
   ]
   movieList = [
     {
-      label: 0,
-      name: '全部影片通投'
-    },
-    {
       label: 1,
       name: '自定义影片'
+    },
+    {
+      label: 0,
+      name: '按类型定向'
     }
   ]
   cinemaList = [
@@ -304,12 +321,12 @@ export default class Orienteering extends ViewBase {
         this.deliveryCityTypeList = deliveryCityTypeList
         this.item = item
         this.movies = movies
+        this.movieCustom = item.movieCustom
         this.renders(item)
       }
       // this.citysId = item.customDeliveryCities || []
       this.xlslid = item.deliveryCinemas || []
       this.cityList = data.deliveryCityTypeList
-      this.movieCustom = item.movieCustom
       this.cinemastatusList = data.cinemaList
       this.sexList = data.tags[2].values || []
       this.ageList = data.tags[1].values || []
@@ -427,6 +444,10 @@ export default class Orienteering extends ViewBase {
           planId: this.$route.params.setid,
           cityCustom: this.cityCustom,
           deliveryGroups: [
+            {
+              tagTypeCode: 'MOVIE_TYPE',
+              text: this.movieCustom == 1 ? 0 : this.form.type.join(';')
+            },
             {
               tagTypeCode: 'PLAN_GROUP_AGE',
               text: this.form.age.join(';')

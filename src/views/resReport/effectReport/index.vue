@@ -55,6 +55,7 @@ import { getPlansReport } from '@/api/effectReport'
 import { findIndex, at, keyBy } from 'lodash'
 import { KeyText } from '@/util/types'
 import { datarange, formatDate } from '@/fn/duration.ts'
+import { toThousands } from '@/util/dealData'
 
 const getName = (key: string, list: any[]) => {
   const i: number = findIndex( list, (it: any) => {
@@ -253,7 +254,7 @@ export default class Index extends ViewBase {
         date: []
       }
     ],
-    color: ['#00B6CC'],
+    color: ['#00B6CC', '#00B6CC', '#00B6CC'],
     height: 350,
     toolTip
   }
@@ -455,7 +456,7 @@ export default class Index extends ViewBase {
             this.moreMovieData.push({
               name: item.name,
               viewCount: item.viewCount, // 曝光人次
-              viewRate: item.viewRate, // 曝光人次占比
+              viewRate: parseFloat(item.viewRate) + '%', // 曝光人次占比
               scheduleCount: item.scheduleCount // 曝光场次
             })
           })
@@ -486,21 +487,26 @@ export default class Index extends ViewBase {
           })
         }
 
-        // 数据趋势 图表
+        // 数据趋势 && 数据明细
         if ( dates && dates.length > 0 ) {
           dates.forEach((item: any, index: number) => {
+            // 图表分类1
             this.chart1.dataList[0].data.push(item.viewCount)
             this.chart1.dataList[1].data.push(item.scheduleCount)
+            // 图表分类2
             this.chart1.dataList[2].data.push(item.cost)
             this.chart1.dataList[0].date.push(item.date)
+            // 图表分类3
             this.chart1.dataList[1].date.push(item.date)
             this.chart1.dataList[2].date.push(item.date)
+            // 数据明细
             this.tableData.data.push({
               date: String(item.date).slice(0, 4) + '-' +
           String(item.date).slice(4, 6) + '-' + String(item.date).slice(6, 8) ,
               viewCount: item.viewCount,
               scheduleCount: item.scheduleCount,
-              cost: parseInt(item.cost, 0) / 100  // 单位为'分'
+              cost: toThousands( parseFloat(item.cost) / 100 ), // 单位为'分' 格式化金额
+              originalCost: parseFloat(item.cost) / 100 // 用于导出内容，iview导出带逗号的字段有bug
             })
           })
           this.chart1.initDone = true
