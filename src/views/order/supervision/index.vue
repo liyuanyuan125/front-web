@@ -45,7 +45,8 @@
               <Col span='2' >{{normallist.videoTotalLength}}s</Col>
               <Col span='14'>
                 <row>
-                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in normallist.details' :key='index'>
+                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
+                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in normallist.details' :key='index' >
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
                     <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">{{item.videoName.slice(0,7)}}...</router-link>
                   </Tooltip>
@@ -76,7 +77,8 @@
         			<Col span='2' >{{it.videoTotalLength}}s</Col>
         			<Col span='14'>
         				<row>
-                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
+                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
+                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index' >
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
                     <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">{{item.videoName.slice(0,7)}}...</router-link>
                   </Tooltip>
