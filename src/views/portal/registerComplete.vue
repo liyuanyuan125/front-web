@@ -136,14 +136,17 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import './common.less';
+
 /deep/ .ivu-form-item-required .ivu-form-item-label::before {
   content: '';
 }
+
 /deep/ .ivu-steps .ivu-steps-status-process {
   .ivu-steps-head-inner span {
     font-size: 12px;
   }
 }
+
 .page-wrap {
   width: 600px;
   margin: 80px auto 0;
@@ -156,6 +159,7 @@ export default class Main extends ViewBase {
     line-height: 18px;
   }
 }
+
 .upload-tip {
   position: absolute;
   top: 96px;
@@ -171,6 +175,7 @@ export default class Main extends ViewBase {
   padding-top: 25px;
   justify-content: space-between;
 }
+
 .btn-pass,
 .btn-submit {
   width: 280px;
