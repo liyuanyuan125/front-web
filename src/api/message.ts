@@ -10,16 +10,6 @@ export async function messageList(query: any) {
   const res = await get(`/message/notification/search`, query, {
     timeout: 1500
   })
-  const title = `广告片【 年轻有wey（45s）】-《风中有朵雨做的云》、《杨门女将》、
-        《流浪地球》 年轻有wey（45s）】-《风中有朵雨做的云》、《杨门女将》、《流浪地球》
-        年轻有wey（45s）】-《风中有朵雨做的云》、《杨门女将》、《流浪地球》 年轻有wey（45s）】
-        -《风中有朵雨做的云》、《杨门女将》、《流浪地球》 年轻有wey（45s）】-《风中
-        有朵雨做的云》、《杨门女将》、《流浪地球》 年轻有wey（45s）】-《风中有朵雨做的云》、《杨门女
-        将》、《流浪地球》 年轻有wey（45s）】-《风中有朵雨做的云》、《杨门女将》
-        、《流浪地球》 年轻有wey（45s）】-《风中有朵雨做的云》、《杨门女将》、《流浪地球》`
-  res.data.items.forEach((it: any) => {
-    it.title = title
-  })
   return res
   return await mockGet(query, {
     items: [
