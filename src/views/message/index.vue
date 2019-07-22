@@ -108,6 +108,14 @@ export default class MessagePage extends ViewBase {
       const items = data.items || null
       const total = data.totalCount || 0
       const status = data.status || null
+
+      if ( !total || total === 0 ) {
+        this.loading = false
+        this.timeout = false
+        this.total = 0
+        return
+      }
+
       if ( items && items.length > 0 ) {
         this.list = items.map((it: any) => {
           return {
@@ -121,16 +129,14 @@ export default class MessagePage extends ViewBase {
           }
         })
         this.total = total
-      } else {
-        this.loading = false
-        this.timeout = false
-        this.total = 0
-        return
       }
+
       if ( status && status.length > 0 ) {
         this.statusList = status
       }
+
       this.loading = false
+
     } catch (ex) {
       const name = ex && ex.code && `handle${ex.code}`
       ; ((this as any)[name] || this.handleError).call(this, ex)
