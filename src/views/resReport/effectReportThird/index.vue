@@ -232,7 +232,7 @@ export default class Index extends ViewBase {
         date: []
       }
     ],
-    color: ['#00B6CC'],
+    color: ['#00B6CC', '#00B6CC'],
     height: 350,
     toolTip
   }
@@ -421,7 +421,7 @@ export default class Index extends ViewBase {
             name: item.name,
             viewCount: item.viewCount, // 曝光人次
             viewRate: item.viewRate, // 曝光人次占比
-            scheduleCount: `￥${item.scheduleCount}` // 曝光场次
+            scheduleCount: `${item.scheduleCount}` // 曝光场次
           })
         })
         movies.slice(0, 3).forEach((it: any) => {

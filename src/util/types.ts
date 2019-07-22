@@ -8,6 +8,24 @@ export interface MapType<T = string> {
   [index: number]: T
 }
 
+/**
+ * ajax 调用结果
+ */
+export interface AjaxResult {
+  code: number
+  data: any
+  msg: string
+  handled?: boolean
+}
+
+/**
+ * 判断 object 是否为 AjaxResult（只要含有 code 就行）
+ * @param object 对象
+ */
+export function isAjaxResult(object: any) {
+  return !!(object && typeof object === 'object' && 'code' in object)
+}
+
 /** 可取消的事件 */
 export interface CancelableEvent {
   canceled: boolean

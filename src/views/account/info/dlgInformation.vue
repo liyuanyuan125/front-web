@@ -6,12 +6,12 @@
         账号变更期间不会影响账号的正常使用。
       </div>
       <Form ref="form" :model="form" :label-width="90" :rules="formRules" class="edit-input">
-        <FormItem label="账号类型" prop="accountType">
+        <!-- <FormItem label="账号类型" prop="accountType">
           <CheckboxGroup v-model="form.accountType" class="item-type">
             <Checkbox size="large" label="ads">广告方</Checkbox>
             <Checkbox size="large" label="resource">资源方</Checkbox>
           </CheckboxGroup>
-        </FormItem>
+        </FormItem>-->
         <FormItem label="公司名称" prop="companyName">
           <Input v-model="form.companyName" placeholder="请输入公司名称" :maxlength="40"></Input>
         </FormItem>
@@ -92,9 +92,7 @@ export default class Change extends ViewBase {
           message: '请选择账号类型',
           trigger: 'change',
           validator(rule: any, value: string[], callback: any) {
-            value.length == 0
-              ? callback(new Error('请选择账号类型'))
-              : callback()
+            value.length == 0 ? callback(new Error('请选择账号类型')) : callback()
           }
         }
       ],
@@ -130,9 +128,7 @@ export default class Change extends ViewBase {
           require: true,
           trigger: 'change',
           validator(rule: any, value: string[], callback: any) {
-            value.length == 0
-              ? callback(new Error('请选择上传图片'))
-              : callback()
+            value.length == 0 ? callback(new Error('请选择上传图片')) : callback()
           }
         }
       ]
@@ -156,17 +152,22 @@ export default class Change extends ViewBase {
   }
 }
 </script>
+
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+
 .upload-wrap {
   position: relative;
   margin-top: 10px;
+  width: 400px;
 }
+
 /deep/ .ivu-modal-header {
   border-bottom: 0;
   padding: 10px 13px;
   // background: #f9f9f9;
 }
+
 /deep/ .ivu-modal-body {
   font-size: 14px;
   color: #444;
@@ -180,12 +181,14 @@ export default class Change extends ViewBase {
     line-height: 23px;
   }
   .ivu-form-item {
-    margin-left: 113px;
+    margin-left: 78px;
   }
 }
+
 .item-type {
   margin-top: 3px;
 }
+
 .ok {
   width: 200px;
   height: 50px;
@@ -194,17 +197,21 @@ export default class Change extends ViewBase {
   color: #fff;
   border: 0;
 }
+
 /deep/ .ivu-modal-footer {
   padding-bottom: 30px;
 }
+
 /deep/ .ivu-checkbox + span {
   margin-left: 3px;
 }
+
 /deep/.ivu-modal-header-inner {
   text-align: center;
   line-height: 38px;
   height: 30px;
 }
+
 /deep/ .ivu-modal-close {
   z-index: 1;
   font-size: 12px;
@@ -220,15 +227,17 @@ export default class Change extends ViewBase {
   width: 30px;
   height: 30px;
 }
+
 /deep/ .ivu-modal-close .ivu-icon-ios-close {
   font-size: 30px;
   font-weight: bold;
   color: #00202d;
-  transition: color .2s ease;
+  transition: color 0.2s ease;
   position: relative;
   top: -1px;
   left: -2px;
 }
+
 /deep/ .ivu-modal-close .ivu-icon-ios-close:hover {
   color: #00202d;
 }

@@ -14,7 +14,7 @@
         <Table stripe  :loading="tableLoading" :columns="columns4" :data="cinemaData">
           <template slot="contactTel" slot-scope="{row, index}">
             <div v-if="editIndex === index"  class="input-tel">
-              <Input  v-model="editTel" style="width: 160px" :maxlength="11" @on-blur="handleBlur(row.id)"/>
+              <Input  v-model="editTel" style="width: 160px" :maxlength="11" @on-blur="handleBlur(row.id, row.contactTel)"/>
             </div>
 
             <Tooltip v-else content="点击可编辑" placement="right" class="contact-tel" >
@@ -156,7 +156,7 @@ export default class Main extends ViewBase {
     this.editTel = row.contactTel
   }
 
-  async handleBlur(id: number) {
+  async handleBlur(id: number, tel: string) {
     const msg = validataTel(this.editTel)
     if (!this.editTel) {
       await info('手机号不能为空')
@@ -164,6 +164,10 @@ export default class Main extends ViewBase {
     }
     if (msg) {
       await info(msg)
+      return
+    }
+    // 未做修改
+    if (tel == this.editTel) {
       return
     }
     try {

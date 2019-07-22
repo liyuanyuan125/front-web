@@ -36,29 +36,29 @@
             <span @click='seachchgdown'>下周&nbsp;></span>
         </Col>
       </Row>
-      <!-- <Row>
-        <li class='li-item' v-for='(it,index) in normallist' :key='index'>
+      <Row style='margin-top: 15px;'>
+        <li class='li-item' v-if='normallist.length != 0'>
             <row>
               <Col span='3'>通投</Col>
-              <Col span='2'>50s</Col>
+              <Col span='2'>{{normallist.videoTotalLength}}s</Col>
               <Col span='19'>
                 <row>
-                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
+                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in normallist.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
                   
-                  <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
-                  <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
+                  <div v-if='item.status == 1' @click="change(normallist.id , item.status, item.orderId)" class='imgs2'></div>
+                  <div v-if='item.status == 2' @click="change(normallist.id , item.status, item.orderId)" class='imgs1'></div>
                     <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
-                    <router-link style='color: #00202D;margin-left: 25px;' :to="{path:'/order/dispatch' , params: {}}">{{item.videoName.slice(0,10)}}...</router-link>
+                    <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">{{item.videoName.slice(0,10)}}...</router-link>
                   </Tooltip>
-                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{path:'/order/dispatch' , params: {}}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
               </Col>
             </row>
           </li>
-          <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div>
-      </Row> -->
+          <!-- <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div> -->
+      </Row>
       <div style='margin-top: 15px;'>
       	<Row class='li-title'>
           <Col :span='3'>影片名称</Col>
@@ -73,7 +73,7 @@
         			<Col span='2'>{{it.videoTotalLength}}s</Col>
         			<Col span='19'>
         				<row>
-        					<Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
+        					<Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
                   
                   <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
@@ -137,6 +137,7 @@ export default class Main extends ViewBase {
   normallist: any = []
 
   objArray: any = []
+  objTwo: any = []
   deArray: any = []
   idsArray: any = []
 
@@ -324,7 +325,8 @@ export default class Main extends ViewBase {
   }
 
   async allover(id: any) {
-    this.objArray = ((await queryList(this.query)).data.items || []).map((it: any , index: any) => {
+    const a = await queryList(this.query)
+    this.objArray = (a.data.items || []).map((it: any , index: any) => {
         return {
           id: it.id,
           con: (it.details || []).map((item: any) => {
@@ -332,6 +334,19 @@ export default class Main extends ViewBase {
           })
         }
     })
+    if (a.data.normal != null) {
+      const b: any = []
+      b.push(a.data.normal)
+      this.objTwo = (b || []).map((it: any , index: any) => {
+        return {
+          id: it.id,
+          con: (it.details || []).map((item: any) => {
+            return item.orderId
+          })
+        }
+      })
+    }
+
     this.deArray = []
     for (const key in  this.objArray) {
       if (1 == 1) {
@@ -342,7 +357,15 @@ export default class Main extends ViewBase {
         }
       }
     }
-
+    for (const key in  this.objTwo) {
+      if (1 == 1) {
+        for (const j in  this.objTwo[key].con) {
+          if (1 == 1) {
+            this.deArray.push({id : this.objTwo[key].id , orderId : this.objTwo[key].con[j]})
+          }
+        }
+      }
+    }
     // for (let i = 0 ;  i < this.objArray.length ; i++ ) {
     //   for (let j = 0 ; j < this.objArray[i].length ; j++) {
     //     this.deArray.push(this.objArray[i][j])
@@ -439,6 +462,7 @@ export default class Main extends ViewBase {
 .page {
   padding-left: 30px;
   padding-right: 40px;
+  list-style: none;
 }
 .t-title {
   width: 100%;

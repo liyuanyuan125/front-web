@@ -329,6 +329,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'account-manage.info',
       authAction: 'edit',
+      title: '修改',
     }
   },
 
