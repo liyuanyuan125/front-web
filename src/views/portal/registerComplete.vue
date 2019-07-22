@@ -152,19 +152,23 @@ export default class Main extends ViewBase {
 .upload-wrap {
   position: relative;
   margin-top: 10px;
+  /deep/ .upload-add-in {
+    line-height: 18px;
+  }
 }
 .upload-tip {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 96px;
+  left: 0;
   font-size: 14px;
   color: @c-sub-text;
 }
 
 .submit-ln {
+  display: flex;
   width: 600px;
   margin: 0 auto;
-  display: flex;
+  padding-top: 25px;
   justify-content: space-between;
 }
 .btn-pass,
