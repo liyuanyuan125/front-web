@@ -131,8 +131,10 @@ export default class Index extends ViewBase {
 
   bannerData: any = {}
 
+  // 汇总摘要
   totalData: any = {}
 
+  // 数据明细
   tableData: any = {
     columns: [
       { title: '时间', key: 'date', align: 'center' },
@@ -162,8 +164,10 @@ export default class Index extends ViewBase {
     ]
   }
 
+  // 影片总数
   moviesTotal: number = 0
 
+  // 影片列表
   moviesData: any[] = [
     /* {
       movieId: 0,
@@ -192,8 +196,10 @@ export default class Index extends ViewBase {
     } */
   ]
 
+  // 更多影片 弹窗
   moreMovieData: any[] = []
 
+  // 影院
   cinemasData: any = {
     totalCount: 0,
     viewRate: {
@@ -210,6 +216,7 @@ export default class Index extends ViewBase {
     }
   }
 
+  // 数据趋势 图表
   chart1: any = {
     title: '',
     dict1: [
@@ -251,6 +258,7 @@ export default class Index extends ViewBase {
     toolTip
   }
 
+  // 用户画像
   userData: any = {
     sex: {},
     cityData: [],
@@ -411,12 +419,14 @@ export default class Index extends ViewBase {
         const scheduleCount = report.scheduleCount || null
         const cost = report.cost || null
 
+        // 汇总摘要
         this.totalData = {
           item0: viewCount,
           item1: scheduleCount,
           item2: (typeof cost === 'number') ? ( parseFloat(report.cost) / 100 ) : cost // 单位为'分'
         }
 
+        // 影院
         if ( cinemas && cinemas.length > 0 ) {
           this.cinemasData.totalCount = cinemas.length
 
@@ -438,6 +448,7 @@ export default class Index extends ViewBase {
           })
         }
 
+        // 影片
         if ( movies && movies.length > 0 ) {
           this.moviesTotal = movies.length
           movies.forEach((item: any) => {
@@ -475,6 +486,7 @@ export default class Index extends ViewBase {
           })
         }
 
+        // 数据趋势 图表
         if ( dates && dates.length > 0 ) {
           dates.forEach((item: any, index: number) => {
             this.chart1.dataList[0].data.push(item.viewCount)
@@ -494,6 +506,7 @@ export default class Index extends ViewBase {
           this.chart1.initDone = true
         }
 
+        // 用户画像
         if ( user && user.ages && user.ages.length > 0 ) {
           const _ageData: any = {
             age: [],

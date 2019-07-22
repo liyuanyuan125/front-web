@@ -137,7 +137,7 @@ export default class Main extends ViewBase {
   cinemaDataList: any = []
 
   // 详情接单影院
-  receiveCinemas = []
+  // receiveCinemas = []
 
   dcpData = []
   logList = []
@@ -176,7 +176,7 @@ export default class Main extends ViewBase {
       // 目标影院
       this.targetCinemaLength = item.targetCinemas.length
       // 接单影院
-      this.receiveCinemas = item.receiveCinemas || []
+      // this.receiveCinemas = item.receiveCinemas || []
       this.dcpData = item.attachments
       this.logList = item.logList
     } catch (ex) {
@@ -191,20 +191,20 @@ export default class Main extends ViewBase {
       } = await receiveCinemaList(this.id, {
         ...this.form
       })
-      const itemsList = items || []
-      // this.cinemaDataList = items || []
-      const receiveList: any[] = []
-      if (this.receiveCinemas.length > 0) {
-        this.receiveCinemas.map((it: any) => {
-          itemsList.filter((item: any) => {
-            if (item.id == it) {
-              receiveList.push(item)
-            }
-          })
-        })
-      }
-      this.cinemaDataList = receiveList
-      this.total = this.cinemaDataList.length
+      // const itemsList = items || []
+      // // this.cinemaDataList = items || []
+      // const receiveList: any[] = []
+      // if (this.receiveCinemas.length > 0) {
+      //   this.receiveCinemas.map((it: any) => {
+      //     itemsList.filter((item: any) => {
+      //       if (item.id == it) {
+      //         receiveList.push(item)
+      //       }
+      //     })
+      //   })
+      // }
+      this.cinemaDataList = items || []
+      this.total = totalCount
     } catch (ex) {
       this.handleError(ex)
     }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CitySelectPane class="citybox" @ok="onOk" v-model="cityIdsModel" :topCityIds="topCityIds" ref="citySelectPane"/>
+    <CitySelectPane :warehouseLisst='warehouseLisst' class="citybox" @ok="onOk" v-model="cityIdsModel" :topCityIds="topCityIds" ref="citySelectPane"/>
   </div>
 </template>
 
@@ -22,6 +22,8 @@ export default class CitySelectDialog extends ViewBase {
    * model，支持双向绑定
    */
   @Prop({ type: Boolean, default: false }) value!: boolean
+
+  @Prop() warehouseLisst!: any
 
   /** 城市 ids */
   @Prop({ type: Array, default: () => [] }) cityIds!: number[]

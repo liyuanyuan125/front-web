@@ -246,11 +246,13 @@
             </Row>
             <Row :gutter="16">
               <Col :span="2"><span>受众性别</span></Col>
-              <Col :span="9">
+              <Col :span="6">
                 <span>{{sexs(headerValue)}}</span>
               </Col>
               <Col :span="2"><span>受众年龄</span></Col>
-              <Col :span="10"><span>{{ages(headerValue)}}</span></Col>
+              <Col :span="6"><span>{{ages(headerValue)}}</span></Col>
+              <Col  v-if="item.movieCustom != 1":span="2"><span>影片类型</span></Col>
+              <Col v-if="item.movieCustom != 1" :span="6"><span>{{types(headerValue)}}</span></Col>
             </Row>
           </Col>
         </Row>
@@ -261,7 +263,7 @@
               自定义影片
             </span>
             <span v-else>
-              全部影片通投
+              影片定向
             </span>
           </Col>
         </Row>
@@ -621,7 +623,7 @@ export default class Apps extends ViewBase {
     if (msg.length > 0) {
       const message = msg.map((it: any) => {
         const maps = it.text.split(';')
-        const value = this.tags[1].values.filter((item: any) => maps.includes(item.key))
+        const value = this.tags[0].values.filter((item: any) => maps.includes(item.key))
         return value.map((its: any) => its.text).join('/')
       })
       return message.join(' / ')
