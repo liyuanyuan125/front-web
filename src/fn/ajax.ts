@@ -6,13 +6,16 @@
 import axios from 'axios'
 import event from './event'
 import tryParseJson from '@/fn/tryParseJson'
+import { AjaxResult } from '@/util/types'
 
 const ajaxBaseUrl = VAR.ajaxBaseUrl
 
 const isAbsoluteUrl = (url: string) => /^[a-z][a-z0-9+.-]*:/.test(url)
 
 const emit = (data: any) => {
-  event.emit(`ajax${data.code}`, data)
+  // 延迟发出 event，以便可以被阻止
+  data.handled = false
+  setTimeout(() => data.handled || event.emit(`ajax${data.code}`, data))
   return data
 }
 
@@ -22,7 +25,7 @@ const perfectData = ({ code, data, msg }: any = {}) => {
     code,
     data: data || {},
     msg: msg || '',
-  }
+  } as AjaxResult
 }
 
 const request = async (url: string, opts: object) => {
@@ -62,7 +65,7 @@ const request = async (url: string, opts: object) => {
   const { data } = res
   if (data && data.code !== undefined) {
     const result = perfectData(data)
-    if (data.code == 0) {
+    if (result.code == 0) {
       return result
     } else {
       throw emit(result)
