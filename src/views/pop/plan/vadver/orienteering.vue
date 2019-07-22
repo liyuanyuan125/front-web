@@ -237,7 +237,7 @@ export default class Orienteering extends ViewBase {
   timers: any = {}
   numsList: any = []
   cityCustom: number = 1
-  movieCustom: number = 0
+  movieCustom: number = 1
   cinemaType: number = 0
   settime: any = null
   deliveryCityTypeList: any = []
@@ -256,12 +256,12 @@ export default class Orienteering extends ViewBase {
   ]
   movieList = [
     {
-      label: 0,
-      name: '影片定向'
-    },
-    {
       label: 1,
       name: '自定义影片'
+    },
+    {
+      label: 0,
+      name: '按类型定向'
     }
   ]
   cinemaList = [
@@ -321,12 +321,12 @@ export default class Orienteering extends ViewBase {
         this.deliveryCityTypeList = deliveryCityTypeList
         this.item = item
         this.movies = movies
+        this.movieCustom = item.movieCustom
         this.renders(item)
       }
       // this.citysId = item.customDeliveryCities || []
       this.xlslid = item.deliveryCinemas || []
       this.cityList = data.deliveryCityTypeList
-      this.movieCustom = item.movieCustom
       this.cinemastatusList = data.cinemaList
       this.sexList = data.tags[2].values || []
       this.ageList = data.tags[1].values || []

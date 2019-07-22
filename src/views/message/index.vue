@@ -1,6 +1,6 @@
 <template>
   <div class="message-page">
-    <div class='top-wrap'>
+    <div class='top-wrap' v-if="!loading && !timeout && total !== 0">
       <span></span>
       <a class="read-all-button" @click="readAllHandler">全部标为已读</a>
     </div>
@@ -103,13 +103,20 @@ export default class MessagePage extends ViewBase {
 
     this.loading = true
     this.timeout = false
-
     try {
       const { data } = await messageList(query)
       const items = data.items || null
       const total = data.totalCount || 0
       const status = data.status || null
-      if (items && items.length > 0) {
+
+      if ( !total || total === 0 ) {
+        this.loading = false
+        this.timeout = false
+        this.total = 0
+        return
+      }
+
+      if ( items && items.length > 0 ) {
         this.list = items.map((it: any) => {
           return {
             id: it.id,
@@ -123,10 +130,13 @@ export default class MessagePage extends ViewBase {
         })
         this.total = total
       }
-      if (status && status.length > 0) {
+
+      if ( status && status.length > 0 ) {
         this.statusList = status
       }
+
       this.loading = false
+
     } catch (ex) {
       const name = ex && ex.code && `handle${ex.code}`
       ; ((this as any)[name] || this.handleError).call(this, ex)

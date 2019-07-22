@@ -263,7 +263,7 @@
               自定义影片
             </span>
             <span v-else>
-              影片定向
+              类型定向
             </span>
           </Col>
         </Row>

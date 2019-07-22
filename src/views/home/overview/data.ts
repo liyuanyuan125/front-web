@@ -4,6 +4,7 @@
  */
 
 import { get } from '@/fn/ajax'
+import { readableThousands } from '@/util/dealData'
 
 /**
  * 账户概览
@@ -78,10 +79,10 @@ export async function queryReport({
 
   const result = {
     legends: [
-      { name: '广告花费／¥', value: expendSum },
-      { name: '覆盖人次', value: personCountSum },
+      { name: '广告花费／¥', value: readableThousands(expendSum) },
+      { name: '覆盖人次', value: readableThousands(personCountSum) },
       // { name: '覆盖影院数', value: cinemaCountSum },
-      { name: '覆盖场次数', value: showCountSum },
+      { name: '覆盖场次数', value: readableThousands(showCountSum) },
     ],
 
     charts: [

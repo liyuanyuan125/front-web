@@ -456,7 +456,7 @@ export default class Index extends ViewBase {
             this.moreMovieData.push({
               name: item.name,
               viewCount: item.viewCount, // 曝光人次
-              viewRate: item.viewRate, // 曝光人次占比
+              viewRate: parseFloat(item.viewRate) + '%', // 曝光人次占比
               scheduleCount: item.scheduleCount // 曝光场次
             })
           })
