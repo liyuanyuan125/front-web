@@ -13,7 +13,7 @@
 
     <ReportPane title="影片贡献度分析">
       <div class="echarts-box">
-        <BarXCategory :initDone="chart2.initDone" :noData="chart2.noData" :title="chart2.title" :dict1="chart2.dict1" :dict2="chart2.dict2" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" axisLabelFormatter="{value}" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b} <br /> {c}'})" @typeChange="typeChangeHander2" />
+        <BarXCategory :initDone="chart2.initDone" :noData="chart2.noData" :title="chart2.title" :dict1="chart2.dict1" :dict2="chart2.dict2" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" axisLabelFormatter="{value}" :toolTip="chart2.toolTip" @typeChange="typeChangeHander2" />
       </div>
     </ReportPane>
 
@@ -38,6 +38,7 @@ import { getTrend, xadvertOrders } from '@/api/resReport'
 import SelectXadvertOrders from './components/x-select-xadvertOrders.vue'
 import { tooltipStyles } from '@/util/echarts'
 import { intDate } from '@/util/dealData'
+import { toThousands } from '@/util/dealData'
 
 const toolTip: any = {
   borderWidth: 1,
@@ -86,6 +87,7 @@ const toolTip: any = {
   }
 })
 export default class Index extends ViewBase {
+
   form: any = {
     xadvertOrderId: 10
   }
@@ -138,7 +140,7 @@ export default class Index extends ViewBase {
         date: []
       }
     ],
-    color: ['#57B4C9'],
+    color: ['#57B4C9', '#57B4C9', '#57B4C9'],
     toolTip
   }
 
@@ -241,6 +243,7 @@ export default class Index extends ViewBase {
         const { data } = await getTrend(this.form.xadvertOrderId)
 
         const items = data.item || null
+
         if ( !items || items.length === 0 ) {
           this.chart1.initDone = true
           this.chart2.initDone = true
@@ -248,50 +251,59 @@ export default class Index extends ViewBase {
           return
         }
 
-        const showCountSum = items.showCountSum || null
-        const personCountSum = items.personCountSum || null
-        const profitAmountSum = items.profitAmountSum || null
-        const orderReports = items.orderReports || null
-        const movieProfits = items.movieProfits || null
-        const movieShows = items.movieShows || null
-        const moviePersons = items.moviePersons || null
-        const cinemaProfits = items.cinemaProfits || null
-        const cinemaShows = items.cinemaShows || null
-        const cinemaPersons = items.cinemaPersons || null
+        const showCountSum = items.showCountSum || null // 总播放场次
+        const personCountSum = items.personCountSum || null // 总覆盖人次
+        const profitAmountSum = items.profitAmountSum || null // 总收益
+        const orderReports = items.orderReports || null // 广告趋势分析
+        const movieProfits = items.movieProfits || null // 影片贡献度分析（收益）
+        const movieShows = items.movieShows || null // 影片贡献度分析（场次）
+        const moviePersons = items.moviePersons || null // 影片贡献度分析（人次）
+        const cinemaProfits = items.cinemaProfits || null // 影院贡献度分析（收益）
+        const cinemaShows = items.cinemaShows || null // 影院贡献度分析（场次）
+        const cinemaPersons = items.cinemaPersons || null // 影院贡献度分析（人次）
 
         // TODO: xadvertOrderId 与 id 是不是重复的？？
-        this.totalData.showCountSum = showCountSum
-        this.totalData.personCountSum = personCountSum
-        this.totalData.profitAmountSum = profitAmountSum
+        this.totalData.showCountSum = showCountSum || '-' // 总播放场次
+        this.totalData.personCountSum = personCountSum || '-' // 总覆盖人次
+        // 总收益
+        if ( profitAmountSum &&  profitAmountSum !== 0 ) {
+          this.totalData.profitAmountSum = parseFloat(profitAmountSum) / 100
+        } else {
+          this.totalData.profitAmountSum = '-'
+        }
 
+        // 广告趋势分析
         if (orderReports && orderReports.length > 0) {
           (orderReports as any[])
             .sort((a, b) => a.date - b.date)
             .forEach((item: any, index: number) => {
-              const date = intDate(item.date)
-              this.chart1.dataList[0].date.push(date)
-              this.chart1.dataList[1].date.push(date)
-              this.chart1.dataList[2].date.push(date)
-              this.chart1.dataList[0].data.push(item.profitAmount)
-              this.chart1.dataList[1].data.push(item.showCount)
-              this.chart1.dataList[2].data.push(item.personCount)
+              const date = intDate(item.date) // 日期
+              this.chart1.dataList[0].date.push(date) // 日期
+              this.chart1.dataList[1].date.push(date) // 日期
+              this.chart1.dataList[2].date.push(date) // 日期
+              this.chart1.dataList[0].data.push( parseFloat(item.profitAmount) / 100 ) // 总收益
+              this.chart1.dataList[1].data.push(item.showCount) // 场次
+              this.chart1.dataList[2].data.push(item.personCount) // 人次
             })
         }
 
         if (movieProfits && movieProfits.length > 0) {
+          // 影片 贡献度分析（收益）
           movieProfits.forEach((item: any) => {
             this.chart2.dict3.push({
               text: item.name
             })
-            this.chart2.dataList[0].data.push(item.profitAmount)
+            this.chart2.dataList[0].data.push( parseFloat(item.profitAmount) / 100 )
           })
 
+          // 影片 贡献度分析（场次）
           if (movieShows && movieShows.length > 0) {
             movieShows.forEach((item: any) => {
               this.chart2.dataList[1].data.push(item.showCount)
             })
           }
 
+          // 影片 贡献度分析（人次）
           if (moviePersons && moviePersons.length > 0) {
             moviePersons.forEach((item: any) => {
               this.chart2.dataList[2].data.push(item.personCount)
@@ -300,19 +312,22 @@ export default class Index extends ViewBase {
         }
 
         if (cinemaProfits && cinemaProfits.length > 0) {
+          // 影院 贡献度分析（场次）
           cinemaProfits.forEach((item: any) => {
             this.chart3.dict3.push({
               text: item.name
             })
-            this.chart3.dataList[0].data.push(item.profitAmount)
+            this.chart3.dataList[0].data.push( parseFloat(item.profitAmount) / 100 )
           })
 
+          // 影院 贡献度分析（场次）
           if (cinemaShows && cinemaShows.length > 0) {
             cinemaShows.forEach((item: any) => {
               this.chart3.dataList[1].data.push(item.showCount)
             })
           }
 
+          // 影院 贡献度分析（人次）
           if (cinemaPersons && cinemaPersons.length > 0) {
             cinemaPersons.forEach((item: any) => {
               this.chart3.dataList[2].data.push(item.personCount)
