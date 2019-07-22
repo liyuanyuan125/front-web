@@ -746,7 +746,7 @@ th {
 }
 .check-item {
   position: relative;
-  min-width: 130px;
+  min-width: 110px;
   top: 3px;
   flex: 1;
   height: 40px;
