@@ -585,18 +585,18 @@ export default class CitySelectPane extends ViewBase {
     const uncheckedItem = this.lastUncheckedFastItem
     this.lastUncheckedFastItem = null
 
-    // 若全国被取消选择，快速清空
+    // 若非全国被反选，设置全国选择状态
     if (uncheckedItem != null
-      && uncheckedItem.key == 'all'
+      && uncheckedItem.key != 'all'
       && !uncheckedItem.checked) {
-      this.model = []
-      return
+      this.fastList[0].checked = false
+      this.fastList[0].indeterminate = this.model.length > 0
     }
 
     // 如果全国被选择，则排斥其他选项
 
     if (list[0].checked) {
-      this.fastList.forEach((it, i) => i > 0 && (it.checked = false))
+      // this.fastList.forEach((it, i) => i > 0 && (it.checked = false))
       this.model = this.allCityIds
     } else {
       // 将所有被选中的，添加到集合中
@@ -746,7 +746,7 @@ th {
 }
 .check-item {
   position: relative;
-  min-width: 110px;
+  min-width: 130px;
   top: 3px;
   flex: 1;
   height: 40px;
@@ -761,6 +761,11 @@ th {
   background: rgba(255, 255, 255, 0.3);
   user-select: none;
   .check-ra;
+}
+@media screen and (max-width: 1356px) {
+  .check-item {
+    min-width: 110px;
+  }
 }
 .check-ra {
   /deep/ .ivu-checkbox {
@@ -798,7 +803,7 @@ th {
 }
 .arrow-box {
   position: absolute;
-  bottom: 20px;
+  bottom: 3px;
   right: 40px;
 }
 /deep/ .ivu-select-input {
