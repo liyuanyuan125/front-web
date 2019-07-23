@@ -5,29 +5,67 @@
         <div slot="title">
           <Row type="flex" justify="space-between">
             <Col :span="17">
-            <DetailNavBar titleText="统计周期">
-              <div slot="item">
-                <RadioGroup class='nav' style="margin-right:15px" @on-change="handleChange" v-model="form.dayRangesKey" size="large" type="button">
-                  <Radio v-for="(item) in dict.dayRanges" :key="item.key" :disabled="item.disabled" :label="item.key">{{item.text}}</Radio>
-                </RadioGroup>
-                <DatePicker type="daterange" v-model="form.beginDate" @on-change="handleChange" placement="bottom-end" placeholder="自定义时间段"></DatePicker>
-              </div>
-            </DetailNavBar>
+              <DetailNavBar titleText="统计周期">
+                <div slot="item">
+                  <RadioGroup
+                    class="nav"
+                    style="margin-right:15px"
+                    @on-change="handleChange"
+                    v-model="form.dayRangesKey"
+                    size="large"
+                    type="button"
+                  >
+                    <Radio
+                      v-for="(item) in dict.dayRanges"
+                      :key="item.key"
+                      :disabled="item.disabled"
+                      :label="item.key"
+                    >{{item.text}}</Radio>
+                  </RadioGroup>
+                  <DatePicker
+                    type="daterange"
+                    v-model="form.beginDate"
+                    @on-change="handleChange"
+                    placement="bottom-end"
+                    placeholder="自定义时间段"
+                  ></DatePicker>
+                </div>
+              </DetailNavBar>
             </Col>
             <Col :span="7" style="text-align:right; color:#fff;">
-            平台
-            <Select v-model="form.channelCode" clearable @on-change="handleChange" style="width:150px; text-align:left">
-              <Option v-for="(item, index) in dict.channelList" :key="index" :value="item.key">{{item.text}}</Option>
-            </Select>
+              平台
+              <Select
+                v-model="form.channelCode"
+                clearable
+                @on-change="handleChange"
+                style="width:150px; text-align:left"
+              >
+                <Option
+                  v-for="(item, index) in dict.channelList"
+                  :key="index"
+                  :value="item.key"
+                >{{item.text}}</Option>
+              </Select>
             </Col>
           </Row>
         </div>
         <div class="content">
           <Row type="flex" justify="space-between">
             <Col :span="24">
-            <div class="chart-wp">
-              <AreaBasic :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="chart1.toolTip" :height="chart1.height" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" @typeChange='typeChangeHander' />
-            </div>
+              <div class="chart-wp">
+                <AreaBasic
+                  :initDone="chart1.initDone"
+                  :title="chart1.title"
+                  :dict1="chart1.dict1"
+                  :dict2="chart1.dict2"
+                  :toolTip="chart1.toolTip"
+                  :height="chart1.height"
+                  :color="chart1.color"
+                  :dataList="chart1.dataList"
+                  :currentTypeIndex="chart1.currentTypeIndex"
+                  @typeChange="typeChangeHander"
+                />
+              </div>
             </Col>
           </Row>
         </div>
@@ -253,9 +291,11 @@ export default class Main extends ViewBase {
   }
 
   endDate() {
-    return ( this.form.dayRangesKey == 'yesterday' )
-    ? moment(new Date()).add(-1, 'days').format(timeFormat)
-    : moment(new Date()).format(timeFormat)
+    return this.form.dayRangesKey == 'yesterday'
+      ? moment(new Date())
+          .add(-1, 'days')
+          .format(timeFormat)
+      : moment(new Date()).format(timeFormat)
   }
 
   async handleChange() {

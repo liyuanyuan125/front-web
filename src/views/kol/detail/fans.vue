@@ -218,14 +218,12 @@ export default class Fans extends ViewBase {
     const id: string = this.$route.params.id || ''
 
     try {
-      const {
-        data
-      } = await fanslist(id, this.pageQuery)
+      const { data } = await fanslist(id, this.pageQuery)
 
-      this.channelList = ( data.channelList ) ? data.channelList : null
+      this.channelList = data.channelList ? data.channelList : null
 
       const item = data.item || null
-      if ( !item ) {
+      if (!item) {
         this.chart1.initDone = true
         this.chart2.initDone = true
         this.chart3.initDone = true
