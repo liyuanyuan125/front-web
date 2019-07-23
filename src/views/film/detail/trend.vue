@@ -492,6 +492,8 @@ export default class Main extends ViewBase {
         const taopiaopiao = {chanelCode: 'taopiaopiao', count: 0, ranking: null, trend: 0}
         items.map((it: any, index: number) => {
           date.push(formatConversion(it.date))
+
+          // 补充缺少数据展示
           const isTao = it.channels.findIndex((col: any) => col.chanelCode == 'taopiaopiao')
           const isDou = it.channels.findIndex((col: any) => col.chanelCode == 'douban')
           const isMao = it.channels.findIndex((col: any) => col.chanelCode == 'maoyan')

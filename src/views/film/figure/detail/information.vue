@@ -29,14 +29,16 @@
       <li v-for="item in personalList" :key="item.id">
         <p class="per-title font_16">{{item.title}}</p>
         <p class="head-img">
-          <a class>
+          <router-link class="a-link" :to="{name: 'film-figure', params: {id: item.personId}}">
             <img
               :src="item.headImg == '' || item.headImg == null ? $store.state.defaultAvatar : item.headImg"
             />
-          </a>
+          </router-link>
         </p>
-        <p class="per-name font_18">{{item.name || '-'}}</p>
-        <p class="per-englist font_18">{{item.nameEn || '-'}}</p>
+        <router-link class="a-name" :to="{name: 'film-figure', params: {id: item.personId}}">
+          <p class="per-name font_18">{{item.name || '-'}}</p>
+          <p class="per-englist font_18">{{item.nameEn || '-'}}</p>
+        </router-link>
         <p>
           <span v-for="(it, index) in item.professions" :key="index">
             {{handleProfess(it.code)}}
@@ -201,6 +203,7 @@ export default class Information extends ViewBase {
 }
 .font_18 {
   font-size: 18px;
+  color: #fff;
 }
 
 .nav-title {
@@ -253,7 +256,7 @@ export default class Information extends ViewBase {
     text-indent: 2rem;
     font-size: 14px;
     line-height: 26px;
-    text-align: justify;
+    // text-align: justify;
     padding: 15px 0 25px;
     border-bottom: solid 1px rgba(79, 166, 187, 0.5);
     margin-bottom: 30px;
@@ -273,7 +276,7 @@ export default class Information extends ViewBase {
       text-align: center;
       padding-bottom: 20px;
       .head-img {
-        a {
+        .a-link {
           width: 140px;
           height: 140px;
           display: block;
