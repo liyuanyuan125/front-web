@@ -3,73 +3,138 @@
   <div>
     <Row>
       <Col span="24">
-      <Form label-position="left" :label-width="100">
-        <Card class="detailmore-card">
-          <div slot="title">
-            <Row type="flex" justify="space-between" align="middle">
-              <Col :span="17">
-              <DetailNavBar titleText='统计周期'>
-                <div slot='item'>
-                  <RadioGroup class='nav' @on-change="handleChange" v-model="form.dayRangesKey" size="large" type="button">
-                    <Radio v-for="(item) in dict.dayRanges" :key="item.key" :disabled="item.disabled" :label="item.key">{{item.text}}</Radio>
-                  </RadioGroup>
-                </div>
-              </DetailNavBar>
-              </Col>
-              <Col :span="7" style="text-align: right; color: #fff">
-              平台
-              <Select v-model="form.channelCode" clearable @on-change="handleChange" style="width:150px; text-align:left">
-                <Option v-for="(item) in dict.channelList" :key="item.key" :value="item.key">{{item.text}}</Option>
-              </Select>
-              </Col>
-            </Row>
-          </div>
-          <div class="content">
-            <Row type="flex" justify="space-between">
-              <Col :span="12">
-              <div class='chart-wp' style='margin-right:10px'>
-                <PieNest :initDone="chart1.initDone" :title='chart1.title' :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
-              </div>
-              </Col>
-              <Col :span="12">
-              <div class='chart-wp'>
-                <BarxCategoryStack :initDone="chart2.initDone" :title='chart2.title' :dict1="chart2.dict1" :dict2="chart2.dict2" :xAxis="chart2.xAxis" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" @typeChange='typeChangeHander' />
-              </div>
-              </Col>
-            </Row>
-            <Row type="flex" justify="space-between" style='margin-top:10px'>
-              <Col :span="12">
-              <div class='chart-wp borderRadius' style='margin-right:10px'>
-                <WordCloud :initDone="chart3.initDone" :title='chart3.title' :dict1="chart3.dict1" :color="chart3.color" :dataList="chart3.dataList" @keyChange='keyChangeHandle' :currentTypeIndex="chart3.currentTypeIndex" />
-              </div>
-              </Col>
-              <Col :span="12">
-              <div class='chart-wp borderRadius'>
-                <WordCloud :initDone="chart4.initDone" :title='chart4.title' :dict1="chart4.dict1" :color="chart4.color" :dataList="chart4.dataList" @keyChange='keyChangeHandle' :currentTypeIndex="chart4.currentTypeIndex" />
-              </div>
-              </Col>
-            </Row>
+        <Form label-position="left" :label-width="100">
+          <Card class="detailmore-card">
+            <div slot="title">
+              <Row type="flex" justify="space-between" align="middle">
+                <Col :span="17">
+                  <DetailNavBar titleText="统计周期">
+                    <div slot="item">
+                      <RadioGroup
+                        class="nav"
+                        @on-change="handleChange"
+                        v-model="form.dayRangesKey"
+                        size="large"
+                        type="button"
+                      >
+                        <Radio
+                          v-for="(item) in dict.dayRanges"
+                          :key="item.key"
+                          :disabled="item.disabled"
+                          :label="item.key"
+                        >{{item.text}}</Radio>
+                      </RadioGroup>
+                    </div>
+                  </DetailNavBar>
+                </Col>
+                <Col :span="7" style="text-align: right; color: #fff">
+                  平台
+                  <Select
+                    v-model="form.channelCode"
+                    clearable
+                    @on-change="handleChange"
+                    style="width:150px; text-align:left"
+                  >
+                    <Option
+                      v-for="(item) in dict.channelList"
+                      :key="item.key"
+                      :value="item.key"
+                    >{{item.text}}</Option>
+                  </Select>
+                </Col>
+              </Row>
+            </div>
+            <div class="content">
+              <Row type="flex" justify="space-between">
+                <Col :span="12">
+                  <div class="chart-wp" style="margin-right:10px">
+                    <PieNest
+                      :initDone="chart1.initDone"
+                      :title="chart1.title"
+                      :dict1="chart1.dict1"
+                      :dict2="chart1.dict2"
+                      :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})"
+                      :color="chart1.color"
+                      :dataList="chart1.dataList"
+                      :currentTypeIndex="chart1.currentTypeIndex"
+                    />
+                  </div>
+                </Col>
+                <Col :span="12">
+                  <div class="chart-wp">
+                    <BarxCategoryStack
+                      :initDone="chart2.initDone"
+                      :title="chart2.title"
+                      :dict1="chart2.dict1"
+                      :dict2="chart2.dict2"
+                      :xAxis="chart2.xAxis"
+                      :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}-{c}'})"
+                      :color="chart2.color"
+                      :dataList="chart2.dataList"
+                      :currentTypeIndex="chart2.currentTypeIndex"
+                      @typeChange="typeChangeHander"
+                    />
+                  </div>
+                </Col>
+              </Row>
+              <Row type="flex" justify="space-between" style="margin-top:10px">
+                <Col :span="12">
+                  <div class="chart-wp borderRadius" style="margin-right:10px">
+                    <WordCloud
+                      :initDone="chart3.initDone"
+                      :title="chart3.title"
+                      :dict1="chart3.dict1"
+                      :color="chart3.color"
+                      :dataList="chart3.dataList"
+                      @keyChange="keyChangeHandle"
+                      :currentTypeIndex="chart3.currentTypeIndex"
+                    />
+                  </div>
+                </Col>
+                <Col :span="12">
+                  <div class="chart-wp borderRadius">
+                    <WordCloud
+                      :initDone="chart4.initDone"
+                      :title="chart4.title"
+                      :dict1="chart4.dict1"
+                      :color="chart4.color"
+                      :dataList="chart4.dataList"
+                      @keyChange="keyChangeHandle"
+                      :currentTypeIndex="chart4.currentTypeIndex"
+                    />
+                  </div>
+                </Col>
+              </Row>
 
-            <Row v-if="tableData.length > 0" type="flex" justify="space-between" style='margin-top:10px'>
-              <Col :span="24">
-              <div class='chart-wp keyword-box borderRadius'>
-                <div class="keyword-title">
-                  提及到“{{keywordQuery.keyword}}”的热门评论
-                </div>
-                <div class="table-box">
-                  <Table stripe ref="table" :columns="tableColumns" :loading="tableLoading" :data="tableData"></Table>
-                </div>
-              </div>
-              </Col>
-            </Row>
-
-          </div>
-        </Card>
-      </Form>
+              <Row
+                v-if="tableData.length > 0"
+                type="flex"
+                justify="space-between"
+                style="margin-top:10px"
+              >
+                <Col :span="24">
+                  <div class="chart-wp keyword-box borderRadius">
+                    <div class="keyword-title">提及到“{{keywordQuery.keyword}}”的热门评论</div>
+                    <div class="table-box">
+                      <Table
+                        stripe
+                        ref="table"
+                        :columns="tableColumns"
+                        :loading="tableLoading"
+                        :data="tableData"
+                      ></Table>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+            </div>
+          </Card>
+        </Form>
       </Col>
     </Row>
   </div>
 </template>
+
 <script lang="tsx">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -96,8 +161,10 @@ const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
     DetailNavBar
   }
 })
-export default class Main extends ViewBase {
+export default class Comment extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
+
+  @Prop({ type: String, default: 'weibo' }) channel!: string
 
   tooltipStyles = tooltipStyles
 
@@ -112,7 +179,7 @@ export default class Main extends ViewBase {
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
     dayRangesKey: 'sevenDay',
-    channelCode: 'weibo'
+    channelCode: this.channel
   }
 
   dict: any = {
