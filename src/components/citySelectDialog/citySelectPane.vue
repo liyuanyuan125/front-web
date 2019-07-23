@@ -540,9 +540,17 @@ export default class CitySelectPane extends ViewBase {
       return
     }
 
-    // 如果全国被选择，则排斥其他选项
+    // 若非全国被反选，设置全国选择状态
+    if (uncheckedItem != null
+      && uncheckedItem.key != 'all'
+      && !uncheckedItem.checked) {
+      this.fastList[0].checked = false
+      this.fastList[0].indeterminate = this.model.length > 0
+    }
+
+    // 如果全国被选择，不要排斥其他选项
     if (list[0].checked) {
-      this.fastList.forEach((it, i) => i > 0 && (it.checked = false))
+      // this.fastList.forEach((it, i) => i > 0 && (it.checked = false))
       this.model = this.allCityIds
     } else {
       // 将所有被选中的，添加到集合中

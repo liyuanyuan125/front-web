@@ -148,7 +148,7 @@ import FansPane from '../../components/fansPane.vue'
 
 import FetchData from './fetchData'
 import { Type } from './types'
-import { toThousands } from '@/util/dealData'
+import { readableThousands } from '@/util/dealData'
 import moment from 'moment'
 import NavSwiper from './navSwiper.vue'
 import { swiperSlide } from 'vue-awesome-swiper'
@@ -167,7 +167,7 @@ import { show403 } from '@/util/auth'
   },
 
   filters: {
-    thousands: toThousands
+    thousands: readableThousands
   }
 })
 export default class BrandLayout extends ViewBase {

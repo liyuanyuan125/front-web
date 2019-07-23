@@ -98,7 +98,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { fanslist, brands } from '@/api/kolfans'
 import DetailNavBar from './components/detailNavBar.vue'
@@ -117,11 +117,13 @@ import { toMap } from '@/fn/array'
     DetailNavBar
   }
 })
-export default class Temporary extends ViewBase {
+export default class Fans extends ViewBase {
+  @Prop({ type: String, default: 'weibo' }) channel!: string
+
   form: any = {}
 
   pageQuery: any = {
-    channelCode: 'weibo'
+    channelCode: this.channel
   }
 
   dict: any = {
@@ -216,14 +218,12 @@ export default class Temporary extends ViewBase {
     const id: string = this.$route.params.id || ''
 
     try {
-      const {
-        data
-      } = await fanslist(id, this.pageQuery)
+      const { data } = await fanslist(id, this.pageQuery)
 
-      this.channelList = ( data.channelList ) ? data.channelList : null
+      this.channelList = data.channelList ? data.channelList : null
 
       const item = data.item || null
-      if ( !item ) {
+      if (!item) {
         this.chart1.initDone = true
         this.chart2.initDone = true
         this.chart3.initDone = true

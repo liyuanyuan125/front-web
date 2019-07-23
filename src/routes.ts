@@ -1100,12 +1100,10 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       title: 'KOL详情页',
       pageTitle: false,
     },
-    props: ({ params: { id, channel } }: Route) => {
-      return {
-        id: +id,
-        channel,
-      }
-    },
+    props: paramTypes({
+      id: Number,
+      channel: String
+    })
   },
 
   // KOL - 更多详情
@@ -1120,14 +1118,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     children: [
       // kol - KOL详情更多页 - 平台运营
       {
-        path: 'platform',
+        path: 'platform/:channel?',
         name: 'kol-detail-platform',
         component: () => import('./views/kol/detail/platform.vue'),
         meta: {
           ...emptyAuth,
           title: '平台运营'
         },
-        props: idProps,
+        props: paramTypes({
+          id: Number,
+          channel: String
+        }),
       },
 
       // KOL - KOL详情更多页 - 热度趋势
@@ -1139,7 +1140,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
           ...emptyAuth,
           title: '热度趋势'
         },
-        props: idProps,
+        props: idProps
       },
 
       // KOL - KOL详情更多页 - 投放价格
@@ -1156,14 +1157,17 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
       // KOL - KOL详情更多页 - 粉丝画像
       {
-        path: 'fans',
+        path: 'fans/:channel?',
         name: 'kol-detail-fans',
         component: () => import('./views/kol/detail/fans.vue'),
         meta: {
           ...emptyAuth,
           title: '粉丝画像'
         },
-        props: idProps,
+        props: paramTypes({
+          id: Number,
+          channel: String
+        }),
       },
 
       // KOL - KOL详情更多页 - 粉丝画像 - 受众匹配
@@ -1181,26 +1185,32 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
       // KOL - KOL详情更多页 - 口碑评论
       {
-        path: 'comment',
+        path: 'comment/:channel?',
         name: 'kol-detail-comment',
         component: () => import('./views/kol/detail/comment.vue'),
         meta: {
           ...emptyAuth,
           title: '口碑评论'
         },
-        props: idProps,
+        props: paramTypes({
+          id: Number,
+          channel: String
+        }),
       },
 
       // kol - KOL详情更多页 - 主要作品
       {
-        path: 'opus',
+        path: 'opus/:channel?',
         name: 'kol-detail-opus',
         component: () => import('./views/kol/detail/opus.vue'),
         meta: {
           ...emptyAuth,
           title: '主要作品'
         },
-        props: idProps,
+        props: paramTypes({
+          id: Number,
+          channel: String
+        }),
       },
 
       // kol - KOL详情更多页 - 合作品牌

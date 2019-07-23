@@ -83,6 +83,8 @@ module.exports = {
           removeAttributeQuotes: true,
         },
         VAR: it,
+        // 是否使用统计
+        useStats: it.env == 'prd'
       }])
     })
 

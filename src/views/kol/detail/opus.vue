@@ -8,33 +8,41 @@
     </div>
 
     <div class="query-select">
-      <Tabs class="" v-model="form.sortBy">
+      <Tabs class v-model="form.sortBy">
         <TabPane v-for="item in selectOption" :key="item.key" :value="item.key" :label="item.text"></TabPane>
       </Tabs>
     </div>
 
-    <div class="list-items"> 
+    <div class="list-items">
       <div class="item" v-for="(item, index) in list" :key="index">
         <div class="item-inner flex-box">
-          <a :href="item.url" target="_blank" class="video-url" >
+          <a :href="item.url" target="_blank" class="video-url">
             <!-- 按钮 -->
             <i v-if="item.url"></i>
-            <img :src="item.coverPic" alt="" class="img"
-            v-real-img="item.coverPic" />
+            <img :src="item.coverPic" alt class="img" v-real-img="item.coverPic" />
           </a>
           <div class="inner-right">
             <p class="title" :title="item.title">{{handleSlice(item.title)}}</p>
             <p class="icon-num">
-              <span><i class="iconfont icon-shipin"  /><em>{{roleNumber(item.playCount)}}</em></span>
-              <span><i class="iconfont icon-dianzan"  /><em>{{roleNumber(item.likeCount)}}</em></span>
-              <span><i class="iconfont icon-dianping"  /><em>{{roleNumber(item.commentCount)}}</em></span>
+              <span>
+                <i class="iconfont icon-shipin" />
+                <em>{{roleNumber(item.playCount)}}</em>
+              </span>
+              <span>
+                <i class="iconfont icon-dianzan" />
+                <em>{{roleNumber(item.likeCount)}}</em>
+              </span>
+              <span>
+                <i class="iconfont icon-dianping" />
+                <em>{{roleNumber(item.commentCount)}}</em>
+              </span>
             </p>
             <p class="times">{{item.publishTime}}</p>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="list.length == 0" class="no-data-list"> 暂无数据</div>
+    <div v-if="list.length == 0" class="no-data-list">暂无数据</div>
     <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
   </div>
 </template>
@@ -48,6 +56,7 @@ import defaultImg from '../assets/error.png'
 import pagination from '@/components/page.vue'
 import moment from 'moment'
 import { roleNumber } from '@/util/validateRules'
+
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 
 @Component({
@@ -58,6 +67,8 @@ const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 export default class Opus extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
+  @Prop({ type: String, default: 'weibo' }) channel!: string
+
   total = 0
   pageList = {
     pageIndex: 1,
@@ -65,7 +76,7 @@ export default class Opus extends ViewBase {
   }
 
   form = {
-    channelCode: 'weibo',
+    channelCode: this.channel,
     sortBy: 0
   }
   // 选择平台
@@ -87,16 +98,19 @@ export default class Opus extends ViewBase {
 
   async tableList() {
     try {
-      const {data: { items, totalCount, sortByList}} = await opusList({
+      const {
+        data: { items, totalCount, sortByList }
+      } = await opusList({
         ...this.form,
         ...this.pageList,
         sortBy: this.form.sortBy + 1,
-        id: this.id,
+        id: this.id
       })
+
       this.list = (items || []).map((it: any) => {
         return {
           ...it,
-          publishTime : moment(it.publishTime).format(timeFormat)
+          publishTime: moment(it.publishTime).format(timeFormat)
         }
       })
       this.total = totalCount
@@ -109,7 +123,9 @@ export default class Opus extends ViewBase {
   // 获取推广平台
   async querySelectList() {
     try {
-      const { data: {channelCodeList} } = await querySelectList()
+      const {
+        data: { channelCodeList }
+      } = await querySelectList()
       this.platformList = channelCodeList
     } catch (ex) {
       this.handleError(ex)
@@ -117,7 +133,9 @@ export default class Opus extends ViewBase {
   }
 
   handleSlice(text: string) {
-    if (!text) {return}
+    if (!text) {
+      return
+    }
     return text.length > 15 ? text.substring(0, 15) + '.....' : text
   }
 
@@ -126,7 +144,7 @@ export default class Opus extends ViewBase {
     this.tableList()
   }
 
-  @Watch('form', {deep: true})
+  @Watch('form', { deep: true })
   watchForm() {
     this.tableList()
   }
@@ -137,6 +155,7 @@ export default class Opus extends ViewBase {
 @import '~@/site/lib.less';
 @import '~@/views/kol/less/common.less';
 // @import '~@/views/brand/less/common.less';
+
 .no-data-list {
   text-align: center;
   color: #fff;
@@ -181,7 +200,7 @@ export default class Opus extends ViewBase {
       .item-inner {
         overflow: hidden;
         position: relative;
-        background: rgba(0, 32, 45, .5);
+        background: rgba(0, 32, 45, 0.5);
         border-radius: 8px;
         height: 200px;
         .video-url {
