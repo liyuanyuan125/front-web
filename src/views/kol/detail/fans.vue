@@ -98,7 +98,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { fanslist, brands } from '@/api/kolfans'
 import DetailNavBar from './components/detailNavBar.vue'
@@ -117,11 +117,13 @@ import { toMap } from '@/fn/array'
     DetailNavBar
   }
 })
-export default class Temporary extends ViewBase {
+export default class Fans extends ViewBase {
+  @Prop({ type: String, default: 'weibo' }) channel!: string
+
   form: any = {}
 
   pageQuery: any = {
-    channelCode: 'weibo'
+    channelCode: this.channel
   }
 
   dict: any = {

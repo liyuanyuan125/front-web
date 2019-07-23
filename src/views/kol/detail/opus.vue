@@ -13,7 +13,7 @@
       </Tabs>
     </div>
 
-    <div class="list-items"> 
+    <div class="list-items">
       <div class="item" v-for="(item, index) in list" :key="index">
         <div class="item-inner flex-box">
           <a :href="item.url" target="_blank" class="video-url" >
@@ -58,6 +58,8 @@ const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 export default class Opus extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
+  @Prop({ type: String, default: 'weibo' }) channel!: string
+
   total = 0
   pageList = {
     pageIndex: 1,
@@ -65,7 +67,7 @@ export default class Opus extends ViewBase {
   }
 
   form = {
-    channelCode: 'weibo',
+    channelCode: this.channel,
     sortBy: 0
   }
   // 选择平台

@@ -43,7 +43,7 @@
             title="粉丝画像"
             :man="fansRate.man"
             :woman="fansRate.woman"
-            :more="{ name: 'kol-detail-fans', params: { id } }"
+            :more="{ name: 'kol-detail-fans', params: { id, channel } }"
             class="fans-pane"
             v-if="fansRate"
           />
@@ -51,7 +51,7 @@
 
           <PiePane
             title="近7日评论分析"
-            :more="{ name: 'kol-detail-comment', params: { id } }"
+            :more="{ name: 'kol-detail-comment', params: { id, channel } }"
             :data="commentData"
             :formatter="commentFormatter"
             class="comment-pane"
@@ -62,7 +62,7 @@
           <HotPane
             :title="hotData.title"
             :data="hotData.list"
-            :more="{ name: 'kol-detail-platform', params: { id } }"
+            :more="{ name: 'kol-detail-platform', params: { id, channel } }"
             :formatter="hotFormatter"
             class="hot-pane"
             v-if="hotData"
@@ -73,7 +73,7 @@
           <OpusPane
             title="热门作品"
             :data="opusData"
-            :more="{ name: 'kol-detail-opus', params: { id }}"
+            :more="{ name: 'kol-detail-opus', params: { id, channel }}"
             class="opus-pane"
             v-if="opusData"
           />

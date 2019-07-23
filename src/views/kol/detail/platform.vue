@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { findIndex } from 'lodash'
@@ -91,9 +91,11 @@ const toolTip: any = {
 export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
+  @Prop({ type: String, default: 'weibo' }) channel!: string
+
   form: any = {
     dayRangesKey: 'sevenDay',
-    channelCode: 'weibo'
+    channelCode: this.channel
   }
 
   dict: any = {
