@@ -721,6 +721,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'adOrderManage.issue',
       authAction: 'EMPTY',
       authIsMenu: true,
+      title: '上刊管理',
       pageTitle: '上刊管理-鲸娱数据',
     },
   },
@@ -731,7 +732,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'order-nextissue',
     component: () => import('./views/order/nextissue/index.vue'),
     meta: {
-      authKey: '',
+      authKey: 'adOrderManage.nextissue',
       authAction: 'EMPTY',
       authIsMenu: true,
       title: '下刊管理',
@@ -814,7 +815,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 效果报表
   {
-    path: '/reseport/effect-report/:id?',
+    path: '/resreport/effect-report/:id?',
     name: 'effect-report',
     component: () => import('./views/resReport/effectReport/index.vue'),
     meta: {
@@ -827,7 +828,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 第三方 - 效果报表
   {
-    path: '/reseport/effect-report-third/:id',
+    path: '/resreport/effect-report-third/:id',
     name: 'test-report-third',
     component: () => import('./views/resReport/effectReportThird/index.vue'),
     meta: {

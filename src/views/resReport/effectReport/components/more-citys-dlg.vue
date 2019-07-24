@@ -88,18 +88,24 @@ export default class MoreCinemasDlg extends ViewBase {
     const id = (this.id).toString() || ''
     try {
       const {
-        data: { items, totalCount }
+        data
       } = await citiesReport(id, {...this.form})
-      this.data = items.map((it: any) => {
-        return {
-          name: it.name,
-          viewCount: it.viewCount,
-          scheduleCount: it.scheduleCount,
-          cost: toThousands( parseFloat(it.cost) / 100 ), // 单位为'分' 格式化金额
-          originalCost: parseFloat(it.cost) / 100 // 用于导出内容，iview导出带逗号的字段有bug
-        }
-      })
-      this.totalCount = totalCount
+
+      const items = data.items || null
+      const totalCount = data.totalCount || null
+
+      if ( items && items.length > 0 && totalCount > 0 ) {
+        this.data = items.map((it: any) => {
+          return {
+            name: it.name,
+            viewCount: it.viewCount,
+            scheduleCount: it.scheduleCount,
+            cost: toThousands( parseFloat(it.cost) / 100 ), // 单位为'分' 格式化金额
+            originalCost: parseFloat(it.cost) / 100 // 用于导出内容，iview导出带逗号的字段有bug
+          }
+        })
+        this.totalCount = totalCount
+      }
       this.showDlg = true
     } catch (ex) {
       this.handleError(ex)

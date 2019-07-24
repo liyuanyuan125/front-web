@@ -31,7 +31,6 @@
                   平台
                   <Select
                     v-model="form.channelCode"
-                    clearable
                     @on-change="handleChange"
                     style="width:150px; text-align:left"
                   >
@@ -402,6 +401,11 @@ export default class Comment extends ViewBase {
     try {
       const { data } = await comment({ ...mockObj }, id)
 
+      const channelList = data.channelList || null
+      if (channelList && channelList.length > 0) {
+        this.dict.channelList = channelList
+      }
+
       if (!data.items) {
         this.chart1.initDone = true
         this.chart2.initDone = true
@@ -411,14 +415,10 @@ export default class Comment extends ViewBase {
       }
 
       let items = data.items || null
-      const channelList = data.channelList || null
       const rate = data.rate || null
       const commentKeyword = data.commentKeyword || null
       if (items) {
         items = ((data.items as any[]) || []).sort((a, b) => a.date - b.date)
-      }
-      if (channelList && channelList.length > 0) {
-        this.dict.channelList = channelList
       }
 
       if (rate) {

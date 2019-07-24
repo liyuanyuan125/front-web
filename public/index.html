@@ -5,9 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <% var VAR = htmlWebpackPlugin.options.VAR %>
     <title>鲸娱数据</title>
-    <script>var VAR = <%=JSON.stringify(VAR)%></script>
+    <script>var VAR = <%=JSON.stringify(htmlWebpackPlugin.options.VAR)%></script>
     <link rel="icon" href="/favicon.ico">
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
@@ -29,6 +28,9 @@
   </head>
   <body>
     <div id="app"></div>
+    <% if (htmlWebpackPlugin.options.useStats) { %>
+    <script src="https://jic.talkingdata.com/app/h5/v1?appid=9EE7C80A745C48AA8AB87D8F9972D932&vn=v1.0&vc=1.0"></script>
+    <% } %>
     <noscript>
       <strong>鲸娱数据需要启用 JavaScript 功能，你的浏览器没有开启，请启用后继续</strong>
     </noscript>
