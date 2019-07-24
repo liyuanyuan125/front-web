@@ -494,7 +494,7 @@ export default class Index extends ViewBase {
             this.chart1.dataList[0].data.push(item.viewCount)
             this.chart1.dataList[1].data.push(item.scheduleCount)
             // 图表分类2
-            this.chart1.dataList[2].data.push(item.cost)
+            this.chart1.dataList[2].data.push(parseFloat(item.cost) / 100)
             this.chart1.dataList[0].date.push(item.date)
             // 图表分类3
             this.chart1.dataList[1].date.push(item.date)
