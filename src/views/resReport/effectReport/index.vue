@@ -1,20 +1,22 @@
 <template>
-  <div class="effect-report-wp" >
+  <div class="effect-report-wp">
     <BannerCard v-if="bannerData.item6" :data="bannerData" @selectPlan="selectPlanHandle"></BannerCard>
     <TotalCard :data="totalData"></TotalCard>
     <div class="flex-box">
       <ReportPane title="数据趋势">
         <div class="echarts-box">
-          <AreaBasic :initDone="chart1.initDone"
-                    :title="chart1.title"
-                    :dict1="chart1.dict1"
-                    :dict2="chart1.dict2"
-                    :toolTip="chart1.toolTip"
-                    :height="chart1.height"
-                    :color="chart1.color"
-                    :dataList="chart1.dataList"
-                    :currentTypeIndex="chart1.currentTypeIndex"
-                    @typeChange="typeChangeHander1" />
+          <AreaBasic
+            :initDone="chart1.initDone"
+            :title="chart1.title"
+            :dict1="chart1.dict1"
+            :dict2="chart1.dict2"
+            :toolTip="chart1.toolTip"
+            :height="chart1.height"
+            :color="chart1.color"
+            :dataList="chart1.dataList"
+            :currentTypeIndex="chart1.currentTypeIndex"
+            @typeChange="typeChangeHander1"
+          />
         </div>
       </ReportPane>
       <DetailTableCard :data="tableData"></DetailTableCard>
@@ -29,11 +31,17 @@
       <UserCard :data="userData" ref="usercard" @moreCity="showMoreCitysHandle"></UserCard>
     </div>
     <MoreCinemasDlg ref="moreCinemasDlg" :id="planId"></MoreCinemasDlg>
-    <MoreMoviesDlg ref="moreMoviesDlg" :id="planId" :moviesTotal="moviesTotal" :data="moreMovieData"></MoreMoviesDlg>
+    <MoreMoviesDlg
+      ref="moreMoviesDlg"
+      :id="planId"
+      :moviesTotal="moviesTotal"
+      :data="moreMovieData"
+    ></MoreMoviesDlg>
     <MoreCitysDlg ref="moreCitysDlg" :id="planId"></MoreCitysDlg>
     <SelectPlanDlg ref="selectPlanDlg" @update="updateHandle"></SelectPlanDlg>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -58,7 +66,7 @@ import { datarange, formatDate } from '@/fn/duration.ts'
 import { toThousands } from '@/util/dealData'
 
 const getName = (key: string, list: any[]) => {
-  const i: number = findIndex( list, (it: any) => {
+  const i: number = findIndex(list, (it: any) => {
     return key === it.key
   })
   const res: string = list[i].text || ''
@@ -125,7 +133,6 @@ const toolTip: any = {
   }
 })
 export default class Index extends ViewBase {
-
   planId: number = 0
 
   initDone: boolean = false
@@ -379,9 +386,10 @@ export default class Index extends ViewBase {
   }
 
   created() {
-    const id = parseInt(this.$route.params.id, 0)
+    const id =
+      parseInt(this.$route.params.id, 0) ||
       // TODO: 线上演示 id 为 104，其他环境 173
-      || (VAR.env == 'prd' ? -1 : 173)
+      (VAR.env == 'prd' ? -1 : 173)
     this.planId = id
     this.init(id)
   }
@@ -389,29 +397,27 @@ export default class Index extends ViewBase {
   async init(id: number = -1) {
     this.initDone = false
     try {
-      const {
-        data
-      } = await getPlansReport(id)
+      const { data } = await getPlansReport(id)
 
-       const plan = data.plan || null
-       const report = data.report || null
-       const movies = data.movies || null
-       const cinemas = data.cinemas || null
-       const user = data.user || null
-       const gradeCodes = data.gradeCodes || null
-       const planStatus = data.planStatus || null
-       const movieTypes = data.movieTypes || null
+      const plan = data.plan || null
+      const report = data.report || null
+      const movies = data.movies || null
+      const cinemas = data.cinemas as any[] || null
+      const user = data.user || null
+      const gradeCodes = data.gradeCodes || null
+      const planStatus = data.planStatus || null
+      const movieTypes = data.movieTypes || null
 
-      if ( report && report.lastModifyTime ) {
+      if (report && report.lastModifyTime) {
         const dates = report.dates
-        const name = getName( plan.status, planStatus )
+        const name = getName(plan.status, planStatus)
 
         this.bannerData = {
           item0: `${formatDate(plan.beginDate)} ~ ${formatDate(plan.endDate)}`,
           item1: datarange(plan.beginDate, plan.endDate),
           item2: plan.videoName,
           item3: plan.specification,
-          item4: getName( plan.status, planStatus),
+          item4: getName(plan.status, planStatus),
           item5: formatYell(report.lastModifyTime),
           item6: plan.name
         }
@@ -424,39 +430,29 @@ export default class Index extends ViewBase {
         this.totalData = {
           item0: viewCount,
           item1: scheduleCount,
-          item2: (typeof cost === 'number') ? ( parseFloat(report.cost) / 100 ) : cost // 单位为'分'
+          item2: typeof cost === 'number' ? parseFloat(report.cost) / 100 : cost // 单位为'分'
         }
 
         // 影院
-        if ( cinemas && cinemas.length > 0 ) {
+        if (cinemas && cinemas.length > 0) {
           this.cinemasData.totalCount = cinemas.length
 
-          const res = cinemas.slice(0, 10)
+          const cinemasTop = (field: string) => cinemas.sort((a, b) => b[field] - a[field])
+            .slice(0, 10).map(it => ({ name: it.name, count: it[field] }))
 
-          cinemas.slice(0, 10).forEach((it: any, index: number) => {
-            this.cinemasData.viewRate.data.push({
-              name: it.name,
-              count: it.viewRate
-            })
-            this.cinemasData.scheduleRate.data.push({
-              name: it.name,
-              count: it.scheduleRate
-            })
-            this.cinemasData.costRate.data.push({
-              name: it.name,
-              count: it.costRate
-            })
-          })
+          this.cinemasData.viewRate.data = cinemasTop('viewRate')
+          this.cinemasData.scheduleRate.data = cinemasTop('scheduleRate')
+          this.cinemasData.costRate.data = cinemasTop('costRate')
         }
 
         // 影片
-        if ( movies && movies.length > 0 ) {
+        if (movies && movies.length > 0) {
           this.moviesTotal = movies.length
           movies.forEach((item: any) => {
             this.moreMovieData.push({
               name: item.name,
               viewCount: item.viewCount, // 曝光人次
-              viewRate: item.viewRate, // 曝光人次占比
+              viewRate: parseFloat(item.viewRate) + '%', // 曝光人次占比
               scheduleCount: item.scheduleCount // 曝光场次
             })
           })
@@ -467,8 +463,12 @@ export default class Index extends ViewBase {
               poster: it.poster,
               name: it.name,
               score: it.score == null ? '-' : it.score,
-              time: String(it.release).slice(0, 4) + '-' + String(it.release).slice(4, 6)
-            + '-' + String(it.release).slice(6, 8),
+              time:
+                String(it.release).slice(0, 4) +
+                '-' +
+                String(it.release).slice(4, 6) +
+                '-' +
+                String(it.release).slice(6, 8),
               type: getNames(it.types, movieTypes).join(' / ') + '（中国大陆）',
               viewCount: it.viewCount, // 曝光人次
               scheduleCount: it.scheduleCount, // 曝光场次
@@ -488,24 +488,28 @@ export default class Index extends ViewBase {
         }
 
         // 数据趋势 && 数据明细
-        if ( dates && dates.length > 0 ) {
+        if (dates && dates.length > 0) {
           dates.forEach((item: any, index: number) => {
             // 图表分类1
             this.chart1.dataList[0].data.push(item.viewCount)
             this.chart1.dataList[1].data.push(item.scheduleCount)
             // 图表分类2
-            this.chart1.dataList[2].data.push(item.cost)
+            this.chart1.dataList[2].data.push(parseFloat(item.cost) / 100)
             this.chart1.dataList[0].date.push(item.date)
             // 图表分类3
             this.chart1.dataList[1].date.push(item.date)
             this.chart1.dataList[2].date.push(item.date)
             // 数据明细
             this.tableData.data.push({
-              date: String(item.date).slice(0, 4) + '-' +
-          String(item.date).slice(4, 6) + '-' + String(item.date).slice(6, 8) ,
+              date:
+                String(item.date).slice(0, 4) +
+                '-' +
+                String(item.date).slice(4, 6) +
+                '-' +
+                String(item.date).slice(6, 8),
               viewCount: item.viewCount,
               scheduleCount: item.scheduleCount,
-              cost: toThousands( parseFloat(item.cost) / 100 ), // 单位为'分' 格式化金额
+              cost: toThousands(parseFloat(item.cost) / 100), // 单位为'分' 格式化金额
               originalCost: parseFloat(item.cost) / 100 // 用于导出内容，iview导出带逗号的字段有bug
             })
           })
@@ -513,12 +517,12 @@ export default class Index extends ViewBase {
         }
 
         // 用户画像
-        if ( user && user.ages && user.ages.length > 0 ) {
+        if (user && user.ages && user.ages.length > 0) {
           const _ageData: any = {
             age: [],
             data: []
           }
-          if (user.ages.length > 0 ) {
+          if (user.ages.length > 0) {
             user.ages.forEach((it: any) => {
               _ageData.age.push(it.k)
               _ageData.data.push(it.v)
@@ -555,6 +559,7 @@ export default class Index extends ViewBase {
   }
 }
 </script>
+
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 .effect-report-wp {
@@ -572,5 +577,3 @@ export default class Index extends ViewBase {
   }
 }
 </style>
-
-

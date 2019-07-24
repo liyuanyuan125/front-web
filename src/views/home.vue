@@ -16,7 +16,7 @@ const routeMap = {
 }
 
 @Component
-export default class Main extends ViewBase {
+export default class Home extends ViewBase {
   async beforeCreate() {
     const user = getUser()
     if (user != null) {
@@ -27,13 +27,15 @@ export default class Main extends ViewBase {
         try {
           const {
             data: {
-              items,
-              totalCount
+              items
             }
           } = await brandList({ pageIndex: 1, pageSize: 10 })
 
-          if (totalCount == 1) {
-            const id = items[0].brandId
+          // 只取已关联的
+          const list = (items as any[] || []).filter(it => it.status == 15)
+
+          if (list.length == 1) {
+            const id = list[0].brandId
             this.$router.replace({ name: 'brand-home', params: { id } })
             // 将品牌首页，作为首页点亮
             siderMenuActiveMap({ 'brand-home': 'home' })

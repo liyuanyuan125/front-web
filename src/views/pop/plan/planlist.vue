@@ -305,7 +305,7 @@ export default class Plan extends ViewBase {
 
   findId(id: any) {
     this.$router.push({ name: 'effect-report', params: {
-      step: id
+      id
     }})
   }
 

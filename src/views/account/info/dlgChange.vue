@@ -1,20 +1,16 @@
 <template>
   <div>
-    <Modal
-      v-model="value.visibleMess"
-      :title="value.title"
-      width="800"
-    >
+    <Modal v-model="value.visibleMess" :title="value.title" width="800">
       <Row class="text-rows">
         <Col :span="24">
           <p>
             <label>公司名称</label>
             {{list.companyName}}
           </p>
-          <p>
+          <!-- <p>
             <label>账号类型</label>
             {{accountType}}
-          </p>
+          </p> -->
           <p>
             <label>资质类型</label>
             {{list.qualificationType}}
@@ -26,8 +22,12 @@
           <p class="flex-box">
             <label>资质图片</label>
             <em class="flex-box">
-              <ImagePreviewer v-for="(item, i) in list.qualificationImageList" :key="i"
-                :url="item" class="qualification-image"/>
+              <ImagePreviewer
+                v-for="(item, i) in list.qualificationImageList"
+                :key="i"
+                :url="item"
+                class="qualification-image"
+              />
             </em>
           </p>
         </Col>
@@ -38,6 +38,7 @@
     </Modal>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
@@ -50,29 +51,37 @@ import ImagePreviewer from '@/components/imagePreviewer'
 })
 export default class Change extends ViewBase {
   @Prop({ type: Object }) value!: any
+
   list: any = {}
+
   accountType = ''
+
   mounted() {
     this.list = Object.assign(this.value.changelist)
     const account: any = this.list.companyTypeList
-    this.accountType = account.length > 1 ? `${account[0]} / ${account[1]}` : account.toString()
+    this.accountType =
+      account.length > 1 ? `${account[0]} / ${account[1]}` : account.toString()
   }
+
   closeDlg() {
     this.value.visibleMess = false
   }
 }
 </script>
+
 <style lang="less" scoped>
 .qualification-image {
   width: 150px;
   margin-right: 25px;
 }
+
 /deep/ .ivu-modal-header {
   border-bottom: 0;
   padding: 10px 13px;
   background: #f9f9f9;
   font-weight: none;
 }
+
 /deep/ .ivu-modal-footer {
   display: none;
 }

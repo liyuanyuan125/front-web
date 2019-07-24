@@ -26,7 +26,7 @@ const hotChannelMap: MapType = {
 }
 
 const hotData = (items: any[]) => {
-  const list = (items || []).map(it => {
+  const list = (items || []).sort((a, b) => a.date - b.date).map(it => {
     const date = fullDate(it.date)
     const mdate = monthDate(it.date)
     const legends = (it.channels as any[] || [])
@@ -172,7 +172,7 @@ export async function getKol({
 
     hotData: indexes && indexes.length > 0 ? (() => {
       const channelName = dot(channelMap[channel], 'text')
-      const list = (indexes || []).map((it: any) => {
+      const list = (indexes as any[] || []).sort((a, b) => a.date - b.date).map((it: any) => {
         const date = monthDate(it.date)
         const item = (it.channels || []).find((tt: any) => tt.code == channel)
         return item && {
@@ -383,7 +383,6 @@ export async function getVideoHot(id: number) {
   })
 
   const result = hotData(items)
-
   return result
 }
 
@@ -438,7 +437,7 @@ export async function getFigure(id: number) {
     },
 
     opusData: movies && movies.length > 0 ? {
-      list: (movies as any[]).map(it => ({
+      list: (movies as any[]).slice(0, 5).map(it => ({
         title: it.name,
         count: readableNumber(it.boxOffice)
       })),
@@ -534,6 +533,5 @@ export async function getFigureHot(id: number) {
   })
 
   const result = hotData(items)
-
   return result
 }

@@ -67,7 +67,9 @@ export function normalizeList(list: any[], idKey: string, nameKey: string) {
  * @param nums 数字
  */
 export function toThousands(nums: any) {
-  let num = (nums || 0).toString()
+  // 分割整数、小数部分，小数部分不参与逗号分割
+  const [, integer = '', decimal = ''] = String(nums || 0).match(/(\d+)\.?(\d+)?/) || []
+  let num = integer
   let result = ''
   while (num.length > 3) {
     result = ',' + num.slice(-3) + result
@@ -76,7 +78,7 @@ export function toThousands(nums: any) {
   if (num) {
     result = num + result
   }
-  return result
+  return result + (decimal ? `.${decimal}` : '')
 }
 
 /**

@@ -106,12 +106,12 @@ export default class Main extends ViewBase {
   formatTimes: any = ''
   columns = [
     { type: 'selection', width: 30,  align: 'center' },
-    { title: '联系人', key: 'name', minWidth: 50},
-    { title: '登录邮箱', minWidth: 110,  key: 'email'},
-    { title: '手机号码', key: 'mobile',  },
-    {  title: '权限角色',   slot: 'roleId', minWidth: 100 },
+    { title: '联系人', key: 'name', minWidth: 100},
+    { title: '登录邮箱', minWidth: 140,  key: 'email'},
+    { title: '手机号码', minWidth: 110, key: 'mobile',  },
+    { title: '权限角色', slot: 'roleId', minWidth: 120 },
     { title: '状态',  slot: 'statusCode', minWidth: 40 },
-    { title: '上次登录时间',  slot: 'lastLoginTime', minWidth: 100 },
+    { title: '上次登录时间',  slot: 'lastLoginTime', minWidth: 140 },
     { title: '操作', slot: 'action',  width: 180  }
   ]
 
