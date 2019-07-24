@@ -20,18 +20,25 @@
 	    >
       <template slot-scope="{ row }" slot="name">
             <div style="text-align:center;cursor: pointer;">
-              <router-link
+              <!-- <router-link
             :to="{path:'/reseport/effect-report-third/' + row.id }"
             tag="span"
-          >{{row.name}}</router-link>&nbsp;&nbsp;&nbsp;
+          >{{row.name}}</router-link>&nbsp;&nbsp;&nbsp; -->
+          <router-link
+            :to="{ name: 'test-report-third', params: { id: row.id  } }" tag="span"
+          >{{row.name}}</router-link>
             </div>
           </template>
 	      <template slot-scope="{ row }" slot="action">
             <div style="text-align:center;cursor: pointer;">
-              <router-link
+              <!-- <router-link
 		        :to="{path:'/test/addtest/' + row.id }"
 		        tag="span"
-		      >编辑</router-link>&nbsp;&nbsp;&nbsp;
+		      >编辑</router-link>&nbsp;&nbsp;&nbsp; -->
+          <router-link
+            :to="{name:'test-addtest' , params: { id: row.id  } }"
+            tag="span"
+          >编辑</router-link>&nbsp;&nbsp;&nbsp;
               <span @click='deletes(row.id)'>删除</span>
             </div>
           </template>
