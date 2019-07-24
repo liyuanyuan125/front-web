@@ -15,7 +15,10 @@
                  @on-clear="brandList = []"
                  @on-change="seachs">
                   <Option
-                    v-for="item in []"
+                    v-for="item in [{
+                                key: 2019,
+                                text: '2019'
+                              },]"
                     :key="item.id"
                     :value="item.id"
                   >{{item.name}}</Option>
@@ -24,47 +27,36 @@
             </Col>
             <Col :span="7">
               <Col style='margin-left: 8px;' span="23">
-                <Select 
-                 v-model='query.brandId'  
-                 clearable
-                 filterable
-                 placeholder="所有月份"
-                 remote
-                 :loading="loading"
-                 :remote-method="remoteMethod"
-                 @on-clear="brandList = []"
-                 @on-change="seachs">
-                  <Option
-                    v-for="item in []"
-                    :key="item.id"
-                    :value="item.id"
-                  >{{item.name}}</Option>
+                <Select v-model="query.mounth" placeholder="选择月份" >
+                  <Option v-for="it in mountes" :key="it.key" :value="it.key"
+                    :label="it.text">{{it.text}}</Option>
                 </Select>
+
               </Col>
             </Col>
             <Col :span="7">
               <Col style='margin-left: 8px;' span="23">
                 <Select 
-                 v-model='query.brandId'  
+                 v-model='query.cinemaId'  
                  clearable
                  filterable
                  placeholder="影院名称"
                  remote
                  :loading="loading"
                  :remote-method="remoteMethod"
-                 @on-clear="brandList = []"
+                 @on-clear="movieList = []"
                  @on-change="seachs">
                   <Option
-                    v-for="item in []"
+                    v-for="item in movieList"
                     :key="item.id"
                     :value="item.id"
-                  >{{item.name}}</Option>
+                  >{{item.shortName}}</Option>
                 </Select>
               </Col>
             </Col>
          </Row>
-         <span class='addbutton' style='margin-right: 20px;' @click='all'>批量审核菜单</span>
-         <span class='addbutton'>开票</span>
+         <!-- <span class='addbutton' style='margin-right: 20px;' @click='all'>批量审核菜单</span> -->
+         <!-- <span class='addbutton'>开票</span> -->
         <CheckboxGroup v-model='orderids' class='chacks'>
           <Checkbox  class="list-li" v-for="(item , index) in list" :key = "index" :value="item.id" :label="item.id">
             <Row class='nav-title'>
@@ -75,7 +67,7 @@
             </Row>
             <Row class="li-col">
               <Col :span="7" style='border-right: 1px solid #fff;'>
-                <p class='order_money'>1231312312313123123</p>
+                <p class='order_money'>{{formatNumber(45646545645646)}}</p>
                 <p class='order_sma'>预计结算金额 / 元</p>
               </Col>
               <Col :span="6">
@@ -83,12 +75,13 @@
                 <p class='order_sma'>广告单数量 / 个</p>
               </Col>
               <Col :span="7">
-                <p class='order_num'>18450</p>
+                <p class='order_num'>{{formatNumber(152847596785 , 2)}}</p>
                 <p class='order_sma'>曝光人次 / 千人次</p>
               </Col>
               <Col :span="4">
-               <!--  <p class="status-btn" style='margin-top: 2px;' @click.prevent.native='view(item.id)'> 查看详情</p> -->
                 <router-link
+                  class="status-btn"
+                  style='line-height: 65px;'
                   :to="{name:'resFinance-bill-detail' , params: { id: 0  } }"
                   tag="span"
                 >查看详情</router-link>
@@ -116,13 +109,8 @@
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, info } from '@/ui/modal'
-import {
-  queryList,
-  editticket,
-  addticket,
-  itemlist,
-  histories
-} from '@/api/ticket'
+import { queryList } from '@/api/ticket'
+import { movielist } from '@/api/lastissue'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { toMap } from '@/fn/array'
 import moment from 'moment'
@@ -130,6 +118,7 @@ import { slice, clean } from '@/fn/object'
 import { warning , success, toast } from '@/ui/modal'
 import { uniq, uniqBy } from 'lodash'
 import Decimal from 'decimal.js'
+import { formatNumber } from '@/util/validateRules'
 
 
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
@@ -138,43 +127,98 @@ const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 export default class Main extends ViewBase {
   totalCount = 0
   query = {
+    mounth: null,
+    cinemaId: null,
     pageIndex: 1,
     pageSize: 4,
   }
 
   loading: any = false
+  // 影院列表
+  movieList: any = []
 
 
   list: any = []
   data: any = {}
-  checkAll: any = false
-  indeterminate: any = false
-  // 总金额
-  sum: any = 0
-  // 选中的退款金额总和
-  refundsum: any = 0
+
   codeList: any = []
-  // 金额数组
-  moneyList: any = []
-  // 选中的金额数组
-  refundmoney: any = []
+
   orderids: any = []
-  orderno: any = []
+  // 月份
+  mountes: any = [
+    {
+      key: 0,
+      text: '全部账单'
+    },
+    {
+      key: 1,
+      text: '一月'
+    },
+    {
+      key: 2,
+      text: '二月'
+    },
+    {
+      key: 3,
+      text: '三月'
+    },
+    {
+      key: 4,
+      text: '四月'
+    },
+    {
+      key: 5,
+      text: '五月'
+    },
+    {
+      key: 6,
+      text: '六月'
+    },
+    {
+      key: 7,
+      text: '七月'
+    },
+    {
+      key: 8,
+      text: '八月'
+    },
+    {
+      key: 9,
+      text: '九月'
+    },
+    {
+      key: 10,
+      text: '十月'
+    },
+    {
+      key: 11,
+      text: '十一月'
+    },
+    {
+      key: 12,
+      text: '十二月'
+    }
+  ]
+
 
   mounted() {
     this.seach()
+  }
+
+  get formatNumber() {
+    return formatNumber
   }
 
   async remoteMethod(query: any) {
     try {
       if (query) {
         this.loading = true
-        // const {
-        //   data: { items }
-        // } = await brandsList({
-        //   name: query,
-        // })
-        // this.brandList = items || []
+        const {
+          data: { items }
+        } = await movielist({
+          query,
+        })
+        this.movieList = items || []
       }
       this.loading = false
     } catch (ex) {
@@ -206,16 +250,12 @@ export default class Main extends ViewBase {
     }
   }
 
-  view(id: any) {
-    this.$router.push({ path : '/kol/order/detail/' + id})
-  }
-
   async all() {
     try {
       await confirm('您确定全部审核通过吗？')
       // await dels({id})
       this.$Message.success({
-        content: `删除成功`,
+        content: `修改成功`,
       })
       this.seach()
     } catch (ex) {
@@ -269,7 +309,7 @@ export default class Main extends ViewBase {
   border-radius: 5px;
   position: relative;
   .li-col {
-    padding: 30px 80px;
+    padding: 30px 50px 30px 0;
     text-align: center;
     .order_num {
       color: #fff;
@@ -334,6 +374,7 @@ export default class Main extends ViewBase {
     position: absolute;
     left: 4%;
     top: 60%;
+    display: none;
   }
 }
 /deep/ .ivu-select-selection {
