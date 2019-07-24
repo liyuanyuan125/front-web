@@ -169,7 +169,7 @@ export default class MessagePage extends ViewBase {
     const today = moment(new Date()).format('YYYYMMDD')
     const curDate = moment(sendTime).format('YYYYMMDD')
     if (curDate === today) {
-      return moment(sendTime).format('h:mm')
+      return moment(sendTime).format('HH:mm')
     } else {
       return moment(sendTime).format('MM-DD')
     }
