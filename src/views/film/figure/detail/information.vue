@@ -20,7 +20,8 @@
 
     <div class="personal-text">
       <!-- {{handleSub(item.introduction)}} -->
-      {{introduction}}
+      <!-- {{introduction}} -->
+      <p v-html="introduction"></p>
       <span class="text-more" @click="handleMore" v-if="isMore">{{moreText}}</span>
     </div>
 
@@ -253,7 +254,7 @@ export default class Information extends ViewBase {
   }
 
   .personal-text {
-    text-indent: 2rem;
+    // text-indent: 2rem;
     font-size: 14px;
     line-height: 26px;
     // text-align: justify;
