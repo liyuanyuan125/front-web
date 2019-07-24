@@ -721,6 +721,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'adOrderManage.issue',
       authAction: 'EMPTY',
       authIsMenu: true,
+      title: '上刊管理',
       pageTitle: '上刊管理-鲸娱数据',
     },
   },
@@ -731,7 +732,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'order-nextissue',
     component: () => import('./views/order/nextissue/index.vue'),
     meta: {
-      authKey: '',
+      authKey: 'adOrderManage.nextissue',
       authAction: 'EMPTY',
       authIsMenu: true,
       title: '下刊管理',
