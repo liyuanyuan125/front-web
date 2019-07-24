@@ -15,13 +15,10 @@
                  @on-clear="brandList = []"
                  @on-change="seachs">
                   <Option
-                    v-for="item in [{
-                                key: 2019,
-                                text: '2019'
-                              },]"
-                    :key="item.id"
-                    :value="item.id"
-                  >{{item.name}}</Option>
+                    v-for="item in years"
+                    :key="item.key"
+                    :value="item.key"
+                  >{{item.text}}</Option>
                 </Select>
               </Col>
             </Col>
@@ -126,7 +123,8 @@ const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 @Component
 export default class Main extends ViewBase {
   totalCount = 0
-  query = {
+  query: any = {
+    year: null,
     mounth: null,
     cinemaId: null,
     pageIndex: 1,
@@ -144,6 +142,8 @@ export default class Main extends ViewBase {
   codeList: any = []
 
   orderids: any = []
+  // 年份
+  years: any = []
   // 月份
   mountes: any = [
     {
@@ -202,6 +202,7 @@ export default class Main extends ViewBase {
 
 
   mounted() {
+    this.query.year = new Date().getFullYear()
     this.seach()
   }
 
@@ -244,6 +245,17 @@ export default class Main extends ViewBase {
       })
       this.totalCount = data.totalCount
       this.codeList = data.channelList
+      const yearlist: any = (this.years || []).map((it: any) => {
+        return it.key
+      })
+      if (yearlist.indexOf(new Date().getFullYear()) == 1) {
+        this.years = this.years
+      } else {
+        this.years.push({
+          key: new Date().getFullYear(),
+          text: String(new Date().getFullYear())
+        })
+      }
     } catch (ex) {
       this.handleError(ex)
     } finally {
