@@ -29,7 +29,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { formatTimestamp, formatTimes, formatYell } from '@/util/validateRules'
+import { formatTimestamp, formatTimes, } from '@/util/validateRules'
 import TinyLoading from '@/components/TinyLoading.vue'
 import ReportPane from './components/report-pane.vue'
 import BannerCard from './components/banner-card.vue'
@@ -46,6 +46,9 @@ import MoreMoviesDlg from './components/more-movies-dlg.vue'
 import { getPlansReport } from '@/api/effectReportThird'
 import { findIndex, at, keyBy } from 'lodash'
 import { KeyText } from '@/util/types'
+
+import moment from 'moment'
+const format = 'YYYY/MM/DD'
 
 const getName = (key: string, list: any[]) => {
   const i: number = findIndex(list, (it: any) => {
@@ -389,7 +392,7 @@ export default class Index extends ViewBase {
       this.bannerData = {
         item0: a + '~' + b,
         item1: sum,
-        item5: report == null ? '暂无' : formatYell(report.lastModifyTime),
+        item5: report == null ? '暂无' : moment(report.lastModifyTime).format(format),
         item6: plan.name
       }
 

@@ -34,7 +34,6 @@
             <p> <label>客户名称</label> {{queryList.customerName || '暂无'}} </p>
             <p> <label>投放排期</label>
               <span v-if="!queryList.beginDate">暂无</span>
-              <span v-else>{{formatYell(queryList.beginDate)}}~{{formatYell(queryList.endDate)}}</span>
             </p>
           </Col>
         </Row>
@@ -67,7 +66,6 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { planList, planDefault, dateMockList } from '@/api/plan'
-import { formatYell } from '@/util/validateRules'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import summany from './summary.vue'
 import crowd from './crowd.vue'
@@ -118,10 +116,6 @@ export default class Main extends ViewBase {
   modelType = 0
 
   isFlxed = false
-
-  get formatYell() {
-    return formatYell
-  }
 
   mounted() {
     this.advList()

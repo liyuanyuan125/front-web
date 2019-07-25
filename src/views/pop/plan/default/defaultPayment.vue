@@ -75,7 +75,7 @@
           </p>
           <p>
             <label>投放排期</label>
-            {{formatYell(items.beginDate)}} ~ {{formatYell(items.endDate)}}
+             {{items.beginDate}} ~ {{items.endDate}}
           </p>
           <p>
             <label>档期</label>
@@ -289,7 +289,7 @@ import ViewBase from '@/util/ViewBase'
 import { confirm, info } from '@/ui/modal'
 import CinemaList from './cinemaDlg.vue'
 import { planDefault, planPayment, planCancel } from '@/api/plan'
-import { formatTimes, formatYell, formatNumber } from '@/util/validateRules'
+import { formatTimes, formatNumber } from '@/util/validateRules'
 import relevanceDlg from './relevanceAdVDlg.vue'
 
 @Component({
@@ -326,10 +326,6 @@ export default class PlanDefault extends ViewBase {
     visible: false,
     title: '关联广告片',
     item: ''
-  }
-
-  get formatYell() {
-    return formatYell
   }
   get formatTimes() {
     return formatTimes
