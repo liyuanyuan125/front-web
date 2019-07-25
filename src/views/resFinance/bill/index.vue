@@ -205,10 +205,6 @@ export default class Main extends ViewBase {
 
 
   mounted() {
-    if (new Date().getFullYear() < 2019) {
-      info('暂不支持该年份查询')
-      return
-    }
      const getDayYear = new Date().getFullYear()
      if ( getDayYear == this.getDefaultYear[0] ) {
        this.years = this.years
