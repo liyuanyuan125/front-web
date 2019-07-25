@@ -263,8 +263,15 @@ export default class Temporary extends ViewBase {
         const value = count / 100
         max = max < value ? value : max
         min = min > value ? value : min
+        if (name.indexOf('省') == 1) {
+          name = name.substr(0, name.length - 1)
+        } else if (name.indexOf('市') == 1) {
+          name = name.substr(0, name.length - 1)
+        } else {
+          name = name
+        }
         return {
-          name: name.substr(0, name.length - 1),
+          name,
           value
         }
       })

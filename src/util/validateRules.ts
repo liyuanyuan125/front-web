@@ -99,9 +99,13 @@ export function formatTimestamp(val: any) {
 /**
  * 数字格式化保留两位小数每个三位加逗号
  */
-export function formatNumber(num: number) {
+export function formatNumber(num: number, type?: any) {
   if (num != undefined) {
-    return num.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
+    if (type == 2) {
+       return num.toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
+    } else {
+       return num.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
+    }
   }
 }
 

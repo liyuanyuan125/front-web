@@ -1648,7 +1648,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
   // 资源方 - 财务信息 - 对账单管理 - 查看详情
   {
-    path: '/resFinance/bill/detail',
+    path: '/resFinance/bill/detail/:id',
     name: 'resFinance-bill-detail',
     component: () => import('./views/resFinance/bill/detail.vue'),
     meta: {

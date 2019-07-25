@@ -1,64 +1,149 @@
 <template>
-  <div class="page">
-    <Row class="title">
-      <Col class="title-col" :span="6">
-        <!-- <img src="./assets/year.png" /> -->
-        <Select v-model="query.year" placeholder="选择年份" >
-          <Option v-for="it in years" :key="it.key" :value="it.key"
-            :label="it.text">{{it.text}}</Option>
-        </Select>
-      </Col>
-      <Col class="title-col" :span="6">
-        <!-- <img src="./assets/month.png"> -->
-        <Select v-model="query.mounth" placeholder="选择月份" >
-          <Option v-for="it in mountes" :key="it.key" :value="it.key"
-            :label="it.text">{{it.text}}</Option>
-        </Select>
-      </Col>
-    </Row>
-    <div v-if='viewimg && (query.mounth == 6 || query.mounth == 0)' class="items">
-      <img src="./assets/2019-06.png" alt='' />
-    </div>
-    <div v-if='viewimg && (query.mounth == 5 || query.mounth == 0)' class="items">
-      <img src="./assets/2019-05.png" alt='' />
-    </div>
-    <div v-if='viewimg && (query.mounth == 4 || query.mounth == 0)' class="items">
-      <img src="./assets/2019-04.png" alt='' />
-    </div>
-    <div v-if='viewimg && (query.mounth == 3 || query.mounth == 0)' class="items">
-      <img src="./assets/2019-03.png" alt='' />
-    </div>
-    <div v-if='!viewimg || query.mounth != 3 || query.mounth != 4 || query.mounth != 5 || query.mounth != 6 || query.mounth != 0' class='nos'>暂无对账单管理数据
-    </div>
+  <div class="pages">
+      <div>
+        <Row>
+           <Col :span="7">
+              <Col span="23">
+                <Select 
+                 v-model='query.brandId'  
+                 clearable
+                 filterable
+                 placeholder="全部年份"
+                 remote
+                 :loading="loading"
+                 :remote-method="remoteMethod"
+                 @on-clear="brandList = []"
+                 @on-change="seachs">
+                  <Option
+                    v-for="item in years"
+                    :key="item.key"
+                    :value="item.key"
+                  >{{item.text}}</Option>
+                </Select>
+              </Col>
+            </Col>
+            <Col :span="7">
+              <Col style='margin-left: 8px;' span="23">
+                <Select v-model="query.mounth" placeholder="选择月份" >
+                  <Option v-for="it in mountes" :key="it.key" :value="it.key"
+                    :label="it.text">{{it.text}}</Option>
+                </Select>
+
+              </Col>
+            </Col>
+            <Col :span="7">
+              <Col style='margin-left: 8px;' span="23">
+                <Select 
+                 v-model='query.cinemaId'  
+                 clearable
+                 filterable
+                 placeholder="影院名称"
+                 remote
+                 :loading="loading"
+                 :remote-method="remoteMethod"
+                 @on-clear="movieList = []"
+                 @on-change="seachs">
+                  <Option
+                    v-for="item in movieList"
+                    :key="item.id"
+                    :value="item.id"
+                  >{{item.shortName}}</Option>
+                </Select>
+              </Col>
+            </Col>
+         </Row>
+         <!-- <span class='addbutton' style='margin-right: 20px;' @click='all'>批量审核菜单</span> -->
+         <!-- <span class='addbutton'>开票</span> -->
+        <CheckboxGroup v-model='orderids' class='chacks'>
+          <Checkbox  class="list-li" v-for="(item , index) in list" :key = "index" :value="item.id" :label="item.id">
+            <Row class='nav-title'>
+              <Col span='5'>北京通州万达店</Col>
+              <Col span='14'>2019-06</Col>
+              <Col span='3' style='color: #DA6C70;float: right;text-align: center;'>待审核</Col>
+    
+            </Row>
+            <Row class="li-col">
+              <Col :span="7" style='border-right: 1px solid #fff;'>
+                <p class='order_money'>{{formatNumber(45646545645646)}}</p>
+                <p class='order_sma'>预计结算金额 / 元</p>
+              </Col>
+              <Col :span="6">
+                <p class='order_num'>4</p>
+                <p class='order_sma'>广告单数量 / 个</p>
+              </Col>
+              <Col :span="7">
+                <p class='order_num'>{{formatNumber(152847596785 , 2)}}</p>
+                <p class='order_sma'>曝光人次 / 千人次</p>
+              </Col>
+              <Col :span="4">
+                <router-link
+                  class="status-btn"
+                  style='line-height: 65px;'
+                  :to="{name:'resFinance-bill-detail' , params: { id: 0  } }"
+                  tag="span"
+                >查看详情</router-link>
+                <!-- <p class="status-btn" style='margin-top: 15px;' @click.prevent.native='view(item.id)'> 审核账单</p> -->
+              </Col>
+            </Row>
+          </Checkbox >
+        </CheckboxGroup >
+        <div class='lis' v-if='this.list.length == 0'>暂无信息</div>
+      </div>
+      <Page
+      :total="totalCount"
+      v-if="totalCount>0"
+      class="btnCenter plan-pages"
+      :current="query.pageIndex"
+      :page-size="query.pageSize"
+      show-total
+      @on-change="handlepageChange"
+      @on-page-size-change="handlePageSize"
+    />
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getUser } from '@/store'
-import moment from 'moment'
+import { confirm, info } from '@/ui/modal'
+import { queryList } from '@/api/ticket'
+import { movielist } from '@/api/lastissue'
+import jsxReactToVue from '@/util/jsxReactToVue'
 import { toMap } from '@/fn/array'
-import { confirm, toast, info } from '@/ui/modal'
+import moment from 'moment'
+import { slice, clean } from '@/fn/object'
+import { warning , success, toast } from '@/ui/modal'
+import { uniq, uniqBy } from 'lodash'
+import Decimal from 'decimal.js'
+import { formatNumber } from '@/util/validateRules'
+
+
+const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 
 @Component
 export default class Main extends ViewBase {
-  // 查看用户信息
-  user: any = getUser()!
-  // userList: any = {}
-  // 显示图片
-  viewimg: any = false
-
+  totalCount = 0
   query: any = {
-    year: 1,
-    mounth: 0,
+    year: null,
+    mounth: null,
+    cinemaId: null,
+    pageIndex: 1,
+    pageSize: 4,
   }
 
+  loading: any = false
+  // 影院列表
+  movieList: any = []
+
+
+  list: any = []
+  data: any = {}
+
+  codeList: any = []
+
+  orderids: any = []
   // 年份
-  years: any = [{
-    key: 1,
-    text: '2019'
-  }]
+  years: any = []
   // 月份
   mountes: any = [
     {
@@ -115,47 +200,194 @@ export default class Main extends ViewBase {
     }
   ]
 
-  mounted() {
-    const corpIds: any = VAR.env == 'prd' ? [642, 644] : [120]
-    if (corpIds.indexOf(this.user.companyId) != -1) {
-      this.viewimg = true
-    } else {
-      this.viewimg = false
-    }
-  }
-}
-</script>
 
-<style lang="less" scoped>
-.title {
-  // height: 46px;
-  margin-top: 15px;
-  margin-bottom: 20px;
-  .title-col {
-    // height: 46px;
-    margin-right: 15px;
-    img {
-      width: 73%;
-      height: 83%;
+  mounted() {
+    this.query.year = new Date().getFullYear()
+    this.seach()
+  }
+
+  get formatNumber() {
+    return formatNumber
+  }
+
+  async remoteMethod(query: any) {
+    try {
+      if (query) {
+        this.loading = true
+        const {
+          data: { items }
+        } = await movielist({
+          query,
+        })
+        this.movieList = items || []
+      }
+      this.loading = false
+    } catch (ex) {
+      this.handleError(ex)
+      this.loading = false
+    }
+  }
+
+  seachs() {
+    this.seach()
+  }
+
+  async seach() {
+    try {
+      const { data } = await queryList(this.query)
+      this.data = data
+      this.list = (data.items || []).map((it: any) => {
+        return {
+          ...it,
+          orderItemList: uniqBy(it.orderItemList, 'kolId'), // 去重一个kol有两个任务
+          createTime: moment(it.createTime).format(timeFormat)
+        }
+      })
+      this.totalCount = data.totalCount
+      this.codeList = data.channelList
+      const yearlist: any = (this.years || []).map((it: any) => {
+        return it.key
+      })
+      if (yearlist.indexOf(new Date().getFullYear()) == 1) {
+        this.years = this.years
+      } else {
+        this.years.push({
+          key: new Date().getFullYear(),
+          text: String(new Date().getFullYear())
+        })
+      }
+    } catch (ex) {
+      this.handleError(ex)
+    } finally {
+    }
+  }
+
+  async all() {
+    try {
+      await confirm('您确定全部审核通过吗？')
+      // await dels({id})
+      this.$Message.success({
+        content: `修改成功`,
+      })
+      this.seach()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+
+  handlepageChange(size: any) {
+    this.query.pageIndex = size
+    this.seach()
+  }
+  handlePageSize(size: any) {
+    this.query.pageIndex = size
+    this.seach()
+  }
+}
+
+</script>
+<style lang='less' scoped>
+@import '~@/site/common.less';
+.pages {
+  padding: 10px 40px 0 30px;
+}
+.nav-title {
+  height: 60px;
+  background: rgba(1, 35, 49, 1);
+  border-radius: 5px 5px 0 0;
+  line-height: 60px;
+  padding: 0 30px 0 50px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  span {
+    color: rgba(218, 108, 112, 1);
+    font-size: 20px;
+  }
+}
+.lis {
+  height: 50px;
+  line-height: 50px;
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+}
+.list-li {
+  width: 100%;
+  font-size: 14px;
+  background: rgba(19, 61, 75, 1);
+  border-radius: 5px;
+  position: relative;
+  .li-col {
+    padding: 30px 50px 30px 0;
+    text-align: center;
+    .order_num {
+      color: #fff;
+      font-size: 20px;
+    }
+    .order_sma {
+      color: #b3bcc0;
+      font-size: 14px;
+      margin-top: 15px;
+    }
+    .order_money {
+      color: #ff6e6e;
+      font-size: 20px;
+    }
+    .status-btn {
+      text-align: center;
+      cursor: pointer;
+      color: #4fa6bb;
+      font-size: 14px;
     }
   }
 }
-.items {
-  // height: 185px;
-  margin-top: 10px;
+.addbutton {
+  margin-top: 20px;
+  display: inline-block;
+  width: 160px;
+  height: 40px;
+  background: rgba(79, 166, 187, 1);
+  border-radius: 20px;
+  color: #fff;
+  text-align: center;
+  line-height: 40px;
   cursor: pointer;
-  img {
-    width: 100%;
-    height: 100%;
+}
+.search {
+  width: 100px;
+  height: 40px;
+  border-radius: 2px;
+  color: #fff;
+  background: @c-res-btn;
+  border: none；;
+}
+.order-status-tab {
+  margin: 40px 0 30px;
+  /deep/ .ivu-tabs-bar {
+    border: none;
   }
 }
-.nos {
-  height: 30px;
-  text-align: center;
-  color: #fff;
-  font-size: 16px;
-  line-height: 30px;
-  margin-top: 150px;
+.drop-down {
+  /deep/ .ivu-dropdown-rel {
+    cursor: pointer;
+    font-size: 14px;
+    color: #515a6e;
+    margin-top: 48px;
+  }
+}
+.chacks {
+  margin-top: 20px;
+  height: 180px;
+  background: rgba(19, 61, 76, 1);
+  /deep/ .ivu-checkbox {
+    position: absolute;
+    left: 4%;
+    top: 60%;
+    display: none;
+  }
 }
 /deep/ .ivu-select-selection {
   height: 40px;
@@ -165,8 +397,20 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-select-input {
   margin-top: 3px;
+  color: #00202d;
+  &::-webkit-input-placeholder {
+    color: #00202d;
+  }
 }
-
+/deep/ .ivu-input {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 1);
+  &::-webkit-input-placeholder {
+    color: #00202d;
+  }
+}
 /deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
   display: block;
   height: 40px;
@@ -189,6 +433,71 @@ export default class Main extends ViewBase {
   white-space: nowrap;
   padding-left: 8px;
   padding-right: 24px;
+  color: #00202d;
+}
+/deep/ .button-text {
+  margin: 0 3px;
+  display: inline-block;
+  text-align: center;
+  line-height: 24px;
+  width: 100px;
+  height: 24px;
+  background: rgba(0, 32, 45, 1);
+  border-radius: 12px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+}
+/deep/ .btnCenter {
+  text-align: center;
+  height: 100px;
+  // background: rgba(32, 67, 80, 1);
+  margin: 0 20px 0 20px;
+  line-height: 100px;
+  color: #fff;
+}
+/deep/ .ivu-page-prev {
+  border: 0;
+  background: rgba(255, 255, 255, 0);
+}
+/deep/ .ivu-page-next {
+  border: 0;
+  background: rgba(255, 255, 255, 0);
+}
+/deep/ .ivu-page-item-active {
+  border-color: #eee;
+  background: #00202d !important;
+  border-radius: 50%;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+}
+/deep/ .ivu-page-item-active:hover a {
+  color: #fff;
+}
+/deep/ .ivu-page-item-active a {
+  color: #fff;
+}
+/deep/ .ivu-page-item {
+  border: 0;
+  display: inline-block;
+  vertical-align: middle;
+  background: rgba(255, 255, 255, 0);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 4px;
+  text-align: center;
+  list-style: none;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+/deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
+  color: #00202d;
+}
+/deep/ .ivu-page-total {
   color: #00202d;
 }
 </style>
