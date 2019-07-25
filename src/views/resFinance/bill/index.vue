@@ -54,29 +54,29 @@
         <CheckboxGroup v-model='orderids' class='chacks'>
           <Checkbox  class="list-li" v-for="(item , index) in list" :key = "index" :value="item.id" :label="item.id">
             <Row class='nav-title'>
-              <Col span='5'>北京通州万达店</Col>
-              <Col span='14'>2019-06</Col>
+              <Col span='5'>{{item.cinemaName}}</Col>
+              <Col span='14'>{{item.year}}-{{item.month}}</Col>
               <Col span='3' style='color: #DA6C70;float: right;text-align: center;'>待审核</Col>
     
             </Row>
             <Row class="li-col">
               <Col :span="7" style='border-right: 1px solid #fff;'>
-                <p class='order_money'>{{formatNumber(45646545645646)}}</p>
+                <p class='order_money'>{{formatNumber(item.amount)}}</p>
                 <p class='order_sma'>预计结算金额 / 元</p>
               </Col>
               <Col :span="6">
-                <p class='order_num'>4</p>
+                <p class='order_num'>{{formatNumber(item.videoCount , 2)}}</p>
                 <p class='order_sma'>广告单数量 / 个</p>
               </Col>
               <Col :span="7">
-                <p class='order_num'>{{formatNumber(152847596785 , 2)}}</p>
+                <p class='order_num'>{{formatNumber(item.personCount , 2)}}</p>
                 <p class='order_sma'>曝光人次 / 千人次</p>
               </Col>
               <Col :span="4">
                 <router-link
                   class="status-btn"
                   style='line-height: 65px;'
-                  :to="{name:'resFinance-bill-detail' , params: { id: 0  } }"
+                  :to="{name:'resFinance-bill-detail' , params: { id: item.id  } }"
                   tag="span"
                 >查看详情</router-link>
                 <!-- <p class="status-btn" style='margin-top: 15px;' @click.prevent.native='view(item.id)'> 审核账单</p> -->
@@ -96,6 +96,7 @@
       @on-change="handlepageChange"
       @on-page-size-change="handlePageSize"
     />
+    <reDlg  ref="re"   v-if="reVisible" @done="dlgEditDone"/>
   </div>
 </template>
 
@@ -103,7 +104,7 @@
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, info } from '@/ui/modal'
-import { queryList } from '@/api/ticket'
+import { queryList , approval } from '@/api/bill'
 import { movielist } from '@/api/lastissue'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { toMap } from '@/fn/array'
@@ -113,16 +114,23 @@ import { warning , success, toast } from '@/ui/modal'
 import { uniq, uniqBy } from 'lodash'
 import Decimal from 'decimal.js'
 import { formatNumber } from '@/util/validateRules'
+// 审核弹窗页面
+import chgDlg from './chgDlg.vue'
 
 
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 
-@Component
+@Component({
+  components: {
+    chgDlg
+  }
+})
 export default class Main extends ViewBase {
+  reVisible: any = false
   totalCount = 0
   query: any = {
     year: null,
-    mounth: 0,
+    mounth: null,
     cinemaId: null,
     pageIndex: 1,
     pageSize: 4,
@@ -136,7 +144,9 @@ export default class Main extends ViewBase {
   list: any = []
   data: any = {}
 
-  codeList: any = []
+  billStatusList: any = [] // 账单状态
+  invoiceStatusList: any = [] // 发票状态
+  payStatusList: any = [] // 付款状态
 
   orderids: any = []
   // 年份
@@ -149,10 +159,6 @@ export default class Main extends ViewBase {
   getDefaultYear: any = [2019]
   // 月份
   mountes: any = [
-    {
-      key: 0,
-      text: '全部账单'
-    },
     {
       key: 1,
       text: '一月'
@@ -237,6 +243,7 @@ export default class Main extends ViewBase {
     }
   }
 
+  // 年份列表展示
   num(bignum: any , defaultyear: any) {
     const a: number = (defaultyear + 1) // 2020
     this.getDefaultYear.push(a) // [2019,2020]
@@ -256,6 +263,10 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
+  dlgEditDone() {
+    this.seach()
+  }
+
   async seach() {
     try {
       const { data } = await queryList(this.query)
@@ -268,24 +279,21 @@ export default class Main extends ViewBase {
         }
       })
       this.totalCount = data.totalCount
-      this.codeList = data.channelList
+      this.billStatusList = data.billStatusList // 账单状态
+      this.invoiceStatusList = data.invoiceStatusList // 发票状态
+      this.payStatusList = data.payStatusList // 付款状态
     } catch (ex) {
       this.handleError(ex)
     } finally {
     }
   }
 
-  async all() {
-    try {
-      await confirm('您确定全部审核通过吗？')
-      // await dels({id})
-      this.$Message.success({
-        content: `修改成功`,
-      })
-      this.seach()
-    } catch (ex) {
-      this.handleError(ex)
-    }
+  all(id: any , price: any , mark: any) {
+    this.reVisible = true
+    this.$nextTick(() => {
+      const myThis: any = this
+      myThis.$refs.re.init(id , price , mark)
+    })
   }
 
 
