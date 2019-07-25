@@ -82,16 +82,21 @@ export default class MoreCinemasDlg extends ViewBase {
     const id = (this.id).toString() || ''
     try {
       const {
-        data: { items, totalCount }
+        data
       } = await cinemasReport(id, {...this.form})
-      this.data = (items || []).map((it: any) => {
-        return {
-          name: it.name,
-          viewCount: it.viewCount,
-          scheduleCount: it.scheduleCount,
-          cost: it.cost
-        }
-      })
+      const items = data.items || null
+      const totalCount = data.totalCount || null
+
+      if (items && items.length > 0 && totalCount && totalCount > 0) {
+        this.data = (items || []).map((it: any) => {
+          return {
+            name: it.name,
+            viewCount: it.viewCount,
+            scheduleCount: it.scheduleCount,
+            cost: it.cost
+          }
+        })
+      }
       this.totalCount = totalCount
       this.showDlg = true
     } catch (ex) {
