@@ -20,9 +20,6 @@
     <div class="list-box">
       <div class="list-table">
         <Table ref="selection" stripe  :columns="columns4" :data="authDate">
-          <template slot="modifyTime" slot-scope="{row, index}">
-            <span>{{formatTimes(row.modifyTime)}}</span>
-          </template>
           <template slot="spaction" slot-scope="{row, index}" >
             <a v-auth="'account-manage.roles#view'"  @click="toDetail(row.id)" style="margin-right: 8px">查看</a>
             <a v-auth="'account-manage.roles#edit'"  @click="toEdit(row.id)" style="margin-right: 8px" class="operation" >编辑</a>
@@ -52,7 +49,6 @@ import { clean } from '@/fn/object'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import moment from 'moment'
 import { confirm, toast } from '@/ui/modal'
-import { formatTimes, formatYell, formatNumber} from '@/util/validateRules'
 const timeFormatDate = 'YYYY-MM-DD HH:mm:ss'
 
 @Component
@@ -82,20 +78,18 @@ export default class Main extends ViewBase {
     },
     {
       title: '上次编辑时间',
-      slot: 'modifyTime',
+      key: 'modifyTime',
     },
     {
       title: '操作',
       slot: 'spaction',
     }
   ]
-  get formatTimes() {
-    return formatTimes
-  }
   get authDate() {
     const list = (this.list || []).map((it: any) => {
       return {
        ...it,
+       modifyTime: moment(it.modifyTime).format(timeFormatDate)
       }
     })
     return list

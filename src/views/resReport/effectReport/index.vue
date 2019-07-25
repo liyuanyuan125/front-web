@@ -45,7 +45,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { formatTimestamp, formatTimes, formatYell } from '@/util/validateRules'
+import { formatTimestamp } from '@/util/validateRules'
 import TinyLoading from '@/components/TinyLoading.vue'
 import ReportPane from './components/report-pane.vue'
 import BannerCard from './components/banner-card.vue'
@@ -64,6 +64,9 @@ import { findIndex, at, keyBy } from 'lodash'
 import { KeyText } from '@/util/types'
 import { datarange, formatDate } from '@/fn/duration.ts'
 import { toThousands } from '@/util/dealData'
+
+import moment from 'moment'
+const format = 'YYYY/MM/DD'
 
 const getName = (key: string, list: any[]) => {
   const i: number = findIndex(list, (it: any) => {
@@ -418,7 +421,7 @@ export default class Index extends ViewBase {
           item2: plan.videoName,
           item3: plan.specification,
           item4: getName(plan.status, planStatus),
-          item5: formatYell(report.lastModifyTime),
+          item5: moment(report.lastModifyTime).format(format), // 修改使用moment
           item6: plan.name
         }
 

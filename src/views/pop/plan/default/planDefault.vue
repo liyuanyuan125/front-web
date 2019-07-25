@@ -12,7 +12,6 @@
           <p> <label>投放类型</label> {{deliveryType(items.deliveryType)}} </p>
           <p> <label>广告计划名称</label> {{items.name || '暂无'}} </p>
           <p> <label>广告片规格</label> {{items.specification || 0}}s </p>
-          <p> <label>投放排期</label> {{formatYell(items.beginDate)}} ~ {{formatYell(items.endDate)}} </p>
           <p>  <label>档期</label>  {{items.calendarName || '暂无'}} </p>
           <p v-if="status == 1 || status == 2 || status == 9 || status == 10">
             <label>预估冻结金额/￥</label>
@@ -25,7 +24,6 @@
           <p>  <label>客户名称</label>  {{items.customerName || '暂无'}} </p>
           <p>  <label>关联广告片</label>  {{items.videoName || '暂无'}} </p>
           <p>  <label>投放天数</label>  {{items.cycle || 0}} 天 </p>
-          <p>  <label>创建时间</label>  {{formatTimes(items.applyTime) || '暂无'}}</p>
           <p> <label>计费类型</label>  {{billingModeList(items.billingMode) || '暂无'}}</p>
           <p v-if="status == 3"> <label>订单折扣</label> {{items.discount || 0}}% </p>
         </Col>
@@ -149,7 +147,7 @@ import { confirm, info } from '@/ui/modal'
 import CinemaList from './cinemaDlg.vue'
 import StatusCode from './status.vue'
 import { planDefault, subExamine, planCancel } from '@/api/plan'
-import { formatTimes, formatYell, formatNumber } from '@/util/validateRules'
+import { formatNumber } from '@/util/validateRules'
 
 @Component({
   components: {
@@ -178,12 +176,6 @@ export default class PlanDefault extends ViewBase {
   cinema: any = {
     visible: false,
     id: ''
-  }
-  get formatYell() {
-    return formatYell
-  }
-  get formatTimes() {
-    return formatTimes
   }
 
   get formatNumber() {
