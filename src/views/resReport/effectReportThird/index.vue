@@ -357,46 +357,51 @@ export default class Index extends ViewBase {
   async init(id: any) {
     try {
       const {
-        data: {
-          plan,
-          report,
-          movies,
-          cinemas,
-          user,
-          gradeCodes,
-          planStatus,
-          movieTypes
-        }
+        data
       } = await getPlansReport(id)
-      // const name = getName( plan.status, planStatus)
-      const a =
-        String(plan.beginDate).slice(0, 4) +
-        '-' +
-        String(plan.beginDate).slice(4, 6) +
-        '-' +
-        String(plan.beginDate).slice(6, 8)
-      const b =
-        String(plan.endDate).slice(0, 4) +
-        '-' +
-        String(plan.endDate).slice(4, 6) +
-        '-' +
-        String(plan.endDate).slice(6, 8)
-      const sum =
-        (new Date(b).getTime() +
-          16 * 60 * 60 * 1000 -
-          (new Date(a).getTime() - 8 * 60 * 60 * 1000)) /
-        (24 * 60 * 60 * 1000)
-      this.bannerData = {
-        item0: a + '~' + b,
-        item1: sum,
-        item5: report == null ? '暂无' : formatYell(report.lastModifyTime),
-        item6: plan.name
+      const plan = data.plan || null
+      const report = data.report || null
+      const movies = data.movies || null
+      const cinemas = data.cinemas || null
+      const user = data.user || null
+      const gradeCodes = data.gradeCodes || null
+      const planStatus = data.planStatus || null
+      const movieTypes = data.movieTypes || null
+
+      if (plan && plan.beginDate && plan.endDate && plan.name) {
+        const a =
+          String(plan.beginDate).slice(0, 4) +
+          '-' +
+          String(plan.beginDate).slice(4, 6) +
+          '-' +
+          String(plan.beginDate).slice(6, 8)
+
+        const b =
+          String(plan.endDate).slice(0, 4) +
+          '-' +
+          String(plan.endDate).slice(4, 6) +
+          '-' +
+          String(plan.endDate).slice(6, 8)
+
+        const sum =
+          (new Date(b).getTime() +
+            16 * 60 * 60 * 1000 -
+            (new Date(a).getTime() - 8 * 60 * 60 * 1000)) /
+          (24 * 60 * 60 * 1000)
+
+        this.bannerData = {
+          item0: a + '~' + b,
+          item1: sum || null,
+          item5: !report ? '暂无' : formatYell(report.lastModifyTime),
+          item6: plan.name
+        }
       }
 
       this.totalData = {
-        item0: report == null ? '-' : report.viewCount,
-        item1: report == null ? '-' : report.scheduleCount
+        item0: !report ? '-' : report.viewCount,
+        item1: !report ? '-' : report.scheduleCount
       }
+
       if (cinemas && cinemas.length > 0) {
         this.cinemasData.totalCount = cinemas.length
         cinemas.slice(0, 10).forEach((it: any, index: number) => {
@@ -414,13 +419,14 @@ export default class Index extends ViewBase {
           })
         })
       }
+
       if (movies && movies.length > 0) {
         this.moviesTotal = movies.length
         movies.forEach((item: any) => {
           this.moreMovieData.push({
             name: item.name,
             viewCount: item.viewCount, // 曝光人次
-            viewRate: item.viewRate, // 曝光人次占比
+            viewRate: item.viewRate + '%', // 曝光人次占比
             scheduleCount: `${item.scheduleCount}` // 曝光场次
           })
         })
@@ -453,6 +459,7 @@ export default class Index extends ViewBase {
           })
         })
       }
+
       report == null
         ? (this.tableData.data = [])
         : report.dates.forEach((item: any, index: number) => {
@@ -474,7 +481,9 @@ export default class Index extends ViewBase {
               cost: item.cost
             })
           })
+
       this.chart1.initDone = true
+
       if (user) {
         const _ageData: any = {
           age: [],

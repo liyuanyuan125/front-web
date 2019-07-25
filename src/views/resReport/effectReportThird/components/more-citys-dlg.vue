@@ -91,7 +91,8 @@ export default class MoreCinemasDlg extends ViewBase {
       } = await citiesReport(id, {...this.form})
       const items = data.items || null
       const totalCount = data.totalCount || null
-      if ( items && items.length > 0 ) {
+
+      if (items && items.length > 0 && totalCount && totalCount > 0) {
         this.data = items.map((it: any) => {
           return {
             name: it.name,
@@ -100,9 +101,9 @@ export default class MoreCinemasDlg extends ViewBase {
             cost: it.cost
           }
         })
-        this.totalCount = totalCount
-        this.showDlg = true
       }
+      this.totalCount = totalCount
+      this.showDlg = true
     } catch (ex) {
       this.handleError(ex)
     }
