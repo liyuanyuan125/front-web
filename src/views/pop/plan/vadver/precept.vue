@@ -313,7 +313,7 @@ export default class App extends ViewBase {
     this.$router.push({
       name: 'film-movie',
       params: {
-        step: id
+        id
       }
     })
   }
