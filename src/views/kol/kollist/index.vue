@@ -34,7 +34,7 @@
             <RadioGroup  v-model="area" class="item-radio-top">
               <Radio :disabled="acount==2" @click.native="areabox(false)" class="check-item form-item-first" :label="0">不限</Radio>
               <Tooltip trigger="hover"  content="content">
-              <Radio :disabled="true" @click.native="areabox(true)" class="check-item" :label='1'>指定区域</Radio>
+              <Radio :disabled="true" class="check-item" :label='1'>指定区域</Radio>
               <div slot="content">
                     <span>免费用户暂不支持筛选</span>
                 </div>
