@@ -313,7 +313,7 @@ export default class App extends ViewBase {
     this.$router.push({
       name: 'film-movie',
       params: {
-        step: id
+        id
       }
     })
   }
@@ -660,6 +660,7 @@ export default class App extends ViewBase {
     color: #fff;
     width: 80px;
     height: 22px;
+    max-width: 150px;
     line-height: 20px;
     border-radius: 20px;
   }

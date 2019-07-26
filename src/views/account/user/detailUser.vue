@@ -183,7 +183,7 @@ export default class Main extends ViewBase {
   }
 
   moreList() {
-    this.$router.push({ name: 'account-user-detail-log', params: {id: this.userId}})
+    this.$router.push({ name: 'account-user-log', params: {id: this.userId}})
   }
   goBack() {
     this.$router.push({ name: 'account-user' })
