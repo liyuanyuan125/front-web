@@ -462,18 +462,22 @@ export async function plans(query: any) {
   export async function cinemasReport(id: string = '', query: any = {}) {
     const res = await get(`/xadvert/third-plans/${id}/report/cinemas`, query)
     return res
-    // return await mockGet(id, {
-    //     'items|10': [
-    //         {
-    //             cinemaId: tid,
-    //             name: title20,
-    //             viewCount: tid,
-    //             scheduleCount: tid,
-    //             cost: tid
-    //         }
-    //     ],
-    //     totalCount: 50
-    // })
+    return await mockGet(id, {
+        items: null,
+        totalCount: null
+    })
+    return await mockGet(id, {
+        'items|10': [
+            {
+                cinemaId: tid,
+                name: title20,
+                viewCount: tid,
+                scheduleCount: tid,
+                cost: tid
+            }
+        ],
+        totalCount: 50
+    })
 }
 
 /**
@@ -485,6 +489,10 @@ export async function plans(query: any) {
 export async function citiesReport(id: string = '', query: any = {}) {
     const res = await get(`/xadvert/third-plans/${id}/report/cities`, query)
     return res
+    return await mockGet(id, {
+        items: null,
+        totalCount: null
+    })
     // return await mockGet(id, {
     //     'items|10': [
     //         {
@@ -683,299 +691,310 @@ export async function popPlans(data: any) {
  export async function getPlansReport(id: any) {
     const res = await get(`/xadvert/third-plans/${id}/report`)
     return res
-    // return await mockGet(id, {
-    //   plan: {
-    //     id: 39,
-    //     name: '234gg',
-    //     beginDate: 20190620,
-    //     endDate: 20190626,
-    //     cycle: 7,
-    //     videoName: '广告片1',
-    //     specification: 15,
-    //     status: 'ONDRAFT'
-    //   },
-    //   report: {
-    //     viewCount: 97200,
-    //     scheduleCount: 6000,
-    //     cost: 25148181792,
-    //     dates: [{
-    //         date: 20190101,
-    //         viewCount: 32400,
-    //         scheduleCount: 2000,
-    //         cost: 8382727264
-    //       },
-    //       {
-    //         date: 20190102,
-    //         viewCount: 22400,
-    //         scheduleCount: 3000,
-    //         cost: 6382727264
-    //       },
-    //       {
-    //         date: 20190103,
-    //         viewCount: 12400,
-    //         scheduleCount: 1000,
-    //         cost: 5382727264
-    //       }
-    //     ],
-    //     lastModifyTime: 1547178378340
-    //   },
-    //   'movies|12': [{
-    //       movieId: tid,
-    //       name: title20,
-    //       poster: 'http://img21.mtime.cn/mt/2012/02/17/102411.25247175_1280X720X2.jpg',
-    //       release: 20120217,
-    //       types: [
-    //         'Kids',
-    //         'Thriller'
-    //       ],
-    //       score: 10,
-    //       userPortrait: {
-    //         male: 1,
-    //         female: 22,
-    //         ages: [
-    //             {
-    //                 value: '10',
-    //                 key: '0～20'
-    //             },
-    //             {
-    //                 value: '10',
-    //                 key: '20～24'
-    //             },
-    //             {
-    //                 value: '20',
-    //                 key: '25～29'
-    //             },
-    //             {
-    //                 value: '30',
-    //                 key: '30～34'
-    //             },
-    //             {
-    //                 value: '20',
-    //                 key: '35～39'
-    //             },
-    //             {
-    //                 value: '10',
-    //                 key: '40＋'
-    //             }
-    //         ]
-    //       },
-    //       viewCount: 32400,
-    //       viewRate: '33.33',
-    //       scheduleCount: 2000
-    //     }
-    //   ],
-    //   'cinemas|3': [{
-    //       cinemaId: tid,
-    //       name: title20,
-    //       viewRate: tid,
-    //       scheduleRate: tid,
-    //       costRate: tid
-    //     }
-    //   ],
-    //   user: {
-    //     male: '55',
-    //     female: '45',
-    //     ages: [{
-    //         v: '30',
-    //         k: '30岁以下'
-    //       },
-    //       {
-    //         v: '70',
-    //         k: '30岁以上'
-    //       }
-    //     ],
-    //     cities: [{
-    //         v: '10',
-    //         k: '北京'
-    //       },
-    //       {
-    //         v: '101',
-    //         k: '上海'
-    //       }
-    //     ],
-    //     grades: [{
-    //         v: '30',
-    //         k: 'first-tier'
-    //       },
-    //       {
-    //         v: '40',
-    //         k: 'second-tier'
-    //       }
-    //     ]
-    //   },
-    //   gradeCodes: [
-    //         {
-    //             text: '新一线城市',
-    //             key: 'new-first-tier'
-    //         },
-    //         {
-    //             text: '一线城市',
-    //             key: 'first-tier'
-    //         },
-    //         {
-    //             text: '二线城市',
-    //             key: 'second-tier'
-    //         },
-    //         {
-    //             text: '三线城市',
-    //             key: 'third-tier'
-    //         },
-    //         {
-    //             text: '四线城市',
-    //             key: 'four-tier'
-    //         },
-    //         {
-    //             text: '五线城市',
-    //             key: 'five-tier'
-    //         }
-    //     ],
-    //   planStatus: [
-    //         {
-    //             text: '未知',
-    //             key: 'UNKNOWN'
-    //         },
-    //         {
-    //             text: '草稿',
-    //             key: 'ONDRAFT'
-    //         },
-    //         {
-    //             text: '待审核',
-    //             key: 'UNAPPROVE'
-    //         },
-    //         {
-    //             text: '待确认',
-    //             key: 'UNCONFIRM'
-    //         },
-    //         {
-    //             text: '待支付',
-    //             key: 'UNPAY'
-    //         },
-    //         {
-    //             text: '已支付',
-    //             key: 'BEPAY'
-    //         },
-    //         {
-    //             text: '接单中',
-    //             key: 'BEORDER'
-    //         },
-    //         {
-    //             text: '待执行',
-    //             key: 'UNEXECUTE'
-    //         },
-    //         {
-    //             text: '执行中',
-    //             key: 'ONEXECUTE'
-    //         },
-    //         {
-    //             text: '待结算',
-    //             key: 'UNSETTLEMENT'
-    //         },
-    //         {
-    //             text: '结算中',
-    //             key: 'SETTLEMENT'
-    //         },
-    //         {
-    //             text: '已完成',
-    //             key: 'FINISH'
-    //         },
-    //         {
-    //             text: '已失效',
-    //             key: 'INVALID'
-    //         }
-    //     ],
-    //   movieTypes: [
-    //         {
-    //             text: '儿童',
-    //             key: 'Kids'
-    //         },
-    //         {
-    //             text: '历史',
-    //             key: 'History'
-    //         },
-    //         {
-    //             text: '纪录片',
-    //             key: 'Documentary'
-    //         },
-    //         {
-    //             text: '战争',
-    //             key: 'War'
-    //         },
-    //         {
-    //             text: '戏曲',
-    //             key: 'Opera'
-    //         },
-    //         {
-    //             text: '音乐',
-    //             key: 'Music'
-    //         },
-    //         {
-    //             text: '歌舞',
-    //             key: 'Musical'
-    //         },
-    //         {
-    //             text: '犯罪',
-    //             key: 'Crime'
-    //         },
-    //         {
-    //             text: '传记',
-    //             key: 'Biography'
-    //         },
-    //         {
-    //             text: '青春',
-    //             key: 'Youth'
-    //         },
-    //         {
-    //             text: '奇幻',
-    //             key: 'Fantasy'
-    //         },
-    //         {
-    //             text: '短片',
-    //             key: 'Short'
-    //         },
-    //         {
-    //             text: '惊悚',
-    //             key: 'Thriller'
-    //         },
-    //         {
-    //             text: '冒险',
-    //             key: 'Adventure'
-    //         },
-    //         {
-    //             text: '科幻',
-    //             key: 'Sci-Fi'
-    //         },
-    //         {
-    //             text: '动作',
-    //             key: 'Action'
-    //         },
-    //         {
-    //             text: '家庭',
-    //             key: 'Family'
-    //         },
-    //         {
-    //             text: '动画',
-    //             key: 'Animation'
-    //         },
-    //         {
-    //             text: '励志',
-    //             key: 'Encouragement'
-    //         },
-    //         {
-    //             text: '喜剧',
-    //             key: 'Comedy'
-    //         },
-    //         {
-    //             text: '悬疑',
-    //             key: 'Mystery'
-    //         },
-    //         {
-    //             text: '爱情',
-    //             key: 'Romance'
-    //         },
-    //         {
-    //             text: '剧情',
-    //             key: 'Drama'
-    //         }
-    //     ]
-    // })
+    return await mockGet(id, {
+        plan: null,
+        report: null,
+        movies: null,
+        cinemas: null,
+        user: null,
+        gradeCodes: null,
+        planStatus: null,
+        movieTypes: null,
+    })
+
+    return await mockGet(id, {
+      plan: {
+        id: 39,
+        name: '234gg',
+        beginDate: 20190620,
+        endDate: 20190626,
+        cycle: 7,
+        videoName: '广告片1',
+        specification: 15,
+        status: 'ONDRAFT'
+      },
+      report: {
+        viewCount: 97200,
+        scheduleCount: 6000,
+        cost: 25148181792,
+        dates: [{
+            date: 20190101,
+            viewCount: 32400,
+            scheduleCount: 2000,
+            cost: 8382727264
+          },
+          {
+            date: 20190102,
+            viewCount: 22400,
+            scheduleCount: 3000,
+            cost: 6382727264
+          },
+          {
+            date: 20190103,
+            viewCount: 12400,
+            scheduleCount: 1000,
+            cost: 5382727264
+          }
+        ],
+        lastModifyTime: 1547178378340
+      },
+      'movies|12': [{
+          movieId: tid,
+          name: title20,
+          poster: 'http://img21.mtime.cn/mt/2012/02/17/102411.25247175_1280X720X2.jpg',
+          release: 20120217,
+          types: [
+            'Kids',
+            'Thriller'
+          ],
+          score: 10,
+          userPortrait: {
+            male: 1,
+            female: 22,
+            ages: [
+                {
+                    value: '10',
+                    key: '0～20'
+                },
+                {
+                    value: '10',
+                    key: '20～24'
+                },
+                {
+                    value: '20',
+                    key: '25～29'
+                },
+                {
+                    value: '30',
+                    key: '30～34'
+                },
+                {
+                    value: '20',
+                    key: '35～39'
+                },
+                {
+                    value: '10',
+                    key: '40＋'
+                }
+            ]
+          },
+          viewCount: 32400,
+          viewRate: '33.33',
+          scheduleCount: 2000
+        }
+      ],
+      'cinemas|3': [{
+          cinemaId: tid,
+          name: title20,
+          viewRate: tid,
+          scheduleRate: tid,
+          costRate: tid
+        }
+      ],
+      user: {
+        male: '55',
+        female: '45',
+        ages: [{
+            v: '30',
+            k: '30岁以下'
+          },
+          {
+            v: '70',
+            k: '30岁以上'
+          }
+        ],
+        cities: [{
+            v: '10',
+            k: '北京'
+          },
+          {
+            v: '101',
+            k: '上海'
+          }
+        ],
+        grades: [{
+            v: '30',
+            k: 'first-tier'
+          },
+          {
+            v: '40',
+            k: 'second-tier'
+          }
+        ]
+      },
+      gradeCodes: [
+            {
+                text: '新一线城市',
+                key: 'new-first-tier'
+            },
+            {
+                text: '一线城市',
+                key: 'first-tier'
+            },
+            {
+                text: '二线城市',
+                key: 'second-tier'
+            },
+            {
+                text: '三线城市',
+                key: 'third-tier'
+            },
+            {
+                text: '四线城市',
+                key: 'four-tier'
+            },
+            {
+                text: '五线城市',
+                key: 'five-tier'
+            }
+        ],
+      planStatus: [
+            {
+                text: '未知',
+                key: 'UNKNOWN'
+            },
+            {
+                text: '草稿',
+                key: 'ONDRAFT'
+            },
+            {
+                text: '待审核',
+                key: 'UNAPPROVE'
+            },
+            {
+                text: '待确认',
+                key: 'UNCONFIRM'
+            },
+            {
+                text: '待支付',
+                key: 'UNPAY'
+            },
+            {
+                text: '已支付',
+                key: 'BEPAY'
+            },
+            {
+                text: '接单中',
+                key: 'BEORDER'
+            },
+            {
+                text: '待执行',
+                key: 'UNEXECUTE'
+            },
+            {
+                text: '执行中',
+                key: 'ONEXECUTE'
+            },
+            {
+                text: '待结算',
+                key: 'UNSETTLEMENT'
+            },
+            {
+                text: '结算中',
+                key: 'SETTLEMENT'
+            },
+            {
+                text: '已完成',
+                key: 'FINISH'
+            },
+            {
+                text: '已失效',
+                key: 'INVALID'
+            }
+        ],
+      movieTypes: [
+            {
+                text: '儿童',
+                key: 'Kids'
+            },
+            {
+                text: '历史',
+                key: 'History'
+            },
+            {
+                text: '纪录片',
+                key: 'Documentary'
+            },
+            {
+                text: '战争',
+                key: 'War'
+            },
+            {
+                text: '戏曲',
+                key: 'Opera'
+            },
+            {
+                text: '音乐',
+                key: 'Music'
+            },
+            {
+                text: '歌舞',
+                key: 'Musical'
+            },
+            {
+                text: '犯罪',
+                key: 'Crime'
+            },
+            {
+                text: '传记',
+                key: 'Biography'
+            },
+            {
+                text: '青春',
+                key: 'Youth'
+            },
+            {
+                text: '奇幻',
+                key: 'Fantasy'
+            },
+            {
+                text: '短片',
+                key: 'Short'
+            },
+            {
+                text: '惊悚',
+                key: 'Thriller'
+            },
+            {
+                text: '冒险',
+                key: 'Adventure'
+            },
+            {
+                text: '科幻',
+                key: 'Sci-Fi'
+            },
+            {
+                text: '动作',
+                key: 'Action'
+            },
+            {
+                text: '家庭',
+                key: 'Family'
+            },
+            {
+                text: '动画',
+                key: 'Animation'
+            },
+            {
+                text: '励志',
+                key: 'Encouragement'
+            },
+            {
+                text: '喜剧',
+                key: 'Comedy'
+            },
+            {
+                text: '悬疑',
+                key: 'Mystery'
+            },
+            {
+                text: '爱情',
+                key: 'Romance'
+            },
+            {
+                text: '剧情',
+                key: 'Drama'
+            }
+        ]
+    })
   }

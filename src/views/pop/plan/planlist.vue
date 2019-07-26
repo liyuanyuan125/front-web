@@ -157,7 +157,7 @@
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
-import { formatTimes, formatYell, formatNumber } from '@/util/validateRules'
+import { formatTimes, formatNumber } from '@/util/validateRules'
 import {
   planList,
   delCheckPlanList,
@@ -252,10 +252,6 @@ export default class Plan extends ViewBase {
 
   get formatTimes() {
     return formatTimes
-  }
-
-  get formatYell() {
-    return formatYell
   }
 
   get formatNumber() {

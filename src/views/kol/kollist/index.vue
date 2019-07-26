@@ -34,7 +34,7 @@
             <RadioGroup  v-model="area" class="item-radio-top">
               <Radio :disabled="acount==2" @click.native="areabox(false)" class="check-item form-item-first" :label="0">不限</Radio>
               <Tooltip trigger="hover"  content="content">
-              <Radio :disabled="true" @click.native="areabox(true)" class="check-item" :label='1'>指定区域</Radio>
+              <Radio :disabled="true" class="check-item" :label='1'>指定区域</Radio>
               <div slot="content">
                     <span>免费用户暂不支持筛选</span>
                 </div>
@@ -125,12 +125,12 @@
             <div>
               <p class="flans-box" style="width: 80px">
                 <span>男性：</span>
-                <span v-if="row.maleFans">{{formatnums(row.maleFans, '%')}}</span>
+                <span v-if="row.maleFans">{{formatnums(row.maleFans/100, '%')}}</span>
                 <span v-else>-</span>
               </p>
               <p class="flans-box" style="width: 80px">
                 <span>女性：</span>
-                <span v-if="row.femaleFans">{{formatnums(row.femaleFans, '%')}}</span>
+                <span v-if="row.femaleFans">{{formatnums(row.femaleFans/100, '%')}}</span>
                 <span v-else>-</span>
               </p>
               <div>

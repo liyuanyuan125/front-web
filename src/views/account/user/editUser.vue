@@ -138,7 +138,7 @@ export default class Main extends ViewBase {
         email: data.email,
         contactName: data.name,
         mobile: data.mobile,
-        role: data.role.id
+        role: data.role ? data.role.id : 0
       }
       this.data = data
       // 禁用启用状态 邮箱不可编辑
@@ -151,7 +151,8 @@ export default class Main extends ViewBase {
       this.customer = data.partners == null ? 0 : data.partners.length
       this.cinemaLen = data.cinemas == null ? 0 : data.cinemas.length
       // tree
-      this.handleSelect(data.role.id)
+      const treeId = data.role ? data.role.id : 0
+      this.handleSelect(treeId)
     } catch (ex) {
       this.handleError(ex)
     }
@@ -202,12 +203,6 @@ export default class Main extends ViewBase {
     this.data.cinemas = val
     this.partnerIds = val.map((item: any) => item.id)
     this.customer = this.cinemaLen = this.partnerIds.length
-    // if (val.length > 0) {
-    //   this.data.partners = val
-    //   this.data.cinemas = val
-    //   this.partnerIds = val.map((item: any) => item.id)
-    //   this.customer = this.cinemaLen = this.partnerIds.length
-    // }
   }
   async handleSelect(id: any) {
     try {

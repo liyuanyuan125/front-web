@@ -62,6 +62,22 @@
               >{{item.text}}</Radio>
             </RadioGroup>
           </FormItem>
+          <FormItem label="" style="width: 100%;" v-if="form.releaseStatus === 2">
+            <RadioGroup
+              class="nav"
+              @on-change="handleChange"
+              v-model="dateSelected"
+              size="large"
+              type="button"
+            >
+              <Radio
+                v-for="(item) in dict.dateSelected"
+                :key="item.key"
+                :disabled="item.disabled"
+                :label="item.key"
+              >{{item.text}}</Radio>
+            </RadioGroup>
+          </FormItem>
           <FormItem label="影片类型：">
             <RadioGroup
               class="nav"
@@ -191,6 +207,9 @@ export default class CooperationFilmList extends ViewBase {
     releaseStatus: 3
   }
 
+  // 即将上映 时间段
+  dateSelected: number = -1
+
   dataList: any[] = []
 
   dict = {
@@ -203,6 +222,17 @@ export default class CooperationFilmList extends ViewBase {
       {
         key: 3,
         text: '正在热映'
+      },
+      {
+        key: 2,
+        text: '即将上映'
+      }
+    ],
+    // 即将上映 时间段
+    dateSelected: [
+      {
+        key: -1,
+        text: '不限'
       },
       {
         key: 4,
@@ -266,22 +296,25 @@ export default class CooperationFilmList extends ViewBase {
     const mockObj = {
       ...this.form
     }
-    if ( mockObj.releaseStatus !== 3 &&  mockObj.releaseStatus !== 0 ) {
-      mockObj.beginDate = dayOffset(0)
-      switch ( mockObj.releaseStatus ) {
-        case 4:
-          mockObj.endDate = dayOffset(+30)
-          break
-        case 5:
-          mockObj.endDate = dayOffset(+90)
-          break
-        case 6:
-          mockObj.endDate = dayOffset(+120)
-          break
-        default:
-          mockObj.endDate = dayOffset(+365)
+    if ( mockObj.releaseStatus !== 3 && mockObj.releaseStatus !== 0 ) {
+      // 即将上映 且 非‘不限’
+      if (mockObj.releaseStatus === 2 && this.dateSelected !== -1) {
+        mockObj.beginDate = dayOffset(+1)
+        switch ( this.dateSelected ) {
+          case 4:
+            mockObj.endDate = dayOffset(+31)
+            break
+          case 5:
+            mockObj.endDate = dayOffset(+91)
+            break
+          case 6:
+            mockObj.endDate = dayOffset(+121)
+            break
+          default:
+            mockObj.endDate = dayOffset(+366)
+        }
       }
-      mockObj.releaseStatus = ''
+      mockObj.releaseStatus = mockObj.releaseStatus === 2 ? mockObj.releaseStatus : ''
     }
     try {
       const {

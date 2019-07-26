@@ -86,23 +86,6 @@ export function formatTimes(value: any) {
   return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
 }
 
-export function formatYell(value: any, flag?: any) {
-  if (!value) {
-    return ''
-  }
-  const date: any = new Date(value)
-  const y = date.getFullYear()
-  let MM = date.getMonth() + 1
-  MM = MM < 10 ? '0' + MM : MM
-  let d = date.getDate()
-  d = d < 10 ? '0' + d : d
-  if (flag) {
-    return y + '-' + MM + '-' + d
-  } else {
-    return y + '/' + MM + '/' + d
-  }
-}
-
 /**
  * 年月日转换时间戳格式
  */
@@ -116,9 +99,13 @@ export function formatTimestamp(val: any) {
 /**
  * 数字格式化保留两位小数每个三位加逗号
  */
-export function formatNumber(num: number) {
+export function formatNumber(num: number, type?: any) {
   if (num != undefined) {
-    return num.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
+    if (type == 2) {
+       return num.toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
+    } else {
+       return num.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
+    }
   }
 }
 
