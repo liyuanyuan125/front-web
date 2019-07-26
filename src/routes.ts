@@ -387,12 +387,13 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主、资源方 - 账户管理 - 查看子用户 - 日志
   {
-    path: '/account/user/detail/log/:id',
-    name: 'account-user-detail-log',
+    path: '/account/user/log/:id',
+    name: 'account-user-log',
     component: () => import('./views/account/user/logList.vue'),
     meta: {
       authKey: 'account-manage.users',
       authAction: 'view',
+      title: '日志',
     }
   },
 
@@ -1657,6 +1658,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       title: '查看详情',
       pageTitle: '对账单详情-鲸娱数据',
     },
+    props: idProps
   },
   // 资源方 - 财务信息 - 对账单管理 - 明细
   {

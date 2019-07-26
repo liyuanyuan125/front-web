@@ -1,14 +1,16 @@
 <template>
-  <div class="home-bg as">
-    <h2 class="layout-nav-title go-back" style='border-bottom: 0;'><span>查看更多操作日志</span>
-      <em @click="goBack">返回上一级</em>
-    </h2>
+  <div>
     <div class="text-rows log-list">
       <p v-for="(item, index) in logList" :key="index">
         <span>{{formatTimes(item.createTime)}}</span>
         <em>{{item.operateDesc}}</em>
       </p>
     </div>
+
+    <div class="btn-center">
+      <Button type="primary" @click="goBack">返回</Button>
+    </div>
+    
   </div>
 </template>
 <script lang="ts">
@@ -40,41 +42,40 @@ export default class Log extends ViewBase {
 }
 </script>
 <style lang="less" scoped>
-.as {
-  background: rgba(255, 255, 255, 0);
-  color: #00202d;
+.btn-center {
+  text-align: center;
 }
-.go-back {
-  position: relative;
-  span {
-    width: 200px;
-    height: 50px;
-    background: rgba(249, 216, 94, 1);
-    border-radius: 25px;
-    display: block;
-    text-align: center;
-    line-height: 50px;
-    font-size: 18px;
-    font-weight: 500;
-    color: rgba(0, 32, 45, 1);
-  }
-  em {
-    position: absolute;
-    right: 20px;
-    top: 10px;
-    cursor: pointer;
-    width: 200px;
-    height: 50px;
-    background: rgba(249, 216, 94, 1);
-    border-radius: 25px;
-    display: block;
-    text-align: center;
-    line-height: 50px;
-    font-size: 18px;
-    font-weight: 500;
-    color: rgba(0, 32, 45, 1);
-  }
-}
+// .go-back {
+//   position: relative;
+//   span {
+//     width: 200px;
+//     height: 50px;
+//     background: rgba(249, 216, 94, 1);
+//     border-radius: 25px;
+//     display: block;
+//     text-align: center;
+//     line-height: 50px;
+//     font-size: 18px;
+//     font-weight: 500;
+//     color: rgba(0, 32, 45, 1);
+//   }
+//   em {
+//     position: absolute;
+//     right: 20px;
+//     top: 10px;
+//     cursor: pointer;
+//     width: 200px;
+//     height: 50px;
+//     background: rgba(249, 216, 94, 1);
+//     border-radius: 25px;
+//     display: block;
+//     text-align: center;
+//     line-height: 50px;
+//     font-size: 18px;
+//     font-weight: 500;
+//     color: rgba(0, 32, 45, 1);
+//   }
+// }
 .log-list {
   color: #444;
   span {

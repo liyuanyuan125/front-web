@@ -28,14 +28,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { toMap } from '@/fn/array'
 import { confirm, toast, info } from '@/ui/modal'
+import { itemList } from '@/api/bill'
 
 @Component
 export default class Main extends ViewBase {
+  @Prop({ type: Number, default: 0}) id!: number
+
   column = [
     { title: '广告片名称', key: 'name' },
     { title: '影片名称', key: 'movieName' },
@@ -47,7 +49,19 @@ export default class Main extends ViewBase {
     { title: '监播文件', key: 'file' },
     { title: '是否结算', key: 'isSetime' },
   ]
-  dataList = []
+  dataList = [
+    {
+      name: 'xxx',
+      movieName: 'xxx',
+      len: 14,
+      startTime: moment(1547864079326).format('YYYY-MM-DD'),
+      endTime: moment(1547864079326).format('YYYY-MM-DD'),
+      person: 100,
+      monery: 8999999,
+      file: 'xxx',
+      isSetime: 'xxx',
+    }
+  ]
 
   columnLog = [
     { title: '操作时间', key: 'name' },
@@ -55,6 +69,18 @@ export default class Main extends ViewBase {
     { title: '操作日志', key: 'len' },
   ]
   dataLog = []
+
+  mounted() {
+    // this.list()
+  }
+
+  async list() {
+    try {
+      const { data } = await itemList(this.id)
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
 }
 </script>
 
