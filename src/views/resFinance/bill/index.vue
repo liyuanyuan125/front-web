@@ -56,8 +56,17 @@
             <Row class='nav-title'>
               <Col span='5'>{{item.cinemaName}}</Col>
               <Col span='14'>{{item.year}}-{{item.month}}</Col>
-              <Col span='3' style='color: #DA6C70;float: right;text-align: center;'>待审核</Col>
-    
+              <Col span='3' style='color: #DA6C70;float: right;text-align: center;'>
+                <span v-if='item.billStatus == 1 && item.invoiceStatus == 0 && item.payStatus == 0'>待平台确认</span>
+                <span v-if='item.billStatus == 2 && item.invoiceStatus == 0 && item.payStatus == 0'>待审核</span>
+                <span v-if='item.billStatus == 3 && item.invoiceStatus == 0 && item.payStatus == 0'>审核失败</span>
+                <span v-if='item.billStatus == 4 && item.invoiceStatus == 1 && item.payStatus == 1'>待结算</span>
+                <span v-if='item.billStatus == 4 && item.invoiceStatus == 1 && item.payStatus == 2'>已结算</span>
+                <span v-if='item.billStatus == 4 && item.invoiceStatus == 2 && item.payStatus == 1'>待登记发票</span>
+                <span v-if='item.billStatus == 4 && item.invoiceStatus == 2 && item.payStatus == 2'>已结算,待登记发票</span>
+                <span v-if='item.billStatus == 4 && item.invoiceStatus == 3 && item.payStatus == 1'>待结算</span>
+                <span v-if='item.billStatus == 4 && item.invoiceStatus == 3 && item.payStatus == 2'>已结算</span>
+              </Col>
             </Row>
             <Row class="li-col">
               <Col :span="7" style='border-right: 1px solid #fff;'>
@@ -73,6 +82,7 @@
                 <p class='order_sma'>曝光人次 / 千人次</p>
               </Col>
               <Col :span="4">
+              <!-- <span v-if='item.billStatus == 2 && item.invoiceStatus == 0 && item.payStatus == 0'>审核账单</span> -->
                 <router-link
                   class="status-btn"
                   style='line-height: 65px;'
@@ -147,7 +157,7 @@ export default class Main extends ViewBase {
   billStatusList: any = [] // 账单状态
   invoiceStatusList: any = [] // 发票状态
   payStatusList: any = [] // 付款状态
-
+  // 选中的id列表
   orderids: any = []
   // 年份
   years: any = [
