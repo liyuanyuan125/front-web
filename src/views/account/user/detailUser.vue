@@ -141,10 +141,10 @@ export default class Main extends ViewBase {
       const { data } = await userDetail({ id, systemCode })
       this.data = data
       this.permTreeModal = {
-        menu: data.menu,
+        menu: data.menu || {},
         perms: (data.role && data.role.perms) || []
       }
-      this.roleName = data.role.name
+      this.roleName = data.role ? data.role.name : ''
       this.statusCode = data.systems.filter((item: any) => item.code == systemCode)[0]
       this.customer = this.data.partners == null ? 0 : this.data.partners.length
       this.cinemaLen = this.data.cinemas == null ? 0 : this.data.cinemas.length
