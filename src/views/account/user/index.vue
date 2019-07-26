@@ -27,7 +27,10 @@
     <Table ref="selection" class="table-jydata"  :columns="columns" :data="data"  @on-selection-change="singleSelect"  @on-select-all="selectAll"
 >
       <template slot-scope="{row, index}" slot="roleId">
-        <span>{{roleList(row.roleId)}}</span>
+        <span>{{roleList(row.roleId) || '-'}}</span>
+      </template>
+      <template slot="mobile" slot-scope="{row: {mobile}}">
+        <span>{{mobile || '-'}}</span>
       </template>
       <template slot-scope="{row, index}" slot="statusCode">
         <span v-if="row.statusCode === 1" class="aneble">已启用</span>
@@ -108,7 +111,7 @@ export default class Main extends ViewBase {
     { type: 'selection', width: 30,  align: 'center' },
     { title: '联系人', key: 'name', minWidth: 100},
     { title: '登录邮箱', minWidth: 140,  key: 'email'},
-    { title: '手机号码', minWidth: 110, key: 'mobile',  },
+    { title: '手机号码', minWidth: 110, slot: 'mobile',  },
     { title: '权限角色', slot: 'roleId', minWidth: 120 },
     { title: '状态',  slot: 'statusCode', minWidth: 40 },
     { title: '上次登录时间',  slot: 'lastLoginTime', minWidth: 140 },

@@ -1,10 +1,5 @@
 <template>
   <div class="page home-bg as">
-    <!-- <h2 class="layout-nav-title">用户管理 > 查看子用户</h2> -->
-    <!-- <div class="layout-nav-title">
-       <router-link :to="{name: 'account-user'}" >用户管理</router-link> > 
-       <span>查看子用户</span>
-    </div> -->
     <div class='bgs'>
       <h3 class="layout-title tits">账号信息</h3>
       <div class="text-rows">
@@ -74,10 +69,8 @@
         </FormItem>
       </Form>
     </div>
-    <div class='bgs'>
-      <h3 class="layout-title tits more-list">操作日志
-      <em @click="moreList">更多...</em>
-      </h3>
+    <div class='bgs' v-if="logList.length > 0">
+      <h3 class="layout-title tits more-list">操作日志<em @click="moreList">更多...</em></h3>
       <div class="text-rows log-list">
         <p v-for="(item, index) in logList" :key="index">
           <span>{{formatTimes(item.createTime)}}</span>
@@ -140,10 +133,12 @@ export default class Main extends ViewBase {
     try {
       const { data } = await userDetail({ id, systemCode })
       this.data = data
-      this.permTreeModal = {
+      const permDate = {
         menu: data.menu || {},
         perms: (data.role && data.role.perms) || []
       }
+      this.permTreeModal = (data.menu && data.role) ? permDate : null
+
       this.roleName = data.role ? data.role.name : ''
       this.statusCode = data.systems.filter((item: any) => item.code == systemCode)[0]
       this.customer = this.data.partners == null ? 0 : this.data.partners.length
@@ -244,6 +239,9 @@ export default class Main extends ViewBase {
   display: inline-block;
   width: 105px;
   color: #3c5b6a;
+}
+/deep/ .ivu-tree-empty {
+  padding-top: 5px;
 }
 </style>
 
