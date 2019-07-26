@@ -313,7 +313,7 @@ export default class App extends ViewBase {
     this.$router.push({
       name: 'film-movie',
       params: {
-        step: id
+        id
       }
     })
   }
@@ -655,12 +655,12 @@ export default class App extends ViewBase {
   .ageitem-box {
     margin-left: 8px;
     display: inline-block;
-    padding: 0 24px;
     background: #00202d;
     text-align: center;
     color: #fff;
     width: 80px;
     height: 22px;
+    max-width: 150px;
     line-height: 20px;
     border-radius: 20px;
   }

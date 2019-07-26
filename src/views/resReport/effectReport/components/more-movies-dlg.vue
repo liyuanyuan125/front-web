@@ -37,7 +37,6 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinemasReport } from '@/api/effectReport'
 
 @Component({
   components: {}
@@ -96,23 +95,7 @@ export default class MoreMoviesDlg extends ViewBase {
   }
 
   async search() {
-    // const id = (this.id).toString() || ''
-    // try {
-    //   const {
-    //     data: { items, totalCount }
-    //   } = await cinemasReport(id, {...this.form})
-    //   this.data = items.map((it: any) => {
-    //     return {
-    //       name: it.name,
-    //       viewCount: it.viewCount,
-    //       scheduleCount: it.scheduleCount,
-    //       cost: it.cost
-    //     }
-    //   })
-    //   this.showDlg = true
-    // } catch (ex) {
-    //   this.handleError(ex)
-    // }
+    // 数据一次性返回前端，无需再次请求
   }
 
   exportData() {
@@ -128,13 +111,11 @@ export default class MoreMoviesDlg extends ViewBase {
   // 每页数
   sizeChangeHandle(val: any) {
     this.form.pageIndex = val
-    // this.search()
   }
 
   // 当前页
   currentChangeHandle(val: any) {
     this.form.pageSize = val
-    // this.search()
   }
 
   cancel() {

@@ -91,6 +91,7 @@ export default class UserCard extends Vue {
       femalePercent: this.data.sex.female
     }
   }
+
   get cityLevel() {
     return {
       dict1: [],
@@ -130,7 +131,9 @@ export default class UserCard extends Vue {
   }
 
   get citysData() {
-    return this.data.cityData
+    return this.data.cityData.length > 10 ? this.data.cityData.filter((it: any, index: number) => {
+      return index < 10
+    }) : this.data.cityData
   }
 
   init() {
