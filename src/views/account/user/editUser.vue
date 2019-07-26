@@ -302,6 +302,9 @@ export default class Main extends ViewBase {
     border-radius: 25px;
   }
 }
+/deep/ .ivu-tree-empty {
+  padding-top: 5px;
+}
 </style>
 
 
