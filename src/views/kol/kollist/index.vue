@@ -125,12 +125,12 @@
             <div>
               <p class="flans-box" style="width: 80px">
                 <span>男性：</span>
-                <span v-if="row.maleFans">{{formatnums(row.maleFans, '%')}}</span>
+                <span v-if="row.maleFans">{{formatnums(row.maleFans/100, '%')}}</span>
                 <span v-else>-</span>
               </p>
               <p class="flans-box" style="width: 80px">
                 <span>女性：</span>
-                <span v-if="row.femaleFans">{{formatnums(row.femaleFans, '%')}}</span>
+                <span v-if="row.femaleFans">{{formatnums(row.femaleFans/100, '%')}}</span>
                 <span v-else>-</span>
               </p>
               <div>
