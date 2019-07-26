@@ -58,7 +58,7 @@
         </Row>
       </div>
     </div>
-    <div class='bgs'>
+    <div class='bgs' v-if="data.role">
       <h3 class="layout-title tits">账号权限</h3>
       <Form  :label-width="120"  class="edit-input forms">
         <FormItem label="权限角色" >
