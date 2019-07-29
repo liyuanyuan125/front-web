@@ -21,18 +21,15 @@
          <Button type="primary" @click="searchList" class="select-btn">搜索广告单</Button>
       </div>
 
-      <!-- <Tabs @on-click="handleTabs">
-        <TabPane v-for="tab in statusList" :key="tab.key" v-if="tab.key != 0 && tab.key != 8" 
-        :label="handleJoin(tab)"></TabPane>
-      </Tabs> -->
       <Tabs v-model="form.status" > 
         <TabPane :label="orderCount.waiting ? `待接单(${orderCount.waiting})` : '待接单'"  name="1" ></TabPane>
         <TabPane :label="orderCount.unexecute ? `待执行(${orderCount.unexecute})` : '待执行'"  name="2"></TabPane>
         <TabPane :label="orderCount.beexecute ? `执行中(${orderCount.beexecute})` : '执行中'"  name="3"></TabPane>
-        <TabPane :label="orderCount.besettlement ? `待结算(${orderCount.besettlement})` : '待结算' "  name="6" ></TabPane>
+        <!-- <TabPane :label="orderCount.besettlement ? `待结算(${orderCount.besettlement})` : '待结算' "  name="6" ></TabPane> -->
         <TabPane label="已拒绝"  name="4" ></TabPane>
         <TabPane label="已失效"  name="5" ></TabPane>
         <TabPane label="已完成"  name="7" ></TabPane>
+        <TabPane label="已关闭"  name="8" ></TabPane>
       </Tabs>
       <!-- v-auth="'adordermanage.order#view'" -->
       <div class="spin-show-parent">
@@ -41,7 +38,13 @@
             <li v-for='(it,index) in itemlist' :key='index'>
               <div class="table-header-title  flex-box">
                 <p><label>投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
-                <p><label>广告收益(元)</label><em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em></p>
+                <p>
+                  <Tooltip placement="bottom" max-width="200" class="text-cursor"
+                   content="根据影院近60天票房情况预算得出；最终收益以实际投放期间产生的曝光数据计算为准；为保证您的收益，请在投放结束后48小时内向国家电影专资办上报您的影院票房数据">
+                    <label>预估广告收益(元)</label>
+                    <em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em><Icon type="md-help" />
+                  </Tooltip> 
+                </p>
               </div>
               <Row class="table-content-list" type="flex" justify="center" align="middle">
                 <Col span="14">
@@ -65,9 +68,15 @@
                   </div>
                   <div class="target-cinema">
                     <label>目标影片</label>
+                    <!-- 当用户的投放模式为通投时，此项数据显示为【所有影片 （?）】 -->
                     <div>
-                      <span  v-if='it.targetMovies.length > 0' v-for='item in it.targetMovies'>《{{item.movieName}}》</span>
-                      <span v-if='it.targetMovies.length == 0'>暂无 </span>
+                      <p v-if='it.targetMovies.length > 0'>
+                        <span v-if="it.movieCustom == 0" v-for='item in (it.targetMovies || [])'>《{{item.movieName}}》</span>
+                        <Tooltip v-else placement="bottom" max-width="200" class="text-cursor" content="“影片不限，请在投放周期内所有影片前安排上刊">
+                          所有影片<Icon type="md-help" />
+                         </Tooltip>
+                      </p>
+                      <span v-else>暂无 </span>
                     </div>
                   </div>
 
@@ -117,11 +126,8 @@ import dlgRejec from './dlgReject.vue'
 import targetDlg from './targetDlg.vue'
 import refuseDlg from './refuseDlg.vue'
 
-// const timeFormat = 'YYYY-MM-DD'
-
 @Component({
   components: {
-    // numAdd,
     dlgRejec,
     targetDlg,
     refuseDlg
@@ -167,6 +173,9 @@ export default class Main extends ViewBase {
     visible: false
   }
 
+  // 通投
+  movieCustomList: any[] = []
+
   get formatConversion() {
     return formatConversion
   }
@@ -211,13 +220,6 @@ export default class Main extends ViewBase {
     this.refuseShow = false
     this.orderList()
   }
-  // handleJoin(tab: any) {
-  //   if ('num' in tab) {
-  //     return `${tab.text}(${tab.num})`
-  //   } else {
-  //     return tab.text
-  //   }
-  // }
 
   async orderList() {
     this.spinShow = true
@@ -227,7 +229,8 @@ export default class Main extends ViewBase {
           totalCount,
           statusList,
           orderCount,
-          items
+          items,
+          movieCustomList
         }
       } = await queryOrderList({
         pageIndex: this.pageIndex,
@@ -247,28 +250,13 @@ export default class Main extends ViewBase {
       })
       // 处理订单统计
       this.orderCount = orderCount || {}
-      // const order = orderCount
-      // statusList.map( (item: any) => {
-      //   if (item.text == '待接单') {
-      //     item.num = order.waiting
-      //   } else if (item.text == '待执行') {
-      //     item.num = order.unexecute
-      //   } else if (item.text == '执行中') {
-      //     item.num = order.beexecute
-      //   } else if (item.text == '待结算') {
-      //     item.num = order.besettlement
-      //   }
-      // })
       this.statusList = statusList
+      this.movieCustomList = movieCustomList || []
     } catch (ex) {
       this.spinShow = false
       this.handleError(ex)
     }
   }
-
-  // handleTabs(id: number) {
-  //   this.form.status = id + 1
-  // }
 
   // 确定接单
   editReject(id: any) {
@@ -318,6 +306,14 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/views/kol/less/common.less';
+
+/deep/ .ivu-icon-md-help::before {
+  position: relative;
+  top: -2px;
+}
+.text-cursor {
+  cursor: pointer;
+}
 .spin-show-parent {
   position: relative;
 }
