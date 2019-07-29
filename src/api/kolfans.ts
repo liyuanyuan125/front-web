@@ -186,78 +186,118 @@ export async function fanslist(id: string = '' , query: any) {
   return res
   return await mockGet({}, {
     item: {
-      totalCount: 83724,
-      genders: [
-        {
-          gender: 1,
-          count: tid,
-        },
-        {
-          gender: 2,
-          count: tid,
-        }
-      ],
-      ages: [
-        {
-          v: tid,
-          k: '18岁以下'
-        },
-        {
-          v: tid,
-          k: '18-25岁'
-        },
-        {
-          v: tid,
-          k: '26-30岁'
-        },
-        {
-          v: tid,
-          k: '31-40岁'
-        },
-        {
-          v: tid,
-          k: '40岁以上'
-        }
-      ],
-      cities: [
-        {
-          v: tid,
-          k: '广州'
-        },
-        {
-          v: tid,
-          k: '北京'
-        }
-      ],
-      provinces: [
-        {
-          v: tid,
-          k: '广东'
-        },
-        {
-          v: tid,
-          k: '江苏'
-        },
-        {
-          v: tid,
-          k: '浙江'
-        }
-      ]
+      id: null,
+      kolId: 0,
+      channelCode: null,
+      totalCount: 30380000,
+      femaleCount: 20658400,
+      maleCount: 9721600,
+      activeCount: 0,
+      dehydrationCount: 0,
+      fans: [{
+        k: 'female',
+        v: 0,
+        r: 6800
+      }, {
+        k: 'male',
+        v: 0,
+        r: 3200
+      }],
+      comments: null,
+      ages: [{
+        k: ' ≤17',
+        v: 0,
+        r: 2294
+      }, {
+        k: '18-24',
+        v: 0,
+        r: 4051
+      }, {
+        k: '25-29',
+        v: 0,
+        r: 2220
+      }, {
+        k: '30-39',
+        v: 0,
+        r: 1323
+      }, {
+        k: '40-49',
+        v: 0,
+        r: 50
+      }, {
+        k: '≥50',
+        v: 0,
+        r: 62
+      }],
+      provinces: [{
+        id: 29,
+        name: '广东省',
+        count: 0,
+        rate: tid
+      }, {
+        id: 21,
+        name: '江苏省',
+        count: 0,
+        rate: tid
+      }, {
+        id: 34,
+        name: '山东省',
+        count: 0,
+        rate: tid
+      }, ],
+      cities: [{
+        id: 290,
+        name: '北京市',
+        count: 0,
+        rate: tid
+      }, {
+        id: 430,
+        name: '上海市',
+        count: 0,
+        rate: tid
+      }, {
+        id: 353,
+        name: '广州市',
+        count: 0,
+        rate: tid
+      }],
+      updateTime: null
     },
-    genders: [
-      {
-        key: 0,
-        text: '未知'
-      },
-      {
-        key: 1,
-        text: '男'
-      },
-      {
-        key: 2,
-        text: '女'
-      }
-    ]
+    ageList: [{
+      controlStatus: 1,
+      text: '17岁及以下',
+      key: '0-17'
+    }, {
+      controlStatus: 1,
+      text: '18-24',
+      key: '18-24'
+    }, {
+      controlStatus: 1,
+      text: '25-29',
+      key: '25-29'
+    }, {
+      controlStatus: 1,
+      text: '30-39',
+      key: '30-39'
+    }, {
+      controlStatus: 1,
+      text: '40-49',
+      key: '40-49'
+    }, {
+      controlStatus: 1,
+      text: '50+以上',
+      key: '50+'
+    }],
+    channelList: [{
+      text: '微博',
+      key: 'weibo'
+    }, {
+      text: '微信',
+      key: 'wechat'
+    }, {
+      text: '抖音',
+      key: 'douyin'
+    }]
   })
 }
 

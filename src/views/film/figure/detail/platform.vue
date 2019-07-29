@@ -188,9 +188,8 @@ export default class Main extends ViewBase {
   }
 
   endDate() {
-    return ( this.form.dayRangesKey == 'yesterday' )
-    ? moment(new Date()).add(-1, 'days').format(timeFormat)
-    : moment(new Date()).format(timeFormat)
+    // 不包含当天
+    return moment(new Date()).add(-1, 'days').format(timeFormat)
   }
 
   async handleChange() {

@@ -7,7 +7,10 @@
         </em>
       </h4>
       <div class="pane-body">
-        <div class="user-content-wp">
+        <div class="nodata-wp" v-if="citysData.length === 0 && !sex.femalePercent && !sex.malePercent">
+          暂无数据
+        </div>
+        <div class="user-content-wp" v-else>
           <div class="left">
             <div class="user-pane-group" style="width: 49.2%; height: 310px">
               <div class="user-pane-head">
@@ -128,9 +131,11 @@ export default class UserCard extends Vue {
   }
 
   get citysData() {
-    return this.data.cityData.length > 10 ? this.data.cityData.filter((it: any, index: number) => {
-      return index < 10
-    }) : this.data.cityData
+    return this.data.cityData.length > 10
+      ? this.data.cityData.filter((it: any, index: number) => {
+          return index < 10
+        })
+      : this.data.cityData
   }
 
   init() {
@@ -179,6 +184,17 @@ export default class UserCard extends Vue {
   }
   .pane-body {
     position: relative;
+  }
+  .nodata-wp {
+    background: rgba(0, 32, 45, 0.6);
+    border-radius: 0 0 5px 5px;
+    padding: 25px;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #999;
   }
   .user-content-wp {
     margin-top: 10px;

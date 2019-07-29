@@ -6,9 +6,25 @@
           <Card class="detailmore-card">
             <div slot="title">
               <Row type="flex" justify="space-between" align="middle">
-                <Col :span="24" style="text-align:right">
+                <Col :span='12' style="color: #fff">
+                  平台
                   <Select
-                    v-model="pageQuery.channelCode"
+                      v-model="pageQuery.channelCode"
+                      placeholder="平台"
+                      filterable
+                      style="max-width:150px; margin-right:10px;"
+                      class="selectedBox"
+                      @on-change="channelChange"
+                    >
+                    <Option
+                        v-for="(option, index) in channelList"
+                        :value="option.key"
+                        :key="index"
+                      >{{option.text}}</Option>
+                  </Select>
+                </Col>
+                <Col :span="12" style="text-align:right; color: #fff">
+                  <!-- <Select
                     placeholder="可选品牌"
                     filterable
                     remote
@@ -23,7 +39,7 @@
                       :value="option.key"
                       :key="index"
                     >{{option.text}}</Option>
-                  </Select>
+                  </Select> -->
                   <!-- <router-link :to="{path: '/figure/detailMoreInfo/matching/'+pageQuery.brandId}"><Button :disabled="pageQuery.brandId === ''"
                         size="small"
                   type="primary">查看匹配度</Button></router-link>-->
@@ -199,7 +215,10 @@ export default class Fans extends ViewBase {
 
   brands = []
 
-  channelList: any = []
+  channelList: any = [{
+    key: 'weibo',
+    text: '微博'
+  }]
 
   async typeChangeHander4(index: number = 0) {
     if (this.chart4.dataList[index].length < 1) {
@@ -214,13 +233,11 @@ export default class Fans extends ViewBase {
    * @param typeIndex 当前类别下标
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
-    const that: any = this
     const id: string = this.$route.params.id || ''
-
     try {
-      const { data } = await fanslist(id, this.pageQuery)
+      const { data } = await fanslist(id, {...this.pageQuery})
 
-      this.channelList = data.channelList ? data.channelList : null
+      this.channelList = data.channelList ? data.channelList : []
 
       const item = data.item || null
       if (!item) {
@@ -301,6 +318,7 @@ export default class Fans extends ViewBase {
     }
   }
 
+  // 可选品牌搜索
   async remoteBrands(query: string) {
     if (query !== '') {
       this.brandsLoading = true
@@ -311,19 +329,23 @@ export default class Fans extends ViewBase {
       }
       try {
         const {
-          data,
-          data: { items }
+          data
         } = await brands({ ...mockObj })
-        const list = items.map((it: any) => {
-          return {
-            value: it.id,
-            label: it.name
-          }
-        })
-        this.brands = list.filter(
-          (it: any) => it.label.toLowerCase().indexOf(query.toLowerCase()) > -1
-        )
-        this.brandsLoading = false
+        const items = data.items || null
+
+        if (items && items.length > 0) {
+          const list = items.map((it: any) => {
+            return {
+              value: it.id,
+              label: it.name
+            }
+          })
+          this.brands = list.filter(
+            (it: any) => it.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+          )
+          this.brandsLoading = false
+          this.initHandler()
+        }
       } catch (ex) {
         this.handleError(ex)
       }
@@ -332,24 +354,12 @@ export default class Fans extends ViewBase {
     }
   }
 
-  async brandsFetch() {
-    const mockObj = {
-      name: 'a',
-      pageIndex: 1,
-      pageSize: 100
-    }
-    try {
-      const { data } = await brands({ ...mockObj })
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
-
   mounted() {
     this.initHandler()
   }
 
   async initHandler() {
+    this.resetData()
     if (this.chart1.dict1.length > 0) {
       this.chart1.dict1.map((item: any, index: number) => {
         this.chart1.dataList.push([])
@@ -385,19 +395,19 @@ export default class Fans extends ViewBase {
   }
 
   resetData() {
-    this.chart1.dataList.forEach((item: any[]) => {
-      item.splice(0, item.length)
-    })
-    this.chart2.dataList.forEach((item: any) => {
-      item.data.splice(0, item.length)
-    })
-    this.chart2.dict3.splice(0, this.chart2.dict3.length)
-    this.chart3.dataList.forEach((item: any[]) => {
-      item.splice(0, item.length)
-    })
-    this.chart4.dataList.forEach((item: any[]) => {
-      item.splice(0, item.length)
-    })
+    this.chart1.dataList = []
+    this.chart2.dataList = []
+    this.chart2.dict3 = []
+    this.chart3.dataList = []
+    this.chart4.dataList = []
+    this.chart1.initDone = false
+    this.chart2.initDone = false
+    this.chart3.initDone = false
+    this.chart4.initDone = false
+  }
+
+  channelChange() {
+    this.initHandler()
   }
 }
 </script>
