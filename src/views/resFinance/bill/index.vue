@@ -49,9 +49,9 @@
               </Col>
             </Col>
          </Row>
-         <!-- <span class='addbutton' style='margin-right: 20px;' @click='all'>批量审核菜单</span> -->
+         <!-- <span class='addbutton' style='margin-right: 20px;' @click='all(0)'>批量审核菜单</span> -->
          <!-- <span class='addbutton'>开票</span> -->
-        <CheckboxGroup v-model='orderids' class='chacks'>
+        <CheckboxGroup v-model='orderids' class='chacks' v-if='this.list.length != 0'>
           <Checkbox  class="list-li" v-for="(item , index) in list" :key = "index" :value="item.id" :label="item.id">
             <Row class='nav-title'>
               <Col span='5'>{{item.cinemaName}}</Col>
@@ -82,7 +82,7 @@
                 <p class='order_sma'>曝光人次 / 千人次</p>
               </Col>
               <Col :span="4">
-              <!-- <span v-if='item.billStatus == 2 && item.invoiceStatus == 0 && item.payStatus == 0'>审核账单</span> -->
+              <!-- <span v-if='item.billStatus == 2 && item.invoiceStatus == 0 && item.payStatus == 0' @click='all(item.id)'>审核账单</span> -->
                 <router-link
                   class="status-btn"
                   style='line-height: 65px;'
@@ -106,7 +106,7 @@
       @on-change="handlepageChange"
       @on-page-size-change="handlePageSize"
     />
-    <reDlg  ref="re"   v-if="reVisible" @done="dlgEditDone"/>
+    <chgDlg  ref="re"   v-if="reVisible" @done="dlgEditDone"/>
   </div>
 </template>
 
@@ -298,11 +298,11 @@ export default class Main extends ViewBase {
     }
   }
 
-  all(id: any , price: any , mark: any) {
+  all(id: any) {
     this.reVisible = true
     this.$nextTick(() => {
       const myThis: any = this
-      myThis.$refs.re.init(id , price , mark)
+      myThis.$refs.re.init(id , this.orderids)
     })
   }
 
