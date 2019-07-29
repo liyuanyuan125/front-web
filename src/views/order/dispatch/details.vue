@@ -13,7 +13,7 @@
           </Col>
           <Col span="8">
               <p>
-                <label>广告收益(元)</label>
+                <label>预估广告收益(元)</label>
                 <span v-if="list.estimateRevenue" class="max-pofit">{{formatNumber(list.estimateRevenue)}}</span>
                 <span v-else>暂无</span>
               </p>
@@ -75,7 +75,6 @@
         <VuePlyr> <video :src="list.srcFileUrl" ></video></VuePlyr>
       </div> -->
       <div class="down-dcp-url">
-        <!-- <h4 class="flex-box"><span>格式</span><span>下载链接</span></h4> -->
         <ul>
           <li v-for="item in dcpData" class="flex-box">
              <span v-for=" it in list.typeList" v-if="item.typeCode == it.key">{{it.text}}</span>
@@ -191,18 +190,6 @@ export default class Main extends ViewBase {
       } = await receiveCinemaList(this.id, {
         ...this.form
       })
-      // const itemsList = items || []
-      // // this.cinemaDataList = items || []
-      // const receiveList: any[] = []
-      // if (this.receiveCinemas.length > 0) {
-      //   this.receiveCinemas.map((it: any) => {
-      //     itemsList.filter((item: any) => {
-      //       if (item.id == it) {
-      //         receiveList.push(item)
-      //       }
-      //     })
-      //   })
-      // }
       this.cinemaDataList = items || []
       this.total = totalCount
     } catch (ex) {
@@ -239,7 +226,7 @@ export default class Main extends ViewBase {
         padding-bottom: 18px;
         label {
           display: inline-block;
-          width: 100px;
+          width: 120px;
         }
         .max-pofit {
           color: #da6c70;
@@ -317,18 +304,11 @@ export default class Main extends ViewBase {
 .cinema-li {
   width: 50%;
   padding: 20px 0;
-  // height: 68px;
-  // line-height: 68px;
-  // border-bottom: 1px solid rgba(255, 255, 255, .2);
   span {
     display: inline-block;
     width: 50%;
     text-align: center;
   }
-}
-.video-plyr {
-  width: 90%;
-  margin: 0 auto 25px;
 }
 .log-list {
   color: #444;
@@ -336,4 +316,5 @@ export default class Main extends ViewBase {
     margin-right: 30px;
   }
 }
+
 </style>

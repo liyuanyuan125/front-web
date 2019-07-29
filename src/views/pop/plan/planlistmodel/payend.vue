@@ -7,8 +7,9 @@
     <div class="title">
       <i @click="cancel"></i>
       <img width="115px" height="115px" src="../assets/fanan.png" />
-      <p v-if="!showmongy">余额不足，前去缴费</p>
-      <p v-else>确认缴费</p>
+      <p v-if="showmongy == 0">余额不足，前去缴费</p>
+      <p v-else-if='showmongy == 1'>确认缴费</p>
+      <p v-else>定金大于应结金额，有退款</p>
     </div>
     <div slot="footer" class="foot">
         <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
@@ -20,7 +21,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinemaList, financeMsg, payMoney, getmoney } from '@/api/popPlan'
+import { cinemaList, financeMsg, payEndMoney, getmoney } from '@/api/popPlan'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
@@ -31,7 +32,7 @@ const timeFormat = 'YYYY-MM-DD'
 export default class DlgEditCinema extends ViewBase {
 
   showDlg = false
-  showmongy = false
+  showmongy = 1
   id = 0
 
   async money(id: any) {
@@ -48,7 +49,10 @@ export default class DlgEditCinema extends ViewBase {
        const { data } = await this.money(this.id)
       // const { data } = await financeMsg(id)
       if (data.availableAmount - (data.depositAmount || 0) > 0) {
-        this.showmongy = true
+        this.showmongy = 1
+      }
+      if ((data.depositAmount || 0) >  (data.needPayAmount || 0)) {
+        this.showmongy = 2
       }
       this.showDlg = true
     } catch (ex) {
@@ -59,7 +63,7 @@ export default class DlgEditCinema extends ViewBase {
   async open() {
     try {
       if (this.showmongy) {
-        await payMoney(this.id)
+        await payEndMoney(this.id)
         this.cancel()
         this.$emit('uplist')
       } else {

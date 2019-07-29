@@ -98,9 +98,8 @@
 
         <template slot="settlementStatus" slot-scope="{row}">
           <div class="table-empty">
-            <p v-if="row.freezeAmount">冻结金额：{{row.freezeAmount}}</p>
-            <p v-if="row.settlementStatus">广告花费：{{row.settlementAmount}}</p>
-            <p v-if="row.refundAmount">退款金额：{{row.refundAmount}}</p>
+          <p v-if="row.depositAmount">定金：{{row.depositAmount}}</p>
+            <p v-if="row.needPayAmount">应结金额 {{row.needPayAmount}}</p>
           </div>
         </template>
 
@@ -137,6 +136,7 @@
               </div>
               <div v-if="row.status >= 8 && row.status < 12 ">
                 <span class="edit-btn" @click="findId(row.id)">查看效果报表</span>
+                <span class="edit-btn" v-if="row.status == 10" @click="payend(row.companyId, row.freezeAmount, row.id)">立即结算</span>
                 <div class="adver-edit">
                   <p @click="plandetail(row.id)">详情</p>
                 </div>
@@ -150,6 +150,7 @@
     </div>
     <Sure ref="Sure" @uplist="uplist"/>
     <Pay ref="Pay" @uplist="uplist"/>
+    <Pay ref="payend" @uplist="uplist"/>
     <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible" @submitRelevance="submitRelevance"></relevanceDlg>
   </div>
 </template>
@@ -168,6 +169,7 @@ import {
 import pagination from '@/components/page.vue'
 import Sure from './planlistmodel/sure.vue'
 import Pay from './planlistmodel/pay.vue'
+import Payend from './planlistmodel/payend.vue'
 import moment from 'moment'
 import relevanceDlg from './planlistmodel/relevance.vue'
 import { clean } from '@/fn/object'
@@ -179,6 +181,7 @@ const timeFormat = 'YYYY-MM-DD'
     Pay,
     pagination,
     relevanceDlg,
+    Payend
   }
 })
 export default class Plan extends ViewBase {
@@ -219,10 +222,11 @@ export default class Plan extends ViewBase {
       ids,
       movieCustom: 1,
       name: '[ 示例 ]精准映前广告投放计划',
-      needPayAmount: null,
       payName: null,
       payTime: null,
       payUser: 0,
+      depositAmount: 200,
+      needPayAmount: 1000,
       productId: 158,
       productName: null,
       recommend: true,
@@ -442,6 +446,12 @@ export default class Plan extends ViewBase {
   pay(id: any, freezeAmount: any, ids: any) {
     this.$nextTick(() => {
       (this.$refs as any).Pay.init(id, freezeAmount, ids)
+    })
+  }
+
+  payend(id: any, freezeAmount: any, ids: any) {
+    this.$nextTick(() => {
+      (this.$refs as any).payend.init(id, freezeAmount, ids)
     })
   }
 
