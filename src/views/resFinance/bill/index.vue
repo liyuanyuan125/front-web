@@ -22,7 +22,7 @@
             <Col :span="7">
               <Col style='margin-left: 8px;' span="23">
                 <Select v-model="query.mounth" placeholder="选择月份" >
-                  <Option v-for="it in mountes" :key="it.key" :value="it.key"
+                  <Option v-for="it in mountes" :key="it.key" :value="it.key" @on-change="seachs"
                     :label="it.text">{{it.text}}</Option>
                 </Select>
 
