@@ -663,7 +663,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 广告主 - 广告单管理 - 广告单列表
+  // 资源方 - 广告单管理 - 广告单列表
   {
     path: '/order/dispatch',
     name: 'order-dispatch',
@@ -675,13 +675,14 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       pageTitle: '映前广告单列表-鲸娱数据',
     }
   },
+
   // 资源方-广告单-广告详情
   {
     path: '/order/dispatch-details/:id',
     name: 'order-dispatch-details',
     component: () => import('./views/order/dispatch/details.vue'),
     meta: {
-      authKey: '',
+      authKey: 'adOrderManage.order',
       authAction: 'view',
       authIsMenu: true,
       title: '详情',
@@ -1601,7 +1602,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     component: () => import('./views/brand/list.vue'),
     meta: {
       authKey: 'brand',
-      authAction: 'EMPTY',
+      authAction: 'view',
       authIsMenu: true,
       title: '品牌管理',
       pageTitle: '品牌列表-鲸娱数据'
