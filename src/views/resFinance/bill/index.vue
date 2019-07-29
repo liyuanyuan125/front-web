@@ -21,7 +21,10 @@
             </Col>
             <Col :span="7">
               <Col style='margin-left: 8px;' span="23">
-                <Select v-model="query.mounth" placeholder="选择月份"  @on-change="seachs">
+                <Select
+                v-model="query.month"
+                placeholder="选择月份"
+                @on-change="seach">
                   <Option v-for="it in mountes" :key="it.key" :value="it.key"
                     :label="it.text">{{it.text}}</Option>
                 </Select>
@@ -140,7 +143,7 @@ export default class Main extends ViewBase {
   totalCount = 0
   query: any = {
     year: null,
-    mounth: null,
+    month: null,
     cinemaId: null,
     pageIndex: 1,
     pageSize: 4,
