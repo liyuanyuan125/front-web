@@ -485,8 +485,6 @@ export default class Index extends ViewBase {
             })
           })
 
-      this.chart1.initDone = true
-
       if (user) {
         const _ageData: any = {
           age: [],
@@ -521,6 +519,7 @@ export default class Index extends ViewBase {
           (this.$refs.usercard as any).init()
         })
       }
+      this.chart1.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }
