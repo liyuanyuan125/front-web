@@ -55,7 +55,7 @@
           <Checkbox  class="list-li" v-for="(item , index) in list" :key = "index" :value="item.id" :label="item.id">
             <Row class='nav-title'>
               <Col span='5'>{{item.cinemaName}}</Col>
-              <Col span='14'>{{item.year}}-{{item.month}}</Col>
+              <Col span='14'>{{item.year}}-{{item.month < 10 ? '0' + item.month : item.month }}</Col>
               <Col span='3' style='color: #DA6C70;float: right;text-align: center;'>
                 <span v-if='item.billStatus == 1'>待平台确认</span>
                 <span v-if='item.billStatus == 2'>待审核</span>
