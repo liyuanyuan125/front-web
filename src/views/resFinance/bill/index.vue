@@ -21,8 +21,8 @@
             </Col>
             <Col :span="7">
               <Col style='margin-left: 8px;' span="23">
-                <Select v-model="query.mounth" placeholder="选择月份" >
-                  <Option v-for="it in mountes" :key="it.key" :value="it.key" @on-change="seachs"
+                <Select v-model="query.mounth" placeholder="选择月份"  @on-change="seachs">
+                  <Option v-for="it in mountes" :key="it.key" :value="it.key"
                     :label="it.text">{{it.text}}</Option>
                 </Select>
 
