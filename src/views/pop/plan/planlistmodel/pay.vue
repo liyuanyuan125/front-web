@@ -36,7 +36,11 @@ export default class DlgEditCinema extends ViewBase {
 
   async money(id: any) {
     try {
-      await getmoney(id)
+      const { data } = await getmoney(id)
+      if (data.availableAmount - (data.depositAmount || 0) > 0) {
+        this.showmongy = true
+      }
+      this.showDlg = true
     } catch (ex) {
       this.handleError(ex)
     }
@@ -45,12 +49,8 @@ export default class DlgEditCinema extends ViewBase {
   async init(id: any, freezeAmount: any, ids: any) {
     this.id = ids
     try {
-       const { data } = await this.money(this.id)
+       this.money(this.id)
       // const { data } = await financeMsg(id)
-      if (data.availableAmount - (data.depositAmount || 0) > 0) {
-        this.showmongy = true
-      }
-      this.showDlg = true
     } catch (ex) {
       this.handleError(ex)
     }
