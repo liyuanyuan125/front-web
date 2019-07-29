@@ -88,6 +88,7 @@ export default class AreaBasicExtra extends ViewBase {
   currentIndex: number = this.currentTypeIndex
 
   currentTypeChange(index: number) {
+    if ( this.dataList.length === 0 ) { return }
     this.currentIndex = index
     this.$emit('typeChange', index)
   }
@@ -122,6 +123,10 @@ export default class AreaBasicExtra extends ViewBase {
     if ( !chartData.data || chartData.data.length == 0 || chartData.date.length == 0) {
       return
     }
+
+    const valueIs0 = chartData.data.every((it: any) => {
+      return it === 0
+    })
 
     const chartEl = this.$refs.refChart as HTMLDivElement
 
@@ -221,6 +226,10 @@ export default class AreaBasicExtra extends ViewBase {
           }
         }
       ]
+    }
+    if (valueIs0) {
+      option.yAxis.min = 0
+      option.yAxis.max = 10
     }
     option.tooltip.formatter = this.title + ` {c}`
     let _title = ''
