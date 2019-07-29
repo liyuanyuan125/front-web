@@ -57,9 +57,9 @@
               <Col span='5'>{{item.cinemaName}}</Col>
               <Col span='14'>{{item.year}}-{{item.month}}</Col>
               <Col span='3' style='color: #DA6C70;float: right;text-align: center;'>
-                <span v-if='item.billStatus == 1 && item.invoiceStatus == 0 && item.payStatus == 0'>待平台确认</span>
-                <span v-if='item.billStatus == 2 && item.invoiceStatus == 0 && item.payStatus == 0'>待审核</span>
-                <span v-if='item.billStatus == 3 && item.invoiceStatus == 0 && item.payStatus == 0'>审核失败</span>
+                <span v-if='item.billStatus == 1'>待平台确认</span>
+                <span v-if='item.billStatus == 2'>待审核</span>
+                <span v-if='item.billStatus == 3'>审核失败</span>
                 <span v-if='item.billStatus == 4 && item.invoiceStatus == 1 && item.payStatus == 1'>待结算</span>
                 <span v-if='item.billStatus == 4 && item.invoiceStatus == 1 && item.payStatus == 2'>已结算</span>
                 <span v-if='item.billStatus == 4 && item.invoiceStatus == 2 && item.payStatus == 1'>待登记发票</span>
@@ -82,7 +82,7 @@
                 <p class='order_sma'>曝光人次 / 千人次</p>
               </Col>
               <Col :span="4">
-              <!-- <span v-if='item.billStatus == 2 && item.invoiceStatus == 0 && item.payStatus == 0' @click='all(item.id)'>审核账单</span> -->
+              <!-- <span v-if='item.billStatus == 2' @click='all(item.id)'>审核账单</span> -->
                 <router-link
                   class="status-btn"
                   style='line-height: 65px;'
