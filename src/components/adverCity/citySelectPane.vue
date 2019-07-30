@@ -795,6 +795,7 @@ th {
 }
 .city-fast-list {
   .check-item {
+    min-width: 110px;
     line-height: 40px;
   }
 }
