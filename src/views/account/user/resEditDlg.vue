@@ -153,7 +153,6 @@ export default class Change extends ViewBase {
     this.value.visible = false
   }
   handleOk() {
-    console.log(this.selectedIds)
     this.$emit('save', this.selectedIds)
     this.value.visible = false
   }
