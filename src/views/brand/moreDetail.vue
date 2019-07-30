@@ -92,6 +92,12 @@ export default class Main extends ViewBase {
     .title {
       font-size: 16px;
       padding: 15px 0 17px;
+      text-align: center;
+      color: #fff;
+    }
+    .types {
+      text-align: center;
+      color: #fff;
     }
     .tabs-title {
       width: 160px;

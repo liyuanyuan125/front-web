@@ -516,7 +516,6 @@ export default class Index extends ViewBase {
               originalCost: parseFloat(item.cost) / 100 // 用于导出内容，iview导出带逗号的字段有bug
             })
           })
-          this.chart1.initDone = true
         }
 
         // 用户画像
@@ -556,6 +555,7 @@ export default class Index extends ViewBase {
         }
         this.initDone = true
       }
+      this.chart1.initDone = true
     } catch (ex) {
       this.handleError(ex)
     }

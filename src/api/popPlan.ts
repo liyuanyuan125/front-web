@@ -240,10 +240,19 @@ export async function financeMsg(id: any) {
 
 /**
  * @param  {any} query
- * 缴纳保证金
+ * 支付定金
  */
 export async function payMoney(id: any) {
-  const data = await post(`/xadvert/plans/${id}/pay`)
+  const data = await post(`/xadvert/plans/${id}/pay-deposit`)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 缴纳结算金额
+ */
+export async function payEndMoney(id: any) {
+  const data = await post(`/xadvert/plans/${id}/pay-deposit`)
   return data
 }
 
@@ -319,3 +328,11 @@ export async function downcinema(id: any, query: any) {
   return data
 }
 
+/**
+ * @param  {any} query
+ * 获取账户余额
+ */
+export async function getmoney(id: any) {
+  const data = await get(`/xadvert/plans/${id}/check-befor-settle`)
+  return data
+}

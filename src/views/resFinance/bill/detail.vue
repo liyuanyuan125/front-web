@@ -3,27 +3,45 @@
     <div class="bill-modal-content">
       <div class="title bottom-40">基本信息</div>
       <ul class="flex-box row-items">
-        <li class="flex-box"><label>影院名称</label><span>xxxxxxx</span></li>
-        <li class="flex-box"><label>日期</label><span>xxxxxxx</span></li>
-        <li class="flex-box"><label>状态</label><span>xxxxxxx</span></li>
+        <li class="flex-box"><label>影院名称</label><span>{{items.cinemaName}}</span></li>
+        <li class="flex-box"><label>日期</label><span>{{items.year}}-{{items.month}}</span></li>
+        <li class="flex-box"><label>曝光人次/人</label><span>{{items.personCount || '-'}}</span></li>
+       
       </ul>
        <ul class="flex-box row-items">
-        <li class="flex-box"><label>广告片数量</label><span>xxxxxxx</span></li>
-        <li class="flex-box"><label>曝光人次</label><span>xxxxxxx</span></li>
-        <li class="flex-box"><label>预计结算金额</label><span>xxxxxxx</span></li>
+        <li class="flex-box"><label>广告片数量</label><span>{{items.videoCount}}</span></li>
+         <li class="flex-box"><label>状态</label>
+           <span v-for="it in billStatusList" :key="it.key" v-if="it.key == items.billStatus">{{it.text}}</span>
+        </li>
+        <li class="flex-box"><label>预计结算金额</label><span>{{formatNumber(items.amount)}}</span></li>
       </ul>
     </div>
 
     <div class="bill-modal-content">
       <div class="title bottom-20">广告片列表</div>
-      <Table :columns="column" :data="dataList" disabled-hover></Table>
+      <Table :columns="column" :data="dataList" disabled-hover>
+        <template slot="playMonitorTexts" slot-scope="{row}">
+          <span v-if="row.playMonitorStatus == 4" class="status-error">{{row.playMonitorTexts}}</span>
+          <span v-else class="status-pass">{{row.playMonitorTexts}}</span>
+        </template>
+      </Table>
+
+      <Page
+      :total="total"
+      v-if="total>0"
+      class="page-cover"
+      :current="pageIndex"
+      :page-size="pageSize"
+      show-total
+      @on-change="handlepageChange"
+      @on-page-size-change="handlepageChange"
+    />
     </div>
 
     <div class="bill-modal-content">
       <div class="title bottom-20">操作日志</div>
       <Table :columns="columnLog" :data="dataLog" disabled-hover></Table>
     </div>
-
   </div>
 </template>
 
@@ -32,59 +50,106 @@ import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { confirm, toast, info } from '@/ui/modal'
-import { itemList } from '@/api/bill'
+import {intDate, readableThousands, textList} from '@/util/dealData'
+import { formatNumber } from '@/util/validateRules'
+import { itemList, itemListbill } from '@/api/bill'
+const format = 'YYYY-MM-DD HH:mm:ss'
 
 @Component
 export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0}) id!: number
 
+  pageIndex = 1
+  pageSize = 20
+  total = 0
+
+  items: any = {}
+  billStatusList: any[] = []
+
+  formatNumber = formatNumber
+
   column = [
-    { title: '广告片名称', key: 'name' },
-    { title: '影片名称', key: 'movieName' },
-    { title: '投放时长', key: 'len' },
-    { title: '执行开始时间', key: 'startTime' },
-    { title: '执行完成时间', key: 'endTime' },
-    { title: '曝光人次/人次', key: 'person' },
-    { title: '金额', key: 'monery' },
-    { title: '监播文件', key: 'file' },
-    { title: '是否结算', key: 'isSetime' },
+    { title: '广告片名称', key: 'videoName', minWidth: 120 },
+    { title: '影片名称', key: 'movieName', minWidth: 150 },
+    { title: '投放时长', key: 'specification', minWidth: 100 },
+    { title: '执行开始时间', key: 'beginDate', minWidth: 160  },
+    { title: '执行完成时间', key: 'endDate', minWidth: 160  },
+    { title: '曝光人次', key: 'personCount', minWidth: 150  },
+    { title: '金额(元)', key: 'amount', minWidth: 100  },
+    { title: '监播文件', slot: 'playMonitorTexts', minWidth: 100 },
+    { title: '是否结算', key: 'status', minWidth: 100  },
   ]
-  dataList = [
-    {
-      name: 'xxx',
-      movieName: 'xxx',
-      len: 14,
-      startTime: moment(1547864079326).format('YYYY-MM-DD'),
-      endTime: moment(1547864079326).format('YYYY-MM-DD'),
-      person: 100,
-      monery: 8999999,
-      file: 'xxx',
-      isSetime: 'xxx',
-    }
-  ]
+  dataList = []
 
   columnLog = [
-    { title: '操作时间', key: 'name' },
-    { title: '操作人', key: 'movieName' },
-    { title: '操作日志', key: 'len' },
+    { title: '操作时间', key: 'createTime' },
+    { title: '操作人', key: 'createName' },
+    { title: '操作日志', key: 'describe' },
   ]
   dataLog = []
 
   mounted() {
-    // this.list()
+    this.list()
+    this.billDetail()
   }
 
   async list() {
     try {
-      const { data } = await itemList(this.id)
+      const { data: {
+        item, billStatusList
+      } } = await itemList(this.id)
+      this.items = item || {}
+      this.billStatusList = billStatusList || []
+      this.dataLog = (item.resourceBillLogs || []).map( (it: any) => {
+        return {
+          ...it,
+          createTime: moment().format(format)
+        }
+      })
     } catch (ex) {
       this.handleError(ex)
     }
+  }
+
+  async billDetail() {
+    try {
+      const { data: {
+        totalCount, items, statusList, playMonitorStatusList} } = await itemListbill(this.id, {
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
+      })
+      this.dataList = (items || []).map((it: any) => {
+        return {
+          ...it,
+          specification: it.specification ? it.specification + 's' : '0s',
+          beginDate: intDate(it.beginDate),
+          endDate: intDate(it.endDate),
+          personCount: readableThousands(it.personCount),
+          amount: formatNumber(it.amount),
+          playMonitorTexts: textList(playMonitorStatusList, [it.playMonitorStatus])[0],
+          status: textList(statusList, [it.status])[0]
+        }
+      })
+      this.total = totalCount
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  handlepageChange(size: any) {
+    this.pageIndex = size
+    this.list()
   }
 }
 </script>
 
 <style lang="less" scoped>
+.status-pass {
+  color: #5f961f;
+}
+.status-error {
+  color: #e86267;
+}
 .bottom-40 {
   padding-bottom: 40px;
 }
@@ -127,7 +192,6 @@ export default class Main extends ViewBase {
 /deep/ .ivu-table-header {
   background: #fff;
   height: 40px;
-  line-height: 40px;
   color: rgba(0, 32, 45, 1);
   font-size: 15px;
   font-weight: 400;
@@ -139,15 +203,57 @@ export default class Main extends ViewBase {
   font-size: 13px;
   font-weight: 400;
   color: rgba(0, 32, 45, 1);
-  height: 50px;
-  line-height: 50px;
+  height: 60px;
 }
 
-// /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
-//   background: none;
-// }
-
-// /deep/ .ivu-table-body {
-//   background: none;
-// }
+// 分页样式
+.page-cover {
+  text-align: center;
+  margin: 30px 0 40px;
+}
+/deep/ .ivu-page-prev {
+  border: 0;
+  background: none;
+}
+/deep/ .ivu-page-next {
+  border: 0;
+  background: none;
+}
+/deep/ .ivu-page-item-active {
+  border-color: #eee;
+  background: #00202d !important;
+  border-radius: 50%;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+}
+/deep/ .ivu-page-item-active:hover a {
+  color: #fff;
+}
+/deep/ .ivu-page-item-active a {
+  color: #fff;
+}
+/deep/ .ivu-page-item {
+  border: 0;
+  display: inline-block;
+  vertical-align: middle;
+  background: rgba(255, 255, 255, 0);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 4px;
+  text-align: center;
+  list-style: none;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+/deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
+  color: #00202d;
+}
+/deep/ .ivu-page-total {
+  color: #00202d;
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="area-basic">
     <div style="text-align:center">
       <div class="title-box">
         <span v-if=" title !=='' ">{{title}}</span>
@@ -7,22 +7,16 @@
           <Icon type="md-help-circle" />
         </Tooltip>
       </div>
-      <RadioGroup
-        size="small"
-        v-if="dict1.length > 0"
-        @on-change="currentTypeChange"
-        v-model="currentIndex"
-        type="button"
-      >
+      <RadioGroup size="small" v-if="dict1.length > 0 && dataList" @on-change="currentTypeChange" v-model="currentIndex" type="button">
         <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <Row type="flex" justify="center" align="middle">
-      <div ref="refChart" v-if="initDone" class="chart-wrap"></div>
-      <div v-else class="loading-wp chart-loading">
+    <div class="content-wrap">
+      <div v-if="initDone" ref="refChart" class="chart-wrap"></div>
+      <div v-show="!initDone" class="chart-loading">
         <TinyLoading />
       </div>
-    </Row>
+    </div>
   </div>
 </template>
 
@@ -83,19 +77,22 @@ export default class MapChina extends ViewBase {
     ) {
       return
     }
+
     const data = this.dataList[this.currentIndex]
     const myChart = echarts.init(this.$refs.refChart as any)
     const chartData = data.map((it: any) => {
       return {
-        name: it.name.split('市')
-            .join('')
-            .split('省')
-            .join('')
-            .split('省')
-            .join(''),
+        name: it.name
+          .split('市')
+          .join('')
+          .split('省')
+          .join('')
+          .split('省')
+          .join(''),
         value: it.value
       }
     })
+
     echarts.registerMap('china', china as any)
     const option: any = {
       ...pubOption,
@@ -180,12 +177,15 @@ export default class MapChina extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-.chart-wrap,
-.chart-loading {
+.content-wrap {
+  position: relative;
   width: 100%;
   height: 400px;
 }
-
+.chart-wrap {
+  width: 100%;
+  height: 400px;
+}
 .chart-wrap:empty {
   display: flex;
   align-items: center;
@@ -195,5 +195,13 @@ export default class MapChina extends ViewBase {
     font-size: 18px;
     color: #999;
   }
+}
+
+.chart-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
 }
 </style>
