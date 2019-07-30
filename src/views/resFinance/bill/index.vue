@@ -21,7 +21,10 @@
             </Col>
             <Col :span="7">
               <Col style='margin-left: 8px;' span="23">
-                <Select v-model="query.mounth" placeholder="选择月份" >
+                <Select
+                v-model="query.month"
+                placeholder="选择月份"
+                @on-change="seach">
                   <Option v-for="it in mountes" :key="it.key" :value="it.key"
                     :label="it.text">{{it.text}}</Option>
                 </Select>
@@ -55,7 +58,7 @@
           <Checkbox  class="list-li" v-for="(item , index) in list" :key = "index" :value="item.id" :label="item.id">
             <Row class='nav-title'>
               <Col span='5'>{{item.cinemaName}}</Col>
-              <Col span='14'>{{item.year}}-{{item.month}}</Col>
+              <Col span='14'>{{item.year}}-{{item.month < 10 ? '0' + item.month : item.month }}</Col>
               <Col span='3' style='color: #DA6C70;float: right;text-align: center;'>
                 <span v-if='item.billStatus == 1'>待平台确认</span>
                 <span v-if='item.billStatus == 2'>待审核</span>
@@ -140,7 +143,7 @@ export default class Main extends ViewBase {
   totalCount = 0
   query: any = {
     year: null,
-    mounth: null,
+    month: null,
     cinemaId: null,
     pageIndex: 1,
     pageSize: 4,
