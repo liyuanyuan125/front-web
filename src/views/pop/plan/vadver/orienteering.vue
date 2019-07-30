@@ -446,7 +446,7 @@ export default class Orienteering extends ViewBase {
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
-              text: this.movieCustom == 1 ? 0 : this.form.type.join(';')
+              text: this.movieCustom == 1 && this.numsList.length > 0 ? 0 : this.form.type.join(';')
             },
             {
               tagTypeCode: 'PLAN_GROUP_AGE',
