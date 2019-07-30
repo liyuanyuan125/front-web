@@ -185,23 +185,26 @@ export default class Main extends ViewBase {
   }
   handleEdit() {
     // 判断资源方 广告方
+    const resCheck = (this.data.cinemas || []).map((it: any) => it.id)
+    const adsCheck = (this.data.partners || []).map((it: any) => it.id)
+
     if (this.typeCode == 'ads') {
       this.editVisible = {
         editVis: true,
-        check: this.data.partners
+        check: adsCheck
       }
     } else if (this.typeCode == 'resource') {
       this.resEditDlg = {
         visible: true,
-        check: this.data.cinemas
+        check: resCheck
       }
     }
   }
   save(val: any) {
     // 关联客户可以为[]
-    this.data.partners = val
-    this.data.cinemas = val
-    this.partnerIds = val.map((item: any) => item.id)
+    // this.data.partners = val
+    // this.data.cinemas = val
+    this.partnerIds = val // 资源方 / 广告主
     this.customer = this.cinemaLen = this.partnerIds.length
   }
   async handleSelect(id: any) {
