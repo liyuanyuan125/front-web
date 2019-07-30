@@ -7,7 +7,15 @@
     class="keep-select-table"
     @on-selection-change="selectionChange"
     ref="table"
-  />
+  >
+    <!-- Pass on all named slots -->
+    <slot v-for="slot in Object.keys($slots)" :name="slot" :slot="slot"/>
+
+    <!-- Pass on all scoped slots -->
+    <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope">
+      <slot :name="slot" v-bind="scope"/>
+    </template>
+  </Table>
 </template>
 
 <script lang="ts">
@@ -15,6 +23,8 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { toMap } from '@/fn/array'
 import { uniq, difference, union, isEqual } from 'lodash'
+
+// slot 透传解决方案：https://stackoverflow.com/questions/50891858/vue-how-to-pass-down-slots-inside-wrapper-component
 
 @Component
 export default class KeepSelectTable extends ViewBase {

@@ -684,7 +684,6 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       authKey: 'adOrderManage.order',
       authAction: 'view',
-      authIsMenu: true,
       title: '详情',
       pageTitle: '映前广告单详情-鲸娱数据'
     }
