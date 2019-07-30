@@ -352,6 +352,8 @@ export default class Main extends ViewBase {
   width: 100%;
   font-size: 14px;
   background: rgba(19, 61, 75, 1);
+  height: 180px;
+  margin-bottom: 20px;
   border-radius: 5px;
   position: relative;
   .li-col {
@@ -414,8 +416,8 @@ export default class Main extends ViewBase {
 }
 .chacks {
   margin-top: 20px;
-  height: 180px;
-  background: rgba(19, 61, 76, 1);
+  // height: 180px;
+  // background: rgba(19, 61, 76, 1);
   /deep/ .ivu-checkbox {
     position: absolute;
     left: 4%;
