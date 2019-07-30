@@ -7,6 +7,7 @@
           v-for="it in fastList"
           :key="it.key"
           v-model="it.checked"
+          v-if='it.text!= "新一线城市"'
           :indeterminate="it.indeterminate"
           class="city-fast-item check-item"
           @on-change="fastChange(it, $event)"
@@ -344,7 +345,6 @@ const cellData = (list: RegionSubList[], {
 
 const gradeSorts = [
   'first-tier',
-  'new-first-tier',
   'second-tier',
   'third-tier',
   'four-tier',
@@ -432,7 +432,6 @@ export default class CitySelectPane extends ViewBase {
       this.list = filterDirty(list)
       this.cellData = cellData(this.list)
       this.updateTable()
-
       const gradeList = getGradeList(this.list)
       this.fastList = [
         { key: 'all', text: '全国', cityIds: [], checked: false, indeterminate: false },

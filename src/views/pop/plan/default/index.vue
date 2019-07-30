@@ -559,7 +559,9 @@ export default class Apps extends ViewBase {
           ages: (names || []).slice(0, 2),
         }
       })
-      this.planMovies = this.planMovies.slice(0, 3)
+      if (this.planMovies.length > 0) {
+        this.planMovies = this.planMovies.sort((a: any, b: any) => b.wantSeeNum - a.wantSeeNum ).slice(0, 3)
+      }
     } catch (ex) {
       (this.$Spin as any).hide()
       this.handleError(ex)
