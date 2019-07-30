@@ -68,10 +68,10 @@ import WordCloud from '@/components/chartsGroup/wordCloud/'
 import DetailNavBar from './components/detailNavBar.vue'
 import { tooltipStyles } from '@/util/echarts'
 const timeFormat = 'YYYYMMDD'
-// #D0BF6B 中性
-// #AD686C 正面
-// #57B4C9 负面
-const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
+// #AD686C 正面 positive
+// #57B4C9 负面 passive
+// #D0BF6B 中性 neutral
+const colors: string[] = ['#AD686C', '#57B4C9', '#D0BF6B']
 
 @Component({
   components: {
@@ -123,20 +123,17 @@ export default class Main extends ViewBase {
       }
     ],
     // 情感分类 写死适配多模块
-    emotion: [
+    emotionList: [
       {
-        key: 0,
-        name: 'positive',
+        key: 'positive',
         text: '正面'
       },
       {
-        key: 1,
-        name: 'passive',
+        key: 'passive',
         text: '负面'
       },
       {
-        key: 2,
-        name: 'neutral',
+        key: 'neutral',
         text: '中性'
       }
     ]
@@ -145,7 +142,7 @@ export default class Main extends ViewBase {
   chart1: any = {
     title: '评论情绪分布',
     dict1: [],
-    dict2: this.dict.emotion,
+    dict2: this.dict.emotionList,
     currentTypeIndex: 0,
     initDone: false,
     dataList: [],
@@ -164,7 +161,7 @@ export default class Main extends ViewBase {
         name: '累计'
       }
     ],
-    dict2: this.dict.emotion,
+    dict2: this.dict.emotionList,
     xAxis: [],
     currentTypeIndex: 0,
     initDone: false,
@@ -318,7 +315,7 @@ export default class Main extends ViewBase {
       const {
         data
       } = await comment({ ...mockObj }, this.id)
-
+      
       const item = data.item || null
       if ( !item ) {
         this.chart1.initDone = true
@@ -332,17 +329,23 @@ export default class Main extends ViewBase {
       const keywords = item.keywords || null
 
       if ( rate ) {
-        for ( const k in rate ) {
-          if ( rate[k] ) {
-            const index = findIndex(this.dict.emotion, (it: any) => {
-              return it.name == k
-            })
+        // #AD686C 正面 positive
+        // #57B4C9 负面 passive
+        // #D0BF6B 中性 neutral
+        // 按照字典顺序遍历成员，同时配置颜色
+        this.dict.emotionList.forEach((it: any, index: number) => {
+          if (rate[it.key] && rate[it.key] !== '') {
             this.chart1.dataList[0].push({
-              value: rate[k],
-              name: this.dict.emotion[index].text
+              value: rate[it.key],
+              name: it.text
+            })
+          } else {
+            this.chart1.dataList[0].push({
+              value: null,
+              name: it.text
             })
           }
-        }
+        })
       }
 
       if ( dates && dates.length > 0 ) {

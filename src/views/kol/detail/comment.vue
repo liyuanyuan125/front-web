@@ -147,10 +147,10 @@ import WordCloud from '@/components/chartsGroup/wordCloud/'
 import DetailNavBar from './components/detailNavBar.vue'
 import { tooltipStyles } from '@/util/echarts'
 const timeFormat = 'YYYYMMDD'
-// #D0BF6B 中性
-// #AD686C 正面
-// #57B4C9 负面
-const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
+// #AD686C 正面 positive
+// #57B4C9 负面 passive
+// #D0BF6B 中性 neutral
+const colors: string[] = ['#AD686C', '#57B4C9', '#D0BF6B']
 
 @Component({
   components: {
@@ -417,22 +417,29 @@ export default class Comment extends ViewBase {
       let items = data.items || null
       const rate = data.rate || null
       const commentKeyword = data.commentKeyword || null
+      
       if (items) {
         items = ((data.items as any[]) || []).sort((a, b) => a.date - b.date)
       }
 
-      if (rate) {
-        for (const k in rate) {
-          if (rate[k]) {
-            const index = findIndex(this.dict.emotionList, (it: any) => {
-              return it.key == k
-            })
+      if ( rate ) {
+        // #AD686C 正面 positive
+        // #57B4C9 负面 passive
+        // #D0BF6B 中性 neutral
+        // 按照字典顺序遍历成员，同时配置颜色
+        this.dict.emotionList.forEach((it: any, index: number) => {
+          if (rate[it.key] && rate[it.key] !== '') {
             this.chart1.dataList[0].push({
-              value: rate[k],
-              name: this.dict.emotionList[index].text
+              value: rate[it.key],
+              name: it.text
+            })
+          } else {
+            this.chart1.dataList[0].push({
+              value: null,
+              name: it.text
             })
           }
-        }
+        })
       }
 
       if (items && items.length > 0) {
