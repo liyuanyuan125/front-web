@@ -225,8 +225,8 @@ export default class Main extends ViewBase {
           name: '分享数'
         }
       ]
-
-      const items = data.items || null
+      // 根据日期排序
+      const items = ((data.items as any[]) || []).sort((a, b) => a.date - b.date)
 
       if (!items) {
         this.chart1.initDone = true
