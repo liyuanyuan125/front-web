@@ -25,7 +25,7 @@
                   <DatePicker
                     type="daterange"
                     v-model="form.beginDate"
-                    @on-change="handleChange"
+                    @on-change="dateChange"
                     placement="bottom-end"
                     placeholder="自定义时间段"
                   ></DatePicker>
@@ -242,8 +242,10 @@ export default class Main extends ViewBase {
           date: []
         }
       })
+
+      // 填充颜色
       this.chart1.color = this.chart1.dict1.map((it: any) => {
-        return this.chart1.color
+        return this.chart1.color[0]
       })
       // k : dau, likeCount, commentCount, playCount, readCount, forwardCount, shareCount
       res.forEach((item: any, index: number) => {
@@ -267,6 +269,10 @@ export default class Main extends ViewBase {
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
    */
   beginDate(dayRangesKey: string) {
+    if ( this.form.beginDate.length > 0 && this.form.beginDate[0] !== '' ) {
+      return moment(this.form.beginDate[0]).format(timeFormat)
+    }
+    // 日期选择器和周期选择互斥
     switch (dayRangesKey) {
       case 'yesterday':
         return moment(new Date())
@@ -294,6 +300,10 @@ export default class Main extends ViewBase {
   }
 
   endDate() {
+    if ( this.form.beginDate.length > 0 && this.form.beginDate[1] !== '' ) {
+      return moment(this.form.beginDate[1]).format(timeFormat)
+    }
+    // 日期选择器和周期选择互斥
     return this.form.dayRangesKey == 'yesterday'
       ? moment(new Date())
           .add(-1, 'days')
@@ -302,6 +312,15 @@ export default class Main extends ViewBase {
   }
 
   async handleChange() {
+    // 日期选择器和周期选择互斥,清除日历数据
+    this.form.beginDate = []
+    this.chart1.initDone = false
+    this.resetData()
+    await this.getChartsData('', 0)
+  }
+
+  async dateChange() {
+    // 日期选择器和周期选择互斥
     this.chart1.initDone = false
     this.resetData()
     await this.getChartsData('', 0)
