@@ -136,7 +136,7 @@
               </div>
               <div v-if="row.status >= 8 && row.status < 12 ">
                 <span class="edit-btn" @click="findId(row.id)">查看效果报表</span>
-                <span class="edit-btn" v-if="row.status == 10" @click="payend(row.companyId, row.freezeAmount, row.id)">立即结算</span>
+                <span class="edit-btn" style='margin-top: 14px' v-if="row.status == 10" @click="payend(row.companyId, row.freezeAmount, row.id)">立即结算</span>
                 <div class="adver-edit">
                   <p @click="plandetail(row.id)">详情</p>
                 </div>
