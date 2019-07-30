@@ -4,14 +4,14 @@
       <span class="adver-tiele">影院管理</span>
     </h3>
     <div class="search-input">
-      <Input v-model="dataForm.searchKey"  placeholder="请输入专资编码或影院名称" />
+      <Input v-model="dataForm.searchKey" style="width: 400px"  placeholder="请输入专资编码或影院名称" />
       <Button  type="primary" class="bth-search" @click="seachList">
         <Icon type="ios-search" size="22"/>
       </Button>
     </div>
     <div class="list-box">
       <div class="list-table">
-        <Table stripe  :loading="tableLoading" :columns="columns4" :data="cinemaData">
+        <Table stripe :columns="columns4" :data="cinemaData">
           <template slot="contactTel" slot-scope="{row, index}">
             <div v-if="editIndex === index"  class="input-tel">
               <Input  v-model="editTel" style="width: 160px" :maxlength="11" @on-blur="handleBlur(row.id, row.contactTel)"/>
@@ -124,8 +124,8 @@ export default class Main extends ViewBase {
           totalCount
         }
       } = await cinmeaList({...this.dataForm})
-      this.cinemaData = items
-      this.total = totalCount
+      this.cinemaData = items || []
+      this.total = totalCount || 0
     } catch (ex) {
       this.handleError(ex)
     } finally {
@@ -185,7 +185,7 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-@import '~@/site/common.less';
+// @import '~@/site/common.less';
 @import '../less/table.less';
 .page {
   padding: 30px 0 0 20px;
@@ -196,7 +196,6 @@ export default class Main extends ViewBase {
   justify-content: center;
   padding: 10px 0;
   /deep/ .ivu-input {
-    // width: 400px;
     line-height: 40px;
     font-size: 14px;
     height: 40px;
