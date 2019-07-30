@@ -4,7 +4,7 @@
       <span class="adver-tiele">影院管理</span>
     </h3>
     <div class="search-input">
-      <Input v-model="dataForm.searchKey"  placeholder="请输入专资编码或影院名称" />
+      <Input v-model="dataForm.searchKey" style="width: 400px"  placeholder="请输入专资编码或影院名称" />
       <Button  type="primary" class="bth-search" @click="seachList">
         <Icon type="ios-search" size="22"/>
       </Button>
@@ -185,7 +185,7 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-@import '~@/site/common.less';
+// @import '~@/site/common.less';
 @import '../less/table.less';
 .page {
   padding: 30px 0 0 20px;
@@ -196,7 +196,6 @@ export default class Main extends ViewBase {
   justify-content: center;
   padding: 10px 0;
   /deep/ .ivu-input {
-    // width: 400px;
     line-height: 40px;
     font-size: 14px;
     height: 40px;
