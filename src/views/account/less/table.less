@@ -1,109 +1,81 @@
 .list-box {
-    background: rgba(0, 32, 45, .8);
-    margin: 0 20px;
-    border-radius: 5px;
-    padding-bottom: 40px;
+  background: #204350;
+  margin: 0 20px;
+  border-radius: 5px;
+  padding-bottom: 40px;
+}
+.list-table {
+  position: relative;
+  background: #204350;
+  border-radius: 5px;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 61px;
+    border-radius: 5px 5px 0 0;
+    background: #204350;
   }
-  .list-table {
+  /deep/ .ivu-table-header {
     position: relative;
-    background: rgba(0, 0, 0, 0);
-    border-radius: 5px;
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 61px;
-      border-radius: 5px 5px 0 0;
-      background: rgba(0, 32, 45, 0.3);
-    }
-    /deep/ .ivu-table-header {
-      position: relative;
-    }
-    /deep/ .ivu-table-row {
-      border-bottom: 1px solid rgba(0, 32, 45, .39);
-    }
   }
-  /deep/ .ivu-table-wrapper > .ivu-spin-fix {
-    background: rgba(0, 0, 0, 0);
-    border: none;
+  /deep/ .ivu-table-row {
+    border-bottom: 1px solid #00202d;
   }
-  /deep/ .ivu-table-wrapper {
-    border-radius: 5px;
-    min-height: 280px;
-    position: relative;
-    margin: 30px 0 40px;
-    /deep/ .ivu-table-header th {
-      height: 60px;
-      background: rgba(0, 32, 45, 0.3);
-      color: #fff;
-      line-height: 60px;
-      span {
-        font-size: 14px;
-      }
-    }
-    /deep/ .ivu-table-column-center, /deep/ .ivu-table-column-left {
-      background: rgba(255, 255, 255, 0);
-    }
-    /deep/ .ivu-table {
-      background: rgba(255, 255, 255, 0);
-      font-size: 14px;
-      td {
-        height: 64px;
-      }
-    }
-    /deep/ .ivu-table-row {
-      background: rgba(255, 255, 255, 0);
-      /deep/ td {
-        color: #fff;
-        background: rgba(0, 0, 0, 0);
-        a {
-          color: #4fa6bb;
-        }
-      }
-    }
-    /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
-      background: rgba(255, 255, 255, 0);
-    }
-    /deep/ .ivu-table-stripe .ivu-table-body tr:nth-child(2n - 1) td {
-      background: rgba(255, 255, 255, 0);
-    }
-    /deep/ .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
-      background: rgba(255, 255, 255, 0);
-    }
-    /deep/ .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
-      span {
-        color: #fff;
-        font-size: 14px;
-      }
-    }
-  
-    /deep/ .ivu-table-tip {
-      line-height: 200px;
-      /deep/ td {
-        color: #fff;
-        background: rgba(255, 255, 255, 0);
-      }
-    }
-  }
-  .bth-search {
-    border-radius: 0 5px 5px 0;
-    .button-style(#fff, #00202d);
-  }
-  /deep/ .ivu-page {
+}
+/deep/ .ivu-table-wrapper {
+  border-radius: 5px;
+  min-height: 280px;
+  position: relative;
+  margin: 20px 0;
+  .ivu-table-header th {
+    height: 60px;
+    background: rgba(0, 32, 45, 0.8);
     color: #fff;
-  }
-  /deep/ .ivu-input-wrapper {
-    width: 400px;
-    .ivu-input {
-      width: 400px;
-      line-height: 40px;
+    line-height: 60px;
+    span {
       font-size: 14px;
-      height: 40px;
     }
   }
-  /deep/ .ivu-modal-confirm-body div {
-    text-align: center;
-    font-size: 16px;
-    color: rgba(0, 32, 45, 1);
+  .ivu-table-column-center, .ivu-table-column-left {
+    background: #204350;
   }
+  .ivu-table {
+    background: #204350;
+    td {
+      height: 60px;
+    }
+  }
+  .ivu-table-row {
+    background: #204350;
+    td {
+      color: #fff;
+      background: #204350;
+      a {
+        color: #4fa6bb;
+      }
+    }
+  }
+  .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
+    background: #204350;
+  }
+  .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td {
+    background: #204350;
+  }
+  .ivu-table-body .ivu-table-column-center, /deep/ .ivu-table-body .ivu-table-column-left {
+    span {
+      color: #fff;
+      font-size: 14px;
+    }
+  }
+// 暂无数据
+  .ivu-table-tip {
+    line-height: 200px;
+    td {
+      color: #fff;
+      background: #204350;
+    }
+  }
+}
+
