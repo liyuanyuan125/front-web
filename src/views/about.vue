@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <WeekDatePicker v-model="weekDate"/>
+    <!-- <WeekDatePicker v-model="weekDate"/>
 
     <div>
       <a @click="visible = true">打开</a>
@@ -11,9 +11,24 @@
       :cityIds.sync="cityIds"
       :topCityIds="topCityIds"
       @ok="onCitySelectOk"
-    />
+    /> -->
 
-    <ECharts :options="chartData" auto-resize class="chart"/>
+    <!-- <ECharts :options="chartData" auto-resize class="chart"/> -->
+
+    <KeepSelectTable
+      border
+      stripe
+      :width="600"
+      :data="tableData"
+      :columns="tableColumns"
+      :selectedIds.sync="selectedIds"
+    >
+      <template slot="name" slot-scope="{ row }">
+        <span>name: {{row.name}}</span>
+      </template>
+    </KeepSelectTable>
+
+    <Page :current.sync="tablePage" :total="18"/>
   </div>
 </template>
 
@@ -25,12 +40,14 @@ import CitySelectDialog from '@/components/citySelectDialog'
 import ECharts from 'vue-echarts'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
+import KeepSelectTable from '@/components/keepSelectTable'
 
 @Component({
   components: {
     WeekDatePicker,
     CitySelectDialog,
-    ECharts
+    ECharts,
+    KeepSelectTable
   }
 })
 export default class AboutPage extends ViewBase {
@@ -69,6 +86,25 @@ export default class AboutPage extends ViewBase {
     ]
   }
 
+  tablePage = 1
+
+  tableColumns = [
+    { title: 'ID', key: 'id' },
+    { title: '名称', slot: 'name' },
+    { title: '年龄', key: 'age' },
+  ]
+
+  selectedIds = [12, 26, 23]
+
+  get tableData() {
+    const page = this.tablePage
+    return Array(10).fill(1).map((n, i) => ({
+      id: page * 10 + i,
+      name: `名字${page * 10 + i}`,
+      age: page * 10 + i
+    }))
+  }
+
   onCitySelectOk({ fastList }: any) {
     debugger
   }
@@ -85,6 +121,7 @@ export default class AboutPage extends ViewBase {
 <style lang="less" scoped>
 .page {
   padding: 15px;
-  height: 1800px;
+  min-height: 1200px;
+  background-color: #fff;
 }
 </style>

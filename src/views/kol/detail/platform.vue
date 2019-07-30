@@ -225,8 +225,8 @@ export default class Main extends ViewBase {
           name: '分享数'
         }
       ]
-
-      const items = data.items || null
+      // 根据日期排序
+      const items = ((data.items as any[]) || []).sort((a, b) => a.date - b.date)
 
       if (!items) {
         this.chart1.initDone = true
@@ -241,6 +241,9 @@ export default class Main extends ViewBase {
           data: [],
           date: []
         }
+      })
+      this.chart1.color = this.chart1.dict1.map((it: any) => {
+        return this.chart1.color
       })
       // k : dau, likeCount, commentCount, playCount, readCount, forwardCount, shareCount
       res.forEach((item: any, index: number) => {
