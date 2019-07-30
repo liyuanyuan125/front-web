@@ -438,6 +438,10 @@ export default class Orienteering extends ViewBase {
     //   confirm('最少选择一个影片')
     //   return
     // }
+    let movie = this.form.type.join(';')
+    if ( (this.movieCustom == 1 && this.numsList.length > 0) || (this.movieCustom == 1 && this.numsList.length == 0) ) {
+      movie = '0'
+    }
     try {
       await direction(
         clean({
@@ -446,7 +450,7 @@ export default class Orienteering extends ViewBase {
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
-              text: this.movieCustom == 1 && this.numsList.length > 0 ? 0 : this.form.type.join(';')
+              text: movie
             },
             {
               tagTypeCode: 'PLAN_GROUP_AGE',
