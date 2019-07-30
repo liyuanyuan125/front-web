@@ -242,6 +242,9 @@ export default class Main extends ViewBase {
           date: []
         }
       })
+      this.chart1.color = this.chart1.dict1.map((it: any) => {
+        return this.chart1.color
+      })
       // k : dau, likeCount, commentCount, playCount, readCount, forwardCount, shareCount
       res.forEach((item: any, index: number) => {
         this.chart1.dataList.forEach((it: any) => {
