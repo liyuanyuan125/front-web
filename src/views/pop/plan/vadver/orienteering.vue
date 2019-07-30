@@ -434,9 +434,13 @@ export default class Orienteering extends ViewBase {
       confirm('请设置目标影院')
       return
     }
-    if (this.movieCustom == 1 && this.numsList.length == 0) {
-      confirm('最少选择一个影片')
-      return
+    // if (this.movieCustom == 1 && this.numsList.length == 0) {
+    //   confirm('最少选择一个影片')
+    //   return
+    // }
+    let movie = this.form.type.join(';')
+    if ( (this.movieCustom == 1 && this.numsList.length > 0) || (this.movieCustom == 1 && this.numsList.length == 0) ) {
+      movie = '0'
     }
     try {
       await direction(
@@ -446,7 +450,7 @@ export default class Orienteering extends ViewBase {
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
-              text: this.movieCustom == 1 ? 0 : this.form.type.join(';')
+              text: movie
             },
             {
               tagTypeCode: 'PLAN_GROUP_AGE',
@@ -460,7 +464,7 @@ export default class Orienteering extends ViewBase {
             return it.text != 0
           }),
           allNation: 1,
-          movieCustom: this.movieCustom,
+          movieCustom: this.numsList.length == 0 ? 0 : this.movieCustom,
           customDeliveryCities: this.cityCustom == 1 ? this.citysId : '' ,
           customDeliveryCinemas: this.cityCustom == 0 ? this.xlslid : '' ,
           deliveryMovies:
