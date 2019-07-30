@@ -22,7 +22,11 @@
       :data="tableData"
       :columns="tableColumns"
       :selectedIds.sync="selectedIds"
-    />
+    >
+      <template slot="name" slot-scope="{ row }">
+        <span>name: {{row.name}}</span>
+      </template>
+    </KeepSelectTable>
 
     <Page :current.sync="tablePage" :total="18"/>
   </div>
@@ -86,7 +90,7 @@ export default class AboutPage extends ViewBase {
 
   tableColumns = [
     { title: 'ID', key: 'id' },
-    { title: '名称', key: 'name' },
+    { title: '名称', slot: 'name' },
     { title: '年龄', key: 'age' },
   ]
 
