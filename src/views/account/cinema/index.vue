@@ -11,7 +11,7 @@
     </div>
     <div class="list-box">
       <div class="list-table">
-        <Table stripe  :loading="tableLoading" :columns="columns4" :data="cinemaData">
+        <Table stripe :columns="columns4" :data="cinemaData">
           <template slot="contactTel" slot-scope="{row, index}">
             <div v-if="editIndex === index"  class="input-tel">
               <Input  v-model="editTel" style="width: 160px" :maxlength="11" @on-blur="handleBlur(row.id, row.contactTel)"/>
@@ -124,8 +124,8 @@ export default class Main extends ViewBase {
           totalCount
         }
       } = await cinmeaList({...this.dataForm})
-      this.cinemaData = items
-      this.total = totalCount
+      this.cinemaData = items || []
+      this.total = totalCount || 0
     } catch (ex) {
       this.handleError(ex)
     } finally {
