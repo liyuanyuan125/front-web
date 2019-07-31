@@ -7,12 +7,13 @@
           v-for="it in fastList"
           :key="it.key"
           v-model="it.checked"
+          v-if='it.text!= "新一线城市"'
           :indeterminate="it.indeterminate"
           class="city-fast-item check-item"
           @on-change="fastChange(it, $event)"
         >
           <span v-if="it.key == 'top'" > {{it.text}}
-            <Poptip trigger="hover" title="票仓城市top10" content="content">
+            <Poptip trigger="hover" title="票仓城市top20" content="content">
               <img v-if="!it.key == 'top' && it.check == true" width="20px" style="vertical-align:middle" src="./assets/question.png" />
               <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
               <div class="api" slot="content">
@@ -344,7 +345,6 @@ const cellData = (list: RegionSubList[], {
 
 const gradeSorts = [
   'first-tier',
-  'new-first-tier',
   'second-tier',
   'third-tier',
   'four-tier',
@@ -432,11 +432,10 @@ export default class CitySelectPane extends ViewBase {
       this.list = filterDirty(list)
       this.cellData = cellData(this.list)
       this.updateTable()
-
       const gradeList = getGradeList(this.list)
       this.fastList = [
         { key: 'all', text: '全国', cityIds: [], checked: false, indeterminate: false },
-        { key: 'top', text: '票仓城市Top10', cityIds: this.topCityIds, checked: false, indeterminate: false },
+        { key: 'top', text: '票仓城市Top20', cityIds: this.topCityIds, checked: false, indeterminate: false },
         ...gradeList
       ]
       if (this.value.length == 0) {
@@ -795,6 +794,7 @@ th {
 }
 .city-fast-list {
   .check-item {
+    min-width: 110px;
     line-height: 40px;
   }
 }

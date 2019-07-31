@@ -161,6 +161,8 @@ export default class DlgEditCinema extends ViewBase {
         movies
         } } = await moviefind(clean({
           ...this.pageList,
+          // beginDate: this.begin,
+          // endDate: this.end
         }))
       this.data = (movies || []).map((it: any) => {
         return {

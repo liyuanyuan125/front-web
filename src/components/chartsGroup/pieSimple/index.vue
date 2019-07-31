@@ -36,7 +36,7 @@ import {
 import { tooltipStyles } from '@/util/echarts'
 const tooltipsDefault = tooltipStyles({
   trigger: 'item',
-  formatter: '{b} <br/> {c}%'
+  formatter: '{a} {b} <br/> {c}%'
 })
 
 @Component({

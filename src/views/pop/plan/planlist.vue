@@ -129,7 +129,14 @@
                   <p @click="plandel(row.id)">删除</p>
                 </div>
               </div>
-              <div v-if="(row.status > 4 && row.status < 8) || row.status == 12 ">
+              <div v-if="row.status == 12">
+                <div class="adver-edit">
+                  <p @click="plandetail(row.id)">详情</p>
+                  <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
+                  <p @click="plandel(row.id)">删除</p>
+                </div>
+              </div>
+              <div v-if="(row.status > 4 && row.status < 8) ">
                 <div class="adver-edit">
                   <p @click="plandetail(row.id)">详情</p>
                 </div>

@@ -9,7 +9,7 @@
       >
       <div class="title">
         <i class="cancel" @click="handleCancel"></i>
-        <p>编辑关联用户</p>
+        <p>编辑关联影院</p>
       </div>
         <Row type="flex" justify="space-between">
           <Col :span="6">
@@ -27,13 +27,14 @@
             </span>
           </Col>
         </Row>
-        <Table
+        <KeepSelectTable
           stripe
-          :columns="columns"
           :data="data"
-          @on-select="singleSelect"
-          @on-select-all="selectAll"
-        ></Table>
+          :columns="columns"
+          :selectedIds.sync="selectedIds"
+        >
+        </KeepSelectTable>
+
         <Page
           :total="value.totalCount"
           v-if="value.totalCount>0"
@@ -58,10 +59,12 @@ import ViewBase from '@/util/ViewBase'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import AreaSelect from '@/components/areaSelect'
 import { resEditCustomer } from '@/api/user'
+import KeepSelectTable from '@/components/keepSelectTable'
 
 @Component({
   components: {
-    AreaSelect
+    AreaSelect,
+    KeepSelectTable
   }
 })
 export default class Change extends ViewBase {
@@ -70,6 +73,8 @@ export default class Change extends ViewBase {
   current = 1
   pageSize = 10
 
+  selectedIds = this.value.check
+
   form: any = {
     searchKey: null,
     areaCode: ''
@@ -77,9 +82,8 @@ export default class Change extends ViewBase {
   areaList = []
   area = []
   data: any = []
-  selectList = []
+
   columns = [
-    { type: 'selection', width: 60, align: 'center' },
     {
       title: '区省市',
       key: 'areaCode',
@@ -118,16 +122,6 @@ export default class Change extends ViewBase {
       // 过滤掉禁用状态2
       this.areaList = data.areaCodes.filter( (item: any) => item.controlStatus == 1)
 
-      // 在渲染之前添加选中的key
-      if (this.value.check) {
-        data.items.map((item: any) => {
-          this.value.check.map((check: any) => {
-            if (item.id == check.id) {
-              item._checked = true
-            }
-          })
-        })
-      }
       this.data = data.items || []
       this.value.totalCount = data.totalCount || 0
     } catch (ex) {
@@ -147,19 +141,12 @@ export default class Change extends ViewBase {
     this.getList()
   }
 
-  singleSelect(select: any) {
-    this.selectList = select
-  }
-  selectAll(select: any) {
-    this.selectList = select
-  }
-
   handleCancel() {
-    this.selectList = []
+    // this.selectedIds = []
     this.value.visible = false
   }
   handleOk() {
-    this.$emit('save', this.selectList)
+    this.$emit('save', this.selectedIds)
     this.value.visible = false
   }
 }

@@ -10,7 +10,7 @@
                 <RadioGroup class='nav' style="margin-right:15px" @on-change="handleChange" v-model="form.dayRangesKey" size="large" type="button">
                   <Radio v-for="(item) in dict.dayRanges" :key="item.key" :disabled="item.disabled" :label="item.key">{{item.text}}</Radio>
                 </RadioGroup>
-                <DatePicker type="daterange" v-model="form.beginDate" @on-change="handleChange" placement="bottom-end" placeholder="自定义时间段"></DatePicker>
+                <DatePicker type="daterange" v-model="form.beginDate" @on-change="dateChange" placement="bottom-end" placeholder="自定义时间段"></DatePicker>
               </div>
             </DetailNavBar>
             </Col>
@@ -46,6 +46,16 @@ import DetailNavBar from './components/detailNavBar.vue'
 import { trend } from '@/api/kolDetailMoreInfo'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
+import { findIndex, at, keyBy } from 'lodash'
+
+const getName = (key: string, list: any[]) => {
+  const i: number = findIndex(list, (it: any) => {
+    return key === it.key
+  })
+  const res: string = list[i].text
+  return res
+}
+
 const timeFormat = 'YYYYMMDD'
 const toolTip: any = {
   borderWidth: 1,
@@ -186,15 +196,21 @@ export default class Main extends ViewBase {
         }
 
         // 取出记录中所包含的渠道（平台）key
-        const msgcode = item[0].channels.map((it: any) => {
-          return it.code
-        })
+        // const msgcode = item[0].channels.map((it: any) => {
+        //   return it.code
+        // })
         // 过滤有效的渠道枚举，排除掉无效但却接口返回的枚举数据
-        this.chart2.dict1 = channelList.filter((it: any, index: number) => {
-           return msgcode.includes(it.key)
-        }).map((its: any, index: number) => {
+        // this.chart2.dict1 = channelList.filter((it: any, index: number) => {
+        //    return msgcode.includes(it.key)
+        // }).map((its: any, index: number) => {
+        //   return {
+        //     text: its.text + '指数',
+        //     key: index
+        //   }
+        // })
+        this.chart2.dict1 = item[0].channels.map((its: any, index: number) => {
           return {
-            text: its.text + '指数',
+            text: getName(its.code, channelList) + '指数',
             key: index
           }
         })
@@ -231,6 +247,10 @@ export default class Main extends ViewBase {
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
    */
   beginDate(dayRangesKey: string) {
+    if ( this.form.beginDate.length > 0 && this.form.beginDate[0] !== '' ) {
+      return moment(this.form.beginDate[0]).format(timeFormat)
+    }
+    // 日期选择器和周期选择互斥
     switch (dayRangesKey) {
       case 'yesterday':
         return moment(new Date())
@@ -252,12 +272,26 @@ export default class Main extends ViewBase {
   }
 
   endDate() {
+    if ( this.form.beginDate.length > 0 && this.form.beginDate[1] !== '' ) {
+      return moment(this.form.beginDate[1]).format(timeFormat)
+    }
+    // 日期选择器和周期选择互斥
     return ( this.form.dayRangesKey == 'yesterday' )
     ? moment(new Date()).add(-1, 'days').format(timeFormat)
     : moment(new Date()).format(timeFormat)
   }
 
   async handleChange() {
+    // 日期选择器和周期选择互斥,清除日历数据
+    this.form.beginDate = []
+    this.chart1.initDone = false
+    this.chart2.initDone = false
+    this.resetData()
+    await this.getChartsData('', 0)
+  }
+
+  async dateChange() {
+    // 日期选择器和周期选择互斥
     this.chart1.initDone = false
     this.chart2.initDone = false
     this.resetData()

@@ -17,12 +17,20 @@
           <Icon type="ios-search" size="22"/>
         </span>
       </div>
-      <Table
+      <!-- <Table
         stripe
         :columns="columns"
         :data="data"
         @on-selection-change="selectChange"
-      ></Table>
+      ></Table> -->
+      <KeepSelectTable
+          stripe
+          :data="data"
+          :columns="columns"
+          :selectedIds.sync="selectedIds"
+        >
+        </KeepSelectTable>
+
       <Page
         :total="value.totalCount"
         v-if="value.totalCount>0"
@@ -45,8 +53,13 @@
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { addEditCustomer } from '@/api/user'
+import KeepSelectTable from '@/components/keepSelectTable'
 
-@Component
+@Component({
+  components: {
+    KeepSelectTable
+  }
+})
 export default class Change extends ViewBase {
   @Prop({ type: Object }) value!: any
   total = 10
@@ -54,10 +67,11 @@ export default class Change extends ViewBase {
   pageSize = 10
   search = null
 
+  selectedIds = this.value.check
+
   data: any = []
-  selectList = []
+  // selectList = []
   columns = [
-    { type: 'selection', width: 60, align: 'center' },
     { title: 'id', key: 'id', align: 'center' },
     { title: '客户名称', key: 'name', align: 'center' }
   ]
@@ -78,15 +92,15 @@ export default class Change extends ViewBase {
     try {
       const { data } = await addEditCustomer(obj)
       // 在渲染之前添加选中的key
-      if (this.value.check) {
-        data.items.map((item: any) => {
-          this.value.check.map((check: any) => {
-            if (item.id == check.id) {
-              item._checked = true
-            }
-          })
-        })
-      }
+      // if (this.value.check) {
+      //   data.items.map((item: any) => {
+      //     this.value.check.map((check: any) => {
+      //       if (item.id == check.id) {
+      //         item._checked = true
+      //       }
+      //     })
+      //   })
+      // }
       this.data = data.items
       this.value.totalCount = data.totalCount
     } catch (ex) {
@@ -102,16 +116,16 @@ export default class Change extends ViewBase {
     this.getList()
   }
 
-  selectChange(select: any) {
-    this.selectList = select
-  }
+  // selectChange(select: any) {
+  //   this.selectList = select
+  // }
 
   handleCancel() {
-    this.selectList = []
+    // this.selectList = []
     this.value.editVis = false
   }
   handleOk() {
-    this.$emit('save', this.selectList)
+    this.$emit('save', this.selectedIds)
     this.value.editVis = false
   }
 }
