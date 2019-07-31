@@ -1,5 +1,6 @@
 import { get } from '@/fn/ajax'
 import { keyBy } from 'lodash'
+import { readableThousands } from '@/util/dealData'
 
 /**
  * KOL详情
@@ -28,22 +29,22 @@ export async function getKol({
 
 /**
  * 获取报价信息
- * https://yapi.aiads-dev.com/project/144/interface/api/4238
+ * https://yapi.aiads-dev.com/project/144/interface/api/5338
  * @param id kol id
  */
 export async function getPrice(id: number) {
   const {
     data: {
-      priceList
+      items
     }
-  } = await get(`/kol/accounts/${id}/delivery-prices`)
+  } = await get(`/kol/accounts/${id}/sale-prices`)
 
-  const priceMap = keyBy(priceList, 'channelCode')
+  const priceMap = keyBy(items, 'channelCode')
   const dealPrice = (type: string) => {
-    const list = ((priceMap[type] || {}).list || []).map(({ categoryName, settlementPrice }: any) => {
+    const list = ((priceMap[type] || {}).list || []).map(({ categoryName, salePrice }: any) => {
       return {
         name: categoryName,
-        value: `￥ ${settlementPrice}`,
+        value: salePrice > 0 ? `￥ ${readableThousands(salePrice)}` : '-',
         enable: true,
       }
     })

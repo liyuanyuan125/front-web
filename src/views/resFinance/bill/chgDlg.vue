@@ -62,11 +62,11 @@ export default class ComponentMain extends ViewBase {
     this.showDlg = true
     this.id = id || 0
     ; (this.$refs.dataForm as any).resetFields()
-    if (this.id == 0) {
+    if (this.id != 0) {
         // console.log(this.id)
       this.ids = [id]
     }
-    if (this.id != 0) {
+    if (this.id == 0) {
       this.ids = ids
     }
   }
