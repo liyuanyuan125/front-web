@@ -336,3 +336,4 @@ export async function getmoney(id: any) {
   const data = await get(`/xadvert/plans/${id}/check-befor-settle`)
   return data
 }
+
