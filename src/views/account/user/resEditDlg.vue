@@ -27,13 +27,6 @@
             </span>
           </Col>
         </Row>
-        <!-- <Table
-          stripe
-          :columns="columns"
-          :data="data"
-          @on-select="singleSelect"
-          @on-select-all="selectAll"
-        ></Table> -->
         <KeepSelectTable
           stripe
           :data="data"

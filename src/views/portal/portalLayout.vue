@@ -20,7 +20,7 @@
 
     <footer class="footer">
       <div class="footer-in">
-        copyright&copy;2018 aiad.com　　北京智能广宣科技有限公司　　北京朝阳区亿利生态广场17层
+        copyright&copy;2019 jydata.com　　北京智能广宣科技有限公司
       </div>
     </footer>
   </div>
