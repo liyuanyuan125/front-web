@@ -336,3 +336,12 @@ export async function getmoney(id: any) {
   const data = await get(`/xadvert/plans/${id}/check-befor-settle`)
   return data
 }
+
+/**
+ * @param  {any} query
+ * 删除广告计划
+ */
+export async function deladver(id: any) {
+  const data = await del(`/xadvert/plans`)
+  return data
+}
