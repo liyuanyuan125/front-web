@@ -18,16 +18,12 @@
         <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <Row type="flex" justify="center" align="middle">
-      <Col :span="24">
-        <div class="wordCloud-wp">
-          <div ref="refChart" v-if="initDone" :style="chartStyle"></div>
-          <div v-else class="loading-wp" :style="chartStyle">
-            <TinyLoading/>
-          </div>
-        </div>
-      </Col>
-    </Row>
+    <div class="content-wrap">
+      <div v-if="initDone" ref="refChart" class="chart-wrap" :style="chartStyle"></div>
+      <div v-show="!initDone" class="chart-loading">
+        <TinyLoading />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -189,5 +185,31 @@ export default class WordCloudChart extends ViewBase {
 .wordCloud-wp {
   cursor: pointer;
 }
-</style>
 
+.content-wrap {
+  position: relative;
+  width: 100%;
+  height: 400px;
+}
+.chart-wrap {
+  width: 100%;
+  height: 400px;
+}
+.chart-wrap:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &::before {
+    content: '暂无数据';
+    font-size: 18px;
+    color: #999;
+  }
+}
+.chart-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
+}
+</style>
