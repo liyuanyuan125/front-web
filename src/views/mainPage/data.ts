@@ -179,7 +179,7 @@ export async function getKol({
           name: date,
           value: item.count,
           rank: item.ranking,
-          categoryRank: item.categoryRaking,
+          categoryRank: item.categoryRanking,
           trend: item.trend,
         }
       })
