@@ -13,7 +13,7 @@
           @on-change="fastChange(it, $event)"
         >
           <span v-if="it.key == 'top'" > {{it.text}}
-            <Poptip trigger="hover" title="票仓城市top10" content="content">
+            <Poptip trigger="hover" title="票仓城市top20" content="content">
               <img v-if="!it.key == 'top' && it.check == true" width="20px" style="vertical-align:middle" src="./assets/question.png" />
               <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
               <div class="api" slot="content">
@@ -435,7 +435,7 @@ export default class CitySelectPane extends ViewBase {
       const gradeList = getGradeList(this.list)
       this.fastList = [
         { key: 'all', text: '全国', cityIds: [], checked: false, indeterminate: false },
-        { key: 'top', text: '票仓城市Top10', cityIds: this.topCityIds, checked: false, indeterminate: false },
+        { key: 'top', text: '票仓城市Top20', cityIds: this.topCityIds, checked: false, indeterminate: false },
         ...gradeList
       ]
       if (this.value.length == 0) {
