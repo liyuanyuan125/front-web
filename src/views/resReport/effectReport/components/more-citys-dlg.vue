@@ -76,6 +76,9 @@ export default class MoreCinemasDlg extends ViewBase {
 
   data: any[] = []
 
+  // 用于导出全部
+  allData: any[] = []
+
   loading = false
 
   async init(type: any) {
@@ -112,17 +115,47 @@ export default class MoreCinemasDlg extends ViewBase {
     }
   }
 
-  exportData() {
-    (this.$refs.table as any).exportCsv({
-      filename: '城市数据',
-      columns: this.columns,
-      data: this.data.map((it: any, index: number) => {
-        return {
-          ...it,
-          cost: it.originalCost
-        }
+  // 导出全部
+  async fetchExportData() {
+    const id = (this.id).toString() || ''
+    try {
+      const {
+        data
+      } = await citiesReport(id, {
+        ...this.form,
+        pageSize: 99999
       })
-    })
+      const items = data.items || null
+      const totalCount = data.totalCount || null
+
+      if (items && items.length > 0 && totalCount && totalCount > 0) {
+        this.allData = items.map((it: any) => {
+          return {
+            name: it.name,
+            viewCount: it.viewCount,
+            scheduleCount: it.scheduleCount,
+            originalCost: parseFloat(it.cost) / 100 // 用于导出内容，iview导出带逗号的字段有bug
+          }
+        })
+      }
+
+      (this.$refs.table as any).exportCsv({
+        filename: '影院数据',
+        columns: this.columns,
+        data: this.allData.map((it: any, index: number) => {
+          return {
+            ...it,
+            cost: it.originalCost
+          }
+        })
+      })
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  exportData() {
+    this.fetchExportData()
   }
 
   // 每页数
