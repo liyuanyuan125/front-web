@@ -35,7 +35,7 @@
           <Row type="flex" justify="space-between" class="chart-group">
             <Col :span="12" class="chart-item">
             <div class="chart-wp" style="margin-right:10px">
-              <PieNest :initDone="chart1.initDone" :noData="chart1.noData" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
+              <PieNest :initDone="chart1.initDone" :noData="chart1.noData" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b} {c} %'})" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
             </div>
             </Col>
 
@@ -91,10 +91,10 @@ import { tooltipStyles } from '@/util/echarts'
 import { intDate, dot } from '@/util/dealData'
 
 const timeFormat = 'YYYYMMDD'
-// #D0BF6B 中性
-// #AD686C 正面
-// #57B4C9 负面
-const colors: string[] = ['#D0BF6B', '#AD686C', '#57B4C9']
+// #AD686C 正面 positive
+// #57B4C9 负面 passive
+// #D0BF6B 中性 neutral
+const colors: string[] = ['#AD686C', '#57B4C9', '#D0BF6B']
 
 @Component({
   components: {
@@ -147,47 +147,22 @@ export default class Temporary extends ViewBase {
       }
     ],
 
-    // 情感分类
-    emotion: [
+    // 情感分类 写死适配多模块
+    emotionList: [
       {
-        key: 0,
-        name: 'positive',
+        key: 'positive',
         text: '正面'
       },
       {
-        key: 1,
-        name: 'passive',
+        key: 'passive',
         text: '负面'
       },
       {
-        key: 2,
-        name: 'neutral',
+        key: 'neutral',
         text: '中性'
       }
     ],
-
-    channelList: [
-      {
-        text: '微博',
-        key: 'weibo'
-      },
-      {
-        text: '微信',
-        key: 'wechat'
-      },
-      {
-        text: '快手',
-        key: 'kuaishou'
-      },
-      {
-        text: '抖音',
-        key: 'douyin'
-      },
-      {
-        text: '小红书',
-        key: 'xiaohongshu'
-      }
-    ]
+    channelList: []
   }
 
   // wordlist: any = []
@@ -223,7 +198,7 @@ export default class Temporary extends ViewBase {
   chart1: any = {
     title: '评论情绪分布',
     dict1: [],
-    dict2: this.dict.emotion,
+    dict2: this.dict.emotionList,
     currentTypeIndex: 0,
     initDone: false,
     noData: false,
@@ -243,7 +218,7 @@ export default class Temporary extends ViewBase {
         name: '累计'
       }
     ],
-    dict2: this.dict.emotion,
+    dict2: this.dict.emotionList,
     xAxis: [],
     currentTypeIndex: 0,
     initDone: false,
@@ -414,17 +389,23 @@ export default class Temporary extends ViewBase {
       const keyWords = data.keyWords || null
 
       if (rate && rate.neutral && rate.passive && rate.positive) {
-        for (const k in rate) {
-          if (rate[k]) {
-            const index = findIndex(this.dict.emotion, (it: any) => {
-              return it.name == k
-            })
+        // #AD686C 正面 positive
+        // #57B4C9 负面 passive
+        // #D0BF6B 中性 neutral
+        // 按照字典顺序遍历成员，同时配置颜色
+        this.dict.emotionList.forEach((it: any, index: number) => {
+          if (rate[it.key] && rate[it.key] !== '') {
             this.chart1.dataList[0].push({
-              value: rate[k],
-              name: this.dict.emotion[index].text
+              value: rate[it.key],
+              name: it.text
+            })
+          } else {
+            this.chart1.dataList[0].push({
+              value: null,
+              name: it.text
             })
           }
-        }
+        })
       }
 
       if (items.length > 0) {
