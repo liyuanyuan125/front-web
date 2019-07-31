@@ -46,6 +46,16 @@ import DetailNavBar from './components/detailNavBar.vue'
 import { trend } from '@/api/kolDetailMoreInfo'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
+import { findIndex, at, keyBy } from 'lodash'
+
+const getName = (key: string, list: any[]) => {
+  const i: number = findIndex(list, (it: any) => {
+    return key === it.key
+  })
+  const res: string = list[i].text
+  return res
+}
+
 const timeFormat = 'YYYYMMDD'
 const toolTip: any = {
   borderWidth: 1,
@@ -186,15 +196,21 @@ export default class Main extends ViewBase {
         }
 
         // 取出记录中所包含的渠道（平台）key
-        const msgcode = item[0].channels.map((it: any) => {
-          return it.code
-        })
+        // const msgcode = item[0].channels.map((it: any) => {
+        //   return it.code
+        // })
         // 过滤有效的渠道枚举，排除掉无效但却接口返回的枚举数据
-        this.chart2.dict1 = channelList.filter((it: any, index: number) => {
-           return msgcode.includes(it.key)
-        }).map((its: any, index: number) => {
+        // this.chart2.dict1 = channelList.filter((it: any, index: number) => {
+        //    return msgcode.includes(it.key)
+        // }).map((its: any, index: number) => {
+        //   return {
+        //     text: its.text + '指数',
+        //     key: index
+        //   }
+        // })
+        this.chart2.dict1 = item[0].channels.map((its: any, index: number) => {
           return {
-            text: its.text + '指数',
+            text: getName(its.code, channelList) + '指数',
             key: index
           }
         })

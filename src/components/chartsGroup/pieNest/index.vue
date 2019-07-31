@@ -117,8 +117,8 @@ export default class PieNest extends ViewBase {
           label: {
             normal: {
               formatter(v: any) {
-                return v.percent + '%' + ` ` + v.name
-                let text = Math.round(v.percent) + '%' + '' + v.name
+                return v.value + '%' + ` ` + v.name
+                let text = Math.round(v.value) + '%' + '' + v.name
                 if ( text.length <= 8 ) {
                   return text
                 } else if (text.length > 8 && text.length <= 16) {

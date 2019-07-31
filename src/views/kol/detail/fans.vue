@@ -2,29 +2,18 @@
   <div>
     <Row>
       <Col span="24">
-        <Form label-position="left" :label-width="100">
-          <Card class="detailmore-card">
-            <div slot="title">
-              <Row type="flex" justify="space-between" align="middle">
-                <Col :span='12' style="color: #fff">
-                  平台
-                  <Select
-                      v-model="pageQuery.channelCode"
-                      placeholder="平台"
-                      filterable
-                      style="max-width:150px; margin-right:10px;"
-                      class="selectedBox"
-                      @on-change="channelChange"
-                    >
-                    <Option
-                        v-for="(option, index) in channelList"
-                        :value="option.key"
-                        :key="index"
-                      >{{option.text}}</Option>
-                  </Select>
-                </Col>
-                <Col :span="12" style="text-align:right; color: #fff">
-                  <!-- <Select
+      <Form label-position="left" :label-width="100">
+        <Card class="detailmore-card">
+          <div slot="title">
+            <Row type="flex" justify="space-between" align="middle">
+              <Col :span='12' style="color: #fff">
+              平台
+              <Select v-model="pageQuery.channelCode" placeholder="平台" filterable style="max-width:150px; margin-right:10px;" class="selectedBox" @on-change="channelChange">
+                <Option v-for="(option, index) in channelList" :value="option.key" :key="index">{{option.text}}</Option>
+              </Select>
+              </Col>
+              <Col :span="12" style="text-align:right; color: #fff">
+              <!-- <Select
                     placeholder="可选品牌"
                     filterable
                     remote
@@ -40,74 +29,40 @@
                       :key="index"
                     >{{option.text}}</Option>
                   </Select> -->
-                  <!-- <router-link :to="{path: '/figure/detailMoreInfo/matching/'+pageQuery.brandId}"><Button :disabled="pageQuery.brandId === ''"
+              <!-- <router-link :to="{path: '/figure/detailMoreInfo/matching/'+pageQuery.brandId}"><Button :disabled="pageQuery.brandId === ''"
                         size="small"
                   type="primary">查看匹配度</Button></router-link>-->
-                </Col>
-              </Row>
-            </div>
-            <div class="content">
-              <Row type="flex" justify="space-between">
-                <Col :span="12">
-                  <div class="chart-wp" style="margin-right:10px">
-                    <Pie
-                      :initDone="chart1.initDone"
-                      :title="chart1.title"
-                      :dict1="chart1.dict1"
-                      :dict2="chart1.dict2"
-                      :color="chart1.color"
-                      :dataList="chart1.dataList"
-                      :currentTypeIndex="chart1.currentTypeIndex"
-                    />
-                  </div>
-                </Col>
-                <Col :span="12">
-                  <div class="chart-wp">
-                    <BarXCategory
-                      :initDone="chart2.initDone"
-                      :title="chart2.title"
-                      :dict1="chart2.dict1"
-                      :dict3="chart2.dict3"
-                      :color="chart2.color"
-                      :dataList="chart2.dataList"
-                      :currentTypeIndex="chart2.currentTypeIndex"
-                    />
-                  </div>
-                </Col>
-              </Row>
-              <Row type="flex" justify="space-between" style="margin-top:10px">
-                <Col :span="12">
-                  <div class="chart-wp borderRadius" style="margin-right:10px; height:460px">
-                    <MapChina
-                      :initDone="chart3.initDone"
-                      :title="chart3.title"
-                      :dict1="chart3.dict1"
-                      :dict2="chart3.dict2"
-                      :color="chart3.color"
-                      :max="chart3.max"
-                      :dataList="chart3.dataList"
-                      :currentTypeIndex="chart3.currentTypeIndex"
-                    />
-                  </div>
-                </Col>
-                <Col :span="12">
-                  <div class="chart-wp" style="height:460px">
-                    <BarYCategory
-                      :initDone="chart4.initDone"
-                      :title="chart4.title"
-                      :dict1="chart4.dict1"
-                      :dict2="chart4.dict2"
-                      :color="chart4.color"
-                      :dataList="chart4.dataList"
-                      :currentTypeIndex="chart4.currentTypeIndex"
-                      @typeChange="typeChangeHander4"
-                    />
-                  </div>
-                </Col>
-              </Row>
-            </div>
-          </Card>
-        </Form>
+              </Col>
+            </Row>
+          </div>
+          <div class="content">
+            <Row type="flex" justify="space-between">
+              <Col :span="12">
+              <div class="chart-wp" style="margin-right:10px">
+                <Pie :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :color="chart1.color" :dataList="chart1.dataList" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b} {c} %'})" :currentTypeIndex="chart1.currentTypeIndex" />
+              </div>
+              </Col>
+              <Col :span="12">
+              <div class="chart-wp">
+                <BarXCategory :initDone="chart2.initDone" :title="chart2.title" :dict1="chart2.dict1" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" />
+              </div>
+              </Col>
+            </Row>
+            <Row type="flex" justify="space-between" style="margin-top:10px">
+              <Col :span="12">
+              <div class="chart-wp borderRadius" style="margin-right:10px; height:460px">
+                <MapChina :initDone="chart3.initDone" :title="chart3.title" :dict1="chart3.dict1" :dict2="chart3.dict2" :color="chart3.color" :max="chart3.max" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" />
+              </div>
+              </Col>
+              <Col :span="12">
+              <div class="chart-wp" style="height:460px">
+                <BarYCategory :initDone="chart4.initDone" :title="chart4.title" :dict1="chart4.dict1" :dict2="chart4.dict2" :color="chart4.color" :dataList="chart4.dataList" :currentTypeIndex="chart4.currentTypeIndex" @typeChange="typeChangeHander4" />
+              </div>
+              </Col>
+            </Row>
+          </div>
+        </Card>
+      </Form>
       </Col>
     </Row>
   </div>
@@ -123,6 +78,7 @@ import MapChina from '@/components/chartsGroup/mapChina/'
 import Pie from '@/components/chartsGroup/pieSimple/'
 import BarYCategory from '@/components/chartsGroup/barYCategory/'
 import { toMap } from '@/fn/array'
+import { tooltipStyles } from '@/util/echarts'
 
 @Component({
   components: {
@@ -135,6 +91,8 @@ import { toMap } from '@/fn/array'
 })
 export default class Fans extends ViewBase {
   @Prop({ type: String, default: 'weibo' }) channel!: string
+
+  tooltipStyles = tooltipStyles
 
   form: any = {}
 
@@ -215,10 +173,12 @@ export default class Fans extends ViewBase {
 
   brands = []
 
-  channelList: any = [{
-    key: 'weibo',
-    text: '微博'
-  }]
+  channelList: any = [
+    {
+      key: 'weibo',
+      text: '微博'
+    }
+  ]
 
   async typeChangeHander4(index: number = 0) {
     if (this.chart4.dataList[index].length < 1) {
@@ -235,7 +195,7 @@ export default class Fans extends ViewBase {
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const id: string = this.$route.params.id || ''
     try {
-      const { data } = await fanslist(id, {...this.pageQuery})
+      const { data } = await fanslist(id, { ...this.pageQuery })
 
       this.channelList = data.channelList ? data.channelList : []
 
@@ -282,8 +242,8 @@ export default class Fans extends ViewBase {
         })
       }
 
-      const provinceList = (provinces as any[] || []).sort((a, b) => a.rate - b.rate)
-      const cityList = (cities as any[] || []).sort((a, b) => a.rate - b.rate)
+      const provinceList = ((provinces as any[]) || []).sort((a, b) => a.rate - b.rate)
+      const cityList = ((cities as any[]) || []).sort((a, b) => a.rate - b.rate)
 
       let [min, max] = [0, 0]
       const provinceData = provinceList.map(({ rate, name }) => {
@@ -328,9 +288,7 @@ export default class Fans extends ViewBase {
         pageSize: 100
       }
       try {
-        const {
-          data
-        } = await brands({ ...mockObj })
+        const { data } = await brands({ ...mockObj })
         const items = data.items || null
 
         if (items && items.length > 0) {
