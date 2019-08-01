@@ -71,7 +71,7 @@ export async function getKol({
         categoryRanking,
         accountCategoryCode,
         fansCounts,
-        settlementPrices
+        prices
       },
 
       accountCategoryList,
@@ -179,7 +179,8 @@ export async function getKol({
           name: date,
           value: item.count,
           rank: item.ranking,
-          trend: item.trend
+          categoryRank: item.categoryRanking,
+          trend: item.trend,
         }
       })
       .filter((it: any) => it != null)
@@ -204,8 +205,8 @@ export async function getKol({
 
     offerData: {
       title: '投放报价',
-      priceList: (settlementPrices || []).map(({ categoryName, settlementPrice }: any) => {
-        const price = readableThousands(settlementPrice)
+      priceList: (prices || []).map(({ categoryName, salePrice }: any) => {
+        const price = readableThousands(salePrice)
         return {
           name: categoryName,
           value: price != '-' ? `¥${price} 起` : price

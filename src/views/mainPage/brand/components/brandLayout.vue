@@ -314,6 +314,7 @@ export default class BrandLayout extends ViewBase {
 
 .logo {
   width: 98px;
+  min-width: 98px;
   height: 98px;
   background-color: #fff;
 }

@@ -30,7 +30,7 @@
           <Row type="flex" justify="space-between">
             <Col :span="12">
             <div class="chart-wp sex-chart" style="margin-right:10px">
-              <Pie :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
+              <Pie :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :color="chart1.color" :dataList="chart1.dataList" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b} {c} %'})" :currentTypeIndex="chart1.currentTypeIndex" />
             </div>
             </Col>
             <Col :span="12">
@@ -66,6 +66,7 @@ import BarXCategory from '@/components/chartsGroup/barXCategory'
 import MapChina from '@/components/chartsGroup/mapChina'
 import Pie from '@/components/chartsGroup/pieSimple'
 import BarYCategory from '@/components/chartsGroup/barYCategory'
+import { tooltipStyles } from '@/util/echarts'
 
 @Component({
   components: {
@@ -78,6 +79,8 @@ import BarYCategory from '@/components/chartsGroup/barYCategory'
 })
 export default class Temporary extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
+
+  tooltipStyles = tooltipStyles
 
   form: any = {}
 
@@ -186,7 +189,7 @@ export default class Temporary extends ViewBase {
       const provinces = item.provinces || null
       const cities = item.cities || null
 
-      if (genders && genders.length > 0) {
+      if (genders && genders.length > 0 && genders[0].rate && genders[0].rate !== '') {
         this.chart1.dict2 = data.genders.filter(({ key, text }: any) => {
           return text !== '未知' || key !== 0
         })

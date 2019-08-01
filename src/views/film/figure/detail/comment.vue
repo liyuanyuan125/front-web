@@ -20,7 +20,7 @@
               <Row type="flex" justify="space-between">
                 <Col :span="12">
                   <div class='chart-wp' style='margin-right:10px'>
-                    <PieNest :initDone="chart1.initDone" :title='chart1.title' :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b}:{c}'})" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" /></div>
+                    <PieNest :initDone="chart1.initDone" :title='chart1.title' :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b} {c} %'})" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" /></div>
                 </Col>
                 <Col :span="12">
                   <div class='chart-wp'>
@@ -422,6 +422,7 @@ export default class Main extends ViewBase {
     this.chart1.initDone = false
     this.chart3.initDone = false
     this.chart4.initDone = false
+    this.tableData = []
     this.resetData()
     await this.getChartsData('', 0)
   }
