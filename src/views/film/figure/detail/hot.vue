@@ -5,62 +5,30 @@
         <div slot="title">
           <Row type="flex" justify="space-between">
             <Col :span="24">
-              <DetailNavBar titleText="统计周期">
-                <div slot="item">
-                  <RadioGroup
-                      class='nav'
-                      style="margin-right:15px"
-                      @on-change="handleChange"
-                      v-model="form.dayRangesKey"
-                      size="large"
-                      type="button">
-                    <Radio v-for="(item) in dict.dayRanges"
-                           :key="item.key"
-                           :disabled="item.disabled"
-                           :label="item.key">{{item.text}}</Radio>
-                  </RadioGroup>
-                  <DatePicker
-                    type="daterange"
-                    v-model="form.beginDate"
-                    @on-change="handleChange"
-                    placement="bottom-end"
-                    placeholder="自定义时间段"
-                  ></DatePicker>
-                </div>
-              </DetailNavBar>
+            <DetailNavBar titleText="统计周期">
+              <div slot="item">
+                <RadioGroup class='nav' style="margin-right:15px" @on-change="handleChange" v-model="form.dayRangesKey" size="large" type="button">
+                  <Radio v-for="(item) in dict.dayRanges" :key="item.key" :disabled="item.disabled" :label="item.key">{{item.text}}</Radio>
+                </RadioGroup>
+                <DatePicker type="daterange" v-model="form.beginDate" @on-change="dateChange" placement="bottom-end" placeholder="自定义时间段"></DatePicker>
+              </div>
+            </DetailNavBar>
             </Col>
           </Row>
         </div>
         <div class="content">
           <Row type="flex" justify="space-between">
             <Col :span="24">
-              <div class="chart-wp">
-                <AreaBasic :initDone="chart1.initDone"
-                    :title="chart1.title"
-                    :dict1="chart1.dict1"
-                    :dict2="chart1.dict2"
-                    :toolTip="chart1.toolTip"
-                    :height="chart1.height"
-                    :color="chart1.color"
-                    :dataList="chart1.dataList"
-                    :currentTypeIndex="chart1.currentTypeIndex" />
-              </div>
+            <div class="chart-wp">
+              <AreaBasic :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="chart1.toolTip" :height="chart1.height" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
+            </div>
             </Col>
           </Row>
           <Row type="flex" justify="space-between">
             <Col :span="24">
-              <div class="chart-wp borderRadius">
-                <AreaBasicxtra
-                  :initDone="chart2.initDone"
-                  :title="chart2.title"
-                  :dict1="chart2.dict1"
-                  :dict2="chart2.dict2"
-                  :color="chart2.color"
-                  :dataList="chart2.dataList"
-                  :currentTypeIndex="chart2.currentTypeIndex"
-                  @typeChange="typeChangeHander2" 
-                />
-              </div>
+            <div class="chart-wp borderRadius">
+              <AreaBasicxtra :initDone="chart2.initDone" :title="chart2.title" :dict1="chart2.dict1" :dict2="chart2.dict2" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" @typeChange="typeChangeHander2" />
+            </div>
             </Col>
           </Row>
         </div>
@@ -73,11 +41,7 @@
 import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import {
-  formatTimestamp,
-  formatTimes,
-  formatNumber
-} from '@/util/validateRules'
+import { formatTimestamp, formatTimes, formatNumber } from '@/util/validateRules'
 import DetailNavBar from './components/detailNavBar.vue'
 import { trend } from '@/api/figureDetailMoreInfo'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
@@ -130,7 +94,7 @@ export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
   form: any = {
-    dayRangesKey: 'last_7_day',
+    dayRangesKey: 'last_7_day'
   }
 
   dict: any = {
@@ -155,7 +119,7 @@ export default class Main extends ViewBase {
         text: '最近90天',
         disabled: false
       }
-    ],
+    ]
   }
 
   chart1: any = {
@@ -204,13 +168,11 @@ export default class Main extends ViewBase {
     }
     const id = this.id
     try {
-      const {
-        data
-      } = await trend({ ...mockObj }, id)
+      const { data } = await trend({ ...mockObj }, id)
 
       const items = data.items || null
 
-      if ( items && items.length > 0 ) {
+      if (items && items.length > 0) {
         this.chart2.dict1 = items[0].channels.map((it: any, index: number) => {
           return {
             text: it.name + '指数',
@@ -244,25 +206,53 @@ export default class Main extends ViewBase {
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
    */
   beginDate(dayRangesKey: string) {
-    switch ( dayRangesKey ) {
-      case 'yesterday' :
-        return moment(new Date()).add(-1, 'days').format(timeFormat)
-      case 'last_30_day' :
-        return moment(new Date()).add(-30, 'days').format(timeFormat)
-      case 'last_90_day' :
-        return moment(new Date()).add(-90, 'days').format(timeFormat)
-      default :
-        return moment(new Date()).add(-7, 'days').format(timeFormat)
+    if (this.form.beginDate.length > 0 && this.form.beginDate[0] !== '') {
+      return moment(this.form.beginDate[0]).format(timeFormat)
+    }
+    // 日期选择器和周期选择互斥
+    switch (dayRangesKey) {
+      case 'yesterday':
+        return moment(new Date())
+          .add(-1, 'days')
+          .format(timeFormat)
+      case 'last_30_day':
+        return moment(new Date())
+          .add(-30, 'days')
+          .format(timeFormat)
+      case 'last_90_day':
+        return moment(new Date())
+          .add(-90, 'days')
+          .format(timeFormat)
+      default:
+        return moment(new Date())
+          .add(-7, 'days')
+          .format(timeFormat)
     }
   }
 
   endDate() {
-    return ( this.form.dayRangesKey == 'yesterday' )
-    ? moment(new Date()).add(-1, 'days').format(timeFormat)
-    : moment(new Date()).format(timeFormat)
+    if (this.form.beginDate.length > 0 && this.form.beginDate[1] !== '') {
+      return moment(this.form.beginDate[1]).format(timeFormat)
+    }
+    // 日期选择器和周期选择互斥
+    return this.form.dayRangesKey == 'yesterday'
+      ? moment(new Date())
+          .add(-1, 'days')
+          .format(timeFormat)
+      : moment(new Date()).format(timeFormat)
   }
 
   async handleChange() {
+    // 日期选择器和周期选择互斥,清除日历数据
+    this.form.beginDate = []
+    this.chart1.initDone = false
+    this.chart2.initDone = false
+    this.resetData()
+    await this.getChartsData('', 0)
+  }
+
+  async dateChange() {
+    // 日期选择器和周期选择互斥
     this.chart1.initDone = false
     this.chart2.initDone = false
     this.resetData()

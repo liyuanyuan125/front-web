@@ -303,7 +303,7 @@ export default class Comment extends ViewBase {
   tableData: any[] = []
 
   async typeChangeHander(index: number = 0) {
-    this.chart2.currentTypeIndex = index
+    this.chart2.currentTypeIndex = index    
   }
 
   /**
@@ -460,6 +460,7 @@ export default class Comment extends ViewBase {
   async handleChange() {
     this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
     this.form.beginDate[1] = this.endDate()
+    this.tableData = []
     await this.initHandler()
   }
 

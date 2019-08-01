@@ -493,6 +493,7 @@ export default class Temporary extends ViewBase {
     this.chart1.initDone = false
     this.chart3.initDone = false
     this.chart4.initDone = false
+    this.tableData = []
     this.resetData()
     await this.getChartsData('', 0)
   }

@@ -291,9 +291,9 @@ export default class Main extends ViewBase {
 
   save(val: any) {
     if (val.length > 0) {
-      this.resEditDlg.check = val
-      this.editVisible.check = val
-      this.partnerIds = val.map((item: any) => item.id)
+     // this.resEditDlg.check = val
+     // this.editVisible.check = val
+      this.partnerIds = val
       this.custList = this.cinemaLen = this.partnerIds.length
     }
   }
