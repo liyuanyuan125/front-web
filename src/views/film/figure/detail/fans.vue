@@ -189,7 +189,7 @@ export default class Temporary extends ViewBase {
       const provinces = item.provinces || null
       const cities = item.cities || null
 
-      if (genders && genders.length > 0) {
+      if (genders && genders.length > 0 && genders[0].rate && genders[0].rate !== '') {
         this.chart1.dict2 = data.genders.filter(({ key, text }: any) => {
           return text !== '未知' || key !== 0
         })
