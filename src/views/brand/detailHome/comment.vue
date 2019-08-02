@@ -375,9 +375,13 @@ export default class Temporary extends ViewBase {
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const that: any = this
+    // const mockObj = {
+    //   beginDate: this.form.beginDate[0],
+    //   endDate: this.form.beginDate[1]
+    // }
     const mockObj = {
-      beginDate: this.form.beginDate[0],
-      endDate: this.form.beginDate[1]
+      beginDate: this.beginDate(this.form.dayRangesKey),
+      endDate: this.endDate()
     }
     // 107028 dev有数据
     const id = this.$route.params.id || ''
@@ -458,6 +462,10 @@ export default class Temporary extends ViewBase {
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
    */
   beginDate(dayRangesKey: string) {
+    if ( this.form.beginDate.length > 0 && this.form.beginDate[0] !== '' ) {
+      return moment(this.form.beginDate[0]).format(timeFormat)
+    }
+    // 日期选择器和周期选择互斥
     switch (dayRangesKey) {
       case 'yesterday':
         return moment(new Date())
@@ -479,6 +487,10 @@ export default class Temporary extends ViewBase {
   }
 
   endDate() {
+    if ( this.form.beginDate.length > 0 && this.form.beginDate[1] !== '' ) {
+      return moment(this.form.beginDate[1]).format(timeFormat)
+    }
+    // 日期选择器和周期选择互斥
     return this.form.dayRangesKey == 'yesterday'
       ? moment(new Date())
           .add(-1, 'days')
@@ -487,12 +499,13 @@ export default class Temporary extends ViewBase {
   }
 
   async handleChange() {
-    this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
-    this.form.beginDate[1] = this.endDate()
+    // 日期选择器和周期选择互斥,清除日历数据
+    this.form.beginDate = []
     this.chartNature.initDone = false
     this.chart1.initDone = false
     this.chart3.initDone = false
     this.chart4.initDone = false
+    this.tableData = []
     this.resetData()
     await this.getChartsData('', 0)
   }
@@ -553,7 +566,9 @@ export default class Temporary extends ViewBase {
     const that: any = this
     const mockObj = {
       keyWord: key == '' ? this.keywordQuery.keyword : key,
-      channelCode: this.form.channelCode
+      // channelCode: this.form.channelCode,
+      beginDate: this.beginDate(this.form.dayRangesKey),
+      endDate: this.endDate()
     }
     const id = this.id
     try {
