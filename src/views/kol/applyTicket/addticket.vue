@@ -44,7 +44,7 @@
           <Row style='margin-top: 10px;'><span class='bx'>*</span>
           <!--  <Col :span='4' style='margin-top: 5px;width: 100px；'>发票内容：</Col>
            <Col :span='6'>
-             <Select v-model="query.itemCode" placeholder="发票内容" filterable
+             <Select v-model="query.invoiceContent" placeholder="发票内容" filterable
                 clearable class="component" >
                 <Option v-for="it in faList" :key="it.key" :value="it.key"
                   :label="it.text" class="flex-box">
@@ -52,8 +52,8 @@
                 </Option>
               </Select>
            </Col> -->
-           <FormItem label="发票内容" prop="itemCode">
-            <Select v-model="query.itemCode" placeholder="发票内容" filterable
+           <FormItem label="发票内容" prop="invoiceContent">
+            <Select v-model="query.invoiceContent" placeholder="发票内容" filterable
                 clearable class="component" >
                 <Option v-for="it in faList" :key="it.key" :value="it.key"
                   :label="it.text" class="flex-box">
@@ -89,12 +89,12 @@
             <br><br>
             <Input  v-model="query.address" placeholder='请输入详细地址'></Input>
            </Col> -->
-           <FormItem v-if='query.invoiceType == 1' label="地址" prop="address">
+           <FormItem v-if='query.invoiceType == "VAT_SPECIAL_INVOICE"' label="地址" prop="address">
             <AreaSelect v-model="area" />
             <br><br>
             <Input  v-model="query.address" placeholder='请输入详细地址'></Input>
           </FormItem>
-          <FormItem v-if='query.invoiceType == 2' label="地址" prop="">
+          <FormItem v-if='query.invoiceType == "VAT_GENERAL_INVOICE"' label="地址" prop="">
             <AreaSelect v-model="area" />
             <br><br>
             <Input  v-model="query.address" placeholder='请输入详细地址'></Input>
@@ -105,10 +105,10 @@
            <Col :span='20'>
             <InputNumber  v-model="query.telphone" placeholder=''></InputNumber >
            </Col> -->
-           <FormItem v-if='query.invoiceType == 1' label="电话" prop="telphone">
+           <FormItem v-if='query.invoiceType == "VAT_SPECIAL_INVOICE"' label="电话" prop="telphone">
             <Input v-model="query.telphone"></Input>
           </FormItem>
-           <FormItem v-if='query.invoiceType == 2' label="电话" prop="">
+           <FormItem v-if='query.invoiceType == "VAT_GENERAL_INVOICE"' label="电话" prop="">
             <Input v-model="query.telphone"></Input>
           </FormItem>
           </Row>
@@ -117,10 +117,10 @@
            <Col :span='20'>
             <Input  v-model="query.accountBank" placeholder=''></Input>
            </Col> -->
-           <FormItem v-if='query.invoiceType == 1'  label="开户行" prop="accountBank">
+           <FormItem v-if='query.invoiceType == "VAT_SPECIAL_INVOICE"'  label="开户行" prop="accountBank">
             <Input v-model="query.accountBank"></Input>
           </FormItem>
-          <FormItem v-if='query.invoiceType == 2'  label="开户行" prop="">
+          <FormItem v-if='query.invoiceType == "VAT_GENERAL_INVOICE"'  label="开户行" prop="">
             <Input v-model="query.accountBank"></Input>
           </FormItem>
           </Row>
@@ -129,10 +129,10 @@
            <Col :span='20'>
             <Input v-model="query.accountNumber" placeholder=''></Input>
            </Col> -->
-           <FormItem  v-if='query.invoiceType == 1'  label="开户账号" prop="accountNumber">
+           <FormItem  v-if='query.invoiceType == "VAT_SPECIAL_INVOICE"'  label="开户账号" prop="accountNumber">
             <Input v-model="query.accountNumber"></Input>
           </FormItem>
-          <FormItem  v-if='query.invoiceType == 2'  label="开户账号" prop="">
+          <FormItem  v-if='query.invoiceType == "VAT_GENERAL_INVOICE"'  label="开户账号" prop="">
             <Input v-model="query.accountNumber"></Input>
           </FormItem>
           </Row>
@@ -240,9 +240,9 @@ import Decimal from 'decimal.js'
 export default class Main extends ViewBase {
   totalCount = 0
   query: any = {
-    itemCode: 1,
+    invoiceContent: 'service_fee',
     totalTaxFee: 0,
-    invoiceType: 1,
+    invoiceType: 'VAT_SPECIAL_INVOICE',
     customerType: 1,
     name: '',
     taxId: '',
@@ -304,7 +304,7 @@ export default class Main extends ViewBase {
 
   get rule() {
     return {
-      itemCode: [
+      invoiceContent: [
         { required: true, message: '请选择发票内容'  },
       ],
       name: [
@@ -353,7 +353,7 @@ export default class Main extends ViewBase {
   async seach() {
     try {
       const { data } = await queryList({pageIndex: 1, pageSize: 10})
-      this.faList = data.itemList
+      this.faList = data.invoiceContentList
       this.faType = data.invoiceTypeList
       this.taiType = data.customerTypeList
     } catch (ex) {
@@ -375,7 +375,7 @@ export default class Main extends ViewBase {
       this.taiType = data.customerTypeList
       this.money = new Decimal(data.orderTotalFee).minus(data.refundTotalFee)
       this.viewnum = true
-      this.query.itemCode = data.itemCode,
+      this.query.invoiceContent = data.invoiceContent,
       this.query.totalTaxFee = new Decimal(data.orderTotalFee).minus(data.refundTotalFee),
       this.query.invoiceType = data.invoiceType,
       this.query.customerType = data.customerType,
@@ -423,7 +423,7 @@ export default class Main extends ViewBase {
   }
 
   async ok(dataForms: any) {
-    // this.query.itemCode = Number(this.query.itemCode)
+    // this.query.invoiceContent = Number(this.query.invoiceContent)
     const myThis: any = this
    myThis.$refs[dataForms].validate(async ( valid: any ) => {
       if (valid) {

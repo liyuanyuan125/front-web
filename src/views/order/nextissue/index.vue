@@ -30,8 +30,8 @@
              @on-change="aes">
               <Option
                 v-for="item in movieList"
-                :key="item.id"
-                :value="item.id"
+                :key="item.code"
+                :value="item.code"
               >{{item.shortName}}</Option>
             </Select>
           </Col>

@@ -265,6 +265,10 @@ export default class Main extends ViewBase {
    * @param dayRangesKey 昨天 | 过去7天 | 过去30天 | 过去90天
    */
   beginDate(dayRangesKey: string) {
+    if ( this.form.beginDate.length > 0 && this.form.beginDate[0] !== '' ) {
+      return moment(this.form.beginDate[0]).format(timeFormat)
+    }
+    // 日期选择器和周期选择互斥
     switch (dayRangesKey) {
       case 'yesterday':
         return moment(new Date())
@@ -286,14 +290,26 @@ export default class Main extends ViewBase {
   }
 
   endDate() {
-    return this.form.dayRangesKey == 'yesterday'
-      ? moment(new Date())
-          .add(-1, 'days')
-          .format(timeFormat)
-      : moment(new Date()).format(timeFormat)
+    if ( this.form.beginDate.length > 0 && this.form.beginDate[1] !== '' ) {
+      return moment(this.form.beginDate[1]).format(timeFormat)
+    }
+    // 日期选择器和周期选择互斥
+    return ( this.form.dayRangesKey == 'yesterday' )
+    ? moment(new Date()).add(-1, 'days').format(timeFormat)
+    : moment(new Date()).format(timeFormat)
   }
 
   async handleChange() {
+    // 日期选择器和周期选择互斥,清除日历数据
+    this.form.beginDate = []
+    this.chart1.initDone = false
+    this.chart2.initDone = false
+    this.resetData()
+    await this.getChartsData('', 0)
+  }
+
+  async dateChange() {
+    // 日期选择器和周期选择互斥
     this.chart1.initDone = false
     this.chart2.initDone = false
     this.resetData()
