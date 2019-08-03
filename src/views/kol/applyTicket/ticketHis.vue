@@ -8,7 +8,7 @@
               <Col :span='3' style='text-align: center;'><span class='hui' v-for='(it , index) in statusList' :key='index' v-if='item.status == it.key'>{{it.text}}</span></Col>
             </Row>
             <Row class="li-col">
-              <Col :span="8"><span class='hui'>发票内容：</span><span v-for='(it , index) in itemList' :key='index' v-if='item.itemCode == it.key'>{{it.text}}</span></Col>
+              <Col :span="8"><span class='hui'>发票内容：</span><span v-for='(it , index) in itemList' :key='index' v-if='item.invoiceContent == it.key'>{{it.text}}</span></Col>
               <Col :span="8"><span class='hui'>发票总额：</span><span class='red'>¥{{item.totalTaxFee}}</span></Col>
               <Col :span="5" style=' height: 100px; line-height: 20px; padding-top: 22px;'>
                 <Row v-if='item.status == 2'>
@@ -38,7 +38,6 @@
       :current="query.pageIndex"
       :page-size="query.pageSize"
       show-total
-      show-elevator
       @on-change="handlepageChange"
       @on-page-size-change="handlePageSize"
     />
@@ -98,7 +97,7 @@ export default class Main extends ViewBase {
       })
       this.totalCount = data.totalCount
       this.statusList = data.statusList
-      this.itemList = data.itemList
+      this.itemList = data.invoiceContentList
     } catch (ex) {
       this.handleError(ex)
     } finally {
@@ -175,5 +174,57 @@ export default class Main extends ViewBase {
   font-weight: 500;
   font-size: 20px;
 }
-
+/deep/ .btnCenter {
+  text-align: center;
+  height: 100px;
+  // background: rgba(32, 67, 80, 1);
+  margin: 0 20px 0 20px;
+  line-height: 100px;
+  color: #fff;
+}
+/deep/ .ivu-page-prev {
+  border: 0;
+  background: rgba(255, 255, 255, 0);
+}
+/deep/ .ivu-page-next {
+  border: 0;
+  background: rgba(255, 255, 255, 0);
+}
+/deep/ .ivu-page-item-active {
+  border-color: #eee;
+  background: #00202d !important;
+  border-radius: 50%;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+}
+/deep/ .ivu-page-item-active:hover a {
+  color: #fff;
+}
+/deep/ .ivu-page-item-active a {
+  color: #fff;
+}
+/deep/ .ivu-page-item {
+  border: 0;
+  display: inline-block;
+  vertical-align: middle;
+  background: rgba(255, 255, 255, 0);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 4px;
+  text-align: center;
+  list-style: none;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+/deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
+  color: #00202d;
+}
+/deep/ .ivu-page-total {
+  color: #00202d;
+}
 </style>
