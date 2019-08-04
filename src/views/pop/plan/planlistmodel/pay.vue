@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinemaList, financeMsg, payMoney, getmoney } from '@/api/popPlan'
+import { cinemaList, financeMsg, payMoney } from '@/api/popPlan'
 import { clean } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
@@ -34,23 +34,14 @@ export default class DlgEditCinema extends ViewBase {
   showmongy = false
   id = 0
 
-  async money(id: any) {
-    try {
-      const { data } = await getmoney(id)
-      if (data.availableAmount - (data.depositAmount || 0) > 0) {
-        this.showmongy = true
-      }
-      this.showDlg = true
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
-
   async init(id: any, freezeAmount: any, ids: any) {
     this.id = ids
     try {
-       this.money(this.id)
-      // const { data } = await financeMsg(id)
+      const { data } = await financeMsg(id)
+      if (data.availableAmount - (freezeAmount || 0) > 0) {
+        this.showmongy = true
+      }
+      this.showDlg = true
     } catch (ex) {
       this.handleError(ex)
     }
