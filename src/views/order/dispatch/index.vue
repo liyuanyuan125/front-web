@@ -70,13 +70,12 @@
                     <label>目标影片</label>
                     <!-- 当用户的投放模式为通投时，此项数据显示为【所有影片 （?）】 -->
                     <div>
-                      <p v-if='it.targetMovies.length > 0'>
-                        <span v-if="it.movieCustom == 0" v-for='item in (it.targetMovies || [])'>《{{item.movieName}}》</span>
-                        <Tooltip v-else placement="bottom" max-width="200" class="text-cursor" content="“影片不限，请在投放周期内所有影片前安排上刊">
+                      <p v-if="it.movieCustom == 1" ><span v-for='item in (it.targetMovies || [])'>《{{item.movieName}}》</span></p>
+                      <p v-else>
+                        <Tooltip placement="bottom" max-width="200" class="text-cursor" content="“影片不限，请在投放周期内所有影片前安排上刊">
                           所有影片<Icon type="md-help" />
                          </Tooltip>
                       </p>
-                      <span v-else>暂无 </span>
                     </div>
                   </div>
 
