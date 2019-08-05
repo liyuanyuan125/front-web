@@ -519,7 +519,9 @@ export default class Comment extends ViewBase {
     const that: any = this
     const mockObj = {
       keyWord: key == '' ? this.keywordQuery.keyword : key,
-      channelCode: this.form.channelCode
+      channelCode: this.form.channelCode,
+      beginDate: this.beginDate(this.form.dayRangesKey),
+      endDate: this.endDate()
     }
     const id = this.id
     try {
