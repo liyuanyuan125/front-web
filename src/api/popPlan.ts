@@ -333,7 +333,7 @@ export async function downcinema(id: any, query: any) {
  * 获取账户余额
  */
 export async function getmoney(id: any) {
-  const data = await get(`/xadvert/plans/${id}/check-befor-settle`)
+  const data = await get(`/xadvert/plans/${id}/check-before-settle`)
   return data
 }
 

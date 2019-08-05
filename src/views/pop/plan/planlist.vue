@@ -157,7 +157,7 @@
     </div>
     <Sure ref="Sure" @uplist="uplist"/>
     <Pay ref="Pay" @uplist="uplist"/>
-    <Pay ref="payend" @uplist="uplist"/>
+    <Payend ref="payend" @uplist="uplist"/>
     <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible" @submitRelevance="submitRelevance"></relevanceDlg>
   </div>
 </template>
