@@ -147,22 +147,22 @@ export async function getKol({
       const ret = [
         {
           name: '正面',
-          value: percent(dot(map.positive, 'rate')),
-          trend: +dot(map.positive, 'trend') || 0,
+          value: +percent(dot(map.positive, 'rate'), 2),
+          trend: +percent(dot(map.positive, 'trend'), 2),
           color: '#ca7273'
         },
 
         {
           name: '中立',
-          value: percent(dot(map.neutral, 'rate')),
-          trend: +dot(map.neutral, 'trend') || 0,
+          value: +percent(dot(map.neutral, 'rate'), 2),
+          trend: +percent(dot(map.neutral, 'trend'), 2),
           color: '#f3d872'
         },
 
         {
           name: '负面',
-          value: percent(dot(map.passive, 'rate')),
-          trend: +dot(map.passive, 'trend') || 0,
+          value: +percent(dot(map.passive, 'rate'), 2),
+          trend: +percent(dot(map.passive, 'trend'), 2),
           color: '#57b4c9'
         },
       ]

@@ -55,7 +55,7 @@
     <div v-if="value.status == 9 || value.status == 8 || value.status == 6 ||  value.status == 7 ||  value.status == 5"
       class="plan-message">
       <p>您已缴纳 ￥{{formatNums(value.depositAmount)}} 为定金 </p>
-      <span style="margin-top: 20px; margin-bottom: 20px">本计划将于【2019/02/21日】开始 </span>
+      <span style="margin-top: 20px; margin-bottom: 20px">本计划将于【{{formatDate(value.beginDate)}}】开始 </span>
       <div class="btn-box">
         <Button type="default" :to="{ name: 'effect-report', params: { 
           id: $route.params.id
@@ -105,7 +105,9 @@ import Sure from '../planlistmodel/sure.vue'
 import Pay from '../planlistmodel/pay.vue'
 import Collect from '../planlistmodel/collect.vue'
 import Payend from '../planlistmodel/payend.vue'
+import moment from 'moment'
 
+const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
     Sure,
@@ -129,6 +131,10 @@ export default class App extends ViewBase {
     this.$nextTick(() => {
       (this.$refs as any).Pay.init(this.value.companyId, this.value.budgetAmount, this.value.id)
     })
+  }
+
+  formatDate(data: any) {
+    return data ? `${(data + '').slice(0, 4)}-${(data + '').substr(4, 2)}-${(data + '').substr(6, 2)}` : '暂无'
   }
 
   payend() {

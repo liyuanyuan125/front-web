@@ -2,9 +2,9 @@
   <div class="page">
     <div class='t-title'>下刊管理</div>
     <div class='title-tip'>
-    	本功能只展示需要提前（紧急）下刊的广告单;未在本页面展示的广告单，请统一在每周的周三进行批量下刊操作</br>
-    	图例 “&nbsp;<div class='img-w1'></div>&nbsp;” ，表示需要下刊，请在影院的TMS广告排播系统中移除对应的广告片，然后再点击该图标即可设为“已下刊”</br>
-		图例 “&nbsp;<div class='img-w2'></div>&nbsp;” ，表示已下刊，点击可设为“未下刊”
+      本功能只展示需要提前（紧急）下刊的广告单;未在本页面展示的广告单，请统一在每周的周三进行批量下刊操作</br>
+      图例 “&nbsp;<div class='img-w1'></div>&nbsp;” ，表示需要下刊，请在影院的TMS广告排播系统中移除对应的广告片，然后再点击该图标即可设为“已下刊”</br>
+    图例 “&nbsp;<div class='img-w2'></div>&nbsp;” ，表示已下刊，点击可设为“未下刊”
     </div>
     <div class='body'>
       <Row class='row-ul'>
@@ -29,42 +29,42 @@
              @on-clear="movieList = []"
              @on-change="aes">
               <Option
-                v-for="item in movieList"
-                :key="item.id"
+                v-for="(item, index) in movieList"
+                :key="index"
                 :value="item.id"
-              >{{item.shortName}}</Option>
+              >【{{item.code}}】{{item.shortName}}</Option>
             </Select>
           </Col>
         </Col>
       </Row>
       <div style='margin-top: 15px;'>
-      	<Row class='li-title'>
+        <Row class='li-title'>
           <Col :span='3'>影片名称</Col>
           <Col :span='2' >总投放时长</Col>
           <Col :span='15'>广告列表</Col>
           <div :span='2' @click="allover(5)" style='color: #57b4c9;cursor: pointer;font-size: 12px;float:right;'>一键设置为已下刊</div>
         </Row>
         <ul class='itemul'>
-        	<li class='li-item' v-for='(it,index) in itemlist' :key='index'>
-        		<row>
-        			<Col span='3'>{{it.movieName}}</Col>
-        			<Col span='2'>{{it.videoTotalLength}}s</Col>
-        			<Col span='19'>
-        				<row>
-        					<Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
+          <li class='li-item' v-for='(it,index) in itemlist' :key='index'>
+            <row>
+              <Col span='3'>{{it.movieName}}</Col>
+              <Col span='2'>{{it.videoTotalLength}}s</Col>
+              <Col span='19'>
+                <row>
+                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'>
                   
                   <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
-        					  <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
-						        <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: it.id }}">{{item.videoName.slice(0,10)}}...</router-link>
-						      </Tooltip>
-							  <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.id }}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
-						      ({{item.videoLength}}s)
-        					</Col>
-        				</row>
-        			</Col>
-        		</row>
-        	</li>
+                    <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
+                    <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: it.id }}">{{item.videoName.slice(0,10)}}...</router-link>
+                  </Tooltip>
+                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.id }}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+                  ({{item.videoLength}}s)
+                  </Col>
+                </row>
+              </Col>
+            </row>
+          </li>
           <li v-if='itemlist.length == 0' style='text-align: center;line-height: 50px;'>暂无数据</li>
         </ul>
       </div>
