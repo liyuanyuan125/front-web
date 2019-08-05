@@ -2,31 +2,31 @@
   <div class="page">
     <div class='t-title'>上刊管理</div>
     <div class='title-tip'>
-    	下方仅显示需要上刊的广告,请及时确认上刊</br>
-    	图例 “&nbsp;<div class='img-w1'></div>&nbsp;” ，表示需要排播，请先点击广告名称下载对应格式的DCP包并在影院的TMS系统中进行排播，然后再点击该图标即可设为“已排”</br>
-		图例 “&nbsp;<div class='img-w2'></div>&nbsp;” ，表示已排，点击可设为“未排”
+      下方仅显示需要上刊的广告,请及时确认上刊</br>
+      图例 “&nbsp;<div class='img-w1'></div>&nbsp;” ，表示需要排播，请先点击广告名称下载对应格式的DCP包并在影院的TMS系统中进行排播，然后再点击该图标即可设为“已排”</br>
+    图例 “&nbsp;<div class='img-w2'></div>&nbsp;” ，表示已排，点击可设为“未排”
     </div>
     <div class='body'>
       <Row class='row-ul'>
        <Col span='6' class='data'> <WeekDatePicker class='data-s' v-model="weekDate"/></Col>
         <Col :span="10">
           <Col style='margin-left: 12px;' span="14">
-            <Select 
-             class='sels' 
-             v-model='query.cinemaId'  
+            <Select
+             class='sels'
+             v-model='query.cinemaId'
              clearable
              filterable
-             placeholder="请输入影院名称/专资编码查询" 
+             placeholder="请输入影院名称/专资编码查询"
              remote
              :loading="loading"
              :remote-method="remoteMethod"
              @on-clear="movieList = []"
              @on-change="seachs">
               <Option
-                v-for="item in movieList"
-                :key="item.id"
+                v-for="(item, index) in movieList"
+                :key="index"
                 :value="item.id"
-              >{{item.shortName}}</Option>
+              >【{{item.code}}】{{item.shortName}}</Option>
             </Select>
           </Col>
         </Col>
@@ -44,7 +44,7 @@
               <Col span='19'>
                 <row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in normallist.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
-                  
+
                   <div v-if='item.status == 1' @click="change(normallist.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(normallist.id , item.status, item.orderId)" class='imgs1'></div>
                     <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
@@ -60,33 +60,33 @@
           <!-- <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div> -->
       </Row>
       <div style='margin-top: 15px;'>
-      	<Row class='li-title'>
+        <Row class='li-title'>
           <Col :span='3'>影片名称</Col>
           <Col :span='2' >总投放时长</Col>
           <Col :span='15'>广告列表</Col>
           <div :span='2' @click="allover(5)" style='color: #57b4c9;cursor: pointer;font-size: 12px;float:right;'>一键设置为已排</div>
         </Row>
         <ul class='itemul'>
-        	<li class='li-item' v-for='(it,index) in itemlist' :key='index'>
-        		<row>
-        			<Col span='3'>{{it.movieName}}</Col>
-        			<Col span='2'>{{it.videoTotalLength}}s</Col>
-        			<Col span='19'>
-        				<row>
-        					<Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
-                  
+          <li class='li-item' v-for='(it,index) in itemlist' :key='index'>
+            <row>
+              <Col span='3'>{{it.movieName}}</Col>
+              <Col span='2'>{{it.videoTotalLength}}s</Col>
+              <Col span='19'>
+                <row>
+                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
+
                   <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
-        					  <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
-						        <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">{{item.videoName.slice(0,10)}}...</router-link>
-						      </Tooltip>
-							  <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
-						      ({{item.videoLength}}s)
-        					</Col>
-        				</row>
-        			</Col>
-        		</row>
-        	</li>
+                    <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
+                    <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">{{item.videoName.slice(0,10)}}...</router-link>
+                  </Tooltip>
+                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+                  ({{item.videoLength}}s)
+                  </Col>
+                </row>
+              </Col>
+            </row>
+          </li>
           <li v-if='itemlist.length == 0' style='text-align: center;line-height: 50px;'>暂无影片数据</li>
         </ul>
       </div>
@@ -422,7 +422,7 @@ export default class Main extends ViewBase {
         info('请选择影院')
         return
       }
-      this.query.cinemaId = 0
+      // this.query.cinemaId = 0
       // 获取上刊列表
       const datalist = await queryList(this.query)
       this.itemlist = datalist.data.items
