@@ -11,12 +11,12 @@
        <Col span='6' class='data'> <WeekDatePicker class='data-s' v-model="weekDate"/></Col>
         <Col :span="10">
           <Col style='margin-left: 12px;' span="14">
-            <Select 
-             class='sels' 
-             v-model='query.cinemaId'  
+            <Select
+             class='sels'
+             v-model='query.cinemaId'
              clearable
              filterable
-             placeholder="请输入影院名称/专资编码查询" 
+             placeholder="请输入影院名称/专资编码查询"
              remote
              :loading="loading"
              :remote-method="remoteMethod"
@@ -44,7 +44,7 @@
               <Col span='19'>
                 <row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in normallist.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
-                  
+
                   <div v-if='item.status == 1' @click="change(normallist.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(normallist.id , item.status, item.orderId)" class='imgs1'></div>
                     <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
@@ -74,7 +74,7 @@
         			<Col span='19'>
         				<row>
         					<Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
-                  
+
                   <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
         					  <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
@@ -422,6 +422,7 @@ export default class Main extends ViewBase {
         info('请选择影院')
         return
       }
+      // this.query.cinemaId = 0
       // 获取上刊列表
       const datalist = await queryList(this.query)
       this.itemlist = datalist.data.items

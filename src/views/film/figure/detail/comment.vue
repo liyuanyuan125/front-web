@@ -483,8 +483,8 @@ export default class Main extends ViewBase {
     const that: any = this
     const mockObj = {
       keyword: (key == '') ? this.keywordQuery.keyword : key,
-      pageIndex: 1,
-      pageSize: 10
+      beginDate: this.beginDate(this.form.dayRangesKey),
+      endDate: this.endDate()
     }
     try {
       const {

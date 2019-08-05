@@ -213,11 +213,11 @@ export default class Temporary extends ViewBase {
           barMaxWidth: '20',
           data: []
         }
-        ages.forEach(({ v, k }: any) => {
+        ages.forEach(({ r, k }: any) => {
           this.chart2.dict3.push({
             text: k
           })
-          this.chart2.dataList[this.chart2.currentTypeIndex].data.push(v / 100)
+          this.chart2.dataList[this.chart2.currentTypeIndex].data.push(r / 100)
         })
         this.chart2.initDone = true
       }
