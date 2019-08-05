@@ -20,10 +20,16 @@
     <div class="bill-modal-content">
       <div class="title bottom-20">广告片列表</div>
       <Table :columns="column" :data="dataList" disabled-hover>
+        <!-- 是否通投 0通投 1-未通投-->
         <template slot="playMonitorTexts" slot-scope="{row}">
           <span v-if="row.playMonitorStatus == 4" class="status-error">{{row.playMonitorTexts}}</span>
           <span v-else class="status-pass">{{row.playMonitorTexts}}</span>
         </template>
+        <template slot="movieName" slot-scope="{row: {movieName, movieCustom}}">
+          <span v-if="movieCustom == 0">通投</span>
+          <span v-else>{{movieName}}</span>
+        </template>
+
       </Table>
 
       <Page
@@ -70,7 +76,7 @@ export default class Main extends ViewBase {
 
   column = [
     { title: '广告片名称', key: 'videoName', minWidth: 120 },
-    { title: '影片名称', key: 'movieName', minWidth: 150 },
+    { title: '影片名称', slot: 'movieName', minWidth: 150 },
     { title: '投放时长', key: 'specification', minWidth: 100 },
     { title: '执行开始时间', key: 'beginDate', minWidth: 160  },
     { title: '执行完成时间', key: 'endDate', minWidth: 160  },

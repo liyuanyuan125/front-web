@@ -74,7 +74,16 @@
               <Col span='19'>
                 <row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
-
+<!-- =======
+        	<li class='li-item' v-for='(it,index) in itemlist' :key='index'>
+        		<row>
+        			<Col span='3'>{{it.movieName}}</Col>
+        			<Col span='2'>{{it.videoTotalLength}}s</Col>
+        			<Col span='19'>
+        				<row>
+        					<Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
+>>>>>>> 52ea7aff318b617508ee33b687955bf91f92fe9a
+ -->
                   <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
                     <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
