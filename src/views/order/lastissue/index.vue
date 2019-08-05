@@ -24,8 +24,8 @@
              @on-change="seachs">
               <Option
                 v-for="item in movieList"
-                :key="item.code"
-                :value="item.code"
+                :key="item.id"
+                :value="item.id"
               >{{item.shortName}}</Option>
             </Select>
           </Col>
@@ -422,6 +422,7 @@ export default class Main extends ViewBase {
         info('请选择影院')
         return
       }
+      this.query.cinemaId = 0
       // 获取上刊列表
       const datalist = await queryList(this.query)
       this.itemlist = datalist.data.items
