@@ -6,58 +6,68 @@
     </div>
     <div class="finish-detail">
       <dl>
-        <dd>覆盖影院</dd>
-        <dt><Number :flag="2" :addNum="!!cinemaCount ? cinemaCount : 0" />家</dt>
-        <dt>
-          <img src="./assets/yingyuanb.png" width="73" height="66px"/>
-        </dt>
-      </dl>
-      <dl>
-        <dd>投放影片</dd>
-        <dt>{{planMovies}}部</dt>
-        <dt>
-          <img src="./assets/dianyingpiao.png" width="73" height="66px"/>
-        </dt>
-      </dl>
-      <dl>
-        <dd>曝光人次预估</dd>
-        <dt>
-           <p v-if="!!item.estimatePersonCount && (item.estimatePersonCount + '').length > 4">
-            <Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/10000 : 0" />万
-          </p>
-          <p v-else>
-            <Number :flag="2"  :addNum="item.estimatePersonCount" />
-          </p>
-        <dt>
-          <img src="./assets/renqun.png" width="100" height="66px"/>
-        </dt>
-      </dl>
-      <dl>
         <dd>投放场次数预估</dd>
         <dt>
-          <p v-if="!!item.estimateShowCount && item.estimateShowCount.length > 4">
-            <Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/10000 : 0" />万
+          <p v-if="!!item.estimateShowCount && (item.estimateShowCount + '').length > 4">
+            <Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/100000*7 : 0" />万 ~ 
+            <Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/100000*13 : 0" />万
           </p>
           <p v-else>
-              <Number :flag="2"  :addNum="item.estimateShowCount" />
+            <Number :flag="2"  :addNum="~~(item.estimateShowCount * 7 / 10)" /> ~ 
+            <Number :flag="2"  :addNum="~~(item.estimateShowCount * 13 / 10)" />
           </p>
         </dt>
-        <dt>
+        <!-- <dt>
           <img src="./assets/toufangfangan.png" width="73" height="66px"/>
-        </dt>
+        </dt> -->
       </dl>
       <dl>
         <dd>预估花费</dd>
         <dt>
           <p v-if="!!item.estimateCostAmount && (item.estimateCostAmount + '').length > 4">
-            <Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount/10000 : 0" />万
+            <Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount/100000*7 : 0" />万 ~ 
+            <Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount/100000*13 : 0" />万
           </p>
           <p v-else>
-            <Number :flag="2"  :addNum="item.estimateCostAmount" />
+            <Number :flag="2"  :addNum="item.estimateCostAmount * 7 / 10" /> ~ 
+            <Number :flag="2"  :addNum="item.estimateCostAmount * 13 / 10" />
           </p>
-        <dt>
-          <img src="./assets/qian-2.png" width="73" height="66px"/>
         </dt>
+        <!-- <dt>
+          <img src="./assets/qian-2.png" width="73" height="66px"/>
+        </dt> -->
+      </dl>
+      <dl>
+        <dd>曝光人次预估</dd>
+        <dt>
+           <p v-if="!!item.estimatePersonCount && (item.estimatePersonCount + '').length > 4">
+            <Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/100000*7 : 0" />万 ~ 
+            <Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/100000*13 : 0" />万 
+          </p>
+          <p v-else>
+            <Number :flag="2"  :addNum="item.estimatePersonCount*7/10" /> ~ 
+            <Number :flag="2"  :addNum="item.estimatePersonCount*13/10" />
+          </p>
+        </dt>
+        <!-- <dt>
+          <img src="./assets/renqun.png" width="100" height="66px"/>
+        </dt> -->
+      </dl>
+    </div>
+    <div class="finish-detail">
+       <dl>
+        <dd>覆盖影院</dd>
+        <dt><Number :flag="2" :addNum="!!cinemaCount ? cinemaCount : 0" />家</dt>
+        <!-- <dt>
+          <img src="./assets/yingyuanb.png" width="73" height="66px"/>
+        </dt> -->
+      </dl>
+      <dl>
+        <dd>投放影片</dd>
+        <dt>{{planMovies}}部</dt>
+        <!-- <dt>
+          <img src="./assets/dianyingpiao.png" width="73" height="66px"/>
+        </dt> -->
       </dl>
     </div>
     <div class="btn-center">
@@ -165,18 +175,18 @@ export default class Apps extends ViewBase {
   }
 }
 .finish-detail {
-  height: 212px;
+  height: 152px;
   background: rgba(0, 32, 45, .9);
   border-radius: 5px 0 0 5px;
   display: flex;
   dl {
     flex: 1;
     dd {
+      font-size: 16px;
       margin-top: 42px;
-      margin-bottom: 26px;
       text-align: center;
       font-weight: 400;
-      color: rgba(255, 255, 255, .7);
+      color: #7f7f7f;
       line-height: 16px;
     }
     dt:first-of-type {

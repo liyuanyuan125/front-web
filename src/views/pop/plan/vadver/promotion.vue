@@ -102,13 +102,13 @@
             </Col>
             <Col span="24">
               <Row>
-                <Col :span="12" style="padding-left: 0px" class="adver-schedule">
+                <Col :span="10" style="padding-left: 0px" class="adver-schedule">
                   <FormItem label="推广预算:" :labelWidth='100' prop="budgetAmount">
                     <Input v-model="form.budgetAmount" placeholder="请输入"></Input>
                     <span class="hint">万元 </span>
                   </FormItem>
                 </Col>
-                <Col :span="10">
+                <Col :span="13">
                   <div class="adver-time">
                     <p>预估曝光人次：<span>{{nums}}</span>人</p>
                   </div>
@@ -180,7 +180,7 @@ export default class Promotion extends ViewBase {
   length = 0
   customerName = ''
   adverList: any = []
-  nums: any = 0
+  nums: any = '0~0'
   times: any = new Date().getTime() - 86400000
   pername: any = ''
   productlist: any = []
@@ -462,7 +462,8 @@ export default class Promotion extends ViewBase {
         info('请选择广告片规格')
       }
       const { data } = await estimate({budgetAmount: val, specification: price })
-      this.nums = formatCurrency(data.estimatePersonCount, 0)
+      this.nums = `${formatCurrency(data.estimatePersonCount * 0.7, 0)}
+      ~ ${formatCurrency(data.estimatePersonCount * 1.3, 0)}`
     } catch (ex) {
       this.handleError(ex)
     }
@@ -496,7 +497,7 @@ export default class Promotion extends ViewBase {
     if (val && reg.test(val)) {
       this.getnums(val * 10000)
     } else {
-      this.nums = 0
+      this.nums = '0~0'
     }
   }
 

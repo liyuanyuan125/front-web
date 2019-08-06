@@ -17,36 +17,42 @@
         </span>
       </div>
       <Row class="precept" :gutter="16">
-        <Col span="5" class="item">
+        <Col span="8" class="item">
           <div>
             <p class="title">曝光人次预估</p>
             <p v-if="item.estimatePersonCount && (item.estimatePersonCount + '').length > 4" class="number">
-              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 10000" />
+              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 100000 * 7" /> ~ 
+              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 100000 * 13" />
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="item.estimatePersonCount" />
+              <Number :flag="2"  :addNum="~~(item.estimatePersonCount * 7 / 10)" /> ~ 
+              <Number :flag="2"  :addNum="~~(item.estimatePersonCount * 13 / 10)" />
             </p>
           </div>
         </Col>
-        <Col span="5" class="item">
+        <Col span="8" class="item">
           <div>
             <p class="title">投放场次数预估</p>
             <p v-if="item.estimateShowCount && (item.estimateShowCount + '').length > 4" class="number">
-              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 10000" />
+              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 100000 * 7" /> ~
+              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 100000 * 13" />
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="item.estimateShowCount" />
+              <Number :flag="2"  :addNum="~~(item.estimateShowCount * 7 / 10)" /> ~ 
+              <Number :flag="2"  :addNum="~~(item.estimateShowCount * 13 / 10)" />
             </p>
           </div>
         </Col>
-        <Col span="5" class="item">
+        <Col span="8" class="item">
           <div>
             <p class="title">预估花费</p>
             <p v-if="item.estimateCostAmount && (item.estimateCostAmount + '').length > 4" class="number">
-              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 10000" />
+              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 100000 * 7" /> ~ 
+              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 100000 * 13" />
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="item.estimateCostAmount" />
+              <Number :flag="2"  :addNum="item.estimateCostAmount * 7 / 10" /> ~ 
+              <Number :flag="2"  :addNum="item.estimateCostAmount * 13 / 10" /> 
             </p>
           </div>
         </Col>
@@ -178,14 +184,22 @@
               <template v-if="tag == 1" slot-scope="{ row }" slot="citys">
                 {{row.provinceName}} {{row.cityName}} {{row.countyName}}
               </template>
-
               <template slot-scope="{ row }" slot="estimateShowCount">
+                {{formatNums(row.estimateShowCount * 7 / 10, 1)}} ~ 
+                {{formatNums(row.estimateShowCount * 13 / 10, 1)}}
+              </template>
+
+              <template slot-scope="{ row }" slot="estimatePersonCount">
+                {{formatNums(row.estimatePersonCount * 7 / 10, 1)}} ~ 
+                {{formatNums(row.estimatePersonCount * 13 / 10, 1)}}
+              </template>
+              <!-- <template slot-scope="{ row }" slot="estimateShowCount">
                 {{formatNums(row.estimateShowCount, 1)}}
               </template>
 
               <template slot-scope="{ row }" slot="estimatePersonCount">
                 {{formatNums(row.estimatePersonCount, 1)}}
-              </template>
+              </template> -->
             </Table>
 
             <pagination :pageList="pageList" :total="total" @uplist="uplists"></pagination>
@@ -214,7 +228,8 @@
         <Row :gutter="16">
           <Col :span="2"><span>预算:</span></Col>
           <Col :span="22">
-            <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount)}}</span>
+            <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount * 7 / 10)}}</span>
+            <!-- <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount * 13 / 10)}}</span> -->
           </Col>
         </Row>
         <Row :gutter="16" style="height: 126px">
