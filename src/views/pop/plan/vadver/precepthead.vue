@@ -6,9 +6,9 @@
           <div>
             <p class="title">曝光人次预估</p>
             <p v-if="data.estimatePersonCount && (data.estimatePersonCount + '').length > 4" class="number">
-              <Number :addNum="data.estimatePersonCount/1000*7" />
+              <Number :addNum="(data.estimatePersonCount / 100000) * 7" />
               <span class='middle'>  ~  </span>
-              <Number :addNum="data.estimatePersonCount/1000*13" />
+              <Number :addNum="(data.estimatePersonCount / 100000) * 13" />
             </p>
             <p class="onenumber" v-else>
               <Number :flag="2"  :addNum="data.estimatePersonCount * 7 / 10" />
@@ -21,14 +21,14 @@
           <div>
             <p class="title">投放场次数预估</p>
             <p class="number" v-if="data.estimateShowCount && (data.estimateShowCount + '').length > 4">
-              <Number :addNum="(data.estimateShowCount/1000 * 7)" />
+              <Number :addNum="(data.estimateShowCount/100000 * 7)" />
               <span class='middle'> ~ </span>
-              <Number :addNum="(data.estimateShowCount/1000 * 13)" />
+              <Number :addNum="(data.estimateShowCount/100000 * 13)" />
             </p>
             <p class="onenumber" v-else>
               <Number :flag="2"  :addNum="(data.estimateShowCount * 7 / 10)" />
               <span class='middle'> ~ </span>
-              <Number :flag="2"  :addNum="(data.estimateShowCount * 1.3)" />
+              <Number :flag="2"  :addNum="(data.estimateShowCount * 1.3 / 10)" />
             </p>
           </div>
         </Col>
@@ -36,9 +36,9 @@
           <div>
             <p class="title">预估花费</p>
             <p v-if="data.estimateCostAmount && (data.estimateCostAmount + '').length > 4" class="number">
-              <Number :addNum="data.estimateCostAmount/1000 * 0.7" />
+              <Number :addNum="data.estimateCostAmount/10000 * 0.7" />
               <span class='middle'> ~ </span>
-              <Number :addNum="data.estimateCostAmount/1000 * 1.3" />
+              <Number :addNum="data.estimateCostAmount/10000 * 1.3" />
             </p>
             <p class="onenumber" v-else>
               <Number :flag="2"  :addNum="data.estimateCostAmount * 7 / 10" />

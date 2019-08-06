@@ -8,9 +8,9 @@
       <dl>
         <dd>投放场次数预估</dd>
         <dt>
-          <p v-if="!!item.estimateShowCount && item.estimateShowCount.length > 4">
-            <Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/1000*7 : 0" />万 ~ 
-            <Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/1000*13 : 0" />万
+          <p v-if="!!item.estimateShowCount && (item.estimateShowCount + '').length > 4">
+            <Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/100000*7 : 0" />万 ~ 
+            <Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/100000*13 : 0" />万
           </p>
           <p v-else>
             <Number :flag="2"  :addNum="~~(item.estimateShowCount * 7 / 10)" /> ~ 
@@ -25,8 +25,8 @@
         <dd>预估花费</dd>
         <dt>
           <p v-if="!!item.estimateCostAmount && (item.estimateCostAmount + '').length > 4">
-            <Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount/1000*7 : 0" />万 ~ 
-            <Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount/1000*13 : 0" />万
+            <Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount/100000*7 : 0" />万 ~ 
+            <Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount/100000*13 : 0" />万
           </p>
           <p v-else>
             <Number :flag="2"  :addNum="item.estimateCostAmount * 7 / 10" /> ~ 
@@ -41,8 +41,8 @@
         <dd>曝光人次预估</dd>
         <dt>
            <p v-if="!!item.estimatePersonCount && (item.estimatePersonCount + '').length > 4">
-            <Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/1000*7 : 0" />万 ~ 
-            <Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/1000*13 : 0" />万 
+            <Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/100000*7 : 0" />万 ~ 
+            <Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/100000*13 : 0" />万 
           </p>
           <p v-else>
             <Number :flag="2"  :addNum="item.estimatePersonCount*7/10" /> ~ 

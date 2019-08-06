@@ -21,8 +21,8 @@
           <div>
             <p class="title">曝光人次预估</p>
             <p v-if="item.estimatePersonCount && (item.estimatePersonCount + '').length > 4" class="number">
-              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 1000 * 7" /> ~ 
-              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 1000 * 13" />
+              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 100000 * 7" /> ~ 
+              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 100000 * 13" />
             </p>
             <p class="onenumber" v-else>
               <Number :flag="2"  :addNum="~~(item.estimatePersonCount * 7 / 10)" /> ~ 
@@ -34,8 +34,8 @@
           <div>
             <p class="title">投放场次数预估</p>
             <p v-if="item.estimateShowCount && (item.estimateShowCount + '').length > 4" class="number">
-              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 1000 * 7" /> ~
-              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 1000 * 13" />
+              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 100000 * 7" /> ~
+              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 100000 * 13" />
             </p>
             <p class="onenumber" v-else>
               <Number :flag="2"  :addNum="~~(item.estimateShowCount * 7 / 10)" /> ~ 
@@ -47,8 +47,8 @@
           <div>
             <p class="title">预估花费</p>
             <p v-if="item.estimateCostAmount && (item.estimateCostAmount + '').length > 4" class="number">
-              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 1000 * 7" /> ~ 
-              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 1000 * 13" />
+              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 100000 * 7" /> ~ 
+              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 100000 * 13" />
             </p>
             <p class="onenumber" v-else>
               <Number :flag="2"  :addNum="item.estimateCostAmount * 7 / 10" /> ~ 
