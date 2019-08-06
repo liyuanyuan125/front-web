@@ -26,9 +26,9 @@
               <Number :addNum="(data.estimateShowCount/1000 * 13)" />
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="~~(data.estimateShowCount * 7 / 10)" />
+              <Number :flag="2"  :addNum="(data.estimateShowCount * 7 / 10)" />
               <span class='middle'> ~ </span>
-              <Number :flag="2"  :addNum="~~(data.estimateShowCount * 1.3)" />
+              <Number :flag="2"  :addNum="(data.estimateShowCount * 1.3)" />
             </p>
           </div>
         </Col>
@@ -91,15 +91,15 @@
         <Col :span='24'>
           <Row class="item item-dl">
             <Col :span='8'>
-                <span>计划名称</span>
+                <span>计划名称：</span>
                 <span>{{data.name}}</span>
               </Col>
               <Col :span='8'>
-                <span>广告片</span>
+                <span>广告片：</span>
                 <span>{{data.videoName}} ({{data.specification}}s)</span>
               </Col>
               <Col :span='8'>
-                <span>投放排期</span>
+                <span>投放排期：</span>
                 <span>开始于{{formatDate(data.beginDate)}}</span>
               </Col>
           </Row>
