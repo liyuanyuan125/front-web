@@ -170,18 +170,18 @@ export default class Main extends ViewBase {
       if (data.provinceId != 0) {
         const proone = await viewcity(data.provinceId)
         this.proone = (proone.data || []).map((it: any) => {
-        return it.nameCn
-      })
+          return it.nameCn
+        })
       }
       if (data.cityId != 0) {
         const cityone = await viewcity(data.cityId)
-        this.cityone = (cityone.data || []).map((it: any) => {
+        this.cityone = ' / ' + (cityone.data || []).map((it: any) => {
           return it.nameCn
         })
       }
       if (data.countyId != 0) {
         const cunone = await viewcity(data.countyId)
-        this.cunone = (cunone.data || []).map((it: any) => {
+        this.cunone = ' / ' + (cunone.data || []).map((it: any) => {
           return it.nameCn
         })
       }
@@ -193,19 +193,19 @@ export default class Main extends ViewBase {
       }
       if (data.contactCityId != 0) {
         const citytwo = await viewcity(data.contactCityId)
-        this.citytwo = (citytwo.data || []).map((it: any) => {
+        this.citytwo = ' / ' + (citytwo.data || []).map((it: any) => {
           return it.nameCn
         })
       }
       if (data.contactCountyId != 0) {
         const cuntwo = await viewcity(data.contactCountyId)
-        this.cuntwo = (cuntwo.data || []).map((it: any) => {
+        this.cuntwo = ' / ' + (cuntwo.data || []).map((it: any) => {
           return it.nameCn
         })
       }
 
-      this.adsoen = this.proone + '/' + this.cityone + '/' + this.cunone
-      this.adstwo = this.protwo + '/' + this.citytwo + '/' + this.cuntwo
+      this.adsoen = this.proone + this.cityone + this.cunone
+      this.adstwo = this.protwo + this.citytwo + this.cuntwo
 
     } catch (ex) {
       this.handleError(ex)
