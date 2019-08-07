@@ -284,14 +284,13 @@ export default class Temporary extends ViewBase {
           value: typeof rate === 'number' ? rate / 100 : parseFloat(rate) / 100
         }
       })
-
       this.chart3.min = min
       this.chart3.max = max
       this.chart3.dataList[this.chart3.currentTypeIndex] = provinceData
 
-      this.chart4.dataList[0] =
-        provinceData.length > 10 ? provinceData.slice(0, 10) : provinceData
-      this.chart4.dataList[1] = cityData.length > 10 ? cityData.slice(0, 10) : cityData
+      this.chart4.dataList[0] = provinceData.length > 10 ? provinceData.slice(-10) : provinceData
+
+      this.chart4.dataList[1] = cityData.length > 10 ? cityData.slice(-10) : cityData
 
       this.chart1.initDone = true
       this.chart2.initDone = true
