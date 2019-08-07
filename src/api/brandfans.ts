@@ -303,187 +303,298 @@ export async function fans(id: string = '') {
   return res
   return await mockGet({}, {
     item: {
-      femalePercent: 3600,
-      malePercent: null,
-      ages: [
-          {
-              k: '0-19',
-              v: 200,
-              r: 200
-          },
-          {
-              k: '20-29',
-              v: 1200,
-              r: 1200
-          },
-          {
-              k: '30-39',
-              v: 5100,
-              r: 5100
-          },
-          {
-              k: '40-49',
-              v: 2800,
-              r: 2800
-          },
-          {
-              k: '50+',
-              v: 700,
-              r: 700
-          }
-      ],
-      citys: [
-          {
-              id: 290,
-              name: '北京市',
-              count: 719,
-              rate: 719
-          },
-          {
-              id: 430,
-              name: '上海市',
-              count: 439,
-              rate: 439
-          },
-          {
-              id: 354,
-              name: '深圳市',
-              count: 279,
-              rate: 279
-          },
-          {
-              id: 353,
-              name: '广州市',
-              count: 243,
-              rate: 243
-          },
-          {
-              id: 138,
-              name: '杭州市',
-              count: 239,
-              rate: 239
-          },
-          {
-              id: 354,
-              name: '成都市',
-              count: 227,
-              rate: 227
-          },
-          {
-              id: 279,
-              name: '苏州市',
-              count: 198,
-              rate: 198
-          },
-          {
-              id: 108,
-              name: '郑州市',
-              count: 181,
-              rate: 181
-          },
-          {
-              id: 372,
-              name: '重庆市',
-              count: 170,
-              rate: 170
-          },
-          {
-              id: 416,
-              name: '青岛市',
-              count: 163,
-              rate: 163
-          }
-      ],
-      provinces: [
-          {
-              id: 23,
-              name: '北京市',
-              count: 719,
-              rate: 719
-          },
-          {
-              id: 29,
-              name: '广东省',
-              count: 709,
-              rate: 709
-          },
-          {
-              id: 21,
-              name: '江苏省',
-              count: 485,
-              rate: 485
-          },
-          {
-              id: 36,
-              name: '上海市',
-              count: 439,
-              rate: 439
-          },
-          {
-              id: 11,
-              name: '浙江省',
-              count: 416,
-              rate: 416
-          },
-          {
-              id: 34,
-              name: '山东省',
-              count: 319,
-              rate: 319
-          },
-          {
-              id: 24,
-              name: '四川省',
-              count: 279,
-              rate: 279
-          },
-          {
-              id: 8,
-              name: '河南省',
-              count: 243,
-              rate: 243
-          },
-          {
-              id: 31,
-              name: '河北省',
-              count: 198,
-              rate: 198
-          },
-          {
-              id: 5,
-              name: '福建省',
-              count: 194,
-              rate: 194
-          }
-      ]
+      femalePercent: 4300,
+      malePercent: 5700,
+      ages: [{
+        k: '0-19',
+        v: 0,
+        r: 400
+      }, {
+        k: '20-29',
+        v: 0,
+        r: 1600
+      }, {
+        k: '30-39',
+        v: 0,
+        r: 5400
+      }, {
+        k: '40-49',
+        v: 0,
+        r: 2200
+      }, {
+        k: '50+',
+        v: 0,
+        r: 400
+      }],
+      citys: [{
+        id: 0,
+        name: '北京',
+        count: 1000,
+        rate: 5869
+      }, {
+        id: 0,
+        name: '上海',
+        count: 100,
+        rate: 587
+      }, {
+        id: 0,
+        name: '深圳市',
+        count: 95,
+        rate: 558
+      }, {
+        id: 0,
+        name: '广州市',
+        count: 61,
+        rate: 358
+      }, {
+        id: 0,
+        name: '苏州市',
+        count: 55,
+        rate: 323
+      }, {
+        id: 0,
+        name: '郑州市',
+        count: 49,
+        rate: 288
+      }, {
+        id: 0,
+        name: '成都市',
+        count: 48,
+        rate: 282
+      }, {
+        id: 0,
+        name: '重庆',
+        count: 48,
+        rate: 282
+      }, {
+        id: 0,
+        name: '杭州市',
+        count: 43,
+        rate: 252
+      }, {
+        id: 0,
+        name: '武汉市',
+        count: 41,
+        rate: 241
+      }, {
+        id: 0,
+        name: '西安市',
+        count: 38,
+        rate: 223
+      }, {
+        id: 0,
+        name: '合肥市',
+        count: 36,
+        rate: 211
+      }, {
+        id: 0,
+        name: '长沙市',
+        count: 34,
+        rate: 200
+      }, {
+        id: 0,
+        name: '天津',
+        count: 28,
+        rate: 164
+      }, {
+        id: 0,
+        name: '青岛市',
+        count: 28,
+        rate: 164
+      }],
+      provinces: [{
+        id: 0,
+        name: '北京',
+        count: 1000,
+        rate: 3341
+      }, {
+        id: 0,
+        name: '广东',
+        count: 245,
+        rate: 819
+      }, {
+        id: 0,
+        name: '江苏',
+        count: 181,
+        rate: 605
+      }, {
+        id: 0,
+        name: '浙江',
+        count: 131,
+        rate: 438
+      }, {
+        id: 0,
+        name: '山东',
+        count: 124,
+        rate: 414
+      }, {
+        id: 0,
+        name: '河南',
+        count: 117,
+        rate: 391
+      }, {
+        id: 0,
+        name: '河北',
+        count: 104,
+        rate: 347
+      }, {
+        id: 0,
+        name: '上海',
+        count: 100,
+        rate: 334
+      }, {
+        id: 0,
+        name: '安徽',
+        count: 99,
+        rate: 331
+      }, {
+        id: 0,
+        name: '四川',
+        count: 97,
+        rate: 324
+      }, {
+        id: 0,
+        name: '湖北',
+        count: 76,
+        rate: 254
+      }, {
+        id: 0,
+        name: '江西',
+        count: 76,
+        rate: 254
+      }, {
+        id: 0,
+        name: '湖南',
+        count: 74,
+        rate: 247
+      }, {
+        id: 0,
+        name: '福建',
+        count: 64,
+        rate: 214
+      }, {
+        id: 0,
+        name: '山西',
+        count: 62,
+        rate: 207
+      }, {
+        id: 0,
+        name: '陕西',
+        count: 62,
+        rate: 207
+      }, {
+        id: 0,
+        name: '广西',
+        count: 57,
+        rate: 190
+      }, {
+        id: 0,
+        name: '重庆',
+        count: 48,
+        rate: 160
+      }, {
+        id: 0,
+        name: '辽宁',
+        count: 41,
+        rate: 137
+      }, {
+        id: 0,
+        name: '云南',
+        count: 34,
+        rate: 114
+      }, {
+        id: 0,
+        name: '黑龙江',
+        count: 29,
+        rate: 97
+      }, {
+        id: 0,
+        name: '天津',
+        count: 28,
+        rate: 94
+      }, {
+        id: 0,
+        name: '贵州',
+        count: 28,
+        rate: 94
+      }, {
+        id: 0,
+        name: '吉林',
+        count: 26,
+        rate: 87
+      }, {
+        id: 0,
+        name: '内蒙古',
+        count: 23,
+        rate: 77
+      }, {
+        id: 0,
+        name: '甘肃',
+        count: 21,
+        rate: 70
+      }, {
+        id: 0,
+        name: '新疆',
+        count: 13,
+        rate: 43
+      }, {
+        id: 0,
+        name: '宁夏',
+        count: 11,
+        rate: 37
+      }, {
+        id: 0,
+        name: '青海',
+        count: 8,
+        rate: 27
+      }, {
+        id: 0,
+        name: '海南',
+        count: 7,
+        rate: 23
+      }, {
+        id: 0,
+        name: '香港',
+        count: 3,
+        rate: 10
+      }, {
+        id: 0,
+        name: '西藏',
+        count: 2,
+        rate: 7
+      }, {
+        id: 0,
+        name: '台湾',
+        count: 1,
+        rate: 3
+      }, {
+        id: 0,
+        name: '澳门',
+        count: 1,
+        rate: 3
+      }]
     },
-    ageCodeList: [
-        {
-            controlStatus: 1,
-            text: '19岁及以下',
-            key: '0-19'
-        },
-        {
-            controlStatus: 1,
-            text: '20-29',
-            key: '20-29'
-        },
-        {
-            controlStatus: 1,
-            text: '30-39',
-            key: '30-39'
-        },
-        {
-            controlStatus: 1,
-            text: '40-49',
-            key: '40-49'
-        },
-        {
-            controlStatus: 1,
-            text: '50+',
-            key: '50+'
-        }
-    ]
+    ageCodeList: [{
+      controlStatus: 1,
+      text: '19岁及以下',
+      key: '0-19'
+    }, {
+      controlStatus: 1,
+      text: '20-29',
+      key: '20-29'
+    }, {
+      controlStatus: 1,
+      text: '30-39',
+      key: '30-39'
+    }, {
+      controlStatus: 1,
+      text: '40-49',
+      key: '40-49'
+    }, {
+      controlStatus: 1,
+      text: '50+',
+      key: '50+'
+    }]
   })
 }
 

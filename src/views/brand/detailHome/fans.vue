@@ -2,9 +2,9 @@
   <div>
     <Row>
       <Col span="24">
-      <Form label-position="left" :label-width="100">
-        <Card class="detailmore-card">
-          <!-- <div slot="title">
+        <Form label-position="left" :label-width="100">
+          <Card class="detailmore-card">
+            <!-- <div slot="title">
             <Row type="flex"
                  justify="space-between"
                  align="middle">
@@ -28,35 +28,70 @@
               </Col>
             </Row>
             </div>-->
-          <div class="content">
-            <Row type="flex" justify="space-between" class="chart-group">
-              <Col :span="12" class="chart-item">
-              <div class="chart-wp fans-sex-pane" style="margin-right:10px">
-                <Pie :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :color="chart1.color" :dataList="chart1.dataList" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b} {c} %'})" :currentTypeIndex="chart1.currentTypeIndex" />
-              </div>
-              </Col>
-              <Col :span="12" class="chart-item">
-              <div class="chart-wp fans-age-pane">
-                <BarXCategory :initDone="chart2.initDone" :title="chart2.title" :dict1="chart2.dict1" :dict3="chart2.dict3" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" />
-              </div>
-              </Col>
-            </Row>
+            <div class="content">
+              <Row type="flex" justify="space-between" class="chart-group">
+                <Col :span="12" class="chart-item">
+                  <div class="chart-wp fans-sex-pane" style="margin-right:10px">
+                    <Pie
+                      :initDone="chart1.initDone"
+                      :title="chart1.title"
+                      :dict1="chart1.dict1"
+                      :dict2="chart1.dict2"
+                      :color="chart1.color"
+                      :dataList="chart1.dataList"
+                      :toolTip="tooltipStyles({trigger:  'item', formatter:'{b} {c} %'})"
+                      :currentTypeIndex="chart1.currentTypeIndex"
+                    />
+                  </div>
+                </Col>
+                <Col :span="12" class="chart-item">
+                  <div class="chart-wp fans-age-pane">
+                    <BarXCategory
+                      :initDone="chart2.initDone"
+                      :title="chart2.title"
+                      :dict1="chart2.dict1"
+                      :dict3="chart2.dict3"
+                      :color="chart2.color"
+                      :dataList="chart2.dataList"
+                      :currentTypeIndex="chart2.currentTypeIndex"
+                    />
+                  </div>
+                </Col>
+              </Row>
 
-            <Row type="flex" justify="space-between" class="chart-group" style="margin-top:10px">
-              <Col :span="12" class="chart-item">
-              <div class="chart-wp fans-province-pane" style="margin-right:10px; height:460px">
-                <MapChina :initDone="chart3.initDone" :title="chart3.title" :dict1="chart3.dict1" :dict2="chart3.dict2" :color="chart3.color" :max="chart3.max" :dataList="chart3.dataList" :currentTypeIndex="chart3.currentTypeIndex" />
-              </div>
-              </Col>
-              <Col :span="12" class="chart-item">
-              <div class="chart-wp fans-city-pane" style="height:460px">
-                <BarYCategory :initDone="chart4.initDone" :title="chart4.title" :dict1="chart4.dict1" :dict2="chart4.dict2" :color="chart4.color" :dataList="chart4.dataList" :currentTypeIndex="chart4.currentTypeIndex" @typeChange="typeChangeHander4" />
-              </div>
-              </Col>
-            </Row>
-          </div>
-        </Card>
-      </Form>
+              <Row type="flex" justify="space-between" class="chart-group" style="margin-top:10px">
+                <Col :span="12" class="chart-item">
+                  <div class="chart-wp fans-province-pane" style="margin-right:10px; height:460px">
+                    <MapChina
+                      :initDone="chart3.initDone"
+                      :title="chart3.title"
+                      :dict1="chart3.dict1"
+                      :dict2="chart3.dict2"
+                      :color="chart3.color"
+                      :max="chart3.max"
+                      :dataList="chart3.dataList"
+                      :currentTypeIndex="chart3.currentTypeIndex"
+                    />
+                  </div>
+                </Col>
+                <Col :span="12" class="chart-item">
+                  <div class="chart-wp fans-city-pane" style="height:460px">
+                    <BarYCategory
+                      :initDone="chart4.initDone"
+                      :title="chart4.title"
+                      :dict1="chart4.dict1"
+                      :dict2="chart4.dict2"
+                      :color="chart4.color"
+                      :dataList="chart4.dataList"
+                      :currentTypeIndex="chart4.currentTypeIndex"
+                      @typeChange="typeChangeHander4"
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </div>
+          </Card>
+        </Form>
       </Col>
     </Row>
   </div>
@@ -83,7 +118,6 @@ import { tooltipStyles } from '@/util/echarts'
   }
 })
 export default class Temporary extends ViewBase {
-
   tooltipStyles = tooltipStyles
 
   form: any = {}
@@ -222,9 +256,7 @@ export default class Temporary extends ViewBase {
         this.chart2.initDone = true
       }
 
-      const provinceList = ((provinces as any[]) || []).sort(
-        (a, b) => a.rate - b.rate
-      )
+      const provinceList = ((provinces as any[]) || []).sort((a, b) => a.rate - b.rate)
       const cityList = ((citys as any[]) || []).sort((a, b) => a.rate - b.rate)
 
       let [min, max] = [0, 0]
@@ -252,14 +284,13 @@ export default class Temporary extends ViewBase {
           value: typeof rate === 'number' ? rate / 100 : parseFloat(rate) / 100
         }
       })
-
       this.chart3.min = min
       this.chart3.max = max
       this.chart3.dataList[this.chart3.currentTypeIndex] = provinceData
 
-      this.chart4.dataList[0] =
-        provinceData.length > 10 ? provinceData.slice(0, 10) : provinceData
-      this.chart4.dataList[1] = cityData.length > 10 ? cityData.slice(0, 10) : cityData
+      this.chart4.dataList[0] = provinceData.length > 10 ? provinceData.slice(-10) : provinceData
+
+      this.chart4.dataList[1] = cityData.length > 10 ? cityData.slice(-10) : cityData
 
       this.chart1.initDone = true
       this.chart2.initDone = true
