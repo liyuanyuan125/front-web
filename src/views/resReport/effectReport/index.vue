@@ -384,11 +384,17 @@ export default class Index extends ViewBase {
   }
 
   async updateHandle(id: number) {
+    this.$router.push({
+      name: 'effect-report',
+      params: {
+        id: parseFloat(id)
+      }
+    })
     this.reset()
     this.init(id)
   }
 
-  created() {
+  mounted() {
     const id =
       parseInt(this.$route.params.id, 0) ||
       // TODO: 线上演示 id 为 104，其他环境 173
