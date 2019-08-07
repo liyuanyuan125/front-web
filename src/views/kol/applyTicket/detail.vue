@@ -21,7 +21,7 @@
                
               <Col>电话：{{list.telphone}}</Col>
               <Col>开户行/账号：{{list.accountBank}} &nbsp;&nbsp;&nbsp; {{list.accountNumber}}</Col>
-              <Col><Tooltip   max-width="200" transfer :content="list.memo">
+              <Col><Tooltip   max-width="200" transfer placement="bottom-start" :content="list.memo">
                     <div class="film-time">备注：{{list.memo}}</div></Tooltip></Col>
             </Row>
             <Row class='sbg' style='margin-left: 4%;'>
@@ -29,7 +29,7 @@
               <Col>邮寄地址：{{adstwo}}&nbsp;&nbsp; {{list.addressDetail}}</Col>
               <Col>联系人：{{list.contact == null ? '暂无联系人' : list.contact}}</Col>
               <Col>联系电话：{{list.contactTelphone}}</Col>
-              <Col><Tooltip   max-width="200" transfer :content="list.comment">
+              <Col><Tooltip   max-width="200" transfer placement="bottom-start" :content="list.comment">
                     <div class="film-time">留言：{{list.comment == '' || list.comment == null ? '暂无留言' : list.comment}}</div></Tooltip></Col>
             </Row>
          </Row>
