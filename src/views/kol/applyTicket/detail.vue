@@ -167,30 +167,42 @@ export default class Main extends ViewBase {
           }
         }).slice(0 , 5)
       }
-      const proone = await viewcity(data.provinceId)
-      const cityone = await viewcity(data.cityId)
-      const cunone = await viewcity(data.countyId)
-      const protwo = await viewcity(data.contactProvinceId)
-      const citytwo = await viewcity(data.contactCityId)
-      const cuntwo = await viewcity(data.contactCountyId)
-      this.proone = (proone.data || []).map((it: any) => {
+      if (data.provinceId != 0) {
+        const proone = await viewcity(data.provinceId)
+        this.proone = (proone.data || []).map((it: any) => {
         return it.nameCn
       })
-      this.cityone = (cityone.data || []).map((it: any) => {
-        return it.nameCn
-      })
-      this.cunone = (cunone.data || []).map((it: any) => {
-        return it.nameCn
-      })
-      this.protwo = (protwo.data || []).map((it: any) => {
-        return it.nameCn
-      })
-      this.citytwo = (citytwo.data || []).map((it: any) => {
-        return it.nameCn
-      })
-      this.cuntwo = (cuntwo.data || []).map((it: any) => {
-        return it.nameCn
-      })
+      }
+      if (data.cityId != 0) {
+        const cityone = await viewcity(data.cityId)
+        this.cityone = (cityone.data || []).map((it: any) => {
+          return it.nameCn
+        })
+      }
+      if (data.countyId != 0) {
+        const cunone = await viewcity(data.countyId)
+        this.cunone = (cunone.data || []).map((it: any) => {
+          return it.nameCn
+        })
+      }
+      if (data.contactProvinceId != 0) {
+        const protwo = await viewcity(data.contactProvinceId)
+        this.protwo = (protwo.data || []).map((it: any) => {
+          return it.nameCn
+        })
+      }
+      if (data.contactCityId != 0) {
+        const citytwo = await viewcity(data.contactCityId)
+        this.citytwo = (citytwo.data || []).map((it: any) => {
+          return it.nameCn
+        })
+      }
+      if (data.contactCountyId != 0) {
+        const cuntwo = await viewcity(data.contactCountyId)
+        this.cuntwo = (cuntwo.data || []).map((it: any) => {
+          return it.nameCn
+        })
+      }
 
       this.adsoen = this.proone + '/' + this.cityone + '/' + this.cunone
       this.adstwo = this.protwo + '/' + this.citytwo + '/' + this.cuntwo
