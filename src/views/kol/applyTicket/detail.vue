@@ -60,8 +60,8 @@
                 <span class="img-num" v-if='item.orderItemList.length > 5'>...等{{item.orderItemList.length}}个账号</span>
               </Col>
               <Col :span="8">
-                <p >实付金额：<span style='font-size: 20px;font-weight: 500'>¥{{item.totalFee}}</span></p>
-                <p v-if='item.refundFee != 0'>有退款：<span style='font-size: 20px;font-weight: 500'>¥{{item.refundFee}}</span></p>
+                <p >实付金额：<span style='font-size: 20px;font-weight: 500'>¥{{item.totalFee == null ? '-' : item.totalFee}}</span></p>
+                <p v-if='item.refundFee != 0'>有退款：<span style='font-size: 20px;font-weight: 500'>¥{{item.refundFee == null ? '-' : item.totalFee}}</span></p>
               </Col>
               <Col :span="3" class="status-btn" @click.prevent.native='view(item.id)'> 详情 </Col>
             </Row>
