@@ -384,14 +384,15 @@ export default class Index extends ViewBase {
   }
 
   async updateHandle(id: number) {
+    const ID = (typeof id === 'number' ) ? id.toString() : id
     this.$router.push({
       name: 'effect-report',
       params: {
-        id: parseFloat(id)
+        id: ID
       }
     })
     this.reset()
-    this.init(id)
+    this.init(ID)
   }
 
   mounted() {
@@ -403,7 +404,7 @@ export default class Index extends ViewBase {
     this.init(id)
   }
 
-  async init(id: number = -1) {
+  async init(id: number|string = -1) {
     this.initDone = false
     try {
       const { data } = await getPlansReport(id)
