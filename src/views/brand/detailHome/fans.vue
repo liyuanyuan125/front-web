@@ -256,8 +256,8 @@ export default class Temporary extends ViewBase {
         this.chart2.initDone = true
       }
 
-      const provinceList = ((provinces as any[]) || []).sort((a, b) => b.rate - a.rate)
-      const cityList = ((citys as any[]) || []).sort((a, b) => b.rate - a.rate)
+      const provinceList = ((provinces as any[]) || []).sort((a, b) => a.rate - b.rate)
+      const cityList = ((citys as any[]) || []).sort((a, b) => a.rate - b.rate)
 
       let [min, max] = [0, 0]
       const provinceData = provinceList.map(({ rate, name }) => {
