@@ -326,7 +326,7 @@ export default class Index extends ViewBase {
           date: []
         }
       ],
-      color: ['#CA7273'],
+      color: ['#00B6CC', '#00B6CC', '#00B6CC'],
       height: 350,
       toolTip
     }
@@ -353,6 +353,9 @@ export default class Index extends ViewBase {
     this.tableData.data = []
     this.totalData = {}
     this.bannerData = {}
+    this.$nextTick(() => {
+      (this.$refs.usercard as any).reset()
+    })
   }
 
   async typeChangeHander1(index: number = 0) {
@@ -384,15 +387,15 @@ export default class Index extends ViewBase {
   }
 
   async updateHandle(id: number) {
-    const ID = (typeof id === 'number' ) ? id.toString() : id
     this.$router.push({
       name: 'effect-report',
       params: {
-        id: ID
+        id: (typeof id === 'number' ) ? id.toString() : id
       }
     })
     this.reset()
-    this.init(ID)
+    this.planId = id
+    this.init(id)
   }
 
   mounted() {
@@ -417,7 +420,6 @@ export default class Index extends ViewBase {
       const gradeCodes = data.gradeCodes || null
       const planStatus = data.planStatus || null
       const movieTypes = data.movieTypes || null
-
       if (report && report.lastModifyTime) {
         const dates = report.dates
         const name = getName(plan.status, planStatus)

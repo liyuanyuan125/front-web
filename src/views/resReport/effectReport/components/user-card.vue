@@ -144,6 +144,11 @@ export default class UserCard extends Vue {
     this.ageDataInitDone = true
   }
 
+  reset() {
+    this.cityLevelInitDone = false
+    this.ageDataInitDone = false
+  }
+
   showMore() {
     this.$emit('moreCity')
   }
