@@ -22,7 +22,7 @@
             <img :src="item.coverPic" alt class="img" v-real-img="item.coverPic" />
           </a>
           <div class="inner-right">
-            <p class="title" :title="item.title">{{handleSlice(item.title)}}</p>
+            <p class="title" :title="item.title">{{handleSlice(item.title || item.content)}}</p>
             <p class="icon-num">
               <span>
                 <i class="iconfont icon-shipin" />

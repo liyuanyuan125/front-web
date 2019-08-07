@@ -2,7 +2,7 @@
   <div class="page">
     <div class='t-title'>监播管理</div>
     <div class='title-tip'>
-    	请按照影片在下方列表中上传广告监播视频,</br>
+      请按照影片在下方列表中上传广告监播视频,</br>
 要求露出所包含的全部广告视频以及对应的影片片头信息、格式为 mp4
     </div>
     <div class='body'>
@@ -21,10 +21,10 @@
             @on-clear="movieList = []"
             @on-change="seachs">
               <Option
-                v-for="item in movieList"
-                :key="item.id"
+                v-for="(item, index) in movieList"
+                :key="index"
                 :value="item.id"
-              >{{item.shortName}}</Option>
+              >【{{item.code}}】{{item.shortName}}</Option>
             </Select>
           </Col>
         </Col>
@@ -63,19 +63,19 @@
           <!-- <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div> -->
       </Row>
       <div style=' margin-top: 15px; '>
-      	<Row class='li-title'>
+        <Row class='li-title'>
           <Col span='3' >影片名称</Col>
           <Col span='2' >总投放时长</Col>
           <Col span='14'>广告列表</Col>
           <Col span='5' style='text-align: center;'>监播视频</Col>
         </Row>
         <ul class='itemul'>
-        	<li class='li-item' v-for='(it,index) in itemlist' :key='index'>
-        		<row>
-        			<Col span='3'>{{it.movieName}}</Col>
-        			<Col span='2' >{{it.videoTotalLength}}s</Col>
-        			<Col span='14'>
-        				<row>
+          <li class='li-item' v-for='(it,index) in itemlist' :key='index'>
+            <row>
+              <Col span='3'>{{it.movieName}}</Col>
+              <Col span='2' >{{it.videoTotalLength}}s</Col>
+              <Col span='14'>
+                <row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'  v-if='item.deleted == false && item.offShelfStatus == 1'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
                     <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">{{item.videoName.slice(0,7)}}...</router-link>
@@ -84,13 +84,13 @@
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
-        			</Col>
-        			<Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' ><UploadButton @success="onUploadSuccess($event, it.id)">上传</UploadButton></Col>
+              </Col>
+              <Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' ><UploadButton @success="onUploadSuccess($event, it.id)">上传</UploadButton></Col>
               <Col span='5' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
               <Col span='5' v-if='it.status == 3' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div></Col>
               <Col span='5' v-if='it.status == 4' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
-        		</row>
-        	</li>
+            </row>
+          </li>
           <li v-if='itemlist.length == 0' style='text-align: center;line-height: 50px;'>暂无数据</li>
         </ul>
       </div>
