@@ -223,14 +223,14 @@ export default class Temporary extends ViewBase {
       }
 
       const provinceList = ((provinces as any[]) || []).sort(
-        (a, b) => a.count - b.count
+        (a, b) => a.rate - b.rate
       )
-      const cityList = ((citys as any[]) || []).sort((a, b) => a.count - b.count)
+      const cityList = ((citys as any[]) || []).sort((a, b) => a.rate - b.rate)
 
       let [min, max] = [0, 0]
-      const provinceData = provinceList.map(({ count, name }) => {
-        count = parseFloat(count)
-        const value = count / 100
+      const provinceData = provinceList.map(({ rate, name }) => {
+        const _rate = parseFloat(rate)
+        const value = _rate / 100
         max = max < value ? value : max
         min = min > value ? value : min
         if (name.indexOf('省') == 1) {
@@ -246,10 +246,10 @@ export default class Temporary extends ViewBase {
         }
       })
 
-      const cityData = cityList.map(({ count, name }) => {
+      const cityData = cityList.map(({ rate, name }) => {
         return {
           name,
-          value: typeof count === 'number' ? count / 100 : parseFloat(count) / 100
+          value: typeof rate === 'number' ? rate / 100 : parseFloat(rate) / 100
         }
       })
 

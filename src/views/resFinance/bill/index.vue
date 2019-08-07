@@ -57,7 +57,11 @@
         <CheckboxGroup v-model='orderids' class='chacks' v-if='this.list.length != 0'>
           <Checkbox  class="list-li" v-for="(item , index) in list" :key = "index" :value="item.id" :label="item.id">
             <Row class='nav-title'>
-              <Col span='5'>{{item.cinemaName}}</Col>
+              <Col span='5'>
+                <Tooltip  transfer placement="bottom-start" :content="item.cinemaName">
+                  <em class='tips'>{{item.cinemaName}}</em>
+                </Tooltip>
+                </Col>
               <Col span='14'>{{item.year}}-{{item.month < 10 ? '0' + item.month : item.month }}</Col>
               <Col span='3' style='color: #DA6C70;float: right;text-align: center;'>
                 <span v-if='item.billStatus == 1'>待平台确认</span>
@@ -347,6 +351,19 @@ export default class Main extends ViewBase {
   font-size: 14px;
   color: #fff;
   text-align: center;
+}
+.tips {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 200px;
+  color: #fff;
+  font-size: 14px;
+  font-style: normal;
+}
+/deep/ .ivu-tooltip-rel {
+  height: 45px;
 }
 .list-li {
   width: 100%;

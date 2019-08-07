@@ -2,41 +2,52 @@
   <div class="precept-box " v-if="data">
     <Row class="precept">
       <Row class="" :gutter="16">
-        <Col span="5" class="item">
+        <Col span="8" class="item">
           <div>
             <p class="title">曝光人次预估</p>
             <p v-if="data.estimatePersonCount && (data.estimatePersonCount + '').length > 4" class="number">
-              <Number :addNum="data.estimatePersonCount/10000" />
+              <Number :addNum="(data.estimatePersonCount / 100000) * 7" />
+              <span class='middle'>  ~  </span>
+              <Number :addNum="(data.estimatePersonCount / 100000) * 13" />
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="data.estimatePersonCount" />
+              <Number :flag="2"  :addNum="data.estimatePersonCount * 7 / 10" />
+              <span class='middle'> ~ </span>
+              <Number :flag="2"  :addNum="data.estimatePersonCount * 13 / 10" />
             </p>
           </div>
         </Col>
-        <Col span="5" class="item">
+        <Col span="8" class="item">
           <div>
             <p class="title">投放场次数预估</p>
             <p class="number" v-if="data.estimateShowCount && (data.estimateShowCount + '').length > 4">
-              <Number :addNum="data.estimateShowCount/10000" />
+              <Number :addNum="(data.estimateShowCount/100000 * 7)" />
+              <span class='middle'> ~ </span>
+              <Number :addNum="(data.estimateShowCount/100000 * 13)" />
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="data.estimateShowCount" />
+              <Number :flag="2"  :addNum="(data.estimateShowCount * 7 / 10)" />
+              <span class='middle'> ~ </span>
+              <Number :flag="2"  :addNum="(data.estimateShowCount * 1.3 / 10)" />
             </p>
           </div>
         </Col>
-        <Col span="5" class="item">
+        <Col span="8" class="item">
           <div>
             <p class="title">预估花费</p>
             <p v-if="data.estimateCostAmount && (data.estimateCostAmount + '').length > 4" class="number">
-              <Number :addNum="data.estimateCostAmount/10000" />
+              <Number :addNum="data.estimateCostAmount/10000 * 0.7" />
+              <span class='middle'> ~ </span>
+              <Number :addNum="data.estimateCostAmount/10000 * 1.3" />
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="data.estimateCostAmount" />
+              <Number :flag="2"  :addNum="data.estimateCostAmount * 7 / 10" />
+              <span class='middle'> ~ </span>
+              <Number :addNum="data.estimateCostAmount * 13 / 10" />
             </p>
           </div>
-          <div class="line-right"></div>
         </Col>
-        <Col span="6" class="item item-dl">
+        <!-- <Col span="6" class="item item-dl">
           <dl>
             <dd>计划名称</dd>
             <dt>{{data.name}}</dt>
@@ -49,7 +60,7 @@
             <dd>投放排期</dd>
             <dt>
               <p v-if="data.status > 9">
-                <span>{{formatDate(data.beginDate)}}</span>至
+                <span>{{formatDate(data.beginDate)}}</span> ~ 
                 <span>{{formatDate(data.endDate)}}</span>
               </p>
               <p v-else>
@@ -71,11 +82,27 @@
             <dd>已投天数</dd>
             <dt>{{days(data.beginDate, data.endDate)}}天</dt>
           </dl>
-        </Col>
+        </Col> -->
         <Col span="24" class="item" style="margin-top: 30px; color:#57B4C9">
         <img src="./assets/info.png" />
           以上曝光数据为根据影片想看指数、预售情况、近两年同档期影片市场表现情况综合预估,
           实际投放周期和投放场次数请以最终实际投放结果为准.
+        </Col>
+        <Col :span='24'>
+          <Row class="item item-dl">
+            <Col :span='8'>
+                <span>计划名称：</span>
+                <span>{{data.name}}</span>
+              </Col>
+              <Col :span='8'>
+                <span>广告片：</span>
+                <span>{{data.videoName}} ({{data.specification}}s)</span>
+              </Col>
+              <Col :span='8'>
+                <span>投放排期：</span>
+                <span>开始于{{formatDate(data.beginDate)}}</span>
+              </Col>
+          </Row>
         </Col>
       </Row>
     </Row>
@@ -138,7 +165,7 @@ export default class App extends ViewBase {
   margin-right: 10px;
   .precept {
     padding: 0 30px;
-    height: 186px;
+    height: 226px;
     background: rgba(0, 32, 45, 1);
     border-radius: 5px;
     opacity: 0.9;
@@ -149,24 +176,31 @@ export default class App extends ViewBase {
     .title {
       margin-top: 30px;
       font-weight: 400;
-      color: #fff;
+      text-align: center;
+      color: #7f7f7f;
       opacity: .8;
     }
   }
   .number, .onenumber {
-    font-size: 30px;
+    font-size: 22px;
     margin-top: 20px;
     color: #fff;
-    display: inline-block;
-    width: 180px;
+    display: block;
     overflow: hidden;
     white-space: nowrap;
+    text-align: center;
     text-overflow: ellipsis;
+    /deep/ span {
+      display: line-block;
+    }
+    .middle {
+      font-size: 22px;
+    }
+    .middle::after {
+      content: "";
+    }
     /deep/ span::after {
       content: "万";
-    }
-    /deep/ span::before {
-      content: "≈";
     }
   }
   .onenumber {
@@ -178,8 +212,11 @@ export default class App extends ViewBase {
     display: flex;
     flex-wrap: wrap;
     align-content: center;
-    margin-top: 20px;
+    margin-top: 36px;
     height: 100%;
+    span {
+      color: #7f7f7f;
+    }
   }
   dl {
     display: flex;
@@ -201,13 +238,13 @@ export default class App extends ViewBase {
     }
   }
 }
-.line-right {
-  position: absolute;
-  width: 1px;
-  height: 81px;
-  top: 30px;
-  right: 40px;
-  opacity: .3;
-  background: #fff;
-}
+// .line-right {
+//   position: absolute;
+//   width: 1px;
+//   height: 81px;
+//   top: 30px;
+//   right: 40px;
+//   opacity: .3;
+//   background: #fff;
+// }
 </style>

@@ -384,11 +384,18 @@ export default class Index extends ViewBase {
   }
 
   async updateHandle(id: number) {
+    const ID = (typeof id === 'number' ) ? id.toString() : id
+    this.$router.push({
+      name: 'effect-report',
+      params: {
+        id: ID
+      }
+    })
     this.reset()
-    this.init(id)
+    this.init(ID)
   }
 
-  created() {
+  mounted() {
     const id =
       parseInt(this.$route.params.id, 0) ||
       // TODO: 线上演示 id 为 104，其他环境 173
@@ -397,7 +404,7 @@ export default class Index extends ViewBase {
     this.init(id)
   }
 
-  async init(id: number = -1) {
+  async init(id: number|string = -1) {
     this.initDone = false
     try {
       const { data } = await getPlansReport(id)
