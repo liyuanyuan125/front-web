@@ -384,14 +384,13 @@ export default class Index extends ViewBase {
   }
 
   async updateHandle(id: number) {
+    id = (typeof id === 'number' ) ? id.toString() : id
     this.$router.push({
       name: 'effect-report',
       params: {
-        id: parseFloat(id)
+        id
       }
     })
-    this.reset()
-    this.init(id)
   }
 
   mounted() {
