@@ -6,11 +6,11 @@
     :title="'审核账单'"
     @on-cancel="cancel" >
     <Form ref="dataForm" :model="dataForm" label-position="left"  :label-width="100">
-      <FormItem label="审核意见" prop="agree">
+      <!-- <FormItem label="审核意见" prop="agree">
         <RadioGroup v-model="dataForm.agree" >
           <Radio v-for="it in statuslist" :key="it.key" :value="it.value" :label="it.key">{{it.text}}</Radio>
         </RadioGroup>
-      </FormItem>
+      </FormItem> -->
       <FormItem label="备注" prop="remark">
         <Input style="width:100px" type='textarea' v-model="dataForm.remark"></Input>
       </FormItem>
@@ -103,4 +103,7 @@ export default class ComponentMain extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+/deep/ .ivu-input {
+  border: 1px solid #ccc !important;
+}
 </style>
