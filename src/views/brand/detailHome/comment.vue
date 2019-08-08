@@ -126,7 +126,7 @@ export default class Temporary extends ViewBase {
   dict: any = {
     dayRanges: [
       {
-        key: 'yesterday',
+        key: 'yesterDay',
         text: '昨日',
         disabled: false
       },
@@ -428,7 +428,6 @@ export default class Temporary extends ViewBase {
           this.chartNature.dataList[1][2].data.push(dot(item, 'neutral.count') || 0)
         })
       }
-
       if (keyWords && keyWords[this.form.dayRangesKey]) {
         if (keyWords[this.form.dayRangesKey].positive) {
           keyWords[this.form.dayRangesKey].positive.forEach((item: any) => {
@@ -467,7 +466,7 @@ export default class Temporary extends ViewBase {
     }
     // 日期选择器和周期选择互斥
     switch (dayRangesKey) {
-      case 'yesterday':
+      case 'yesterDay':
         return moment(new Date())
           .add(-1, 'days')
           .format(timeFormat)
@@ -491,7 +490,7 @@ export default class Temporary extends ViewBase {
       return moment(this.form.beginDate[1]).format(timeFormat)
     }
     // 日期选择器和周期选择互斥
-    return this.form.dayRangesKey == 'yesterday'
+    return this.form.dayRangesKey == 'yesterDay'
       ? moment(new Date())
           .add(-1, 'days')
           .format(timeFormat)

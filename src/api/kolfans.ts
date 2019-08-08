@@ -229,38 +229,150 @@ export async function fanslist(id: string = '' , query: any) {
         v: 0,
         r: 62
       }],
-      provinces: [{
-        id: 29,
-        name: '广东省',
+      cities: [
+          {
+            id: 29,
+            name: '广东省',
+            count: 0,
+            rate: 1111
+        },
+        {
+            id: 23,
+            name: '北京市',
+            count: 0,
+            rate: 894
+        },
+        {
+            id: 21,
+            name: '江苏省',
+            count: 0,
+            rate: 655
+        },
+        {
+            id: 11,
+            name: '浙江省',
+            count: 0,
+            rate: 587
+        },
+        {
+            id: 36,
+            name: '上海市',
+            count: 0,
+            rate: 568
+        },
+        {
+            id: 34,
+            name: '山东省',
+            count: 0,
+            rate: 497
+        },
+        {
+            id: 4,
+            name: '山西省',
+            count: 0,
+            rate: 382
+        },
+        {
+          id: 78,
+          name: '黑龙江',
+          count: 0,
+          rate: 3411
+        },
+        {
+            id: 24,
+            name: '四川省',
+            count: 0,
+            rate: 350
+        },
+        {
+            id: 5,
+            name: '福建省',
+            count: 0,
+            rate: 357
+        },
+        {
+          id: 8,
+          name: '河南省',
+          count: 0,
+          rate: 341
+        }, {
+          id: 99,
+          name: '广西省',
+          count: 0,
+          rate: 2000
+      },
+      ],
+      provinces: [ {
+          id: 29,
+          name: '广东省',
+          count: 0,
+          rate: 1111
+      },
+      {
+          id: 23,
+          name: '北京市',
+          count: 0,
+          rate: 894
+      },
+      {
+          id: 21,
+          name: '江苏省',
+          count: 0,
+          rate: 655
+      },
+      {
+          id: 11,
+          name: '浙江省',
+          count: 0,
+          rate: 587
+      },
+      {
+          id: 36,
+          name: '上海市',
+          count: 0,
+          rate: 568
+      },
+      {
+          id: 34,
+          name: '山东省',
+          count: 0,
+          rate: 497
+      },
+      {
+          id: 4,
+          name: '山西省',
+          count: 0,
+          rate: 382
+      },
+      {
+        id: 78,
+        name: '黑龙江',
         count: 0,
-        rate: tid
+        rate: 3411
+      },
+      {
+          id: 24,
+          name: '四川省',
+          count: 0,
+          rate: 350
+      },
+      {
+          id: 5,
+          name: '福建省',
+          count: 0,
+          rate: 357
+      },
+      {
+        id: 8,
+        name: '河南省',
+        count: 0,
+        rate: 341
       }, {
-        id: 21,
-        name: '江苏省',
+        id: 99,
+        name: '广西省',
         count: 0,
-        rate: tid
-      }, {
-        id: 34,
-        name: '山东省',
-        count: 0,
-        rate: tid
-      }, ],
-      cities: [{
-        id: 290,
-        name: '北京市',
-        count: 0,
-        rate: tid
-      }, {
-        id: 430,
-        name: '上海市',
-        count: 0,
-        rate: tid
-      }, {
-        id: 353,
-        name: '广州市',
-        count: 0,
-        rate: tid
-      }],
+        rate: 2000
+    }, ],
       updateTime: null
     },
     ageList: [{
