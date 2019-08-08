@@ -21,7 +21,7 @@
                
               <Col>电话：{{list.telphone}}</Col>
               <Col>开户行/账号：{{list.accountBank}} &nbsp;&nbsp;&nbsp; {{list.accountNumber}}</Col>
-              <Col><Tooltip   max-width="200" transfer :content="list.memo">
+              <Col><Tooltip   max-width="200" transfer placement="bottom-start" :content="list.memo">
                     <div class="film-time">备注：{{list.memo}}</div></Tooltip></Col>
             </Row>
             <Row class='sbg' style='margin-left: 4%;'>
@@ -29,7 +29,7 @@
               <Col>邮寄地址：{{adstwo}}&nbsp;&nbsp; {{list.addressDetail}}</Col>
               <Col>联系人：{{list.contact == null ? '暂无联系人' : list.contact}}</Col>
               <Col>联系电话：{{list.contactTelphone}}</Col>
-              <Col><Tooltip   max-width="200" transfer :content="list.comment">
+              <Col><Tooltip   max-width="200" transfer placement="bottom-start" :content="list.comment">
                     <div class="film-time">留言：{{list.comment == '' || list.comment == null ? '暂无留言' : list.comment}}</div></Tooltip></Col>
             </Row>
          </Row>
@@ -60,8 +60,8 @@
                 <span class="img-num" v-if='item.orderItemList.length > 5'>...等{{item.orderItemList.length}}个账号</span>
               </Col>
               <Col :span="8">
-                <p >实付金额：<span style='font-size: 20px;font-weight: 500'>¥{{item.totalFee}}</span></p>
-                <p v-if='item.refundFee != 0'>有退款：<span style='font-size: 20px;font-weight: 500'>¥{{item.refundFee}}</span></p>
+                <p >实付金额：<span style='font-size: 20px;font-weight: 500'><span v-if='item.totalFee != null'>¥</span>{{item.totalFee == null ? '-' : item.totalFee}}</span></p>
+                <p v-if='item.refundFee != 0'>有退款：<span style='font-size: 20px;font-weight: 500'><span v-if='item.totalFee != null'>¥</span>{{item.refundFee == null ? '-' : item.totalFee}}</span></p>
               </Col>
               <Col :span="3" class="status-btn" @click.prevent.native='view(item.id)'> 详情 </Col>
             </Row>
@@ -167,33 +167,45 @@ export default class Main extends ViewBase {
           }
         }).slice(0 , 5)
       }
-      const proone = await viewcity(data.provinceId)
-      const cityone = await viewcity(data.cityId)
-      const cunone = await viewcity(data.countyId)
-      const protwo = await viewcity(data.contactProvinceId)
-      const citytwo = await viewcity(data.contactCityId)
-      const cuntwo = await viewcity(data.contactCountyId)
-      this.proone = (proone.data || []).map((it: any) => {
-        return it.nameCn
-      })
-      this.cityone = (cityone.data || []).map((it: any) => {
-        return it.nameCn
-      })
-      this.cunone = (cunone.data || []).map((it: any) => {
-        return it.nameCn
-      })
-      this.protwo = (protwo.data || []).map((it: any) => {
-        return it.nameCn
-      })
-      this.citytwo = (citytwo.data || []).map((it: any) => {
-        return it.nameCn
-      })
-      this.cuntwo = (cuntwo.data || []).map((it: any) => {
-        return it.nameCn
-      })
+      if (data.provinceId != 0) {
+        const proone = await viewcity(data.provinceId)
+        this.proone = (proone.data || []).map((it: any) => {
+          return it.nameCn
+        })
+      }
+      if (data.cityId != 0) {
+        const cityone = await viewcity(data.cityId)
+        this.cityone = ' / ' + (cityone.data || []).map((it: any) => {
+          return it.nameCn
+        })
+      }
+      if (data.countyId != 0) {
+        const cunone = await viewcity(data.countyId)
+        this.cunone = ' / ' + (cunone.data || []).map((it: any) => {
+          return it.nameCn
+        })
+      }
+      if (data.contactProvinceId != 0) {
+        const protwo = await viewcity(data.contactProvinceId)
+        this.protwo = (protwo.data || []).map((it: any) => {
+          return it.nameCn
+        })
+      }
+      if (data.contactCityId != 0) {
+        const citytwo = await viewcity(data.contactCityId)
+        this.citytwo = ' / ' + (citytwo.data || []).map((it: any) => {
+          return it.nameCn
+        })
+      }
+      if (data.contactCountyId != 0) {
+        const cuntwo = await viewcity(data.contactCountyId)
+        this.cuntwo = ' / ' + (cuntwo.data || []).map((it: any) => {
+          return it.nameCn
+        })
+      }
 
-      this.adsoen = this.proone + '/' + this.cityone + '/' + this.cunone
-      this.adstwo = this.protwo + '/' + this.citytwo + '/' + this.cuntwo
+      this.adsoen = this.proone + this.cityone + this.cunone
+      this.adstwo = this.protwo + this.citytwo + this.cuntwo
 
     } catch (ex) {
       this.handleError(ex)

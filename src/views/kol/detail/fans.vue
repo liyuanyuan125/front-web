@@ -250,8 +250,16 @@ export default class Fans extends ViewBase {
         rate = parseFloat(rate) / 100
         max = max < rate ? rate : max
         min = min > rate ? rate : min
+
+        if (name.indexOf('省') !== -1) {
+          name = name.substr(0, name.length - 1)
+        } else if (name.indexOf('市') !== -1) {
+          name = name.substr(0, name.length - 1)
+        } else {
+          name = name
+        }
         return {
-          name: name.substr(0, name.length - 1),
+          name,
           value: rate
         }
       })
@@ -266,8 +274,8 @@ export default class Fans extends ViewBase {
       this.chart3.max = max
       this.chart3.dataList[this.chart3.currentTypeIndex] = provinceData
 
-      this.chart4.dataList[0] = provinceData
-      this.chart4.dataList[1] = cityData
+      this.chart4.dataList[0] = provinceData.slice(-10)
+      this.chart4.dataList[1] = cityData.slice(-10)
 
       this.chart1.initDone = true
       this.chart2.initDone = true

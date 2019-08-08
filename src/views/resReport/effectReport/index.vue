@@ -326,7 +326,7 @@ export default class Index extends ViewBase {
           date: []
         }
       ],
-      color: ['#CA7273'],
+      color: ['#00B6CC', '#00B6CC', '#00B6CC'],
       height: 350,
       toolTip
     }
@@ -353,6 +353,9 @@ export default class Index extends ViewBase {
     this.tableData.data = []
     this.totalData = {}
     this.bannerData = {}
+    this.$nextTick(() => {
+      (this.$refs.usercard as any).reset()
+    })
   }
 
   async typeChangeHander1(index: number = 0) {
@@ -384,11 +387,18 @@ export default class Index extends ViewBase {
   }
 
   async updateHandle(id: number) {
+    this.$router.push({
+      name: 'effect-report',
+      params: {
+        id: (typeof id === 'number' ) ? id.toString() : id
+      }
+    })
     this.reset()
+    this.planId = id
     this.init(id)
   }
 
-  created() {
+  mounted() {
     const id =
       parseInt(this.$route.params.id, 0) ||
       // TODO: 线上演示 id 为 104，其他环境 173
@@ -397,7 +407,7 @@ export default class Index extends ViewBase {
     this.init(id)
   }
 
-  async init(id: number = -1) {
+  async init(id: number|string = -1) {
     this.initDone = false
     try {
       const { data } = await getPlansReport(id)
@@ -410,7 +420,6 @@ export default class Index extends ViewBase {
       const gradeCodes = data.gradeCodes || null
       const planStatus = data.planStatus || null
       const movieTypes = data.movieTypes || null
-
       if (report && report.lastModifyTime) {
         const dates = report.dates
         const name = getName(plan.status, planStatus)

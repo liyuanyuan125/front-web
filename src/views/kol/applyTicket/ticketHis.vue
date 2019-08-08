@@ -1,7 +1,7 @@
 <template>
   <div class="pages">
       <div>
-        <ul class='big'>
+        <ul class='big' v-if='this.list.length != 0'>
           <li class="list-li" v-for="item in list" :key = "item.id">
             <Row class="li-title flex-box">
               <Col :span='20'>下单时间： {{item.applyTime}}</Col>
