@@ -52,7 +52,7 @@
               </Col>
             </Col>
          </Row>
-         <!-- <span class='addbutton' style='margin-right: 20px;' @click='all(0)'>批量审核菜单</span> -->
+         <span class='addbutton' style='margin-right: 20px;' @click='all(0)'>批量通过审核菜单</span>
          <!-- <span class='addbutton'>开票</span> -->
         <CheckboxGroup v-model='orderids' class='chacks' v-if='this.list.length != 0'>
           <Checkbox  class="list-li" v-for="(item , index) in list" :key = "index" :value="item.id" :label="item.id">
@@ -96,7 +96,7 @@
                   :to="{name:'resFinance-bill-detail' , params: { id: item.id  } }"
                   tag="span"
                 >查看详情</router-link>
-                <!-- <p class="status-btn" style='margin-top: 15px;' @click.prevent.native='view(item.id)'> 审核账单</p> -->
+                <p v-if='item.billStatus == 2' class="status-btn"  @click.prevent.native='view(item.id)'> 审核账单</p>
               </Col>
             </Row>
           </Checkbox >

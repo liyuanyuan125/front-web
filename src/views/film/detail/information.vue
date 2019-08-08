@@ -28,12 +28,13 @@
          <div class='nams' style='margin-left: 2%;'>-------------------------</div>
          <div class='nams' style='margin-left: 4%;'>{{items.date}}</div>
        </div><br>
-       <div class="show-alls" v-if="itemlist.releaseDates.length > 5">
+       <div class="show-alls" v-if="itemlist.releaseDates != null && itemlist.releaseDates.length > 5">
         <span @click="dataToggle">{{dataTitle}}<Icon :class="{'dataDown': dataFlag == 1, 'dataUp': dataFlag == 0}" type="ios-arrow-down" size="25" /></span>
       </div>
      </Col>
        </Col>
      </Row>
+     <row class='row-bo' v-if='itemlist.releaseDates == null' style='height: 30px;'></row>
      <Row class='row-bo' style='padding-top: 0px;'>
        <Col span='3' class='fo-bo'>制作公司</Col>
        <Col span='20' class='fo-bos'>
