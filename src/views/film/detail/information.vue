@@ -67,7 +67,7 @@
       </div>
    </div>
    <Modal v-model="viewerShow" title="查看图片" width="500" height="500">
-      <img style="width: 100%;" :src="viewerImage" alt sizes srcset>
+      <img style="width: 100%;" :src="viewerImage" alt>
     </Modal>
   </div>
 </template>
