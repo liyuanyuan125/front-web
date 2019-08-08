@@ -55,7 +55,7 @@
          <span class='addbutton' v-if='this.list.length != 0' style='margin-right: 20px;' @click='all(0)'>批量审核通过</span>
          <!-- <span class='addbutton'>开票</span> -->
         <CheckboxGroup v-model='orderids' class='chacks' v-if='this.list.length != 0'>
-          <Checkbox  class="list-li" v-for="(item , index) in list" :key = "index" :value="item.id" :label="item.id">
+          <Checkbox  class="list-li" v-for="(item , index) in list" :key = "index" :value="item.id" :label="item.id" :disabled='item.billStatus != 2'>
             <Row class='nav-title'>
               <Col span='5'>
                 <Tooltip  transfer placement="bottom-start" :content="item.cinemaName">
@@ -319,7 +319,7 @@ export default class Main extends ViewBase {
 
   async all(id: any) {
     if (this.orderids.length == 0) {
-      info('清先选择订单')
+      info('请先选择订单')
       return
     }
     try {
