@@ -52,7 +52,7 @@
               </Col>
             </Col>
          </Row>
-         <span class='addbutton' style='margin-right: 20px;' @click='all(0)'>批量通过审核菜单</span>
+         <span class='addbutton' v-if='this.list.length != 0' style='margin-right: 20px;' @click='all(0)'>批量审核通过</span>
          <!-- <span class='addbutton'>开票</span> -->
         <CheckboxGroup v-model='orderids' class='chacks' v-if='this.list.length != 0'>
           <Checkbox  class="list-li" v-for="(item , index) in list" :key = "index" :value="item.id" :label="item.id">
@@ -89,14 +89,26 @@
                 <p class='order_sma'>曝光人次 / 千人次</p>
               </Col>
               <Col :span="4">
-              <!-- <span v-if='item.billStatus == 2' @click='all(item.id)'>审核账单</span> -->
                 <router-link
+                    v-if='item.billStatus != 2'
+                    class="status-btn"
+                    style='line-height: 65px;'
+                    :to="{name:'resFinance-bill-detail' , params: { id: item.id  } }"
+                    tag="span"
+                  >查看详情</router-link>
+                <router-link
+                  v-if='item.billStatus == 2'
                   class="status-btn"
-                  style='line-height: 65px;'
+                  style='line-height: 41px;'
                   :to="{name:'resFinance-bill-detail' , params: { id: item.id  } }"
                   tag="span"
                 >查看详情</router-link>
-                <p v-if='item.billStatus == 2' class="status-btn"  @click.prevent.native='view(item.id)'> 审核账单</p>
+                <router-link
+                  v-if='item.billStatus == 2'
+                  class="status-btn"
+                  :to="{name:'resFinance-bill-detail' , params: { id: item.id  } }"
+                  tag="p"
+                >审核账单</router-link>
               </Col>
             </Row>
           </Checkbox >
@@ -305,12 +317,26 @@ export default class Main extends ViewBase {
     }
   }
 
-  all(id: any) {
-    this.reVisible = true
-    this.$nextTick(() => {
-      const myThis: any = this
-      myThis.$refs.re.init(id , this.orderids)
-    })
+  async all(id: any) {
+    if (this.orderids.length == 0) {
+      info('清先选择订单')
+      return
+    }
+    try {
+      await confirm('您确定要操作批量审核通过吗？')
+      await approval ({ids: this.orderids})
+      this.$Message.success({
+        content: `审核成功`,
+      })
+      this.seach()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+    // this.reVisible = true
+    // this.$nextTick(() => {
+    //   const myThis: any = this
+    //   myThis.$refs.re.init(id , this.orderids)
+    // })
   }
 
 
@@ -439,7 +465,6 @@ export default class Main extends ViewBase {
     position: absolute;
     left: 4%;
     top: 60%;
-    display: none;
   }
 }
 /deep/ .ivu-select-selection {

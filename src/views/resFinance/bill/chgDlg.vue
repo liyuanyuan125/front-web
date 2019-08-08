@@ -5,14 +5,14 @@
     :width='420'
     :title="'审核账单'"
     @on-cancel="cancel" >
-    <Form ref="dataForm" :model="dataForm" label-position="left"  :label-width="100">
+    <Form ref="dataForm" :model="dataForm" label-position="left"  :label-width="50">
       <!-- <FormItem label="审核意见" prop="agree">
         <RadioGroup v-model="dataForm.agree" >
           <Radio v-for="it in statuslist" :key="it.key" :value="it.value" :label="it.key">{{it.text}}</Radio>
         </RadioGroup>
       </FormItem> -->
       <FormItem label="备注" prop="remark">
-        <Input style="width:100px" type='textarea' v-model="dataForm.remark"></Input>
+        <Input  type='textarea' v-model="dataForm.remark"></Input>
       </FormItem>
     </Form>
     <div slot="footer" class="dialog-footer">
@@ -31,7 +31,7 @@ import { queryList , approval } from '@/api/bill'
 import ViewBase from '@/util/ViewBase'
 const timeFormat = 'YYYY-MM-DD'
 const dataForm = {
-  agree: '',
+  agree: true,
   remark: '',
 }
 
@@ -61,14 +61,8 @@ export default class ComponentMain extends ViewBase {
   init(id: any , ids: any) {
     this.showDlg = true
     this.id = id || 0
+    this.ids = ids
     ; (this.$refs.dataForm as any).resetFields()
-    if (this.id != 0) {
-        // console.log(this.id)
-      this.ids = [id]
-    }
-    if (this.id == 0) {
-      this.ids = ids
-    }
   }
 
   cancel() {
@@ -79,6 +73,7 @@ export default class ComponentMain extends ViewBase {
   // 表单提交
   async dataFormSubmit() {
     try {
+      // console.log({...this.dataForm , ids: this.ids})
       const res =  await approval ({...this.dataForm , ids: this.ids})
       toast('操作成功')
       this.showDlg = false
@@ -89,21 +84,15 @@ export default class ComponentMain extends ViewBase {
       this.showDlg = false
     }
   }
-
-  // async mounted() {
-  //   try {
-  //     const relist = await queryList({orderStatus : 9})
-  //     this.relist = relist.data.items
-  //   } catch (ex) {
-  //     this.handleError(ex)
-  //   }
-  // }
-
 }
 </script>
 
 <style lang="less" scoped>
 /deep/ .ivu-input {
   border: 1px solid #ccc !important;
+}
+/deep/ textarea {
+  min-height: 100px;
+  max-height: 100px;
 }
 </style>
