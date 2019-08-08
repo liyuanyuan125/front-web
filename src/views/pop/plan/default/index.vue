@@ -575,7 +575,8 @@ export default class Apps extends ViewBase {
         }
       })
       if (this.planMovies.length > 0) {
-        this.planMovies = this.planMovies.sort((a: any, b: any) => b.wantSeeNum - a.wantSeeNum ).slice(0, 3)
+        // this.planMovies = this.planMovies.sort((a: any, b: any) => b.wantSeeNum - a.wantSeeNum ).slice(0, 3)
+        this.planMovies = this.planMovies.slice(0, 3)
       }
     } catch (ex) {
       (this.$Spin as any).hide()

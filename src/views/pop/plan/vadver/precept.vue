@@ -385,7 +385,8 @@ export default class App extends ViewBase {
         }
       })
       if (this.filmList.length > 0) {
-        this.filmList = this.filmList.sort((a: any, b: any) => b.wantSeeNum - a.wantSeeNum ).slice(0, 3)
+        // this.filmList = this.filmList.sort((a: any, b: any) => b.wantSeeNum - a.wantSeeNum ).slice(0, 3)
+        this.filmList = this.filmList.slice(0, 3)
       }
       // const geners = this.filmList.genders.length > 0 ? [this.filmList.genders.sort((a: any, b: any) => {
       //   return a.rate - b.rate

@@ -144,11 +144,11 @@ export default class Main extends ViewBase {
     if (!this.dataFlag) {
       this.dataFlag = 1
       this.dataTitle = '向上隐藏'
-      this.dataitemlist = this.itemlist.releaseDates
+      this.dataitemlist = this.itemlist.releaseDates == null ? [] : this.itemlist.releaseDates
     } else {
       this.dataFlag = 0
       this.dataTitle = '展示全部'
-      this.dataitemlist = this.itemlist.releaseDates.slice(0, 5)
+      this.dataitemlist = this.itemlist.releaseDates == null ? [] : this.itemlist.releaseDates.slice(0, 5)
     }
   }
   faToggle() {
@@ -186,7 +186,7 @@ export default class Main extends ViewBase {
         }
       })
       this.imgList = this.imgUrl.slice(0, 20)
-      this.dataitemlist = this.itemlist.releaseDates.slice(0, 5)
+      this.dataitemlist = this.itemlist.releaseDates == null ? [] : this.itemlist.releaseDates.slice(0, 5)
       this.faitemlist = this.itemlist.companyMap.Distributor.slice(0, 5)
       this.summary = this.itemlist.summary.slice(0, 211)
     } catch {
