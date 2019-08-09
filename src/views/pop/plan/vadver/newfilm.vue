@@ -75,7 +75,7 @@ export default class DlgEditCinema extends ViewBase {
   total = 0
   form: any = {
     pageIndex: 1,
-    pageSize: 4,
+    pageSize: 9,
   }
   idO: any = {}
   checks: any = {}
@@ -90,7 +90,7 @@ export default class DlgEditCinema extends ViewBase {
 
   pageList = {
     pageIndex: 1,
-    pageSize: 4
+    pageSize: 9
   }
 
   formatDate(data: any) {
@@ -256,7 +256,11 @@ export default class DlgEditCinema extends ViewBase {
         ids = ids.filter((item: any) => item && item != it)
       })
       if (this.data.length > 0) {
-        this.checkboxall = ids.length > 0 ? false : true
+        if (ids.length > 0) {
+          this.checkboxall = false
+        } else {
+          this.checkboxall = true
+        }
       } else {
         this.checkboxall = false
       }
@@ -288,7 +292,7 @@ export default class DlgEditCinema extends ViewBase {
       }
     }
     this.checkId.forEach((it: any) => {
-      id = id.filter((item: any) => item == it)
+      id = id.filter((item: any) => item != it)
     })
     const nums = this.data.filter((it: any) => {
       return this.checkId.includes(it.id + '')
@@ -403,8 +407,9 @@ export default class DlgEditCinema extends ViewBase {
   margin-bottom: 20px;
   margin-right: 20px;
   .film-item {
-    width: calc(50% - 20px);
+    width: calc(33% - 40px);
     height: 179px;
+    margin: 0 10px;
     padding-bottom: 5px;
     margin-bottom: 30px;
     background: rgba(255, 255, 255, 0.3);
@@ -456,9 +461,6 @@ export default class DlgEditCinema extends ViewBase {
       text-align: center;
       line-height: 16px;
     }
-  }
-  .film-item:nth-child(2n-1) {
-    margin-right: 40px;
   }
   .film-name,
   .film-tags {
