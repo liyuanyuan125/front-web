@@ -27,6 +27,13 @@
         <i class="iconfont icon-cart"/>
         <span class="cart-count" v-if="cartCount > 0">{{cartCount}}</span>
       </router-link> -->
+      
+      <VideoPreviewer
+          :url="videoUrl"
+          v-if="user.systemCode == 'resource'"
+        >
+          <span class="movie-preview">视频教程</span>
+        </VideoPreviewer>
 
       <router-link :to="{ name: 'message' }" class="notice-node">
         <i class="iconfont icon-notice"/>
@@ -89,6 +96,7 @@
         <router-view :name="viewName"/>
       </Content>
     </Layout>
+
   </div>
 </template>
 
@@ -105,6 +113,7 @@ import { devInfo } from '@/util/dev'
 import { usePosition } from '@/util/scroll'
 import { backImage, siderMenuActiveMap } from '@/store'
 import { RouteMetaBase } from '@/routes'
+import VideoPreviewer from '@/components/videoPreviewer'
 
 let instance: any = null
 let viewName: string = 'default'
@@ -116,9 +125,16 @@ event.on('route-perm', ({ has }: any) => {
 
 const headerColor = 0x25668f
 
-@Component
+@Component({
+  components: {
+    VideoPreviewer
+  }
+})
 export default class MainLayout extends ViewBase {
   user = getUser()
+
+ // https://vf.piaoshen.com/files/misc/2019/06/15/190615120010426328.mp4
+  videoUrl = 'https://monitor-video.oss-cn-beijing.aliyuncs.com/intro.mp4'
 
   allSystemList = allSystemList
 
@@ -331,6 +347,11 @@ export default class MainLayout extends ViewBase {
   margin: auto;
   background: url(~@/assets/site/bg.jpg) no-repeat center top fixed;
   background-size: cover;
+}
+
+.movie-preview {
+  color: #fff;
+  cursor: pointer;
 }
 
 .site-header {

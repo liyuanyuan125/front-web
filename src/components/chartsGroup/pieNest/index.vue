@@ -111,7 +111,7 @@ export default class PieNest extends ViewBase {
           name: ' ',
           type: 'pie',
           avoidLabelOverlap: true,
-          minAngle: 25, // 最小的扇区角度
+          // minAngle: 25, // 最小的扇区角度
           radius: ['40%', '55%'],
           color: this.color,
           label: {

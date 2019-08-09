@@ -10,7 +10,7 @@
       @click.native.self="viewerShow = false"
     >
       <p class="viewer-tip" @click="viewerShow = false">轻点关闭</p>
-      <div class="flex-mid">
+      <div class="flex-mid" @contextmenu.prevent="">
         <video
           :key="viewerKey"
           :src="url"
