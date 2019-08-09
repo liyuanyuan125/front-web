@@ -34,7 +34,7 @@ export async function itemListbill(id: any , data: any) {
 // 资源方对账单批量审核
 // http://yapi.aiads-dev.com/project/139/interface/api/5370
 export async function approval(data: any) {
-    const res = get(`/xadvert/resource-bill/approval`, data)
+    const res = put(`/xadvert/resource-bill/approvals`, data)
     return res
 }
 

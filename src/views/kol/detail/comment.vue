@@ -364,7 +364,7 @@ export default class Comment extends ViewBase {
         this.dict.emotionList.forEach((it: any, index: number) => {
           if (rate[it.key] && rate[it.key] !== '') {
             this.chart1.dataList[0].push({
-              value: rate[it.key],
+              value: (rate[it.key] === 0 || rate[it.key] == '0.00') ? 0 : rate[it.key],
               name: it.text
             })
           } else {
