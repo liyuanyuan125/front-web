@@ -38,5 +38,12 @@ export async function approval(data: any) {
     return res
 }
 
+// 审批
+// http://yapi.aiads-dev.com/project/139/interface/api/5484
+export async function billAudit(data: any) {
+    const res = put('/xadvert/resource-bill/approval', data)
+    return res
+}
+
 
 

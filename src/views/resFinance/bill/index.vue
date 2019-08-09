@@ -106,7 +106,7 @@
                 <router-link
                   v-if='item.billStatus == 2'
                   class="status-btn"
-                  :to="{name:'resFinance-bill-detail' , params: { id: item.id  } }"
+                  :to="{name:'resFinance-bill-detail' , params: { id: item.id, audit: 1  } }"
                   tag="p"
                 >审核账单</router-link>
               </Col>

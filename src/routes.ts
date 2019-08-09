@@ -1649,16 +1649,22 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   },
   // 资源方 - 财务信息 - 对账单管理 - 查看详情
   {
-    path: '/resFinance/bill/detail/:id',
+    path: '/resFinance/bill/detail/:id/:audit?',
     name: 'resFinance-bill-detail',
     component: () => import('./views/resFinance/bill/detail.vue'),
     meta: {
       authKey: '',
       authAction: '',
-      title: '查看详情',
+      title({params}) {
+        const text = params.audit ? '审核账单' : '查看详情'
+        return text
+      },
       pageTitle: '对账单详情-鲸娱数据',
     },
-    props: idProps
+    props:  paramTypes({
+      id: Number,
+      audit: Number
+    }),
   },
   // 资源方 - 财务信息 - 对账单管理 - 明细
   {
