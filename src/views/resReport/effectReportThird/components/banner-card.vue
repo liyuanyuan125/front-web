@@ -1,7 +1,7 @@
 <template>
   <div class="banner-wp">
     <div class="banner-box flex-box">
-      <p>第三方检测报告</p>
+      <p>第三方监测报告</p>
       <h1>{{data.item6}}</h1>
       <!-- <a href="javascript:;"
          class="show-more-link"
