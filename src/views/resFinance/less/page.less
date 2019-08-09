@@ -1,0 +1,50 @@
+// 分页样式
+.page-cover {
+  text-align: center;
+  margin: 30px 0 40px;
+}
+/deep/ .ivu-page-prev {
+  border: 0;
+  background: none;
+}
+/deep/ .ivu-page-next {
+  border: 0;
+  background: none;
+}
+/deep/ .ivu-page-item-active {
+  border-color: #eee;
+  background: #00202d !important;
+  border-radius: 50%;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+}
+/deep/ .ivu-page-item-active:hover a {
+  color: #fff;
+}
+/deep/ .ivu-page-item-active a {
+  color: #fff;
+}
+/deep/ .ivu-page-item {
+  border: 0;
+  display: inline-block;
+  vertical-align: middle;
+  background: rgba(255, 255, 255, 0);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 4px;
+  text-align: center;
+  list-style: none;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+/deep/ .ivu-form .ivu-form-item-em, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
+  color: #00202d;
+}
+/deep/ .ivu-page-total {
+  color: #00202d;
+}

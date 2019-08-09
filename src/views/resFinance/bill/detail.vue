@@ -3,17 +3,17 @@
     <div class="bill-modal-content">
       <div class="title bottom-40">基本信息</div>
       <ul class="flex-box row-items">
-        <li class="flex-box"><label>影院名称</label><span>{{items.cinemaName}}</span></li>
-        <li class="flex-box"><label>日期</label><span>{{items.year}}-{{items.month}}</span></li>
-        <li class="flex-box"><label>曝光人次/人</label><span>{{items.personCount || '-'}}</span></li>
+        <li class="flex-box"><em>影院名称</em><span>{{items.cinemaName}}</span></li>
+        <li class="flex-box"><em>日期</em><span>{{items.year}}-{{items.month}}</span></li>
+        <li class="flex-box"><em>曝光人次/人</em><span>{{items.personCount || '-'}}</span></li>
        
       </ul>
        <ul class="flex-box row-items">
-        <li class="flex-box"><label>广告片数量</label><span>{{items.videoCount}}</span></li>
-         <li class="flex-box"><label>状态</label>
+        <li class="flex-box"><em>广告片数量</em><span>{{items.videoCount}}</span></li>
+         <li class="flex-box"><em>状态</em>
            <span v-for="it in billStatusList" :key="it.key" v-if="it.key == items.billStatus">{{it.text}}</span>
         </li>
-        <li class="flex-box"><label>预计结算金额</label><span>{{formatNumber(items.amount)}}</span></li>
+        <li class="flex-box"><em>预计结算金额</em><span>{{formatNumber(items.amount)}}</span></li>
       </ul>
     </div>
 
@@ -48,6 +48,44 @@
       <div class="title bottom-20">操作日志</div>
       <Table :columns="columnLog" :data="dataLog" disabled-hover></Table>
     </div>
+
+    <div class="bill-modal-content" v-if="audit">
+       <div class="title bottom-20">审核操作</div>
+        <Form ref="form" :model="form" :rules="rule" :label-width="115" class="audit-form">
+          <Row  >
+            <Col :span="12">
+                  <FormItem label="账单人次">
+                    <div class="account-count">{{items.personCount}}</div>
+                  </FormItem>
+                  <FormItem label="审核意见">
+                     <RadioGroup v-model="agree">
+                          <Radio :label="1">审核通过</Radio>
+                          <Radio :label="0">审核拒绝</Radio>
+                      </RadioGroup>
+                  </FormItem>
+                  <FormItem v-if="!agree" class="person-count" prop="resourcePersonCount" label="影城系统人次">
+                    <span class="span-input"><Input v-model="form.resourcePersonCount" /> 人</span>
+                  </FormItem>
+                  <FormItem v-if="!agree" label="影城系统截图">
+                    <span class="audit-upload">
+                      <Upload v-model="form.pictures" :max-count="8" multiple accept="images/*" confirm-on-del/>
+                        <div class="upload-tip">请上传格式为jpg/jpeg/png，大小不超过5M的图片</div>
+                  </span>
+                  </FormItem>
+            </Col>
+            <Col :span="12">
+            <FormItem label="备注" v-if="!agree">
+              <Input type="textarea" style="width: 90%" v-model="form.resourceRemark" :rows="5" />
+            </FormItem>
+            </Col>
+          </Row>
+        </Form>
+         <div class="create-submit-btn submit-audit">
+          <Button class="cancel-btn ">取消</Button>
+          <Button class="btn" @click="submitAudit('form')" >确定</Button>
+        </div>
+    </div>
+
   </div>
 </template>
 
@@ -58,12 +96,18 @@ import moment from 'moment'
 import { confirm, toast, info } from '@/ui/modal'
 import {intDate, readableThousands, textList} from '@/util/dealData'
 import { formatNumber } from '@/util/validateRules'
-import { itemList, itemListbill } from '@/api/bill'
+import { itemList, itemListbill, billAudit} from '@/api/bill'
+import Upload, { FileItem } from '@/components/upload'
 const format = 'YYYY-MM-DD HH:mm:ss'
 
-@Component
+@Component({
+  components: {
+    Upload
+  }
+})
 export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0}) id!: number
+  @Prop({ type: Number, default: 1}) audit!: number
 
   pageIndex = 1
   pageSize = 20
@@ -73,6 +117,9 @@ export default class Main extends ViewBase {
   billStatusList: any[] = []
 
   formatNumber = formatNumber
+
+  agree = 1
+  form: any = {}
 
   column = [
     { title: '广告片名称', key: 'videoName', minWidth: 120 },
@@ -93,6 +140,20 @@ export default class Main extends ViewBase {
     { title: '操作日志', key: 'describe' },
   ]
   dataLog = []
+
+  get rule() {
+    return {
+      resourcePersonCount: [
+        {
+          require: true,
+          trigger: 'change',
+          validator(rule: any, value: string[], callback: any) {
+            !value ? callback(new Error('影城系统人次不能为空')) : callback()
+          }
+        }
+      ]
+    }
+  }
 
   mounted() {
     this.list()
@@ -146,10 +207,37 @@ export default class Main extends ViewBase {
     this.pageIndex = size
     this.list()
   }
+
+  async submitAudit(dataform: any) {
+    const agress = this.agree ? true : false
+    if (!agress) {
+      const volid = await (this.$refs[dataform] as any).validate()
+      if (!volid) {
+        return
+      }
+    }
+
+    try {
+      const { data } = await billAudit({
+        ...this.form,
+        agress,
+        id: this.id
+      })
+      this.$router.push({name: 'resFinance-bill'})
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
+@import '~@/views/kol/less/common.less';
+@import '~@/views/pop/film/com.less';
+@import '~@/views/resFinance/less/page.less';
+.submit-audit {
+  margin-bottom: 30px;
+}
 .status-pass {
   color: #5f961f;
 }
@@ -182,10 +270,47 @@ export default class Main extends ViewBase {
     flex: 1;
     padding-bottom: 30px;
   }
-  label {
+  em {
     display: block;
     width: 116px;
     color: rgba(0, 32, 45, .7);
+  }
+  .remark {
+    display: block;
+    width: 100%;
+  }
+}
+
+/deep/ .audit-form {
+  .account-count {
+    padding-top: 4px;
+  }
+  .ivu-form-item-content {
+    font-size: 14px;
+  }
+  .ivu-input-wrapper {
+    width: auto;
+    margin-right: 10px;
+  }
+  .ivu-form-item-label {
+    font-size: 15px;
+    color: #00202d;
+    padding: 13px 15px 0 0;
+  }
+  .ivu-input {
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    border-radius: 5px;
+  }
+  .person-count {
+    .span-input {
+      display: flex;
+      align-items: center;
+    }
+    .ivu-input {
+      width: 200px;
+      height: 40px;
+    }
   }
 }
 /deep/ .ivu-table-wrapper {
@@ -212,54 +337,14 @@ export default class Main extends ViewBase {
   height: 60px;
 }
 
-// 分页样式
-.page-cover {
-  text-align: center;
-  margin: 30px 0 40px;
+/deep/ .ivu-radio-wrapper {
+  font-size: 14px;
 }
-/deep/ .ivu-page-prev {
-  border: 0;
+
+.upload-box {
   background: none;
 }
-/deep/ .ivu-page-next {
-  border: 0;
-  background: none;
-}
-/deep/ .ivu-page-item-active {
-  border-color: #eee;
-  background: #00202d !important;
-  border-radius: 50%;
-  color: #fff;
-  width: 30px;
-  height: 30px;
-}
-/deep/ .ivu-page-item-active:hover a {
-  color: #fff;
-}
-/deep/ .ivu-page-item-active a {
-  color: #fff;
-}
-/deep/ .ivu-page-item {
-  border: 0;
-  display: inline-block;
-  vertical-align: middle;
-  background: rgba(255, 255, 255, 0);
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  margin-right: 4px;
-  text-align: center;
-  list-style: none;
-  user-select: none;
-  cursor: pointer;
-  font-weight: 500;
-  transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
-}
-/deep/ .ivu-form .ivu-form-item-label, /deep/ .ivu-icon-ios-arrow-forward::before, /deep/ .ivu-icon-ios-arrow-back::before {
-  color: #00202d;
-}
-/deep/ .ivu-page-total {
-  color: #00202d;
+.upload-tip {
+  font-size: 14px;
 }
 </style>
