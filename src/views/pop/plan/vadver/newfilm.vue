@@ -171,7 +171,9 @@ export default class DlgEditCinema extends ViewBase {
           image: it.main_pic,
           nameCn: it.name_cn,
           releaseDate: it.release_date,
-          type: it.types
+          type: it.types,
+          actor: it.actor || [],
+          director: it.director || []
         }
       })
       this.total = totalCount
