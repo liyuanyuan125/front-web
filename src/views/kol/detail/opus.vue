@@ -56,6 +56,7 @@ import defaultImg from '../assets/error.png'
 import pagination from '@/components/page.vue'
 import moment from 'moment'
 import { roleNumber } from '@/util/validateRules'
+import { formatValidDate } from '@/util/dealData'
 
 const timeFormat = 'YYYY-MM-DD HH:mm:ss'
 
@@ -110,7 +111,8 @@ export default class Opus extends ViewBase {
       this.list = (items || []).map((it: any) => {
         return {
           ...it,
-          publishTime: moment(it.publishTime).format(timeFormat)
+          // publishTime: moment(it.publishTime).format(timeFormat)
+          publishTime: formatValidDate(it.publishTime, {format: timeFormat})
         }
       })
       this.total = totalCount
