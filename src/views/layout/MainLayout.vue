@@ -27,7 +27,7 @@
         <i class="iconfont icon-cart"/>
         <span class="cart-count" v-if="cartCount > 0">{{cartCount}}</span>
       </router-link> -->
-      
+
       <VideoPreviewer
           :url="videoUrl"
           v-if="user.systemCode == 'resource'"
@@ -501,7 +501,9 @@ export default class MainLayout extends ViewBase {
 .logo {
   position: relative;
   width: inherit;
-  height: 152px;
+  // 新版的 chrome，对 height 的实现似乎有问题
+  min-height: 152px;
+  max-height: 152px;
   background-color: @c-sider-bg;
 }
 
