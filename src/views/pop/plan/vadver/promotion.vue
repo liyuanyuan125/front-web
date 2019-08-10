@@ -74,7 +74,7 @@
               <Row class="adver-detail">
                 <Col :span="10">
                   <FormItem label="投放排期:" class="timer" :labelWidth='100' prop="beginDate">
-                    <DatePicker type="date" 
+                    <DatePicker type="date"
                       :options="startDate"
                       v-model="form.beginDate"
                       placeholder="开始时间" style="width: 200px"></DatePicker>
@@ -97,7 +97,7 @@
                     <!-- <weekDatePicker  style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker> -->
                   </FormItem>
                 </Col>
-                
+
               </Row>
             </Col>
             <Col span="24">
@@ -122,7 +122,7 @@
       <div class="btn-center">
         <Button type="primary" class="button-ok" @click="next('dataform')">下一步,进入定向设置</Button>
       </div>
-    </Form>  
+    </Form>
   </div>
 </template>
 
@@ -328,7 +328,7 @@ export default class Promotion extends ViewBase {
     try {
       const { data } = await advertising( clean({
         pageIndex: 1,
-        pageSize: 200000,
+        pageSize: 288,
         status: this.setadver ? '' : 4
       }) )
       this.adverList = data.items || []

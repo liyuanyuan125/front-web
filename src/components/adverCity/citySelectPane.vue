@@ -344,12 +344,11 @@ const cellData = (list: RegionSubList[], {
 }
 
 const gradeSorts = [
-  'first-tier',
-  'second-tier',
-  'third-tier',
-  'four-tier',
-  'five-tier',
-  'six-tier'
+  'A1',
+  'A2',
+  'A3',
+  'A4',
+  'A5',
 ]
 
 const getGradeList = (list: RegionSubList[]) => {
@@ -357,7 +356,7 @@ const getGradeList = (list: RegionSubList[]) => {
   const cityList = flatMap(provinceList, 'subList') as AreaItem[]
 
   const gradeMap = cityList.reduce((map, item) => {
-    const { id, grade: key, gradeName: text } = item
+    const { id, bizGrade: key, bizGradeName: text } = item
     if (key && text) {
       const fast = map[key] || (map[key] = {
         key,
@@ -400,6 +399,9 @@ export default class CitySelectPane extends ViewBase {
   fastList: FastItem[] = []
 
   arrowloding = false
+
+  lastCheckedFastItem: FastItem | null = null
+
   lastUncheckedFastItem: FastItem | null = null
 
   get cityList() {
@@ -434,13 +436,13 @@ export default class CitySelectPane extends ViewBase {
       this.updateTable()
       const gradeList = getGradeList(this.list)
       this.fastList = [
-        { key: 'all', text: '全国', cityIds: [], checked: false, indeterminate: false },
-        { key: 'top', text: '票仓城市Top20', cityIds: this.topCityIds, checked: false, indeterminate: false },
+        { key: 'all', text: '全国', cityIds: [], checked: true, indeterminate: false },
+        { key: 'top', text: '票仓城市Top10', cityIds: this.topCityIds, checked: false, indeterminate: false },
         ...gradeList
       ]
-      if (this.value.length == 0) {
-        this.model = [...this.allCityIds]
-      }
+      // if (this.value.length == 0) {
+      //   this.model = [...this.allCityIds]
+      // }
       this.updateFast()
     } catch (ex) {
       this.handleError(ex)
@@ -522,23 +524,24 @@ export default class CitySelectPane extends ViewBase {
   }
 
   updateFast() {
-    this.fastList.forEach((it, i) => {
-      const selectedIds = this.allSelectedCityIds
-      if (i == 0) {
-        const allCount = this.allCityIds.length
-        const selectedCount = selectedIds.length
-        it.checked = selectedCount == allCount
-        it.indeterminate = 0 < selectedCount && selectedCount < allCount
-      } else {
-        const rel = getRelation(it.cityIds, selectedIds)
-        it.checked = rel == SetRelation.Equal || rel == SetRelation.AInB
-        it.indeterminate = rel == SetRelation.Half
-      }
-    })
+    // this.fastList.forEach((it, i) => {
+    //   const selectedIds = this.allSelectedCityIds
+    //   if (i == 0) {
+    //     const allCount = this.allCityIds.length
+    //     const selectedCount = selectedIds.length
+    //     it.checked = selectedCount == allCount
+    //     it.indeterminate = 0 < selectedCount && selectedCount < allCount
+    //   } else {
+    //     const rel = getRelation(it.cityIds, selectedIds)
+    //     it.checked = rel == SetRelation.Equal || rel == SetRelation.AInB
+    //     it.indeterminate = rel == SetRelation.Half
+    //   }
+    // })
   }
 
   fastChange(item: FastItem) {
-    // 记录下最后不选的项，以供 watchFastList 使用
+    // 记录下最后选择的项、反选的项，以供 watchFastList 使用
+    item.checked && (this.lastCheckedFastItem = item)
     item.checked || (this.lastUncheckedFastItem = item)
   }
 
@@ -578,35 +581,36 @@ export default class CitySelectPane extends ViewBase {
   }
 
   @Watch('fastList', { deep: true })
-  watchFastList(list: FastItem[], oldlist: FastItem[]) {
-    // const flag = oldlist[0] ? oldlist[0].checked : false
-    // console.log(flag, list[0].checked)
+  watchFastList(list: FastItem[]) {
+    const checkedItem = this.lastCheckedFastItem
     const uncheckedItem = this.lastUncheckedFastItem
+    this.lastCheckedFastItem = null
     this.lastUncheckedFastItem = null
 
-    // 若非全国被反选，设置全国选择状态
-    if (uncheckedItem != null
-      && uncheckedItem.key != 'all'
-      && !uncheckedItem.checked) {
+    // 若非全国被选择，取消全国的选择状态
+    if (checkedItem != null
+      && checkedItem.key != 'all'
+      && checkedItem.checked) {
       this.fastList[0].checked = false
       this.fastList[0].indeterminate = this.model.length > 0
     }
 
-    // 如果全国被选择，则排斥其他选项
-
     if (list[0].checked) {
-      // this.fastList.forEach((it, i) => i > 0 && (it.checked = false))
-      this.model = this.allCityIds
+    // 如果全国被选择，则排斥其他选项
+      this.fastList.forEach((it, i) => i > 0 && (it.checked = false))
+      this.model = []
     } else {
-      // 将所有被选中的，添加到集合中
-      const checkedList = list.filter(it => it.checked)
-      const checkedIds = flatMap(checkedList, 'cityIds') as number[]
-      const unionIds = checkedIds.concat(this.model)
-
       // 从集合中，减去最后被取消选择的项
-      const diffIds = uncheckedItem ? difference(unionIds, uncheckedItem.cityIds) : unionIds
+      const diffIds = uncheckedItem
+        ? difference(this.model, uncheckedItem.cityIds)
+        : this.model
 
-      const uniqIds = uniq(diffIds)
+      // 将所有被选中的（全国除外），添加到集合中
+      const checkedList = list.slice(1).filter(it => it.checked)
+      const checkedIds = flatMap(checkedList, 'cityIds') as number[]
+      const unionIds = checkedIds.concat(diffIds)
+
+      const uniqIds = uniq(unionIds)
       this.model = uniqIds
     }
   }

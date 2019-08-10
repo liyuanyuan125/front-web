@@ -26,6 +26,12 @@ export interface AreaItem {
   /** 城市分级名称 */
   gradeName: string
 
+  /** 业务分级 */
+  bizGrade: string
+
+  /** 业务分级名称 */
+  bizGradeName: string
+
   /** 名称 */
   name: string
 
@@ -60,7 +66,7 @@ export interface AreaItemSubList extends AreaItem {
  * @param pid 父区域ID或以 , 号分割的父区域 ids
  */
 export async function getSubList(pid: number | string = 0) {
-  const { data } = await get('/basis/districts', { parentIds: pid, pageSize: 888888 })
+  const { data } = await get('/basis/districts', { parentIds: pid, pageSize: 888 })
 
   const tlist: any[] = (data.items || []).map((it: any) => {
     return {
