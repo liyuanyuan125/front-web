@@ -23,7 +23,19 @@
               </div>
             </Poptip>
           </span>
-          <span v-else>{{it.text}}</span>
+          <span v-else-if="it.key == 'all'">{{it.text}}</span>
+          <span v-else > {{it.text}} {{!!allcity[it.text]}}
+            <Poptip v-if='!!allcity[it.text]' trigger="hover" :title="allcity[it.text].title" content="content">
+              <img v-if="!it.key == it.text && it.check == true" width="20px" style="vertical-align:middle" src="./assets/question.png" />
+              <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
+              <div class="api" slot="content">
+                <div class="city-show">
+                  <span v-for="it in allcity[it.text].city" :key="it">{{it}}</span>
+                </div>
+              </div>
+            </Poptip>
+          </span>
+          <!-- <span v-else>{{it.text}}</span> -->
         </Checkbox>
       </div>
     </div>
@@ -139,7 +151,7 @@
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getGegionProvinceCity, getSubList, RegionSubList, AreaItem, AreaItemSubList } from '@/api/area'
+import { getGegionProvinceCity, getSubList, RegionSubList, AreaItem, AreaItemSubList, tip } from '@/api/area'
 import { chunk, flatMap, flatten, intersection, difference, isEqual, uniq } from 'lodash'
 import { random } from '@/fn/string'
 import { devWarn } from '@/util/dev'
@@ -383,15 +395,16 @@ export default class CitySelectPane extends ViewBase {
 
   /** 票仓城市 Top20 城市 ids */
   @Prop({ type: Array, default: () => [] }) topCityIds!: number[]
-
+  @Prop() time!: any
   @Prop() warehouseLisst!: any
-
+  @Prop() specification!: any
   model: number[] = []
 
+  allcityshow: any = false
   list: RegionSubList[] = []
 
   cellData: CellItem[][] | null = null
-
+  allcity: any = {}
   city: AreaItem | null = null
 
   hightlightCityId: number | null = null
@@ -444,6 +457,32 @@ export default class CitySelectPane extends ViewBase {
       //   this.model = [...this.allCityIds]
       // }
       this.updateFast()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  mounted() {
+    gradeSorts.forEach((it: any) => {
+      this.init(it)
+    })
+  }
+  async init(it: any) {
+    try {
+      const { data } = await tip({
+        videoLength: this.specification,
+        bizGrade: it,
+        beginDate: this.time,
+      })
+      this.$nextTick(() => {
+        this.allcity[it] = {
+          city: data.cities || [],
+          cpm: data.cpm || '',
+          key: it,
+          videoLength: data.videoLength || '',
+          title: `[ ${data.videoLength}] 刊例价：${data.cpm}元/千人次`
+        }
+      })
     } catch (ex) {
       this.handleError(ex)
     }

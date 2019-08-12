@@ -171,3 +171,8 @@ export async function getGegionProvinceCity() {
   }) as RegionSubList)
   return result
 }
+
+export async function tip(query: any) {
+  const data = await get('/xadvert/plans/cpm/tip', query)
+  return data
+}
