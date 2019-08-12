@@ -841,6 +841,9 @@ th {
       text-align: center;
       line-height: 16px;
     }
+    .city-space {
+      color: #00202d;
+    }
   }
 }
 .city-fast-list {
