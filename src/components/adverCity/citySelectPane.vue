@@ -31,12 +31,10 @@
               <div class="api" slot="content">
                 <div class="city-show">
                   <p class='city-space'>{{allcity[it.text].city.join(',   ')}}</p>
-                  <!-- <span v-for="it in allcity[it.text].city" :key="it">{{it}}</span> -->
                 </div>
               </div>
             </Poptip>
           </span>
-          <!-- <span v-else>{{it.text}}</span> -->
         </Checkbox>
       </div>
     </div>

@@ -26,6 +26,7 @@
                     共{{citysId.length}}个城市
                     <span>设置</span>
                   </div> -->
+                  <!-- {{citysId}} -->
                   <City :specification='specification'
                    :time='beginDate'
                    :warehouseLisst='warehouseLisst' v-if='cityfalse' @ok="onCitySelectOk" v-model="visible" :cityIds.sync="citysId" :topCityIds="warehouseId"></City>
@@ -476,7 +477,7 @@ export default class Orienteering extends ViewBase {
           }),
           allNation: this.citysId.length > 0 ? 0 : 1,
           movieCustom: this.numsList.length == 0 ? 0 : this.movieCustom,
-          customDeliveryCities: this.cityCustom == 1 ? this.citysId : '' ,
+          customDeliveryCities: this.cityCustom == 1 && this.citysId.length > 0 ? this.citysId : '' ,
           customDeliveryCinemas: this.cityCustom == 0 ? this.xlslid : '' ,
           deliveryMovies:
             this.movieCustom == 0
