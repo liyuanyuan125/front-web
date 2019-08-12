@@ -24,7 +24,7 @@
             </Poptip>
           </span>
           <span v-else-if="it.key == 'all'">{{it.text}}</span>
-          <span v-else > {{it.text}} 
+          <span v-else > {{it.text}}
             <Poptip v-if='!!allcity[it.text]' trigger="hover" :title="allcity[it.text].title" content="content">
               <img v-if="!it.key == it.text && it.check == true" width="20px" style="vertical-align:middle" src="./assets/question.png" />
               <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
@@ -447,14 +447,13 @@ export default class CitySelectPane extends ViewBase {
       this.cellData = cellData(this.list)
       this.updateTable()
       const gradeList = getGradeList(this.list)
+      const isBackFill = (this.value || []).length > 0
       this.fastList = [
-        { key: 'all', text: '全国', cityIds: [], checked: true, indeterminate: false },
+        { key: 'all', text: '全国', cityIds: [], checked: !isBackFill, indeterminate: false },
         { key: 'top', text: '票仓城市Top10', cityIds: this.topCityIds, checked: false, indeterminate: false },
         ...gradeList
       ]
-      // if (this.value.length == 0) {
-      //   this.model = [...this.allCityIds]
-      // }
+      this.arrowloding = isBackFill
       this.updateFast()
     } catch (ex) {
       this.handleError(ex)
