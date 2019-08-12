@@ -13,24 +13,25 @@
           @on-change="fastChange(it, $event)"
         >
           <span v-if="it.key == 'top'" > {{it.text}}
-            <Poptip trigger="hover" title="票仓城市top20" content="content">
+            <Poptip trigger="hover" :title="allcity['top'].title" content="content">
               <img v-if="!it.key == 'top' && it.check == true" width="20px" style="vertical-align:middle" src="./assets/question.png" />
               <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
               <div class="api" slot="content">
                 <div class="city-show">
-                  <span v-for="it in warehouseLisst" :key="it.cityId">{{it.cityName}}</span>
+                  <p class='city-space'>{{allcity['top'].city.join(',   ')}}</p>
                 </div>
               </div>
             </Poptip>
           </span>
           <span v-else-if="it.key == 'all'">{{it.text}}</span>
-          <span v-else > {{it.text}} {{!!allcity[it.text]}}
+          <span v-else > {{it.text}} 
             <Poptip v-if='!!allcity[it.text]' trigger="hover" :title="allcity[it.text].title" content="content">
               <img v-if="!it.key == it.text && it.check == true" width="20px" style="vertical-align:middle" src="./assets/question.png" />
               <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
               <div class="api" slot="content">
                 <div class="city-show">
-                  <span v-for="it in allcity[it.text].city" :key="it">{{it}}</span>
+                  <p class='city-space'>{{allcity[it.text].city.join(',   ')}}</p>
+                  <!-- <span v-for="it in allcity[it.text].city" :key="it">{{it}}</span> -->
                 </div>
               </div>
             </Poptip>
@@ -142,8 +143,8 @@
       已选： {{model.length}}
     </p>
     <div class="arrow-box">
-      <div @click="arrowloding = true" v-if="!arrowloding" class="arrow">展开<Icon type="ios-arrow-forward" ></Icon></div>
-      <div @click="arrowloding = false" v-if="arrowloding" class="arrow">收起<Icon type="ios-arrow-up" /></div>
+      <div @click="arrowloding = true" v-if="!arrowloding" class="arrow">展开城市列表<Icon type="ios-arrow-forward" ></Icon></div>
+      <div @click="arrowloding = false" v-if="arrowloding" class="arrow">收起城市列表<Icon type="ios-arrow-up" /></div>
     </div>
   </div>
 </template>
@@ -463,7 +464,7 @@ export default class CitySelectPane extends ViewBase {
   }
 
   mounted() {
-    gradeSorts.forEach((it: any) => {
+    ['top', ...gradeSorts].forEach((it: any) => {
       this.init(it)
     })
   }
@@ -475,12 +476,22 @@ export default class CitySelectPane extends ViewBase {
         beginDate: this.time,
       })
       this.$nextTick(() => {
-        this.allcity[it] = {
-          city: data.cities || [],
-          cpm: data.cpm || '',
-          key: it,
-          videoLength: data.videoLength || '',
-          title: `[ ${data.videoLength}] 刊例价：${data.cpm}元/千人次`
+        if (it == 'top') {
+          this.allcity[it] = {
+            city: (this.warehouseLisst || []).map((its: any) => its.cityName),
+            cpm: data.cpm || '',
+            key: it,
+            videoLength: data.videoLength || '',
+            title: `[ ${data.videoLength}] 刊例价：${data.cpm}元/千人次`
+          }
+        } else {
+          this.allcity[it] = {
+            city: data.cities || [],
+            cpm: data.cpm || '',
+            key: it,
+            videoLength: data.videoLength || '',
+            title: `[ ${data.videoLength}] 刊例价：${data.cpm}元/千人次`
+          }
         }
       })
     } catch (ex) {
@@ -842,12 +853,13 @@ th {
   }
 }
 .film-max {
-  max-height: 110px;
+  max-height: 120px;
+  height: 130px;
 }
 .arrow-box {
   position: absolute;
+  left: 46%;
   bottom: 17px;
-  right: 40px;
 }
 /deep/ .ivu-select-input {
   line-height: 36px;
@@ -865,5 +877,15 @@ th {
     color: #00202d;
     overflow: hidden;
   }
+}
+.city-space {
+  max-height: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  word-break: break-all;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  white-space: pre-wrap;
 }
 </style>
