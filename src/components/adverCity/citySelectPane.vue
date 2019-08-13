@@ -33,7 +33,8 @@
                 <div class="city-show">
                   <p class='city-space'>{{allcity[it.text].city.join(',   ')}}</p>
                 </div>
-                <div style='text-align: left; margin-top: 10px;'>共{{allcity[it.text].city.length}}个城市</div>
+                <div class='city-num'
+                 style='text-align: left; margin-top: 10px;'>共{{allcity[it.text].city.length}}个城市</div>
               </div>
             </Poptip>
           </span>
@@ -846,6 +847,9 @@ th {
       line-height: 16px;
     }
     .city-space {
+      color: #00202d;
+    }
+    .city-num {
       color: #00202d;
     }
   }
