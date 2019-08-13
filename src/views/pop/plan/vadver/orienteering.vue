@@ -118,7 +118,6 @@
           </h3>
            <FormItem :labelWidth="0" class="item-top cinema-position form-item-type">
               <Tags v-model="movieCustom" :tagMess="movieList"/>
-              <!-- {{movieCustom}} -->
             </FormItem>
           <div v-show="movieCustom != 0">
             <Film v-if="typeList.length > 0" v-model="numsList" @donefilm="timerfilm" :begin="beginDate" :end="endDate" />
@@ -327,8 +326,8 @@ export default class Orienteering extends ViewBase {
         this.deliveryCityTypeList = deliveryCityTypeList
         this.item = item
         this.movies = movies
-        this.movieCustom = item.movieCustom
         this.renders(item)
+        this.movieCustom = item.movieCustom
       }
       // this.citysId = item.customDeliveryCities || []
       this.xlslid = item.deliveryCinemas || []
