@@ -552,7 +552,7 @@ export default class App extends ViewBase {
     this.tag = id
     this.form.name = ''
     this.pageList.pageIndex = 1
-    this.pageList.pageSize = 6
+    this.pageList.pageSize = 4
     this.seach()
   }
 

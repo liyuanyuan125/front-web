@@ -338,7 +338,7 @@ export default class Apps extends ViewBase {
 
   pageList = {
     pageIndex: 1,
-    pageSize: 6
+    pageSize: 4
   }
   ageTypeList: any = []
   tags: any = []
