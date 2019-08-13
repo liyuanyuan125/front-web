@@ -28,7 +28,7 @@
             <p class="onenumber" v-else>
               <Number :flag="2"  :addNum="(data.estimateShowCount * 7 / 10)" />
               <span class='middle'> ~ </span>
-              <Number :flag="2"  :addNum="(data.estimateShowCount * 1.3 / 10)" />
+              <Number :flag="2"  :addNum="(data.estimateShowCount * 13 / 10)" />
             </p>
           </div>
         </Col>
@@ -36,14 +36,14 @@
           <div>
             <p class="title">预估花费</p>
             <p v-if="data.estimateCostAmount && (data.estimateCostAmount + '').length > 4" class="number">
-              <Number :addNum="data.estimateCostAmount/10000 * 0.7" />
-              <span class='middle'> ~ </span>
-              <Number :addNum="data.estimateCostAmount/10000 * 1.3" />
+              <Number :addNum="data.estimateCostAmount" />
+              <!-- <span class='middle'> ~ </span>
+              <Number :addNum="data.estimateCostAmount" /> -->
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="data.estimateCostAmount * 7 / 10" />
-              <span class='middle'> ~ </span>
-              <Number :addNum="data.estimateCostAmount * 13 / 10" />
+              <Number :flag="2"  :addNum="data.estimateCostAmount" />
+              <!-- <span class='middle'> ~ </span>
+              <Number :addNum="data.estimateCostAmount * 13 / 10" /> -->
             </p>
           </div>
         </Col>
@@ -91,8 +91,7 @@
         <Col :span='24'>
           <Row class="item item-dl">
               <Col :span='8'>
-                <span>计划名称：</span>
-                <span class='plan-name'>{{data.name}}</span>
+                <div class='plan-box'>计划名称: <span class='plan-name'>{{data.name}}</span></div>
               </Col>
               <Col :span='8'>
                 <span>广告片：</span>
@@ -239,11 +238,15 @@ export default class App extends ViewBase {
   }
 }
 .plan-name {
-  display: block;
+  display: inline-block;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  width: 220px;
+  vertical-align: middle;
+  width: 160px;
+}
+.plan-box {
+  color: #7f7f7f;
 }
 // .line-right {
 //   position: absolute;
