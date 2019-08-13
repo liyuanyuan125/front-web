@@ -19,6 +19,7 @@
               <div class="api" slot="content">
                 <div class="city-show">
                   <p class='city-space'>{{allcity['top'].city.join(',   ')}}</p>
+                  <div style='text-align: left; margin-top: 10px;'>共{{allcity['top'].city.length}}个城市</div>
                 </div>
               </div>
             </Poptip>
@@ -32,6 +33,7 @@
                 <div class="city-show">
                   <p class='city-space'>{{allcity[it.text].city.join(',   ')}}</p>
                 </div>
+                <div style='text-align: left; margin-top: 10px;'>共{{allcity[it.text].city.length}}个城市</div>
               </div>
             </Poptip>
           </span>
@@ -450,7 +452,7 @@ export default class CitySelectPane extends ViewBase {
       const isBackFill = (this.value || []).length > 0
       this.fastList = [
         { key: 'all', text: '全国', cityIds: [], checked: !isBackFill, indeterminate: false },
-        { key: 'top', text: '票仓城市Top10', cityIds: this.topCityIds, checked: false, indeterminate: false },
+        { key: 'top', text: '票仓城市Top20', cityIds: this.topCityIds, checked: false, indeterminate: false },
         ...gradeList
       ]
       this.arrowloding = isBackFill
@@ -887,5 +889,6 @@ th {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   white-space: pre-wrap;
+  text-align: left;
 }
 </style>
