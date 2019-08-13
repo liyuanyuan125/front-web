@@ -13,7 +13,7 @@
           @on-change="fastChange(it, $event)"
         >
           <span v-if="it.key == 'top'" > {{it.text}}
-            <Poptip trigger="hover" :title="allcity['top'].title" content="content">
+            <Poptip trigger="hover" title="票仓城市top20" content="content">
               <img v-if="!it.key == 'top' && it.check == true" width="20px" style="vertical-align:middle" src="./assets/question.png" />
               <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
               <div class="api" slot="content">
@@ -139,12 +139,14 @@
         </component>
       </tr>
     </table>
-    <p v-show="model.length > 0" >
-      已选： {{model.length}}
-    </p>
-    <div class="arrow-box">
-      <div @click="arrowloding = true" v-if="!arrowloding" class="arrow">展开城市列表<Icon type="ios-arrow-forward" ></Icon></div>
-      <div @click="arrowloding = false" v-if="arrowloding" class="arrow">收起城市列表<Icon type="ios-arrow-up" /></div>
+    <div style='display: flex; margin-top: 6px'>
+      <p v-show="model.length > 0" >
+        已选： {{model.length}}
+      </p>
+      <div class="arrow-box">
+        <div @click="arrowloding = true" v-if="!arrowloding" class="arrow">展开城市列表<Icon type="ios-arrow-forward" ></Icon></div>
+        <div @click="arrowloding = false" v-if="arrowloding" class="arrow">收起城市列表<Icon type="ios-arrow-up" /></div>
+      </div>
     </div>
   </div>
 </template>
@@ -855,13 +857,12 @@ th {
   }
 }
 .film-max {
-  max-height: 120px;
+  max-height: 132px;
   height: 130px;
 }
 .arrow-box {
-  position: absolute;
-  left: 46%;
-  bottom: 17px;
+  margin-left: 40%;
+  height: 17px;
 }
 /deep/ .ivu-select-input {
   line-height: 36px;
