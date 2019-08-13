@@ -13,8 +13,8 @@
             <Number :addNum="!!item.estimateShowCount ? item.estimateShowCount/100000*13 : 0" />万
           </p>
           <p v-else>
-            <Number :flag="2"  :addNum="~~(item.estimateShowCount * 7 / 10)" /> ~ 
-            <Number :flag="2"  :addNum="~~(item.estimateShowCount * 13 / 10)" />
+            <Number :flag="2"  :addNum="Math.floor(item.estimateShowCount * 7 / 10)" /> ~ 
+            <Number :flag="2"  :addNum="Math.floor(item.estimateShowCount * 13 / 10)" />
           </p>
         </dt>
         <!-- <dt>
@@ -29,8 +29,8 @@
             <!-- <Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount : 0" />万 -->
           </p>
           <p v-else>
-            <Number :flag="2"  :addNum="item.estimateCostAmount * 7 / 10" /> ~ 
-            <Number :flag="2"  :addNum="item.estimateCostAmount * 13 / 10" />
+            <Number :flag="2"  :addNum="item.estimateCostAmount" /> 
+            <!-- <Number :flag="2"  :addNum="item.estimateCostAmount * 13 / 10" /> -->
           </p>
         </dt>
         <!-- <dt>
@@ -45,8 +45,8 @@
             <Number :addNum="!!item.estimatePersonCount ? item.estimatePersonCount/100000*13 : 0" />万 
           </p>
           <p v-else>
-            <Number :flag="2"  :addNum="item.estimatePersonCount*7/10" /> ~ 
-            <Number :flag="2"  :addNum="item.estimatePersonCount*13/10" />
+            <Number :flag="2"  :addNum="Math.floor(item.estimatePersonCount*7/10)" /> ~ 
+            <Number :flag="2"  :addNum="Math.floor(item.estimatePersonCount*13/10)" />
           </p>
         </dt>
         <!-- <dt>
