@@ -139,7 +139,7 @@
         </component>
       </tr>
     </table>
-    <p v-show="arrowloding" >
+    <p v-show="model.length > 0" >
       已选： {{model.length}}
     </p>
     <div class="arrow-box">
