@@ -36,7 +36,7 @@
           <div>
             <p class="title">预估花费</p>
             <p v-if="data.estimateCostAmount && (data.estimateCostAmount + '').length > 4" class="number">
-              <Number :addNum="data.estimateCostAmount" />
+              <Number :addNum="data.estimateCostAmount / 10000" />
               <!-- <span class='middle'> ~ </span>
               <Number :addNum="data.estimateCostAmount" /> -->
             </p>

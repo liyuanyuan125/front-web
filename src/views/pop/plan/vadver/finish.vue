@@ -25,7 +25,7 @@
         <dd>预估花费</dd>
         <dt>
           <p v-if="!!item.estimateCostAmount && (item.estimateCostAmount + '').length > 4">
-            <Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount : 0" />万
+            <Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount / 10000 : 0" />万
             <!-- <Number :addNum="!!item.estimateCostAmount ? item.estimateCostAmount : 0" />万 -->
           </p>
           <p v-else>
