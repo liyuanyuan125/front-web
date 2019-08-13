@@ -9,30 +9,11 @@ module.exports = {
   productionSourceMap: false,
 
   devServer: {
+    host: 'fdev.aiads-dev.com',
+    disableHostCheck: true,
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
-    proxy: {
-      '/': {
-        target: 'https://fapi.aiads-dev.com',
-        changeOrigin: true,
-        ws: false,
-        secure: false,
-        bypass(req) {
-          if (req.headers.accept.indexOf('html') !== -1) {
-            return '/index.html'
-          }
-        },
-        onProxyRes(proxy) {
-          const cookies = proxy.headers['set-cookie']
-          if (cookies) {
-            const newCookies = cookies.map(it =>
-              it.replace(/Domain=[^\s;]+;?/i, 'Domain=localhost;'))
-            proxy.headers['set-cookie'] = newCookies
-          }
-        }
-      }
-    }
   },
 
   chainWebpack: config => {
@@ -49,7 +30,7 @@ module.exports = {
       {
         env: 'dev',
         baseUrl: isDev ? '/' : 'https://aiads-dev.com',
-        ajaxBaseUrl: isDev ? '/' : 'https://fapi.aiads-dev.com',
+        ajaxBaseUrl: 'https://fapi.aiads-dev.com',
       },
       {
         env: 'qas',

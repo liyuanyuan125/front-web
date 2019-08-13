@@ -26,7 +26,10 @@
                     共{{citysId.length}}个城市
                     <span>设置</span>
                   </div> -->
-                  <City :warehouseLisst='warehouseLisst' v-if='cityfalse' @ok="onCitySelectOk" v-model="visible" :cityIds.sync="citysId" :topCityIds="warehouseId"></City>
+                  <!-- {{citysId}} -->
+                  <City :specification='specification'
+                   :time='beginDate'
+                   :warehouseLisst='warehouseLisst' v-if='cityfalse' @ok="onCitySelectOk" v-model="visible" :cityIds.sync="citysId" :topCityIds="warehouseId"></City>
                 </div>
                 <div v-show="cityCustom != 1" class="xls-box">
                   <p class="title">注（请先下载影院数据表，编辑为仅包含自己目标投放影院的“.xls”格式文件，
@@ -284,6 +287,7 @@ export default class Orienteering extends ViewBase {
   cinemaDetail: any = []
   citiesList: any = []
   xlslid = []
+  specification: any = 0
 
   get herf() {
     return `${VAR.ajaxBaseUrl}/xadvert/plans/export-cinemas`
@@ -315,6 +319,7 @@ export default class Orienteering extends ViewBase {
       this.warehouseId = (datas.data || []).map((it: any) => it.cityId)
       this.beginDate = item.beginDate
       this.endDate = item.endDate
+      this.specification = item.specification
       this.tags = tags
       if (this.$route.name == 'pop-planlist-edit') {
         this.cityCustom = item.cityCustom || 0
@@ -442,11 +447,18 @@ export default class Orienteering extends ViewBase {
     if ( (this.movieCustom == 1 && this.numsList.length > 0) || (this.movieCustom == 1 && this.numsList.length == 0) ) {
       movie = '0'
     }
+    let citysId = 1
+    if ( this.cityCustom == 1 && this.citysId.length == 0) {
+      citysId = 0
+    }
+    if ( this.cityCustom == 0) {
+      citysId = 0
+    }
     try {
       await direction(
         clean({
           planId: this.$route.params.setid,
-          cityCustom: this.cityCustom,
+          cityCustom: citysId,
           deliveryGroups: [
             {
               tagTypeCode: 'MOVIE_TYPE',
@@ -463,9 +475,9 @@ export default class Orienteering extends ViewBase {
           ].filter((it: any) => {
             return it.text != 0
           }),
-          allNation: 1,
+          allNation: this.citysId.length > 0 ? 0 : 1,
           movieCustom: this.numsList.length == 0 ? 0 : this.movieCustom,
-          customDeliveryCities: this.cityCustom == 1 ? this.citysId : '' ,
+          customDeliveryCities: this.cityCustom == 1 && this.citysId.length > 0 ? this.citysId : '' ,
           customDeliveryCinemas: this.cityCustom == 0 ? this.xlslid : '' ,
           deliveryMovies:
             this.movieCustom == 0

@@ -90,9 +90,9 @@
         </Col>
         <Col :span='24'>
           <Row class="item item-dl">
-            <Col :span='8'>
+              <Col :span='8'>
                 <span>计划名称：</span>
-                <span>{{data.name}}</span>
+                <span class='plan-name'>{{data.name}}</span>
               </Col>
               <Col :span='8'>
                 <span>广告片：</span>
@@ -237,6 +237,13 @@ export default class App extends ViewBase {
       text-overflow: ellipsis;
     }
   }
+}
+.plan-name {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 220px;
 }
 // .line-right {
 //   position: absolute;
