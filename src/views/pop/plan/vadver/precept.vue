@@ -144,7 +144,7 @@
                     </template>
                   </Table>
 
-                  <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
+                  <pagination class='pagination' :pageList="pageList" :total="total" @uplist="uplist"></pagination>
                 </div>
               </div>
             </div>
@@ -588,6 +588,25 @@ export default class App extends ViewBase {
 .plan-box {
   margin: 0 20px;
 }
+.pagination {
+  /deep/ .page-list {
+    padding: 0;
+    .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+      color: #00202d;
+    }
+    .ivu-page-item {
+      a {
+        color: #00202d;
+      }
+    }
+    .ivu-page-item.ivu-page-item-active {
+      background: #00202d;
+      a {
+        color: #fff;
+      }
+    }
+  }
+}
 .layout-titles {
   font-size: 24px;
   font-weight: 500;
@@ -1004,23 +1023,6 @@ export default class App extends ViewBase {
     border: 2px solid #00202d;
     border-top: 0;
     border-left: 0;
-  }
-}
-/deep/ .page-list {
-  padding: 0;
-  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
-    color: #00202d;
-  }
-  .ivu-page-item {
-    a {
-      color: #00202d;
-    }
-  }
-  .ivu-page-item.ivu-page-item-active {
-    background: #00202d;
-    a {
-      color: #fff;
-    }
   }
 }
 </style>

@@ -460,6 +460,7 @@ export default class Promotion extends ViewBase {
       const price = this.setadver ? this.query.specification : this.form.specification
       if (!price) {
         info('请选择广告片规格')
+        return
       }
       const { data } = await estimate({budgetAmount: val, specification: price })
       this.nums = `${formatCurrency(data.estimatePersonCount * 0.7, 0)}
