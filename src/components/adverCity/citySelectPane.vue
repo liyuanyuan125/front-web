@@ -449,7 +449,7 @@ export default class CitySelectPane extends ViewBase {
       const gradeList = getGradeList(this.list)
       const isBackFill = (this.value || []).length > 0
       this.fastList = [
-        { key: 'all', text: '不限', cityIds: [], checked: !isBackFill, indeterminate: false },
+        { key: 'all', text: '全国', cityIds: [], checked: !isBackFill, indeterminate: false },
         { key: 'top', text: '票仓城市Top10', cityIds: this.topCityIds, checked: false, indeterminate: false },
         ...gradeList
       ]
