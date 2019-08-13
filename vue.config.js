@@ -11,9 +11,6 @@ module.exports = {
   devServer: {
     host: 'fdev.aiads-dev.com',
     disableHostCheck: true,
-    headers: {
-      'Access-Control-Allow-Origin': '*'
-    },
   },
 
   chainWebpack: config => {
