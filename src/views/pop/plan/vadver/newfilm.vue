@@ -27,7 +27,7 @@
         </span>
     </div>
     <!-- <updateschedule ref="updatetime" @done="updatetime" /> -->
-    <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
+    <pagination class='pagination' :pageList="pageList" :total="total" @uplist="uplist"></pagination>
   </div>
 </template>
 
@@ -327,6 +327,25 @@ export default class DlgEditCinema extends ViewBase {
 @import '~@/site/lib.less';
 // /deep/ .ivu-modal-body {
 // }
+.pagination {
+  /deep/ .page-list {
+    padding: 0;
+    .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+      color: #00202d;
+    }
+    .ivu-page-item {
+      a {
+        color: #00202d;
+      }
+    }
+    .ivu-page-item.ivu-page-item-active {
+      background: #00202d;
+      a {
+        color: #fff;
+      }
+    }
+  }
+}
 .title {
   text-align: center;
   font-size: 16px;
@@ -521,22 +540,5 @@ export default class DlgEditCinema extends ViewBase {
 .film-no {
   text-align: center;
   padding-top: 50px;
-}
-/deep/ .page-list {
-  padding: 0;
-  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
-    color: #00202d;
-  }
-  .ivu-page-item {
-    a {
-      color: #00202d;
-    }
-  }
-  .ivu-page-item.ivu-page-item-active {
-    background: #00202d;
-    a {
-      color: #fff;
-    }
-  }
 }
 </style>

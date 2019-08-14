@@ -214,7 +214,7 @@ export default class App extends ViewBase {
   arrowloding: any = false
   pageList = {
     pageIndex: 1,
-    pageSize: 4
+    pageSize: 5
   }
 
   get columns() {
@@ -552,7 +552,7 @@ export default class App extends ViewBase {
     this.tag = id
     this.form.name = ''
     this.pageList.pageIndex = 1
-    this.pageList.pageSize = 4
+    this.pageList.pageSize = 5
     this.seach()
   }
 
