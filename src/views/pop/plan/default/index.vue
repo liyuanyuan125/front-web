@@ -338,7 +338,7 @@ export default class Apps extends ViewBase {
 
   pageList = {
     pageIndex: 1,
-    pageSize: 4
+    pageSize: 5
   }
   ageTypeList: any = []
   tags: any = []
@@ -484,7 +484,7 @@ export default class Apps extends ViewBase {
     this.tag = id
     this.name = ''
     this.pageList.pageIndex = 1
-    this.pageList.pageSize = 6
+    this.pageList.pageSize = 5
     this.seach()
   }
 
