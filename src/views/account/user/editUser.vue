@@ -187,7 +187,6 @@ export default class Main extends ViewBase {
     // 判断资源方 广告方
     const resCheck = (this.data.cinemas || []).map((it: any) => it.id)
     const adsCheck = (this.data.partners || []).map((it: any) => it.id)
-
     if (this.typeCode == 'ads') {
       this.editVisible = {
         editVis: true,
