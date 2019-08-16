@@ -1,7 +1,7 @@
 <template>
   <div class="page home-bg as">
     <h3 class="userTitle title" style='margin: 0 20px 15px 20px;'>
-      <span class="nav-top-title"></span>
+      <span></span>
       <Button  class="btn-new but" type="primary" v-auth="'customer-manage#create'" @click="addUser">
         <!-- <Icon type="ios-add" size="27"/> -->
          +&nbsp;&nbsp;新建客户
@@ -50,7 +50,7 @@
     <Page
       :total="total"
       v-if="total>0"
-      class="btnCenter"
+      class="btn-center-footer"
       :current="form.pageIndex"
       :page-size="form.pageSize"
       show-total
@@ -349,7 +349,7 @@ export default class Main extends ViewBase {
   margin: 30px 20px 0;
   border: none;
 }
-/deep/ .btnCenter {
+/deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
   margin: 0 20px 0 20px;

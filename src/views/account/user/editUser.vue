@@ -48,7 +48,7 @@
       <div class="bgs">
         <h3 class="layout-title tits">设置账号权限
         </h3>
-        <div class="btnCenter zIndex-button">
+        <div class="btn-center-footer zIndex-button">
           <Button type="primary" class="button-ok editSumbit"
             :disabled="submitDisabled" @click="handleInforma">确定修改</Button>
         </div>
@@ -256,6 +256,12 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+@import '~@/views/account/less/formInput.less';
+.item-top {
+  padding-top: 20px;
+}
+
 .zIndex-button {
   position: relative;
   z-index: 999;
@@ -271,6 +277,8 @@ export default class Main extends ViewBase {
   display: flex;
   .query-cinema {
     margin-left: 30px;
+    color: @c-button;
+    cursor: pointer;
   }
 }
 .bgs {
@@ -295,7 +303,7 @@ export default class Main extends ViewBase {
     margin-left: 40px;
   }
 }
-.btnCenter {
+.btn-center-footer {
   position: absolute;
   left: 770px;
   margin-top: 16px;

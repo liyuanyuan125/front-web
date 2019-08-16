@@ -16,7 +16,7 @@
         </Col>
       </Row>
     </div>
-    <div class="btnCenter">
+    <div class="btn-center-footer">
       <Button v-auth="'account-manage.roles#edit'" type="primary" @click="toAuth" class="submitBtn button-ok">编辑</Button>
     </div>
   </div>
@@ -104,6 +104,8 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+
 /deep/ .ivu-input-wrapper,
 /deep/ .ivu-input {
   background: rgba(255, 255, 255, 0.4);

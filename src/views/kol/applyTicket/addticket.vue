@@ -472,6 +472,8 @@ export default class Main extends ViewBase {
 </script>
 <style lang='less' scoped>
 @import '~@/site/common.less';
+@import '~@/views/account/less/formInput.less';
+
 .pages {
   padding: 10px 30px 0 30px;
 }

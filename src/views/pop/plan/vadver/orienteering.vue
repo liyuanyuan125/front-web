@@ -667,6 +667,8 @@ export default class Orienteering extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+
 .item-top {
   margin-left: 30px;
   margin-right: 30px;

@@ -36,7 +36,7 @@
         <span v-else>{{row.remark}}</span>
       </template>
     </Table>
-    <Page  :total="total"  class="btnCenter page-list" :current="pageIndex" 
+    <Page  :total="total"  class="btn-center-footer page-list" :current="pageIndex" 
       :page-size="pageSize" show-total @on-change="handlepageChange"
       @on-page-size-change="handlePageSize"/>
   </div>
@@ -130,6 +130,11 @@
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+.item-top {
+  padding-top: 20px;
+}
+
 .tag {
   box-sizing: content-box;
   text-align: center;
@@ -263,7 +268,7 @@
   margin: 30px 20px 0;
   border: none;
 }
-/deep/ .btnCenter {
+/deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
   // background: rgba(32, 67, 80, 1);

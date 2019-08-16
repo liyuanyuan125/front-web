@@ -13,7 +13,7 @@
       </div>
       <div v-if="visible">当前没有关联的客户</div>
       <Table v-else stripe :columns="columns" :data="data"></Table>
-      <div slot="footer" class="btnCenter footer-bottom">
+      <div slot="footer" class="btn-center-footer footer-bottom">
         <Button type="primary" class="button-cancel" @click="value.visibleDetail = false">关闭</Button>
       </div>
     </Modal>
@@ -41,6 +41,8 @@ export default class Change extends ViewBase {
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+
 /deep/ .ivu-modal-header {
   border-bottom: 0;
   background: #f9f9f9;

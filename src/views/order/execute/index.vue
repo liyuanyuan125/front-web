@@ -140,7 +140,7 @@
       <Page
       :total="totalCount"
       v-if="totalCount>0"
-      class="btnCenter plan-pages"
+      class="btn-center-footer plan-pages"
       :current="query.pageIndex"
       :page-size="query.pageSize"
       show-total

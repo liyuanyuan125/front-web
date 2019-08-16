@@ -279,6 +279,8 @@ export default class Main extends ViewBase {
 }
 </script>
 <style lang="less" scoped>
+@import '~@/views/account/less/common.less';
+
 .left-circel {
   padding-top: 57px;
 }

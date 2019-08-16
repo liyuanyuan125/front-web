@@ -60,7 +60,7 @@
         </div> -->
       </div>
       <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
-      <div slot="footer" class="foot btnCenter footer-btn">
+      <div slot="footer" class="foot btn-center-footer footer-btn">
         <Button class="button-cancel foot-cancel-button" @click="cancel">取消</Button>
         <Button type="primary" class="button-ok foot-button" @click="handleSumbit">确认</Button>
       </div>
@@ -225,6 +225,10 @@ export default class Relevan extends ViewBase {
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+.item-top {
+  padding-top: 20px;
+}
 /deep/ .ivu-modal-body {
   padding: 0;
 }

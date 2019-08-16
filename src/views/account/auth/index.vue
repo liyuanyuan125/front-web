@@ -26,7 +26,7 @@
             <a v-auth="'account-manage.roles#delete'"  @click="toDel(row.id)" class="operation" >删除</a>
           </template>
         </Table>
-        <Page :total="total" v-if="total>0" class="btnCenter page-bottom"
+        <Page :total="total" v-if="total>0" class="btn-center-footer page-bottom"
           :current="dataForm.pageIndex"
           :page-size="dataForm.pageSize"
           :page-size-opts="[10, 20, 50, 100]"

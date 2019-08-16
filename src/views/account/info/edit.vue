@@ -1,5 +1,5 @@
 <template>
-  <div class="page home-bg as">
+  <div class="page as">
     <Form :model="form"  :rules="rule"  ref="dataform" label-position="left" class="edit-input" :label-width="100">
       <div class='bs'>
       <h3 class="layout-title">登录信息</h3>
@@ -57,7 +57,7 @@
       </FormItem>
       </div>
     </Form>
-    <div class="btnCenter">
+    <div class="btn-center-footer">
       <Button v-auth="'account-manage.info#change'" type="primary" class="button-ok edit-submit bok"
        @click="updateAccount('dataform')">更新账号</Button>
     </div>
@@ -198,6 +198,11 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+.item-top {
+  padding-top: 20px;
+}
+
 .bok {
   width: 200px;
   height: 50px;

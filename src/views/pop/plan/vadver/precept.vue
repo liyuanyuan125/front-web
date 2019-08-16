@@ -585,6 +585,9 @@ export default class App extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+@import '~@/views/account/less/formInput.less';
+
 .plan-box {
   margin: 0 20px;
 }
@@ -637,6 +640,7 @@ export default class App extends ViewBase {
   margin-left: 30px;
   font-size: 14px;
   color: #26344b;
+  padding-top: 20px;
 }
 .hint {
   position: absolute;
