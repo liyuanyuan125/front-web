@@ -1,6 +1,9 @@
 <template>
   <div>
-    <CitySelectPane :warehouseLisst='warehouseLisst' class="citybox" @ok="onOk" v-model="cityIdsModel" :topCityIds="topCityIds" ref="citySelectPane"/>
+    <CitySelectPane
+      :specification='specification'
+      :time='time'
+     :warehouseLisst='warehouseLisst' class="citybox" @ok="onOk" v-model="cityIdsModel" :topCityIds="topCityIds" ref="citySelectPane"/>
   </div>
 </template>
 
@@ -22,9 +25,9 @@ export default class CitySelectDialog extends ViewBase {
    * model，支持双向绑定
    */
   @Prop({ type: Boolean, default: false }) value!: boolean
-
+  @Prop() specification: any
   @Prop() warehouseLisst!: any
-
+  @Prop() time!: any
   /** 城市 ids */
   @Prop({ type: Array, default: () => [] }) cityIds!: number[]
 

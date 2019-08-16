@@ -18,12 +18,26 @@
               <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
               <div class="api" slot="content">
                 <div class="city-show">
-                  <span v-for="it in warehouseLisst" :key="it.cityId">{{it.cityName}}</span>
+                  <p class='city-space'>{{allcity['top'].city.join(',   ')}}</p>
+                  <div style='text-align: left; margin-top: 10px;'>共{{allcity['top'].city.length}}个城市</div>
                 </div>
               </div>
             </Poptip>
           </span>
-          <span v-else>{{it.text}}</span>
+          <span v-else-if="it.key == 'all'">{{it.text}}</span>
+          <span v-else > {{it.text}}
+            <Poptip v-if='!!allcity[it.text]' trigger="hover" :title="allcity[it.text].title" content="content">
+              <img v-if="!it.key == it.text && it.check == true" width="20px" style="vertical-align:middle" src="./assets/question.png" />
+              <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
+              <div class="api" slot="content">
+                <div class="city-show">
+                  <p class='city-space'>{{allcity[it.text].city.join(',   ')}}</p>
+                </div>
+                <div class='city-num'
+                 style='text-align: left; margin-top: 10px;'>共{{allcity[it.text].city.length}}个城市</div>
+              </div>
+            </Poptip>
+          </span>
         </Checkbox>
       </div>
     </div>
@@ -126,12 +140,14 @@
         </component>
       </tr>
     </table>
-    <p v-show="arrowloding" >
-      已选： {{model.length}}
-    </p>
-    <div class="arrow-box">
-      <div @click="arrowloding = true" v-if="!arrowloding" class="arrow">展开<Icon type="ios-arrow-forward" ></Icon></div>
-      <div @click="arrowloding = false" v-if="arrowloding" class="arrow">收起<Icon type="ios-arrow-up" /></div>
+    <div style='display: flex; margin-top: 6px'>
+      <p v-show="model.length > 0" >
+        已选： {{model.length}}
+      </p>
+      <div class="arrow-box">
+        <div @click="arrowloding = true" v-if="!arrowloding" class="arrow">展开城市列表<Icon type="ios-arrow-forward" ></Icon></div>
+        <div @click="arrowloding = false" v-if="arrowloding" class="arrow">收起城市列表<Icon type="ios-arrow-up" /></div>
+      </div>
     </div>
   </div>
 </template>
@@ -139,7 +155,7 @@
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getGegionProvinceCity, getSubList, RegionSubList, AreaItem, AreaItemSubList } from '@/api/area'
+import { getGegionProvinceCity, getSubList, RegionSubList, AreaItem, AreaItemSubList, tip } from '@/api/area'
 import { chunk, flatMap, flatten, intersection, difference, isEqual, uniq } from 'lodash'
 import { random } from '@/fn/string'
 import { devWarn } from '@/util/dev'
@@ -344,12 +360,11 @@ const cellData = (list: RegionSubList[], {
 }
 
 const gradeSorts = [
-  'first-tier',
-  'second-tier',
-  'third-tier',
-  'four-tier',
-  'five-tier',
-  'six-tier'
+  'A1',
+  'A2',
+  'A3',
+  'A4',
+  'A5',
 ]
 
 const getGradeList = (list: RegionSubList[]) => {
@@ -357,7 +372,7 @@ const getGradeList = (list: RegionSubList[]) => {
   const cityList = flatMap(provinceList, 'subList') as AreaItem[]
 
   const gradeMap = cityList.reduce((map, item) => {
-    const { id, grade: key, gradeName: text } = item
+    const { id, bizGrade: key, bizGradeName: text } = item
     if (key && text) {
       const fast = map[key] || (map[key] = {
         key,
@@ -384,15 +399,16 @@ export default class CitySelectPane extends ViewBase {
 
   /** 票仓城市 Top20 城市 ids */
   @Prop({ type: Array, default: () => [] }) topCityIds!: number[]
-
+  @Prop() time!: any
   @Prop() warehouseLisst!: any
-
+  @Prop() specification!: any
   model: number[] = []
 
+  allcityshow: any = false
   list: RegionSubList[] = []
 
   cellData: CellItem[][] | null = null
-
+  allcity: any = {}
   city: AreaItem | null = null
 
   hightlightCityId: number | null = null
@@ -400,6 +416,9 @@ export default class CitySelectPane extends ViewBase {
   fastList: FastItem[] = []
 
   arrowloding = false
+
+  lastCheckedFastItem: FastItem | null = null
+
   lastUncheckedFastItem: FastItem | null = null
 
   get cityList() {
@@ -433,15 +452,50 @@ export default class CitySelectPane extends ViewBase {
       this.cellData = cellData(this.list)
       this.updateTable()
       const gradeList = getGradeList(this.list)
+      const isBackFill = (this.value || []).length > 0
       this.fastList = [
-        { key: 'all', text: '全国', cityIds: [], checked: false, indeterminate: false },
+        { key: 'all', text: '全国', cityIds: [], checked: !isBackFill, indeterminate: false },
         { key: 'top', text: '票仓城市Top20', cityIds: this.topCityIds, checked: false, indeterminate: false },
         ...gradeList
       ]
-      if (this.value.length == 0) {
-        this.model = [...this.allCityIds]
-      }
+      this.arrowloding = isBackFill
       this.updateFast()
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  mounted() {
+    ['top', ...gradeSorts].forEach((it: any) => {
+      this.init(it)
+    })
+  }
+  async init(it: any) {
+    try {
+      const { data } = await tip({
+        videoLength: this.specification,
+        bizGrade: it,
+        beginDate: this.time,
+      })
+      this.$nextTick(() => {
+        if (it == 'top') {
+          this.allcity[it] = {
+            city: (this.warehouseLisst || []).map((its: any) => its.cityName),
+            cpm: data.cpm || '',
+            key: it,
+            videoLength: data.videoLength || '',
+            title: `[ ${data.videoLength}] 刊例价：${data.cpm}元/千人次`
+          }
+        } else {
+          this.allcity[it] = {
+            city: data.cities || [],
+            cpm: data.cpm || '',
+            key: it,
+            videoLength: data.videoLength || '',
+            title: `[ ${data.videoLength}] 刊例价：${data.cpm}元/千人次`
+          }
+        }
+      })
     } catch (ex) {
       this.handleError(ex)
     }
@@ -522,23 +576,24 @@ export default class CitySelectPane extends ViewBase {
   }
 
   updateFast() {
-    this.fastList.forEach((it, i) => {
-      const selectedIds = this.allSelectedCityIds
-      if (i == 0) {
-        const allCount = this.allCityIds.length
-        const selectedCount = selectedIds.length
-        it.checked = selectedCount == allCount
-        it.indeterminate = 0 < selectedCount && selectedCount < allCount
-      } else {
-        const rel = getRelation(it.cityIds, selectedIds)
-        it.checked = rel == SetRelation.Equal || rel == SetRelation.AInB
-        it.indeterminate = rel == SetRelation.Half
-      }
-    })
+    // this.fastList.forEach((it, i) => {
+    //   const selectedIds = this.allSelectedCityIds
+    //   if (i == 0) {
+    //     const allCount = this.allCityIds.length
+    //     const selectedCount = selectedIds.length
+    //     it.checked = selectedCount == allCount
+    //     it.indeterminate = 0 < selectedCount && selectedCount < allCount
+    //   } else {
+    //     const rel = getRelation(it.cityIds, selectedIds)
+    //     it.checked = rel == SetRelation.Equal || rel == SetRelation.AInB
+    //     it.indeterminate = rel == SetRelation.Half
+    //   }
+    // })
   }
 
   fastChange(item: FastItem) {
-    // 记录下最后不选的项，以供 watchFastList 使用
+    // 记录下最后选择的项、反选的项，以供 watchFastList 使用
+    item.checked && (this.lastCheckedFastItem = item)
     item.checked || (this.lastUncheckedFastItem = item)
   }
 
@@ -578,35 +633,36 @@ export default class CitySelectPane extends ViewBase {
   }
 
   @Watch('fastList', { deep: true })
-  watchFastList(list: FastItem[], oldlist: FastItem[]) {
-    // const flag = oldlist[0] ? oldlist[0].checked : false
-    // console.log(flag, list[0].checked)
+  watchFastList(list: FastItem[]) {
+    const checkedItem = this.lastCheckedFastItem
     const uncheckedItem = this.lastUncheckedFastItem
+    this.lastCheckedFastItem = null
     this.lastUncheckedFastItem = null
 
-    // 若非全国被反选，设置全国选择状态
-    if (uncheckedItem != null
-      && uncheckedItem.key != 'all'
-      && !uncheckedItem.checked) {
+    // 若非全国被选择，取消全国的选择状态
+    if (checkedItem != null
+      && checkedItem.key != 'all'
+      && checkedItem.checked) {
       this.fastList[0].checked = false
       this.fastList[0].indeterminate = this.model.length > 0
     }
 
-    // 如果全国被选择，则排斥其他选项
-
     if (list[0].checked) {
-      // this.fastList.forEach((it, i) => i > 0 && (it.checked = false))
-      this.model = this.allCityIds
+    // 如果全国被选择，则排斥其他选项
+      this.fastList.forEach((it, i) => i > 0 && (it.checked = false))
+      this.model = []
     } else {
-      // 将所有被选中的，添加到集合中
-      const checkedList = list.filter(it => it.checked)
-      const checkedIds = flatMap(checkedList, 'cityIds') as number[]
-      const unionIds = checkedIds.concat(this.model)
-
       // 从集合中，减去最后被取消选择的项
-      const diffIds = uncheckedItem ? difference(unionIds, uncheckedItem.cityIds) : unionIds
+      const diffIds = uncheckedItem
+        ? difference(this.model, uncheckedItem.cityIds)
+        : this.model
 
-      const uniqIds = uniq(diffIds)
+      // 将所有被选中的（全国除外），添加到集合中
+      const checkedList = list.slice(1).filter(it => it.checked)
+      const checkedIds = flatMap(checkedList, 'cityIds') as number[]
+      const unionIds = checkedIds.concat(diffIds)
+
+      const uniqIds = uniq(unionIds)
       this.model = uniqIds
     }
   }
@@ -790,6 +846,12 @@ th {
       text-align: center;
       line-height: 16px;
     }
+    .city-space {
+      color: #00202d;
+    }
+    .city-num {
+      color: #00202d;
+    }
   }
 }
 .city-fast-list {
@@ -799,12 +861,12 @@ th {
   }
 }
 .film-max {
-  max-height: 110px;
+  max-height: 132px;
+  height: 130px;
 }
 .arrow-box {
-  position: absolute;
-  bottom: 17px;
-  right: 40px;
+  margin-left: 40%;
+  height: 17px;
 }
 /deep/ .ivu-select-input {
   line-height: 36px;
@@ -822,5 +884,16 @@ th {
     color: #00202d;
     overflow: hidden;
   }
+}
+.city-space {
+  max-height: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  word-break: break-all;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  white-space: pre-wrap;
+  text-align: left;
 }
 </style>

@@ -144,7 +144,7 @@
                     </template>
                   </Table>
 
-                  <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
+                  <pagination class='pagination' :pageList="pageList" :total="total" @uplist="uplist"></pagination>
                 </div>
               </div>
             </div>
@@ -214,7 +214,7 @@ export default class App extends ViewBase {
   arrowloding: any = false
   pageList = {
     pageIndex: 1,
-    pageSize: 4
+    pageSize: 5
   }
 
   get columns() {
@@ -552,7 +552,7 @@ export default class App extends ViewBase {
     this.tag = id
     this.form.name = ''
     this.pageList.pageIndex = 1
-    this.pageList.pageSize = 6
+    this.pageList.pageSize = 5
     this.seach()
   }
 
@@ -587,6 +587,25 @@ export default class App extends ViewBase {
 @import '~@/site/lib.less';
 .plan-box {
   margin: 0 20px;
+}
+.pagination {
+  /deep/ .page-list {
+    padding: 0;
+    .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
+      color: #00202d;
+    }
+    .ivu-page-item {
+      a {
+        color: #00202d;
+      }
+    }
+    .ivu-page-item.ivu-page-item-active {
+      background: #00202d;
+      a {
+        color: #fff;
+      }
+    }
+  }
 }
 .layout-titles {
   font-size: 24px;
@@ -1004,23 +1023,6 @@ export default class App extends ViewBase {
     border: 2px solid #00202d;
     border-top: 0;
     border-left: 0;
-  }
-}
-/deep/ .page-list {
-  padding: 0;
-  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
-    color: #00202d;
-  }
-  .ivu-page-item {
-    a {
-      color: #00202d;
-    }
-  }
-  .ivu-page-item.ivu-page-item-active {
-    background: #00202d;
-    a {
-      color: #fff;
-    }
   }
 }
 </style>
