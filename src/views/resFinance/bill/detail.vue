@@ -209,8 +209,8 @@ export default class Main extends ViewBase {
   }
 
   async submitAudit(dataform: any) {
-    const agress = this.agree ? true : false
-    if (!agress) {
+    const agree = this.agree ? true : false
+    if (!agree) {
       const volid = await (this.$refs[dataform] as any).validate()
       if (!volid) {
         return
@@ -220,7 +220,7 @@ export default class Main extends ViewBase {
     try {
       const { data } = await billAudit({
         ...this.form,
-        agress,
+        agree,
         id: this.id
       })
       this.$router.push({name: 'resFinance-bill'})
