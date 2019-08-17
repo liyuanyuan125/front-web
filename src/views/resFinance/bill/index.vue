@@ -82,7 +82,7 @@
               </Col>
               <Col :span="6">
                 <p class='order_num'>{{formatNumber(item.videoCount , 2)}}</p>
-                <p class='order_sma'>广告单数量 / 个</p>
+                <p class='order_sma'>广告片数量 / 个</p>
               </Col>
               <Col :span="7">
                 <p class='order_num'>{{formatNumber(item.personCount , 2)}}</p>
