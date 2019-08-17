@@ -210,7 +210,7 @@
         </Table>
       </div>
 
-      <!-- <Page :total="total" v-if="total>0" class="btnCenter"
+      <!-- <Page :total="total" v-if="total>0" class="btn-center-footer"
         :current="form.pageIndex"
         :page-size="form.pageSize"
         :page-size-opts="[10, 20, 50, 100]"
@@ -830,6 +830,8 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/formInput.less';
+
 .to-detail {
   cursor: pointer;
   display: flex;
@@ -1089,7 +1091,7 @@ export default class Main extends ViewBase {
     z-index: 999;
   }
 }
-.btnCenter {
+.btn-center-footer {
   margin-top: 30px;
   padding-bottom: 30px;
 }

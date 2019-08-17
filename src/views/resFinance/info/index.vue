@@ -155,7 +155,7 @@ export default class Info extends ViewBase {
 // @import '~@/site/lib.less';
 // @import '~@/views/brand/less/common.less';
 // @import '~@/views/kol/less/common.less';
-
+@import '~@/views/account/less/common.less';
 .as {
   background: rgba(255, 255, 255, 0);
 }
@@ -299,7 +299,7 @@ export default class Info extends ViewBase {
   font-weight: 500;
   transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
 }
-/deep/ .btnCenter {
+/deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
   background: rgba(32, 67, 80, 1);

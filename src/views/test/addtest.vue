@@ -326,7 +326,7 @@ export default class Main extends ViewBase {
   font-weight: 400;
   color: rgba(255, 255, 255, 1);
 }
-/deep/ .btnCenter {
+/deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
   margin: 0 20px 0 20px;

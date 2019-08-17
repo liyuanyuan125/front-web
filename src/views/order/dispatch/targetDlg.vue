@@ -26,7 +26,7 @@
       </template>
     </Table>
 
-    <Page :total="total" v-if="total>0" class="btnCenter"
+    <Page :total="total" v-if="total>0" class="btn-center-footer"
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
       show-total
@@ -204,7 +204,7 @@ export default class DlgEditCinema extends ViewBase {
   margin-left: 30px;
   color: rgba(152, 152, 152, 1);
 }
-.btnCenter {
+.btn-center-footer {
   margin: 40px 0 40px;
 }
 .targer-cinema {

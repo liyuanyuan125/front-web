@@ -29,9 +29,12 @@ Vue.directive('auth', {
 // //aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncsr5uomr0008001o0.png
 // //aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncstluomr0008001og.png
 Vue.directive('real-img', async (el: any, binding: any) => {
+  // 如果没传默认图片就用url地址
+  const selfImg = el.getAttribute('default-img')
+  const url = 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncstluomr0008001og.png'
+  const defaultURL = selfImg || url
+
   const imgURL: any = binding.value
-  // const defaultURL = el.getAttribute('default-img') // 手动传
-  const defaultURL = 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncstluomr0008001og.png'
   if (!imgURL) {
     el.setAttribute('src', defaultURL)
     return
@@ -48,18 +51,18 @@ Vue.directive('real-img', async (el: any, binding: any) => {
   }
 })
 
-// 检测图片是否存在
+// 检测图片是否有效
 const imageIsExist = (url: any) => {
   return new Promise((resolve: any) => {
       let img: any = new Image()
+      img.src = url
       img.onload =  () => {
         resolve(true)
         img = null
       }
       img.onerror = () => {
-          resolve(false)
-          img = null
+        resolve(false)
+        img = null
       }
-      img.src = url
   })
 }

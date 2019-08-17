@@ -11,9 +11,9 @@
               <Number :addNum="(data.estimatePersonCount / 100000) * 13" />
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="data.estimatePersonCount * 7 / 10" />
+              <Number :flag="2"  :addNum="Math.floor(data.estimatePersonCount * 7 / 10)" />
               <span class='middle'> ~ </span>
-              <Number :flag="2"  :addNum="data.estimatePersonCount * 13 / 10" />
+              <Number :flag="2"  :addNum="Math.floor(data.estimatePersonCount * 13 / 10)" />
             </p>
           </div>
         </Col>
@@ -26,9 +26,9 @@
               <Number :addNum="(data.estimateShowCount/100000 * 13)" />
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="(data.estimateShowCount * 7 / 10)" />
+              <Number :flag="2"  :addNum="Math.floor((data.estimateShowCount * 7 / 10))" />
               <span class='middle'> ~ </span>
-              <Number :flag="2"  :addNum="(data.estimateShowCount * 1.3 / 10)" />
+              <Number :flag="2"  :addNum="Math.floor((data.estimateShowCount * 13 / 10))" />
             </p>
           </div>
         </Col>
@@ -36,14 +36,14 @@
           <div>
             <p class="title">预估花费</p>
             <p v-if="data.estimateCostAmount && (data.estimateCostAmount + '').length > 4" class="number">
-              <Number :addNum="data.estimateCostAmount/10000 * 0.7" />
-              <span class='middle'> ~ </span>
-              <Number :addNum="data.estimateCostAmount/10000 * 1.3" />
+              <Number :addNum="data.estimateCostAmount / 10000" />
+              <!-- <span class='middle'> ~ </span>
+              <Number :addNum="data.estimateCostAmount" /> -->
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="data.estimateCostAmount * 7 / 10" />
-              <span class='middle'> ~ </span>
-              <Number :addNum="data.estimateCostAmount * 13 / 10" />
+              <Number :flag="2"  :addNum="data.estimateCostAmount" />
+              <!-- <span class='middle'> ~ </span>
+              <Number :addNum="data.estimateCostAmount * 13 / 10" /> -->
             </p>
           </div>
         </Col>
@@ -90,15 +90,14 @@
         </Col>
         <Col :span='24'>
           <Row class="item item-dl">
-            <Col :span='8'>
-                <span>计划名称：</span>
-                <span>{{data.name}}</span>
-              </Col>
               <Col :span='8'>
+                <div class='plan-box' style='text-align: center'>计划名称: <span class='plan-name'>{{data.name}}</span></div>
+              </Col>
+              <Col :span='8' style='text-align: center'>
                 <span>广告片：</span>
                 <span>{{data.videoName}} ({{data.specification}}s)</span>
               </Col>
-              <Col :span='8'>
+              <Col :span='8' style='text-align: center'>
                 <span>投放排期：</span>
                 <span>开始于{{formatDate(data.beginDate)}}</span>
               </Col>
@@ -212,8 +211,9 @@ export default class App extends ViewBase {
     display: flex;
     flex-wrap: wrap;
     align-content: center;
-    margin-top: 36px;
+    margin-top: 30px;
     height: 100%;
+    text-align: center;
     span {
       color: #7f7f7f;
     }
@@ -237,6 +237,17 @@ export default class App extends ViewBase {
       text-overflow: ellipsis;
     }
   }
+}
+.plan-name {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  max-width: 200px;
+}
+.plan-box {
+  color: #7f7f7f;
 }
 // .line-right {
 //   position: absolute;

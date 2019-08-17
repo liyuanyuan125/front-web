@@ -25,8 +25,8 @@
               <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 100000 * 13" />
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="~~(item.estimatePersonCount * 7 / 10)" /> ~ 
-              <Number :flag="2"  :addNum="~~(item.estimatePersonCount * 13 / 10)" />
+              <Number :flag="2"  :addNum="Math.floor(item.estimatePersonCount * 7 / 10)" /> ~ 
+              <Number :flag="2"  :addNum="Math.floor(item.estimatePersonCount * 13 / 10)" />
             </p>
           </div>
         </Col>
@@ -38,8 +38,8 @@
               <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 100000 * 13" />
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="~~(item.estimateShowCount * 7 / 10)" /> ~ 
-              <Number :flag="2"  :addNum="~~(item.estimateShowCount * 13 / 10)" />
+              <Number :flag="2"  :addNum="Math.floor(item.estimateShowCount * 7 / 10)" /> ~ 
+              <Number :flag="2"  :addNum="Math.floor(item.estimateShowCount * 13 / 10)" />
             </p>
           </div>
         </Col>
@@ -47,12 +47,12 @@
           <div>
             <p class="title">预估花费</p>
             <p v-if="item.estimateCostAmount && (item.estimateCostAmount + '').length > 4" class="number">
-              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 100000 * 7" /> ~ 
-              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 100000 * 13" />
+              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount" />
+              <!-- <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 100000 * 13" /> -->
             </p>
             <p class="onenumber" v-else>
-              <Number :flag="2"  :addNum="item.estimateCostAmount * 7 / 10" /> ~ 
-              <Number :flag="2"  :addNum="item.estimateCostAmount * 13 / 10" /> 
+              <Number :flag="2"  :addNum="item.estimateCostAmount" />
+              <!-- <Number :flag="2"  :addNum="item.estimateCostAmount * 13 / 10" />  -->
             </p>
           </div>
         </Col>
@@ -338,7 +338,7 @@ export default class Apps extends ViewBase {
 
   pageList = {
     pageIndex: 1,
-    pageSize: 6
+    pageSize: 5
   }
   ageTypeList: any = []
   tags: any = []
@@ -484,7 +484,7 @@ export default class Apps extends ViewBase {
     this.tag = id
     this.name = ''
     this.pageList.pageIndex = 1
-    this.pageList.pageSize = 6
+    this.pageList.pageSize = 5
     this.seach()
   }
 

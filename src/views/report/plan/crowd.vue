@@ -137,6 +137,7 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
 
 .line-col-peopel {
   .peopel-title {

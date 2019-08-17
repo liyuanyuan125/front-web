@@ -44,13 +44,6 @@
           </Col>
       </Row>
       
-     <h3 class="layout-title more-list">下载链接更新日志</h3>
-      <div class="text-rows log-list">
-        <p v-if="item.attachments" v-for="(ite, index) in item.attachments" :key="index">
-          <span>{{formatTimes(ite.uploadTime)}}</span>
-          <em>{{queryTypeList(ite.typeCode)}}Flat 格式DCP包下载链接已更新</em>
-        </p>
-      </div>
     </div> -->
   </div>
 </template>

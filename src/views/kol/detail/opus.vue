@@ -16,11 +16,11 @@
     <div class="list-items">
       <div class="item" v-for="(item, index) in list" :key="index">
         <div class="item-inner flex-box">
-          <a :href="item.url" target="_blank" class="video-url">
-            <!-- 按钮 -->
+          <a :href="item.url" target="_blank" class="video-url" >
             <i v-if="item.url"></i>
-            <img :src="item.coverPic" alt class="img" v-real-img="item.coverPic" />
+            <img class="img" v-real-img="item.coverPic" />
           </a>
+
           <div class="inner-right">
             <p class="title" :title="item.title">{{handleSlice(item.title || item.content)}}</p>
             <p class="icon-num">
@@ -94,7 +94,6 @@ export default class Opus extends ViewBase {
 
   mounted() {
     this.tableList()
-    // this.querySelectList()
   }
 
   async tableList() {
@@ -111,7 +110,6 @@ export default class Opus extends ViewBase {
       this.list = (items || []).map((it: any) => {
         return {
           ...it,
-          // publishTime: moment(it.publishTime).format(timeFormat)
           publishTime: formatValidDate(it.publishTime, {format: timeFormat})
         }
       })
@@ -122,18 +120,6 @@ export default class Opus extends ViewBase {
       this.handleError(ex)
     }
   }
-
-  // 获取推广平台
-  // async querySelectList() {
-  //   try {
-  //     const {
-  //       data: { channelCodeList }
-  //     } = await querySelectList()
-  //     this.platformList = channelCodeList
-  //   } catch (ex) {
-  //     this.handleError(ex)
-  //   }
-  // }
 
   handleSlice(text: string) {
     if (!text) {
@@ -149,6 +135,7 @@ export default class Opus extends ViewBase {
 
   @Watch('form', { deep: true })
   watchForm() {
+    this.pageList.pageIndex = 1
     this.tableList()
   }
 }
@@ -208,9 +195,14 @@ export default class Opus extends ViewBase {
         height: 200px;
         .video-url {
           position: relative;
-          display: block;
-          width: 220px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 200px;
           height: 200px;
+          border-radius: 8px;
+          margin-right: 20px;
+          overflow: hidden;
           i {
             display: block;
             width: 50px;
@@ -245,9 +237,9 @@ export default class Opus extends ViewBase {
           color: #a3d5e6;
         }
         .img {
-          width: 220px;
           height: 200px;
           border-radius: 8px;
+          object-fit: cover;
         }
       }
     }

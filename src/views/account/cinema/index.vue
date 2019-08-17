@@ -26,7 +26,7 @@
             <a v-auth="'account-manage.managecinema#view'" @click="toDetail(row.id)" class="operation" >详情</a>
           </template>
         </Table>
-        <Page :total="total" v-if="total>0" class="btnCenter"
+        <Page :total="total" v-if="total>0" class="btn-center-footer"
           :current="dataForm.pageIndex"
           :page-size="dataForm.pageSize"
           :page-size-opts="[10, 20, 50, 100]"

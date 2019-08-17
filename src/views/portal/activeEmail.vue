@@ -24,7 +24,7 @@
         ></Input>
       </FormItem>
     </Form>
-    <div class="btnCenter">
+    <div class="btn-center-footer">
       <Button type="primary" long class="submit" @click="handleInforma">激活邮箱</Button>
     </div>
   </div>
@@ -108,6 +108,9 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import './login/common.less';
+.item-top {
+  padding-top: 20px;
+}
 .main-wrap {
   padding-top: 40px;
   padding-bottom: 60px;

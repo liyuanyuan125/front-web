@@ -82,28 +82,25 @@
     <div class="accountList" v-if="displayStatus == 3">
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" disabled-hover></Table>
-      <div class="btnCenter sumbit-button">
+      <div class="btn-center-footer sumbit-button">
         <Button
           v-auth="'account-manage.info#edit'"
-          type="primary"
-          class="button-ok button-offset bok"
-          :to="{ name: 'account-info-accedit' }"
+          type="primary" class="button-ok bok"
+          @click="$router.push({ name: 'account-info-accedit' })"
         >修改信息</Button>
         <Button
           v-auth="'account-manage.info#change'"
-          type="primary"
           class="button-ok bok"
           @click="handleInforma"
         >变更账号</Button>
       </div>
     </div>
 
-    <div class="btnCenter sumbit-button" v-else>
+    <div class="btn-center-footer sumbit-button" v-else>
       <Button
         v-auth="'account-manage.info#edit'"
-        type="primary"
         class="button-ok bok"
-        :to="{ name: 'account-info-edit' }"
+        @click="$router.push({ name: 'account-info-edit' })"
       >修改信息</Button>
     </div>
 
@@ -310,6 +307,7 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
 
 .as {
   background: rgba(255, 255, 255, 0);
@@ -355,9 +353,9 @@ export default class Main extends ViewBase {
   margin-right: 25px;
 }
 
-a.button-ok {
-  line-height: 37px;
-}
+// a.button-ok {
+//   line-height: 37px;
+// }
 
 .accountList {
   border: 1px solid #ccc;
@@ -369,9 +367,10 @@ a.button-ok {
 .bok {
   width: 200px;
   height: 50px;
-  background: rgba(0, 32, 45, 1);
   border-radius: 25px;
   color: #fff;
+  margin-right: 30px;
+  .button-style(#fff,#00202d);
 }
 
 /deep/ .ivu-table th,
