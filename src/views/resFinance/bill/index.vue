@@ -335,10 +335,12 @@ export default class Main extends ViewBase {
 
 
   handlepageChange(size: any) {
+    this.list = [1]
     this.query.pageIndex = size
     this.seach()
   }
   handlePageSize(size: any) {
+    this.list = [1]
     this.query.pageIndex = size
     this.seach()
   }
