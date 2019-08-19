@@ -216,7 +216,7 @@ export default class Main extends ViewBase {
         return
       }
     }
-    const pictures = (this.form.pictures || []).map((it: any) => it.url)
+    const pictures = (this.form.pictures || []).map((it: any) => it.fileId)
     try {
       const { data } = await billAudit({
         ...this.form,
