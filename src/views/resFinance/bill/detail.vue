@@ -81,7 +81,7 @@
           </Row>
         </Form>
          <div class="create-submit-btn submit-audit">
-          <Button class="cancel-btn ">取消</Button>
+          <Button class="cancel-btn " @click="$router.push({name: 'resFinance-bill'})">取消</Button>
           <Button class="btn" @click="submitAudit('form')" >确定</Button>
         </div>
     </div>
@@ -209,19 +209,20 @@ export default class Main extends ViewBase {
   }
 
   async submitAudit(dataform: any) {
-    const agress = this.agree ? true : false
-    if (!agress) {
+    const agree = this.agree ? true : false
+    if (!agree) {
       const volid = await (this.$refs[dataform] as any).validate()
       if (!volid) {
         return
       }
     }
-
+    const pictures = (this.form.pictures || []).map((it: any) => it.fileId)
     try {
       const { data } = await billAudit({
         ...this.form,
-        agress,
-        id: this.id
+        agree,
+        id: this.id,
+        pictures
       })
       this.$router.push({name: 'resFinance-bill'})
     } catch (ex) {
