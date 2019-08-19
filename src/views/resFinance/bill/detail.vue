@@ -81,7 +81,7 @@
           </Row>
         </Form>
          <div class="create-submit-btn submit-audit">
-          <Button class="cancel-btn ">取消</Button>
+          <Button class="cancel-btn " @click="$router.push({name: 'resFinance-bill'})">取消</Button>
           <Button class="btn" @click="submitAudit('form')" >确定</Button>
         </div>
     </div>
@@ -216,12 +216,13 @@ export default class Main extends ViewBase {
         return
       }
     }
-
+    const pictures = (this.form.pictures || []).map((it: any) => it.url)
     try {
       const { data } = await billAudit({
         ...this.form,
         agree,
-        id: this.id
+        id: this.id,
+        pictures
       })
       this.$router.push({name: 'resFinance-bill'})
     } catch (ex) {
