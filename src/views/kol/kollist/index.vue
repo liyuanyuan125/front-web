@@ -144,6 +144,7 @@
                   v-clickoutside="handleClose"
                   v-if="row.id == areaIdshow"
                   class="flans-modeal"
+                  :type='title[type]'
                   :id="row.id" />
               </div>
             </div>
