@@ -64,7 +64,7 @@
                       </RadioGroup>
                   </FormItem>
                   <FormItem v-if="!agree" class="person-count" prop="resourcePersonCount" label="影城系统人次">
-                    <span class="span-input"><Input v-model="form.resourcePersonCount" /> 人</span>
+                    <span class="span-input"><Input type="number" v-model="form.resourcePersonCount" /> 人</span>
                   </FormItem>
                   <FormItem v-if="!agree" label="影城系统截图">
                     <span class="audit-upload">
