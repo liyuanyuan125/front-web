@@ -86,7 +86,7 @@
               </Col>
               <Col :span="7">
                 <p class='order_num'>{{formatNumber(item.personCount , 2)}}</p>
-                <p class='order_sma'>曝光人次 / 千人次</p>
+                <p class='order_sma'>曝光人次 / 人次</p>
               </Col>
               <Col :span="4">
                 <router-link
@@ -300,13 +300,7 @@ export default class Main extends ViewBase {
     try {
       const { data } = await queryList(this.query)
       this.data = data
-      this.list = (data.items || []).map((it: any) => {
-        return {
-          ...it,
-          orderItemList: uniqBy(it.orderItemList, 'kolId'), // 去重一个kol有两个任务
-          createTime: moment(it.createTime).format(timeFormat)
-        }
-      })
+      this.list = data.items
       this.totalCount = data.totalCount
       this.billStatusList = data.billStatusList // 账单状态
       this.invoiceStatusList = data.invoiceStatusList // 发票状态
@@ -341,10 +335,12 @@ export default class Main extends ViewBase {
 
 
   handlepageChange(size: any) {
+    this.list = [1]
     this.query.pageIndex = size
     this.seach()
   }
   handlePageSize(size: any) {
+    this.list = [1]
     this.query.pageIndex = size
     this.seach()
   }
