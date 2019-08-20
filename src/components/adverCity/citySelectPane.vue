@@ -458,7 +458,6 @@ export default class CitySelectPane extends ViewBase {
 
   async created() {
     try {
-      this.$Spin.show()
       const list = await getGegionProvinceCity()
       this.list = filterDirty(list)
       this.cellData = cellData(this.list)
@@ -475,7 +474,6 @@ export default class CitySelectPane extends ViewBase {
     } catch (ex) {
       this.handleError(ex)
     } finally {
-      this.$Spin.hide()
     }
   }
 
