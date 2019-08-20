@@ -2,7 +2,6 @@
   <div class="city-select-pane" :class="[ !arrowloding ? 'film-max' : '']">
     <div class="city-fast-row" v-if="fastList.length > 0">
       <div class="city-fast-list">
-
         <Checkbox
           v-for="it in fastList"
           :key="it.key"
@@ -13,28 +12,36 @@
           @on-change="fastChange(it, $event)"
         >
           <span v-if="it.key == 'top'" > {{it.text}}
-            <Poptip trigger="hover" title="票仓城市top20" content="content">
+            <Poptip @on-popper-show="init('top')" trigger="hover" title="票仓城市top20" content="content">
               <img v-if="!it.key == 'top' && it.check == true" width="20px" style="vertical-align:middle" src="./assets/question.png" />
               <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
               <div class="api" slot="content">
-                <div class="city-show">
+                <div v-if="cirys['top']" class="city-show">
                   <p class='city-space'>{{allcity['top'].city.join(',   ')}}</p>
                   <div style='text-align: left; margin-top: 10px;'>共{{allcity['top'].city.length}}个城市</div>
+                </div>
+                <div v-else class="city-show" style='height: 60px'>
+                  <Icon type="ios-loading" />
                 </div>
               </div>
             </Poptip>
           </span>
           <span v-else-if="it.key == 'all'">{{it.text}}</span>
           <span v-else > {{it.text}}
-            <Poptip v-if='!!allcity[it.text]' trigger="hover" :title="allcity[it.text].title" content="content">
+            <Poptip @on-popper-show='init(it.text)' trigger="hover" :title="it.text" content="content">
               <img v-if="!it.key == it.text && it.check == true" width="20px" style="vertical-align:middle" src="./assets/question.png" />
               <img v-else width="20px" style="vertical-align:middle" src="./assets/questioncheck.png" />
-              <div class="api" slot="content">
-                <div class="city-show">
-                  <p class='city-space'>{{allcity[it.text].city.join(',   ')}}</p>
+              <div  class="api" slot="content">
+                <div v-if='cirys[it.text]'>
+                  <div class="city-show">
+                    <p class='city-space'>{{allcity[it.text].city.join(',   ')}}</p>
+                  </div>
+                  <div class='city-num'
+                  style='text-align: left; margin-top: 10px;'>共{{allcity[it.text].city.length}}个城市</div>
                 </div>
-                <div class='city-num'
-                 style='text-align: left; margin-top: 10px;'>共{{allcity[it.text].city.length}}个城市</div>
+                <div v-else class="city-show" style='height: 60px'>
+                  <Icon type="ios-loading" />
+                </div>
               </div>
             </Poptip>
           </span>
@@ -431,6 +438,10 @@ export default class CitySelectPane extends ViewBase {
     return this.cityList.map(it => it.id)
   }
 
+  get cirys() {
+    return JSON.parse(JSON.stringify(this.allcity))
+  }
+
   get cellList() {
     const list = flatten(this.cellData)
     return list
@@ -447,6 +458,7 @@ export default class CitySelectPane extends ViewBase {
 
   async created() {
     try {
+      this.$Spin.show()
       const list = await getGegionProvinceCity()
       this.list = filterDirty(list)
       this.cellData = cellData(this.list)
@@ -462,40 +474,45 @@ export default class CitySelectPane extends ViewBase {
       this.updateFast()
     } catch (ex) {
       this.handleError(ex)
+    } finally {
+      this.$Spin.hide()
     }
   }
 
   mounted() {
     ['top', ...gradeSorts].forEach((it: any) => {
-      this.init(it)
+      // this.init(it)
     })
   }
   async init(it: any) {
+    if (this.allcity[it]) {
+      return
+    }
+
     try {
       const { data } = await tip({
         videoLength: this.specification,
         bizGrade: it,
         beginDate: this.time,
       })
-      this.$nextTick(() => {
-        if (it == 'top') {
-          this.allcity[it] = {
-            city: (this.warehouseLisst || []).map((its: any) => its.cityName),
-            cpm: data.cpm || '',
-            key: it,
-            videoLength: data.videoLength || '',
-            title: `[ ${data.videoLength}] 刊例价：${data.cpm}元/千人次`
-          }
-        } else {
-          this.allcity[it] = {
-            city: data.cities || [],
-            cpm: data.cpm || '',
-            key: it,
-            videoLength: data.videoLength || '',
-            title: `[ ${data.videoLength}] 刊例价：${data.cpm}元/千人次`
-          }
-        }
-      })
+      if (it == 'top') {
+        this.$set(this.allcity, it, {
+          city: (this.warehouseLisst || []).map((its: any) => its.cityName),
+          cpm: data.cpm || '',
+          key: it,
+          videoLength: data.videoLength || '',
+          title: `[ ${data.videoLength}] 刊例价：${data.cpm}元/千人次`
+        })
+      } else {
+        this.$set(this.allcity, it, {
+          city: data.cities || [],
+          cpm: data.cpm || '',
+          key: it,
+          videoLength: data.videoLength || '',
+          title: `[ ${data.videoLength}] 刊例价：${data.cpm}元/千人次`
+        })
+        // this.allcity[it] =
+      }
     } catch (ex) {
       this.handleError(ex)
     }
