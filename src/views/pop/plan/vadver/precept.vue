@@ -372,6 +372,9 @@ export default class App extends ViewBase {
 
   async detail() {
     try {
+      if ((this.$route as any).params.step != 2) {
+        return
+      }
       const { data } = await adverdetail(this.$route.params.setid)
       this.movieCustom = data.item.movieCustom
       this.filmList = (data.planMovies || []).map((it: any) => {

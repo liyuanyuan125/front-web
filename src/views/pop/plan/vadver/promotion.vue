@@ -364,6 +364,9 @@ export default class Promotion extends ViewBase {
     }
     try {
       this.moneystep = 2
+      if ((this.$route as any).params.step != 0) {
+        return
+      }
       const { data } = await adverdetail(this.$route.params.setid)
       this.form.budgetAmount = (data.item.budgetAmount / 10000) + ''
       this.steps = 2
