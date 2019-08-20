@@ -1,6 +1,5 @@
 <template>
   <div class="page home-bg as">
-    <!-- <h2 class="layout-nav-title"><span @click="goBack">客户管理</span> > 查看客户</h2> -->
     <h3 class="layout-title nav">概览</h3>
     <div class="text-rows bgs">
       <Row>
@@ -149,6 +148,8 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+
 .as {
   background: rgba(255, 255, 255, 0);
 }
@@ -224,7 +225,7 @@ export default class Main extends ViewBase {
   margin: 0;
   border: none;
 }
-/deep/ .btnCenter {
+/deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
   background: rgba(32, 67, 80, 1);

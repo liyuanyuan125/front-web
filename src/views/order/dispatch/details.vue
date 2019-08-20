@@ -206,6 +206,8 @@ export default class Main extends ViewBase {
 </script>
 <style lang='less' scoped>
 @import '~@/views/kol/less/common.less';
+@import '~@/views/account/less/common.less';
+
 .detail-list {
   padding: 30px 40px 70px;
   .list-col-item {

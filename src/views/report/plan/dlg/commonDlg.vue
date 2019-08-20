@@ -10,7 +10,7 @@
       <!-- <Page
         :total="total"
         v-if="total>0"
-        class="btnCenter"
+        class="btn-center-footer"
         :current="pageIndex"
         :page-size="pageSize"
         show-total

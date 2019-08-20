@@ -26,7 +26,7 @@
         </Row>
       </Row>
     </Form>
-    <div class="tableSubmit btnCenter">
+    <div class="tableSubmit btn-center-footer">
       <Button type="primary" class="submitBtn button-ok" v-if="!$route.params.id" @click="handleInforma">确定增加</Button>
       <Button type="primary" class="submitBtn button-ok" v-else @click="handleInforma">确定修改</Button>
     </div>
@@ -149,6 +149,11 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/formInput.less';
+
+.item-top {
+  padding-top: 20px;
+}
 .page-name {
   margin: 0 30px;
 }
@@ -159,6 +164,7 @@ export default class Main extends ViewBase {
   line-height: 40px;
   font-size: 14px;
   border-radius: 5px;
+  width: 400px;
   &::placeholder {
     font-size: 14px;
     color: #00202d;

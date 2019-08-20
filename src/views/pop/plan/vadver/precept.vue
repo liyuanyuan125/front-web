@@ -22,7 +22,7 @@
                     <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
                     <p style="margin-bottom: 6px"><span>影片类型：</span>{{movieMap(it.movieType)}}</p>
                     <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum, 2)}}</p>
-                    <i-circle v-if='movieCustom == 0' trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
+                    <i-circle v-if='movieCustom == 0 || detaildata.deliveryGroups' trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                       <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
                       <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent || '-'}}%</p>
                     </i-circle>
@@ -372,6 +372,9 @@ export default class App extends ViewBase {
 
   async detail() {
     try {
+      if ((this.$route as any).params.step != 2) {
+        return
+      }
       const { data } = await adverdetail(this.$route.params.setid)
       this.movieCustom = data.item.movieCustom
       this.filmList = (data.planMovies || []).map((it: any) => {
@@ -585,6 +588,9 @@ export default class App extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+@import '~@/views/account/less/formInput.less';
+
 .plan-box {
   margin: 0 20px;
 }
@@ -637,6 +643,7 @@ export default class App extends ViewBase {
   margin-left: 30px;
   font-size: 14px;
   color: #26344b;
+  padding-top: 20px;
 }
 .hint {
   position: absolute;

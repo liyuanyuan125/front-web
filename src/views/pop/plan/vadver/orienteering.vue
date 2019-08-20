@@ -307,6 +307,9 @@ export default class Orienteering extends ViewBase {
 
   async init() {
     try {
+      if ((this.$route as any).params.step != 1) {
+        return
+      }
       const { data } = await getTwodetail()
       await getRegionList()
       const {
@@ -667,6 +670,8 @@ export default class Orienteering extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+
 .item-top {
   margin-left: 30px;
   margin-right: 30px;

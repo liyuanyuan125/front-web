@@ -59,7 +59,7 @@
     <Page
       :total="total"
       v-if="total>0"
-      class="btnCenter page-bottom"
+      class="btn-center-footer page-bottom"
       :current="pageObject.pageIndex"
       :page-size="pageObject.pageSize"
       show-total
@@ -331,7 +331,7 @@ export default class Main extends ViewBase {
   font-weight: 500;
   transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
 }
-/deep/ .btnCenter {
+/deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
   background: rgba(32, 67, 80, 1);

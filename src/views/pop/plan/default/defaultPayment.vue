@@ -1,6 +1,5 @@
 <template>
   <div class="home-bg">
-    <!-- <h2 class="layout-nav-title">广告计划 > 查看广告计划</h2> -->
     <div class="layout-nav-title">
        <router-link :to="{name: 'pop-planlist'}" >广告计划</router-link> > 
        <span>查看广告计划</span>
@@ -267,11 +266,11 @@
         <div v-else>暂无</div>
       </div>
     </div>
-    <div class="btnCenter btn-footer" v-if="status == 2">
+    <div class="btn-center-footer btn-footer" v-if="status == 2">
       <Button v-auth="'promotion.ad-plan#cancel'" class="button-cancel" @click="cancelPlan">取消计划</Button>
       <Button  v-auth="'promotion.ad-plan#edit'" type="primary"  class="button-ok edit-btn"  @click="toEdit">编辑</Button>
     </div>
-    <div class="btnCenter btn-footer">
+    <div class="btn-center-footer btn-footer">
       <Button  v-if="status == 4" v-auth="'promotion.ad-plan#cancel'" class="button-cancel"
        @click="cancelPlan" >取消计划</Button>
       <Button  v-if="status == 4" v-auth="'promotion.ad-plan#pay'" type="primary" class="button-ok" 
@@ -551,6 +550,8 @@ export default class PlanDefault extends ViewBase {
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+
 .flex-wrap {
   flex-wrap: wrap;
 }

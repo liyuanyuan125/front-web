@@ -34,7 +34,7 @@
       <Page
       :total="totalCount"
       v-if="totalCount>0"
-      class="btnCenter plan-pages"
+      class="btn-center-footer plan-pages"
       :current="query.pageIndex"
       :page-size="query.pageSize"
       show-total
@@ -174,7 +174,7 @@ export default class Main extends ViewBase {
   font-weight: 500;
   font-size: 20px;
 }
-/deep/ .btnCenter {
+/deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
   // background: rgba(32, 67, 80, 1);

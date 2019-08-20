@@ -1,12 +1,9 @@
 <template>
   <div class="page home-bg as">
 
-    <!-- <div class="userTitle">
-      <span class="nav-top-title">财务信息</span>
-    </div> -->
     <div class="fince"  v-auth="'financial-manage.info#viewsummary'">
       <h3 class="userTitle">
-        <span style="color:#00202D;" class="nav-top-title">账户总览</span>
+        <span style="color:#00202D;">账户总览</span>
       </h3>
       <div class="fince-list">
         <div class="fince-list-big">
@@ -980,7 +977,7 @@ export default class Main extends ViewBase {
   margin: 0;
   border: none;
 }
-/deep/ .btnCenter {
+/deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
   background: rgba(32, 67, 80, 1);

@@ -143,6 +143,7 @@ export default class Main extends ViewBase {
 }
 </script>
 <style lang='less' scoped>
+@import '~@/views/account/less/formInput.less';
 @import '~@/views/brand/less/common.less';
 .base-form {
   padding: 30px 30px 10px 20px;

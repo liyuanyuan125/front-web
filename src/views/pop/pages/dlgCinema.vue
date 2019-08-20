@@ -9,7 +9,7 @@
       <Page
       :total="total"
       v-if="total>0"
-      class="btnCenter"
+      class="btn-center-footer"
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
       show-total

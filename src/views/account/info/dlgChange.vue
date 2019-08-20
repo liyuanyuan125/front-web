@@ -32,7 +32,7 @@
           </p>
         </Col>
       </Row>
-      <div class="footer btnCenter">
+      <div class="footer btn-center-footer">
         <Button type="primary" class="button-ok" @click="value.visibleMess = false">关闭</Button>
       </div>
     </Modal>
@@ -70,6 +70,8 @@ export default class Change extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import '~@/views/account/less/common.less';
+
 .qualification-image {
   width: 150px;
   margin-right: 25px;
