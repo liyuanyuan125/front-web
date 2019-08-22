@@ -220,7 +220,9 @@
         show-elevator
         @on-change="sizeChangeHandle"
         @on-page-size-change="currentChangeHandle"/> -->
-        <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
+        <div class='black-pagination'>
+          <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
+        </div>
         <div class="free-user-tip">免费用户仅可查看2页</div>
       </div>
       <Detail ref='detailbox' v-model="type" @done="checkDetailSet" />
@@ -1125,19 +1127,21 @@ export default class Main extends ViewBase {
     .button-style(#fff, #f18d94);
   }
 }
-/deep/ .page-list {
-  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
-    color: #00202d;
-  }
-  .ivu-page-item {
-    a {
+.black-pagination {
+  /deep/ .page-list {
+    .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
       color: #00202d;
     }
-  }
-  .ivu-page-item.ivu-page-item-active {
-    background: #00202d;
-    a {
-      color: #fff;
+    .ivu-page-item {
+      a {
+        color: #00202d;
+      }
+    }
+    .ivu-page-item.ivu-page-item-active {
+      background: #00202d;
+      a {
+        color: #fff;
+      }
     }
   }
 }
