@@ -4,6 +4,7 @@
     <div class="fince"  v-auth="'financial-manage.info#viewsummary'">
       <h3 class="userTitle">
         <span style="color:#00202D;">账户总览</span>
+        <!-- <span class='addmoney' @click='addmon'>充值</span> -->
       </h3>
       <div class="fince-list">
         <div class="fince-list-big">
@@ -142,6 +143,8 @@
     <Modal v-model="viewerShow" title="查看图片" width="500" height="500">
       <img style="width: 100%;" :src="viewerImage" alt sizes srcset>
     </Modal>
+    <dlgInforma ref="addOrUpdate" v-if="addOrUpdateVisible" @done="done"
+    ></dlgInforma>
   </div>
 </template>
 
@@ -162,6 +165,8 @@ import moment from 'moment'
 import Upload from '../upload/Upload.vue'
 import { slice, clean } from '@/fn/object'
 import { warning , success, toast , info } from '@/ui/modal'
+// 选择方式
+import dlgInforma from './dlgInformation.vue'
 
 // 获取当前登录用户信息
 // const user: any = getUser()!
@@ -184,8 +189,8 @@ const timeFormat = 'YYYY-MM-DD'
 
 @Component({
   components: {
-    Upload
-    // countTo
+    Upload,
+    dlgInforma
   }
 })
 export default class Main extends ViewBase {
@@ -209,6 +214,8 @@ export default class Main extends ViewBase {
     companyId: this.user.companyId,
     companyName: this.user.companyName
   }
+
+  addOrUpdateVisible = false
 
 
   accountSplice = ''
@@ -253,7 +260,7 @@ export default class Main extends ViewBase {
 
   // dataForm: any = { ...dataForm }
 
-    columns4 = [
+  columns4 = [
     { title: '充值ID', key: 'id', align: 'center', width: 70, },
     {
       title: '申请时间',
@@ -386,7 +393,7 @@ export default class Main extends ViewBase {
         } else if (approvalStatus == 3) {
           return (
             <tooltip content={rejectReason} placement="top">
-              <span class={`status-${3}`}>充值拒绝</span>
+              <span class={`status-${3} `}>充值拒绝</span>
             </tooltip>
           )
         }
@@ -451,6 +458,18 @@ export default class Main extends ViewBase {
   currentChangeHandle(val: any) {
     this.dataFormget.pageSize = val
     this.seach()
+  }
+
+  done() {
+    this.seach()
+  }
+
+  addmon() {
+    this.addOrUpdateVisible = true
+    this.$nextTick(() => {
+      const myThis: any = this
+      myThis.$refs.addOrUpdate.init()
+    })
   }
 
   get cachedMap() {
@@ -900,6 +919,20 @@ export default class Main extends ViewBase {
   top: 80%;
   left: 18%;
 }
+.addmoney {
+  color: rgb(0, 32, 45);
+  display: block;
+  width: 193px;
+  height: 47px;
+  background: rgba(249, 216, 94, 1);
+  border-radius: 25px;
+  float: right;
+  text-align: center;
+  line-height: 52px;
+  margin-top: 3px;
+  margin-right: 15px;
+  cursor: pointer;
+}
 /deep/ .ivu-table-cell {
   padding-left: 0;
   padding-right: 0;
@@ -950,17 +983,6 @@ export default class Main extends ViewBase {
 /deep/ .ivu-select-input {
   margin-top: 3px;
 }
-// /deep/ .ivu-input-wrapper,
-// /deep/ .ivu-input {
-//   border-radius: 5px 5px 5px 5px;
-//   height: 40px;
-//   background: rgba(255, 255, 255, 0.8);
-//   border: 1px solid rgba(255, 255, 255, 1);
-//   &::placeholder {
-//     font-size: 14px;
-//     color: #000 !important;
-//   }
-// }
 /deep/ .upload-box {
   width: 400px;
   height: 225px;
