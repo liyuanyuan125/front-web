@@ -62,8 +62,8 @@
                   <em class='tips'>{{item.cinemaName}}</em>
                 </Tooltip>
                 </Col>
-              <Col span='14'>{{item.year}}-{{item.month < 10 ? '0' + item.month : item.month }}</Col>
-              <Col span='3' style='color: #DA6C70;float: right;text-align: center;'>
+              <Col span='13'>{{item.year}}-{{item.month < 10 ? '0' + item.month : item.month }}</Col>
+              <Col span='5' style='color: #DA6C70;float: right;text-align: center;'>
                 <span v-if='item.billStatus == 1'>待平台确认</span>
                 <span v-if='item.billStatus == 2'>待审核</span>
                 <span v-if='item.billStatus == 3'>审核失败</span>
