@@ -307,9 +307,6 @@ export default class Orienteering extends ViewBase {
 
   async init() {
     try {
-      if ((this.$route as any).params.step != 1) {
-        return
-      }
       const { data } = await getTwodetail()
       await getRegionList()
       const {
