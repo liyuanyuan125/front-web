@@ -4,7 +4,7 @@
       <div class="title bottom-40">基本信息</div>
       <ul class="flex-box row-items">
         <li class="flex-box"><em>影院名称</em><span>{{items.cinemaName}}</span></li>
-        <li class="flex-box"><em>日期</em><span>{{items.year}}-{{items.month}}</span></li>
+        <li class="flex-box"><em>日期</em><span>{{FormatDateTime}}</span></li>
         <li class="flex-box"><em>曝光人次/人</em><span>{{readableThousands(items.personCount) || '-'}}</span></li>
       </ul>
        <ul class="flex-box row-items">
@@ -52,7 +52,7 @@
           <li><em>公司地址</em>{{items.companyAddress}}</li>
           <li><em>开户银行</em>{{items.accountBank}}</li>
           <li><em>发票编号</em>{{items.invoiceNo}}</li>
-          <li><em>发票日期</em>{{items.invoiceDate}}</li>
+          <li><em>发票日期</em>{{intDate(items.invoiceDate)}}</li>
           <li><em>发票内容</em>
             <i v-for="it in invoiceContentCodeList" :key="it.key" v-if="it.key == items.invoiceContentCode">{{it.text}}</i>
           </li>
@@ -65,7 +65,7 @@
           <li><em>发票类型</em>
             <i v-for="it in invoiceTypeCodList" :key="it.key" v-if="it.key == items.invoiceType">{{it.text}}</i>
           </li>
-          <li><em>发票金额</em>{{items.invoiceAmount || '-'}}</li>
+          <li><em>发票金额</em>{{formatNumber(items.invoiceAmount) || '-'}}</li>
           <li><em>快递单号</em>{{items.expressNo || '-'}}</li>
         </ul>
       </div>
@@ -121,7 +121,7 @@ import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
 import { confirm, toast, info } from '@/ui/modal'
-import {intDate, readableThousands, textList} from '@/util/dealData'
+import {intDate, readableThousands, textList, formatValidDateTime} from '@/util/dealData'
 import { formatNumber } from '@/util/validateRules'
 import { itemList, itemListbill, billAudit} from '@/api/bill'
 import Upload, { FileItem } from '@/components/upload'
@@ -152,6 +152,7 @@ export default class Main extends ViewBase {
 
   formatNumber = formatNumber
   readableThousands = readableThousands
+  intDate = intDate
 
   agree = 1
   form: any = {}
@@ -175,6 +176,13 @@ export default class Main extends ViewBase {
     { title: '操作日志', key: 'describe' },
   ]
   dataLog = []
+
+  get FormatDateTime() {
+    const { year, month } = this.items
+    const changeType = month + ''
+    const mon = changeType.length > 1 ? month : `0${month}`
+    return `${year}-${mon}`
+  }
 
   get rule() {
     return {
