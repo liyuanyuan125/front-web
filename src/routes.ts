@@ -304,7 +304,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.info',
       authAction: 'view',
       authIsMenu: true,
-      pageTitle: '账号信息-鲸娱数据'
+      pageTitle: '公司信息-鲸娱数据'
     }
   },
 

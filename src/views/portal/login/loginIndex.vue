@@ -2,19 +2,15 @@
   <loginLayout>
     <div class="main-wrap">
       <div class="tablist">
-        <p class="systerm">
-          <span :class="{active: form.systemCode == 'ads'}" @click="form.systemCode = 'ads'">我是广告主</span>
-          <span :class="{active: form.systemCode == 'resource'}" @click="form.systemCode = 'resource'" >我是影城</span>
-        </p>
+        <p class="systerm">登录 </p>
       </div>
       <Form :model="form" :rules="rules" ref="form" @submit.native.prevent="submit" novalidate>
         <FormItem prop="email" :error="emailError">
           <Input type="email" v-model="form.email" class="some-class" autocomplete="off" disableautocomplete
-           placeholder="请输入邮箱">
+           placeholder="请输入账号">
             <i class="iconfont icon-youxiang" slot="prefix"><font></font></i>
           </Input>
         </FormItem>
-        <!--  readonly onfocus="this.removeAttribute('readonly');" -->
         <FormItem prop="password" :error="passwordError">
           <Input
             type="password"
@@ -94,8 +90,8 @@ export default class Main extends ViewBase {
 
   rules = {
     email: [
-      { required: true, message: '请输入你的邮箱', trigger: 'blur' },
-      { type: 'email', message: '邮箱格式有误', trigger: 'blur' }
+      { required: true, message: '请输入你的账号', trigger: 'blur' },
+      // { type: 'email', message: '账号格式有误', trigger: 'blur' }
     ],
     password: [
       { required: true, message: '请输入你的密码', trigger: 'blur' },
@@ -180,25 +176,8 @@ export default class Main extends ViewBase {
 @import '~@/assets/iconFont/iconfont.css';
 @import './common.less';
 
-.systerm {
-  text-align: center;
-  span {
-    font-size: 23px;
-    color: #2f6af9;
-    cursor: pointer;
-    &.active {
-      color: #fff;
-      padding-bottom: 5px;
-      border-bottom: solid 1px #fff;
-    }
-    &:nth-child(1) {
-      margin-right: 65px;
-    }
-  }
-}
 .main-wrap {
-  padding-top: 44px;
-  padding-bottom: 70px;
+  padding-bottom: 60px;
   .login-etc {
     font-size: 15px;
     color: #fff;

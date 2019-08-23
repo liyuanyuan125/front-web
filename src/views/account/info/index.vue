@@ -2,7 +2,7 @@
   <div class="page home-bg as">
     <com-statu :statuCode="displayStatus" v-if="displayStatus != 5"></com-statu>
     <div class="content">
-      <div class="bs">
+      <!-- <div class="bs">
         <h3 class="layout-title">登录信息</h3>
         <Row class="text-rows">
           <Col :span="12">
@@ -20,8 +20,9 @@
             </p>
           </Col>
         </Row>
-      </div>
+      </div> -->
       <div class="bs">
+        <Button v-auth="'account-manage.info#edit'" type="primary" class="button-ok button-offset bok"  :to="{ name: 'account-info-accedit' }" >修改</Button>
         <h3 class="layout-title">公司信息</h3>
         <Row class="text-rows">
           <Col :span="12">
@@ -51,6 +52,7 @@
         </Row>
       </div>
       <div class="bs">
+         <Button v-auth="'account-manage.info#change'" type="primary" class="button-ok bok" @click="handleInforma" >修改</Button>
         <h3 class="layout-title">开户信息</h3>
         <Row class="text-rows">
           <Col :span="24">
@@ -336,6 +338,7 @@ export default class Main extends ViewBase {
   border-radius: 5px;
   margin-top: 30px;
   background: rgba(255, 255, 255, 0.3);
+  position: relative;
 }
 
 .hui {
