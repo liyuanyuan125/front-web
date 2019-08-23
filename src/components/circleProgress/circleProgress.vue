@@ -1,11 +1,16 @@
 <template>
-  <i-circle class="circle-progress" :percent="percent" :size="opt.size"
-    :stroke-width="opt.strokeWidth" :stroke-color="strokeColor">
+  <i-circle
+    class="circle-progress"
+    :percent="percent"
+    :size="opt.size"
+    :stroke-width="opt.strokeWidth"
+    :stroke-color="strokeColor"
+  >
     <slot name="fail" v-if="fail">
-      <Icon type="ios-close" :style="{color: strokeColor}" class="icon-fail"/>
+      <Icon type="ios-close" :style="{color: strokeColor}" class="icon-fail" />
     </slot>
     <slot name="done" v-else-if="percent >= 100">
-      <Icon type="ios-checkmark" :style="{color: strokeColor}" class="icon-done"/>
+      <Icon type="ios-checkmark" :style="{color: strokeColor}" class="icon-done" />
     </slot>
     <slot v-else>
       <span class="percent-text">{{percent}}%</span>
@@ -25,7 +30,7 @@ const defaultOptions: CircleProgressOptions = {
   strokeWidth: 6,
   strokeColorDefault: '#2db7f5',
   strokeColorDone: '#5cb85c',
-  strokeColorFail: '#f50',
+  strokeColorFail: '#f50'
 }
 
 @Component

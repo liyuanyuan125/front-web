@@ -1,5 +1,21 @@
 <template>
   <div class="page">
+    <Progress :percent="progress" status="active" class="progress"/>
+
+    <Button type="success" class="upload-button">
+      <input type="file" @change="onUpload"> 上传
+    </Button>
+
+    <img :src="imageUrl" v-if="imageUrl">
+
+    <div>
+      <Button type="success" @click="onTriple">三态对话框</Button>
+    </div>
+
+    <TripleDialog v-model="tripleShow">
+      妳好呀
+    </TripleDialog>
+
     <!-- <WeekDatePicker v-model="weekDate"/>
 
     <div>
@@ -15,7 +31,7 @@
 
     <!-- <ECharts :options="chartData" auto-resize class="chart"/> -->
 
-    <KeepSelectTable
+    <!-- <KeepSelectTable
       border
       stripe
       :width="600"
@@ -28,7 +44,7 @@
       </template>
     </KeepSelectTable>
 
-    <Page :current.sync="tablePage" :total="18"/>
+    <Page :current.sync="tablePage" :total="18"/> -->
   </div>
 </template>
 
@@ -37,84 +53,121 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import WeekDatePicker from '@/components/weekDatePicker'
 import CitySelectDialog from '@/components/citySelectDialog'
+import TripleDialog from '@/components/tripleDialog'
 import ECharts from 'vue-echarts'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
 import KeepSelectTable from '@/components/keepSelectTable'
+import OSS from 'ali-oss'
+import { get } from '@/fn/ajax'
+import { devLog } from '@/util/dev'
+import { dot } from '@/util/dealData'
+import OssUploader, { CacheHitEvent, ProgressEvent } from '@/util/OssUploader'
+import triple from '@/ui/triple'
 
 @Component({
   components: {
     WeekDatePicker,
     CitySelectDialog,
+    TripleDialog,
     ECharts,
     KeepSelectTable
   }
 })
 export default class AboutPage extends ViewBase {
-  // weekDate = [null, null]
-  weekDate = [new Date(2019, 4, 9), new Date(2019, 4, 15)]
+  progress = 0
 
-  cityIds = [349, 170, 353]
+  imageUrl = ''
 
-  topCityIds = [349, 430, 170, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428]
+  tripleShow = false
 
-  visible = false
-
-  chartData: any = {
-    tooltip: {
-      trigger: 'item',
-      formatter: '{a} <br/>{b} : {c} ({d}%)'
-    },
-    series: [
-      {
-        name: '近7日评论分析',
-        type: 'pie',
-        radius: [33, 49],
-        label: {
-          formatter: '{b}\n{d}%',
-          lineHeight: 156
-        },
-        labelLine: {
-          show: false
-        },
-        data: [
-          { name: '正面', value: 80, itemStyle: { color: '#ca7273' } },
-          { name: '中立', value: 30, itemStyle: { color: '#f3d872' } },
-          { name: '负面', value: 20, itemStyle: { color: '#57b4c9' } }
-        ]
+  async onTriple() {
+    const yes = await triple('哈哈舒服舒服', {
+      yesText: '从断点恢复',
+      noText: '重新上传',
+      onCancel() {
       }
-    ]
+    })
   }
 
-  tablePage = 1
-
-  tableColumns = [
-    { title: 'ID', key: 'id' },
-    { title: '名称', slot: 'name' },
-    { title: '年龄', key: 'age' },
-  ]
-
-  selectedIds = [12, 26, 23]
-
-  get tableData() {
-    const page = this.tablePage
-    return Array(10).fill(1).map((n, i) => ({
-      id: page * 10 + i,
-      name: `名字${page * 10 + i}`,
-      age: page * 10 + i
-    }))
+  async onUpload(ev: Event) {
+    const input = ev.target as HTMLInputElement
+    const [ file = null ] = input.files || []
+    const uploader = new OssUploader()
+    uploader.on('cacheHit', (evt: CacheHitEvent) => {
+      evt.useCache = true
+    })
+    .on('progress', (evt: ProgressEvent) => {
+      this.progress = +evt.percent.toFixed(2)
+    })
+    uploader.upload(file!)
+    setTimeout(() => input.value = '')
   }
 
-  onCitySelectOk({ fastList }: any) {
-    debugger
-  }
+  // weekDate = [null, null]
+  // weekDate = [new Date(2019, 4, 9), new Date(2019, 4, 15)]
 
-  async mounted() {
-    // const xx = list.filter(it => it.subList != null)
-    // console.log(xx)
-    // const one = xx.filter(it => it.subList.length == 1)
-    // console.log(one)
-  }
+  // cityIds = [349, 170, 353]
+
+  // topCityIds = [349, 430, 170, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428]
+
+  // visible = false
+
+  // chartData: any = {
+  //   tooltip: {
+  //     trigger: 'item',
+  //     formatter: '{a} <br/>{b} : {c} ({d}%)'
+  //   },
+  //   series: [
+  //     {
+  //       name: '近7日评论分析',
+  //       type: 'pie',
+  //       radius: [33, 49],
+  //       label: {
+  //         formatter: '{b}\n{d}%',
+  //         lineHeight: 156
+  //       },
+  //       labelLine: {
+  //         show: false
+  //       },
+  //       data: [
+  //         { name: '正面', value: 80, itemStyle: { color: '#ca7273' } },
+  //         { name: '中立', value: 30, itemStyle: { color: '#f3d872' } },
+  //         { name: '负面', value: 20, itemStyle: { color: '#57b4c9' } }
+  //       ]
+  //     }
+  //   ]
+  // }
+
+  // tablePage = 1
+
+  // tableColumns = [
+  //   { title: 'ID', key: 'id' },
+  //   { title: '名称', slot: 'name' },
+  //   { title: '年龄', key: 'age' },
+  // ]
+
+  // selectedIds = [12, 26, 23]
+
+  // get tableData() {
+  //   const page = this.tablePage
+  //   return Array(10).fill(1).map((n, i) => ({
+  //     id: page * 10 + i,
+  //     name: `名字${page * 10 + i}`,
+  //     age: page * 10 + i
+  //   }))
+  // }
+
+  // onCitySelectOk({ fastList }: any) {
+  //   debugger
+  // }
+
+  // async mounted() {
+  //   // const xx = list.filter(it => it.subList != null)
+  //   // console.log(xx)
+  //   // const one = xx.filter(it => it.subList.length == 1)
+  //   // console.log(one)
+  // }
 }
 </script>
 
@@ -123,5 +176,22 @@ export default class AboutPage extends ViewBase {
   padding: 15px;
   min-height: 1200px;
   background-color: #fff;
+}
+
+.progress {
+  width: 288px;
+}
+
+.upload-button {
+  position: relative;
+  overflow: hidden;
+  input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
 }
 </style>

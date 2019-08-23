@@ -126,3 +126,9 @@ export enum MovieStatus {
   /** 已下映 */
   down = 4,
 }
+
+/**
+ * iview 按钮类型
+ */
+export type ButtonType = 'default' | 'primary' | 'dashed' | 'text'
+  | 'info' | 'success' | 'warning' | 'error'
