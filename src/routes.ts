@@ -295,11 +295,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     props: true,
   },
 
-  // 广告主、资源方 - 账户管理 - 账号信息
+  // 广告主、资源方 - 账户管理 - 账号信息（2.1账号信息改为公司信息）
   {
-    path: '/account/info',
+    path: '/account/company',
     name: 'account-info',
-    component: () => import('./views/account/info/index.vue'),
+    component: () => import('./views/account/company/index.vue'),
     meta: {
       authKey: 'account-manage.info',
       authAction: 'view',
@@ -308,13 +308,11 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // TODO: 下面两个页面应该合并在一起？还是涉及权限，应该拆开以方便控制？
-
   // 广告主、资源方 - 账户管理 - 账户编辑（全部信息编辑）
   {
-    path: '/account/info/edit',
+    path: '/account/company/edit',
     name: 'account-info-edit',
-    component: () => import('./views/account/info/edit.vue'),
+    component: () => import('./views/account/company/edit.vue'),
     meta: {
       authKey: 'account-manage.info',
       authAction: 'edit',
@@ -323,15 +321,28 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主、资源方 - 账户管理 - 账户编辑（基本信息编辑）
   {
-    path: '/account/info/accedit',
+    path: '/account/company/accedit',
     name: 'account-info-accedit',
-    component: () => import('./views/account/info/accEdit.vue'),
+    component: () => import('./views/account/company/accEdit.vue'),
     meta: {
       authKey: 'account-manage.info',
       authAction: 'edit',
       title: '修改',
     }
   },
+
+  // 2.1 增加账号信息 菜单项
+  {
+    path: '/account/information',
+    name: 'account-information',
+    component: () => import('./views/account/information/index.vue'),
+    meta: {
+      authKey: '',
+      authAction: '',
+      authIsMenu: true,
+    }
+  },
+
 
   // 广告主、资源方 - 账户管理 - 用户管理
   {

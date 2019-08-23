@@ -166,11 +166,11 @@ export default class Main extends ViewBase {
     margin-left: 40px;
   }
 }
-.item-account-email {
-  /deep/ .ivu-form-item-label {
-    // padding-left: 0;
-  }
-}
+// .item-account-email {
+//   /deep/ .ivu-form-item-label {
+//     // padding-left: 0;
+//   }
+// }
 .login-email {
   font-size: 14px;
   position: relative;

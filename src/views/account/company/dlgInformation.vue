@@ -1,17 +1,11 @@
 <template>
   <div>
-    <Modal v-model="value.visibleInforma" title="变更账号信息" width="700">
+    <Modal v-model="value.visibleInforma" title="变更开户信息" width="700">
       <div class="digtext">
         说明：如有需要可对以下账号信息进行变更，账号变更申请提交后将由平台进行审核，
         账号变更期间不会影响账号的正常使用。
       </div>
       <Form ref="form" :model="form" :label-width="90" :rules="formRules" class="edit-input">
-        <!-- <FormItem label="账号类型" prop="accountType">
-          <CheckboxGroup v-model="form.accountType" class="item-type">
-            <Checkbox size="large" label="ads">广告方</Checkbox>
-            <Checkbox size="large" label="resource">资源方</Checkbox>
-          </CheckboxGroup>
-        </FormItem>-->
         <FormItem label="公司名称" prop="companyName">
           <Input v-model="form.companyName" placeholder="请输入公司名称" :maxlength="40"></Input>
         </FormItem>
