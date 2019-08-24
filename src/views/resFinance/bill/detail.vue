@@ -10,7 +10,16 @@
        <ul class="flex-box row-items">
         <li class="flex-box"><em>广告片数量</em><span>{{items.videoCount}}</span></li>
          <li class="flex-box"><em>状态</em>
-           <span v-for="it in billStatusList" :key="it.key" v-if="it.key == items.billStatus">{{it.text}}</span>
+           <span v-if='items.billStatus == 1'>待平台确认</span>
+            <span v-if='items.billStatus == 2'>待审核</span>
+            <span v-if='items.billStatus == 3'>审核失败</span>
+            <span v-if='items.billStatus == 4 && items.invoiceStatus == 1 && items.payStatus == 1'>待结算</span>
+            <span v-if='items.billStatus == 4 && items.invoiceStatus == 1 && items.payStatus == 2'>已结算</span>
+            <span v-if='items.billStatus == 4 && items.invoiceStatus == 2 && items.payStatus == 1'>待登记发票</span>
+            <span v-if='items.billStatus == 4 && items.invoiceStatus == 2 && items.payStatus == 2'>已结算,待登记发票</span>
+            <span v-if='items.billStatus == 4 && items.invoiceStatus == 3 && items.payStatus == 1'>待结算</span>
+            <span v-if='items.billStatus == 4 && items.invoiceStatus == 3 && items.payStatus == 2'>已结算</span>
+           <!-- <span v-for="it in billStatusList" :key="it.key" v-if="it.key == items.billStatus">{{it.text}}</span> -->
         </li>
         <li class="flex-box"><em>预计结算金额</em><span>{{formatNumber(items.amount)}}</span></li>
       </ul>
@@ -220,7 +229,7 @@ export default class Main extends ViewBase {
       this.dataLog = (item.resourceBillLogs || []).map( (it: any) => {
         return {
           ...it,
-          createTime: moment().format(format),
+          createTime: formatValidDateTime(it.createTime),
         }
       })
     } catch (ex) {
