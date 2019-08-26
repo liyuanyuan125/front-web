@@ -628,7 +628,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   //   }
   // },
 
-  // 广告主 - 推广管理 - 广告片 - 列表
+  // 广告片 - 列表
   {
     path: '/pop/film',
     name: 'pop-film',
@@ -642,7 +642,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 广告主 - 推广管理 - 广告片 - 创建、编辑（存在 id 为编辑，否则为创建）
+  // 广告片 - 创建、编辑（存在 id 为编辑，否则为创建）
   {
     path: '/pop/film/edit/:id?',
     name: 'pop-film-edit',
@@ -657,7 +657,27 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         return id > 0 ? 'edit' : 'create'
       },
       pageTitle({ params }) {
-        return params.id as any > 0 ? '编辑广告片-鲸娱数据' : '新建广告片-鲸娱数据'
+        return params.id as any > 0 ? '编辑商业广告片-鲸娱数据' : '新建商业广告片-鲸娱数据'
+      },
+    }
+  },
+
+  // 广告片 - 创建，编辑预告片（存在 id 为编辑，否则为创建）
+  {
+    path: '/pop/film/editprevue/:id?',
+    name: 'pop-film-editprevue',
+    component: () => import('./views/pop/film/editPrevue.vue'),
+    meta: {
+      authKey: 'promotion.ad-video',
+      title({ params }) {
+        return params.id as any > 0 ? '编辑' : '新建'
+      },
+      authAction(route) {
+        const id = parseInt(route.params.id, 10) || 0
+        return id > 0 ? 'edit' : 'create'
+      },
+      pageTitle({ params }) {
+        return params.id as any > 0 ? '编辑电影预告片-鲸娱数据' : '新建电影预告片-鲸娱数据'
       },
     }
   },

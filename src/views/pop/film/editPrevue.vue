@@ -47,33 +47,13 @@
           <em class="remark">支持（.rmvb\.mp4\.mov）等视频格式；视频大小不超过100M；上传广告片小样可提升系统审核速度</em>
         </FormItem>
 
-        <FormItem label="公司营业执照编号" prop="vipCode">
-          <Input v-model="form.vipCode" placeholder="请输入执照编号"/>
-        </FormItem>
-        <FormItem label="营业执照有效期" prop="validity">
-          <DatePicker v-model="form.validity" type="daterange" placement="bottom-end" placeholder="请选择有效期"></DatePicker>
-        </FormItem>
-        <FormItem label="营业执照扫描件" prop="companyImgList">
-          <Upload
-              v-model="form.companyImgList"
-              :max-count="3"
-              multiple
-              accept="images/*"
-              confirm-on-del
-            />
-            <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
+        <FormItem label="关联影片">
+          <Select v-model="form.specification" @on-change="handleChangeSpe"   clearable filterable>
+            <Option v-for="(item, index) in specificationList" :value="item.id" :key="index">{{ item.name }}</Option>
+          </Select>
         </FormItem>
 
-        <FormItem label="授权文件扫描件" prop="authImageList">
-          <Upload
-              v-model="form.authImageList"
-              :max-count="3"
-              multiple
-              accept="images/*"
-              confirm-on-del
-            />
-            <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
-        </FormItem>
+
 
          <div class=" create-submit-btn">
            <Button v-if="!$route.params.id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
@@ -146,42 +126,6 @@ export default class Main extends ViewBase {
       ],
       srcFileUrl: [
         { required: true, message: '请输入下载地址', trigger: 'blur'}
-      ],
-      vipCode: [
-        { required: true, message: '请输入执照编号', trigger: 'blur'}
-      ],
-      validity: [
-        {
-          required: true,
-          message: '有效期不能为空',
-          trigger: 'change',
-          type: 'array',
-          validator(rule: any, value: any[], callback: any) {
-            value[0] == '' ? callback(new Error(rule.message)) : callback()
-          }
-        }
-      ],
-      companyImgList: [
-        {
-          required: true,
-          message: '营业执照扫描件',
-          trigger: 'change',
-          type: 'array',
-          validator(rule: any, value: any[], callback: any) {
-            value.length == 0 ? callback(new Error(rule.message)) : callback()
-          }
-        }
-      ],
-      authImageList: [
-        {
-          required: true,
-          message: '授权文件扫描件',
-          trigger: 'change',
-          type: 'array',
-          validator(rule: any, value: any[], callback: any) {
-            value.length == 0 ? callback(new Error(rule.message)) : callback()
-          }
-        }
       ],
     }
   }

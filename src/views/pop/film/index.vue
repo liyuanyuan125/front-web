@@ -1,9 +1,12 @@
 <template>
   <div class="film-page">
     <div class="page-title-btn">
+      <!-- 用户公司类型包含片商 增加新建电影预告片 -->
+      <Button type="primary" :to="{name: 'pop-film-editprevue'}" class="btn-add-line"
+        v-auth="'promotion.ad-video#create'">新建电影预告片
+      </Button>
        <Button type="primary" :to="{name: 'pop-film-edit'}" class="btn-add-line"
-        v-auth="'promotion.ad-video#create'">新建广告片
-        <!-- <Icon type="ios-add" size="27"/> -->
+        v-auth="'promotion.ad-video#create'">新建商业广告片
       </Button>
     </div>
     <Form :model="form" class="form flex-box-center jyd-form">
@@ -12,7 +15,6 @@
       </Select>
       <customerList v-model="form.customerId" />
       <brandList v-model="form.brandId" />
-      <!--  v-if="form.brandld" -->
       <productList :brandld="form.brandId" v-model="form.productId" />
       <div class="flex-box film-search">
           <Input v-model="query" placeholder="请输入广告ID/名称进行搜索"/>
@@ -30,7 +32,8 @@
       </div>
       <div class="spin-show">
         <ul class="ul-list demo-spin-article">
-          <li v-for="item in tableDate " :key="item.id">
+          <!-- 当广告片列表类型为 电影预告片 展示active class -->
+          <li v-for="item in tableDate " :key="item.id" :class="{active: item.types == 'prevue'}">
             <div class="flex-box inner">
               <div class="left-item"  @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">
                 <img v-if="item.logo" :src="item.logo" class="img" />
@@ -47,8 +50,11 @@
                     <Tooltip content="审核拒绝"><img v-if="item.status == 5" src="../assets/reject-icon.png" class="img-wid" /></Tooltip>
                     <Tooltip content="待支付"><img v-if="item.status == 2" src="../assets/pay-icon.png" class="img-wid" /></Tooltip>
                     <Tooltip content="转码中"><img v-if="item.status == 3"  src="../assets/transing-icon.png" class="img-wid" /></Tooltip>
+                    
+                    <!-- 判断广告片类型 跳到对应的预告片和商业片 -->
                     <Tooltip content="点击编辑"><img v-if="item.status == 1 || item.status == 5" src="../assets/edit-icon.png" 
                     @click="$router.push({name: 'pop-film-edit', params: {id: item.id}})" class="img-wid" /></Tooltip>
+
                     <Tooltip content="点击删除"><img src="../assets/del-icon.png" v-if="item.status != 3"  @click="deleteList(item.id)" class="img-wid" /></Tooltip>
                   </div>
                 </div>
@@ -99,10 +105,6 @@ export default class Main extends ViewBase {
   checkboxAll = false
 
   tableDate = []
-
-  get defaultImg() {
-    return 'this.src="' + require('../assets/error.png') + '"'
-  }
 
   mounted() {
     this.tableList()
@@ -191,14 +193,6 @@ export default class Main extends ViewBase {
   padding: 20px 40px 40px;
 }
 
-.bth-search {
-  position: relative;
-  left: -4px;
-  border: none;
-  background: #00202d;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
 .ul-list {
   padding: 0 38px 40px;
   margin-left: -15px;
@@ -209,6 +203,10 @@ export default class Main extends ViewBase {
     width: 33.3%;
     padding: 0 15px;
     margin-top: 30px;
+    &:active {
+      background: url('./assets/prevue.png') no-repeat 15px top;
+      background-size: 35px auto;
+    }
     .inner {
       background: rgba(0, 32, 45, .5);
       border-radius: 5px;
@@ -262,6 +260,14 @@ export default class Main extends ViewBase {
 }
 .film-search {
   width: 280px;
+  .bth-search {
+    position: relative;
+    left: -4px;
+    border: none;
+    background: #00202d;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
 }
 .check-title {
   font-size: 14px;
@@ -293,5 +299,9 @@ export default class Main extends ViewBase {
     width: 160px;
     margin-right: 20px;
   }
+}
+.btn-add-line {
+  font-size: 18px;
+  margin-left: 10px;
 }
 </style>

@@ -14,11 +14,6 @@
           <FormItem label="登录邮箱" class="item-top" prop="email" :error="emailError">
             <Input v-model="form.email" @on-blur="handleEmail" placeholder="请输入正确的邮箱地址"></Input>
           </FormItem>
-        </div>
-      </div>
-      <div class="bgs">
-        <h3 class="layout-title tits">设置联系人（选填）</h3>
-        <div class="formleft">
           <FormItem label="联系人名称" class="item-top">
             <Input v-model="form.contactName" :disabled="!isAccountAuth" placeholder="请输入联系人名称"></Input>
           </FormItem>

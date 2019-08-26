@@ -1,18 +1,11 @@
 <template>
   <div>
-    <!-- <div class="layout-nav-title">
-       <router-link :to="{name: 'account-user'}" >用户管理</router-link> > 
-       <span>编辑子用户</span>
-    </div> -->
     <Form :model="form" label-position="left" :label-width="100" class="edit-input">
       <div class="bgs">
         <h3 class="layout-title tits">设置登录账号</h3>
-        <FormItem label="登录邮箱" class="formleft item-top">
+        <FormItem label="登录邮箱" class=" item-top">
           <Input v-model="form.email" :disabled="disEmail" placeholder="请输入登录邮箱"></Input>
         </FormItem>
-      </div>
-      <div class="bgs">
-        <h3 class="layout-title tits">设置联系人（选项）</h3>
         <FormItem label="联系人名称" class="item-top">
           <Input v-model="form.contactName" placeholder="请输入联系人名称"></Input>
         </FormItem>
