@@ -13,7 +13,10 @@
       <Icon type="ios-checkmark" :style="{color: strokeColor}" class="icon-done" />
     </slot>
     <slot v-else>
-      <span class="percent-text">{{percent}}%</span>
+      <span
+        class="percent-text"
+        v-if="!(hideZero && percent == 0)"
+      >{{percentText}}%</span>
     </slot>
   </i-circle>
 </template>
@@ -41,6 +44,12 @@ export default class CircleProgress extends ViewBase {
   /** 是否失败，默认 false */
   @Prop({ type: Boolean, default: false }) fail!: boolean
 
+  /** 精度，即小数位数，默认为 1 */
+  @Prop({ type: Number, default: 1 }) precision!: number
+
+  /** 隐藏 0 时的文本显示 */
+  @Prop({ type: Boolean, default: false }) hideZero!: number
+
   /** 选项，默认空对象 */
   @Prop({ type: Object, default: () => ({}) }) options!: CircleProgressOptions
 
@@ -57,6 +66,10 @@ export default class CircleProgress extends ViewBase {
       ? strokeColorDone
       : strokeColorDefault
     return color
+  }
+
+  get percentText() {
+    return this.percent.toFixed(this.precision)
   }
 }
 </script>

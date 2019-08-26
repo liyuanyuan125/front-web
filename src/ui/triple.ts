@@ -5,6 +5,8 @@ import { ButtonType } from '@/util/types'
  * 三态对话框选项
  */
 export interface TripleOptions {
+  /** 宽度，默认 360 */
+  width?: number
   /** 肯定按钮的文字，默认：是 */
   yesText?: string
   /** 肯定按钮的类型，默认：primary */
@@ -25,6 +27,7 @@ export interface TripleOptions {
  * 默认选项
  */
 const defaultOptions: TripleOptions = {
+  width: 360,
   yesText: '是',
   yesType: 'success',
   noText: '否',

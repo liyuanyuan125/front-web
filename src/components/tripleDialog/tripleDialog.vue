@@ -1,5 +1,5 @@
 <template>
-  <Modal v-model="model">
+  <Modal v-model="model" :width="width" v-bind="$attrs">
     <main class="modal-main">
       <slot></slot>
     </main>
@@ -20,6 +20,9 @@ import { ButtonType } from '@/util/types'
 export default class TripleDialog extends ViewBase {
   /** model，支持双向绑定 */
   @Prop({ type: Boolean, default: false }) value!: boolean
+
+  /** 对话框宽度，默认 360 */
+  @Prop({ type: Number, default: 360 }) width!: number
 
   /** 肯定按钮的文字，默认：是 */
   @Prop({ type: String, default: '是' }) yesText!: string

@@ -1,20 +1,15 @@
 <template>
   <div class="page">
-    <Progress :percent="progress" status="active" class="progress"/>
+    <OssUploader v-model="imageUrl">
+    </OssUploader>
 
-    <Button type="success" class="upload-button">
-      <input type="file" @change="onUpload"> 上传
-    </Button>
+    <!-- <UploadLabel useCircle/>
 
-    <img :src="imageUrl" v-if="imageUrl">
-
-    <div>
-      <Button type="success" @click="onTriple">三态对话框</Button>
-    </div>
+    <UploadButton/>
 
     <TripleDialog v-model="tripleShow">
       妳好呀
-    </TripleDialog>
+    </TripleDialog> -->
 
     <!-- <WeekDatePicker v-model="weekDate"/>
 
@@ -62,7 +57,9 @@ import OSS from 'ali-oss'
 import { get } from '@/fn/ajax'
 import { devLog } from '@/util/dev'
 import { dot } from '@/util/dealData'
-import OssUploader, { CacheHitEvent, ProgressEvent } from '@/util/OssUploader'
+import OssUploader from '@/components/ossUploader'
+import UploadLabel from '@/components/uploadLabel'
+import UploadButton from '@/components/UploadButton.vue'
 import triple from '@/ui/triple'
 
 @Component({
@@ -71,7 +68,10 @@ import triple from '@/ui/triple'
     CitySelectDialog,
     TripleDialog,
     ECharts,
-    KeepSelectTable
+    KeepSelectTable,
+    OssUploader,
+    UploadLabel,
+    UploadButton
   }
 })
 export default class AboutPage extends ViewBase {
@@ -81,28 +81,19 @@ export default class AboutPage extends ViewBase {
 
   tripleShow = false
 
-  async onTriple() {
-    const yes = await triple('哈哈舒服舒服', {
-      yesText: '从断点恢复',
-      noText: '重新上传',
-      onCancel() {
-      }
-    })
-  }
-
-  async onUpload(ev: Event) {
-    const input = ev.target as HTMLInputElement
-    const [ file = null ] = input.files || []
-    const uploader = new OssUploader()
-    uploader.on('cacheHit', (evt: CacheHitEvent) => {
-      evt.useCache = true
-    })
-    .on('progress', (evt: ProgressEvent) => {
-      this.progress = +evt.percent.toFixed(2)
-    })
-    uploader.upload(file!)
-    setTimeout(() => input.value = '')
-  }
+  // async onUpload(ev: Event) {
+  //   const input = ev.target as HTMLInputElement
+  //   const [ file = null ] = input.files || []
+  //   const uploader = new OssUploader()
+  //   uploader.on('cacheHit', (evt: CacheHitEvent) => {
+  //     evt.useCache = true
+  //   })
+  //   .on('progress', (evt: ProgressEvent) => {
+  //     this.progress = +evt.percent.toFixed(2)
+  //   })
+  //   uploader.upload(file!)
+  //   setTimeout(() => input.value = '')
+  // }
 
   // weekDate = [null, null]
   // weekDate = [new Date(2019, 4, 9), new Date(2019, 4, 15)]

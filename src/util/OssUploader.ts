@@ -13,6 +13,7 @@ import { dot } from '@/util/dealData'
 import md5 from 'md5'
 import { random } from '@/fn/string'
 import tryParseJson from '@/fn/tryParseJson'
+import triple from '@/ui/triple'
 
 /**
  * Oss 项，用于识别不同的文件
@@ -61,6 +62,22 @@ export interface Token {
  */
 export type GetToken = () => Promise<Token>
 
+/** 断点续传使用策略函数参数 */
+export interface UseCacheParam {
+  /** 文件本身 */
+  file: File
+  /** 缓存中的数据 */
+  track: Track
+}
+
+/**
+ * 断点续传使用策略函数，返回：
+ * - yes    使用断点续传
+ * - no     不使用断点续传，执行重新上传
+ * - cancel 取消上传（即中断上传）
+ */
+export type UseCache = (param: UseCacheParam) => Promise<'yes' | 'no' | 'cancel'>
+
 /**
  * 上传选项
  */
@@ -73,6 +90,10 @@ export interface Options {
   retryTimeout?: number
   /** Track 过期时间，毫秒数 */
   expireTime?: number
+  /**
+   * 断点续传使用策略函数
+   */
+  useCache?: UseCache
 }
 
 const defaultOptions: Options = {
@@ -96,7 +117,20 @@ const defaultOptions: Options = {
   },
   maxTryCount: 3,
   retryTimeout: 3000,
-  expireTime: 24 * 60 * 60 * 1000
+  expireTime: 24 * 60 * 60 * 1000,
+  // 默认的断点续传策略
+  useCache: async ({ track }) => {
+    return new Promise(async resolve => {
+      const { percent } = track
+      const percentText = +percent.toFixed(1)
+      const yes = await triple(`发现该文件上次已上传到 ${percentText}%`, {
+        yesText: '断点续传',
+        noText: '重新上传',
+        onCancel: () => resolve('cancel')
+      })
+      resolve(yes ? 'yes' : 'no')
+    })
+  }
 }
 
 const getOssItem = (file: File) => {
@@ -116,10 +150,12 @@ const getHash = (value: any) => {
 }
 
 const newTrack = (item: OssItem, hash: string) => {
+  // 保留扩展名
+  const ext = item.name ? item.name.replace(/^[^.]+/, '') : ''
   const track: Track = {
     ...item,
     // 预防重复，会被覆盖
-    fileName: random('upload', hash),
+    fileName: random('upload', hash) + ext,
     percent: 0,
     checkpoint: null,
     lastTime: Date.now()
@@ -154,7 +190,7 @@ const saveTrack = (track: Track, hash: string) => {
 }
 
 // 从本地存储中获取 track
-const getTrack = (item: OssItem, hash: string) => {
+const getTrack = (hash: string) => {
   const key = storageKeyPrefix + hash
   const json = localStorage.getItem(key)
   const track = tryParseJson(json) as Track | null
@@ -162,7 +198,7 @@ const getTrack = (item: OssItem, hash: string) => {
 }
 
 // 从本地存储中获取 track
-const delTrack = (item: OssItem, hash: string) => {
+const delTrack = (hash: string) => {
   const key = storageKeyPrefix + hash
   localStorage.removeItem(key)
 }
@@ -184,16 +220,6 @@ export interface OssUploaderEvent {
 /** 已经获取 token 事件 */
 export interface AfterGetTokenEvent extends OssUploaderEvent {
   token: Token
-}
-
-/**
- * 缓存命中事件（缓存中有断点续传任务）
- */
-export interface CacheHitEvent extends OssUploaderEvent {
-  /** 缓存中的数据 */
-  cachedData: Track
-  /** 是否使用缓存中的数据，断点续传 */
-  useCache: boolean
 }
 
 /**
@@ -238,37 +264,56 @@ export interface BeforeRetryEvent extends OssUploaderEvent, CancelableEvent {
 export default class OssUploader extends EventClass {
   private options: Options
 
-  constructor(options = {} as Options) {
+  private client: OSS | null = null
+
+  private file: File | null = null
+
+  private isPausedInner: boolean = false
+
+  public constructor(options = {} as Options) {
     super()
     this.options = deepExtend({}, defaultOptions, options)
+  }
+
+  public get isPaused() {
+    return this.isPausedInner
   }
 
   /**
    * 上传文件
    * @param file 文件对象
    */
-  public async upload(file: File) {
-    const { expireTime } = this.options
+  public async upload(
+    file: File,
+    /* 选项是内部参数 */
+    {
+      // resume 模式，不判断，直接恢复
+      resume = false
+    }: any = {}
+  ) {
+    const { expireTime, useCache } = this.options
     cleanTracks(expireTime!)
 
     const item = getOssItem(file)
     const hash = getHash(item)
-    const cachedData = getTrack(item, hash)
+    const cachedTrack = getTrack(hash)
 
     let track = newTrack(item, hash)
 
-    if (cachedData != null) {
-      // 当缓存中的数据存在时，发出缓存命中事件
-      const cacheHitEvent: CacheHitEvent = {
-        file,
-        cachedData,
-        useCache: false,
+    if (cachedTrack != null) {
+      // 当缓存中的数据存在时，执行断点续传使用策略函数
+      const cacheResult = resume
+        ? 'yes'
+        : await useCache!({ file, track: cachedTrack })
+
+      if (cacheResult == 'cancel') {
+        return
       }
-      this.emit('cacheHit', cacheHitEvent)
-      if (cacheHitEvent.useCache) {
+
+      if (cacheResult == 'yes') {
         // 恢复 file，本地存储（JSON）无法保存 file 引用
-        cachedData.checkpoint.file = file
-        track = cachedData
+        cachedTrack.checkpoint.file = file
+        track = cachedTrack
       }
     }
 
@@ -291,25 +336,29 @@ export default class OssUploader extends EventClass {
   ) {
     const { getToken, maxTryCount, retryTimeout } = this.options
 
-    if (tryCount == 0) {
-      // 发出开始事件，这个是全局的开始
-      this.emit('begin')
-    }
-
-    // 发出将要获取 token 事件
-    this.emit('beforeGetToken')
-    const token = await getToken!()
-    // 发出已经获取 token 事件
-    const afterGetTokenEvent: AfterGetTokenEvent = { file, token }
-    this.emit('afterGetToken', afterGetTokenEvent)
-
-    const client = new OSS(token)
-
-    const { fileName, checkpoint: savedCheckPoint } = track
-
     try {
-      // 获取即将开始上传事件
-      this.emit('aboutToUpload')
+      if (tryCount == 0) {
+        // 发出开始事件，这个是全局的开始
+        this.emit('begin')
+        this.setIsPaused(false)
+      }
+
+      // 发出将要获取 token 事件
+      this.emit('beforeGetToken')
+      const token = await getToken!()
+      // 发出已经获取 token 事件
+      const afterGetTokenEvent: AfterGetTokenEvent = { file, token }
+      this.emit('afterGetToken', afterGetTokenEvent)
+
+      const client = this.client = new OSS(token)
+
+      // 将 file 保存下来，以便 pause 后 resume
+      this.file = file
+
+      const { fileName, checkpoint: savedCheckPoint } = track
+
+      // 发出准备事件（multipartUpload 会进行分片等耗时操作）
+      this.emit('prepare')
       const result = await client.multipartUpload(fileName, file, {
         // 支持从 checkpoint 恢复
         checkpoint: savedCheckPoint,
@@ -336,12 +385,17 @@ export default class OssUploader extends EventClass {
       const doneEvent: DoneEvent = { file, url, result }
       this.emit('done', doneEvent)
 
-      delTrack(item, hash)
-    } catch (exception) {
+      delTrack(hash)
+    } catch (ex) {
+      // 判断是否是取消
+      if (ex && ex.status == 0 && ex.name == 'cancel') {
+        return
+      }
+
       // 发出上传失败 fail 事件
-      const failEvent: FailEvent = { file, exception }
+      const failEvent: FailEvent = { file, exception: ex }
       this.emit('fail', failEvent)
-      devError('[OssUploader] upload fail:', exception)
+      devError('[OssUploader] upload fail:', ex)
 
       // 重试逻辑
       const nextTryCount = tryCount + 1
@@ -375,6 +429,35 @@ export default class OssUploader extends EventClass {
         // 发出结束事件，这个是全局的结束
         this.emit('end')
       }
+    }
+  }
+
+  /**
+   * 暂停上传
+   */
+  public pause() {
+    const client = this.client as any
+    if (client != null) {
+      // cancel 方法未在文档中说明
+      client.cancel()
+      this.setIsPaused(true)
+    }
+  }
+
+  /**
+   * 恢复上传
+   */
+  public resume() {
+    const client = this.client
+    if (client != null) {
+      this.upload(this.file!, { resume: true })
+    }
+  }
+
+  private setIsPaused(value: boolean) {
+    if (value != this.isPausedInner) {
+      this.isPausedInner = value
+      this.emit('isPausedChanged', value)
     }
   }
 }

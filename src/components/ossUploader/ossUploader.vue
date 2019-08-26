@@ -5,17 +5,51 @@
     'oss-uploader-readonly': readonly,
   }">
     <label class="handle" v-if="status == 'none' && !readonly">
-      <slot name="text">
-        <span>上传</span>
+      <input type="file" :accept="accept" class="handle-file" @change="onChange">
+      <slot name="handle">
+        <div class="handle-in flex-mid">
+          <Icon type="ios-cloud-upload" size="38" class="handle-icon"/>
+          <div class="handle-text">上传</div>
+        </div>
       </slot>
-      <input type="file" :accept="accept" @change="onChange">
     </label>
 
-    <slot name="progress" v-if="status != 'none'">
-      <div class="progress">
-        <CircleProgress :percent="percent" :fail="error != ''"/>
-        <TinyLoading class="loading" v-if="status == 'loading'"/>
-        <div class="error" v-if="error">{{error}}</div>
+    <slot
+      name="control"
+      :status="status"
+      :percent="percent"
+      :error="error"
+      :isPaused="isPaused"
+      v-if="status != 'none'"
+    >
+      <div class="control flex-mid">
+        <slot name="loading" :status="status">
+          <div class="loading-wrap flex-mid">
+            <TinyLoading :size="28" v-if="status == 'loading'"/>
+          </div>
+        </slot>
+
+        <slot
+          name="progress"
+          :percent="percent"
+          :error="error"
+        >
+          <CircleProgress :percent="percent" :fail="error != ''" hideZero/>
+          <div class="error" v-if="error">{{error}}</div>
+        </slot>
+
+        <div class="action flex-mid" v-if="status == 'uploading'">
+          <Tooltip content="继续" v-if="isPaused">
+            <Icon type="ios-play" @click="onResume"/>
+          </Tooltip>
+          <Tooltip content="暂停" v-else>
+            <Icon type="ios-pause" @click="onPause"/>
+          </Tooltip>
+        </div>
+
+        <Tooltip :content="fileName" placement="top" class="file-name-tip">
+          <div class="file-name">{{shortName}}</div>
+        </Tooltip>
       </div>
     </slot>
   </div>
@@ -24,19 +58,25 @@
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import OssUploader, { Options } from '@/util/OssUploader'
+import OssUploader, {
+  Options,
+  UseCache,
+  ProgressEvent,
+  DoneEvent,
+  FailEvent,
+} from '@/util/OssUploader'
 import TinyLoading from '@/components/TinyLoading.vue'
 import CircleProgress from '@/components/circleProgress'
 import { slice } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { FileItem } from './types'
+import { wideTruncate } from '@/fn/string'
 
 // 状态，loading 表示加载（文件上传之前要计算分片等），uploading 正在上传，done 完成
 type Status = 'none' | 'loading' | 'uploading' | 'done' | 'fail'
 
 const defaultItem: FileItem = {
   url: '',
-  fileId: '',
   clientName: '',
   clientSize: 0,
   clientType: ''
@@ -85,6 +125,24 @@ export default class OssUpload extends ViewBase {
 
   error = ''
 
+  uploader: OssUploader | null = null
+
+  isPaused = false
+
+  get fileName() {
+    const name = this.model && this.model.clientName || ''
+    return name
+  }
+
+  get shortName() {
+    const name = this.fileName
+    // 取扩展名，一般的扩展名是 3 位，再加上 . 是 4 位，如果太长，最多允许 6 位
+    const ext = name ? name.replace(/^[^.]+/, '') : ''
+    const backCount = Math.max(6, ext.length) / 2
+    const short = wideTruncate(name, 5, backCount)
+    return short
+  }
+
   @Watch('value', { deep: true, immediate: true })
   async watchValue(value: FileItem | string) {
     const item = typeof value === 'string' ? { url: value } : value
@@ -123,50 +181,110 @@ export default class OssUpload extends ViewBase {
       clientType: file.type
     }
 
-    this.status = 'loading'
     this.percent = 0
-    this.error = ''
+    this.status = 'none'
 
-    const uploader = new OssUploader(this.options)
+    const uploader = this.uploader = new OssUploader(this.options)
     uploader.on({
+      begin: () => {
+        this.status = 'loading'
+        this.error = ''
+      },
+      progress: ({ percent }: ProgressEvent) => {
+        this.status = 'uploading'
+        this.percent = percent
+      },
+      done: ({ url }: DoneEvent) => {
+        this.status = 'done'
+        this.model!.url = url
+      },
+      fail: ({ exception }: FailEvent) => {
+        this.status = 'fail'
+        this.error = String(exception)
+      },
+      isPausedChanged: (value: boolean) => {
+        this.isPaused = value
+      }
     })
+    uploader.upload(file)
   }
 
-  // onUploadThumb(uqid: string, { thumb }: any) {
-  //   // TODO: 暂时不用 thumb，chrome 预览图报错
-  // }
+  onResume() {
+    this.uploader!.resume()
+  }
 
-  // onUploadBegin(uqid: string) {
-  //   const item = this.model.find(it => it.uqid === uqid)!
-  //   item.status = 'uploading'
-  // }
-
-  // onUploadProgress(uqid: string, ev: ProgressEvent) {
-  //   const { loaded, total } = ev
-  //   const percent = Math.floor((loaded * 100) / total)
-  //   const item = this.model.find(it => it.uqid === uqid)!
-  //   item.percent = percent
-  // }
-
-  // onUploadDone(uqid: string, { url, fileId }: any) {
-  //   const item = this.model.find(it => it.uqid === uqid)!
-  //   item.url = url
-  //   item.fileId = fileId
-  //   item.status = 'done'
-  // }
-
-  // onUploadFail(uqid: string, ex: any) {
-  //   const error = this.formatError(ex)
-  //   const item = this.model.find(it => it.uqid === uqid)!
-  //   item.error = error
-  //   item.status = 'fail'
-  // }
-
-  // onUploadEnd(uqid: string) {
-  // }
+  onPause() {
+    this.uploader!.pause()
+  }
 }
 </script>
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+
+.oss-uploader {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  border: 1px dashed #ccc;
+  border-radius: 5px;
+}
+
+.oss-uploader-none {
+  &:hover {
+    border-color: @c-button;
+  }
+}
+
+.handle,
+.handle-in,
+.control,
+.loading-wrap,
+.action {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.handle {
+  overflow: hidden;
+}
+
+.handle-file {
+  opacity: 0;
+}
+
+.handle-in {
+  flex-direction: column;
+  cursor: pointer;
+  &:hover {
+    color: @c-button;
+  }
+}
+
+.control {
+  flex-direction: column;
+  /deep/ .circle-progress {
+    width: 88% !important;
+    height: 88% !important;
+  }
+  /deep/ .percent-text {
+    position: relative;
+    top: 28px;
+    color: #888;
+    font-size: 12px;
+  }
+}
+
+.action {
+  font-size: 28px;
+  color: #38b8f2;
+}
+
+.file-name-tip {
+  position: absolute;
+  margin-top: -22px;
+}
 </style>

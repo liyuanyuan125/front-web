@@ -28,6 +28,7 @@ export function isAjaxResult(object: any) {
 
 /** 可取消的事件 */
 export interface CancelableEvent {
+  /** 是否取消 */
   canceled: boolean
 }
 
