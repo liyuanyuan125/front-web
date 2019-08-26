@@ -63,8 +63,12 @@ export async function reportcities(planMonitorId: any) {
 }
 
 
-// 影片搜索接口
+/**
+ * @name 影片搜索接口
+ * @description http://yapi.aiads-dev.com/project/161/interface/api/5114
+ * @description http://yapi.aiads-dev.com/project/161/interface/api/4974
+ */
 export async function searchcinema(query: any) {
-  const res = await get(`/movie/search/xadvert` , query)
+  const res = await get(`/movie/search/` , query)
   return res
 }
