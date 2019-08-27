@@ -24,6 +24,9 @@
 		 <div class='t-title'>
 			<div class='te-l'>投放影片</div>
 		</div>
+    <div class='add-movies-tips'>
+      <p>如不添加影片，则系统会自动查询投放排期内所有播放的影片进行数据计算</p>
+    </div>
 		<Film v-model="numsList" :begin="query.beginDate" :end="query.endDate" @donefilm="timerfilm"/>
 		<div class='t-title'>
 			<div class='te-l'>投放影院</div>
@@ -170,12 +173,13 @@ export default class Main extends ViewBase {
   }
 
   async addform() {
-    if (this.$route.params.id == '0') {
-      if (this.numsList.length == 0) {
-       info('请选择影片')
-       return
-      }
-    }
+    // 去除"影片必选" 20190827 nxd
+    // if (this.$route.params.id == '0') {
+    //   if (this.numsList.length == 0) {
+    //    info('请选择影片')
+    //    return
+    //   }
+    // }
     // if (this.numsList.length > 0) {
       // this.query.deliveryMovies.push(this.numsList)
       this.query.deliveryMovies = (this.numsList || []).map((it: any) => {
@@ -326,7 +330,7 @@ export default class Main extends ViewBase {
   font-weight: 400;
   color: rgba(255, 255, 255, 1);
 }
-/deep/ .btn-center-footer {
+/deep/ .btnCenter {
   text-align: center;
   height: 100px;
   margin: 0 20px 0 20px;
@@ -480,6 +484,10 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-page-item-active:hover a, .ivu-page-item-active a {
   color: #fff;
+}
+.add-movies-tips {
+  padding: 15px 0;
+  color: #ff6e6e;
 }
 </style>
 

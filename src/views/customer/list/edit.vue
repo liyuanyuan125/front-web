@@ -147,6 +147,7 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import '~@/views/account/less/formInput.less';
 .as {
   background: rgba(255, 255, 255, 0);
 }
