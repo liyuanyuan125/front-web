@@ -4,8 +4,14 @@
     [`oss-uploader-${status}`]: true,
     'oss-uploader-readonly': readonly,
   }">
-    <label class="handle" v-if="status == 'none' && !readonly">
-      <input type="file" :accept="accept" class="handle-file" @change="onChange">
+    <label class="handle" v-if="!readonly">
+      <input
+        type="file"
+        :accept="accept"
+        class="handle-file"
+        @change="onChange"
+        ref="file"
+      >
       <slot name="handle">
         <div class="handle-in flex-mid">
           <Icon type="ios-cloud-upload" size="38" class="handle-icon"/>
@@ -34,22 +40,46 @@
           :percent="percent"
           :error="error"
         >
-          <CircleProgress :percent="percent" :fail="error != ''" hideZero/>
-          <div class="error" v-if="error">{{error}}</div>
+          <CircleProgress :percent="percent" :fail="error != ''"/>
+          <MiddleEllipsis class="error" v-if="error">{{error}}</MiddleEllipsis>
         </slot>
 
-        <div class="action flex-mid" v-if="status == 'uploading'">
-          <Tooltip content="继续" v-if="isPaused">
-            <Icon type="ios-play" @click="onResume"/>
-          </Tooltip>
-          <Tooltip content="暂停" v-else>
-            <Icon type="ios-pause" @click="onPause"/>
-          </Tooltip>
+        <div class="action-all">
+          <Icon
+            type="md-close-circle"
+            :title="removeMap[status]"
+            class="action"
+            @click="onRemove"
+          />
         </div>
 
-        <Tooltip :content="fileName" placement="top" class="file-name-tip">
-          <div class="file-name">{{shortName}}</div>
-        </Tooltip>
+        <div class="action-uploading flex-mid" v-if="status == 'uploading'">
+          <Icon
+            type="ios-play"
+            title="继续"
+            class="action"
+            @click="onResume"
+            v-if="isPaused"
+          />
+          <Icon
+            type="ios-pause"
+            title="暂停"
+            class="action"
+            @click="onPause"
+            v-else
+          />
+        </div>
+
+        <div class="action-done flex-mid" v-if="status == 'done'">
+          <Icon
+            type="md-sync"
+            title="更换"
+            class="action"
+            @click="onEdit"
+          />
+        </div>
+
+        <MiddleEllipsis :ratio="64" class="file-name">{{fileName}}</MiddleEllipsis>
       </div>
     </slot>
   </div>
@@ -67,10 +97,12 @@ import OssUploader, {
 } from '@/util/OssUploader'
 import TinyLoading from '@/components/TinyLoading.vue'
 import CircleProgress from '@/components/circleProgress'
+import MiddleEllipsis from '@/components/middleEllipsis'
 import { slice } from '@/fn/object'
 import { isEqual } from 'lodash'
 import { FileItem } from './types'
-import { wideTruncate } from '@/fn/string'
+import { confirm } from '@/ui/modal'
+import { MapType } from '@/util/types'
 
 // 状态，loading 表示加载（文件上传之前要计算分片等），uploading 正在上传，done 完成
 type Status = 'none' | 'loading' | 'uploading' | 'done' | 'fail'
@@ -90,10 +122,18 @@ const hasChange = (aitem: any, bitem: any) => {
   return !isEqual(pureAItem, pureBItem)
 }
 
+const removeMap: MapType = {
+  loading: '取消',
+  uploading: '取消',
+  done: '移除',
+  fail: '移除',
+}
+
 @Component({
   components: {
     TinyLoading,
-    CircleProgress
+    CircleProgress,
+    MiddleEllipsis
   }
 })
 export default class OssUpload extends ViewBase {
@@ -129,18 +169,11 @@ export default class OssUpload extends ViewBase {
 
   isPaused = false
 
+  removeMap = removeMap
+
   get fileName() {
     const name = this.model && this.model.clientName || ''
     return name
-  }
-
-  get shortName() {
-    const name = this.fileName
-    // 取扩展名，一般的扩展名是 3 位，再加上 . 是 4 位，如果太长，最多允许 6 位
-    const ext = name ? name.replace(/^[^.]+/, '') : ''
-    const backCount = Math.max(6, ext.length) / 2
-    const short = wideTruncate(name, 5, backCount)
-    return short
   }
 
   @Watch('value', { deep: true, immediate: true })
@@ -184,7 +217,12 @@ export default class OssUpload extends ViewBase {
     this.percent = 0
     this.status = 'none'
 
-    const uploader = this.uploader = new OssUploader(this.options)
+    const uploader = this.uploader = new OssUploader({
+      ...this.options,
+      monitor: (name, args) => {
+        this.$emit(name, args)
+      }
+    })
     uploader.on({
       begin: () => {
         this.status = 'loading'
@@ -209,12 +247,35 @@ export default class OssUpload extends ViewBase {
     uploader.upload(file)
   }
 
+  reset() {
+    this.status = 'none'
+    this.percent = 0
+    this.error = ''
+    this.uploader = null
+    this.isPaused = false
+  }
+
   onResume() {
     this.uploader!.resume()
   }
 
   onPause() {
     this.uploader!.pause()
+  }
+
+  onEdit() {
+    const file = this.$refs.file as HTMLInputElement
+    file && file.click()
+  }
+
+  async onRemove() {
+    const status = this.status
+    const type = removeMap[status]
+    if (status != 'fail') {
+      await confirm(`确定${type}吗？`)
+    }
+    this.uploader && this.uploader.stop()
+    this.reset()
   }
 }
 </script>
@@ -230,17 +291,12 @@ export default class OssUpload extends ViewBase {
   border-radius: 5px;
 }
 
-.oss-uploader-none {
-  &:hover {
-    border-color: @c-button;
-  }
-}
-
 .handle,
 .handle-in,
 .control,
 .loading-wrap,
-.action {
+.action-uploading,
+.action-done {
   position: absolute;
   left: 0;
   top: 0;
@@ -249,6 +305,7 @@ export default class OssUpload extends ViewBase {
 }
 
 .handle {
+  display: none;
   overflow: hidden;
 }
 
@@ -267,8 +324,8 @@ export default class OssUpload extends ViewBase {
 .control {
   flex-direction: column;
   /deep/ .circle-progress {
-    width: 88% !important;
-    height: 88% !important;
+    width: 88.88% !important;
+    height: 88.88% !important;
   }
   /deep/ .percent-text {
     position: relative;
@@ -279,12 +336,59 @@ export default class OssUpload extends ViewBase {
 }
 
 .action {
+  cursor: pointer;
+  opacity: .8;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.action-all,
+.action-uploading,
+.action-done {
   font-size: 28px;
+}
+
+.action-all {
+  position: absolute;
+  top: -8px;
+  right: 2px;
+  color: #888;
+  z-index: 8;
+}
+
+.action-uploading,
+.action-done {
   color: #38b8f2;
 }
 
-.file-name-tip {
+.file-name {
   position: absolute;
-  margin-top: -22px;
+  max-width: 96px;
+  margin-top: -26px;
+}
+
+.oss-uploader-none {
+  &:hover {
+    border-color: @c-button;
+  }
+  .handle {
+    display: block;
+  }
+}
+
+.oss-uploader-done {
+  /deep/ .ivu-chart-circle-inner {
+    &::before {
+      content: '上传完成';
+      color: #5fb760;
+      position: relative;
+      top: 28px;
+      font-weight: bold;
+    }
+    .icon-done {
+      display: none;
+    }
+  }
 }
 </style>

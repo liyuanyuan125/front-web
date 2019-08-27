@@ -3,7 +3,7 @@
 /// @author zhangpeng
 /// @date 2019-08-21
 
-import EventClass from '@/fn/EventClass'
+import EventClass, { Monitor } from '@/fn/EventClass'
 import deepExtend from 'deep-extend'
 import { CancelableEvent } from '@/util/types'
 import { get } from '@/fn/ajax'
@@ -90,10 +90,10 @@ export interface Options {
   retryTimeout?: number
   /** Track 过期时间，毫秒数 */
   expireTime?: number
-  /**
-   * 断点续传使用策略函数
-   */
+  /** 断点续传使用策略函数 */
   useCache?: UseCache
+  /** 事件监听者，用于事件代理透传 */
+  monitor?: Monitor
 }
 
 const defaultOptions: Options = {
@@ -268,10 +268,14 @@ export default class OssUploader extends EventClass {
 
   private file: File | null = null
 
-  private isPausedInner: boolean = false
+  private hash: string | null = null
+
+  private isPausedInner = false
+
+  private hasBegin = false
 
   public constructor(options = {} as Options) {
-    super()
+    super({ monitor: options.monitor })
     this.options = deepExtend({}, defaultOptions, options)
   }
 
@@ -325,7 +329,53 @@ export default class OssUploader extends EventClass {
     })
   }
 
-  async uploadWork(
+  /**
+   * 暂停上传
+   */
+  public pause() {
+    const client = this.client as any
+    if (client != null && !this.isPaused) {
+      // cancel 方法未在文档中说明
+      client.cancel()
+      this.setIsPaused(true)
+    }
+  }
+
+  /**
+   * 恢复上传
+   */
+  public resume() {
+    if (this.isPaused) {
+      this.upload(this.file!, { resume: true })
+    }
+  }
+
+  /**
+   * 停止或中断上传，多次调用无副作用
+   */
+  public stop() {
+    this.pause()
+    this.end()
+    this.clean()
+  }
+
+  private clean() {
+    if (this.hash) {
+      delTrack(this.hash)
+      this.hash = null
+      this.file = null
+    }
+  }
+
+  private end() {
+    if (this.hasBegin) {
+      this.hasBegin = false
+      // 发出结束事件，这个是全局的结束
+      this.emit('end')
+    }
+  }
+
+  private async uploadWork(
     file: File,
     {
       tryCount = 0,
@@ -341,6 +391,10 @@ export default class OssUploader extends EventClass {
         // 发出开始事件，这个是全局的开始
         this.emit('begin')
         this.setIsPaused(false)
+        this.hasBegin = true
+        // 将 file 保存下来，以便 pause 后 resume
+        this.file = file
+        this.hash = hash
       }
 
       // 发出将要获取 token 事件
@@ -351,9 +405,6 @@ export default class OssUploader extends EventClass {
       this.emit('afterGetToken', afterGetTokenEvent)
 
       const client = this.client = new OSS(token)
-
-      // 将 file 保存下来，以便 pause 后 resume
-      this.file = file
 
       const { fileName, checkpoint: savedCheckPoint } = track
 
@@ -385,7 +436,7 @@ export default class OssUploader extends EventClass {
       const doneEvent: DoneEvent = { file, url, result }
       this.emit('done', doneEvent)
 
-      delTrack(hash)
+      this.clean()
     } catch (ex) {
       // 判断是否是取消
       if (ex && ex.status == 0 && ex.name == 'cancel') {
@@ -410,9 +461,7 @@ export default class OssUploader extends EventClass {
         }
         this.emit('beforeRetry', beforeRetryEvent)
         if (beforeRetryEvent.canceled) {
-          // 发出结束事件，这个是全局的结束
-          this.emit('end')
-          return
+          return this.end()
         }
 
         setTimeout(() => {
@@ -426,31 +475,8 @@ export default class OssUploader extends EventClass {
           })
         }, retryTimeout)
       } else {
-        // 发出结束事件，这个是全局的结束
-        this.emit('end')
+        this.end()
       }
-    }
-  }
-
-  /**
-   * 暂停上传
-   */
-  public pause() {
-    const client = this.client as any
-    if (client != null) {
-      // cancel 方法未在文档中说明
-      client.cancel()
-      this.setIsPaused(true)
-    }
-  }
-
-  /**
-   * 恢复上传
-   */
-  public resume() {
-    const client = this.client
-    if (client != null) {
-      this.upload(this.file!, { resume: true })
     }
   }
 
