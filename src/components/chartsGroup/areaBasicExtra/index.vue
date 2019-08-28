@@ -231,11 +231,11 @@ export default class AreaBasicExtra extends ViewBase {
       option.yAxis.min = 0
       option.yAxis.max = 10
     }
-    option.tooltip.formatter = this.title + ` {c}`
+    option.tooltip.formatter = '{b} <br> ' + this.title + '<br> {c}'
     let _title = ''
     if (this.title === '') {
       _title = this.dict1[this.currentTypeIndex].text
-      option.tooltip.formatter = _title + ` {c}`
+      option.tooltip.formatter = '{b} <br> ' + _title + '<br> {c}'
     }
     option.tooltip.backgroundColor = this.color[this.currentIndex]
     // console.save(option, `${new Date()}.json`)
