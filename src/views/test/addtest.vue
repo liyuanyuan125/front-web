@@ -487,7 +487,7 @@ export default class Main extends ViewBase {
 }
 .add-movies-tips {
   padding: 15px 0;
-  color: #ff6e6e;
+  color: #00202d;
 }
 </style>
 
