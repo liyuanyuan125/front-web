@@ -1,12 +1,12 @@
 <template>
   <div class="page">
-    <OssUploader
+    <VideoUploader
       v-model="imageUrl"
       @begin="onBegin"
       @progress="onProgress"
       @isPausedChanged="onIsPausedChanged"
     >
-    </OssUploader>
+    </VideoUploader>
 
     <p>按时发送发放322323是非得失：<MiddleEllipsis class="shi">春眠不觉晓处处蚊子咬夜来风雨声花落知多少</MiddleEllipsis>是对方是否</p>
 
@@ -71,6 +71,7 @@ import { get } from '@/fn/ajax'
 import { devLog } from '@/util/dev'
 import { dot } from '@/util/dealData'
 import OssUploader from '@/components/ossUploader'
+import VideoUploader from '@/components/videoUploader'
 import UploadLabel from '@/components/uploadLabel'
 import UploadButton from '@/components/UploadButton.vue'
 import triple from '@/ui/triple'
@@ -84,6 +85,7 @@ import MiddleEllipsis from '@/components/middleEllipsis'
     ECharts,
     KeepSelectTable,
     OssUploader,
+    VideoUploader,
     UploadLabel,
     UploadButton,
     MiddleEllipsis
