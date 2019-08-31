@@ -4,6 +4,8 @@
     [`oss-uploader-${status}`]: true,
     'oss-uploader-readonly': readonly,
   }">
+    <slot name="under"></slot>
+
     <label class="handle" v-if="!readonly">
       <input
         type="file"
@@ -88,7 +90,7 @@
 <script lang="ts">
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import OssUploader, {
+import OssUploaderClass, {
   Options,
   UseCache,
   ProgressEvent,
@@ -136,7 +138,7 @@ const removeMap: MapType = {
     MiddleEllipsis
   }
 })
-export default class OssUpload extends ViewBase {
+export default class OssUploader extends ViewBase {
   /**
    * 值本身，可以使用 v-model 进行双向绑定
    */
@@ -165,7 +167,7 @@ export default class OssUpload extends ViewBase {
 
   error = ''
 
-  uploader: OssUploader | null = null
+  uploader: OssUploaderClass | null = null
 
   isPaused = false
 
@@ -174,25 +176,6 @@ export default class OssUpload extends ViewBase {
   get fileName() {
     const name = this.model && this.model.clientName || ''
     return name
-  }
-
-  @Watch('value', { deep: true, immediate: true })
-  async watchValue(value: FileItem | string) {
-    const item = typeof value === 'string' ? { url: value } : value
-    if (hasChange(item, this.model)) {
-      this.model = {
-        ...defaultItem,
-        ...item
-      } as FileItem
-    }
-  }
-
-  @Watch('model', { deep: true })
-  watchModel(value: FileItem) {
-    if (hasChange(value, this.value)) {
-      const nude = toFileItem(value)
-      this.$emit('input', nude)
-    }
   }
 
   onChange(ev: Event) {
@@ -217,7 +200,7 @@ export default class OssUpload extends ViewBase {
     this.percent = 0
     this.status = 'none'
 
-    const uploader = this.uploader = new OssUploader({
+    const uploader = this.uploader = new OssUploaderClass({
       ...this.options,
       monitor: (name, args) => {
         this.$emit(name, args)
@@ -276,6 +259,30 @@ export default class OssUpload extends ViewBase {
     }
     this.uploader && this.uploader.stop()
     this.reset()
+  }
+
+  @Watch('value', { deep: true, immediate: true })
+  async watchValue(value: FileItem | string) {
+    const item = typeof value === 'string' ? { url: value } : value
+    if (hasChange(item, this.model)) {
+      this.model = {
+        ...defaultItem,
+        ...item
+      } as FileItem
+    }
+  }
+
+  @Watch('model', { deep: true })
+  watchModel(value: FileItem) {
+    if (hasChange(value, this.value)) {
+      const nude = toFileItem(value)
+      this.$emit('input', nude)
+    }
+  }
+
+  @Watch('status')
+  watchStatus(value: string) {
+    this.$emit('statusChange', value)
   }
 }
 </script>
