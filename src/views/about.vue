@@ -1,7 +1,20 @@
 <template>
   <div class="page">
-    <OssUploader v-model="imageUrl">
+    <OssUploader
+      v-model="imageUrl"
+      @begin="onBegin"
+      @progress="onProgress"
+      @isPausedChanged="onIsPausedChanged"
+    >
     </OssUploader>
+
+    <p>按时发送发放322323是非得失：<MiddleEllipsis class="shi">春眠不觉晓处处蚊子咬夜来风雨声花落知多少</MiddleEllipsis>是对方是否</p>
+
+    <div><MiddleEllipsis class="shi">{{text}}</MiddleEllipsis></div>
+
+    <div>
+      <Button @click="changeText">改变文字</Button>
+    </div>
 
     <!-- <UploadLabel useCircle/>
 
@@ -61,6 +74,7 @@ import OssUploader from '@/components/ossUploader'
 import UploadLabel from '@/components/uploadLabel'
 import UploadButton from '@/components/UploadButton.vue'
 import triple from '@/ui/triple'
+import MiddleEllipsis from '@/components/middleEllipsis'
 
 @Component({
   components: {
@@ -71,7 +85,8 @@ import triple from '@/ui/triple'
     KeepSelectTable,
     OssUploader,
     UploadLabel,
-    UploadButton
+    UploadButton,
+    MiddleEllipsis
   }
 })
 export default class AboutPage extends ViewBase {
@@ -80,6 +95,27 @@ export default class AboutPage extends ViewBase {
   imageUrl = ''
 
   tripleShow = false
+
+  text = '春眠不觉晓'
+
+  n = 1
+
+  onBegin(ev: any) {
+    devLog('=> onBegin', ev)
+  }
+
+  onProgress(ev: any) {
+    devLog('=> onProgress', ev)
+  }
+
+  onIsPausedChanged(ev: any) {
+    devLog('=> onIsPausedChanged', ev)
+  }
+
+  changeText() {
+    this.text = this.n % 2 ? '春眠不觉晓处处蚊子咬夜来风雨声花落知多少' : '出门水电费'
+    this.n++
+  }
 
   // async onUpload(ev: Event) {
   //   const input = ev.target as HTMLInputElement
@@ -184,5 +220,9 @@ export default class AboutPage extends ViewBase {
     height: 100%;
     opacity: 0;
   }
+}
+
+.shi {
+  max-width: 168px;
 }
 </style>
