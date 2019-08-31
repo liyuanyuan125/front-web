@@ -35,7 +35,7 @@
       <div class="spin-show-parent">
         <div class="demo-spin-article">
           <ul class='itemul' >
-            <li v-for='(it,index) in itemlist' :key='index'>
+            <li v-for='(it,index) in itemlist' :key='index' :class="{advert: it.advertType == 'TRAILER'}">
               <div class="table-header-title  flex-box">
                 <p><label>投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
                 <p>
@@ -63,6 +63,7 @@
                     <!-- <em><label>目标影厅</label><em>{{it.hallsCount || '暂无'}}</em></p> -->
                   </div>
                   <div class="flex-box col-order">
+                    <p ><label>广告位置</label><em>[{{it.deliveryPositionCode || '--'}}]</em></p>
                     <!-- <em><label>投放周期</label><em>{{it.cycle || 0}}天</em></p> -->
                     
                   </div>
@@ -450,6 +451,10 @@ export default class Main extends ViewBase {
           color: rgba(68, 68, 68, 1);
         }
       }
+    }
+    &.advert {
+      background: url('~@/assets/icon/prevue.png') no-repeat left top;
+      background-size: 35px auto;
     }
   }
 }

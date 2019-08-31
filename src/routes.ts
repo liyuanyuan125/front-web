@@ -298,7 +298,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   // 广告主、资源方 - 账户管理 - 账号信息（2.1账号信息改为公司信息）
   {
     path: '/account/company',
-    name: 'account-info',
+    name: 'account-company',
     component: () => import('./views/account/company/index.vue'),
     meta: {
       authKey: 'account-manage.info',

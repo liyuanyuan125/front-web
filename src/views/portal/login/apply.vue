@@ -2,7 +2,7 @@
   <loginLayout>
       <div class="main-wrap ">
           <div class="tablist">
-            <p class="systerm">申请加入</p>
+            <p class="systerm">平台留言</p>
           </div>
           <Form :model="form" :rules="rules" ref="form"
             @submit.native.prevent="submit" novalidate>

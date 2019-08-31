@@ -67,10 +67,10 @@
   font-size: 17px;
   color: #fff;
   text-align: center;
-  border: none;
   border: solid 1px #5587ff;
   &:hover {
     background: #4561d7;
+    border: solid 1px #5587ff;
   }
 }
 
@@ -89,6 +89,61 @@
   color: #ff6259;
 }
 
+
+// 选择登录弹框
+.comDlg {
+  color: #00202d;
+  /deep/ .ivu-radio {
+    display: none;
+  }
+  .title {
+    font-size: 32px;
+    font-weight: normal;
+  }
+  .check-way {
+    display: flex;
+    justify-content: space-between;
+  }
+  .check-type {
+    display: block;
+    width: 120px;
+    height: 150px;
+    background-size: 120px 120px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    .check-name {
+      text-align: center;
+      font-size: 14px;
+      padding-top: 148px;
+    }
+  }
+  .ads {
+    background-image: url('./assets/abs.png');
+    &.checked {
+      background-image: url('./assets/abs-check.png');
+    }
+  }
+  .resource {
+    background-image: url('./assets/cinema.png');
+    &.checked {
+      background-image: url('./assets/cinema-check.png');
+    }
+  }
+  .producer {
+    background-image: url('./assets/producer.png');
+    &.checked {
+      background-image: url('./assets/producer-check.png')
+    }
+  }
+  .regAgency {
+    background-image: url('./assets/regAgency.png');
+    &.checked {
+      background-image: url('./assets/regAgency-check.png')
+    }
+  }
+}
+
+// input 自动填入样式修改
 @keyframes autofill {
   to {
     color: #fff;
@@ -104,9 +159,14 @@
   }
 }
 
+// 优化滚动条
 /deep/ input:-webkit-autofill {
   -webkit-animation-name: autofill;
   animation-name: autofill;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
+}
+// form error message
+/deep/ .ivu-form-item-error-tip{
+  padding-top: 4px;
 }

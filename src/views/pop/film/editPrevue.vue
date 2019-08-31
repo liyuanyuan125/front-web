@@ -36,7 +36,7 @@
         </FormItem>
 
         <FormItem label="是否已转制">
-          <RadioGroup v-model="form.isConversion">
+          <RadioGroup v-model="form.translated">
             <Radio label="1">否，未转制</Radio>
             <Radio label="2">是，已转制</Radio>
         </RadioGroup>

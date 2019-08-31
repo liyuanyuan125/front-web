@@ -33,7 +33,7 @@
       <div class="spin-show">
         <ul class="ul-list demo-spin-article">
           <!-- 当广告片列表类型为 电影预告片 展示active class -->
-          <li v-for="item in tableDate " :key="item.id" :class="{active: item.types == 'prevue'}">
+          <li v-for="item in tableDate " :key="item.id" :class="{active: item.videoType == 1}">
             <div class="flex-box inner">
               <div class="left-item"  @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">
                 <img v-if="item.logo" :src="item.logo" class="img" />
@@ -52,8 +52,9 @@
                     <Tooltip content="转码中"><img v-if="item.status == 3"  src="../assets/transing-icon.png" class="img-wid" /></Tooltip>
                     
                     <!-- 判断广告片类型 跳到对应的预告片和商业片 -->
-                    <Tooltip content="点击编辑"><img v-if="item.status == 1 || item.status == 5" src="../assets/edit-icon.png" 
-                    @click="$router.push({name: 'pop-film-edit', params: {id: item.id}})" class="img-wid" /></Tooltip>
+                    <Tooltip content="点击编辑">
+                      <img v-if="item.status == 1 || item.status == 5" src="../assets/edit-icon.png" @click="handleEdit(item)" class="img-wid" />
+                    </Tooltip>
 
                     <Tooltip content="点击删除"><img src="../assets/del-icon.png" v-if="item.status != 3"  @click="deleteList(item.id)" class="img-wid" /></Tooltip>
                   </div>
@@ -109,6 +110,7 @@ export default class Main extends ViewBase {
   mounted() {
     this.tableList()
   }
+
   async tableList() {
     this.spinShow = true
     const query = this.query
@@ -128,6 +130,14 @@ export default class Main extends ViewBase {
     } catch (ex) {
       this.spinShow = false
       this.handleError(ex)
+    }
+  }
+
+  handleEdit(item: any) {
+    if (item.videoType == 1) {
+      this.$router.push({name: 'pop-film-editprevue', params: {id: item.id}})
+    } else {
+      this.$router.push({name: 'pop-film-edit', params: {id: item.id}})
     }
   }
 

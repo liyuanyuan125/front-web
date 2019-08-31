@@ -46,17 +46,30 @@
             </router-link>
           </Col>
         </Row>
-        <Button type="primary" html-type="submit" class="submit" long :disabled="submitDisabled">账号登录</Button>
-        <div class="to-apply">还没有账户？
-          <router-link :to="{name: 'apply'}">申请加入</router-link>
+        <Button type="primary" html-type="submit" class="submit" long >账号登录</Button>
+        <div class="to-register-apply">
+          <router-link :to="{name: 'apply'}">给平台留言</router-link>
+          <router-link :to="{name: 'register'}">立即注册</router-link>
         </div>
       </Form>
+
+      <!-- 选择登录方式 -->
+      <Modal v-model="visLogin" width="700px" class="comDlg" :key="keyRandom">
+        <h2 class="title">选择登录方式</h2>
+        <RadioGroup v-model="form.systemCode" class="check-way">
+           <Radio v-for="(item, index) in systems" :key="index" :label="item.code" 
+           class="check-type" :class="[item.code ? item.code : null, {checked: form.systemCode == item.code}]">
+              <div class="check-name">{{item.name}}</div>
+            </Radio>
+        </RadioGroup>
+     </Modal>
+
     </div>
   </loginLayout>
 </template>
 
 <script lang='ts'>
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { login, LoginData } from '@/api/auth'
 import setUserByData from '@/util/setUserByData'
@@ -64,6 +77,7 @@ import { getCaptchaImage } from '@/api/captcha'
 import loginLayout from './loginLayout.vue'
 import { decodeRoute } from '@/util/base64Route'
 import { info } from '@/ui/modal'
+import { random } from '@/fn/string'
 
 @Component({
   components: {
@@ -71,8 +85,14 @@ import { info } from '@/ui/modal'
   }
 })
 export default class Main extends ViewBase {
+
+  visLogin = false
+  systems: any[] = []
+
+  keyRandom = ''
+
   form: LoginData = {
-    systemCode: 'ads',
+    systemCode: '',
     email: '',
     password: '',
     captchaId: '',
@@ -86,12 +106,9 @@ export default class Main extends ViewBase {
   captchaImg = ''
   captchaCodeError = ''
 
-  submitDisabled = false
-
   rules = {
     email: [
       { required: true, message: '请输入你的账号', trigger: 'blur' },
-      // { type: 'email', message: '账号格式有误', trigger: 'blur' }
     ],
     password: [
       { required: true, message: '请输入你的密码', trigger: 'blur' },
@@ -125,12 +142,37 @@ export default class Main extends ViewBase {
     if (!valid) {
       return
     }
+    // 假如是一种身份直接登录(如果是区域代理身份则弹框禁止登录)
+    // 多种身份弹框选择
+    try {
+      this.systems = [
+        {code: 'ads', secondaryCode: 'daili', status: 1, name: '广告主'},
+        {code: 'resource', secondaryCode: 'agent', status: 1, name: '资源方'},
+        {code: 'producer', secondaryCode: 'agent', status: 1, name: '片商'},
+      ]
 
+      if (this.systems.length == 1) {
+        if (this.systems[0].code == 'regAgency') { // 区域代理
+         await info('很抱歉，此类客户相关功能仍未开放，敬请期待', {
+            title: '您的身份为：区域推广代理',
+            okText: '我知道了'
+         })
+         this.$router.push({name: 'login'})
+        } else {
+          this.form.systemCode = this.systems[0].code
+        }
+      } else {
+        this.visLogin = true
+      }
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
+
+  async handleSubmit() {
     this.emailError = ''
     this.passwordError = ''
     this.captchaCodeError = ''
-
-    this.submitDisabled = true
 
     try {
       const postData = { ...this.form }
@@ -146,8 +188,7 @@ export default class Main extends ViewBase {
     } catch (ex) {
       ((this as any)[`onLogin${ex.code}`] || this.handleError).call(this, ex)
       this.resetCaptcha()
-    } finally {
-      this.submitDisabled = false
+      this.keyRandom = random()
     }
   }
 
@@ -168,16 +209,22 @@ export default class Main extends ViewBase {
   onLogin10006() {
     this.captchaCodeError = '验证码错误'
   }
+
+  @Watch('form.systemCode')
+  watchSystemCode() {
+    this.handleSubmit()
+    this.visLogin = false
+  }
 }
 </script>
 
 <style lang='less' scoped>
 @import '~@/site/lib.less';
 @import '~@/assets/iconFont/iconfont.css';
+@import '~@/views/account/information/common.less';
 @import './common.less';
-
 .main-wrap {
-  padding-bottom: 60px;
+  padding-bottom: 50px;
   .login-etc {
     font-size: 15px;
     color: #fff;
@@ -214,7 +261,14 @@ export default class Main extends ViewBase {
     left: 6px;
   }
 }
-
+.to-register-apply {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  a {
+    color: #fff;
+  }
+}
 @media screen and(max-height: 600px) {
   .main-wrap {
     position: absolute;

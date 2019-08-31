@@ -3,7 +3,7 @@
     <div @click="onView">
       <slot>变更邮箱</slot>
     </div>
-    <Modal v-model="visible" width="445px">
+    <Modal v-model="visible" width="445px" class="comDlg">
         <h2 class="title">变更邮箱</h2>
         <Form :model="form" :rules="rule" ref="form">
           <FormItem prop="email" :error="errorEmail">
@@ -101,55 +101,4 @@ export default class Main extends ViewBase {
 </script>
 <style lang='less' scoped>
 @import './common.less';
-
-.title {
-  text-align: center;
-  font-size: 16px;
-  color: #00202d;
-  padding: 30px 0;
-}
-/deep/ .ivu-modal-body {
-  padding: 0 40px  70px;
-}
-/deep/ .ivu-modal-footer {
-  display: none;
-}
-/deep/ .ivu-input {
-  height: 40px;
-  font-size: 14px;
-  border-radius: 5px;
-  outline: none;
-}
-/deep/ .form-item-getcode {
-  .ivu-form-item-content {
-    display: flex;
-    justify-content: space-between;
-  }
-}
-.input-captcha {
-  width: 230px;
-}
-.get-code {
-  width: 119px;
-  height: 40px;
-  background: #3398db;
-  border-radius: 5px;
-  color: #fff;
-}
-.footer-btn {
-  width: 200px;
-  height: 50px;
-  background: rgba(0, 32, 45, 1);
-  border-radius: 25px;
-  color: #fff;
-  border: 0;
-  margin-top: 50px;
-  &:hover {
-    background: rgba(0, 32, 45, 1);
-    color: #fff;
-  }
-}
-.footer {
-  text-align: center;
-}
 </style>

@@ -3,7 +3,7 @@
     <div class="main-wrap">
 
       <div class="tablist">
-        <p class="systerm">注册</p>
+        <!-- <p class="systerm">注册</p> -->
         <h4 class="tabs" v-if="!registerNext || form.systems == 'person'">
           <span :class="{active: form.systems == 'company'}" @click="handleCompany">我是企业</span>
           <span :class="{active: form.systems == 'person'}" @click="handlePerson">我是个人</span>
@@ -14,7 +14,7 @@
         </h5>
       </div>
 
-      <Form :model="form" :rules="rules" class="form"  ref="form" v-if="!registerNext">
+      <Form :model="form" :rules="rules" class="form"  ref="form" v-if="!registerNext" :key="keyRandom">
         <FormItem prop="companyName" :error="companyError">
           <Input type="text" v-model="form.companyName" placeholder="请输入公司名称" />
         </FormItem>
@@ -36,7 +36,7 @@
         <Button type="primary" long class="submit" @click="submitNext" >下一步</Button>
       </Form>
 
-      <Form :model="subForm" :rules="subRules" class="form"  ref="subForm" v-if="registerNext">
+      <Form :model="subForm" :rules="subRules" class="form"  ref="subForm" v-if="registerNext" :key="keyRandom">
         <DisableAutoFill />
         <FormItem prop="name">
           <Input  v-model="subForm.name" placeholder="请输入姓名" />
@@ -58,11 +58,16 @@
             placeholder="请再次输入密码"/>
         </FormItem>
 
-         <FormItem v-if="form.systems == 'person'">
-          <Input v-model="subForm.referrerMobile" :maxlength="11" placeholder="推荐人手机号（选填）"/>
+         <FormItem v-if="form.systems == 'person'" class="check-ready">
+          <Input v-model="subForm.referrerMobile" :maxlength="11" placeholder="推荐人手机号(选填）"/>
         </FormItem>
 
+        <FormItem class="check-ready agreement" prop="agreement" >
+          <Checkbox v-model="subForm.agreement">已阅读并同意</Checkbox>
+          <agreementDlg>《鲸娱数据-广告主合作协议》</agreementDlg>
+        </FormItem>
          <Button type="primary"  long class="submit" @click="submit">提交申请</Button>
+         <!--  :disabled="submitDisabled" -->
       </Form>
 
 
@@ -76,27 +81,33 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { countDown } from '@/fn/timer'
 import { validateEmail, validatePassword, validataTel } from '@/util/validateRules'
-import { sendRegisterEmail, register } from '@/api/register'
+import { sendRegisterEmail, register, tradeList } from '@/api/register'
 import AreaSelect from '@/components/areaSelect'
 import Upload, { FileItem } from '@/components/upload'
 import { except } from '@/fn/object'
 import { scrollToError } from '@/util/form'
+import { random } from '@/fn/string'
 import DisableAutoFill from '@/components/DisableAutoFill.vue'
 import setUserByData from '@/util/setUserByData'
 import registerLayout from './login/loginLayout.vue'
+import agreementDlg from './register/agreement.vue'
 
 @Component({
   components: {
     AreaSelect,
     registerLayout,
     Upload,
-    DisableAutoFill
+    DisableAutoFill,
+    agreementDlg
   }
 })
 export default class Main extends ViewBase {
   placeholder = '请选择公司地址'
   codeDisabled = false
   codeMsg = '获取验证码'
+
+  keyRandom = ''
+  agreement = false
 
   imageList: any[] = []
 
@@ -105,6 +116,8 @@ export default class Main extends ViewBase {
   companyError = ''
 
   registerNext = false
+
+  submitDisabled = true
 
   form: any = {
     systems: 'company',
@@ -199,6 +212,7 @@ export default class Main extends ViewBase {
           }
         }
       ],
+      agreement: [{ required: true, type: 'boolean', message: '请勾选鲸娱协议', trigger: 'blur' }]
     }
   }
 
@@ -207,38 +221,45 @@ export default class Main extends ViewBase {
     return !!failMsg
   }
 
+  async mounted() {
+    const list = await tradeList()
+  }
+
   handleCompany() {
     this.form.systems = 'company'
     this.registerNext = false
+    this.keyRandom = random()
   }
 
   handlePerson() {
     this.form.systems = 'person'
     this.registerNext = true
+    // (this.$refs.subForm as any).resetFields();
+    this.keyRandom = random()
   }
 
   nextBack() {
-    this.registerNext = false;
-    (this.$refs.subForm as any).resetFields()
+    this.registerNext = false
+    this.keyRandom = random()
     this.form.area = [this.form.provinceId, this.form.cityId]
   }
 
   async getCode() {
     this.codeDisabled = true
 
-    // try {
-    //   await sendRegisterEmail(this.subForm.mobile)
+    try {
+      await sendRegisterEmail(this.subForm.mobile)
 
-    //   await countDown(60, sec => {
-    //     this.codeMsg = sec + 's'
-    //   })
+      await countDown(60, sec => {
+        this.codeMsg = sec + 's'
+      })
 
-    //   this.codeMsg = '重新获取验证码'
-    // } catch (ex) {
-    //   ((this as any)[`onGetCode${ex.code}`] || this.handleError).call(this, ex)
-    // } finally {
-    //   this.codeDisabled = false
-    // }
+      this.codeMsg = '重新获取验证码'
+    } catch (ex) {
+      ((this as any)[`onGetCode${ex.code}`] || this.handleError).call(this, ex)
+    } finally {
+      this.codeDisabled = false
+    }
   }
 
   async submitNext() {
@@ -252,7 +273,16 @@ export default class Main extends ViewBase {
     const form = this.$refs.subForm as any
     const valid = await form.validate()
     if (!valid) { return}
-    // this.submitDisabled = true
+
+    // 个人和企业提交的参数
+    if (this.form.systems == 'company') {
+      const formCompany = {
+        ...this.form,
+        ...this.subForm
+      }
+    } else if (this.form.systems == 'person') {
+    }
+
 
     // try {
     //   const postData: any = except(this.form, 'passwordAgain,area')
@@ -266,24 +296,22 @@ export default class Main extends ViewBase {
     //   this.$router.push({ name: 'register-complete' })
     // } catch (ex) {
     //   ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
-    // } finally {
-    //   this.submitDisabled = false
-    // }
   }
 
-  onSubmit8007303() {
-    this.captchaError = '验证码错误'
-  }
+  // onSubmit8007303() {
+  //   this.captchaError = '验证码错误'
+  // }
 
-  onSubmit9006305() {
-    this.companyError = '公司名称已被使用'
-  }
+  // onSubmit9006305() {
+  //   this.companyError = '公司名称已被使用'
+  // }
 
   @Watch('form.area', { deep: true })
   watchArea(val: number[]) {
     this.form.provinceId = val[0]
     this.form.cityId = val[1]
   }
+
 }
 </script>
 
@@ -370,8 +398,26 @@ export default class Main extends ViewBase {
 .to-apply {
   padding-top: 18px;
 }
-
-// 兼容小于 900
+.check-ready {
+  color: #fff;
+  margin-bottom: 18px;
+  /deep/ .ivu-form-item-content {
+    line-height: 25px;
+    display: flex;
+  }
+}
+/deep/ .ivu-checkbox-inner {
+  border: none;
+  outline: none;
+  background-color: rgba(16, 23, 44, 0.6);
+  width: 19px;
+  height: 19px;
+  &::after {
+    width: 6px;
+    height: 12px;
+    left: 6px;
+  }
+}
 
 // 兼容小于 600
 @media screen and(max-height: 800px) {
