@@ -1,7 +1,7 @@
 <template>
   <div class="film-page">
     <div class="page-title-btn">
-      <!-- 用户公司类型包含片商 增加新建电影预告片 -->
+      <!-- 用户公司类型包含片商 增加新建电影预告片按钮 -->
       <Button type="primary" :to="{name: 'pop-film-editprevue'}" class="btn-add-line"
         v-auth="'promotion.ad-video#create'">新建电影预告片
       </Button>
@@ -52,8 +52,9 @@
                     <Tooltip content="转码中"><img v-if="item.status == 3"  src="../assets/transing-icon.png" class="img-wid" /></Tooltip>
                     
                     <!-- 判断广告片类型 跳到对应的预告片和商业片 -->
-                    <Tooltip content="点击编辑">
-                      <img v-if="item.status == 1 || item.status == 5" src="../assets/edit-icon.png" @click="handleEdit(item)" class="img-wid" />
+                    <Tooltip content="点击编辑" v-if="item.status == 1 || item.status == 5">
+                      <img v-if="item.videoType == 1" src="../assets/edit-icon.png" @click="$router.push({name: 'pop-film-editprevue', params: {id: item.id}})" class="img-wid" />
+                      <img v-else src="../assets/edit-icon.png" @click="$router.push({name: 'pop-film-edit', params: {id: item.id}})" class="img-wid" />
                     </Tooltip>
 
                     <Tooltip content="点击删除"><img src="../assets/del-icon.png" v-if="item.status != 3"  @click="deleteList(item.id)" class="img-wid" /></Tooltip>
@@ -133,14 +134,6 @@ export default class Main extends ViewBase {
     }
   }
 
-  handleEdit(item: any) {
-    if (item.videoType == 1) {
-      this.$router.push({name: 'pop-film-editprevue', params: {id: item.id}})
-    } else {
-      this.$router.push({name: 'pop-film-edit', params: {id: item.id}})
-    }
-  }
-
   transformSpecif(val: any) {
     const num = val % 60 == 0 ? '00' : val % 60
     return val < 60 ? `00:${val}` : `${Math.floor(val / 60)} : ${num}`
@@ -213,7 +206,7 @@ export default class Main extends ViewBase {
     width: 33.3%;
     padding: 0 15px;
     margin-top: 30px;
-    &:active {
+    &.active {
       background: url('./assets/prevue.png') no-repeat 15px top;
       background-size: 35px auto;
     }
