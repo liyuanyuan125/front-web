@@ -3,12 +3,11 @@
     <div class="main-wrap">
 
       <div class="tablist">
-        <!-- <p class="systerm">注册</p> -->
-        <h4 class="tabs" v-if="!registerNext || form.systems == 'person'">
-          <span :class="{active: form.systems == 'company'}" @click="handleCompany">我是企业</span>
-          <span :class="{active: form.systems == 'person'}" @click="handlePerson">我是个人</span>
+        <h4 class="tabs" v-if="!registerNext || form.companyType == 2">
+          <span :class="{active: form.companyType == 1}" @click="handleCompany">我是企业</span>
+          <span :class="{active: form.companyType == 2}" @click="handlePerson">我是个人</span>
         </h4>
-        <h5 class="go-back" v-if="registerNext && form.systems == 'company'">
+        <h5 class="go-back" v-if="registerNext && form.companyType == 1">
           <span>设置账号</span>
           <span @click="nextBack">返回上一步</span>
         </h5>
@@ -18,17 +17,19 @@
         <FormItem prop="companyName" :error="companyError">
           <Input type="text" v-model="form.companyName" placeholder="请输入公司名称" />
         </FormItem>
-        <FormItem prop="companyTrade">
-          <Input type="text" v-model="form.companyTrade" placeholder="请选择所属行业" />
+        <FormItem prop="businessParentCode">
+          <Select v-model="form.businessParentCode" clearable placeholder="请选择所属行业">
+            <Option v-for=" item in tradeList" :key="item.id" :value="item.code">{{item.name}}</Option>
+          </Select>
         </FormItem>
          <FormItem prop="area" >
             <AreaSelect v-model="form.area" ref="areas"  :max-level="2" no-self :placeholder="placeholder" />
          </FormItem>
          <FormItem>
-          <Input v-model="form.referrerMobile" :maxlength="11" placeholder="推荐人手机号（选填）"/>
+          <Input v-model="form.recommendTel" :maxlength="11" placeholder="推荐人手机号（选填）"/>
         </FormItem>
-        <FormItem prop="images">
-           <Upload v-model="form.images" :max-count="4" multiple accept="images/*"
+        <FormItem prop="qualificationImageList">
+           <Upload v-model="form.qualificationImageList" :max-count="4" multiple accept="images/*"
               confirm-on-del>
             </Upload>
            <span class="upload-tip">上传营业执照</span>
@@ -58,7 +59,7 @@
             placeholder="请再次输入密码"/>
         </FormItem>
 
-         <FormItem v-if="form.systems == 'person'" class="check-ready">
+         <FormItem v-if="form.companyType == 2" class="check-ready">
           <Input v-model="subForm.referrerMobile" :maxlength="11" placeholder="推荐人手机号(选填）"/>
         </FormItem>
 
@@ -81,7 +82,7 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { countDown } from '@/fn/timer'
 import { validateEmail, validatePassword, validataTel } from '@/util/validateRules'
-import { sendRegisterEmail, register, tradeList } from '@/api/register'
+import { sendRegisterEmail, register, tradeList, getSms, isCompanyName } from '@/api/register'
 import AreaSelect from '@/components/areaSelect'
 import Upload, { FileItem } from '@/components/upload'
 import { except } from '@/fn/object'
@@ -116,18 +117,17 @@ export default class Main extends ViewBase {
   companyError = ''
 
   registerNext = false
-
   submitDisabled = true
 
+  tradeList = [] // 行业
+
   form: any = {
-    systems: 'company',
-    companyName: '',
-    companyTrade: '',
+    companyType: 1,
     area: [],
     provinceId: 0,
     cityId: 0,
-    referrerMobile: '',
-    images: []
+    requestId: '', // 短信成功验证
+    qualificationImageList: []
   }
 
   subForm = {
@@ -222,17 +222,18 @@ export default class Main extends ViewBase {
   }
 
   async mounted() {
-    const list = await tradeList()
+    const { data } = await tradeList()
+    this.tradeList = data.list || []
   }
 
   handleCompany() {
-    this.form.systems = 'company'
+    this.form.companyType = 1
     this.registerNext = false
     this.keyRandom = random()
   }
 
   handlePerson() {
-    this.form.systems = 'person'
+    this.form.companyType = 2
     this.registerNext = true
     // (this.$refs.subForm as any).resetFields();
     this.keyRandom = random()
@@ -248,8 +249,8 @@ export default class Main extends ViewBase {
     this.codeDisabled = true
 
     try {
-      await sendRegisterEmail(this.subForm.mobile)
-
+      const { data } = await getSms(this.subForm.mobile)
+      this.form.requestId = data.requestId
       await countDown(60, sec => {
         this.codeMsg = sec + 's'
       })
@@ -273,15 +274,6 @@ export default class Main extends ViewBase {
     const form = this.$refs.subForm as any
     const valid = await form.validate()
     if (!valid) { return}
-
-    // 个人和企业提交的参数
-    if (this.form.systems == 'company') {
-      const formCompany = {
-        ...this.form,
-        ...this.subForm
-      }
-    } else if (this.form.systems == 'person') {
-    }
 
 
     // try {

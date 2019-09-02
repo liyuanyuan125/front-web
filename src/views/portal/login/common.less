@@ -17,7 +17,7 @@
       padding: 20px 0 40px;
     }
   }
-  /deep/ input {
+  /deep/ input, .ivu-select {
     outline: none;
     height: 50px;
     font-size: 14px;
@@ -28,6 +28,18 @@
     &::placeholder {
       color: #fff;
       font-size: 14px;
+    }
+  }
+  /deep/ .ivu-select-single .ivu-select-selection{
+    height: 50px;
+    border: none;
+    background: none;
+    .ivu-select-selected-value, .ivu-select-placeholder{
+      height: 50px;
+      line-height: 50px;
+      font-size: 14px;
+      color: #fff;
+      padding-left: 18px;
     }
   }
   /deep/ .ivu-input-with-prefix {
@@ -54,8 +66,8 @@
   }
 }
 
-// 省市区
-/deep/ .ivu-cascader-arrow {
+// 箭头
+/deep/ .ivu-cascader-arrow, /deep/ .ivu-select-arrow {
   font-size: 22px;
   color: #fff;
 }

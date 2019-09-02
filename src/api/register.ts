@@ -54,3 +54,22 @@ export async function tradeList() {
   return res
 }
 
+/**
+ * 获取短信验证码
+ * @param mobile
+ * http://yapi.aiads-dev.com/project/94/interface/api/6238
+ */
+export async function getSms(mobile: any) {
+  const res = post('/customer/accounts/sms', {mobile})
+  return res
+}
+
+/**
+ * 检测公司是否存在
+ * @param companyName
+ * http://yapi.aiads-dev.com/project/94/interface/api/6238
+ */
+export async function isCompanyName(name: any) {
+  const res = get('/customer/companies/name', {name})
+  return res
+}

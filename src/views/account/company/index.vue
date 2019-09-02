@@ -3,7 +3,7 @@
     <com-statu :statuCode="displayStatus" v-if="displayStatus != 5"></com-statu>
     <div class="content">
       <div class="bs">
-        <Button v-auth="'account-manage.info#edit'" type="primary" class="button-ok button-offset bok"  :to="{ name: 'account-info-accedit' }" >修改</Button>
+        <Button type="primary" class="button-ok button-offset bok"  :to="{ name: 'account-info-accedit' }" >修改</Button>
         <h3 class="layout-title">公司信息</h3>
         <Row class="text-rows">
           <Col :span="12">
@@ -33,7 +33,7 @@
         </Row>
       </div>
       <div class="bs">
-        <Button  v-if="displayStatus == 3" v-auth="'account-manage.info#change'" type="primary"
+        <Button  v-if="displayStatus == 3"  type="primary"
          class="button-ok bok" @click="handleInforma" >修改</Button>
         <h3 class="layout-title">开户信息</h3>
         <Row class="text-rows">

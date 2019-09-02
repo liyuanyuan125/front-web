@@ -301,8 +301,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'account-company',
     component: () => import('./views/account/company/index.vue'),
     meta: {
-      authKey: 'account-manage.info',
-      authAction: 'view',
+      authKey: 'account-manage.company',
+      authAction: 'EMPTY',
       authIsMenu: true,
       pageTitle: '公司信息-鲸娱数据'
     }
@@ -314,7 +314,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'account-info-edit',
     component: () => import('./views/account/company/edit.vue'),
     meta: {
-      authKey: 'account-manage.info',
+      authKey: 'account-manage.company',
       authAction: 'edit',
     }
   },
@@ -337,8 +337,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'account-information',
     component: () => import('./views/account/information/index.vue'),
     meta: {
-      authKey: '',
-      authAction: '',
+      authKey: 'account-manage.information',
+      authAction: 'EMPTY',
       authIsMenu: true,
     }
   },

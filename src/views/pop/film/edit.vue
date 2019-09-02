@@ -55,14 +55,12 @@
           <DatePicker v-model="form.validity" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择有效期"></DatePicker>
         </FormItem>
         <FormItem label="营业执照扫描件" prop="licenseFileId">
-          <Upload
-              v-model="form.licenseFileId" :max-count="1"  multiple accept="images/*" confirm-on-del/>
+          <Upload v-model="form.licenseFileId" :max-count="1"  multiple accept="images/*" confirm-on-del/>
             <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
         </FormItem>
 
         <FormItem label="授权文件扫描件" prop="grantFileIds">
-          <Upload
-              v-model="form.grantFileIds":max-count="6" multiple accept="images/*"  confirm-on-del/>
+          <Upload  v-model="form.grantFileIds":max-count="6" multiple accept="images/*"  confirm-on-del/>
             <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
         </FormItem>
 
@@ -207,7 +205,11 @@ export default class Main extends ViewBase {
         specification: item.specification,
         translated: item.translated,
         licenseCode: item.licenseCode,
-        validity: [formatValidDate(item.licenseBeginDate), formatValidDate(item.licenseEndDate)]
+        validity: [formatValidDate(item.licenseBeginDate), formatValidDate(item.licenseEndDate)],
+        licenseFileId: [{
+          fileId: item.licenseFileId
+        }],
+        grantFileIds: item.grantFileIds,
       }
       // 重新获取transFee
       this.handleChangeSpe()
