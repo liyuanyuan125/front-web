@@ -186,11 +186,10 @@ export default class Main extends ViewBase {
         this.chart2.initDone = true
         return
       }
-
       if (items && items.length > 0) {
         let item: any = null
         if ( this.form.dayRangesKey != 'yesterday') {
-           item = items.slice(1)
+           item = (items.length > 1) ? items.slice(1) : items
         } else {
           item = items
         }
@@ -208,6 +207,8 @@ export default class Main extends ViewBase {
         //     key: index
         //   }
         // })
+
+
         this.chart2.dict1 = item[0].channels.map((its: any, index: number) => {
           return {
             text: getName(its.code, channelList) + '指数',
