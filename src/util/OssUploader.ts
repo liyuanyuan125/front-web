@@ -184,7 +184,7 @@ const cleanTracks = (expireTime: number) => {
 // 将 track 保存在本地存储
 const saveTrack = (track: Track, hash: string) => {
   const json = JSON.stringify(track)
-  devLog('saveTrack', track, json)
+  // devLog('saveTrack', track, json)
   const key = storageKeyPrefix + hash
   localStorage.setItem(key, json)
 }
@@ -425,12 +425,12 @@ export default class OssUploader extends EventClass {
           track.checkpoint = checkpoint
           track.lastTime = Date.now()
           saveTrack(track, hash)
-          devLog('=> p', p, ' checkpoint', checkpoint)
+          // devLog('=> p', p, ' checkpoint', checkpoint)
         }
       })
 
-      const url = dot(result, 'res.requestUrls[0]')
-      devLog(url, result)
+      const url = (dot(result, 'res.requestUrls[0]') || '').replace(/\?uploadId=.*/, '')
+      // devLog(url, result)
 
       // 发出上传成功 done 事件
       const doneEvent: DoneEvent = { file, url, result }
