@@ -53,7 +53,7 @@
         </div>
       </Form>
 
-      <!-- 选择登录方式 -->
+      <!-- 选择登录方式beizhu -->
       <Modal v-model="visLogin" width="700px" class="comDlg" :key="keyRandom">
         <h2 class="title">选择登录方式</h2>
         <RadioGroup v-model="form.systemCode" class="check-way">
