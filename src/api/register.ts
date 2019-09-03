@@ -34,7 +34,7 @@ export async function register(data: any) {
 }
 
 /**
- * 充值密码
+ * 重置密码
  * @param data 接口数据
  */
 export async function resetPassword(data: any) {
@@ -59,8 +59,8 @@ export async function tradeList() {
  * @param mobile
  * http://yapi.aiads-dev.com/project/94/interface/api/6238
  */
-export async function getSms(mobile: any) {
-  const res = post('/customer/accounts/sms', {mobile})
+export async function getSms(data: any) {
+  const res = post('/customer/accounts/sms', data)
   return res
 }
 
@@ -69,7 +69,7 @@ export async function getSms(mobile: any) {
  * @param companyName
  * http://yapi.aiads-dev.com/project/94/interface/api/6238
  */
-export async function isCompanyName(name: any) {
-  const res = get('/customer/companies/name', {name})
+export async function isCompanyName(companyName: any) {
+  const res = get('/customer/companies/name', {companyName})
   return res
 }

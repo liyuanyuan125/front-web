@@ -38,7 +38,7 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { countDown } from '@/fn/timer'
-import { validateEmail, validatePassword } from '@/util/validateRules'
+import { validateEmail, validatePassword, validataTel } from '@/util/validateRules'
 import { except } from '@/fn/object'
 import DisableAutoFill from '@/components/DisableAutoFill.vue'
 import { sendResetpwdEmail, resetPassword } from '@/api/register'
@@ -124,6 +124,11 @@ export default class Main extends ViewBase {
     } finally {
       this.codeDisabled = false
     }
+  }
+
+  get mobileIsValid() {
+    const failMsg = validataTel(this.form.email)
+    return !!failMsg
   }
 
   async submit() {

@@ -237,10 +237,6 @@ export default class Main extends ViewBase {
 
 
   async createSub() {
-    // 客户,品牌，产品 名称
-    const customerName = (this.$refs.refCust as any).queryCustName()
-    const brandName = (this.$refs.refBrand as any).queryBrandName()
-    const productName = this.queryProductName()
 
     // 视频
     const srcFileId = this.srcFileId ? this.srcFileId.url : null
@@ -257,9 +253,6 @@ export default class Main extends ViewBase {
       const { data } = await createPop({
         ...this.form,
         transFee: this.transFee,
-        customerName,
-        brandName,
-        productName,
         srcFileId,
         size,
         licenseFileId,
@@ -278,19 +271,12 @@ export default class Main extends ViewBase {
     if (!volid) {
       return
     }
-    // 客户名称
-    const customerName = (this.$refs.refCust as any).queryCustName()
-    const brandName = (this.$refs.refBrand as any).queryBrandName()
-    const productName = this.queryProductName()
 
     const id = this.$route.params.id
     try {
       const { data } = await editPop({
         ...this.form,
         transFee: this.transFee, // transFee
-        customerName,
-        brandName,
-        productName
       }, id)
       this.$router.push({name: 'pop-film'})
     } catch (ex) {
@@ -309,11 +295,6 @@ export default class Main extends ViewBase {
       } catch (ex) {
           this.handleError(ex)
       }
-  }
-  queryProductName() {
-      const ary: any = this.productsListSel.filter( (item: any) => item.id == this.form.productId) || []
-      const brandname = ary.length > 0 ? ary[0].name : ''
-      return brandname
   }
 
   @Watch('form.brandId')
