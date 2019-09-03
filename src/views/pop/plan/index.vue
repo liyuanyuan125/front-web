@@ -30,7 +30,6 @@ import StepTime from './vadver/stepTime.vue'
   }
 })
 export default class App extends ViewBase {
-  // 第一次修改
   step = {
     step: 0,
     setid: ''
