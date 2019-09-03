@@ -12,7 +12,6 @@ import ViewBase from '@/util/ViewBase'
 
 @Component
 export default class Main extends ViewBase {
-    // merge 测试
     @Prop({default: 1}) value!: number
     @Prop({type: Array, default: () => []}) tagMess!: any[]
     invalue = this.value
