@@ -35,7 +35,7 @@
           <Input type="textarea" v-model="form.srcFileUrl" class="input-textarea-col" :rows="5"  placeholder="" />
         </FormItem>
 
-        <FormItem label="是否已转制">
+        <FormItem label="是否已转制" prop="translated">
           <RadioGroup v-model="form.translated">
             <Radio :label="1">否，未转制</Radio>
             <Radio :label="2">是，已转制</Radio>
@@ -127,6 +127,9 @@ export default class Main extends ViewBase {
       name: [
         { required: true, message: '请输入广告片名称', trigger: 'change' }
       ],
+      translated: [
+        { required: true, message: '请输入专制', trigger: 'blur' }
+      ],
       customerId: [
         { required: true, message: '请选择客户', trigger: 'change', type: 'number'  }
       ],
@@ -203,11 +206,10 @@ export default class Main extends ViewBase {
         translated: item.translated,
         licenseCode: item.licenseCode,
         validity: [formatValidDate(item.licenseBeginDate), formatValidDate(item.licenseEndDate)],
-        licenseFileId: [{
-          fileId: item.licenseFileId
-        }],
-        grantFileIds: item.grantFileIds,
+        licenseFileId: item.licenseFiles,
+        grantFileIds: item.grantFiles,
       }
+      // this.srcFileId = item.videoSamples[0].url // 视频小样
       // 重新获取transFee
       this.handleChangeSpe()
     } catch (ex) {
@@ -234,7 +236,6 @@ export default class Main extends ViewBase {
 
 
   async createSub() {
-
     // 视频
     const srcFileId = this.srcFileId ? this.srcFileId.url : null
     const size = this.srcFileId ? this.srcFileId.clientSize : null
@@ -269,11 +270,28 @@ export default class Main extends ViewBase {
       return
     }
 
+    // 视频
+    const srcFileId = this.srcFileId ? this.srcFileId.url : null
+    const size = this.srcFileId ? this.srcFileId.clientSize : null
+
+    // 营业执照扫描文件
+    const licenseFileId = this.form.licenseFileId ? this.form.licenseFileId[0].fileId : null
+    // 授权扫描文件
+    const grantFileIds = (this.form.grantFileIds || []).map((it: any) => it.fileId)
+
+    // 删除多余字段
+    delete this.form.validity
+
     const id = this.$route.params.id
     try {
       const { data } = await editPop({
         ...this.form,
-        transFee: this.transFee, // transFee
+        transFee: this.transFee,
+        srcFileId,
+        size,
+        licenseFileId,
+        grantFileIds,
+        videoType: 2, // 影片类型 1 = 预告片 2 = 商业片
       }, id)
       this.$router.push({name: 'pop-film'})
     } catch (ex) {

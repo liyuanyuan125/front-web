@@ -17,6 +17,15 @@ export async function sendRegisterEmail(email: string) {
 }
 
 /**
+ * 找回密码 （获取邮箱或者短信验证码）
+ * http://yapi.aiads-dev.com/project/94/interface/api/6254
+ * @param mobileOrEmail
+ */
+export async function mobileOrEmail(data: any) {
+  const res = post('/customer/accounts/verify-code', data)
+  return res
+}
+/**
  * 发送重置密码邮箱验证码
  * @param email 邮箱
  */

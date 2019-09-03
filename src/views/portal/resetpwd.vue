@@ -14,15 +14,13 @@
         <FormItem prop="captcha" :error="captchaError" class="form-item-getcode">
           <Input v-model="form.captcha" :maxlength="6" class="input-captcha"
             placeholder="输入手机验证码"/>
-          <Button type="primary" class="btn-code" :disabled="codeDisabled || mobileIsValid" @click="getCode">{{codeMsg}}</Button>
+          <Button class="btn-code" :disabled="codeDisabled || failMsg" @click="getCode">{{codeMsg}}</Button>
         </FormItem>
         <FormItem  prop="password">
-          <Input type="password" v-model="form.password" :maxlength="16"
-            placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"/>
+          <Input type="password" v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"/>
         </FormItem>
         <FormItem  prop="passwordAgain">
-          <Input type="password" v-model="form.passwordAgain" :maxlength="16"
-            placeholder="请再次输入密码"/>
+          <Input type="password" v-model="form.passwordAgain" :maxlength="16" placeholder="请再次输入密码"/>
         </FormItem>
 
         <div class="submit-ln">
@@ -41,7 +39,7 @@ import { countDown } from '@/fn/timer'
 import { validateEmail, validatePassword, validataTel } from '@/util/validateRules'
 import { except } from '@/fn/object'
 import DisableAutoFill from '@/components/DisableAutoFill.vue'
-import { sendResetpwdEmail, resetPassword } from '@/api/register'
+import { sendResetpwdEmail, resetPassword, mobileOrEmail} from '@/api/register'
 import { success } from '@/ui/modal'
 import registerLayout from './login/loginLayout.vue'
 
@@ -70,10 +68,9 @@ export default class Main extends ViewBase {
   rules = {
     email: [
       { required: true, message: '请输入邮箱', trigger: 'blur' },
-      { type: 'email', message: '邮箱格式有误', trigger: 'blur' },
     ],
     captcha: [
-      { required: true, message: '请输入邮箱验证码', trigger: 'blur' }
+      { required: true, message: '请输入验证码', trigger: 'blur' }
     ],
 
     password: [
@@ -112,7 +109,7 @@ export default class Main extends ViewBase {
     this.codeDisabled = true
 
     try {
-      await sendResetpwdEmail(this.form.email)
+      await mobileOrEmail({mobileOrEmail: this.form.email, codeType: 'pwd-reset' })
 
       await countDown(60, sec => {
         this.codeMsg = sec + 's'
@@ -184,7 +181,7 @@ export default class Main extends ViewBase {
 .btn-code {
   width: 126px;
   height: 48px;
-  background: #2f6af9;
+  background-color: #2f6af9;
   border-radius: 10px;
   color: #fff;
   font-size: 14px;
