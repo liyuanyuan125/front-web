@@ -87,7 +87,7 @@ import {intDate, formatValidDate, formatIntDateRange } from '@/util/dealData'
 import customerList from '@/components/selectList/customerList.vue'
 import brandList from '@/components/selectList/brandList.vue'
 import productList from '@/components/selectList/productList.vue'
-import OssUploader from '@/components/ossUploader'
+import OssUploader from '@/components/videoUploader'
 
 @Component({
   components: {
@@ -111,9 +111,6 @@ export default class Main extends ViewBase {
   // 是否正在上传
   uploading = false
   srcFileId: any = null
-
-  // 广告片时长
-  // length = 0
 
   // 转码费
   transFee = ''
