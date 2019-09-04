@@ -982,7 +982,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       meta: emptyAuth
   },
 
-  // kol - koll列表
+  // KOL - koll列表
   {
     path: '/kol/shopping/:id?',
     name: 'kol-shopping',
