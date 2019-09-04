@@ -56,9 +56,9 @@
       <!-- 选择登录方式beizhu -->
       <Modal v-model="visLogin" width="700px" class="comDlg" :key="keyRandom">
         <h2 class="title">选择登录方式</h2>
-        <RadioGroup v-model="form.systemCode" class="check-way">
+        <RadioGroup v-model="systemCode" class="check-way">
            <Radio v-for="(item, index) in systems" :key="index" :label="item.code" 
-           class="check-type" :class="[item.code ? item.code : null, {checked: form.systemCode == item.code}]">
+           class="check-type" :class="[item.code ? item.code : null, {checked: systemCode == item.code}]">
               <div class="check-name">{{item.name}}</div>
             </Radio>
         </RadioGroup>
@@ -78,6 +78,7 @@ import loginLayout from './loginLayout.vue'
 import { decodeRoute } from '@/util/base64Route'
 import { info } from '@/ui/modal'
 import { random } from '@/fn/string'
+import { except } from '@/fn/object'
 
 @Component({
   components: {
@@ -90,9 +91,10 @@ export default class Main extends ViewBase {
   systems: any[] = []
 
   keyRandom = ''
+  systemCode = ''
+  data: any = {}
 
   form: LoginData = {
-    systemCode: '',
     email: '',
     password: '',
     captchaId: '',
@@ -142,54 +144,50 @@ export default class Main extends ViewBase {
     if (!valid) {
       return
     }
-    // 假如是一种身份直接登录(如果是区域代理身份则弹框禁止登录)
-    // 多种身份弹框选择
-    try {
-      this.systems = [
-        {code: 'ads', secondaryCode: 'daili', status: 1, name: '广告主'},
-        {code: 'resource', secondaryCode: 'agent', status: 1, name: '资源方'},
-        {code: 'producer', secondaryCode: 'agent', status: 1, name: '片商'},
-      ]
+    this.emailError = ''
+    this.passwordError = ''
+    this.captchaCodeError = ''
 
+    try {
+      const postData: any = except(this.form, 'remember')
+      const { data } = await login(postData)
+      this.data = data
+      this.systems = data.systems
+
+      // 假如是一种身份直接登录(如果是区域代理身份则弹框禁止登录)
+      // 多种身份弹框选择
       if (this.systems.length == 1) {
-        if (this.systems[0].code == 'regAgency') { // 区域代理
+        if (this.systems[0].code == 'agent') { // 区域代理
          await info('很抱歉，此类客户相关功能仍未开放，敬请期待', {
             title: '您的身份为：区域推广代理',
             okText: '我知道了'
          })
          this.$router.push({name: 'login'})
         } else {
-          this.form.systemCode = this.systems[0].code
+          this.systemCode = this.systems[0].code
         }
       } else {
         this.visLogin = true
       }
-    } catch (ex) {
-      this.handleError(ex)
-    }
-  }
 
-  async handleSubmit() {
-    this.emailError = ''
-    this.passwordError = ''
-    this.captchaCodeError = ''
-
-    try {
-      const postData = { ...this.form }
-      const { data } = await login(postData)
-      setUserByData({
-        ...data,
-        systemCode: postData.systemCode
-      })
-
-      const { ret = '' } = this.$route.query || {}
-      const route = ret && decodeRoute(ret as string) || { name: 'home' }
-      this.$router.push(route)
+      // 登录选择数据填充
+      // this.handleSubmit()
     } catch (ex) {
       ((this as any)[`onLogin${ex.code}`] || this.handleError).call(this, ex)
       this.resetCaptcha()
       this.keyRandom = random()
     }
+  }
+
+  handleSubmit() {
+    setUserByData({
+      ...this.data,
+      systemCode: this.systemCode
+    })
+
+    const { ret = '' } = this.$route.query || {}
+    const route = ret && decodeRoute(ret as string) || { name: 'home' }
+    this.$router.push(route)
   }
 
   onLogin9006201() {
@@ -200,17 +198,11 @@ export default class Main extends ViewBase {
     this.passwordError = '密码错误'
   }
 
-  async onLogin10008(ex: any) {
-    await info('请核实您的账号角色，正确选择广告主或影城身份', {
-      title: '温馨提示'
-    })
-  }
-
   onLogin10006() {
     this.captchaCodeError = '验证码错误'
   }
 
-  @Watch('form.systemCode')
+  @Watch('systemCode')
   watchSystemCode() {
     this.handleSubmit()
     this.visLogin = false

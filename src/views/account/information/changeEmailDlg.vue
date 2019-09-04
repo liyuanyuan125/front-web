@@ -27,7 +27,7 @@ import {Component} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { validateEmail, validataTel } from '@/util/validateRules'
 import { countDown } from '@/fn/timer'
-import { sendRegisterEmail } from '@/api/register'
+import { mobileOrEmail } from '@/api/register'
 
 @Component
 export default class Main extends ViewBase {
@@ -69,7 +69,10 @@ export default class Main extends ViewBase {
     this.codeDisable = true
 
     try {
-      await sendRegisterEmail(this.form.email)
+      await mobileOrEmail({
+        mobileOrEmail: this.form.email,
+        codeType: 'email-reset',
+      })
 
       await countDown(60, sec => {
         this.codeMsg = sec + 's'

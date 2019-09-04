@@ -35,10 +35,10 @@
           <Input type="textarea" v-model="form.srcFileUrl" class="input-textarea-col" :rows="5"  placeholder="" />
         </FormItem>
 
-        <FormItem label="是否已转制" prop="translated">
+        <FormItem label="是否已转制">
           <RadioGroup v-model="form.translated">
-            <Radio :label="1">否，未转制</Radio>
-            <Radio :label="2">是，已转制</Radio>
+            <Radio :label="1">是，已转制</Radio>
+            <Radio :label="2">否，未转制</Radio>
         </RadioGroup>
           <em class="remark">影院进行排播时，需要将视频文件转制为特定的DCP包，请确定是否需要平台进行格式转制</em>
         </FormItem>
@@ -105,7 +105,8 @@ export default class Main extends ViewBase {
     validity: [], // 有效期
     grantFileIds: [],
     licenseBeginDate: '', // 营业执照开始和结束
-    licenseEndDate: ''
+    licenseEndDate: '',
+    translated: 1
   }
 
   // 是否正在上传
@@ -126,9 +127,6 @@ export default class Main extends ViewBase {
     return {
       name: [
         { required: true, message: '请输入广告片名称', trigger: 'change' }
-      ],
-      translated: [
-        { required: true, message: '请输入专制', trigger: 'blur' }
       ],
       customerId: [
         { required: true, message: '请选择客户', trigger: 'change', type: 'number'  }
