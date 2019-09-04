@@ -62,8 +62,8 @@
                   <em class='tips'>{{item.cinemaName}}</em>
                 </Tooltip>
                 </Col>
-              <Col span='14'>{{item.year}}-{{item.month < 10 ? '0' + item.month : item.month }}</Col>
-              <Col span='3' style='color: #DA6C70;float: right;text-align: center;'>
+              <Col span='13'>{{item.year}}-{{item.month < 10 ? '0' + item.month : item.month }}</Col>
+              <Col span='5' style='color: #DA6C70;float: right;text-align: center;'>
                 <span v-if='item.billStatus == 1'>待平台确认</span>
                 <span v-if='item.billStatus == 2'>待审核</span>
                 <span v-if='item.billStatus == 3'>审核失败</span>
@@ -82,11 +82,11 @@
               </Col>
               <Col :span="6">
                 <p class='order_num'>{{formatNumber(item.videoCount , 2)}}</p>
-                <p class='order_sma'>广告单数量 / 个</p>
+                <p class='order_sma'>广告片数量 / 个</p>
               </Col>
               <Col :span="7">
                 <p class='order_num'>{{formatNumber(item.personCount , 2)}}</p>
-                <p class='order_sma'>曝光人次 / 千人次</p>
+                <p class='order_sma'>曝光人次 / 人次</p>
               </Col>
               <Col :span="4">
                 <router-link
@@ -118,7 +118,7 @@
       <Page
       :total="totalCount"
       v-if="totalCount>0"
-      class="btnCenter plan-pages"
+      class="btn-center-footer plan-pages"
       :current="query.pageIndex"
       :page-size="query.pageSize"
       show-total
@@ -300,13 +300,7 @@ export default class Main extends ViewBase {
     try {
       const { data } = await queryList(this.query)
       this.data = data
-      this.list = (data.items || []).map((it: any) => {
-        return {
-          ...it,
-          orderItemList: uniqBy(it.orderItemList, 'kolId'), // 去重一个kol有两个任务
-          createTime: moment(it.createTime).format(timeFormat)
-        }
-      })
+      this.list = data.items
       this.totalCount = data.totalCount
       this.billStatusList = data.billStatusList // 账单状态
       this.invoiceStatusList = data.invoiceStatusList // 发票状态
@@ -341,10 +335,12 @@ export default class Main extends ViewBase {
 
 
   handlepageChange(size: any) {
+    this.list = [1]
     this.query.pageIndex = size
     this.seach()
   }
   handlePageSize(size: any) {
+    this.list = [1]
     this.query.pageIndex = size
     this.seach()
   }
@@ -525,7 +521,7 @@ export default class Main extends ViewBase {
   font-weight: 400;
   color: rgba(255, 255, 255, 1);
 }
-/deep/ .btnCenter {
+/deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
   // background: rgba(32, 67, 80, 1);

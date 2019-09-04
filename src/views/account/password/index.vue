@@ -17,7 +17,7 @@
         <Input type="password" v-model="from.newPasswords" :maxlength="16" placeholder="请输入含大小写的英文字母与数字的组合，8－16位"></Input>
       </FormItem>
     </Form>
-    <div class="btnCenter sumbit-button">
+    <div class="btn-center-footer sumbit-button">
       <Button type="primary" class="button-ok submitBtn" @click="passwordkSet('form')">修改</Button>
     </div>
   </div>
@@ -93,6 +93,8 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/common.less';
+@import '~@/views/account/less/common.less';
+@import '~@/views/account/less/formInput.less';
 
 .plan-title {
   padding-bottom: 20px;

@@ -49,12 +49,12 @@
           <Row type="flex" justify="space-between" class="chart-group" style="margin-top:10px">
             <Col :span="12" class="chart-item">
             <div class="chart-wp borderRadius" style="margin-right:10px;cursor: pointer;">
-              <WordCloud :initDone="chart3.initDone" :title="chart3.title" :dict1="chart3.dict1" :color="chart3.color" :dataList="chart3.dataList" @keyChange="keyChangeHandle" :currentTypeIndex="chart3.currentTypeIndex" />
+              <WordCloud :initDone="chart3.initDone" :title="chart3.title" :dict1="chart3.dict1" :color="chart3.color" :dataList="chart3.dataList" @keyChange="keyChangeHandle1" :currentTypeIndex="chart3.currentTypeIndex" />
             </div>
             </Col>
             <Col :span="12" class="chart-item">
             <div class="chart-wp borderRadius" style="cursor: pointer">
-              <WordCloud :initDone="chart4.initDone" :title="chart4.title" :dict1="chart4.dict1" :color="chart4.color" :dataList="chart4.dataList" @keyChange="keyChangeHandle" :currentTypeIndex="chart4.currentTypeIndex" />
+              <WordCloud :initDone="chart4.initDone" :title="chart4.title" :dict1="chart4.dict1" :color="chart4.color" :dataList="chart4.dataList" @keyChange="keyChangeHandle2" :currentTypeIndex="chart4.currentTypeIndex" />
             </div>
             </Col>
           </Row>
@@ -560,14 +560,15 @@ export default class Temporary extends ViewBase {
     })
   }
 
-  async getKeywordList(key?: string) {
+  async getKeywordList(key?: string, isPositive: boolean = true) {
     this.tableData = []
     const that: any = this
     const mockObj = {
       keyWord: key == '' ? this.keywordQuery.keyword : key,
       // channelCode: this.form.channelCode,
       beginDate: this.beginDate(this.form.dayRangesKey),
-      endDate: this.endDate()
+      endDate: this.endDate(),
+      positive: isPositive  // 是否正面
     }
     const id = this.id
     try {
@@ -600,9 +601,15 @@ export default class Temporary extends ViewBase {
     return index + '1'
   }
 
-  keyChangeHandle(item: any) {
+  keyChangeHandle1(item: any) {
     this.tableData = []
-    this.getKeywordList(item[0])
+    this.getKeywordList(item[0], true)
+    this.keywordQuery.keyword = item[0]
+  }
+
+  keyChangeHandle2(item: any) {
+    this.tableData = []
+    this.getKeywordList(item[0], false)
     this.keywordQuery.keyword = item[0]
   }
 }

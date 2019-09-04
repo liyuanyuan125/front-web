@@ -38,7 +38,6 @@ import { formatTimestamp, formatTimes, formatNumber } from '@/util/validateRules
 import DetailNavBar from './components/detailNavBar.vue'
 import { dau } from '@/api/figureDetailMoreInfo'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
-import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
 const timeFormat = 'YYYYMMDD'
 const toolTip: any = {
   borderWidth: 1,
@@ -79,7 +78,6 @@ const toolTip: any = {
 @Component({
   components: {
     AreaBasic,
-    AreaBasicxtra,
     DetailNavBar
   }
 })

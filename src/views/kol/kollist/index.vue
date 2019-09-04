@@ -144,6 +144,7 @@
                   v-clickoutside="handleClose"
                   v-if="row.id == areaIdshow"
                   class="flans-modeal"
+                  :type='title[type]'
                   :id="row.id" />
               </div>
             </div>
@@ -210,7 +211,7 @@
         </Table>
       </div>
 
-      <!-- <Page :total="total" v-if="total>0" class="btnCenter"
+      <!-- <Page :total="total" v-if="total>0" class="btn-center-footer"
         :current="form.pageIndex"
         :page-size="form.pageSize"
         :page-size-opts="[10, 20, 50, 100]"
@@ -219,7 +220,9 @@
         show-elevator
         @on-change="sizeChangeHandle"
         @on-page-size-change="currentChangeHandle"/> -->
-        <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
+        <div class='black-pagination'>
+          <pagination :pageList="pageList" :total="total" @uplist="uplist"></pagination>
+        </div>
         <div class="free-user-tip">免费用户仅可查看2页</div>
       </div>
       <Detail ref='detailbox' v-model="type" @done="checkDetailSet" />
@@ -830,6 +833,8 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/formInput.less';
+
 .to-detail {
   cursor: pointer;
   display: flex;
@@ -1089,7 +1094,7 @@ export default class Main extends ViewBase {
     z-index: 999;
   }
 }
-.btnCenter {
+.btn-center-footer {
   margin-top: 30px;
   padding-bottom: 30px;
 }
@@ -1122,19 +1127,21 @@ export default class Main extends ViewBase {
     .button-style(#fff, #f18d94);
   }
 }
-/deep/ .page-list {
-  .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
-    color: #00202d;
-  }
-  .ivu-page-item {
-    a {
+.black-pagination {
+  /deep/ .page-list {
+    .ivu-page-prev a, .ivu-page-total, .ivu-page-next a {
       color: #00202d;
     }
-  }
-  .ivu-page-item.ivu-page-item-active {
-    background: #00202d;
-    a {
-      color: #fff;
+    .ivu-page-item {
+      a {
+        color: #00202d;
+      }
+    }
+    .ivu-page-item.ivu-page-item-active {
+      background: #00202d;
+      a {
+        color: #fff;
+      }
     }
   }
 }

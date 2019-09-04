@@ -59,7 +59,7 @@
       <div class="bgs">
         <h3 class="layout-title tits">设置账号权限</h3>
         <div class="formleft">
-          <div class="btnCenter">
+          <div class="btn-center-footer">
             <Button
               type="primary"
               v-if="isAccountAuth"
@@ -306,6 +306,19 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+@import '~@/views/account/less/formInput.less';
+
+.query-cinema {
+  margin-left: 30px;
+  color: @c-button;
+  cursor: pointer;
+}
+
+.item-top {
+  padding-top: 20px;
+}
+
 .page {
   .ivu-form-item {
     padding-left: 30px;
@@ -319,6 +332,8 @@ export default class Main extends ViewBase {
   display: flex;
   .query-cinema {
     margin-left: 30px;
+    color: @c-button;
+    cursor: pointer;
   }
 }
 .bgs {
@@ -361,7 +376,7 @@ export default class Main extends ViewBase {
     }
   }
 }
-.btnCenter {
+.btn-center-footer {
   position: absolute;
   left: 770px;
   margin-top: 16px;

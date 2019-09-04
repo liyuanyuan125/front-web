@@ -693,7 +693,12 @@ export default class Main extends ViewBase {
 }
 </script>
 <style lang='less' scoped>
+@import '~@/views/account/less/formInput.less';
 @import '~@/site/common.less';
+.item-top {
+  padding-top: 20px;
+}
+
 /deep/ .ivu-checkbox {
   /deep/ .ivu-checkbox-inner {
     border-radius: 50%;

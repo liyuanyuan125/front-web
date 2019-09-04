@@ -14,6 +14,7 @@
 <script lang='ts'>
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import {subBytes } from '@/fn/string'
 
 @Component
 export default class Login extends ViewBase {

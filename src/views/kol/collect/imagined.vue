@@ -19,7 +19,7 @@
           </li>
         </ul>
     </div>
-    <!-- <Page :total="total" v-if="total>0" class="btnCenter"
+    <!-- <Page :total="total" v-if="total>0" class="btn-center-footer"
         :current="pageIndex"
         :page-size="pageSize"
         :page-size-opts="[6, 20, 50, 100]"

@@ -156,14 +156,22 @@ export default class Upload extends ViewBase {
   }
 
   onChange(ev: Event) {
+    const input = ev.target as HTMLInputElement
     const files = (ev.target as HTMLInputElement).files
     if (files == null || files.length === 0) {
       return
     }
+
+    // 清空以便下次可以再次触发 onChange
+    setTimeout(() => {
+      input.value = ''
+    })
+
     const remain = this.maxCount - this.inValue.length
     if (files.length > remain) {
       return alert(`最多添加 ${this.maxCount} 个，还剩 ${remain} 个`)
     }
+
     [].slice.call(files).forEach((file: File) => {
       const uqid = genUqid()
       // 快速响应原则：只要选择，直接添加

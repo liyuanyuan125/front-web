@@ -79,7 +79,7 @@
       </div>
     </div>
     
-    <!-- <div class="btnCenter">
+    <!-- <div class="btn-center-footer">
       <Button type="primary" class="button-ok submitBtn" @click="goBack">返回</Button>
     </div> -->
     <detailDlg v-model="objDlg" v-if="objDlg.visibleDetail"></detailDlg>
@@ -188,6 +188,13 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+@import '~@/views/account/less/formInput.less';
+
+.query-cinema {
+  color: @c-button;
+  cursor: pointer;
+}
 .as {
   background: rgba(255, 255, 255, 0);
   color: #00202d;

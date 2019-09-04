@@ -132,7 +132,7 @@
         <div v-else>暂无</div>
       </div>
     </div>
-    <div class="btnCenter btn-footer" v-if="status == 1">
+    <div class="btn-center-footer btn-footer" v-if="status == 1">
       <Button v-if="status == 1" v-auth="'promotion.ad-plan#cancel'" class="button-cancel" @click="cancelPlan">取消计划</Button>
       <Button v-if="status == 1 || status == 10" v-auth="'promotion.ad-plan#edit'" type="primary"  class="button-ok edit-btn"  @click="toEdit" >编辑</Button>
       <Button v-if="status == 1" type="primary" class="button-ok" @click="submitExamine">提交审核</Button>
@@ -365,6 +365,8 @@ export default class PlanDefault extends ViewBase {
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+
 .flex-wrap {
   flex-wrap: wrap;
 }

@@ -271,6 +271,7 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
 
 .as {
   background: rgba(255, 255, 255, 0);
@@ -318,9 +319,9 @@ export default class Main extends ViewBase {
   margin-right: 25px;
 }
 
-a.button-ok {
-  line-height: 37px;
-}
+// a.button-ok {
+//   line-height: 37px;
+// }
 
 .accountList {
   border: 1px solid #ccc;
@@ -332,13 +333,10 @@ a.button-ok {
 .bok {
   width: 200px;
   height: 50px;
-  background: rgba(0, 32, 45, 1);
   border-radius: 25px;
   color: #fff;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 999;
+  margin-right: 30px;
+  .button-style(#fff,#00202d);
 }
 
 /deep/ .ivu-table th,

@@ -394,6 +394,13 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+@import '~@/views/account/less/formInput.less';
+
+.item-top {
+  padding-top: 20px;
+}
+
 .float {
   float: left;
 }

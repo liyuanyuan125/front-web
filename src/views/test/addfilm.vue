@@ -56,7 +56,7 @@
           已选择 {{checkObj.length}} 个
          </span>
        </div>
-        <Page :total="total" v-if="total>0" class="btnCenter"
+        <Page :total="total" v-if="total>0" class="btn-center-footer"
           :current="form.pageIndex"
           :page-size="form.pageSize"
           :page-size-opts="[4, 8, 16, 24]"

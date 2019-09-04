@@ -1,0 +1,72 @@
+@import '~@/site/lib.less';
+// layout 模块 标题
+.layout-title {
+    position: relative;
+    font-size: 14px;
+    height: 50px;
+    line-height: 50px;
+    padding-left: 30px;
+    background: @c-head-bg;
+    em {
+      color: @c-button;
+      position: absolute;
+      right: 20px;
+      font-weight: normal;
+      cursor: pointer;
+    }
+  }
+  // layout 标题栏
+  .layout-nav-title {
+    height: 50px;
+    padding: 14px 30px 33px;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: solid 10px #f2f2f2;
+    color: @c-link;
+  }
+
+  // button 按钮样式
+.button-cancel {
+    display: inline-block;
+    height: 50px;
+    width: 160px;
+    .button-style(#fff, #00202d);
+    border-radius: 25px;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    margin-right: 20px;
+    cursor: pointer;
+  }
+  .button-ok {
+    display: inline-block;
+    height: 50px;
+    width: 160px;
+    border: none;
+    .button-style(#fff, #00202d);
+    border-radius: 25px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .button-offset {
+    margin-right: 20px;
+  }
+
+  // 文字排版
+.text-rows {
+    padding: 20px 0 30px 30px;
+    font-size: 14px;
+    color: #444;
+    p {
+      margin-bottom: 20px;
+      // img {
+      //   margin-right: 20px;
+      // }
+      label {
+        display: inline-block;
+        width: 105px;
+        color: #888;
+      }
+    }
+  }
