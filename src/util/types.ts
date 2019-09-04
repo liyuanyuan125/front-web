@@ -28,6 +28,7 @@ export function isAjaxResult(object: any) {
 
 /** 可取消的事件 */
 export interface CancelableEvent {
+  /** 是否取消 */
   canceled: boolean
 }
 
@@ -126,3 +127,9 @@ export enum MovieStatus {
   /** 已下映 */
   down = 4,
 }
+
+/**
+ * iview 按钮类型
+ */
+export type ButtonType = 'default' | 'primary' | 'dashed' | 'text'
+  | 'info' | 'success' | 'warning' | 'error'
