@@ -1,5 +1,5 @@
 # admin-web
-vue+typeScript+iview
+vue + typeScript + iview
 
 ## 工程初始化
 ```
@@ -16,24 +16,14 @@ yarn dev
 yarn build
 ```
 
-### 测试
-```
-yarn test
-```
-
-### 验证并修复语法错误
+### 验证
 ```
 yarn lint
 ```
 
-### 执行 end-to-end 测试
+### 验证 css
 ```
-yarn test:e2e
-```
-
-### 执行单元测试
-```
-yarn test:unit
+yarn lint:css
 ```
 
 ### 更多自定义配置
