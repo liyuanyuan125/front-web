@@ -607,6 +607,32 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  // 广告主 - 推广管理 - 广告计划 - 创建广告计划
+  {
+    path: '/pop/planlist/add/business/:step?/:setid?',
+    name: 'pop-planlist-add-business',
+    component: () => import('./views/pop/plan/business.vue'),
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'edit',
+      title: '创建',
+      pageTitle: '创建广告计划-鲸娱数据',
+    }
+  },
+
+  // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
+  {
+    path: '/pop/planlist/edit/business/:step/:setid',
+    name: 'pop-planlist-edit-business',
+    component: () => import('./views/pop/plan/business.vue'),
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'edit',
+      title: '编辑',
+      pageTitle: '编辑广告计划-鲸娱数据',
+    }
+  },
+
   // // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
   // {
   //   path: '/pop/planlist/set/:id?/:setid?',
