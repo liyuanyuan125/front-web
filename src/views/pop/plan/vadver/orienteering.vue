@@ -672,6 +672,7 @@ export default class Orienteering extends ViewBase {
 .item-top {
   margin-left: 30px;
   margin-right: 30px;
+  margin-top: 24px;
 }
 .plan-box {
   margin: 0 40px;

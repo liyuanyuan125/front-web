@@ -46,7 +46,7 @@
         
         <a  v-auth="'account-manage.users#enable'" class="action-btn" v-if="row.statusCode == 2" @click="handleEnable(row.id, 1)">启用</a>
         <a  v-auth="'account-manage.users#enable'" class="action-btn" v-else-if="row.statusCode == 1" @click="handleEnable(row.id, 2)">禁用</a>
-        <a class="action-btn" v-else-if="row.statusCode == 3" @click="activeEmail(row.id)">重新激活</a>
+        <!-- <a class="action-btn" v-else-if="row.statusCode == 3" @click="activeEmail(row.id)">重置密码</a> -->
       </template>
     </Table>
     <div class="checkAll flex-box"   v-if="total>0" v-auth="'account-manage.users#delete'">
@@ -242,18 +242,18 @@ export default class Main extends ViewBase {
   toEdit(id: any) {
     this.$router.push({ name: 'account-user-edit', params: { useid: id } })
   }
-  async activeEmail(id: any) {
-    try {
-      await activeEmail({ id })
-      await info('激活链接已重新发送，请查收激活邮件', { title: '提示' })
-    } catch (ex) {
-      if (ex.code != 0) {
-        this.handleError(ex)
-      } else {
-        this.handleError(ex)
-      }
-    }
-  }
+  // async activeEmail(id: any) {
+  //   try {
+  //     await activeEmail({ id })
+  //     await info('激活链接已重新发送，请查收激活邮件', { title: '提示' })
+  //   } catch (ex) {
+  //     if (ex.code != 0) {
+  //       this.handleError(ex)
+  //     } else {
+  //       this.handleError(ex)
+  //     }
+  //   }
+  // }
 
   handlepageChange(size: any) {
     this.pageObject.pageIndex = size
