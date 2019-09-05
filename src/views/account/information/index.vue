@@ -26,6 +26,7 @@
 <script lang='ts'>
 import {Component} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { accountDetail } from '@/api/account'
 import ChangeEmail from './changeEmailDlg.vue'
 import ChangeMobile from './changeMobileDlg.vue'
 
@@ -37,10 +38,11 @@ import ChangeMobile from './changeMobileDlg.vue'
   }
 })
 export default class Main extends ViewBase {
-  items = {
-    name: 'yuanyuan.li',
-    email: 'yuanyuan@aiads.com',
-    mobile: 13693520458
+  items = {}
+
+  async mounted() {
+    const { data } = await accountDetail()
+    this.items = data.account || {}
   }
 }
 

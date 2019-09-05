@@ -11,13 +11,18 @@
 
     <!-- dcp下载 v-if="status == 4" -->
     <dl  class="form dcp-download">
+      <dt class="dl-title"><em>下载链接</em></dt>
+      <dd v-for="it in (item.attachments || [])"   :key="it.id" class="dcp-dd-list">
+        <span v-if="it.typeCode == -1" :href="it.fileUrl">{{it.fileUrl || '-'}}</span>
+      </dd>
+    </dl>
+    <!-- <dl  class="form dcp-download">
       <dt class="dl-title flex-box"><span>格式</span><em>下载链接</em></dt>
       <dd v-if="item.attachments" v-for="it in item.attachments" :key="it.id" class="dcp-dd-list flex-box">
-        <!-- <span>{{it.typeCode}}</span> -->
         <span  v-for="(ind, index) in typeList" :key="index" v-if="ind.key == it.typeCode ">{{ind.text}}</span>
         <a target="_blank" :href="it.fileUrl">{{it.fileUrl || '-'}}</a>
       </dd>
-    </dl>
+    </dl> -->
 
     <div class="form detail-inner">
       <p><label>名称：</label><em>{{item.name || '-'}}</em></p>
@@ -34,24 +39,6 @@
          <Button class="cancel-btn" @click="$router.push({name: 'pop-film'})">返回</Button>
       </div>
     </div>
-
-    <!-- dcp下载 -->
-    <!-- <div v-if="status == 4">
-      <Row type="flex" justify="space-between" class="code-row-bg">
-          <Col span="11" v-if="item.attachments" v-for="it in item.attachments" :key="it.id" class="down-load-dcp flex-box">
-            <span>{{queryTypeList(it.typeCode)}}</span>
-            <a :href="it.fileUrl" target="_blank"><img class="down-img" src="./assets/down-dcp.png"  width="14"/>下载DCP包</a>
-          </Col>
-      </Row>
-      
-     <h3 class="layout-title more-list">下载链接更新日志</h3>
-      <div class="text-rows log-list">
-        <p v-if="item.attachments" v-for="(ite, index) in item.attachments" :key="index">
-          <span>{{formatTimes(ite.uploadTime)}}</span>
-          <em>{{queryTypeList(ite.typeCode)}}Flat 格式DCP包下载链接已更新</em>
-        </p>
-      </div>
-    </div> -->
   </div>
 </template>
 
