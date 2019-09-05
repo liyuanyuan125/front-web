@@ -1,4 +1,4 @@
-# front-web
+# admin-web
 vue + typescript + iview
 
 ## 工程初始化
