@@ -1,5 +1,5 @@
 # admin-web
-vue + typeScript + iview
+vue + typescript + iview
 
 ## 工程初始化
 ```
