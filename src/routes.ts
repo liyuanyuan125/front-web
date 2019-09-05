@@ -295,43 +295,54 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     props: true,
   },
 
-  // 广告主、资源方 - 账户管理 - 账号信息
+  // 广告主、资源方 - 账户管理 - 账号信息（2.1账号信息改为公司信息）
   {
-    path: '/account/info',
-    name: 'account-info',
-    component: () => import('./views/account/info/index.vue'),
+    path: '/account/company',
+    name: 'account-company',
+    component: () => import('./views/account/company/index.vue'),
     meta: {
-      authKey: 'account-manage.info',
-      authAction: 'view',
+      authKey: 'account-manage.company',
+      authAction: 'EMPTY',
       authIsMenu: true,
-      pageTitle: '账号信息-鲸娱数据'
+      pageTitle: '公司信息-鲸娱数据'
     }
   },
 
-  // TODO: 下面两个页面应该合并在一起？还是涉及权限，应该拆开以方便控制？
-
   // 广告主、资源方 - 账户管理 - 账户编辑（全部信息编辑）
   {
-    path: '/account/info/edit',
+    path: '/account/company/edit',
     name: 'account-info-edit',
-    component: () => import('./views/account/info/edit.vue'),
+    component: () => import('./views/account/company/edit.vue'),
     meta: {
-      authKey: 'account-manage.info',
+      authKey: 'account-manage.company',
       authAction: 'edit',
     }
   },
 
   // 广告主、资源方 - 账户管理 - 账户编辑（基本信息编辑）
   {
-    path: '/account/info/accedit',
+    path: '/account/company/accedit',
     name: 'account-info-accedit',
-    component: () => import('./views/account/info/accEdit.vue'),
+    component: () => import('./views/account/company/accEdit.vue'),
     meta: {
       authKey: 'account-manage.info',
       authAction: 'edit',
       title: '修改',
     }
   },
+
+  // 2.1 增加账号信息 菜单项
+  {
+    path: '/account/information',
+    name: 'account-information',
+    component: () => import('./views/account/information/index.vue'),
+    meta: {
+      authKey: 'account-manage.information',
+      authAction: 'EMPTY',
+      authIsMenu: true,
+    }
+  },
+
 
   // 广告主、资源方 - 账户管理 - 用户管理
   {
@@ -596,6 +607,32 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  // 广告主 - 推广管理 - 广告计划 - 创建广告计划
+  {
+    path: '/pop/planlist/add/business/:step?/:setid?',
+    name: 'pop-planlist-add-business',
+    component: () => import('./views/pop/plan/business.vue'),
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'edit',
+      title: '创建',
+      pageTitle: '创建广告计划-鲸娱数据',
+    }
+  },
+
+  // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
+  {
+    path: '/pop/planlist/edit/business/:step/:setid',
+    name: 'pop-planlist-edit-business',
+    component: () => import('./views/pop/plan/business.vue'),
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'edit',
+      title: '编辑',
+      pageTitle: '编辑广告计划-鲸娱数据',
+    }
+  },
+
   // // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
   // {
   //   path: '/pop/planlist/set/:id?/:setid?',
@@ -617,7 +654,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
   //   }
   // },
 
-  // 广告主 - 推广管理 - 广告片 - 列表
+  // 广告片 - 列表
   {
     path: '/pop/film',
     name: 'pop-film',
@@ -631,7 +668,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
-  // 广告主 - 推广管理 - 广告片 - 创建、编辑（存在 id 为编辑，否则为创建）
+  // 广告片 - 创建、编辑（存在 id 为编辑，否则为创建）
   {
     path: '/pop/film/edit/:id?',
     name: 'pop-film-edit',
@@ -646,7 +683,27 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         return id > 0 ? 'edit' : 'create'
       },
       pageTitle({ params }) {
-        return params.id as any > 0 ? '编辑广告片-鲸娱数据' : '新建广告片-鲸娱数据'
+        return params.id as any > 0 ? '编辑商业广告片-鲸娱数据' : '新建商业广告片-鲸娱数据'
+      },
+    }
+  },
+
+  // 广告片 - 创建，编辑预告片（存在 id 为编辑，否则为创建）
+  {
+    path: '/pop/film/editprevue/:id?',
+    name: 'pop-film-editprevue',
+    component: () => import('./views/pop/film/editPrevue.vue'),
+    meta: {
+      authKey: 'promotion.ad-video',
+      title({ params }) {
+        return params.id as any > 0 ? '编辑' : '新建'
+      },
+      authAction(route) {
+        const id = parseInt(route.params.id, 10) || 0
+        return id > 0 ? 'edit' : 'create'
+      },
+      pageTitle({ params }) {
+        return params.id as any > 0 ? '编辑电影预告片-鲸娱数据' : '新建电影预告片-鲸娱数据'
       },
     }
   },

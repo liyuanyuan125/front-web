@@ -35,6 +35,96 @@ export function subBytes(str: string, size: number, tail = '...') {
   return substr == str ? substr : substr + tail
 }
 
+/**
+ * 判断字符是否是宽字符（如汉字，这里取：凡是 unicode 大于 0xff 的，都被认为是宽字符）
+ * @param char 字符
+ */
+export function isWideChar(char: string) {
+  return char.charCodeAt(0) > 0xff
+}
+
+/**
+ * 从头部按照宽字符规则截取字符串
+ * @param string 字符串
+ * @param count 汉字个数（2 个英文算作 1 个汉字，下同）
+ */
+export function wideHead(string: string | null, count: number) {
+  if (string == null || count <= 0) {
+    return ''
+  }
+  const list = []
+  let sum = 0
+  for (const char of string) {
+    const size = isWideChar(char) ? 1 : .5
+    if (size + sum > count) {
+      break
+    }
+    list.push(char)
+    sum += size
+  }
+  const result = list.join('')
+  return result
+}
+
+/**
+ * 从尾部按照宽字符规则截取字符串
+ * @param string 字符串
+ * @param count 汉字个数（2 个英文算作 1 个汉字，下同）
+ */
+export function wideTail(string: string, count: number) {
+  if (string == null || count <= 0) {
+    return ''
+  }
+  const list = []
+  let sum = 0
+  const charList = string.split('')
+  for (let i = charList.length - 1; i >= 0; i--) {
+    const char = charList[i]
+    const size = isWideChar(char) ? 1 : .5
+    if (size + sum > count) {
+      break
+    }
+    list.unshift(char)
+    sum += size
+  }
+  const result = list.join('')
+  return result
+}
+
+/**
+ * 考虑汉字的字符串截断
+ * @param string 字符串
+ * @param frontCount 前面的汉字个数（2 个英文算作 1 个汉字，下同）
+ * @param backCount 后面的汉字个数
+ * @param padString 填充字符串，默认 ...
+ */
+export function wideTruncate(
+  string: string | null,
+  frontCount: number,
+  backCount: number,
+  padString = '...'
+) {
+  if (string == null || string == '') {
+    return ''
+  }
+  const count = getSize(string) / 2
+  if (
+    frontCount == 0 && backCount == 0
+    || frontCount >= count
+    || backCount >= count
+    || (frontCount + backCount) >= count
+  ) {
+    return string
+  }
+  const front = frontCount > 0 ? wideHead(string, frontCount) : ''
+  const back = backCount > 0 ? wideTail(string, backCount) : ''
+  const join = front + padString + back
+  // 排除非常特殊的情况，若连接后的字符串长度大于
+  // 原来的字符串长度，不如直接显示原来的字符串
+  const result = join.length >= string.length ? string : join
+  return result
+}
+
 let uniqueId = 0
 
 /**

@@ -801,12 +801,6 @@ export async function brands(query: any) {
  * @description http://yapi.aiads-dev.com/project/152/interface/api/4054
  */
  export async function trend(query: any, id: number | string = '') {
-  // 演示 临时参数 nxd 20190621
-  // id = '10121'
-  // query = {
-  //   beginDate: '20160520',
-  //   endDate: '20190620'
-  // }
   const res = await get(`/brand/brands/${id}/index`, query)
   return res
   return await mockGet({}, {
