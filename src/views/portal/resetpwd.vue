@@ -1,26 +1,26 @@
 <template>
-  <PortalLayout>
-    <div class="forgetpass">找回密码</div>
-    <div class="reset-pwd">
-      <Form :model="form" :rules="rules" class="form" label-position="left"
-        :label-width="120" @submit.native.prevent="submit" ref="form">
+  <registerLayout>
+    <div class="main-wrap">
+      <div class="tablist">
+        <p class="systerm">找回密码</p>
+      </div>
+
+      <Form :model="form" :rules="rules" class="form" @submit.native.prevent="submit" ref="form">
         <DisableAutoFill/>
 
-        <FormItem label="登录邮箱" prop="email" :error="emailError">
-          <Input v-model="form.email" placeholder="请输入注册时的邮箱地址"/>
+        <FormItem prop="email">
+          <Input  v-model="form.email" :maxlength="11" placeholder="请输入手机号或邮箱" />
         </FormItem>
-        <FormItem label="邮箱验证码" prop="captcha" :error="captchaError">
+        <FormItem prop="captcha" :error="captchaError" class="form-item-getcode">
           <Input v-model="form.captcha" :maxlength="6" class="input-captcha"
-            placeholder="请输入邮箱验证码"/>
-          <Button class="btn-code" :disabled="codeDisabled || emailIsValid"
-            @click="getCode">{{codeMsg}}</Button>
+            placeholder="输入手机验证码"/>
+          <Button type="primary" class="btn-code" :disabled="codeDisabled || mobileIsValid" @click="getCode">{{codeMsg}}</Button>
         </FormItem>
-
-        <FormItem label="密码" prop="password">
+        <FormItem  prop="password">
           <Input type="password" v-model="form.password" :maxlength="16"
-            placeholder="请设置包含大小写的英文字母与数字的组合，8－16位的新密码"/>
+            placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"/>
         </FormItem>
-        <FormItem label="重复密码" prop="passwordAgain">
+        <FormItem  prop="passwordAgain">
           <Input type="password" v-model="form.passwordAgain" :maxlength="16"
             placeholder="请再次输入密码"/>
         </FormItem>
@@ -31,30 +31,29 @@
         </div>
       </Form>
     </div>
-  </PortalLayout>
+  </registerLayout>
 </template>
 
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import PortalLayout from './portalLayout.vue'
 import { countDown } from '@/fn/timer'
 import { validateEmail, validatePassword } from '@/util/validateRules'
 import { except } from '@/fn/object'
-import { scrollToError } from '@/util/form'
 import DisableAutoFill from '@/components/DisableAutoFill.vue'
 import { sendResetpwdEmail, resetPassword } from '@/api/register'
 import { success } from '@/ui/modal'
+import registerLayout from './login/loginLayout.vue'
 
 @Component({
   components: {
-    PortalLayout,
-    DisableAutoFill
+    DisableAutoFill,
+    registerLayout
   }
 })
 export default class Main extends ViewBase {
   codeDisabled = false
-  codeMsg = '获取邮箱验证码'
+  codeMsg = '获取验证码'
 
   emailError = ''
   captchaError = ''
@@ -127,17 +126,10 @@ export default class Main extends ViewBase {
     }
   }
 
-  scrollToError() {
-    const form = this.$refs.form as any
-    this.$nextTick(() => scrollToError(form))
-  }
-
   async submit() {
     const form = this.$refs.form as any
     const valid = await form.validate()
-    if (!valid) {
-      return this.scrollToError()
-    }
+    if (!valid) { return }
 
     this.submitDisabled = true
 
@@ -155,47 +147,47 @@ export default class Main extends ViewBase {
 
   onSubmit8007203() {
     this.emailError = '邮箱已存在'
-    this.scrollToError()
   }
 
   onSubmit8007303() {
     this.captchaError = '验证码错误'
-    this.scrollToError()
   }
 }
 </script>
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-@import './common.less';
-/deep/ .ivu-form-item-required .ivu-form-item-label::before {
-  content: '';
-}
-.forgetpass {
-  max-width: 1100px;
-  margin: 0 auto;
-  text-align: center;
-  font-size: 15px;
-  color: @c-button;
-  border-bottom: solid 1px @c-divider;
-  padding: 50px 0 20px;
-}
+@import './login/common.less';
 
-.reset-pwd {
-  width: 600px;
-  margin: auto;
-  padding: 80px auto 40px;
+/deep/ .form-item-getcode {
+  .ivu-form-item-content {
+    display: flex;
+    justify-content: space-between;
+  }
 }
-
 .input-captcha {
-  width: 260px;
+  width: 230px;
+}
+/deep/ .ivu-cascader {
+  .ivu-input {
+    padding-left: 20px;
+  }
+}
+/deep/ .form .ivu-input {
+  padding-left: 20px;
 }
 .btn-code {
-  margin-left: 20px;
-  width: 200px;
+  width: 126px;
+  height: 48px;
+  background: #2f6af9;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  border: none;
+  &:hover {
+    background: #2f6af9;
+    color: #fff;
+  }
 }
 
-.submit-ln {
-  margin-top: 100px;
-}
 </style>

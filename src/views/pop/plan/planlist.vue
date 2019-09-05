@@ -10,6 +10,14 @@
       >
         <Icon type="ios-add" size="27"/>新建广告计划
       </Button>
+      <Button
+        type="primary"
+        :to="{name: 'pop-planlist-add-business'}"
+        class="btn-new"
+        v-auth="'promotion.ad-plan#create'"
+      >
+        <Icon type="ios-add" size="27"/>新建商业广告计划
+      </Button>
     </h3>
 
     <Form :model="form" class="table-box">

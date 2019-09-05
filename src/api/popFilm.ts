@@ -88,3 +88,10 @@ export async function productsList(data: any) {
     const res = await get('/brand/products', data)
     return res
 }
+
+// http://yapi.aiads-dev.com/project/94/interface/api/6234
+// 获取该公司下影片列表
+export async function companyMovies() {
+    const res = get('/customer/companies/movies')
+    return res
+}

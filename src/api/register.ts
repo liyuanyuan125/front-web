@@ -41,3 +41,35 @@ export async function resetPassword(data: any) {
   const res = put('/customer/accounts/pwd-reset', data)
   return res
 }
+
+/**
+ * 公司行业
+ * @param categoryId=2720 行业列表
+ */
+export async function tradeList() {
+  const res = get('/basis/dictionaries', {
+    categoryId: 2720,
+    dictionaryName: ''
+  })
+  return res
+}
+
+/**
+ * 获取短信验证码
+ * @param mobile
+ * http://yapi.aiads-dev.com/project/94/interface/api/6238
+ */
+export async function getSms(mobile: any) {
+  const res = post('/customer/accounts/sms', {mobile})
+  return res
+}
+
+/**
+ * 检测公司是否存在
+ * @param companyName
+ * http://yapi.aiads-dev.com/project/94/interface/api/6238
+ */
+export async function isCompanyName(name: any) {
+  const res = get('/customer/companies/name', {name})
+  return res
+}

@@ -123,7 +123,7 @@ export default class Main extends ViewBase {
       if (this.form.email) {
         updateEmail(this.form.email)
       }
-      this.$router.push({ name: 'account-info' })
+      this.$router.push({ name: 'account-company' })
     } catch (ex) {
       this.handleError(ex)
     } finally {

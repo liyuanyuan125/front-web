@@ -5,30 +5,67 @@
         <div slot="title">
           <Row type="flex" justify="space-between">
             <Col :span="24">
-            <DetailNavBar titleText="统计周期">
-              <div slot="item">
-                <RadioGroup class='nav' style="margin-right:15px" @on-change="handleChange" v-model="form.dayRangesKey" size="large" type="button">
-                  <Radio v-for="(item) in dict.dayRanges" :key="item.key" :disabled="item.disabled" :label="item.key">{{item.text}}</Radio>
-                </RadioGroup>
-                <DatePicker type="daterange" v-model="form.beginDate" @on-change="dateChange" placement="bottom-end" placeholder="自定义时间段"></DatePicker>
-              </div>
-            </DetailNavBar>
+              <DetailNavBar titleText="统计周期">
+                <div slot="item">
+                  <RadioGroup
+                    class="nav"
+                    style="margin-right:15px"
+                    @on-change="handleChange"
+                    v-model="form.dayRangesKey"
+                    size="large"
+                    type="button"
+                  >
+                    <Radio
+                      v-for="(item) in dict.dayRanges"
+                      :key="item.key"
+                      :disabled="item.disabled"
+                      :label="item.key"
+                    >{{item.text}}</Radio>
+                  </RadioGroup>
+                  <DatePicker
+                    type="daterange"
+                    v-model="form.beginDate"
+                    @on-change="handleChange"
+                    placement="bottom-end"
+                    placeholder="自定义时间段"
+                  ></DatePicker>
+                </div>
+              </DetailNavBar>
             </Col>
           </Row>
         </div>
         <div class="content">
           <Row type="flex" justify="space-between">
             <Col :span="24">
-            <div class="chart-wp">
-              <AreaBasic :initDone="chart1.initDone" :title="chart1.title" :dict1="chart1.dict1" :dict2="chart1.dict2" :toolTip="chart1.toolTip" :height="chart1.height" :color="chart1.color" :dataList="chart1.dataList" :currentTypeIndex="chart1.currentTypeIndex" />
-            </div>
+              <div class="chart-wp">
+                <AreaBasic
+                  :initDone="chart1.initDone"
+                  :title="chart1.title"
+                  :dict1="chart1.dict1"
+                  :dict2="chart1.dict2"
+                  :toolTip="chart1.toolTip"
+                  :height="chart1.height"
+                  :color="chart1.color"
+                  :dataList="chart1.dataList"
+                  :currentTypeIndex="chart1.currentTypeIndex"
+                />
+              </div>
             </Col>
           </Row>
           <Row type="flex" justify="space-between">
             <Col :span="24">
-            <div class="chart-wp borderRadius">
-              <AreaBasicxtra :initDone="chart2.initDone" :title="chart2.title" :dict1="chart2.dict1" :dict2="chart2.dict2" :color="chart2.color" :dataList="chart2.dataList" :currentTypeIndex="chart2.currentTypeIndex" @typeChange="typeChangeHander2" />
-            </div>
+              <div class="chart-wp borderRadius">
+                <AreaBasicxtra
+                  :initDone="chart2.initDone"
+                  :title="chart2.title"
+                  :dict1="chart2.dict1"
+                  :dict2="chart2.dict2"
+                  :color="chart2.color"
+                  :dataList="chart2.dataList"
+                  :currentTypeIndex="chart2.currentTypeIndex"
+                  @typeChange="typeChangeHander2"
+                />
+              </div>
             </Col>
           </Row>
         </div>
@@ -49,6 +86,7 @@ import AreaBasicxtra from '@/components/chartsGroup/areaBasicExtra/'
 const timeFormat = 'YYYYMMDD'
 import { findIndex, at, keyBy } from 'lodash'
 import { KeyText } from '@/util/types'
+import { intDate } from '@/util/dealData'
 
 const getName = (key: string, list: any[]) => {
   const i: number = findIndex(list, (it: any) => {
@@ -189,9 +227,9 @@ export default class Main extends ViewBase {
     try {
       const { data } = await trend({ ...mockObj }, id)
 
-      const items = data.items || null
+      const items = (data.items as any[] || []).sort((a, b) => a.date - b.date)
 
-      if (items && items.length > 0) {
+      if (items.length > 0) {
         this.chart2.dict1 = items[0].channels.map((it: any, index: number) => {
           return {
             text: it.name + '指数',
@@ -205,14 +243,16 @@ export default class Main extends ViewBase {
           })
         })
         items.forEach((it: any, index: number) => {
-          this.chart1.dataList[0].date.push(it.date)
+          const date = intDate(it.date)
+          this.chart1.dataList[0].date.push(date)
           this.chart1.dataList[0].data.push(it.count)
           it.channels.forEach((channelItem: any, i: number) => {
             this.chart2.dataList[i].data.push(channelItem.count)
-            this.chart2.dataList[i].date.push(it.date)
+            this.chart2.dataList[i].date.push(date)
           })
         })
       }
+
       this.chart1.initDone = true
       this.chart2.initDone = true
     } catch (ex) {

@@ -303,7 +303,7 @@ export default class BrandLayout extends ViewBase {
 
 .hot-pane {
   width: 379px;
-  min-height: 150px;
+  min-height: 150px !important;
   border-radius: 6px 0 0 0;
 }
 
@@ -362,7 +362,7 @@ export default class BrandLayout extends ViewBase {
 
 .fans-pane {
   width: 379px;
-  min-height: 150px;
+  min-height: 150px !important;
   border-radius: 0 6px 0 0;
 
   /deep/ .fans-content {
@@ -405,7 +405,7 @@ export default class BrandLayout extends ViewBase {
 
 .plan-pane {
   position: relative;
-  min-height: 140px;
+  min-height: 140px !important;
   margin-top: 6px;
 }
 
@@ -459,7 +459,7 @@ export default class BrandLayout extends ViewBase {
 .recommend-pane {
   position: relative;
   margin-top: 6px;
-  min-height: 236px;
+  min-height: 236px !important;
 }
 
 .recommend-swiper {

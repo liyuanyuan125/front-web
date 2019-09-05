@@ -1,5 +1,5 @@
 <template>
-  <Cascader v-model="inner"  :data="data" :load-data="loadData" :clearable="clearable"
+  <Cascader v-model="inner"  :data="data" :load-data="loadData" :clearable="clearable" :placeholder="placeholder"
     class="area-select" :render-format="format" ref="ui"></Cascader>
 </template>
 
@@ -42,6 +42,11 @@ export default class AreaSelect extends ViewBase {
    * 是否显示大区，例如：华北地区，默认不显示
    */
   @Prop({ type: Boolean, default: false }) showRegion!: boolean
+
+  /**
+   * placeholder 默认值为请选择
+   */
+  @Prop({ type: String, default: '请选择'}) placeholder!: string
 
   inner: AreaValue = []
 
