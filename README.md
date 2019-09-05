@@ -21,5 +21,10 @@ yarn build
 yarn lint
 ```
 
+### 验证 css
+```
+yarn lint:css
+```
+
 ### 更多自定义配置
 参见 [Vue Cli 配置](https://cli.vuejs.org/zh/config/)
