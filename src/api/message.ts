@@ -7,7 +7,7 @@ import { mockGet, tid, title20, dateRange } from './mock'
  * @description https://yapi.aiads-dev.com/project/189/interface/api/5356
  */
 export async function messageList(query: any) {
-  const res = await get(`/message/notification/search`, query, {
+  const res = await get(`/message/letter/search`, query, {
     timeout: 1500
   })
   return res
@@ -75,7 +75,7 @@ export async function messageList(query: any) {
  * @description https://yapi.aiads-dev.com/project/189/interface/api/5357
  */
 export async function readItem(id: string = '') {
-  const res = await get(`message/notification/read/${id}`)
+  const res = await get(`message/letter/read/${id}`)
   return res
 }
 
@@ -84,6 +84,6 @@ export async function readItem(id: string = '') {
  * @description https://yapi.aiads-dev.com/project/189/interface/api/5360
  */
 export async function readAll() {
-  const res = await put(`message/notification/read`)
+  const res = await put(`message/letter/read`)
   return res
 }
