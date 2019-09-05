@@ -12,9 +12,8 @@ build:
   stage: build
   only:
     - tags
+    - master
     - develop
-    - testing
-    - release
   script:
     - yarn config get registry && yarn && yarn lint && yarn build
   artifacts:
@@ -32,9 +31,8 @@ package:
     GIT_STRATEGY: none
   only:
     - tags
+    - master
     - develop
-    - testing
-    - release
   script:
     - package
   tags:
@@ -47,9 +45,8 @@ deploy-dev:
     GIT_STRATEGY: none
   dependencies: []
   only:
+    - master
     - develop
-    - testing
-    - release
   except:
     - tags
   script:
@@ -66,6 +63,7 @@ deploy-prd:
   dependencies: []
   only:
     - tags
+    - master
   except:
     - branches
   script:
