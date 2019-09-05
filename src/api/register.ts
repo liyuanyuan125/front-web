@@ -82,3 +82,24 @@ export async function isCompanyName(companyName: any) {
   const res = get('/customer/companies/name', {companyName})
   return res
 }
+
+/**
+ * 绑定邮箱
+ * http://yapi.aiads-dev.com/project/94/interface/api/6274
+ */
+export async function bindEmail(data: any) {
+  const res = put('/customer/accounts/bind-email', data)
+  return res
+}
+
+/**
+ * 绑定手机号
+ * http://yapi.aiads-dev.com/project/94/interface/api/6270
+ */
+export async function bindMobile(data: any) {
+  const res = put('/customer/accounts/bind-mobile', data)
+  return res
+}
+
+
+

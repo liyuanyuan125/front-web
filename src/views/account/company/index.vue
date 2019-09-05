@@ -335,8 +335,10 @@ export default class Main extends ViewBase {
   height: 50px;
   border-radius: 25px;
   color: #fff;
-  margin-right: 30px;
-  .button-style(#fff,#00202d);
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
 }
 
 /deep/ .ivu-table th,
