@@ -2,8 +2,8 @@
   <div>
     <Modal v-model="showDlg" title="充值" width="400" @on-cancel="cancel()" >
       <Form ref="form" :model="form" :label-width="90" :rules="formRules" class="edit-input">
-        <FormItem label="充值金额" prop="qualificationCode">
-          <Input v-model="form.qualificationCode" placeholder="请输入"></Input>&nbsp;&nbsp;元
+        <FormItem label="充值金额" prop="amount">
+          <Input v-model="form.amount" placeholder="请输入"></Input>&nbsp;&nbsp;元
         </FormItem>
         <FormItem label="支付方式" prop="status">
           <RadioGroup v-model="form.status" >
@@ -23,14 +23,13 @@
       </div>
       <div slot="footer" class="btn-center-footer">
         <Button class="button-cancel "  @click="cancel('form')" >取消</Button>
-        <Button type="primary" v-if='this.form.status == 1' class="button-ok ok" ><a href="http://zentao.aiads.com/index.php?m=bug&f=browse&productid=5&branch=0&browseType=unresolved">确认支付</a></Button>
+        <Button type="primary" v-if='this.form.status == 1' class="button-ok ok" ><a href="javascript:;" @click='hrefJump'>确认支付</a></Button>
         <Button type="primary" v-if='this.form.status == 2' class="button-ok ok" @click="changeData('form')">确认支付</Button>
       </div>
     </Modal>
     <Modal v-model="showoffline" title="线下转账" width="1000" @on-cancel="cancelDataForm()" >
      <Row class='moneyTip'>
-       <Col :span='12' class='top'>订单提交成功，请尽快付款！ 订单号：800000151097054690</Col>
-       <Col :span='5' class='bottom'>应付金额: <span>{{formatNumber(500000)}}</span> 元</Col>
+       <Col :span='12' class='top'>应付金额: <span>{{formatNumber(Number(dataForm.amount))}}</span> 元</Col>
      </Row>
      <Form
           :model="dataForm"
@@ -68,15 +67,15 @@
           </Row>
           <Row class="add-row">
             <Col span="10">
-              <FormItem label="银行账号" prop="accountNumber">
-                <RadioGroup v-model="dataForm.addstatus" >
+              <FormItem label="汇款方式" prop="remittanceType">
+                <RadioGroup v-model="dataForm.remittanceType" >
                   <Radio v-for="it in addMoneyList" :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
                 </RadioGroup>
               </FormItem>
             </Col>
             <Col span="10" style='margin-left: 15%'>
-              <FormItem label="汇款流水单号" prop="amount">
-                <Input v-model="dataForm.amount" class="inp-style" placeholder="请输入充值金额"/>
+              <FormItem label="汇款流水单号" prop="remittanceNo">
+                <Input v-model="dataForm.remittanceNo" class="inp-style" placeholder="请输入充值金额"/>
               </FormItem>
             </Col>
           </Row>
@@ -93,6 +92,7 @@
             <Col span="10" style='margin-left: 15%;'>
               <FormItem label="汇款时间">
                 <Date-picker
+                  :options="options3"
                   type="date"
                   prop="remittanceDate"
                   v-model="dataForm.remittanceDate"
@@ -141,13 +141,16 @@ import {
   moneyList,
   dataFrom,
   defaultList,
-  add
+  add,
+  lineUnderRemittances,
+  before
 } from '@/api/financeinfo'
 import Upload from '../upload/Upload.vue'
 import { warning , success, toast , info } from '@/ui/modal'
+// import { formatNumber } from '@/util/validateRules'
 
 const form = {
-  qualificationCode: '',
+  amount: '',
   status: 1
 }
 
@@ -163,7 +166,7 @@ export default class Change extends ViewBase {
   // 输入框验证规则
   get formRules() {
     const rules = {
-      qualificationCode: [
+      amount: [
           { required: true, message: '请输入充值金额', trigger: 'blur' }
       ],
       status: [
@@ -202,18 +205,26 @@ export default class Change extends ViewBase {
     }
   ]
 
+  options3: any = {
+    disabledDate(date: any) {
+       return date && date.valueOf() < Date.now() - 86400000
+    }
+  }
+
   form = { ...form }
+  // defaultamount = this.form.amount
   dataForm: any = {
-    accountNumber: '',
     accountName: '',
-    amount: null,
+    amount: '0.01', // 充值金额
     remittanceDate: null,
-    addstatus: 1,
+    remittanceType: 1,
+    remittanceNo: '',
     remark: '',
     receipts: [],
     receipt: '',
-    companyId: this.user.companyId,
-    companyName: this.user.companyName
+    payType: 1,
+    // companyId: this.user.companyId,
+    // companyName: this.user.companyName
   }
 
   async init() {
@@ -224,6 +235,10 @@ export default class Change extends ViewBase {
     this.accountSplice = data.accountNumber
       ? data.accountNumber.replace(/(\d{4})(?=\d)/g, '$1 ')
       : ''
+  }
+
+  get formatNumber() {
+    return formatNumber
   }
 
   cancel() {
@@ -238,28 +253,40 @@ export default class Change extends ViewBase {
     ; (this.$refs.dataForm as any).resetFields()
   }
 
-  get formatNumber() {
-    return formatNumber
+  async hrefJump() {
+    if (this.form.amount == '') {
+      info('请输入充值金额')
+      return
+    }
+    try {
+      const res = await lineUnderRemittances({amount: this.form.amount , payType: 0})
+      window.location = res.data
+      // this.form = {}
+    } catch (ex) {
+      this.handleError(ex)
+    }
   }
 
 
   async changeData(forms: any) {
-    if (this.form.qualificationCode == '') {
+    if (this.form.amount == '') {
         info('请输入充值金额')
         return
       }
     const myThis: any = this
     myThis.$refs[forms].validate(async ( valid: any ) => {
+      this.dataForm.amount = this.form.amount
       this.showDlg = false
       this.showoffline = true
     })
+    const aaa = await before()
+    this.addMoneyList = aaa.data.remittanceTypeList
   }
 
     // 表单提交
   async dataFormSubmit(dataForms: any) {
-    this.dataForm.remittanceDate = new Date(
-      this.dataForm.remittanceDate
-    ).getTime()
+    const aaa = new Date(this.dataForm.remittanceDate)
+    this.dataForm.remittanceDate =
     this.dataForm.receipt =
       this.dataForm.receipts.length > 0 ? this.dataForm.receipts[0].fileId : []
       if (this.dataForm.receipts.length == 0 ) {
@@ -270,18 +297,23 @@ export default class Change extends ViewBase {
     myThis.$refs[dataForms].validate(async (valid: any) => {
       if (valid) {
         const query = !this.id
-          ? this.dataForm
+          ? {...this.dataForm , remittanceDate: String(aaa.getFullYear()) +
+            ((aaa.getMonth() + 1) < 10 ? '0' + String((aaa.getMonth() + 1)) : (aaa.getMonth() + 1) ) +
+            ((aaa.getDate()) < 10 ? '0' + String((aaa.getDate())) : (aaa.getDate()) )}
           : {
-              id: this.id,
-              ...this.dataForm
+              // id: this.id,
+              ...this.dataForm,
+              remittanceDate: String(aaa.getFullYear()) +
+              ((aaa.getMonth() + 1) < 10 ? '0' + String((aaa.getMonth() + 1)) : (aaa.getMonth() + 1) ) +
+              ((aaa.getDate()) < 10 ? '0' + String((aaa.getDate())) : (aaa.getDate()) )
             }
         const title = '添加'
         try {
-          const res = await add(query)
+          const res = await lineUnderRemittances(query)
           toast('添加成功')
-          this.dataForm = {}
+          // this.dataForm = {}
           // this.seach()
-          // history.go(0)
+          history.go(0)
         } catch (ex) {
           this.handleError(ex)
         }
@@ -420,11 +452,6 @@ export default class Change extends ViewBase {
     font-size: 16px;
     font-weight: 600;
     color: rgba(0, 32, 45, 1);
-  }
-  .bottom {
-    color: rgba(102, 102, 102, 1);
-    font-size: 16px;
-    float: right;
     span {
       color: rgba(255, 128, 128, 1);
     }
