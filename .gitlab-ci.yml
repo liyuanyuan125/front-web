@@ -45,10 +45,10 @@ deploy-dev:
     GIT_STRATEGY: none
   dependencies: []
   only:
-    - master
     - develop
   except:
     - tags
+    - master
   script:
     - deploy -service $SERVICE_NAME
   environment: aiads-dev
@@ -64,8 +64,6 @@ deploy-prd:
   only:
     - tags
     - master
-  except:
-    - branches
   script:
     - deploy -service $SERVICE_NAME -template web -vars port=8005
   environment: aiads-prd
