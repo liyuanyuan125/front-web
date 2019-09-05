@@ -20,7 +20,7 @@
           </Select>
         </FormItem>
       </Form>
-      <div class="footer btnCenter footer-btn">
+      <div class="footer btn-center-footer footer-btn">
         <Button class="button-cancel" @click="value.visible = false">取消</Button>
         <Button type="primary" class="button-ok" @click="handleSumbit">确认</Button>
       </div>
@@ -95,6 +95,10 @@ export default class Relevan extends ViewBase {
 }
 </script>
 <style lang="less" scoped>
+@import '~@/views/account/less/common.less';
+.item-top {
+  padding-top: 20px;
+}
 .footer-btn {
   margin: 70px 0 30px;
 }

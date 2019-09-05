@@ -154,10 +154,16 @@ export default class Upload extends ViewBase {
   }
 
   onChange(ev: Event) {
-    const files = (ev.target as HTMLInputElement).files
+    const input = ev.target as HTMLInputElement
+    const files = input.files
     if (files == null || files.length === 0) {
       return
     }
+
+    // 清空以便下次可以再次触发 onChange
+    setTimeout(() => {
+      input.value = ''
+    })
 
     const remain = this.maxCount - this.inValue.length
     if (files.length > remain) {

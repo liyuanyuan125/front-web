@@ -142,7 +142,7 @@ export default class WordCloudChart extends ViewBase {
       shape: 'square',
       ellipticity: 0.65,
       click: this.clickHandle,
-      // hover: this.hoverHandle
+      // hover: this.hoverHandle  // 暂未使用
     }
     WordCloud(ele, option)
   }
@@ -158,9 +158,10 @@ export default class WordCloudChart extends ViewBase {
     this.$emit('keyChange', item)
   }
 
-  // hoverHandle(item: any, dimension: any, event: any) {
-  //   console.log(item, dimension, event)
-  // }
+  // 暂未使用
+  hoverHandle(item: any, dimension: any, event: any) {
+    // console.log(item, dimension, event)
+  }
 
   @Watch('initDone')
   watchInitDone(val: boolean) {
@@ -211,5 +212,15 @@ export default class WordCloudChart extends ViewBase {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 9;
+}
+</style>
+<style lang="less">
+.word-cloud .content-wrap .chart-wrap {
+  span {
+    cursor: pointer;
+  }
+  span:hover {
+    color: #fff !important;
+  }
 }
 </style>

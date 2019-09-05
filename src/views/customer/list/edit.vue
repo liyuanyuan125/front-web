@@ -1,8 +1,7 @@
 <template>
   <div class="page home-bg as">
     <h3 class="nav">
-      <!-- <span class="nav-top-title"><span @click="goBack">客户管理</span> > {{title}}</span> -->
-      <span class="nav-top-title ">{{titles}}</span>
+      <span>{{titles}}</span>
     </h3>
     <Form ref="form" :model="from" class="edit-input from" :rules="dataRule" :label-width="100">
       <FormItem label="客户名称" class="item-account-email" prop="name">
@@ -33,7 +32,7 @@
         <Input type="text" v-model="from.contactAddress" ></Input>
       </FormItem>
     </Form>
-    <div class="btnCenter sumbit-button">
+    <div class="btn-center-footer sumbit-button">
       <Button type="primary" v-if="!$route.params.id" class="button-ok but" @click="passwordkSet('form')">提交</Button>
       <Button type="primary" v-else class="button-ok but" @click="passwordkSet('form')">修改</Button>
     </div>
@@ -148,6 +147,7 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
+@import '~@/views/account/less/formInput.less';
 .as {
   background: rgba(255, 255, 255, 0);
 }
@@ -166,11 +166,6 @@ export default class Main extends ViewBase {
     margin-left: 40px;
   }
 }
-// .item-account-email {
-//   /deep/ .ivu-form-item-label {
-//     // padding-left: 0;
-//   }
-// }
 .login-email {
   font-size: 14px;
   position: relative;

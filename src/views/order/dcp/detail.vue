@@ -1,7 +1,7 @@
 <template>
   <div class="page home-bg">
     <h3 class="userTitle">
-      <span class="nav-top-title">DCP包  > 下载DCP包 </span>
+      <span>DCP包  > 下载DCP包 </span>
     </h3>
     <div class="search-input">
       <div>

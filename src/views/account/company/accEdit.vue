@@ -1,5 +1,5 @@
 <template>
-  <div class="page home-bg as">
+  <div class="page as">
     <Form :model="form"  :rules="rule"  ref="dataform" label-position="left" :label-width="100" class="edit-input">
       <div class='bs'>
       <h3 class="layout-title">登录信息</h3>
@@ -28,7 +28,7 @@
       </FormItem>
     </div>
     </Form>
-    <div class="btnCenter">
+    <div class="btn-center-footer">
       <Button
         type="primary"
         :disabled="submitDisabled"
@@ -135,6 +135,12 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
+@import '~@/views/account/less/formInput.less';
+
+.item-top {
+  padding-top: 20px;
+}
 .bok {
   width: 200px;
   height: 50px;
@@ -163,6 +169,10 @@ export default class Main extends ViewBase {
   height: 40px;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 1);
+  width: 400px;
+}
+/deep/ .ivu-input-wrapper {
+  width: auto;
 }
 .layout-title {
   background: rgba(255, 255, 255, 0);

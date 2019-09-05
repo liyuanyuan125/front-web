@@ -1,7 +1,7 @@
 <template>
   <div class="page home-bg">
     <h3 class="userTitle">
-      <span class="nav-top-title">DCP包</span>
+      <span>DCP包</span>
     </h3>
     <div class="flex-box search-input">
       <h4 class="info-title">搜索查询</h4>
@@ -20,7 +20,7 @@
         </template>
       </Table>
 
-      <Page :total="total" v-if="total>0" class="btnCenter"
+      <Page :total="total" v-if="total>0" class="btn-center-footer"
         :current="dataForm.pageIndex"
         :page-size="dataForm.pageSize"
         :page-size-opts="[10, 20, 50, 100]"

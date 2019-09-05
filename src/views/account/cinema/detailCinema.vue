@@ -111,6 +111,8 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/common.less';
 @import '../less/table.less';
+@import '~@/views/account/less/common.less';
+
 .cinema-title {
   font-size: 22px;
   color: #fff;

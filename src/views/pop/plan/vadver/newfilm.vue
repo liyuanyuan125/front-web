@@ -209,11 +209,11 @@ export default class DlgEditCinema extends ViewBase {
       const id = this.data.map((it: any) => it.id)
       this.idO = {}
       if (flag) {
-        await moviedate({
-          ids: id.join(','),
-          beginDate: this.begin,
-          endDate: this.end
-        })
+        // await moviedate({
+        //   ids: id.join(','),
+        //   beginDate: this.begin,
+        //   endDate: this.end
+        // })
         id.forEach((it: any) => {
           this.idO[it] = true
         })
@@ -227,20 +227,20 @@ export default class DlgEditCinema extends ViewBase {
         ...this.idO
       }
     } catch (ex) {
-      this.checkboxall = false
-      this.handleError(ex)
+      // this.checkboxall = false
+      // this.handleError(ex)
     }
   }
 
   async checkNum(id?: any) {
     try {
-      if (id) {
-        await moviedate({
-          ids: id,
-          beginDate: this.begin,
-          endDate: this.end
-        })
-      }
+      // if (id) {
+      //   await moviedate({
+      //     ids: id,
+      //     beginDate: this.begin,
+      //     endDate: this.end
+      //   })
+      // }
       this.checks[id] = !this.checks[id] ? true : false
       this.checkId = []
       let ids = this.data.map((it: any) => it.id)
@@ -267,7 +267,7 @@ export default class DlgEditCinema extends ViewBase {
         this.checkboxall = false
       }
     } catch (ex) {
-      this.handleError(ex)
+      // this.handleError(ex)
     }
   }
 

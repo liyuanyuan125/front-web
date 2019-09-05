@@ -185,6 +185,8 @@ export default class DlgEditCinema extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/formInput.less';
+
 /deep/ .edit-input .ivu-form-item-content .ivu-input-wrapper {
   width: 100%;
 }

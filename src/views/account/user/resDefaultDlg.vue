@@ -14,7 +14,7 @@
           </template>
         </Table>
       </div>
-      <div slot="footer" class="btnCenter footer-bottom">
+      <div slot="footer" class="btn-center-footer footer-bottom">
         <Button type="primary" class="button-ok ok" @click="value.visible = false">关闭</Button>
       </div>
     </Modal>

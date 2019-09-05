@@ -6,7 +6,7 @@
       <Page
         :total="total"
         v-if="total>0"
-        class="btnCenter"
+        class="btn-center-footer"
         :current="pageIndex"
         :page-size="pageSize"
         show-total
@@ -14,7 +14,7 @@
         @on-change="handlepageChange"
         @on-page-size-change="handlePageSize"
       />
-      <div slot="footer" class="btnCenter footer-bottom">
+      <div slot="footer" class="btn-center-footer footer-bottom">
         <Button type="primary" class="button-cancel" @click="value.visible = false">关闭</Button>
       </div>
     </Modal>
@@ -84,6 +84,8 @@ export default class Change extends ViewBase {
 }
 </script>
 <style lang="less" scoped>
+@import '~@/views/account/less/common.less';
+
 /deep/ .ivu-modal-header {
   border-bottom: 0;
   padding: 10px 13px;

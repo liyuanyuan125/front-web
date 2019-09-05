@@ -13,7 +13,7 @@
       <Page
       :total="total"
       v-if="total>0"
-      class="btnCenter"
+      class="btn-center-footer"
       :current="dataForm.pageIndex"
       :page-size="dataForm.pageSize"
       show-total
@@ -411,7 +411,7 @@ export default class Main extends ViewBase {
   overflow-y: hidden;
   background: rgba(32, 67, 80, 1);
 }
-/deep/ .btnCenter {
+/deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
   margin: 0 20px 0 20px;

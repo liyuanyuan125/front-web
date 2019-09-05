@@ -32,7 +32,7 @@
         <p class="head-img">
           <router-link class="a-link" :to="{name: 'film-figure', params: {id: item.personId}}">
             <img
-              :src="item.headImg == '' || item.headImg == null ? $store.state.defaultAvatar : item.headImg"
+              :src="!item.headImg ? $store.state.defaultAvatar : item.headImg"
             />
           </router-link>
         </p>
@@ -61,7 +61,7 @@
       <ul name="list" tag="ul" class="loading-img" v-if="mapImgList.length">
         <li v-for="(img, index) in mapImgList" :key="index">
           <a class="img-list">
-            <img :src="img" v-real-img="img" />
+            <img  v-real-img="img" />
           </a>
         </li>
       </ul>

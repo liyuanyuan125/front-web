@@ -42,6 +42,8 @@ export default class Log extends ViewBase {
 }
 </script>
 <style lang="less" scoped>
+@import '~@/views/account/less/common.less';
+
 .btn-center {
   text-align: center;
 }

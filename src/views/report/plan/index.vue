@@ -1,6 +1,6 @@
 <template>
-  <div class="page home-bg">
-    <div class="layout-nav-title">
+  <div class="page">
+    <div >
       <span>广告计划</span>
     </div>
 
@@ -212,6 +212,7 @@ export default class Main extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+@import '~@/views/account/less/common.less';
 
 .not-data-list {
   font-size: 14px;

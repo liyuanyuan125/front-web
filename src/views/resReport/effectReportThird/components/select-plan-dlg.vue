@@ -57,7 +57,7 @@
       </div>
       <Page :total="total"
             v-if="total>0"
-            class="btnCenter"
+            class="btn-center-footer"
             :current="form.pageIndex"
             :page-size="form.pageSize"
             :page-size-opts="[4, 8, 16, 24]"

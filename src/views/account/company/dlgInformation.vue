@@ -34,7 +34,7 @@
           </div>
         </FormItem>
       </Form>
-      <div slot="footer" class="btnCenter">
+      <div slot="footer" class="btn-center-footer">
         <Button class="button-cancel ok" @click="value.visibleInforma = false">取消</Button>
         <Button type="primary" class="button-ok ok" @click="changeData('form')">变更数据</Button>
       </div>
@@ -149,7 +149,8 @@ export default class Change extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+@import '~@/views/account/less/common.less';
+@import '~@/views/account/less/formInput.less';
 .upload-wrap {
   position: relative;
   margin-top: 10px;

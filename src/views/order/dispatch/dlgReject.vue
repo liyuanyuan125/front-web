@@ -28,7 +28,7 @@
         </template>
       </Table>
 
-      <Page :total="total" v-if="total>0" class="btnCenter"
+      <Page :total="total" v-if="total>0" class="btn-center-footer"
         :current="dataForm.pageIndex"
         :page-size="dataForm.pageSize"
         show-total
