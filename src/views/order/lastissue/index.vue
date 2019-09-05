@@ -48,9 +48,15 @@
                   <div v-if='item.status == 1' @click="change(normallist.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(normallist.id , item.status, item.orderId)" class='imgs1'></div>
                     <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
-                    <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">{{item.videoName.slice(0,10)}}...</router-link>
-                  </Tooltip>
-                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+                    <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">
+                        <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                        {{item.videoName.slice(0,10)}}...
+                    </router-link>
+                    </Tooltip>
+                   <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}" v-if='item.videoName.length <= 10'>
+                        <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                        {{item.videoName}}
+                    </router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
@@ -87,9 +93,15 @@
                   <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
                     <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
-                    <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">{{item.videoName.slice(0,10)}}...</router-link>
+                    <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">
+                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                       {{item.videoName.slice(0,10)}}...
+                     </router-link>
                   </Tooltip>
-                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 10'>
+                    <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                    {{item.videoName}}
+                </router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
@@ -149,6 +161,8 @@ export default class Main extends ViewBase {
   objTwo: any = []
   deArray: any = []
   idsArray: any = []
+  // 广告片投放位置
+  deliveryPositionList: any = []
 
   async mounted() {
     // this.asd = true
@@ -435,6 +449,7 @@ export default class Main extends ViewBase {
       // 获取上刊列表
       const datalist = await queryList(this.query)
       this.itemlist = datalist.data.items
+      this.deliveryPositionList = datalist.data.deliveryPositionList
       this.normallist = datalist.data.normal == null ? [] : datalist.data.normal
       this.asd = false
 

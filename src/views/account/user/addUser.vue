@@ -22,7 +22,7 @@
           <FormItem label="联系人名称" >
             <Input v-model="form.contactName" :disabled="!isAccountAuth" placeholder="请输入联系人名称"></Input>
           </FormItem>
-          <FormItem label="邮箱(选填)"  prop="email" :error="emailError">
+          <FormItem label="邮箱(选填)" :error="emailError">
             <Input v-model="form.email" @on-blur="handleEmail" placeholder="请输入正确的邮箱地址"></Input>
           </FormItem>
           
@@ -142,19 +142,19 @@ export default class Main extends ViewBase {
 
   get rules() {
     return {
-      email: [
-        {
-          require: true,
-          message: '请输入登录邮箱',
-          trigger: 'blur',
-          validator(rule: any, value: string[], callback: any) {
-            value.length == 0
-              ? callback(new Error('请输入登录邮箱'))
-              : callback()
-          }
-        },
-        { type: 'email', message: '邮箱格式有误', trigger: 'blur' }
-      ],
+      // email: [
+      //   {
+      //     require: true,
+      //     message: '请输入登录邮箱',
+      //     trigger: 'blur',
+      //     validator(rule: any, value: string[], callback: any) {
+      //       value.length == 0
+      //         ? callback(new Error('请输入登录邮箱'))
+      //         : callback()
+      //     }
+      //   },
+      //   { type: 'email', message: '邮箱格式有误', trigger: 'blur' }
+      // ],
       role: [
         {
           require: true,

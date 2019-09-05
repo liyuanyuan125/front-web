@@ -5,12 +5,12 @@
     </div>
     <Modal v-model="visible" width="445px" class="comDlg">
         <h2 class="title">变更邮箱</h2>
-        <Form :model="form" :rules="rule" ref="form">
+        <Form :model="form" :rules="rule" ref="form" :key="randomKey">
           <FormItem prop="email" :error="errorEmail">
             <Input v-model="form.email" placeholder="请输入邮箱" />
           </FormItem>
-          <FormItem prop="captcha" class="form-item-getcode">
-            <Input v-model="form.captcha" :maxlength="6" class="input-captcha" placeholder="请输入验证码" />
+          <FormItem prop="code" class="form-item-getcode">
+            <Input v-model="form.code" :maxlength="6" class="input-captcha" placeholder="请输入验证码" />
             <Button class="get-code" @click="getCode" :disabled="codeDisable || emailIsValid">{{codeMsg}}</Button>
           </FormItem>
         </Form>
@@ -27,7 +27,9 @@ import {Component} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { validateEmail, validataTel } from '@/util/validateRules'
 import { countDown } from '@/fn/timer'
-import { sendRegisterEmail } from '@/api/register'
+import { mobileOrEmail, bindEmail } from '@/api/register'
+import { success } from '@/ui/modal'
+import { random } from '@/fn/string'
 
 @Component
 export default class Main extends ViewBase {
@@ -39,8 +41,9 @@ export default class Main extends ViewBase {
 
   form = {
     email: '',
-    captcha: ''
+    code: ''
   }
+  randomKey = random()
 
   get rule() {
     return {
@@ -54,7 +57,7 @@ export default class Main extends ViewBase {
           }
         }
       ],
-      captcha: [
+      code: [
         { required: true, message: '请输入验证码', trigger: 'blur' }
       ],
     }
@@ -69,7 +72,10 @@ export default class Main extends ViewBase {
     this.codeDisable = true
 
     try {
-      await sendRegisterEmail(this.form.email)
+      await mobileOrEmail({
+        mobileOrEmail: this.form.email,
+        codeType: 'email-reset',
+      })
 
       await countDown(60, sec => {
         this.codeMsg = sec + 's'
@@ -85,6 +91,7 @@ export default class Main extends ViewBase {
 
   onView() {
     this.visible = true
+    this.randomKey = random()
   }
 
   onGetCode8007203() {
@@ -94,8 +101,15 @@ export default class Main extends ViewBase {
   async emailSubmit() {
     const valid = await (this.$refs.form as any).validate()
     if (!valid) { return}
-    this.visible = false
     // 重新调用接口刷新页面
+    try {
+      const { data } = await bindEmail({...this.form})
+      await success('重置密码成功')
+      this.visible = false
+    } catch (ex) {
+      this.handleError(ex)
+      this.visible = false
+    }
   }
 }
 </script>

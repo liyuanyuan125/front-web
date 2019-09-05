@@ -3,18 +3,18 @@
     <div class="main-wrap">
 
       <div class="tablist">
-        <h4 class="tabs" v-if="!registerNext || form.companyType == 2">
-          <span :class="{active: form.companyType == 1}" @click="handleCompany">我是企业</span>
-          <span :class="{active: form.companyType == 2}" @click="handlePerson">我是个人</span>
+        <h4 class="tabs" v-if="!registerNext || subForm.companyType == 2">
+          <span :class="{active: subForm.companyType == 1}" @click="handleCompany">我是企业</span>
+          <span :class="{active: subForm.companyType == 2}" @click="handlePerson">我是个人</span>
         </h4>
-        <h5 class="go-back" v-if="registerNext && form.companyType == 1">
+        <h5 class="go-back" v-if="registerNext && subForm.companyType == 1">
           <span>设置账号</span>
           <span @click="nextBack">返回上一步</span>
         </h5>
       </div>
 
       <Form :model="form" :rules="rules" class="form"  ref="form" v-if="!registerNext" :key="keyRandom">
-        <FormItem prop="companyName" :error="companyError">
+        <FormItem prop="companyName">
           <Input type="text" v-model="form.companyName" placeholder="请输入公司名称" />
         </FormItem>
         <FormItem prop="businessParentCode">
@@ -45,8 +45,8 @@
         <FormItem prop="mobile">
           <Input  v-model="subForm.mobile" :maxlength="11" placeholder="请输入手机号" />
         </FormItem>
-        <FormItem prop="captcha" :error="captchaError" class="form-item-getcode">
-          <Input v-model="subForm.captcha" :maxlength="6" class="input-captcha"
+        <FormItem prop="smsCode" :error="smsCodeError" class="form-item-getcode">
+          <Input v-model="subForm.smsCode" :maxlength="6" class="input-smsCode"
             placeholder="输入手机验证码"/>
           <Button type="primary" class="btn-code" :disabled="codeDisabled || mobileIsValid" @click="getCode">{{codeMsg}}</Button>
         </FormItem>
@@ -59,8 +59,8 @@
             placeholder="请再次输入密码"/>
         </FormItem>
 
-         <FormItem v-if="form.companyType == 2" class="check-ready">
-          <Input v-model="subForm.referrerMobile" :maxlength="11" placeholder="推荐人手机号(选填）"/>
+         <FormItem v-if="subForm.companyType == 2" class="check-ready">
+          <Input v-model="subForm.recommendTel" :maxlength="11" placeholder="推荐人手机号(选填）"/>
         </FormItem>
 
         <FormItem class="check-ready agreement" prop="agreement" >
@@ -68,7 +68,6 @@
           <agreementDlg>《鲸娱数据-广告主合作协议》</agreementDlg>
         </FormItem>
          <Button type="primary"  long class="submit" @click="submit">提交申请</Button>
-         <!--  :disabled="submitDisabled" -->
       </Form>
 
 
@@ -111,10 +110,7 @@ export default class Main extends ViewBase {
   agreement = false
 
   imageList: any[] = []
-
-  emailError = ''
-  captchaError = ''
-  companyError = ''
+  smsCodeError = ''
 
   registerNext = false
   submitDisabled = true
@@ -122,26 +118,35 @@ export default class Main extends ViewBase {
   tradeList = [] // 行业
 
   form: any = {
-    companyType: 1,
     area: [],
     provinceId: 0,
     cityId: 0,
-    requestId: '', // 短信成功验证
     qualificationImageList: []
   }
 
   subForm = {
+    companyType: 1, // 1 公司 2个人
     name: '',
     mobile: '',
-    captcha: '',
+    smsCode: '',
     password: '',
     passwordAgain: '',
+    requestId: '', // 短信成功验证id
   }
 
   get rules() {
     return {
-      companyName: [{ required: true, message: '请输入公司名称', trigger: 'blur' }],
-      companyTrade: [{ required: true, message: '请选择行业', trigger: 'blur' }],
+      companyName: [
+        { required: true, message: '请输入公司名称', trigger: 'blur' },
+        {
+          trigger: 'blur',
+          async validator(rule: any, value: string, callback: any) {
+            const {data} = await isCompanyName(value)
+            data == 1 ? callback() : callback(new Error('公司已存在'))
+          }
+        },
+      ],
+      businessParentCode: [{ required: true, message: '请选择行业', trigger: 'blur' }],
 
       area: [
         {
@@ -156,7 +161,7 @@ export default class Main extends ViewBase {
         }
       ],
 
-      images: [
+      qualificationImageList: [
         {
           required: true,
           message: '营业执照不能为空',
@@ -173,7 +178,6 @@ export default class Main extends ViewBase {
   get subRules() {
     return {
       name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-      tel: [{ required: true, message: '请输入联系电话', trigger: 'blur' }],
       mobile: [
         { required: true, message: '请输入您的手机号', trigger: 'blur' },
         {
@@ -184,7 +188,7 @@ export default class Main extends ViewBase {
           }
         }
       ],
-      captcha: [
+      smsCode: [
         { required: true, message: '请输入验证码', trigger: 'blur' }
       ],
       password: [
@@ -227,30 +231,28 @@ export default class Main extends ViewBase {
   }
 
   handleCompany() {
-    this.form.companyType = 1
+    this.subForm.companyType = 1
     this.registerNext = false
-    this.keyRandom = random()
+    this.keyRandom = random('one')
   }
 
   handlePerson() {
-    this.form.companyType = 2
+    this.subForm.companyType = 2
     this.registerNext = true
-    // (this.$refs.subForm as any).resetFields();
-    this.keyRandom = random()
+    this.keyRandom = random('two')
   }
 
   nextBack() {
     this.registerNext = false
-    this.keyRandom = random()
-    this.form.area = [this.form.provinceId, this.form.cityId]
+    this.keyRandom = random('three')
   }
 
   async getCode() {
     this.codeDisabled = true
 
     try {
-      const { data } = await getSms(this.subForm.mobile)
-      this.form.requestId = data.requestId
+      const { data } = await getSms({mobile: this.subForm.mobile, smsType: 'register'})
+      this.subForm.requestId = data.requestId
       await countDown(60, sec => {
         this.codeMsg = sec + 's'
       })
@@ -275,35 +277,44 @@ export default class Main extends ViewBase {
     const valid = await form.validate()
     if (!valid) { return}
 
+    let postData = {}
+    const cloneForm: any = except(this.form, 'passwordAgain,area')
+    const cloneSubForm: any = except(this.subForm, 'agreement')
+    const qualificationImageList = (cloneForm.qualificationImageList || []).map((it: any) => it.fileId)
 
-    // try {
-    //   const postData: any = except(this.form, 'passwordAgain,area')
-    //   const { data } = await register(postData)
+    if (this.subForm.companyType == 1) { // 公司
+      postData = {
+        ...cloneForm,
+        ...cloneSubForm,
+        qualificationImageList
+      }
+    } else if (this.subForm.companyType == 2) { // 个人
+       postData = {
+        ...cloneSubForm,
+       }
+    }
 
-    //   setUserByData({
-    //     ...data,
-    //     systemCode: postData.systems[0],
-    //   })
-
-    //   this.$router.push({ name: 'register-complete' })
-    // } catch (ex) {
-    //   ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
+    try {
+      const { data } = await register(postData)
+        setUserByData({
+          ...data,
+          // systemCode: postData.systems[0],
+        })
+      this.$router.push({ name: 'register-success' })
+    } catch (ex) {
+      ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
+    }
   }
 
-  // onSubmit8007303() {
-  //   this.captchaError = '验证码错误'
-  // }
-
-  // onSubmit9006305() {
-  //   this.companyError = '公司名称已被使用'
-  // }
+  onSubmit8007303() {
+    this.smsCodeError = '验证码错误'
+  }
 
   @Watch('form.area', { deep: true })
   watchArea(val: number[]) {
     this.form.provinceId = val[0]
     this.form.cityId = val[1]
   }
-
 }
 </script>
 
@@ -371,7 +382,7 @@ export default class Main extends ViewBase {
     justify-content: space-between;
   }
 }
-.input-captcha {
+.input-smsCode {
   width: 230px;
 }
 .btn-code {

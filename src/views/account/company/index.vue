@@ -66,26 +66,6 @@
     <div class="accountList" v-if="displayStatus == 3">
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" disabled-hover></Table>
-      <div class="btn-center-footer sumbit-button">
-        <Button
-          v-auth="'account-manage.info#edit'"
-          type="primary" class="button-ok bok"
-          @click="$router.push({ name: 'account-info-accedit' })"
-        >修改信息</Button>
-        <Button
-          v-auth="'account-manage.info#change'"
-          class="button-ok bok"
-          @click="handleInforma"
-        >变更账号</Button>
-      </div>
-    </div>
-
-    <div class="btn-center-footer sumbit-button" v-else>
-      <Button
-        v-auth="'account-manage.info#edit'"
-        class="button-ok bok"
-        @click="$router.push({ name: 'account-info-edit' })"
-      >修改信息</Button>
     </div>
 
     <dlgChange v-model="queryDetail" v-if="queryDetail.visibleMess"></dlgChange>
@@ -355,8 +335,10 @@ export default class Main extends ViewBase {
   height: 50px;
   border-radius: 25px;
   color: #fff;
-  margin-right: 30px;
-  .button-style(#fff,#00202d);
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
 }
 
 /deep/ .ivu-table th,

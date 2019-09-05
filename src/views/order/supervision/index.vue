@@ -47,9 +47,15 @@
                 <row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in normallist.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                        <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">{{item.videoName.slice(0,7)}}...</router-link>
+                        <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">
+                           <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                          {{item.videoName.slice(0,7)}}...
+                        </router-link>
                       </Tooltip>
-                    <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
+                    <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}" v-if='item.videoName.length <= 7'>
+                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                      {{item.videoName}}
+                    </router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
@@ -78,9 +84,15 @@
                 <row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'  v-if='item.deleted == false && item.offShelfStatus == 1'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">{{item.videoName.slice(0,7)}}...</router-link>
+                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">
+                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                        {{item.videoName.slice(0,7)}}...
+                      </router-link>
                   </Tooltip>
-                <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
+                <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 7'>
+                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                        {{item.videoName}}
+                      </router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
@@ -141,6 +153,10 @@ export default class Main extends ViewBase {
 
   itemlist: any = []
   normallist: any = []
+
+
+  // 广告片投放位置
+  deliveryPositionList: any = []
 
 
 
@@ -379,6 +395,7 @@ export default class Main extends ViewBase {
       }
       const datalist = await querylist(this.query)
       this.itemlist = datalist.data.items
+      this.deliveryPositionList = datalist.data.deliveryPositionList
       this.normallist = datalist.data.normal == null ? [] : datalist.data.normal
       this.asd = false
 
@@ -477,7 +494,7 @@ export default class Main extends ViewBase {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     background: url('./assets/wait.png');
     background-size: cover;
     margin-right: 2px;
@@ -488,7 +505,7 @@ export default class Main extends ViewBase {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     background: url('./assets/over.png');
     background-size: cover;
     margin-right: 2px;
@@ -499,7 +516,7 @@ export default class Main extends ViewBase {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     background: url('./assets/dels.png');
     background-size: cover;
     margin-right: 2px;
