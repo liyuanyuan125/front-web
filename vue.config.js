@@ -31,8 +31,8 @@ module.exports = {
       },
       {
         env: 'qas',
-        baseUrl: 'https://qas.aiads.com',
-        ajaxBaseUrl: 'https://fapi.qas.aiads.com',
+        baseUrl: 'https://whaledata.com',
+        ajaxBaseUrl: 'https://fapi.whaledata.com',
       },
       {
         env: 'stg',

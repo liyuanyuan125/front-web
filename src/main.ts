@@ -41,7 +41,7 @@ const getLoginRoute = (route: Route) => {
     ? route
     : {
         name: 'login',
-        query: route.name != 'home' ? { ret: encodeRoute(route) } : {}
+        query: route.name != 'home' ? { ret: encodeRoute(route) } : undefined
       }
 }
 
