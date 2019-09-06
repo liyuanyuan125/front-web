@@ -1,9 +1,9 @@
 <template>
   <Modal v-model='showDlg'
+        :mask-closable='true'
          :transfer='false'
          :width='770'
          :closable='false'
-         :mask-closable='false'
          :styles="{top: '10%'}">
     <div class="title">
       <h3>影片数据</h3>
@@ -210,5 +210,9 @@ export default class MoreMoviesDlg extends ViewBase {
     background: #00b6cc;
     color: #fff;
   }
+}
+/deep/ .ivu-modal-body {
+  height: 550px;
+  overflow-y: scroll;
 }
 </style>

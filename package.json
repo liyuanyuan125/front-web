@@ -1,19 +1,19 @@
 {
-  "name": "admin-portal-web",
+  "name": "front-web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --no-fix && yarn lint:css",
-    "lint:css": "stylelint \"**/*.vue\" --syntax less",
-    "release": "node --experimental-modules tools/release.mjs"
+    "lint:css": "stylelint \"**/*.vue\" --syntax less"
   },
   "dependencies": {
     "@better-scroll/core": "^2.0.0-alpha.14",
     "@types/echarts": "^4.1.3",
     "@types/quill": "^2.0.2",
     "@types/wordcloud": "^1.1.1",
+    "ali-oss": "^6.1.1",
     "axios": "^0.18.0",
     "decimal.js": "^10.2.0",
     "deep-extend": "^0.6.0",
@@ -47,6 +47,7 @@
     "yxg-xlsx-style": "^0.0.1"
   },
   "devDependencies": {
+    "@types/ali-oss": "^6.0.4",
     "@types/deep-extend": "^0.4.31",
     "@types/js-cookie": "^2.2.0",
     "@types/lodash": "^4.14.120",
