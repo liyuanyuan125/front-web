@@ -325,8 +325,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'account-info-accedit',
     component: () => import('./views/account/company/accEdit.vue'),
     meta: {
-      authKey: 'account-manage.info',
-      authAction: 'edit',
+      authKey: 'account-manage.company',
+      authAction: 'EMPTY',
       title: '修改',
     }
   },

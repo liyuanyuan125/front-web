@@ -3,7 +3,7 @@
     <com-statu :statuCode="displayStatus" v-if="displayStatus != 5"></com-statu>
     <div class="content">
       <div class="bs">
-        <Button type="primary" class="button-ok button-offset bok"  :to="{ name: 'account-info-accedit' }" >修改</Button>
+        <Button type="primary" class="button-ok bok"  :to="{ name: 'account-info-accedit' }" >修改</Button>
         <h3 class="layout-title">公司信息</h3>
         <Row class="text-rows">
           <Col :span="12">
@@ -33,8 +33,7 @@
         </Row>
       </div>
       <div class="bs">
-        <Button  v-if="displayStatus == 3"  type="primary"
-         class="button-ok bok" @click="handleInforma" >修改</Button>
+        <Button  v-if="displayStatus == 3"  type="primary" class="button-ok bok" @click="handleInforma" >修改</Button>
         <h3 class="layout-title">开户信息</h3>
         <Row class="text-rows">
           <Col :span="24">
@@ -319,10 +318,6 @@ export default class Main extends ViewBase {
   margin-right: 25px;
 }
 
-// a.button-ok {
-//   line-height: 37px;
-// }
-
 .accountList {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -336,9 +331,10 @@ export default class Main extends ViewBase {
   border-radius: 25px;
   color: #fff;
   position: absolute;
-  top: 10px;
   right: 10px;
   z-index: 999;
+  top: 10px;
+  line-height: 38px;
 }
 
 /deep/ .ivu-table th,
