@@ -15,15 +15,19 @@
               <label class="hui">公司所在地</label>
               {{company.provinceName}} / {{company.cityName}}
             </p>
+            <p>
+              <label class="hui">管理账号</label>
+              {{account.name}}({{account.mobile}})
+            </p>
           </Col>
           <Col :span="12">
             <p>
               <label class="hui">联系人</label>
-              {{account.name}}
+              {{company.name}}
             </p>
             <p>
               <label class="hui">手机号码</label>
-              {{account.mobile}}
+              {{company.mobile}}
             </p>
             <p>
               <label class="hui">邮箱</label>

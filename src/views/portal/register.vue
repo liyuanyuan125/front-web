@@ -251,7 +251,7 @@ export default class Main extends ViewBase {
     this.codeDisabled = true
 
     try {
-      const { data } = await getSms({mobile: this.subForm.mobile, smsType: 'register'})
+      const { data } = await getSms({mobile: this.subForm.mobile, verifyCodeType: 'register'})
       this.subForm.requestId = data.requestId
       await countDown(60, sec => {
         this.codeMsg = sec + 's'
