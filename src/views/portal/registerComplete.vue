@@ -18,7 +18,7 @@
           <div class="upload-wrap">
             <Upload v-model="imageList" :max-count="3" multiple accept="images/*"
               confirm-on-del/>
-            <div class="upload-tip">支持1或3张，格式为jpg/jpeg/png，大小不超过5M的图片</div>
+            <div class="upload-tip">上传营业执照</div>
           </div>
         </FormItem>
 

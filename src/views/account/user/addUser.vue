@@ -11,25 +11,21 @@
       <div class="bgs">
         <h3 class="layout-title tits">设置登录账号</h3>
         <div class="formleft">
-          <FormItem label="登录邮箱" class="item-top" prop="email" :error="emailError">
-            <Input v-model="form.email" @on-blur="handleEmail" placeholder="请输入正确的邮箱地址"></Input>
-          </FormItem>
-        </div>
-      </div>
-      <div class="bgs">
-        <h3 class="layout-title tits">设置联系人（选填）</h3>
-        <div class="formleft">
-          <FormItem label="联系人名称" class="item-top">
-            <Input v-model="form.contactName" :disabled="!isAccountAuth" placeholder="请输入联系人名称"></Input>
-          </FormItem>
-          <FormItem label="手机号码" class="padbottom">
+          <FormItem label="登录手机号" >
             <Input
               v-model="form.mobile"
               :maxlength="11"
               :disabled="!isAccountAuth"
-              placeholder="请输入手机号码"
+              placeholder="请输入手机号"
             ></Input>
           </FormItem>
+          <FormItem label="联系人名称" >
+            <Input v-model="form.contactName" :disabled="!isAccountAuth" placeholder="请输入联系人名称"></Input>
+          </FormItem>
+          <FormItem label="邮箱(选填)" :error="emailError">
+            <Input v-model="form.email" placeholder="请输入正确的邮箱地址"></Input>
+          </FormItem>
+          
         </div>
       </div>
       <div class="bgs">
@@ -146,19 +142,19 @@ export default class Main extends ViewBase {
 
   get rules() {
     return {
-      email: [
-        {
-          require: true,
-          message: '请输入登录邮箱',
-          trigger: 'blur',
-          validator(rule: any, value: string[], callback: any) {
-            value.length == 0
-              ? callback(new Error('请输入登录邮箱'))
-              : callback()
-          }
-        },
-        { type: 'email', message: '邮箱格式有误', trigger: 'blur' }
-      ],
+      // email: [
+      //   {
+      //     require: true,
+      //     message: '请输入登录邮箱',
+      //     trigger: 'blur',
+      //     validator(rule: any, value: string[], callback: any) {
+      //       value.length == 0
+      //         ? callback(new Error('请输入登录邮箱'))
+      //         : callback()
+      //     }
+      //   },
+      //   { type: 'email', message: '邮箱格式有误', trigger: 'blur' }
+      // ],
       role: [
         {
           require: true,
@@ -185,39 +181,39 @@ export default class Main extends ViewBase {
     }
   }
 
-  async handleEmail() {
-    // 判断当前有效子用户
-    if (this.form.email) {
-      try {
-        const { data } = await vaildNonEmail({
-          type: this.systemCode,
-          email: this.form.email
-        })
-        // “邮箱”在本公司账号其它系统存在时 code =0
-        await confirm('该邮箱已存在，是否填充信息？', { okText: '填充' })
-        this.isAccountAuth = false
-        this.form = {
-          email: data.email,
-          contactName: data.name,
-          mobile: data.mobile
-        }
-      } catch (ex) {
-        if (ex.code == '8007205') {
-        } else if (ex.code == '8007220') {
-          // 主账号邮箱，不可建为子用户
-          this.showWaring(ex.msg)
-        } else if (ex.code == '8007203') {
-          // 该邮箱已被占用
-          this.showWaring(ex.msg)
-        } else if (ex.code == '9006201') {
-          // “邮箱”在账号库里不存在时，正常新增子用户
-          this.isAccountAuth = true
-        } else {
-          this.showWaring(ex.msg)
-        }
-      }
-    }
-  }
+  // async handleEmail() {
+  //   // 判断当前有效子用户
+  //   if (this.form.email) {
+  //     try {
+  //       const { data } = await vaildNonEmail({
+  //         type: this.systemCode,
+  //         email: this.form.email
+  //       })
+  //       // “邮箱”在本公司账号其它系统存在时 code =0
+  //       await confirm('该邮箱已存在，是否填充信息？', { okText: '填充' })
+  //       this.isAccountAuth = false
+  //       this.form = {
+  //         email: data.email,
+  //         contactName: data.name,
+  //         mobile: data.mobile
+  //       }
+  //     } catch (ex) {
+  //       if (ex.code == '8007205') {
+  //       } else if (ex.code == '8007220') {
+  //         // 主账号邮箱，不可建为子用户
+  //         this.showWaring(ex.msg)
+  //       } else if (ex.code == '8007203') {
+  //         // 该邮箱已被占用
+  //         this.showWaring(ex.msg)
+  //       } else if (ex.code == '9006201') {
+  //         // “邮箱”在账号库里不存在时，正常新增子用户
+  //         this.isAccountAuth = true
+  //       } else {
+  //         this.showWaring(ex.msg)
+  //       }
+  //     }
+  //   }
+  // }
   async handleInforma() {
     (this.$refs.forms as any).validate((valid: any) => {
       if (valid) {

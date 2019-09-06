@@ -2,8 +2,20 @@
   <div class="page">
     <div class='t-title'>监播管理</div>
     <div class='title-tip'>
-      请按照影片在下方列表中上传广告监播视频,</br>
-要求露出所包含的全部广告视频以及对应的影片片头信息、格式为 mp4
+      <div class='tip-left'><span style='color: #F9D85E;'>*</span>监播视频录制标准:</br>
+    准备当日报纸或当日影票票更,带报头或票根拍摄厅号及/LOGO以及厅号,然后拍摄广告(广告播放起直至龙标出现)</br>
+    备注：需拍摄一个包含上述内容的完整不间断视频</br>
+    <span style='color: #F9D85E;'>*</span>拍摄视频命名规范: 日期、影片名称、影院名称、厅号、场次</div>
+      <div class='tip-right'>
+        <VideoPreviewer
+          :url="videoUrl"
+        >
+          <span>
+            <img src="./assets/goplan.png">
+          </span>
+          <em>查看监播示例</em>
+        </VideoPreviewer>
+      </div>
     </div>
     <div class='body'>
       <Row class='row-ul'>
@@ -47,9 +59,15 @@
                 <row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in normallist.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                        <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">{{item.videoName.slice(0,7)}}...</router-link>
+                        <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">
+                           <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                          {{item.videoName.slice(0,7)}}...
+                        </router-link>
                       </Tooltip>
-                    <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
+                    <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}" v-if='item.videoName.length <= 7'>
+                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                      {{item.videoName}}
+                    </router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
@@ -78,9 +96,15 @@
                 <row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'  v-if='item.deleted == false && item.offShelfStatus == 1'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">{{item.videoName.slice(0,7)}}...</router-link>
+                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">
+                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                        {{item.videoName.slice(0,7)}}...
+                      </router-link>
                   </Tooltip>
-                <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
+                <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 7'>
+                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                        {{item.videoName}}
+                      </router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
@@ -107,6 +131,7 @@ import { formatTimestamp } from '@/util/validateRules'
 import UploadButton, { SuccessEvent } from '../components/UploadButton.vue'
 import WeekDatePicker from '@/components/weekDatePicker'
 import { confirm , toast , info } from '@/ui/modal'
+import VideoPreviewer from '@/components/videoPreviewer'
 
 
 const timeFormat = 'YYYY-MM-DD'
@@ -114,10 +139,13 @@ const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
     UploadButton,
-    WeekDatePicker
+    WeekDatePicker,
+    VideoPreviewer
   }
 })
 export default class Main extends ViewBase {
+
+  videoUrl = 'https://monitor-video.oss-cn-beijing.aliyuncs.com/monitor-intro.mp4'
 
   startTime: any = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000
   endTime: any = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1
@@ -141,6 +169,10 @@ export default class Main extends ViewBase {
 
   itemlist: any = []
   normallist: any = []
+
+
+  // 广告片投放位置
+  deliveryPositionList: any = []
 
 
 
@@ -379,6 +411,7 @@ export default class Main extends ViewBase {
       }
       const datalist = await querylist(this.query)
       this.itemlist = datalist.data.items
+      this.deliveryPositionList = datalist.data.deliveryPositionList
       this.normallist = datalist.data.normal == null ? [] : datalist.data.normal
       this.asd = false
 
@@ -428,14 +461,43 @@ export default class Main extends ViewBase {
 .title-tip {
   margin-top: 20px;
   width: 100%;
-  background: rgba(0, 32, 45, 1);
+  background: #00202d;
   line-height: 32px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   color: #fff;
-  padding: 35px 0 35px 30px;
+  padding: 30px 0 27px 30px;
   border-radius: 5px 0 0 0;
-  opacity: 0.9;
+  opacity: .9;
+  height: 188px;
+  .tip-left {
+    float: left;
+    width: 80%;
+  }
+  .tip-right {
+    width: 14%;
+    float: right;
+    padding-top: 32px;
+    span {
+      display: block;
+      width: 48px;
+      height: 48px;
+      margin-left: 11%;
+      background: #4fa6bb;
+      border-radius: 50%;
+      cursor: pointer;
+      img {
+        width: 60%;
+        height: 60%;
+        margin: 20% 0 0 20%;
+      }
+    }
+    em {
+      color: rgba(79, 166, 187, 1);
+      font-size: 14px;
+      cursor: pointer;
+    }
+  }
 }
 .body {
   width: 100%;
@@ -477,7 +539,7 @@ export default class Main extends ViewBase {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     background: url('./assets/wait.png');
     background-size: cover;
     margin-right: 2px;
@@ -488,7 +550,7 @@ export default class Main extends ViewBase {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     background: url('./assets/over.png');
     background-size: cover;
     margin-right: 2px;
@@ -499,7 +561,7 @@ export default class Main extends ViewBase {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     background: url('./assets/dels.png');
     background-size: cover;
     margin-right: 2px;

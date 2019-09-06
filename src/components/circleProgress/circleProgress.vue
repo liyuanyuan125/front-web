@@ -1,14 +1,22 @@
 <template>
-  <i-circle class="circle-progress" :percent="percent" :size="opt.size"
-    :stroke-width="opt.strokeWidth" :stroke-color="strokeColor">
+  <i-circle
+    class="circle-progress"
+    :percent="percent"
+    :size="opt.size"
+    :stroke-width="opt.strokeWidth"
+    :stroke-color="strokeColor"
+  >
     <slot name="fail" v-if="fail">
-      <Icon type="ios-close" :style="{color: strokeColor}" class="icon-fail"/>
+      <Icon type="ios-close" :style="{color: strokeColor}" class="icon-fail" />
     </slot>
     <slot name="done" v-else-if="percent >= 100">
-      <Icon type="ios-checkmark" :style="{color: strokeColor}" class="icon-done"/>
+      <Icon type="ios-checkmark" :style="{color: strokeColor}" class="icon-done" />
     </slot>
     <slot v-else>
-      <span class="percent-text">{{percent}}%</span>
+      <span
+        class="percent-text"
+        v-if="!(hideZero && percent == 0)"
+      >{{percentText}}%</span>
     </slot>
   </i-circle>
 </template>
@@ -25,7 +33,7 @@ const defaultOptions: CircleProgressOptions = {
   strokeWidth: 6,
   strokeColorDefault: '#2db7f5',
   strokeColorDone: '#5cb85c',
-  strokeColorFail: '#f50',
+  strokeColorFail: '#f50'
 }
 
 @Component
@@ -35,6 +43,12 @@ export default class CircleProgress extends ViewBase {
 
   /** 是否失败，默认 false */
   @Prop({ type: Boolean, default: false }) fail!: boolean
+
+  /** 精度，即小数位数，默认为 1 */
+  @Prop({ type: Number, default: 1 }) precision!: number
+
+  /** 隐藏 0 时的文本显示 */
+  @Prop({ type: Boolean, default: false }) hideZero!: number
 
   /** 选项，默认空对象 */
   @Prop({ type: Object, default: () => ({}) }) options!: CircleProgressOptions
@@ -52,6 +66,10 @@ export default class CircleProgress extends ViewBase {
       ? strokeColorDone
       : strokeColorDefault
     return color
+  }
+
+  get percentText() {
+    return this.percent.toFixed(this.precision)
   }
 }
 </script>

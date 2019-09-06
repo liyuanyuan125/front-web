@@ -1,28 +1,26 @@
 <template>
-  <PortalLayout>
-    <div class="forgetpass">找回密码</div>
-    <div class="reset-pwd">
-      <Form :model="form" :rules="rules" class="form" label-position="left"
-        :label-width="120" @submit.native.prevent="submit" ref="form">
+  <registerLayout>
+    <div class="main-wrap">
+      <div class="tablist">
+        <p class="systerm">找回密码</p>
+      </div>
+
+      <Form :model="form" :rules="rules" class="form" @submit.native.prevent="submit" ref="form">
         <DisableAutoFill/>
 
-        <FormItem label="登录邮箱" prop="email" :error="emailError">
-          <Input v-model="form.email" placeholder="请输入注册时的邮箱地址"/>
+        <FormItem prop="email">
+          <Input  v-model="form.email" placeholder="请输入手机号或邮箱" />
         </FormItem>
-        <FormItem label="邮箱验证码" prop="captcha" :error="captchaError">
+        <FormItem prop="captcha" :error="captchaError" class="form-item-getcode">
           <Input v-model="form.captcha" :maxlength="6" class="input-captcha"
-            placeholder="请输入邮箱验证码"/>
-          <Button class="btn-code" :disabled="codeDisabled || emailIsValid"
-            @click="getCode">{{codeMsg}}</Button>
+            placeholder="输入手机验证码"/>
+          <Button class="btn-code" :disabled="codeDisabled || emailOrMobileValid" @click="getCode">{{codeMsg}}</Button>
         </FormItem>
-
-        <FormItem label="密码" prop="password">
-          <Input type="password" v-model="form.password" :maxlength="16"
-            placeholder="请设置包含大小写的英文字母与数字的组合，8－16位的新密码"/>
+        <FormItem  prop="password">
+          <Input type="password" v-model="form.password" :maxlength="16" placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"/>
         </FormItem>
-        <FormItem label="重复密码" prop="passwordAgain">
-          <Input type="password" v-model="form.passwordAgain" :maxlength="16"
-            placeholder="请再次输入密码"/>
+        <FormItem  prop="passwordAgain">
+          <Input type="password" v-model="form.passwordAgain" :maxlength="16" placeholder="请再次输入密码"/>
         </FormItem>
 
         <div class="submit-ln">
@@ -31,30 +29,29 @@
         </div>
       </Form>
     </div>
-  </PortalLayout>
+  </registerLayout>
 </template>
 
 <script lang="ts">
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import PortalLayout from './portalLayout.vue'
 import { countDown } from '@/fn/timer'
-import { validateEmail, validatePassword } from '@/util/validateRules'
+import { validateEmail, validatePassword, validataTel } from '@/util/validateRules'
 import { except } from '@/fn/object'
-import { scrollToError } from '@/util/form'
 import DisableAutoFill from '@/components/DisableAutoFill.vue'
-import { sendResetpwdEmail, resetPassword } from '@/api/register'
+import { sendResetpwdEmail, resetPassword, mobileOrEmail} from '@/api/register'
 import { success } from '@/ui/modal'
+import registerLayout from './login/loginLayout.vue'
 
 @Component({
   components: {
-    PortalLayout,
-    DisableAutoFill
+    DisableAutoFill,
+    registerLayout
   }
 })
 export default class Main extends ViewBase {
   codeDisabled = false
-  codeMsg = '获取邮箱验证码'
+  codeMsg = '获取验证码'
 
   emailError = ''
   captchaError = ''
@@ -66,15 +63,22 @@ export default class Main extends ViewBase {
     captcha: '',
     password: '',
     passwordAgain: '',
+    requestId: null
   }
 
   rules = {
     email: [
       { required: true, message: '请输入邮箱', trigger: 'blur' },
-      { type: 'email', message: '邮箱格式有误', trigger: 'blur' },
+      {
+        trigger: 'blur',
+        validator(rule: any, value: string, callback: any) {
+          const msg = value && value.indexOf('@') != -1 ? validateEmail(value) : validataTel(value)
+          msg ? callback(new Error(msg)) : callback()
+        }
+      },
     ],
     captcha: [
-      { required: true, message: '请输入邮箱验证码', trigger: 'blur' }
+      { required: true, message: '请输入验证码', trigger: 'blur' }
     ],
 
     password: [
@@ -104,8 +108,9 @@ export default class Main extends ViewBase {
     ],
   }
 
-  get emailIsValid() {
-    const failMsg = validateEmail(this.form.email)
+  get emailOrMobileValid() {
+    const isExist = this.form.email && this.form.email.indexOf('@')
+    const failMsg = isExist != -1 ? validateEmail(this.form.email) : validataTel(this.form.email)
     return !!failMsg
   }
 
@@ -113,7 +118,8 @@ export default class Main extends ViewBase {
     this.codeDisabled = true
 
     try {
-      await sendResetpwdEmail(this.form.email)
+      const {data} = await mobileOrEmail({mobileOrEmail: this.form.email, codeType: 'pwd-reset' })
+      this.form.requestId = data.requestId ? data.requestId : null
 
       await countDown(60, sec => {
         this.codeMsg = sec + 's'
@@ -127,23 +133,27 @@ export default class Main extends ViewBase {
     }
   }
 
-  scrollToError() {
-    const form = this.$refs.form as any
-    this.$nextTick(() => scrollToError(form))
-  }
-
   async submit() {
     const form = this.$refs.form as any
     const valid = await form.validate()
-    if (!valid) {
-      return this.scrollToError()
-    }
+    if (!valid) { return }
 
     this.submitDisabled = true
+    // email or mobile
+    let formData = {}
+    if (this.form.email.indexOf('@') != -1) {
+      const postData = except(this.form, 'passwordAgain,requestId')
+      formData = postData
+    } else {
+      const postData = except(this.form, 'passwordAgain,email')
+      formData = {
+        ...postData,
+        mobile: this.form.email
+      }
+    }
 
     try {
-      const postData = except(this.form, 'passwordAgain,area')
-      const { data } = await resetPassword(postData)
+      const { data } = await resetPassword(formData)
       await success('重置密码成功')
       this.$router.push({ name: 'login' })
     } catch (ex) {
@@ -155,47 +165,47 @@ export default class Main extends ViewBase {
 
   onSubmit8007203() {
     this.emailError = '邮箱已存在'
-    this.scrollToError()
   }
 
   onSubmit8007303() {
     this.captchaError = '验证码错误'
-    this.scrollToError()
   }
 }
 </script>
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-@import './common.less';
-/deep/ .ivu-form-item-required .ivu-form-item-label::before {
-  content: '';
-}
-.forgetpass {
-  max-width: 1100px;
-  margin: 0 auto;
-  text-align: center;
-  font-size: 15px;
-  color: @c-button;
-  border-bottom: solid 1px @c-divider;
-  padding: 50px 0 20px;
-}
+@import './login/common.less';
 
-.reset-pwd {
-  width: 600px;
-  margin: auto;
-  padding: 80px auto 40px;
+/deep/ .form-item-getcode {
+  .ivu-form-item-content {
+    display: flex;
+    justify-content: space-between;
+  }
 }
-
 .input-captcha {
-  width: 260px;
+  width: 230px;
+}
+/deep/ .ivu-cascader {
+  .ivu-input {
+    padding-left: 20px;
+  }
+}
+/deep/ .form .ivu-input {
+  padding-left: 20px;
 }
 .btn-code {
-  margin-left: 20px;
-  width: 200px;
+  width: 126px;
+  height: 48px;
+  background-color: #2f6af9;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  border: none;
+  &:hover {
+    background: #2f6af9;
+    color: #fff;
+  }
 }
 
-.submit-ln {
-  margin-top: 100px;
-}
 </style>

@@ -173,7 +173,6 @@ export default class Main extends ViewBase {
   }
 
   async addform() {
-    // 去除"影片必选" 20190827 nxd
     // if (this.$route.params.id == '0') {
     //   if (this.numsList.length == 0) {
     //    info('请选择影片')
@@ -487,7 +486,7 @@ export default class Main extends ViewBase {
 }
 .add-movies-tips {
   padding: 15px 0;
-  color: #00202d;
+  color: #ff6e6e;
 }
 </style>
 

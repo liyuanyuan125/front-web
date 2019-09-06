@@ -3,25 +3,7 @@
     <com-statu :statuCode="displayStatus" v-if="displayStatus != 5"></com-statu>
     <div class="content">
       <div class="bs">
-        <h3 class="layout-title">登录信息</h3>
-        <Row class="text-rows">
-          <Col :span="12">
-            <p>
-              <label class="hui">账号类型</label>
-              {{accountType}}
-            </p>
-            <p>
-              <label class="hui">账号ID</label>
-              {{account.id}}
-            </p>
-            <p>
-              <label class="hui">登录邮箱</label>
-              {{account.email}}
-            </p>
-          </Col>
-        </Row>
-      </div>
-      <div class="bs">
+        <Button type="primary" class="button-ok bok"  :to="{ name: 'account-info-accedit' }" >修改</Button>
         <h3 class="layout-title">公司信息</h3>
         <Row class="text-rows">
           <Col :span="12">
@@ -33,15 +15,19 @@
               <label class="hui">公司所在地</label>
               {{company.provinceName}} / {{company.cityName}}
             </p>
+            <p>
+              <label class="hui">管理账号</label>
+              {{account.name}}({{account.mobile}})
+            </p>
           </Col>
           <Col :span="12">
             <p>
               <label class="hui">联系人</label>
-              {{account.name}}
+              {{company.name}}
             </p>
             <p>
               <label class="hui">手机号码</label>
-              {{account.mobile}}
+              {{company.mobile}}
             </p>
             <p>
               <label class="hui">邮箱</label>
@@ -51,6 +37,7 @@
         </Row>
       </div>
       <div class="bs">
+        <Button  v-if="displayStatus == 3"  type="primary" class="button-ok bok" @click="handleInforma" >修改</Button>
         <h3 class="layout-title">开户信息</h3>
         <Row class="text-rows">
           <Col :span="24">
@@ -82,26 +69,6 @@
     <div class="accountList" v-if="displayStatus == 3">
       <h3 class="layout-title">账号变更记录</h3>
       <Table :columns="column" :data="dataList" disabled-hover></Table>
-      <div class="btn-center-footer sumbit-button">
-        <Button
-          v-auth="'account-manage.info#edit'"
-          type="primary" class="button-ok bok"
-          @click="$router.push({ name: 'account-info-accedit' })"
-        >修改信息</Button>
-        <Button
-          v-auth="'account-manage.info#change'"
-          class="button-ok bok"
-          @click="handleInforma"
-        >变更账号</Button>
-      </div>
-    </div>
-
-    <div class="btn-center-footer sumbit-button" v-else>
-      <Button
-        v-auth="'account-manage.info#edit'"
-        class="button-ok bok"
-        @click="$router.push({ name: 'account-info-edit' })"
-      >修改信息</Button>
     </div>
 
     <dlgChange v-model="queryDetail" v-if="queryDetail.visibleMess"></dlgChange>
@@ -312,6 +279,7 @@ export default class Main extends ViewBase {
 .as {
   background: rgba(255, 255, 255, 0);
   padding: 20px 30px 0 30px;
+  position: relative;
 }
 
 .stateContent {
@@ -334,6 +302,7 @@ export default class Main extends ViewBase {
   border-radius: 5px;
   margin-top: 30px;
   background: rgba(255, 255, 255, 0.3);
+  position: relative;
 }
 
 .hui {
@@ -353,10 +322,6 @@ export default class Main extends ViewBase {
   margin-right: 25px;
 }
 
-// a.button-ok {
-//   line-height: 37px;
-// }
-
 .accountList {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -369,8 +334,11 @@ export default class Main extends ViewBase {
   height: 50px;
   border-radius: 25px;
   color: #fff;
-  margin-right: 30px;
-  .button-style(#fff,#00202d);
+  position: absolute;
+  right: 10px;
+  z-index: 999;
+  top: 10px;
+  line-height: 38px;
 }
 
 /deep/ .ivu-table th,

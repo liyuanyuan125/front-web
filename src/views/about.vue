@@ -7,6 +7,29 @@
     </Button>
 
     <img :src="imageUrl" v-if="imageUrl">
+    <VideoUploader
+      v-model="imageUrl"
+      @begin="onBegin"
+      @progress="onProgress"
+      @isPausedChanged="onIsPausedChanged"
+    >
+    </VideoUploader>
+
+    <p>按时发送发放322323是非得失：<MiddleEllipsis class="shi">春眠不觉晓处处蚊子咬夜来风雨声花落知多少</MiddleEllipsis>是对方是否</p>
+
+    <div><MiddleEllipsis class="shi">{{text}}</MiddleEllipsis></div>
+
+    <div>
+      <Button @click="changeText">改变文字</Button>
+    </div>
+
+    <!-- <UploadLabel useCircle/>
+
+    <UploadButton/>
+
+    <TripleDialog v-model="tripleShow">
+      妳好呀
+    </TripleDialog> -->
 
     <!-- <WeekDatePicker v-model="weekDate"/>
 
@@ -45,6 +68,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import WeekDatePicker from '@/components/weekDatePicker'
 import CitySelectDialog from '@/components/citySelectDialog'
+import TripleDialog from '@/components/tripleDialog'
 import ECharts from 'vue-echarts'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
@@ -53,19 +77,37 @@ import OSS from 'ali-oss'
 import { get } from '@/fn/ajax'
 import { devLog } from '@/util/dev'
 import { dot } from '@/util/dealData'
+import OssUploader from '@/components/ossUploader'
+import VideoUploader from '@/components/videoUploader'
+import UploadLabel from '@/components/uploadLabel'
+import UploadButton from '@/components/UploadButton.vue'
+import triple from '@/ui/triple'
+import MiddleEllipsis from '@/components/middleEllipsis'
 
 @Component({
   components: {
     WeekDatePicker,
     CitySelectDialog,
+    TripleDialog,
     ECharts,
-    KeepSelectTable
+    KeepSelectTable,
+    OssUploader,
+    VideoUploader,
+    UploadLabel,
+    UploadButton,
+    MiddleEllipsis
   }
 })
 export default class AboutPage extends ViewBase {
   progress = 0
 
   imageUrl = ''
+
+  tripleShow = false
+
+  text = '春眠不觉晓'
+
+  n = 1
 
   async onUpload(ev: Event) {
     const [ file = null ] = (ev.target as HTMLInputElement).files || []
@@ -91,6 +133,37 @@ export default class AboutPage extends ViewBase {
     this.imageUrl = url
     devLog(url, result)
   }
+
+  onBegin(ev: any) {
+    devLog('=> onBegin', ev)
+  }
+
+  onProgress(ev: any) {
+    devLog('=> onProgress', ev)
+  }
+
+  onIsPausedChanged(ev: any) {
+    devLog('=> onIsPausedChanged', ev)
+  }
+
+  changeText() {
+    this.text = this.n % 2 ? '春眠不觉晓处处蚊子咬夜来风雨声花落知多少' : '出门水电费'
+    this.n++
+  }
+
+  // async onUpload(ev: Event) {
+  //   const input = ev.target as HTMLInputElement
+  //   const [ file = null ] = input.files || []
+  //   const uploader = new OssUploader()
+  //   uploader.on('cacheHit', (evt: CacheHitEvent) => {
+  //     evt.useCache = true
+  //   })
+  //   .on('progress', (evt: ProgressEvent) => {
+  //     this.progress = +evt.percent.toFixed(2)
+  //   })
+  //   uploader.upload(file!)
+  //   setTimeout(() => input.value = '')
+  // }
 
   // weekDate = [null, null]
   // weekDate = [new Date(2019, 4, 9), new Date(2019, 4, 15)]
@@ -181,5 +254,9 @@ export default class AboutPage extends ViewBase {
     height: 100%;
     opacity: 0;
   }
+}
+
+.shi {
+  max-width: 168px;
 }
 </style>
