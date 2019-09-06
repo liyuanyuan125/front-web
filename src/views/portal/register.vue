@@ -25,7 +25,7 @@
          <FormItem prop="area" >
             <AreaSelect v-model="form.area" ref="areas"  :max-level="2" no-self :placeholder="placeholder" />
          </FormItem>
-         <FormItem>
+         <FormItem prop="recommendTel">
           <Input v-model="form.recommendTel" :maxlength="11" placeholder="推荐人手机号（选填）"/>
         </FormItem>
         <FormItem prop="qualificationImageList">
@@ -59,7 +59,7 @@
             placeholder="请再次输入密码"/>
         </FormItem>
 
-         <FormItem v-if="subForm.companyType == 2" class="check-ready">
+         <FormItem prop="recommendTel" v-if="subForm.companyType == 2" class="check-ready">
           <Input v-model="subForm.recommendTel" :maxlength="11" placeholder="推荐人手机号(选填）"/>
         </FormItem>
 
@@ -141,10 +141,26 @@ export default class Main extends ViewBase {
         {
           trigger: 'blur',
           async validator(rule: any, value: string, callback: any) {
-            const {data} = await isCompanyName(value)
+            const val = value.trim()
+            const {data} = await isCompanyName(val)
             data == 1 ? callback() : callback(new Error('公司已存在'))
           }
         },
+      ],
+
+      recommendTel: [
+        {
+          required: false,
+          trigger: 'blur',
+          validator(rule: any, value: string, callback: any) {
+            if (!!value) {
+              const msg = validataTel(value)
+              msg ? callback(new Error(msg)) : callback()
+            } else {
+              callback()
+            }
+          }
+        }
       ],
       businessParentCode: [{ required: true, message: '请选择行业', trigger: 'blur' }],
 
@@ -213,6 +229,20 @@ export default class Main extends ViewBase {
             value != this.subForm.password
               ? callback(new Error('两次密码不一致，请重新输入'))
               : callback()
+          }
+        }
+      ],
+      recommendTel: [
+        {
+          required: false,
+          trigger: 'blur',
+          validator(rule: any, value: string, callback: any) {
+            if (!!value) {
+              const msg = validataTel(value)
+              msg ? callback(new Error(msg)) : callback()
+            } else {
+              callback()
+            }
           }
         }
       ],
@@ -290,6 +320,7 @@ export default class Main extends ViewBase {
       postData = {
         ...cloneForm,
         ...cloneSubForm,
+        companyName: cloneForm.companyName.trim(),
         qualificationImageList
       }
     } else if (this.subForm.companyType == 2) { // 个人

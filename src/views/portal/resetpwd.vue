@@ -13,7 +13,7 @@
         </FormItem>
         <FormItem prop="captcha" :error="captchaError" class="form-item-getcode">
           <Input v-model="form.captcha" :maxlength="6" class="input-captcha"
-            placeholder="输入手机验证码"/>
+            placeholder="请输入获取验证码"/>
           <Button class="btn-code" :disabled="codeDisabled || emailOrMobileValid" @click="getCode">{{codeMsg}}</Button>
         </FormItem>
         <FormItem  prop="password">

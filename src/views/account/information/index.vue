@@ -7,9 +7,9 @@
       </li>
       <li>
         <label>邮箱</label>
-        <em>{{items.email}}</em>
+        <em>{{items.email ? items.email : '暂无绑定邮箱'}}</em>
         <ChangeEmail @uploadEmail="list">
-          <Button class="btn-item">变更邮箱</Button>
+          <Button class="btn-item">{{items.email ? '更换邮箱' : '绑定邮箱'}}</Button>
         </ChangeEmail>
       </li>
       <li>
