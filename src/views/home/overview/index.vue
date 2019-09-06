@@ -15,7 +15,7 @@
         <ul class="plan-list">
           <li v-for="(it, i) in planList" :key="i" class="plan-item">
             <h5 class="plan-title">{{it.title}}</h5>
-            <div class="plan-line">待支付：{{it.pend}}个</div>
+            <div class="plan-line">待审核：{{it.pend}}个</div>
             <div class="plan-line">执行中：{{it.done}}个</div>
           </li>
         </ul>
