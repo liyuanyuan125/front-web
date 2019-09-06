@@ -3,7 +3,7 @@
     <div @click="onView">
       <slot>变更邮箱</slot>
     </div>
-    <Modal v-model="visible" width="445px" class="comDlg">
+    <Modal v-model="visible" width="445px" ref="form" class="comDlg">
         <h2 class="title">变更邮箱</h2>
         <Form :model="form" :rules="rule" ref="form" :key="randomKey">
           <FormItem prop="email" :error="errorEmail">
@@ -104,11 +104,13 @@ export default class Main extends ViewBase {
     // 重新调用接口刷新页面
     try {
       const { data } = await bindEmail({...this.form})
-      await success('重置密码成功')
+      await success('重置邮箱成功')
       this.visible = false
+      this.$emit('uploadEmail')
     } catch (ex) {
       this.handleError(ex)
-      this.visible = false
+      this.codeMsg = '获取验证码';
+      (this.$refs.form as any).resetFields()
     }
   }
 }

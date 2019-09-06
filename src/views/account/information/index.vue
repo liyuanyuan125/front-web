@@ -8,14 +8,14 @@
       <li>
         <label>邮箱</label>
         <em>{{items.email}}</em>
-        <ChangeEmail>
+        <ChangeEmail @uploadEmail="list">
           <Button class="btn-item">变更邮箱</Button>
         </ChangeEmail>
       </li>
       <li>
         <label>手机号</label>
         <em>{{items.mobile ? items.mobile : '暂无绑定手机号'}}</em>
-        <ChangeMobile>
+        <ChangeMobile @uploadMobile="list ">
           <Button class="btn-item">{{items.mobile ? '更换手机' : '绑定手机'}}</Button>
         </ChangeMobile>
       </li>
@@ -41,6 +41,9 @@ export default class Main extends ViewBase {
   items = {}
 
   async mounted() {
+    this.list()
+  }
+  async list() {
     const { data } = await accountDetail()
     this.items = data.account || {}
   }
