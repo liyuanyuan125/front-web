@@ -487,9 +487,9 @@ export default class Main extends ViewBase {
       border-radius: 50%;
       cursor: pointer;
       img {
-        width: 80%;
-        height: 80%;
-        margin: 10% 0 0 10%;
+        width: 60%;
+        height: 60%;
+        margin: 20% 0 0 20%;
       }
     }
     em {
