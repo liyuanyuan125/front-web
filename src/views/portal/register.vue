@@ -275,6 +275,10 @@ export default class Main extends ViewBase {
   async submit() {
     const form = this.$refs.subForm as any
     const valid = await form.validate()
+    if (this.subForm.requestId == '') {
+      this.smsCodeError = '请获取验证码'
+      return
+    }
     if (!valid) { return}
 
     let postData = {}
