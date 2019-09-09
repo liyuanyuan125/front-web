@@ -118,11 +118,17 @@ export default class Apps extends ViewBase {
       step: 2,
       setid: this.$route.params.setid
     })
-
-    this.$router.push({
-      name: 'pop-planlist-edit',
-      params: { step: '2', setid: this.$route.params.setid  }
-    })
+    if (this.$route.name == 'pop-planlist-edit' || this.$route.name == 'pop-planlist-add') {
+      this.$router.push({
+        name: 'pop-planlist-edit',
+        params: { step: '2', setid: this.$route.params.setid  }
+      })
+    } else {
+      this.$router.push({
+        name: 'pop-business-edit',
+        params: { step: '2', setid: this.$route.params.setid  }
+      })
+    }
   }
   async next() {
     try {
@@ -155,7 +161,7 @@ export default class Apps extends ViewBase {
   margin-bottom: 32px;
 }
 .btn-center {
-  margin-top: 50px;
+  margin: 50px 0 30px;
   text-align: center;
 }
 .btn-save {
@@ -163,6 +169,7 @@ export default class Apps extends ViewBase {
   font-weight: 500;
   .button-style(#fff, #00202d);
   border-radius: 25px;
+  line-height: 34px;
 }
 .btn-next {
   width: 200px;
@@ -170,6 +177,7 @@ export default class Apps extends ViewBase {
   .button-style(#00202d, rgba(0, 0, 0, 0));
   vertical-align: middle;
   border-radius: 25px;
+  line-height: 34px;
   img {
     vertical-align: middle;
   }
