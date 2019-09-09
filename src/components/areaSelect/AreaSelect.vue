@@ -1,6 +1,14 @@
 <template>
-  <Cascader v-model="inner"  :data="data" :load-data="loadData" :clearable="clearable" :placeholder="placeholder"
-    class="area-select" :render-format="format" ref="ui"></Cascader>
+  <Cascader
+    v-model="inner"
+    :data="data"
+    :load-data="loadData"
+    :clearable="clearable"
+    :placeholder="placeholder"
+    class="area-select"
+    :render-format="format"
+    ref="ui"
+  />
 </template>
 
 <script lang="ts">

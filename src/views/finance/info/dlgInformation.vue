@@ -3,11 +3,11 @@
     <Modal v-model="showDlg" title="充值" width="400" @on-cancel="cancel()" >
       <Form ref="form" :model="form" :label-width="90" :rules="formRules" class="edit-input">
         <FormItem label="充值金额" prop="amount">
-          <Input v-model="form.amount" placeholder="请输入"></Input>&nbsp;&nbsp;元
+          <InputNumber v-model="form.amount" :min='0.01' placeholder="请输入"></InputNumber>&nbsp;&nbsp;元
         </FormItem>
         <FormItem label="支付方式" prop="status">
           <RadioGroup v-model="form.status" >
-            <Radio v-for="it in moneyList" :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
+            <Radio v-for="it in moneyList" v-if='it.key != 0' :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
           </RadioGroup>
         </FormItem>
       </Form>
@@ -69,13 +69,13 @@
             <Col span="10">
               <FormItem label="汇款方式" prop="remittanceType">
                 <RadioGroup v-model="dataForm.remittanceType" >
-                  <Radio v-for="it in addMoneyList" :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
+                  <Radio v-for="it in addMoneyList" v-if='it.key != 0' :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
                 </RadioGroup>
               </FormItem>
             </Col>
             <Col span="10" style='margin-left: 15%'>
               <FormItem label="汇款流水单号" prop="remittanceNo">
-                <Input v-model="dataForm.remittanceNo" class="inp-style" placeholder="请输入充值金额"/>
+                <Input v-model="dataForm.remittanceNo" class="inp-style" placeholder="请输入汇款流水单号"/>
               </FormItem>
             </Col>
           </Row>
@@ -149,8 +149,8 @@ import Upload from '../upload/Upload.vue'
 import { warning , success, toast , info } from '@/ui/modal'
 // import { formatNumber } from '@/util/validateRules'
 
-const form = {
-  amount: '',
+const form: any = {
+  amount: 0.01,
   status: 1
 }
 
@@ -167,7 +167,7 @@ export default class Change extends ViewBase {
   get formRules() {
     const rules = {
       amount: [
-          { required: true, message: '请输入充值金额', trigger: 'blur' }
+          { required: true, message: '请输入正确有效的金额', }
       ],
       status: [
           { required: true }
@@ -577,6 +577,9 @@ export default class Change extends ViewBase {
   background: rgba(255, 255, 255, 1);
   border-radius: 4px;
   border: 1px solid rgba(0, 32, 45, 0.1);
+}
+/deep/ .ivu-input-number {
+  width: 180px !important;
 }
 </style>
 
