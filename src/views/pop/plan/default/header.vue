@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="value.status == 12" class="plan-message">
+    <div v-if="value.status == 13" class="plan-message">
       <span style="padding-top: 40px">当前计划已失效或已关闭，如有疑问，请点击下放"联系商务"</span>
       <div class="btn-box" style="margin-top: 40px">
         <Button  type="default" @click="collect" class="btn-contact">联系商务</Button>
@@ -84,6 +84,17 @@
     <div v-if="value.status == 11" class="plan-message">
       <p style=" margin-bottom: 10px">
         您已缴纳 ￥{{formatNums(value.needPayAmount)}} 为应结金额，￥{{formatNums(value.depositAmount)}} 为定金，投放结束后保证金剩余余额将退还到您的账户 </p>
+      <div class="btn-box">
+        <Button type="default" :to="{ name: 'effect-report', params: { 
+          id: $route.params.id
+        }}" class="btn-contact">查看效果报表</Button>
+      </div>
+    </div>
+
+    <div v-if="value.status == 12" class="plan-message">
+      <p v-if='value.discount'>本次投放折扣【{{value.discount}}折】</p>
+      <p style=" margin-bottom: 10px">
+        您已缴纳 ￥{{formatNums(value.needPayAmount)}} 为应结金额，￥{{formatNums(value.depositAmount)}} 为定金，您可在下方点击“查看效果报告” </p>
       <div class="btn-box">
         <Button type="default" :to="{ name: 'effect-report', params: { 
           id: $route.params.id

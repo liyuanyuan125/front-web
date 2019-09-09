@@ -43,7 +43,7 @@ export default class App extends ViewBase {
     const step: any = this.$route.params
     if (!step.step) {
       this.$router.replace({
-        name: 'pop-planlist-add-business',
+        name: 'pop-business-add',
         params: { step: '0' }
       })
     } else {

@@ -609,8 +609,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 推广管理 - 广告计划 - 创建广告计划
   {
-    path: '/pop/planlist/add/business/:step?/:setid?',
-    name: 'pop-planlist-add-business',
+    path: '/pop/business/add/:step?/:setid?',
+    name: 'pop-business-add',
     component: () => import('./views/pop/plan/business.vue'),
     meta: {
       authKey: 'promotion.ad-plan',
@@ -622,8 +622,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
 
   // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
   {
-    path: '/pop/planlist/edit/business/:step/:setid',
-    name: 'pop-planlist-edit-business',
+    path: '/pop/business/edit/:step/:setid',
+    name: 'pop-business-edit',
     component: () => import('./views/pop/plan/business.vue'),
     meta: {
       authKey: 'promotion.ad-plan',

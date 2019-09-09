@@ -193,6 +193,11 @@
                 {{formatNums(row.estimatePersonCount * 7 / 10, 1)}} ~ 
                 {{formatNums(row.estimatePersonCount * 13 / 10, 1)}}
               </template>
+
+              <template slot-scope="{ row }" slot="cpm">
+                {{formatNums(row.cpm * 7 / 10, 1)}} ~ 
+                {{formatNums(row.cpm * 13 / 10, 1)}}
+              </template>
               <!-- <template slot-scope="{ row }" slot="estimateShowCount">
                 {{formatNums(row.estimateShowCount, 1)}}
               </template>
@@ -227,8 +232,13 @@
         </Row>
         <Row :gutter="16">
           <Col :span="2"><span>预算:</span></Col>
-          <Col :span="22">
+          <Col :span="10">
             <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount * 7 / 10)}}</span>
+            <!-- <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount * 13 / 10)}}</span> -->
+          </Col>
+          <Col :span="2"><span>位置:</span></Col>
+          <Col :span="10">
+            <span>{{location}}</span>
             <!-- <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount * 13 / 10)}}</span> -->
           </Col>
         </Row>
@@ -303,7 +313,7 @@ import Exportfile from '../vadver/exportfile.vue'
 import Xlsx from '../vadver/downxsxl.vue'
 import pagination from '@/components/page.vue'
 
-const statusMap =  (list: any[]) => toMap(list, 'code', 'text')
+const codeMap =  (list: any[]) => toMap(list, 'ket', 'text')
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
@@ -329,6 +339,8 @@ export default class Apps extends ViewBase {
   planMovies: any = []
   status = 0
   name = ''
+  location = ''
+  deliveryPositionList: any = []
   count: any = {
     cinemaCount: '',
     chainCount: '',
@@ -412,6 +424,12 @@ export default class Apps extends ViewBase {
           align: 'center'
         },
         ...four,
+        {
+          title: '45s 刊例价（元/千人次）',
+          width: 136,
+          key: 'cpm',
+          slot: 'cpm'
+        },
         ...five
       ]
     } else if (this.tag == 2 || this.tag == 3) {
@@ -540,6 +558,8 @@ export default class Apps extends ViewBase {
         ...data.item
       }
       this.length = (data.cities || []).length
+      this.deliveryPositionList = codeMap(data.deliveryPositionList)
+      this.location = this.deliveryPositionList[data.item.deliveryPositionCode]
       const citylength = ['票仓城市Top10', '一线城市', '二线城市', '三线城市', '四线城市', '五线城市']
       const citynums = uniqBy((data.cities || []), 'gradeName').map((it: any) => {
         const index = citylength.findIndex((item: any) => item == it.grade)

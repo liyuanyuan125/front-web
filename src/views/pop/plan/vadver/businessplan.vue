@@ -40,11 +40,11 @@
                 </Col>
                 <Col :span="9">
                   <FormItem style="margin-left: 3px" label="影片:" :labelWidth='100'>
-                    <Select v-if="!setadver" :disabled="!setadver" v-model="form.specification" filterable clearable>
-                      <Option v-for="(item, index) in adverList" :value="item.specification" :key="index">{{ item.specification }}</Option>
+                    <Select placeholder="请选择" v-if="!setadver" :disabled="!setadver" v-model="form.movieId" filterable clearable>
+                      <Option v-for="(item, index) in adverList" :value="item.movieId" :key="index">{{ item.movieName }}</Option>
                     </Select>
-                    <Select v-else v-model="query.specification"  clearable filterable>
-                      <Option v-for="(item, index) in movieList" :value="item.movieId" :key="item.movieId">{{ item.name }}</Option>
+                    <Select v-else v-model="query.movieId"  clearable filterable>
+                      <Option v-for="(item, index) in movieList" :value="item.movieId" :key="index">{{ item.name }}</Option>
                     </Select>
                   </FormItem>
                 </Col>
@@ -134,16 +134,12 @@ export default class Promotion extends ViewBase {
     budgetAmount: '',
     videoId: null,
     specification: null,
-    customerId: null,
-    productId: null,
-    brandId: null,
+    movieId: 0
   }
-  movieList = []
+  movieList: any = []
   query: any = {
     specification: null,
-    brandId: null,
-    customerId: 0,
-    productId: 0,
+    movieId: 0
   }
   accountList: any = [] // 客户聊表
   specificationList: any = [] // 规格列表
@@ -269,6 +265,8 @@ export default class Promotion extends ViewBase {
 
   async movieSeach() {
     try {
+      const { data } = await companyMovies()
+      this.movieList = data || []
     } catch (ex) {
       this.handleError(ex)
     }
@@ -280,9 +278,16 @@ export default class Promotion extends ViewBase {
       const { data } = await advertising( clean({
         pageIndex: 1,
         pageSize: 288,
-        status: this.setadver ? '' : 4
+        status: this.setadver ? '' : 4,
+        videoType: 2
       }) )
-      this.adverList = data.items || []
+      this.adverList = (data.items || []).map((it: any) => {
+        const movieId = it.movieId || '0'
+        return {
+          ...it,
+          movieId
+        }
+      })
       this.seach()
     } catch (ex) {
       (this.$Spin as any).hide()
@@ -321,18 +326,13 @@ export default class Promotion extends ViewBase {
       if (!data.item.videoId) {
         this.setadver = true
         this.pername = data.item.name
-        this.query.brandId = data.item.brandId || 0
         // data.item.brandId ? this.seachs(data.item.brandId) : ''
         this.query.specification = data.item.specification || ''
-        this.query.customerId = data.item.customerId || 0
-        this.query.productId = data.item.productId || null
+        this.query.movieId = data.item.movieId || 0
       } else {
         this.form.name = data.item.name
         this.form.specification = data.item.specification
         this.form.videoId = data.item.videoId
-        this.form.customerId = data.item.customerId
-        this.form.productId = data.item.productId
-        this.form.brandId = data.item.brandId
       }
       const begin: any = new Date(this.formatDate(data.item.beginDate))
       const end: any = new Date(this.formatDate(data.item.endDate))
@@ -383,15 +383,16 @@ export default class Promotion extends ViewBase {
           videoId: this.setadver ? '' : this.form.videoId,
           id: this.$route.params.setid ? this.$route.params.setid : '',
           specification: this.setadver ? this.query.specification + '' : this.form.specification + '',
-          budgetAmount: Number(this.form.budgetAmount * 10000)}, [0]))
+          budgetAmount: Number(this.form.budgetAmount * 10000),
+          advertTypeCode: 'BRAND' }, [0, '']))
         if (!this.$route.params.setid) {
           this.$router.push({
-            name: 'pop-planlist-add',
+            name: 'pop-business-add',
             params: { step: '1', setid: data.data  }
           })
         } else {
           this.$router.push({
-            name: 'pop-planlist-edit',
+            name: 'pop-business-edit',
             params: { step: '1', setid: data.data  }
           })
         }
@@ -425,17 +426,15 @@ export default class Promotion extends ViewBase {
   watchformVideoId(val: any, old: any) {
     if (val) {
       const data = this.adverList.filter((it: any) => val == it.id)
-      this.form.customerId = data[0].customerId
-      this.form.brandId = data[0].brandId
+      this.form.movieId = data[0].movieId || 0
       this.form.specification = data[0].specification
       if (this.steps == 2) {
       } else {
         this.form.budgetAmount = ''
         this.form.productId = data[0].productId
         const name1 = data[0].name ? `[ ${data[0].name} ]` : ''
-        const customerName = data[0].customerName ? `[ ${data[0].customerName} ]` : ''
-        const productName = data[0].productName ? `[ ${data[0].productName} ]` : ''
-        this.form.name = `${name1}${customerName}${productName}`
+        const movieName = data[0].movieName ? `[ ${data[0].movieName} ]` : ''
+        this.form.name = `${name1}${movieName}`
       }
       this.steps = 1
     } else {
@@ -467,23 +466,17 @@ export default class Promotion extends ViewBase {
   @Watch('query', {deep: true})
   watchQuery(val: any) {
     if (this.steps == 1) {
-      let braname = ''
-      let productname = ''
-      let accountname = ''
-      if (val.brandId) {
-        braname = (this.$refs.refBrand as any).queryBrandName()
-        braname = braname ? `[${braname}]` : ''
-        // braname = this.productlist.filter((it: any) => val.brandId == it.id)[0].name
+      let movieName = ''
+      // if (val.brandId) {
+      //   braname = (this.$refs.refBrand as any).queryBrandName()
+      //   braname = braname ? `[${braname}]` : ''
+      //   // braname = this.productlist.filter((it: any) => val.brandId == it.id)[0].name
+      // }
+      if (val.movieId && this.movieList.length > 0) {
+        movieName = this.movieList.filter((it: any) => val.movieId == it.movieId)[0].name
+        movieName = movieName ? `[${movieName}]` : ''
       }
-      if (val.productId && this.branidlist.length > 0) {
-        productname = this.branidlist.filter((it: any) => val.productId == it.id)[0].name
-        productname = productname ? `[${productname}]` : ''
-      }
-      if (val.customerId) {
-        accountname = (this.$refs.refCust as any).queryCustName()
-        accountname = accountname ? `[${accountname}]` : ''
-      }
-      this.pername = `${accountname}${braname}${productname}`
+      this.pername = `${movieName}`
     } else {
       this.steps = 1
     }

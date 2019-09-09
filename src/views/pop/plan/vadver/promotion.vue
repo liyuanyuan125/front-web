@@ -328,8 +328,9 @@ export default class Promotion extends ViewBase {
     try {
       const { data } = await advertising( clean({
         pageIndex: 1,
-        pageSize: 288,
-        status: this.setadver ? '' : 4
+        pageSize: 888,
+        status: this.setadver ? '' : 4,
+        videoType: 1
       }) )
       this.adverList = data.items || []
       this.seach()
@@ -435,7 +436,8 @@ export default class Promotion extends ViewBase {
           videoId: this.setadver ? '' : this.form.videoId,
           id: this.$route.params.setid ? this.$route.params.setid : '',
           specification: this.setadver ? this.query.specification + '' : this.form.specification + '',
-          budgetAmount: Number(this.form.budgetAmount * 10000)}, [0]))
+          budgetAmount: Number(this.form.budgetAmount * 10000),
+          advertTypeCode: 'TRAILER'}, [0]))
         if (!this.$route.params.setid) {
           this.$router.push({
             name: 'pop-planlist-add',

@@ -337,3 +337,12 @@ export async function getmoney(id: any) {
   return data
 }
 
+/**
+ * @param  {any} query
+ * 支付定金前获取定金信息
+ */
+export async function deposit(id: any) {
+  const data = await get(`/xadvert/plans/${id}/check-before-pay-deposit`)
+  return data
+}
+
