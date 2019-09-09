@@ -16,16 +16,78 @@ import tryParseJson from '@/fn/tryParseJson'
 import triple from '@/ui/triple'
 
 /**
+ * 文件类型，参见：https://yapi.aiads-dev.com/project/49/interface/api/5869
+ */
+export enum FileType {
+  /** 文件 */
+  misc = 1,
+  /** 图片 */
+  image = 2,
+  /** 视频 */
+  video = 3
+}
+
+/**
+ * 子目录，参见：https://yapi.aiads-dev.com/project/49/interface/api/5869
+ */
+export enum SubCategory {
+  /** 杂项 */
+  misc = 1,
+  /** 监播视频 */
+  monitorVideo = 2,
+}
+
+/**
+ * 上传参数
+ */
+export interface UploadParam {
+  /** 文件类型，默认 FileType.misc */
+  fileType?: FileType
+  /** 子目录，默认 SubCategory.misc */
+  subCategory?: SubCategory
+  /** 文件扩展名，默认自动提取扩展名，也可以明确指定 */
+  fileExtension?: string
+}
+
+interface UploadParamInner extends UploadParam {
+  /** 内部使用。resume 模式，是否不判断，直接恢复，默认为 false */
+  resume?: boolean
+}
+
+/**
  * Oss 项，用于识别不同的文件
  * 从 File 对象中摘取，参见：
  * https://developer.mozilla.org/en-US/docs/Web/API/File
  */
-export interface OssItem {
+export interface OssItem extends UploadParam {
   name: string
   size: number
   type: string
   lastModified: number
 }
+
+/**
+ * 获取 oss 一系列参数结果
+ */
+export interface Token {
+  /** oss 参数 region */
+  region: string
+  /** oss 参数 bucket */
+  bucket: string
+  /** oss 参数 stsToken */
+  stsToken: string
+  /** oss 参数 accessKeyId */
+  accessKeyId: string
+  /** oss 参数 accessKeySecret */
+  accessKeySecret: string
+  /** 文件名 */
+  fileName: string
+}
+
+/**
+ * 获取 token 的函数
+ */
+export type GetToken = (param: UploadParam) => Promise<Token>
 
 /**
  * 放入本地存储中的信息
@@ -39,28 +101,11 @@ export interface Track extends OssItem {
   checkpoint: any
   /** 最近修改时间，毫秒数 */
   lastTime: number
+  /** 上传参数 */
+  param: UploadParam
+  /** 将 token 也保存在 track 中 */
+  token?: Token
 }
-
-/**
- * 获取 oss 一系列参数结果
- */
-export interface Token {
-  /** oss 参数 region */
-  region?: string
-  /** oss 参数 bucket */
-  bucket?: string
-  /** oss 参数 stsToken */
-  stsToken: string
-  /** oss 参数 accessKeyId */
-  accessKeyId: string
-  /** oss 参数 accessKeySecret */
-  accessKeySecret: string
-}
-
-/**
- * 获取 token 的函数
- */
-export type GetToken = () => Promise<Token>
 
 /** 断点续传使用策略函数参数 */
 export interface UseCacheParam {
@@ -97,22 +142,24 @@ export interface Options {
 }
 
 const defaultOptions: Options = {
-  async getToken() {
+  async getToken(param: UploadParam) {
     const {
       data: {
         region,
         bucket,
         securityToken: stsToken,
         accessKeyId,
-        accessKeySecret
+        accessKeySecret,
+        fileName
       }
-    } = await get('/file/sts/aiadsFileBucketToken')
+    } = await get('/file/sts/aiadsFileBucketToken', param)
     return {
       region,
       bucket,
       stsToken,
       accessKeyId,
-      accessKeySecret
+      accessKeySecret,
+      fileName
     }
   },
   maxTryCount: 3,
@@ -133,8 +180,9 @@ const defaultOptions: Options = {
   }
 }
 
-const getOssItem = (file: File) => {
+const getOssItem = (file: File, param: UploadParam) => {
   const item: OssItem = {
+    ...param,
     name: file.name,
     size: file.size,
     type: file.type,
@@ -149,16 +197,20 @@ const getHash = (value: any) => {
   return hash
 }
 
-const newTrack = (item: OssItem, hash: string) => {
+// 获取扩展名，file.tar.zip => .tar.zip
+const getExt = (name = '') => name && name.replace(/^[^.]+/, '')
+
+const newTrack = (item: OssItem, hash: string, param: UploadParam) => {
   // 保留扩展名
-  const ext = item.name ? item.name.replace(/^[^.]+/, '') : ''
+  const ext = param.fileExtension
   const track: Track = {
     ...item,
     // 预防重复，会被覆盖
     fileName: random('upload', hash) + ext,
     percent: 0,
     checkpoint: null,
-    lastTime: Date.now()
+    lastTime: Date.now(),
+    param,
   }
   return track
 }
@@ -208,6 +260,7 @@ interface UploadIntent {
   item: OssItem
   hash: string
   track: Track
+  resume: boolean
 }
 
 /**
@@ -286,23 +339,33 @@ export default class OssUploader extends EventClass {
   /**
    * 上传文件
    * @param file 文件对象
+   * @param param 参数，更详尽描述，在 UploadParam 类型描述里
    */
   public async upload(
     file: File,
-    /* 选项是内部参数 */
     {
-      // resume 模式，不判断，直接恢复
+      fileType = FileType.misc,
+      subCategory = SubCategory.misc,
+      fileExtension = '',
       resume = false
-    }: any = {}
+    }: UploadParamInner = {}
   ) {
+    const ext = (fileExtension || getExt(file.name) || '').replace(/^\./, '').toLowerCase()
+
     const { expireTime, useCache } = this.options
     cleanTracks(expireTime!)
 
-    const item = getOssItem(file)
+    const param: UploadParam = {
+      fileType,
+      subCategory,
+      fileExtension: ext
+    }
+
+    const item = getOssItem(file, param)
     const hash = getHash(item)
     const cachedTrack = getTrack(hash)
 
-    let track = newTrack(item, hash)
+    let track = newTrack(item, hash, param)
 
     if (cachedTrack != null) {
       // 当缓存中的数据存在时，执行断点续传使用策略函数
@@ -318,14 +381,20 @@ export default class OssUploader extends EventClass {
         // 恢复 file，本地存储（JSON）无法保存 file 引用
         cachedTrack.checkpoint.file = file
         track = cachedTrack
+        resume = true
+      } else {
+        resume = false
       }
+    } else {
+      resume = false
     }
 
     this.uploadWork(file, {
       tryCount: 0,
       item,
       hash,
-      track
+      track,
+      resume
     })
   }
 
@@ -381,7 +450,8 @@ export default class OssUploader extends EventClass {
       tryCount = 0,
       item,
       hash,
-      track
+      track,
+      resume = false
     }: UploadIntent
   ) {
     const { getToken, maxTryCount, retryTimeout } = this.options
@@ -397,12 +467,22 @@ export default class OssUploader extends EventClass {
         this.hash = hash
       }
 
-      // 发出将要获取 token 事件
-      this.emit('beforeGetToken')
-      const token = await getToken!()
-      // 发出已经获取 token 事件
-      const afterGetTokenEvent: AfterGetTokenEvent = { file, token }
-      this.emit('afterGetToken', afterGetTokenEvent)
+      const token = resume && track.token || await (async () => {
+        // 发出将要获取 token 事件
+        this.emit('beforeGetToken')
+
+        const ret = await getToken!(track.param)
+        // 更新 fileName，使用服务器端返回的
+        track.fileName = ret.fileName
+        track.token = ret
+        saveTrack(track, hash)
+
+        // 发出已经获取 token 事件
+        const afterGetTokenEvent: AfterGetTokenEvent = { file, token: ret }
+        this.emit('afterGetToken', afterGetTokenEvent)
+
+        return ret
+      })()
 
       const client = this.client = new OSS(token)
 
@@ -471,7 +551,8 @@ export default class OssUploader extends EventClass {
             tryCount: nextTryCount,
             item,
             hash,
-            track
+            track,
+            resume: false,
           })
         }, retryTimeout)
       } else {
