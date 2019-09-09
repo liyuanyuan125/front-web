@@ -1,6 +1,14 @@
 <template>
-  <Cascader v-model="inner"  :data="data" :load-data="loadData" :clearable="clearable" :placeholder="placeholder"
-    class="area-select" :render-format="format" ref="ui"></Cascader>
+  <Cascader
+    v-model="inner"
+    :data="data"
+    :load-data="loadData"
+    :clearable="clearable"
+    :placeholder="placeholder"
+    class="area-select"
+    :render-format="format"
+    ref="ui"
+  />
 </template>
 
 <script lang="ts">
@@ -181,7 +189,7 @@ export default class AreaSelect extends ViewBase {
     return emptyList as AreaValue
   }
 
-  @Watch('value')
+  @Watch('value', {immediate: true})
   async watchValue(val: AreaValue) {
     // 检查传入的 value 值，是否合法，不合法直接清空
     const isValid = await this.checkValid(val)
