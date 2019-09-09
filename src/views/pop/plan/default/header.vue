@@ -6,7 +6,7 @@
         <Button  type="default" @click="collect" class="btn-contact">联系商务</Button>
       </div>
     </div>
-    <div v-if="value.status == 3" class="plan-message">
+    <div v-if="value.status == 2" class="plan-message">
       <p>以下为平台专业投放人员为您提供的投放方案，如对方案有任何疑问，请点击“联系商务”</p>
       <p请确认无误后点击下方“确认方案”按钮</p>
       <span style="margin-top: 20px">如对方案有任何疑问请点击“ 联系商务 ” </span>
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div v-if="value.status == 2" class="plan-message" style="height:80px; padding-top: 16px;">
+    <div v-if="value.status == 4" class="plan-message" style="height:80px; padding-top: 16px;">
       <div class="btn-box">
         <Button type="default" :to="{ name: 'effect-report', params: { 
           id: $route.params.id
@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div v-if="value.status == 4" class="plan-message">
+    <div v-if="value.status == 3" class="plan-message">
       <!-- <p>以下为平台专业投放人员为您提供的投放方案，确认后您只需缴纳 -->
       <p>您需要支付 ￥{{formatNums(value.depositAmount)}} 为定金 </p>
       <!-- <p>¥
@@ -102,8 +102,8 @@
       </div>
     </div>
     <Sure ref="Sure" @uplist="uplist" />
-    <Pay ref="Pay" @uplist="uplist" />
     <Payend ref="Payend" @uplist="uplist" />  
+    <Expenditure ref='Pay' @uplist="uplist"></Expenditure>
     <Collect ref="collect" />
   </div>
 </template>
@@ -117,6 +117,7 @@ import Pay from '../planlistmodel/pay.vue'
 import Collect from '../planlistmodel/collect.vue'
 import Payend from '../planlistmodel/payend.vue'
 import moment from 'moment'
+import Expenditure from '../planlistmodel/expenditure.vue'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
@@ -124,7 +125,8 @@ const timeFormat = 'YYYY-MM-DD'
     Sure,
     Pay,
     Collect,
-    Payend
+    Payend,
+    Expenditure
   }
 })
 export default class App extends ViewBase {
@@ -140,7 +142,7 @@ export default class App extends ViewBase {
 
   pay() {
     this.$nextTick(() => {
-      (this.$refs as any).Pay.init(this.value.companyId, this.value.budgetAmount, this.value.id)
+      (this.$refs as any).Pay.init(this.value.id)
     })
   }
 

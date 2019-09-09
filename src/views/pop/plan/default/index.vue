@@ -755,4 +755,8 @@ export default class Apps extends ViewBase {
     }
   }
 }
+/deep/ .ivu-col-span-10 span:empty::before {
+  content: '暂无数据';
+  font-size: 16px;
+}
 </style>

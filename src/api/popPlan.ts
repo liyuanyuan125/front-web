@@ -242,8 +242,8 @@ export async function financeMsg(id: any) {
  * @param  {any} query
  * 支付定金
  */
-export async function payMoney(id: any) {
-  const data = await post(`/xadvert/plans/${id}/pay-deposit`)
+export async function payMoney(id: any, query: any) {
+  const data = await post(`/xadvert/plans/${id}/pay-deposit`, query)
   return data
 }
 

@@ -3,9 +3,9 @@
     <Modal v-model="showDlg" title="支付定金" width="600" @on-cancel="cancel()" >
       <p class='cell-box'>您需要支付【{{depositAmount}}】为定金即可开始投放，
         投放结束后定金可抵结算款，如对方案有任何疑问，请点击“联系商务”</p>
-      <Form ref="form" :model="form" :label-width="90" :rules="formRules" class="edit-input">
+      <Form ref="form" :model="form" :label-width="90" class="edit-input">
         <FormItem label="支付定金">
-          <div style="margin-top: -6px;">{{depositAmount}}元</div>
+          <div style="margin-top: 6px;">{{depositAmount}}元</div>
         </FormItem>
         <FormItem label="支付方式" prop="status">
           <RadioGroup v-model="form.status" >
@@ -38,11 +38,12 @@
      <Row class='moneyTip'>
        <Col :span='12' class='top'>应付金额: <span>{{formatNumber(Number(dataForm.amount))}}</span> 元</Col>
      </Row>
-     <Form
+      <Form
           :model="dataForm"
           :label-width="88"
           label-position="left"
           class="form page"
+          :rules="formRules"
           ref="dataForm"
         >
           <Row class="add-row">
@@ -66,8 +67,8 @@
               </FormItem>
             </Col>
             <Col span="9" style='margin-left: 9%;'>
-              <FormItem label="汇款底单" prop="receipts">
-                <Upload v-model="dataForm.receipts" multiple :maxCount="1" accept="image/*"/>
+              <FormItem label="汇款底单">
+                <Upload v-model="dataForm.receipt" multiple :maxCount="1" accept="image/*"/>
                 <span class='is'>格式为jpg/jpeg/png，大小不超过5M的图片</span>
               </FormItem>
             </Col>
@@ -97,13 +98,11 @@
               </FormItem>
             </Col>
             <Col span="10" style='margin-left: 15%;'>
-              <FormItem label="汇款时间">
+              <FormItem label="汇款时间" prop="remittanceDate">
                 <Date-picker
                   :options="options3"
                   type="date"
-                  prop="remittanceDate"
                   v-model="dataForm.remittanceDate"
-                  on-change="selectTime"
                   placeholder="选择日期"
                   class="inp-style"
                 ></Date-picker>
@@ -121,10 +120,10 @@
               </FormItem>
             </Col>
           </Row>
-        </Form>
+      </Form>
       <div slot="footer" class="btn-center-footer">
-        <Button class="button-cancel "  @click="cancelDataForm()" >取消</Button>
-        <Button type="primary" class="button-ok ok" @click="dataFormSubmit('dataForm')">确认支付</Button>
+        <Button class="button-cancel "  @click="cancelDataForm" >取消</Button>
+        <Button type="primary" class="button-ok ok" @click="dataFormSubmit">确认支付</Button>
       </div>
     </Modal>
   </div>
@@ -145,7 +144,8 @@ import {
 } from '@/api/financeinfo'
 import Upload from '@/views/finance/upload/Upload.vue'
 import { warning , success, toast , info } from '@/ui/modal'
-import { deposit, getmoney, adverdetail } from '@/api/popPlan'
+import { deposit, getmoney, adverdetail, payMoney } from '@/api/popPlan'
+import moment from 'moment'
 
 const form = {
   amount: '',
@@ -162,19 +162,8 @@ export default class Change extends ViewBase {
   availableAmount: any = ''
   showDlg: any = false
   // 输入框验证规则
-  get formRules() {
-    const rules = {
-      amount: [
-          { required: true, message: '请输入充值金额', trigger: 'blur' }
-      ],
-      status: [
-          { required: true }
-      ]
-    }
-    return rules
-  }
 
-  id = 0
+  // id = 0
 
   depositAmount: any = ''
 
@@ -221,20 +210,44 @@ export default class Change extends ViewBase {
 
   form = { ...form }
 
+  id = 0
+
   dataForm: any = {
     accountName: '',
     amount: '0.01', // 充值金额
-    remittanceDate: null,
+    remittanceDate: '',
     remittanceType: 1,
     remittanceNo: '',
     remark: '',
-    receipts: [],
-    receipt: '',
+    receipt: [],
     payType: 1,
+  }
+
+  get formRules() {
+    const rules = {
+      amount: [
+        { required: true, message: '请输入充值金额', trigger: 'blur' }
+      ],
+      remittanceType: [
+        { required: true, type: 'number', message: '请选择汇款方式', trigger: 'blur' }
+      ],
+      accountName: [
+        { required: true, message: '请输入汇款人姓名', trigger: 'blur' }
+      ],
+      remittanceDate: [
+        { required: true, type: 'date', message: '请选择汇款时间', trigger: 'change' }
+      ],
+      remittanceNo: [
+        { required: true, message: '请输入汇款流水单号', trigger: 'blur' }
+      ]
+    }
+    return rules
   }
 
   async init(id: any) {
     // 银行卡信息
+    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
+    this.id = id
     if (id || (this.$route.query.id && this.$route.query.success == 'false')) {
       const { data: {
         item
@@ -243,6 +256,7 @@ export default class Change extends ViewBase {
         this.showDlg = true
         const { data } = await deposit(id)
         this.depositAmount = data.depositAmount
+        this.dataForm.amount = data.depositAmount
         this.availableAmount = data.availableAmount
         this.defaultdata = data // accountSplice
         this.accountSplice = data.accountNumber
@@ -259,6 +273,7 @@ export default class Change extends ViewBase {
   }
 
   cancel() {
+    (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
     this.showDlg = false
     this.showoffline = false
     ; (this.$refs.form as any).resetFields()
@@ -272,9 +287,18 @@ export default class Change extends ViewBase {
 
   async hrefJump() {
     try {
-      const res = await lineUnderRemittances({amount: this.form.amount , payType: 0})
-      window.location = res.data
-      // this.form = {}
+      if (this.form.status == 0) {
+        await payMoney(this.id, {
+          payType: 'ACCOUNT',
+          depositAmount: this.depositAmount
+        })
+        toast('支付成功')
+      } else if (this.form.status == 1) {
+        await payMoney(this.id, {
+          payType: 'ALIPAY',
+          depositAmount: this.depositAmount
+        })
+      }
     } catch (ex) {
       this.handleError(ex)
     }
@@ -289,40 +313,33 @@ export default class Change extends ViewBase {
       this.showoffline = true
     })
     const aaa = await before()
-    this.addMoneyList = aaa.data.remittanceTypeList
+    this.addMoneyList = aaa.data.remittanceTypeList.filter((it: any) => it.key != 0)
   }
 
     // 表单提交
-  async dataFormSubmit(dataForms: any) {
-    const aaa = new Date(this.dataForm.remittanceDate)
-    this.dataForm.remittanceDate =
-    this.dataForm.receipt =
-      this.dataForm.receipts.length > 0 ? this.dataForm.receipts[0].fileId : []
-      if (this.dataForm.receipts.length == 0 ) {
-        info('请上传汇款底单')
-        return
-      }
-    const myThis: any = this
-    myThis.$refs[dataForms].validate(async (valid: any) => {
+  async dataFormSubmit() {
+    (this.$refs.dataForm as any).validate(async (valid: any) => {
       if (valid) {
-        const query = !this.id
-          ? {...this.dataForm , remittanceDate: String(aaa.getFullYear()) +
-            ((aaa.getMonth() + 1) < 10 ? '0' + String((aaa.getMonth() + 1)) : (aaa.getMonth() + 1) ) +
-            ((aaa.getDate()) < 10 ? '0' + String((aaa.getDate())) : (aaa.getDate()) )}
-          : {
-              // id: this.id,
-              ...this.dataForm,
-              remittanceDate: String(aaa.getFullYear()) +
-              ((aaa.getMonth() + 1) < 10 ? '0' + String((aaa.getMonth() + 1)) : (aaa.getMonth() + 1) ) +
-              ((aaa.getDate()) < 10 ? '0' + String((aaa.getDate())) : (aaa.getDate()) )
-            }
+        const image = this.dataForm.receipt.length > 0 ? this.dataForm.receipt[0].fileId : []
+        if (this.dataForm.receipt.length == 0 ) {
+          info('请上传汇款底单')
+          return
+        }
+        const query = {
+          ...this.dataForm,
+          remittanceDate: moment(this.dataForm.remittanceDate).format('YYYYMMDD'),
+          receipt: image
+        }
         const title = '添加'
         try {
-          const res = await lineUnderRemittances(query)
+          const res = await payMoney(this.id, {
+            payType: 'LINEPAY',
+            depositAmount: this.depositAmount,
+            linepayBody: {
+              ...query
+            }
+          })
           toast('添加成功')
-          // this.dataForm = {}
-          // this.seach()
-          history.go(0)
         } catch (ex) {
           this.handleError(ex)
         }
@@ -374,7 +391,7 @@ export default class Change extends ViewBase {
       width: 20px;
       height: 20px;
       margin-left: 22px;
-      margin-top: 13px;
+      margin-top: 6px;
       img {
         width: 100%;
         height: 100%;
@@ -476,7 +493,6 @@ export default class Change extends ViewBase {
 }
 .availableAmount {
   display: inline-block;
-  margin-top: 6px;
   margin-left: 100px;
 }
 .button-ok-a {
@@ -583,7 +599,7 @@ export default class Change extends ViewBase {
 }
 /deep/ .upload-list {
   margin-top: 0;
-  left: 25%;
+  left: -5%;
 }
 /deep/ .upload-item {
   position: relative;
