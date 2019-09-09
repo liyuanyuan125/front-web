@@ -256,10 +256,10 @@ export default class Change extends ViewBase {
 
   async hrefJump() {
     if (this.form.amount == '') {
-      info('请输入充值金额')
+      info('请输入不小于0的金额')
       return
     }
-    if (this.form.amount < 0) {
+    if (this.form.amount == null || this.form.amount < 0) {
       info('请输入不小于0的金额')
       return
     }
@@ -275,10 +275,10 @@ export default class Change extends ViewBase {
 
   async changeData(forms: any) {
     if (this.form.amount == '') {
-        info('请输入充值金额')
+        info('请输入不小于0的金额')
         return
     }
-    if (this.form.amount < 0) {
+    if (this.form.amount == null || this.form.amount < 0) {
       info('请输入不小于0的金额')
       return
     }
