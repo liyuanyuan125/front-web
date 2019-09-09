@@ -54,7 +54,7 @@
       </Form>
 
       <!-- 选择登录方式beizhu -->
-      <Modal v-model="visLogin" width="700px" class="comDlg" :key="keyRandom">
+      <Modal v-model="visLogin" width="700px" class="comDlg">
         <h2 class="title">选择登录方式</h2>
         <RadioGroup v-model="systemCode" class="check-way">
            <Radio v-for="(item, index) in systems" :key="index" :label="item.code" 
@@ -90,7 +90,6 @@ export default class Main extends ViewBase {
   visLogin = false
   systems: any[] = []
 
-  keyRandom = ''
   systemCode = ''
   data: any = {}
 
@@ -116,8 +115,8 @@ export default class Main extends ViewBase {
       { required: true, message: '请输入你的密码', trigger: 'blur' },
       {
         type: 'string',
-        min: 6,
-        message: '密码的个数不能少于6位',
+        min: 8,
+        message: '密码的个数不能少于8位',
         trigger: 'blur'
       }
     ],
@@ -141,9 +140,7 @@ export default class Main extends ViewBase {
 
   async submit() {
     const valid = await (this.$refs.form as any).validate()
-    if (!valid) {
-      return
-    }
+    if (!valid) { return }
     this.emailError = ''
     this.passwordError = ''
     this.captchaCodeError = ''
@@ -169,13 +166,9 @@ export default class Main extends ViewBase {
       } else {
         this.visLogin = true
       }
-
-      // 登录选择数据填充
-      // this.handleSubmit()
     } catch (ex) {
       ((this as any)[`onLogin${ex.code}`] || this.handleError).call(this, ex)
       this.resetCaptcha()
-      this.keyRandom = random()
     }
   }
 

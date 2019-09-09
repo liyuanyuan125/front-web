@@ -325,8 +325,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     name: 'account-info-accedit',
     component: () => import('./views/account/company/accEdit.vue'),
     meta: {
-      authKey: 'account-manage.info',
-      authAction: 'edit',
+      authKey: 'account-manage.company',
+      authAction: 'EMPTY',
       title: '修改',
     }
   },
@@ -1039,7 +1039,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       meta: emptyAuth
   },
 
-  // kol - koll列表
+  // KOL - koll列表
   {
     path: '/kol/shopping/:id?',
     name: 'kol-shopping',
@@ -1175,7 +1175,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     },
     props: idProps,
     children: [
-      // kol - KOL详情更多页 - 平台运营
+      // KOL - KOL详情更多页 - 平台运营
       {
         path: 'platform/:channel?',
         name: 'kol-detail-platform',

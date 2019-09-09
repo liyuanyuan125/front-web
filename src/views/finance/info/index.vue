@@ -312,14 +312,20 @@ export default class Main extends ViewBase {
         const h = jsxReactToVue(hh)
         // const url = imageList.url
         // console.log(url)
-        return (
+        if (receipt == null) {
+          return (
+            <span v-html="-" />
+          )
+        } else {
+          return (
           <a
-            href="javascript:;"
-            on-click={this.onView.bind(this , receipt)}
-            class="operation">
-            查看
-          </a>
-        )
+              href="javascript:;"
+              on-click={this.onView.bind(this , receipt)}
+              class="operation">
+              查看
+            </a>
+          )
+        }
         /* tslint:enable */
       }
     },

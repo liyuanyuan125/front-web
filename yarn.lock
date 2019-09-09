@@ -9046,7 +9046,7 @@ string.prototype.padstart@^3.0.0:
 
 string_decoder@^0.10.25, string_decoder@~0.10.x:
   version "0.10.31"
-  resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-0.10.31.tgz#62e203bc41766c6c28c9fc84301dab1c5310fa94"
+  resolved "https://registry.npm.taobao.org/string_decoder/download/string_decoder-0.10.31.tgz?cache=0&sync_timestamp=1565170823020&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fstring_decoder%2Fdownload%2Fstring_decoder-0.10.31.tgz#62e203bc41766c6c28c9fc84301dab1c5310fa94"
   integrity sha1-YuIDvEF2bGwoyfyEMB2rHFMQ+pQ=
 
 string_decoder@^1.0.0, string_decoder@^1.1.1:

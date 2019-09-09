@@ -23,8 +23,8 @@
 
         <FormItem label="是否已转制">
           <RadioGroup v-model="form.translated">
-            <Radio :label="1">否，未转制</Radio>
-            <Radio :label="2">是，已转制</Radio>
+             <Radio :label="1">是，已转制</Radio>
+             <Radio :label="2">否，未转制</Radio>
         </RadioGroup>
           <em class="remark">影院进行排播时，需要将视频文件转制为特定的DCP包，请确定是否需要平台进行格式转制</em>
         </FormItem>
@@ -68,7 +68,9 @@ import OssUploader from '@/components/ossUploader'
   }
 })
 export default class Main extends ViewBase {
-  form: any = {}
+  form: any = {
+    translated: 1
+  }
   // 是否正在上传
   uploading = false
 

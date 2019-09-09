@@ -2,7 +2,7 @@
   <div class="film-page">
     <div class="page-title-btn">
       <!-- 用户公司类型包含片商 增加新建电影预告片按钮 -->
-      <Button type="primary" :to="{name: 'pop-film-editprevue'}" class="btn-add-line"
+      <Button v-if="systemCode == 'film'" type="primary" :to="{name: 'pop-film-editprevue'}" class="btn-add-line"
         v-auth="'promotion.ad-video#create'">新建电影预告片
       </Button>
        <Button type="primary" :to="{name: 'pop-film-edit'}" class="btn-add-line"
@@ -78,15 +78,14 @@ import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
 import { dataList, delList, popCancel, popPayment, popPartners } from '@/api/popFilm'
 import { formatTimes, formatNumber} from '@/util/validateRules'
-// import updataVideo from '@/components/videoDlg.vue'
 import pagination from '@/components/page.vue'
+import { getUser } from '@/store'
 
 import customerList from '@/components/selectList/customerList.vue'
 import brandList from '@/components/selectList/brandList.vue'
 import productList from '@/components/selectList/productList.vue'
 @Component({
   components: {
-    // updataVideo,
     pagination,
     customerList,
     brandList,
@@ -96,10 +95,12 @@ import productList from '@/components/selectList/productList.vue'
 export default class Main extends ViewBase {
   form: any = {}
   query = null
+
   pageList = {
     pageIndex: 1,
     pageSize: 20
   }
+
   totalCount = 0
   spinShow = false
   statusList: any = []
@@ -108,7 +109,11 @@ export default class Main extends ViewBase {
 
   tableDate = []
 
-  mounted() {
+  get systemCode() {
+    return getUser()!.systemCode
+  }
+
+  async mounted() {
     this.tableList()
   }
 

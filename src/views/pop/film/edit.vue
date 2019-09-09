@@ -10,7 +10,7 @@
           <Input v-model="form.name" placeholder="请输入广告片名称"  :maxlength="30" ></Input>
         </FormItem>
 
-        <FormItem  label="客户" >
+        <FormItem  label="客户" v-if="secondaryCode == 'daili'" >
           <customerList v-model="form.customerId" ref="refCust" />
         </FormItem>
 
@@ -48,21 +48,23 @@
           <em class="remark">支持（.rmvb\.mp4\.mov）等视频格式；视频大小不超过100M；上传广告片小样可提升系统审核速度</em>
         </FormItem>
 
-        <FormItem label="公司营业执照编号" prop="licenseCode">
-          <Input v-model="form.licenseCode" placeholder="请输入执照编号"/>
-        </FormItem>
-        <FormItem label="营业执照有效期" prop="validity">
-          <DatePicker v-model="form.validity" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择有效期"></DatePicker>
-        </FormItem>
-        <FormItem label="营业执照扫描件" prop="licenseFileId">
-          <Upload v-model="form.licenseFileId" :max-count="1"  multiple accept="images/*" confirm-on-del/>
-            <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
-        </FormItem>
+        <div v-if="secondaryCode == 'daili'">
+          <FormItem label="公司营业执照编号" prop="licenseCode" >
+            <Input v-model="form.licenseCode" placeholder="请输入执照编号"/>
+          </FormItem>
+          <FormItem label="营业执照有效期" prop="validity">
+            <DatePicker v-model="form.validity" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择有效期"></DatePicker>
+          </FormItem>
+          <FormItem label="营业执照扫描件" prop="licenseFileId">
+            <Upload v-model="form.licenseFileId" :max-count="1"  multiple accept="images/*" confirm-on-del/>
+              <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
+          </FormItem>
 
-        <FormItem label="授权文件扫描件" prop="grantFileIds">
-          <Upload  v-model="form.grantFileIds":max-count="6" multiple accept="images/*"  confirm-on-del/>
-            <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
-        </FormItem>
+          <FormItem label="授权文件扫描件" prop="grantFileIds">
+            <Upload  v-model="form.grantFileIds":max-count="6" multiple accept="images/*"  confirm-on-del/>
+              <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
+          </FormItem>
+        </div>
 
          <div class=" create-submit-btn">
            <Button v-if="!$route.params.id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
@@ -78,11 +80,11 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { getUser } from '@/store'
 import { confirm } from '@/ui/modal'
 import Upload, { FileItem } from '@/components/upload'
 import { popPartners, detailPop, createPop, editPop, transFee, productsList} from '@/api/popFilm'
 import {intDate, formatValidDate, formatIntDateRange } from '@/util/dealData'
+import { getUser } from '@/store'
 
 import customerList from '@/components/selectList/customerList.vue'
 import brandList from '@/components/selectList/brandList.vue'
@@ -122,6 +124,10 @@ export default class Main extends ViewBase {
 
   // 产品
   productsListSel = []
+
+  get secondaryCode() {
+    return getUser()!.secondaryCode
+  }
 
   get rule() {
     return {
