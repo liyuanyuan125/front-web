@@ -28,7 +28,7 @@
                 </Col>
               </Row>
               <Row class="adver-detail" :gutter="10">
-                <Col :span="7">
+                <Col :span="9">
                   <FormItem style="margin-left: 3px" label="广告片规格:" :labelWidth='100'>
                     <Select v-if="!setadver" :disabled="!setadver" v-model="form.specification" filterable clearable>
                       <Option v-for="(item, index) in adverList" :value="item.specification" :key="index">{{ item.specification }}</Option>
@@ -38,33 +38,13 @@
                     </Select>
                   </FormItem>
                 </Col>
-                <Col :span="5">
-                  <FormItem label="客户:" :labelWidth='50'>
-                    <Select v-if="!setadver" :disabled="!setadver" v-model="form.customerId" filterable clearable>
-                      <Option v-for="(item, index) in adverList" :value="item.customerId" :key="index">{{ item.customerName }}</Option>
+                <Col :span="9">
+                  <FormItem style="margin-left: 3px" label="影片:" :labelWidth='100'>
+                    <Select placeholder="请选择" v-if="!setadver" :disabled="!setadver" v-model="form.movieId" filterable clearable>
+                      <Option v-for="(item, index) in adverList" :value="item.movieId" :key="index">{{ item.movieName }}</Option>
                     </Select>
-                    <div v-else>
-                      <customerList v-model="query.customerId" ref="refCust" />
-                    </div>
-                  </FormItem>
-                </Col>
-                <Col :span="6">
-                  <FormItem label="品牌:" :labelWidth='56'>
-                    <Select v-if="!setadver" :disabled="!setadver" v-model="form.brandId" filterable clearable>
-                      <Option v-for="(item, index) in adverList" :value="item.brandId" :key="index">{{ item.brandName }}</Option>
-                    </Select>
-                    <div v-else>
-                      <brandList v-model="query.brandId"  ref="refBrand" />
-                    </div>
-                  </FormItem>
-                </Col>
-                <Col :span="6">
-                  <FormItem label="产品:" :labelWidth='60'>
-                    <Select v-if="!setadver" :disabled="!setadver" v-model="form.productId" filterable clearable>
-                      <Option v-for="(item, index) in adverList" :value="item.productId" :key="index">{{ item.productName }}</Option>
-                    </Select>
-                    <Select v-else v-model="query.productId" filterable clearable>
-                      <Option v-for="(item, index) in branidlist" :value="item.id" :key="index">{{ item.name }}</Option>
+                    <Select v-else v-model="query.movieId"  clearable filterable>
+                      <Option v-for="(item, index) in movieList" :value="item.movieId" :key="index">{{ item.name }}</Option>
                     </Select>
                   </FormItem>
                 </Col>
@@ -78,10 +58,6 @@
                       :options="startDate"
                       v-model="form.beginDate"
                       placeholder="开始时间" style="width: 200px"></DatePicker>
-                    <!-- <DatePicker v-model="form.advertime"
-                      :options="startDate"
-                      type="daterange" placement="bottom-end" placeholder="请选择日期" ></DatePicker> -->
-                    <!-- <weekDatePicker  style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker> -->
                   </FormItem>
                 </Col>
                 <Col :span="1"><p style="text-align: center;margin-top: 8px;font-size: 16px;">至</p></Col>
@@ -91,13 +67,8 @@
                       :options="endDate"
                       v-model="form.endDate"
                       placeholder="结束时间" style="width: 200px"></DatePicker>
-                    <!-- <DatePicker v-model="form.advertime"
-                      :options="startDate"
-                      type="daterange" placement="bottom-end" placeholder="请选择日期" ></DatePicker> -->
-                    <!-- <weekDatePicker  style="margin-left: 4px" type="daterange" placeholder="请选择日期"></weekDatePicker> -->
                   </FormItem>
                 </Col>
-
               </Row>
             </Col>
             <Col span="24">
@@ -142,6 +113,7 @@ import { getUser } from '@/store'
 import customerList from '@/components/selectList/customerList.vue'
 import brandList from '@/components/selectList/brandList.vue'
 import productList from '@/components/selectList/productList.vue'
+import { companyMovies } from '@/api/popFilm'
 
 const timeFormat = 'YYYYMMDD'
 @Component({
@@ -162,15 +134,12 @@ export default class Promotion extends ViewBase {
     budgetAmount: '',
     videoId: null,
     specification: null,
-    customerId: null,
-    productId: null,
-    brandId: null,
+    movieId: 0
   }
+  movieList: any = []
   query: any = {
     specification: null,
-    brandId: null,
-    customerId: 0,
-    productId: 0,
+    movieId: 0
   }
   accountList: any = [] // 客户聊表
   specificationList: any = [] // 规格列表
@@ -212,15 +181,6 @@ export default class Promotion extends ViewBase {
       this.specificationList.push({id: i * 15, name: i * 15})
     }
   }
-
-  // get pername() {
-  //   const data = this.adverList.filter((it: any) => this.form.productId == it.productId)
-  //   const data1 = this.adverList.filter((it: any) => this.form.brandId == it.brandId)
-  //   const customerName = data.length > 0 ? `[ ${data[0].customerName} ]` : ''
-  //   const productName = data1.length > 0 ? `[ ${data1[0].productName} ]` : ''
-  //   this.names = `${customerName} ${productName}`
-  //   return `${customerName} ${productName}`
-  // }
 
   get rule() {
     const moneyvalidator = ( rules: any, value: any, callback: any) => {
@@ -300,26 +260,15 @@ export default class Promotion extends ViewBase {
   created() {
     this.init()
     this.creSpecificationList()
+    this.movieSeach()
   }
 
-  // 获取所有的产品
-  async seachproction(val: any, step: any) {
+  async movieSeach() {
     try {
-      this.branidlist = []
-      const {
-        data: { items }
-      } = await productsList({
-        brandId: val,
-        pageIndex: 1,
-        pageSize: 400
-      })
-      this.branidlist = items || []
-      if (step == 1) {
-        this.query.productId = null
-      }
+      const { data } = await companyMovies()
+      this.movieList = data || []
     } catch (ex) {
       this.handleError(ex)
-    } finally {
     }
   }
 
@@ -328,11 +277,17 @@ export default class Promotion extends ViewBase {
     try {
       const { data } = await advertising( clean({
         pageIndex: 1,
-        pageSize: 888,
+        pageSize: 288,
         status: this.setadver ? '' : 4,
-        videoType: 1
+        videoType: 2
       }) )
-      this.adverList = data.items || []
+      this.adverList = (data.items || []).map((it: any) => {
+        const movieId = it.movieId || '0'
+        return {
+          ...it,
+          movieId
+        }
+      })
       this.seach()
     } catch (ex) {
       (this.$Spin as any).hide()
@@ -365,27 +320,19 @@ export default class Promotion extends ViewBase {
     }
     try {
       this.moneystep = 2
-      if ((this.$route as any).params.step != 0) {
-        return
-      }
       const { data } = await adverdetail(this.$route.params.setid)
       this.form.budgetAmount = (data.item.budgetAmount / 10000) + ''
       this.steps = 2
       if (!data.item.videoId) {
         this.setadver = true
         this.pername = data.item.name
-        this.query.brandId = data.item.brandId || 0
         // data.item.brandId ? this.seachs(data.item.brandId) : ''
         this.query.specification = data.item.specification || ''
-        this.query.customerId = data.item.customerId || 0
-        this.query.productId = data.item.productId || null
+        this.query.movieId = data.item.movieId || 0
       } else {
         this.form.name = data.item.name
         this.form.specification = data.item.specification
         this.form.videoId = data.item.videoId
-        this.form.customerId = data.item.customerId
-        this.form.productId = data.item.productId
-        this.form.brandId = data.item.brandId
       }
       const begin: any = new Date(this.formatDate(data.item.beginDate))
       const end: any = new Date(this.formatDate(data.item.endDate))
@@ -437,15 +384,15 @@ export default class Promotion extends ViewBase {
           id: this.$route.params.setid ? this.$route.params.setid : '',
           specification: this.setadver ? this.query.specification + '' : this.form.specification + '',
           budgetAmount: Number(this.form.budgetAmount * 10000),
-          advertTypeCode: 'TRAILER'}, [0]))
+          advertTypeCode: 'BRAND' }, [0, '']))
         if (!this.$route.params.setid) {
           this.$router.push({
-            name: 'pop-planlist-add',
+            name: 'pop-business-add',
             params: { step: '1', setid: data.data  }
           })
         } else {
           this.$router.push({
-            name: 'pop-planlist-edit',
+            name: 'pop-business-edit',
             params: { step: '1', setid: data.data  }
           })
         }
@@ -479,17 +426,15 @@ export default class Promotion extends ViewBase {
   watchformVideoId(val: any, old: any) {
     if (val) {
       const data = this.adverList.filter((it: any) => val == it.id)
-      this.form.customerId = data[0].customerId
-      this.form.brandId = data[0].brandId
+      this.form.movieId = data[0].movieId || 0
       this.form.specification = data[0].specification
       if (this.steps == 2) {
       } else {
         this.form.budgetAmount = ''
         this.form.productId = data[0].productId
         const name1 = data[0].name ? `[ ${data[0].name} ]` : ''
-        const customerName = data[0].customerName ? `[ ${data[0].customerName} ]` : ''
-        const productName = data[0].productName ? `[ ${data[0].productName} ]` : ''
-        this.form.name = `${name1}${customerName}${productName}`
+        const movieName = data[0].movieName ? `[ ${data[0].movieName} ]` : ''
+        this.form.name = `${name1}${movieName}`
       }
       this.steps = 1
     } else {
@@ -510,7 +455,7 @@ export default class Promotion extends ViewBase {
   @Watch('query.brandId')
   watchqueryBrandId(val: any) {
     if (val) {
-      this.seachproction(val, this.steps)
+      // this.seachproction(val, this.steps)
     } else {
       if (this.steps == 1) {
         this.query.productId = null
@@ -521,23 +466,17 @@ export default class Promotion extends ViewBase {
   @Watch('query', {deep: true})
   watchQuery(val: any) {
     if (this.steps == 1) {
-      let braname = ''
-      let productname = ''
-      let accountname = ''
-      if (val.brandId) {
-        braname = (this.$refs.refBrand as any).queryBrandName()
-        braname = braname ? `[${braname}]` : ''
-        // braname = this.productlist.filter((it: any) => val.brandId == it.id)[0].name
+      let movieName = ''
+      // if (val.brandId) {
+      //   braname = (this.$refs.refBrand as any).queryBrandName()
+      //   braname = braname ? `[${braname}]` : ''
+      //   // braname = this.productlist.filter((it: any) => val.brandId == it.id)[0].name
+      // }
+      if (val.movieId && this.movieList.length > 0) {
+        movieName = this.movieList.filter((it: any) => val.movieId == it.movieId)[0].name
+        movieName = movieName ? `[${movieName}]` : ''
       }
-      if (val.productId && this.branidlist.length > 0) {
-        productname = this.branidlist.filter((it: any) => val.productId == it.id)[0].name
-        productname = productname ? `[${productname}]` : ''
-      }
-      if (val.customerId) {
-        accountname = (this.$refs.refCust as any).queryCustName()
-        accountname = accountname ? `[${accountname}]` : ''
-      }
-      this.pername = `${accountname}${braname}${productname}`
+      this.pername = `${movieName}`
     } else {
       this.steps = 1
     }
@@ -805,4 +744,3 @@ export default class Promotion extends ViewBase {
   background-size: 100%;
 }
 </style>
-
