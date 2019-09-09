@@ -96,6 +96,7 @@ import OssUploaderClass, {
   ProgressEvent,
   DoneEvent,
   FailEvent,
+  UploadParam
 } from '@/util/OssUploader'
 import TinyLoading from '@/components/TinyLoading.vue'
 import CircleProgress from '@/components/circleProgress'
@@ -158,6 +159,11 @@ export default class OssUploader extends ViewBase {
    * 选项
    */
   @Prop({ type: Object, default: () => ({}) }) options!: Options
+
+  /**
+   * 上传参数，参考 OssUploader.ts
+   */
+  @Prop({ type: Object, default: () => ({}) }) param!: UploadParam
 
   model: FileItem | null = null
 
@@ -227,7 +233,7 @@ export default class OssUploader extends ViewBase {
         this.isPaused = value
       }
     })
-    uploader.upload(file)
+    uploader.upload(file, this.param)
   }
 
   reset() {
