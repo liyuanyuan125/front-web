@@ -16,9 +16,10 @@
     <Table  :columns="columns" :data="dataList">
       <template slot="transactionType" slot-scope="{row: {transactionType}, index}">
         <span v-if="[3,5,7].includes(transactionType)">消费</span>
-        <span v-if="transactionType == 1">充值</span>
-        <span v-if="transactionType == 8">提现</span>
-        <span v-if="transactionType == 4">退费</span>
+        <span v-else-if="transactionType == 1">充值</span>
+        <span v-else-if="transactionType == 8">提现</span>
+        <span v-else-if="transactionType == 4">退费</span>
+        <span v-else>--</span>
       </template>
     </Table>
     <Page  :total="total"  class="btn-center-footer page-list" :current="pageIndex" 
