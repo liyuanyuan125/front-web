@@ -3,7 +3,8 @@
     <Modal v-model="showDlg" title="充值" width="400" @on-cancel="cancel()" >
       <Form ref="form" :model="form" :label-width="90" :rules="formRules" class="edit-input">
         <FormItem label="充值金额" prop="amount">
-          <InputNumber v-model="form.amount" :min='0.01' placeholder="请输入"></InputNumber>&nbsp;&nbsp;元
+          <!-- <Input v-model="form.amount"  placeholder="请输入"></Input>&nbsp;&nbsp;元 -->
+          <InputNumber  v-model="form.amount" placeholder="请输入"></InputNumber>&nbsp;&nbsp;元
         </FormItem>
         <FormItem label="支付方式" prop="status">
           <RadioGroup v-model="form.status" >
@@ -150,7 +151,7 @@ import { warning , success, toast , info } from '@/ui/modal'
 // import { formatNumber } from '@/util/validateRules'
 
 const form: any = {
-  amount: 0.01,
+  amount: null,
   status: 1
 }
 
@@ -255,7 +256,11 @@ export default class Change extends ViewBase {
 
   async hrefJump() {
     if (this.form.amount == '') {
-      info('请输入充值金额')
+      info('请输入不小于0的金额')
+      return
+    }
+    if (this.form.amount == null || this.form.amount < 0) {
+      info('请输入不小于0的金额')
       return
     }
     try {
@@ -270,9 +275,13 @@ export default class Change extends ViewBase {
 
   async changeData(forms: any) {
     if (this.form.amount == '') {
-        info('请输入充值金额')
+        info('请输入不小于0的金额')
         return
-      }
+    }
+    if (this.form.amount == null || this.form.amount < 0) {
+      info('请输入不小于0的金额')
+      return
+    }
     const myThis: any = this
     myThis.$refs[forms].validate(async ( valid: any ) => {
       this.dataForm.amount = this.form.amount
