@@ -1,10 +1,29 @@
 <template>
   <div>
-    <Modal v-model="showDlg" title="支付定金" width="600" @on-cancel="cancel()" >
-      <p class='cell-box'>您需要支付【{{depositAmount}}】为定金即可开始投放，
+    <Modal v-model="showDlg" :title="title" width="600" @on-cancel="cancel()" >
+      <p v-if='status == 3' class='cell-box'>您需要支付【{{depositAmount}}】为定金即可开始投放，
         投放结束后定金可抵结算款，如对方案有任何疑问，请点击“联系商务”</p>
-      <Form ref="form" :model="form" :label-width="90" class="edit-input">
-        <FormItem label="支付定金">
+      <p v-else class='cell-box'>
+        本次投放共计应结金额【{{depositAmount}} 元】，您已支付【{{deposit}}元】定金，定金可抵结算款；如对方案有任何疑问，请点击“联系商务”
+      </p>
+      <div v-if='deposit > depositAmount'>
+        <Form ref="form" :model="form" :label-width="90" class="edit-input">
+          <FormItem v-if='status == 10' label="应结金额">
+            <div style="margin-top: 6px;">{{depositAmount}}元</div>
+          </FormItem>
+          <FormItem label="需支付金额">
+            <div style="margin-top: 6px;">{{realPayAmount}}元</div>
+          </FormItem>
+          <FormItem label="退款金额" prop="status">
+            <div style="margin-top: 6px;">{{deposit - depositAmount}}元</div>
+          </FormItem>
+        </Form>
+      </div>
+      <Form v-else ref="form" :model="form" :label-width="90" class="edit-input">
+        <FormItem v-if='status == 3' label="支付定金">
+          <div style="margin-top: 6px;">{{depositAmount}}元</div>
+        </FormItem>
+        <FormItem v-else label="应结金额">
           <div style="margin-top: 6px;">{{depositAmount}}元</div>
         </FormItem>
         <FormItem label="支付方式" prop="status">
@@ -13,10 +32,10 @@
           </RadioGroup>
         </FormItem>
       </Form>
-      <div class='posimg'>
+      <div v-if='deposit < depositAmount' class='posimg'>
         <div>
           <span class='disimg'><img src="./assets/accountbalance.png" alt=""></span>
-          <span class='availableAmount'>可用余额{{availableAmount}}</span>
+          <span class='availableAmount' >可用余额{{availableAmount}}</span>
         </div>
         <div>
           <span class='disimg'><img src="./assets/alipay.png" alt=""></span>
@@ -28,15 +47,22 @@
         </div>
       </div>
       <div slot="footer" class="btn-center-footer">
-        <Button class="button-cancel "  @click="cancel('form')" >取消</Button>
-        <Button type="primary" v-if='this.form.status == 0' class="button-ok ok" ><a href="javascript:;" @click='hrefJump'>确认支付</a></Button>
-        <Button type="primary" v-if='this.form.status == 1' class="button-ok ok" ><a href="javascript:;" @click='hrefJump'>确认支付</a></Button>
-        <Button type="primary" v-if='this.form.status == 2' class="button-ok ok" @click="changeData('form')">确认支付</Button>
+        <div v-if='deposit < depositAmount'>
+          <Button class="button-cancel "  @click="cancel('form')" >取消</Button>
+          <Button type="primary" v-if='this.form.status == 0' class="button-ok ok" ><a href="javascript:;" @click='hrefJump'>确认支付</a></Button>
+          <Button type="primary" v-if='this.form.status == 1' class="button-ok ok" ><a href="javascript:;" @click='hrefJump'>确认支付</a></Button>
+          <Button type="primary" v-if='this.form.status == 2' class="button-ok ok" @click="changeData('form')">确认支付</Button>
+        </div>
+        <div v-else>
+          <Button class="button-cancel "  @click="cancel('form')" >取消</Button>
+          <Button type="primary" class="button-ok ok" @click="refund('form')">确认结算</Button>
+        </div>
       </div>
     </Modal>
     <Modal v-model="showoffline" title="线下转账" width="1000" @on-cancel="cancelDataForm()" >
      <Row class='moneyTip'>
-       <Col :span='12' class='top'>应付金额: <span>{{formatNumber(Number(dataForm.amount))}}</span> 元</Col>
+       <Col :span='12' v-if='status != 10' class='top'>应付金额: <span>{{formatNumber(Number(depositAmount))}}</span> 元</Col>
+       <Col :span='12' v-if='status == 10' class='top'>应付金额: <span>{{formatNumber(Number(realPayAmount))}}</span> 元</Col>
      </Row>
       <Form
           :model="dataForm"
@@ -144,7 +170,7 @@ import {
 } from '@/api/financeinfo'
 import Upload from '@/views/finance/upload/Upload.vue'
 import { warning , success, toast , info } from '@/ui/modal'
-import { deposit, getmoney, adverdetail, payMoney } from '@/api/popPlan'
+import { deposit, getmoney, adverdetail, payMoney, zfsettle } from '@/api/popPlan'
 import moment from 'moment'
 
 const form = {
@@ -162,11 +188,12 @@ export default class Change extends ViewBase {
   availableAmount: any = ''
   showDlg: any = false
   // 输入框验证规则
-
+  title = '支付定金'
   // id = 0
-
-  depositAmount: any = ''
-
+  payType: any = ''
+  depositAmount: any = 0
+  realPayAmount: any = 0
+  deposit: any = 0
   showoffline: any = false
   // 默认银行卡信息
   defaultdata: any = {}
@@ -212,9 +239,9 @@ export default class Change extends ViewBase {
 
   id = 0
 
+  status = 0
   dataForm: any = {
     accountName: '',
-    amount: '0.01', // 充值金额
     remittanceDate: '',
     remittanceType: 1,
     remittanceNo: '',
@@ -248,23 +275,35 @@ export default class Change extends ViewBase {
     // 银行卡信息
     (document.getElementsByTagName('html')[0] as any).style = 'overflow-y: auto'
     this.id = id
-    if (id || (this.$route.query.id && this.$route.query.success == 'false')) {
-      const { data: {
-        item
-      }} = await adverdetail(id)
-      if (item.status == 3) {
-        this.showDlg = true
-        const { data } = await deposit(id)
-        this.depositAmount = data.depositAmount
-        this.dataForm.amount = data.depositAmount
-        this.availableAmount = data.availableAmount
-        this.defaultdata = data // accountSplice
-        this.accountSplice = data.accountNumber
-          ? data.accountNumber.replace(/(\d{4})(?=\d)/g, '$1 ')
-          : ''
-      } else {
-
+    try {
+      if (id || (this.$route.query.id && this.$route.query.success == 'false')) {
+        const { data: {
+          item
+        }} = await adverdetail(id)
+        this.payType = item.payType
+        if (item.status == 3) {
+          this.status = 3
+          this.title = '支付定金'
+          const { data } = await deposit(id)
+          this.depositAmount = data.depositAmount
+          this.dataForm.amount = data.depositAmount
+          this.availableAmount = data.availableAmount
+          this.defaultdata = data // accountSplice
+          this.showDlg = true
+        } else {
+          this.status = 10
+          this.title = '立即结算'
+          const { data } = await getmoney(id)
+          this.deposit = data.depositAmount
+          this.depositAmount = data.needPayAmount
+          this.dataForm.amount = data.needPayAmount
+          this.availableAmount = data.availableAmount
+          this.realPayAmount = data.realPayAmount
+          this.showDlg = true
+        }
       }
+    } catch (ex) {
+      this.handleError(ex)
     }
   }
 
@@ -287,23 +326,62 @@ export default class Change extends ViewBase {
 
   async hrefJump() {
     try {
-      if (this.form.status == 0) {
-        await payMoney(this.id, {
-          payType: 'ACCOUNT',
-          depositAmount: this.depositAmount
-        })
-        toast('支付成功')
-      } else if (this.form.status == 1) {
-        await payMoney(this.id, {
-          payType: 'ALIPAY',
-          depositAmount: this.depositAmount
-        })
+      if (this.status == 3) {
+        if (this.form.status == 0) {
+          await payMoney(this.id, {
+            payType: 'ACCOUNT',
+            depositAmount: this.depositAmount
+          })
+          toast('支付成功')
+          this.showDlg = false
+          this.realPayAmount = 0
+          this.deposit = 0
+          this.$emit('uplist')
+        } else if (this.form.status == 1) {
+          const { data: { thirdPayResponse }} = await payMoney(this.id, {
+            payType: 'ALIPAY',
+            depositAmount: this.depositAmount
+          })
+          ; (window.location as any) = `${thirdPayResponse.redirectUrl}?${thirdPayResponse.payStr}`
+        }
+      } else {
+        if (this.form.status == 0) {
+          await zfsettle(this.id, {
+            payType: 'ACCOUNT',
+            zero: this.depositAmount ? false : true
+          })
+          toast('支付成功')
+          this.realPayAmount = 0
+          this.deposit = 0
+          this.showDlg = false
+          this.$emit('uplist')
+        } else if (this.form.status == 1) {
+          const { data: { thirdPayResponse }} = await zfsettle(this.id, {
+            payType: 'ALIPAY',
+            zero: this.depositAmount ? false : true
+          })
+          ; (window.location as any) = `${thirdPayResponse.redirectUrl}?${thirdPayResponse.payStr}`
+        }
       }
     } catch (ex) {
       this.handleError(ex)
     }
   }
 
+  async refund() {
+    try {
+      const { data: { thirdPayResponse }} = await zfsettle(this.id, {
+        payType: this.payType,
+        zero: (this.deposit - this.depositAmount) == 0 ? false : true
+      })
+      toast('退款成功')
+      this.realPayAmount = 0
+      this.deposit = 0
+      this.$emit('uplist')
+    } catch (ex) {
+      this.handleError(ex)
+    }
+  }
 
   async changeData(forms: any) {
     const myThis: any = this
@@ -332,14 +410,29 @@ export default class Change extends ViewBase {
         }
         const title = '添加'
         try {
-          const res = await payMoney(this.id, {
-            payType: 'LINEPAY',
-            depositAmount: this.depositAmount,
-            linepayBody: {
-              ...query
-            }
-          })
-          toast('添加成功')
+          if (this.status == 3) {
+            const res = await payMoney(this.id, {
+              payType: 'LINEPAY',
+              depositAmount: this.depositAmount,
+              linepayBody: {
+                ...query
+              }
+            })
+            this.$emit('uplist')
+            toast('添加成功')
+          } else {
+            await zfsettle(this.id, {
+              payType: 'LINEPAY',
+              zero: this.depositAmount ? false : true,
+              linepayBody: {
+                ...query
+              }
+            })
+            this.$emit('uplist')
+          }
+          this.realPayAmount = 0
+          this.deposit = 0
+          this.showoffline = false
         } catch (ex) {
           this.handleError(ex)
         }
