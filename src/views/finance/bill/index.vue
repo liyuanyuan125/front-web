@@ -91,19 +91,19 @@ export default class Index extends ViewBase {
   handlepageChange(size: any) {
    this.pageIndex = size
    this.tableList()
- }
+  }
 
   @Watch('billDate')
- watchBillDate(val: any) {
+  watchBillDate(val: any) {
    this.form.beginDate = formatValidDate(val[0], {format: 'YYYYMMDD', blank: ''})
    this.form.endDate = formatValidDate(val[1], {format: 'YYYYMMDD', blank: ''})
    this.searchTableList()
- }
+  }
 
   @Watch('form.transactionType')
- watchTransType() {
+  watchTransType() {
    this.tableList()
- }
+  }
 }
 </script>
 <style lang="less" scoped>

@@ -44,7 +44,7 @@
         </FormItem>
 
         <FormItem label="广告片小样">
-          <OssUploader v-model="srcFileId"></OssUploader>
+          <OssUploader v-model="form.srcFileId" :param="{fileType: 3, subCategory: 1}"></OssUploader>
           <em class="remark">支持（.rmvb\.mp4\.mov）等视频格式；视频大小不超过100M；上传广告片小样可提升系统审核速度</em>
         </FormItem>
 
@@ -89,7 +89,7 @@ import { getUser } from '@/store'
 import customerList from '@/components/selectList/customerList.vue'
 import brandList from '@/components/selectList/brandList.vue'
 import productList from '@/components/selectList/productList.vue'
-import OssUploader from '@/components/videoUploader'
+import OssUploader from '@/components/ossUploader'
 
 @Component({
   components: {
@@ -102,6 +102,7 @@ import OssUploader from '@/components/videoUploader'
 })
 export default class Main extends ViewBase {
   form: any = {
+    srcFileId: null,
     brandId: null,
     productId: null,
     validity: [], // 有效期
@@ -209,11 +210,11 @@ export default class Main extends ViewBase {
         specification: item.specification,
         translated: item.translated,
         licenseCode: item.licenseCode,
+        srcFileId: item.videoSamples[0], // 视频小样
         validity: [formatValidDate(item.licenseBeginDate), formatValidDate(item.licenseEndDate)],
         licenseFileId: item.licenseFiles,
         grantFileIds: item.grantFiles,
       }
-      // this.srcFileId = item.videoSamples[0].url // 视频小样
       // 重新获取transFee
       this.handleChangeSpe()
     } catch (ex) {
@@ -241,8 +242,8 @@ export default class Main extends ViewBase {
 
   async createSub() {
     // 视频
-    const srcFileId = this.srcFileId ? this.srcFileId.url : null
-    const size = this.srcFileId ? this.srcFileId.clientSize : null
+    const srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null
+    const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
 
     // 营业执照扫描文件
     const licenseFileId = this.form.licenseFileId ? this.form.licenseFileId[0].fileId : null
@@ -275,8 +276,8 @@ export default class Main extends ViewBase {
     }
 
     // 视频
-    const srcFileId = this.srcFileId ? this.srcFileId.url : null
-    const size = this.srcFileId ? this.srcFileId.clientSize : null
+    const srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null
+    const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
 
     // 营业执照扫描文件
     const licenseFileId = this.form.licenseFileId ? this.form.licenseFileId[0].fileId : null
