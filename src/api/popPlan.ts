@@ -346,3 +346,11 @@ export async function deposit(id: any) {
   return data
 }
 
+/**
+ * @param  {any} query
+ * 支付定金前获取定金信息
+ */
+export async function zfsettle(id: any, query: any) {
+  const data = await post(`/xadvert/plans/${id}/settle`, query)
+  return data
+}
