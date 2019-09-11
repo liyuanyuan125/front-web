@@ -4,7 +4,7 @@
       <span class="adver-tiele">广告计划</span>
       <Button
         type="primary"
-        :to="{name: 'pop-planlist-add'}"
+        :to="{name: 'pop-business-add'}"
         class="btn-new"
         v-auth="'promotion.ad-plan#create'"
       >
@@ -12,9 +12,9 @@
       </Button>
       <Button
         type="primary"
-        :to="{name: 'pop-business-add'}"
+        :to="{name: 'pop-planlist-add'}"
         class="btn-new"
-        v-if="systemCode == 'film'"
+        v-if="systemCode == 'TRAILER'"
         v-auth="'promotion.ad-plan#create'"
       >
         <Icon type="ios-add" size="27"/>新建预告片
@@ -306,7 +306,7 @@ export default class Plan extends ViewBase {
       clean({
         ...this.form,
         ...this.pageList,
-        advertTypeCode: (this.systemCode as any) == 'film' ? '' : 'TRAILER'
+        advertTypeCode: (this.systemCode as any) == 'film' ? 'TRAILER' : ''
       })
     )
     this.data = data
