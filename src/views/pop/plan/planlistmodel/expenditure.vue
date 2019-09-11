@@ -1,7 +1,7 @@
 <template>
   <div>
     <Modal v-model="showDlg" :title="title" width="600" @on-cancel="cancel()" >
-      <p v-if='status == 3' class='cell-box'>您需要支付【{{depositAmount}}】为定金即可开始投放，
+      <p v-if='status == 3' class='cell-box'>您需要支付【{{depositAmount}} 元】为定金即可开始投放，
         投放结束后定金可抵结算款，如对方案有任何疑问，请点击“联系商务”</p>
       <p v-else class='cell-box'>
         本次投放共计应结金额【{{depositAmount}} 元】，您已支付【{{deposit}}元】定金，定金可抵结算款；如对方案有任何疑问，请点击“联系商务”
@@ -35,10 +35,10 @@
       <div v-if='deposit < depositAmount' class='posimg'>
         <div>
           <span class='disimg'><img src="./assets/accountbalance.png" alt=""></span>
-          <span class='availableAmount' >可用余额{{availableAmount}}</span>
+          <span class='availableAmount' >可用余额{{availableAmount}}元</span>
           <router-link v-if="availableAmount < depositAmount" :to="{
             name: 'finance-info'
-          }" style='margin-left: 40px'>前往充值</router-link>
+          }" style='margin-left: 40px'>余额不足，前往充值</router-link>
         </div>
         <div>
           <span class='disimg'><img src="./assets/alipay.png" alt=""></span>
@@ -86,7 +86,7 @@
                   </div>
                   <div>
                     <p class="sma3">开户账号</p>
-                    <div class="sma4">{{accountSplice}}</div>
+                    <div class="sma4">{{defaultdata.accountNumber}}</div>
                     <!-- <div class='sma4'>{{defaultdata.accountNumber.slice(0, 4)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(4, 8)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(8, 12)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(12, 16)}}</div> -->
                   </div>
                   <div>
@@ -96,7 +96,7 @@
                 </div>
               </FormItem>
             </Col>
-            <Col span="9" style='margin-left: 9%;'>
+            <Col span="9" style='margin-left: 62px;'>
               <FormItem label="汇款底单">
                 <Upload v-model="dataForm.receipt" multiple :maxCount="1" accept="image/*"/>
                 <span class='is'>格式为jpg/jpeg/png，大小不超过5M的图片</span>
@@ -714,6 +714,14 @@ export default class Change extends ViewBase {
   background: rgba(255, 255, 255, 1);
   border-radius: 4px;
   border: 1px solid rgba(0, 32, 45, 0.1);
+}
+/deep/ .button-ok[disabled] {
+  background: #00202d;
+  opacity: .6;
+  &:hover {
+    background: #00202d;
+    opacity: .6;
+  }
 }
 </style>
 
