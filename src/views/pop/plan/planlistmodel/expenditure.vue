@@ -12,7 +12,7 @@
             <div style="margin-top: 6px;">{{depositAmount}}元</div>
           </FormItem>
           <FormItem label="需支付金额">
-            <div style="margin-top: 6px;">{{realPayAmount}}元</div>
+            <div style="margin-top: 6px;">0.00 元（定金大于应结金额，有退款）元</div>
           </FormItem>
           <FormItem label="退款金额" prop="status">
             <div style="margin-top: 6px;">{{deposit - depositAmount}}元</div>
@@ -70,7 +70,7 @@
      </Row>
       <Form
           :model="dataForm"
-          :label-width="88"
+          :label-width="92"
           label-position="left"
           class="form page"
           :rules="formRules"
@@ -176,7 +176,9 @@ import Upload from '@/views/finance/upload/Upload.vue'
 import { warning , success, toast , info } from '@/ui/modal'
 import { deposit, getmoney, adverdetail, payMoney, zfsettle } from '@/api/popPlan'
 import moment from 'moment'
-
+import {
+  defaultList,
+} from '@/api/financeinfo'
 const form = {
   amount: '',
   status: 0
@@ -286,6 +288,8 @@ export default class Change extends ViewBase {
         }} = await adverdetail(id)
         this.payType = item.payType
         this.payTypeCode = item.payTypeCode
+        const res = await defaultList(this.user.companyId)
+        this.defaultdata = res.data // accountSplice
         if (item.status == 3) {
           this.status = 3
           this.title = '支付定金'
@@ -293,7 +297,6 @@ export default class Change extends ViewBase {
           this.depositAmount = data.depositAmount
           this.dataForm.amount = data.depositAmount
           this.availableAmount = data.availableAmount
-          this.defaultdata = data // accountSplice
           this.showDlg = true
         } else {
           this.status = 10
