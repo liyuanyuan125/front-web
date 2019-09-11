@@ -71,7 +71,8 @@ export default class Index extends ViewBase {
       pageSize: this.pageSize,
       ...this.form,
       transactionType,
-      transactionTypes
+      transactionTypes,
+      status: 2 // 返回交易成功的数据
    })
    this.dataList = (data.items || []).map((it: any) => {
       return {
