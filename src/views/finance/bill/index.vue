@@ -16,9 +16,10 @@
     <Table  :columns="columns" :data="dataList">
       <template slot="transactionType" slot-scope="{row: {transactionType}, index}">
         <span v-if="[3,5,7].includes(transactionType)">消费</span>
-        <span v-if="transactionType == 1">充值</span>
-        <span v-if="transactionType == 8">提现</span>
-        <span v-if="transactionType == 4">退费</span>
+        <span v-else-if="transactionType == 1">充值</span>
+        <span v-else-if="transactionType == 8">提现</span>
+        <span v-else-if="transactionType == 4">退费</span>
+        <span v-else>--</span>
       </template>
     </Table>
     <Page  :total="total"  class="btn-center-footer page-list" :current="pageIndex" 
@@ -91,19 +92,19 @@ export default class Index extends ViewBase {
   handlepageChange(size: any) {
    this.pageIndex = size
    this.tableList()
- }
+  }
 
   @Watch('billDate')
- watchBillDate(val: any) {
+  watchBillDate(val: any) {
    this.form.beginDate = formatValidDate(val[0], {format: 'YYYYMMDD', blank: ''})
    this.form.endDate = formatValidDate(val[1], {format: 'YYYYMMDD', blank: ''})
    this.searchTableList()
- }
+  }
 
   @Watch('form.transactionType')
- watchTransType() {
+  watchTransType() {
    this.tableList()
- }
+  }
 }
 </script>
 <style lang="less" scoped>

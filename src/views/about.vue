@@ -2,17 +2,7 @@
   <div class="page">
     <Progress :percent="progress" status="active" class="progress"/>
 
-    <Button type="success" class="upload-button">
-      <input type="file" @change="onUpload"> 上传
-    </Button>
-
-    <img :src="imageUrl" v-if="imageUrl">
-    <VideoUploader
-      v-model="imageUrl"
-      @begin="onBegin"
-      @progress="onProgress"
-      @isPausedChanged="onIsPausedChanged"
-    >
+    <VideoUploader v-model="videoUrl">
     </VideoUploader>
 
     <p>按时发送发放322323是非得失：<MiddleEllipsis class="shi">春眠不觉晓处处蚊子咬夜来风雨声花落知多少</MiddleEllipsis>是对方是否</p>
@@ -101,38 +91,13 @@ import MiddleEllipsis from '@/components/middleEllipsis'
 export default class AboutPage extends ViewBase {
   progress = 0
 
-  imageUrl = ''
+  videoUrl = 'http://aiads-file.oss-cn-beijing.aliyuncs.com/MISC/MISC/blrhqc9e2o7g008ukpkg.mp4'
 
   tripleShow = false
 
   text = '春眠不觉晓'
 
   n = 1
-
-  async onUpload(ev: Event) {
-    const [ file = null ] = (ev.target as HTMLInputElement).files || []
-    const { data } = await get('//sts.fapi.aiads-dev.com/sts/token')
-    const client = new OSS({
-      region: 'oss-cn-beijing',
-      bucket: 'monitor-video',
-      stsToken: data.securityToken,
-      accessKeyId: data.accessKeyId,
-      accessKeySecret: data.accessKeySecret,
-      // tslint:disable-next-line:max-line-length
-      // stsToken: 'CAIS/QF1q6Ft5B2yfSjIr4uNG8P5josS/YGRdB6HimEyaPlHt63RjDz2IHFPfHJvBOsXtfQznWlS7vwYlqJoV4QAXkHfdsp36MzRB646wc+T1fau5Jko1beXewHKeSOZsebWZ+LmNqS/Ht6md1HDkAJq3LL+bk/Mdle5MJqP+/EFA9MMRVv6F3kkYu1bPQx/ssQXGGLMPPK2SH7Qj3HXEVBjt3gb6wZ24r/txdaHuFiMzg+46JdM/dmgf8P9NJk2Z88lDobp5oEsKPqdihw3wgNR6aJ7gJZD/Tr6pdyHCzFTmU7XaLKPrYA0fVQpOvFjQfYe9uKXjuFjqgZ0f2kHEuAnGoABkj1TSJ5o/aClu184+vye33vpzSWMKSP7YfIId57YrUXLnJrnH0bu1U9ZMmEf4bh/vF3tPPxW8+8gzADOyYh1MIkUhv7WCBsd7QTiM6tJmmiiIAPjXwUdrgnKf1qmnWILGrvvFSYXYRItCOPX0UbeGJ4C55vfbR+6FSHj4MjKGMk=',
-      // accessKeyId: 'STS.NH8PyMcT3JCzv86nagdvkXhzn',
-      // accessKeySecret: 'AmBYzZbmQ2GbU72ZkM4G8r9enp3PtUJPKkfHV5Hbk4M6'
-    })
-    const result = await client.multipartUpload(file!.name, file!, {
-      progress: async (p, checkpoint) => {
-        this.progress = p * 100
-        devLog('=> p', p, ' checkpoint', checkpoint)
-      }
-    })
-    const url = dot(result, 'res.requestUrls[0]')
-    this.imageUrl = url
-    devLog(url, result)
-  }
 
   onBegin(ev: any) {
     devLog('=> onBegin', ev)

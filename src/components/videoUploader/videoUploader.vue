@@ -40,7 +40,7 @@ export default class VideoUploader extends ViewBase {
 
   model: FileItem | string | null = null
 
-  showVideo = false
+  showVideo: boolean = !!this.value
 
   get videoUrl() {
     const model = this.model || ''
@@ -64,6 +64,9 @@ export default class VideoUploader extends ViewBase {
   onStatusChange(status: string) {
     if (status == 'none') {
       this.showVideo = false
+    }
+    if (status == 'done') {
+      this.showVideo = true
     }
   }
 

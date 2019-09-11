@@ -34,7 +34,7 @@
      </Row>
      <Form
           :model="dataForm"
-          :label-width="88"
+          :label-width="95"
           label-position="left"
           class="form page"
           ref="dataForm"
@@ -91,11 +91,10 @@
               </FormItem>
             </Col>
             <Col span="10" style='margin-left: 15%;'>
-              <FormItem label="汇款时间">
+              <FormItem label="汇款时间" prop="remittanceDate">
                 <Date-picker
                   :options="options3"
                   type="date"
-                  prop="remittanceDate"
                   v-model="dataForm.remittanceDate"
                   on-change="selectTime"
                   placeholder="选择日期"
@@ -172,7 +171,7 @@ export default class Change extends ViewBase {
       ],
       status: [
           { required: true }
-      ]
+      ],
     }
     return rules
   }
@@ -216,8 +215,8 @@ export default class Change extends ViewBase {
   // defaultamount = this.form.amount
   dataForm: any = {
     accountName: '',
-    amount: '0.01', // 充值金额
     remittanceDate: null,
+    amount: '', // 充值金额
     remittanceType: 1,
     remittanceNo: '',
     remark: '',
@@ -256,11 +255,15 @@ export default class Change extends ViewBase {
 
   async hrefJump() {
     if (this.form.amount == '') {
-      info('请输入不小于0的金额')
+      info('请输入1-1亿之间金额')
       return
     }
-    if (this.form.amount == null || this.form.amount < 0) {
-      info('请输入不小于0的金额')
+    if (this.form.amount == null || this.form.amount < 0 || this.form.amount > 100000000) {
+      info('请输入1-1亿之间金额')
+      return
+    }
+    if (String(this.form.amount).indexOf('.') == 1 && String(this.form.amount).split('.')[1].length > 2) {
+      info('请输入最多两位小数的金额')
       return
     }
     try {
@@ -275,11 +278,15 @@ export default class Change extends ViewBase {
 
   async changeData(forms: any) {
     if (this.form.amount == '') {
-        info('请输入不小于0的金额')
+        info('请输入1-1亿之间金额')
         return
     }
-    if (this.form.amount == null || this.form.amount < 0) {
-      info('请输入不小于0的金额')
+    if (this.form.amount == null || this.form.amount < 0 || this.form.amount > 100000000) {
+      info('请输入1-1亿之间金额')
+      return
+    }
+    if (String(this.form.amount).indexOf('.') == 1 && String(this.form.amount).split('.')[1].length > 2) {
+      info('请输入最多两位小数的金额')
       return
     }
     const myThis: any = this
@@ -294,14 +301,18 @@ export default class Change extends ViewBase {
 
     // 表单提交
   async dataFormSubmit(dataForms: any) {
-    const aaa = new Date(this.dataForm.remittanceDate)
-    this.dataForm.remittanceDate =
+    // this.dataForm.remittanceDate =
     this.dataForm.receipt =
       this.dataForm.receipts.length > 0 ? this.dataForm.receipts[0].fileId : []
       if (this.dataForm.receipts.length == 0 ) {
         info('请上传汇款底单')
         return
       }
+      if (this.dataForm.remittanceNo == '' || this.dataForm.accountName == '' || this.dataForm.remittanceDate == '') {
+        info('请准确填写汇款信息')
+        return
+      }
+    const aaa = new Date(this.dataForm.remittanceDate)
     const myThis: any = this
     myThis.$refs[dataForms].validate(async (valid: any) => {
       if (valid) {
@@ -319,7 +330,7 @@ export default class Change extends ViewBase {
         const title = '添加'
         try {
           const res = await lineUnderRemittances(query)
-          toast('添加成功')
+          toast('充值申请提交成功，请等待审核！')
           // this.dataForm = {}
           // this.seach()
           history.go(0)
@@ -569,7 +580,6 @@ export default class Change extends ViewBase {
 }
 /deep/ .upload-list {
   margin-top: 0;
-  left: 25%;
 }
 /deep/ .upload-item {
   position: relative;

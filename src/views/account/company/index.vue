@@ -124,7 +124,7 @@ export default class Main extends ViewBase {
 
   column = [
     { title: '变更编号', key: 'id' },
-    { title: '账号变更提交时间', key: 'timeName' },
+    { title: '账号变更提交时间', key: 'timeName', minWidth: 120 },
     {
       title: '变更前信息',
       key: 'changeBefore',

@@ -271,10 +271,13 @@ export default class OssUploader extends ViewBase {
   async watchValue(value: FileItem | string) {
     const item = typeof value === 'string' ? { url: value } : value
     if (hasChange(item, this.model)) {
-      this.model = {
+      const newModel = {
         ...defaultItem,
         ...item
       } as FileItem
+      this.model = newModel
+      // 更新状态
+      this.status = this.model.url ? 'done' : 'none'
     }
   }
 
