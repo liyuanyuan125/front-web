@@ -70,7 +70,7 @@
      </Row>
       <Form
           :model="dataForm"
-          :label-width="92"
+          :label-width="94"
           label-position="left"
           class="form page"
           :rules="formRules"
