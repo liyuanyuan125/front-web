@@ -333,10 +333,10 @@ export default class Main extends ViewBase {
 
     try {
       const { data } = await register(postData)
-        setUserByData({
-          ...data,
-          systemCode: 'abs', // 注册只有一种广告主身份
-        })
+        // setUserByData({
+        //   ...data,
+        //   systemCode: 'abs', // 注册只有一种广告主身份
+        // })
       this.$router.push({ name: 'register-success' })
     } catch (ex) {
       ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
