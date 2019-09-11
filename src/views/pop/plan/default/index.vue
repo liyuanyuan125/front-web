@@ -227,8 +227,10 @@
         <Row :gutter="16">
           <Col :span="2"><span>投放周期:</span></Col>
           <Col :span="10"><span>{{formatDate(item.beginDate)}} 至 {{formatDate(item.endDate)}}</span></Col>
-          <Col :span="2"><span>客户:</span></Col>
-          <Col :span="10"><span>{{item.customerName}}</span></Col>
+          <Col :span="2" v-if="item.advertTypeCode == 'TRAILER'"><span>客户:</span></Col>
+          <Col :span="10" v-if="item.advertTypeCode == 'TRAILER'"><span>{{item.customerName}}</span></Col>
+          <Col :span="2" v-if="item.advertTypeCode != 'TRAILER'"><span>影片:</span></Col>
+          <Col :span="10" v-if="item.advertTypeCode != 'TRAILER'"><span>{{item.customerName}}</span></Col>
         </Row>
         <Row :gutter="16">
           <Col :span="2"><span>预算:</span></Col>
