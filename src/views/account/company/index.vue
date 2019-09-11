@@ -23,15 +23,15 @@
           <Col :span="12">
             <p>
               <label class="hui">联系人</label>
-              {{company.name}}
+              {{company.contact || '-'}}
             </p>
             <p>
               <label class="hui">手机号码</label>
-              {{company.mobile}}
+              {{company.contactTel || '-'}}
             </p>
             <p>
               <label class="hui">邮箱</label>
-              {{company.email}}
+              {{company.email || '-'}}
             </p>
           </Col>
         </Row>
