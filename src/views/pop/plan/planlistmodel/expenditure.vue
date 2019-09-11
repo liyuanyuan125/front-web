@@ -163,15 +163,6 @@ import { Component, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
 import { formatNumber } from '@/util/validateRules'
-import {
-  queryList,
-  moneyList,
-  dataFrom,
-  defaultList,
-  add,
-  lineUnderRemittances,
-  before
-} from '@/api/financeinfo'
 import Upload from '@/views/finance/upload/Upload.vue'
 import { warning , success, toast , info } from '@/ui/modal'
 import { deposit, getmoney, adverdetail, payMoney, zfsettle } from '@/api/popPlan'
