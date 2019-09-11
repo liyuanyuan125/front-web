@@ -118,6 +118,7 @@ export default class Main extends ViewBase {
   // 是否正在上传
   uploading = false
   srcFileId: any = null
+  fileId = null
 
   // 转码费
   transFee = ''
@@ -209,6 +210,7 @@ export default class Main extends ViewBase {
     const id = this.$route.params.id
     try {
       const { data: { item } } = await detailPop(id)
+
       this.form = {
         name: item.name,
         customerId: item.customerId,
@@ -223,6 +225,8 @@ export default class Main extends ViewBase {
         licenseFileId: item.licenseFiles ? item.licenseFiles : [],
         grantFileIds: item.grantFiles ? item.grantFiles : [],
       }
+      // 获取视频fileId
+      this.fileId = item.videoSamples && item.videoSamples[0].fileId
       // 重新获取transFee
       this.handleChangeSpe()
     } catch (ex) {
@@ -282,9 +286,14 @@ export default class Main extends ViewBase {
       return this.scrollToError()
     }
 
-    // 视频
-    const srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null
+    // 视频(默认传后台fileId， 重新上传视频则传url和size)
+    let srcFileId = null
     const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
+    if (size == 0) {
+      srcFileId = this.fileId
+    } else {
+      srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null
+    }
 
     // 营业执照扫描文件
     const licenseFileId = this.form.licenseFileId ? this.form.licenseFileId[0].fileId : null
@@ -300,7 +309,7 @@ export default class Main extends ViewBase {
         ...this.form,
         transFee: this.transFee,
         srcFileId,
-        size,
+        size: size || null,
         licenseFileId,
         grantFileIds,
         videoType: 2, // 影片类型 1 = 预告片 2 = 商业片
