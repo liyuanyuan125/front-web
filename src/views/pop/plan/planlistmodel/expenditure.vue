@@ -24,7 +24,7 @@
           <div style="margin-top: 6px;">{{depositAmount}}元</div>
         </FormItem>
         <FormItem v-else label="应结金额">
-          <div style="margin-top: 6px;">{{depositAmount}}元</div>
+          <div style="margin-top: 6px;">{{realPayAmount}}元</div>
         </FormItem>
         <FormItem label="支付方式" prop="status">
           <RadioGroup v-model="form.status" >
@@ -179,7 +179,7 @@ import moment from 'moment'
 
 const form = {
   amount: '',
-  status: 1
+  status: 0
 }
 
 @Component({
@@ -202,7 +202,7 @@ export default class Change extends ViewBase {
   // 默认银行卡信息
   defaultdata: any = {}
   accountSplice = ''
-
+  payTypeCode: any = ''
   moneyList: any = [
     {
       key: 0,
@@ -285,6 +285,7 @@ export default class Change extends ViewBase {
           item
         }} = await adverdetail(id)
         this.payType = item.payType
+        this.payTypeCode = item.payTypeCode
         if (item.status == 3) {
           this.status = 3
           this.title = '支付定金'
@@ -352,7 +353,7 @@ export default class Change extends ViewBase {
         if (this.form.status == 0) {
           await zfsettle(this.id, {
             payType: 'ACCOUNT',
-            zero: this.depositAmount ? false : true
+            zero: this.realPayAmount ? false : true
           })
           toast('支付成功')
           this.realPayAmount = 0
@@ -362,7 +363,7 @@ export default class Change extends ViewBase {
         } else if (this.form.status == 1) {
           const { data: { thirdPayResponse }} = await zfsettle(this.id, {
             payType: 'ALIPAY',
-            zero: this.depositAmount ? false : true
+            zero: this.realPayAmount ? false : true
           })
           ; (window.location as any) = `${thirdPayResponse.redirectUrl}?${thirdPayResponse.payStr}`
         }
@@ -375,8 +376,8 @@ export default class Change extends ViewBase {
   async refund() {
     try {
       const { data: { thirdPayResponse }} = await zfsettle(this.id, {
-        payType: this.payType,
-        zero: (this.deposit - this.depositAmount) == 0 ? false : true
+        payType: this.payTypeCode,
+        zero: (this.deposit - this.depositAmount) == 0 ? true : false
       })
       toast('退款成功')
       this.realPayAmount = 0
@@ -427,7 +428,7 @@ export default class Change extends ViewBase {
           } else {
             await zfsettle(this.id, {
               payType: 'LINEPAY',
-              zero: this.depositAmount ? false : true,
+              zero: this.realPayAmount ? false : true,
               linepayBody: {
                 ...query
               }
