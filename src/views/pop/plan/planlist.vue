@@ -80,9 +80,11 @@
               <span v-else>ID:{{row.id}}</span>
             </p>
             <div>
-              <img v-if="!row.ids" :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
-              <img v-else src="./assets/mock.png" :onerror="defaultImg" width="90px" height="90px">
-
+              <div>
+                <div :class="{advert: row.advertType == 'TRAILER'}"></div>
+                <img v-if="!row.ids" :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
+                <img v-else src="./assets/mock.png" :onerror="defaultImg" width="90px" height="90px">
+              </div>
               <div>
                 <h3>{{row.name}}</h3>
                 <span>{{row.videoName}}&nbsp;&nbsp;{{row.customerName}}&nbsp;&nbsp;{{row.specification||0 }}s</span>
@@ -643,6 +645,13 @@ export default class Plan extends ViewBase {
   border-radius: 5px;
   min-height: 280px;
   position: relative;
+  .advert {
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    background: url('~@/assets/icon/prevue.png') no-repeat left top;
+    background-size: 40px auto;
+  }
   .ivu-table-header th {
     height: 60px;
     background: #000;
