@@ -306,7 +306,7 @@ export default class Plan extends ViewBase {
       clean({
         ...this.form,
         ...this.pageList,
-        advertTypeCode: (this.systemCode as any) == 'film' ? '' : 'TRAILER'
+        advertTypeCode: (this.systemCode as any) == 'film' ? '' : 'BRAND'
       })
     )
     this.data = data
