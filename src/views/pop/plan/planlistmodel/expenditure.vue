@@ -36,6 +36,9 @@
         <div>
           <span class='disimg'><img src="./assets/accountbalance.png" alt=""></span>
           <span class='availableAmount' >可用余额{{availableAmount}}</span>
+          <router-link v-if="availableAmount < depositAmount" :to="{
+            name: 'finance-info'
+          }" style='margin-left: 40px'>前往充值</router-link>
         </div>
         <div>
           <span class='disimg'><img src="./assets/alipay.png" alt=""></span>
@@ -49,7 +52,8 @@
       <div slot="footer" class="btn-center-footer">
         <div v-if='deposit < depositAmount'>
           <Button class="button-cancel "  @click="cancel('form')" >取消</Button>
-          <Button type="primary" v-if='this.form.status == 0' class="button-ok ok" ><a href="javascript:;" @click='hrefJump'>确认支付</a></Button>
+          <Button type="primary" :disabled='availableAmount < depositAmount' v-if='this.form.status == 0'
+            class="button-ok ok" ><a href="javascript:;" @click='hrefJump'>确认支付</a></Button>
           <Button type="primary" v-if='this.form.status == 1' class="button-ok ok" ><a href="javascript:;" @click='hrefJump'>确认支付</a></Button>
           <Button type="primary" v-if='this.form.status == 2' class="button-ok ok" @click="changeData('form')">确认支付</Button>
         </div>
