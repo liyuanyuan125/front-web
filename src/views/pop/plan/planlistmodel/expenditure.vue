@@ -376,12 +376,12 @@ export default class Change extends ViewBase {
   async refund() {
     try {
       const { data: { thirdPayResponse }} = await zfsettle(this.id, {
-        payType: this.payTypeCode,
         zero: (this.deposit - this.depositAmount) == 0 ? true : false
       })
       toast('退款成功')
       this.realPayAmount = 0
       this.deposit = 0
+      this.showDlg = false
       this.$emit('uplist')
     } catch (ex) {
       this.handleError(ex)
