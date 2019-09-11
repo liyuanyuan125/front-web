@@ -82,7 +82,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { adverdetail } from '@/api/popPlan.ts'
 import Number from '@/components/number.vue'
-import { surecaogao } from '@/api/plan'
+import { sureEdit } from '@/api/plan'
 
 @Component({
   components: {
@@ -132,7 +132,7 @@ export default class Apps extends ViewBase {
   }
   async next() {
     try {
-      await surecaogao(this.$route.params.setid)
+      await sureEdit(this.$route.params.setid)
       this.$router.push({
         name: 'pop-planlist',
       })
