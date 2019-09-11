@@ -74,6 +74,7 @@ export default class Index extends ViewBase {
       transactionTypes,
       status: 2 // 返回交易成功的数据
    })
+
    this.dataList = (data.items || []).map((it: any) => {
       return {
        ...it,
