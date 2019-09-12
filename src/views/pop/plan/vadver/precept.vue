@@ -277,6 +277,7 @@ export default class App extends ViewBase {
           title: '45s 刊例价（元/千人次）',
           width: 136,
           key: 'cpm',
+          align: 'center',
           slot: 'cpm'
         },
         ...five

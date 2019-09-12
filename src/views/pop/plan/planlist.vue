@@ -104,7 +104,8 @@
           <p v-else>
             <span>开始于{{formatDate(row.beginDate)}}</span>
           </p>
-          <!-- <p style="margin-top: 10px">{{days(row.beginDate, row.endDate)}}天</p> -->
+          <p
+          <p style="margin: 10px 0px 0px 40px">{{row.deliveryPositiontext}}</p>
         </template>
 
         <template slot="settlementStatus" slot-scope="{row}">
@@ -193,7 +194,9 @@ import moment from 'moment'
 import Expenditure from './planlistmodel/expenditure.vue'
 import { clean } from '@/fn/object'
 import { getUser } from '@/store'
+import { toMap } from '@/fn/array'
 
+const makeMap = (list: any[]) => toMap(list, 'key', 'text')
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
@@ -211,6 +214,7 @@ export default class Plan extends ViewBase {
     settlementStatus: '',
     name: ''
   }
+  deliveryPositionList: any = []
   loading: any = false
   checkId: any = []
   pageList = {
@@ -320,6 +324,13 @@ export default class Plan extends ViewBase {
     this.loading = false
     this.tableDate = (data.items || [])
     this.tableDate.unshift(this.mockadver)
+    this.deliveryPositionList = makeMap(data.deliveryPositionList || [])
+    this.tableDate = this.tableDate.map((it: any) => {
+      return {
+        ...it,
+        deliveryPositiontext: it.deliveryPositionCode ? this.deliveryPositionList[it.deliveryPositionCode] : ''
+      }
+    })
     this.totalCount = data.totalCount
   }
 

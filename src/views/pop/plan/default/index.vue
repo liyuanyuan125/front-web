@@ -263,10 +263,11 @@
               <Col :span="2"><span>覆盖影院</span></Col>
               <Col :span="10">
                 <div>
-                  <span>共{{(headerValue.deliveryCinemas || []).length}}个
+                  <span>共{{headerValue.cinemaCount}}个
                     <b style="margin-left: 5px"></b> 
                   </span>
-                  <a v-if='(headerValue.deliveryCinemas || []).length > 0' style='font-size: 18px' :href='herf' download='影院数据' >影院数据</a>
+                  <a v-if='headerValue.cinemaCount && headerValue.cinemaCount > 0'
+                     style='font-size: 18px' :href='herf' download='影院数据' >影院数据</a>
                 </div>
               </Col>
             </Row>
@@ -314,7 +315,7 @@ import Exportfile from '../vadver/exportfile.vue'
 import Xlsx from '../vadver/downxsxl.vue'
 import pagination from '@/components/page.vue'
 
-const codeMap =  (list: any[]) => toMap(list, 'ket', 'text')
+const codeMap = (list: any[]) => toMap(list, 'key', 'text')
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
@@ -429,6 +430,7 @@ export default class Apps extends ViewBase {
           title: '45s 刊例价（元/千人次）',
           width: 136,
           key: 'cpm',
+          align: 'center',
           slot: 'cpm'
         },
         ...five
