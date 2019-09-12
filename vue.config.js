@@ -6,7 +6,7 @@ const resolve = dir => path.join(__dirname, 'src', dir)
 
 module.exports = {
   // 加快编译速度
-  productionSourceMap: false,
+  productionSourceMap: false,   
 
   devServer: {
     host: 'fdev.aiads-dev.com',
