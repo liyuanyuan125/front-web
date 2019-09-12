@@ -1,18 +1,20 @@
 <template>
   <div>
-    <Modal v-model="showDlg" :title="title" width="600" @on-cancel="cancel()" >
+    <Modal :styles="{
+      top: '60px'
+    }" v-model="showDlg" :title="title" width="600" @on-cancel="cancel()" >
       <p v-if='status == 3' class='cell-box'>您需要支付【{{depositAmount}} 元】为定金即可开始投放，
         投放结束后定金可抵结算款，如对方案有任何疑问，请点击“联系商务”</p>
       <p v-else class='cell-box'>
         本次投放共计应结金额【{{depositAmount}} 元】，您已支付【{{deposit}}元】定金，定金可抵结算款；如对方案有任何疑问，请点击“联系商务”
       </p>
       <div v-if='deposit > depositAmount'>
-        <Form ref="form" :model="form" :label-width="90" class="edit-input">
+        <Form ref="form" :model="form" :label-width="90" class="edit-input magin-b0">
           <FormItem v-if='status == 10' label="应结金额">
             <div style="margin-top: 6px;">{{depositAmount}}元</div>
           </FormItem>
           <FormItem label="需支付金额">
-            <div style="margin-top: 6px;">0.00 元（定金大于应结金额，有退款）元</div>
+            <div style="margin-top: 6px; color: #3398db">0.00 元<span style="color: #999">（定金大于应结金额，有退款）</span></div>
           </FormItem>
           <FormItem label="退款金额" prop="status">
             <div style="margin-top: 6px;">{{deposit - depositAmount}}元</div>
@@ -463,6 +465,7 @@ export default class Change extends ViewBase {
   color: #fff;
   font-size: 16px;
   padding: 10px;
+  margin-bottom: 16px;
 }
 
 .ok {
@@ -492,7 +495,7 @@ export default class Change extends ViewBase {
       width: 20px;
       height: 20px;
       margin-left: 22px;
-      margin-top: 6px;
+      margin-top: 16px;
       img {
         width: 100%;
         height: 100%;
@@ -500,7 +503,11 @@ export default class Change extends ViewBase {
     }
   }
 }
-
+.magin-b0 {
+  /deep/ .ivu-form-item {
+    margin-bottom: 0;
+  }
+}
 .add-row {
   padding-left: 30px;
   padding-right: 40px;
@@ -595,6 +602,8 @@ export default class Change extends ViewBase {
 .availableAmount {
   display: inline-block;
   margin-left: 100px;
+  margin-top: 10px;
+  color: #999;
 }
 .button-ok-a {
   display: inline-block;
