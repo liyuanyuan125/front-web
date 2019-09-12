@@ -63,10 +63,14 @@ export default class Index extends ViewBase {
 
   async tableList() {
    const transType = this.form.transactionType
-   // 全部和充值 返回交易成功的数据
-   const status = (transType == -1) || (transType == 1) ? 2 : null
    const transactionType = transType > 0 && transType != 3 ? transType : null
-   const transactionTypes = transType == 3 ? '3,5,7' : null
+   let transactionTypes = null
+
+   if ( transType == 3) {
+     transactionTypes = '3,5,7'
+   } else if (transType == -1) {
+     transactionTypes = '1,4,3,5,7,8'
+   }
 
    const { data }  = await bill({
       pageIndex: this.pageIndex,
@@ -74,7 +78,7 @@ export default class Index extends ViewBase {
       ...this.form,
       transactionType,
       transactionTypes,
-      status
+      status: 2,
    })
 
    this.dataList = (data.items || []).map((it: any) => {

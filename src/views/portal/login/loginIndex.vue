@@ -187,6 +187,11 @@ export default class Main extends ViewBase {
     this.emailError = '账号不存在'
   }
 
+  onLogin10009() {
+    info('您的注册申请将在24小时内审核完毕，请耐心等待', {
+      title: '提示',
+    })
+  }
   onLogin10002() {
     this.passwordError = '密码错误'
   }
