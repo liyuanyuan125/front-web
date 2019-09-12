@@ -237,7 +237,7 @@
             <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount * 7 / 10)}}</span>
             <!-- <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount * 13 / 10)}}</span> -->
           </Col>
-          <Col :span="2"><span>位置:</span></Col>
+          <Col :span="2"><span>广告位置:</span></Col>
           <Col :span="10">
             <span>{{location}}</span>
             <!-- <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount * 13 / 10)}}</span> -->
