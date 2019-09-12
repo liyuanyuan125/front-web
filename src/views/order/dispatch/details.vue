@@ -33,7 +33,7 @@
         </Row>
         <Row>
           <Col span="8">
-           <p><label>广告位置</label>{{list.deliveryPositionCode || '--'}} </p>
+           <p><label>广告位置</label>{{deliveryPositionNames}} </p>
           </Col>
         </Row>
       </div>
@@ -112,6 +112,7 @@ import 'vue-plyr/dist/vue-plyr.css'
 import { orderDetail, receiveCinemaList } from '@/api/norderDis'
 import targetDlg from './targetDlg.vue'
 import moment from 'moment'
+import { getEnumText } from '@/util/dealData'
 
 const timeFormat = 'YYYY/MM/DD HH:mm:ss'
 
@@ -140,8 +141,7 @@ export default class Main extends ViewBase {
   schedulingData = []
   cinemaDataList: any = []
 
-  // 详情接单影院
-  // receiveCinemas = []
+  deliveryPositionNames = ''
 
   dcpData = []
   logList = []
@@ -173,14 +173,13 @@ export default class Main extends ViewBase {
     const id = this.id
     try {
       const {
-        data: {item}
+        data: {item, deliveryPositionCodeList}
       } = await orderDetail(id)
       this.list = item || {}
+      this.deliveryPositionNames = getEnumText(deliveryPositionCodeList, item.deliveryPositionCode) || '---'
       this.schedulingData = item.targetMovies || []
       // 目标影院
       this.targetCinemaLength = item.targetCinemas.length
-      // 接单影院
-      // this.receiveCinemas = item.receiveCinemas || []
       this.dcpData = item.attachments
       this.logList = item.logList
     } catch (ex) {
