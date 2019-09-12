@@ -7,6 +7,7 @@
       </div>
     </div>
     <div v-if="value.status == 2" class="plan-message">
+      <p v-if='value.discount'>本次投放折扣【{{value.discount}}折】</p>
       <p>以下为平台专业投放人员为您提供的投放方案，如对方案有任何疑问，请点击“联系商务”</p>
       <p请确认无误后点击下方“确认方案”按钮</p>
       <span style="margin-top: 20px">如对方案有任何疑问请点击“ 联系商务 ” </span>
@@ -18,6 +19,7 @@
     </div>
 
     <div v-if="value.status == 4" class="plan-message" style="height:80px; padding-top: 16px;">
+      <p v-if='value.discount'>本次投放折扣【{{value.discount}}折】</p>
       <div class="btn-box">
         <Button type="default" :to="{ name: 'effect-report', params: { 
           id: $route.params.id
@@ -27,6 +29,7 @@
 
     <div v-if="value.status == 3" class="plan-message">
       <!-- <p>以下为平台专业投放人员为您提供的投放方案，确认后您只需缴纳 -->
+      <p v-if='value.discount'>本次投放折扣【{{value.discount}}折】</p>
       <p>您需要支付 ￥{{formatNums(value.depositAmount)}} 为定金 </p>
       <!-- <p>¥
         <span v-if="value.needPayAmount || value.needPayAmount == 0">
@@ -54,6 +57,7 @@
 
     <div v-if="value.status == 9 || value.status == 8 || value.status == 6 ||  value.status == 7 ||  value.status == 5"
       class="plan-message">
+      <p v-if='value.discount'>本次投放折扣【{{value.discount}}折】</p>
       <p>您已缴纳 ￥{{formatNums(value.depositAmount)}} 为定金 </p>
       <span style="margin-top: 20px; margin-bottom: 20px">本计划将于【{{formatDate(value.beginDate)}}】开始 </span>
       <div class="btn-box">
@@ -65,6 +69,7 @@
 
     <div v-if="value.status == 10" class="plan-message">
       <!-- <p>以下为平台专业投放人员为您提供的投放方案，确认后您只需缴纳 -->
+      <p v-if='value.discount'>本次投放折扣【{{value.discount}}折】</p>
       <p>应结金额￥{{formatNums(value.needPayAmount)}}, 您已支付￥{{formatNums(value.depositAmount)}} 为定金</p>
       <!-- <p>¥
         <span v-if="value.needPayAmount || value.needPayAmount == 0">
@@ -82,6 +87,7 @@
     </div>
 
     <div v-if="value.status == 11" class="plan-message">
+      <p v-if='value.discount'>本次投放折扣【{{value.discount}}折】</p>
       <p style=" margin-bottom: 10px">
         您已缴纳 ￥{{formatNums(value.needPayAmount)}} 为应结金额，￥{{formatNums(value.depositAmount)}} 为定金，投放结束后保证金剩余余额将退还到您的账户 </p>
       <div class="btn-box">
