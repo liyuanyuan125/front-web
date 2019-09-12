@@ -998,7 +998,7 @@ export default class App extends ViewBase {
     height: 60px;
     background: rgba(255, 255, 255, 0.3);
     color: #00202d;
-    line-height: 60px;
+    line-height: 20px;
     span {
       display: block;
       line-height: 20px;
