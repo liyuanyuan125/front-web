@@ -46,13 +46,19 @@ export interface KeyTextControlStatus extends KeyText {
   controlStatus: ControlStatus
 }
 
-/** 系统 code 枚举 */
-export type SystemCode = 'ads' | 'resource'
+/**
+ * 系统 code 枚举
+ * ads      - 广告主
+ * resource - 资源方
+ * agent    - 区代
+ * film     - 片商
+ */
+export type SystemCode = 'ads' | 'resource' | 'agent' | 'film'
 
-/** 广告主子类型：代理商、直客 */
+/** 广告主子类型：代理商 daili、直客 zhike */
 export type AdsSecondaryCode = 'daili' | 'zhike'
 
-/** 资源方子类型：代理商、影院 */
+/** 资源方子类型：代理商 agent、影院 cinema */
 export type ResourceSecondaryCode = 'agent' | 'cinema'
 
 /** 合并后的二级子类型 */
@@ -81,6 +87,8 @@ export interface SystemType {
 export const systemList: SystemType[] = [
   { code: 'ads', name: '广告主' },
   { code: 'resource', name: '影城' },
+  { code: 'agent', name: '区代' },
+  { code: 'film', name: '片商' },
 ]
 
 /** 权限操作 */

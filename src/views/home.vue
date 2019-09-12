@@ -8,11 +8,12 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser, siderMenuActiveMap } from '@/store'
 import { brandList } from '@/api/brandList'
+import { MapType } from '@/util/types'
 
-const routeMap = {
+const routeMap: MapType = {
   ads: 'home-overview',
   resource: 'order-dispatch',
-  // resource: 'home-resoverview'
+  film: 'home-overview'
 }
 
 @Component

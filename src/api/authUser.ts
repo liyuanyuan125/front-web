@@ -5,8 +5,8 @@ import { get, post, put, del } from '@/fn/ajax'
  * @param data 接口数据
  */
 export async function authUserList(query: any) {
-    const res = get('/customer/roles/', query)
-    return res
+  const res = get('/customer/roles/', query)
+  return res
 }
 
 /**
@@ -14,8 +14,8 @@ export async function authUserList(query: any) {
  * @param data 接口数据
  */
 export async function customerRole(id: any) {
-    const res = get(`/customer/roles/${id}`)
-    return res
+  const res = get(`/customer/roles/${id}`)
+  return res
 }
 
 /**
@@ -23,8 +23,8 @@ export async function customerRole(id: any) {
  * @param data 接口数据
  */
 export async function customerSet(id: any, query: any) {
-    const res = put(`/customer/roles/${id}`, query)
-    return res
+  const res = put(`/customer/roles/${id}`, query)
+  return res
 }
 
 /**
@@ -32,8 +32,8 @@ export async function customerSet(id: any, query: any) {
  * @param data 接口数据
  */
 export async function customerAdd(query: any) {
-    const res = post('/customer/roles/', query)
-    return res
+  const res = post('/customer/roles/', query)
+  return res
 }
 
 /**
@@ -41,8 +41,8 @@ export async function customerAdd(query: any) {
  * @param data 接口数据
  */
 export async function customerDel(id: any) {
-    const res = del(`/customer/roles/${id}`)
-    return res
+  const res = del(`/customer/roles/${id}`)
+  return res
 }
 
 /**
@@ -50,6 +50,6 @@ export async function customerDel(id: any) {
  * @param data 接口数据
  */
 export async function meanList(systemCode: string, query: any) {
-    const res = get(`/customer/menus/${systemCode}`, query)
-    return res
+  const res = get(`/customer/menus/${systemCode}`, query)
+  return res
 }
