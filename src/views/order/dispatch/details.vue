@@ -176,7 +176,9 @@ export default class Main extends ViewBase {
         data: {item, deliveryPositionCodeList}
       } = await orderDetail(id)
       this.list = item || {}
-      this.deliveryPositionNames = getEnumText(deliveryPositionCodeList, item.deliveryPositionCode) || '---'
+
+      const offset = getEnumText(deliveryPositionCodeList, item.deliveryPositionCode)
+      this.deliveryPositionNames =  offset ? `[${offset}]` : '--'
       this.schedulingData = item.targetMovies || []
       // 目标影院
       this.targetCinemaLength = item.targetCinemas.length
@@ -206,7 +208,6 @@ export default class Main extends ViewBase {
     this.receiveCinemaList()
   }
 }
-
 </script>
 <style lang='less' scoped>
 @import '~@/views/kol/less/common.less';
