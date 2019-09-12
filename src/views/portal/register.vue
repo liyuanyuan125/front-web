@@ -333,17 +333,13 @@ export default class Main extends ViewBase {
 
     try {
       const { data } = await register(postData)
-        // setUserByData({
-        //   ...data,
-        //   systemCode: 'abs', // 注册只有一种广告主身份
-        // })
       this.$router.push({ name: 'register-success' })
     } catch (ex) {
       ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
     }
   }
 
-  onSubmit8007303() {
+  onSubmit8007303( ) {
     this.smsCodeError = '验证码错误'
   }
 
@@ -358,6 +354,7 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import './login/common.less';
+
 /deep/ .ivu-cascader {
   .ivu-input {
     padding-left: 20px;
@@ -459,7 +456,6 @@ export default class Main extends ViewBase {
   }
 }
 
-// 兼容小于 600
 @media screen and(max-height: 800px) {
   .main-wrap {
     position: absolute;

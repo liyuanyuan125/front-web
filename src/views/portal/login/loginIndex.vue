@@ -146,8 +146,8 @@ export default class Main extends ViewBase {
     this.captchaCodeError = ''
 
     try {
-      const postData: any = except(this.form, 'remember')
-      const { data } = await login(postData)
+      // const postData: any = except(this.form, 'remember')
+      const { data } = await login(this.form)
       this.data = data
       this.systems = data.systems
 

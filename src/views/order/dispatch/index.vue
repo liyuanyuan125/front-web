@@ -176,6 +176,8 @@ export default class Main extends ViewBase {
   get formatConversion() {
     return formatConversion
   }
+
+
   get formatNumber() {
     return formatNumber
   }
