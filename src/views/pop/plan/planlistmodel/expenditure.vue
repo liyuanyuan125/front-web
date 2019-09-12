@@ -365,7 +365,9 @@ export default class Change extends ViewBase {
             payType: 'ALIPAY',
             zero: this.realPayAmount ? false : true
           })
-          ; (window.location as any) = `${thirdPayResponse.redirectUrl}?${thirdPayResponse.payStr}`
+          if (this.realPayAmount == 0) {
+            (window.location as any) = `${thirdPayResponse.redirectUrl}?${thirdPayResponse.payStr}`
+          }
         }
       }
     } catch (ex) {
