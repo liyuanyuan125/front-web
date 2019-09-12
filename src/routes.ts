@@ -1805,6 +1805,19 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     ]
   },
 
+  // 片商 - 影片管理
+  {
+    path: '/filmmanage/index',
+    name: 'film-manage',
+    component: () => import('./views/filmManage/index.vue'),
+    meta: {
+      authKey: 'film-manage',
+      authAction: '',
+      title: '影片管理',
+      pageTitle: '影片管理-鲸娱数据',
+    },
+  },
+
 ] // end of mainLayoutRoutes
 
 const errorRoutes: RouteConfigEnhance[] = [
