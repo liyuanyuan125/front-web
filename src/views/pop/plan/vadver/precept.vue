@@ -139,8 +139,7 @@
                     </template>
 
                     <template slot-scope="{ row }" slot="cpm">
-                      {{formatNums(row.cpm * 7 / 10, 1)}} ~ 
-                      {{formatNums(row.cpm * 13 / 10, 1)}}
+                      {{formatNums(row.cpm)}}
                     </template>
 
                     <template slot-scope="{ row }" slot="estimatePersonCount">
