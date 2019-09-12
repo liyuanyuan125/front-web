@@ -32,7 +32,7 @@
           </RadioGroup>
         </FormItem>
       </Form>
-      <div v-if='deposit < depositAmount' class='posimg'>
+      <div v-if='deposit <= depositAmount' class='posimg'>
         <div>
           <span class='disimg'><img src="./assets/accountbalance.png" alt=""></span>
           <span class='availableAmount' >可用余额{{availableAmount}}元</span>
@@ -50,7 +50,7 @@
         </div>
       </div>
       <div slot="footer" class="btn-center-footer">
-        <div v-if='deposit < depositAmount'>
+        <div v-if='deposit <= depositAmount'>
           <Button class="button-cancel "  @click="cancel('form')" >取消</Button>
           <Button type="primary" :disabled='availableAmount < depositAmount' v-if='this.form.status == 0'
             class="button-ok ok" ><a href="javascript:;" @click='hrefJump'>确认支付</a></Button>
@@ -113,7 +113,7 @@
             </Col>
             <Col span="10" style='margin-left: 15%'>
               <FormItem label="汇款流水单号" prop="remittanceNo">
-                <Input v-model="dataForm.remittanceNo" class="inp-style" placeholder="请输入充值金额"/>
+                <Input v-model="dataForm.remittanceNo" class="inp-style" placeholder="请输入汇款流水单号"/>
               </FormItem>
             </Col>
           </Row>
