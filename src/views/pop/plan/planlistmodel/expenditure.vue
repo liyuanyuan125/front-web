@@ -426,7 +426,7 @@ export default class Change extends ViewBase {
               }
             })
             this.$emit('uplist')
-            toast('添加成功')
+            toast('支付申请成功请等待审核')
           } else {
             await zfsettle(this.id, {
               payType: 'LINEPAY',
@@ -435,6 +435,7 @@ export default class Change extends ViewBase {
                 ...query
               }
             })
+            toast('结算成功请等待确认')
             this.$emit('uplist')
           }
           this.realPayAmount = 0
