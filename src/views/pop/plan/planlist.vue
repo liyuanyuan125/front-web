@@ -105,7 +105,7 @@
             <span>开始于{{formatDate(row.beginDate)}}</span>
           </p>
           <p
-          <p style="margin: 10px 0px 0px 40px">{{row.deliveryPositiontext}}</p>
+          <p style="margin: 10px 0px 0px 46px">{{row.deliveryPositiontext}}</p>
         </template>
 
         <template slot="settlementStatus" slot-scope="{row}">
@@ -328,7 +328,7 @@ export default class Plan extends ViewBase {
     this.tableDate = this.tableDate.map((it: any) => {
       return {
         ...it,
-        deliveryPositiontext: it.deliveryPositionCode ? this.deliveryPositionList[it.deliveryPositionCode] : ''
+        deliveryPositiontext: it.deliveryPositionCode ? `[ ${this.deliveryPositionList[it.deliveryPositionCode]} ]` : ''
       }
     })
     this.totalCount = data.totalCount
