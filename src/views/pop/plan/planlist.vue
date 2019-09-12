@@ -4,11 +4,20 @@
       <span class="adver-tiele">广告计划</span>
       <Button
         type="primary"
-        :to="{name: 'pop-planlist-add'}"
+        :to="{name: 'pop-business-add'}"
         class="btn-new"
         v-auth="'promotion.ad-plan#create'"
       >
-        <Icon type="ios-add" size="27"/>新建广告计划
+        <Icon type="ios-add" size="27"/>新建商业广告计划
+      </Button>
+      <Button
+        type="primary"
+        :to="{name: 'pop-planlist-add'}"
+        class="btn-new"
+        v-if="systemCode == 'TRAILER'"
+        v-auth="'promotion.ad-plan#create'"
+      >
+        <Icon type="ios-add" size="27"/>新建预告片
       </Button>
     </h3>
 
@@ -71,9 +80,11 @@
               <span v-else>ID:{{row.id}}</span>
             </p>
             <div>
-              <img v-if="!row.ids" :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
-              <img v-else src="./assets/mock.png" :onerror="defaultImg" width="90px" height="90px">
-
+              <div>
+                <div :class="{advert: row.advertType == 'TRAILER'}"></div>
+                <img v-if="!row.ids" :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
+                <img v-else src="./assets/mock.png" :onerror="defaultImg" width="90px" height="90px">
+              </div>
               <div>
                 <h3>{{row.name}}</h3>
                 <span>{{row.videoName}}&nbsp;&nbsp;{{row.customerName}}&nbsp;&nbsp;{{row.specification||0 }}s</span>
@@ -93,7 +104,8 @@
           <p v-else>
             <span>开始于{{formatDate(row.beginDate)}}</span>
           </p>
-          <!-- <p style="margin-top: 10px">{{days(row.beginDate, row.endDate)}}天</p> -->
+          <p
+          <p style="margin: 10px 0px 0px 46px">{{row.deliveryPositiontext}}</p>
         </template>
 
         <template slot="settlementStatus" slot-scope="{row}">
@@ -115,14 +127,14 @@
               <span class="edit-btn" @click="findId(row.ids)">查看效果报表</span>
             </div>
             <div v-else>
+              <span class="edit-btn" v-if="row.status == 1" @click="sure(row.id)">确认方案</span>
               <div v-if="row.status == 1 || row.status == 2">
                 <p @click="plandetail(row.id)">详情</p>
-                <p @click="plandEdit(row.id)">编辑</p>
+                <p @click="plandEdit(row.id, row.advertTypeCode)">编辑</p>
                 <p @click="plandel(row.id)">删除</p>
               </div>
               <div v-if="row.status == 3 || row.status == 4">
-                <span class="edit-btn" v-if="row.status == 3" @click="sure(row.id)">确认方案</span>
-                <span class="edit-btn" v-if="row.status == 4" @click="pay(row.companyId, row.freezeAmount, row.id)">立即缴费</span>
+                <span class="edit-btn" v-if="row.status == 3" @click="pay(row.id)">立即缴费</span>
                 <div class="adver-edit">
                   <p @click="plandetail(row.id)">详情</p>
                   <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
@@ -143,7 +155,7 @@
               </div>
               <div v-if="row.status >= 8 && row.status < 12 ">
                 <span class="edit-btn" @click="findId(row.id)">查看效果报表</span>
-                <span class="edit-btn" style='margin-top: 14px' v-if="row.status == 10" @click="payend(row.companyId, row.freezeAmount, row.id)">立即结算</span>
+                <span class="edit-btn" style='margin-top: 14px' v-if="row.status == 10" @click="payend(row.id)">立即结算</span>
                 <div class="adver-edit">
                   <p @click="plandetail(row.id)">详情</p>
                 </div>
@@ -156,9 +168,9 @@
       <pagination :pageList="pageList" :total="totalCount" @uplist="uplist"></pagination>
     </div>
     <Sure ref="Sure" @uplist="uplist"/>
-    <Pay ref="Pay" @uplist="uplist"/>
-    <Payend ref="payend" @uplist="uplist"/>
+    <Expenditure ref='Pay' @uplist="uplist"></Expenditure>
     <relevanceDlg v-model="relevanVis" v-if="relevanVis.visible" @submitRelevance="submitRelevance"></relevanceDlg>
+
   </div>
 </template>
 <script lang="ts">
@@ -166,6 +178,7 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
 import { formatTimes, formatNumber } from '@/util/validateRules'
+import relevanceDlg from './planlistmodel/relevance.vue'
 import {
   planList,
   delCheckPlanList,
@@ -178,17 +191,21 @@ import Sure from './planlistmodel/sure.vue'
 import Pay from './planlistmodel/pay.vue'
 import Payend from './planlistmodel/payend.vue'
 import moment from 'moment'
-import relevanceDlg from './planlistmodel/relevance.vue'
+import Expenditure from './planlistmodel/expenditure.vue'
 import { clean } from '@/fn/object'
+import { getUser } from '@/store'
+import { toMap } from '@/fn/array'
 
+const makeMap = (list: any[]) => toMap(list, 'key', 'text')
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
     Sure,
     Pay,
     pagination,
-    relevanceDlg,
-    Payend
+    Expenditure,
+    Payend,
+    relevanceDlg
   }
 })
 export default class Plan extends ViewBase {
@@ -197,6 +214,7 @@ export default class Plan extends ViewBase {
     settlementStatus: '',
     name: ''
   }
+  deliveryPositionList: any = []
   loading: any = false
   checkId: any = []
   pageList = {
@@ -213,6 +231,10 @@ export default class Plan extends ViewBase {
   data: any = []
   selectIds = []
   checkboxall = false
+
+  get systemCode() {
+    return getUser()!.systemCode
+  }
 
   get mockadver() {
     let ids = 173
@@ -269,12 +291,17 @@ export default class Plan extends ViewBase {
     return formatNumber
   }
 
-  async mounted() {
-    this.tableList()
-  }
-
   get defaultImg() {
     return 'this.src="' + require('./assets/mock.png') + '"'
+  }
+
+  mounted() {
+    this.tableList()
+    if (this.$route.query.id && this.$route.query.success == 'false') {
+      this.$nextTick(() => {
+        (this.$refs as any).Pay.init(this.$route.query.id)
+      })
+    }
   }
 
   async tableList() {
@@ -282,7 +309,8 @@ export default class Plan extends ViewBase {
     const { data } = await planList(
       clean({
         ...this.form,
-        ...this.pageList
+        ...this.pageList,
+        advertTypeCode: (this.systemCode as any) == 'film' ? '' : 'BRAND'
       })
     )
     this.data = data
@@ -296,6 +324,13 @@ export default class Plan extends ViewBase {
     this.loading = false
     this.tableDate = (data.items || [])
     this.tableDate.unshift(this.mockadver)
+    this.deliveryPositionList = makeMap(data.deliveryPositionList || [])
+    this.tableDate = this.tableDate.map((it: any) => {
+      return {
+        ...it,
+        deliveryPositiontext: it.deliveryPositionCode ? `[ ${this.deliveryPositionList[it.deliveryPositionCode]} ]` : ''
+      }
+    })
     this.totalCount = data.totalCount
   }
 
@@ -386,11 +421,18 @@ export default class Plan extends ViewBase {
     })
   }
 
-  plandEdit(id: any) {
-    this.$router.push({
-      name: 'pop-planlist-edit',
-      params: { step: '0', setid: id }
-    })
+  plandEdit(id: any, code: string) {
+    if (code && code == 'BRAND') {
+      this.$router.push({
+        name: 'pop-business-edit',
+        params: { step: '0', setid: id }
+      })
+    } else {
+      this.$router.push({
+        name: 'pop-planlist-edit',
+        params: { step: '0', setid: id }
+      })
+    }
   }
 
   async plandel(id: any) {
@@ -452,13 +494,13 @@ export default class Plan extends ViewBase {
 
   pay(id: any, freezeAmount: any, ids: any) {
     this.$nextTick(() => {
-      (this.$refs as any).Pay.init(id, freezeAmount, ids)
+      (this.$refs as any).Pay.init(id)
     })
   }
 
-  payend(id: any, freezeAmount: any, ids: any) {
+  payend(id: any) {
     this.$nextTick(() => {
-      (this.$refs as any).payend.init(id, freezeAmount, ids)
+      (this.$refs as any).Pay.init(id)
     })
   }
 
@@ -614,6 +656,13 @@ export default class Plan extends ViewBase {
   border-radius: 5px;
   min-height: 280px;
   position: relative;
+  .advert {
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    background: url('~@/assets/icon/prevue.png') no-repeat left top;
+    background-size: 40px auto;
+  }
   .ivu-table-header th {
     height: 60px;
     background: #000;

@@ -607,6 +607,32 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     }
   },
 
+  // 广告主 - 推广管理 - 广告计划 - 创建广告计划
+  {
+    path: '/pop/business/add/:step?/:setid?',
+    name: 'pop-business-add',
+    component: () => import('./views/pop/plan/business.vue'),
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'edit',
+      title: '创建',
+      pageTitle: '创建广告计划-鲸娱数据',
+    }
+  },
+
+  // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
+  {
+    path: '/pop/business/edit/:step/:setid',
+    name: 'pop-business-edit',
+    component: () => import('./views/pop/plan/business.vue'),
+    meta: {
+      authKey: 'promotion.ad-plan',
+      authAction: 'edit',
+      title: '编辑',
+      pageTitle: '编辑广告计划-鲸娱数据',
+    }
+  },
+
   // // 广告主 - 推广管理 - 广告计划 - 编辑广告计划
   // {
   //   path: '/pop/planlist/set/:id?/:setid?',
@@ -1777,6 +1803,19 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         }),
       },
     ]
+  },
+
+  // 片商 - 影片管理
+  {
+    path: '/filmmanage/index',
+    name: 'film-manage',
+    component: () => import('./views/filmManage/index.vue'),
+    meta: {
+      authKey: 'film-manage',
+      authAction: '',
+      title: '影片管理',
+      pageTitle: '影片管理-鲸娱数据',
+    },
   },
 
 ] // end of mainLayoutRoutes

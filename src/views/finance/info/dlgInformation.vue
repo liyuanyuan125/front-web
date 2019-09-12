@@ -3,11 +3,12 @@
     <Modal v-model="showDlg" title="充值" width="400" @on-cancel="cancel()" >
       <Form ref="form" :model="form" :label-width="90" :rules="formRules" class="edit-input">
         <FormItem label="充值金额" prop="amount">
-          <Input v-model="form.amount" placeholder="请输入"></Input>&nbsp;&nbsp;元
+          <!-- <Input v-model="form.amount"  placeholder="请输入"></Input>&nbsp;&nbsp;元 -->
+          <InputNumber  v-model="form.amount" placeholder="请输入"></InputNumber>&nbsp;&nbsp;元
         </FormItem>
         <FormItem label="支付方式" prop="status">
           <RadioGroup v-model="form.status" >
-            <Radio v-for="it in moneyList" :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
+            <Radio v-for="it in moneyList" v-if='it.key != 0' :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
           </RadioGroup>
         </FormItem>
       </Form>
@@ -33,7 +34,7 @@
      </Row>
      <Form
           :model="dataForm"
-          :label-width="88"
+          :label-width="95"
           label-position="left"
           class="form page"
           ref="dataForm"
@@ -69,13 +70,13 @@
             <Col span="10">
               <FormItem label="汇款方式" prop="remittanceType">
                 <RadioGroup v-model="dataForm.remittanceType" >
-                  <Radio v-for="it in addMoneyList" :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
+                  <Radio v-for="it in addMoneyList" v-if='it.key != 0' :key="it.key" :value="it.key" :label="it.key">{{it.text}}</Radio>
                 </RadioGroup>
               </FormItem>
             </Col>
             <Col span="10" style='margin-left: 15%'>
               <FormItem label="汇款流水单号" prop="remittanceNo">
-                <Input v-model="dataForm.remittanceNo" class="inp-style" placeholder="请输入充值金额"/>
+                <Input v-model="dataForm.remittanceNo" class="inp-style" placeholder="请输入汇款流水单号"/>
               </FormItem>
             </Col>
           </Row>
@@ -90,11 +91,10 @@
               </FormItem>
             </Col>
             <Col span="10" style='margin-left: 15%;'>
-              <FormItem label="汇款时间">
+              <FormItem label="汇款时间" prop="remittanceDate">
                 <Date-picker
                   :options="options3"
                   type="date"
-                  prop="remittanceDate"
                   v-model="dataForm.remittanceDate"
                   on-change="selectTime"
                   placeholder="选择日期"
@@ -149,8 +149,8 @@ import Upload from '../upload/Upload.vue'
 import { warning , success, toast , info } from '@/ui/modal'
 // import { formatNumber } from '@/util/validateRules'
 
-const form = {
-  amount: '',
+const form: any = {
+  amount: null,
   status: 1
 }
 
@@ -167,11 +167,11 @@ export default class Change extends ViewBase {
   get formRules() {
     const rules = {
       amount: [
-          { required: true, message: '请输入充值金额', trigger: 'blur' }
+          { required: true, message: '请输入正确有效的金额', }
       ],
       status: [
           { required: true }
-      ]
+      ],
     }
     return rules
   }
@@ -215,8 +215,8 @@ export default class Change extends ViewBase {
   // defaultamount = this.form.amount
   dataForm: any = {
     accountName: '',
-    amount: '0.01', // 充值金额
     remittanceDate: null,
+    amount: '', // 充值金额
     remittanceType: 1,
     remittanceNo: '',
     remark: '',
@@ -255,7 +255,15 @@ export default class Change extends ViewBase {
 
   async hrefJump() {
     if (this.form.amount == '') {
-      info('请输入充值金额')
+      info('请输入1-1亿之间金额')
+      return
+    }
+    if (this.form.amount == null || this.form.amount < 0 || this.form.amount > 100000000) {
+      info('请输入1-1亿之间金额')
+      return
+    }
+    if (String(this.form.amount).indexOf('.') == 1 && String(this.form.amount).split('.')[1].length > 2) {
+      info('请输入最多两位小数的金额')
       return
     }
     try {
@@ -270,9 +278,17 @@ export default class Change extends ViewBase {
 
   async changeData(forms: any) {
     if (this.form.amount == '') {
-        info('请输入充值金额')
+        info('请输入1-1亿之间金额')
         return
-      }
+    }
+    if (this.form.amount == null || this.form.amount < 0 || this.form.amount > 100000000) {
+      info('请输入1-1亿之间金额')
+      return
+    }
+    if (String(this.form.amount).indexOf('.') == 1 && String(this.form.amount).split('.')[1].length > 2) {
+      info('请输入最多两位小数的金额')
+      return
+    }
     const myThis: any = this
     myThis.$refs[forms].validate(async ( valid: any ) => {
       this.dataForm.amount = this.form.amount
@@ -285,14 +301,18 @@ export default class Change extends ViewBase {
 
     // 表单提交
   async dataFormSubmit(dataForms: any) {
-    const aaa = new Date(this.dataForm.remittanceDate)
-    this.dataForm.remittanceDate =
+    // this.dataForm.remittanceDate =
     this.dataForm.receipt =
       this.dataForm.receipts.length > 0 ? this.dataForm.receipts[0].fileId : []
       if (this.dataForm.receipts.length == 0 ) {
         info('请上传汇款底单')
         return
       }
+      if (this.dataForm.remittanceNo == '' || this.dataForm.accountName == '' || this.dataForm.remittanceDate == '') {
+        info('请准确填写汇款信息')
+        return
+      }
+    const aaa = new Date(this.dataForm.remittanceDate)
     const myThis: any = this
     myThis.$refs[dataForms].validate(async (valid: any) => {
       if (valid) {
@@ -310,7 +330,7 @@ export default class Change extends ViewBase {
         const title = '添加'
         try {
           const res = await lineUnderRemittances(query)
-          toast('添加成功')
+          toast('充值申请提交成功，请等待审核！')
           // this.dataForm = {}
           // this.seach()
           history.go(0)
@@ -560,7 +580,6 @@ export default class Change extends ViewBase {
 }
 /deep/ .upload-list {
   margin-top: 0;
-  left: 25%;
 }
 /deep/ .upload-item {
   position: relative;
@@ -577,6 +596,9 @@ export default class Change extends ViewBase {
   background: rgba(255, 255, 255, 1);
   border-radius: 4px;
   border: 1px solid rgba(0, 32, 45, 0.1);
+}
+/deep/ .ivu-input-number {
+  width: 180px !important;
 }
 </style>
 

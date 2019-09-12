@@ -23,15 +23,15 @@
           <Col :span="12">
             <p>
               <label class="hui">联系人</label>
-              {{company.name}}
+              {{company.contact || '-'}}
             </p>
             <p>
               <label class="hui">手机号码</label>
-              {{company.mobile}}
+              {{company.contactTel || '-'}}
             </p>
             <p>
               <label class="hui">邮箱</label>
-              {{company.email}}
+              {{company.email || '-'}}
             </p>
           </Col>
         </Row>
@@ -124,7 +124,7 @@ export default class Main extends ViewBase {
 
   column = [
     { title: '变更编号', key: 'id' },
-    { title: '账号变更提交时间', key: 'timeName' },
+    { title: '账号变更提交时间', key: 'timeName', minWidth: 120 },
     {
       title: '变更前信息',
       key: 'changeBefore',

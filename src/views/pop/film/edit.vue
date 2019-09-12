@@ -11,11 +11,11 @@
         </FormItem>
 
         <FormItem  label="客户" v-if="secondaryCode == 'daili'" >
-          <customerList v-model="form.customerId" ref="refCust" />
+          <customerList v-model="form.customerId" />
         </FormItem>
 
         <FormItem  label="品牌" >
-          <brandList v-model="form.brandId"  ref="refBrand" />
+          <brandList v-model="form.brandId" />
         </FormItem>
 
         <FormItem  label="产品" >
@@ -44,12 +44,12 @@
         </FormItem>
 
         <FormItem label="广告片小样">
-          <OssUploader v-model="srcFileId"></OssUploader>
+          <OssUploader v-model="form.srcFileId" :param="{fileType: 3, subCategory: 1}"></OssUploader>
           <em class="remark">支持（.rmvb\.mp4\.mov）等视频格式；视频大小不超过100M；上传广告片小样可提升系统审核速度</em>
         </FormItem>
 
         <div v-if="secondaryCode == 'daili'">
-          <FormItem label="公司营业执照编号" prop="licenseCode" >
+          <FormItem label="营业执照编号" prop="licenseCode" >
             <Input v-model="form.licenseCode" placeholder="请输入执照编号"/>
           </FormItem>
           <FormItem label="营业执照有效期" prop="validity">
@@ -85,6 +85,8 @@ import Upload, { FileItem } from '@/components/upload'
 import { popPartners, detailPop, createPop, editPop, transFee, productsList} from '@/api/popFilm'
 import {intDate, formatValidDate, formatIntDateRange } from '@/util/dealData'
 import { getUser } from '@/store'
+import { scrollToError } from '@/util/form'
+import { get } from 'lodash'
 
 import customerList from '@/components/selectList/customerList.vue'
 import brandList from '@/components/selectList/brandList.vue'
@@ -100,8 +102,10 @@ import OssUploader from '@/components/videoUploader'
     productList
   }
 })
+
 export default class Main extends ViewBase {
   form: any = {
+    srcFileId: null,
     brandId: null,
     productId: null,
     validity: [], // 有效期
@@ -114,6 +118,7 @@ export default class Main extends ViewBase {
   // 是否正在上传
   uploading = false
   srcFileId: any = null
+  fileId = null
 
   // 转码费
   transFee = ''
@@ -164,7 +169,7 @@ export default class Main extends ViewBase {
           trigger: 'change',
           type: 'array',
           validator(rule: any, value: any[], callback: any) {
-            value.length == 0 ? callback(new Error(rule.message)) : callback()
+            value && value.length == 0 ? callback(new Error(rule.message)) : callback()
           }
         }
       ],
@@ -175,7 +180,7 @@ export default class Main extends ViewBase {
           trigger: 'change',
           type: 'array',
           validator(rule: any, value: any[], callback: any) {
-            value.length == 0 ? callback(new Error(rule.message)) : callback()
+            value && value.length == 0 ? callback(new Error(rule.message)) : callback()
           }
         }
       ],
@@ -190,6 +195,11 @@ export default class Main extends ViewBase {
     }
   }
 
+  scrollToError() {
+    const form = this.$refs.dataform as any
+    this.$nextTick(() => scrollToError(form))
+  }
+
   creSpecificationList() {
     for ( let i = 1 ; i < 41; i ++) {
       this.specificationList.push({id: i * 15, name: i * 15})
@@ -200,6 +210,7 @@ export default class Main extends ViewBase {
     const id = this.$route.params.id
     try {
       const { data: { item } } = await detailPop(id)
+
       this.form = {
         name: item.name,
         customerId: item.customerId,
@@ -209,11 +220,13 @@ export default class Main extends ViewBase {
         specification: item.specification,
         translated: item.translated,
         licenseCode: item.licenseCode,
+        srcFileId: item.videoSamples && item.videoSamples[0].url, // 视频小样
         validity: [formatValidDate(item.licenseBeginDate), formatValidDate(item.licenseEndDate)],
-        licenseFileId: item.licenseFiles,
-        grantFileIds: item.grantFiles,
+        licenseFileId: item.licenseFiles ? item.licenseFiles : [],
+        grantFileIds: item.grantFiles ? item.grantFiles : [],
       }
-      // this.srcFileId = item.videoSamples[0].url // 视频小样
+      // 获取视频fileId
+      this.fileId = item.videoSamples && item.videoSamples[0].fileId
       // 重新获取transFee
       this.handleChangeSpe()
     } catch (ex) {
@@ -231,7 +244,7 @@ export default class Main extends ViewBase {
 
   async createSubmit(dataform: any) {
     const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) { return}
+    if (!volid) { return this.scrollToError()}
     // 二次确定弹框
     const transFreeCount = await this.handleChangeSpe()
     await confirm(`数字转制费用：${transFreeCount} 元`, {title: '确认新建广告片'})
@@ -241,8 +254,8 @@ export default class Main extends ViewBase {
 
   async createSub() {
     // 视频
-    const srcFileId = this.srcFileId ? this.srcFileId.url : null
-    const size = this.srcFileId ? this.srcFileId.clientSize : null
+    const srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null
+    const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
 
     // 营业执照扫描文件
     const licenseFileId = this.form.licenseFileId ? this.form.licenseFileId[0].fileId : null
@@ -268,15 +281,19 @@ export default class Main extends ViewBase {
   }
 
   async editSubmit(dataform: any) {
-    // this.errorPerm =  this.srcFileId == '' ? '请选择上传视频' : ''
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) {
-      return
+      return this.scrollToError()
     }
 
-    // 视频
-    const srcFileId = this.srcFileId ? this.srcFileId.url : null
-    const size = this.srcFileId ? this.srcFileId.clientSize : null
+    // 视频(默认传后台fileId， 重新上传视频则传url和size)
+    let srcFileId = null
+    const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
+    if (size == 0) {
+      srcFileId = this.fileId
+    } else {
+      srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null
+    }
 
     // 营业执照扫描文件
     const licenseFileId = this.form.licenseFileId ? this.form.licenseFileId[0].fileId : null
@@ -292,7 +309,7 @@ export default class Main extends ViewBase {
         ...this.form,
         transFee: this.transFee,
         srcFileId,
-        size,
+        size: size || null,
         licenseFileId,
         grantFileIds,
         videoType: 2, // 影片类型 1 = 预告片 2 = 商业片

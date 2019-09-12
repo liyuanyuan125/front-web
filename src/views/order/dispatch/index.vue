@@ -61,7 +61,7 @@
                     <p><label>目标人次</label><em>{{it.estimatePersonCount || 0}}人</em></p>
                   </div>
                   <div class="flex-box col-order">
-                    <p ><label>广告位置</label><em>[{{it.deliveryPositionNames}}]</em></p>
+                    <p ><label>广告位置</label><em>{{it.deliveryPositionNames}}</em></p>
                     
                   </div>
                   <div class="target-cinema">
@@ -177,6 +177,7 @@ export default class Main extends ViewBase {
     return formatConversion
   }
 
+
   get formatNumber() {
     return formatNumber
   }
@@ -240,11 +241,12 @@ export default class Main extends ViewBase {
       this.totalCount = totalCount
       // 处理空数组null转化为[]
       this.itemlist = (items || []).map( (item: any) => {
+        const offset = getEnumText(deliveryPositionCodeList, item.deliveryPositionCode)
         return {
           ...item,
           targetCinemas: item.targetCinemas || [],
           targetMovies: item.targetMovies || [],
-          deliveryPositionNames: getEnumText(deliveryPositionCodeList, item.deliveryPositionCode) || '---'
+          deliveryPositionNames: offset ? `[${offset}]` : '--'
         }
       })
       // 处理订单统计

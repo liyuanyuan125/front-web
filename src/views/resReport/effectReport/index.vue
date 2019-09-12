@@ -45,7 +45,6 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { formatTimestamp } from '@/util/validateRules'
 import TinyLoading from '@/components/TinyLoading.vue'
 import ReportPane from './components/report-pane.vue'
 import BannerCard from './components/banner-card.vue'

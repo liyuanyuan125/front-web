@@ -13,7 +13,7 @@
         </h5>
       </div>
 
-      <Form :model="form" :rules="rules" class="form"  ref="form" v-if="!registerNext" :key="keyRandom">
+      <Form :model="form" :rules="rules" class="form"  ref="form" v-if="!registerNext" :key="keyRandom" >
         <FormItem prop="companyName">
           <Input type="text" v-model="form.companyName" placeholder="请输入公司名称" />
         </FormItem>
@@ -37,7 +37,7 @@
         <Button type="primary" long class="submit" @click="submitNext" >下一步</Button>
       </Form>
 
-      <Form :model="subForm" :rules="subRules" class="form"  ref="subForm" v-if="registerNext" :key="keyRandom">
+      <Form :model="subForm" :rules="subRules" class="form"  ref="subForm" v-if="registerNext" :key="keyRandom" >
         <DisableAutoFill />
         <FormItem prop="name">
           <Input  v-model="subForm.name" placeholder="请输入姓名" />
@@ -89,6 +89,7 @@ import { scrollToError } from '@/util/form'
 import { random } from '@/fn/string'
 import DisableAutoFill from '@/components/DisableAutoFill.vue'
 import setUserByData from '@/util/setUserByData'
+import { info } from '@/ui/modal'
 import registerLayout from './login/loginLayout.vue'
 import agreementDlg from './register/agreement.vue'
 
@@ -102,11 +103,12 @@ import agreementDlg from './register/agreement.vue'
   }
 })
 export default class Main extends ViewBase {
-  placeholder = '请选择公司地址'
+  placeholder = '请输入公司地址'
+
   codeDisabled = false
   codeMsg = '获取验证码'
 
-  keyRandom = ''
+  keyRandom = random()
   agreement = false
 
   imageList: any[] = []
@@ -263,18 +265,18 @@ export default class Main extends ViewBase {
   handleCompany() {
     this.subForm.companyType = 1
     this.registerNext = false
-    this.keyRandom = random('one')
+    this.keyRandom = random()
   }
 
   handlePerson() {
     this.subForm.companyType = 2
     this.registerNext = true
-    this.keyRandom = random('two')
+    this.keyRandom = random()
   }
 
   nextBack() {
     this.registerNext = false
-    this.keyRandom = random('three')
+    this.keyRandom = random()
   }
 
   async getCode() {
@@ -305,11 +307,11 @@ export default class Main extends ViewBase {
   async submit() {
     const form = this.$refs.subForm as any
     const valid = await form.validate()
+    if (!valid) { return}
     if (this.subForm.requestId == '') {
-      this.smsCodeError = '请获取验证码'
+      info('请核实你的操作流程，是否获取验证码', {title: '提示'})
       return
     }
-    if (!valid) { return}
 
     let postData = {}
     const cloneForm: any = except(this.form, 'passwordAgain,area')
@@ -331,17 +333,13 @@ export default class Main extends ViewBase {
 
     try {
       const { data } = await register(postData)
-        setUserByData({
-          ...data,
-          // systemCode: postData.systems[0],
-        })
       this.$router.push({ name: 'register-success' })
     } catch (ex) {
       ((this as any)[`onSubmit${ex.code}`] || this.handleError).call(this, ex)
     }
   }
 
-  onSubmit8007303() {
+  onSubmit8007303( ) {
     this.smsCodeError = '验证码错误'
   }
 
@@ -356,6 +354,7 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import './login/common.less';
+
 /deep/ .ivu-cascader {
   .ivu-input {
     padding-left: 20px;
@@ -457,7 +456,6 @@ export default class Main extends ViewBase {
   }
 }
 
-// 兼容小于 600
 @media screen and(max-height: 800px) {
   .main-wrap {
     position: absolute;
