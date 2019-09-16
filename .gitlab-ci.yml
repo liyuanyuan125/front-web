@@ -57,7 +57,7 @@ deploy-dev:
 
 deploy-qas:
   image: $REGISTRY_ADDRESS/devops/docker/deploy
-  stage: deploy-dev
+  stage: deploy-qas
   variables:
     GIT_STRATEGY: none
   dependencies: []
