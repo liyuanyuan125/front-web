@@ -430,7 +430,9 @@ export default class Main extends ViewBase {
       const {
         data: { items, totalCount, billPayTypeList , statusList }
       } = await bills(clean({ ...query }))
-      if (items.length <= 5) {
+      if (items == null) {
+        this.items = []
+      } else if (items.length <= 5) {
         this.items = items || []
       } else {
         this.items.push(items[0], items[1], items[2], items[3], items[4])
