@@ -18,7 +18,7 @@
         </FormItem>
 
         <FormItem label='广告片下载地址' prop="srcFileUrl">
-          <Input type="textarea" v-model="form.srcFileUrl" class="input-textarea-col" :rows="5"  placeholder="" />
+          <Input type="textarea" v-model="form.srcFileUrl" class="input-textarea-col" :rows="5"  placeholder="请输入广告片下载地址" />
         </FormItem>
 
         <FormItem label="是否已转制">
@@ -30,7 +30,7 @@
         </FormItem>
 
         <FormItem label="广告片小样">
-          <OssUploader v-model="form.srcFileId"></OssUploader>
+          <OssUploader v-model="form.srcFileId"  :param="{fileType: 3, subCategory: 1}"></OssUploader>
           <em class="remark">支持（.rmvb\.mp4\.mov）等视频格式；视频大小不超过100M；上传广告片小样可提升系统审核速度</em>
         </FormItem>
 
@@ -59,7 +59,7 @@ import { confirm } from '@/ui/modal'
 import Upload, { FileItem } from '@/components/upload'
 import {detailPop, createPop, editPop, transFee, companyMovies } from '@/api/popFilm'
 
-import OssUploader from '@/components/ossUploader'
+import OssUploader from '@/components/videoUploader'
 
 @Component({
   components: {
@@ -73,6 +73,7 @@ export default class Main extends ViewBase {
   }
   // 是否正在上传
   uploading = false
+  fileId = null
 
   // 关联影片
   movieList = []
@@ -119,9 +120,13 @@ export default class Main extends ViewBase {
         srcFileUrl: item.srcFileUrl,
         specification: item.specification,
         translated: item.translated,
-        srcFileId: item.srcFileId,
+        srcFileId: item.videoSamples && item.videoSamples[0].url, // 视频小样
         movieId: item.movieId
       }
+
+      // 获取视频fileId
+      this.fileId = item.videoSamples && item.videoSamples[0].fileId
+
       // 重新获取transFee 费用
       this.handleChangeSpe()
     } catch (ex) {
@@ -160,7 +165,7 @@ export default class Main extends ViewBase {
         srcFileId, // 视频小样
         size, // 视频大小
         transFee: this.transFee,
-        videoType: 1, // 影片类型 1 = 预告片 2 = 商业片
+        videoType: 1, // 影片类型： 1 = 预告片 2 = 商业片
       })
       this.$router.push({name: 'pop-film'})
     } catch (ex) {
@@ -177,15 +182,23 @@ export default class Main extends ViewBase {
     }
 
     const id = this.$route.params.id
-    const srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null
+
+    // 视频(默认传后台fileId， 重新上传视频则传url和size)
+    let srcFileId = null
     const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
+    if (size == 0) {
+      srcFileId = this.fileId
+    } else {
+      srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null
+    }
+
     try {
       const { data } = await editPop({
         ...this.form,
         srcFileId, // 视频小样
-        size, // 视频大小
+        size: size || null, // 视频大小
         transFee: this.transFee,
-        videoType: 1, // 影片类型 1 = 预告片 2 = 商业片
+        videoType: 1, // 影片类型： 1 = 预告片 2 = 商业片
       }, id)
       this.$router.push({name: 'pop-film'})
     } catch (ex) {
