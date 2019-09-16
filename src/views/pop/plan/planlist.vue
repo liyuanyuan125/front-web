@@ -14,7 +14,7 @@
         type="primary"
         :to="{name: 'pop-planlist-add'}"
         class="btn-new"
-        v-if="systemCode == 'TRAILER'"
+        v-if="systemCode == 'film'"
         v-auth="'promotion.ad-plan#create'"
       >
         <Icon type="ios-add" size="27"/>新建预告片
