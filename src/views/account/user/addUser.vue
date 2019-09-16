@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="bgs">
-        <h3 class="layout-title tits" v-if="systemCode == 'ads'">关联客户(选填)
+        <h3 class="layout-title tits" v-if="systemCode == 'ads' || systemCode == 'film'">关联客户(选填)
           <p class="query-cinema" @click="handleEdit">编辑关联客户</p>
         </h3>
         <h3 class="layout-title tits" v-else-if="systemCode == 'resource'">关联影院(选填)
@@ -39,7 +39,7 @@
           <div class="formleft">
             <Row>
               <Col :span="24">
-                <div class="flex" v-if="systemCode == 'ads'">
+                <div class="flex" v-if="systemCode == 'ads' || systemCode == 'film'">
                   <p>
                     <label>客户</label>
                     {{custList}} 个
@@ -142,19 +142,6 @@ export default class Main extends ViewBase {
 
   get rules() {
     return {
-      // email: [
-      //   {
-      //     require: true,
-      //     message: '请输入登录邮箱',
-      //     trigger: 'blur',
-      //     validator(rule: any, value: string[], callback: any) {
-      //       value.length == 0
-      //         ? callback(new Error('请输入登录邮箱'))
-      //         : callback()
-      //     }
-      //   },
-      //   { type: 'email', message: '邮箱格式有误', trigger: 'blur' }
-      // ],
       role: [
         {
           require: true,
@@ -181,39 +168,6 @@ export default class Main extends ViewBase {
     }
   }
 
-  // async handleEmail() {
-  //   // 判断当前有效子用户
-  //   if (this.form.email) {
-  //     try {
-  //       const { data } = await vaildNonEmail({
-  //         type: this.systemCode,
-  //         email: this.form.email
-  //       })
-  //       // “邮箱”在本公司账号其它系统存在时 code =0
-  //       await confirm('该邮箱已存在，是否填充信息？', { okText: '填充' })
-  //       this.isAccountAuth = false
-  //       this.form = {
-  //         email: data.email,
-  //         contactName: data.name,
-  //         mobile: data.mobile
-  //       }
-  //     } catch (ex) {
-  //       if (ex.code == '8007205') {
-  //       } else if (ex.code == '8007220') {
-  //         // 主账号邮箱，不可建为子用户
-  //         this.showWaring(ex.msg)
-  //       } else if (ex.code == '8007203') {
-  //         // 该邮箱已被占用
-  //         this.showWaring(ex.msg)
-  //       } else if (ex.code == '9006201') {
-  //         // “邮箱”在账号库里不存在时，正常新增子用户
-  //         this.isAccountAuth = true
-  //       } else {
-  //         this.showWaring(ex.msg)
-  //       }
-  //     }
-  //   }
-  // }
   async handleInforma() {
     (this.$refs.forms as any).validate((valid: any) => {
       if (valid) {
@@ -228,7 +182,7 @@ export default class Main extends ViewBase {
   async submit() {
     this.submitDisabled = true
     try {
-      if (this.systemCode == 'ads') {
+      if (this.systemCode == 'ads' || this.systemCode == 'film') {
         const { data } = await addUser(
           {
             ...this.form,
@@ -261,7 +215,7 @@ export default class Main extends ViewBase {
     }
      this.submitDisabled = true
     try {
-      if (this.systemCode == 'ads') {
+      if (this.systemCode == 'ads' || this.systemCode == 'film') {
         await accountSystem({ ...obj, partnerIds: this.partnerIds })
       } else if (this.systemCode == 'resource') {
         await accountSystem({ ...obj, cinemaIds: this.partnerIds })
@@ -287,15 +241,13 @@ export default class Main extends ViewBase {
 
   save(val: any) {
     if (val.length > 0) {
-     // this.resEditDlg.check = val
-     // this.editVisible.check = val
       this.partnerIds = val
       this.custList = this.cinemaLen = this.partnerIds.length
     }
   }
 
   handleEdit() {
-    if (this.systemCode == 'ads') {
+    if (this.systemCode == 'ads' || this.systemCode == 'film' ) {
       this.editVisible.editVis = true
     } else if (this.systemCode == 'resource') {
       this.resEditDlg.visible = true

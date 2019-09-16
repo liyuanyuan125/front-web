@@ -26,19 +26,10 @@
 
     <Table ref="selection" class="table-jydata"  :columns="columns" :data="data"  @on-selection-change="singleSelect"  @on-select-all="selectAll"
 >
-      <template slot-scope="{row, index}" slot="roleId">
-        <span>{{roleList(row.roleId) || '-'}}</span>
-      </template>
-      <template slot="mobile" slot-scope="{row: {mobile}}">
-        <span>{{mobile || '-'}}</span>
-      </template>
       <template slot-scope="{row, index}" slot="statusCode">
         <span v-if="row.statusCode === 1" class="aneble">已启用</span>
         <span v-else-if="row.statusCode === 2" class="display">已禁用</span>
         <span v-else-if="row.statusCode === 3" class="warting">待激活</span>
-      </template>
-      <template slot-scope="{row, index}" slot="lastLoginTime">
-        <span>{{formatTimes(row.lastLoginTime)}}</span>
       </template>
       <template slot-scope="{row, index}" slot="action">
         <a v-auth="'account-manage.users#view'" class="action-btn" @click="toDetail(row.id)">查看</a>
@@ -46,7 +37,6 @@
         
         <a  v-auth="'account-manage.users#enable'" class="action-btn" v-if="row.statusCode == 2" @click="handleEnable(row.id, 1)">启用</a>
         <a  v-auth="'account-manage.users#enable'" class="action-btn" v-else-if="row.statusCode == 1" @click="handleEnable(row.id, 2)">禁用</a>
-        <!-- <a class="action-btn" v-else-if="row.statusCode == 3" @click="activeEmail(row.id)">重置密码</a> -->
       </template>
     </Table>
     <div class="checkAll flex-box"   v-if="total>0" v-auth="'account-manage.users#delete'">
@@ -65,7 +55,7 @@
       show-total
       show-elevator
       @on-change="handlepageChange"
-      @on-page-size-change="handlePageSize"
+      @on-page-size-change="handlepageChange"
     />
   </div>
 </template>
@@ -73,16 +63,15 @@
 <script lang="tsx">
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { formatTimes } from '@/util/validateRules'
 import {
   rolesList,
   subAccount,
   delectSub,
   accountStatu,
-  activeEmail
 } from '@/api/user'
 import { getUser } from '@/store'
 import { confirm, info } from '@/ui/modal'
+import { formatTimestamp} from '@/util/dealData'
 
 @Component({})
 export default class Main extends ViewBase {
@@ -94,7 +83,6 @@ export default class Main extends ViewBase {
   }
 
   form = {
-    systemCode: null,
     roleId: null,
     status: null,
     searchKey: null
@@ -106,57 +94,53 @@ export default class Main extends ViewBase {
   selectIds = []
   systemCode: any = ''
 
-  formatTimes: any = ''
   columns = [
     { type: 'selection', width: 30,  align: 'center' },
     { title: '联系人', key: 'name', minWidth: 100},
     { title: '登录邮箱', minWidth: 140,  key: 'email'},
-    { title: '手机号码', minWidth: 110, slot: 'mobile',  },
-    { title: '权限角色', slot: 'roleId', minWidth: 120 },
+    { title: '手机号码', minWidth: 110, key: 'mobile',  },
+    { title: '权限角色', key: 'roleName', minWidth: 120 },
     { title: '状态',  slot: 'statusCode', minWidth: 40 },
-    { title: '上次登录时间',  slot: 'lastLoginTime', minWidth: 140 },
+    { title: '上次登录时间',  key: 'lastLoginTime', minWidth: 140 },
     { title: '操作', slot: 'action',  width: 180  }
   ]
 
   async mounted() {
     const user: any = getUser()!
-    this.form.systemCode = this.systemCode = user.systemCode
+    this.systemCode = user.systemCode
     this.userList()
-
-    this.formatTimes = formatTimes
   }
 
   async userList() {
+    const systemCode = this.systemCode
     try {
-      const { data } = await subAccount({ ...this.form, ...this.pageObject })
+      const { data } = await subAccount({ ...this.form, ...this.pageObject, systemCode })
       this.rolelist = data.roleList || []
       this.statusList = data.statusList || []
       this.total = data.totalCount || 0
 
       // 读取当前广告主或资源方statusCode
       const code = this.systemCode
-      if (data.list) {
-        data.list.map((item: any) => {
-          for (const i of item.systems) {
-            if (i.code == code) {
-              item.statusCode = i.status
-            }
+      // 只有禁用数据可以删除
+      this.data = (data.list || []).map((it: any) => {
+        const statusCode = (it.systems || []).filter((ite: any) => ite.code == code)[0].status
+        let roleName = null
+        this.rolelist.map((ite: any) => {
+          if (ite.id == it.roleId) {
+            roleName = ite.name
           }
         })
-      }
-
-      // 只有禁用数据可以删除
-      if (data.list) {
-        for (const it of data.list) {
-          if (it.statusCode == 2) {
-            it._checked = false
-          } else {
-            it._disabled = true
-          }
+        return {
+          ...it,
+          statusCode,
+          _checked: statusCode == 2 ? false : null,
+          _disabled: statusCode != 2 ? true : null,
+          email: it.email || '-',
+          mobile: it.mobile || '-',
+          lastLoginTime: formatTimestamp(it.lastLoginTime),
+          roleName: roleName || '-'
         }
-      }
-
-      this.data = data.list || []
+      })
     } catch (ex) {
       this.handleError(ex)
     }
@@ -164,14 +148,6 @@ export default class Main extends ViewBase {
   searchTableList() {
     this.pageObject.pageIndex = 1
     this.userList()
-  }
-  roleList(id: any) {
-    const list: any = this.rolelist
-    for (const item of list) {
-      if (item.id == id) {
-        return item.name
-      }
-    }
   }
   addUser() {
     if (this.rolelist.length) {
@@ -242,24 +218,8 @@ export default class Main extends ViewBase {
   toEdit(id: any) {
     this.$router.push({ name: 'account-user-edit', params: { useid: id } })
   }
-  // async activeEmail(id: any) {
-  //   try {
-  //     await activeEmail({ id })
-  //     await info('激活链接已重新发送，请查收激活邮件', { title: '提示' })
-  //   } catch (ex) {
-  //     if (ex.code != 0) {
-  //       this.handleError(ex)
-  //     } else {
-  //       this.handleError(ex)
-  //     }
-  //   }
-  // }
 
   handlepageChange(size: any) {
-    this.pageObject.pageIndex = size
-    this.userList()
-  }
-  handlePageSize(size: any) {
     this.pageObject.pageIndex = size
     this.userList()
   }
