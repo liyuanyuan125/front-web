@@ -31,13 +31,13 @@ module.exports = {
       },
       {
         env: 'qas',
-        baseUrl: 'https://qas.aiads.com',
-        ajaxBaseUrl: 'https://fapi.qas.aiads.com',
+        baseUrl: 'https://www.whaledata.com',
+        ajaxBaseUrl: 'https://fapi.whaledata.com',
       },
       {
         env: 'stg',
-        baseUrl: 'https://www.whaledata.com',
-        ajaxBaseUrl: 'https://fapi.whaledata.com',
+        baseUrl: 'https://www.aiads-stg.com',
+        ajaxBaseUrl: 'https://fapi.aiads-stg.com',
       },
       {
         env: 'prd',
