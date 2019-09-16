@@ -76,8 +76,8 @@ deploy-prd:
     GIT_STRATEGY: none
   dependencies: []
   only:
-    - tags
     - master
+    - tags
   script:
     - deploy -service $SERVICE_NAME -template web -vars port=8005
   environment: aiads-prd
