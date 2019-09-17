@@ -37,16 +37,16 @@
       <li class="action-node" @click="gotoRoute('kol-kollist')">KOL推广</li>
       <li class="action-node" @click="gotoRoute('film-cooperation-list')">影片合作</li>
       <li class="brand-pane">
-        <h4 class="brand-title">品牌管理</h4>
-        <router-link :to="{ name: 'brand-list' }" class="brand-more">更多</router-link>
+        <h4 class="brand-title">{{isFilm ? '影片' : '品牌'}}管理</h4>
+        <router-link :to="{ name: isFilm ? 'film-manage' : 'brand-list' }" class="brand-more">更多</router-link>
         <ul class="brand-list">
           <li
-            v-for="(it, i) in brandList"
+            v-for="(it, i) in brandOrFilmList"
             :key="i"
             class="brand-item"
           >
             <router-link
-              :to="{ name: 'brand-home', params: { id: it.id } }"
+              :to="{ name: isFilm ? 'film-movie' : 'brand-home', params: { id: it.id } }"
               class="brand-item-in"
               target="_blank"
             >
@@ -72,13 +72,14 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import numAdd from '../number.vue'
 import ChartPane from './chartPane.vue'
-import { getStats, queryReport, getBrandList } from './data'
+import { getStats, queryReport, getBrandList, getFilmList } from './data'
 import moment from 'moment'
 import { capitalize } from 'lodash'
 import { MapType } from '@/util/types'
 import { RawLocation } from 'vue-router'
 import { dayOffsetRange } from '@/util/date'
 import Figure from '@/components/figure'
+import { getUser } from '@/store'
 
 @Component({
   components: {
@@ -94,7 +95,7 @@ export default class Overview extends ViewBase {
 
   filmSummary = {}
 
-  brandList: any[] = []
+  brandOrFilmList: any[] = []
 
   chartNav = '7days'
 
@@ -121,6 +122,11 @@ export default class Overview extends ViewBase {
     }
   ]
 
+  get isFilm() {
+    const user = getUser()
+    return user && user.systemCode == 'film' || false
+  }
+
   gotoRoute(route: RawLocation) {
     const to = typeof route == 'string' ? { name: route } : route
     this.$router.push(to)
@@ -129,7 +135,7 @@ export default class Overview extends ViewBase {
   async created() {
     this.initStats()
     this.queryReport()
-    this.initBrandList()
+    this.initBrandOrFilmList()
   }
 
   async initStats() {
@@ -139,9 +145,9 @@ export default class Overview extends ViewBase {
     this.filmSummary = filmSummary
   }
 
-  async initBrandList() {
-    const list = await getBrandList()
-    this.brandList = list
+  async initBrandOrFilmList() {
+    const list = this.isFilm ? await getFilmList() : await getBrandList()
+    this.brandOrFilmList = list
   }
 
   async queryReport() {
