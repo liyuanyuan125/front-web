@@ -144,12 +144,9 @@ export async function getFilmList() {
     data: {
       items
     }
-  } = await get('/customer/companies/detail-movies', {
-    pageIndex: 1,
-    pageSize: 5,
-  })
+  } = await get('/customer/companies/detail-movies')
 
-  const list = (items || []).map((it: any) => ({
+  const list = (items as any[] || []).slice(0, 5).map(it => ({
     id: it.movieId,
     name: it.movieTitle,
     logo: it.logoUrl,

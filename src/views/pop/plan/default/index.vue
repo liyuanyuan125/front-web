@@ -417,6 +417,7 @@ export default class Apps extends ViewBase {
         align: 'center'
       }
     ]
+    const specification = this.item.specification || 0
     if (this.tag == 1) {
       return [
         ...one,
@@ -427,7 +428,7 @@ export default class Apps extends ViewBase {
         },
         ...four,
         {
-          title: '45s 刊例价（元/千人次）',
+          title: `${specification}s 刊例价（元/千人次）`,
           width: 136,
           key: 'cpm',
           align: 'center',

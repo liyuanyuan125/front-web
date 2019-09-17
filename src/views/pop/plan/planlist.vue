@@ -4,15 +4,16 @@
       <span class="adver-tiele">广告计划</span>
       <Button
         type="primary"
-        :to="{name: 'pop-business-add'}"
+        :to="{name: 'pop-planlist-add'}"
         class="btn-new"
         v-auth="'promotion.ad-plan#create'"
       >
-        <Icon type="ios-add" size="27"/>新建商业广告计划
+        <Icon type="ios-add" size="27"/> 新建商业广告计划
       </Button>
+
       <Button
         type="primary"
-        :to="{name: 'pop-planlist-add'}"
+        :to="{name: 'pop-business-add'}"
         class="btn-new"
         style="margin-right: 20px"
         v-if="systemCode == 'film'"
@@ -130,13 +131,16 @@
             <div v-else>
               <span class="edit-btn" v-if="row.status == 1" @click="sure(row.id)">确认方案</span>
               <div v-if="row.status == 1 || row.status == 2">
-                <p @click="plandetail(row.id)">详情</p>
-                <p @click="plandEdit(row.id, row.advertTypeCode)">编辑</p>
+                <!-- <p @click="plandetail(row.id)">详情</p> -->
+                <!-- <p @click="plandEdit(row.id, row.advertTypeCode)">编辑</p> -->
                 <p @click="plandel(row.id)">删除</p>
               </div>
               <div v-if="row.status == 3 || row.status == 4">
                 <span class="edit-btn" v-if="row.status == 3" @click="pay(row.id)">立即缴费</span>
-                <div class="adver-edit">
+                <div class="adver-edit" v-if="row.status == 3">
+                  <p @click="planCancel(row.id)">取消</p>
+                </div>
+                <div class="adver-edit" v-else>
                   <p @click="plandetail(row.id)">详情</p>
                   <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
                   <p @click="plandel(row.id)">删除</p>
