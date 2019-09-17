@@ -14,6 +14,7 @@
         type="primary"
         :to="{name: 'pop-planlist-add'}"
         class="btn-new"
+        style="margin-right: 20px"
         v-if="systemCode == 'film'"
         v-auth="'promotion.ad-plan#create'"
       >
