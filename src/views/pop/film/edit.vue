@@ -1,9 +1,6 @@
 <template>
   <div class="pagehome">
-    <div class="create-title-text">
-      <p>平台映前广告计费标准最小时长单位为15s，为节省您的广告投放成本，请准确设置广告片时长规格；时长规格不得低于广告片实际时长 广告片通过审核后，
-      平台会统一为您进行转码为影院可播放的格式；转码费用标准为【3,000.00元/15s】</p>
-    </div>
+     <textDlg />
      <Form :model="form" ref="dataform" :rules="rule" :label-width="130" class="jyd-form film-edit">
        <div class="item-center">
         <FormItem  label="名称" prop="name">
@@ -61,7 +58,7 @@
           </FormItem>
 
           <FormItem label="授权文件扫描件" prop="grantFileIds">
-            <Upload  v-model="form.grantFileIds":max-count="6" multiple accept="images/*"  confirm-on-del/>
+            <Upload  v-model="form.grantFileIds" :max-count="6" multiple accept="images/*"  confirm-on-del/>
               <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
           </FormItem>
         </div>
@@ -92,6 +89,7 @@ import customerList from '@/components/selectList/customerList.vue'
 import brandList from '@/components/selectList/brandList.vue'
 import productList from '@/components/selectList/productList.vue'
 import OssUploader from '@/components/videoUploader'
+import textDlg from './components/textDlg.vue'
 
 @Component({
   components: {
@@ -99,7 +97,8 @@ import OssUploader from '@/components/videoUploader'
     OssUploader,
     customerList,
     brandList,
-    productList
+    productList,
+    textDlg
   }
 })
 
@@ -117,7 +116,6 @@ export default class Main extends ViewBase {
 
   // 是否正在上传
   uploading = false
-  srcFileId: any = null
   fileId = null
 
   // 转码费
@@ -187,7 +185,7 @@ export default class Main extends ViewBase {
     }
   }
 
-  mounted() {
+  async mounted() {
     this.creSpecificationList()
     // 编辑详情
     if (this.$route.params.id) {
@@ -239,15 +237,19 @@ export default class Main extends ViewBase {
      const translated = this.form.translated
      const { data } = await transFee({ specification, translated })
      this.transFee = data.transFee
-     return this.transFee
+     return data
   }
 
   async createSubmit(dataform: any) {
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) { return this.scrollToError()}
     // 二次确定弹框
-    const transFreeCount = await this.handleChangeSpe()
-    await confirm(`数字转制费用：${transFreeCount} 元`, {title: '确认新建广告片'})
+    const data = await this.handleChangeSpe()
+    if (this.form.translated == 1) {
+      await confirm(`数字转制费用：${data.transFee} 元`, {title: '确认新建广告片'})
+    } else {
+      await confirm(`关联活动费用: ${data.promotionPrice} 元`, {title: '确认新建广告片'})
+    }
     this.createSub()
   }
 
@@ -285,18 +287,18 @@ export default class Main extends ViewBase {
     if (!volid) {
       return this.scrollToError()
     }
-
     // 视频(默认传后台fileId， 重新上传视频则传url和size)
     let srcFileId = null
     const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
-    if (size == 0) {
+    if (!size) {
       srcFileId = this.fileId
     } else {
       srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null
     }
 
     // 营业执照扫描文件
-    const licenseFileId = this.form.licenseFileId ? this.form.licenseFileId[0].fileId : null
+    const licenLen = this.form.licenseFileId.length
+    const licenseFileId = licenLen > 1 ? this.form.licenseFileId[0].fileId : null
     // 授权扫描文件
     const grantFileIds = (this.form.grantFileIds || []).map((it: any) => it.fileId)
 
@@ -311,7 +313,7 @@ export default class Main extends ViewBase {
         srcFileId,
         size: size || null,
         licenseFileId,
-        grantFileIds,
+        grantFileIds: grantFileIds.length > 1 ? grantFileIds : null ,
         videoType: 2, // 影片类型 1 = 预告片 2 = 商业片
       }, id)
       this.$router.push({name: 'pop-film'})

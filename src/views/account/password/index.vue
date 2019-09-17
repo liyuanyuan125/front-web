@@ -4,7 +4,7 @@
       <span class="adver-tiele">修改密码</span>
     </h3>
     <Form ref="form" :model="from" class="auth-box edit-input from" :rules="dataRule" :label-width="100">
-      <FormItem label="邮箱账号" class="item-account-email">
+      <FormItem label="登录账号" class="item-account-email">
         <em class="login-email">{{loginEmail}}</em>
       </FormItem>
       <FormItem label="输入旧密码" prop="oldPassword">

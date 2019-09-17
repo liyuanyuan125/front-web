@@ -95,3 +95,10 @@ export async function companyMovies() {
     const res = get('/customer/companies/movies')
     return res
 }
+
+// 获取活动价格和非活动价格列表
+// http://yapi.aiads-dev.com/project/139/interface/api/6291
+export async function transFeeList() {
+    const res = get('/xadvert/videos/trans-fee-list')
+    return res
+}
