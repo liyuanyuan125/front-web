@@ -457,14 +457,16 @@ export default class Plan extends ViewBase {
         item: {
           videoId: ''
         },
-        id: val.id
+        id: val.id,
+        advertTypeCode: val.advertTypeCode
       }
     } else {
       this.relevanVis = {
         visible: true,
         title: '修改广告片',
         item: val,
-        id: val.id
+        id: val.id,
+        advertTypeCode: val.advertTypeCode
       }
     }
   }
