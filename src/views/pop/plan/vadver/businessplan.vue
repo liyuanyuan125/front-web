@@ -279,7 +279,7 @@ export default class Promotion extends ViewBase {
         pageIndex: 1,
         pageSize: 288,
         status: this.setadver ? '' : 4,
-        videoType: 2
+        videoType: 1
       }) )
       this.adverList = (data.items || []).map((it: any) => {
         const movieId = it.movieId || '0'
@@ -414,7 +414,7 @@ export default class Promotion extends ViewBase {
         info('请选择广告片规格')
         return
       }
-      const { data } = await estimate({budgetAmount: val, specification: price })
+      const { data } = await estimate({budgetAmount: val, specification: price, advertType: 'BRAND' })
       this.nums = `${formatCurrency(data.estimatePersonCount * 0.7, 0)}
       ~ ${formatCurrency(data.estimatePersonCount * 1.3, 0)}`
     } catch (ex) {
