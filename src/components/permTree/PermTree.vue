@@ -58,6 +58,7 @@ const toTreeData = (
           isLeaf,
           level,
           allPerms,
+          tip: node.tip || ''
         },
         render: (hh: any, { data }: any) => {
           /* tslint:disable */
