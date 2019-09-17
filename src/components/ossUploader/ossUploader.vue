@@ -165,7 +165,7 @@ export default class OssUploader extends ViewBase {
    */
   @Prop({ type: Object, default: () => ({}) }) param!: UploadParam
 
-  model: FileItem | null = null
+  model: FileItem = { ...defaultItem }
 
   status: Status = 'none'
 
@@ -242,6 +242,7 @@ export default class OssUploader extends ViewBase {
     this.error = ''
     this.uploader = null
     this.isPaused = false
+    this.model = { ...defaultItem }
   }
 
   onResume() {
@@ -276,12 +277,11 @@ export default class OssUploader extends ViewBase {
         ...item
       } as FileItem
       this.model = newModel
-      // 更新状态
       this.status = this.model.url ? 'done' : 'none'
     }
   }
 
-  @Watch('model', { deep: true })
+  @Watch('model', { deep: true, immediate: true })
   watchModel(value: FileItem) {
     if (hasChange(value, this.value)) {
       const nude = toFileItem(value)
