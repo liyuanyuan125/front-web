@@ -2,9 +2,15 @@
   <span :class="['perm-tree-item', 'perm-tree-item-level-' + inner.level]">
     <label class="title">{{inner.name}}</label>
     <CheckboxGroup v-model="perms" class="perm-list" v-if="inner.isLeaf">
-      <Checkbox v-for="it in inner.actions" :key="it.code" :disabled="readonly"
-        :label="it.code" class="perm-item">{{it.name}}</Checkbox>
+      <Checkbox
+        v-for="it in inner.actions"
+        :key="it.code"
+        :disabled="readonly || !!it.disabled"
+        :label="it.code"
+        class="perm-item"
+      >{{it.name}}</Checkbox>
     </CheckboxGroup>
+    <span class="perm-tree-item-tip" v-if="inner.tip">{{inner.tip}}</span>
   </span>
 </template>
 
@@ -76,5 +82,10 @@ export default class PermTreeItem extends ViewBase {
 }
 .perm-tree-item-level-1 .perm-list {
   margin-left: 18px;
+}
+
+.perm-tree-item-tip {
+  color: #e20;
+  margin-left: 20px;
 }
 </style>
