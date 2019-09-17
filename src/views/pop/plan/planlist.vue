@@ -82,7 +82,7 @@
             </p>
             <div>
               <div>
-                <div :class="{advert: row.advertType == 'TRAILER'}"></div>
+                <div :class="{advert: row.advertTypeCode == 'TRAILER'}"></div>
                 <img v-if="!row.ids" :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
                 <img v-else src="./assets/mock.png" :onerror="defaultImg" width="90px" height="90px">
               </div>
