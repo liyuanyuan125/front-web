@@ -250,6 +250,7 @@ export default class App extends ViewBase {
         align: 'center'
       }
     ]
+    const specification = this.deatilItem.specification || 0
     const five = [
       {
         title: '预估投放场次',
@@ -274,7 +275,7 @@ export default class App extends ViewBase {
         },
         ...four,
         {
-          title: '45s 刊例价（元/千人次）',
+          title: `${specification} 刊例价（元/千人次）`,
           width: 136,
           key: 'cpm',
           align: 'center',
