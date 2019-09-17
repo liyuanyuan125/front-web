@@ -14,6 +14,7 @@
         type="primary"
         :to="{name: 'pop-planlist-add'}"
         class="btn-new"
+        style="margin-right: 20px"
         v-if="systemCode == 'film'"
         v-auth="'promotion.ad-plan#create'"
       >
@@ -81,7 +82,7 @@
             </p>
             <div>
               <div>
-                <div :class="{advert: row.advertType == 'TRAILER'}"></div>
+                <div :class="{advert: row.advertTypeCode == 'TRAILER'}"></div>
                 <img v-if="!row.ids" :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
                 <img v-else src="./assets/mock.png" :onerror="defaultImg" width="90px" height="90px">
               </div>
@@ -456,14 +457,16 @@ export default class Plan extends ViewBase {
         item: {
           videoId: ''
         },
-        id: val.id
+        id: val.id,
+        advertTypeCode: val.advertTypeCode
       }
     } else {
       this.relevanVis = {
         visible: true,
         title: '修改广告片',
         item: val,
-        id: val.id
+        id: val.id,
+        advertTypeCode: val.advertTypeCode
       }
     }
   }
