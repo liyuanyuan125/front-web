@@ -1,9 +1,6 @@
 <template>
   <div class="pagehome">
-    <div class="create-title-text">
-      <p>平台映前广告计费标准最小时长单位为15s，为节省您的广告投放成本，请准确设置广告片时长规格；时长规格不得低于广告片实际时长 广告片通过审核后，
-      平台会统一为您进行转码为影院可播放的格式；转码费用标准为【3,000.00元/15s】</p>
-    </div>
+     <textDlg />
      <Form :model="form" ref="dataform" :rules="rule" :label-width="130" class="jyd-form film-edit">
        <div class="item-center">
         <FormItem  label="名称" prop="name">
@@ -92,6 +89,7 @@ import customerList from '@/components/selectList/customerList.vue'
 import brandList from '@/components/selectList/brandList.vue'
 import productList from '@/components/selectList/productList.vue'
 import OssUploader from '@/components/videoUploader'
+import textDlg from './components/textDlg.vue'
 
 @Component({
   components: {
@@ -99,7 +97,8 @@ import OssUploader from '@/components/videoUploader'
     OssUploader,
     customerList,
     brandList,
-    productList
+    productList,
+    textDlg
   }
 })
 
