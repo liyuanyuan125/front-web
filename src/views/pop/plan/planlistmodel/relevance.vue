@@ -39,6 +39,7 @@
             :key="item.id" v-for="item in releList">
             <div class="flex-box inner">
               <div class="left-item">
+                <div :class="{advert: item.videoType == 1}"></div>
                 <img :src="item.logo ? item.logo : defaultImg" :onerror="defaultImg" class="img" />
               </div>
               
@@ -125,7 +126,8 @@ export default class Relevan extends ViewBase {
       const { data } = await advertising( clean({
         ...this.pageList,
         status: this.single ? 4 : '',
-        name: this.form.name
+        name: this.form.name,
+        videoType: this.value.advertTypeCode == 'TRAILER' ? 1 : 2
       }) )
       this.releList = data.items || []
       this.total = data.totalCount
@@ -228,6 +230,13 @@ export default class Relevan extends ViewBase {
 @import '~@/views/account/less/common.less';
 .item-top {
   padding-top: 20px;
+}
+.advert {
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  background: url('~@/assets/icon/prevue.png') no-repeat left top;
+  background-size: 40px auto;
 }
 /deep/ .ivu-modal-body {
   padding: 0;
@@ -420,7 +429,7 @@ export default class Relevan extends ViewBase {
       content: '';
       color: #00202d;
       position: absolute;
-      left: 8px;
+      right: 8px;
       top: 8px;
       background: url(../assets/sure.png);
       background-size: 20px;
