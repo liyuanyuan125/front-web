@@ -237,15 +237,19 @@ export default class Main extends ViewBase {
      const translated = this.form.translated
      const { data } = await transFee({ specification, translated })
      this.transFee = data.transFee
-     return this.transFee
+     return data
   }
 
   async createSubmit(dataform: any) {
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) { return this.scrollToError()}
     // 二次确定弹框
-    const transFreeCount = await this.handleChangeSpe()
-    await confirm(`数字转制费用：${transFreeCount} 元`, {title: '确认新建广告片'})
+    const data = await this.handleChangeSpe()
+    if (this.form.translated == 1) {
+      await confirm(`数字转制费用：${data.transFee} 元`, {title: '确认新建广告片'})
+    } else {
+      await confirm(`关联活动费用: ${data.promotionPrice} 元`, {title: '确认新建广告片'})
+    }
     this.createSub()
   }
 
