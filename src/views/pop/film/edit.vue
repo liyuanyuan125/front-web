@@ -290,7 +290,11 @@ export default class Main extends ViewBase {
     // 视频(默认传后台fileId， 重新上传视频则传url和size)
     let srcFileId = null
     const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
-    if (!size) {
+    const url = this.form.srcFileId ? this.form.srcFileId.url : null
+
+    if (!size && !url) {
+      srcFileId = null
+    } else if (!size && url) {
       srcFileId = this.fileId
     } else {
       srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null

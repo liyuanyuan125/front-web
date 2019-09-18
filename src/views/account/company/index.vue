@@ -2,10 +2,10 @@
   <div class="page home-bg as">
     <com-statu :statuCode="displayStatus" v-if="displayStatus != 5"></com-statu>
     <div class="content">
-      <div class="bs">
+      <div class="bs" v-if="company.companyType == 1">
         <Button type="primary" class="button-ok bok"  :to="{ name: 'account-info-accedit' }" >修改</Button>
         <h3 class="layout-title">公司信息</h3>
-        <Row class="text-rows">
+        <Row class="text-rows" >
           <Col :span="12">
             <p>
               <label class="hui">公司名称</label>
@@ -41,10 +41,15 @@
         <h3 class="layout-title">开户信息</h3>
         <Row class="text-rows">
           <Col :span="24">
-            <p>
+            <p v-if="company.companyType == 1">
               <label class="hui">资质类型</label>
-              {{queryTypeList(company.qualificationType)}}
+              <span v-for="item in qualificationTypeList" :key="item.code" v-if="item.code == company.qualificationType">{{item.desc}}</span>
             </p>
+            <p v-else>
+              <label class="hui">资质类型</label>
+              <span v-for="item in personQualificationTypeList" :key="item.code" v-if="item.code == company.qualificationType">{{item.desc}}</span>
+            </p>
+
             <p>
               <label class="hui">资质编号</label>
               {{company.qualificationCode}}
@@ -120,7 +125,8 @@ export default class Main extends ViewBase {
     dataList: []
   }
 
-  qualificationTypeList = []
+  qualificationTypeList = [] // 资质类型
+  personQualificationTypeList = [] // 身份证
 
   column = [
     { title: '变更编号', key: 'id' },
@@ -194,7 +200,8 @@ export default class Main extends ViewBase {
       this.account = data.account
       this.company = data.company
       this.systemList = data.systemList
-      this.qualificationTypeList = data.qualificationTypeList
+      this.qualificationTypeList = data.qualificationTypeList || []
+      this.personQualificationTypeList = data.personQualificationTypeList || []
 
       this.queryAccuontList()
     } catch (ex) {
@@ -220,16 +227,6 @@ export default class Main extends ViewBase {
       })
     })
     this.accountType = array.length > 1 ? `${array[0]} / ${array[1]}` : array.toString()
-  }
-
-  queryTypeList(val: any) {
-    // 查询资质类型
-    let list: any = this.qualificationTypeList
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].code == val) {
-        return list[i].desc
-      }
-    }
   }
 
   async accountChangeList() {
