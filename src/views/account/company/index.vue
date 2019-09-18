@@ -193,7 +193,11 @@ export default class Main extends ViewBase {
   dataList = []
 
   async mounted() {
-    try {
+    this.detailList()
+  }
+
+  async detailList() {
+     try {
       const { data } = await accountDetail()
       this.detailDate = data
       this.displayStatus = data.company.displayStatus - 1
@@ -212,7 +216,8 @@ export default class Main extends ViewBase {
   }
 
   updataChangeList() {
-    this.accountChangeList()
+    this.informa.visibleInforma = false
+    // this.detailList()
   }
 
   queryAccuontList() {

@@ -6,30 +6,32 @@
         账号变更期间不会影响账号的正常使用。
       </div>
       <Form ref="form" :model="form" :label-width="90" :rules="formRules" class="edit-input">
-        <FormItem label="公司名称" prop="companyName">
+        <FormItem label="公司名称" prop="companyName" v-if="value.dataList.company.companyType == 1">
           <Input v-model="form.companyName" placeholder="请输入公司名称" :maxlength="40"></Input>
         </FormItem>
         <FormItem label="资质类型" prop="qualificationType">
-          <Select v-model="form.qualificationType" placeholder="请选择资质类型" style="width:400px" v-if="value.dataList.companyType == 1">
-            <Option
+          <Select v-model="form.qualificationType" placeholder="请选择资质类型" style="width:400px" >
+            <Option 
+              v-if="value.dataList.company.companyType == 1"
               v-for="item in value.dataList.qualificationTypeList"
               :value="item.code"
               :key="item.code"
             >{{ item.desc }}</Option>
-          </Select>
 
-           <Select v-model="form.qualificationType" placeholder="请选择资质类型" style="width:400px" v-else>
-            <Option
+            <Option 
+              v-else
               v-for="item in value.dataList.personQualificationTypeList"
               :value="item.code"
               :key="item.code"
             >{{ item.desc }}</Option>
-          </Select>
 
+          </Select>
         </FormItem>
+
         <FormItem label="资质编号" prop="qualificationCode">
           <Input v-model="form.qualificationCode" placeholder="请输入资质编号"></Input>
         </FormItem>
+
         <FormItem label="资质图片" prop="imageList">
           <div class="upload-wrap">
             <Upload
@@ -42,6 +44,7 @@
             <div class="upload-tip">支持1或3张，格式为jpg/jpeg/png，大小不超过5M的图片</div>
           </div>
         </FormItem>
+
       </Form>
       <div slot="footer" class="btn-center-footer">
         <Button class="button-cancel ok" @click="value.visibleInforma = false">取消</Button>
@@ -65,23 +68,13 @@ export default class Change extends ViewBase {
   @Prop({ type: Object }) value!: any
 
   form: any = {
-    accountType: [],
-    companyName: '',
-    imageList: [],
-    qualificationType: '',
-    qualificationCode: ''
+    imageList: []
   }
+
   mounted() {
     const company = this.value.dataList.company
-    const account = this.value.dataList.account
-    const systems = this.value.dataList.account.systems
-    const arryList: [number, string] = systems.map((item: any) => {
-      return item.code
-    })
     this.form = {
-      accountType: arryList,
       companyName: company.name,
-
       qualificationType: company.qualificationType || '',
       qualificationCode: company.qualificationCode,
       imageList: company.images || []
@@ -89,16 +82,6 @@ export default class Change extends ViewBase {
   }
   get formRules() {
     return {
-      accountType: [
-        {
-          require: true,
-          message: '请选择账号类型',
-          trigger: 'change',
-          validator(rule: any, value: string[], callback: any) {
-            value.length == 0 ? callback(new Error('请选择账号类型')) : callback()
-          }
-        }
-      ],
       companyName: [
         {
           require: true,
@@ -144,11 +127,12 @@ export default class Change extends ViewBase {
       return
     }
     try {
-      const cloneForm = Object.assign(this.form)
-      cloneForm.imageList = cloneForm.imageList.map((item: any) => item.fileId)
-      await changeCompanyList(cloneForm)
+      const imageList = (this.form.imageList || []).map((item: any) => item.fileId)
+      await changeCompanyList({
+        ...this.form,
+        imageList
+      })
       this.$emit('updataChangeList')
-      this.value.visibleInforma = false
     } catch (ex) {
       this.handleError(ex)
     }
