@@ -136,8 +136,10 @@ export default class Main extends ViewBase {
   async createSubmit(dataform: any) {
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) { return}
-    const transFreeCount = await this.handleChangeSpe()
-    await confirm(`数字转制费用：${transFreeCount} 元`, {title: '确认新建广告片'})
+    const data = await this.handleChangeSpe()
+    const free = this.form.translated == 1 ? data.transFee : data.promotionPrice
+
+    await confirm(`数字转制费用：${free} 元`, {title: '确认新建广告片'})
     this.createSub()
   }
 
@@ -146,7 +148,7 @@ export default class Main extends ViewBase {
      const translated = this.form.translated
      const { data } = await transFee({ specification, translated })
      this.transFee = data.transFee
-     return this.transFee
+     return data
   }
 
   async companyMoviesList() {
@@ -185,7 +187,11 @@ export default class Main extends ViewBase {
     // 视频(默认传后台fileId， 重新上传视频则传url和size)
     let srcFileId = null
     const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
-    if (size == 0) {
+    const url = this.form.srcFileId ? this.form.srcFileId.url : null
+
+    if (!size && !url) {
+      srcFileId = null
+    } else if (!size && url) {
       srcFileId = this.fileId
     } else {
       srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null

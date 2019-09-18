@@ -10,13 +10,22 @@
           <Input v-model="form.companyName" placeholder="请输入公司名称" :maxlength="40"></Input>
         </FormItem>
         <FormItem label="资质类型" prop="qualificationType">
-          <Select v-model="form.qualificationType" placeholder="请选择资质类型" style="width:400px">
+          <Select v-model="form.qualificationType" placeholder="请选择资质类型" style="width:400px" v-if="value.dataList.companyType == 1">
             <Option
               v-for="item in value.dataList.qualificationTypeList"
               :value="item.code"
               :key="item.code"
             >{{ item.desc }}</Option>
           </Select>
+
+           <Select v-model="form.qualificationType" placeholder="请选择资质类型" style="width:400px" v-else>
+            <Option
+              v-for="item in value.dataList.personQualificationTypeList"
+              :value="item.code"
+              :key="item.code"
+            >{{ item.desc }}</Option>
+          </Select>
+
         </FormItem>
         <FormItem label="资质编号" prop="qualificationCode">
           <Input v-model="form.qualificationCode" placeholder="请输入资质编号"></Input>
@@ -160,7 +169,6 @@ export default class Change extends ViewBase {
 /deep/ .ivu-modal-header {
   border-bottom: 0;
   padding: 10px 13px;
-  // background: #f9f9f9;
 }
 
 /deep/ .ivu-modal-body {

@@ -248,7 +248,7 @@ export default class Main extends ViewBase {
     if (this.form.translated == 1) {
       await confirm(`数字转制费用：${data.transFee} 元`, {title: '确认新建广告片'})
     } else {
-      await confirm(`关联活动费用: ${data.promotionPrice} 元`, {title: '确认新建广告片'})
+      await confirm(`数字转制费用: ${data.promotionPrice} 元`, {title: '确认新建广告片'})
     }
     this.createSub()
   }
@@ -290,7 +290,11 @@ export default class Main extends ViewBase {
     // 视频(默认传后台fileId， 重新上传视频则传url和size)
     let srcFileId = null
     const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
-    if (!size) {
+    const url = this.form.srcFileId ? this.form.srcFileId.url : null
+
+    if (!size && !url) {
+      srcFileId = null
+    } else if (!size && url) {
       srcFileId = this.fileId
     } else {
       srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null
