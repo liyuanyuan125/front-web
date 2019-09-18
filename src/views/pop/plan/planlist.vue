@@ -148,7 +148,6 @@
               </div>
               <div v-if="row.status == 12">
                 <div class="adver-edit">
-                  <p @click="plandetail(row.id)">详情</p>
                   <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
                   <p @click="plandel(row.id)">删除</p>
                 </div>
@@ -412,7 +411,7 @@ export default class Plan extends ViewBase {
   async planCancel(val: any, id: any) {
     await confirm(`是否取消广告计划：${val}`, { title: '取消广告计划' })
     try {
-      await planCancel(id)
+      await planCancel(val)
       this.tableList()
     } catch (ex) {
       this.handleError(ex)
