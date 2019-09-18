@@ -384,7 +384,7 @@ export default class Promotion extends ViewBase {
           id: this.$route.params.setid ? this.$route.params.setid : '',
           specification: this.setadver ? this.query.specification + '' : this.form.specification + '',
           budgetAmount: Number(this.form.budgetAmount * 10000),
-          advertTypeCode: 'BRAND' }, [0, '']))
+          advertTypeCode: 'TRAILER' }, [0, '']))
         if (!this.$route.params.setid) {
           this.$router.push({
             name: 'pop-business-add',
@@ -414,7 +414,7 @@ export default class Promotion extends ViewBase {
         info('请选择广告片规格')
         return
       }
-      const { data } = await estimate({budgetAmount: val, specification: price, advertType: 'BRAND' })
+      const { data } = await estimate({budgetAmount: val, specification: price, advertType: 'TRAILER' })
       this.nums = `${formatCurrency(data.estimatePersonCount * 0.7, 0)}
       ~ ${formatCurrency(data.estimatePersonCount * 1.3, 0)}`
     } catch (ex) {
