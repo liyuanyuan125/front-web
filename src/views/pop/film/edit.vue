@@ -52,8 +52,9 @@
           <FormItem label="营业执照有效期" prop="validity">
             <DatePicker v-model="form.validity" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择有效期"></DatePicker>
           </FormItem>
+
           <FormItem label="营业执照扫描件" prop="licenseFileId">
-            <Upload v-model="form.licenseFileId" :max-count="1"  multiple accept="images/*" confirm-on-del/>
+            <Upload v-model="form.licenseFileId" :max-count="1"  accept="images/*" confirm-on-del/>
               <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
           </FormItem>
 
@@ -167,7 +168,7 @@ export default class Main extends ViewBase {
           trigger: 'change',
           type: 'array',
           validator(rule: any, value: any[], callback: any) {
-            value && value.length == 0 ? callback(new Error(rule.message)) : callback()
+            !value ? callback(new Error(rule.message)) : callback()
           }
         }
       ],
@@ -302,7 +303,7 @@ export default class Main extends ViewBase {
 
     // 营业执照扫描文件
     const licenLen = this.form.licenseFileId.length
-    const licenseFileId = licenLen > 1 ? this.form.licenseFileId[0].fileId : null
+    const licenseFileId = licenLen >= 1 ? this.form.licenseFileId[0].fileId : null
     // 授权扫描文件
     const grantFileIds = (this.form.grantFileIds || []).map((it: any) => it.fileId)
 
@@ -317,7 +318,7 @@ export default class Main extends ViewBase {
         srcFileId,
         size: size || null,
         licenseFileId,
-        grantFileIds: grantFileIds.length > 1 ? grantFileIds : null ,
+        grantFileIds: grantFileIds.length >= 1 ? grantFileIds : null ,
         videoType: 2, // 影片类型 1 = 预告片 2 = 商业片
       }, id)
       this.$router.push({name: 'pop-film'})

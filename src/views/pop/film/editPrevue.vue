@@ -25,9 +25,9 @@
         </RadioGroup>
           <em class="remark">影院进行排播时，需要将视频文件转制为特定的DCP包，请确定是否需要平台进行格式转制</em>
         </FormItem>
-
+        
         <FormItem label="广告片小样">
-          <OssUploader v-model="form.srcFileId"  :param="{fileType: 3, subCategory: 1}"></OssUploader>
+          <OssUploader v-model="form.srcFileId" :param="{fileType: 3, subCategory: 1}"></OssUploader>
           <em class="remark">支持（.rmvb\.mp4\.mov）等视频格式；视频大小不超过100M；上传广告片小样可提升系统审核速度</em>
         </FormItem>
 
@@ -68,7 +68,8 @@ import textDlg from './components/textDlg.vue'
 })
 export default class Main extends ViewBase {
   form: any = {
-    translated: 1
+    translated: 1,
+    srcFileId: null
   }
   // 是否正在上传
   uploading = false
@@ -176,7 +177,6 @@ export default class Main extends ViewBase {
 
   // 编辑
   async editSubmit(dataform: any) {
-    // this.errorPerm =  this.srcFileId == '' ? '请选择上传视频' : ''
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) {
       return
