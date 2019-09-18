@@ -134,11 +134,13 @@
                 <!-- <p @click="plandetail(row.id)">详情</p> -->
                 <!-- <p @click="plandEdit(row.id, row.advertTypeCode)">编辑</p> -->
                 <p @click="plandel(row.id)">删除</p>
+                <p @click="plandetail(row.id)">详情</p>
               </div>
               <div v-if="row.status == 3 || row.status == 4">
                 <span class="edit-btn" v-if="row.status == 3" @click="pay(row.id)">立即缴费</span>
                 <div class="adver-edit" v-if="row.status == 3">
                   <p @click="planCancel(row.id)">取消</p>
+                  <p @click="plandetail(row.id)">详情</p>
                 </div>
                 <div class="adver-edit" v-else>
                   <p @click="plandetail(row.id)">详情</p>
@@ -150,6 +152,7 @@
                 <div class="adver-edit">
                   <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
                   <p @click="plandel(row.id)">删除</p>
+                  <p @click="plandetail(row.id)">详情</p>
                 </div>
               </div>
               <div v-if="(row.status > 4 && row.status < 8) ">
