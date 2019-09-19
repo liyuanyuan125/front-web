@@ -45,13 +45,15 @@
             :key="i"
             class="brand-item"
           >
-            <router-link
-              :to="{ name: isFilm ? 'film-movie' : 'brand-home', params: { id: it.id } }"
-              class="brand-item-in"
-              target="_blank"
-            >
-              <Figure :src="it.logo"/>
-            </router-link>
+            <Tooltip :content="it.name">
+              <router-link
+                :to="{ name: isFilm ? 'film-movie' : 'brand-home', params: { id: it.id } }"
+                class="brand-item-in"
+                target="_blank"
+              >
+                <Figure :src="it.logo"/>
+              </router-link>
+            </Tooltip>
           </li>
         </ul>
       </li>
@@ -298,6 +300,9 @@ export default class Overview extends ViewBase {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
+  /deep/ .figure-component {
+    background-color: transparent;
+  }
 }
 
 .action-node {
