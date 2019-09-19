@@ -66,7 +66,7 @@
 
          <div class=" create-submit-btn">
            <Button v-if="!$route.params.id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
-           <Button v-else type="primary" class="btn"  @click="editSubmit('dataform')">保存修改</Button>
+           <Button v-else type="primary" class="btn"  @click="createSubmit('dataform')">保存修改</Button>
            <Button class="cancel-btn" @click="$router.push({name: 'pop-film'})">取消</Button>
          </div>
 
@@ -246,11 +246,11 @@ export default class Main extends ViewBase {
     if (!volid) { return this.scrollToError()}
     // 二次确定弹框
     const data = await this.handleChangeSpe()
-    if (this.form.translated == 1) {
-      await confirm(`数字转制费用：${data.transFee} 元`, {title: '确认新建广告片'})
-    } else {
-      await confirm(`数字转制费用: ${data.promotionPrice || data.transFee} 元`, {title: '确认新建广告片'})
-    }
+    const free = this.form.translated == 1 ? data.transFee : (data.promotionPrice || data.transFee)
+    await confirm(`数字转制费用：${free} 元`, {title: '确认新建广告片'})
+    // 判断调用添加还是编辑接口
+    const id = this.$route.params.id
+    !id ? this.createSub() : this.editSubmit()
     this.createSub()
   }
 
@@ -283,11 +283,11 @@ export default class Main extends ViewBase {
     }
   }
 
-  async editSubmit(dataform: any) {
-    const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) {
-      return this.scrollToError()
-    }
+  async editSubmit() {
+    // const volid = await (this.$refs[dataform] as any).validate()
+    // if (!volid) {
+    //   return this.scrollToError()
+    // }
     // 视频(默认传后台fileId， 重新上传视频则传url和size)
     let srcFileId = null
     const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null

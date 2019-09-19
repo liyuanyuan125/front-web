@@ -39,7 +39,7 @@
 
          <div class=" create-submit-btn">
            <Button v-if="!$route.params.id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
-           <Button v-else type="primary" class="btn"  @click="editSubmit('dataform')">保存修改</Button>
+           <Button v-else type="primary" class="btn"  @click="createSubmit('dataform')">保存修改</Button>
            <Button class="cancel-btn" @click="$router.push({name: 'pop-film'})">取消</Button>
          </div>
 
@@ -134,16 +134,6 @@ export default class Main extends ViewBase {
     }
   }
 
-  async createSubmit(dataform: any) {
-    const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) { return}
-    const data = await this.handleChangeSpe()
-    const free = this.form.translated == 1 ? data.transFee : (data.promotionPrice || data.transFee)
-
-    await confirm(`数字转制费用：${free} 元`, {title: '确认新建广告片'})
-    this.createSub()
-  }
-
   async handleChangeSpe() {
      const specification = this.form.specification
      const translated = this.form.translated
@@ -155,6 +145,19 @@ export default class Main extends ViewBase {
   async companyMoviesList() {
     const { data } = await companyMovies()
     this.movieList = data || []
+  }
+
+
+  async createSubmit(dataform: any) {
+    const volid = await (this.$refs[dataform] as any).validate()
+    if (!volid) { return}
+    const data = await this.handleChangeSpe()
+    const free = this.form.translated == 1 ? data.transFee : (data.promotionPrice || data.transFee)
+
+    await confirm(`数字转制费用：${free} 元`, {title: '确认新建广告片'})
+    // 判断调用添加还是编辑接口
+    const id = this.$route.params.id
+    !id ? this.createSub() : this.editSubmit()
   }
 
   // 新建
@@ -176,11 +179,11 @@ export default class Main extends ViewBase {
   }
 
   // 编辑
-  async editSubmit(dataform: any) {
-    const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) {
-      return
-    }
+  async editSubmit() {
+    // const volid = await (this.$refs[dataform] as any).validate()
+    // if (!volid) {
+    //   return
+    // }
 
     const id = this.$route.params.id
 
