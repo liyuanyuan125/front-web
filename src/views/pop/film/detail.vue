@@ -3,7 +3,7 @@
      <textDlg>
        <div slot="detailStatus">
           <div v-if="status == 1" class="status-title">待审核，您上传的广告片正在审核中</div>
-      <div v-if="status == 5" class="status-title">已拒绝，拒绝原因：{{resultReason}}</div>
+      <div v-if="status == 5" class="status-title">已拒绝，拒绝原因：{{item.resultReason}}</div>
       <div v-if="status == 2" class="status-title">待支付，数字转制费{{item.transFee}}元</div>
       <div v-if="status == 3" class="status-title">转码中，您已支付{{item.transFee}}的数字转制费</div>
        </div>
