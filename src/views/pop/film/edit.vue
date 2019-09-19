@@ -249,7 +249,7 @@ export default class Main extends ViewBase {
     if (this.form.translated == 1) {
       await confirm(`数字转制费用：${data.transFee} 元`, {title: '确认新建广告片'})
     } else {
-      await confirm(`数字转制费用: ${data.promotionPrice} 元`, {title: '确认新建广告片'})
+      await confirm(`数字转制费用: ${data.promotionPrice || data.transFee} 元`, {title: '确认新建广告片'})
     }
     this.createSub()
   }

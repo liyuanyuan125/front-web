@@ -138,7 +138,7 @@ export default class Main extends ViewBase {
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) { return}
     const data = await this.handleChangeSpe()
-    const free = this.form.translated == 1 ? data.transFee : data.promotionPrice
+    const free = this.form.translated == 1 ? data.transFee : (data.promotionPrice || data.transFee)
 
     await confirm(`数字转制费用：${free} 元`, {title: '确认新建广告片'})
     this.createSub()
