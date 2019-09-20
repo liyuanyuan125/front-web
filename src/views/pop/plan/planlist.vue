@@ -27,7 +27,7 @@
       <Row :gutter="20">
         <Col class="flex-box" :span="6" :offset="3">
           <div class="flex-box search-border-left" style="width: 100%">
-            <Input v-model="form.name" placeholder="请输入ID/名称进行搜索"/>
+            <Input v-model="form.query" placeholder="请输入ID/名称进行搜索"/>
             <Button type="primary" class="bth-search" @click="searchList">
               <Icon type="ios-search" size="22"/>
             </Button>
@@ -39,6 +39,7 @@
             <Option
               v-for="item in data.statusList"
               v-if="item.key != 0"
+              @on-change="() => pageList.pageIndex = 1"
               :key="item.key"
               :value="item.key"
             >{{item.text}}</Option>
@@ -219,7 +220,7 @@ export default class Plan extends ViewBase {
   form: any = {
     status: '',
     settlementStatus: '',
-    name: ''
+    query: ''
   }
   deliveryPositionList: any = []
   loading: any = false
