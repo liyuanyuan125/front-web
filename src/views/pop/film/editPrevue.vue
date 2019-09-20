@@ -38,7 +38,7 @@
         </FormItem>
 
          <div class=" create-submit-btn">
-           <Button v-if="!$route.params.id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
+           <Button v-if="!id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
            <Button v-else type="primary" class="btn"  @click="createSubmit('dataform')">保存修改</Button>
            <Button class="cancel-btn" @click="$router.push({name: 'pop-film'})">取消</Button>
          </div>
@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
 import { confirm } from '@/ui/modal'
@@ -66,11 +66,15 @@ import textDlg from './components/textDlg.vue'
     textDlg
   }
 })
+
 export default class Main extends ViewBase {
+  @Prop({ type: Number}) id!: number
+
   form: any = {
     translated: 1,
     srcFileId: null
   }
+
   // 是否正在上传
   uploading = false
   fileId = null
@@ -100,7 +104,7 @@ export default class Main extends ViewBase {
     this.creSpecificationList()
     this.companyMoviesList()
     // 编辑详情
-    if (this.$route.params.id) {
+    if (this.id) {
       this.detailList()
     }
   }
@@ -112,7 +116,7 @@ export default class Main extends ViewBase {
   }
 
   async detailList() {
-    const id = this.$route.params.id
+    const id = this.id
     try {
       const { data: { item } } = await detailPop(id)
       this.form = {
@@ -137,7 +141,8 @@ export default class Main extends ViewBase {
   async handleChangeSpe() {
      const specification = this.form.specification
      const translated = this.form.translated
-     const { data } = await transFee({ specification, translated })
+     const id = this.id
+     const { data } = await transFee({ specification, translated, id })
      this.transFee = data.transFee
      return data
   }
@@ -156,7 +161,7 @@ export default class Main extends ViewBase {
 
     await confirm(`数字转制费用：${free} 元`, {title: '确认新建广告片'})
     // 判断调用添加还是编辑接口
-    const id = this.$route.params.id
+    const id = this.id
     !id ? this.createSub() : this.editSubmit()
   }
 
@@ -185,7 +190,7 @@ export default class Main extends ViewBase {
     //   return
     // }
 
-    const id = this.$route.params.id
+    const id = this.id
 
     // 视频(默认传后台fileId， 重新上传视频则传url和size)
     let srcFileId = null
