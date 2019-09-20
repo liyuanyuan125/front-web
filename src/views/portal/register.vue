@@ -165,19 +165,18 @@ export default class Main extends ViewBase {
         }
       ],
       businessParentCode: [{ required: true, message: '请选择行业', trigger: 'blur' }],
-
-      area: [
-        {
-          required: true,
-          message: '公司地址不能为空',
-          trigger: 'change',
-          type: 'array',
-          validator(rule: any, value: number[], callback: any) {
-            const strVal = (value || []).join('');
-            /^0*$/.test(strVal) ? callback(new Error(rule.message)) : callback()
-          }
-        }
-      ],
+      area: [{ required: true, type: 'array', message: '公司地址不能为空', trigger: 'change' }],
+      // area: [
+      //   {
+      //     required: true,
+      //     message: '公司地址不能为空',
+      //     trigger: 'change',
+      //     type: 'array',
+      //     validator(rule: any, value: number[], callback: any) {
+      //       !value[0] ? callback(new Error(rule.message)) : callback()
+      //     }
+      //   }
+      // ],
 
       qualificationImageList: [
         {

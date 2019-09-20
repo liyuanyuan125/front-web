@@ -52,8 +52,9 @@
           <FormItem label="营业执照有效期" prop="validity">
             <DatePicker v-model="form.validity" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择有效期"></DatePicker>
           </FormItem>
+
           <FormItem label="营业执照扫描件" prop="licenseFileId">
-            <Upload v-model="form.licenseFileId" :max-count="1"  multiple accept="images/*" confirm-on-del/>
+            <Upload v-model="form.licenseFileId" :max-count="1"  accept="images/*" confirm-on-del/>
               <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
           </FormItem>
 
@@ -65,7 +66,7 @@
 
          <div class=" create-submit-btn">
            <Button v-if="!$route.params.id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
-           <Button v-else type="primary" class="btn"  @click="editSubmit('dataform')">保存修改</Button>
+           <Button v-else type="primary" class="btn"  @click="createSubmit('dataform')">保存修改</Button>
            <Button class="cancel-btn" @click="$router.push({name: 'pop-film'})">取消</Button>
          </div>
 
@@ -167,7 +168,7 @@ export default class Main extends ViewBase {
           trigger: 'change',
           type: 'array',
           validator(rule: any, value: any[], callback: any) {
-            value && value.length == 0 ? callback(new Error(rule.message)) : callback()
+            !value ? callback(new Error(rule.message)) : callback()
           }
         }
       ],
@@ -245,12 +246,11 @@ export default class Main extends ViewBase {
     if (!volid) { return this.scrollToError()}
     // 二次确定弹框
     const data = await this.handleChangeSpe()
-    if (this.form.translated == 1) {
-      await confirm(`数字转制费用：${data.transFee} 元`, {title: '确认新建广告片'})
-    } else {
-      await confirm(`数字转制费用: ${data.promotionPrice} 元`, {title: '确认新建广告片'})
-    }
-    this.createSub()
+    const free = this.form.translated == 1 ? data.transFee : (data.promotionPrice || data.transFee)
+    await confirm(`数字转制费用：${free} 元`, {title: '确认新建广告片'})
+    // 判断调用添加还是编辑接口
+    const id = this.$route.params.id
+    !id ? this.createSub() : this.editSubmit()
   }
 
 
@@ -282,11 +282,11 @@ export default class Main extends ViewBase {
     }
   }
 
-  async editSubmit(dataform: any) {
-    const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) {
-      return this.scrollToError()
-    }
+  async editSubmit() {
+    // const volid = await (this.$refs[dataform] as any).validate()
+    // if (!volid) {
+    //   return this.scrollToError()
+    // }
     // 视频(默认传后台fileId， 重新上传视频则传url和size)
     let srcFileId = null
     const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
@@ -302,7 +302,7 @@ export default class Main extends ViewBase {
 
     // 营业执照扫描文件
     const licenLen = this.form.licenseFileId.length
-    const licenseFileId = licenLen > 1 ? this.form.licenseFileId[0].fileId : null
+    const licenseFileId = licenLen >= 1 ? this.form.licenseFileId[0].fileId : null
     // 授权扫描文件
     const grantFileIds = (this.form.grantFileIds || []).map((it: any) => it.fileId)
 
@@ -317,7 +317,7 @@ export default class Main extends ViewBase {
         srcFileId,
         size: size || null,
         licenseFileId,
-        grantFileIds: grantFileIds.length > 1 ? grantFileIds : null ,
+        grantFileIds: grantFileIds.length >= 1 ? grantFileIds : null ,
         videoType: 2, // 影片类型 1 = 预告片 2 = 商业片
       }, id)
       this.$router.push({name: 'pop-film'})

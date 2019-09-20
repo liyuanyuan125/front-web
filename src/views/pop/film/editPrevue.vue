@@ -25,9 +25,9 @@
         </RadioGroup>
           <em class="remark">影院进行排播时，需要将视频文件转制为特定的DCP包，请确定是否需要平台进行格式转制</em>
         </FormItem>
-
+        
         <FormItem label="广告片小样">
-          <OssUploader v-model="form.srcFileId"  :param="{fileType: 3, subCategory: 1}"></OssUploader>
+          <OssUploader v-model="form.srcFileId" :param="{fileType: 3, subCategory: 1}"></OssUploader>
           <em class="remark">支持（.rmvb\.mp4\.mov）等视频格式；视频大小不超过100M；上传广告片小样可提升系统审核速度</em>
         </FormItem>
 
@@ -39,7 +39,7 @@
 
          <div class=" create-submit-btn">
            <Button v-if="!$route.params.id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
-           <Button v-else type="primary" class="btn"  @click="editSubmit('dataform')">保存修改</Button>
+           <Button v-else type="primary" class="btn"  @click="createSubmit('dataform')">保存修改</Button>
            <Button class="cancel-btn" @click="$router.push({name: 'pop-film'})">取消</Button>
          </div>
 
@@ -68,7 +68,8 @@ import textDlg from './components/textDlg.vue'
 })
 export default class Main extends ViewBase {
   form: any = {
-    translated: 1
+    translated: 1,
+    srcFileId: null
   }
   // 是否正在上传
   uploading = false
@@ -133,16 +134,6 @@ export default class Main extends ViewBase {
     }
   }
 
-  async createSubmit(dataform: any) {
-    const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) { return}
-    const data = await this.handleChangeSpe()
-    const free = this.form.translated == 1 ? data.transFee : data.promotionPrice
-
-    await confirm(`数字转制费用：${free} 元`, {title: '确认新建广告片'})
-    this.createSub()
-  }
-
   async handleChangeSpe() {
      const specification = this.form.specification
      const translated = this.form.translated
@@ -154,6 +145,19 @@ export default class Main extends ViewBase {
   async companyMoviesList() {
     const { data } = await companyMovies()
     this.movieList = data || []
+  }
+
+
+  async createSubmit(dataform: any) {
+    const volid = await (this.$refs[dataform] as any).validate()
+    if (!volid) { return}
+    const data = await this.handleChangeSpe()
+    const free = this.form.translated == 1 ? data.transFee : (data.promotionPrice || data.transFee)
+
+    await confirm(`数字转制费用：${free} 元`, {title: '确认新建广告片'})
+    // 判断调用添加还是编辑接口
+    const id = this.$route.params.id
+    !id ? this.createSub() : this.editSubmit()
   }
 
   // 新建
@@ -175,12 +179,11 @@ export default class Main extends ViewBase {
   }
 
   // 编辑
-  async editSubmit(dataform: any) {
-    // this.errorPerm =  this.srcFileId == '' ? '请选择上传视频' : ''
-    const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) {
-      return
-    }
+  async editSubmit() {
+    // const volid = await (this.$refs[dataform] as any).validate()
+    // if (!volid) {
+    //   return
+    // }
 
     const id = this.$route.params.id
 

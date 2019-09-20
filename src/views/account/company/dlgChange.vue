@@ -3,14 +3,10 @@
     <Modal v-model="value.visibleMess" :title="value.title" width="800">
       <Row class="text-rows">
         <Col :span="24">
-          <p>
+          <p v-if="companyType == 1">
             <label>公司名称</label>
             {{list.companyName}}
           </p>
-          <!-- <p>
-            <label>账号类型</label>
-            {{accountType}}
-          </p> -->
           <p>
             <label>资质类型</label>
             {{list.qualificationType}}
@@ -52,12 +48,15 @@ import ImagePreviewer from '@/components/imagePreviewer'
 export default class Change extends ViewBase {
   @Prop({ type: Object }) value!: any
 
+
   list: any = {}
 
   accountType = ''
+  companyType = null
 
   mounted() {
     this.list = Object.assign(this.value.changelist)
+    this.companyType = this.value.companyType
     const account: any = this.list.companyTypeList
     this.accountType =
       account.length > 1 ? `${account[0]} / ${account[1]}` : account.toString()
