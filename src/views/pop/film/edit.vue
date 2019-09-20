@@ -251,7 +251,6 @@ export default class Main extends ViewBase {
     // 判断调用添加还是编辑接口
     const id = this.$route.params.id
     !id ? this.createSub() : this.editSubmit()
-    this.createSub()
   }
 
 
