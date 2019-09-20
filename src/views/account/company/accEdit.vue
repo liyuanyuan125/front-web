@@ -1,17 +1,17 @@
 <template>
   <div class="page as">
     <Form :model="form"  :rules="rule"  ref="dataform" label-position="left" :label-width="100" class="edit-input">
-      <div class='bs'>
-      <h3 class="layout-title">登录信息</h3>
-      <FormItem label="登录邮箱" class="item-top">
+      <!-- <div class='bs'>
+      <h3 class="layout-title">登录信息</h3> -->
+      <!-- <FormItem label="登录邮箱" class="item-top">
         <Input v-model="form.email" placeholder="请输入登录邮箱"></Input>
         <span class="modifyCode" @click="isEmailCode = !isEmailCode">修改邮箱</span>
-      </FormItem>
-      <FormItem label="邮箱验证码" v-if="isEmailCode">
+      </FormItem> -->
+      <!-- <FormItem label="邮箱验证码" v-if="isEmailCode">
         <Input v-model="form.emailCaptcha" :maxlength="6" class="email-code" placeholder="请输入邮箱验证码"></Input>
         <Button class="btn-code sok" :disabled="displayCode" @click="getEmailCode">{{emailMes}}</Button>
       </FormItem>
-      </div>
+      </div> -->
       <div class='bs'>
       <h3 class="layout-title">公司信息</h3>
       <FormItem label="公司所在地" class="item-top">
@@ -55,13 +55,13 @@ import { updateEmail } from '@/store'
 export default class Main extends ViewBase {
   submitDisabled = false
 
-  isEmailCode = false
-  emailMes = '获取邮箱验证码'
-  displayCode = false
+  // isEmailCode = false
+  // emailMes = '获取邮箱验证码'
+  // displayCode = false
 
   form: any = {
-    email: '',
-    emailCaptcha: '',
+    // email: '',
+    // emailCaptcha: '',
     contact: '',
     contactTel: '',
     companyEmail: '',
@@ -78,29 +78,29 @@ export default class Main extends ViewBase {
   async mounted() {
     const { data } = await accountDetail()
     this.form = {
-      email: data.account.email,
-      emailCaptcha: '',
+      // email: data.account.email,
+      // emailCaptcha: '',
       contact: data.company.contact,
       contactTel: data.company.contactTel,
       companyEmail: data.company.email,
       area: [data.company.provinceId, data.company.cityId]
     }
   }
-  async getEmailCode() {
-    this.displayCode = true
-    try {
-      const msg = await getLoginEmail(this.form.email)
-      await countDown(60, sec => {
-        this.emailMes = sec + 's'
-      })
-      this.emailMes = '重新获取验证码'
-    } catch (ex) {
-      this.handleError(ex)
-      this.displayCode = false
-    } finally {
-      this.displayCode = false
-    }
-  }
+  // async getEmailCode() {
+  //   this.displayCode = true
+  //   try {
+  //     const msg = await getLoginEmail(this.form.email)
+  //     await countDown(60, sec => {
+  //       this.emailMes = sec + 's'
+  //     })
+  //     this.emailMes = '重新获取验证码'
+  //   } catch (ex) {
+  //     this.handleError(ex)
+  //     this.displayCode = false
+  //   } finally {
+  //     this.displayCode = false
+  //   }
+  // }
 
   async editAccount(dataform: any) {
     const volid = await (this.$refs[dataform] as any).validate()
@@ -109,10 +109,10 @@ export default class Main extends ViewBase {
     }
     this.submitDisabled = true
     const cloneForm = Object.assign(this.form)
-    if (!this.form.emailCaptcha) {
-      cloneForm.emailCaptcha = null
-      cloneForm.email = null
-    }
+    // if (!this.form.emailCaptcha) {
+    //   cloneForm.emailCaptcha = null
+    //   cloneForm.email = null
+    // }
     try {
       await auditingAccount({
         ...cloneForm,
@@ -120,9 +120,9 @@ export default class Main extends ViewBase {
         cityId: this.form.area[1]
       })
       // 变更主账户信息
-      if (this.form.email) {
-        updateEmail(this.form.email)
-      }
+      // if (this.form.email) {
+      //   updateEmail(this.form.email)
+      // }
       this.$router.push({ name: 'account-company' })
     } catch (ex) {
       this.handleError(ex)
@@ -191,7 +191,7 @@ export default class Main extends ViewBase {
   background: rgba(255, 255, 255, 0);
   padding: 20px 30px 0 30px;
 }
-@c-bg: #fff;
+
 .page {
   .ivu-form-item {
     padding-left: 30px;
