@@ -76,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm } from '@/ui/modal'
 import Upload, { FileItem } from '@/components/upload'
@@ -104,6 +104,9 @@ import textDlg from './components/textDlg.vue'
 })
 
 export default class Main extends ViewBase {
+
+  @Prop({ type: String}) id!: any
+
   form: any = {
     srcFileId: null,
     brandId: null,

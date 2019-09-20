@@ -130,7 +130,6 @@ export default class Main extends ViewBase {
       })
       this.spinShow = false
       this.statusList = statusList || []
-      this.totalCount = totalCount || 0
 
       // 若切换身份为广告主，需过滤广告类型为 商业广告
       // 若切换身份为片商，不需过滤，获取全量广告片
@@ -139,6 +138,8 @@ export default class Main extends ViewBase {
       } else {
         this.tableDate = (items || [])
       }
+      this.totalCount = this.tableDate.length || 0
+
     } catch (ex) {
       this.spinShow = false
       this.handleError(ex)

@@ -685,6 +685,9 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       pageTitle({ params }) {
         return params.id as any > 0 ? '编辑商业广告片-鲸娱数据' : '新建商业广告片-鲸娱数据'
       },
+    },
+    props({params}) {
+      return params
     }
   },
 
