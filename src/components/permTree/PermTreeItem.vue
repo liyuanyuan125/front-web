@@ -14,7 +14,7 @@
   </span>
 </template>
 
-<script lang="tsx">
+<script lang="ts">
 // doc: https://github.com/kaorun343/vue-property-decorator
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'

@@ -95,13 +95,12 @@ export default class Main extends ViewBase {
     const [ newMenu ] = walkTree([ menu ], {
       childrenKey: 'subPages',
       onEachBefore(node) {
-        devLog(node)
         if (node.key == 'resource.adOrderManage.order') {
           node.actions = node.actions.map(it => {
             it.disabled = disabledActions.includes(it.code)
             return it
           })
-          node.tip = '由于您是影管合作，目前系统仅支持影管账号统一接单；影城子账号自助接单功能暂未开放，请知晓。'
+          node.tip = '由于您是影管合作，目前系统仅支持影管账号统一接单；影城子账号自主接单功能暂未开放，请知晓。'
         }
       }
     })
