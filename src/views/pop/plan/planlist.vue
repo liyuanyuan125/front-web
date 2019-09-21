@@ -318,6 +318,7 @@ export default class Plan extends ViewBase {
       clean({
         ...this.form,
         ...this.pageList,
+        pageIndex: 1,
         advertTypeCode: (this.systemCode as any) == 'film' ? '' : 'BRAND'
       })
     )
