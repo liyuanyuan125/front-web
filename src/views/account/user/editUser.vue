@@ -1,23 +1,16 @@
 <template>
   <div>
-    <!-- <div class="layout-nav-title">
-       <router-link :to="{name: 'account-user'}" >用户管理</router-link> > 
-       <span>编辑子用户</span>
-    </div> -->
     <Form :model="form" label-position="left" :label-width="100" class="edit-input">
       <div class="bgs">
         <h3 class="layout-title tits">设置登录账号</h3>
-        <FormItem label="登录邮箱" class="formleft item-top">
-          <Input v-model="form.email" :disabled="disEmail" placeholder="请输入登录邮箱"></Input>
+        <FormItem  label="登录手机号" class="padbottom">
+          <Input v-model="form.mobile" :maxlength="11" placeholder="请输入手机号码"></Input>
         </FormItem>
-      </div>
-      <div class="bgs">
-        <h3 class="layout-title tits">设置联系人（选项）</h3>
-        <FormItem label="联系人名称" class="item-top">
+        <FormItem label="联系人名称" >
           <Input v-model="form.contactName" placeholder="请输入联系人名称"></Input>
         </FormItem>
-        <FormItem class="formleft" label="手机号码">
-          <Input v-model="form.mobile" :maxlength="11" placeholder="请输入手机号码"></Input>
+        <FormItem label="邮箱(选填)" class="email-content">
+          <Input v-model="form.email" placeholder="请输入登录邮箱"></Input>
         </FormItem>
       </div>
       <div class="bgs">
@@ -28,7 +21,7 @@
         <div class="text-rows">
           <Row>
             <Col :span="12">
-              <div v-if="typeCode == 'ads'">
+              <div v-if="typeCode == 'ads' || typeCode == 'film'">
                 <p>
                   <label>关联客户</label>
                   {{customer}}个
@@ -90,7 +83,7 @@ import PermTree, { PermTreeModal } from '@/components/permTree'
 })
 export default class Main extends ViewBase {
   submitDisabled = false
-  disEmail = false
+  // disEmail = false
 
   customer = 0
   cinemaLen = 0
@@ -143,11 +136,11 @@ export default class Main extends ViewBase {
       this.data = data
       // 禁用启用状态 邮箱不可编辑
       const systems = data.systems[0].status
-      if (systems == 1 || systems == 2) {
-        this.disEmail = true
-      } else {
-        this.disEmail = false
-      }
+      // if (systems == 1 || systems == 2) {
+      //   this.disEmail = true
+      // } else {
+      //   this.disEmail = false
+      // }
       this.customer = data.partners == null ? 0 : data.partners.length
       this.cinemaLen = data.cinemas == null ? 0 : data.cinemas.length
       // tree
@@ -171,7 +164,7 @@ export default class Main extends ViewBase {
 
   queryList() {
     // 判断资源方 广告方
-    if (this.typeCode == 'ads') {
+    if (this.typeCode == 'ads' || this.typeCode == 'film') {
       this.detailVisible = {
         visibleDetail: true,
         customer: this.data.partners
@@ -187,7 +180,7 @@ export default class Main extends ViewBase {
     // 判断资源方 广告方
     const resCheck = (this.data.cinemas || []).map((it: any) => it.id)
     const adsCheck = (this.data.partners || []).map((it: any) => it.id)
-    if (this.typeCode == 'ads') {
+    if (this.typeCode == 'ads' || this.typeCode == 'film') {
       this.editVisible = {
         editVis: true,
         check: adsCheck
@@ -225,7 +218,7 @@ export default class Main extends ViewBase {
       const id = this.$route.params.useid
       const type = this.typeCode
       // 判断资源方 广告主 partnerIds
-      if (this.typeCode == 'ads') {
+      if (this.typeCode == 'ads' || this.typeCode == 'film') {
         const { data } = await userEditSub(
           {
             ...this.form,
@@ -314,6 +307,9 @@ export default class Main extends ViewBase {
 }
 /deep/ .ivu-tree-empty {
   padding-top: 5px;
+}
+.email-content {
+  padding-bottom: 25px;
 }
 </style>
 

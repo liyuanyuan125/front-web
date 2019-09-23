@@ -328,8 +328,9 @@ export default class Promotion extends ViewBase {
     try {
       const { data } = await advertising( clean({
         pageIndex: 1,
-        pageSize: 288,
-        status: this.setadver ? '' : 4
+        pageSize: 888,
+        status: this.setadver ? '' : 4,
+        videoType: 2
       }) )
       this.adverList = data.items || []
       this.seach()
@@ -435,7 +436,8 @@ export default class Promotion extends ViewBase {
           videoId: this.setadver ? '' : this.form.videoId,
           id: this.$route.params.setid ? this.$route.params.setid : '',
           specification: this.setadver ? this.query.specification + '' : this.form.specification + '',
-          budgetAmount: Number(this.form.budgetAmount * 10000)}, [0]))
+          budgetAmount: Number(this.form.budgetAmount * 10000),
+          advertTypeCode: 'BRAND'}, ['', 0]))
         if (!this.$route.params.setid) {
           this.$router.push({
             name: 'pop-planlist-add',
@@ -465,7 +467,7 @@ export default class Promotion extends ViewBase {
         info('请选择广告片规格')
         return
       }
-      const { data } = await estimate({budgetAmount: val, specification: price })
+      const { data } = await estimate({budgetAmount: val, specification: price, advertType: 'BRAND' })
       this.nums = `${formatCurrency(data.estimatePersonCount * 0.7, 0)}
       ~ ${formatCurrency(data.estimatePersonCount * 1.3, 0)}`
     } catch (ex) {

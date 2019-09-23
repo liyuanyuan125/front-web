@@ -12,7 +12,7 @@ import { productsList } from '@/api/popFilm'
 
 @Component
 export default class Main extends ViewBase {
-    @Prop({type: Number, default: 0}) value?: number
+    @Prop({type: Number, default: null}) value?: number
     @Prop({type: Number, default: 0 }) brandld?: any
 
     inner: any = this.value

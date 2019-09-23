@@ -2,11 +2,26 @@
   <div class="page">
     <Progress :percent="progress" status="active" class="progress"/>
 
-    <Button type="success" class="upload-button">
-      <input type="file" @change="onUpload"> 上传
-    </Button>
+    <VideoUploader v-model="videoUrl">
+    </VideoUploader>
 
-    <img :src="imageUrl" v-if="imageUrl">
+    <OssUploader v-model="ossUrl"/>
+
+    <p>按时发送发放322323是非得失：<MiddleEllipsis class="shi">春眠不觉晓处处蚊子咬夜来风雨声花落知多少</MiddleEllipsis>是对方是否</p>
+
+    <div><MiddleEllipsis class="shi">{{text}}</MiddleEllipsis></div>
+
+    <div>
+      <Button @click="changeText">改变文字</Button>
+    </div>
+
+    <!-- <UploadLabel useCircle/>
+
+    <UploadButton/>
+
+    <TripleDialog v-model="tripleShow">
+      妳好呀
+    </TripleDialog> -->
 
     <!-- <WeekDatePicker v-model="weekDate"/>
 
@@ -45,6 +60,7 @@ import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import WeekDatePicker from '@/components/weekDatePicker'
 import CitySelectDialog from '@/components/citySelectDialog'
+import TripleDialog from '@/components/tripleDialog'
 import ECharts from 'vue-echarts'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
@@ -53,44 +69,71 @@ import OSS from 'ali-oss'
 import { get } from '@/fn/ajax'
 import { devLog } from '@/util/dev'
 import { dot } from '@/util/dealData'
+import OssUploader from '@/components/ossUploader'
+import VideoUploader from '@/components/videoUploader'
+import UploadLabel from '@/components/uploadLabel'
+import UploadButton from '@/components/UploadButton.vue'
+import triple from '@/ui/triple'
+import MiddleEllipsis from '@/components/middleEllipsis'
+import { alert, warning, success, error } from '@/ui/modal'
 
 @Component({
   components: {
     WeekDatePicker,
     CitySelectDialog,
+    TripleDialog,
     ECharts,
-    KeepSelectTable
+    KeepSelectTable,
+    OssUploader,
+    VideoUploader,
+    UploadLabel,
+    UploadButton,
+    MiddleEllipsis
   }
 })
 export default class AboutPage extends ViewBase {
   progress = 0
 
-  imageUrl = ''
+  videoUrl = 'http://aiads-file.oss-cn-beijing.aliyuncs.com/MISC/MISC/blrhqc9e2o7g008ukpkg.mp4'
 
-  async onUpload(ev: Event) {
-    const [ file = null ] = (ev.target as HTMLInputElement).files || []
-    const { data } = await get('//sts.fapi.aiads-dev.com/sts/token')
-    const client = new OSS({
-      region: 'oss-cn-beijing',
-      bucket: 'monitor-video',
-      stsToken: data.securityToken,
-      accessKeyId: data.accessKeyId,
-      accessKeySecret: data.accessKeySecret,
-      // tslint:disable-next-line:max-line-length
-      // stsToken: 'CAIS/QF1q6Ft5B2yfSjIr4uNG8P5josS/YGRdB6HimEyaPlHt63RjDz2IHFPfHJvBOsXtfQznWlS7vwYlqJoV4QAXkHfdsp36MzRB646wc+T1fau5Jko1beXewHKeSOZsebWZ+LmNqS/Ht6md1HDkAJq3LL+bk/Mdle5MJqP+/EFA9MMRVv6F3kkYu1bPQx/ssQXGGLMPPK2SH7Qj3HXEVBjt3gb6wZ24r/txdaHuFiMzg+46JdM/dmgf8P9NJk2Z88lDobp5oEsKPqdihw3wgNR6aJ7gJZD/Tr6pdyHCzFTmU7XaLKPrYA0fVQpOvFjQfYe9uKXjuFjqgZ0f2kHEuAnGoABkj1TSJ5o/aClu184+vye33vpzSWMKSP7YfIId57YrUXLnJrnH0bu1U9ZMmEf4bh/vF3tPPxW8+8gzADOyYh1MIkUhv7WCBsd7QTiM6tJmmiiIAPjXwUdrgnKf1qmnWILGrvvFSYXYRItCOPX0UbeGJ4C55vfbR+6FSHj4MjKGMk=',
-      // accessKeyId: 'STS.NH8PyMcT3JCzv86nagdvkXhzn',
-      // accessKeySecret: 'AmBYzZbmQ2GbU72ZkM4G8r9enp3PtUJPKkfHV5Hbk4M6'
-    })
-    const result = await client.multipartUpload(file!.name, file!, {
-      progress: async (p, checkpoint) => {
-        this.progress = p * 100
-        devLog('=> p', p, ' checkpoint', checkpoint)
-      }
-    })
-    const url = dot(result, 'res.requestUrls[0]')
-    this.imageUrl = url
-    devLog(url, result)
+  ossUrl = 'http://aiads-file.oss-cn-beijing.aliyuncs.com/MISC/MISC/blrhqc9e2o7g008ukpkg.mp4'
+
+  tripleShow = false
+
+  text = '春眠不觉晓'
+
+  n = 1
+
+  onBegin(ev: any) {
+    devLog('=> onBegin', ev)
   }
+
+  onProgress(ev: any) {
+    devLog('=> onProgress', ev)
+  }
+
+  onIsPausedChanged(ev: any) {
+    devLog('=> onIsPausedChanged', ev)
+  }
+
+  changeText() {
+    this.text = this.n % 2 ? '春眠不觉晓处处蚊子咬夜来风雨声花落知多少' : '出门水电费'
+    this.n++
+  }
+
+  // async onUpload(ev: Event) {
+  //   const input = ev.target as HTMLInputElement
+  //   const [ file = null ] = input.files || []
+  //   const uploader = new OssUploader()
+  //   uploader.on('cacheHit', (evt: CacheHitEvent) => {
+  //     evt.useCache = true
+  //   })
+  //   .on('progress', (evt: ProgressEvent) => {
+  //     this.progress = +evt.percent.toFixed(2)
+  //   })
+  //   uploader.upload(file!)
+  //   setTimeout(() => input.value = '')
+  // }
 
   // weekDate = [null, null]
   // weekDate = [new Date(2019, 4, 9), new Date(2019, 4, 15)]
@@ -181,5 +224,9 @@ export default class AboutPage extends ViewBase {
     height: 100%;
     opacity: 0;
   }
+}
+
+.shi {
+  max-width: 168px;
 }
 </style>

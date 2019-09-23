@@ -1,6 +1,14 @@
 <template>
-  <Cascader v-model="inner"  :data="data" :load-data="loadData" :clearable="clearable"
-    class="area-select" :render-format="format" ref="ui"></Cascader>
+  <Cascader
+    v-model="inner"
+    :data="data"
+    :load-data="loadData"
+    :clearable="clearable"
+    :placeholder="placeholder"
+    class="area-select"
+    :render-format="format"
+    ref="ui"
+  />
 </template>
 
 <script lang="ts">
@@ -42,6 +50,11 @@ export default class AreaSelect extends ViewBase {
    * 是否显示大区，例如：华北地区，默认不显示
    */
   @Prop({ type: Boolean, default: false }) showRegion!: boolean
+
+  /**
+   * placeholder 默认值为请选择
+   */
+  @Prop({ type: String, default: '请选择'}) placeholder!: string
 
   inner: AreaValue = []
 
@@ -176,7 +189,7 @@ export default class AreaSelect extends ViewBase {
     return emptyList as AreaValue
   }
 
-  @Watch('value')
+  @Watch('value', {immediate: true})
   async watchValue(val: AreaValue) {
     // 检查传入的 value 值，是否合法，不合法直接清空
     const isValid = await this.checkValid(val)

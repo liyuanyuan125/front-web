@@ -35,7 +35,7 @@
       <div class="spin-show-parent">
         <div class="demo-spin-article">
           <ul class='itemul' >
-            <li v-for='(it,index) in itemlist' :key='index'>
+            <li v-for='(it,index) in itemlist' :key='index' :class="{advert: it.advertType == 'TRAILER'}">
               <div class="table-header-title  flex-box">
                 <p><label>投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
                 <p>
@@ -59,11 +59,9 @@
                   <div class="flex-box col-order">
                     <p><label>广告片规格</label><em>{{it.specification || 0}}s</em></p>
                     <p><label>目标人次</label><em>{{it.estimatePersonCount || 0}}人</em></p>
-                    <!-- <em><label>目标场次</label><em>{{it.targetSession || '暂无'}}</em></p> -->
-                    <!-- <em><label>目标影厅</label><em>{{it.hallsCount || '暂无'}}</em></p> -->
                   </div>
                   <div class="flex-box col-order">
-                    <!-- <em><label>投放周期</label><em>{{it.cycle || 0}}天</em></p> -->
+                    <p ><label>广告位置</label><em>{{it.deliveryPositionNames}}</em></p>
                     
                   </div>
                   <div class="target-cinema">
@@ -91,7 +89,7 @@
                       <p><Button  @click="editRefuse(it)" class="operation-btn result-btn">拒绝接单</Button></p>
                     </div>
                     <div >
-                      <Button class=" operation-btn  query-detail-btn " :to="{ name: 'order-dispatch-details', params: { id: it.id } }" >查看详情</Button>
+                      <Button class="operation-btn  query-detail-btn " :to="{ name: 'order-dispatch-details', params: { id: it.id } }" >查看详情</Button>
                     </div>
                 </col>
               </Row>
@@ -107,7 +105,6 @@
     </div>
 
      
-
     <dlgRejec ref="reject" v-model="rejectVisible" v-if="rejectVisible.visible" @rejReload="orderList"/>
     <targetDlg ref="target" v-if="targetShow" />
     <refuseDlg ref="refuse" v-if="refuseShow"  @refReload="refReload" />
@@ -121,6 +118,7 @@ import { queryOrderList, queryCinemaList } from '@/api/norderDis'
 import { formatConversion, formatNumber } from '@/util/validateRules.ts'
 import { getUser } from '@/store'
 import { slice, clean, except } from '@/fn/object'
+import { getEnumText } from '@/util/dealData'
 import dlgRejec from './dlgReject.vue'
 import targetDlg from './targetDlg.vue'
 import refuseDlg from './refuseDlg.vue'
@@ -179,6 +177,7 @@ export default class Main extends ViewBase {
     return formatConversion
   }
 
+
   get formatNumber() {
     return formatNumber
   }
@@ -229,7 +228,8 @@ export default class Main extends ViewBase {
           statusList,
           orderCount,
           items,
-          movieCustomList
+          movieCustomList,
+          deliveryPositionCodeList
         }
       } = await queryOrderList({
         pageIndex: this.pageIndex,
@@ -241,10 +241,12 @@ export default class Main extends ViewBase {
       this.totalCount = totalCount
       // 处理空数组null转化为[]
       this.itemlist = (items || []).map( (item: any) => {
+        const offset = getEnumText(deliveryPositionCodeList, item.deliveryPositionCode)
         return {
           ...item,
           targetCinemas: item.targetCinemas || [],
-          targetMovies: item.targetMovies || []
+          targetMovies: item.targetMovies || [],
+          deliveryPositionNames: offset ? `[${offset}]` : '--'
         }
       })
       // 处理订单统计
@@ -450,6 +452,10 @@ export default class Main extends ViewBase {
           color: rgba(68, 68, 68, 1);
         }
       }
+    }
+    &.advert {
+      background: url('~@/assets/icon/prevue.png') no-repeat left top;
+      background-size: 35px auto;
     }
   }
 }

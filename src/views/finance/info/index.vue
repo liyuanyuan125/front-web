@@ -4,7 +4,7 @@
     <div class="fince"  v-auth="'financial-manage.info#viewsummary'">
       <h3 class="userTitle">
         <span style="color:#00202D;">账户总览</span>
-        <!-- <span class='addmoney' @click='addmon'>充值</span> -->
+        <span class='addmoney' @click='addmon'>充值</span>
       </h3>
       <div class="fince-list">
         <div class="fince-list-big">
@@ -35,10 +35,20 @@
       v-auth="'financial-manage.info#viewlist'"
       :loading="tableLoading"
       :columns="columns4"
-      :data="tableData"
-    ></Table>
+      :data="items"
+    >
+      <template slot="transactionAmount" slot-scope="{row}" >
+          {{formatNumber(row.transactionAmount)}}
+      </template>
+      <template slot="billPayType" slot-scope="{row}" >
+          <span v-for='(it , index) in billPayTypeList' :key='index' v-if='row.billPayType == it.key'>{{it.text}}</span>
+      </template>
+      <template slot="status" slot-scope="{row}" >
+          <span v-for='(it , index) in statusList' :key='index' v-if='row.status == it.key'>{{it.text}}</span>
+      </template>
+    </Table>
 
-    <div class="finceadd">
+   <!--  <div class="finceadd">
       <h3 class="userTitle zhc">
         <span >账户充值</span>
       </h3>
@@ -62,7 +72,6 @@
                   <div>
                     <p class="sma3">开户账号</p>
                     <div class="sma4">{{accountSplice}}</div>
-                    <!-- <div class='sma4'>{{defaultdata.accountNumber.slice(0, 4)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(4, 8)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(8, 12)}}&nbsp;&nbsp;{{defaultdata.accountNumber.slice(12, 16)}}</div> -->
                   </div>
                   <div>
                     <p class="sma5">开户名称</p>
@@ -139,7 +148,7 @@
           <Button class='but'  v-auth="'financial-manage.info#submit'" type="primary" @click="dataFormSubmit('dataForm')">提交充值申请</Button>
         </div>
       </div>
-    </div>
+    </div> -->
     <Modal v-model="viewerShow" title="查看图片" width="500" height="500">
       <img style="width: 100%;" :src="viewerImage" alt sizes srcset>
     </Modal>
@@ -157,7 +166,8 @@ import {
   moneyList,
   dataFrom,
   defaultList,
-  add
+  add,
+  bills
 } from '@/api/financeinfo'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { toMap } from '@/fn/array'
@@ -165,6 +175,7 @@ import moment from 'moment'
 import Upload from '../upload/Upload.vue'
 import { slice, clean } from '@/fn/object'
 import { warning , success, toast , info } from '@/ui/modal'
+import { formatNumber } from '@/util/validateRules'
 // 选择方式
 import dlgInforma from './dlgInformation.vue'
 
@@ -197,9 +208,10 @@ export default class Main extends ViewBase {
   //   user : any = getUser()
   user: any = getUser()!
   dataFormget = {
-    companyId: this.user.companyId,
+    // companyId: this.user.companyId,
+    transactionType: 1,
     pageIndex: 1,
-    pageSize: 10
+    pageSize: 5
   }
 
   dataForm: any = {
@@ -257,51 +269,18 @@ export default class Main extends ViewBase {
   // 查看图片
   viewerShow = false
   viewerImage = ''
+  // 支付方式
+  billPayTypeList: any =  []
+  // 充值状态
+  statusList: any = []
 
   // dataForm: any = { ...dataForm }
 
   columns4 = [
     { title: '充值ID', key: 'id', align: 'center', width: 70, },
-    {
-      title: '申请时间',
-      width: 120,
-      key: 'applyTime',
-      align: 'center',
-      render: (hh: any, { row: { applyTime } }: any) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        const html = moment(applyTime).format(timeFormat)
-        return applyTime == null ? (
-          <span class="datetime" v-html="-" />
-        ) : (
-          <span class="datetime" v-html={html} />
-        )
-        /* tslint:enable */
-      }
-    },
-    {
-      title: '银行账号',
-      key: 'accountNumber',
-      align: 'center',
-      width: 90,
-      render: (hh: any, { row: { accountNumber } }: any) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        const html = String(accountNumber).substring(String(accountNumber).length - 4)
-        return accountNumber == null ? (
-          <span class="datetime" v-html="-" />
-        ) : (
-          <span class="datetime" v-html={'****' + html} />
-        )
-        /* tslint:enable */
-      }
-    },
-    {
-      title: '汇款人姓名',
-      key: 'accountName',
-      align: 'center',
-      width: 115,
-    },
+    { title: '充值金额', slot: 'transactionAmount', align: 'center'},
+    { title: '支付方式', slot: 'billPayType', align: 'center'},
+    { title: '流水单号', key: 'streamNo', align: 'center'},
     {
       title: '汇款时间',
       key: 'remittanceDate',
@@ -310,8 +289,8 @@ export default class Main extends ViewBase {
       render: (hh: any, { row: { remittanceDate } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
-        const html = moment(remittanceDate).format(timeFormat)
-        return remittanceDate == null ? (
+        const html = String(remittanceDate).slice(0, 4) + '-' + String(remittanceDate).slice(4, 6) + '-' + String(remittanceDate).slice(6, 8)
+        return remittanceDate == 0 ? (
           <span class="datetime" v-html="-" />
         ) : (
           <span class="datetime" v-html={html} />
@@ -320,86 +299,37 @@ export default class Main extends ViewBase {
       }
     },
     {
-      title: '联系人电话',
-      key: 'contactPhone',
+      title: '汇款账户名',
+      key: 'accountName',
       align: 'center',
-      width: 120,
     },
     {
-      title: '充值金额/元',
-      key: 'amount',
-      align: 'center',
-      width: 125,
-    },
-    {
-      title: '备注',
-      key: 'remark',
-      align: 'center',
-      render: (hh: any, { row: { remark } }: any) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        const html1 = String(remark).slice(0, 4) + '...'
-        if (String(remark).length >= 4) {
-          return (
-            <div>
-              <tooltip max-width="200" transfer content={remark} placement="top">
-                <span class="bei" v-html={html1} />
-              </tooltip>
-            </div>
-          )
-        } else {
-          return (
-              <span class="bei" v-html={remark} />
-          )
-        }
-        /* tslint:enable */
-      }
-    },
-    {
-      title: '汇款凭证',
+      title: '汇款底单',
       align: 'center',
       width: 100,
-      render: (hh: any, { row: { imageList } }: any) => {
+      render: (hh: any, { row: { receipt } }: any) => {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         // const url = imageList.url
         // console.log(url)
-        return (
-          <a
-            href="javascript:;"
-            on-click={this.onView.bind(this , imageList.url)}
-            class="operation">
-            查看
-          </a>
-        )
-        /* tslint:enable */
-      }
-    },
-    {
-      title: '状态',
-      key: 'statusText',
-      width: 90,
-      align: 'center',
-      render: (
-        hh: any,
-        { row: { rejectReason, approvalStatus, statusText } }: any
-      ) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        if (approvalStatus == 1) {
-          return <span class={`status-${1}`}>待审核</span>
-        } else if (approvalStatus == 2) {
-          return <span class={`status-${2}`}>充值通过</span>
-        } else if (approvalStatus == 3) {
+        if (receipt == null) {
           return (
-            <tooltip content={rejectReason} placement="top">
-              <span class={`status-${3} `}>充值拒绝</span>
-            </tooltip>
+            <span v-html="-" />
+          )
+        } else {
+          return (
+          <a
+              href="javascript:;"
+              on-click={this.onView.bind(this , receipt)}
+              class="operation">
+              查看
+            </a>
           )
         }
         /* tslint:enable */
       }
-    }
+    },
+    { title: '状态', slot: 'status', align: 'center', width: 70, },
   ]
 
 
@@ -448,6 +378,10 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
+  get formatNumber() {
+    return formatNumber
+  }
+
   // 每页数
   sizeChangeHandle(val: any) {
     this.dataFormget.pageIndex = val
@@ -478,31 +412,34 @@ export default class Main extends ViewBase {
     }
   }
 
-  get tableData() {
-    const cachedMap = this.cachedMap
-    const list = (this.items || []).map((it: any) => {
-      return {
-        ...it,
-        statusText: it.approvalStatus
-      }
-    })
-    return list
-  }
+  // get tableData() {
+  //   const cachedMap = this.cachedMap
+  //   const list = (this.items || []).map((it: any) => {
+  //     return {
+  //       ...it,
+  //       statusText: it.approvalStatus
+  //     }
+  //   })
+  //   return list
+  // }
 
   async seach() {
     this.tableLoading = true
     try {
       const query = { ...this.dataFormget }
       const {
-        data: { items, totalCount, approvalStatusList }
-      } = await queryList(clean({ ...query }))
-      if (items.length <= 5) {
-        this.items = items
+        data: { items, totalCount, billPayTypeList , statusList }
+      } = await bills(clean({ ...query }))
+      if (items == null) {
+        this.items = []
+      } else if (items.length <= 5) {
+        this.items = items || []
       } else {
         this.items.push(items[0], items[1], items[2], items[3], items[4])
       }
       this.total = totalCount
-      this.approvalStatusList = approvalStatusList
+      this.billPayTypeList = billPayTypeList
+      this.statusList = statusList
       // 财产信息
       const res = await moneyList(this.user.companyId)
       this.datamoney = res.data

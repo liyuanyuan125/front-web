@@ -28,6 +28,7 @@ export function isAjaxResult(object: any) {
 
 /** 可取消的事件 */
 export interface CancelableEvent {
+  /** 是否取消 */
   canceled: boolean
 }
 
@@ -45,17 +46,29 @@ export interface KeyTextControlStatus extends KeyText {
   controlStatus: ControlStatus
 }
 
-/** 系统 code 枚举 */
-export type SystemCode = 'ads' | 'resource'
+/**
+ * 系统 code 枚举
+ * ads      - 广告主
+ * resource - 资源方
+ * agent    - 区代
+ * film     - 片商
+ */
+export type SystemCode = 'ads' | 'resource' | 'agent' | 'film'
 
-/** 广告主子类型：代理商、直客 */
+/** 广告主子类型：代理商 daili、直客 zhike */
 export type AdsSecondaryCode = 'daili' | 'zhike'
 
-/** 资源方子类型：代理商、影院 */
+/** 资源方子类型：代理商 agent、影院 cinema */
 export type ResourceSecondaryCode = 'agent' | 'cinema'
 
 /** 合并后的二级子类型 */
 export type SecondaryCode = AdsSecondaryCode | ResourceSecondaryCode
+
+export interface SystemItem {
+  code: SystemCode
+  secondaryCode: SecondaryCode
+  status: number
+}
 
 const defaultSecondaryCodeMap: MapType<SecondaryCode> = {
   ads: 'daili',
@@ -80,6 +93,8 @@ export interface SystemType {
 export const systemList: SystemType[] = [
   { code: 'ads', name: '广告主' },
   { code: 'resource', name: '影城' },
+  { code: 'agent', name: '区代' },
+  { code: 'film', name: '片商' },
 ]
 
 /** 权限操作 */
@@ -126,3 +141,9 @@ export enum MovieStatus {
   /** 已下映 */
   down = 4,
 }
+
+/**
+ * iview 按钮类型
+ */
+export type ButtonType = 'default' | 'primary' | 'dashed' | 'text'
+  | 'info' | 'success' | 'warning' | 'error'

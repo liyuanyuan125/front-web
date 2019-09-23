@@ -21,8 +21,8 @@
           <div>
             <p class="title">曝光人次预估</p>
             <p v-if="item.estimatePersonCount && (item.estimatePersonCount + '').length > 4" class="number">
-              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 100000 * 7" /> ~ 
-              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 100000 * 13" />
+              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 10000 * 7" /> ~ 
+              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 10000 * 13" />
             </p>
             <p class="onenumber" v-else>
               <Number :flag="2"  :addNum="Math.floor(item.estimatePersonCount * 7 / 10)" /> ~ 
@@ -34,8 +34,8 @@
           <div>
             <p class="title">投放场次数预估</p>
             <p v-if="item.estimateShowCount && (item.estimateShowCount + '').length > 4" class="number">
-              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 100000 * 7" /> ~
-              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 100000 * 13" />
+              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 10000 * 7" /> ~
+              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 10000 * 13" />
             </p>
             <p class="onenumber" v-else>
               <Number :flag="2"  :addNum="Math.floor(item.estimateShowCount * 7 / 10)" /> ~ 
@@ -47,7 +47,7 @@
           <div>
             <p class="title">预估花费</p>
             <p v-if="item.estimateCostAmount && (item.estimateCostAmount + '').length > 4" class="number">
-              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount" />
+              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 10000" />
               <!-- <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 100000 * 13" /> -->
             </p>
             <p class="onenumber" v-else>
@@ -193,6 +193,10 @@
                 {{formatNums(row.estimatePersonCount * 7 / 10, 1)}} ~ 
                 {{formatNums(row.estimatePersonCount * 13 / 10, 1)}}
               </template>
+
+              <template slot-scope="{ row }" slot="cpm">
+                {{formatNums(row.cpm)}}
+              </template>
               <!-- <template slot-scope="{ row }" slot="estimateShowCount">
                 {{formatNums(row.estimateShowCount, 1)}}
               </template>
@@ -222,13 +226,20 @@
         <Row :gutter="16">
           <Col :span="2"><span>投放周期:</span></Col>
           <Col :span="10"><span>{{formatDate(item.beginDate)}} 至 {{formatDate(item.endDate)}}</span></Col>
-          <Col :span="2"><span>客户:</span></Col>
-          <Col :span="10"><span>{{item.customerName}}</span></Col>
+          <Col :span="2" v-if="item.advertTypeCode == 'TRAILER'"><span>客户:</span></Col>
+          <Col :span="10" v-if="item.advertTypeCode == 'TRAILER'"><span>{{item.customerName}}</span></Col>
+          <Col :span="2" v-if="item.advertTypeCode != 'TRAILER'"><span>影片:</span></Col>
+          <Col :span="10" v-if="item.advertTypeCode != 'TRAILER'"><span>{{item.customerName}}</span></Col>
         </Row>
         <Row :gutter="16">
           <Col :span="2"><span>预算:</span></Col>
-          <Col :span="22">
+          <Col :span="10">
             <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount * 7 / 10)}}</span>
+            <!-- <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount * 13 / 10)}}</span> -->
+          </Col>
+          <Col :span="2"><span>广告位置:</span></Col>
+          <Col :span="10">
+            <span>{{location}}</span>
             <!-- <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount * 13 / 10)}}</span> -->
           </Col>
         </Row>
@@ -252,10 +263,11 @@
               <Col :span="2"><span>覆盖影院</span></Col>
               <Col :span="10">
                 <div>
-                  <span>共{{(headerValue.deliveryCinemas || []).length}}个
+                  <span>共{{headerValue.cinemaCount}}个
                     <b style="margin-left: 5px"></b> 
                   </span>
-                  <a v-if='(headerValue.deliveryCinemas || []).length > 0' style='font-size: 18px' :href='herf' download='影院数据' >影院数据</a>
+                  <a v-if='headerValue.cinemaCount && headerValue.cinemaCount > 0'
+                     style='font-size: 18px' :href='herf' download='影院数据' >影院数据</a>
                 </div>
               </Col>
             </Row>
@@ -303,7 +315,7 @@ import Exportfile from '../vadver/exportfile.vue'
 import Xlsx from '../vadver/downxsxl.vue'
 import pagination from '@/components/page.vue'
 
-const statusMap =  (list: any[]) => toMap(list, 'code', 'text')
+const codeMap = (list: any[]) => toMap(list, 'key', 'text')
 const timeFormat = 'YYYY-MM-DD'
 @Component({
   components: {
@@ -329,6 +341,8 @@ export default class Apps extends ViewBase {
   planMovies: any = []
   status = 0
   name = ''
+  location = ''
+  deliveryPositionList: any = []
   count: any = {
     cinemaCount: '',
     chainCount: '',
@@ -403,6 +417,7 @@ export default class Apps extends ViewBase {
         align: 'center'
       }
     ]
+    const specification = this.item.specification || 0
     if (this.tag == 1) {
       return [
         ...one,
@@ -412,6 +427,13 @@ export default class Apps extends ViewBase {
           align: 'center'
         },
         ...four,
+        {
+          title: `${specification}s 刊例价（元/千人次）`,
+          width: 136,
+          key: 'cpm',
+          align: 'center',
+          slot: 'cpm'
+        },
         ...five
       ]
     } else if (this.tag == 2 || this.tag == 3) {
@@ -540,6 +562,8 @@ export default class Apps extends ViewBase {
         ...data.item
       }
       this.length = (data.cities || []).length
+      this.deliveryPositionList = codeMap(data.deliveryPositionList)
+      this.location = this.deliveryPositionList[data.item.deliveryPositionCode]
       const citylength = ['票仓城市Top10', '一线城市', '二线城市', '三线城市', '四线城市', '五线城市']
       const citynums = uniqBy((data.cities || []), 'gradeName').map((it: any) => {
         const index = citylength.findIndex((item: any) => item == it.grade)
@@ -734,5 +758,9 @@ export default class Apps extends ViewBase {
       color: #fff;
     }
   }
+}
+/deep/ .ivu-col-span-10 span:empty::before {
+  content: '暂无数据';
+  font-size: 16px;
 }
 </style>

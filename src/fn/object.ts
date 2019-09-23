@@ -7,7 +7,7 @@ import makeMd5 from 'md5'
  *
  * @return object 新生成的对象
  */
-export function slice(object: any, keys: string|string[]): object {
+export function slice(object: any, keys: string | string[]): object {
   if (object == null) {
     return {}
   }
@@ -29,7 +29,7 @@ export function slice(object: any, keys: string|string[]): object {
  * @param object 对象
  * @param keys 要排除的属性，字符串数组，或以 , 号分割的字符串
  */
-export function except(object: any, keys: string|string[]): object {
+export function except(object: any, keys: string | string[]): object {
   if (object == null) {
     return {}
   }

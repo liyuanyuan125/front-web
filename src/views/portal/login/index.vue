@@ -74,7 +74,6 @@ export default class Login extends ViewBase {
     border: none;
   }
 }
-// media < 600 屏幕适配
 @media screen and(max-height: 600px) {
   .login-home {
     .login-whale {

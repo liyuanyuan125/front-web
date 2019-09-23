@@ -15,10 +15,12 @@
          class="download-link"
          href="javascript:;"><span class="downloadIcon"></span>下载表格</a>
       </div>
-      <Table stripe
+      <div class="table-wrap">
+        <Table stripe
              ref="table"
              :columns="columns"
              :data="data"></Table>
+      </div>
       <!-- <Page :total="totalCount"
             class="info-page"
             :current="form.pageIndex"
@@ -144,18 +146,23 @@ export default class MoreMoviesDlg extends ViewBase {
     position: absolute;
     right: -20px;
     top: -20px;
-    display: block;
     width: 40px;
     height: 40px;
     background: #fff;
     border-radius: 50%;
     cursor: pointer;
     border: 2px solid rgba(209, 216, 219, 1);
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
     &::before {
       content: '×';
-      font-size: 34px;
-      line-height: 36px;
-      text-align: center;
+      font-size: 29px;
+      display: flex;
+      flex-flow: row;
+      justify-content: center;
+      align-items: center;
     }
   }
 }
@@ -213,6 +220,12 @@ export default class MoreMoviesDlg extends ViewBase {
 }
 /deep/ .ivu-modal-body {
   height: 550px;
+}
+.table-wrap {
   overflow-y: scroll;
+  height: 470px;
+}
+/deep/ .ivu-table-header {
+  position: fixed;
 }
 </style>

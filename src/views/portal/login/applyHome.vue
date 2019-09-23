@@ -4,7 +4,7 @@
         <content class="content">
           <div class="login-title">欢迎您的加入</div>
           <p class="login-text">营销顾问将在24小时内与您联系</p>
-          <Button type="primary" :to="{name: 'tologin'}"  class="login-but">好的</Button>
+          <Button type="primary" :to="{name: 'login'}"  class="login-but">好的</Button>
         </content>
     </div>
   </loginLayout>
@@ -41,13 +41,13 @@ export default class Main extends ViewBase {
     width: 460px;
     position: absolute;
     left: 50%;
-    top: 240px;
+    top: 180px;
     transform: translate(-50%, 0);
     text-align: center;
     .login-title {
       font-size: 45px;
       color: #fff;
-      margin-bottom: 50px;
+      margin-bottom: 40px;
     }
     .login-text {
       color: #fff;
@@ -56,25 +56,24 @@ export default class Main extends ViewBase {
     }
   }
   /deep/ .ivu-btn {
-    width: 366px;
-    height: 46px;
-    line-height: 37px;
+    width: 250px;
+    height: 38px;
     color: #fff;
-    font-size: 18px;
+    font-size: 16px;
     text-align: center;
     background: #2f6af9;
-    border-radius: 23px;
+    border-radius: 17px;
     border: none;
   }
 }
-// media < 600 屏幕适配
+
 @media screen and(max-height: 600px) {
   .login-home {
     .content {
       width: 460px;
       position: absolute;
       left: 50%;
-      top: 100px;
+      top: 70px;
       transform: translate(-50%, 0);
       text-align: center;
       .login-title {

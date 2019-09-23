@@ -1,4 +1,4 @@
-import CircleProgress from './CircleProgress.vue'
+import CircleProgress from './circleProgress.vue'
 
 export default CircleProgress
 
