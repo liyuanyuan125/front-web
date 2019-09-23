@@ -33,9 +33,7 @@
           <Input v-model="form.recommendTel" :maxlength="11" placeholder="推荐人手机号（选填）"/>
         </FormItem>
         <FormItem prop="qualificationImageList">
-           <Upload v-model="form.qualificationImageList" :max-count="4" multiple accept="images/*"
-              confirm-on-del>
-            </Upload>
+           <Upload v-model="form.qualificationImageList" :max-count="4" multiple accept="images/*" confirm-on-del> </Upload>
            <!-- <span class="upload-tip">上传营业执照</span> -->
         </FormItem>
         <Button type="primary" long class="submit" @click="submitNext" >下一步</Button>
