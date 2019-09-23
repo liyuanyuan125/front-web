@@ -5,6 +5,8 @@
     <VideoUploader v-model="videoUrl">
     </VideoUploader>
 
+    <OssUploader v-model="ossUrl"/>
+
     <p>按时发送发放322323是非得失：<MiddleEllipsis class="shi">春眠不觉晓处处蚊子咬夜来风雨声花落知多少</MiddleEllipsis>是对方是否</p>
 
     <div><MiddleEllipsis class="shi">{{text}}</MiddleEllipsis></div>
@@ -73,6 +75,7 @@ import UploadLabel from '@/components/uploadLabel'
 import UploadButton from '@/components/UploadButton.vue'
 import triple from '@/ui/triple'
 import MiddleEllipsis from '@/components/middleEllipsis'
+import { alert, warning, success, error } from '@/ui/modal'
 
 @Component({
   components: {
@@ -92,6 +95,8 @@ export default class AboutPage extends ViewBase {
   progress = 0
 
   videoUrl = 'http://aiads-file.oss-cn-beijing.aliyuncs.com/MISC/MISC/blrhqc9e2o7g008ukpkg.mp4'
+
+  ossUrl = 'http://aiads-file.oss-cn-beijing.aliyuncs.com/MISC/MISC/blrhqc9e2o7g008ukpkg.mp4'
 
   tripleShow = false
 
