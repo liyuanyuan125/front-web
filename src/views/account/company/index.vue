@@ -2,35 +2,35 @@
   <div class="page home-bg as">
     <com-statu :statuCode="displayStatus" v-if="displayStatus != 5"></com-statu>
     <div class="content">
-      <div class="bs">
+      <div class="bs" v-if="company.companyType == 1">
         <Button type="primary" class="button-ok bok"  :to="{ name: 'account-info-accedit' }" >修改</Button>
         <h3 class="layout-title">公司信息</h3>
-        <Row class="text-rows">
+        <Row class="text-rows" >
           <Col :span="12">
             <p>
-              <label class="hui">公司名称</label>
+              <label>公司名称</label>
               {{company.name}}
             </p>
             <p>
-              <label class="hui">公司所在地</label>
+              <label >公司所在地</label>
               {{company.provinceName}} / {{company.cityName}}
             </p>
             <p>
-              <label class="hui">管理账号</label>
+              <label >管理账号</label>
               {{account.name}}({{account.mobile}})
             </p>
           </Col>
           <Col :span="12">
             <p>
-              <label class="hui">联系人</label>
+              <label >联系人</label>
               {{company.contact || '-'}}
             </p>
             <p>
-              <label class="hui">手机号码</label>
+              <label>手机号码</label>
               {{company.contactTel || '-'}}
             </p>
             <p>
-              <label class="hui">邮箱</label>
+              <label >邮箱</label>
               {{company.email || '-'}}
             </p>
           </Col>
@@ -41,16 +41,21 @@
         <h3 class="layout-title">开户信息</h3>
         <Row class="text-rows">
           <Col :span="24">
-            <p>
-              <label class="hui">资质类型</label>
-              {{queryTypeList(company.qualificationType)}}
+            <p v-if="company.companyType == 1">
+              <label >资质类型</label>
+              <span v-for="item in qualificationTypeList" :key="item.code" v-if="item.code == company.qualificationType">{{item.desc}}</span>
             </p>
+            <p v-else>
+              <label >资质类型</label>
+              <span v-for="item in personQualificationTypeList" :key="item.code" v-if="item.code == company.qualificationType">{{item.desc}}</span>
+            </p>
+
             <p>
-              <label class="hui">资质编号</label>
+              <label >资质编号</label>
               {{company.qualificationCode}}
             </p>
             <p class="flex-box">
-              <label class="hui">资质图片</label>
+              <label >资质图片</label>
               <em class="flex-box">
                 <ImagePreviewer
                   v-for="(item, i) in company.images"
@@ -68,10 +73,22 @@
     <!-- 审核以通过 displayStatus == 3  -->
     <div class="accountList" v-if="displayStatus == 3">
       <h3 class="layout-title">账号变更记录</h3>
-      <Table :columns="column" :data="dataList" disabled-hover></Table>
+      <Table :columns="column" :data="dataList" disabled-hover>
+        <template slot="changeBefore" slot-scope="{row}">
+          <a class="detail-list" @click="changeDetail(row.changeBefore, '变更前信息')">点击查看</a>
+        </template>
+        <template slot="changeEnd" slot-scope="{row}">
+          <a class="detail-list" @click="changeDetail(row.changeEnd, '变更后信息')">点击查看</a>
+        </template>
+        <template slot="remark" slot-scope="{row}">
+          <span v-if="!row.remark">/</span>
+          <Tooltip v-else :content="row.remark">{{handleSplit(row.remark)}}</Tooltip>
+        </template>
+      </Table>
     </div>
 
     <dlgChange v-model="queryDetail" v-if="queryDetail.visibleMess"></dlgChange>
+
     <dlgInforma
       v-model="informa"
       v-if="informa.visibleInforma"
@@ -103,8 +120,7 @@ export default class Main extends ViewBase {
   displayStatus: any = 5
   account: any = {}
   company: any = {}
-  systemList: any = []
-  accountType = ''
+  // systemList: any = []
 
   detailDate: any = []
 
@@ -120,83 +136,36 @@ export default class Main extends ViewBase {
     dataList: []
   }
 
-  qualificationTypeList = []
+  qualificationTypeList = [] // 资质类型
+  personQualificationTypeList = [] // 身份证
 
   column = [
     { title: '变更编号', key: 'id' },
     { title: '账号变更提交时间', key: 'timeName', minWidth: 120 },
-    {
-      title: '变更前信息',
-      key: 'changeBefore',
-      render: (hh: any, { row }: any) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        return (
-          <a
-            on-click={this.beforeChange.bind(this, row.changeBefore)}
-            class="detail-list"
-          >
-            点击查看
-          </a>
-        )
-        /* tslint:disable */
-      }
-    },
-    {
-      title: '变更后信息',
-      key: 'changeEnd',
-      render: (hh: any, { row }: any) => {
-        /* tslint:disable */
-        const h = jsxReactToVue(hh)
-        return (
-          <a on-click={this.afterChange.bind(this, row.changeEnd)} class="detail-list">
-            点击查看
-          </a>
-        )
-        /* tslint:disable */
-      }
-    },
+    { title: '变更前信息', slot: 'changeBefore' },
+    { title: '变更后信息', slot: 'changeEnd' },
     { title: '审核状态', key: 'status' },
-    {
-      title: '备注',
-      key: 'remark',
-      render: (h: any, params: any) => {
-        const { row } = params
-        if (row.remark && row.remark.length > 10) {
-          const splitText = row.remark.substr(0, 10) + '.......'
-          return h(
-            'Tooltip',
-            {
-              props: {
-                placement: 'top',
-                content: row.remark,
-                maxWidth: '200px'
-              }
-            },
-            splitText
-          )
-        } else if (!row.remark) {
-          return h('span', {}, '/')
-        } else {
-          return h('span', {}, row.remark)
-        }
-      }
-    }
+    { title: '备注',  slot: 'remark'}
   ]
 
   dataList = []
 
   async mounted() {
-    try {
+    this.detailList()
+  }
+
+  async detailList() {
+     try {
       const { data } = await accountDetail()
       this.detailDate = data
       this.displayStatus = data.company.displayStatus - 1
       this.account = data.account
       this.company = data.company
-      this.systemList = data.systemList
-      this.qualificationTypeList = data.qualificationTypeList
+      // this.systemList = data.systemList
+      this.qualificationTypeList = data.qualificationTypeList || []
+      this.personQualificationTypeList = data.personQualificationTypeList || []
 
-      this.queryAccuontList()
+      // this.queryAccuontList()
     } catch (ex) {
       this.handleError(ex)
     }
@@ -204,33 +173,28 @@ export default class Main extends ViewBase {
     this.accountChangeList()
   }
 
+  handleSplit(val: any) {
+    const remark = val.length > 10 ? val.substr(0, 10) + '.......' : val
+    return remark
+  }
+
   updataChangeList() {
-    this.accountChangeList()
+    this.informa.visibleInforma = false
+    // this.detailList()
   }
 
-  queryAccuontList() {
-    // 账号类型转换
-    let array: any[] = []
-    this.account.systems.map((item: any) => {
-      const a = this.systemList.filter((sys: any) => {
-        if (sys.code == item.code) {
-          array.push(sys.desc)
-          return sys.desc
-        }
-      })
-    })
-    this.accountType = array.length > 1 ? `${array[0]} / ${array[1]}` : array.toString()
-  }
-
-  queryTypeList(val: any) {
-    // 查询资质类型
-    let list: any = this.qualificationTypeList
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].code == val) {
-        return list[i].desc
-      }
-    }
-  }
+  // queryAccuontList() {
+  //   // 账号类型转换
+  //   const array: any[] = []
+  //   this.account.systems.map((item: any) => {
+  //     const a = this.systemList.filter((sys: any) => {
+  //       if (sys.code == item.code) {
+  //         array.push(sys.desc)
+  //         return sys.desc
+  //       }
+  //     })
+  //   })
+  // }
 
   async accountChangeList() {
     try {
@@ -244,19 +208,12 @@ export default class Main extends ViewBase {
     }
   }
 
-  beforeChange(list: any) {
+  changeDetail(list: any, title: string) {
     this.queryDetail = {
-      title: '账号变更前信息',
+      title,
       changelist: list,
-      visibleMess: true
-    }
-  }
-
-  afterChange(list: any) {
-    this.queryDetail = {
-      title: '账号变更后信息',
-      changelist: list,
-      visibleMess: true
+      visibleMess: true,
+      companyType: this.company.companyType
     }
   }
 
@@ -266,9 +223,6 @@ export default class Main extends ViewBase {
       dataList: this.detailDate
     }
   }
-  // setErrorImg(e: any) {
-  //   e.target.src = 'https://file.iviewui.com/iview-admin/login_bg.jpg'
-  // }
 }
 </script>
 
@@ -305,10 +259,6 @@ export default class Main extends ViewBase {
   position: relative;
 }
 
-.hui {
-  color: rgba(0, 32, 45, 0.7);
-}
-
 .detail-list {
   color: #2481d7;
 }
@@ -339,6 +289,10 @@ export default class Main extends ViewBase {
   z-index: 999;
   top: 10px;
   line-height: 38px;
+}
+
+.text-rows p label {
+  color: #444;
 }
 
 /deep/ .ivu-table th,

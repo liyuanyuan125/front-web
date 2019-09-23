@@ -21,7 +21,7 @@
         <div class="text-rows">
           <Row>
             <Col :span="12">
-              <div v-if="typeCode == 'ads'">
+              <div v-if="typeCode == 'ads' || typeCode == 'film'">
                 <p>
                   <label>关联客户</label>
                   {{customer}}个
@@ -164,7 +164,7 @@ export default class Main extends ViewBase {
 
   queryList() {
     // 判断资源方 广告方
-    if (this.typeCode == 'ads') {
+    if (this.typeCode == 'ads' || this.typeCode == 'film') {
       this.detailVisible = {
         visibleDetail: true,
         customer: this.data.partners
@@ -180,7 +180,7 @@ export default class Main extends ViewBase {
     // 判断资源方 广告方
     const resCheck = (this.data.cinemas || []).map((it: any) => it.id)
     const adsCheck = (this.data.partners || []).map((it: any) => it.id)
-    if (this.typeCode == 'ads') {
+    if (this.typeCode == 'ads' || this.typeCode == 'film') {
       this.editVisible = {
         editVis: true,
         check: adsCheck
@@ -218,7 +218,7 @@ export default class Main extends ViewBase {
       const id = this.$route.params.useid
       const type = this.typeCode
       // 判断资源方 广告主 partnerIds
-      if (this.typeCode == 'ads') {
+      if (this.typeCode == 'ads' || this.typeCode == 'film') {
         const { data } = await userEditSub(
           {
             ...this.form,

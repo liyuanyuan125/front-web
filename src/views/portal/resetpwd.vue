@@ -23,10 +23,13 @@
           <Input type="password" v-model="form.passwordAgain" :maxlength="16" placeholder="请再次输入密码"/>
         </FormItem>
 
-        <div class="submit-ln">
+        <div class="submit-ln submit-reset">
           <Button type="primary" html-type="submit" long class="submit"
             :disabled="submitDisabled">提交</Button>
         </div>
+
+        <p class="to-apply"><router-link :to="{name: 'tologin'}">返回登录</router-link> </p>
+        
       </Form>
     </div>
   </registerLayout>
@@ -182,6 +185,9 @@ export default class Main extends ViewBase {
     display: flex;
     justify-content: space-between;
   }
+}
+.submit-reset {
+  margin-bottom: 15px;
 }
 .input-captcha {
   width: 230px;

@@ -77,7 +77,7 @@ export default class Main extends ViewBase {
       font-size: 14px;
     }
     em {
-      width: 160px;
+      width: 190px;
     }
   }
 }

@@ -5,18 +5,18 @@
         <li class="items-list" v-for="item in list" :key="item.movieId">
           <router-link :to="{name: 'film-movie', params: {id: item.movieId}}" target="_blank">
           <div class="inner-items flex-box">
-            <div><img :src="item.logoUrl" width="104" height="156" /></div>
+            <div><img  v-real-img="item.logoUrl" width="104" height="156" /></div>
             <div class="inner-right">
               <h2>{{item.movieTitle}}</h2>
               <div class="rows"><em v-for="(it, index) in (item.typeList || [])" :key="index">{{it}}<i v-if="index < (item.typeList || []).length-1">/</i></em></div>
               <div class="rows">{{item.releaseDate}}上映</div>
               <div class="rows">
                 <em class="item-label">导演：</em>
-                <span class="span-offset" v-for="(it, index) in item.directorList" :key="index" v-if="index < 3">{{it}}</span>
+                <span>{{item.directorNames}}</span>
               </div>
               <div class="rows">
                 <em class="item-label">演员：</em>
-                <span class="span-offset" v-for="(it, index) in item.actorList" :key="index" v-if="index < 3">{{it}}</span>
+                  <span>{{item.actorNames}}</span>
               </div>
             </div>
           </div>
@@ -31,6 +31,7 @@
 import {Component} from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import {managementList} from './type'
+import { intDate } from '@/util/dealData'
 
 @Component
 export default class Main extends ViewBase {
@@ -38,7 +39,19 @@ export default class Main extends ViewBase {
 
   async mounted() {
     const { data } = await managementList()
-    this.list = data.items || []
+    this.list = (data.items || []).map((it: any) => {
+      const transStr = it.directorList && it.directorList.join(' ')
+      const directorNames = transStr && transStr.length > 12 ? transStr.substr(0, 12) + '...' : transStr
+
+      const str = it.actorList && it.actorList.join(' ')
+      const actorNames = str && str.length > 12 ? str.substr(0, 12) + '...' : str
+      return {
+        ...it,
+        releaseDate: intDate(it.releaseDate),
+        actorNames,
+        directorNames
+      }
+    })
   }
 }
 

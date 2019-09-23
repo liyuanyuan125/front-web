@@ -4,7 +4,7 @@
     :content="title"
     class="figure-component"
   >
-    <img :src="src" class="figure-img">
+    <img v-real-img="src" class="figure-img">
   </component>
 </template>
 

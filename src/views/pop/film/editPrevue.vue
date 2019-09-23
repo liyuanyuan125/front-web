@@ -1,9 +1,6 @@
 <template>
   <div class="pagehome">
-    <div class="create-title-text">
-      <p>平台映前广告计费标准最小时长单位为15s，为节省您的广告投放成本，请准确设置广告片时长规格；时长规格不得低于广告片实际时长 广告片通过审核后，
-      平台会统一为您进行转码为影院可播放的格式；转码费用标准为【3,000.00元/15s】</p>
-    </div>
+     <textDlg />
      <Form :model="form" ref="dataform" :rules="rule" :label-width="130" class="jyd-form film-edit">
        <div class="item-center">
         <FormItem  label="名称" prop="name">
@@ -28,9 +25,9 @@
         </RadioGroup>
           <em class="remark">影院进行排播时，需要将视频文件转制为特定的DCP包，请确定是否需要平台进行格式转制</em>
         </FormItem>
-
+        
         <FormItem label="广告片小样">
-          <OssUploader v-model="form.srcFileId"  :param="{fileType: 3, subCategory: 1}"></OssUploader>
+          <OssUploader v-model="form.srcFileId" :param="{fileType: 3, subCategory: 1}"></OssUploader>
           <em class="remark">支持（.rmvb\.mp4\.mov）等视频格式；视频大小不超过100M；上传广告片小样可提升系统审核速度</em>
         </FormItem>
 
@@ -41,8 +38,8 @@
         </FormItem>
 
          <div class=" create-submit-btn">
-           <Button v-if="!$route.params.id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
-           <Button v-else type="primary" class="btn"  @click="editSubmit('dataform')">保存修改</Button>
+           <Button v-if="!id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
+           <Button v-else type="primary" class="btn"  @click="createSubmit('dataform')">保存修改</Button>
            <Button class="cancel-btn" @click="$router.push({name: 'pop-film'})">取消</Button>
          </div>
 
@@ -52,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { getUser } from '@/store'
 import { confirm } from '@/ui/modal'
@@ -60,17 +57,24 @@ import Upload, { FileItem } from '@/components/upload'
 import {detailPop, createPop, editPop, transFee, companyMovies } from '@/api/popFilm'
 
 import OssUploader from '@/components/videoUploader'
+import textDlg from './components/textDlg.vue'
 
 @Component({
   components: {
     Upload,
-    OssUploader
+    OssUploader,
+    textDlg
   }
 })
+
 export default class Main extends ViewBase {
+  @Prop({ type: Number}) id!: number
+
   form: any = {
-    translated: 1
+    translated: 1,
+    srcFileId: null
   }
+
   // 是否正在上传
   uploading = false
   fileId = null
@@ -100,7 +104,7 @@ export default class Main extends ViewBase {
     this.creSpecificationList()
     this.companyMoviesList()
     // 编辑详情
-    if (this.$route.params.id) {
+    if (this.id) {
       this.detailList()
     }
   }
@@ -112,7 +116,7 @@ export default class Main extends ViewBase {
   }
 
   async detailList() {
-    const id = this.$route.params.id
+    const id = this.id
     try {
       const { data: { item } } = await detailPop(id)
       this.form = {
@@ -134,25 +138,31 @@ export default class Main extends ViewBase {
     }
   }
 
-  async createSubmit(dataform: any) {
-    const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) { return}
-    const transFreeCount = await this.handleChangeSpe()
-    await confirm(`数字转制费用：${transFreeCount} 元`, {title: '确认新建广告片'})
-    this.createSub()
-  }
-
   async handleChangeSpe() {
      const specification = this.form.specification
      const translated = this.form.translated
-     const { data } = await transFee({ specification, translated })
+     const id = this.id
+     const { data } = await transFee({ specification, translated, id })
      this.transFee = data.transFee
-     return this.transFee
+     return data
   }
 
   async companyMoviesList() {
     const { data } = await companyMovies()
     this.movieList = data || []
+  }
+
+
+  async createSubmit(dataform: any) {
+    const volid = await (this.$refs[dataform] as any).validate()
+    if (!volid) { return}
+    const data = await this.handleChangeSpe()
+    const free = this.form.translated == 1 ? data.transFee : (data.promotionPrice || data.transFee)
+
+    await confirm(`数字转制费用：${free} 元`, {title: '确认新建广告片'})
+    // 判断调用添加还是编辑接口
+    const id = this.id
+    !id ? this.createSub() : this.editSubmit()
   }
 
   // 新建
@@ -174,19 +184,22 @@ export default class Main extends ViewBase {
   }
 
   // 编辑
-  async editSubmit(dataform: any) {
-    // this.errorPerm =  this.srcFileId == '' ? '请选择上传视频' : ''
-    const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) {
-      return
-    }
+  async editSubmit() {
+    // const volid = await (this.$refs[dataform] as any).validate()
+    // if (!volid) {
+    //   return
+    // }
 
-    const id = this.$route.params.id
+    const id = this.id
 
     // 视频(默认传后台fileId， 重新上传视频则传url和size)
     let srcFileId = null
     const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
-    if (size == 0) {
+    const url = this.form.srcFileId ? this.form.srcFileId.url : null
+
+    if (!size && !url) {
+      srcFileId = null
+    } else if (!size && url) {
       srcFileId = this.fileId
     } else {
       srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null

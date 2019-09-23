@@ -4,7 +4,7 @@
         <content class="content">
           <div class="login-title">欢迎您的加入</div>
           <p class="login-text">营销顾问将在24小时内与您联系</p>
-          <Button type="primary" :to="{name: 'tologin'}"  class="login-but">好的</Button>
+          <Button type="primary" :to="{name: 'login'}"  class="login-but">好的</Button>
         </content>
     </div>
   </loginLayout>

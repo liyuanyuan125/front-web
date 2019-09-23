@@ -21,8 +21,8 @@
           <div>
             <p class="title">曝光人次预估</p>
             <p v-if="item.estimatePersonCount && (item.estimatePersonCount + '').length > 4" class="number">
-              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 100000 * 7" /> ~ 
-              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 100000 * 13" />
+              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 10000 * 7" /> ~ 
+              <Number :addNum="!item.estimatePersonCount ? 0 : item.estimatePersonCount / 10000 * 13" />
             </p>
             <p class="onenumber" v-else>
               <Number :flag="2"  :addNum="Math.floor(item.estimatePersonCount * 7 / 10)" /> ~ 
@@ -34,8 +34,8 @@
           <div>
             <p class="title">投放场次数预估</p>
             <p v-if="item.estimateShowCount && (item.estimateShowCount + '').length > 4" class="number">
-              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 100000 * 7" /> ~
-              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 100000 * 13" />
+              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 10000 * 7" /> ~
+              <Number :addNum="!item.estimateShowCount ? 0 : item.estimateShowCount / 10000 * 13" />
             </p>
             <p class="onenumber" v-else>
               <Number :flag="2"  :addNum="Math.floor(item.estimateShowCount * 7 / 10)" /> ~ 
@@ -47,7 +47,7 @@
           <div>
             <p class="title">预估花费</p>
             <p v-if="item.estimateCostAmount && (item.estimateCostAmount + '').length > 4" class="number">
-              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount" />
+              <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 10000" />
               <!-- <Number :addNum="!item.estimateCostAmount ? 0 : item.estimateCostAmount / 100000 * 13" /> -->
             </p>
             <p class="onenumber" v-else>
@@ -195,7 +195,7 @@
               </template>
 
               <template slot-scope="{ row }" slot="cpm">
-                {{formatNums(row.cpm * 7 / 10, 1)}}
+                {{formatNums(row.cpm)}}
               </template>
               <!-- <template slot-scope="{ row }" slot="estimateShowCount">
                 {{formatNums(row.estimateShowCount, 1)}}
@@ -417,6 +417,7 @@ export default class Apps extends ViewBase {
         align: 'center'
       }
     ]
+    const specification = this.item.specification || 0
     if (this.tag == 1) {
       return [
         ...one,
@@ -427,7 +428,7 @@ export default class Apps extends ViewBase {
         },
         ...four,
         {
-          title: '45s 刊例价（元/千人次）',
+          title: `${specification}s 刊例价（元/千人次）`,
           width: 136,
           key: 'cpm',
           align: 'center',

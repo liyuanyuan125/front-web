@@ -6,7 +6,7 @@ const resolve = dir => path.join(__dirname, 'src', dir)
 
 module.exports = {
   // 加快编译速度
-  productionSourceMap: false,   
+  productionSourceMap: false,
 
   devServer: {
     host: 'fdev.aiads-dev.com',
@@ -31,13 +31,13 @@ module.exports = {
       },
       {
         env: 'qas',
-        baseUrl: 'https://whaledata.com',
-        ajaxBaseUrl: 'https://fapi.whaledata.com',
+        baseUrl: 'https:/www.jydata-qas.com',
+        ajaxBaseUrl: 'https://fapi.jydata-qas.com',
       },
       {
         env: 'stg',
-        baseUrl: 'https://stg.aiads.com',
-        ajaxBaseUrl: 'https://fapi.stg.aiads.com',
+        baseUrl: 'https://www.jydata-stg.com',
+        ajaxBaseUrl: 'https://fapi.jydata-stg.com',
       },
       {
         env: 'prd',

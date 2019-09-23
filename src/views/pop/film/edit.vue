@@ -1,9 +1,6 @@
 <template>
   <div class="pagehome">
-    <div class="create-title-text">
-      <p>平台映前广告计费标准最小时长单位为15s，为节省您的广告投放成本，请准确设置广告片时长规格；时长规格不得低于广告片实际时长 广告片通过审核后，
-      平台会统一为您进行转码为影院可播放的格式；转码费用标准为【3,000.00元/15s】</p>
-    </div>
+     <textDlg />
      <Form :model="form" ref="dataform" :rules="rule" :label-width="130" class="jyd-form film-edit">
        <div class="item-center">
         <FormItem  label="名称" prop="name">
@@ -55,20 +52,21 @@
           <FormItem label="营业执照有效期" prop="validity">
             <DatePicker v-model="form.validity" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择有效期"></DatePicker>
           </FormItem>
+
           <FormItem label="营业执照扫描件" prop="licenseFileId">
-            <Upload v-model="form.licenseFileId" :max-count="1"  multiple accept="images/*" confirm-on-del/>
+            <Upload v-model="form.licenseFileId" :max-count="1"  accept="images/*" confirm-on-del/>
               <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
           </FormItem>
 
           <FormItem label="授权文件扫描件" prop="grantFileIds">
-            <Upload  v-model="form.grantFileIds":max-count="6" multiple accept="images/*"  confirm-on-del/>
+            <Upload  v-model="form.grantFileIds" :max-count="6" multiple accept="images/*"  confirm-on-del/>
               <div class="upload-tip">支持（.jpg/.jpeg/.png）等图片格式；图片大小不超过2M</div>
           </FormItem>
         </div>
 
          <div class=" create-submit-btn">
-           <Button v-if="!$route.params.id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
-           <Button v-else type="primary" class="btn"  @click="editSubmit('dataform')">保存修改</Button>
+           <Button v-if="!id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
+           <Button v-else type="primary" class="btn"  @click="createSubmit('dataform')">保存修改</Button>
            <Button class="cancel-btn" @click="$router.push({name: 'pop-film'})">取消</Button>
          </div>
 
@@ -78,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm } from '@/ui/modal'
 import Upload, { FileItem } from '@/components/upload'
@@ -92,6 +90,7 @@ import customerList from '@/components/selectList/customerList.vue'
 import brandList from '@/components/selectList/brandList.vue'
 import productList from '@/components/selectList/productList.vue'
 import OssUploader from '@/components/videoUploader'
+import textDlg from './components/textDlg.vue'
 
 @Component({
   components: {
@@ -99,11 +98,15 @@ import OssUploader from '@/components/videoUploader'
     OssUploader,
     customerList,
     brandList,
-    productList
+    productList,
+    textDlg
   }
 })
 
 export default class Main extends ViewBase {
+
+  @Prop({ type: Number }) id!: number
+
   form: any = {
     srcFileId: null,
     brandId: null,
@@ -117,7 +120,6 @@ export default class Main extends ViewBase {
 
   // 是否正在上传
   uploading = false
-  srcFileId: any = null
   fileId = null
 
   // 转码费
@@ -169,7 +171,7 @@ export default class Main extends ViewBase {
           trigger: 'change',
           type: 'array',
           validator(rule: any, value: any[], callback: any) {
-            value && value.length == 0 ? callback(new Error(rule.message)) : callback()
+            !value ? callback(new Error(rule.message)) : callback()
           }
         }
       ],
@@ -187,10 +189,10 @@ export default class Main extends ViewBase {
     }
   }
 
-  mounted() {
+  async mounted() {
     this.creSpecificationList()
     // 编辑详情
-    if (this.$route.params.id) {
+    if (this.id) {
       this.detailList()
     }
   }
@@ -207,7 +209,7 @@ export default class Main extends ViewBase {
   }
 
   async detailList() {
-    const id = this.$route.params.id
+    const id = this.id
     try {
       const { data: { item } } = await detailPop(id)
 
@@ -237,18 +239,23 @@ export default class Main extends ViewBase {
   async handleChangeSpe() {
      const specification = this.form.specification
      const translated = this.form.translated
-     const { data } = await transFee({ specification, translated })
+     // 添加id 区分新建和编辑计算转制费用
+     const id = this.id ? this.id : null
+     const { data } = await transFee({ specification, translated, id })
      this.transFee = data.transFee
-     return this.transFee
+     return data
   }
 
   async createSubmit(dataform: any) {
     const volid = await (this.$refs[dataform] as any).validate()
     if (!volid) { return this.scrollToError()}
     // 二次确定弹框
-    const transFreeCount = await this.handleChangeSpe()
-    await confirm(`数字转制费用：${transFreeCount} 元`, {title: '确认新建广告片'})
-    this.createSub()
+    const data = await this.handleChangeSpe()
+    const free = this.form.translated == 1 ? data.transFee : (data.promotionPrice || data.transFee)
+    await confirm(`数字转制费用：${free} 元`, {title: '确认新建广告片'})
+    // 判断调用添加还是编辑接口
+    const id = this.id
+    !id ? this.createSub() : this.editSubmit()
   }
 
 
@@ -280,30 +287,34 @@ export default class Main extends ViewBase {
     }
   }
 
-  async editSubmit(dataform: any) {
-    const volid = await (this.$refs[dataform] as any).validate()
-    if (!volid) {
-      return this.scrollToError()
-    }
-
+  async editSubmit() {
+    // const volid = await (this.$refs[dataform] as any).validate()
+    // if (!volid) {
+    //   return this.scrollToError()
+    // }
     // 视频(默认传后台fileId， 重新上传视频则传url和size)
     let srcFileId = null
     const size = this.form.srcFileId ? this.form.srcFileId.clientSize : null
-    if (size == 0) {
+    const url = this.form.srcFileId ? this.form.srcFileId.url : null
+
+    if (!size && !url) {
+      srcFileId = null
+    } else if (!size && url) {
       srcFileId = this.fileId
     } else {
       srcFileId = this.form.srcFileId ? this.form.srcFileId.url : null
     }
 
     // 营业执照扫描文件
-    const licenseFileId = this.form.licenseFileId ? this.form.licenseFileId[0].fileId : null
+    const licenLen = this.form.licenseFileId.length
+    const licenseFileId = licenLen >= 1 ? this.form.licenseFileId[0].fileId : null
     // 授权扫描文件
     const grantFileIds = (this.form.grantFileIds || []).map((it: any) => it.fileId)
 
     // 删除多余字段
     delete this.form.validity
 
-    const id = this.$route.params.id
+    const id = this.id
     try {
       const { data } = await editPop({
         ...this.form,
@@ -311,7 +322,7 @@ export default class Main extends ViewBase {
         srcFileId,
         size: size || null,
         licenseFileId,
-        grantFileIds,
+        grantFileIds: grantFileIds.length >= 1 ? grantFileIds : null ,
         videoType: 2, // 影片类型 1 = 预告片 2 = 商业片
       }, id)
       this.$router.push({name: 'pop-film'})

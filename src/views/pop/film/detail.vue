@@ -1,13 +1,18 @@
 <template>
   <div class="pagehome">
-    <div class="create-title-text">
-      <p>平台映前广告计费标准最小时长单位为15s，为节省您的广告投放成本，建议广告片时长为15s的整倍数，例如（15s、30s、45s、60s等）
-广告片通过审核后，平台会统一为您进行转码为影院可播放的格式；转码费用标准为【3,000.00元/15s】</p>
-      <div v-if="status == 1" class="status-title">待审核，您上传的广告片正在审核中</div>
-      <div v-if="status == 5" class="status-title">已拒绝，拒绝原因：{{refuseReason}}</div>
+     <textDlg>
+       <div slot="detailStatus">
+          <div v-if="status == 1" class="status-title">待审核，您上传的广告片正在审核中</div>
+      <div v-if="status == 5" class="status-title">已拒绝，拒绝原因：{{item.resultReason}}</div>
       <div v-if="status == 2" class="status-title">待支付，数字转制费{{item.transFee}}元</div>
       <div v-if="status == 3" class="status-title">转码中，您已支付{{item.transFee}}的数字转制费</div>
-    </div>
+       </div>
+      
+     </textDlg>
+    <!-- <div class="create-title-text">
+     
+      
+    </div> -->
 
     <!-- dcp下载 v-if="status == 4" -->
     <dl  class="form dcp-download">
@@ -52,12 +57,14 @@ import payDefault from './payDefault.vue'
 import statusCode from './status.vue'
 import { VuePlyr } from 'vue-plyr'
 import 'vue-plyr/dist/vue-plyr.css'
+import textDlg from './components/textDlg.vue'
 
 @Component({
   components: {
     payDefault,
     statusCode,
-    VuePlyr
+    VuePlyr,
+    textDlg
   }
 })
 export default class Main extends ViewBase {

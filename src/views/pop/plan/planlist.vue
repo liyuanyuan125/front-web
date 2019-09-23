@@ -4,16 +4,18 @@
       <span class="adver-tiele">广告计划</span>
       <Button
         type="primary"
-        :to="{name: 'pop-business-add'}"
+        :to="{name: 'pop-planlist-add'}"
         class="btn-new"
         v-auth="'promotion.ad-plan#create'"
       >
-        <Icon type="ios-add" size="27"/>新建商业广告计划
+        <Icon type="ios-add" size="27"/> 新建商业广告计划
       </Button>
+
       <Button
         type="primary"
-        :to="{name: 'pop-planlist-add'}"
+        :to="{name: 'pop-business-add'}"
         class="btn-new"
+        style="margin-right: 20px"
         v-if="systemCode == 'film'"
         v-auth="'promotion.ad-plan#create'"
       >
@@ -25,7 +27,7 @@
       <Row :gutter="20">
         <Col class="flex-box" :span="6" :offset="3">
           <div class="flex-box search-border-left" style="width: 100%">
-            <Input v-model="form.name" placeholder="请输入ID/名称进行搜索"/>
+            <Input v-model="form.query" placeholder="请输入ID/名称进行搜索"/>
             <Button type="primary" class="bth-search" @click="searchList">
               <Icon type="ios-search" size="22"/>
             </Button>
@@ -37,6 +39,7 @@
             <Option
               v-for="item in data.statusList"
               v-if="item.key != 0"
+              @on-change="() => pageList.pageIndex = 1"
               :key="item.key"
               :value="item.key"
             >{{item.text}}</Option>
@@ -81,7 +84,7 @@
             </p>
             <div>
               <div>
-                <div :class="{advert: row.advertType == 'TRAILER'}"></div>
+                <div :class="{advert: row.advertTypeCode == 'TRAILER'}"></div>
                 <img v-if="!row.ids" :src="row.videoLogo ? row.videoLogo : defaultImg" :onerror="defaultImg" width="90px" height="90px">
                 <img v-else src="./assets/mock.png" :onerror="defaultImg" width="90px" height="90px">
               </div>
@@ -129,13 +132,18 @@
             <div v-else>
               <span class="edit-btn" v-if="row.status == 1" @click="sure(row.id)">确认方案</span>
               <div v-if="row.status == 1 || row.status == 2">
-                <p @click="plandetail(row.id)">详情</p>
-                <p @click="plandEdit(row.id, row.advertTypeCode)">编辑</p>
+                <!-- <p @click="plandetail(row.id)">详情</p> -->
+                <!-- <p @click="plandEdit(row.id, row.advertTypeCode)">编辑</p> -->
                 <p @click="plandel(row.id)">删除</p>
+                <p @click="plandetail(row.id)">详情</p>
               </div>
               <div v-if="row.status == 3 || row.status == 4">
                 <span class="edit-btn" v-if="row.status == 3" @click="pay(row.id)">立即缴费</span>
-                <div class="adver-edit">
+                <div class="adver-edit" v-if="row.status == 3">
+                  <p @click="planCancel(row.id)">取消</p>
+                  <p @click="plandetail(row.id)">详情</p>
+                </div>
+                <div class="adver-edit" v-else>
                   <p @click="plandetail(row.id)">详情</p>
                   <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
                   <p @click="plandel(row.id)">删除</p>
@@ -143,9 +151,9 @@
               </div>
               <div v-if="row.status == 12">
                 <div class="adver-edit">
-                  <p @click="plandetail(row.id)">详情</p>
                   <!-- <p v-if="row.status == 3" @click="plandEdit(row.id)">编辑</p> -->
                   <p @click="plandel(row.id)">删除</p>
+                  <p @click="plandetail(row.id)">详情</p>
                 </div>
               </div>
               <div v-if="(row.status > 4 && row.status < 8) ">
@@ -212,7 +220,7 @@ export default class Plan extends ViewBase {
   form: any = {
     status: '',
     settlementStatus: '',
-    name: ''
+    query: ''
   }
   deliveryPositionList: any = []
   loading: any = false
@@ -310,6 +318,7 @@ export default class Plan extends ViewBase {
       clean({
         ...this.form,
         ...this.pageList,
+        pageIndex: 1,
         advertTypeCode: (this.systemCode as any) == 'film' ? '' : 'BRAND'
       })
     )
@@ -407,7 +416,7 @@ export default class Plan extends ViewBase {
   async planCancel(val: any, id: any) {
     await confirm(`是否取消广告计划：${val}`, { title: '取消广告计划' })
     try {
-      await planCancel(id)
+      await planCancel(val)
       this.tableList()
     } catch (ex) {
       this.handleError(ex)
@@ -456,14 +465,16 @@ export default class Plan extends ViewBase {
         item: {
           videoId: ''
         },
-        id: val.id
+        id: val.id,
+        advertTypeCode: val.advertTypeCode
       }
     } else {
       this.relevanVis = {
         visible: true,
         title: '修改广告片',
         item: val,
-        id: val.id
+        id: val.id,
+        advertTypeCode: val.advertTypeCode
       }
     }
   }
@@ -520,8 +531,8 @@ export default class Plan extends ViewBase {
     this.tableList()
   }
 
-  @Watch('form', { deep: true })
-  watchForm(val: any) {
+  @Watch('form.status', { deep: true })
+  watchFormStatus(val: any) {
     this.tableList()
   }
 
