@@ -40,7 +40,7 @@
           <span class='availableAmount' >可用余额{{availableAmount}}元</span>
           <router-link v-if="availableAmount < depositAmount" :to="{
             name: 'finance-info'
-          }" style='margin-left: 40px'>余额不足，前往充值</router-link>
+          }" style='margin-left: 40px; margin-top: 10px'>余额不足，前往充值</router-link>
         </div>
         <div>
           <span class='disimg'><img src="./assets/alipay.png" alt=""></span>
