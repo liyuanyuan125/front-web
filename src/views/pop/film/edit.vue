@@ -41,7 +41,7 @@
         </FormItem>
 
         <FormItem label="广告片小样">
-          <OssUploader v-model="form.srcFileId" :param="{fileType: 3, subCategory: 1}"></OssUploader>
+          <OssUploader v-model="form.srcFileId" :param="{fileType: 3, subCategory: 1}" accept="video/*"></OssUploader>
           <em class="remark">支持（.rmvb\.mp4\.mov）等视频格式；视频大小不超过100M；上传广告片小样可提升系统审核速度</em>
         </FormItem>
 

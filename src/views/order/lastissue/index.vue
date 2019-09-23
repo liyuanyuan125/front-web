@@ -141,6 +141,8 @@ export default class Main extends ViewBase {
   weekDate = [new Date(this.startTime), new Date(this.endTime)]
   sd = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
   ed = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+  ad = moment(this.weekDate[0].getTime() - (24 * 60 * 60 * 1000 * 7)).format(timeFormat).split('-')
+  bd = moment(this.weekDate[1].getTime() - (24 * 60 * 60 * 1000 * 7)).format(timeFormat).split('-')
   query: any = {
     cinemaId: null,
     beginDate: this.sd[0] + this.sd[1] + this.sd[2],
@@ -187,6 +189,11 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.seach()
     } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
+      this.weekDate = [
+      new Date(this.startTime - (24 * 60 * 60 * 1000 * 7)) ,
+      new Date(this.endTime - (24 * 60 * 60 * 1000 * 7))]
+      this.query.beginDate = this.ad[0] + this.ad[1] + this.ad[2]
+      this.query.endDate = this.bd[0] + this.bd[1] + this.bd[2]
       this.seach()
       return
     }

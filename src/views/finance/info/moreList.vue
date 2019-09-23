@@ -4,7 +4,7 @@
       <form class="form item-top" @submit.prevent="seach">
         <em style='color: #fff;display: inline-block;'>充值状态</em>
         <Select v-model="dataForm.status" placeholder="所有状态" clearable @on-change="seach">
-          <Option v-for="it in statusList" :key="it.key" :value="it.key"
+          <Option v-for="it in statusList" v-if='it.key != 0' :key="it.key" :value="it.key"
             :label="it.text">{{it.text}}</Option>
         </Select>
       </form>

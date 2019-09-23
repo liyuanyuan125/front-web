@@ -61,7 +61,7 @@
             </Col>
             <Col span="9" style='margin-left: 9%;'>
               <FormItem label="汇款底单" prop="receipts">
-                <Upload v-model="dataForm.receipts" multiple :maxCount="1" accept="image/*"/>
+                <Upload v-model="dataForm.receipts" multiple :maxCount="1" accept="image/jpg , image/jpeg , image/png"/>
                 <span class='is'>格式为jpg/jpeg/png，大小不超过5M的图片</span>
               </FormItem>
             </Col>
@@ -258,7 +258,7 @@ export default class Change extends ViewBase {
       info('请输入1-1亿之间金额')
       return
     }
-    if (this.form.amount == null || this.form.amount < 0 || this.form.amount > 100000000) {
+    if (this.form.amount == null || this.form.amount < 1 || this.form.amount > 100000000) {
       info('请输入1-1亿之间金额')
       return
     }

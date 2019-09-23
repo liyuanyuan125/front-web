@@ -33,8 +33,8 @@
       <div class="spin-show">
         <ul class="ul-list demo-spin-article">
           <!-- 当广告片列表类型为 电影预告片 展示active class -->
-          <li v-for="item in tableDate " :key="item.id" :class="{active: item.videoType == 1}">
-            <div class="flex-box inner">
+          <li v-for="item in tableDate " :key="item.id">
+            <div class="flex-box inner"  :class="{active: item.videoType == 1}"> 
               <div class="left-item"  @click="$router.push({name: 'pop-film-detail', params: {id: item.id}})">
                 <img v-if="item.logo" :src="item.logo" class="img" />
                 <img v-else src="./assets/default-img.png"  class="img"/>
@@ -218,16 +218,16 @@ export default class Main extends ViewBase {
     width: 33.3%;
     padding: 0 15px;
     margin-top: 30px;
-    &.active {
-      background: url('./assets/prevue.png') no-repeat 15px top;
-      background-size: 35px auto;
-    }
     .inner {
       background: rgba(0, 32, 45, .5);
       border-radius: 5px;
       padding: 20px 20px 15px;
       cursor: pointer;
       position: relative;
+      &.active {
+        background: rgba(0, 32, 45, .5) url('./assets/prevue.png') no-repeat left top;
+        background-size: 30px auto;
+      }
       .left-item {
         .img {
           width: 120px;

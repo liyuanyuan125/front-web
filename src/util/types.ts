@@ -64,6 +64,12 @@ export type ResourceSecondaryCode = 'agent' | 'cinema'
 /** 合并后的二级子类型 */
 export type SecondaryCode = AdsSecondaryCode | ResourceSecondaryCode
 
+export interface SystemItem {
+  code: SystemCode
+  secondaryCode: SecondaryCode
+  status: number
+}
+
 const defaultSecondaryCodeMap: MapType<SecondaryCode> = {
   ads: 'daili',
   resource: 'agent'
