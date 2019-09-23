@@ -45,8 +45,12 @@
           <span class="user-name">{{system.name}}：{{user.email}}</span>
           <DropdownMenu slot="list">
             <div class="switcher-arrow"></div>
-            <DropdownItem v-for="it in systemList" :key="it.code" :name="it.code"
-              :selected="user.systemCode == it.code">{{it.name}}</DropdownItem>
+            <DropdownItem
+              v-for="it in systemList"
+              :key="it.code"
+              :name="it.code"
+              :selected="user.systemCode == it.code"
+            >{{it.name}}</DropdownItem>
           </DropdownMenu>
         </Dropdown>
         <a class="logout" title="退出" @click="logout">
