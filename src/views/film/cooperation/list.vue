@@ -1,6 +1,6 @@
 <template>
   <div class="film-cooperation-wp">
-    <div class="guide">
+    <!-- <div class="guide">
       <h3>影片合作推广 - 流程介绍：</h3>
       <ul>
         <li class="icon-1">
@@ -42,7 +42,7 @@
           </div>
         </li>
       </ul>
-    </div>
+    </div> -->
     <div class="filter-box">
       <Form :model="form" label-position="left" class="edit-input" :label-width="100">
         <Row type="flex" class="filtertop" justify="space-between">
@@ -204,7 +204,7 @@ export default class CooperationFilmList extends ViewBase {
     sortBy: 'wantSeeCount',
     pageIndex: 1,
     pageSize: 18,
-    releaseStatus: 3
+    releaseStatus: 2
   }
 
   // 即将上映 时间段
@@ -220,12 +220,12 @@ export default class CooperationFilmList extends ViewBase {
       //   text: '不限'
       // },
       {
-        key: 3,
-        text: '正在热映'
-      },
-      {
         key: 2,
         text: '即将上映'
+      },
+      {
+        key: 3,
+        text: '正在热映'
       }
     ],
     // 即将上映 时间段

@@ -31,13 +31,13 @@ module.exports = {
       },
       {
         env: 'qas',
-        baseUrl: 'https://qas.aiads.com',
-        ajaxBaseUrl: 'https://fapi.qas.aiads.com',
+        baseUrl: 'https://www.jydata-qas.com',
+        ajaxBaseUrl: 'https://fapi.jydata-qas.com',
       },
       {
         env: 'stg',
-        baseUrl: 'https://stg.aiads.com',
-        ajaxBaseUrl: 'https://fapi.stg.aiads.com',
+        baseUrl: 'https://www.jydata-stg.com',
+        ajaxBaseUrl: 'https://fapi.jydata-stg.com',
       },
       {
         env: 'prd',
