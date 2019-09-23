@@ -84,6 +84,7 @@ export default class VideoUploader extends ViewBase {
 
 <style lang="less" scoped>
 .video-uploader {
+  &.oss-uploader-filled,
   &.oss-uploader-done {
     /deep/ .file-name,
     /deep/ .loading-wrap,
@@ -108,6 +109,10 @@ export default class VideoUploader extends ViewBase {
         vertical-align: top;
       }
     }
+  }
+
+  /deep/ .filled-url {
+    display: none;
   }
 }
 
