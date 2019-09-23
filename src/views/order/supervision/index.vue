@@ -59,12 +59,12 @@
                 <row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in normallist.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                        <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">
+                        <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}">
                            <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
                           {{item.videoName.slice(0,7)}}...
                         </router-link>
                       </Tooltip>
-                    <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}" v-if='item.videoName.length <= 7'>
+                    <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}" v-if='item.videoName.length <= 7'>
                       <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
                       {{item.videoName}}
                     </router-link>
