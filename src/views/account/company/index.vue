@@ -8,29 +8,29 @@
         <Row class="text-rows" >
           <Col :span="12">
             <p>
-              <label class="hui">公司名称</label>
+              <label>公司名称</label>
               {{company.name}}
             </p>
             <p>
-              <label class="hui">公司所在地</label>
+              <label >公司所在地</label>
               {{company.provinceName}} / {{company.cityName}}
             </p>
             <p>
-              <label class="hui">管理账号</label>
+              <label >管理账号</label>
               {{account.name}}({{account.mobile}})
             </p>
           </Col>
           <Col :span="12">
             <p>
-              <label class="hui">联系人</label>
+              <label >联系人</label>
               {{company.contact || '-'}}
             </p>
             <p>
-              <label class="hui">手机号码</label>
+              <label>手机号码</label>
               {{company.contactTel || '-'}}
             </p>
             <p>
-              <label class="hui">邮箱</label>
+              <label >邮箱</label>
               {{company.email || '-'}}
             </p>
           </Col>
@@ -42,20 +42,20 @@
         <Row class="text-rows">
           <Col :span="24">
             <p v-if="company.companyType == 1">
-              <label class="hui">资质类型</label>
+              <label >资质类型</label>
               <span v-for="item in qualificationTypeList" :key="item.code" v-if="item.code == company.qualificationType">{{item.desc}}</span>
             </p>
             <p v-else>
-              <label class="hui">资质类型</label>
+              <label >资质类型</label>
               <span v-for="item in personQualificationTypeList" :key="item.code" v-if="item.code == company.qualificationType">{{item.desc}}</span>
             </p>
 
             <p>
-              <label class="hui">资质编号</label>
+              <label >资质编号</label>
               {{company.qualificationCode}}
             </p>
             <p class="flex-box">
-              <label class="hui">资质图片</label>
+              <label >资质图片</label>
               <em class="flex-box">
                 <ImagePreviewer
                   v-for="(item, i) in company.images"
@@ -259,10 +259,6 @@ export default class Main extends ViewBase {
   position: relative;
 }
 
-.hui {
-  color: rgba(0, 32, 45, 0.7);
-}
-
 .detail-list {
   color: #2481d7;
 }
@@ -293,6 +289,10 @@ export default class Main extends ViewBase {
   z-index: 999;
   top: 10px;
   line-height: 38px;
+}
+
+.text-rows p label {
+  color: #444;
 }
 
 /deep/ .ivu-table th,

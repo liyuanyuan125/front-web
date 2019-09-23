@@ -731,6 +731,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'adOrderManage.order',
       authAction: 'view',
       authIsMenu: true,
+      title: '广告单列表',
       pageTitle: '映前广告单列表-鲸娱数据',
     }
   },
