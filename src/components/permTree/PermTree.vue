@@ -1,7 +1,13 @@
 <template>
   <div class="perm-tree">
-    <Tree :data="treeData" multiple :show-checkbox="!readonly" ref="tree"
-      @on-select-change="onSelChange" @on-check-change="onSelChange"/>
+    <Tree
+      :data="treeData"
+      :show-checkbox="!readonly"
+      @on-select-change="onSelChange"
+      @on-check-change="onSelChange"
+      multiple
+      ref="tree"
+    />
   </div>
 </template>
 
@@ -9,19 +15,20 @@
 // doc: https://github.com/kaorun343/vue-property-decorator
 import { Component, Prop, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { listToTree } from '@/fn/tree'
-import { walkTree } from '@/fn/tree'
+import { listToTree, walkTree } from '@/fn/tree'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { isEqual, Dictionary, uniq, intersection } from 'lodash'
 import { toMap } from '@/fn/array'
 import { Action, Page, PermTreeModal, TreeItem } from './types'
 import PermTreeItem from './PermTreeItem.vue'
+import { MapType } from '@/util/types'
 
 const toTreeData = (
   nodes: Page[],
   allPerms: string[],
   handler: (perms: string[]) => any,
-  readonly: boolean
+  readonly: boolean,
+  expandMap: MapType<boolean>
 ) => {
   const allPermMap = toMap(allPerms)
   return walkTree(nodes, {
@@ -38,7 +45,7 @@ const toTreeData = (
       if (isLeaf && actions.length > 0) {
         actionList = actions.map(it => ({
           ...it,
-          code: `${node.key}:${it.code}`,
+          code: `${node.key}:${it.code}`
         }))
         const hasPerm = actionList.some(it => it.code in allPermMap)
         const allPerm = actionList.every(it => it.code in allPermMap)
@@ -63,8 +70,13 @@ const toTreeData = (
         render: (hh: any, { data }: any) => {
           /* tslint:disable */
           const h = jsxReactToVue(hh)
-          return <PermTreeItem v-model={data.extraData}
-            on-change={handler} v-readonly={readonly}/>
+          return (
+            <PermTreeItem
+              v-model={data.extraData}
+              on-change={handler}
+              v-readonly={readonly}
+            />
+          )
           /* tslint:enable */
         }
       }
@@ -74,10 +86,11 @@ const toTreeData = (
 
     onEachAfter(page, parentNodes) {
       const hasChecked = page.checked || page.indeterminate
-      hasChecked && parentNodes.forEach(parent => {
-        parent.indeterminate = true
-        parent.expand = true
-      })
+      hasChecked &&
+        parentNodes.forEach(parent => {
+          parent.indeterminate = true
+          parent.expand = true
+        })
     }
   })
 }
@@ -121,7 +134,7 @@ const normalizeTree = (nodes: Page[]): Page[] => {
 const permListFromItems = (items: TreeItem[]) => {
   const result = items.reduce((list: string[], it) => {
     const { actions } = it.extraData
-    const subList = (actions || []).map(act => act.code)
+    const subList = (actions || []).filter(act => !act.disabled).map(act => act.code)
     return list.concat(subList)
   }, [])
   return result
@@ -141,13 +154,18 @@ export default class PermTree extends ViewBase {
 
   inner = {} as PermTreeModal
 
-  oldNodes: any[] | null = null
+  expandMap: MapType<boolean> = {}
 
   get treeData() {
     const menu = this.inner.menu
     const perms = this.inner.perms
-    const tree = toTreeData(menu ? [menu] : [], perms,
-      this.onPermsChange.bind(this), this.readonly)
+    const tree = toTreeData(
+      menu ? [menu] : [],
+      perms,
+      this.onPermsChange.bind(this),
+      this.readonly,
+      this.expandMap
+    )
     return tree
   }
 
@@ -157,7 +175,7 @@ export default class PermTree extends ViewBase {
 
   @Watch('value', { deep: true, immediate: true })
   watchValue(value: PermTreeModal) {
-    const [ menu ] = normalizeTree([value.menu])
+    const [menu] = normalizeTree([value.menu])
     this.inner = {
       menu,
       perms: [...(value.perms || [])]

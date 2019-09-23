@@ -65,7 +65,7 @@
         </div>
 
          <div class=" create-submit-btn">
-           <Button v-if="!$route.params.id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
+           <Button v-if="!id" type="primary" class="btn"  @click="createSubmit('dataform')" >保存</Button>
            <Button v-else type="primary" class="btn"  @click="createSubmit('dataform')">保存修改</Button>
            <Button class="cancel-btn" @click="$router.push({name: 'pop-film'})">取消</Button>
          </div>
@@ -76,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm } from '@/ui/modal'
 import Upload, { FileItem } from '@/components/upload'
@@ -104,6 +104,9 @@ import textDlg from './components/textDlg.vue'
 })
 
 export default class Main extends ViewBase {
+
+  @Prop({ type: Number }) id!: number
+
   form: any = {
     srcFileId: null,
     brandId: null,
@@ -189,7 +192,7 @@ export default class Main extends ViewBase {
   async mounted() {
     this.creSpecificationList()
     // 编辑详情
-    if (this.$route.params.id) {
+    if (this.id) {
       this.detailList()
     }
   }
@@ -206,7 +209,7 @@ export default class Main extends ViewBase {
   }
 
   async detailList() {
-    const id = this.$route.params.id
+    const id = this.id
     try {
       const { data: { item } } = await detailPop(id)
 
@@ -236,7 +239,9 @@ export default class Main extends ViewBase {
   async handleChangeSpe() {
      const specification = this.form.specification
      const translated = this.form.translated
-     const { data } = await transFee({ specification, translated })
+     // 添加id 区分新建和编辑计算转制费用
+     const id = this.id ? this.id : null
+     const { data } = await transFee({ specification, translated, id })
      this.transFee = data.transFee
      return data
   }
@@ -249,7 +254,7 @@ export default class Main extends ViewBase {
     const free = this.form.translated == 1 ? data.transFee : (data.promotionPrice || data.transFee)
     await confirm(`数字转制费用：${free} 元`, {title: '确认新建广告片'})
     // 判断调用添加还是编辑接口
-    const id = this.$route.params.id
+    const id = this.id
     !id ? this.createSub() : this.editSubmit()
   }
 
@@ -309,7 +314,7 @@ export default class Main extends ViewBase {
     // 删除多余字段
     delete this.form.validity
 
-    const id = this.$route.params.id
+    const id = this.id
     try {
       const { data } = await editPop({
         ...this.form,

@@ -104,7 +104,7 @@ export default class Main extends ViewBase {
         provinceName,
         cityName
       })
-      this.$router.push({name: 'login'})
+      this.$router.push({name: 'applyhome'})
     } catch (ex) {
       this.handleError(ex)
     }

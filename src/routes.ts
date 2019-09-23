@@ -685,7 +685,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       pageTitle({ params }) {
         return params.id as any > 0 ? '编辑商业广告片-鲸娱数据' : '新建商业广告片-鲸娱数据'
       },
-    }
+    },
+    props: idProps
   },
 
   // 广告片 - 创建，编辑预告片（存在 id 为编辑，否则为创建）
@@ -705,7 +706,8 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       pageTitle({ params }) {
         return params.id as any > 0 ? '编辑电影预告片-鲸娱数据' : '新建电影预告片-鲸娱数据'
       },
-    }
+    },
+    props: idProps
   },
 
   // 广告主 - 推广管理 - 广告片 - 查看
