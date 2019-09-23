@@ -531,8 +531,8 @@ export default class Plan extends ViewBase {
     this.tableList()
   }
 
-  @Watch('form', { deep: true })
-  watchForm(val: any) {
+  @Watch('form.status', { deep: true })
+  watchFormStatus(val: any) {
     this.tableList()
   }
 
