@@ -146,6 +146,10 @@ export default class App extends ViewBase {
 
   async init() {
     try {
+      if (this.value.depositAmount) {
+        this.depositAmount = this.value.depositAmount
+        return
+      }
       const { data } = await deposit(this.$route.params.id)
       this.depositAmount = data.depositAmount || 0
     } catch (ex) {

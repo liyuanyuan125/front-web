@@ -506,6 +506,7 @@ export default class MainLayout extends ViewBase {
   position: relative;
   width: inherit;
   // 新版的 chrome，对 height 的实现似乎有问题
+  height: 152px;
   min-height: 152px;
   max-height: 152px;
   background-color: @c-sider-bg;
