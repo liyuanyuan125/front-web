@@ -18,8 +18,10 @@
       </li>
       <li class="upload-item upload-add" v-if="!readonly && canAdd">
         <label class="upload-add-in">
-          <Icon type="ios-camera" size="20"/>
-          <span>上传</span>
+          <slot>
+            <Icon type="ios-camera" size="20"/>
+            <span>上传</span>
+          </slot>
           <input type="file" :accept="accept" :multiple="multiple" @change="onChange"/>
         </label>
       </li>

@@ -31,7 +31,7 @@ module.exports = {
       },
       {
         env: 'qas',
-        baseUrl: 'https://www.jydata-qas.com',
+        baseUrl: 'https:/www.jydata-qas.com',
         ajaxBaseUrl: 'https://fapi.jydata-qas.com',
       },
       {

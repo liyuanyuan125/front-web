@@ -2,9 +2,7 @@
   <loginLayout>
       <div class="main-wrap ">
           <div class="tablist">
-            <p class="systerm">
-                <span>申请加入</span>
-            </p>
+            <p class="systerm">平台留言</p>
           </div>
           <Form :model="form" :rules="rules" ref="form"
             @submit.native.prevent="submit" novalidate>
@@ -106,7 +104,7 @@ export default class Main extends ViewBase {
         provinceName,
         cityName
       })
-      this.$router.push({name: 'login'})
+      this.$router.push({name: 'applyhome'})
     } catch (ex) {
       this.handleError(ex)
     }
@@ -136,10 +134,6 @@ export default class Main extends ViewBase {
   .ivu-input {
     padding-left: 11px;
   }
-}
-/deep/ .ivu-cascader-arrow {
-  font-size: 22px;
-  color: #fff;
 }
 /deep/ .text-area {
   overflow: hidden;

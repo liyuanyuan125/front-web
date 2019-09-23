@@ -48,9 +48,15 @@
                   <div v-if='item.status == 1' @click="change(normallist.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(normallist.id , item.status, item.orderId)" class='imgs1'></div>
                     <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
-                    <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">{{item.videoName.slice(0,10)}}...</router-link>
-                  </Tooltip>
-                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+                    <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">
+                        <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                        {{item.videoName.slice(0,10)}}...
+                    </router-link>
+                    </Tooltip>
+                   <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}" v-if='item.videoName.length <= 10'>
+                        <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                        {{item.videoName}}
+                    </router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
@@ -87,9 +93,15 @@
                   <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
                     <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
-                    <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">{{item.videoName.slice(0,10)}}...</router-link>
+                    <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">
+                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                       {{item.videoName.slice(0,10)}}...
+                     </router-link>
                   </Tooltip>
-                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
+                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 10'>
+                    <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                    {{item.videoName}}
+                </router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
@@ -129,6 +141,8 @@ export default class Main extends ViewBase {
   weekDate = [new Date(this.startTime), new Date(this.endTime)]
   sd = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
   ed = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+  ad = moment(this.weekDate[0].getTime() - (24 * 60 * 60 * 1000 * 7)).format(timeFormat).split('-')
+  bd = moment(this.weekDate[1].getTime() - (24 * 60 * 60 * 1000 * 7)).format(timeFormat).split('-')
   query: any = {
     cinemaId: null,
     beginDate: this.sd[0] + this.sd[1] + this.sd[2],
@@ -149,6 +163,8 @@ export default class Main extends ViewBase {
   objTwo: any = []
   deArray: any = []
   idsArray: any = []
+  // 广告片投放位置
+  deliveryPositionList: any = []
 
   async mounted() {
     // this.asd = true
@@ -173,6 +189,11 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.seach()
     } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
+      this.weekDate = [
+      new Date(this.startTime - (24 * 60 * 60 * 1000 * 7)) ,
+      new Date(this.endTime - (24 * 60 * 60 * 1000 * 7))]
+      this.query.beginDate = this.ad[0] + this.ad[1] + this.ad[2]
+      this.query.endDate = this.bd[0] + this.bd[1] + this.bd[2]
       this.seach()
       return
     }
@@ -435,6 +456,7 @@ export default class Main extends ViewBase {
       // 获取上刊列表
       const datalist = await queryList(this.query)
       this.itemlist = datalist.data.items
+      this.deliveryPositionList = datalist.data.deliveryPositionList
       this.normallist = datalist.data.normal == null ? [] : datalist.data.normal
       this.asd = false
 

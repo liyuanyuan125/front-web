@@ -1,6 +1,7 @@
 export interface Action {
   name: string
   code: string
+  disabled?: boolean
 }
 
 export interface Page {
@@ -8,6 +9,8 @@ export interface Page {
   key: string
   actions: Action[]
   subPages: Page[]
+  // 醒目提示
+  tip?: string
   // 标准化后会出现
   children?: Page[]
 }
@@ -25,6 +28,8 @@ export interface ExtraData {
   isLeaf: boolean
   level: number
   allPerms: string[]
+  // 醒目提示
+  tip: string
 }
 
 export interface TreeItem {

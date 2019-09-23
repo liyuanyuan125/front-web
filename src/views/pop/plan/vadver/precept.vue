@@ -138,6 +138,10 @@
                       {{formatNums(row.estimateShowCount * 13 / 10, 1)}}
                     </template>
 
+                    <template slot-scope="{ row }" slot="cpm">
+                      {{formatNums(row.cpm)}}
+                    </template>
+
                     <template slot-scope="{ row }" slot="estimatePersonCount">
                       {{formatNums(row.estimatePersonCount * 7 / 10, 1)}} ~ 
                       {{formatNums(row.estimatePersonCount * 13 / 10, 1)}}
@@ -246,6 +250,7 @@ export default class App extends ViewBase {
         align: 'center'
       }
     ]
+    const specification = this.deatilItem.specification || 0
     const five = [
       {
         title: '预估投放场次',
@@ -269,6 +274,13 @@ export default class App extends ViewBase {
           align: 'center'
         },
         ...four,
+        {
+          title: `${specification} 刊例价（元/千人次）`,
+          width: 136,
+          key: 'cpm',
+          align: 'center',
+          slot: 'cpm'
+        },
         ...five
       ]
     } else if (this.tag == 2 || this.tag == 3) {
@@ -503,9 +515,14 @@ export default class App extends ViewBase {
             name: 'pop-planlist-add',
             params: { step: '3', setid: this.$route.params.setid  }
           })
+        } else if (this.$route.name == 'pop-planlist-add') {
+          this.$router.push({
+            name: 'pop-business-add',
+            params: { step: '3', setid: this.$route.params.setid  }
+          })
         } else {
           this.$router.push({
-            name: 'pop-planlist-edit',
+            name: this.$route.name,
             params: { step: '3', setid: this.$route.params.setid  }
           })
         }
@@ -567,10 +584,17 @@ export default class App extends ViewBase {
     //     params: { id: '1', setid: this.$route.params.setid  }
     //   })
     // } else {
-    this.$router.push({
-      name: 'pop-planlist-edit',
-      params: { step: '1', setid: this.$route.params.setid  }
-    })
+    if (this.$route.name == 'pop-planlist-edit' || this.$route.name == 'pop-planlist-add') {
+      this.$router.push({
+        name: 'pop-planlist-edit',
+        params: { step: '1', setid: this.$route.params.setid  }
+      })
+    } else {
+      this.$router.push({
+        name: 'pop-business-edit',
+        params: { step: '1', setid: this.$route.params.setid  }
+      })
+    }
     // }
   }
 
@@ -975,8 +999,10 @@ export default class App extends ViewBase {
     height: 60px;
     background: rgba(255, 255, 255, 0.3);
     color: #00202d;
-    line-height: 60px;
+    line-height: 20px;
     span {
+      display: block;
+      line-height: 20px;
       font-size: 14px;
     }
   }

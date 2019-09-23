@@ -50,7 +50,7 @@ export default class DlgEditCinema extends ViewBase {
   async open() {
     try {
       if (this.showmongy) {
-        await payMoney(this.id)
+        // await payMoney(this.id)
         this.cancel()
         this.$emit('uplist')
       } else {
