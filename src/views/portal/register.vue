@@ -17,14 +17,18 @@
         <FormItem prop="companyName">
           <Input type="text" v-model="form.companyName" placeholder="请输入公司名称" />
         </FormItem>
-        <FormItem prop="businessParentCode">
-          <Select v-model="form.businessParentCode" clearable placeholder="请选择所属行业">
-            <Option v-for=" item in tradeList" :key="item.id" :value="item.code">{{item.name}}</Option>
-          </Select>
-        </FormItem>
-         <FormItem prop="area" >
-            <AreaSelect v-model="form.area" ref="areas"  :max-level="2" no-self :placeholder="placeholder" />
-         </FormItem>
+
+        <div class="flex-justify-between">
+          <FormItem prop="businessParentCode" style="width: 170px">
+            <Select v-model="form.businessParentCode" clearable placeholder="请选择所属行业">
+              <Option v-for=" item in tradeList" :key="item.id" :value="item.code">{{item.name}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem prop="area" style="width: 190px">
+              <AreaSelect v-model="form.area" ref="areas"  :max-level="2" no-self :placeholder="placeholder" />
+          </FormItem>
+        </div>
+        
          <FormItem prop="recommendTel">
           <Input v-model="form.recommendTel" :maxlength="11" placeholder="推荐人手机号（选填）"/>
         </FormItem>
@@ -32,19 +36,22 @@
            <Upload v-model="form.qualificationImageList" :max-count="4" multiple accept="images/*"
               confirm-on-del>
             </Upload>
-           <span class="upload-tip">上传营业执照</span>
+           <!-- <span class="upload-tip">上传营业执照</span> -->
         </FormItem>
         <Button type="primary" long class="submit" @click="submitNext" >下一步</Button>
       </Form>
 
       <Form :model="subForm" :rules="subRules" class="form"  ref="subForm" v-if="registerNext" :key="keyRandom" >
         <DisableAutoFill />
-        <FormItem prop="name">
-          <Input  v-model="subForm.name" placeholder="请输入姓名" />
-        </FormItem>
-        <FormItem prop="mobile">
-          <Input  v-model="subForm.mobile" :maxlength="11" placeholder="请输入手机号" />
-        </FormItem>
+        <div class="flex-justify-between">
+          <FormItem prop="name" style="width: 170px">
+            <Input  v-model="subForm.name" placeholder="请输入姓名" />
+          </FormItem>
+          <FormItem prop="mobile" style="width: 190px">
+            <Input  v-model="subForm.mobile" :maxlength="11" placeholder="请输入手机号" />
+          </FormItem>
+        </div>
+        
         <FormItem prop="smsCode" :error="smsCodeError" class="form-item-getcode">
           <Input v-model="subForm.smsCode" :maxlength="6" class="input-smsCode"
             placeholder="输入手机验证码"/>
@@ -362,6 +369,10 @@ export default class Main extends ViewBase {
 /deep/ .form .ivu-input {
   padding-left: 20px;
 }
+.flex-justify-between {
+  display: flex;
+  justify-content: space-between;
+}
 .main-wrap .tablist {
   .systerm {
     padding-bottom: 20px;
@@ -415,20 +426,19 @@ export default class Main extends ViewBase {
     justify-content: space-between;
   }
 }
-.input-smsCode {
-  width: 230px;
-}
 .btn-code {
   width: 126px;
   height: 48px;
-  background: #2f6af9;
+  position: absolute;
+  right: 0;
+  background: none;
   border-radius: 10px;
-  color: #fff;
+  color: #2f6af9;
   font-size: 14px;
   border: none;
   &:hover {
-    background: #2f6af9;
-    color: #fff;
+    background: none;
+    color: #2f6af9;
   }
 }
 .to-apply {
