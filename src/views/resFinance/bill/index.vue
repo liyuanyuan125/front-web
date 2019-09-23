@@ -455,8 +455,6 @@ export default class Main extends ViewBase {
 }
 .chacks {
   margin-top: 20px;
-  // height: 180px;
-  // background: rgba(19, 61, 76, 1);
   /deep/ .ivu-checkbox {
     position: absolute;
     left: 4%;
@@ -524,7 +522,6 @@ export default class Main extends ViewBase {
 /deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
-  // background: rgba(32, 67, 80, 1);
   margin: 0 20px 0 20px;
   line-height: 100px;
   color: #fff;

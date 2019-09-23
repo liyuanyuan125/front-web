@@ -111,7 +111,8 @@ export default class Index extends ViewBase {
 
   @Watch('form.transactionType')
   watchTransType() {
-   this.tableList()
+    this.pageIndex = 1
+    this.tableList()
   }
 }
 </script>
@@ -257,7 +258,6 @@ export default class Index extends ViewBase {
 /deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
-  // background: rgba(32, 67, 80, 1);
   margin: 0 20px 0 20px;
   line-height: 100px;
   color: #fff;
