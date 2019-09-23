@@ -42,7 +42,11 @@
           :percent="percent"
           :error="error"
         >
-          <CircleProgress :percent="percent" :fail="error != ''"/>
+          <CircleProgress
+            :percent="percent"
+            :fail="error != ''"
+            v-if="status != 'none' && status != 'filled'"
+          />
           <MiddleEllipsis class="error" v-if="error">{{error}}</MiddleEllipsis>
         </slot>
 
@@ -72,7 +76,7 @@
           />
         </div>
 
-        <div class="action-done flex-mid" v-if="status == 'done'">
+        <div class="action-done flex-mid" v-if="status == 'filled' || status == 'done'">
           <Icon
             type="md-sync"
             title="更换"
@@ -82,6 +86,11 @@
         </div>
 
         <MiddleEllipsis :ratio="64" class="file-name">{{fileName}}</MiddleEllipsis>
+        <MiddleEllipsis
+          :ratio="64"
+          class="filled-url"
+          v-if="status == 'filled'"
+        >{{model && model.url}}</MiddleEllipsis>
       </div>
     </slot>
   </div>
@@ -107,8 +116,13 @@ import { FileItem } from './types'
 import { confirm } from '@/ui/modal'
 import { MapType } from '@/util/types'
 
-// 状态，loading 表示加载（文件上传之前要计算分片等），uploading 正在上传，done 完成
-type Status = 'none' | 'loading' | 'uploading' | 'done' | 'fail'
+// 状态
+// loading 表示加载（文件上传之前要计算分片等），
+// uploading 正在上传
+// filled 表示已回填，说明当前有值，与 done 类似
+// done 表示上传成功
+// fail 表示上传失败
+type Status = 'none' | 'filled' | 'loading' | 'uploading' | 'done' | 'fail'
 
 const defaultItem: FileItem = {
   url: '',
@@ -126,6 +140,7 @@ const hasChange = (aitem: any, bitem: any) => {
 }
 
 const removeMap: MapType = {
+  filled: '移除',
   loading: '取消',
   uploading: '取消',
   done: '移除',
@@ -277,7 +292,7 @@ export default class OssUploader extends ViewBase {
         ...item
       } as FileItem
       this.model = newModel
-      this.status = this.model.url ? 'done' : 'none'
+      this.status = this.model.url ? 'filled' : 'none'
     }
   }
 
@@ -378,10 +393,15 @@ export default class OssUploader extends ViewBase {
   color: #38b8f2;
 }
 
-.file-name {
+.file-name,
+.filled-url {
   position: absolute;
   max-width: 96px;
   margin-top: -26px;
+}
+
+.filled-url {
+  max-width: 88%;
 }
 
 .oss-uploader-none {
