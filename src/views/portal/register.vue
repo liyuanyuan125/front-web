@@ -33,7 +33,10 @@
           <Input v-model="form.recommendTel" :maxlength="11" placeholder="推荐人手机号（选填）"/>
         </FormItem>
         <FormItem prop="qualificationImageList">
-           <Upload v-model="form.qualificationImageList" :max-count="4" multiple accept="images/*" confirm-on-del> </Upload>
+           <Upload v-model="form.qualificationImageList" :max-count="4" multiple accept="images/*" confirm-on-del>
+              <Icon type="ios-camera" size="20"/>
+              <span style="line-height: 18px">上传营<br />业资质</span>
+           </Upload>
            <!-- <span class="upload-tip">上传营业执照</span> -->
         </FormItem>
         <Button type="primary" long class="submit" @click="submitNext" >下一步</Button>
@@ -358,7 +361,9 @@ export default class Main extends ViewBase {
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import './login/common.less';
-
+.upload-add-in {
+  text-align: center;
+}
 /deep/ .ivu-cascader {
   .ivu-input {
     padding-left: 20px;
@@ -408,8 +413,8 @@ export default class Main extends ViewBase {
 /deep/ .upload-box {
   background: none;
   .upload-item {
-    width: 48px;
-    height: 48px;
+    width: 55px;
+    height: 55px;
     margin: 0 8px 0 0;
     background: rgba(16, 23, 44, 0.6);
     color: #fff;
