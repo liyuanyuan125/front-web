@@ -1,6 +1,11 @@
 .main-wrap {
   width: 450px;
-  background: linear-gradient(180deg, rgba(107, 129, 167, 0) 0%, rgba(107, 129, 167, .1) 54%, rgba(107, 129, 167, .5) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(107, 129, 167, 0) 0%,
+    rgba(107, 129, 167, 0.1) 54%,
+    rgba(107, 129, 167, 0.5) 100%
+  );
   padding: 0px 40px 20px;
   border-radius: 4px;
   position: absolute;
@@ -17,12 +22,13 @@
       padding: 20px 0 40px;
     }
   }
-  /deep/ input, .ivu-select {
+  /deep/ input,
+  .ivu-select {
     outline: none;
     height: 50px;
     font-size: 14px;
     border-radius: 10px;
-    background: rgba(16, 23, 44, .6);
+    background: rgba(16, 23, 44, 0.6);
     border: none;
     color: #fff;
     &::placeholder {
@@ -30,11 +36,12 @@
       font-size: 14px;
     }
   }
-  /deep/ .ivu-select-single .ivu-select-selection{
+  /deep/ .ivu-select-single .ivu-select-selection {
     height: 50px;
     border: none;
     background: none;
-    .ivu-select-selected-value, .ivu-select-placeholder{
+    .ivu-select-selected-value,
+    .ivu-select-placeholder {
       height: 50px;
       line-height: 50px;
       font-size: 14px;
@@ -67,7 +74,8 @@
 }
 
 // 箭头
-/deep/ .ivu-cascader-arrow, /deep/ .ivu-select-arrow {
+/deep/ .ivu-cascader-arrow,
+/deep/ .ivu-select-arrow {
   font-size: 22px;
   color: #fff;
 }
@@ -101,7 +109,6 @@
   color: #ff6259;
 }
 
-
 // 选择登录弹框
 .comDlg {
   color: #00202d;
@@ -114,7 +121,7 @@
   }
   .check-way {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
   }
   .check-type {
     display: block;
@@ -122,6 +129,7 @@
     height: 150px;
     background-size: 120px 120px;
     background-repeat: no-repeat;
+    margin: 0 28px;
     cursor: pointer;
     .check-name {
       text-align: center;
@@ -147,14 +155,14 @@
   .film {
     background-image: url('./assets/producer.png');
     &.checked {
-      background-image: url('./assets/producer-check.png')
+      background-image: url('./assets/producer-check.png');
     }
   }
   // 区代
   .agent {
     background-image: url('./assets/regAgency.png');
     &.checked {
-      background-image: url('./assets/regAgency-check.png')
+      background-image: url('./assets/regAgency-check.png');
     }
   }
 }
@@ -163,14 +171,14 @@
 @keyframes autofill {
   to {
     color: #fff;
-    background: rgba(16,23,44,0.6);
+    background: rgba(16, 23, 44, 0.6);
     font-size: 14px;
   }
 }
 @-webkit-keyframes autofill {
   to {
     color: #fff;
-    background:rgba(16, 23, 44, .6);
+    background: rgba(16, 23, 44, 0.6);
     font-size: 14px;
   }
 }
@@ -183,6 +191,6 @@
   animation-fill-mode: both;
 }
 // form error message
-/deep/ .ivu-form-item-error-tip{
+/deep/ .ivu-form-item-error-tip {
   padding-top: 4px;
 }
