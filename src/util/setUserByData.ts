@@ -1,11 +1,5 @@
 import { setUser, User } from '@/store'
-import { SystemCode, SecondaryCode, defaultSecondaryCode } from '@/util/types'
-
-interface SystemItem {
-  code: SystemCode
-  secondaryCode: SecondaryCode
-  status: number
-}
+import { SystemCode, SecondaryCode, SystemItem, defaultSecondaryCode } from '@/util/types'
 
 interface UserData {
   accountNonExpired: boolean
@@ -33,6 +27,7 @@ interface UserData {
  */
 export default function setUserByData(data: UserData) {
   const system = data.systems.find(it => it.code == data.systemCode)
+  const systemList = (data.systems || []).filter(it => it.status == 1)
   // 设置用户
   const user: User = {
     id: data.userId as number,
@@ -42,8 +37,9 @@ export default function setUserByData(data: UserData) {
     accountType: data.accountType as number,
 
     systemCode: data.systemCode as SystemCode,
-    systems: (data.systems || []).filter(it => it.status == 1).map(it => it.code),
     secondaryCode: system && system.secondaryCode || defaultSecondaryCode(data.systemCode),
+    systems: systemList.map(it => it.code),
+    systemList,
 
     companyId: data.companyId as number,
     companyName: data.companyName || '<我的公司>',
