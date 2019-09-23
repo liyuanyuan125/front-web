@@ -1,5 +1,5 @@
 <template>
-  <span>{{numbers || 0}}</span>
+  <span>{{numbers}}</span>
 </template>
 
 <script lang="ts">
@@ -28,7 +28,7 @@ export default class ComponentMain extends ViewBase {
           this.count++
         }
         number = this.newend + '.00' // 自动补小数点后两位
-        return number
+        return number || 0
       } else {
         for (let i = number.indexOf('.') - 1; i >= 0; i--) {
           if (this.count % 3 == 0 && this.count != 0) {
@@ -40,7 +40,7 @@ export default class ComponentMain extends ViewBase {
         }
         number =
           this.newend + (number + '00').substr((number + '00').indexOf('.'), 3)
-        return number
+        return number || 0
       }
     } else {
       // for (let i = number.indexOf('.') - 1; i >= 0; i--) {
@@ -53,7 +53,7 @@ export default class ComponentMain extends ViewBase {
       // }
       // number =
       //   this.newend + (number + '00').substr((number + '00').indexOf('.'), 3)
-      return this.addNum
+      return this.addNum || 0
     }
   }
   mounted() {
