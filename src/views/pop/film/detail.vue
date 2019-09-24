@@ -17,8 +17,8 @@
     <!-- dcp下载 v-if="status == 4" -->
     <dl  class="form dcp-download">
       <dt class="dl-title"><em>下载链接</em></dt>
-      <dd v-for="it in (item.attachments || [])"   :key="it.id" class="dcp-dd-list">
-        <span v-if="it.typeCode == -1" :href="it.fileUrl">{{it.fileUrl || '-'}}</span>
+      <dd v-for="it in (item.attachments || [])"   :key="it.id" v-if="it.typeCode == -1" class="dcp-dd-list">
+        <em  :href="it.fileUrl">{{it.fileUrl || '-'}}</em>
       </dd>
     </dl>
     <!-- <dl  class="form dcp-download">
