@@ -275,7 +275,7 @@ export default class App extends ViewBase {
         },
         ...four,
         {
-          title: `${specification} 刊例价（元/千人次）`,
+          title: `${specification}s 刊例价（元/千人次）`,
           width: 136,
           key: 'cpm',
           align: 'center',
@@ -390,7 +390,8 @@ export default class App extends ViewBase {
         const names = (it.ageCodes || []).map((items: any, ins: number) => {
           return {
             key: items,
-            text: (it.ageValues) ? it.ageValues[ins] : '-'
+            text: (it.ageValues) ? it.ageValues[ins] : '-',
+            matchPercent: it.matchPercent || 0
           }
         })
         return {
