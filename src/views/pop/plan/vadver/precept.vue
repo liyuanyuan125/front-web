@@ -275,7 +275,7 @@ export default class App extends ViewBase {
         },
         ...four,
         {
-          title: `${specification} 刊例价（元/千人次）`,
+          title: `${specification}s 刊例价（元/千人次）`,
           width: 136,
           key: 'cpm',
           align: 'center',
