@@ -82,8 +82,9 @@
       <div class="down-dcp-url">
         <ul>
           <li v-for="item in dcpData" class="flex-box">
-             <span v-for=" it in list.typeList" v-if="item.typeCode == it.key">{{it.text}}</span>
-             <a :href="item.fileUrl" target="_blank">{{item.fileUrl}}</a>
+            {{item.fileUrl}}
+             <!-- <span v-for=" it in list.typeList" v-if="item.typeCode == it.key">{{it.text}}</span> -->
+             <!-- <a :href="item.fileUrl" target="_blank">{{}}</a> -->
           </li>
         </ul>
       </div>
