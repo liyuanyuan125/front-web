@@ -127,7 +127,7 @@ export default class Relevan extends ViewBase {
         ...this.pageList,
         status: this.single ? 4 : '',
         name: this.form.name,
-        videoType: this.value.advertTypeCode == 'TRAILER' ? 2 : 1
+        videoType: this.value.advertTypeCode == 'BRAND' ? 2 : 1
       }) )
       this.releList = data.items || []
       this.total = data.totalCount
