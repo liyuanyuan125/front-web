@@ -49,7 +49,7 @@
         <Button type="primary" html-type="submit" class="submit" long >账号登录</Button>
         <div class="to-register-apply">
           <router-link :to="{name: 'apply'}">给平台留言</router-link>
-          <router-link :to="{name: 'register'}">立即注册</router-link>
+          <router-link :to="{name: 'register'}">广告主入驻申请</router-link>
         </div>
       </Form>
 
