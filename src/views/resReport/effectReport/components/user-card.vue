@@ -177,7 +177,7 @@ export default class UserCard extends Vue {
 }
 .pane-wp {
   min-width: 287px;
-  min-height: 254px;
+  min-height: 147px;
   color: #fff;
   font-size: 14px;
   user-select: none;
