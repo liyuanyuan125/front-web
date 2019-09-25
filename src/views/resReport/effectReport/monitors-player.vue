@@ -96,7 +96,7 @@ export default class VideoPlayer extends ViewBase {
 
   videoPoster = ''
 
-  dataList = []
+  dataList: any[] = []
 
   selectItemHandler(index: number, mid: string) {
     this.dataList.forEach((it: any) => {
@@ -195,7 +195,7 @@ export default class VideoPlayer extends ViewBase {
   }
 
   get player() {
-    return this.$refs.plyr.player as any
+    return (this.$refs.plyr as any).player
   }
 
   created() {
