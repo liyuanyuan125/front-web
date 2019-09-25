@@ -5,7 +5,7 @@
         <em>
           {{title}}
         </em>
-        <router-link target='_blank' :to="{ name: 'effect-report-monitorsPlayer', params: { planId}}" class="more-link" >查看更多</router-link>
+        <router-link v-if="data.length !== 0" target='_blank' :to="{ name: 'effect-report-monitorsPlayer', params: { planId}}" class="more-link" >查看更多</router-link>
       </h4>
       <div class="pane-body">
         <div class="nodata-wp" v-if="data.length === 0">
