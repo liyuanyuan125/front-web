@@ -887,6 +887,19 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     },
   },
 
+  // 广告主 - 效果报表 - 监播视频
+  {
+    path: '/resreport/monitors-player/:planId?/:videoId?',
+    name: 'effect-report-monitorsPlayer',
+    component: () => import('./views/resReport/effectReport/monitors-player.vue'),
+    meta: {
+      title: '查看监播视频',
+      authKey: '',
+      authAction: '',
+      pageTitle: '视频',
+    },
+  },
+
   // 第三方 - 效果报表
   {
     path: '/resreport/effect-report-third/:id',
