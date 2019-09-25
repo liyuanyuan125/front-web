@@ -2,6 +2,7 @@
   <div :class="{
     'oss-uploader': true,
     [`oss-uploader-${status}`]: true,
+    'oss-uploader-mini': mini,
     'oss-uploader-readonly': readonly,
   }">
     <slot name="under"></slot>
@@ -16,8 +17,13 @@
       >
       <slot name="handle">
         <div class="handle-in flex-mid">
-          <Icon type="ios-cloud-upload" size="38" class="handle-icon"/>
-          <div class="handle-text">上传</div>
+          <Icon
+            type="ios-cloud-upload"
+            :size="mini ? 18 : 38"
+            class="handle-icon"
+            title="上传"
+          />
+          <div class="handle-text" v-if="!mini">上传</div>
         </div>
       </slot>
     </label>
@@ -33,7 +39,7 @@
       <div class="control flex-mid">
         <slot name="loading" :status="status">
           <div class="loading-wrap flex-mid">
-            <TinyLoading :size="28" v-if="status == 'loading'"/>
+            <TinyLoading :size="mini ? 12 : 28" v-if="status == 'loading'"/>
           </div>
         </slot>
 
@@ -42,12 +48,40 @@
           :percent="percent"
           :error="error"
         >
-          <CircleProgress
-            :percent="percent"
-            :fail="error != ''"
-            v-if="status != 'none' && status != 'filled'"
-          />
-          <MiddleEllipsis class="error" v-if="error">{{error}}</MiddleEllipsis>
+          <template v-if="!mini">
+            <CircleProgress
+              :percent="percent"
+              :fail="error != ''"
+              v-if="status != 'none' && status != 'filled'"
+            />
+            <MiddleEllipsis class="error" v-if="error">{{error}}</MiddleEllipsis>
+          </template>
+          <template v-else>
+            <Tooltip class="mini-progress-tip">
+              <Progress
+                :percent="percent"
+                :status="error ? 'wrong' : (percent < 100 ? 'active' : 'success')"
+                hide-info
+                class="mini-progress"
+                v-if="!['none', 'filled', 'loading'].includes(status)"
+              />
+              <Icon
+                type="ios-checkmark-circle"
+                class="filled-icon"
+                v-if="status == 'filled'"
+              />
+              <div slot="content" v-if="status != 'filled'">
+                <div class="tip-error" v-if="error">{{error}}</div>
+                <div class="tip-percent" v-else>
+                  <em>{{fileName}}</em>
+                  <i v-if="percent < 100"> [ {{percent.toFixed(1) + '%'}} ]</i>
+                </div>
+              </div>
+              <div slot="content" v-else>
+                <div class="tip-filled">{{model && model.url}}</div>
+              </div>
+            </Tooltip>
+          </template>
         </slot>
 
         <div class="action-all">
@@ -85,11 +119,11 @@
           />
         </div>
 
-        <MiddleEllipsis :ratio="64" class="file-name">{{fileName}}</MiddleEllipsis>
+        <MiddleEllipsis :ratio="64" class="file-name" v-if="!mini">{{fileName}}</MiddleEllipsis>
         <MiddleEllipsis
           :ratio="64"
           class="filled-url"
-          v-if="status == 'filled'"
+          v-if="!mini && status == 'filled'"
         >{{model && model.url}}</MiddleEllipsis>
       </div>
     </slot>
@@ -179,6 +213,11 @@ export default class OssUploader extends ViewBase {
    * 上传参数，参考 OssUploader.ts
    */
   @Prop({ type: Object, default: () => ({}) }) param!: UploadParam
+
+  /**
+   * mini 模式，默认 false
+   */
+  @Prop({ type: Boolean, default: false }) mini!: boolean
 
   model: FileItem = { ...defaultItem }
 
@@ -425,6 +464,65 @@ export default class OssUploader extends ViewBase {
     .icon-done {
       display: none;
     }
+  }
+}
+
+.oss-uploader-mini {
+  width: 68px;
+  height: 20px;
+  border: 0;
+  border-radius: 0;
+  // 仅用于调试
+  // background-color: #eee;
+  // margin: 18px 0;
+
+  /deep/ .loading-box {
+    position: relative;
+    top: -1px;
+    left: -10px;
+  }
+
+  .action-all,
+  .action-uploading,
+  .action-done {
+    font-size: 16px;
+  }
+
+  .action-all {
+    top: -4px;
+    right: 0;
+  }
+
+  .action-uploading,
+  .action-done {
+    left: 35px;
+    width: auto;
+  }
+
+  .mini-progress-tip {
+    align-self: flex-start;
+  }
+
+  .mini-progress {
+    top: -1px;
+    width: 32px;
+  }
+
+  .filled-icon {
+    font-size: 18px;
+    color: #20b558;
+  }
+
+  .tip-filled {
+    white-space: normal;
+    word-break: break-all;
+    min-width: 200px;
+  }
+}
+
+.oss-uploader-filled {
+  .mini-progress-tip {
+    margin-left: 11px;
   }
 }
 </style>
