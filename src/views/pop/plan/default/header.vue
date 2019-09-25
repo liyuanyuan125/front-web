@@ -30,7 +30,7 @@
     <div v-if="value.status == 3" class="plan-message">
       <!-- <p>以下为平台专业投放人员为您提供的投放方案，确认后您只需缴纳 -->
       <p v-if='value.discount'>本次投放折扣【{{value.discount * 10}}折】</p>
-      <p>您需要支付 ￥{{formatNums(value.depositAmount)}} 为定金 </p>
+      <p>您需要支付 ￥{{formatNums(depositAmount)}} 为定金 </p>
       <!-- <p>¥
         <span v-if="value.needPayAmount || value.needPayAmount == 0">
           {{formatNums(value.needPayAmount)}}
@@ -58,7 +58,7 @@
     <div v-if="value.status == 9 || value.status == 8 || value.status == 6 ||  value.status == 7 ||  value.status == 5"
       class="plan-message">
       <p v-if='value.discount'>本次投放折扣【{{value.discount * 10}}折】</p>
-      <p>您已缴纳 ￥{{formatNums(value.depositAmount)}} 为定金 </p>
+      <p>您已缴纳 ￥{{formatNums(depositAmount)}} 为定金 </p>
       <span style="margin-top: 20px; margin-bottom: 20px">本计划将于【{{formatDate(value.beginDate)}}】开始 </span>
       <div class="btn-box">
         <Button type="default" :to="{ name: 'effect-report', params: { 
@@ -70,7 +70,7 @@
     <div v-if="value.status == 10" class="plan-message">
       <!-- <p>以下为平台专业投放人员为您提供的投放方案，确认后您只需缴纳 -->
       <p v-if='value.discount'>本次投放折扣【{{value.discount * 10}}折】</p>
-      <p>应结金额￥{{formatNums(value.needPayAmount)}}, 您已支付￥{{formatNums(value.depositAmount)}} 为定金</p>
+      <p>应结金额￥{{formatNums(value.needPayAmount)}}, 您已支付￥{{formatNums(depositAmount)}} 为定金</p>
       <!-- <p>¥
         <span v-if="value.needPayAmount || value.needPayAmount == 0">
           {{formatNums(value.needPayAmount)}}
@@ -89,7 +89,7 @@
     <div v-if="value.status == 11" class="plan-message">
       <p v-if='value.discount'>本次投放折扣【{{value.discount * 10}}折】</p>
       <p style=" margin-bottom: 10px">
-        您已缴纳 ￥{{formatNums(value.needPayAmount)}} 为应结金额，￥{{formatNums(value.depositAmount)}} 为定金，投放结束后保证金剩余余额将退还到您的账户 </p>
+        您已缴纳 ￥{{formatNums(value.needPayAmount)}} 为应结金额，￥{{formatNums(depositAmount)}} 为定金，投放结束后保证金剩余余额将退还到您的账户 </p>
       <div class="btn-box">
         <Button type="default" :to="{ name: 'effect-report', params: { 
           id: $route.params.id
@@ -100,7 +100,7 @@
     <div v-if="value.status == 12" class="plan-message">
       <p v-if='value.discount'>本次投放折扣【{{value.discount * 10}}折】</p>
       <p style=" margin-bottom: 10px">
-        您已缴纳 ￥{{formatNums(value.needPayAmount)}} 为应结金额，￥{{formatNums(value.depositAmount)}} 为定金，您可在下方点击“查看效果报告” </p>
+        您已缴纳 ￥{{formatNums(value.needPayAmount)}} 为应结金额，￥{{formatNums(depositAmount)}} 为定金，您可在下方点击“查看效果报告” </p>
       <div class="btn-box">
         <Button type="default" :to="{ name: 'effect-report', params: { 
           id: $route.params.id
@@ -124,6 +124,7 @@ import Collect from '../planlistmodel/collect.vue'
 import Payend from '../planlistmodel/payend.vue'
 import moment from 'moment'
 import Expenditure from '../planlistmodel/expenditure.vue'
+import { deposit } from '@/api/popPlan'
 
 const timeFormat = 'YYYY-MM-DD'
 @Component({
@@ -137,6 +138,24 @@ const timeFormat = 'YYYY-MM-DD'
 })
 export default class App extends ViewBase {
   @Prop() value: any
+
+  depositAmount: any = 0
+  created() {
+    this.init()
+  }
+
+  async init() {
+    try {
+      if (this.value.depositAmount) {
+        this.depositAmount = this.value.depositAmount
+        return
+      }
+      const { data } = await deposit(this.$route.params.id)
+      this.depositAmount = data.depositAmount || 0
+    } catch (ex) {
+
+    }
+  }
 
   formatNums(data: any) {
     return data ? formatCurrency(data) : '0'

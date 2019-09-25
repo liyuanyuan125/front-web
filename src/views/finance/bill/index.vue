@@ -21,8 +21,14 @@
         <span v-else-if="transactionType == 4">退费</span>
         <span v-else>--</span>
       </template>
+
+      <template slot="remarks" slot-scope="{row}">
+        <Tooltip :content="row.remark" placement="right-end">
+          <span class="curpon">{{row.remarks}}</span>
+        </Tooltip >
+      </template>
     </Table>
-    <Page  :total="total"  class="btn-center-footer page-list" :current="pageIndex" 
+    <Page  :total="total"  class="btn-center-footer page-list" :current="pageIndex"
       :page-size="pageSize" show-total @on-change="handlepageChange"  @on-page-size-change="handlepageChange"/>
   </div>
 </template>
@@ -58,7 +64,7 @@ export default class Index extends ViewBase {
     { title: '交易时间', key: 'transactionTime'},
     { title: '费用/元', key: 'transactionAmount'},
     { title: '类型', slot: 'transactionType'},
-    { title: '交易说明', key: 'remark'},
+    { title: '交易说明', slot: 'remarks'},
   ]
 
   async tableList() {
@@ -82,11 +88,12 @@ export default class Index extends ViewBase {
    })
 
    this.dataList = (data.items || []).map((it: any) => {
+      const remark = it.remark && it.remark.length > 12 ? it.remark.substr(0, 12) + '...' : it.remark
       return {
        ...it,
        transactionTime: formatValidDateTime(it.transactionTime),
        transactionAmount: formatNumber(it.transactionAmount),
-       remark: it.remark || '/'
+       remarks: remark || '/'
       }
    })
    this.total = data.totalCount || 0
@@ -111,13 +118,17 @@ export default class Index extends ViewBase {
 
   @Watch('form.transactionType')
   watchTransType() {
-   this.tableList()
+    this.pageIndex = 1
+    this.tableList()
   }
 }
 </script>
 <style lang="less" scoped>
 @import '~@/site/lib.less';
 @import '~@/views/account/less/common.less';
+.curpon {
+  cursor: pointer;
+}
 .item-top {
   padding-top: 20px;
 }
@@ -257,7 +268,6 @@ export default class Index extends ViewBase {
 /deep/ .btn-center-footer {
   text-align: center;
   height: 100px;
-  // background: rgba(32, 67, 80, 1);
   margin: 0 20px 0 20px;
   line-height: 100px;
   color: #fff;
