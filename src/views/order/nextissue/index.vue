@@ -42,7 +42,7 @@
           <Col :span='3'>影片名称</Col>
           <Col :span='2' >总投放时长</Col>
           <Col :span='15'>广告列表</Col>
-          <div :span='2' @click="allover(5)" style='color: #57b4c9;cursor: pointer;font-size: 12px;float:right;'>一键设置为已下刊</div>
+          <div :span='2' v-if='itemlist.length != 0' @click="allover(5)" style='color: #57b4c9;cursor: pointer;font-size: 12px;float:right;'>一键设置为已下刊</div>
         </Row>
         <ul class='itemul'>
           <li class='li-item' v-for='(it,index) in itemlist' :key='index'>
@@ -276,7 +276,7 @@ export default class Main extends ViewBase {
 
       // 获取上刊列表
       const datalist = await queryList({cinemaId: this.query.cinemaId, offDate: data})
-      this.itemlist = datalist.data.items
+      this.itemlist = datalist.data.items == null ? [] : datalist.data.items
       this.deliveryPositionList = datalist.data.deliveryPositionList
       this.asd = false
 
