@@ -591,7 +591,8 @@ export default class Index extends ViewBase {
               id: it.id,
               time: moment(it.uploadTime).format('YYYY/MM/DD h:mm'),
               name: `
-                ${it.cinemaName} ${formartDate(it.beginDate, it.endDate)} 《${it.movieName}》
+                ${it.cinemaName} ${formartDate(it.beginDate, it.endDate)}
+                ${it.movieName ? '《' + it.movieName + '》' : ''}
               `,
             }
           })
