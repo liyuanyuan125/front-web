@@ -30,6 +30,9 @@
     <div>
       <UserCard :data="userData" ref="usercard" @moreCity="showMoreCitysHandle"></UserCard>
     </div>
+    <div>
+      <Monitors :planId="planId" :data="monitorsData" ref="monitorscard"></Monitors>
+    </div>
     <MoreCinemasDlg ref="moreCinemasDlg" :id="planId"></MoreCinemasDlg>
     <MoreMoviesDlg
       ref="moreMoviesDlg"
@@ -45,6 +48,7 @@
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
+import { formatTimestamp } from '@/util/validateRules'
 import TinyLoading from '@/components/TinyLoading.vue'
 import ReportPane from './components/report-pane.vue'
 import BannerCard from './components/banner-card.vue'
@@ -53,6 +57,7 @@ import DetailTableCard from './components/detail-table-card.vue'
 import CinemaCard from './components/cinema-card.vue'
 import MoviesCard from './components/movies-card.vue'
 import UserCard from './components/user-card.vue'
+import Monitors from './components/monitors-card.vue'
 import AreaBasic from '@/components/chartsGroup/areaBasic/area-basic.vue'
 import SelectPlanDlg from './components/select-plan-dlg.vue'
 import MoreCinemasDlg from './components/more-cinemas-dlg.vue'
@@ -79,6 +84,14 @@ const getNames = (keys: string[], list: KeyText[]) => {
   const map = keyBy(list, 'key')
   const names = (keys || []).map((it: any) => dot(map[it], 'text') as string)
   return names
+}
+// 格式化时间
+function formartDate(beginDate: string, endDate: string) {
+  if ( beginDate === '' &&  endDate === '') {
+    return ''
+  } else {
+    return moment(beginDate, 'YYYY-MM-DD').format('MM/DD') + '-' + moment(endDate, 'YYYY-MM-DD').format('MM/DD')
+  }
 }
 
 const toolTip: any = {
@@ -126,6 +139,7 @@ const toolTip: any = {
     MoviesCard,
     CinemaCard,
     UserCard,
+    Monitors,
     ReportPane,
     AreaBasic,
     SelectPlanDlg,
@@ -279,6 +293,9 @@ export default class Index extends ViewBase {
     cityLevelData: []
   }
 
+  // 监播视频
+  monitorsData: any = []
+
   async reset() {
     this.userData = {
       sex: {},
@@ -410,6 +427,8 @@ export default class Index extends ViewBase {
     this.initDone = false
     try {
       const { data } = await getPlansReport(id)
+      // 临时调试监播视频 使用 nxd
+      // const { data } = await getPlansReport(1402)
 
       const plan = data.plan || null
       const report = data.report || null
@@ -419,6 +438,8 @@ export default class Index extends ViewBase {
       const gradeCodes = data.gradeCodes || null
       const planStatus = data.planStatus || null
       const movieTypes = data.movieTypes || null
+      const monitors = data.monitors || null
+
       if (report && report.lastModifyTime) {
         const dates = report.dates
         const name = getName(plan.status, planStatus)
@@ -559,6 +580,21 @@ export default class Index extends ViewBase {
           }
           this.$nextTick(() => {
             (this.$refs.usercard as any).init()
+          })
+        }
+
+        // 监播视频
+        if (monitors && monitors.length > 0) {
+          this.monitorsData = monitors.map((it: any) => {
+            return {
+              img: it.img,
+              id: it.id,
+              time: moment(it.uploadTime).format('YYYY/MM/DD HH:mm'),
+              name: `
+                ${it.cinemaName} ${formartDate(it.beginDate, it.endDate)}
+                ${it.movieName ? '《' + it.movieName + '》' : ''}
+              `,
+            }
           })
         }
         this.initDone = true

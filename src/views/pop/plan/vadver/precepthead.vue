@@ -176,8 +176,8 @@ export default class App extends ViewBase {
       margin-top: 30px;
       font-weight: 400;
       text-align: center;
-      color: #7f7f7f;
-      opacity: .8;
+      color: #fff;
+      // opacity: .8;
     }
   }
   .number, .onenumber {
@@ -215,7 +215,7 @@ export default class App extends ViewBase {
     height: 100%;
     text-align: center;
     span {
-      color: #7f7f7f;
+      color: #fff;
     }
   }
   dl {
@@ -247,7 +247,7 @@ export default class App extends ViewBase {
   max-width: 200px;
 }
 .plan-box {
-  color: #7f7f7f;
+  color: #fff;
 }
 // .line-right {
 //   position: absolute;

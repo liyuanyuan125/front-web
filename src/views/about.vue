@@ -2,10 +2,9 @@
   <div class="page">
     <Progress :percent="progress" status="active" class="progress"/>
 
-    <VideoUploader v-model="videoUrl">
-    </VideoUploader>
+    <VideoUploader v-model="videoUrl"/>
 
-    <OssUploader v-model="ossUrl"/>
+    <OssUploader v-model="ossUrl" mini/>
 
     <p>按时发送发放322323是非得失：<MiddleEllipsis class="shi">春眠不觉晓处处蚊子咬夜来风雨声花落知多少</MiddleEllipsis>是对方是否</p>
 
@@ -97,6 +96,7 @@ export default class AboutPage extends ViewBase {
   videoUrl = 'http://aiads-file.oss-cn-beijing.aliyuncs.com/MISC/MISC/blrhqc9e2o7g008ukpkg.mp4'
 
   ossUrl = 'http://aiads-file.oss-cn-beijing.aliyuncs.com/MISC/MISC/blrhqc9e2o7g008ukpkg.mp4'
+  // ossUrl = ''
 
   tripleShow = false
 
