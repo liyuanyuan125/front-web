@@ -29,7 +29,7 @@ Vue.directive('auth', {
 // //aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncsr5uomr0008001o0.png
 // //aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncstluomr0008001og.png
 Vue.directive('real-img', async (el: any, binding: any) => {
-  // 如果没传默认图片就用url地址
+  // 没传default-img 属性则用默认的url属性
   const selfImg = el.getAttribute('default-img')
   const url = 'http://aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkncstluomr0008001og.png'
   const defaultURL = selfImg || url
@@ -39,16 +39,10 @@ Vue.directive('real-img', async (el: any, binding: any) => {
     el.setAttribute('src', defaultURL)
     return
   }
-  if (imgURL) {
-      const exist: any = await imageIsExist(imgURL)
-      if (exist) {
-        el.setAttribute('src', imgURL)
-      } else {
-        if (defaultURL) {
-          el.setAttribute('src', defaultURL)
-        }
-      }
-  }
+
+  const exist: any = await imageIsExist(imgURL)
+  const srcUrl = exist ? imgURL : defaultURL
+  el.setAttribute('src', srcUrl)
 })
 
 // 检测图片是否有效

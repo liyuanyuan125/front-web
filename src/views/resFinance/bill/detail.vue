@@ -173,6 +173,7 @@ export default class Main extends ViewBase {
     { title: '执行开始时间', key: 'beginDate', minWidth: 160  },
     { title: '执行完成时间', key: 'endDate', minWidth: 160  },
     { title: '曝光人次', key: 'personCount', minWidth: 150  },
+    { title: '结算单价（元/人次）', key: 'unitPrice', minWidth: 200  },
     { title: '金额(元)', key: 'amount', minWidth: 100  },
     { title: '监播文件', slot: 'playMonitorTexts', minWidth: 100 },
     { title: '是否结算', key: 'status', minWidth: 100  },
