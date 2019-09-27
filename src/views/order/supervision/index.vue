@@ -72,7 +72,12 @@
                   </Col>
                 </row>
               </Col>
-              <Col span='5' style='text-align: center;cursor: pointer;' v-if='normallist.status == 1' ><UploadButton @success="onUploadSuccess($event, normallist.id)">上传</UploadButton></Col>
+              <Col span='5' style='text-align: center;cursor: pointer;' v-if='normallist.status == 1' >
+
+                <!-- <UploadButton @success="onUploadSuccess($event, normallist.id)">上传</UploadButton> -->
+                <OssUploader v-model="ossUrl" :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess.bind($event , normallist.id)"/>
+
+              </Col>
               <Col span='5' v-if='normallist.status == 2' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
               <Col span='5' v-if='normallist.status == 3' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 3' class='imgs2'></div></Col>
               <Col span='5' v-if='normallist.status == 4' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
@@ -109,7 +114,10 @@
                   </Col>
                 </row>
               </Col>
-              <Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' ><UploadButton @success="onUploadSuccess($event, it.id)">上传</UploadButton></Col>
+              <Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' >
+                <!-- <UploadButton @success="onUploadSuccess($event, it.id)">上传</UploadButton> -->
+                <OssUploader v-model="ossUrl" :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
+              </Col>
               <Col span='5' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
               <Col span='5' v-if='it.status == 3' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div></Col>
               <Col span='5' v-if='it.status == 4' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
@@ -132,6 +140,7 @@ import UploadButton, { SuccessEvent } from '../components/UploadButton.vue'
 import WeekDatePicker from '@/components/weekDatePicker'
 import { confirm , toast , info } from '@/ui/modal'
 import VideoPreviewer from '@/components/videoPreviewer'
+import OssUploader from '@/components/ossUploader'
 
 
 const timeFormat = 'YYYY-MM-DD'
@@ -140,7 +149,8 @@ const timeFormat = 'YYYY-MM-DD'
   components: {
     UploadButton,
     WeekDatePicker,
-    VideoPreviewer
+    VideoPreviewer,
+    OssUploader
   }
 })
 export default class Main extends ViewBase {
@@ -168,6 +178,8 @@ export default class Main extends ViewBase {
   movieList: any = []
   loading = false
   asd = false
+
+  ossUrl: any = null
 
 
   itemlist: any = []
@@ -257,12 +269,12 @@ export default class Main extends ViewBase {
   }
 
   // 上传文件
-  async onUploadSuccess({ files }: SuccessEvent, id: number) {
-    // console.log(files)
+  async onUploadSuccess(ev: any, id: number) {
       try {
         await addvideo (id , {
-                        fileName: files[0].clientName,
-                        fileId: files[0].fileId
+                        fileUrl: ev.url,
+                        size: ev.file.size,
+                        fileName: ev.file.name
                       })
         this.$Message.success({
           content: `更改成功`,
@@ -418,7 +430,7 @@ export default class Main extends ViewBase {
         return
       }
       const datalist = await querylist(this.query)
-      this.itemlist = datalist.data.items
+      this.itemlist = datalist.data.items == null ? [] : datalist.data.items
       this.deliveryPositionList = datalist.data.deliveryPositionList
       this.normallist = datalist.data.normal == null ? [] : datalist.data.normal
       this.asd = false
@@ -612,5 +624,13 @@ export default class Main extends ViewBase {
   &::-webkit-input-placeholder {
     color: #00202d;
   }
+}
+/deep/ .oss-uploader-mini {
+  width: 68px;
+  height: 20px;
+  border: 0;
+  border-radius: 0;
+  margin-left: 39%;
+  margin-top: 7px;
 }
 </style>
