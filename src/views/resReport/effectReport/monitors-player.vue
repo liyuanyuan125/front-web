@@ -260,11 +260,13 @@ export default class VideoPlayer extends ViewBase {
   border-radius: 8px;
   padding: 40px 0;
   position: relative;
-  min-height: 600px;
+  .plyr__video-wrapper {
+    height: 555px;
+  }
   .plyr-wrap {
     flex: 1;
-    .plyr audio, .plyr video {
-      height: 555px;
+    .plyr audio,.plyr video {
+      height: 100%;
     }
   }
   .offOn-button {
