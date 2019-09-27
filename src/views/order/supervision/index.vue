@@ -80,6 +80,7 @@
           </li>
           <!-- <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div> -->
       </Row>
+      <OssUploader v-model="ossUrl" :param="{fileType: 3, subCategory: 2}" mini />
       <div style=' margin-top: 15px; '>
         <Row class='li-title'>
           <Col span='3' >影片名称</Col>
@@ -109,7 +110,10 @@
                   </Col>
                 </row>
               </Col>
-              <Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' ><UploadButton @success="onUploadSuccess($event, it.id)">上传</UploadButton></Col>
+              <Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' >
+                <UploadButton @success="onUploadSuccess($event, it.id)">上传</UploadButton>
+                <!-- <OssUploader v-model="ossUrl" mini/> -->
+              </Col>
               <Col span='5' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
               <Col span='5' v-if='it.status == 3' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div></Col>
               <Col span='5' v-if='it.status == 4' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
@@ -132,6 +136,7 @@ import UploadButton, { SuccessEvent } from '../components/UploadButton.vue'
 import WeekDatePicker from '@/components/weekDatePicker'
 import { confirm , toast , info } from '@/ui/modal'
 import VideoPreviewer from '@/components/videoPreviewer'
+import OssUploader from '@/components/ossUploader'
 
 
 const timeFormat = 'YYYY-MM-DD'
@@ -140,7 +145,8 @@ const timeFormat = 'YYYY-MM-DD'
   components: {
     UploadButton,
     WeekDatePicker,
-    VideoPreviewer
+    VideoPreviewer,
+    OssUploader
   }
 })
 export default class Main extends ViewBase {
@@ -168,6 +174,10 @@ export default class Main extends ViewBase {
   movieList: any = []
   loading = false
   asd = false
+
+  ossUrl: any = null
+  fileUrl: any = null
+  fileSize: any = null
 
 
   itemlist: any = []
@@ -429,13 +439,9 @@ export default class Main extends ViewBase {
     }
   }
 
-  // @Watch('query', {deep: true})
-  // watchQuery() {
-  //   if (this.query.cinemaId == null) {
-  //     return
-  //   }
-  //   this.seach()
-  // }
+  @Watch('ossUrl', {deep: true})
+  watchQuery() {
+  }
 
   @Watch('weekDate', {deep: true})
   watchWeekDate() {
