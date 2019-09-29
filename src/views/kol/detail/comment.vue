@@ -288,7 +288,7 @@ export default class Comment extends ViewBase {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         return (
-          <a class="sourceContent" href={row.sourceUrl} v-html={row.sourceContent}></a>
+          <a target="_blank" class="sourceContent " href={row.sourceUrl} v-html={row.sourceContent}></a>
         )
         /* tslint:disable */
       }
