@@ -333,7 +333,7 @@ export default class Temporary extends ViewBase {
         const h = jsxReactToVue(hh)
         return (
           <a target="_blank"
-            class="sourceContent"
+            class="sourceContent "
             href={row.sourceContentUrl}
             v-html={row.sourceContent}
           ></a>
