@@ -279,7 +279,7 @@ export default class Promotion extends ViewBase {
         pageIndex: 1,
         pageSize: 288,
         status: this.setadver ? '' : 4,
-        videoType: 2
+        videoType: 1
       }) )
       this.adverList = (data.items || []).map((it: any) => {
         const movieId = it.movieId || '0'

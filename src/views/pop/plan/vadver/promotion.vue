@@ -330,7 +330,7 @@ export default class Promotion extends ViewBase {
         pageIndex: 1,
         pageSize: 888,
         status: this.setadver ? '' : 4,
-        videoType: 1
+        videoType: 2
       }) )
       this.adverList = data.items || []
       this.seach()
