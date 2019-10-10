@@ -23,6 +23,7 @@
 
           <div class="inner-right">
             <p class="title" :title="item.title">{{handleSlice(item.title || item.content)}}</p>
+            <!-- <p class="title" :title="item.title">{{handleSlice('详情文字配置详情文字配置详情文字配置详情文字配置详情文字配置详情文字配置详情文字配置详情文字配置详情文字配置详情文字配置')}}</p> -->
             <p class="icon-num">
               <span>
                 <i class="iconfont icon-shipin" />
@@ -197,6 +198,7 @@ export default class Opus extends ViewBase {
           justify-content: center;
           align-items: center;
           width: 200px;
+          min-width: 200px;
           height: 200px;
           border-radius: 8px;
           margin-right: 20px;
