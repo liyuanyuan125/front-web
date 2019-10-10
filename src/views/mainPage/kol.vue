@@ -228,6 +228,10 @@ export default class FigurePage extends ViewBase {
   /deep/ .brand-list {
     padding-right: 42px;
   }
+  // 产品说：先隐藏
+  /deep/ .rank-title {
+    display: none;
+  }
 }
 
 .layout-big-figure {
