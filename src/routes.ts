@@ -896,7 +896,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       title: '查看监播视频',
       authKey: '',
       authAction: '',
-      pageTitle: '视频',
+      pageTitle: '监播视频-鲸娱数据',
     },
   },
 

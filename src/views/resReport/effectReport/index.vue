@@ -90,7 +90,7 @@ function formartDate(beginDate: string, endDate: string) {
   if ( beginDate === '' &&  endDate === '') {
     return ''
   } else {
-    return moment(beginDate, 'YYYY-MM-DD').format('MM.DD') + '-' + moment(endDate, 'YYYY-MM-DD').format('MM.DD')
+    return moment(beginDate, 'YYYY-MM-DD').format('MM/DD') + '-' + moment(endDate, 'YYYY-MM-DD').format('MM/DD')
   }
 }
 
@@ -589,9 +589,10 @@ export default class Index extends ViewBase {
             return {
               img: it.img,
               id: it.id,
-              time: moment(it.uploadTime).format('YYYY/MM/DD h:mm'),
+              time: moment(it.uploadTime).format('YYYY/MM/DD HH:mm'),
               name: `
-                ${it.cinemaName} 《${it.movieName}》
+                ${it.cinemaName} ${formartDate(it.beginDate, it.endDate)}
+                ${it.movieName ? '《' + it.movieName + '》' : ''}
               `,
             }
           })
