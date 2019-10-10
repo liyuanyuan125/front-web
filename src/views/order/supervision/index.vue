@@ -80,7 +80,7 @@
           </li>
           <!-- <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div> -->
       </Row>
-      <OssUploader v-model="ossUrl" :param="{fileType: 3, subCategory: 2}" mini />
+      <!-- <OssUploader v-model="ossUrl" :param="{fileType: 3, subCategory: 2}" mini /> -->
       <div style=' margin-top: 15px; '>
         <Row class='li-title'>
           <Col span='3' >影片名称</Col>
