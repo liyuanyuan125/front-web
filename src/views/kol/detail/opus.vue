@@ -125,7 +125,7 @@ export default class Opus extends ViewBase {
     if (!text) {
       return
     }
-    return text.length > 15 ? text.substring(0, 15) + '.....' : text
+    return text.length > 45 ? text.substring(0, 45) + '.....' : text
   }
 
   uplist(size: any) {
@@ -144,7 +144,6 @@ export default class Opus extends ViewBase {
 <style lang='less' scoped>
 @import '~@/site/lib.less';
 @import '~@/views/kol/less/common.less';
-// @import '~@/views/brand/less/common.less';
 
 .no-data-list {
   text-align: center;
@@ -160,7 +159,6 @@ export default class Opus extends ViewBase {
 }
 
 .brand-list {
-  // margin: 0 20px 30px;
   font-size: 14px;
   .select-brand {
     padding-left: 30px;

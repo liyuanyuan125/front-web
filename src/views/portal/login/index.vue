@@ -6,8 +6,6 @@
         class="login-logo"
       />
       <p class="login-title">全网精准娱乐营销平台</p>
-      <img src=" https://wx3.sinaimg.cn/orj360/76e1e855gy1g7f50tewqnj22c02c0e82.jpg" width="100" />
-      <img src=" https://wx1.sinaimg.cn/large/7410164ely1g7e57ka0ylj20dw0dw74e.jpg" width="100" />
       <Button type="primary" :to="toLoginUrl" class="login-but">登 录 / 注 册</Button>
     </content>
   </div>
