@@ -43,6 +43,15 @@
                     <div class="keyword-title">提及到“{{keywordQuery.keyword}}”的热门评论</div>
                     <div class="table-box">
                       <Table stripe ref="table" :columns="tableColumns" :loading="tableLoading" :data="tableData"></Table>
+                      <Page
+                        class="info-page"
+                        show-total
+                        @on-change="keywordCommentPageChange"
+                        :total="keywordCommentTotal"
+                        :current.sync="keywordCommentQueryData.pageIndex"
+                        :page-size="keywordCommentQueryData.pageSize"
+                        v-if="!keywordCommentLoading && keywordCommentTotal > 50"
+                      />
                     </div>
                   </div>
                 </Col>
@@ -84,12 +93,25 @@ const colors: string[] = ['#AD686C', '#57B4C9', '#D0BF6B']
 export default class Main extends ViewBase {
   @Prop({ type: Number, default: 0 }) id!: number
 
+  // 评论列表添加分页 20191010
+  keywordCommentQueryData: any = {
+    pageIndex: 1,
+    pageSize: 50,
+    isPositive: null
+  }
+
+  // 评论列表添加分页 20191010
+  keywordCommentLoading = false
+
+  // 评论列表添加分页 20191010
+  keywordCommentTotal: number | null = null
+
   tooltipStyles = tooltipStyles
 
   keywordQuery: any = {
     keyword: '',
     pageIndex: 0,
-    pageSize: 10
+    pageSize: 50
   }
 
   form: any = {
@@ -415,6 +437,13 @@ export default class Main extends ViewBase {
     : moment(new Date()).format(timeFormat)
   }
 
+  // 切换当前页，发起请求
+  keywordCommentPageChange(val: any) {
+    this.keywordCommentQueryData.pageIndex = val
+    this.tableData = []
+    this.getKeywordList(this.keywordQuery.keyword)
+  }
+
   async handleChange() {
     this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
     this.form.beginDate[1] = this.endDate()
@@ -485,14 +514,20 @@ export default class Main extends ViewBase {
       keyword: (key == '') ? this.keywordQuery.keyword : key,
       beginDate: this.beginDate(this.form.dayRangesKey),
       endDate: this.endDate(),
-      positive: isPositive  // 是否正面
+      positive: isPositive,  // 是否正面
+      // 评论列表添加分页 20191010
+      pageIndex: this.keywordCommentQueryData.pageIndex,
+      pageSize: this.keywordCommentQueryData.pageSize,
     }
+    // 评论列表添加分页 20191010
+    this.keywordCommentLoading = true
     try {
       const {
         data
       } = await keywordComment({ ...mockObj }, this.id)
 
       const items = data.items || null
+      const totalCount = data.totalCount || null
 
       this.tableData = []
       if (items && items.length > 0 ) {
@@ -508,6 +543,9 @@ export default class Main extends ViewBase {
             commentDate: it.commentDate // 评论时间
           })
         })
+        // 评论列表添加分页 20191010
+        this.keywordCommentLoading = false
+        this.keywordCommentTotal = totalCount
       }
       this.tableLoading = false
     } catch (ex) {
@@ -613,6 +651,39 @@ export default class Main extends ViewBase {
     font-weight: 500;
     color: rgba(255, 255, 255, 1);
     padding: 0 25px;
+  }
+  //底部页码
+  .info-page {
+    text-align: center;
+    padding-bottom: 59px;
+    padding-top: 50px;
+    /deep/ .ivu-page-prev,
+    /deep/ .ivu-page-next,
+    /deep/ .ivu-page-item,
+    /deep/ .ivu-page-item-jump-prev,
+    /deep/ .ivu-page-item-jump-next {
+      width: 35px;
+      height: 35px;
+      border-radius: 20px;
+      background: none;
+      border: none;
+      color: #fff;
+    }
+    /deep/ .ivu-page-item a {
+      color: #fff;
+      line-height: 35px;
+    }
+    /deep/ .ivu-page-item-active a,
+    /deep/ .ivu-page-item-active:hover a {
+      display: inline-block;
+      width: 35px;
+      height: 35px;
+      border-radius: 20px;
+      line-height: 35px;
+      text-align: center;
+      background: #00202d;
+      color: #fff;
+    }
   }
 }
 </style>
