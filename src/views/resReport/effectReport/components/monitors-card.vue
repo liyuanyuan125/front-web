@@ -20,7 +20,14 @@
                     <div class="v-thumb" :style="`background-image: url( ${it.img} ) `"></div>
                     <div class="v-meta">
                       <div class="v-meta-title">{{it.time}}</div>
-                      <div class="v-meta-entry"><span>{{it.name}}</span></div> 
+                      <div class="v-meta-entry">
+                        <Tooltip>
+                          <div slot="content">
+                            {{it.name}}
+                          </div>
+                          <span>{{it.name}}</span>
+                        </Tooltip>
+                      </div> 
                     </div>
                     <Icon color="#fff" type="md-arrow-dropright-circle" />
                   </div>
@@ -54,6 +61,13 @@ export default class MonitorsCard extends Vue {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
+
+/deep/ .ivu-tooltip-inner {
+  white-space: inherit;
+}
+/deep/ .ivu-tooltip-popper {
+  width: 190px;
+}
 ul.video-list {
   display: flex;
   flex-flow: row;
@@ -88,7 +102,6 @@ ul.video-list {
         height: 210px;
       }
       .v-meta {
-        overflow: hidden;
         zoom: 1;
         z-index: 3;
         position: absolute;
@@ -109,13 +122,15 @@ ul.video-list {
           word-wrap: break-word;
         }
         .v-meta-entry {
-          margin: 0 8px;
-          margin-right: 10px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
+          span {
+            margin: 0 8px;
+            margin-right: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+          }
         }
       }
     }

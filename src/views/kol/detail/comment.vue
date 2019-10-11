@@ -56,6 +56,15 @@
                 <div class="keyword-title">提及到“{{keywordQuery.keyword}}”的热门评论</div>
                 <div class="table-box">
                   <Table stripe ref="table" :columns="tableColumns" :loading="tableLoading" :data="tableData"></Table>
+                  <Page
+                    class="info-page"
+                    show-total
+                    @on-change="keywordCommentPageChange"
+                    :total="keywordCommentTotal"
+                    :current.sync="keywordCommentQueryData.pageIndex"
+                    :page-size="keywordCommentQueryData.pageSize"
+                    v-if="!keywordCommentLoading && keywordCommentTotal > 50"
+                  />
                 </div>
               </div>
               </Col>
@@ -99,12 +108,25 @@ export default class Comment extends ViewBase {
 
   @Prop({ type: String, default: 'weibo' }) channel!: string
 
+  // 评论列表添加分页 20191010
+  keywordCommentQueryData: any = {
+    pageIndex: 1,
+    pageSize: 50,
+    isPositive: null
+  }
+
+  // 评论列表添加分页 20191010
+  keywordCommentLoading = false
+
+  // 评论列表添加分页 20191010
+  keywordCommentTotal: number | null = null
+
   tooltipStyles = tooltipStyles
 
   keywordQuery: any = {
-    keyword: '大家',
+    keyword: '',
     pageIndex: 0,
-    pageSize: 10
+    pageSize: 50
   }
 
   form: any = {
@@ -457,6 +479,13 @@ export default class Comment extends ViewBase {
       : moment(new Date()).format(timeFormat)
   }
 
+  // 切换当前页，发起请求
+  keywordCommentPageChange(val: any) {
+    this.keywordCommentQueryData.pageIndex = val
+    this.tableData = []
+    this.getKeywordList(this.keywordQuery.keyword)
+  }
+
   async handleChange() {
     this.form.beginDate[0] = this.beginDate(this.form.dayRangesKey)
     this.form.beginDate[1] = this.endDate()
@@ -522,13 +551,18 @@ export default class Comment extends ViewBase {
       channelCode: this.form.channelCode,
       beginDate: this.beginDate(this.form.dayRangesKey),
       endDate: this.endDate(),
-      positive: isPositive  // 是否正面
+      positive: isPositive,  // 是否正面
+      // 评论列表添加分页 20191010
+      pageIndex: this.keywordCommentQueryData.pageIndex,
+      pageSize: this.keywordCommentQueryData.pageSize,
     }
+    // 评论列表添加分页 20191010
+    this.keywordCommentLoading = true
     const id = this.id
     try {
       const {
         data,
-        data: { items }
+        data: { items, totalCount }
       } = await keywordComment({ ...mockObj }, id)
       if (items && items.length > 0) {
         items.map((it: any, index: number) => {
@@ -543,6 +577,9 @@ export default class Comment extends ViewBase {
             commentDate: it.commentDate // 评论时间
           })
         })
+        // 评论列表添加分页 20191010
+        this.keywordCommentLoading = false
+        this.keywordCommentTotal = totalCount
       }
       this.tableLoading = false
     } catch (ex) {
@@ -558,12 +595,16 @@ export default class Comment extends ViewBase {
     this.tableData = []
     this.getKeywordList(item[0], true)
     this.keywordQuery.keyword = item[0]
+    // 评论列表添加分页 20191010 记录正负面参数
+    this.keywordCommentQueryData.isPositive = true
   }
 
   keyChangeHandle2(item: any) {
     this.tableData = []
     this.getKeywordList(item[0], false)
     this.keywordQuery.keyword = item[0]
+    // 评论列表添加分页 20191010 记录正负面参数
+    this.keywordCommentQueryData.isPositive = false
   }
 
 }
@@ -651,6 +692,39 @@ export default class Comment extends ViewBase {
   /deep/ .ivu-table-wrapper {
     /deep/ .ivu-table-cell > div {
       line-height: 28px;
+    }
+  }
+  //底部页码
+  .info-page {
+    text-align: center;
+    padding-bottom: 59px;
+    padding-top: 50px;
+    /deep/ .ivu-page-prev,
+    /deep/ .ivu-page-next,
+    /deep/ .ivu-page-item,
+    /deep/ .ivu-page-item-jump-prev,
+    /deep/ .ivu-page-item-jump-next {
+      width: 35px;
+      height: 35px;
+      border-radius: 20px;
+      background: none;
+      border: none;
+      color: #fff;
+    }
+    /deep/ .ivu-page-item a {
+      color: #fff;
+      line-height: 35px;
+    }
+    /deep/ .ivu-page-item-active a,
+    /deep/ .ivu-page-item-active:hover a {
+      display: inline-block;
+      width: 35px;
+      height: 35px;
+      border-radius: 20px;
+      line-height: 35px;
+      text-align: center;
+      background: #00202d;
+      color: #fff;
     }
   }
 }

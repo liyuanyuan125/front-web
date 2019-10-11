@@ -17,7 +17,12 @@
         <div span="4" v-for="(item, index) in dataList" :key="item.id" @click="selectItemHandler(index, item.id)"
         :class="`data-item ${item.playing ? 'cur' : ''}`" >
           <div class="inner">
-            <a href="javascript:;"><div class="name">{{item.name}}</div></a>
+            <Tooltip>
+              <div slot="content">
+                {{item.name}}
+              </div>
+              <a href="javascript:;"><div class="name">{{item.name}}</div></a>
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -146,7 +151,7 @@ export default class VideoPlayer extends ViewBase {
       }
       this.videoId = id
       this.videoName = `
-        ${cinemaName} ${formartDate(beginDate, endDate)}《${movieName}》监播
+        ${cinemaName} ${formartDate(beginDate, endDate)}${movieName ? '《' + movieName + '》' : ''}监播
       `
       this.videoURL = url
       this.videoPoster = img
@@ -171,16 +176,19 @@ export default class VideoPlayer extends ViewBase {
       const totalCount = data.totalCount || 0
       const items = data.items || null
       if (items && items.length > 0) {
-        this.dataList = items.map((it: any) => {
+        let res: any[] = []
+        res = items.map((it: any) => {
           return {
             id: it.id,
             url: it.url,
             name: `
-            ${it.cinemaName} ${formartDate(it.beginDate, it.endDate)}《${it.movieName}》
+            ${it.cinemaName} ${formartDate(it.beginDate, it.endDate)}${it.movieName ? '《' + it.movieName + '》' : ''}
             `,
             playing: false
           }
         })
+        // 防止接口返回超过限额数量的数据
+        this.dataList = res.length > 11 ? res.slice(0, 11) : res
         this.totalCount = totalCount
         this.playerIsReady = true
         this.listVisible = true
@@ -231,7 +239,9 @@ export default class VideoPlayer extends ViewBase {
 
 <style lang="less" scoped>
 @import '~@/site/lib.less';
-
+/deep/ .ivu-tooltip-inner {
+  white-space: inherit;
+}
 .page-wrap {
   padding-top: 40px;
   h3 {
@@ -250,11 +260,13 @@ export default class VideoPlayer extends ViewBase {
   border-radius: 8px;
   padding: 40px 0;
   position: relative;
-  min-height: 600px;
+  .plyr__video-wrapper {
+    height: 555px;
+  }
   .plyr-wrap {
     flex: 1;
-    .plyr audio, .plyr video {
-      height: 555px;
+    .plyr audio,.plyr video {
+      height: 100%;
     }
   }
   .offOn-button {
@@ -319,7 +331,7 @@ export default class VideoPlayer extends ViewBase {
             color: rgba(133, 229, 253, 0.6);
           }
           .name {
-            width: 100%;
+            width: 385px;
             .cut-text;
           }
         }

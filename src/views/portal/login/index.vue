@@ -25,6 +25,15 @@ export default class Login extends ViewBase {
       query
     }
   }
+
+  mounted() {
+    // 同源策略是一种约定，它是浏览器最核心也是最基本的安全功能，如果缺少了同源策略浏览器很容易受到XSS, CSRF等攻击
+    // 所谓同源策略是指协议+域名+端口号相同
+    // http://www.aiads-dev.com/login  http 协议， www：子域名，aiads-dev.com主域名
+    // XSS 跨域脚本攻击, 恶意攻击者往js脚本里面插入script代码，当浏览器执行网页的浏览的时候，scrpt代码自动执行；
+    // CSRF :跨域伪造攻击，伪造受信任用户请求，
+    //
+  }
 }
 </script>
 
