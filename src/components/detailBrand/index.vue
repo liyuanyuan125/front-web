@@ -7,7 +7,9 @@
       <div class="video-list">
           <div class="list-col" v-for="item in list" :key ="item.id">
               <h3 class="flex-box"><img :src="item.logo" width="30" height="30" /><span>{{item.name}}</span></h3>
-              <img :src="item.logo" class="top-img"/>
+              <div class="back-img">
+                <img :src="item.logo" class="top-img"/>
+              </div>
               <em class="video-long" v-for="it in trades" :key="it.key" v-if="it.key == item.tradeCode">{{it.text}}</em>
               <h4 :title="item.description">{{item.description}}</h4> 
           </div>
@@ -62,6 +64,11 @@ export default class Main extends ViewBase {
 </script>
 <style lang='less' scoped>
 @import '~@/views/kol/less/common.less';
+
+.back-img {
+  background: #fff;
+  text-align: center;
+}
 .no-data-list {
   font-size: 15px;
   color: #fff;
@@ -109,7 +116,7 @@ export default class Main extends ViewBase {
       position: relative;
     }
     .top-img {
-      width: 100%;
+      max-width: 100%;
       height: 190px;
       border-radius: 8px;
     }
