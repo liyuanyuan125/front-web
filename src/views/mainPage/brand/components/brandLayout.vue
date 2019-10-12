@@ -28,7 +28,7 @@
         </Pane>
 
         <FansPane
-          title="百度搜索用户画像"
+          title="用户画像"
           :man="item.malePercent"
           :woman="item.femalePercent"
           :more="{ name: 'brand-homedetail-fans', params: { id } }"
