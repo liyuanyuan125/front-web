@@ -126,7 +126,7 @@ export default class Comment extends ViewBase {
   keywordQuery: any = {
     keyword: '',
     pageIndex: 0,
-    pageSize: 50
+    pageSize: 50,
   }
 
   form: any = {
@@ -593,18 +593,22 @@ export default class Comment extends ViewBase {
 
   keyChangeHandle1(item: any) {
     this.tableData = []
-    this.getKeywordList(item[0], true)
-    this.keywordQuery.keyword = item[0]
     // 评论列表添加分页 20191010 记录正负面参数
     this.keywordCommentQueryData.isPositive = true
+    // 切换热词重置当前分页
+    this.keywordCommentQueryData.pageIndex = 1
+    this.getKeywordList(item[0], true)
+    this.keywordQuery.keyword = item[0]
   }
 
   keyChangeHandle2(item: any) {
     this.tableData = []
-    this.getKeywordList(item[0], false)
-    this.keywordQuery.keyword = item[0]
     // 评论列表添加分页 20191010 记录正负面参数
     this.keywordCommentQueryData.isPositive = false
+    // 切换热词重置当前分页
+    this.keywordCommentQueryData.pageIndex = 1
+    this.getKeywordList(item[0], false)
+    this.keywordQuery.keyword = item[0]
   }
 
 }
