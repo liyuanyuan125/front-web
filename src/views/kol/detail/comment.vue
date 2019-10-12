@@ -133,7 +133,7 @@ export default class Comment extends ViewBase {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
-    dayRangesKey: 'sevenDay',
+    dayRangesKey: 'ninetyDay',
     channelCode: this.channel
   }
 

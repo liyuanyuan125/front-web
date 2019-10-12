@@ -118,7 +118,7 @@ export default class Main extends ViewBase {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
-    dayRangesKey: 'last_7_day',
+    dayRangesKey: 'last_90_day',
   }
 
   dict: any = {
