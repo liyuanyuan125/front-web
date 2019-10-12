@@ -177,7 +177,7 @@ export default class App extends ViewBase {
       font-weight: 400;
       text-align: center;
       color: #fff;
-      opacity: .8;
+      // opacity: .8;
     }
   }
   .number, .onenumber {
@@ -245,10 +245,9 @@ export default class App extends ViewBase {
   text-overflow: ellipsis;
   vertical-align: middle;
   max-width: 200px;
-  color: #fff;
 }
 .plan-box {
-  color: #7f7f7f;
+  color: #fff;
 }
 // .line-right {
 //   position: absolute;
