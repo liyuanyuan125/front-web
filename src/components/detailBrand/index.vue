@@ -68,6 +68,7 @@ export default class Main extends ViewBase {
 .back-img {
   background: #fff;
   text-align: center;
+  border-radius: 5px;
 }
 .no-data-list {
   font-size: 15px;

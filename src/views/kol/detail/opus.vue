@@ -23,6 +23,7 @@
 
           <div class="inner-right">
             <p class="title" :title="item.title">{{handleSlice(item.title || item.content)}}</p>
+            <!-- <p class="title" :title="item.title">{{handleSlice('详情文字配置详情文字配置详情文字配置详情文字配置详情文字配置详情文字配置详情文字配置详情文字配置详情文字配置详情文字配置')}}</p> -->
             <p class="icon-num">
               <span>
                 <i class="iconfont icon-shipin" />
@@ -125,7 +126,7 @@ export default class Opus extends ViewBase {
     if (!text) {
       return
     }
-    return text.length > 45 ? text.substring(0, 45) + '.....' : text
+     return text.length > 45 ? text.substring(0, 45) + '.....' : text
   }
 
   uplist(size: any) {
@@ -197,6 +198,7 @@ export default class Opus extends ViewBase {
           justify-content: center;
           align-items: center;
           width: 200px;
+          min-width: 200px;
           height: 200px;
           border-radius: 8px;
           margin-right: 20px;
