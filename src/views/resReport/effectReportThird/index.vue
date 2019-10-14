@@ -426,7 +426,7 @@ export default class Index extends ViewBase {
       }
 
       if (personTopCinemas && personTopCinemas.length > 0) {
-        this.cinemasData.totalCount = cinemaCount
+        // this.cinemasData.totalCount = cinemaCount
         personTopCinemas.slice(0, 10).forEach((it: any, index: number) => {
           // this.cinemasData.viewRate.data.push({
           //   name: it.name,
