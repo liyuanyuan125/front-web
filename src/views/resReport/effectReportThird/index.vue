@@ -366,6 +366,9 @@ export default class Index extends ViewBase {
       const report = data.report || null
       const movies = data.movies || null
       const cinemas = data.cinemas || null
+      const cinemaCount = data.cinemaCount
+      const showTopCinemas = data.showTopCinemas || null
+      const personTopCinemas = data.personTopCinemas || null
       const user = data.user || null
       const gradeCodes = data.gradeCodes || null
       const planStatus = data.planStatus || null
@@ -404,22 +407,39 @@ export default class Index extends ViewBase {
         item0: !report ? '-' : report.viewCount,
         item1: !report ? '-' : report.scheduleCount
       }
-
-      if (cinemas && cinemas.length > 0) {
-        this.cinemasData.totalCount = cinemas.length
-        cinemas.slice(0, 10).forEach((it: any, index: number) => {
+      this.cinemasData.totalCount = cinemaCount
+      if (showTopCinemas && showTopCinemas.length > 0) {
+        showTopCinemas.slice(0, 10).forEach((it: any, index: number) => {
           this.cinemasData.viewRate.data.push({
             name: it.name,
             count: it.viewRate
           })
+          // this.cinemasData.scheduleRate.data.push({
+          //   name: it.name,
+          //   count: it.scheduleRate
+          // })
+          // this.cinemasData.costRate.data.push({
+          //   name: it.name,
+          //   count: it.costRate
+          // })
+        })
+      }
+
+      if (personTopCinemas && personTopCinemas.length > 0) {
+        // this.cinemasData.totalCount = cinemaCount
+        personTopCinemas.slice(0, 10).forEach((it: any, index: number) => {
+          // this.cinemasData.viewRate.data.push({
+          //   name: it.name,
+          //   count: it.viewRate
+          // })
           this.cinemasData.scheduleRate.data.push({
             name: it.name,
             count: it.scheduleRate
           })
-          this.cinemasData.costRate.data.push({
-            name: it.name,
-            count: it.costRate
-          })
+          // this.cinemasData.costRate.data.push({
+          //   name: it.name,
+          //   count: it.costRate
+          // })
         })
       }
 
