@@ -1,4 +1,4 @@
-import { encode, decode } from 'universal-base64url'
+import { encode, decode } from './universalBase64url'
 import { Route } from 'vue-router'
 
 /**
