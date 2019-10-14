@@ -69,6 +69,7 @@ export default class Main extends ViewBase {
   width: 100%;
   background: #fff;
   text-align: center;
+  border-radius: 5px;
 }
 .no-data-list {
   font-size: 15px;
