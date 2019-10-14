@@ -20,7 +20,7 @@
 
       <div class="zone rank-zone effect-lightning">
         <div class="rank-label">
-          鲸娱指数
+          鲸鱼指数
           <Tooltip :content="item.jyTip" v-if="item.jyTip"/>
         </div>
         <div class="rank-no">{{item.rankNo}}</div>

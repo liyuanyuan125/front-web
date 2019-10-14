@@ -44,7 +44,7 @@ export default class Layout extends ViewBase {
   get pageTitle() {
     const meta = this.$route.meta as RouteMetaBase
     const title = meta && meta.pageTitle || meta.title || ''
-    return `${this.name}${title}-鲸娱数据`
+    return `${this.name}${title}-鲸鱼数据`
   }
 
   async created() {

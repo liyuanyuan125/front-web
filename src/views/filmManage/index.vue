@@ -23,7 +23,7 @@
           </router-link>
         </li>
       </ul>
-      <ul v-if="list.length == 0" class="no-list-data">暂无关联影片，可联系鲸娱添加</ul>
+      <ul v-if="list.length == 0" class="no-list-data">暂无关联影片，可联系鲸鱼添加</ul>
   </div>
 </template>
 

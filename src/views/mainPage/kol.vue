@@ -208,7 +208,7 @@ export default class FigurePage extends ViewBase {
     this.opusData = opusData
     this.offerData = offerData
 
-    setPageTitle(`${basic.name}-鲸娱数据`)
+    setPageTitle(`${basic.name}-鲸鱼数据`)
   }
 
   @Watch('channel')

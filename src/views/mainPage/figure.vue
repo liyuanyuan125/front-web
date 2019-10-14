@@ -157,7 +157,7 @@ export default class FigurePage extends ViewBase {
     this.brandData = brandData
     this.commentData = commentData
 
-    setPageTitle(`${basic.name}-鲸娱数据`)
+    setPageTitle(`${basic.name}-鲸鱼数据`)
   }
 
   async initActiveFans() {
