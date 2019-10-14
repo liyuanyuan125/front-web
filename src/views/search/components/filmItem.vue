@@ -20,7 +20,7 @@
       <div class="line year-box">年度票房榜：<em>{{item.yearBoxOfficeRank}}</em></div>
     </aside>
     <aside class="side2">
-      <div class="line jy-index">鲸娱指数：<em>{{item.jy_index / 100}}</em></div>
+      <div class="line jy-index">鲸鱼指数：<em>{{item.jy_index / 100}}</em></div>
     </aside>
   </router-link>
 </template>

@@ -63,7 +63,7 @@
       <aside class="site-sider">
         <h1 class="logo">
           <router-link :to="{name: 'home'}" class="logo-link">
-            <img src="./assets/logo.png" alt="Aiads投放管理平台" class="logo-img">
+            <img src="./assets/logo.png" alt="鲸鱼数据" class="logo-img">
           </router-link>
         </h1>
 
