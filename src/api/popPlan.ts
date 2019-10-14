@@ -242,8 +242,8 @@ export async function financeMsg(id: any) {
  * @param  {any} query
  * 支付定金
  */
-export async function payMoney(id: any) {
-  const data = await post(`/xadvert/plans/${id}/pay-deposit`)
+export async function payMoney(id: any, query: any) {
+  const data = await post(`/xadvert/plans/${id}/pay-deposit`, query)
   return data
 }
 
@@ -337,3 +337,20 @@ export async function getmoney(id: any) {
   return data
 }
 
+/**
+ * @param  {any} query
+ * 支付定金前获取定金信息
+ */
+export async function deposit(id: any) {
+  const data = await get(`/xadvert/plans/${id}/check-before-pay-deposit`)
+  return data
+}
+
+/**
+ * @param  {any} query
+ * 支付定金前获取定金信息
+ */
+export async function zfsettle(id: any, query: any) {
+  const data = await post(`/xadvert/plans/${id}/settle`, query)
+  return data
+}

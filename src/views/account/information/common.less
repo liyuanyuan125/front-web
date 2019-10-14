@@ -1,0 +1,84 @@
+
+// Modal 关闭按钮样式
+.comDlg {
+  .title {
+    text-align: center;
+    font-size: 16px;
+    color: #00202d;
+    padding: 30px 0;
+  }
+  /deep/ .ivu-modal-body {
+    padding: 0 40px  70px;
+  }
+  /deep/ .ivu-modal-footer {
+    display: none;
+  }
+  /deep/ .ivu-input {
+    height: 40px;
+    font-size: 14px;
+    border-radius: 5px;
+    outline: none;
+  }
+  /deep/ .form-item-getcode {
+    .ivu-form-item-content {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  .input-captcha {
+    width: 230px;
+  }
+  .get-code {
+    width: 119px;
+    height: 40px;
+    background: #3398db;
+    border-radius: 5px;
+    color: #fff;
+  }
+  .footer-btn {
+    width: 200px;
+    height: 50px;
+    background: rgba(0, 32, 45, 1);
+    border-radius: 25px;
+    color: #fff;
+    border: 0;
+    margin-top: 50px;
+    &:hover {
+      background: rgba(0, 32, 45, 1);
+      color: #fff;
+    }
+  }
+  .footer {
+    text-align: center;
+  }
+
+  /deep/ .ivu-modal-close {
+    z-index: 1;
+    font-size: 12px;
+    position: absolute;
+    right: -17px;
+    top: -18px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #fff;
+    border-radius: 50%;
+    border: 2px solid #00202d;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+  }
+  
+  /deep/ .ivu-modal-close .ivu-icon-ios-close {
+    font-size: 30px;
+    font-weight: bold;
+    color: #00202d;
+    transition: color 0.2s ease;
+    position: relative;
+    top: -1px;
+    left: -2px;
+  }
+  
+  /deep/ .ivu-modal-close .ivu-icon-ios-close:hover {
+    color: #00202d;
+  }
+}

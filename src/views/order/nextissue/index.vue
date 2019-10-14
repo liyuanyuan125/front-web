@@ -42,7 +42,7 @@
           <Col :span='3'>影片名称</Col>
           <Col :span='2' >总投放时长</Col>
           <Col :span='15'>广告列表</Col>
-          <div :span='2' @click="allover(5)" style='color: #57b4c9;cursor: pointer;font-size: 12px;float:right;'>一键设置为已下刊</div>
+          <div :span='2' v-if='itemlist.length != 0' @click="allover(5)" style='color: #57b4c9;cursor: pointer;font-size: 12px;float:right;'>一键设置为已下刊</div>
         </Row>
         <ul class='itemul'>
           <li class='li-item' v-for='(it,index) in itemlist' :key='index'>
@@ -56,10 +56,16 @@
                   <div v-if='item.status == 1' @click="change(it.id , item.status, item.orderId)" class='imgs2'></div>
                   <div v-if='item.status == 2' @click="change(it.id , item.status, item.orderId)" class='imgs1'></div>
                     <Tooltip v-if='item.videoName.length > 10' :content="item.videoName">
-                    <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: it.id }}">{{item.videoName.slice(0,10)}}...</router-link>
-                  </Tooltip>
-                <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.id }}" v-if='item.videoName.length <= 10'>{{item.videoName}}</router-link>
-                  ({{item.videoLength}}s)
+                      <router-link style='color: #00202D;margin-left: 25px;' :to="{ name: 'order-dispatch-details', params: { id: it.id }}">
+                          <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                          {{item.videoName.slice(0,10)}}...
+                      </router-link>
+                    </Tooltip>
+                     <router-link style='color: #00202D;margin-left: 25px;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.id }}" v-if='item.videoName.length <= 10'>
+                          <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                          {{item.videoName}}
+                      </router-link>
+                    ({{item.videoLength}}s)
                   </Col>
                 </row>
               </Col>
@@ -110,6 +116,9 @@ export default class Main extends ViewBase {
   deArray: any = []
   idsArray: any = []
   aaa: any = 0
+
+  // 广告片投放位置
+  deliveryPositionList: any = []
 
   async mounted() {
     // const cinid = await getcinid()
@@ -224,6 +233,7 @@ export default class Main extends ViewBase {
       // 获取上刊列表
       const datalist = await queryList({cinemaId: this.query.cinemaId, offDate: data})
       this.itemlist = datalist.data.items
+      this.deliveryPositionList = datalist.data.deliveryPositionList
       this.asd = false
 
     } catch (ex) {
@@ -266,7 +276,8 @@ export default class Main extends ViewBase {
 
       // 获取上刊列表
       const datalist = await queryList({cinemaId: this.query.cinemaId, offDate: data})
-      this.itemlist = datalist.data.items
+      this.itemlist = datalist.data.items == null ? [] : datalist.data.items
+      this.deliveryPositionList = datalist.data.deliveryPositionList
       this.asd = false
 
     } catch (ex) {

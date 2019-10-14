@@ -1,7 +1,7 @@
 import { get, post } from '@/fn/ajax'
 
 export interface LoginData {
-  systemCode: string
+  // systemCode: string
   email: string
   password: string
   captchaId: string

@@ -22,7 +22,7 @@
                     <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
                     <p style="margin-bottom: 6px"><span>影片类型：</span>{{movieMap(it.movieType)}}</p>
                     <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum, 2)}}</p>
-                    <i-circle v-if='movieCustom == 0 || detaildata.deliveryGroups' trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
+                    <i-circle v-if='movieCustom == 0' trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                       <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
                       <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent || '-'}}%</p>
                     </i-circle>
@@ -138,6 +138,10 @@
                       {{formatNums(row.estimateShowCount * 13 / 10, 1)}}
                     </template>
 
+                    <template slot-scope="{ row }" slot="cpm">
+                      {{formatNums(row.cpm)}}
+                    </template>
+
                     <template slot-scope="{ row }" slot="estimatePersonCount">
                       {{formatNums(row.estimatePersonCount * 7 / 10, 1)}} ~ 
                       {{formatNums(row.estimatePersonCount * 13 / 10, 1)}}
@@ -246,6 +250,7 @@ export default class App extends ViewBase {
         align: 'center'
       }
     ]
+    const specification = this.deatilItem.specification || 0
     const five = [
       {
         title: '预估投放场次',
@@ -269,6 +274,13 @@ export default class App extends ViewBase {
           align: 'center'
         },
         ...four,
+        {
+          title: `${specification}s 刊例价（元/千人次）`,
+          width: 136,
+          key: 'cpm',
+          align: 'center',
+          slot: 'cpm'
+        },
         ...five
       ]
     } else if (this.tag == 2 || this.tag == 3) {
@@ -378,7 +390,8 @@ export default class App extends ViewBase {
         const names = (it.ageCodes || []).map((items: any, ins: number) => {
           return {
             key: items,
-            text: (it.ageValues) ? it.ageValues[ins] : '-'
+            text: (it.ageValues) ? it.ageValues[ins] : '-',
+            matchPercent: it.matchPercent || 0
           }
         })
         return {
@@ -503,9 +516,14 @@ export default class App extends ViewBase {
             name: 'pop-planlist-add',
             params: { step: '3', setid: this.$route.params.setid  }
           })
+        } else if (this.$route.name == 'pop-planlist-add') {
+          this.$router.push({
+            name: 'pop-business-add',
+            params: { step: '3', setid: this.$route.params.setid  }
+          })
         } else {
           this.$router.push({
-            name: 'pop-planlist-edit',
+            name: this.$route.name,
             params: { step: '3', setid: this.$route.params.setid  }
           })
         }
@@ -567,10 +585,17 @@ export default class App extends ViewBase {
     //     params: { id: '1', setid: this.$route.params.setid  }
     //   })
     // } else {
-    this.$router.push({
-      name: 'pop-planlist-edit',
-      params: { step: '1', setid: this.$route.params.setid  }
-    })
+    if (this.$route.name == 'pop-planlist-edit' || this.$route.name == 'pop-planlist-add') {
+      this.$router.push({
+        name: 'pop-planlist-edit',
+        params: { step: '1', setid: this.$route.params.setid  }
+      })
+    } else {
+      this.$router.push({
+        name: 'pop-business-edit',
+        params: { step: '1', setid: this.$route.params.setid  }
+      })
+    }
     // }
   }
 
@@ -975,8 +1000,10 @@ export default class App extends ViewBase {
     height: 60px;
     background: rgba(255, 255, 255, 0.3);
     color: #00202d;
-    line-height: 60px;
+    line-height: 20px;
     span {
+      display: block;
+      line-height: 20px;
       font-size: 14px;
     }
   }

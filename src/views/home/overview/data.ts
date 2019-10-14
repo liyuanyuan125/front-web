@@ -134,3 +134,23 @@ export async function getBrandList() {
 
   return list
 }
+
+/**
+ * 获取公司下的影片列表
+ * https://yapi.aiads-dev.com/project/94/interface/api/6292
+ */
+export async function getFilmList() {
+  const {
+    data: {
+      items
+    }
+  } = await get('/customer/companies/detail-movies')
+
+  const list = (items as any[] || []).slice(0, 5).map(it => ({
+    id: it.movieId,
+    name: it.movieTitle,
+    logo: it.logoUrl,
+  }))
+
+  return list
+}

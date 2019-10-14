@@ -26,7 +26,7 @@
 
     <section class="content-box">
       <div class="content-left">
-        <Pane title="百度搜索用户画像" :more="{name: 'brand-homedetail-fans', params: {id}}" class="baidu-pane">
+        <Pane title="用户画像" :more="{name: 'brand-homedetail-fans', params: {id}}" class="baidu-pane">
           <ul class="baidu-list">
             <li class="baidu-item">
               <em>{{item.malePercent}}</em>%

@@ -1,23 +1,33 @@
 <template>
   <div class="pagehome">
-    <div class="create-title-text">
-      <p>平台映前广告计费标准最小时长单位为15s，为节省您的广告投放成本，建议广告片时长为15s的整倍数，例如（15s、30s、45s、60s等）
-广告片通过审核后，平台会统一为您进行转码为影院可播放的格式；转码费用标准为【3,000.00元/15s】</p>
-      <div v-if="status == 1" class="status-title">待审核，您上传的广告片正在审核中</div>
-      <div v-if="status == 5" class="status-title">已拒绝，拒绝原因：{{refuseReason}}</div>
+     <textDlg>
+       <div slot="detailStatus">
+          <div v-if="status == 1" class="status-title">待审核，您上传的广告片正在审核中</div>
+      <div v-if="status == 5" class="status-title">已拒绝，拒绝原因：{{item.resultReason}}</div>
       <div v-if="status == 2" class="status-title">待支付，数字转制费{{item.transFee}}元</div>
       <div v-if="status == 3" class="status-title">转码中，您已支付{{item.transFee}}的数字转制费</div>
-    </div>
+       </div>
+      
+     </textDlg>
+    <!-- <div class="create-title-text">
+     
+      
+    </div> -->
 
     <!-- dcp下载 v-if="status == 4" -->
     <dl  class="form dcp-download">
+      <dt class="dl-title"><em>下载链接</em></dt>
+      <dd v-for="it in (item.attachments || [])"   :key="it.id" v-if="it.typeCode == -1" class="dcp-dd-list">
+        <em  :href="it.fileUrl">{{it.fileUrl || '-'}}</em>
+      </dd>
+    </dl>
+    <!-- <dl  class="form dcp-download">
       <dt class="dl-title flex-box"><span>格式</span><em>下载链接</em></dt>
       <dd v-if="item.attachments" v-for="it in item.attachments" :key="it.id" class="dcp-dd-list flex-box">
-        <!-- <span>{{it.typeCode}}</span> -->
         <span  v-for="(ind, index) in typeList" :key="index" v-if="ind.key == it.typeCode ">{{ind.text}}</span>
         <a target="_blank" :href="it.fileUrl">{{it.fileUrl || '-'}}</a>
       </dd>
-    </dl>
+    </dl> -->
 
     <div class="form detail-inner">
       <p><label>名称：</label><em>{{item.name || '-'}}</em></p>
@@ -34,17 +44,6 @@
          <Button class="cancel-btn" @click="$router.push({name: 'pop-film'})">返回</Button>
       </div>
     </div>
-
-    <!-- dcp下载 -->
-    <!-- <div v-if="status == 4">
-      <Row type="flex" justify="space-between" class="code-row-bg">
-          <Col span="11" v-if="item.attachments" v-for="it in item.attachments" :key="it.id" class="down-load-dcp flex-box">
-            <span>{{queryTypeList(it.typeCode)}}</span>
-            <a :href="it.fileUrl" target="_blank"><img class="down-img" src="./assets/down-dcp.png"  width="14"/>下载DCP包</a>
-          </Col>
-      </Row>
-      
-    </div> -->
   </div>
 </template>
 
@@ -58,12 +57,14 @@ import payDefault from './payDefault.vue'
 import statusCode from './status.vue'
 import { VuePlyr } from 'vue-plyr'
 import 'vue-plyr/dist/vue-plyr.css'
+import textDlg from './components/textDlg.vue'
 
 @Component({
   components: {
     payDefault,
     statusCode,
-    VuePlyr
+    VuePlyr,
+    textDlg
   }
 })
 export default class Main extends ViewBase {

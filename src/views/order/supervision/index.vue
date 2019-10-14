@@ -59,14 +59,25 @@
                 <row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in normallist.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                        <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}">{{item.videoName.slice(0,7)}}...</router-link>
+                        <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}">
+                           <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                          {{item.videoName.slice(0,7)}}...
+                        </router-link>
                       </Tooltip>
-                    <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: normallist.orderId }}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
+                    <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}" v-if='item.videoName.length <= 7'>
+                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                      {{item.videoName}}
+                    </router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
               </Col>
-              <Col span='5' style='text-align: center;cursor: pointer;' v-if='normallist.status == 1' ><UploadButton @success="onUploadSuccess($event, normallist.id)">上传</UploadButton></Col>
+              <Col span='5' style='text-align: center;cursor: pointer;' v-if='normallist.status == 1' >
+
+                <!-- <UploadButton @success="onUploadSuccess($event, normallist.id)">上传</UploadButton> -->
+                <OssUploader :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , normallist.id)"/>
+
+              </Col>
               <Col span='5' v-if='normallist.status == 2' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
               <Col span='5' v-if='normallist.status == 3' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 3' class='imgs2'></div></Col>
               <Col span='5' v-if='normallist.status == 4' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
@@ -82,7 +93,7 @@
           <Col span='5' style='text-align: center;'>监播视频</Col>
         </Row>
         <ul class='itemul'>
-          <li class='li-item' v-for='(it,index) in itemlist' :key='index'>
+          <li class='li-item' v-for='(it,index) in itemlist' :key='it.id'>
             <row>
               <Col span='3'>{{it.movieName}}</Col>
               <Col span='2' >{{it.videoTotalLength}}s</Col>
@@ -90,14 +101,23 @@
                 <row>
                   <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'  v-if='item.deleted == false && item.offShelfStatus == 1'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">{{item.videoName.slice(0,7)}}...</router-link>
+                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">
+                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                        {{item.videoName.slice(0,7)}}...
+                      </router-link>
                   </Tooltip>
-                <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 7'>{{item.videoName}}</router-link>
+                <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 7'>
+                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                        {{item.videoName}}
+                      </router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
               </Col>
-              <Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' ><UploadButton @success="onUploadSuccess($event, it.id)">上传</UploadButton></Col>
+              <Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' >
+                <!-- <UploadButton @success="onUploadSuccess($event, it.id)">上传</UploadButton> -->
+                <OssUploader :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
+              </Col>
               <Col span='5' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
               <Col span='5' v-if='it.status == 3' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div></Col>
               <Col span='5' v-if='it.status == 4' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
@@ -120,6 +140,7 @@ import UploadButton, { SuccessEvent } from '../components/UploadButton.vue'
 import WeekDatePicker from '@/components/weekDatePicker'
 import { confirm , toast , info } from '@/ui/modal'
 import VideoPreviewer from '@/components/videoPreviewer'
+import OssUploader from '@/components/ossUploader'
 
 
 const timeFormat = 'YYYY-MM-DD'
@@ -128,7 +149,8 @@ const timeFormat = 'YYYY-MM-DD'
   components: {
     UploadButton,
     WeekDatePicker,
-    VideoPreviewer
+    VideoPreviewer,
+    OssUploader
   }
 })
 export default class Main extends ViewBase {
@@ -144,6 +166,9 @@ export default class Main extends ViewBase {
   sd = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
   ed = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
 
+  ad = moment(this.weekDate[0].getTime() - (24 * 60 * 60 * 1000 * 7)).format(timeFormat).split('-')
+  bd = moment(this.weekDate[1].getTime() - (24 * 60 * 60 * 1000 * 7)).format(timeFormat).split('-')
+
   query: any = {
     cinemaId: null,
     beginDate: this.sd[0] + this.sd[1] + this.sd[2],
@@ -157,6 +182,10 @@ export default class Main extends ViewBase {
 
   itemlist: any = []
   normallist: any = []
+
+
+  // 广告片投放位置
+  deliveryPositionList: any = []
 
 
 
@@ -183,6 +212,11 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.seach()
     } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
+      this.weekDate = [
+      new Date(this.startTime - (24 * 60 * 60 * 1000 * 7)) ,
+      new Date(this.endTime - (24 * 60 * 60 * 1000 * 7))]
+      this.query.beginDate = this.ad[0] + this.ad[1] + this.ad[2]
+      this.query.endDate = this.bd[0] + this.bd[1] + this.bd[2]
       this.seach()
       return
     }
@@ -233,17 +267,20 @@ export default class Main extends ViewBase {
   }
 
   // 上传文件
-  async onUploadSuccess({ files }: SuccessEvent, id: number) {
-    // console.log(files)
+  async onUploadSuccess(ev: any, id: number) {
       try {
         await addvideo (id , {
-                        fileName: files[0].clientName,
-                        fileId: files[0].fileId
+                        fileUrl: ev.url,
+                        size: ev.file.size,
+                        fileName: ev.file.name
                       })
         this.$Message.success({
           content: `更改成功`,
         })
-        this.reloadSearch()
+        // setTimeout(() => {
+          // (this.$Spin as any).hide()
+          this.seach()
+        // }, 1000)
       } catch (ex) {
         this.handleError(ex)
       }
@@ -394,7 +431,8 @@ export default class Main extends ViewBase {
         return
       }
       const datalist = await querylist(this.query)
-      this.itemlist = datalist.data.items
+      this.itemlist = datalist.data.items == null ? [] : datalist.data.items
+      this.deliveryPositionList = datalist.data.deliveryPositionList
       this.normallist = datalist.data.normal == null ? [] : datalist.data.normal
       this.asd = false
 
@@ -522,7 +560,7 @@ export default class Main extends ViewBase {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     background: url('./assets/wait.png');
     background-size: cover;
     margin-right: 2px;
@@ -533,7 +571,7 @@ export default class Main extends ViewBase {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     background: url('./assets/over.png');
     background-size: cover;
     margin-right: 2px;
@@ -544,7 +582,7 @@ export default class Main extends ViewBase {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     background: url('./assets/dels.png');
     background-size: cover;
     margin-right: 2px;
@@ -587,5 +625,21 @@ export default class Main extends ViewBase {
   &::-webkit-input-placeholder {
     color: #00202d;
   }
+}
+/deep/ .oss-uploader-mini {
+  width: 68px;
+  height: 20px;
+  border: 0;
+  border-radius: 0;
+  margin-left: 39%;
+  margin-top: 7px;
+}
+/deep/ .oss-uploader-mini .action-all {
+  top: -11px;
+  right: -10px;
+}
+/deep/ .oss-uploader-mini .action-done {
+  left: 38px;
+  width: auto;
 }
 </style>

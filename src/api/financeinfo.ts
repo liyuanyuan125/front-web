@@ -29,5 +29,21 @@ export async function dataFrom(query: any) {
   return res
 }
 
+// 获取转账方式
+export async function before() {
+  const res = await get('/finance/lineUnderRemittances/create/before')
+  return res
+}
 
+// 新(新建充值)
+export async function lineUnderRemittances(query: any) {
+  const res = await post('/finance/lineUnderRemittances', query)
+  return res
+}
+
+// 资金账单列表
+export async function bills(query: any) {
+  const res = await get(`/finance/xadvertiser/account-bills` , query)
+  return res
+}
 

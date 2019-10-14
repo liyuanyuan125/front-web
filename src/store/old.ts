@@ -4,7 +4,7 @@
 import tryParseJson from '@/fn/tryParseJson'
 import cookie from 'js-cookie'
 import { logout as postLogout } from '@/api/auth'
-import { SystemCode, SecondaryCode, systemList, PermPage, MapType } from '@/util/types'
+import { SystemCode, SecondaryCode, SystemItem, systemList, PermPage, MapType } from '@/util/types'
 import innerAccess, { AccessToken } from '@/fn/innerAccess'
 import event from '@/fn/event'
 import { systemSwitched, SystemSwitchedEvent } from '@/util/globalEvents'
@@ -34,10 +34,12 @@ export interface User {
 
   /** 当前系统 */
   systemCode: SystemCode
-  /** 所拥有的系统列表 */
-  systems: SystemCode[]
   /** 二级代理商和直客身份 */
   secondaryCode: SecondaryCode
+  /** 所拥有的系统列表（已被 systemList 取代，TODO: 准备重构掉） */
+  systems: SystemCode[]
+  /** 所拥有的系统列表 */
+  systemList: SystemItem[]
 
   /** 所属公司 ID */
   companyId: number
@@ -104,6 +106,7 @@ export function checkUser() {
       const codeList = systemList.map(it => it.code)
       assert(codeList.includes(user.systemCode), '角色不正确')
       assert(user.systems && user.systems.length > 0, '没有角色')
+      assert(user.systemList && user.systemList.length > 0, '没有角色')
       assert(user.companyId > 0, '没有所属公司')
       assert(user.accountType > 0, '没有子账户类型')
       assert(user.perms && user.perms.length > 0, '没有权限列表')
@@ -121,13 +124,23 @@ export function checkUser() {
 export function switchSystem(systemCode: SystemCode) {
   if (theUser != null && theUser.systemCode !== systemCode) {
     const oldSystemCode = theUser.systemCode
+    const {
+      secondaryCode: oldSecondaryCode
+    } = theUser.systemList.find(it => it.code == oldSystemCode)!
+    const { secondaryCode } = theUser.systemList.find(it => it.code == systemCode)!
     accessToken.can = true
     theUser.systemCode = systemCode
+    theUser.secondaryCode = secondaryCode
     accessToken.can = false
 
     saveUser()
 
-    const ev: SystemSwitchedEvent = { systemCode, oldSystemCode }
+    const ev: SystemSwitchedEvent = {
+      systemCode,
+      secondaryCode,
+      oldSystemCode,
+      oldSecondaryCode
+    }
     event.emit(systemSwitched, ev)
   }
 }

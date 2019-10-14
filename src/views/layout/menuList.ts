@@ -72,6 +72,13 @@ const authKeyToMenuNameMap: MapType = {
   'resource.data-report': 'report',
   'resource.financemanage': 'resfinance',
   'resource.account-manage': 'account',
+
+  // 片商
+  'film.promotion': 'pop',
+  'film.film-manage': 'film-manage',
+  'film.customer-manage': 'customer',
+  'film.financial-manage': 'finance',
+  'film.account-manage': 'account',
 }
 
 /**
@@ -90,6 +97,8 @@ const nameToIconMap: MapType = {
 
   order: 'order',
   resfinance: 'finance',
+
+  'film-manage': 'diamond',
 }
 
 /**

@@ -354,8 +354,8 @@ export default class Temporary extends ViewBase {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         return (
-          <a
-            class="sourceContent"
+          <a target="_blank"
+            class="sourceContent "
             href={row.sourceContentUrl}
             v-html={row.sourceContent}
           ></a>

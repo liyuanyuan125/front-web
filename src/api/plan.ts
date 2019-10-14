@@ -87,7 +87,7 @@ export async function planPayment(id: any) {
  * @param id
  */
 export async function planCancel(id: any) {
-  const res = await put(`xadvert/plans/${id}/cancel`)
+  const res = await post(`xadvert/plans/${id}/cancel`)
   return res
 }
 

@@ -511,9 +511,14 @@ export default class Orienteering extends ViewBase {
                     name: 'pop-planlist-add',
                     params: { step: '2', setid: this.$route.params.setid  }
                   })
+                } else if (this.$route.name == 'pop-planlist-add') {
+                  this.$router.push({
+                    name: 'pop-business-add',
+                    params: { step: '2', setid: this.$route.params.setid  }
+                  })
                 } else {
                   this.$router.push({
-                    name: 'pop-planlist-edit',
+                    name: this.$route.name,
                     params: { step: '2', setid: this.$route.params.setid  }
                   })
                 }
@@ -605,9 +610,14 @@ export default class Orienteering extends ViewBase {
         name: 'pop-planlist-add',
         params: { step: '0', setid: this.$route.params.setid  }
       })
+    } else if ( this.$route.name == 'pop-business-add') {
+      this.$router.push({
+        name: 'pop-business-add',
+        params: { step: '0', setid: this.$route.params.setid  }
+      })
     } else {
       this.$router.push({
-        name: 'pop-planlist-edit',
+        name: this.$route.name,
         params: { step: '0', setid: this.$route.params.setid  }
       })
     }

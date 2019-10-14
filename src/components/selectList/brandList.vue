@@ -12,7 +12,7 @@ import { brandList } from '@/api/popFilm'
 @Component
 export default class Main extends ViewBase {
   // v-model 双向绑定
-  @Prop({type: Number, default: 0}) value?: number
+  @Prop({type: Number, default: null}) value?: any
 
   inner = this.value
   brandsList = []

@@ -1,7 +1,10 @@
 <template>
   <div class="login-home">
-    <img src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcpcgljqctg008ubl7g.png" class="layout-log" />
+    <router-link :to="{name: 'login'}">
+      <img src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcpcgljqctg008ubl7g.png" class="layout-log" />
+    </router-link>
     <slot></slot>
+    <p class="home-footer">copyright&copy; 2019 jydata.com　　北京智能广宣科技有限公司</p>
   </div>
 </template>
 
@@ -27,6 +30,21 @@ export default class Main extends ViewBase {
     left: 37px;
     top: 31px;
     z-index: 999;
+  }
+  .home-footer {
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    position: absolute;
+    bottom: 40px;
+  }
+}
+
+@media screen and(max-height: 600px) {
+  .login-home .home-footer {
+    position: absolute;
+    bottom: 20px;
   }
 }
 </style>

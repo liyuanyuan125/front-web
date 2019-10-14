@@ -17,6 +17,9 @@ interface EventMap {
   [key: string]: HandlerPriority[]
 }
 
+/** 事件监听者 */
+export type Monitor = (name: string, ...args: any[]) => void
+
 /** 事件选项 */
 export interface EventOptions {
   /**
@@ -28,6 +31,11 @@ export interface EventOptions {
    * handler 返回 false，是否中断接下来的 handler，默认中断
    */
   falseBreak?: boolean
+
+  /**
+   * 事件监听者，用于事件代理透传
+   */
+  monitor?: Monitor
 }
 
 interface ResolvedEventOptions extends EventOptions {
@@ -105,7 +113,7 @@ export default class EventClass {
   emit(name: string, ...args: any[]) {
     const list = this._eventMap[name] || []
 
-    const { chained, falseBreak } = this._options
+    const { chained, falseBreak, monitor } = this._options
 
     let lastArgs = args
 
@@ -119,6 +127,9 @@ export default class EventClass {
       chained && (lastArgs = [ret])
       return falseBreak && ret === false
     })
+
+    // 若有事件监听者，调用之
+    monitor && monitor(name, ...args)
 
     return this
   }

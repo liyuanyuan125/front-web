@@ -7,7 +7,7 @@
       <div class="text-rows-col">
         <Row>
           <Col span="8">
-              <p><label>广告片名称</label>{{list.videoName || '暂无'}} </p>
+              <p><label :class="{'adver-type': list.advertType == 'TRAILER'}">广告片名称</label>{{list.videoName || '暂无'}} </p>
               <!-- <p><label>投放周期</label>{{list.cycle || 0}}天</p> -->
               <p><label>投放排期</label>{{formatConversion(list.beginDate)}} ~ {{formatConversion(list.endDate)}}</p>
           </Col>
@@ -29,6 +29,11 @@
               <p><label>广告片规格</label>{{list.specification || 0}}s </p>
               <p><label>目标人次</label>{{list.estimatePersonCount || '暂无'}}人</p>
               <!-- <p><label>目标影厅</label>{{list.hallsCount || '暂无'}} </p> -->
+          </Col>
+        </Row>
+        <Row>
+          <Col span="8">
+           <p><label>广告位置</label>{{deliveryPositionNames}} </p>
           </Col>
         </Row>
       </div>
@@ -77,8 +82,9 @@
       <div class="down-dcp-url">
         <ul>
           <li v-for="item in dcpData" class="flex-box">
-             <span v-for=" it in list.typeList" v-if="item.typeCode == it.key">{{it.text}}</span>
-             <a :href="item.fileUrl" target="_blank">{{item.fileUrl}}</a>
+            {{item.fileUrl}}
+             <!-- <span v-for=" it in list.typeList" v-if="item.typeCode == it.key">{{it.text}}</span> -->
+             <!-- <a :href="item.fileUrl" target="_blank">{{}}</a> -->
           </li>
         </ul>
       </div>
@@ -107,6 +113,7 @@ import 'vue-plyr/dist/vue-plyr.css'
 import { orderDetail, receiveCinemaList } from '@/api/norderDis'
 import targetDlg from './targetDlg.vue'
 import moment from 'moment'
+import { getEnumText } from '@/util/dealData'
 
 const timeFormat = 'YYYY/MM/DD HH:mm:ss'
 
@@ -135,8 +142,7 @@ export default class Main extends ViewBase {
   schedulingData = []
   cinemaDataList: any = []
 
-  // 详情接单影院
-  // receiveCinemas = []
+  deliveryPositionNames = ''
 
   dcpData = []
   logList = []
@@ -168,14 +174,15 @@ export default class Main extends ViewBase {
     const id = this.id
     try {
       const {
-        data: {item}
+        data: {item, deliveryPositionCodeList}
       } = await orderDetail(id)
       this.list = item || {}
+
+      const offset = getEnumText(deliveryPositionCodeList, item.deliveryPositionCode)
+      this.deliveryPositionNames =  offset ? `[${offset}]` : '--'
       this.schedulingData = item.targetMovies || []
       // 目标影院
       this.targetCinemaLength = item.targetCinemas.length
-      // 接单影院
-      // this.receiveCinemas = item.receiveCinemas || []
       this.dcpData = item.attachments
       this.logList = item.logList
     } catch (ex) {
@@ -202,12 +209,13 @@ export default class Main extends ViewBase {
     this.receiveCinemaList()
   }
 }
-
 </script>
 <style lang='less' scoped>
 @import '~@/views/kol/less/common.less';
-@import '~@/views/account/less/common.less';
-
+.adver-type {
+  background: url('~@/assets/icon/prevue.png') no-repeat right 2px;
+  background-size: 22px auto;
+}
 .detail-list {
   padding: 30px 40px 70px;
   .list-col-item {
