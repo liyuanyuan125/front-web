@@ -109,7 +109,7 @@ export default class BarXCategoryStack extends ViewBase {
     let _width = '20'
     const dataLen = this.dataList[0][0].data.length
     if (this.dict1 && this.dict1.length > 1 && dataLen && dataLen > 7) {
-      if (dataLen > 30 && dataLen < 100) {
+      if (dataLen > 29) {
         _width = '3'
       } else if (dataLen > 7 && dataLen < 30) {
         _width = '10'
