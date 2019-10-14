@@ -407,9 +407,8 @@ export default class Index extends ViewBase {
         item0: !report ? '-' : report.viewCount,
         item1: !report ? '-' : report.scheduleCount
       }
-
+      this.cinemasData.totalCount = cinemaCount
       if (showTopCinemas && showTopCinemas.length > 0) {
-        this.cinemasData.totalCount = cinemaCount
         showTopCinemas.slice(0, 10).forEach((it: any, index: number) => {
           this.cinemasData.viewRate.data.push({
             name: it.name,
