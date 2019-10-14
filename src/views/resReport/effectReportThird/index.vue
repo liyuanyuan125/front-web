@@ -408,8 +408,8 @@ export default class Index extends ViewBase {
         item1: !report ? '-' : report.scheduleCount
       }
       this.cinemasData.totalCount = cinemaCount
-      if (showTopCinemas && showTopCinemas.length > 0) {
-        showTopCinemas.slice(0, 10).forEach((it: any, index: number) => {
+      if (personTopCinemas && personTopCinemas.length > 0) {
+        personTopCinemas.slice(0, 10).forEach((it: any, index: number) => {
           this.cinemasData.viewRate.data.push({
             name: it.name,
             count: it.viewRate
@@ -425,9 +425,9 @@ export default class Index extends ViewBase {
         })
       }
 
-      if (personTopCinemas && personTopCinemas.length > 0) {
+      if (showTopCinemas && showTopCinemas.length > 0) {
         // this.cinemasData.totalCount = cinemaCount
-        personTopCinemas.slice(0, 10).forEach((it: any, index: number) => {
+        showTopCinemas.slice(0, 10).forEach((it: any, index: number) => {
           // this.cinemasData.viewRate.data.push({
           //   name: it.name,
           //   count: it.viewRate
