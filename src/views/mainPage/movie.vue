@@ -189,7 +189,7 @@ export default class MoviePage extends ViewBase {
     // 拿到 hasShow 后，再调用 initRise
     this.initRise()
 
-    setPageTitle(`${basic.name}-鲸娱数据`)
+    setPageTitle(`${basic.name}-鲸鱼数据`)
   }
 
   async initRise() {

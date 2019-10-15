@@ -5,7 +5,7 @@
         class="register-logo"
       />
     <content class="content">
-      <h2 class="register-title">欢迎您加入鲸娱平台</h2>
+      <h2 class="register-title">欢迎您加入鲸鱼平台</h2>
       <p class="register-text">您的注册申请将在24小时内审核完毕，请耐心等待</p>
       <Button type="primary" :to="{name: 'login'}">我知道了</Button>
     </content>

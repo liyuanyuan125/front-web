@@ -209,7 +209,7 @@ export function percent(rate: number | null, digits = 0) {
 }
 
 /**
- * 加工鲸娱指数
+ * 加工鲸鱼指数
  * @param index 指数数据
  * @param digits 保留位数，默认为 2
  */
