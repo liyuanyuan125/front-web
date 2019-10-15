@@ -42,7 +42,7 @@
                 <div :class="{advert: item.videoType == 1}"></div>
                 <img :src="item.logo ? item.logo : defaultImg" :onerror="defaultImg" class="img" />
               </div>
-              
+
               <div class="right-item">
                 <p class="name">{{item.name}}</p>
                 <p class="brand-name">{{item.brandName || item.productName}}</p>
@@ -127,7 +127,7 @@ export default class Relevan extends ViewBase {
         ...this.pageList,
         status: this.single ? 4 : '',
         name: this.form.name,
-        videoType: this.value.advertTypeCode == 'TRAILER' ? 2 : 1
+        videoType: this.value.advertTypeCode == 'BRAND' ? 2 : 1
       }) )
       this.releList = data.items || []
       this.total = data.totalCount

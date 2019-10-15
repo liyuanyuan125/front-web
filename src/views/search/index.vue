@@ -144,7 +144,7 @@ export default class SearchPage extends ViewBase {
 
   get pageTitle() {
     const { label } = this.typeList.find(it => it.name == this.typeOn)!
-    return `搜索：${this.keyword} ${label} -鲸娱数据`
+    return `搜索：${this.keyword} ${label} -鲸鱼数据`
   }
 
   async fetchFigure(query: any) {

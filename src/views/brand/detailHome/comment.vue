@@ -135,14 +135,14 @@ export default class Temporary extends ViewBase {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
-    dayRangesKey: 'sevenDay',
+    dayRangesKey: 'ninetyDay',
     channelCode: 'weibo'
   }
 
   keywordQuery: any = {
     keyword: '',
     pageIndex: 0,
-    pageSize: 10
+    pageSize: 50
   }
 
   dict: any = {
@@ -354,8 +354,8 @@ export default class Temporary extends ViewBase {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         return (
-          <a
-            class="sourceContent"
+          <a target="_blank"
+            class="sourceContent "
             href={row.sourceContentUrl}
             v-html={row.sourceContent}
           ></a>
@@ -640,12 +640,20 @@ export default class Temporary extends ViewBase {
 
   keyChangeHandle1(item: any) {
     this.tableData = []
+    // 评论列表添加分页 20191010 记录正负面参数
+    this.keywordCommentQueryData.isPositive = true
+    // 切换热词重置当前分页
+    this.keywordCommentQueryData.pageIndex = 1
     this.getKeywordList(item[0], true)
     this.keywordQuery.keyword = item[0]
   }
 
   keyChangeHandle2(item: any) {
     this.tableData = []
+    // 评论列表添加分页 20191010 记录正负面参数
+    this.keywordCommentQueryData.isPositive = false
+    // 切换热词重置当前分页
+    this.keywordCommentQueryData.pageIndex = 1
     this.getKeywordList(item[0], false)
     this.keywordQuery.keyword = item[0]
   }

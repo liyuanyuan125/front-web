@@ -276,7 +276,7 @@ export default class Main extends ViewBase {
 
       // 获取上刊列表
       const datalist = await queryList({cinemaId: this.query.cinemaId, offDate: data})
-      this.itemlist = datalist.data.items
+      this.itemlist = datalist.data.items == null ? [] : datalist.data.items
       this.deliveryPositionList = datalist.data.deliveryPositionList
       this.asd = false
 

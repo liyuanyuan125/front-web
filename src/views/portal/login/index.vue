@@ -2,7 +2,7 @@
   <div class="login-home">
     <content class="content">
       <img
-        src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcpcgljqctg008ubl7g.png"
+        src="~@/assets/site/home-logo.png"
         class="login-logo"
       />
       <p class="login-title">全网精准娱乐营销平台</p>

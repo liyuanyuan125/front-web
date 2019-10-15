@@ -126,14 +126,14 @@ export default class Comment extends ViewBase {
   keywordQuery: any = {
     keyword: '',
     pageIndex: 0,
-    pageSize: 50
+    pageSize: 50,
   }
 
   form: any = {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
-    dayRangesKey: 'sevenDay',
+    dayRangesKey: 'ninetyDay',
     channelCode: this.channel
   }
 
@@ -310,7 +310,7 @@ export default class Comment extends ViewBase {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         return (
-          <a class="sourceContent" href={row.sourceUrl} v-html={row.sourceContent}></a>
+          <a target="_blank" class="sourceContent " href={row.sourceUrl} v-html={row.sourceContent}></a>
         )
         /* tslint:disable */
       }
@@ -325,7 +325,7 @@ export default class Comment extends ViewBase {
   tableData: any[] = []
 
   async typeChangeHander(index: number = 0) {
-    this.chart2.currentTypeIndex = index    
+    this.chart2.currentTypeIndex = index
   }
 
   /**
@@ -593,6 +593,10 @@ export default class Comment extends ViewBase {
 
   keyChangeHandle1(item: any) {
     this.tableData = []
+    // 评论列表添加分页 20191010 记录正负面参数
+    this.keywordCommentQueryData.isPositive = true
+    // 切换热词重置当前分页
+    this.keywordCommentQueryData.pageIndex = 1
     this.getKeywordList(item[0], true)
     this.keywordQuery.keyword = item[0]
     // 评论列表添加分页 20191010 记录正负面参数
@@ -601,6 +605,10 @@ export default class Comment extends ViewBase {
 
   keyChangeHandle2(item: any) {
     this.tableData = []
+    // 评论列表添加分页 20191010 记录正负面参数
+    this.keywordCommentQueryData.isPositive = false
+    // 切换热词重置当前分页
+    this.keywordCommentQueryData.pageIndex = 1
     this.getKeywordList(item[0], false)
     this.keywordQuery.keyword = item[0]
     // 评论列表添加分页 20191010 记录正负面参数

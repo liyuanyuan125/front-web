@@ -73,7 +73,7 @@
 
         <FormItem class="check-ready agreement" prop="agreement" >
           <Checkbox v-model="subForm.agreement">已阅读并同意</Checkbox>
-          <agreementDlg>《鲸娱数据-广告主合作协议》</agreementDlg>
+          <agreementDlg>《鲸鱼数据-广告主合作协议》</agreementDlg>
         </FormItem>
          <Button type="primary"  long class="submit" @click="submit">提交申请</Button>
       </Form>
@@ -255,7 +255,7 @@ export default class Main extends ViewBase {
           }
         }
       ],
-      agreement: [{ required: true, type: 'boolean', message: '请勾选鲸娱协议', trigger: 'blur' }]
+      agreement: [{ required: true, type: 'boolean', message: '请勾选鲸鱼协议', trigger: 'blur' }]
     }
   }
 
