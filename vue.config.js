@@ -12,7 +12,11 @@ module.exports = {
     host: 'fdev.aiads-dev.com',
     disableHostCheck: true,
   },
-
+  // 编译以下两个包，解决IE兼容性
+  transpileDependencies: [
+    'vue-echarts',
+    'resize-detector',
+  ],
   chainWebpack: config => {
     config
     .plugin('provide')
