@@ -65,7 +65,7 @@ export default class VideoUploader extends ViewBase {
     if (status == 'none') {
       this.showVideo = false
     }
-    if (status == 'done') {
+    if (status == 'filled' || status == 'done') {
       this.showVideo = true
     }
   }
