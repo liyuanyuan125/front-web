@@ -116,7 +116,8 @@ export default class WordCloudChart extends ViewBase {
     const sizeList = makeSizeList(dlist)
     const mocklist = dlist.map((item: any, index: number) => {
       const size = parseInt(sizeList[index].toFixed(0), 0)
-      return [item.name, size]
+      const _size = (size < 13) ? 22 : size
+      return [item.name, _size]
       // return [item.name, item.value]
     })
     const option: any = {
@@ -130,13 +131,14 @@ export default class WordCloudChart extends ViewBase {
       color: this.foreColor,
       // color: 'random-light',
       list: mocklist,
-      ellipticity: 0.65,
+      // ellipticity: 0.65,
       click: this.clickHandle,
       shape: 'circle',
-      size: 0.7,
-      minFontSize: '20px'
+      // size: 0.7,
+      // minFontSize: '20px'
       // hover: this.hoverHandle  // 暂未使用
     }
+    // console.log(mocklist)
     WordCloud(ele, option)
   }
 
