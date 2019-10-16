@@ -145,8 +145,7 @@ export default class Main extends ViewBase {
 
   transformSpecif(val: any) {
     const num = val % 60 == 0 ? '00' : val % 60
-    const strPadStart = (Math.floor(val / 60)).toString().padStart(2, 0)
-    return val < 60 ? `00:${val}` : `${strPadStart} : ${num}`
+    return val < 60 ? `00:${val}` : `${Math.floor(val / 60)} : ${num}`
   }
 
   checkall() {
