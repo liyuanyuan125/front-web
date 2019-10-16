@@ -13,7 +13,7 @@
       <div class="line line-foot">
         <span class="col1 icons"><i class="platform-icon-weibo"></i></span>
         <span class="col2 ranking">微博红人榜：<em>{{item.fansRanking}}</em></span>
-        <span class="col3 jy-index">鲸娱指数：<em>{{item.jyIndex / 100}}</em></span>
+        <span class="col3 jy-index">鲸鱼指数：<em>{{item.jyIndex / 100}}</em></span>
       </div>
     </main>
   </router-link>

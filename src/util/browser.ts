@@ -1,4 +1,4 @@
-const defaultPageTitle = '鲸娱数据'
+const defaultPageTitle = '鲸鱼数据'
 
 /**
  * 设置页面标题

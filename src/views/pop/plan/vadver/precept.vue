@@ -22,7 +22,7 @@
                     <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
                     <p style="margin-bottom: 6px"><span>影片类型：</span>{{movieMap(it.movieType)}}</p>
                     <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum, 2)}}</p>
-                    <i-circle v-if='movieCustom == 0' trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
+                    <i-circle v-if='movieCustom == 1' trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                       <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
                       <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent || '-'}}%</p>
                     </i-circle>
@@ -33,7 +33,7 @@
                   <p style="opacity: .7">受众性别: </p>
                   <div v-if="it.genders && it.genders.length > 0">
                     <div style="margin-left: 20px" :key="index" v-for="(item, index) in it.genders">
-                      <p style="margin-bottom: 10px" v-if="item.k == 'F'">女<span class="ageitem-box" 
+                      <p style="margin-bottom: 10px" v-if="item.k == 'F'">女<span class="ageitem-box"
                       :style="{width: 60 + (item.rate/100) + 'px'}">{{item.rate/100}}%</span></p>
                       <p style="margin-bottom: 10px" v-else>男<span class="ageitem-box"
                       :style="{width: 60 + (item.rate/100) + 'px'}"
@@ -78,7 +78,7 @@
             <!-- <span class="custom" style="margin-right: 160px">自定义投放影院</span> -->
           </h3>
           <div class="item-top">
-           
+
           </div>
           <div class="item-top">
             <div class="cinema-box">
@@ -134,7 +134,7 @@
                     </template>
 
                     <template slot-scope="{ row }" slot="estimateShowCount">
-                      {{formatNums(row.estimateShowCount * 7 / 10, 1)}} ~ 
+                      {{formatNums(row.estimateShowCount * 7 / 10, 1)}} ~
                       {{formatNums(row.estimateShowCount * 13 / 10, 1)}}
                     </template>
 
@@ -143,7 +143,7 @@
                     </template>
 
                     <template slot-scope="{ row }" slot="estimatePersonCount">
-                      {{formatNums(row.estimatePersonCount * 7 / 10, 1)}} ~ 
+                      {{formatNums(row.estimatePersonCount * 7 / 10, 1)}} ~
                       {{formatNums(row.estimatePersonCount * 13 / 10, 1)}}
                     </template>
                   </Table>
@@ -160,7 +160,7 @@
             <Button type="default" class="button-ok btn-export" @click="exportadver" ><img width="16px" src="./assets/export.png" /> 导出投放方案</Button>
             <Button type="default" class="button-ok btn-collect" @click="collectpeo">联系商务</Button>
           </div>
-        </Form>  
+        </Form>
       </Col>
     </Row>
     <Xlsx ref="down" :id="$route.params.setid" />
@@ -390,7 +390,8 @@ export default class App extends ViewBase {
         const names = (it.ageCodes || []).map((items: any, ins: number) => {
           return {
             key: items,
-            text: (it.ageValues) ? it.ageValues[ins] : '-'
+            text: (it.ageValues) ? it.ageValues[ins] : '-',
+            matchPercent: it.matchPercent || 0
           }
         })
         return {

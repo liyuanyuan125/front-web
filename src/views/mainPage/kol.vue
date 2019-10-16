@@ -208,7 +208,7 @@ export default class FigurePage extends ViewBase {
     this.opusData = opusData
     this.offerData = offerData
 
-    setPageTitle(`${basic.name}-鲸娱数据`)
+    setPageTitle(`${basic.name}-鲸鱼数据`)
   }
 
   @Watch('channel')
@@ -227,6 +227,10 @@ export default class FigurePage extends ViewBase {
   padding-right: 80px;
   /deep/ .brand-list {
     padding-right: 42px;
+  }
+  // 产品说：先隐藏
+  /deep/ .rank-title {
+    display: none;
   }
 }
 

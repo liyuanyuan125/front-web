@@ -1,7 +1,7 @@
 <template>
   <div class="login-home">
     <router-link :to="{name: 'login'}">
-      <img src="//aiads-file.oss-cn-beijing.aliyuncs.com/IMAGE/MISC/bkcpcgljqctg008ubl7g.png" class="layout-log" />
+      <img src="~@/assets/site/home-logo.png" class="layout-log" />
     </router-link>
     <slot></slot>
     <p class="home-footer">copyright&copy; 2019 jydata.com　　北京智能广宣科技有限公司</p>

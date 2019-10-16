@@ -26,7 +26,7 @@
 
     <section class="content-box">
       <div class="content-left">
-        <Pane title="百度搜索用户画像" :more="{name: 'brand-homedetail-fans', params: {id}}" class="baidu-pane">
+        <Pane title="用户画像" :more="{name: 'brand-homedetail-fans', params: {id}}" class="baidu-pane">
           <ul class="baidu-list">
             <li class="baidu-item">
               <em>{{item.malePercent}}</em>%
@@ -114,7 +114,7 @@
                       </figure>
                       <div class="film-main">
                         <div class="film-name text-omit">{{sub.name}}</div>
-                        <div class="film-index">鲸娱指数：{{sub.jyIndex}}</div>
+                        <div class="film-index">鲸鱼指数：{{sub.jyIndex}}</div>
                         <div class="film-date">{{sub.date}}上映</div>
                         <div class="film-stats text-omit" v-if="sub.hasShow">
                           已上映{{sub.showDays}}天，累计{{sub.custom}}

@@ -111,14 +111,14 @@ export default class Main extends ViewBase {
   keywordQuery: any = {
     keyword: '',
     pageIndex: 0,
-    pageSize: 10
+    pageSize: 50
   }
 
   form: any = {
     beginDate: [
       // new Date(2019, 3, 9), new Date(2019, 4, 11)
     ],
-    dayRangesKey: 'last_7_day',
+    dayRangesKey: 'last_90_day',
   }
 
   dict: any = {
@@ -292,7 +292,7 @@ export default class Main extends ViewBase {
         /* tslint:disable */
         const h = jsxReactToVue(hh)
         return (
-          <a class="sourceContent" href={row.sourceUrl} v-html={row.sourceContent}></a>
+          <a target="_blank" class="sourceContent " href={row.sourceUrl} v-html={row.sourceContent}></a>
         )
         /* tslint:disable */
       }
@@ -559,12 +559,20 @@ export default class Main extends ViewBase {
 
   keyChangeHandle1(item: any) {
     this.tableData = []
+    // 评论列表添加分页 20191010 记录正负面参数
+    this.keywordCommentQueryData.isPositive = true
+    // 切换热词重置当前分页
+    this.keywordCommentQueryData.pageIndex = 1
     this.getKeywordList(item[0], true)
     this.keywordQuery.keyword = item[0]
   }
 
   keyChangeHandle2(item: any) {
     this.tableData = []
+    // 评论列表添加分页 20191010 记录正负面参数
+    this.keywordCommentQueryData.isPositive = false
+    // 切换热词重置当前分页
+    this.keywordCommentQueryData.pageIndex = 1
     this.getKeywordList(item[0], false)
     this.keywordQuery.keyword = item[0]
   }
