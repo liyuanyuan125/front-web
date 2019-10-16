@@ -676,4 +676,61 @@ export default class MainLayout extends ViewBase {
     display: none;
   }
 }
+
+//隐藏滚动条
+// webkit
+.scroll_content::-webkit-scrollbar-button {
+  background-color: rgba(0, 0, 0, 0);
+}
+.scroll_content::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+}
+.scroll_content::-webkit-scrollbar-track-piece {
+  background-color: rgba(0, 0, 0, 0);
+}
+.scroll_content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0);
+}
+.scroll_content::-webkit-scrollbar-corner {
+  background-color: rgba(0, 0, 0, 0);
+}
+.scroll_content::-webkit-scrollbar-resizer {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+// o内核
+.scroll_content .-o-scrollbar {
+  -moz-appearance: none !important;
+  background: rgba(0, 255, 0, 0) !important;
+}
+.scroll_content::-o-scrollbar-button {
+  background-color: rgba(0, 0, 0, 0);
+}
+.scroll_content::-o-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+}
+.scroll_content::-o-scrollbar-track-piece {
+  background-color: rgba(0, 0, 0, 0);
+}
+.scroll_content::-o-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0);
+}
+.scroll_content::-o-scrollbar-corner {
+  background-color: rgba(0, 0, 0, 0);
+}
+.scroll_content::-o-scrollbar-resizer {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+// IE10+
+.scroll_content {
+  -ms-scroll-chaining: chained;
+  -ms-overflow-style: none;
+  -ms-content-zooming: zoom;
+  -ms-scroll-rails: none;
+  -ms-content-zoom-limit-min: 100%;
+  -ms-content-zoom-limit-max: 500%;
+  -ms-scroll-snap-type: proximity;
+  overflow: auto;
+}
 </style>
