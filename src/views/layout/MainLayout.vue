@@ -60,7 +60,7 @@
     </header>
 
     <Layout class="site-center">
-      <aside class="site-sider">
+      <aside class="site-sider scroll_content">
         <h1 class="logo">
           <router-link :to="{name: 'home'}" class="logo-link">
             <img src="./assets/logo.png" alt="鲸鱼数据" class="logo-img">
@@ -505,7 +505,6 @@ export default class MainLayout extends ViewBase {
 .logo {
   position: relative;
   width: inherit;
-  // 新版的 chrome，对 height 的实现似乎有问题
   height: 152px;
   min-height: 152px;
   max-height: 152px;
