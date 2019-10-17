@@ -21,8 +21,8 @@
                     <p class="film-title" :title="it.movieName" style="margin-bottom: 30px">{{it.movieName}}</p>
                     <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
                     <p style="margin-bottom: 6px"><span>影片类型：</span>{{movieMap(it.movieType)}}</p>
-                    <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum, 2)}}</p>
-                    <i-circle v-if='movieCustom == 0 && (items.deliveryGroups || []).length == 0'
+                    <p style="margin-bottom: 6px"><span>想看人数1：</span>{{formatNums(it.wantSeeNum, 2)}}</p>
+                    <i-circle v-if='movieCustom == 1 || (items.deliveryGroups || []).length > 0'
                       trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                       <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
                       <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent || '-'}}%</p>
