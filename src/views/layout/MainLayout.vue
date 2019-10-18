@@ -677,6 +677,11 @@ export default class MainLayout extends ViewBase {
   }
 }
 
+// 清除Chrome 滚动条
+::-webkit-scrollbar {
+  width: 0 !important;
+}
+
 //隐藏滚动条
 // IE10+，FF
 .scroll_content {
