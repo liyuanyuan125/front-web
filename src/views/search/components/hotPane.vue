@@ -5,7 +5,7 @@
       <li class="item-head">
         <span class="col1">排名</span>
         <slot name="head">
-          <span class="col2">鲸娱指数</span>
+          <span class="col2">鲸鱼指数</span>
           <span class="col3">全网热度</span>
         </slot>
       </li>

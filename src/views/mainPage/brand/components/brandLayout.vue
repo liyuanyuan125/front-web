@@ -237,7 +237,7 @@ export default class BrandLayout extends ViewBase {
 
       backImage(bigFigure || '')
 
-      setPageTitle(`${item.name}-鲸娱数据`)
+      setPageTitle(`${item.name}-鲸鱼数据`)
     } catch (ex) {
       if (ex && ex.code == 403) {
         ex.handled = true

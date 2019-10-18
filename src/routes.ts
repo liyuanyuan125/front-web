@@ -253,7 +253,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       ...emptyAuth,
       breadcrumbs: [{ label: '首页' }],
-      pageTitle: '鲸娱数据：全网精准娱乐营销平台',
+      pageTitle: '鲸鱼数据：全网精准娱乐营销平台',
     }
   },
 
@@ -278,7 +278,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'index',
       authAction: 'EMPTY',
       breadcrumbs: [{ label: '首页' }],
-      pageTitle: '鲸娱数据：全网精准娱乐营销平台'
+      pageTitle: '鲸鱼数据：全网精准娱乐营销平台'
     }
   },
 
@@ -304,7 +304,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.company',
       authAction: 'EMPTY',
       authIsMenu: true,
-      pageTitle: '公司信息-鲸娱数据'
+      pageTitle: '公司信息-鲸鱼数据'
     }
   },
 
@@ -353,7 +353,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.users',
       authAction: 'viewList',
       authIsMenu: true,
-      pageTitle: '用户管理-鲸娱数据'
+      pageTitle: '用户管理-鲸鱼数据'
     }
   },
 
@@ -366,7 +366,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.users',
       authAction: 'create',
       title: '添加子用户',
-      pageTitle: '添加子账号-鲸娱数据',
+      pageTitle: '添加子账号-鲸鱼数据',
     }
   },
 
@@ -379,7 +379,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.users',
       authAction: 'edit',
       title: '编辑子用户',
-      pageTitle: '编辑子账号-鲸娱数据'
+      pageTitle: '编辑子账号-鲸鱼数据'
     }
   },
 
@@ -392,7 +392,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.users',
       authAction: 'view',
       title: '查看',
-      pageTitle: '查看子账号详情-鲸娱数据'
+      pageTitle: '查看子账号详情-鲸鱼数据'
     }
   },
 
@@ -417,7 +417,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.roles',
       authAction: 'viewList',
       authIsMenu: true,
-      pageTitle: '权限管理-鲸娱数据'
+      pageTitle: '权限管理-鲸鱼数据'
     }
   },
 
@@ -437,7 +437,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         return id ? '编辑' : '添加'
       },
       pageTitle({ params: { id } }) {
-        return id ? '编辑权限角色-鲸娱数据' : '新建权限角色-鲸娱数据'
+        return id ? '编辑权限角色-鲸鱼数据' : '新建权限角色-鲸鱼数据'
       }
     }
   },
@@ -451,7 +451,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.roles',
       authAction: 'view',
       title: '查看',
-      pageTitle: '查看权限角色-鲸娱数据',
+      pageTitle: '查看权限角色-鲸鱼数据',
     },
   },
 
@@ -464,7 +464,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.managecinema',
       authAction: 'viewList',
       authIsMenu: true,
-      pageTitle: '影院管理-鲸娱数据'
+      pageTitle: '影院管理-鲸鱼数据'
     }
   },
 
@@ -489,7 +489,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'account-manage.changePassword',
       authAction: 'EMPTY',
       authIsMenu: true,
-      pageTitle: '修改密码-鲸娱数据',
+      pageTitle: '修改密码-鲸鱼数据',
     }
   },
 
@@ -502,7 +502,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'financial-manage.info',
       authAction: 'viewSummary',
       authIsMenu: true,
-      pageTitle: '财务信息-鲸娱数据'
+      pageTitle: '财务信息-鲸鱼数据'
     }
   },
 
@@ -527,7 +527,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'financial-manage.bill',
       authAction: 'view',
       authIsMenu: true,
-      pageTitle: '资金账单-鲸娱数据'
+      pageTitle: '资金账单-鲸鱼数据'
     }
   },
 
@@ -540,7 +540,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'promotion.ad-plan',
       authAction: 'viewList',
       authIsMenu: true,
-      pageTitle: '广告计划-鲸娱数据',
+      pageTitle: '广告计划-鲸鱼数据',
     }
   },
 
@@ -590,7 +590,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'promotion.ad-plan',
       authAction: 'edit',
       title: '创建',
-      pageTitle: '创建广告计划-鲸娱数据',
+      pageTitle: '创建广告计划-鲸鱼数据',
     }
   },
 
@@ -603,7 +603,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'promotion.ad-plan',
       authAction: 'edit',
       title: '编辑',
-      pageTitle: '编辑广告计划-鲸娱数据',
+      pageTitle: '编辑广告计划-鲸鱼数据',
     }
   },
 
@@ -616,7 +616,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'promotion.ad-plan',
       authAction: 'edit',
       title: '创建',
-      pageTitle: '创建广告计划-鲸娱数据',
+      pageTitle: '创建广告计划-鲸鱼数据',
     }
   },
 
@@ -629,7 +629,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'promotion.ad-plan',
       authAction: 'edit',
       title: '编辑',
-      pageTitle: '编辑广告计划-鲸娱数据',
+      pageTitle: '编辑广告计划-鲸鱼数据',
     }
   },
 
@@ -664,7 +664,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: 'viewList',
       authIsMenu: true,
       title: '',
-      pageTitle: '广告片-鲸娱数据',
+      pageTitle: '广告片-鲸鱼数据',
     }
   },
 
@@ -683,7 +683,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         return id > 0 ? 'edit' : 'create'
       },
       pageTitle({ params }) {
-        return params.id as any > 0 ? '编辑商业广告片-鲸娱数据' : '新建商业广告片-鲸娱数据'
+        return params.id as any > 0 ? '编辑商业广告片-鲸鱼数据' : '新建商业广告片-鲸鱼数据'
       },
     },
     props: idProps
@@ -704,7 +704,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         return id > 0 ? 'edit' : 'create'
       },
       pageTitle({ params }) {
-        return params.id as any > 0 ? '编辑电影预告片-鲸娱数据' : '新建电影预告片-鲸娱数据'
+        return params.id as any > 0 ? '编辑电影预告片-鲸鱼数据' : '新建电影预告片-鲸鱼数据'
       },
     },
     props: idProps
@@ -732,7 +732,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: 'view',
       authIsMenu: true,
       title: '广告单列表',
-      pageTitle: '映前广告单列表-鲸娱数据',
+      pageTitle: '映前广告单列表-鲸鱼数据',
     }
   },
 
@@ -745,7 +745,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'adOrderManage.order',
       authAction: 'view',
       title: '详情',
-      pageTitle: '映前广告单详情-鲸娱数据'
+      pageTitle: '映前广告单详情-鲸鱼数据'
     }
   },
 
@@ -783,7 +783,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: 'EMPTY',
       authIsMenu: true,
       title: '上刊管理',
-      pageTitle: '上刊管理-鲸娱数据',
+      pageTitle: '上刊管理-鲸鱼数据',
     },
   },
 
@@ -797,7 +797,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: 'EMPTY',
       authIsMenu: true,
       title: '下刊管理',
-      pageTitle: '下刊管理-鲸娱数据',
+      pageTitle: '下刊管理-鲸鱼数据',
     },
   },
 
@@ -810,7 +810,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'adOrderManage.supervision',
       authAction: 'EMPTY',
       authIsMenu: true,
-      pageTitle: '监播管理-鲸娱数据',
+      pageTitle: '监播管理-鲸鱼数据',
     },
   },
 
@@ -858,7 +858,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'financeManage.info',
       authAction: 'viewSummary',
       authIsMenu: true,
-      pageTitle: '财务信息-鲸娱数据',
+      pageTitle: '财务信息-鲸鱼数据',
     }
   },
 
@@ -883,7 +883,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'promotion.report',
       authAction: 'EMPTY',
       authIsMenu: true,
-      pageTitle: '映前广告效果报告-鲸娱数据',
+      pageTitle: '映前广告效果报告-鲸鱼数据',
     },
   },
 
@@ -934,7 +934,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'customer-manage',
       authAction: 'viewList',
       authIsMenu: true,
-      pageTitle: '客户管理-鲸娱数据',
+      pageTitle: '客户管理-鲸鱼数据',
     }
   },
 
@@ -954,7 +954,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         return id ? '编辑客户信息' : '添加客户信息'
       },
       pageTitle(route) {
-        return route.params.id ? '编辑客户信息-鲸娱数据' : '新建客户信息-鲸娱数据'
+        return route.params.id ? '编辑客户信息-鲸鱼数据' : '新建客户信息-鲸鱼数据'
       }
     }
   },
@@ -968,7 +968,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'customer-manage',
       authAction: 'view',
       title: '查看客户详情',
-      pageTitle: '查看客户详情-鲸娱数据',
+      pageTitle: '查看客户详情-鲸鱼数据',
     }
   },
 
@@ -981,7 +981,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       title: '消息中心',
-      pageTitle: '消息中心-鲸娱数据',
+      pageTitle: '消息中心-鲸鱼数据',
     },
   },
 
@@ -994,7 +994,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       title: '消息详情',
-      pageTitle: '消息详情-消息中心-鲸娱数据',
+      pageTitle: '消息详情-消息中心-鲸鱼数据',
     },
   },
 
@@ -1030,7 +1030,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: 'EMPTY',
       authIsMenu: true,
       title: 'KOL推广订单列表',
-      pageTitle: 'KOL推广订单列表-鲸娱数据'
+      pageTitle: 'KOL推广订单列表-鲸鱼数据'
     }
   },
 
@@ -1051,7 +1051,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       title: '购物车',
-      pageTitle: '购物车-鲸娱数据'
+      pageTitle: '购物车-鲸鱼数据'
     }
   },
 
@@ -1063,7 +1063,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta:  {
       ...emptyAuth,
       title: '订单详情',
-      pageTitle: 'KOL推广详情-鲸娱数据'
+      pageTitle: 'KOL推广详情-鲸鱼数据'
     },
     props: idProps,
   },
@@ -1098,7 +1098,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       ...emptyAuth,
       title: '申请发票列表',
-      pageTitle: '申请开票-鲸娱数据',
+      pageTitle: '申请开票-鲸鱼数据',
     },
   },
 
@@ -1110,7 +1110,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       ...emptyAuth,
       title: '申请发票填写页',
-      pageTitle: '新建开票申请-鲸娱数据'
+      pageTitle: '新建开票申请-鲸鱼数据'
     },
   },
 
@@ -1122,7 +1122,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       ...emptyAuth,
       title: '查看开票历史',
-      pageTitle: '开票历史-鲸娱数据'
+      pageTitle: '开票历史-鲸鱼数据'
     },
   },
 
@@ -1134,7 +1134,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
     meta: {
       ...emptyAuth,
       title: '查看开票详情',
-      pageTitle: '开票详情-鲸娱数据'
+      pageTitle: '开票详情-鲸鱼数据'
     },
   },
 
@@ -1147,7 +1147,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'kol.list',
       authAction: 'EMPTY',
       authIsMenu: true,
-      pageTitle: 'KOL列表-鲸娱数据',
+      pageTitle: 'KOL列表-鲸鱼数据',
     }
   },
 
@@ -1506,7 +1506,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'film-cooperation.list',
       authAction: 'EMPTY',
       authIsMenu: true,
-      pageTitle: '影片列表-鲸娱数据'
+      pageTitle: '影片列表-鲸鱼数据'
     }
   },
 
@@ -1519,7 +1519,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'film-cooperation.order',
       authAction: 'EMPTY',
       authIsMenu: true,
-      pageTitle: '影片合作订单-鲸娱数据'
+      pageTitle: '影片合作订单-鲸鱼数据'
     },
   },
 
@@ -1532,7 +1532,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       title: '影片合作订单添加',
-      pageTitle: '申请影片合作-鲸娱数据'
+      pageTitle: '申请影片合作-鲸鱼数据'
     },
   },
 
@@ -1545,7 +1545,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       title: '影片合作订单详情',
-      pageTitle: '影片合作详情-鲸娱数据'
+      pageTitle: '影片合作详情-鲸鱼数据'
     },
   },
 
@@ -1558,7 +1558,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       title: '订单填写',
-      pageTitle: '新建KOL推广-鲸娱数据',
+      pageTitle: '新建KOL推广-鲸鱼数据',
     },
   },
   // kol - 我的收藏
@@ -1664,7 +1664,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: 'view',
       authIsMenu: true,
       title: '品牌管理',
-      pageTitle: '品牌列表-鲸娱数据'
+      pageTitle: '品牌列表-鲸鱼数据'
     }
   },
 
@@ -1677,7 +1677,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: 'promotion.evaluate',
       authAction: 'EMPTY',
       authIsMenu: true,
-      pageTitle: '映前广告第三方监测-鲸娱数据',
+      pageTitle: '映前广告第三方监测-鲸鱼数据',
     },
   },
   // 第三方监测 - 新建/编辑
@@ -1704,7 +1704,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: 'EMPTY',
       authIsMenu: true,
       title: '对账单管理',
-      pageTitle: '对账单列表-鲸娱数据'
+      pageTitle: '对账单列表-鲸鱼数据'
     },
   },
   // 资源方 - 财务信息 - 对账单管理 - 查看详情
@@ -1719,7 +1719,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
         const text = params.audit ? '审核账单' : '查看详情'
         return text
       },
-      pageTitle: '对账单详情-鲸娱数据',
+      pageTitle: '对账单详情-鲸鱼数据',
     },
     props:  paramTypes({
       id: Number,
@@ -1735,7 +1735,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authKey: '',
       authAction: '',
       title: '明细',
-      pageTitle: '对账单明细-鲸娱数据',
+      pageTitle: '对账单明细-鲸鱼数据',
     },
   },
 
@@ -1818,7 +1818,7 @@ const mainLayoutRoutes: RouteConfigEnhance[] = [
       authAction: 'EMPTY',
       authIsMenu: true,
       title: '影片管理',
-      pageTitle: '影片管理-鲸娱数据',
+      pageTitle: '影片管理-鲸鱼数据',
     },
   },
 
