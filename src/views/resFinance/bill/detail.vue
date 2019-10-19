@@ -102,6 +102,9 @@
                   <FormItem v-if="!agree" class="person-count" prop="resourcePersonCount" label="影城系统人次">
                     <span class="span-input"><Input type="number" v-model="form.resourcePersonCount" /> 人</span>
                   </FormItem>
+                  <FormItem v-if="!agree" class="person-count" label="影城金额">
+                    <span class="span-input"><Input type="number" v-model="form.resourceAmount" /> 元</span>
+                  </FormItem>
                   <FormItem v-if="!agree" label="影城系统截图">
                     <span class="audit-upload">
                       <Upload v-model="form.pictures" :max-count="8" multiple accept="images/*" confirm-on-del/>
