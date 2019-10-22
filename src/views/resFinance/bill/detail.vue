@@ -102,7 +102,7 @@
                   <FormItem v-if="!agree" class="person-count" prop="resourcePersonCount" label="影城系统人次">
                     <span class="span-input"><Input type="number" v-model="form.resourcePersonCount" /> 人</span>
                   </FormItem>
-                  <FormItem v-if="!agree" class="person-count" label="影城金额">
+                  <FormItem v-if="!agree" class="person-count" prop="resourceAmount" label="影城金额">
                     <span class="span-input"><Input type="number" v-model="form.resourceAmount" /> 元</span>
                   </FormItem>
                   <FormItem v-if="!agree" label="影城系统截图">
@@ -205,6 +205,15 @@ export default class Main extends ViewBase {
           trigger: 'change',
           validator(rule: any, value: string[], callback: any) {
             !value ? callback(new Error('影城系统人次不能为空')) : callback()
+          }
+        }
+      ],
+      resourceAmount: [
+        {
+          require: true,
+          trigger: 'change',
+          validator(rule: any, value: string[], callback: any) {
+            !value ? callback(new Error('影城金额不能为空')) : callback()
           }
         }
       ]
