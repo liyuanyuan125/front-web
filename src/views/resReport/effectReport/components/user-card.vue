@@ -24,7 +24,7 @@
               <div class="user-pane-head">
                 <h6>线级分布</h6>
               </div>
-              <div class="user-pane-body">
+              <div class="user-pane-body" style="padding: 5px">
                 <PieNest :initDone="cityLevel.initDone" :dict1="cityLevel.dict1" :dict2="cityLevel.dict2" :height="cityLevel.height" :toolTip="tooltipStyles({trigger:  'item', formatter:'{b} : {c} %'})" :color="cityLevel.color" :dataList="cityLevel.dataList" :currentTypeIndex="cityLevel.currentTypeIndex" />
               </div>
             </div>
