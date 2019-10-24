@@ -126,6 +126,26 @@
           v-if="!mini && status == 'filled'"
         >{{model && model.url}}</MiddleEllipsis>
       </div>
+
+      <div class="center-control">
+        <div class="action-play flex-mid" v-if="status == 'filled' || status == 'done'">
+          <Icon
+            :type="isplay ? 'ios-pause' : 'ios-play'"
+            :title="isplay ? '暂停' : '播放'"
+            class="action"
+            @click="onPlayOrPause"
+          />
+        </div>
+        <div></div>
+        <div class="action-expand flex-mid" v-if="status == 'filled' || status == 'done'">
+          <Icon
+            type="ios-expand"
+            title="全屏"
+            class="action"
+            @click="onFullScreen"
+          />
+        </div>
+      </div>
     </slot>
   </div>
 </template>
@@ -233,6 +253,8 @@ export default class OssUploader extends ViewBase {
 
   removeMap = removeMap
 
+  isplay = false
+
   get fileName() {
     const name = this.model && this.model.clientName || ''
     return name
@@ -310,6 +332,27 @@ export default class OssUploader extends ViewBase {
   onEdit() {
     const file = this.$refs.file as HTMLInputElement
     file && file.click()
+  }
+
+  onFullScreen() {
+      const ele: any = (this.$slots.under as any)[0].elm
+      if (ele.requestFullscreen) {
+          ele.requestFullscreen()
+      } else if (ele.mozRequestFullScreen) {
+          ele.mozRequestFullScreen()
+      } else if (ele.webkitRequestFullScreen) {
+          ele.webkitRequestFullScreen()
+      }
+  }
+
+  onPlayOrPause() {
+    const ele: any = (this.$slots.under as any)[0].elm
+    if (this.isplay) {
+      ele.pause()
+    } else {
+      ele.play()
+    }
+    this.isplay = !this.isplay
   }
 
   async onRemove() {
@@ -413,9 +456,20 @@ export default class OssUploader extends ViewBase {
   }
 }
 
+.center-control {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  bottom: 0;
+  height: 28px;
+  width: 100%;
+}
+
 .action-all,
 .action-uploading,
-.action-done {
+.action-done,
+.action-expand,
+.action-play {
   font-size: 28px;
 }
 
@@ -430,6 +484,11 @@ export default class OssUploader extends ViewBase {
 .action-uploading,
 .action-done {
   color: #38b8f2;
+}
+
+.action-expand,
+.action-play {
+  color: #5c6b77;
 }
 
 .file-name,
