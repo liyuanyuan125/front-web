@@ -112,12 +112,12 @@ export default class PieNest extends ViewBase {
           type: 'pie',
           avoidLabelOverlap: true,
           // minAngle: 25, // 最小的扇区角度
-          radius: ['40%', '55%'],
+          radius: ['30%', '45%'],
           color: this.color,
           label: {
             normal: {
               formatter(v: any) {
-                return v.value + '%' + ` ` + v.name
+                return v.value + '%' + '\n' + v.name
                 let text = Math.round(v.value) + '%' + '' + v.name
                 if ( text.length <= 8 ) {
                   return text
@@ -139,6 +139,8 @@ export default class PieNest extends ViewBase {
               },
               borderWidth: 1,
               borderRadius: 4,
+              position: 'outside',
+              // formatter: '{b} \n {d}%',
               rich: {
                 b: {
                   fontSize: 16,

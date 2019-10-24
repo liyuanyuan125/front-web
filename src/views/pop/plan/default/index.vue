@@ -74,7 +74,8 @@
               <p style="margin-bottom: 6px"><span>上映时间：</span>{{formatDate(it.publishStartDate)}}</p>
               <p style="margin-bottom: 6px"><span>影片类型：</span>{{movieMap(it.movieType)}}</p>
               <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum, 2)}}</p>
-              <i-circle v-if='item.movieCustom == 1' trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
+              <i-circle v-if='movieCustom == 1 || (item.deliveryGroups || []).length > 0'
+                trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                 <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
                 <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent || '-'}}%</p>
               </i-circle>
@@ -278,7 +279,7 @@
               </Col>
               <Col :span="2"><span>受众年龄</span></Col>
               <Col :span="6"><span>{{ages(headerValue)}}</span></Col>
-              <Col  v-if="item.movieCustom != 1":span="2"><span>影片类型</span></Col>
+              <Col  v-if="item.movieCustom != 1" :span="2"><span>影片类型</span></Col>
               <Col v-if="item.movieCustom != 1" :span="6"><span>{{types(headerValue)}}</span></Col>
             </Row>
           </Col>
@@ -332,6 +333,7 @@ export default class Apps extends ViewBase {
   pageIndex = 1
   pageSize = 6
   total = 0
+  movieCustom = 0
   tableDate: any = []
   loading = false
   loadding = false
@@ -582,6 +584,7 @@ export default class Apps extends ViewBase {
       this.count.cityCount = data.cityCount
       this.statusList = data.statusList || []
       this.item = data.item || {}
+      this.movieCustom = data.item.movieCustom
       this.tags = data.tags
       this.status = data.item.status
       this.movieTypeList = data.movieTypeList || []

@@ -483,7 +483,7 @@ export default class Comment extends ViewBase {
   keywordCommentPageChange(val: any) {
     this.keywordCommentQueryData.pageIndex = val
     this.tableData = []
-    this.getKeywordList(this.keywordQuery.keyword)
+    this.getKeywordList(this.keywordQuery.keyword, this.keywordCommentQueryData.isPositive)
   }
 
   async handleChange() {

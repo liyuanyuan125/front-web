@@ -66,6 +66,8 @@ export default class BannerCard extends Vue {
     h1 {
       font-size: 65px;
       color: #fff;
+      width: 100%;
+      .cut-text();
     }
     p {
       font-size: 24px;
