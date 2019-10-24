@@ -12,7 +12,6 @@
       <video
         :key="videoKey"
         :src="videoUrl"
-        autoplay
         controls
         class="video"
         v-if="showVideo"
@@ -115,7 +114,6 @@ export default class VideoUploader extends ViewBase {
     display: none;
   }
 }
-
 .video {
   width: 100%;
   height: 100%;

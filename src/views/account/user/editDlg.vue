@@ -114,7 +114,7 @@ export default class Change extends ViewBase {
     this.getList()
   }
   handlePageSize(size: any) {
-    this.current = size
+    this.pageSize = size
     this.getList()
   }
 
@@ -197,8 +197,12 @@ export default class Change extends ViewBase {
   }
 }
 /deep/ .ivu-table {
-  min-height: 200px;
+  max-height: 500px;
+  height: 450px;
   overflow-y: auto;
+  .ivu-table-overflowX {
+    overflow-x: inherit;
+  }
 }
 .footer-bottom {
   margin: 0 0 10px;
