@@ -102,6 +102,9 @@
                   <FormItem v-if="!agree" class="person-count" prop="resourcePersonCount" label="影城系统人次">
                     <span class="span-input"><Input type="number" v-model="form.resourcePersonCount" /> 人</span>
                   </FormItem>
+                  <FormItem v-if="!agree" class="person-count" prop="resourceAmount" label="影城金额">
+                    <span class="span-input"><Input type="number" v-model="form.resourceAmount" /> 元</span>
+                  </FormItem>
                   <FormItem v-if="!agree" label="影城系统截图">
                     <span class="audit-upload">
                       <Upload v-model="form.pictures" :max-count="8" multiple accept="images/*" confirm-on-del/>
@@ -173,6 +176,7 @@ export default class Main extends ViewBase {
     { title: '执行开始时间', key: 'beginDate', minWidth: 160  },
     { title: '执行完成时间', key: 'endDate', minWidth: 160  },
     { title: '曝光人次', key: 'personCount', minWidth: 150  },
+    { title: '结算单价（元/人次）', key: 'unitPrice', minWidth: 200  },
     { title: '金额(元)', key: 'amount', minWidth: 100  },
     { title: '监播文件', slot: 'playMonitorTexts', minWidth: 100 },
     { title: '是否结算', key: 'status', minWidth: 100  },
@@ -201,6 +205,15 @@ export default class Main extends ViewBase {
           trigger: 'change',
           validator(rule: any, value: string[], callback: any) {
             !value ? callback(new Error('影城系统人次不能为空')) : callback()
+          }
+        }
+      ],
+      resourceAmount: [
+        {
+          require: true,
+          trigger: 'change',
+          validator(rule: any, value: string[], callback: any) {
+            !value ? callback(new Error('影城金额不能为空')) : callback()
           }
         }
       ]
