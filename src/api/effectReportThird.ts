@@ -458,9 +458,36 @@ export async function plans(query: any) {
   * @param id id
   * https://yapi.aiads-dev.com/project/139/interface/api/4740
   */
-
   export async function cinemasReport(id: string = '', query: any = {}) {
     const res = await get(`/xadvert/third-plans/${id}/report/cinemas`, query)
+    return res
+    return await mockGet(id, {
+        items: null,
+        totalCount: null
+    })
+    return await mockGet(id, {
+        'items|10': [
+            {
+                cinemaId: tid,
+                name: title20,
+                viewCount: tid,
+                scheduleCount: tid,
+                cost: tid
+            }
+        ],
+        totalCount: 50
+    })
+}
+
+ /**
+  * 导出影院全部数据
+  * @param id id
+  * 大量数据导出，新增接口 20191024 文超
+  * https://fapi.jydata.com/xadvert/third-plans/30/export-cinema
+  */
+
+ export async function cinemasReportExport(id: string = '', query: any = {}) {
+    const res = await get(`/xadvert/third-plans/${id}/export-cinema`, query)
     return res
     return await mockGet(id, {
         items: null,
