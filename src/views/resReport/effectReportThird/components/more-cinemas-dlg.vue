@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { cinemasReport } from '@/api/effectReportThird'
+import { cinemasReport, cinemasReportExport } from '@/api/effectReportThird'
 
 @Component({
   components: {}
@@ -107,13 +107,14 @@ export default class MoreCinemasDlg extends ViewBase {
     }
   }
 
-  // 导出全部
+  // 导出全部数据
   async fetchExportData() {
     const id = (this.id).toString() || ''
+    this.$Loading.start()
     try {
       const {
         data
-      } = await cinemasReport(id, {
+      } = await cinemasReportExport(id, {
         ...this.form,
         pageSize: 99999
       })
@@ -128,6 +129,7 @@ export default class MoreCinemasDlg extends ViewBase {
             scheduleCount: it.scheduleCount
           }
         })
+        this.$Loading.finish()
       }
 
       (this.$refs.table as any).exportCsv({
