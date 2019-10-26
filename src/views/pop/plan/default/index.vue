@@ -244,12 +244,12 @@
             <!-- <span style="color: #DA6C70">￥{{formatNums(item.budgetAmount * 13 / 10)}}</span> -->
           </Col>
         </Row>
-        <Row :gutter="16" style="height: 126px">
+        <Row :gutter="8" style="height: 126px">
           <Col :span="2"><span>定向设置:</span></Col>
-          <Col :span="22">
-            <Row :gutter="16" v-if="headerValue.cityCustom">
+          <Col :span="20">
+            <Row :gutter="10" v-if="headerValue.cityCustom">
               <Col :span="2"><span>覆盖城市</span></Col>
-              <Col :span="20">
+              <Col :span="18">
                 <div>
                   <span>共{{length}}个
                     <!-- <b style="margin-left: 5px">|</b>  -->
@@ -260,7 +260,7 @@
                 </div>
               </Col>
             </Row>
-            <Row  :gutter="16" v-else>
+            <Row  :gutter="10" v-else>
               <Col :span="2"><span>覆盖影院</span></Col>
               <Col :span="10">
                 <div>
@@ -272,7 +272,7 @@
                 </div>
               </Col>
             </Row>
-            <Row :gutter="16">
+            <Row :gutter="10">
               <Col :span="2"><span>受众性别</span></Col>
               <Col :span="6">
                 <span>{{sexs(headerValue)}}</span>
@@ -280,13 +280,13 @@
               <Col :span="2"><span>受众年龄</span></Col>
               <Col :span="6"><span>{{ages(headerValue)}}</span></Col>
               <Col  v-if="item.movieCustom != 1" :span="2"><span>影片类型</span></Col>
-              <Col v-if="item.movieCustom != 1" :span="6"><span>{{types(headerValue)}}</span></Col>
+              <Col v-if="item.movieCustom != 1" :span="4"><span>{{types(headerValue)}}</span></Col>
             </Row>
           </Col>
         </Row>
-        <Row :gutter="16">
+        <Row :gutter="10">
           <Col :span="2"><span>影片定向:</span></Col>
-          <Col :span="10">
+          <Col :span="9">
             <span v-if="item.movieCustom == 1">
               自定义影片
             </span>
@@ -315,7 +315,7 @@ import Header from './header.vue'
 import Exportfile from '../vadver/exportfile.vue'
 import Xlsx from '../vadver/downxsxl.vue'
 import pagination from '@/components/page.vue'
-// mock
+
 const codeMap = (list: any[]) => toMap(list, 'key', 'text')
 const timeFormat = 'YYYY-MM-DD'
 @Component({
