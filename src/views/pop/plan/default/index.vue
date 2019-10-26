@@ -316,6 +316,7 @@ import Exportfile from '../vadver/exportfile.vue'
 import Xlsx from '../vadver/downxsxl.vue'
 import pagination from '@/components/page.vue'
 
+// 样式修改
 const codeMap = (list: any[]) => toMap(list, 'key', 'text')
 const timeFormat = 'YYYY-MM-DD'
 @Component({
