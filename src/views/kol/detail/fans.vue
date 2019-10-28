@@ -195,7 +195,10 @@ export default class Fans extends ViewBase {
   async getChartsData(chart: string = '', typeIndex: number = 0) {
     const id: string = this.$route.params.id || ''
     try {
-      const { data } = await fanslist(id, { ...this.pageQuery })
+      const { data } = await fanslist(id, {
+        channelCode: this.pageQuery.channelCode && this.pageQuery.channelCode !== ''
+        ? this.pageQuery.channelCode : 'weibo'
+      })
 
       this.channelList = data.channelList ? data.channelList : []
 
