@@ -173,12 +173,7 @@ export default class Fans extends ViewBase {
 
   brands = []
 
-  channelList: any = [
-    {
-      key: 'weibo',
-      text: '微博'
-    }
-  ]
+  channelList: any = []
 
   async typeChangeHander4(index: number = 0) {
     if (this.chart4.dataList[index].length < 1) {
@@ -193,14 +188,25 @@ export default class Fans extends ViewBase {
    * @param typeIndex 当前类别下标
    */
   async getChartsData(chart: string = '', typeIndex: number = 0) {
+
     const id: string = this.$route.params.id || ''
     try {
       const { data } = await fanslist(id, {
-        channelCode: this.pageQuery.channelCode && this.pageQuery.channelCode !== ''
-        ? this.pageQuery.channelCode : 'weibo'
+        channelCode: this.pageQuery.channelCode
       })
 
       this.channelList = data.channelList ? data.channelList : []
+
+      // 检查 channel 是否在 navList 中，若不在，就强制跳转到第一个 nav
+      const navItem = data.channelList.find((it: any) => it.key == this.pageQuery.channelCode)
+      if (navItem == null && data.channelList.length > 0) {
+        const firstNav = data.channelList[0]
+        this.$router.push({
+          name: 'kol-detail-fans',
+          params: { id: this.$route.params.id as any, channel: firstNav.key }
+        })
+        return
+      }
 
       const item = data.item || null
       if (!item) {
@@ -323,7 +329,7 @@ export default class Fans extends ViewBase {
     }
   }
 
-  mounted() {
+  created() {
     this.initHandler()
   }
 
@@ -376,6 +382,14 @@ export default class Fans extends ViewBase {
   }
 
   channelChange() {
+    this.initHandler()
+  }
+
+  @Watch('$route', {deep: true})
+  watch$router(val: any) {
+    this.pageQuery = {
+      channelCode: val.params.channel
+    }
     this.initHandler()
   }
 }
