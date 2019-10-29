@@ -5,16 +5,10 @@
       <div class="title-box">
         <span v-if=" title !=='' ">{{title}}</span>
         <Tooltip max-width="200" v-if=" titleTips !=='' " :content="titleTips">
-          <Icon type="md-help-circle"/>
+          <Icon type="md-help-circle" />
         </Tooltip>
       </div>
-      <RadioGroup
-        size="small"
-        v-if="dict1.length > 0"
-        @on-change="currentTypeChange"
-        v-model="currentIndex"
-        type="button"
-      >
+      <RadioGroup size="small" v-if="dict1.length > 0" @on-change="currentTypeChange" v-model="currentIndex" type="button">
         <Radio v-for="(item,index) in dict1" :key="item.key" :label="index">{{item.name}}</Radio>
       </RadioGroup>
     </div>
@@ -54,7 +48,7 @@ const maxSize = 88
 const makeSizeList = (list: any[]) => {
   const count = list.length
   const step = count > 1 ? (maxSize - minSize) / (count - 1) : 0
-  const result = list.map((it, i) => Math.max(maxSize - step * i, minSize))
+  const result = list.map((it, i) => Math.max(maxSize - step * i * 5, minSize))
   return result
 }
 
@@ -84,7 +78,7 @@ export default class WordCloudChart extends ViewBase {
   @Prop({ type: Array, default: () => ['#a3d5e6'] }) foreColor!: string[]
 
   /** 补丁参数：图表区域高度 */
-  @Prop({ type: Number, default: 300 }) chartHeight!: number
+  @Prop({ type: Number, default: 350 }) chartHeight!: number
 
   currentIndex: number = this.currentTypeIndex
 
@@ -120,16 +114,14 @@ export default class WordCloudChart extends ViewBase {
     // [['foo', 12], ['bar', 6]]
     const dlist = this.dataList[this.currentIndex] || []
     const sizeList = makeSizeList(dlist)
-    const mocklist = dlist.map(
-      (item: any, index: number) => {
-        const size = sizeList[index]
-        return [item.name, size]
-        // return [item.name, item.value]
-      }
-    )
+    const mocklist = dlist.map((item: any, index: number) => {
+      const size = parseInt(sizeList[index].toFixed(0), 0)
+      const _size = (size < 13) ? 22 : size
+      return [item.name, _size]
+      // return [item.name, item.value]
+    })
     const option: any = {
       backgroundColor: this.color,
-      imageShape: 'cardioid',
       // tooltip: {
       //   show: false,
       //   formatter(item: any) {
@@ -137,13 +129,16 @@ export default class WordCloudChart extends ViewBase {
       //   }
       // },
       color: this.foreColor,
-      minSize: true,
+      // color: 'random-light',
       list: mocklist,
-      shape: 'square',
-      ellipticity: 0.65,
+      // ellipticity: 0.65,
       click: this.clickHandle,
+      shape: 'circle',
+      // size: 0.7,
+      // minFontSize: '20px'
       // hover: this.hoverHandle  // 暂未使用
     }
+    // console.log(mocklist)
     WordCloud(ele, option)
   }
 

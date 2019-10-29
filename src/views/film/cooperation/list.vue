@@ -277,7 +277,7 @@ export default class CooperationFilmList extends ViewBase {
       },
       {
         key: '',
-        text: '鲸娱指数'
+        text: '鲸鱼指数'
       },
       {
         key: 'hots',
