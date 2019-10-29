@@ -24,7 +24,7 @@
                     <p style="margin-bottom: 6px"><span>想看人数：</span>{{formatNums(it.wantSeeNum, 2)}}</p>
                     <i-circle v-if='movieCustom == 0 || detaildata.deliveryGroups' trail-color="#fff" stroke-color="#DA6C70" class="circle-per" :size="73" :percent="Number(it.matchPercent)">
                       <p class="demo-Circle-inner" style="font-size:14px;height:16px;margin-top: 4px; color:#DA6C70">匹配度</p>
-                      <p class="demo-Circle-inner" style="font-size:16px;color:#DA6C70">{{it.matchPercent || '-'}}%</p>
+                      <p class="demo-Circle-inner" style="font-size:16px; color:#DA6C70">{{it.matchPercent || '-'}}%</p>
                     </i-circle>
                   </div>
                 </div>
@@ -391,7 +391,7 @@ export default class App extends ViewBase {
           return {
             key: items,
             text: (it.ageValues) ? it.ageValues[ins] : '-',
-            matchPercent: it.matchPercent || 0
+            matchPercent: (it.matchPercent || 0) > 100 ? 0 : it.matchPercent
           }
         })
         return {
