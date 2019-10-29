@@ -3,7 +3,7 @@
     <div class='t-title'>监播管理</div>
     <div class='title-tip'>
       <div class='tip-left'><span style='color: #F9D85E;'>*</span>监播视频录制标准:</br>
-    准备当日报纸或当日影票票更,带报头或票根拍摄厅号及/LOGO以及厅号,然后拍摄广告(广告播放起直至龙标出现)</br>
+    准备当日报纸或当日影票票跟,带报头或票根拍摄厅号及/LOGO以及厅号,然后拍摄广告(广告播放起直至龙标出现)</br>
     备注：需拍摄一个包含上述内容的完整不间断视频</br>
     <span style='color: #F9D85E;'>*</span>拍摄视频命名规范: 日期、影片名称、影院名称、厅号、场次</div>
       <div class='tip-right'>
@@ -22,11 +22,11 @@
        <Col span='6' class='data'><WeekDatePicker class='data-s' v-model="weekDate"/></Col>
         <Col :span="10">
           <Col style='margin-left: 12px;' span="14">
-            <Select 
-            v-model='query.cinemaId'  
+            <Select
+            v-model='query.cinemaId'
             clearable
-            filterable  
-            placeholder="请输入影院名称/专资编码查询" 
+            filterable
+            placeholder="请输入影院名称/专资编码查询"
             remote
             :loading="loading"
             :remote-method="remoteMethod"
@@ -85,6 +85,7 @@
           </li>
           <!-- <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div> -->
       </Row>
+      <!-- <OssUploader v-model="ossUrl" :param="{fileType: 3, subCategory: 2}" mini /> -->
       <div style=' margin-top: 15px; '>
         <Row class='li-title'>
           <Col span='3' >影片名称</Col>
@@ -115,7 +116,6 @@
                 </row>
               </Col>
               <Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' >
-                <!-- <UploadButton @success="onUploadSuccess($event, it.id)">上传</UploadButton> -->
                 <OssUploader :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
               </Col>
               <Col span='5' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
@@ -178,6 +178,10 @@ export default class Main extends ViewBase {
   movieList: any = []
   loading = false
   asd = false
+
+  ossUrl: any = null
+  fileUrl: any = null
+  fileSize: any = null
 
 
   itemlist: any = []
@@ -442,13 +446,9 @@ export default class Main extends ViewBase {
     }
   }
 
-  // @Watch('query', {deep: true})
-  // watchQuery() {
-  //   if (this.query.cinemaId == null) {
-  //     return
-  //   }
-  //   this.seach()
-  // }
+  @Watch('ossUrl', {deep: true})
+  watchQuery() {
+  }
 
   @Watch('weekDate', {deep: true})
   watchWeekDate() {
