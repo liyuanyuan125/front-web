@@ -3,7 +3,7 @@
     <div class='t-title'>监播管理</div>
     <div class='title-tip'>
       <div class='tip-left'><span style='color: #F9D85E;'>*</span>监播视频录制标准:</br>
-    准备当日报纸或当日影票票跟,带报头或票根拍摄厅号及/LOGO以及厅号,然后拍摄广告(广告播放起直至龙标出现)</br>
+    准备当日报纸或当日影票票根,带报头或票根拍摄厅号及/LOGO以及厅号,然后拍摄广告(广告播放起直至龙标出现)</br>
     备注：需拍摄一个包含上述内容的完整不间断视频</br>
     <span style='color: #F9D85E;'>*</span>拍摄视频命名规范: 日期、影片名称、影院名称、厅号、场次</div>
       <div class='tip-right'>
