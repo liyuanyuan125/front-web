@@ -15,11 +15,11 @@
       <div class='posimg'>
         <div>
           <span class='disimg'><img src="./assets/alipay.png" alt=""></span>
-          <span style='float: right;color: rgba(255, 110, 110, 1);'>优惠： 单笔最高减99元</span>
+          <!-- <span style='float: right;color: rgba(255, 110, 110, 1);'>优惠： 单笔最高减99元</span> -->
         </div>
         <div>
           <span class='disimg'><img src="./assets/offlineTransfer.png" alt=""></span>
-          <span style='float: right;color: rgba(255, 110, 110, 1);'>优惠： 单笔最高减99元</span>
+          <!-- <span style='float: right;color: rgba(255, 110, 110, 1);'>优惠： 单笔最高减99元</span> -->
         </div>
       </div>
       <div slot="footer" class="btn-center-footer">
