@@ -264,7 +264,7 @@ export default class Main extends ViewBase {
 @import '~@/views/account/information/common.less';
 @import '~@/views/portal/login/common.less';
 .content {
-  max-height: 650px;
+  max-height: 550px;
   overflow: auto;
   font-size: 14px;
   h4 {
