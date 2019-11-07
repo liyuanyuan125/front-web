@@ -34,7 +34,7 @@
                   <p style="opacity: .7">受众性别: </p>
                   <div v-if="it.genders && it.genders.length > 0">
                     <div style="margin-left: 20px" :key="index" v-for="(item, index) in it.genders">
-                      <p style="margin-bottom: 10px" v-if="item.k == 'F'">女<span class="ageitem-box" 
+                      <p style="margin-bottom: 10px" v-if="item.k == 'F'">女<span class="ageitem-box"
                       :style="{width: 60 + (item.rate/100) + 'px'}">{{item.rate/100}}%</span></p>
                       <p style="margin-bottom: 10px" v-else>男<span class="ageitem-box"
                       :style="{width: 60 + (item.rate/100) + 'px'}"
@@ -79,7 +79,7 @@
             <!-- <span class="custom" style="margin-right: 160px">自定义投放影院</span> -->
           </h3>
           <div class="item-top">
-           
+
           </div>
           <div class="item-top">
             <div class="cinema-box">
@@ -135,7 +135,7 @@
                     </template>
 
                     <template slot-scope="{ row }" slot="estimateShowCount">
-                      {{formatNums(row.estimateShowCount * 7 / 10, 1)}} ~ 
+                      {{formatNums(row.estimateShowCount * 7 / 10, 1)}} ~
                       {{formatNums(row.estimateShowCount * 13 / 10, 1)}}
                     </template>
 
@@ -144,7 +144,7 @@
                     </template>
 
                     <template slot-scope="{ row }" slot="estimatePersonCount">
-                      {{formatNums(row.estimatePersonCount * 7 / 10, 1)}} ~ 
+                      {{formatNums(row.estimatePersonCount * 7 / 10, 1)}} ~
                       {{formatNums(row.estimatePersonCount * 13 / 10, 1)}}
                     </template>
                   </Table>
@@ -161,7 +161,7 @@
             <Button type="default" class="button-ok btn-export" @click="exportadver" ><img width="16px" src="./assets/export.png" /> 导出投放方案</Button>
             <Button type="default" class="button-ok btn-collect" @click="collectpeo">联系商务</Button>
           </div>
-        </Form>  
+        </Form>
       </Col>
     </Row>
     <Xlsx ref="down" :id="$route.params.setid" />

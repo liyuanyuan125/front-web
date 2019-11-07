@@ -60,7 +60,7 @@
     </header>
 
     <Layout class="site-center">
-      <aside class="site-sider">
+      <aside class="site-sider scroll_content">
         <h1 class="logo">
           <router-link :to="{name: 'home'}" class="logo-link">
             <img src="./assets/logo.png" alt="鲸鱼数据" class="logo-img">
@@ -505,7 +505,6 @@ export default class MainLayout extends ViewBase {
 .logo {
   position: relative;
   width: inherit;
-  // 新版的 chrome，对 height 的实现似乎有问题
   height: 152px;
   min-height: 152px;
   max-height: 152px;
@@ -676,5 +675,24 @@ export default class MainLayout extends ViewBase {
   .menu-item-resfinance-info {
     display: none;
   }
+}
+
+// 清除Chrome 滚动条
+::-webkit-scrollbar {
+  width: 0 !important;
+}
+
+//隐藏滚动条
+// IE10+，FF
+.scroll_content {
+  scrollbar-width: none;
+  -ms-scroll-chaining: chained;
+  -ms-overflow-style: none;
+  -ms-content-zooming: zoom;
+  -ms-scroll-rails: none;
+  -ms-content-zoom-limit-min: 100%;
+  -ms-content-zoom-limit-max: 500%;
+  -ms-scroll-snap-type: proximity;
+  overflow: auto;
 }
 </style>

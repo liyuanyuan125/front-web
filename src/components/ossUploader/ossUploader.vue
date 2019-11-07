@@ -262,7 +262,7 @@ export default class OssUploader extends ViewBase {
 
   onChange(ev: Event) {
     const input = ev.target as HTMLInputElement
-    const [file = null] = input.files || []
+    const file = input.files && input.files[0]
     if (file == null) {
       return
     }

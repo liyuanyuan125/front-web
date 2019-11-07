@@ -126,7 +126,7 @@ export default class Opus extends ViewBase {
     if (!text) {
       return
     }
-     return text.length > 45 ? text.substring(0, 45) + '.....' : text
+    return text.length > 45 ? text.substring(0, 45) + '.....' : text
   }
 
   uplist(size: any) {

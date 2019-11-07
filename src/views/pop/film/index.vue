@@ -57,7 +57,9 @@
                       <img v-else src="../assets/edit-icon.png" @click="$router.push({name: 'pop-film-edit', params: {id: item.id}})" class="img-wid" />
                     </Tooltip>
 
-                    <Tooltip content="点击删除"><img src="../assets/del-icon.png" v-if="item.status != 3"  @click="deleteList(item.id)" class="img-wid" /></Tooltip>
+                    <Tooltip content="点击删除" v-if="item.status != 4 && item.status != 3">
+                      <img src="../assets/del-icon.png"   @click="deleteList(item.id)" class="img-wid" />
+                    </Tooltip>
                   </div>
                 </div>
               </div>
@@ -120,25 +122,22 @@ export default class Main extends ViewBase {
   async tableList() {
     this.spinShow = true
     const query = this.query
+    // 若切换身份为广告主，需过滤广告类型为 商业广告
+    // 若切换身份为片商，不需过滤，获取全量广告片
+    const videoType = this.systemCode == 'ads' ? 2 : null
     try {
       const {
         data: { items, statusList, totalCount }
       } = await dataList({
         ...this.form,
         query,
+        videoType,
         ...this.pageList
       })
       this.spinShow = false
       this.statusList = statusList || []
-
-      // 若切换身份为广告主，需过滤广告类型为 商业广告
-      // 若切换身份为片商，不需过滤，获取全量广告片
-      if (this.systemCode == 'ads') {
-        this.tableDate = (items || []).filter((it: any) => it.videoType == 2)
-      } else {
-        this.tableDate = (items || [])
-      }
-      this.totalCount = this.tableDate.length || 0
+      this.tableDate = items || []
+      this.totalCount = totalCount
 
     } catch (ex) {
       this.spinShow = false
@@ -148,7 +147,8 @@ export default class Main extends ViewBase {
 
   transformSpecif(val: any) {
     const num = val % 60 == 0 ? '00' : val % 60
-    return val < 60 ? `00:${val}` : `${Math.floor(val / 60)} : ${num}`
+    const strPadStart = (Math.floor(val / 60)).toString().padStart(2, '0')
+    return val < 60 ? `00 : ${val}` : `${strPadStart} : ${num}`
   }
 
   checkall() {

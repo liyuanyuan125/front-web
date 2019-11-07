@@ -5,7 +5,7 @@
       <ul>
         <li v-for="item in topList" :key="item.id">
           <p class="item-list">
-              <img :src="item.poster" class="img-top" />
+              <img v-real-img="item.poster" class="img-top" />
               <span v-if="item.boxOfficeRanking">影史票房NO.{{item.boxOfficeRanking}}</span>
               <img v-if="item.status == 3" src="~@/views/film/assets/hotShow.png" width="48px" alt="alias" class="hot"/>
           </p>
@@ -47,7 +47,7 @@
               <div class="pic-item flex-box" v-for="it in list.items">
                 <a :href="it.videoUrl" class="img" >
                   <i class="nowing" v-if="it.status == 3"><img src="~@/views/film/assets/hotShow.png" width="48px" alt="alias" /></i>
-                  <img :src="it.poster" class="img-item" />
+                  <img  v-real-img="it.poster" class="img-item" />
                 </a>
                 <div class="text-right">
                   <h3 class="title-grade"><span>{{it.name}}</span><em>{{handleJy(it.jyIndex)}}</em></h3>
@@ -281,9 +281,6 @@ export default class Master extends ViewBase {
 h2, h3, h4 {
   font-weight: normal;
 }
-// .page {
-//   padding: 30px 20px 30px 40px;
-// }
 .nav-title {
   font-size: 24px;
   margin-bottom: 30px;
@@ -317,7 +314,6 @@ h2, h3, h4 {
         height: 240px;
         overflow: hidden;
         margin: 0 auto;
-        background: #fff;
         span {
           position: absolute;
           bottom: 5px;

@@ -42,7 +42,7 @@
                 <div :class="{advert: item.videoType == 1}"></div>
                 <img :src="item.logo ? item.logo : defaultImg" :onerror="defaultImg" class="img" />
               </div>
-              
+
               <div class="right-item">
                 <p class="name">{{item.name}}</p>
                 <p class="brand-name">{{item.brandName || item.productName}}</p>

@@ -11,7 +11,7 @@
                 <img :src="item.logo" class="top-img"/>
               </div>
               <em class="video-long" v-for="it in trades" :key="it.key" v-if="it.key == item.tradeCode">{{it.text}}</em>
-              <h4 :title="item.description">{{item.description}}</h4> 
+              <h4 :title="item.description">{{item.description}}</h4>
           </div>
       </div>
       <div class="no-data-list" v-if="list.length == 0">暂无数据</div>
