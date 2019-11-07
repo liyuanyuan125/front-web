@@ -100,7 +100,7 @@ export default class Main extends ViewBase {
 
   pageList = {
     pageIndex: 1,
-    pageSize: 20
+    pageSize: 30
   }
 
   totalCount = 0
@@ -242,6 +242,12 @@ export default class Main extends ViewBase {
           font-size: 18px;
           color: #a3d5e6;
           height: 76px;
+          word-break: break-all;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
         }
         .img-wid {
           width: 17px;
