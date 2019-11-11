@@ -163,6 +163,9 @@ export default class UserCard extends Vue {
     align-items: center;
     padding: 0 40px 0 29px;
     height: 30px;
+    h6 {
+      font-size: 13px;
+    }
   }
   .user-pane-body {
     margin: 10px 0;

@@ -144,25 +144,24 @@ export default class MoreMoviesDlg extends ViewBase {
   color: #00202d;
   i {
     position: absolute;
+    box-sizing: content-box;
     right: -20px;
     top: -20px;
+    display: inline-block;
+    vertical-align: middle;
     width: 40px;
     height: 40px;
+    line-height: 40px;
     background: #fff;
     border-radius: 50%;
+    text-align: center;
     cursor: pointer;
     border: 2px solid rgba(209, 216, 219, 1);
-    display: flex;
-    flex-flow: row;
-    justify-content: center;
-    align-items: center;
     &::before {
       content: '×';
-      font-size: 29px;
-      display: flex;
-      flex-flow: row;
-      justify-content: center;
-      align-items: center;
+      font-size: 35px;
+      line-height: 100%;
+      text-align: center;
     }
   }
 }
