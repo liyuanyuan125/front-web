@@ -230,7 +230,7 @@
           <Col :span="2" v-if="item.advertTypeCode == 'TRAILER'"><span>客户:</span></Col>
           <Col :span="10" v-if="item.advertTypeCode == 'TRAILER'"><span>{{item.customerName}}</span></Col>
           <Col :span="2" v-if="item.advertTypeCode != 'TRAILER'"><span>影片:</span></Col>
-          <Col :span="10" v-if="item.advertTypeCode != 'TRAILER'"><span>{{item.customerName}}</span></Col>
+          <Col :span="10" v-if="item.advertTypeCode != 'TRAILER'"><span>{{item.videoName}}</span></Col>
         </Row>
         <Row :gutter="16">
           <Col :span="2"><span>预算:</span></Col>
