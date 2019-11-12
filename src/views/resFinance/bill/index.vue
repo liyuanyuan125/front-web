@@ -37,7 +37,7 @@
                  v-model='query.cinemaId'  
                  clearable
                  filterable
-                 placeholder="影院名称"
+                 placeholder="请输入专资编码或影院名称"
                  remote
                  :loading="loading"
                  :remote-method="remoteMethod"
@@ -47,7 +47,7 @@
                     v-for="item in movieList"
                     :key="item.id"
                     :value="item.id"
-                  >{{item.shortName}}</Option>
+                  >【{{item.code}}】{{item.shortName}}</Option>
                 </Select>
               </Col>
             </Col>

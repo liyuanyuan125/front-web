@@ -22,7 +22,7 @@
              v-model='query.cinemaId'  
              clearable
              filterable
-             placeholder="请输入影院名称/专资编码查询" 
+             placeholder="请输入专资编码或影院名称" 
              remote
              :loading="loading"
              :remote-method="remoteMethod"
