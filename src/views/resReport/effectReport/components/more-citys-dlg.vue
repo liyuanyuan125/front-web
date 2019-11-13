@@ -194,19 +194,23 @@ export default class MoreCinemasDlg extends ViewBase {
   color: #00202d;
   i {
     position: absolute;
+    box-sizing: content-box;
     right: -20px;
     top: -20px;
-    display: block;
+    display: inline-block;
+    vertical-align: middle;
     width: 40px;
     height: 40px;
+    line-height: 40px;
     background: #fff;
     border-radius: 50%;
+    text-align: center;
     cursor: pointer;
     border: 2px solid rgba(209, 216, 219, 1);
     &::before {
       content: '×';
-      font-size: 34px;
-      line-height: 36px;
+      font-size: 35px;
+      line-height: 100%;
       text-align: center;
     }
   }

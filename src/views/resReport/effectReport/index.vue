@@ -419,7 +419,7 @@ export default class Index extends ViewBase {
       parseInt(this.$route.params.id, 0) ||
       // TODO: 线上演示 id 为 104，其他环境 173
       (VAR.env == 'prd' ? -1 : 173)
-    this.planId = id
+    // this.planId = id 未知id 传-1，接口返回的id 用于请求其他接口。2019.11.12 from 老范
     this.init(id)
   }
 
@@ -439,6 +439,9 @@ export default class Index extends ViewBase {
       const planStatus = data.planStatus || null
       const movieTypes = data.movieTypes || null
       const monitors = data.monitors || null
+
+      // 未知id 传-1，接口返回的id 用于请求其他接口。2019.11.12 from 老范
+      this.planId = id === -1 ? plan.id : id
 
       if (report && report.lastModifyTime) {
         const dates = report.dates
