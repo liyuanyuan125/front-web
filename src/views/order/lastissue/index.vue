@@ -323,7 +323,6 @@ export default class Main extends ViewBase {
     } else if (
       new Date().getDay() == 1 || new Date().getDay() == 2 ||
       new Date().getDay() == 3 || new Date().getDay() == 4 ) {
-      alert(3)
       let aa = this.startTime - (24 * 60 * 60 * 1000 * 7)
       let bb = this.endTime - (24 * 60 * 60 * 1000 * 7)
       this.weekDate = [new Date(aa -= this.datanum), new Date(bb -= this.datanum)]
@@ -340,7 +339,6 @@ export default class Main extends ViewBase {
   // 下周
   seachchgdown() {
     if (new Date().getDay() == 5 || new Date().getDay() == 6 ) {
-      alert(1)
       let ss = this.startTime
       let ee = this.endTime
       this.weekDate = [
@@ -369,7 +367,6 @@ export default class Main extends ViewBase {
     } else if (
       new Date().getDay() == 1 || new Date().getDay() == 2 ||
       new Date().getDay() == 3 ) {
-        alert(111)
       let ss = this.startTime - (24 * 60 * 60 * 1000 * 7)
       let ee = this.endTime - (24 * 60 * 60 * 1000 * 7)
       this.weekDate = [new Date(ss += this.datanum), new Date(ee += this.datanum)]
