@@ -187,6 +187,8 @@ export default class Main extends ViewBase {
   itemlist: any = []
   normallist: any = []
 
+  num = 6
+
 
   // 广告片投放位置
   deliveryPositionList: any = []
@@ -206,37 +208,55 @@ export default class Main extends ViewBase {
       this.query.cinemaId = cinid.data.cinemaId
       this.remoteMethod(cinid.data.cinemaName)
     }
-    if (new Date().getDay() == 5 || new Date().getDay() == 6) {
+    // if (new Date().getDay() == 5 || new Date().getDay() == 6) {
+    //   this.weekDate = [
+    //   new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
+    //   new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
+    //   const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+    //   const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+    //   this.query.beginDate = a[0] + a[1] + a[2]
+    //   this.query.endDate = b[0] + b[1] + b[2]
+    this.seach()
+    if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 || new Date().getDay() == 0 ) {
+      if (new Date().getDay() == 1) {
+        this.num = 7
+      } else if (new Date().getDay() == 2) {
+        this.num = 7
+      } else if (new Date().getDay() == 3) {
+        this.num = 7
+      } else if (new Date().getDay() == 4) {
+        this.num = 6
+      }
       this.weekDate = [
-      new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
-      new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
-      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-      this.query.beginDate = a[0] + a[1] + a[2]
-      this.query.endDate = b[0] + b[1] + b[2]
-      this.seach()
-    } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
-      this.weekDate = [
-      new Date(this.startTime - (24 * 60 * 60 * 1000 * 7)) ,
-      new Date(this.endTime - (24 * 60 * 60 * 1000 * 7))]
+      new Date(this.startTime - (24 * 60 * 60 * 1000 * this.num)) ,
+      new Date(this.endTime - (24 * 60 * 60 * 1000 * this.num))]
       this.query.beginDate = this.ad[0] + this.ad[1] + this.ad[2]
       this.query.endDate = this.bd[0] + this.bd[1] + this.bd[2]
       this.seach()
       return
     }
-    if (new Date().getDay() == 4) {
-      this.seach()
-    }
-    if (new Date().getDay() == 0) {
-      this.weekDate = [
-      new Date(this.startTime + (24 * 60 * 60 * 1000 * 1)) ,
-      new Date(this.endTime + (24 * 60 * 60 * 1000 * 1))]
-      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-      this.query.beginDate = a[0] + a[1] + a[2]
-      this.query.endDate = b[0] + b[1] + b[2]
-      this.seach()
-    }
+    // } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
+    //   this.weekDate = [
+    //   new Date(this.startTime - (24 * 60 * 60 * 1000 * 7)) ,
+    //   new Date(this.endTime - (24 * 60 * 60 * 1000 * 7))]
+    //   this.query.beginDate = this.ad[0] + this.ad[1] + this.ad[2]
+    //   this.query.endDate = this.bd[0] + this.bd[1] + this.bd[2]
+    //   this.seach()
+    //   return
+    // }
+    // if (new Date().getDay() == 4) {
+    //   this.seach()
+    // }
+    // if (new Date().getDay() == 0) {
+    //   this.weekDate = [
+    //   new Date(this.startTime + (24 * 60 * 60 * 1000 * 1)) ,
+    //   new Date(this.endTime + (24 * 60 * 60 * 1000 * 1))]
+    //   const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+    //   const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+    //   this.query.beginDate = a[0] + a[1] + a[2]
+    //   this.query.endDate = b[0] + b[1] + b[2]
+    //   this.seach()
+    // }
   }
 
   async remoteMethod(querys: any) {
@@ -308,10 +328,10 @@ export default class Main extends ViewBase {
     this.startTime = Number(new Date(this.getTime(0))) + (24 * 60 * 60 * 1000 * 3) - 8 * 60 * 60 * 1000  // 本周的开始时间
     this.endTime = Number(new Date(this.getTime(-6))) + (24 * 60 * 60 * 1000 * 3) + 16 * 60 * 60 * 1000 - 1 // 本周的结束时间
 
-    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
+    if (new Date().getDay() == 4 || new Date().getDay() == 5 || new Date().getDay() == 6 ) {
       this.weekDate = [
-      new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
-      new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
+      new Date(this.startTime) ,
+      new Date(this.endTime)]
       const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
       const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
@@ -319,8 +339,17 @@ export default class Main extends ViewBase {
       // this.seach()
     } else if (
       new Date().getDay() == 1 || new Date().getDay() == 2 ||
-      new Date().getDay() == 3 || new Date().getDay() == 4 ) {
-      this.weekDate = [new Date(this.startTime), new Date(this.endTime)]
+      new Date().getDay() == 3) {
+      this.weekDate = [new Date(this.startTime - (24 * 60 * 60 * 1000 * 7)),
+      new Date(this.endTime - (24 * 60 * 60 * 1000 * 7))]
+      const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
+      const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      // this.seach()
+    } else if (new Date().getDay() == 0) {
+      this.weekDate = [new Date(this.startTime - (24 * 60 * 60 * 1000 * 6)),
+      new Date(this.endTime - (24 * 60 * 60 * 1000 * 6))]
       const a = moment(new Date(this.startTime).getTime()).format(timeFormat).split('-')
       const b = moment(new Date(this.endTime).getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
@@ -330,9 +359,22 @@ export default class Main extends ViewBase {
   }
   // 上周
   seachchgup() {
-    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
-      let ss = this.startTime + (24 * 60 * 60 * 1000 * 7)
-      let ee = this.endTime + (24 * 60 * 60 * 1000 * 7)
+    if (new Date().getDay() == 5 || new Date().getDay() == 6) {
+      let ss = this.startTime
+      let ee = this.endTime
+      this.weekDate = [
+      new Date(ss -= this.datanum ) ,
+      new Date(ee -= this.datanum)]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.startTime -= this.datanum
+      this.endTime -= this.datanum
+      this.seach()
+    } else if (new Date().getDay() == 0) {
+      let ss = this.startTime - (24 * 60 * 60 * 1000 * 6)
+      let ee = this.endTime - (24 * 60 * 60 * 1000 * 6)
       this.weekDate = [
       new Date(ss -= this.datanum ) ,
       new Date(ee -= this.datanum)]
@@ -346,20 +388,37 @@ export default class Main extends ViewBase {
     } else if (
       new Date().getDay() == 1 || new Date().getDay() == 2 ||
       new Date().getDay() == 3 || new Date().getDay() == 4 ) {
-      this.weekDate = [new Date(this.startTime -= this.datanum), new Date(this.endTime -= this.datanum)]
+      let aa = this.startTime - (24 * 60 * 60 * 1000 * 7)
+      let bb = this.endTime - (24 * 60 * 60 * 1000 * 7)
+      this.weekDate = [new Date(aa -= this.datanum), new Date(bb -= this.datanum)]
       const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
       const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
+      this.startTime -= this.datanum
+      this.endTime -= this.datanum
       this.seach()
     }
   }
 
   // 下周
   seachchgdown() {
-    if (new Date().getDay() == 5 || new Date().getDay() == 6 || new Date().getDay() == 0) {
-      let ss = this.startTime + (24 * 60 * 60 * 1000 * 7)
-      let ee = this.endTime + (24 * 60 * 60 * 1000 * 7)
+    if (new Date().getDay() == 5 || new Date().getDay() == 6 ) {
+      let ss = this.startTime
+      let ee = this.endTime
+      this.weekDate = [
+      new Date(ss += this.datanum ) ,
+      new Date(ee += this.datanum)]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.startTime += this.datanum
+      this.endTime += this.datanum
+      this.seach()
+    } else if (new Date().getDay() == 0) {
+      let ss = this.startTime - (24 * 60 * 60 * 1000 * 6)
+      let ee = this.endTime - (24 * 60 * 60 * 1000 * 6)
       this.weekDate = [
       new Date(ss += this.datanum ) ,
       new Date(ee += this.datanum)]
@@ -372,7 +431,18 @@ export default class Main extends ViewBase {
       this.seach()
     } else if (
       new Date().getDay() == 1 || new Date().getDay() == 2 ||
-      new Date().getDay() == 3 || new Date().getDay() == 4 ) {
+      new Date().getDay() == 3 ) {
+      let ss = this.startTime - (24 * 60 * 60 * 1000 * 7)
+      let ee = this.endTime - (24 * 60 * 60 * 1000 * 7)
+      this.weekDate = [new Date(ss += this.datanum), new Date(ee += this.datanum)]
+      const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
+      const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
+      this.query.beginDate = a[0] + a[1] + a[2]
+      this.query.endDate = b[0] + b[1] + b[2]
+      this.startTime += this.datanum
+      this.endTime += this.datanum
+      this.seach()
+     } else if (new Date().getDay() == 4 ) {
       this.weekDate = [new Date(this.startTime += this.datanum), new Date(this.endTime += this.datanum)]
       const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
       const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
