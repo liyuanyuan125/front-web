@@ -148,7 +148,7 @@ export default class FetchData {
           })
           const group = groupBy(list, 'month')
           const m = moment().month() + 1
-          const ret = [m, m + 1, m + 2].map(it => ({
+          const ret = [m, (m + 1) % 12, (m + 2) % 12].map(it => ({
             name: `${it}月`,
             list: group[it]
           }))
