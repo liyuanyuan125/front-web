@@ -160,8 +160,10 @@ export default class FetchData {
           })
           .filter(item => item.date != null)
           const group = groupBy(list, 'month')
-          const m = moment().month() + 1
-          const ret = [m, m + 1, m + 2].map(it => ({
+          const m1 = moment().month() + 1
+          const m2 = moment().add(1, 'M').month() + 1
+          const m3 = moment().add(2, 'M').month() + 1
+          const ret = [m1, m2, m3].map(it => ({
             name: `${it}月`,
             list: group[it]
           }))
