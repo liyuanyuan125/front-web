@@ -63,8 +63,9 @@
             </Radio>
         </RadioGroup>
      </Modal>
-
     </div>
+
+    <QR />
   </loginLayout>
 </template>
 
@@ -79,10 +80,12 @@ import { decodeRoute } from '@/util/base64Route'
 import { info } from '@/ui/modal'
 import { random } from '@/fn/string'
 import { except } from '@/fn/object'
+import QR from './components/qrcode.vue'
 
 @Component({
   components: {
-    loginLayout
+    loginLayout,
+    QR
   }
 })
 export default class Main extends ViewBase {
