@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img src="../assets/QR.png" class="qr-code" width="150" />
+    <img src="../assets/QR.png" class="qr-code" width="200" />
   </div>
 </template>
 
@@ -17,7 +17,7 @@ export default class Main extends ViewBase {
 <style lang='less' scoped>
 .qr-code {
   position: fixed;
-  bottom: 20px;
-  right: 30px;
+  bottom: 40px;
+  right: 50px;
 }
 </style>
