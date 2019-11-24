@@ -20,8 +20,8 @@
     <div class='body'>
       <Row class='row-ul'>
        <Col span='6' class='data'><WeekDatePicker class='data-s' v-model="weekDate"/></Col>
-        <Col :span="10">
-          <Col style='margin-left: 12px;' span="14">
+        <Col :span="5">
+          <Col style='margin-left: 12px;'>
             <Select
             v-model='query.cinemaId'
             clearable
@@ -40,6 +40,22 @@
             </Select>
           </Col>
         </Col>
+        <Col :span="5">
+          <Col style='margin-left: 12px;' :span='14'>
+            <Select
+            v-model='query.status'
+            clearable
+            filterable
+            placeholder="请选择监播状态"
+            @on-change="seachs">
+              <Option
+                v-for="(it, index) in statusList"
+                :key="it.key"
+                :value="it.key"
+              >{{it.text}}</Option>
+            </Select>
+          </Col>
+        </Col>
         <Col span='8' class='chb'>
           <!-- <RadioGroup v-model='chgkey.status' type="button" @on-change='seachchg'>
               <Radio v-for='(it,index) in timechg' :key='it.key' :value='it.key' :label='it.key'>{{it.name}}</Radio>
@@ -53,11 +69,15 @@
       <Row style='margin-top: 15px;'>
         <li class='li-item' v-if='normallist.length != 0'>
             <row>
-              <Col span='3'>通投</Col>
-              <Col span='2' >{{normallist.videoTotalLength}}s</Col>
-              <Col span='14'>
+              <Col span='3' class='txtali'>{{normallist.cinemaName}}</Col>
+              <Col span='2' class='txtali'>{{normallist.code}}</Col>
+              <Col span='3' class='txtali'>{{normallist.beginDate}}～{{normallist.endDate}}</Col>
+              <Col span='3' class='txtali'>通投</Col>
+              <Col span='2' class='txtali'>{{normallist.videoTotalLength}}s</Col>
+              <Col span='1' class='txtali'>{{normallist.statusText}}</Col>
+              <Col span='6' style='padding-left: 10px;'>
                 <row>
-                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in normallist.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
+                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item) in normallist.details' :key='item.orderId' v-if='item.deleted == false && item.offShelfStatus == 1'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
                         <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}">
                            <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
@@ -72,15 +92,15 @@
                   </Col>
                 </row>
               </Col>
-              <Col span='5' style='text-align: center;cursor: pointer;' v-if='normallist.status == 1' >
+              <Col span='4' style='text-align: center;cursor: pointer;' v-if='normallist.status == 1' >
 
                 <!-- <UploadButton @success="onUploadSuccess($event, normallist.id)">上传</UploadButton> -->
                 <OssUploader :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , normallist.id)"/>
 
               </Col>
-              <Col span='5' v-if='normallist.status == 2' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
-              <Col span='5' v-if='normallist.status == 3' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 3' class='imgs2'></div></Col>
-              <Col span='5' v-if='normallist.status == 4' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
+              <Col span='4' v-if='normallist.status == 2' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
+              <Col span='4' v-if='normallist.status == 3' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 3' class='imgs2'></div></Col>
+              <Col span='4' v-if='normallist.status == 4' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
             </row>
           </li>
           <!-- <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div> -->
@@ -88,39 +108,48 @@
       <!-- <OssUploader v-model="ossUrl" :param="{fileType: 3, subCategory: 2}" mini /> -->
       <div style=' margin-top: 15px; '>
         <Row class='li-title'>
-          <Col span='3' >影片名称</Col>
-          <Col span='2' >总投放时长</Col>
-          <Col span='14'>广告列表</Col>
-          <Col span='5' style='text-align: center;'>监播视频</Col>
+          <Col span='3' class="txtali">影院名称</Col>
+          <Col span='2' class="txtali">影院专资码</Col>
+          <Col span='3' class="txtali">时间段</Col>
+          <Col span='3' class="txtali">影片名称</Col>
+          <Col span='2' class="txtali">总投放时长</Col>
+          <Col span='1' class="txtali">监播状态</Col>
+          <Col span='6' style='padding-left: 10px;'>广告列表</Col>
+          <Col span='4' style='text-align: center;'>操作</Col>
         </Row>
         <ul class='itemul'>
-          <li class='li-item' v-for='(it,index) in itemlist' :key='it.id'>
+          <li class='li-item' v-for='(it) in itemlist' :key='it.id'>
             <row>
-              <Col span='3'>{{it.movieName}}</Col>
-              <Col span='2' >{{it.videoTotalLength}}s</Col>
-              <Col span='14'>
+              <Col span='3' class='txtali'>{{it.cinemaName}}</Col>
+              <Col span='2' class='txtali'>{{it.code}}</Col>
+              <Col span='3' class='txtali'>{{it.beginDate}}～{{it.endDate}}</Col>
+              <Col span='3' class='txtali'>{{it.movieName}}</Col>
+              <Col span='2'  class='txtali'>{{it.videoTotalLength}}s</Col>
+              <Col span='1'  class='txtali'>{{it.statusText}}</Col>
+              <Col span='6' style='padding-left: 10px;'>
                 <row>
-                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'  v-if='item.deleted == false && item.offShelfStatus == 1'>
+                  <Col style='color: #00202D;cursor: pointer;' :span='12' v-for='(item) in it.details' :key='item.orderId'  v-if='item.deleted == false && item.offShelfStatus == 1'>
                     <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">
-                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}">
+                      <em v-for='(its) in deliveryPositionList' :key='its.key' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
                         {{item.videoName.slice(0,7)}}...
                       </router-link>
-                  </Tooltip>
-                <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}" v-if='item.videoName.length <= 7'>
-                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
+                    </Tooltip>
+                      <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}" v-if='item.videoName.length <= 7'>
+                      <em v-for='(its) in deliveryPositionList' :key='its.key' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
                         {{item.videoName}}
                       </router-link>
                   ({{item.videoLength}}s)
                   </Col>
                 </row>
               </Col>
-              <Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' >
-                <OssUploader :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
+              <Col span='4' style='text-align: center;cursor: pointer;' v-if='it.status == 1' >
+                <OssUploader class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
+                <OssUploader class='up2' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
               </Col>
-              <Col span='5' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
-              <Col span='5' v-if='it.status == 3' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div></Col>
-              <Col span='5' v-if='it.status == 4' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
+              <Col span='4' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
+              <Col span='4' v-if='it.status == 3' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div></Col>
+              <Col span='4' v-if='it.status == 4' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
             </row>
           </li>
           <li v-if='itemlist.length == 0' style='text-align: center;line-height: 50px;'>暂无数据</li>
@@ -141,9 +170,18 @@ import WeekDatePicker from '@/components/weekDatePicker'
 import { confirm , toast , info } from '@/ui/modal'
 import VideoPreviewer from '@/components/videoPreviewer'
 import OssUploader from '@/components/ossUploader'
+import { findIndex } from 'lodash'
 
 
 const timeFormat = 'YYYY-MM-DD'
+
+const getstatus = (key: any, list: any[]) => {
+    const i: any = findIndex(list, (it: any) => {
+        return key == it.key
+    })
+    const res: string = (!list[i].text || list[i].text == '') ? '-' : list[i].text
+    return res
+}
 
 @Component({
   components: {
@@ -173,6 +211,7 @@ export default class Main extends ViewBase {
     cinemaId: null,
     beginDate: this.sd[0] + this.sd[1] + this.sd[2],
     endDate: this.ed[0] + this.ed[1] + this.ed[2],
+    status: null,
   }
 
   movieList: any = []
@@ -186,6 +225,9 @@ export default class Main extends ViewBase {
 
   itemlist: any = []
   normallist: any = []
+
+  // 监播状态列表
+  statusList: any = []
 
 
   // 广告片投放位置
@@ -435,9 +477,29 @@ export default class Main extends ViewBase {
         return
       }
       const datalist = await querylist(this.query)
-      this.itemlist = datalist.data.items == null ? [] : datalist.data.items
+      this.statusList = datalist.data.statusList
+      this.itemlist = datalist.data.items == null ? [] : datalist.data.items.map((it: any) => {
+        return {
+          ...it,
+          beginDate: String(it.beginDate).slice(0, 4) + '-' + String(it.beginDate).slice(4, 6)
+          + '-' + String(it.beginDate).slice(6, 8),
+          endDate: String(it.endDate).slice(0, 4) + '-' + String(it.endDate).slice(4, 6) + '-'
+          + String(it.endDate).slice(6, 8),
+          fileName: it.fileName == null ? '' : it.fileName,
+          statusText: getstatus(it.status , this.statusList)
+        }
+      })
       this.deliveryPositionList = datalist.data.deliveryPositionList
-      this.normallist = datalist.data.normal == null ? [] : datalist.data.normal
+      const a = datalist.data.normal
+      this.normallist = datalist.data.normal == null ? [] : datalist.data.normal = {
+        ...datalist.data.normal,
+        beginDate: String(a.beginDate).slice(0, 4) + '-' + String(a.beginDate).slice(4, 6)
+          + '-' + String(a.beginDate).slice(6, 8),
+        endDate: String(a.endDate).slice(0, 4) + '-' + String(a.endDate).slice(4, 6) + '-'
+          + String(a.endDate).slice(6, 8),
+        fileName: a.fileName == null ? '' : a.fileName,
+        statusText: getstatus(a.status , this.statusList)
+      }
       this.asd = false
 
     } catch (ex) {
@@ -543,7 +605,7 @@ export default class Main extends ViewBase {
 }
 .li-title {
   color: #00202d;
-  padding: 0 10px 0 10px;
+  // padding: 0 10px 0 10px;
   height: 40px;
   background: #c2d6e3;
   line-height: 40px;
@@ -551,8 +613,8 @@ export default class Main extends ViewBase {
 }
 .li-item {
   color: #00202d;
-  padding: 0 10px 0 10px;
-  line-height: 40px;
+  // padding: 0 10px 0 10px;
+  line-height: 47px;
   font-size: 14px;
   background: #abcbdd;
   border-bottom: 1px solid rgba(255, 255, 255, 0.26);
@@ -601,6 +663,9 @@ export default class Main extends ViewBase {
   margin-left: 15%;
   font-size: 14px;
 }
+.txtali {
+  text-align: center;
+}
 /deep/ .ivu-btn:hover {
   color: #000;
   border-color: #f2f2f2;
@@ -627,12 +692,15 @@ export default class Main extends ViewBase {
   }
 }
 /deep/ .oss-uploader-mini {
-  width: 68px;
-  height: 20px;
+  display: inline-block;
+  width: 40%;
+  margin-right: 5%;
+  height: 32px;
   border: 0;
   border-radius: 0;
-  margin-left: 39%;
-  margin-top: 7px;
+  i {
+    font-size: 13px !important;
+  }
 }
 /deep/ .oss-uploader-mini .action-all {
   top: -11px;
@@ -642,4 +710,20 @@ export default class Main extends ViewBase {
   left: 38px;
   width: auto;
 }
+/deep/ .up1 .ivu-icon-ios-cloud-upload::before {
+  content: '上传监播视频';
+}
+/deep/ .up2 .ivu-icon-ios-cloud-upload::before {
+  content: '上传TMS截图';
+}
+/deep/ .handle-in {
+  background: #5cade2;
+  flex-direction: column;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 5px;
+}
+
+
+
 </style>
