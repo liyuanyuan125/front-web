@@ -8,6 +8,7 @@
       <p class="login-title">全网精准娱乐营销平台</p>
       <Button type="primary" :to="toLoginUrl" class="login-but">登 录 / 注 册</Button>
     </content>
+    <QR />
   </div>
 </template>
 
@@ -15,8 +16,13 @@
 import { Component } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import {subBytes } from '@/fn/string'
+import QR from './components/qrcode.vue'
 
-@Component
+@Component({
+  components: {
+    QR
+  }
+})
 export default class Login extends ViewBase {
   get toLoginUrl() {
     const query = this.$route.query || {}
