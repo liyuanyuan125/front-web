@@ -55,7 +55,8 @@
          <span class='addbutton' v-if='this.list.length != 0' style='margin-right: 20px;' @click='all(0)'>批量审核通过</span>
          <!-- <span class='addbutton'>开票</span> -->
         <CheckboxGroup v-model='orderids' class='chacks' v-if='this.list.length != 0'>
-          <Checkbox  class="list-li" v-for="(item , index) in list" :key = "item.id" :value="item.id" :label="item.id" :disabled='item.billStatus != 2'>
+          <Checkbox  class="list-li" v-for="(item , index) in list" :key = "item.id" :value="item.id"
+           :label="item.id" :disabled='item.billStatus != 2' >
             <Row class='nav-title'>
               <img v-if="item.advertType == 'TRAILER'" class='advertTypeImg' src="~@/assets/icon/prevue.png" alt="">
               <Col span='5'>
@@ -301,8 +302,11 @@ export default class Main extends ViewBase {
     try {
       const { data } = await queryList(this.query)
       this.data = data
-      this.list = data.items
-      this.totalCount = data.totalCount
+
+      // 只显示【待资源方审核】【资源方审核失败】【已完成】3个状态的账单，不显示【待运营确认】的账单
+      this.list = (data.items).filter((ite: any) => ite.billStatus != 1)
+      this.totalCount = (this.list || []).length
+
       this.billStatusList = data.billStatusList // 账单状态
       this.invoiceStatusList = data.invoiceStatusList // 发票状态
       this.payStatusList = data.payStatusList // 付款状态
