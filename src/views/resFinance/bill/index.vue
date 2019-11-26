@@ -80,7 +80,7 @@
             <Row class="li-col">
               <Col :span="7" style='border-right: 1px solid #fff;'>
                 <p class='order_money'>{{formatNumber(item.amount)}}</p>
-                <p class='order_sma'>预计结算金额 / 元</p>
+                <p class='order_sma'>结算金额 / 元</p>
               </Col>
               <Col :span="6">
                 <p class='order_num'>{{formatNumber(item.videoCount , 2)}}</p>
