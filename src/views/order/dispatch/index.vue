@@ -42,7 +42,9 @@
                   <Tooltip placement="bottom" max-width="200" class="text-cursor"
                    content="根据影院近60天票房情况预算得出；最终收益以实际投放期间产生的曝光数据计算为准；为保证您的收益，请在投放结束后48小时内向国家电影专资办上报您的影院票房数据">
                     <label>预估广告收益(元)</label>
-                    <em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em><Icon type="md-help" />
+                    <em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em>
+                    <Icon class="iconfont icon-wenhao" size="18"></Icon>
+                    <!-- <Icon type="md-help" /> -->
                   </Tooltip> 
                 </p>
               </div>
@@ -71,7 +73,9 @@
                       <p v-if="it.movieCustom == 1" ><span v-for='item in (it.targetMovies || [])'>《{{item.movieName}}》</span></p>
                       <p v-else>
                         <Tooltip placement="bottom" max-width="200" class="text-cursor" content="“影片不限，请在投放周期内所有影片前安排上刊">
-                          所有影片<Icon type="md-help" />
+                          所有影片
+                          <Icon class="iconfont icon-wenhao" size="18"></Icon>
+                          <!-- <Icon type="md-help" /> -->
                          </Tooltip>
                       </p>
                     </div>
@@ -404,6 +408,7 @@ export default class Main extends ViewBase {
       }
       .max-earning {
         color: #da6c70;
+        padding-right: 5px;
       }
     }
     .table-content-list {
