@@ -4,7 +4,7 @@
       <!-- <Icon type="ios-cloud-upload-outline" v-if="!isUploading" class="icon-prefix"/> -->
       <TinyLoading :size="12" v-if="isUploading" class="icon-prefix"/>
       <span class="button-text">
-        <slot>上传</slot>
+        <slot>上传TMS截图</slot>
       </span>
       <label class="upload-label" v-if="!isUploading">
         <input type="file" :accept="accept" :multiple="multiple" @change="onChange"/>
@@ -192,11 +192,14 @@ export default class UploadButton extends ViewBase {
 
 <style lang="less" scoped>
 .button-upload {
-  position: relative;
+  width: 100%;
+  margin-left: -47%;
+  position: absolute;
+  top: -10px;
 }
 .button-text {
   margin: 0 3px;
-  color: #5f961f;
+  color: #fff;
 }
 .upload-label {
   position: absolute;
@@ -208,6 +211,9 @@ export default class UploadButton extends ViewBase {
   input[type=file] {
     display: none;
   }
+}
+/deep/ .ivu-dropdown-rel {
+  margin-top: 12px;
 }
 .progress-pane {
   width: 288px;
@@ -237,5 +243,18 @@ export default class UploadButton extends ViewBase {
   .error {
     color: #ed4014;
   }
+}
+.upload-button {
+  background: #5cade2;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 5px;
+  width: 32%;
+  height: 32px;
+  text-align: center;
+  line-height: 32px;
+  font-size: 12px;
+  margin-left: 5%;
+  margin-top: 6px;
 }
 </style>

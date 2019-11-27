@@ -1,4 +1,4 @@
-<template>
+-<template>
   <div class="page">
     <div class='t-title'>监播管理</div>
     <div class='title-tip'>
@@ -49,7 +49,7 @@
             placeholder="请选择监播状态"
             @on-change="seachs">
               <Option
-                v-for="(it, index) in statusList"
+                v-for="(it) in statusList"
                 :key="it.key"
                 :value="it.key"
               >{{it.text}}</Option>
@@ -57,113 +57,112 @@
           </Col>
         </Col>
         <Col span='8' class='chb'>
-          <!-- <RadioGroup v-model='chgkey.status' type="button" @on-change='seachchg'>
-              <Radio v-for='(it,index) in timechg' :key='it.key' :value='it.key' :label='it.key'>{{it.name}}</Radio>
-            </RadioGroup> -->
-            <!-- <span v-model='chgkey.status' v-for='(it,index) in timechg' :key='index' :value='it.key' @click='seachchg' :label='it.key'>{{it.name}}</span> -->
             <span @click='seachchgup'><&nbsp;上周</span>
             <span @click='seachchg'>本周</span>
             <span @click='seachchgdown'>下周&nbsp;></span>
         </Col>
       </Row>
-      <Row style='margin-top: 15px;'>
-        <li class='li-item' v-if='normallist.length != 0'>
-            <row>
-              <Col span='3' class='txtali'>{{normallist.cinemaName}}</Col>
-              <Col span='2' class='txtali'>{{normallist.code}}</Col>
-              <Col span='3' class='txtali'>{{normallist.beginDate}}～{{normallist.endDate}}</Col>
-              <Col span='3' class='txtali'>通投</Col>
-              <Col span='2' class='txtali'>{{normallist.videoTotalLength}}s</Col>
-              <Col span='1' class='txtali'>{{normallist.statusText}}</Col>
-              <Col span='6' style='padding-left: 10px;'>
-                <row>
-                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item) in normallist.details' :key='item.orderId' v-if='item.deleted == false && item.offShelfStatus == 1'>
-                    <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                        <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}">
-                           <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
-                          {{item.videoName.slice(0,7)}}...
-                        </router-link>
-                      </Tooltip>
-                    <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}" v-if='item.videoName.length <= 7'>
-                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
-                      {{item.videoName}}
-                    </router-link>
-                  ({{item.videoLength}}s)
-                  </Col>
-                </row>
-              </Col>
-              <Col span='4' style='text-align: center;cursor: pointer;' v-if='normallist.status == 1' >
-
-                <!-- <UploadButton @success="onUploadSuccess($event, normallist.id)">上传</UploadButton> -->
-                <OssUploader :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , normallist.id)"/>
-
-              </Col>
-              <Col span='4' v-if='normallist.status == 2' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
-              <Col span='4' v-if='normallist.status == 3' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 3' class='imgs2'></div></Col>
-              <Col span='4' v-if='normallist.status == 4' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
-            </row>
-          </li>
-          <!-- <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div> -->
-      </Row>
-      <!-- <OssUploader v-model="ossUrl" :param="{fileType: 3, subCategory: 2}" mini /> -->
-      <div style=' margin-top: 15px; '>
-        <Row class='li-title'>
-          <Col span='3' class="txtali">影院名称</Col>
-          <Col span='2' class="txtali">影院专资码</Col>
-          <Col span='3' class="txtali">时间段</Col>
-          <Col span='3' class="txtali">影片名称</Col>
-          <Col span='2' class="txtali">总投放时长</Col>
-          <Col span='1' class="txtali">监播状态</Col>
-          <Col span='6' style='padding-left: 10px;'>广告列表</Col>
-          <Col span='4' style='text-align: center;'>操作</Col>
-        </Row>
-        <ul class='itemul'>
-          <li class='li-item' v-for='(it) in itemlist' :key='it.id'>
-            <row>
-              <Col span='3' class='txtali'>{{it.cinemaName}}</Col>
-              <Col span='2' class='txtali'>{{it.code}}</Col>
-              <Col span='3' class='txtali'>{{it.beginDate}}～{{it.endDate}}</Col>
-              <Col span='3' class='txtali'>{{it.movieName}}</Col>
-              <Col span='2'  class='txtali'>{{it.videoTotalLength}}s</Col>
-              <Col span='1'  class='txtali'>{{it.statusText}}</Col>
-              <Col span='6' style='padding-left: 10px;'>
-                <row>
-                  <Col style='color: #00202D;cursor: pointer;' :span='12' v-for='(item) in it.details' :key='item.orderId'  v-if='item.deleted == false && item.offShelfStatus == 1'>
-                    <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}">
-                      <em v-for='(its) in deliveryPositionList' :key='its.key' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
-                        {{item.videoName.slice(0,7)}}...
-                      </router-link>
-                    </Tooltip>
-                      <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}" v-if='item.videoName.length <= 7'>
-                      <em v-for='(its) in deliveryPositionList' :key='its.key' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
-                        {{item.videoName}}
-                      </router-link>
-                  ({{item.videoLength}}s)
-                  </Col>
-                </row>
-              </Col>
-              <Col span='4' style='text-align: center;cursor: pointer;' v-if='it.status == 1' >
-                <OssUploader class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
-                <OssUploader class='up2' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
-              </Col>
-              <Col span='4' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
-              <Col span='4' v-if='it.status == 3' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div></Col>
-              <Col span='4' v-if='it.status == 4' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
-            </row>
-          </li>
-          <li v-if='itemlist.length == 0' style='text-align: center;line-height: 50px;'>暂无数据</li>
-        </ul>
-      </div>
     </div>
+    <!-- 通投数据 -->
+    <Table
+      v-if='normallist.length > 0'
+      ref="selection"
+      class="tables"
+      :loading="tableLoading"
+      :columns="columns"
+      :data="normallist"
+      :show-header='false'
+      style='margin-top: 20px;'
+    >
+      <template slot="date" slot-scope="{row}" >
+          {{row.beginDate}}～{{row.endDate}}
+      </template>
+      <template slot="orders" slot-scope="{row}" >
+          <span v-for='(it ) in row.details' :key='it.orderId' >
+            <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">
+               <em v-for='(its) in deliveryPositionList' :key='its.key' v-if='it.deliveryPosition != null && it.deliveryPosition == its.key'>【{{its.text}}】</em>
+              {{it.videoName}}({{it.videoLength}}s)&nbsp;&nbsp;&nbsp;
+            </router-link>
+          </span>
+      </template>
+      <template slot="status" slot-scope="{row}" >
+        <div v-if='row.status == 1' >
+          <OssUploader style='margin-left: -9%;' class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
+          <UploadButton @success="onUploadimg($event, row.id)"></UploadButton>
+        </div>
+        <div v-if='row.status == 2' >
+          <a class='aclick' href="javascript:;" v-if='row.alimg != "" '  @click='onView(row.alimg)'>查看TMS截图</a>
+          <a class='aclick' @click='onViewVideo(row.fileUrl)' :class="row.alimg != '' ? 'mar' : ''" href="javascript:;">查看监播视频</a>
+        </div>
+        <div v-if='row.status == 3' >
+          <a class='aclick' href="javascript:;" v-if='row.alimg != "" '  @click='onView(row.alimg)'>查看TMS截图</a>
+          <a class='aclick' @click='onViewVideo(row.alimg)' :class="row.fileUrl != '' ? 'mar' : ''" href="javascript:;">查看监播视频</a>
+        </div>
+        <div v-if='row.status == 4'>
+          <OssUploader class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
+          <UploadButton @success="onUploadimg($event, row.id)"></UploadButton>
+          <a class='aclick' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
+          <a class='aclick mar' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+          <a class='aclick' style='margin-bottom: 6px;' :class="row.fileUrl == null ? 'mar' : ''"  @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
+        </div>
+      </template>
+    </Table>
+    <!-- 列表数据 -->
+    <Table
+      ref="selection"
+      class="tables"
+      :loading="tableLoading"
+      :columns="columns"
+      :data="itemlist"
+      style='margin-top: 20px;'
+    >
+      <template slot="date" slot-scope="{row}" >
+          {{row.beginDate}}～{{row.endDate}}
+      </template>
+      <template slot="orders" slot-scope="{row}" >
+          <span v-for='(it ) in row.details' :key='it.orderId' >
+            <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">
+               <em v-for='(its) in deliveryPositionList' :key='its.key' v-if='it.deliveryPosition != null && it.deliveryPosition == its.key'>【{{its.text}}】</em>
+              {{it.videoName}}({{it.videoLength}}s)&nbsp;&nbsp;&nbsp;
+            </router-link>
+          </span>
+      </template>
+      <template slot="status" slot-scope="{row}" >
+        <div v-if='row.status == 1' >
+          <OssUploader style='margin-left: -9%;' class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+          <UploadButton @success="onUploadimg($event, row.id)"></UploadButton>
+        </div>
+        <div v-if='row.status == 2' >
+          <a class='aclick' href="javascript:;" v-if='row.alimg != "" '  @click='onView(row.alimg)'>查看TMS截图</a>
+          <a class='aclick' @click='onViewVideo(row.fileUrl)' :class="row.alimg != '' ? 'mar' : ''" href="javascript:;">查看监播视频</a>
+        </div>
+        <div v-if='row.status == 3' >
+          <a class='aclick' href="javascript:;" v-if='row.alimg != "" '  @click='onView(row.alimg)'>查看TMS截图</a>
+          <a class='aclick' @click='onViewVideo(row.alimg)' :class="row.fileUrl != '' ? 'mar' : ''" href="javascript:;">查看监播视频</a>
+        </div>
+        <div v-if='row.status == 4'>
+          <OssUploader class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+          <UploadButton @success="onUploadimg($event, row.id)"></UploadButton>
+          <a class='aclick' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
+          <a class='aclick mar' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+          <a class='aclick' style='margin-bottom: 6px;' :class="row.fileUrl == null ? 'mar' : ''"  @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
+        </div>
+      </template>
+    </Table>
+    <Modal v-model="viewerShow" title="查看图片" width="500" height="500">
+      <img style="width: 100%;" :src="viewerImage">
+    </Modal>
+    <VideodlgEdit  ref="addOrUpdateVideo"  @refreshDataList="reloadSearch" v-if="addOrUpdateVisibleVideo" @done="reloadSearch"/>
+    <dlgEdit  ref="addOrUpdate"   @refreshDataList="reloadSearch" v-if="addOrUpdateVisible" @done="reloadSearch"/>
   </div>
 </template>
 
-<script lang="ts">
-import { Component , Watch } from 'vue-property-decorator'
+<script lang="tsx">
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { querylist ,  getcinid , addvideo , delvideo , movielist } from '@/api/supervision'
+import jsxReactToVue from '@/util/jsxReactToVue'
+import { querylist ,  getcinid , addvideo , delvideo , movielist , addimg } from '@/api/supervision'
 import { formatTimestamp } from '@/util/validateRules'
 import UploadButton, { SuccessEvent } from '../components/UploadButton.vue'
 import WeekDatePicker from '@/components/weekDatePicker'
@@ -171,6 +170,10 @@ import { confirm , toast , info } from '@/ui/modal'
 import VideoPreviewer from '@/components/videoPreviewer'
 import OssUploader from '@/components/ossUploader'
 import { findIndex } from 'lodash'
+// 查看视频
+import VideodlgEdit from './videodlgEdit.vue'
+// 查看原因
+import dlgEdit from './dlgEdit.vue'
 
 
 const timeFormat = 'YYYY-MM-DD'
@@ -188,10 +191,22 @@ const getstatus = (key: any, list: any[]) => {
     UploadButton,
     WeekDatePicker,
     VideoPreviewer,
-    OssUploader
+    OssUploader,
+    VideodlgEdit,
+    dlgEdit
   }
 })
 export default class Main extends ViewBase {
+
+  // 查看图片、视频
+  viewerShow = false
+  viewerImage = ''
+  addOrUpdateVisibleVideo = false
+
+  // 查看拒绝原因
+  addOrUpdateVisible = false
+
+  tableLoading = false
 
   videoUrl = 'https://monitor-video.oss-cn-beijing.aliyuncs.com/monitor-intro.mp4'
 
@@ -234,6 +249,19 @@ export default class Main extends ViewBase {
   // 广告片投放位置
   deliveryPositionList: any = []
 
+  // 拒绝原因
+  fixRefusesList: any = []
+
+  columns = [
+    { title: '影院名称', key: 'cinemaName', align: 'center', width: 110, },
+    { title: '影院专资码', key: 'code', align: 'center', width: 100, },
+    { title: '时间段', slot: 'date', align: 'center', width: 110, },
+    { title: '影片名称', key: 'movieName', align: 'center', width: 100, },
+    { title: '总投放时长', key: 'videoTotalLengths', align: 'center', width: 80, },
+    { title: '监播状态', key: 'statusText', align: 'center' , width: 100, },
+    { title: '广告列表', slot: 'orders', align: 'center'},
+    { title: '状态', slot: 'status', align: 'center'},
+  ]
 
 
 
@@ -331,7 +359,7 @@ export default class Main extends ViewBase {
     // this.seachchg()
   }
 
-  // 上传文件
+  // 上传视频文件
   async onUploadSuccess(ev: any, id: number) {
       try {
         await addvideo (id , {
@@ -340,12 +368,25 @@ export default class Main extends ViewBase {
                         fileName: ev.file.name
                       })
         this.$Message.success({
-          content: `更改成功`,
+          content: `上传成功`,
         })
-        // setTimeout(() => {
-          // (this.$Spin as any).hide()
-          this.seach()
-        // }, 1000)
+        this.seach()
+      } catch (ex) {
+        this.handleError(ex)
+      }
+  }
+
+  // 上传图片文件
+  async onUploadimg({ files }: SuccessEvent, id: number) {
+      try {
+        debugger
+        await addimg (id , {
+                        fileId: files[0].fileId,
+                      })
+        this.$Message.success({
+          content: `上传成功`,
+        })
+        this.seach()
       } catch (ex) {
         this.handleError(ex)
       }
@@ -361,6 +402,15 @@ export default class Main extends ViewBase {
       } catch (ex) {
         this.handleError(ex)
       }
+  }
+
+   // 查看拒绝原因
+  viewrej(row: any) {
+    this.addOrUpdateVisible = true
+    this.$nextTick(() => {
+      const myThis: any = this
+      myThis.$refs.addOrUpdate.init(row , this.fixRefusesList)
+    })
   }
 
   // 本周
@@ -547,34 +597,55 @@ export default class Main extends ViewBase {
       }
       const datalist = await querylist(this.query)
       this.statusList = datalist.data.statusList
+      // 列表
       this.itemlist = datalist.data.items == null ? [] : datalist.data.items.map((it: any) => {
         return {
           ...it,
-          beginDate: String(it.beginDate).slice(0, 4) + '-' + String(it.beginDate).slice(4, 6)
-          + '-' + String(it.beginDate).slice(6, 8),
-          endDate: String(it.endDate).slice(0, 4) + '-' + String(it.endDate).slice(4, 6) + '-'
+          beginDate: String(it.beginDate).slice(0, 4) + '/' + String(it.beginDate).slice(4, 6)
+          + '/' + String(it.beginDate).slice(6, 8),
+          endDate: String(it.endDate).slice(0, 4) + '/' + String(it.endDate).slice(4, 6) + '/'
           + String(it.endDate).slice(6, 8),
           fileName: it.fileName == null ? '' : it.fileName,
-          statusText: getstatus(it.status , this.statusList)
+          statusText: getstatus(it.status , this.statusList),
+          videoTotalLengths: String(it.videoTotalLength) + 's',
+          alimg: it.imgs.length == 0 ? '' : it.imgs[it.imgs.length - 1]
         }
       })
       this.deliveryPositionList = datalist.data.deliveryPositionList
+      this.fixRefusesList = datalist.data.fixRefusesList
+      // 通投
       const a = datalist.data.normal
-      this.normallist = datalist.data.normal == null ? [] : datalist.data.normal = {
+      this.normallist = datalist.data.normal == null ? [] : datalist.data.normal = [{
         ...datalist.data.normal,
-        beginDate: String(a.beginDate).slice(0, 4) + '-' + String(a.beginDate).slice(4, 6)
-          + '-' + String(a.beginDate).slice(6, 8),
-        endDate: String(a.endDate).slice(0, 4) + '-' + String(a.endDate).slice(4, 6) + '-'
+        beginDate: String(a.beginDate).slice(0, 4) + '/' + String(a.beginDate).slice(4, 6)
+          + '/' + String(a.beginDate).slice(6, 8),
+        endDate: String(a.endDate).slice(0, 4) + '/' + String(a.endDate).slice(4, 6) + '/'
           + String(a.endDate).slice(6, 8),
+        movieName: '通投',
         fileName: a.fileName == null ? '' : a.fileName,
-        statusText: getstatus(a.status , this.statusList)
-      }
+        statusText: getstatus(a.status , this.statusList),
+        videoTotalLengths: String(a.videoTotalLength) + 's'
+      }]
       this.asd = false
 
     } catch (ex) {
       this.handleError(ex)
     } finally {
     }
+  }
+
+  // 查看图片，视频
+  onView(url: string) {
+    this.viewerImage = url
+    this.viewerShow = true
+  }
+
+  onViewVideo(src: any) {
+    this.addOrUpdateVisibleVideo = true
+    this.$nextTick(() => {
+      const myThis: any = this
+      myThis.$refs.addOrUpdateVideo.init(src)
+    })
   }
 
   @Watch('ossUrl', {deep: true})
@@ -735,18 +806,18 @@ export default class Main extends ViewBase {
 .txtali {
   text-align: center;
 }
-/deep/ .ivu-btn:hover {
-  color: #000;
-  border-color: #f2f2f2;
-  background: #f2f2f2;
-}
-/deep/ .ivu-btn {
-  border-color: #f2f2f2;
-  background: #f2f2f2;
-}
-/deep/ .ivu-btn:focus {
-  box-shadow: 0;
-}
+// /deep/ .ivu-btn:hover {
+//   color: #000;
+//   border-color: #f2f2f2;
+//   background: #f2f2f2;
+// }
+// /deep/ .ivu-btn {
+//   border-color: #f2f2f2;
+//   background: #f2f2f2;
+// }
+// /deep/ .ivu-btn:focus {
+//   box-shadow: 0;
+// }
 /deep/ .ivu-select-selection {
   height: 40px;
   background: rgba(255, 255, 255, 0.8);
@@ -767,9 +838,24 @@ export default class Main extends ViewBase {
   height: 32px;
   border: 0;
   border-radius: 0;
+  margin-top: 6px;
   i {
-    font-size: 13px !important;
+    font-size: 12px !important;
   }
+}
+.aclick {
+  background: #5cade2;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 5px;
+  width: 32%;
+  height: 32px;
+  text-align: center;
+  line-height: 32px;
+  font-size: 12px;
+  float: left;
+  margin-left: 5%;
+  margin-top: 6px;
 }
 /deep/ .oss-uploader-mini .action-all {
   top: -11px;
@@ -786,13 +872,37 @@ export default class Main extends ViewBase {
   content: '上传TMS截图';
 }
 /deep/ .handle-in {
+  width: 80%;
   background: #5cade2;
   flex-direction: column;
   cursor: pointer;
   color: #fff;
   border-radius: 5px;
 }
-
-
+/deep/ .ivu-table-wrapper {
+  margin: 0;
+}
+/deep/ .ivu-table th {
+  background: #c2d6e3 !important;
+  color: #00202d;
+  font-weight: normal;
+}
+/deep/ .ivu-table td {
+  background: #abcbdd;
+  color: #00202d;
+  font-weight: normal;
+}
+a:hover, /deep/ .handle-in:hover {
+  color: #fff;
+}
+/deep/ tr.ivu-table-row-hover td {
+  background: #abcbdd;
+}
+/deep/ .ivu-table-row {
+  border-bottom: 1px solid #ccc;
+}
+.mar {
+  margin-left: 13%;
+}
 
 </style>
