@@ -37,16 +37,15 @@
           <ul class='itemul' >
             <li v-for='(it,index) in itemlist' :key='index' :class="{advert: it.advertType == 'TRAILER'}">
               <div class="table-header-title  flex-box">
-                <p><label>投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
-                <p>
+                <p><label>预估投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
+                <!-- <p>
                   <Tooltip placement="bottom" max-width="200" class="text-cursor"
                    content="根据影院近60天票房情况预算得出；最终收益以实际投放期间产生的曝光数据计算为准；为保证您的收益，请在投放结束后48小时内向国家电影专资办上报您的影院票房数据">
                     <label>预估广告收益(元)</label>
                     <em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em>
                     <Icon class="iconfont icon-wenhao" size="18"></Icon>
-                    <!-- <Icon type="md-help" /> -->
                   </Tooltip> 
-                </p>
+                </p> -->
               </div>
               <Row class="table-content-list" type="flex" justify="center" align="middle">
                 <Col span="14">
@@ -60,7 +59,7 @@
                   </div>
                   <div class="flex-box col-order">
                     <p><label>广告片规格</label><em>{{it.specification || 0}}s</em></p>
-                    <p><label>目标人次</label><em>{{it.estimatePersonCount || 0}}人</em></p>
+                    <!-- <em><label>目标人次</label><em>{{it.estimatePersonCount || 0}}人</em></p> -->
                   </div>
                   <div class="flex-box col-order">
                     <p ><label>广告位置</label><em>{{it.deliveryPositionNames}}</em></p>
