@@ -37,7 +37,7 @@
           <ul class='itemul' >
             <li v-for='(it,index) in itemlist' :key='index' :class="{advert: it.advertType == 'TRAILER'}">
               <div class="table-header-title  flex-box">
-                <p><label>投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
+                <p><label>预估投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
                 <!-- <p>
                   <Tooltip placement="bottom" max-width="200" class="text-cursor"
                    content="根据影院近60天票房情况预算得出；最终收益以实际投放期间产生的曝光数据计算为准；为保证您的收益，请在投放结束后48小时内向国家电影专资办上报您的影院票房数据">

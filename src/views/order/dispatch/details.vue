@@ -9,7 +9,7 @@
           <Col span="8">
               <p><label :class="{'adver-type': list.advertType == 'TRAILER'}">广告片名称</label>{{list.videoName || '暂无'}} </p>
               <!-- <p><label>投放周期</label>{{list.cycle || 0}}天</p> -->
-              <p><label>投放排期</label>{{formatConversion(list.beginDate)}} ~ {{formatConversion(list.endDate)}}</p>
+              <p><label>预估投放排期</label>{{formatConversion(list.beginDate)}} ~ {{formatConversion(list.endDate)}}</p>
           </Col>
           <Col span="8">
               <!-- <p>
