@@ -303,9 +303,8 @@ export default class Main extends ViewBase {
       const { data } = await queryList(this.query)
       this.data = data
 
-      // 只显示【待资源方审核】【资源方审核失败】【已完成】3个状态的账单，不显示【待运营确认】的账单
-      this.list = (data.items).filter((ite: any) => ite.billStatus != 1)
-      this.totalCount = (this.list || []).length
+      this.list = data.items
+      this.totalCount = data.totalCount
 
       this.billStatusList = data.billStatusList // 账单状态
       this.invoiceStatusList = data.invoiceStatusList // 发票状态
