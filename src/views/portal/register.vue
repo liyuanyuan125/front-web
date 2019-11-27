@@ -5,7 +5,7 @@
       <div class="tablist">
         <h4 class="tabs" v-if="!registerNext || subForm.companyType == 2">
           <span :class="{active: subForm.companyType == 1}" @click="handleCompany">我是企业</span>
-          <span :class="{active: subForm.companyType == 2}" @click="handlePerson">我是个人</span>
+          <!-- <span :class="{active: subForm.companyType == 2}" @click="handlePerson">我是个人</span> -->
         </h4>
         <h5 class="go-back" v-if="registerNext && subForm.companyType == 1">
           <span>设置账号</span>
@@ -60,7 +60,7 @@
         </FormItem>
         <FormItem  prop="password">
           <Input type="password" v-model="subForm.password" :maxlength="16"
-            placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"/>
+            placeholder="请设置包含大小写的英文字母与数字的组合，6-16 位"/>
         </FormItem>
         <FormItem  prop="passwordAgain">
           <Input type="password" v-model="subForm.passwordAgain" :maxlength="16"
@@ -275,11 +275,11 @@ export default class Main extends ViewBase {
     this.keyRandom = random()
   }
 
-  handlePerson() {
-    this.subForm.companyType = 2
-    this.registerNext = true
-    this.keyRandom = random()
-  }
+  // handlePerson() {
+  //   this.subForm.companyType = 2
+  //   this.registerNext = true
+  //   this.keyRandom = random()
+  // }
 
   nextBack() {
     this.registerNext = false
