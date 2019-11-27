@@ -44,7 +44,7 @@
       <div class="text-rows-col">
         <Row v-for="it in schedulingData" :key="it.movieId">
           <Col :span="8"><p><label>影片</label>{{it.movieName || '暂无'}} </p></Col>
-          <Col :span="8"><p><label>投放排期</label>
+          <Col :span="8"><p><label>预估投放排期</label>
             <span v-if="it.beginDate && it.endDate">{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</span>
             <span v-else>暂无</span>
           </p></Col>
