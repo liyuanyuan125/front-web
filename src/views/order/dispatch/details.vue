@@ -12,11 +12,11 @@
               <p><label>投放排期</label>{{formatConversion(list.beginDate)}} ~ {{formatConversion(list.endDate)}}</p>
           </Col>
           <Col span="8">
-              <p>
+              <!-- <p>
                 <label>预估广告收益(元)</label>
                 <span v-if="list.estimateRevenue" class="max-pofit">{{formatNumber(list.estimateRevenue)}}</span>
                 <span v-else>暂无</span>
-              </p>
+              </p> -->
               <p v-if="targetCinemaLength > 1">
                     <label>目标影院：</label>
                     <em>{{targetCinemaLength}}家</em> 
@@ -27,7 +27,7 @@
           </Col>
           <Col :span="8">
               <p><label>广告片规格</label>{{list.specification || 0}}s </p>
-              <p><label>目标人次</label>{{list.estimatePersonCount || '暂无'}}人</p>
+              <!-- <p><label>目标人次</label>{{list.estimatePersonCount || '暂无'}}人</p> -->
               <!-- <p><label>目标影厅</label>{{list.hallsCount || '暂无'}} </p> -->
           </Col>
         </Row>
