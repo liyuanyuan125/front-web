@@ -33,12 +33,12 @@ export function validatePassword(password: string): string | undefined {
   }
 
   // 一般直接在 input 上设置 maxlength 为 16，此处就不验证过长了，最后一条规则兜底
-  if (password.length < 8) {
-    return '密码过短，不能少于 8 位'
+  if (password.length < 6) {
+    return '密码过短，不能少于 6 位'
   }
 
-  if (!/^[a-zA-Z\d]{8,16}$/.test(password)) {
-    return '密码不合法，合法的密码：8-16 位大小写字母、数字组合'
+  if (!/^[a-zA-Z\d]{6,16}$/.test(password)) {
+    return '密码不合法，合法的密码：6-16 位大小写字母、数字组合'
   }
 }
 

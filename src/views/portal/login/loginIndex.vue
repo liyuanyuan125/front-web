@@ -118,8 +118,8 @@ export default class Main extends ViewBase {
       { required: true, message: '请输入你的密码', trigger: 'blur' },
       {
         type: 'string',
-        min: 8,
-        message: '密码的个数不能少于8位',
+        min: 6,
+        message: '密码的个数不能少于6位',
         trigger: 'blur'
       }
     ],
