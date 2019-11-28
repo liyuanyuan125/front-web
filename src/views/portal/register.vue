@@ -4,8 +4,9 @@
 
       <div class="tablist">
         <h4 class="tabs" v-if="!registerNext || subForm.companyType == 2">
-          <span :class="{active: subForm.companyType == 1}" @click="handleCompany">我是企业</span>
-          <span :class="{active: subForm.companyType == 2}" @click="handlePerson">我是个人</span>
+          <!-- :class="{active: subForm.companyType == 1}" -->
+          <span  @click="handleCompany">我是企业</span>
+          <!-- <span :class="{active: subForm.companyType == 2}" @click="handlePerson">我是个人</span> -->
         </h4>
         <h5 class="go-back" v-if="registerNext && subForm.companyType == 1">
           <span>设置账号</span>
@@ -275,11 +276,11 @@ export default class Main extends ViewBase {
     this.keyRandom = random()
   }
 
-  handlePerson() {
-    this.subForm.companyType = 2
-    this.registerNext = true
-    this.keyRandom = random()
-  }
+  // handlePerson() {
+  //   this.subForm.companyType = 2
+  //   this.registerNext = true
+  //   this.keyRandom = random()
+  // }
 
   nextBack() {
     this.registerNext = false
@@ -385,7 +386,8 @@ export default class Main extends ViewBase {
     color: #2f6af9;
     font-weight: normal;
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
+    justify-content: center;
     padding: 0 35px 30px;
     span {
       cursor: pointer;
