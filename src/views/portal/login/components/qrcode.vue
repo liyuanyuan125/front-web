@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img src="../assets/QR.png" class="qr-code" width="200" />
+    <img src="../assets/QR.png" class="qr-code" width="300" />
   </div>
 </template>
 
