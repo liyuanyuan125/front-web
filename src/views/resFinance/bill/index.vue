@@ -41,7 +41,7 @@
                  remote
                  :loading="loading"
                  :remote-method="remoteMethod"
-                 @on-clear="movieList = []"
+                 @on-clear="lis"
                  @on-change="seachs">
                   <Option
                     v-for="item in movieList"
@@ -253,6 +253,11 @@ export default class Main extends ViewBase {
 
   get formatNumber() {
     return formatNumber
+  }
+
+  async lis() {
+    const a = await movielist({pageIndex: 1, pageSize: 20})
+    this.movieList = a.data.items
   }
 
   async remoteMethod(query: any) {

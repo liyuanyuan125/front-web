@@ -30,7 +30,7 @@
             remote
             :loading="loading"
             :remote-method="remoteMethod"
-            @on-clear="movieList = []"
+            @on-clear="lis"
             @on-change="seachs">
               <Option
                 v-for="(item, index) in movieList"
@@ -277,6 +277,7 @@ export default class Main extends ViewBase {
       this.query.cinemaId = cinid.data.cinemaId
       this.remoteMethod(cinid.data.cinemaName)
     }
+    // console.log(a)
     // if (new Date().getDay() == 5 || new Date().getDay() == 6) {
     //   this.weekDate = [
     //   new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
@@ -352,6 +353,11 @@ export default class Main extends ViewBase {
       return
     }
     this.seach()
+  }
+
+  async lis() {
+    const a = await movielist({pageIndex: 1, pageSize: 20})
+    this.movieList = a.data.items
   }
 
   reloadSearch() {
