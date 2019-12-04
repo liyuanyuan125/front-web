@@ -26,6 +26,7 @@
              remote
              :loading="loading"
              :remote-method="remoteMethod"
+             @on-open-change='empty'
              @on-clear="empty"
              @on-change="aes">
               <Option

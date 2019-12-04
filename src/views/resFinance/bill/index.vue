@@ -250,6 +250,7 @@ export default class Main extends ViewBase {
      }
     this.query.year = new Date().getFullYear()
     this.seach()
+    this.empty()
   }
 
   get formatNumber() {
