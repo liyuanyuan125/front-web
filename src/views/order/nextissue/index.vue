@@ -26,7 +26,7 @@
              remote
              :loading="loading"
              :remote-method="remoteMethod"
-             @on-clear="lis"
+             @on-clear="empty"
              @on-change="aes">
               <Option
                 v-for="(item, index) in movieList"
@@ -135,7 +135,7 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
-  async lis() {
+  async empty() {
     const a = await movielist({pageIndex: 1, pageSize: 20})
     this.movieList = a.data.items
   }
