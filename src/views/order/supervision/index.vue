@@ -354,9 +354,9 @@ export default class Main extends ViewBase {
   // 上传图片文件
   async onUploadimg({ files }: SuccessEvent, id: number) {
       try {
-        // await addimg (id , {
-        //                 fileId: files[0].fileId,
-        //               })
+        await addimg (id , {
+                        fileId: files[0].fileId,
+                      })
         this.$Message.success({
           content: `上传成功`,
         })

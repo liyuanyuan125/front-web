@@ -9,7 +9,7 @@
       <label class="upload-label" v-if="!isUploading">
         <input type="file" :accept="accept" :multiple="multiple" @change="onChange"/>
       </label>
-      <Icon type="ios-arrow-down" class="icon-suffix" v-show="list.length > 0"/>
+      <!-- <Icon type="ios-arrow-down" class="icon-suffix" v-show="list.length > 0"/> -->
     </span>
     <DropdownMenu slot="list" class="progress-pane" v-if="list.length > 0">
       <DropdownItem v-for="it in list" :key="it.uqid" disabled
@@ -257,7 +257,7 @@ export default class UploadButton extends ViewBase {
   margin-left: 5%;
   margin-top: 6px;
 }
-// /deep/ .ivu-select-dropdown {
-//   display: none;
-// }
+/deep/ .ivu-select-dropdown {
+  display: none;
+}
 </style>
