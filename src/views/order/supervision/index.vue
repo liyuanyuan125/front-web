@@ -87,7 +87,7 @@
       </template>
       <template slot="status" slot-scope="{row}" >
         <div v-if='row.status == 1' >
-          <OssUploader style='margin-left: -9%;' class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
+          <OssUploader style='margin-left: -9%;' class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
           <UploadButton @success="onUploadimg($event, row.id)"></UploadButton>
         </div>
         <div v-if='row.status == 2' >
@@ -99,7 +99,7 @@
           <a class='aclick' @click='onViewVideo(row.alimg)' :class="row.fileUrl != '' ? 'mar' : ''" href="javascript:;">查看监播视频</a>
         </div>
         <div v-if='row.status == 4'>
-          <OssUploader class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
+          <OssUploader class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
           <UploadButton @success="onUploadimg($event, row.id)"></UploadButton>
           <a class='aclick' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
           <a class='aclick mar' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
@@ -277,15 +277,6 @@ export default class Main extends ViewBase {
       this.query.cinemaId = cinid.data.cinemaId
       this.remoteMethod(cinid.data.cinemaName)
     }
-    // console.log(a)
-    // if (new Date().getDay() == 5 || new Date().getDay() == 6) {
-    //   this.weekDate = [
-    //   new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
-    //   new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
-    //   const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-    //   const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-    //   this.query.beginDate = a[0] + a[1] + a[2]
-    //   this.query.endDate = b[0] + b[1] + b[2]
     this.seach()
     if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 || new Date().getDay() == 0 ) {
       if (new Date().getDay() == 1) {
@@ -305,28 +296,6 @@ export default class Main extends ViewBase {
       this.seach()
       return
     }
-    // } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
-    //   this.weekDate = [
-    //   new Date(this.startTime - (24 * 60 * 60 * 1000 * 7)) ,
-    //   new Date(this.endTime - (24 * 60 * 60 * 1000 * 7))]
-    //   this.query.beginDate = this.ad[0] + this.ad[1] + this.ad[2]
-    //   this.query.endDate = this.bd[0] + this.bd[1] + this.bd[2]
-    //   this.seach()
-    //   return
-    // }
-    // if (new Date().getDay() == 4) {
-    //   this.seach()
-    // }
-    // if (new Date().getDay() == 0) {
-    //   this.weekDate = [
-    //   new Date(this.startTime + (24 * 60 * 60 * 1000 * 1)) ,
-    //   new Date(this.endTime + (24 * 60 * 60 * 1000 * 1))]
-    //   const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-    //   const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-    //   this.query.beginDate = a[0] + a[1] + a[2]
-    //   this.query.endDate = b[0] + b[1] + b[2]
-    //   this.seach()
-    // }
   }
 
   async remoteMethod(querys: any) {
@@ -385,10 +354,9 @@ export default class Main extends ViewBase {
   // 上传图片文件
   async onUploadimg({ files }: SuccessEvent, id: number) {
       try {
-        debugger
-        await addimg (id , {
-                        fileId: files[0].fileId,
-                      })
+        // await addimg (id , {
+        //                 fileId: files[0].fileId,
+        //               })
         this.$Message.success({
           content: `上传成功`,
         })
@@ -583,20 +551,6 @@ export default class Main extends ViewBase {
   async seach() {
     try {
 
-      // 影院列表
-      // const movieList = await movielist()
-      // this.movieList = movieList.data.items
-      // if (this.asd == true) {
-      //   // 获取默认影院id
-      //   const cinid = await getcinid()
-      //   if (cinid.data.cinemaId == 0) {
-      //     info('当前用户下没有关联影院')
-      //     this.query.cinemaId = cinid.data.cinemaId
-      //   } else {
-      //     this.query.cinemaId = cinid.data.cinemaId
-      //     this.remoteMethod(cinid.data.cinemaName)
-      //   }
-      // }
       if (this.query.cinemaId == undefined) {
         info('请选择影院')
         return
@@ -614,7 +568,7 @@ export default class Main extends ViewBase {
           fileName: it.fileName == null ? '' : it.fileName,
           statusText: getstatus(it.status , this.statusList),
           videoTotalLengths: String(it.videoTotalLength) + 's',
-          alimg: it.imgs.length == 0 ? '' : it.imgs[it.imgs.length - 1]
+          alimg: it.imgs.length == 0 ? '' : it.imgs[it.imgs.length - 1].fileUrl
         }
       })
       this.deliveryPositionList = datalist.data.deliveryPositionList
@@ -630,7 +584,8 @@ export default class Main extends ViewBase {
         movieName: '通投',
         fileName: a.fileName == null ? '' : a.fileName,
         statusText: getstatus(a.status , this.statusList),
-        videoTotalLengths: String(a.videoTotalLength) + 's'
+        videoTotalLengths: String(a.videoTotalLength) + 's',
+        alimg: a.imgs.length == 0 ? '' : a.imgs[a.imgs.length - 1]
       }]
       this.asd = false
 

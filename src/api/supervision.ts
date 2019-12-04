@@ -76,7 +76,7 @@ export async function addvideo(id: any , query: any) {
 // 上传图片
 // http://yapi.aiads-dev.com/project/139/interface/api/7508
 export async function addimg(id: any , query: any) {
-  const res = await put(`/xadvert/play-monitors/${id}/upload_img` , query)
+  const res = await put(`/xadvert/play-monitors/${id}/upload-img` , query)
   return res
 }
 

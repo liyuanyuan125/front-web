@@ -257,4 +257,7 @@ export default class UploadButton extends ViewBase {
   margin-left: 5%;
   margin-top: 6px;
 }
+// /deep/ .ivu-select-dropdown {
+//   display: none;
+// }
 </style>
