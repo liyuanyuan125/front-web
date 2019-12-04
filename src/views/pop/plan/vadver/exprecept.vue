@@ -76,7 +76,7 @@ export default class Dates extends ViewBase {
       this.tableDate1.push(['序号', '省份', '地区', '影院名称',
       '院线归属', '预估投放场次', '预估曝光人次', '详细地址'])
       let indexs = 0
-      this.tableDate1.push(...(data.planCinemas.map((it: any, index: number) => {
+      this.tableDate1.push(...((data.planCinemas || []).map((it: any, index: number) => {
         if (it.num != -1) {
           indexs += 1
         }
