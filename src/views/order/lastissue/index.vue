@@ -20,8 +20,6 @@
              remote
              :loading="loading"
              :remote-method="remoteMethod"
-             @on-open-change='empty'
-             @on-clear="empty"
              @on-change="seachs">
               <Option
                 v-for="(item, index) in movieList"

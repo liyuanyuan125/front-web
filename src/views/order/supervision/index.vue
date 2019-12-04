@@ -30,8 +30,6 @@
             remote
             :loading="loading"
             :remote-method="remoteMethod"
-            @on-open-change='empty'
-            @on-clear="empty"
             @on-change="seachs">
               <Option
                 v-for="(item, index) in movieList"
@@ -64,6 +62,7 @@
         </Col>
       </Row>
     </div>
+    
     <!-- 通投数据 -->
     <Table
       v-if='normallist.length > 0'
@@ -267,8 +266,6 @@ export default class Main extends ViewBase {
 
 
   async mounted() {
-    // this.asd = true
-    // this.remoteMethod('')
     const cinid = await getcinid()
     if (cinid.data.cinemaId == 0) {
       info('当前用户下没有关联影院')
@@ -308,12 +305,18 @@ export default class Main extends ViewBase {
         } = await movielist({
           query: querys,
         })
-        this.movieList = items || []
+        this.movieList = (items || []).map((it: any) => {
+          return {
+            ...it,
+            label: '【' + it.code + '】' + it.shortName
+          }
+        })
       }
       this.loading = false
     } catch (ex) {
       this.handleError(ex)
       this.loading = false
+    } finally {
     }
   }
 
