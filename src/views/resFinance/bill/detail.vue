@@ -21,7 +21,7 @@
             <span v-if='items.billStatus == 4 && items.invoiceStatus == 3 && items.payStatus == 2'>已结算</span>
            <!-- <span v-for="it in billStatusList" :key="it.key" v-if="it.key == items.billStatus">{{it.text}}</span> -->
         </li>
-        <li class="flex-box"><em>预计结算金额</em><span>{{formatNumber(items.amount)}}</span></li>
+        <li class="flex-box"><em>结算金额</em><span>{{formatNumber(items.amount)}}</span></li>
       </ul>
     </div>
 

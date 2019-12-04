@@ -55,7 +55,8 @@
          <span class='addbutton' v-if='this.list.length != 0' style='margin-right: 20px;' @click='all(0)'>批量审核通过</span>
          <!-- <span class='addbutton'>开票</span> -->
         <CheckboxGroup v-model='orderids' class='chacks' v-if='this.list.length != 0'>
-          <Checkbox  class="list-li" v-for="(item , index) in list" :key = "item.id" :value="item.id" :label="item.id" :disabled='item.billStatus != 2'>
+          <Checkbox  class="list-li" v-for="(item , index) in list" :key = "item.id" :value="item.id"
+           :label="item.id" :disabled='item.billStatus != 2' >
             <Row class='nav-title'>
               <img v-if="item.advertType == 'TRAILER'" class='advertTypeImg' src="~@/assets/icon/prevue.png" alt="">
               <Col span='5'>
@@ -79,7 +80,7 @@
             <Row class="li-col">
               <Col :span="7" style='border-right: 1px solid #fff;'>
                 <p class='order_money'>{{formatNumber(item.amount)}}</p>
-                <p class='order_sma'>预计结算金额 / 元</p>
+                <p class='order_sma'>结算金额 / 元</p>
               </Col>
               <Col :span="6">
                 <p class='order_num'>{{formatNumber(item.videoCount , 2)}}</p>
@@ -306,8 +307,10 @@ export default class Main extends ViewBase {
     try {
       const { data } = await queryList(this.query)
       this.data = data
+
       this.list = data.items
       this.totalCount = data.totalCount
+
       this.billStatusList = data.billStatusList // 账单状态
       this.invoiceStatusList = data.invoiceStatusList // 发票状态
       this.payStatusList = data.payStatusList // 付款状态

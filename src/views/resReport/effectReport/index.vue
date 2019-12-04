@@ -415,10 +415,10 @@ export default class Index extends ViewBase {
   }
 
   mounted() {
-    const id =
-      parseInt(this.$route.params.id, 0) ||
-      // TODO: 线上演示 id 为 104，其他环境 173
-      (VAR.env == 'prd' ? -1 : 173)
+    const id = parseInt(this.$route.params.id, 0) || -1
+    // 不区分环境，所有环境默认传 -1
+    // TODO: 线上演示 id 为 104，其他环境 173
+    // (VAR.env == 'prd' ? 173 : -1 )
     // this.planId = id 未知id 传-1，接口返回的id 用于请求其他接口。2019.11.12 from 老范
     this.init(id)
   }
@@ -439,7 +439,12 @@ export default class Index extends ViewBase {
       const planStatus = data.planStatus || null
       const movieTypes = data.movieTypes || null
       const monitors = data.monitors || null
-
+      // 没有广告计划id 2019.12.02
+      if (!plan || !plan.id) {
+        this.initDone = true
+        this.chart1.initDone = true
+        return
+      }
       // 未知id 传-1，接口返回的id 用于请求其他接口。2019.11.12 from 老范
       this.planId = id === -1 ? plan.id : id
 

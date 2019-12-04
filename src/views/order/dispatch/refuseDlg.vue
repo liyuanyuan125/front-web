@@ -43,10 +43,10 @@
         <Col :span="4">目标影片</Col>
         <Col :span="18"><span  v-if='data.targetMovies.length > 0' v-for='item in data.targetMovies'>《{{item.movieName}}》 </span><span v-if='data.targetMovies.length == 0'>暂无  </span></Col>
       </Row>
-      <Row>
+      <!-- <Row>
         <Col :span="4" style="padding-top: 10px"><span>预估最大收益/¥</span></Col>
         <Col :span="7"><span class="red">{{data.estimateRevenue}}</span></Col>
-      </Row>
+      </Row> -->
     </Row>
     <div slot="footer" class="foot">
       <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
