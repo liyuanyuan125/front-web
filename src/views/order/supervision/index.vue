@@ -141,8 +141,8 @@
           <a class='aclick' @click='onViewVideo(row.alimg)' :class="row.fileUrl != '' ? 'mar' : ''" href="javascript:;">查看监播视频</a>
         </div>
         <div v-if='row.status == 4'>
-          <OssUploader class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
-          <UploadButton @success="onUploadimg($event, row.id)"></UploadButton>
+          <OssUploader  class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+          <UploadButton  @success="onUploadimg($event, row.id)"></UploadButton>
           <a class='aclick' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
           <a class='aclick mar' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
           <a class='aclick' style='margin-bottom: 6px;' :class="row.fileUrl == null ? 'mar' : ''"  @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
@@ -258,9 +258,9 @@ export default class Main extends ViewBase {
     { title: '时间段', slot: 'date', align: 'center', width: 110, },
     { title: '影片名称', key: 'movieName', align: 'center', width: 100, },
     { title: '总投放时长', key: 'videoTotalLengths', align: 'center', width: 80, },
-    { title: '监播状态', key: 'statusText', align: 'center' , width: 100, },
     { title: '广告列表', slot: 'orders', align: 'center'},
-    { title: '状态', slot: 'status', align: 'center'},
+    { title: '监播状态', key: 'statusText', align: 'center' , width: 100, },
+    { title: '操作', slot: 'status', align: 'center'},
   ]
 
 
