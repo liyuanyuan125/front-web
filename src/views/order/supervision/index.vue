@@ -87,6 +87,7 @@
       </template>
       <template slot="status" slot-scope="{row}" >
         <div v-if='row.status == 1' >
+         
           <OssUploader style='margin-left: -9%;' class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
           <UploadButton v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
         </div>
@@ -130,7 +131,7 @@
       <template slot="status" slot-scope="{row}" >
         <div v-if='row.status == 1' >
           <OssUploader style='margin-left: -9%;' class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
-          <UploadButton @success="onUploadimg($event, row.id)"></UploadButton>
+          <UploadButton v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
         </div>
         <div v-if='row.status == 2' >
           <a class='aclick' href="javascript:;" v-if='row.alimg != "" '  @click='onView(row.alimg)'>查看TMS截图</a>
@@ -142,7 +143,7 @@
         </div>
         <div v-if='row.status == 4'>
           <OssUploader  class='up1' :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
-          <UploadButton  @success="onUploadimg($event, row.id)"></UploadButton>
+          <UploadButton  v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
           <a class='aclick' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
           <a class='aclick mar' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
           <a class='aclick' style='margin-bottom: 6px;' :class="row.fileUrl == null ? 'mar' : ''"  @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
