@@ -32,8 +32,8 @@
             :remote-method="remoteMethod"
             @on-change="seachs">
               <Option
-                v-for="(item, index) in movieList"
-                :key="index"
+                v-for="(item) in movieList"
+                :key="item.id"
                 :value="item.id"
               >【{{item.code}}】{{item.shortName}}</Option>
             </Select>
@@ -260,7 +260,7 @@ export default class Main extends ViewBase {
     { title: '影片名称', key: 'movieName', align: 'center', width: 100, },
     { title: '总投放时长', key: 'videoTotalLengths', align: 'center', width: 80, },
     { title: '广告列表', slot: 'orders', align: 'center'},
-    { title: '监播状态', key: 'statusText', align: 'center' , width: 100, },
+    { title: '监播状态', key: 'statusText', align: 'left' , width: 100, },
     { title: '操作', slot: 'status', align: 'center'},
   ]
 
@@ -439,7 +439,7 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.startTime -= this.datanum
       this.endTime -= this.datanum
-      this.seach()
+      // this.seach()
     } else if (new Date().getDay() == 0) {
       let ss = this.startTime - (24 * 60 * 60 * 1000 * 6)
       let ee = this.endTime - (24 * 60 * 60 * 1000 * 6)
@@ -452,7 +452,7 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.startTime -= this.datanum
       this.endTime -= this.datanum
-      this.seach()
+      // this.seach()
     } else if (
       new Date().getDay() == 1 || new Date().getDay() == 2 ||
       new Date().getDay() == 3 || new Date().getDay() == 4 ) {
@@ -465,7 +465,7 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.startTime -= this.datanum
       this.endTime -= this.datanum
-      this.seach()
+      // this.seach()
     }
   }
 
@@ -483,7 +483,7 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.startTime += this.datanum
       this.endTime += this.datanum
-      this.seach()
+      // this.seach()
     } else if (new Date().getDay() == 0) {
       let ss = this.startTime - (24 * 60 * 60 * 1000 * 6)
       let ee = this.endTime - (24 * 60 * 60 * 1000 * 6)
@@ -496,7 +496,7 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.startTime += this.datanum
       this.endTime += this.datanum
-      this.seach()
+      // this.seach()
     } else if (
       new Date().getDay() == 1 || new Date().getDay() == 2 ||
       new Date().getDay() == 3 ) {
@@ -516,7 +516,7 @@ export default class Main extends ViewBase {
       const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
-      this.seach()
+      // this.seach()
      }
   }
 
@@ -568,7 +568,7 @@ export default class Main extends ViewBase {
           endDate: String(it.endDate).slice(0, 4) + '/' + String(it.endDate).slice(4, 6) + '/'
           + String(it.endDate).slice(6, 8),
           fileName: it.fileName == null ? '' : it.fileName,
-          statusText: getstatus(it.status , this.statusList),
+          statusText: it.changeStatusShow == null ? getstatus(it.status , this.statusList) : it.changeStatusShow,
           videoTotalLengths: String(it.videoTotalLength) + 's',
           alimg: it.imgs.length == 0 ? '' : it.imgs[it.imgs.length - 1].fileUrl
         }
@@ -585,7 +585,7 @@ export default class Main extends ViewBase {
           + String(a.endDate).slice(6, 8),
         movieName: '通投',
         fileName: a.fileName == null ? '' : a.fileName,
-        statusText: getstatus(a.status , this.statusList),
+        statusText: a.changeStatusShow == null ? getstatus(a.status , this.statusList) : a.changeStatusShow,
         videoTotalLengths: String(a.videoTotalLength) + 's',
         alimg: a.imgs.length == 0 ? '' : a.imgs[a.imgs.length - 1]
       }]
@@ -797,11 +797,11 @@ export default class Main extends ViewBase {
 /deep/ .oss-uploader-mini {
   display: inline-block;
   width: 40%;
-  margin-right: 5%;
+  // margin-right: 5%;
   height: 32px;
   border: 0;
   border-radius: 0;
-  margin-top: 6px;
+  // margin-top: 6px;
   i {
     font-size: 12px !important;
   }
@@ -811,7 +811,7 @@ export default class Main extends ViewBase {
   cursor: pointer;
   color: #fff;
   border-radius: 5px;
-  width: 32%;
+  width: 40%;
   height: 32px;
   text-align: center;
   // line-height: 32px;
@@ -837,7 +837,7 @@ export default class Main extends ViewBase {
   content: '上传TMS截图';
 }
 /deep/ .handle-in {
-  width: 80%;
+  // width: 80%;
   background: #5cade2;
   flex-direction: column;
   cursor: pointer;
@@ -872,6 +872,7 @@ a:hover, /deep/ .handle-in:hover {
 .action {
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 </style>
