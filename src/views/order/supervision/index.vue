@@ -340,11 +340,11 @@ export default class Main extends ViewBase {
   // 上传视频文件
   async onUploadSuccess(ev: any, id: number) {
       try {
-        // await addvideo (id , {
-        //                 fileUrl: ev.url,
-        //                 size: ev.file.size,
-        //                 fileName: ev.file.name
-        //               })
+        await addvideo (id , {
+                        fileUrl: ev.url,
+                        size: ev.file.size,
+                        fileName: ev.file.name
+                      })
         this.$Message.success({
           content: `上传成功`,
         })
