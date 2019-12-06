@@ -568,7 +568,8 @@ export default class Main extends ViewBase {
           endDate: String(it.endDate).slice(0, 4) + '/' + String(it.endDate).slice(4, 6) + '/'
           + String(it.endDate).slice(6, 8),
           fileName: it.fileName == null ? '' : it.fileName,
-          statusText: it.changeStatusShow == null ? getstatus(it.status , this.statusList) : it.changeStatusShow,
+          // statusText: it.changeStatusShow == null ? getstatus(it.status , this.statusList) : it.changeStatusShow,
+          statusText: getstatus(it.status , this.statusList),
           videoTotalLengths: String(it.videoTotalLength) + 's',
           alimg: it.imgs.length == 0 ? '' : it.imgs[it.imgs.length - 1].fileUrl
         }
@@ -585,7 +586,8 @@ export default class Main extends ViewBase {
           + String(a.endDate).slice(6, 8),
         movieName: '通投',
         fileName: a.fileName == null ? '' : a.fileName,
-        statusText: a.changeStatusShow == null ? getstatus(a.status , this.statusList) : a.changeStatusShow,
+        // statusText: a.changeStatusShow == null ? getstatus(a.status , this.statusList) : a.changeStatusShow,
+        statusText: getstatus(a.status , this.statusList),
         videoTotalLengths: String(a.videoTotalLength) + 's',
         alimg: a.imgs.length == 0 ? '' : a.imgs[a.imgs.length - 1]
       }]
