@@ -104,7 +104,7 @@
           <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
           <a class='aclick mar' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
           <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
-          <a class='aclick mar' style='margin-bottom: 6px;'  v-if='row.allowPic == 1'  @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
+          <a class='aclick mar' style='margin-bottom: 6px;'  v-if='row.alimg != "" && row.allowPic == 1'  @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
         </div>
       </template>
     </Table>
@@ -146,7 +146,7 @@
           <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
           <a class='aclick mar' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
           <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
-          <a class='aclick mar' style='margin-bottom: 6px;'  v-if='row.allowPic == 1' @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
+          <a class='aclick mar' style='margin-bottom: 6px;'  v-if='row.alimg != "" && row.allowPic == 1' @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
         </div>
       </template>
     </Table>
