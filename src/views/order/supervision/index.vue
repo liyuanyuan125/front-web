@@ -86,20 +86,39 @@
           </span>
       </template>
       <template slot="status" slot-scope="{row}" >
-        <div v-if='row.status == 1' class='action'>
+          <!-- <template v-if="row.status == 1" class='action'>
+            <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+            <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+          </template>
+          <template v-if="row.status == 2" class='action'>
+            <a class='aclick mar' href="javascript:;" v-if='row.alimg != ""  && row.allowPic == 1'  @click='onView(row.alimg)'>查看TMS截图</a>
+            <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+          </template>
+          <template v-if="row.status == 3" class='action'>
+            <a class='aclick mar' href="javascript:;" v-if='row.alimg != ""  && row.allowPic == 1'  @click='onView(row.alimg)'>查看TMS截图</a>
+            <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+          </template>
+          <template v-if="row.status == 4" class='action'>
+            <OssUploader class='up1 mar'  :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+            <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+            <a class='aclick mar' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
+            <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+            <a class='aclick mar' style='margin-bottom: 6px;'  v-if='row.alimg != "" && row.allowPic == 1'  @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
+          </template> -->
          
-          <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
-          <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+        <div v-if='row.status == 1' class='action' :key="'action' + row.id">
+            <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+            <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
         </div>
-        <div v-if='row.status == 2' class='action'>
+        <div v-if='row.status == 2' class='action' :key="'action' + row.id">
           <a class='aclick mar' href="javascript:;" v-if='row.alimg != ""  && row.allowPic == 1'  @click='onView(row.alimg)'>查看TMS截图</a>
           <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
         </div>
-        <div v-if='row.status == 3' class='action'>
+        <div v-if='row.status == 3' class='action' :key="'action' + row.id">
           <a class='aclick mar' href="javascript:;" v-if='row.alimg != ""  && row.allowPic == 1'  @click='onView(row.alimg)'>查看TMS截图</a>
           <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
         </div>
-        <div v-if='row.status == 4' class='action'>
+        <div v-if='row.status == 4' class='action' :key="'action' + row.id">
           <OssUploader class='up1 mar'  :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
           <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
           <a class='aclick mar' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
@@ -129,19 +148,38 @@
           </span>
       </template>
       <template slot="status" slot-scope="{row}" >
-        <div v-if='row.status == 1' class='action'>
+         <!-- <template v-if="row.status == 1" class='action'>
+            <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+            <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+          </template>
+          <template v-if="row.status == 2" class='action'>
+            <a class='aclick mar' href="javascript:;" v-if='row.alimg != "" && row.allowPic == 1'   @click='onView(row.alimg)'>查看TMS截图</a>
+            <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+          </template>
+          <template v-if="row.status == 3" class='action'>
+            <a class='aclick mar' href="javascript:;" v-if='row.alimg != ""  && row.allowPic == 1'  @click='onView(row.alimg)'>查看TMS截图</a>
+            <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+          </template>
+          <template v-if="row.status == 4" class='action'>
+            <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+            <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+            <a class='aclick mar' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
+            <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+            <a class='aclick mar' style='margin-bottom: 6px;'  v-if='row.alimg != "" && row.allowPic == 1' @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
+          </template> -->
+        <div v-if='row.status == 1' class='action' :key="'action' + row.id">
           <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
           <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
         </div>
-        <div v-if='row.status == 2' class='action'>
+        <div v-if='row.status == 2' class='action' :key="'action' + row.id">
           <a class='aclick mar' href="javascript:;" v-if='row.alimg != "" && row.allowPic == 1'   @click='onView(row.alimg)'>查看TMS截图</a>
           <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
         </div>
-        <div v-if='row.status == 3' class='action'>
+        <div v-if='row.status == 3' class='action' :key="'action' + row.id">
           <a class='aclick mar' href="javascript:;" v-if='row.alimg != ""  && row.allowPic == 1'  @click='onView(row.alimg)'>查看TMS截图</a>
           <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
         </div>
-        <div v-if='row.status == 4' class='action'>
+        <div v-if='row.status == 4' class='action' :key="'action' + row.id">
           <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
           <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
           <a class='aclick mar' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
