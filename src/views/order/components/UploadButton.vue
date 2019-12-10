@@ -7,7 +7,7 @@
         <slot>上传TMS截图</slot>
       </span>
       <label class="upload-label" v-if="!isUploading">
-        <input type="file" :accept="accept" :multiple="multiple" @change="onChange"/>
+        <input type="file" accept="image/*" :multiple="multiple" @change="onChange"/>
       </label>
       <!-- <Icon type="ios-arrow-down" class="icon-suffix" v-show="list.length > 0"/> -->
     </span>
@@ -198,8 +198,12 @@ export default class UploadButton extends ViewBase {
   top: -10px;
 }
 .button-text {
+  display: inline-block;
+  height: 32px;
   margin: 0 3px;
   color: #fff;
+  line-height: 1;
+  padding-top: 3%;
 }
 .upload-label {
   position: absolute;
@@ -249,12 +253,12 @@ export default class UploadButton extends ViewBase {
   cursor: pointer;
   color: #fff;
   border-radius: 5px;
-  width: 32%;
+  width: 40%;
   height: 32px;
   text-align: center;
   line-height: 32px;
   font-size: 12px;
-  margin-left: 5%;
+  // margin-left: 5%;
   margin-top: 6px;
 }
 /deep/ .ivu-select-dropdown {
