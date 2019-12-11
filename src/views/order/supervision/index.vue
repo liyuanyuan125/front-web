@@ -629,7 +629,7 @@ export default class Main extends ViewBase {
         // statusText: a.changeStatusShow == null ? getstatus(a.status , this.statusList) : a.changeStatusShow,
         statusText: getstatus(a.status , this.statusList),
         videoTotalLengths: String(a.videoTotalLength) + 's',
-        alimg: a.imgs.length == 0 ? '' : a.imgs[a.imgs.length - 1]
+        alimg: a.imgs.length == 0 ? '' : a.imgs[a.imgs.length - 1].fileUrl
       }]
       this.asd = false
 
