@@ -11,7 +11,7 @@
           <div class="inner">
             <div class="left">
               <dl class="film-card">
-                <dt><img :src="item.poster" /></dt>
+                <dt data-html2canvas-ignore><img :src="item.poster" /></dt>
                 <dd>
                   <div class="dsc-box">
                     <h5 class="name">{{item.name}}</h5>
