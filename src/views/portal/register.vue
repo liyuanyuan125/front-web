@@ -20,8 +20,8 @@
         </FormItem>
 
         <div class="flex-justify-between">
-          <FormItem prop="businessParentCode" style="width: 170px">
-           <ComTradeList v-model="form.businessParentCode" />
+          <FormItem prop="businessList" style="width: 170px">
+           <ComTradeList v-model="form.businessList" />
           </FormItem>
           <FormItem prop="area" style="width: 190px">
               <AreaSelect v-model="form.area" ref="areas"  :max-level="2" no-self :placeholder="placeholder" />
@@ -128,6 +128,9 @@ export default class Main extends ViewBase {
     area: [],
     provinceId: 0,
     cityId: 0,
+    businessList: [],
+    businessParentCode: '',
+    businessChildCode: '',
     qualificationImageList: []
   }
 
@@ -169,7 +172,17 @@ export default class Main extends ViewBase {
           }
         }
       ],
-      businessParentCode: [{ required: true, message: '请选择行业', trigger: 'blur' }],
+      businessList: [
+        {
+          required: true,
+          message: '请选择行业',
+          trigger: 'blur',
+          type: 'array',
+          validator(rule: any, value: number[], callback: any) {
+            !value[0] ? callback(new Error(rule.message)) : callback()
+          }
+        }
+      ],
       area: [
         {
           required: true,
@@ -306,7 +319,7 @@ export default class Main extends ViewBase {
     }
 
     let postData = {}
-    const cloneForm: any = except(this.form, 'passwordAgain,area')
+    const cloneForm: any = except(this.form, 'passwordAgain,area,businessList')
     const cloneSubForm: any = except(this.subForm, 'agreement')
     const qualificationImageList = (cloneForm.qualificationImageList || []).map((it: any) => it.fileId)
 
@@ -317,11 +330,12 @@ export default class Main extends ViewBase {
         companyName: cloneForm.companyName.trim(),
         qualificationImageList
       }
-    } else if (this.subForm.companyType == 2) { // 个人
-       postData = {
-        ...cloneSubForm,
-       }
     }
+    // else if (this.subForm.companyType == 2) { // 个人--
+    //    postData = {
+    //     ...cloneSubForm,
+    //    }
+    // }
 
     try {
       const { data } = await register(postData)
@@ -339,6 +353,12 @@ export default class Main extends ViewBase {
   watchArea(val: number[]) {
     this.form.provinceId = val[0]
     this.form.cityId = val[1]
+  }
+
+  @Watch('form.businessList', {deep: true})
+  watchbusin(val: string[]) {
+    this.form.businessParentCode = val[0]
+    this.form.businessChildCode = val[1]
   }
 }
 </script>

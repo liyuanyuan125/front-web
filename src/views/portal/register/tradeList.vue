@@ -38,21 +38,13 @@ export default class Main extends ViewBase {
   async loadData(item: any, callback: any) {
     item.loading = true
     const { data } = await tradeList({categoryCode: item.code})
-    const items = (data.list || [])
-    if (items.length == 0) {
-      item.children = [
-        {value: 'zanwu', label: '暂无分类', id: 0}
-      ]
-    } else {
-      const list = (data.list || []).map((it: any) => {
-        return {
-          ...it,
-          value: it.code,
-          label: it.name
-        }
-      })
-      item.children = list
-    }
+    item.children = (data.list || []).map((it: any) => {
+      return {
+        ...it,
+        value: it.code,
+        label: it.name
+      }
+    })
     item.loading = false
     callback()
   }
