@@ -22,11 +22,10 @@
              v-model='query.cinemaId'  
              clearable
              filterable
-             placeholder="请输入影院名称/专资编码查询" 
+             placeholder="请输入专资编码或影院名称" 
              remote
              :loading="loading"
              :remote-method="remoteMethod"
-             @on-clear="movieList = []"
              @on-change="aes">
               <Option
                 v-for="(item, index) in movieList"
@@ -133,6 +132,11 @@ export default class Main extends ViewBase {
 
     this.query.offDate = new Date()
     this.seach()
+  }
+
+  async empty() {
+    const a = await movielist({pageIndex: 1, pageSize: 20})
+    this.movieList = a.data.items
   }
 
   async remoteMethod(querys: any) {

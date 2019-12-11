@@ -1,4 +1,4 @@
-<template>
+-<template>
   <div class="page">
     <div class='t-title'>监播管理</div>
     <div class='title-tip'>
@@ -20,140 +20,234 @@
     <div class='body'>
       <Row class='row-ul'>
        <Col span='6' class='data'><WeekDatePicker class='data-s' v-model="weekDate"/></Col>
-        <Col :span="10">
-          <Col style='margin-left: 12px;' span="14">
+        <Col :span="5">
+          <Col style='margin-left: 12px;'>
             <Select
             v-model='query.cinemaId'
             clearable
             filterable
-            placeholder="请输入影院名称/专资编码查询"
+            placeholder="请输入专资编码或影院名称"
             remote
             :loading="loading"
             :remote-method="remoteMethod"
-            @on-clear="movieList = []"
             @on-change="seachs">
               <Option
-                v-for="(item, index) in movieList"
-                :key="index"
+                v-for="(item) in movieList"
+                :key="item.id"
                 :value="item.id"
               >【{{item.code}}】{{item.shortName}}</Option>
             </Select>
           </Col>
         </Col>
+        <Col :span="5">
+          <Col style='margin-left: 12px;' :span='14'>
+            <Select
+            v-model='query.status'
+            clearable
+            filterable
+            placeholder="请选择监播状态"
+            @on-change="seachs">
+              <Option
+                v-for="(it) in statusList"
+                :key="it.key"
+                :value="it.key"
+              >{{it.text}}</Option>
+            </Select>
+          </Col>
+        </Col>
         <Col span='8' class='chb'>
-          <!-- <RadioGroup v-model='chgkey.status' type="button" @on-change='seachchg'>
-              <Radio v-for='(it,index) in timechg' :key='it.key' :value='it.key' :label='it.key'>{{it.name}}</Radio>
-            </RadioGroup> -->
-            <!-- <span v-model='chgkey.status' v-for='(it,index) in timechg' :key='index' :value='it.key' @click='seachchg' :label='it.key'>{{it.name}}</span> -->
             <span @click='seachchgup'><&nbsp;上周</span>
             <span @click='seachchg'>本周</span>
             <span @click='seachchgdown'>下周&nbsp;></span>
         </Col>
       </Row>
-      <Row style='margin-top: 15px;'>
-        <li class='li-item' v-if='normallist.length != 0'>
-            <row>
-              <Col span='3'>通投</Col>
-              <Col span='2' >{{normallist.videoTotalLength}}s</Col>
-              <Col span='14'>
-                <row>
-                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in normallist.details' :key='index' v-if='item.deleted == false && item.offShelfStatus == 1'>
-                    <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                        <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}">
-                           <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
-                          {{item.videoName.slice(0,7)}}...
-                        </router-link>
-                      </Tooltip>
-                    <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}" v-if='item.videoName.length <= 7'>
-                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
-                      {{item.videoName}}
-                    </router-link>
-                  ({{item.videoLength}}s)
-                  </Col>
-                </row>
-              </Col>
-              <Col span='5' style='text-align: center;cursor: pointer;' v-if='normallist.status == 1' >
-
-                <!-- <UploadButton @success="onUploadSuccess($event, normallist.id)">上传</UploadButton> -->
-                <OssUploader :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , normallist.id)"/>
-
-              </Col>
-              <Col span='5' v-if='normallist.status == 2' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
-              <Col span='5' v-if='normallist.status == 3' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 3' class='imgs2'></div></Col>
-              <Col span='5' v-if='normallist.status == 4' style='text-align: center;'><Tooltip v-if='normallist.fileName.length > 15' :content="normallist.fileName">{{normallist.fileName.slice(0,15)}}...</Tooltip><span v-else>{{normallist.fileName}}</span>&nbsp;&nbsp;<div v-if='normallist.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(normallist.id)'>删除</a> </Col>
-            </row>
-          </li>
-          <!-- <div  v-if='normallist.length == 0' style='text-align: center;line-height: 50px;'>暂无通投数据</div> -->
-      </Row>
-      <!-- <OssUploader v-model="ossUrl" :param="{fileType: 3, subCategory: 2}" mini /> -->
-      <div style=' margin-top: 15px; '>
-        <Row class='li-title'>
-          <Col span='3' >影片名称</Col>
-          <Col span='2' >总投放时长</Col>
-          <Col span='14'>广告列表</Col>
-          <Col span='5' style='text-align: center;'>监播视频</Col>
-        </Row>
-        <ul class='itemul'>
-          <li class='li-item' v-for='(it,index) in itemlist' :key='it.id'>
-            <row>
-              <Col span='3'>{{it.movieName}}</Col>
-              <Col span='2' >{{it.videoTotalLength}}s</Col>
-              <Col span='14'>
-                <row>
-                  <Col style='color: #00202D;cursor: pointer;' :span='6' v-for='(item,index) in it.details' :key='index'  v-if='item.deleted == false && item.offShelfStatus == 1'>
-                    <Tooltip v-if='item.videoName.length > 7' :content="item.videoName">
-                    <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}">
-                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
-                        {{item.videoName.slice(0,7)}}...
-                      </router-link>
-                  </Tooltip>
-                <router-link style='color: #00202D;' tag="a" :to="{ name: 'order-dispatch-details', params: { id: item.orderId }}" v-if='item.videoName.length <= 7'>
-                      <em v-for='(its,index) in deliveryPositionList' :key='index' v-if='item.deliveryPosition != null && item.deliveryPosition == its.key'>【{{its.text}}】</em>
-                        {{item.videoName}}
-                      </router-link>
-                  ({{item.videoLength}}s)
-                  </Col>
-                </row>
-              </Col>
-              <Col span='5' style='text-align: center;cursor: pointer;' v-if='it.status == 1' >
-                <OssUploader :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , it.id)"/>
-              </Col>
-              <Col span='5' v-if='it.status == 2' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div class='imgs1'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
-              <Col span='5' v-if='it.status == 3' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 3' class='imgs2'></div></Col>
-              <Col span='5' v-if='it.status == 4' style='text-align: center;'><Tooltip v-if='it.fileName.length > 15' :content="it.fileName">{{it.fileName.slice(0,15)}}...</Tooltip><span v-else>{{it.fileName}}</span>&nbsp;&nbsp;<div v-if='it.status == 4' class='imgs3'></div>&nbsp;&nbsp;&nbsp;<a style='margin-left: 20px;' @click='dels(it.id)'>删除</a> </Col>
-            </row>
-          </li>
-          <li v-if='itemlist.length == 0' style='text-align: center;line-height: 50px;'>暂无数据</li>
-        </ul>
-      </div>
     </div>
+    
+    <!-- 通投数据 -->
+    <Table
+      v-if='normallist.length > 0'
+      ref="selection"
+      class="tables"
+      :loading="tableLoading"
+      :columns="columns"
+      :data="normallist"
+      :show-header='false'
+      style='margin-top: 20px;'
+    >
+      <template slot="date" slot-scope="{row}" >
+          {{row.beginDate}}～{{row.endDate}}
+      </template>
+      <template slot="orders" slot-scope="{row}" >
+          <span v-for='(it ) in row.details' :key='it.orderId' >
+            <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">
+               <em v-for='(its) in deliveryPositionList' :key='its.key' v-if='it.deliveryPosition != null && it.deliveryPosition == its.key'>【{{its.text}}】</em>
+              {{it.videoName}}({{it.videoLength}}s)&nbsp;&nbsp;&nbsp;
+            </router-link>
+          </span>
+      </template>
+      <template slot="status" slot-scope="{row}" >
+          <!-- <template v-if="row.status == 1" class='action'>
+            <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+            <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+          </template>
+          <template v-if="row.status == 2" class='action'>
+            <a class='aclick mar' href="javascript:;" v-if='row.alimg != ""  && row.allowPic == 1'  @click='onView(row.alimg)'>查看TMS截图</a>
+            <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+          </template>
+          <template v-if="row.status == 3" class='action'>
+            <a class='aclick mar' href="javascript:;" v-if='row.alimg != ""  && row.allowPic == 1'  @click='onView(row.alimg)'>查看TMS截图</a>
+            <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+          </template>
+          <template v-if="row.status == 4" class='action'>
+            <OssUploader class='up1 mar'  :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+            <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+            <a class='aclick mar' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
+            <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+            <a class='aclick mar' style='margin-bottom: 6px;'  v-if='row.alimg != "" && row.allowPic == 1'  @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
+          </template> -->
+         
+        <div v-if='row.status == 1' class='action' :key="'action' + row.id">
+            <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+            <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+        </div>
+        <div v-if='row.status == 2' class='action' :key="'action' + row.id">
+          <a class='aclick mar' href="javascript:;" v-if='row.alimg != ""  && row.allowPic == 1'  @click='onView(row.alimg)'>查看TMS截图</a>
+          <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+        </div>
+        <div v-if='row.status == 3' class='action' :key="'action' + row.id">
+          <a class='aclick mar' href="javascript:;" v-if='row.alimg != ""  && row.allowPic == 1'  @click='onView(row.alimg)'>查看TMS截图</a>
+          <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+        </div>
+        <div v-if='row.status == 4' class='action' :key="'action' + row.id">
+          <OssUploader class='up1 mar'  :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+          <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+          <a class='aclick mar' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
+          <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+          <a class='aclick mar' style='margin-bottom: 6px;'  v-if='row.alimg != "" && row.allowPic == 1'  @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
+        </div>
+      </template>
+    </Table>
+    <!-- 列表数据 -->
+    <Table
+      ref="selection"
+      class="tables"
+      :loading="tableLoading"
+      :columns="columns"
+      :data="itemlist"
+      style='margin-top: 20px;'
+    >
+      <template slot="date" slot-scope="{row}" >
+          {{row.beginDate}}～{{row.endDate}}
+      </template>
+      <template slot="orders" slot-scope="{row}" >
+          <span v-for='(it ) in row.details' :key='it.orderId' >
+            <router-link style='color: #00202D;' :to="{ name: 'order-dispatch-details', params: { id: it.orderId }}">
+               <em v-for='(its) in deliveryPositionList' :key='its.key' v-if='it.deliveryPosition != null && it.deliveryPosition == its.key'>【{{its.text}}】</em>
+              {{it.videoName}}({{it.videoLength}}s)&nbsp;&nbsp;&nbsp;
+            </router-link>
+          </span>
+      </template>
+      <template slot="status" slot-scope="{row}" >
+         <!-- <template v-if="row.status == 1" class='action'>
+            <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+            <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+          </template>
+          <template v-if="row.status == 2" class='action'>
+            <a class='aclick mar' href="javascript:;" v-if='row.alimg != "" && row.allowPic == 1'   @click='onView(row.alimg)'>查看TMS截图</a>
+            <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+          </template>
+          <template v-if="row.status == 3" class='action'>
+            <a class='aclick mar' href="javascript:;" v-if='row.alimg != ""  && row.allowPic == 1'  @click='onView(row.alimg)'>查看TMS截图</a>
+            <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+          </template>
+          <template v-if="row.status == 4" class='action'>
+            <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+            <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+            <a class='aclick mar' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
+            <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+            <a class='aclick mar' style='margin-bottom: 6px;'  v-if='row.alimg != "" && row.allowPic == 1' @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
+          </template> -->
+        <div v-if='row.status == 1' class='action' :key="'action' + row.id">
+          <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+          <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+        </div>
+        <div v-if='row.status == 2' class='action' :key="'action' + row.id">
+          <a class='aclick mar' href="javascript:;" v-if='row.alimg != "" && row.allowPic == 1'   @click='onView(row.alimg)'>查看TMS截图</a>
+          <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+        </div>
+        <div v-if='row.status == 3' class='action' :key="'action' + row.id">
+          <a class='aclick mar' href="javascript:;" v-if='row.alimg != ""  && row.allowPic == 1'  @click='onView(row.alimg)'>查看TMS截图</a>
+          <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+        </div>
+        <div v-if='row.status == 4' class='action' :key="'action' + row.id">
+          <OssUploader  class='up1 mar' :accept=abd :param="{fileType: 3, subCategory: 2}" mini @done="onUploadSuccess($event , row.id)"/>
+          <UploadButton class='mar' v-if='row.allowPic == 1' @success="onUploadimg($event, row.id)"></UploadButton>
+          <a class='aclick mar' href="javascript:;" v-if='row.fixRefuses != null' @click="viewrej(row)">查看拒绝原因</a>
+          <a class='aclick mar' v-if='row.fileUrl != null' @click='onViewVideo(row.fileUrl)' href="javascript:;">查看监播视频</a>
+          <a class='aclick mar' style='margin-bottom: 6px;'  v-if='row.alimg != "" && row.allowPic == 1' @click='onView(row.alimg)' href="javascript:;">查看TMS截图</a>
+        </div>
+      </template>
+    </Table>
+    <Modal v-model="viewerShow" title="查看图片" width="500" height="500">
+      <img style="width: 100%;" :src="viewerImage">
+    </Modal>
+    <VideodlgEdit  ref="addOrUpdateVideo"  @refreshDataList="reloadSearch" v-if="addOrUpdateVisibleVideo" @done="reloadSearch"/>
+    <dlgEdit  ref="addOrUpdate"   @refreshDataList="reloadSearch" v-if="addOrUpdateVisible" @done="reloadSearch"/>
   </div>
 </template>
 
-<script lang="ts">
-import { Component , Watch } from 'vue-property-decorator'
+<script lang="tsx">
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import moment from 'moment'
-import { querylist ,  getcinid , addvideo , delvideo , movielist } from '@/api/supervision'
+import jsxReactToVue from '@/util/jsxReactToVue'
+import { querylist ,  getcinid , addvideo , delvideo , movielist , addimg } from '@/api/supervision'
 import { formatTimestamp } from '@/util/validateRules'
 import UploadButton, { SuccessEvent } from '../components/UploadButton.vue'
 import WeekDatePicker from '@/components/weekDatePicker'
 import { confirm , toast , info } from '@/ui/modal'
 import VideoPreviewer from '@/components/videoPreviewer'
 import OssUploader from '@/components/ossUploader'
+import { findIndex } from 'lodash'
+// 查看视频
+import VideodlgEdit from './videodlgEdit.vue'
+// 查看原因
+import dlgEdit from './dlgEdit.vue'
 
 
 const timeFormat = 'YYYY-MM-DD'
+
+const getstatus = (key: any, list: any[]) => {
+    const i: any = findIndex(list, (it: any) => {
+        return key == it.key
+    })
+    const res: string = (!list[i].text || list[i].text == '') ? '-' : list[i].text
+    return res
+}
 
 @Component({
   components: {
     UploadButton,
     WeekDatePicker,
     VideoPreviewer,
-    OssUploader
+    OssUploader,
+    VideodlgEdit,
+    dlgEdit
   }
 })
 export default class Main extends ViewBase {
+
+  // 查看图片、视频
+  viewerShow = false
+  viewerImage = ''
+  addOrUpdateVisibleVideo = false
+
+  abd = 'video/*'
+
+  // 查看拒绝原因
+  addOrUpdateVisible = false
+
+  tableLoading = false
 
   videoUrl = 'https://monitor-video.oss-cn-beijing.aliyuncs.com/monitor-intro.mp4'
 
@@ -173,6 +267,7 @@ export default class Main extends ViewBase {
     cinemaId: null,
     beginDate: this.sd[0] + this.sd[1] + this.sd[2],
     endDate: this.ed[0] + this.ed[1] + this.ed[2],
+    status: null,
   }
 
   movieList: any = []
@@ -187,18 +282,29 @@ export default class Main extends ViewBase {
   itemlist: any = []
   normallist: any = []
 
+  // 监播状态列表
+  statusList: any = []
   num = 6
 
 
   // 广告片投放位置
   deliveryPositionList: any = []
 
+  // 拒绝原因
+  fixRefusesList: any = []
 
-
+  columns = [
+    { title: '影院名称', key: 'cinemaName', align: 'center', width: 110, },
+    { title: '影院专资码', key: 'code', align: 'center', width: 100, },
+    { title: '时间段', slot: 'date', align: 'center', width: 110, },
+    { title: '影片名称', key: 'movieName', align: 'center', width: 100, },
+    { title: '总投放时长', key: 'videoTotalLengths', align: 'center', width: 80, },
+    { title: '广告列表', slot: 'orders', align: 'center'},
+    { title: '监播状态', key: 'statusText', align: 'left' , width: 100, },
+    { title: '操作', slot: 'status', align: 'center'},
+  ]
 
   async mounted() {
-    // this.asd = true
-    // this.remoteMethod('')
     const cinid = await getcinid()
     if (cinid.data.cinemaId == 0) {
       info('当前用户下没有关联影院')
@@ -208,14 +314,6 @@ export default class Main extends ViewBase {
       this.query.cinemaId = cinid.data.cinemaId
       this.remoteMethod(cinid.data.cinemaName)
     }
-    // if (new Date().getDay() == 5 || new Date().getDay() == 6) {
-    //   this.weekDate = [
-    //   new Date(this.startTime + (24 * 60 * 60 * 1000 * 7)) ,
-    //   new Date(this.endTime + (24 * 60 * 60 * 1000 * 7))]
-    //   const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-    //   const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-    //   this.query.beginDate = a[0] + a[1] + a[2]
-    //   this.query.endDate = b[0] + b[1] + b[2]
     this.seach()
     if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 || new Date().getDay() == 0 ) {
       if (new Date().getDay() == 1) {
@@ -235,28 +333,6 @@ export default class Main extends ViewBase {
       this.seach()
       return
     }
-    // } else if (new Date().getDay() == 1 || new Date().getDay() == 2 || new Date().getDay() == 3 ) {
-    //   this.weekDate = [
-    //   new Date(this.startTime - (24 * 60 * 60 * 1000 * 7)) ,
-    //   new Date(this.endTime - (24 * 60 * 60 * 1000 * 7))]
-    //   this.query.beginDate = this.ad[0] + this.ad[1] + this.ad[2]
-    //   this.query.endDate = this.bd[0] + this.bd[1] + this.bd[2]
-    //   this.seach()
-    //   return
-    // }
-    // if (new Date().getDay() == 4) {
-    //   this.seach()
-    // }
-    // if (new Date().getDay() == 0) {
-    //   this.weekDate = [
-    //   new Date(this.startTime + (24 * 60 * 60 * 1000 * 1)) ,
-    //   new Date(this.endTime + (24 * 60 * 60 * 1000 * 1))]
-    //   const a = moment(this.weekDate[0].getTime()).format(timeFormat).split('-')
-    //   const b  = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
-    //   this.query.beginDate = a[0] + a[1] + a[2]
-    //   this.query.endDate = b[0] + b[1] + b[2]
-    //   this.seach()
-    // }
   }
 
   async remoteMethod(querys: any) {
@@ -268,12 +344,18 @@ export default class Main extends ViewBase {
         } = await movielist({
           query: querys,
         })
-        this.movieList = items || []
+        this.movieList = (items || []).map((it: any) => {
+          return {
+            ...it,
+            label: '【' + it.code + '】' + it.shortName
+          }
+        })
       }
       this.loading = false
     } catch (ex) {
       this.handleError(ex)
       this.loading = false
+    } finally {
     }
   }
 
@@ -285,12 +367,17 @@ export default class Main extends ViewBase {
     this.seach()
   }
 
+  async empty() {
+    const a = await movielist({pageIndex: 1, pageSize: 20})
+    this.movieList = a.data.items
+  }
+
   reloadSearch() {
     this.seach()
     // this.seachchg()
   }
 
-  // 上传文件
+  // 上传视频文件
   async onUploadSuccess(ev: any, id: number) {
       try {
         await addvideo (id , {
@@ -299,12 +386,24 @@ export default class Main extends ViewBase {
                         fileName: ev.file.name
                       })
         this.$Message.success({
-          content: `更改成功`,
+          content: `上传成功`,
         })
-        // setTimeout(() => {
-          // (this.$Spin as any).hide()
-          this.seach()
-        // }, 1000)
+        this.seach()
+      } catch (ex) {
+        this.handleError(ex)
+      }
+  }
+
+  // 上传图片文件
+  async onUploadimg({ files }: SuccessEvent, id: number) {
+      try {
+        await addimg (id , {
+                        fileId: files[0].fileId,
+                      })
+        this.$Message.success({
+          content: `上传成功`,
+        })
+        this.seach()
       } catch (ex) {
         this.handleError(ex)
       }
@@ -320,6 +419,15 @@ export default class Main extends ViewBase {
       } catch (ex) {
         this.handleError(ex)
       }
+  }
+
+   // 查看拒绝原因
+  viewrej(row: any) {
+    this.addOrUpdateVisible = true
+    this.$nextTick(() => {
+      const myThis: any = this
+      myThis.$refs.addOrUpdate.init(row , this.fixRefusesList)
+    })
   }
 
   // 本周
@@ -371,7 +479,7 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.startTime -= this.datanum
       this.endTime -= this.datanum
-      this.seach()
+      // this.seach()
     } else if (new Date().getDay() == 0) {
       let ss = this.startTime - (24 * 60 * 60 * 1000 * 6)
       let ee = this.endTime - (24 * 60 * 60 * 1000 * 6)
@@ -384,7 +492,7 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.startTime -= this.datanum
       this.endTime -= this.datanum
-      this.seach()
+      // this.seach()
     } else if (
       new Date().getDay() == 1 || new Date().getDay() == 2 ||
       new Date().getDay() == 3 || new Date().getDay() == 4 ) {
@@ -397,7 +505,7 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.startTime -= this.datanum
       this.endTime -= this.datanum
-      this.seach()
+      // this.seach()
     }
   }
 
@@ -415,7 +523,7 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.startTime += this.datanum
       this.endTime += this.datanum
-      this.seach()
+      // this.seach()
     } else if (new Date().getDay() == 0) {
       let ss = this.startTime - (24 * 60 * 60 * 1000 * 6)
       let ee = this.endTime - (24 * 60 * 60 * 1000 * 6)
@@ -428,7 +536,7 @@ export default class Main extends ViewBase {
       this.query.endDate = b[0] + b[1] + b[2]
       this.startTime += this.datanum
       this.endTime += this.datanum
-      this.seach()
+      // this.seach()
     } else if (
       new Date().getDay() == 1 || new Date().getDay() == 2 ||
       new Date().getDay() == 3 ) {
@@ -448,7 +556,7 @@ export default class Main extends ViewBase {
       const b = moment(this.weekDate[1].getTime()).format(timeFormat).split('-')
       this.query.beginDate = a[0] + a[1] + a[2]
       this.query.endDate = b[0] + b[1] + b[2]
-      this.seach()
+      // this.seach()
      }
   }
 
@@ -485,35 +593,64 @@ export default class Main extends ViewBase {
 
   async seach() {
     try {
-
-      // 影院列表
-      // const movieList = await movielist()
-      // this.movieList = movieList.data.items
-      // if (this.asd == true) {
-      //   // 获取默认影院id
-      //   const cinid = await getcinid()
-      //   if (cinid.data.cinemaId == 0) {
-      //     info('当前用户下没有关联影院')
-      //     this.query.cinemaId = cinid.data.cinemaId
-      //   } else {
-      //     this.query.cinemaId = cinid.data.cinemaId
-      //     this.remoteMethod(cinid.data.cinemaName)
-      //   }
-      // }
       if (this.query.cinemaId == undefined) {
         info('请选择影院')
         return
       }
       const datalist = await querylist(this.query)
-      this.itemlist = datalist.data.items == null ? [] : datalist.data.items
+      this.statusList = datalist.data.statusList
+      // 列表
+      this.itemlist = datalist.data.items == null ? [] : datalist.data.items.map((it: any) => {
+        return {
+          ...it,
+          beginDate: String(it.beginDate).slice(0, 4) + '/' + String(it.beginDate).slice(4, 6)
+          + '/' + String(it.beginDate).slice(6, 8),
+          endDate: String(it.endDate).slice(0, 4) + '/' + String(it.endDate).slice(4, 6) + '/'
+          + String(it.endDate).slice(6, 8),
+          fileName: it.fileName == null ? '' : it.fileName,
+          // statusText: it.changeStatusShow == null ? getstatus(it.status , this.statusList) : it.changeStatusShow,
+          statusText: getstatus(it.status , this.statusList),
+          videoTotalLengths: String(it.videoTotalLength) + 's',
+          alimg: it.imgs.length == 0 ? '' : it.imgs[it.imgs.length - 1].fileUrl
+        }
+      })
       this.deliveryPositionList = datalist.data.deliveryPositionList
-      this.normallist = datalist.data.normal == null ? [] : datalist.data.normal
+      this.fixRefusesList = datalist.data.fixRefusesList
+      // 通投
+      const a = datalist.data.normal
+      this.normallist = datalist.data.normal == null ? [] : datalist.data.normal = [{
+        ...datalist.data.normal,
+        beginDate: String(a.beginDate).slice(0, 4) + '/' + String(a.beginDate).slice(4, 6)
+          + '/' + String(a.beginDate).slice(6, 8),
+        endDate: String(a.endDate).slice(0, 4) + '/' + String(a.endDate).slice(4, 6) + '/'
+          + String(a.endDate).slice(6, 8),
+        movieName: '通投',
+        fileName: a.fileName == null ? '' : a.fileName,
+        // statusText: a.changeStatusShow == null ? getstatus(a.status , this.statusList) : a.changeStatusShow,
+        statusText: getstatus(a.status , this.statusList),
+        videoTotalLengths: String(a.videoTotalLength) + 's',
+        alimg: a.imgs.length == 0 ? '' : a.imgs[a.imgs.length - 1]
+      }]
       this.asd = false
 
     } catch (ex) {
       this.handleError(ex)
     } finally {
     }
+  }
+
+  // 查看图片，视频
+  onView(url: string) {
+    this.viewerImage = url
+    this.viewerShow = true
+  }
+
+  onViewVideo(src: any) {
+    this.addOrUpdateVisibleVideo = true
+    this.$nextTick(() => {
+      const myThis: any = this
+      myThis.$refs.addOrUpdateVideo.init(src)
+    })
   }
 
   @Watch('ossUrl', {deep: true})
@@ -613,7 +750,7 @@ export default class Main extends ViewBase {
 }
 .li-title {
   color: #00202d;
-  padding: 0 10px 0 10px;
+  // padding: 0 10px 0 10px;
   height: 40px;
   background: #c2d6e3;
   line-height: 40px;
@@ -621,8 +758,8 @@ export default class Main extends ViewBase {
 }
 .li-item {
   color: #00202d;
-  padding: 0 10px 0 10px;
-  line-height: 40px;
+  // padding: 0 10px 0 10px;
+  line-height: 47px;
   font-size: 14px;
   background: #abcbdd;
   border-bottom: 1px solid rgba(255, 255, 255, 0.26);
@@ -671,18 +808,21 @@ export default class Main extends ViewBase {
   margin-left: 15%;
   font-size: 14px;
 }
-/deep/ .ivu-btn:hover {
-  color: #000;
-  border-color: #f2f2f2;
-  background: #f2f2f2;
+.txtali {
+  text-align: center;
 }
-/deep/ .ivu-btn {
-  border-color: #f2f2f2;
-  background: #f2f2f2;
-}
-/deep/ .ivu-btn:focus {
-  box-shadow: 0;
-}
+// /deep/ .ivu-btn:hover {
+//   color: #000;
+//   border-color: #f2f2f2;
+//   background: #f2f2f2;
+// }
+// /deep/ .ivu-btn {
+//   border-color: #f2f2f2;
+//   background: #f2f2f2;
+// }
+// /deep/ .ivu-btn:focus {
+//   box-shadow: 0;
+// }
 /deep/ .ivu-select-selection {
   height: 40px;
   background: rgba(255, 255, 255, 0.8);
@@ -697,12 +837,32 @@ export default class Main extends ViewBase {
   }
 }
 /deep/ .oss-uploader-mini {
-  width: 68px;
-  height: 20px;
+  display: inline-block;
+  width: 40%;
+  // margin-right: 5%;
+  height: 32px;
   border: 0;
   border-radius: 0;
-  margin-left: 39%;
-  margin-top: 7px;
+  // margin-top: 6px;
+  i {
+    font-size: 12px !important;
+  }
+}
+.aclick {
+  background: #5cade2;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 5px;
+  width: 40%;
+  height: 32px;
+  text-align: center;
+  // line-height: 32px;
+  font-size: 12px;
+  float: left;
+  // margin-left: 5%;
+  // margin-top: 6px;
+  line-height: 1;
+  padding-top: 3%;
 }
 /deep/ .oss-uploader-mini .action-all {
   top: -11px;
@@ -712,4 +872,51 @@ export default class Main extends ViewBase {
   left: 38px;
   width: auto;
 }
+/deep/ .up1 .ivu-icon-ios-cloud-upload::before {
+  content: '上传监播视频';
+}
+/deep/ .up2 .ivu-icon-ios-cloud-upload::before {
+  content: '上传TMS截图';
+}
+/deep/ .handle-in {
+  // width: 80%;
+  background: #5cade2;
+  flex-direction: column;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 5px;
+}
+/deep/ .ivu-table-wrapper {
+  margin: 0;
+}
+/deep/ .ivu-table th {
+  background: #c2d6e3 !important;
+  color: #00202d;
+  font-weight: normal;
+}
+/deep/ .ivu-table td {
+  background: #abcbdd;
+  color: #00202d;
+  font-weight: normal;
+}
+a:hover, /deep/ .handle-in:hover {
+  color: #fff;
+}
+/deep/ tr.ivu-table-row-hover td {
+  background: #abcbdd;
+}
+/deep/ .ivu-table-row {
+  border-bottom: 1px solid #ccc;
+}
+.mar {
+  margin-right: 1%;
+  margin-top: 1%;
+}
+.action {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  flex-wrap: wrap;
+}
+
 </style>
