@@ -3,9 +3,17 @@
     <div class="banner-box flex-box">
       <p>Effect Report</p>
       <h1>{{data.item6}}</h1>
-      <a href="javascript:;"
+      <div class="link-group">
+        <button 
          class="show-more-link"
-         @click="selectPlan">查看其它计划</a>
+         data-html2canvas-ignore
+         @click="selectPlan">查看其它计划</button>
+        <button 
+          :class="`show-more-link ${exporting ? 'exporting' : ''}`"
+          data-html2canvas-ignore
+          :disabled="exporting"
+          @click="exportPlan">{{ exporting? '正在导出...' : '导出'}}</button>
+      </div>
     </div>
     <div class="dsc-box">
       <div class="cell">
@@ -39,6 +47,7 @@ import { datarange, formatDate } from '@/fn/duration.ts'
 })
 export default class BannerCard extends Vue {
   @Prop({ type: Object, default: () => ({}) }) data!: any
+  @Prop({ type: Boolean, default: false }) exporting!: boolean
 
   days(begin: any, end: any) {
     datarange(begin, end)
@@ -46,6 +55,11 @@ export default class BannerCard extends Vue {
 
   selectPlan() {
     this.$emit('selectPlan')
+  }
+
+  exportPlan() {
+    if (this.exporting) { return }
+    this.$emit('exportPlan')
   }
 }
 </script>
@@ -75,15 +89,28 @@ export default class BannerCard extends Vue {
       color: rgba(255, 255, 255, 1);
       line-height: 24px;
     }
-    .show-more-link {
-      width: 300px;
-      height: 50px;
-      line-height: 50px;
-      background: rgba(163, 213, 230, 1);
-      border-radius: 25px;
-      font-size: 18px;
-      color: #00202d;
-      text-align: center;
+    .link-group {
+      width: 700px;
+      .show-more-link {
+        min-width: 200px;
+        height: 50px;
+        display: inline-block;
+        line-height: 50px;
+        background: rgba(163, 213, 230, 1);
+        border-radius: 25px;
+        font-size: 18px;
+        color: #00202d;
+        text-align: center;
+        margin-right: 25px;
+        outline: none 0;
+        border: 0;
+        cursor: pointer;
+        padding: 0 15px;
+      }
+      .exporting {
+        color: #999;
+        background: #e1e1e1;
+      }
     }
   }
   .dsc-box {

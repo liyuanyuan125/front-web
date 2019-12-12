@@ -1,36 +1,38 @@
 <template>
-  <div class="effect-report-wp">
-    <BannerCard v-if="bannerData.item6" :data="bannerData" @selectPlan="selectPlanHandle"></BannerCard>
-    <TotalCard :data="totalData"></TotalCard>
-    <div class="flex-box">
-      <ReportPane title="数据趋势">
-        <div class="echarts-box">
-          <AreaBasic
-            :initDone="chart1.initDone"
-            :title="chart1.title"
-            :dict1="chart1.dict1"
-            :dict2="chart1.dict2"
-            :toolTip="chart1.toolTip"
-            :height="chart1.height"
-            :color="chart1.color"
-            :dataList="chart1.dataList"
-            :currentTypeIndex="chart1.currentTypeIndex"
-            @typeChange="typeChangeHander1"
-          />
-        </div>
-      </ReportPane>
-      <DetailTableCard :data="tableData"></DetailTableCard>
+  <div :class="`effect-report-wp ${exporting ? 'exporting' : ''}`">
+    <div ref='PDF0'>
+      <BannerCard v-if="bannerData.item6" :exporting="exporting" :data="bannerData" @selectPlan="selectPlanHandle" @exportPlan="exportPlanHandle"></BannerCard>
+      <TotalCard :data="totalData"></TotalCard>
+      <div class="flex-box">
+        <ReportPane title="数据趋势">
+          <div class="echarts-box">
+            <AreaBasic
+              :initDone="chart1.initDone"
+              :title="chart1.title"
+              :dict1="chart1.dict1"
+              :dict2="chart1.dict2"
+              :toolTip="chart1.toolTip"
+              :height="chart1.height"
+              :color="chart1.color"
+              :dataList="chart1.dataList"
+              :currentTypeIndex="chart1.currentTypeIndex"
+              @typeChange="typeChangeHander1"
+            />
+          </div>
+        </ReportPane>
+        <DetailTableCard :data="tableData"></DetailTableCard>
+      </div>
     </div>
-    <div>
+    <div ref="PDF1">
       <MoviesCard @showMore="showMoreMoviesHandle" :moviesTotal="moviesTotal" :data="moviesData"></MoviesCard>
     </div>
-    <div>
+    <div ref='PDF2'>
       <CinemaCard @showMore="showMoreCinemasHandle" :data="cinemasData"></CinemaCard>
     </div>
-    <div>
+    <div ref='PDF3'>
       <UserCard :data="userData" ref="usercard" @moreCity="showMoreCitysHandle"></UserCard>
     </div>
-    <div>
+    <div ref='PDF4'>
       <Monitors :planId="planId" :data="monitorsData" ref="monitorscard"></Monitors>
     </div>
     <MoreCinemasDlg ref="moreCinemasDlg" :id="planId"></MoreCinemasDlg>
@@ -68,6 +70,11 @@ import { findIndex, at, keyBy } from 'lodash'
 import { KeyText } from '@/util/types'
 import { datarange, formatDate } from '@/fn/duration.ts'
 import { toThousands } from '@/util/dealData'
+
+import { delay } from '@/fn/timer'
+
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 import moment from 'moment'
 const format = 'YYYY/MM/DD'
@@ -149,6 +156,10 @@ const toolTip: any = {
   }
 })
 export default class Index extends ViewBase {
+
+  // 导出ing...
+  exporting: boolean = false
+
   planId: number = 0
 
   initDone: boolean = false
@@ -295,6 +306,97 @@ export default class Index extends ViewBase {
 
   // 监播视频
   monitorsData: any = []
+
+  async exportPlanHandle() {
+    const nothingExport = !this.totalData.item0 || !this.totalData.item1 || !this.totalData.item2
+    if ( this.exporting || nothingExport) { return }
+    this.exporting = true
+    this.$Notice.info({
+      title: '正在导出PDF！',
+      desc: '请稍等。。。 ',
+      duration: 0.3,
+      onClose: () => {
+        this.exportPDF()
+      }
+    })
+  }
+
+  /**
+   * @see html2canvas http://html2canvas.hertzen.com/configuration
+   * @see jspdf+html2canvas实现网页转pdf https://juejin.im/post/5c74e940518825629a77d078
+   * @see jsPDF http://raw.githack.com/MrRio/jsPDF/master/docs/
+   * @see jsPDF https://parall.ax/products/jspdf
+   */
+  async exportPDF() {
+    const fileName = `${this.bannerData.item6}(${this.bannerData.item0})`
+    const pdf = new jsPDF('p', 'pt', 'a4')
+    const width = pdf.internal.pageSize.getWidth()
+    const height = pdf.internal.pageSize.getHeight()
+    const backgroundColor = 'rgba(49, 145, 170)'
+    const promistList = [
+      html2canvas((this.$refs.PDF0 as any), {
+        backgroundColor
+      }),
+      html2canvas((this.$refs.PDF1 as any), {
+        backgroundColor
+      }),
+      html2canvas((this.$refs.PDF2 as any), {
+        backgroundColor
+      }),
+      html2canvas((this.$refs.PDF3 as any), {
+        backgroundColor
+      }),
+      html2canvas((this.$refs.PDF4 as any), {
+        backgroundColor
+      })
+    ]
+    Promise.all(promistList).then(canvases => {
+      const [p0, p1, p2, p3, p4] = canvases
+      const heightP0 = Math.round((p0.height * width / p0.width) || 100)
+      const heightP1 = Math.round((p1.height * width / p1.width) || 100)
+      const heightP2 = Math.round((p2.height * width / p2.width) || 100)
+      const heightP3 = Math.round((p3.height * width / p3.width) || 100)
+      const heightP4 = Math.round((p4.height * width / p4.width) || 100)
+
+      // 间距
+      const padding = 10
+      // 每增加一条高度+41
+      const cinemasDataLen: number = getMaxLen(this.cinemasData) || 1
+
+      function getMaxLen(obj: any) {
+        const numArr: number[] = [
+          obj.costRate.data.length || 0,
+          obj.scheduleRate.data.length || 0,
+          obj.viewRate.data.length || 0,
+        ]
+        return numArr.sort((a: number, b: number) => {
+          return b - a
+        })[0]
+      }
+
+      pdf.setFillColor(49, 145, 170)
+      pdf.rect(0, 0, 2000, 2000, 'FD')
+      pdf.addImage(p0.toDataURL(), 'JPEG', 0, 0, width, heightP0, null, 'NONE')
+      pdf.addImage(p1.toDataURL(), 'JPEG', 0, heightP0, width, heightP1, null, 'NONE')
+
+      pdf.addPage()
+      pdf.setFillColor(49, 145, 170)
+      pdf.rect(0, 0, 2000, 2000, 'FD')
+
+      pdf.addImage(p2.toDataURL(), 'JPEG', 0, 0, width, heightP2, null, 'NONE')
+      pdf.addImage(p3.toDataURL(), 'JPEG', 0, heightP2 + padding, width, heightP3, null, 'NONE')
+      pdf.addImage(p4.toDataURL(), 'JPEG', 0, heightP2 + heightP3 + padding, width, heightP4, null, 'NONE')
+      return true
+    }).then(() => {
+      pdf.internal.scaleFactor = 1.33
+      pdf.save(`${fileName}.pdf`)
+      this.$Notice.success({
+        title: '导出成功！',
+        desc: ''
+      })
+      this.exporting = false
+    })
+  }
 
   async reset() {
     this.userData = {
@@ -629,6 +731,29 @@ export default class Index extends ViewBase {
   .echarts-box {
     padding: 15px;
     min-height: 446px;
+  }
+}
+</style>
+
+<style lang="less">
+// 导出前隐藏链接，调整排版
+.exporting {
+  .more-link {
+    visibility: hidden;
+  }
+  ul.film-list li {
+    margin-bottom: 4px;
+  }
+  .film-card {
+    dd {
+      .dsc-box {
+        display: flex;
+        flex-flow: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 17px;
+      }
+    }
   }
 }
 </style>
