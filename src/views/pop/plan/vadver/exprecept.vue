@@ -49,7 +49,7 @@ export default class Dates extends ViewBase {
   async exportData() {
     try {
       const { data } = await exportId(this.id)
-      this.tableDate1 = (data.planMovies.map((it: any, index: number) => {
+      this.tableDate1 = ((data.planMovies || []).map((it: any, index: number) => {
         const nums = it.movieType.split('|')
         const msg = data.movieTypeList.filter((item: any) => nums.includes(item.key))
         return [
@@ -65,7 +65,7 @@ export default class Dates extends ViewBase {
       }))
       this.tableDate1.push([
         '合计',
-        data.planMovies.length + '部',
+        (data.planMovies || []).length + '部',
         '',
         '',
         '',
