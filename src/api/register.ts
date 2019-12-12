@@ -55,11 +55,8 @@ export async function resetPassword(data: any) {
  * 公司行业
  * @param categoryId=2720 行业列表
  */
-export async function tradeList() {
-  const res = get('/basis/dictionaries', {
-    categoryId: 2720,
-    dictionaryName: ''
-  })
+export async function tradeList(data: any) {
+  const res = get('/basis/dictionaries', data)
   return res
 }
 

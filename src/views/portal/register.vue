@@ -20,13 +20,11 @@
         </FormItem>
 
         <div class="flex-justify-between">
-          <FormItem prop="businessParentCode" style="width: 170px">
-            <Select v-model="form.businessParentCode" clearable placeholder="请选择所属行业">
-              <Option v-for=" item in tradeList" :key="item.id" :value="item.code">{{item.name}}</Option>
-            </Select>
+          <FormItem prop="businessList" style="width: 170px">
+           <ComTradeList v-model="form.businessList" />
           </FormItem>
           <FormItem prop="area" style="width: 190px">
-              <AreaSelect v-model="form.area" ref="areas"  :max-level="2" no-self :placeholder="placeholder" />
+              <AreaSelect v-model="form.area" ref="areas"  :max-level="2" no-self placeholder="请输入公司地址" />
           </FormItem>
         </div>
         
@@ -38,7 +36,6 @@
               <Icon type="ios-camera" size="20"/>
               <span style="line-height: 18px">上传营<br />业资质</span>
            </Upload>
-           <!-- <span class="upload-tip">上传营业执照</span> -->
         </FormItem>
         <Button type="primary" long class="submit" @click="submitNext" >下一步</Button>
       </Form>
@@ -61,7 +58,7 @@
         </FormItem>
         <FormItem  prop="password">
           <Input type="password" v-model="subForm.password" :maxlength="16"
-            placeholder="请设置包含大小写的英文字母与数字的组合，8-16 位"/>
+            placeholder="请设置包含大小写的英文字母与数字的组合，6-16 位"/>
         </FormItem>
         <FormItem  prop="passwordAgain">
           <Input type="password" v-model="subForm.passwordAgain" :maxlength="16"
@@ -90,17 +87,17 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { countDown } from '@/fn/timer'
 import { validateEmail, validatePassword, validataTel } from '@/util/validateRules'
-import { sendRegisterEmail, register, tradeList, getSms, isCompanyName } from '@/api/register'
+import { sendRegisterEmail, register, getSms, isCompanyName } from '@/api/register'
 import AreaSelect from '@/components/areaSelect'
 import Upload, { FileItem } from '@/components/upload'
 import { except } from '@/fn/object'
-import { scrollToError } from '@/util/form'
 import { random } from '@/fn/string'
 import DisableAutoFill from '@/components/DisableAutoFill.vue'
 import setUserByData from '@/util/setUserByData'
 import { info } from '@/ui/modal'
 import registerLayout from './login/loginLayout.vue'
 import agreementDlg from './register/agreement.vue'
+import ComTradeList from './register/tradeList.vue'
 
 @Component({
   components: {
@@ -108,12 +105,11 @@ import agreementDlg from './register/agreement.vue'
     registerLayout,
     Upload,
     DisableAutoFill,
-    agreementDlg
+    agreementDlg,
+    ComTradeList
   }
 })
 export default class Main extends ViewBase {
-  placeholder = '请输入公司地址'
-
   codeDisabled = false
   codeMsg = '获取验证码'
 
@@ -126,12 +122,13 @@ export default class Main extends ViewBase {
   registerNext = false
   submitDisabled = true
 
-  tradeList = [] // 行业
-
   form: any = {
     area: [],
     provinceId: 0,
     cityId: 0,
+    businessList: [],
+    businessParentCode: '',
+    businessChildCode: '',
     qualificationImageList: []
   }
 
@@ -173,19 +170,28 @@ export default class Main extends ViewBase {
           }
         }
       ],
-      businessParentCode: [{ required: true, message: '请选择行业', trigger: 'blur' }],
-      area: [{ required: true, type: 'array', message: '公司地址不能为空', trigger: 'change' }],
-      // area: [
-      //   {
-      //     required: true,
-      //     message: '公司地址不能为空',
-      //     trigger: 'change',
-      //     type: 'array',
-      //     validator(rule: any, value: number[], callback: any) {
-      //       !value[0] ? callback(new Error(rule.message)) : callback()
-      //     }
-      //   }
-      // ],
+      businessList: [
+        {
+          required: true,
+          message: '请选择行业',
+          trigger: 'blur',
+          type: 'array',
+          validator(rule: any, value: number[], callback: any) {
+            !value[0] ? callback(new Error(rule.message)) : callback()
+          }
+        }
+      ],
+      area: [
+        {
+          required: true,
+          message: '公司地址不能为空',
+          trigger: 'blur',
+          type: 'array',
+          validator(rule: any, value: number[], callback: any) {
+            !value[0] ? callback(new Error(rule.message)) : callback()
+          }
+        }
+      ],
 
       qualificationImageList: [
         {
@@ -265,22 +271,11 @@ export default class Main extends ViewBase {
     return !!failMsg
   }
 
-  async mounted() {
-    const { data } = await tradeList()
-    this.tradeList = data.list || []
-  }
-
   handleCompany() {
     this.subForm.companyType = 1
     this.registerNext = false
     this.keyRandom = random()
   }
-
-  // handlePerson() {
-  //   this.subForm.companyType = 2
-  //   this.registerNext = true
-  //   this.keyRandom = random()
-  // }
 
   nextBack() {
     this.registerNext = false
@@ -322,7 +317,7 @@ export default class Main extends ViewBase {
     }
 
     let postData = {}
-    const cloneForm: any = except(this.form, 'passwordAgain,area')
+    const cloneForm: any = except(this.form, 'passwordAgain,area,businessList')
     const cloneSubForm: any = except(this.subForm, 'agreement')
     const qualificationImageList = (cloneForm.qualificationImageList || []).map((it: any) => it.fileId)
 
@@ -333,11 +328,12 @@ export default class Main extends ViewBase {
         companyName: cloneForm.companyName.trim(),
         qualificationImageList
       }
-    } else if (this.subForm.companyType == 2) { // 个人
-       postData = {
-        ...cloneSubForm,
-       }
     }
+    // else if (this.subForm.companyType == 2) { // 个人--
+    //    postData = {
+    //     ...cloneSubForm,
+    //    }
+    // }
 
     try {
       const { data } = await register(postData)
@@ -355,6 +351,12 @@ export default class Main extends ViewBase {
   watchArea(val: number[]) {
     this.form.provinceId = val[0]
     this.form.cityId = val[1]
+  }
+
+  @Watch('form.businessList', {deep: true})
+  watchbusin(val: string[]) {
+    this.form.businessParentCode = val[0]
+    this.form.businessChildCode = val[1]
   }
 }
 </script>
