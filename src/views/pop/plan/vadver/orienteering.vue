@@ -501,29 +501,25 @@ export default class Orienteering extends ViewBase {
           clearInterval(this.settime)
           setTimeout(() => {
             this.spinshow = false
-            if (this.planMovies && this.planMovies.length > 0) {
-                this.$emit('input', {
-                  step: 2,
-                  setid: this.$route.params.setid
+              this.$emit('input', {
+                step: 2,
+                setid: this.$route.params.setid
+              })
+              if (this.$route.name == 'pop-planlist-add') {
+                this.$router.push({
+                  name: 'pop-planlist-add',
+                  params: { step: '2', setid: this.$route.params.setid  }
                 })
-                if (this.$route.name == 'pop-planlist-add') {
-                  this.$router.push({
-                    name: 'pop-planlist-add',
-                    params: { step: '2', setid: this.$route.params.setid  }
-                  })
-                } else if (this.$route.name == 'pop-planlist-add') {
-                  this.$router.push({
-                    name: 'pop-business-add',
-                    params: { step: '2', setid: this.$route.params.setid  }
-                  })
-                } else {
-                  this.$router.push({
-                    name: this.$route.name,
-                    params: { step: '2', setid: this.$route.params.setid  }
-                  })
-                }
+              } else if (this.$route.name == 'pop-planlist-add') {
+                this.$router.push({
+                  name: 'pop-business-add',
+                  params: { step: '2', setid: this.$route.params.setid  }
+                })
               } else {
-                info('非常抱歉，暂未找到匹配项；请尝试扩大定向范围或投放排期范围')
+                this.$router.push({
+                  name: this.$route.name,
+                  params: { step: '2', setid: this.$route.params.setid  }
+                })
               }
               this.spins = 0
             }, 500)
