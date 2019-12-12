@@ -24,7 +24,7 @@
            <ComTradeList v-model="form.businessList" />
           </FormItem>
           <FormItem prop="area" style="width: 190px">
-              <AreaSelect v-model="form.area" ref="areas"  :max-level="2" no-self :placeholder="placeholder" />
+              <AreaSelect v-model="form.area" ref="areas"  :max-level="2" no-self placeholder="请输入公司地址" />
           </FormItem>
         </div>
         
@@ -110,8 +110,6 @@ import ComTradeList from './register/tradeList.vue'
   }
 })
 export default class Main extends ViewBase {
-  placeholder = '请输入公司地址'
-
   codeDisabled = false
   codeMsg = '获取验证码'
 
