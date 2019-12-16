@@ -14,7 +14,7 @@
           remote
           :loading="loading"
           :remote-method="remoteMethod"
-          placeholder="影院名称" >
+          placeholder="请输入专资编码或影院名称" >
             <Option v-for="item in cinemaList" :key="item.id" :value="item.id" >{{item.shortName}}</Option>
          </Select>
          <Input v-model="videoName" placeholder="广告片名称" style="width: 250px" />
