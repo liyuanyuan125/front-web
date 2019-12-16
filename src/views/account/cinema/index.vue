@@ -3,8 +3,16 @@
     <h3 class="plan-title">
       <span class="adver-tiele">影院管理</span>
     </h3>
-    <div class="search-input">
-      <Input v-model="dataForm.searchKey" style="width: 400px"  placeholder="请输入专资编码或影院名称" />
+    <div class="search-input jyd-form">
+      <!-- <Input v-model="dataForm.searchKey" style="width: 400px"  placeholder="请输入专资编码或影院名称" /> -->
+      <Select v-model="dataForm.searchKey" style="width: 250px" 
+        filterable clearable
+        remote
+        :loading="loading"
+        :remote-method="remoteMethod"
+        placeholder="请输入专资编码或影院名称" >
+          <Option v-for="item in cinemaList" :key="item.id" :value="item.id" >{{item.shortName}}</Option>
+        </Select>
       <Button  type="primary" class="bth-search" @click="seachList">
         <Icon type="ios-search" size="22"/>
       </Button>
@@ -45,6 +53,7 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { cinmeaList, editCompanyTel } from '@/api/cinema'
+import { queryCinemaList } from '@/api/norderDis'
 import { clean } from '@/fn/object'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { validataTel } from '@/util/validateRules'
@@ -63,6 +72,7 @@ export default class Main extends ViewBase {
   cinemaData: any = []
   loading = false
   tableLoading = false
+  cinemaList = []
 
   options: any = []
   columns4 = [
@@ -113,6 +123,25 @@ export default class Main extends ViewBase {
 
   mounted() {
     this.seach()
+    this.remoteMethod()
+  }
+
+  async remoteMethod(query?: any) {
+    try {
+      if (query) {
+        this.loading = true
+        const { data: {items, totalCount}} = await queryCinemaList({
+           pageIndex: 1,
+           pageSize: 400,
+           query
+        })
+        this.cinemaList = items || []
+      }
+      this.loading = false
+    } catch (ex) {
+       this.loading = false
+      this.handleError(ex)
+    }
   }
 
   async seach() {
@@ -185,8 +214,8 @@ export default class Main extends ViewBase {
 </script>
 
 <style lang="less" scoped>
-// @import '~@/site/common.less';
 @import '../less/table.less';
+@import '~@/views/kol/less/common.less';
 .page {
   padding: 30px 0 0 20px;
 }
