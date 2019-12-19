@@ -75,6 +75,8 @@ import { delay } from '@/fn/timer'
 
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
+import JSZip from 'jszip'
+import FileSaver from 'file-saver'
 
 import moment from 'moment'
 const format = 'YYYY/MM/DD'
@@ -389,13 +391,30 @@ export default class Index extends ViewBase {
       return true
     }).then(() => {
       pdf.internal.scaleFactor = 1.33
-      pdf.save(`${fileName}.pdf`)
-      this.$Notice.success({
-        title: '导出成功！',
-        desc: ''
+      const zip = new JSZip()
+      zip.file(`${fileName}.pdf`, pdf.output( 'blob', {}))
+      zip.generateAsync({
+          type: 'blob',
+          compression: 'DEFLATE',
+          compressionOptions: {
+            level: 9
+          }
+        }).then((content: any) => {
+        // see FileSaver.js
+        FileSaver.saveAs(content, `${fileName}.zip`)
+
+        this.$Notice.success({
+          title: '导出成功！',
+          desc: ''
+        })
+        this.exporting = false
       })
-      this.exporting = false
+      // pdf.save(`${fileName}.pdf`)
     })
+  }
+
+  detectOS() {
+    // console.log('%c⧭', 'color: #00e600', navigator.platform)
   }
 
   async reset() {
@@ -517,6 +536,7 @@ export default class Index extends ViewBase {
   }
 
   mounted() {
+    this.detectOS()
     const id = parseInt(this.$route.params.id, 0) || -1
     // 不区分环境，所有环境默认传 -1
     // TODO: 线上演示 id 为 104，其他环境 173
