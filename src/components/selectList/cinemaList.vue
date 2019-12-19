@@ -46,6 +46,10 @@ export default class Main extends ViewBase {
     }
   }
 
+  public get getCinemalist() {
+    return this.cinemaList
+  }
+
   @Watch('value')
   watchValue(value: number) {
     this.inner = value

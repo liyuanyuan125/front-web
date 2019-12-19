@@ -3,20 +3,13 @@
     <h2 class="order-nav">广告单</h2>
     <div class="order-list-title">
       <p>以下广告单已经过平台审核，接单后需要按照广告单中要求投放的影片在您的影院进行排播</p>
-      <p  v-if="cinemaList.length == 1">您当前影院为 {{cinemaList[0].shortName}}</p>
-      <p  v-else>您当前共有 {{cinemaTotalCount}} 家影院的广告代理权</p>
+      <!-- <p  v-if="cinemaList.length == 1">您当前影院为 {{cinemaList[0].shortName}}</p> -->
+      <p>您当前共有 {{cinemaTotalCount}} 家影院的广告代理权</p>
     </div>
     <div class="order-content">
       <div class="order-form jyd-form flex-box">
          <DatePicker type="daterange" class="item-list-sel" style="width: 250px"  v-model='putDate'  @on-change="handleChange"  placeholder="开始日期和结束日期" ></DatePicker>
-         <Select v-model='form.cinemaId' class="item-list-sel" style="width: 250px" 
-          filterable clearable
-          remote
-          :loading="loading"
-          :remote-method="remoteMethod"
-          placeholder="请输入专资编码或影院名称" >
-            <Option v-for="item in cinemaList" :key="item.id" :value="item.id" >{{item.shortName}}</Option>
-         </Select>
+         <selectList v-model='form.cinemaId' ref="cinemalist" />
          <Input v-model="videoName" placeholder="广告片名称" style="width: 250px" />
          <Button type="primary" @click="searchList" class="select-btn">搜索广告单</Button>
       </div>
@@ -113,13 +106,13 @@ import { slice, clean, except } from '@/fn/object'
 import { getEnumText } from '@/util/dealData'
 import dlgRejec from './dlgReject.vue'
 import targetDlg from './targetDlg.vue'
-// import refuseDlg from './refuseDlg.vue'
+import selectList from '@/components/selectList/cinemaList.vue'
 
 @Component({
   components: {
     dlgRejec,
     targetDlg,
-    // refuseDlg
+    selectList,
   }
 })
 export default class Main extends ViewBase {
@@ -143,7 +136,6 @@ export default class Main extends ViewBase {
   searchLoading = false
 
   // 影院名称list
-  cinemaList = []
   cinemaTotalCount = null
 
   // 订单统计
@@ -174,34 +166,16 @@ export default class Main extends ViewBase {
   }
 
   mounted() {
-    this.remoteMethod()
+    this.queryList()
     this.orderList()
   }
 
-  async remoteMethod(query?: any) {
-    try {
-      if (query) {
-        this.loading = true
-        const { data: {items, totalCount}} = await queryCinemaList({
-           pageIndex: 1,
-           pageSize: 400,
-           query
-        })
-        this.cinemaList = items || []
-      } else {
-        this.loading = true
-        const { data: {items, totalCount}} = await queryCinemaList({
-           pageIndex: 1,
-           pageSize: 400,
-           query
-        })
-        this.cinemaTotalCount = totalCount
-      }
-      this.loading = false
-    } catch (ex) {
-       this.loading = false
-      this.handleError(ex)
-    }
+  async queryList() {
+    const { data: {items, totalCount}} = await queryCinemaList({
+        pageIndex: 1,
+        pageSize: 400,
+    })
+    this.cinemaTotalCount = totalCount
   }
 
 
