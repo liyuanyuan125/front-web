@@ -8,32 +8,44 @@
         <Row>
           <Col span="8">
               <p><label :class="{'adver-type': list.advertType == 'TRAILER'}">广告片名称</label>{{list.videoName || '暂无'}} </p>
-              <!-- <p><label>投放周期</label>{{list.cycle || 0}}天</p> -->
               <p><label>预估投放排期</label>{{formatConversion(list.beginDate)}} ~ {{formatConversion(list.endDate)}}</p>
           </Col>
           <Col span="8">
-              <!-- <p>
-                <label>预估广告收益(元)</label>
-                <span v-if="list.estimateRevenue" class="max-pofit">{{formatNumber(list.estimateRevenue)}}</span>
-                <span v-else>暂无</span>
-              </p> -->
-              <p v-if="targetCinemaLength > 1">
-                    <label>目标影院：</label>
-                    <em>{{targetCinemaLength}}家</em> 
-                    <span class="query-status"  @click="edittarget(list.id, 1)" >查看</span></p>
-              <p v-else><label>目标影院：</label><em>{{list.cinemaName || '暂无'}}</em></p>
-              
-              <!-- <p><label>目标场次</label>{{list.sceneCount || '暂无'}} </p> -->
+           <p><label>广告位置</label>{{deliveryPositionNames}} </p>
           </Col>
           <Col :span="8">
               <p><label>广告片规格</label>{{list.specification || 0}}s </p>
-              <!-- <p><label>目标人次</label>{{list.estimatePersonCount || '暂无'}}人</p> -->
-              <!-- <p><label>目标影厅</label>{{list.hallsCount || '暂无'}} </p> -->
           </Col>
         </Row>
         <Row>
-          <Col span="8">
-           <p><label>广告位置</label>{{deliveryPositionNames}} </p>
+           <Col span="24">
+              <p v-if="targetCinemaLength > 1">
+                <span class="status-list">
+                  <label>目标影院</label>
+                  <em>{{targetCinemaLength}}家</em> 
+                </span>
+                <span class="status-list" v-if="[1].includes(list.status)">
+                   <label>待接单影城</label>
+                  <em>{{list.waiting}}家</em> 
+                </span>
+                <span class="status-list" v-if="[1, 2, 3, 7].includes(list.status)">
+                  <label>已接单影城</label>
+                  <em>{{list.received}}家</em> 
+                </span>
+                <span class="status-list">
+                  <label>已拒绝影城</label>
+                  <em>{{list.refuse}}家</em> 
+                </span>
+                <span class="status-list" v-if="[2, 3, 5, 7, 8].includes(list.status)">
+                   <label>已失效影城</label>
+                  <em>{{list.faliure}}家</em> 
+                </span>
+                <span class="status-list" v-if="[1, 2, 3, 7, 8].includes(list.status)">
+                  <label>已取消影城</label>
+                  <em>{{list.cancel}}家</em> 
+                </span>
+                   
+              <p v-else><label>目标影院：</label><em>{{list.cinemaName || '暂无'}}</em></p>
           </Col>
         </Row>
       </div>
@@ -48,7 +60,6 @@
             <span v-if="it.beginDate && it.endDate">{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</span>
             <span v-else>暂无</span>
           </p></Col>
-          <!-- <Col :span="8"><p><label>投放周期</label>{{it.cycle || 0}}天 </p></Col> -->
         </Row>
       </div>
     </div>
@@ -76,15 +87,10 @@
     <!-- dcp包 -->
     <div class="list-col-item">
       <h3 class="title">DCP包</h3>
-      <!-- <div class="video-plyr player-wrap">
-        <VuePlyr> <video :src="list.srcFileUrl" ></video></VuePlyr>
-      </div> -->
       <div class="down-dcp-url">
         <ul>
           <li v-for="item in dcpData" class="flex-box">
             {{item.fileUrl}}
-             <!-- <span v-for=" it in list.typeList" v-if="item.typeCode == it.key">{{it.text}}</span> -->
-             <!-- <a :href="item.fileUrl" target="_blank">{{}}</a> -->
           </li>
         </ul>
       </div>
@@ -163,19 +169,18 @@ export default class Main extends ViewBase {
   handleCreateTime(times: any) {
     return moment(times).format(timeFormat)
   }
-  edittarget(id: any, type: any) {
-    this.targetShow = true
-    this.$nextTick(() => {
-      (this.$refs.target as any).init(id, type)
-    })
-  }
+  // edittarget(id: any, type: any) {
+  //   this.targetShow = true
+  //   this.$nextTick(() => {
+  //     (this.$refs.target as any).init(id, type)
+  //   })
+  // }
   // 详情
   async querySelect() {
-    const id = this.id
     try {
       const {
         data: {item, deliveryPositionCodeList}
-      } = await orderDetail(id)
+      } = await orderDetail(this.id)
       this.list = item || {}
 
       const offset = getEnumText(deliveryPositionCodeList, item.deliveryPositionCode)
@@ -237,6 +242,12 @@ export default class Main extends ViewBase {
         label {
           display: inline-block;
           width: 120px;
+        }
+        .status-list {
+          padding-right: 20px;
+          label {
+            width: 80px;
+          }
         }
         .max-pofit {
           color: #da6c70;

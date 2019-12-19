@@ -38,14 +38,6 @@
             <li v-for='(it,index) in itemlist' :key='index' :class="{advert: it.advertType == 'TRAILER'}">
               <div class="table-header-title  flex-box">
                 <p><label>预估投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
-                <!-- <p>
-                  <Tooltip placement="bottom" max-width="200" class="text-cursor"
-                   content="根据影院近60天票房情况预算得出；最终收益以实际投放期间产生的曝光数据计算为准；为保证您的收益，请在投放结束后48小时内向国家电影专资办上报您的影院票房数据">
-                    <label>预估广告收益(元)</label>
-                    <em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em>
-                    <Icon class="iconfont icon-wenhao" size="18"></Icon>
-                  </Tooltip> 
-                </p> -->
               </div>
               <Row class="table-content-list" type="flex" justify="center" align="middle">
                 <Col span="14">
@@ -54,12 +46,11 @@
                     <p  v-if="it.targetCinemas.length">
                       <label>目标影院</label>
                       <em>{{it.targetCinemas.length}}家</em> 
-                      <span class="query-status"  @click="edittarget(it.id, 1)" >查看</span></p>
+                      <span class="query-status"  @click="edittarget(it.id, it.status)" >查看</span></p>
                     <p v-else><label>目标影院</label><em>{{it.cinemaName}}</em></p>
                   </div>
                   <div class="flex-box col-order">
                     <p><label>广告片规格</label><em>{{it.specification || 0}}s</em></p>
-                    <!-- <em><label>目标人次</label><em>{{it.estimatePersonCount || 0}}人</em></p> -->
                   </div>
                   <div class="flex-box col-order">
                     <p ><label>广告位置</label><em>{{it.deliveryPositionNames}}</em></p>
@@ -74,7 +65,6 @@
                         <Tooltip placement="bottom" max-width="200" class="text-cursor" content="“影片不限，请在投放周期内所有影片前安排上刊">
                           所有影片
                           <Icon class="iconfont icon-wenhao" size="18"></Icon>
-                          <!-- <Icon type="md-help" /> -->
                          </Tooltip>
                       </p>
                     </div>
@@ -88,8 +78,8 @@
                 <Col span="5" class="text-center">
                 <!-- 待审核状态展示 -->
                     <div class="btn-sure-cancel" v-if="it.status == 1">
-                      <p><Button type="primary" @click="editReject(it.id)" class="operation-btn">确定接单</Button></p>
-                      <p><Button  @click="editRefuse(it)" class="operation-btn result-btn">拒绝接单</Button></p>
+                      <p><Button type="primary" @click="editReject(it.id, 1)" class="operation-btn">确定接单</Button></p>
+                      <p><Button @click="editReject(it.id, 2)" class="operation-btn result-btn">拒绝接单</Button></p>
                     </div>
                     <div >
                       <Button class="operation-btn  query-detail-btn " :to="{ name: 'order-dispatch-details', params: { id: it.id } }" >查看详情</Button>
@@ -109,8 +99,7 @@
 
      
     <dlgRejec ref="reject" v-model="rejectVisible" v-if="rejectVisible.visible" @rejReload="orderList"/>
-    <targetDlg ref="target" v-if="targetShow" />
-    <refuseDlg ref="refuse" v-if="refuseShow"  @refReload="refReload" />
+    <targetDlg ref="target" v-model="targetObj" v-if="targetObj.visible" />
   </div>
 </template>
 
@@ -124,13 +113,13 @@ import { slice, clean, except } from '@/fn/object'
 import { getEnumText } from '@/util/dealData'
 import dlgRejec from './dlgReject.vue'
 import targetDlg from './targetDlg.vue'
-import refuseDlg from './refuseDlg.vue'
+// import refuseDlg from './refuseDlg.vue'
 
 @Component({
   components: {
     dlgRejec,
     targetDlg,
-    refuseDlg
+    // refuseDlg
   }
 })
 export default class Main extends ViewBase {
@@ -166,8 +155,7 @@ export default class Main extends ViewBase {
   typeList: any = []
   itemlist: any = []
 
-  targetShow = false
-  refuseShow = false
+  targetObj = {}
 
   rejectVisible: any = {
     visible: false
@@ -217,11 +205,6 @@ export default class Main extends ViewBase {
   }
 
 
-  refReload() {
-    this.refuseShow = false
-    this.orderList()
-  }
-
   async orderList() {
     this.spinShow = true
     try {
@@ -262,26 +245,21 @@ export default class Main extends ViewBase {
     }
   }
 
-  // 确定接单
-  editReject(id: any) {
+  // 确定接单 mark =1, 拒绝接单 mark =2
+  editReject(id: any, mark: number) {
     this.rejectVisible = {
       visible: true,
-      id
+      id,
+      mark
     }
   }
-  // 拒绝接单
-  editRefuse(id: any) {
-    this.refuseShow = true
-    this.$nextTick(() => {
-      (this.$refs.refuse as any).init(id)
-    })
-  }
 
-  edittarget(id: any, type: any) {
-    this.targetShow = true
-    this.$nextTick(() => {
-      (this.$refs.target as any).init(id, type)
-    })
+  edittarget(id: number, status: number) {
+    this.targetObj = {
+      visible: true,
+      id,
+      status
+    }
   }
 
   handleChange(data: any) {

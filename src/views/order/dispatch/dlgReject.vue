@@ -1,32 +1,50 @@
 <template>
   <Modal v-model='value.visible'
-  title='确认接单影院'
+  :title='title'
   :transfer='false'
   :width='700'
   :mask-closable='false'
-  :styles="{top: '10px'}"
-  @on-cancel="cancel()">
+  >
     <div class="reject-cinema">
       <div class="flex-box search-input">
-        <AreaSelect class="name-input" show-region :max-level="2" v-model="name" />
+        <AreaSelect class="name-input" show-region :max-level="2" v-model="areaSelect" />
         <Input class="name-input" style="margin-right: 0px" v-model="dataForm.query"  placeholder="请输入影院专资编码／影院名称进行搜索" />
         <span @click="seach">
           <Icon type="ios-search" size="22"/>
         </span>
       </div>
-      <Table  stripe @on-selection-change="check" :loading="loading" :columns="columns" :data="tableDate">
-        <template slot-scope="{ row }" slot="citys">
-          {{row.citys}}
-        </template>
 
-        <template slot-scope="{ row }" slot="code">
-          {{row.code}}
-        </template>
+      <KeepSelectTable
+          stripe
+          :data="tableDate"
+          :columns="columns"
+          :selectedIds.sync="checkId"
+        >
+          <template slot-scope="{ row }" slot="citys">
+            {{row.citys}}
+          </template>
 
-        <template slot-scope="{ row }" slot="shortName">
-          {{row.shortName}}
-        </template>
-      </Table>
+          <template slot-scope="{ row }" slot="code">
+            {{row.code}}
+          </template>
+
+          <template slot-scope="{ row }" slot="shortName">
+            {{row.shortName}}
+          </template>
+
+          <template slot-scope="{ row }" slot="titleRemark">
+            <!-- remark不为空 则表示有权限 -->
+            <div v-if="row.remark">
+              <span v-if="row.status == 1">您无权操作该影城</span>
+              <span v-if="row.status == 2">已接单</span>
+              <span v-if=" row.status == 4">已拒单</span>
+            </div>
+            <div v-else>
+              <span v-for="item in statusList" :key="item.id" v-if="item.key == row.status">{{item.text}}</span>
+            </div>
+            
+          </template>
+        </KeepSelectTable>
 
       <Page :total="total" v-if="total>0" class="btn-center-footer"
         :current="dataForm.pageIndex"
@@ -37,10 +55,9 @@
         @on-page-size-change="currentChangeHandle"/>
     </div>
     <div slot="footer" class="foot">
-      <div>
-        <Button class="foot-cancel-button" type="info" @click="cancel">取消</Button>
-        <Button class="foot-button" :loading="sureLoading" type="primary" @click="handleSubmit">确定</Button>
-      </div>
+        <Button class="foot-cancel-button" type="info" @click="value.visible = false">取消</Button>
+        <Button v-if="value.mark == 1" class="foot-button" type="primary" :loading="sureLoading" @click="handleSubmit('receiv')">确认接单</Button>
+        <Button v-if="value.mark == 2" class="foot-button" type="primary" @click="refuseSubmit('refuse')" >拒绝接单</Button>
     </div>
   </Modal>
 </template>
@@ -48,43 +65,41 @@
 <script lang="ts">
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
-import { queryDetail, reciveOrder} from '@/api/norderDis'
-// import { clean } from '@/fn/object'
+import { queryDetail, reciveOrder, refuseOrder} from '@/api/norderDis'
 import { isEqual } from 'lodash'
-// import targetDlg from './targetDlg.vue'
 import { toast, warning } from '@/ui/modal.ts'
 import AreaSelect from '@/components/areaSelect'
 import { isNullOrEmpty } from '@/fn/string'
+import KeepSelectTable from '@/components/keepSelectTable'
 
 @Component({
   components: {
-    // targetDlg,
-    AreaSelect
+    AreaSelect,
+    KeepSelectTable
   }
 })
 export default class DlgEditCinema extends ViewBase {
   @Prop({ type: Object }) value!: any
+
   total = 0
+  statusList = []
+
   dataForm: any = {
     query: null,
     pageIndex: 1,
-    pageSize: 20,
+    pageSize: 3,
   }
-  loading = false
+
   sureLoading = false
-  // page: any = []
+
+  // 区/县/市
   reject: any = {}
-  name: any = []
-  data: any = []
+  areaSelect: any = []
+  itemsList: any = []
   checkId: any = []
-  checkObj: any = []
+  // checkObj: any = []
 
   columns: any = [
-    {
-      type: 'selection',
-      width: 60,
-      align: 'right'
-    },
     {
       title: '区/县/市',
       width: 180,
@@ -101,23 +116,25 @@ export default class DlgEditCinema extends ViewBase {
       title: '影院名称',
       slot: 'shortName',
       align: 'center'
+    },
+    {
+      title: ' ',
+      slot: 'titleRemark',
+      align: 'center',
     }
   ]
 
   get tableDate() {
-    if (this.data && this.data.length > 0) {
-      return this.data.map((it: any) => {
-        if (this.checkId .includes(it.id)) {
-          return {
-            ...it,
-            citys: `${it.areaName} / ${it.provinceName} / ${it.cityName}`,
-            _checked: true
-          }
-        } else {
-          return {
-            ...it,
-            citys: `${it.areaName} / ${it.provinceName} / ${it.cityName}`
-          }
+    // 该账号无该影城权限的，首列的复选框置灰，不可选
+    // 该账号有该影城的权限，待接单的情况，复选框可以选中，其他状态复选框置灰不可选
+    if (this.itemsList && this.itemsList.length > 0) {
+      return this.itemsList.map((it: any) => {
+        let checked = null
+        checked = it.remark ? {_disabled: true} : (it.status == 1 ? {_checked: true} : {_disabled: true})
+        return {
+          ...it,
+          ...checked,
+          citys: `${it.areaName} / ${it.provinceName} / ${it.cityName}`,
         }
       })
     } else {
@@ -125,22 +142,11 @@ export default class DlgEditCinema extends ViewBase {
     }
   }
 
-  check(data: any) {
-    const ids = this.data.map((it: any) => it.id)
-    const dataId = data.map((it: any) => it.id)
-    data.forEach((item: any) => {
-      if (!this.checkId.includes(item.id)) {
-        this.checkId.push(item.id)
-        this.checkObj.push(item)
-      }
-    })
-    const filterId = ids.filter((it: any) => !dataId.includes(it))
-    this.checkId = this.checkId.filter((it: any) => !filterId.includes(it))
-    this.checkObj = this.checkObj.filter((it: any) => !filterId.includes(it.id))
+  get title() {
+    return this.value.mark == 1 ? '确认接单影院' : '拒绝接单影院'
   }
 
   mounted() {
-    this.seach()
     this.listall()
   }
 
@@ -165,23 +171,46 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   async seach() {
-    this.loading = true
     try {
       const {
         data: {
           items,
-          totalCount
+          totalCount,
+          statusList
         }
       } = await queryDetail(this.value.id, {
         ...this.dataForm,
         ...this.reject
       })
-      this.loading = false
       this.total = totalCount
-      this.data = items || []
-      this.$emit('ref')
+      this.statusList = statusList
+      this.itemsList = items || []
     } catch (ex) {
-      this.loading = false
+      this.handleError(ex)
+    }
+  }
+
+  async handleSubmit(types: string) {
+    if (this.checkId.length == 0) {
+      warning('请选择影院')
+      return
+    }
+    this.sureLoading = true
+    try {
+      if (types == 'receiv') {
+        await reciveOrder({
+          id: this.value.id,
+          receiveCinemas: this.checkId
+        })
+      } else if (types == 'refuse') {
+
+      }
+
+      this.$emit('rejReload')
+      this.sureLoading = false
+      // this.cancel()
+    } catch (ex) {
+      this.sureLoading = false
       this.handleError(ex)
     }
   }
@@ -198,34 +227,12 @@ export default class DlgEditCinema extends ViewBase {
     this.seach()
   }
 
-  cancel() {
-    this.value.visible = false
-    // this.page = []
-    this.checkId = []
-    this.checkObj = []
-  }
+  // cancel() {
+  //   this.value.visible = false
+  //   this.checkId = []
+  // }
 
-  async handleSubmit() {
-    if (this.checkId.length == 0) {
-      warning('请选择目标影院')
-      return
-    }
-    this.sureLoading = true
-    try {
-      const data = await reciveOrder({
-        id: this.value.id,
-        receiveCinemas: this.checkId
-      })
-      this.$emit('rejReload')
-      this.sureLoading = false
-      this.cancel()
-    } catch (ex) {
-      this.sureLoading = false
-      this.handleError(ex)
-    }
-  }
-
-  @Watch('name', { deep: true })
+  @Watch('areaSelect', { deep: true })
   watchArea(val: number[]) {
     this.reject.areaCode = val[0] == 0 ? '' : val[0]
     this.reject.provinceId = val[1] == 0 ? '' : val[1]
