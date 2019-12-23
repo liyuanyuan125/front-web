@@ -57,7 +57,7 @@
     <div slot="footer" class="foot">
         <Button class="foot-cancel-button" type="info" @click="value.visible = false">取消</Button>
         <Button v-if="value.mark == 1" class="foot-button" type="primary" :loading="sureLoading" @click="handleSubmit('receiv')">确认接单</Button>
-        <Button v-if="value.mark == 2" class="foot-button" type="primary" @click="refuseSubmit('refuse')" >拒绝接单</Button>
+        <Button v-if="value.mark == 2" class="foot-button" type="primary" @click="handleSubmit('refuse')" >拒绝接单</Button>
     </div>
   </Modal>
 </template>
@@ -87,7 +87,7 @@ export default class DlgEditCinema extends ViewBase {
   dataForm: any = {
     query: null,
     pageIndex: 1,
-    pageSize: 3,
+    pageSize: 20,
   }
 
   sureLoading = false
@@ -162,8 +162,11 @@ export default class DlgEditCinema extends ViewBase {
         pageIndex: 1,
         pageSize: 200000,
       })
+      // 该账号有该影城的权限，待接单的情况，复选框可以选中(返回相应的id)
       this.checkId = (items || []).map((it: any) => {
-        return it.id
+        if (!it.remark && it.status == 1) {
+          return it.id
+        }
       })
     } catch (ex) {
       this.handleError(ex)
@@ -196,19 +199,19 @@ export default class DlgEditCinema extends ViewBase {
       return
     }
     this.sureLoading = true
+    const datas = {
+      id: this.value.id,
+      cinemaIds: this.checkId
+    }
     try {
       if (types == 'receiv') {
-        await reciveOrder({
-          id: this.value.id,
-          receiveCinemas: this.checkId
-        })
+        await reciveOrder(datas)
       } else if (types == 'refuse') {
-
+        await refuseOrder(datas)
       }
 
       this.$emit('rejReload')
       this.sureLoading = false
-      // this.cancel()
     } catch (ex) {
       this.sureLoading = false
       this.handleError(ex)
