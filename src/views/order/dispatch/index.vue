@@ -30,7 +30,8 @@
           <ul class='itemul' >
             <li v-for='(it,index) in itemlist' :key='index' :class="{advert: it.advertType == 'TRAILER'}">
               <div class="table-header-title  flex-box">
-                <p><label>预估投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
+                <p v-if="it.status == 7"><label>投放排期</label><em>{{it.orderPutDate}}</em></p>
+                <p v-else><label>预估投放排期</label><em>{{it.forecasPuttDate}}</em></p>
               </div>
               <Row class="table-content-list" type="flex" justify="center" align="middle">
                 <Col span="14">
@@ -100,10 +101,10 @@
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { queryOrderList, queryCinemaList } from '@/api/norderDis'
-import { formatConversion, formatNumber } from '@/util/validateRules.ts'
+import { formatConversion } from '@/util/validateRules.ts'
 import { getUser } from '@/store'
 import { slice, clean, except } from '@/fn/object'
-import { getEnumText } from '@/util/dealData'
+import { getEnumText, formatIntDateRange } from '@/util/dealData'
 import dlgRejec from './dlgReject.vue'
 import targetDlg from './targetDlg.vue'
 import selectList from '@/components/selectList/cinemaList.vue'
@@ -160,11 +161,6 @@ export default class Main extends ViewBase {
     return formatConversion
   }
 
-
-  get formatNumber() {
-    return formatNumber
-  }
-
   mounted() {
     this.queryList()
     this.orderList()
@@ -200,13 +196,15 @@ export default class Main extends ViewBase {
       this.spinShow = false
       this.totalCount = totalCount
       // 处理空数组null转化为[]
-      this.itemlist = (items || []).map( (item: any) => {
-        const offset = getEnumText(deliveryPositionCodeList, item.deliveryPositionCode)
+      this.itemlist = (items || []).map( (it: any) => {
+        const offset = getEnumText(deliveryPositionCodeList, it.deliveryPositionCode)
         return {
-          ...item,
-          targetCinemas: item.targetCinemas || [],
-          targetMovies: item.targetMovies || [],
-          deliveryPositionNames: offset ? `[${offset}]` : '--'
+          ...it,
+          targetCinemas: it.targetCinemas || [],
+          targetMovies: it.targetMovies || [],
+          deliveryPositionNames: offset ? `[${offset}]` : '--',
+          forecasPuttDate: formatIntDateRange(it.beginDate, it.endDate), // 预估投放排期
+          orderPutDate: formatIntDateRange(it.beginDate, it.completeDate), // 投放接单日期
         }
       })
       // 处理订单统计

@@ -66,7 +66,7 @@
 import { Component, Watch, Prop } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { queryDetail, reciveOrder, refuseOrder} from '@/api/norderDis'
-import { isEqual } from 'lodash'
+import { isEqual, difference } from 'lodash'
 import { toast, warning } from '@/ui/modal.ts'
 import AreaSelect from '@/components/areaSelect'
 import { isNullOrEmpty } from '@/fn/string'
@@ -194,14 +194,16 @@ export default class DlgEditCinema extends ViewBase {
   }
 
   async handleSubmit(types: string) {
-    if (this.checkId.length == 0) {
+    // 排除null, undefined, ''
+    const checkIds = difference(this.checkId, [null, undefined, ''])
+    if (checkIds.length == 0) {
       warning('请选择影院')
       return
     }
     this.sureLoading = true
     const datas = {
       id: this.value.id,
-      cinemaIds: this.checkId
+      cinemaIds: checkIds
     }
     try {
       if (types == 'receiv') {
@@ -211,6 +213,7 @@ export default class DlgEditCinema extends ViewBase {
       }
 
       this.$emit('rejReload')
+      this.value.visible = false
       this.sureLoading = false
     } catch (ex) {
       this.sureLoading = false

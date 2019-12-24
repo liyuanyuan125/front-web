@@ -8,7 +8,8 @@
         <Row>
           <Col span="8">
               <p><label :class="{'adver-type': list.advertType == 'TRAILER'}">广告片名称</label>{{list.videoName || '暂无'}} </p>
-              <p><label>预估投放排期</label>{{formatConversion(list.beginDate)}} ~ {{formatConversion(list.endDate)}}</p>
+              <p v-if="list.status == 7"><label>投放排期</label>{{formatConversion(list.beginDate)}} ~ {{formatConversion(list.completeDate)}}</p>
+              <p v-else><label>预估投放排期</label>{{formatConversion(list.beginDate)}} ~ {{formatConversion(list.endDate)}}</p>
           </Col>
           <Col span="8">
            <p><label>广告位置</label>{{deliveryPositionNames}} </p>
@@ -28,7 +29,7 @@
                    <label>待接单影城</label>
                   <em>{{list.waiting}}家</em> 
                 </span>
-                <span class="status-list" v-if="[1, 2, 3, 7].includes(list.status)">
+                <span class="status-list" v-if="[1, 2].includes(list.status)">
                   <label>已接单影城</label>
                   <em>{{list.received}}家</em> 
                 </span>
@@ -43,6 +44,14 @@
                 <span class="status-list" v-if="[1, 2, 3, 7, 8].includes(list.status)">
                   <label>已取消影城</label>
                   <em>{{list.cancel}}家</em> 
+                </span>
+                <span class="status-list" v-if="[3].includes(list.status)">
+                  <label>执行中影城</label>
+                  <em>{{list.beexecute}}家</em> 
+                </span>
+                <span class="status-list" v-if="[7].includes(list.status)">
+                  <label>已完成影城</label>
+                  <em>{{list.complete}}家</em> 
                 </span>
                    
               <p v-else><label>目标影院：</label><em>{{list.cinemaName || '暂无'}}</em></p>
@@ -119,7 +128,7 @@ import 'vue-plyr/dist/vue-plyr.css'
 import { orderDetail, receiveCinemaList } from '@/api/norderDis'
 import targetDlg from './targetDlg.vue'
 import moment from 'moment'
-import { getEnumText } from '@/util/dealData'
+import { getEnumText, formatIntDateRange } from '@/util/dealData'
 
 const timeFormat = 'YYYY/MM/DD HH:mm:ss'
 
@@ -169,12 +178,6 @@ export default class Main extends ViewBase {
   handleCreateTime(times: any) {
     return moment(times).format(timeFormat)
   }
-  // edittarget(id: any, type: any) {
-  //   this.targetShow = true
-  //   this.$nextTick(() => {
-  //     (this.$refs.target as any).init(id, type)
-  //   })
-  // }
   // 详情
   async querySelect() {
     try {

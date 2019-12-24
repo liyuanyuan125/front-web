@@ -10,10 +10,13 @@
     <div class="detail">
       <span>目标影城{{statsuObj.totalCount}}家</span>
       <span v-if="[1].includes(value.status)">待接单影城{{statsuObj.waiting}}家</span>
-      <span v-if="[1, 2, 3, 7].includes(value.status)">已接单影城{{statsuObj.received}}家</span>
+      <span v-if="[1, 2].includes(value.status)">已接单影城{{statsuObj.received}}家</span>
       <span>已拒绝影城{{statsuObj.refuse}}家</span>
       <span v-if="[2, 3, 5, 7, 8].includes(value.status)">已失效影城{{statsuObj.faliure}}家</span>
       <span v-if="[1, 2, 3, 7, 8].includes(value.status)">已取消影城{{statsuObj.cancel}}家</span>
+      <span v-if="[3].includes(value.status)">执行中影城{{statsuObj.beexecute}}家</span>
+      <span v-if="[7].includes(value.status)">已完成影城{{statsuObj.complete}}家</span>
+      <!-- 增加 已完成/执行中 -->
     </div>
     <Table stripe :columns="columns" :data="tableDate">
       <template slot-scope="{ row }" slot="citys">
@@ -101,7 +104,9 @@ export default class DlgEditCinema extends ViewBase {
         received: data.received,
         refuse: data.refuse,
         cancel: data.cancel,
-        faliure: data.faliure
+        faliure: data.faliure,
+        beexecute: data.beexecute,
+        complete: data.complete
       }
 
       this.statusList = data.statusList || []
