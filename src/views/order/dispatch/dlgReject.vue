@@ -107,7 +107,7 @@ export default class DlgEditCinema extends ViewBase {
       align: 'center'
     },
     {
-      title: '转资编码',
+      title: '专资编码',
       slot: 'code',
       width: 160,
       align: 'center'
