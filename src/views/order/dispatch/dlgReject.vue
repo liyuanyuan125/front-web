@@ -35,9 +35,9 @@
           <template slot-scope="{ row }" slot="titleRemark">
             <!-- remark不为空 则表示有权限 -->
             <div v-if="row.remark">
-              <span v-if="row.status == 1">您无权操作该影城</span>
+              <span v-if="row.status == 1">{{row.remark}}</span>
               <span v-if="row.status == 2">已接单</span>
-              <span v-if=" row.status == 4">已拒单</span>
+              <span v-if=" row.status == 3">已拒单</span>
             </div>
             <div v-else>
               <span v-for="item in statusList" :key="item.id" v-if="item.key == row.status">{{item.text}}</span>
