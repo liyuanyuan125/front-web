@@ -20,10 +20,13 @@
         </Row>
         <Row>
            <Col span="24">
-              <p v-if="targetCinemaLength > 1">
-                <span class="status-list">
+              <p >
+                <span class="status-list" v-if="targetCinemaLength > 1">
                   <label>目标影院</label>
                   <em>{{targetCinemaLength}}家</em> 
+                </span>
+                <span class="status-list" v-else>
+                  <label>目标影院：</label><em>{{list.cinemaName || '暂无'}}</em>
                 </span>
                 <span class="status-list" v-if="[1].includes(list.status)">
                    <label>待接单影城</label>
@@ -54,7 +57,7 @@
                   <em>{{list.complete}}家</em> 
                 </span>
                    
-              <p v-else><label>目标影院：</label><em>{{list.cinemaName || '暂无'}}</em></p>
+              </p>
           </Col>
         </Row>
       </div>
