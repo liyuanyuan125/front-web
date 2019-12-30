@@ -37,7 +37,7 @@
             <div v-if="row.remark">
               <span v-if="row.status == 1">{{row.remark}}</span>
               <span v-if="row.status == 2">已接单</span>
-              <span v-if=" row.status == 3">已拒单</span>
+              <span v-if=" row.status == 3">已拒绝</span>
             </div>
             <div v-else>
               <span v-for="item in statusList" :key="item.id" v-if="item.key == row.status">{{item.text}}</span>
