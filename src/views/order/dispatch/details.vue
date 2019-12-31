@@ -28,11 +28,11 @@
                 <span class="status-list" v-else>
                   <label>目标影院：</label><em>{{list.cinemaName || '暂无'}}</em>
                 </span>
-                <span class="status-list" v-if="[1].includes(list.status)">
+                <span class="status-list">
                    <label>待接单影城</label>
                   <em>{{list.waiting}}家</em> 
                 </span>
-                <span class="status-list" v-if="[1, 2].includes(list.status)">
+                <span class="status-list">
                   <label>已接单影城</label>
                   <em>{{list.received}}家</em> 
                 </span>
@@ -40,19 +40,19 @@
                   <label>已拒绝影城</label>
                   <em>{{list.refuse}}家</em> 
                 </span>
-                <span class="status-list" v-if="[2, 3, 5, 7, 8].includes(list.status)">
+                <span class="status-list">
                    <label>已失效影城</label>
                   <em>{{list.faliure}}家</em> 
                 </span>
-                <span class="status-list" v-if="[1, 2, 3, 7, 8].includes(list.status)">
+                <span class="status-list">
                   <label>已取消影城</label>
                   <em>{{list.cancel}}家</em> 
                 </span>
-                <span class="status-list" v-if="[3].includes(list.status)">
+                <span class="status-list" >
                   <label>执行中影城</label>
                   <em>{{list.beexecute}}家</em> 
                 </span>
-                <span class="status-list" v-if="[7].includes(list.status)">
+                <span class="status-list">
                   <label>已完成影城</label>
                   <em>{{list.complete}}家</em> 
                 </span>
