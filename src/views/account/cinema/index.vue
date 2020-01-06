@@ -4,10 +4,11 @@
       <span class="adver-tiele">影院管理</span>
     </h3>
     <div class="search-input">
-      <Input v-model="dataForm.searchKey" style="width: 400px"  placeholder="请输入专资编码或影院名称" />
-      <Button  type="primary" class="bth-search" @click="seachList">
+      <cinemaList v-model="dataForm.selectCinemaId" />
+      <!-- <Input v-model="dataForm.searchKey" style="width: 400px"  placeholder="请输入专资编码或影院名称" /> -->
+      <!-- <Button  type="primary" class="bth-search" @click="seachList">
         <Icon type="ios-search" size="22"/>
-      </Button>
+      </Button> -->
     </div>
     <div class="list-box">
       <div class="list-table">
@@ -42,20 +43,24 @@
 </template>
 
 <script lang="tsx">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { cinmeaList, editCompanyTel } from '@/api/cinema'
 import { clean } from '@/fn/object'
 import jsxReactToVue from '@/util/jsxReactToVue'
 import { validataTel } from '@/util/validateRules'
 import { info } from '@/ui/modal'
+import cinemaList from '@/components/selectList/cinemaList.vue'
 
-@Component
+@Component({
+  components: {
+    cinemaList
+  }
+})
 export default class Main extends ViewBase {
-  dataForm = {
-    searchKey: '',
+  dataForm: any = {
     pageIndex: 1,
-    pageSize: 20,
+    pageSize: 20
   }
 
   query = ''
@@ -123,7 +128,9 @@ export default class Main extends ViewBase {
           items,
           totalCount
         }
-      } = await cinmeaList({...this.dataForm})
+      } = await cinmeaList({
+        ...this.dataForm
+        })
       this.cinemaData = items || []
       this.total = totalCount || 0
     } catch (ex) {
@@ -180,6 +187,11 @@ export default class Main extends ViewBase {
     } catch (ex) {
       this.handleError(ex)
     }
+  }
+
+  @Watch('dataForm.selectCinemaId', {deep: true})
+  watchDataForm() {
+    this.seach()
   }
 }
 </script>
