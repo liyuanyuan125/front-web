@@ -386,7 +386,7 @@ export default class Main extends ViewBase {
       }
 
       if ( keywords ) {
-        if ( keywords[this.form.dayRangesKey].positive && keywords[this.form.dayRangesKey].positive.length > 0 ) {
+        if ( keywords[this.form.dayRangesKey] && keywords[this.form.dayRangesKey].positive && keywords[this.form.dayRangesKey].positive.length > 0 ) {
           that.chart3.initDone = true
           keywords[this.form.dayRangesKey].positive.forEach((item: any) => {
             that.chart3.dataList[0].push({
@@ -396,7 +396,7 @@ export default class Main extends ViewBase {
           })
         }
 
-        if ( keywords[this.form.dayRangesKey].passive && keywords[this.form.dayRangesKey].passive.length > 0 ) {
+        if ( keywords[this.form.dayRangesKey] && keywords[this.form.dayRangesKey].passive && keywords[this.form.dayRangesKey].passive.length > 0 ) {
           keywords[this.form.dayRangesKey].passive.forEach((item: any) => {
             that.chart4.dataList[0].push({
               name: item,
