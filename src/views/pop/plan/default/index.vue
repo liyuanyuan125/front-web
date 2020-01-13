@@ -225,8 +225,11 @@
           <Col :span="10"><span>{{item.videoName || '暂无'}}</span></Col>
         </Row>
         <Row :gutter="16">
-          <Col :span="2"><span>投放周期:</span></Col>
-          <Col :span="10"><span>{{formatDate(item.beginDate)}} 至 {{formatDate(item.endDate)}}</span></Col>
+          <Col :span="2" style="padding-left: 0px"><span v-if="item.status < 9 || item.status > 12">预估</span><span>投放周期</span></Col>
+          <Col :span="10"><span>{{formatDate(item.beginDate)}} 至 
+            <span v-if="item.status >= 9 && item.status <= 12">{{formatDate(item.completeDate)}}</span>
+            <span v-else>{{formatDate(item.endDate)}}</span>
+          </span></Col>
           <Col :span="2" v-if="item.advertTypeCode == 'TRAILER'"><span>客户:</span></Col>
           <Col :span="10" v-if="item.advertTypeCode == 'TRAILER'"><span>{{item.customerName}}</span></Col>
           <Col :span="2" v-if="item.advertTypeCode != 'TRAILER'"><span>影片:</span></Col>
