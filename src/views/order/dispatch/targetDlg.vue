@@ -109,7 +109,7 @@ export default class DlgEditCinema extends ViewBase {
       }
 
       this.statusList = data.statusList || []
-      this.tableDate = data.items.map((it: any) => {
+      this.tableDate = (data.items || []).map((it: any) => {
         return {
           ...it,
           citys: `${it.areaName} / ${it.provinceName} / ${it.cityName}`,
