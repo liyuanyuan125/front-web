@@ -3,20 +3,13 @@
     <h2 class="order-nav">广告单</h2>
     <div class="order-list-title">
       <p>以下广告单已经过平台审核，接单后需要按照广告单中要求投放的影片在您的影院进行排播</p>
-      <p  v-if="cinemaList.length == 1">您当前影院为 {{cinemaList[0].shortName}}</p>
-      <p  v-else>您当前共有 {{cinemaTotalCount}} 家影院的广告代理权</p>
+      <!-- <p  v-if="cinemaList.length == 1">您当前影院为 {{cinemaList[0].shortName}}</p> -->
+      <p>您当前共有 {{cinemaTotalCount}} 家影院的广告代理权</p>
     </div>
     <div class="order-content">
       <div class="order-form jyd-form flex-box">
          <DatePicker type="daterange" class="item-list-sel" style="width: 250px"  v-model='putDate'  @on-change="handleChange"  placeholder="开始日期和结束日期" ></DatePicker>
-         <Select v-model='form.cinemaId' class="item-list-sel" style="width: 250px" 
-          filterable clearable
-          remote
-          :loading="loading"
-          :remote-method="remoteMethod"
-          placeholder="影院名称" >
-            <Option v-for="item in cinemaList" :key="item.id" :value="item.id" >{{item.shortName}}</Option>
-         </Select>
+         <selectList v-model='form.cinemaId' ref="cinemalist" />
          <Input v-model="videoName" placeholder="广告片名称" style="width: 250px" />
          <Button type="primary" @click="searchList" class="select-btn">搜索广告单</Button>
       </div>
@@ -37,15 +30,8 @@
           <ul class='itemul' >
             <li v-for='(it,index) in itemlist' :key='index' :class="{advert: it.advertType == 'TRAILER'}">
               <div class="table-header-title  flex-box">
-                <p><label>预估投放排期</label><em>{{formatConversion(it.beginDate)}} ~ {{formatConversion(it.endDate)}}</em></p>
-                <!-- <p>
-                  <Tooltip placement="bottom" max-width="200" class="text-cursor"
-                   content="根据影院近60天票房情况预算得出；最终收益以实际投放期间产生的曝光数据计算为准；为保证您的收益，请在投放结束后48小时内向国家电影专资办上报您的影院票房数据">
-                    <label>预估广告收益(元)</label>
-                    <em class="max-earning">{{formatNumber(it.estimateRevenue)}}</em>
-                    <Icon class="iconfont icon-wenhao" size="18"></Icon>
-                  </Tooltip> 
-                </p> -->
+                <p v-if="it.status == 7"><label>投放排期</label><em>{{it.orderPutDate}}</em></p>
+                <p v-else><label>预估投放排期</label><em>{{it.forecasPuttDate}}</em></p>
               </div>
               <Row class="table-content-list" type="flex" justify="center" align="middle">
                 <Col span="14">
@@ -54,12 +40,11 @@
                     <p  v-if="it.targetCinemas.length">
                       <label>目标影院</label>
                       <em>{{it.targetCinemas.length}}家</em> 
-                      <span class="query-status"  @click="edittarget(it.id, 1)" >查看</span></p>
+                      <span class="query-status"  @click="edittarget(it.id, it.status)" >查看</span></p>
                     <p v-else><label>目标影院</label><em>{{it.cinemaName}}</em></p>
                   </div>
                   <div class="flex-box col-order">
                     <p><label>广告片规格</label><em>{{it.specification || 0}}s</em></p>
-                    <!-- <em><label>目标人次</label><em>{{it.estimatePersonCount || 0}}人</em></p> -->
                   </div>
                   <div class="flex-box col-order">
                     <p ><label>广告位置</label><em>{{it.deliveryPositionNames}}</em></p>
@@ -74,7 +59,6 @@
                         <Tooltip placement="bottom" max-width="200" class="text-cursor" content="“影片不限，请在投放周期内所有影片前安排上刊">
                           所有影片
                           <Icon class="iconfont icon-wenhao" size="18"></Icon>
-                          <!-- <Icon type="md-help" /> -->
                          </Tooltip>
                       </p>
                     </div>
@@ -88,8 +72,8 @@
                 <Col span="5" class="text-center">
                 <!-- 待审核状态展示 -->
                     <div class="btn-sure-cancel" v-if="it.status == 1">
-                      <p><Button type="primary" @click="editReject(it.id)" class="operation-btn">确定接单</Button></p>
-                      <p><Button  @click="editRefuse(it)" class="operation-btn result-btn">拒绝接单</Button></p>
+                      <p><Button type="primary" @click="editReject(it.id, 1)" class="operation-btn">确定接单</Button></p>
+                      <p><Button @click="editReject(it.id, 2)" class="operation-btn result-btn">拒绝接单</Button></p>
                     </div>
                     <div >
                       <Button class="operation-btn  query-detail-btn " :to="{ name: 'order-dispatch-details', params: { id: it.id } }" >查看详情</Button>
@@ -109,8 +93,7 @@
 
      
     <dlgRejec ref="reject" v-model="rejectVisible" v-if="rejectVisible.visible" @rejReload="orderList"/>
-    <targetDlg ref="target" v-if="targetShow" />
-    <refuseDlg ref="refuse" v-if="refuseShow"  @refReload="refReload" />
+    <targetDlg ref="target" v-model="targetObj" v-if="targetObj.visible" />
   </div>
 </template>
 
@@ -118,19 +101,19 @@
 import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { queryOrderList, queryCinemaList } from '@/api/norderDis'
-import { formatConversion, formatNumber } from '@/util/validateRules.ts'
+import { formatConversion } from '@/util/validateRules.ts'
 import { getUser } from '@/store'
 import { slice, clean, except } from '@/fn/object'
-import { getEnumText } from '@/util/dealData'
+import { getEnumText, formatIntDateRange } from '@/util/dealData'
 import dlgRejec from './dlgReject.vue'
 import targetDlg from './targetDlg.vue'
-import refuseDlg from './refuseDlg.vue'
+import selectList from '@/components/selectList/cinemaList.vue'
 
 @Component({
   components: {
     dlgRejec,
     targetDlg,
-    refuseDlg
+    selectList,
   }
 })
 export default class Main extends ViewBase {
@@ -154,7 +137,6 @@ export default class Main extends ViewBase {
   searchLoading = false
 
   // 影院名称list
-  cinemaList = []
   cinemaTotalCount = null
 
   // 订单统计
@@ -166,8 +148,7 @@ export default class Main extends ViewBase {
   typeList: any = []
   itemlist: any = []
 
-  targetShow = false
-  refuseShow = false
+  targetObj = {}
 
   rejectVisible: any = {
     visible: false
@@ -180,47 +161,19 @@ export default class Main extends ViewBase {
     return formatConversion
   }
 
-
-  get formatNumber() {
-    return formatNumber
-  }
-
   mounted() {
-    this.remoteMethod()
+    this.queryList()
     this.orderList()
   }
 
-  async remoteMethod(query?: any) {
-    try {
-      if (query) {
-        this.loading = true
-        const { data: {items, totalCount}} = await queryCinemaList({
-           pageIndex: 1,
-           pageSize: 400,
-           query
-        })
-        this.cinemaList = items || []
-      } else {
-        this.loading = true
-        const { data: {items, totalCount}} = await queryCinemaList({
-           pageIndex: 1,
-           pageSize: 400,
-           query
-        })
-        this.cinemaTotalCount = totalCount
-      }
-      this.loading = false
-    } catch (ex) {
-       this.loading = false
-      this.handleError(ex)
-    }
+  async queryList() {
+    const { data: {items, totalCount}} = await queryCinemaList({
+        pageIndex: 1,
+        pageSize: 400,
+    })
+    this.cinemaTotalCount = totalCount
   }
 
-
-  refReload() {
-    this.refuseShow = false
-    this.orderList()
-  }
 
   async orderList() {
     this.spinShow = true
@@ -243,13 +196,15 @@ export default class Main extends ViewBase {
       this.spinShow = false
       this.totalCount = totalCount
       // 处理空数组null转化为[]
-      this.itemlist = (items || []).map( (item: any) => {
-        const offset = getEnumText(deliveryPositionCodeList, item.deliveryPositionCode)
+      this.itemlist = (items || []).map( (it: any) => {
+        const offset = getEnumText(deliveryPositionCodeList, it.deliveryPositionCode)
         return {
-          ...item,
-          targetCinemas: item.targetCinemas || [],
-          targetMovies: item.targetMovies || [],
-          deliveryPositionNames: offset ? `[${offset}]` : '--'
+          ...it,
+          targetCinemas: it.targetCinemas || [],
+          targetMovies: it.targetMovies || [],
+          deliveryPositionNames: offset ? `[${offset}]` : '--',
+          forecasPuttDate: formatIntDateRange(it.beginDate, it.endDate), // 预估投放排期
+          orderPutDate: formatIntDateRange(it.beginDate, it.completeDate), // 投放接单日期
         }
       })
       // 处理订单统计
@@ -262,26 +217,21 @@ export default class Main extends ViewBase {
     }
   }
 
-  // 确定接单
-  editReject(id: any) {
+  // 确定接单 mark =1, 拒绝接单 mark =2
+  editReject(id: any, mark: number) {
     this.rejectVisible = {
       visible: true,
-      id
+      id,
+      mark
     }
   }
-  // 拒绝接单
-  editRefuse(id: any) {
-    this.refuseShow = true
-    this.$nextTick(() => {
-      (this.$refs.refuse as any).init(id)
-    })
-  }
 
-  edittarget(id: any, type: any) {
-    this.targetShow = true
-    this.$nextTick(() => {
-      (this.$refs.target as any).init(id, type)
-    })
+  edittarget(id: number, status: number) {
+    this.targetObj = {
+      visible: true,
+      id,
+      status
+    }
   }
 
   handleChange(data: any) {

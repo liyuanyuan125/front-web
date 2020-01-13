@@ -40,8 +40,18 @@ export async function reciveOrder(data: any) {
 }
 
 /**
+ * 广告单 - 拒绝接单
+ * @param  data
+ */
+export async function refuseOrder(data: any) {
+  const res = await put('/xadvert/orders/refuse', data)
+  return res
+}
+
+/**
  * 广告单 - 查看详情 确认影厅列表
  * @param  data
+ * http://yapi.aiads-dev.com/project/139/interface/api/1964
  */
 export async function queryDetail(id: number, data: any) {
   const res = await get(`/xadvert/orders/${id}/target-cinemas`, data)
