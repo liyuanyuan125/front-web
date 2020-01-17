@@ -84,27 +84,28 @@ export default class Main extends ViewBase {
 
   // 产品临时需求：资源方 - 代理商，不能选择「广告单管理」- [广告单] 下面的「确认」、「拒绝」权限
   dealMenu(menu: Page) {
-    const user = getUser()
-    if (user == null
-      || user.systemCode != 'resource'
-      || user.secondaryCode != 'agent'
-    ) {
-      return menu
-    }
-    const disabledActions = ['confirm', 'refuse']
-    const [ newMenu ] = walkTree([ menu ], {
-      childrenKey: 'subPages',
-      onEachBefore(node) {
-        if (node.key == 'resource.adOrderManage.order') {
-          node.actions = node.actions.map(it => {
-            it.disabled = disabledActions.includes(it.code)
-            return it
-          })
-          node.tip = '由于您是影管合作，目前系统仅支持影管账号统一接单；影城子账号自主接单功能暂未开放，请知晓。'
-        }
-      }
-    })
-    return newMenu
+    return menu
+    // const user = getUser()
+    // if (user == null
+    //   || user.systemCode != 'resource'
+    //   || user.secondaryCode != 'agent'
+    // ) {
+    //   return menu
+    // }
+    // const disabledActions = ['confirm', 'refuse']
+    // const [ newMenu ] = walkTree([ menu ], {
+    //   childrenKey: 'subPages',
+    //   onEachBefore(node) {
+    //     if (node.key == 'resource.adOrderManage.order') {
+    //       node.actions = node.actions.map(it => {
+    //         it.disabled = disabledActions.includes(it.code)
+    //         return it
+    //       })
+    //       node.tip = '由于您是影管合作，目前系统仅支持影管账号统一接单；影城子账号自主接单功能暂未开放，请知晓。'
+    //     }
+    //   }
+    // })
+    // return newMenu
   }
 
   async seach() {
