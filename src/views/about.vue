@@ -14,13 +14,17 @@
       <Button @click="changeText">改变文字</Button>
     </div>
 
-    <!-- <UploadLabel useCircle/>
+    <UploadLabel/>
+
+    <UploadLabel useCircle/>
 
     <UploadButton/>
 
+    <!--
     <TripleDialog v-model="tripleShow">
       妳好呀
-    </TripleDialog> -->
+    </TripleDialog>
+    -->
 
     <!-- <WeekDatePicker v-model="weekDate"/>
 
