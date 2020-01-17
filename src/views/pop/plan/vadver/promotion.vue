@@ -188,22 +188,39 @@ export default class Promotion extends ViewBase {
   moneystep = 1
   startDate: any = {
     disabledDate: (dates: any) => {
+      // if (this.form.endDate) {
+      //   const time = new Date(this.form.endDate).valueOf()
+      //   return dates && dates.valueOf() < (new Date().getDay() == 1 || new Date().getDay() > 4 ?
+      //   this.times : this.times + 7 * 24 * 3600000) || dates.getDay() != 4 || dates.valueOf() > time
+      // }
+      // if (new Date().getDay() == 1 || new Date().getDay() > 4) {
+      //   return dates && dates.valueOf() < this.times || dates.getDay() != 4
+      // } else {
+      //   return dates && dates.valueOf() < this.times +  7 * 24 * 3600000 || dates.getDay() != 4
+      // }
       if (this.form.endDate) {
-        const time = new Date(this.form.beginDate)
-        return dates && dates.valueOf() < this.times || dates.getDay() != 4 ||
-        dates.valueOf() > time
+        return dates && dates.valueOf() > new Date(this.form.endDate).valueOf() - 86400000
+        || dates.valueOf() < Date.now() - 86400000
       }
-      return dates && dates.valueOf() < this.times || dates.getDay() != 4
+      return dates && dates.valueOf() < Date.now() - 86400000
     }
   }
 
   endDate: any = {
     disabledDate: (dates: any) => {
-      let time = this.times
       if (this.form.beginDate) {
-        time = new Date(this.form.beginDate)
+        return dates && dates.valueOf() < new Date(this.form.beginDate).valueOf() + 86400000
       }
-      return dates && dates.valueOf() < time || dates.getDay() != 3
+      return dates && dates.valueOf() < Date.now()
+      // let time = this.times
+      // if (this.form.beginDate) {
+      //   time = new Date(this.form.beginDate).valueOf() - 7 * 24 * 3600000
+      // }
+      // if (new Date().getDay() > 1 || new Date().getDay() < 5) {
+      //   return dates && dates.valueOf() < time + 7 * 24 * 3600000  || dates.getDay() != 3
+      // } else {
+      //   return dates && dates.valueOf() < time + 7 * 24 * 3600000 || dates.getDay() != 3
+      // }
     }
   }
 
