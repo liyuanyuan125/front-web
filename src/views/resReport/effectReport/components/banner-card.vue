@@ -18,7 +18,7 @@
     <div class="dsc-box">
       <div class="cell">
         <ul>
-          <li><i class="icon-1"></i><span class="name">投放排期</span><span>{{data.item0}}</span></li>
+          <li><i class="icon-1"></i><span class="name">{{deliveryDateDesc}}</span><span>{{data.item0}}</span></li>
           <li><i class="icon-4"></i><span class="name">已投天数</span><span>{{data.item1}}天</span></li>
         </ul>
       </div>
@@ -60,6 +60,10 @@ export default class BannerCard extends Vue {
   exportPlan() {
     if (this.exporting) { return }
     this.$emit('exportPlan')
+  }
+
+  get deliveryDateDesc() {
+    return (this.data.deliveryDateDesc && this.data.deliveryDateDesc !== '') ? this.data.deliveryDateDesc : '投放排期'
   }
 }
 </script>

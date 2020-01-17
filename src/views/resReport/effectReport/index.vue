@@ -581,7 +581,8 @@ export default class Index extends ViewBase {
           item3: plan.specification,
           item4: getName(plan.status, planStatus),
           item5: moment(report.lastModifyTime).format(format), // 修改使用moment
-          item6: plan.name
+          item6: plan.name,
+          deliveryDateDesc: plan.deliveryDateDesc || ''
         }
 
         const viewCount = report.viewCount || null
