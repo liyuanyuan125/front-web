@@ -9,6 +9,8 @@
       <Button type="primary" :to="toLoginUrl" class="login-but">登 录 / 注 册</Button>
     </content>
     <QR />
+    <p class="home-footer">copyright&copy; 2019 jydata.com &nbsp;&nbsp;&nbsp;&nbsp;北京智能广宣科技有限公司&nbsp;&nbsp;&nbsp;&nbsp; 
+      <a href="http://beian.miit.gov.cn" target="_blank">京ICP备19004779号-2</a></p>
   </div>
 </template>
 
@@ -37,6 +39,14 @@ export default class Login extends ViewBase {
 <style lang='less' scoped>
 @import '~@/site/lib.less';
 @import '~@/assets/iconFont/iconfont.css';
+.home-footer {
+  width: 100%;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+  position: absolute;
+  bottom: 20px;
+}
 .login-home {
   position: relative;
   height: 100%;

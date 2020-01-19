@@ -4,7 +4,8 @@
       <img src="~@/assets/site/home-logo.png" class="layout-log" />
     </router-link>
     <slot></slot>
-    <p class="home-footer">copyright&copy; 2019 jydata.com　　北京智能广宣科技有限公司</p>
+    <p class="home-footer">copyright&copy; 2019 jydata.com &nbsp;&nbsp;&nbsp;&nbsp;北京智能广宣科技有限公司&nbsp;&nbsp;&nbsp;&nbsp; 
+      <a href="http://beian.miit.gov.cn" target="_blank">京ICP备19004779号-2</a></p>
   </div>
 </template>
 
@@ -37,14 +38,14 @@ export default class Main extends ViewBase {
     text-align: center;
     font-size: 14px;
     position: absolute;
-    bottom: 40px;
-  }
-}
-
-@media screen and(max-height: 600px) {
-  .login-home .home-footer {
-    position: absolute;
     bottom: 20px;
   }
 }
+
+// @media screen and(max-height: 600px) {
+//   .login-home .home-footer {
+//     position: absolute;
+//     bottom: 20px;
+//   }
+// }
 </style>
