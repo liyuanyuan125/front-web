@@ -67,7 +67,7 @@ export default class DlgEditCinema extends ViewBase {
   tableDate: any = []
   columns: any = [
     {
-      title: '区/县/市',
+      title: '县/市',
       width: 190,
       slot: 'citys',
       align: 'center'
@@ -112,7 +112,7 @@ export default class DlgEditCinema extends ViewBase {
       this.tableDate = (data.items || []).map((it: any) => {
         return {
           ...it,
-          citys: `${it.areaName} / ${it.provinceName} / ${it.cityName}`,
+          citys: `${it.provinceName} / ${it.cityName}`,
         }
       })
     } catch (ex) {
