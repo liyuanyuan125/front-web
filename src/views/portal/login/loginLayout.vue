@@ -4,7 +4,7 @@
       <img src="~@/assets/site/home-logo.png" class="layout-log" />
     </router-link>
     <slot></slot>
-    <p class="home-footer">copyright&copy; 2019 jydata.com &nbsp;&nbsp;&nbsp;&nbsp;北京智能广宣科技有限公司&nbsp;&nbsp;&nbsp;&nbsp; 
+    <p class="home-footer">copyright&copy; 2020 jydata.com &nbsp;&nbsp;&nbsp;&nbsp;北京智能广宣科技有限公司&nbsp;&nbsp;&nbsp;&nbsp; 
       <a href="http://beian.miit.gov.cn" target="_blank">京ICP备19004779号-2</a></p>
   </div>
 </template>
