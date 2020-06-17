@@ -11,6 +11,12 @@
     <QR />
     <p class="home-footer">copyright&copy; 2020 jydata.com &nbsp;&nbsp;&nbsp;&nbsp;北京智能广宣科技有限公司&nbsp;&nbsp;&nbsp;&nbsp; 
       <a href="http://beian.miit.gov.cn" target="_blank">京ICP备19004779号-2</a></p>
+    <div class="recordNo">
+      <a target="_blank" class="code-link" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010502041177">
+         <img src="https://bkssl.bdimg.com/static/wiki-common/widget/component/footer/img/icon-police_d8a40a4.png" width="13" height="14" />
+         <p style="height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">京公网安备 11010502041177号</p>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -45,7 +51,21 @@ export default class Login extends ViewBase {
   text-align: center;
   font-size: 14px;
   position: absolute;
+  bottom: 40px;
+}
+.recordNo {
+  width: 100%;
+  position: absolute;
   bottom: 20px;
+  text-align: center;
+}
+.code-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  height: 20px;
+  line-height: 20px;
 }
 .login-home {
   position: relative;
