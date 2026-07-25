@@ -69,7 +69,7 @@ import { Component, Watch } from 'vue-property-decorator'
 import ViewBase from '@/util/ViewBase'
 import { confirm, toast } from '@/ui/modal'
 import { dataList, delList, popCancel, popPayment, popPartners } from '@/api/popFilm'
-import { formatTimes, formatYell, formatNumber} from '@/util/validateRules'
+import { formatTimes, formatNumber} from '@/util/validateRules'
 // import updataVideo from '@/components/videoDlg.vue'
 import pagination from '@/components/page.vue'
 
