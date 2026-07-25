@@ -5,14 +5,11 @@
            <Col :span="7">
               <Col span="23">
                 <Select 
-                 v-model='query.brandId'  
+                 v-model='query.year'  
                  clearable
                  filterable
                  placeholder="全部年份"
                  remote
-                 :loading="loading"
-                 :remote-method="remoteMethod"
-                 @on-clear="brandList = []"
                  @on-change="seachs">
                   <Option
                     v-for="item in years"
@@ -125,7 +122,7 @@ export default class Main extends ViewBase {
   totalCount = 0
   query: any = {
     year: null,
-    mounth: null,
+    mounth: 0,
     cinemaId: null,
     pageIndex: 1,
     pageSize: 4,
@@ -143,7 +140,13 @@ export default class Main extends ViewBase {
 
   orderids: any = []
   // 年份
-  years: any = []
+  years: any = [
+    {
+      key: 2019,
+      text: '2019'
+    }
+  ]
+  getDefaultYear: any = [2019]
   // 月份
   mountes: any = [
     {
@@ -202,6 +205,16 @@ export default class Main extends ViewBase {
 
 
   mounted() {
+    if (new Date().getFullYear() < 2019) {
+      info('暂不支持该年份查询')
+      return
+    }
+     const getDayYear = new Date().getFullYear()
+     if ( getDayYear == this.getDefaultYear[0] ) {
+       this.years = this.years
+     } else {
+       this.num(getDayYear , 2019)
+     }
     this.query.year = new Date().getFullYear()
     this.seach()
   }
@@ -228,6 +241,21 @@ export default class Main extends ViewBase {
     }
   }
 
+  num(bignum: any , defaultyear: any) {
+    const a: number = (defaultyear + 1) // 2020
+    this.getDefaultYear.push(a) // [2019,2020]
+    if (a == bignum) { // 2021
+      this.years = (this.getDefaultYear || []).map((it: any) => {
+        return {
+          key: it,
+          text: String(it)
+        }
+      })
+    } else {
+      this.num(new Date().getFullYear() , a)
+    }
+  }
+
   seachs() {
     this.seach()
   }
@@ -245,17 +273,6 @@ export default class Main extends ViewBase {
       })
       this.totalCount = data.totalCount
       this.codeList = data.channelList
-      const yearlist: any = (this.years || []).map((it: any) => {
-        return it.key
-      })
-      if (yearlist.indexOf(new Date().getFullYear()) == 1) {
-        this.years = this.years
-      } else {
-        this.years.push({
-          key: new Date().getFullYear(),
-          text: String(new Date().getFullYear())
-        })
-      }
     } catch (ex) {
       this.handleError(ex)
     } finally {
